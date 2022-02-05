@@ -82,7 +82,9 @@ class CreateEmployee extends React.Component {
     }
     this.props.employeeCreateActions.createEmployee(postData).then((res) => {
       if (res.status === 200) {
-        this.props.commonActions.tostifyAlert('success', 'New Employee Created Successfully')
+        this.props.commonActions.tostifyAlert(
+          'success',
+          res.data? res.data.message: 'New Employee Created Successfully')
         if (this.state.createMore) {
           this.setState({
             createMore: false
@@ -93,7 +95,9 @@ class CreateEmployee extends React.Component {
         }
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
+      this.props.commonActions.tostifyAlert(
+        'error', 
+        err && err.data ? err.data.message : 'New Employee Created Unsuccessfully')
     })
   }
 
@@ -191,9 +195,10 @@ class CreateEmployee extends React.Component {
                               </Col>
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span>Email</Label>
+                                  <Label htmlFor="select"><span className="text-danger">* </span>Email</Label>
                                   <Input
                                     type="text"
+                                    maxLength='80'
                                     id="email"
                                     name="email"
                                     value={props.values.email}
@@ -210,9 +215,10 @@ class CreateEmployee extends React.Component {
                             <Row className="row-wrapper">
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span>First Name</Label>
+                                  <Label htmlFor="select"><span className="text-danger">* </span>First Name</Label>
                                   <Input
                                     type="text"
+                                    maxLength="100"
                                     id="firstName"
                                     name="firstName"
                                     value={props.values.firstName}
@@ -229,9 +235,10 @@ class CreateEmployee extends React.Component {
                               </Col>
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span>Middle Name</Label>
+                                  <Label htmlFor="select"><span className="text-danger">* </span>Middle Name</Label>
                                   <Input
                                     type="text"
+                                    maxLength="100"
                                     id="middleName"
                                     name="middleName"
                                     value={props.values.middleName}
@@ -248,9 +255,10 @@ class CreateEmployee extends React.Component {
                               </Col>
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span>Last Name</Label>
+                                  <Label htmlFor="select"><span className="text-danger">* </span>Last Name</Label>
                                   <Input
                                     type="text"
+                                    maxLength="100"
                                     id="lastName"
                                     name="lastName"
                                     value={props.values.lastName}
@@ -269,7 +277,7 @@ class CreateEmployee extends React.Component {
                             <Row className="row-wrapper">
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span>Password</Label>
+                                  <Label htmlFor="select"><span className="text-danger">* </span>Password</Label>
                                   <Input
                                     type="password"
                                     id="password"
@@ -287,7 +295,7 @@ class CreateEmployee extends React.Component {
                               </Col>
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span>Confirm Password</Label>
+                                  <Label htmlFor="select"><span className="text-danger">* </span>Confirm Password</Label>
                                   <Input
                                     type="password"
                                     id="confirmPassword"
@@ -304,7 +312,7 @@ class CreateEmployee extends React.Component {
                               </Col>
                               <Col md="4">
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="date"><span className="text-danger">*</span>Date Of Birth</Label>
+                                  <Label htmlFor="date"><span className="text-danger">* </span>Date Of Birth</Label>
                                   <DatePicker
                                     className={`form-control ${props.errors.dob && props.touched.dob ? "is-invalid" : ""}`}
                                     id="dob"
@@ -312,7 +320,7 @@ class CreateEmployee extends React.Component {
                                     placeholderText="Select Date of Birth"
                                     showMonthDropdown
                                     showYearDropdown
-                                    dateFormat="dd/MM/yyyy"
+                                    dateFormat="dd-MM-yyyy"
                                     dropdownMode="select"
                                     selected={props.values.dob}
                                     maxDate={new Date()}
@@ -335,6 +343,7 @@ class CreateEmployee extends React.Component {
                                   <Label htmlFor="billingEmail">Billing Email</Label>
                                   <Input
                                     type="text"
+                                    maxLength="80"
                                     id="billingEmail"
                                     name="billingEmail"
                                     placeholder="Enter Billing Email Address"
@@ -356,6 +365,7 @@ class CreateEmployee extends React.Component {
                                   <Label htmlFor="poBoxNumber">Contract PO Number</Label>
                                   <Input
                                     type="text"
+                                    maxLength="8"
                                     id="poBoxNumber"
                                     name="poBoxNumber"
                                     placeholder="Enter Contract PO Number"
@@ -382,6 +392,7 @@ class CreateEmployee extends React.Component {
                                   <Label htmlFor="vatRegestationNo">Tax Registration Number</Label>
                                   <Input
                                     type="text"
+                                    maxLength="15"
                                     id="vatRegestationNo"
                                     name="vatRegestationNo"
                                     placeholder="Enter Tax Registration Number"

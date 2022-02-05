@@ -100,7 +100,8 @@ class ViewPurchaseOrder extends React.Component {
 				.then((res) => {
 					let val = 0;
 					if (res.status === 200) {
-						res.data.poQuatationLineItemRequestModelList.map((item) => {
+						if(res.data.poQuatationLineItemRequestModelList&&res.data.poQuatationLineItemRequestModelList.length !=0 )
+							res.data.poQuatationLineItemRequestModelList.map((item) => {
 							val = val + item.subTotal;
 							return item;
 						});
@@ -127,6 +128,18 @@ class ViewPurchaseOrder extends React.Component {
 								// 			}
 								// 		});
 								// }
+								if(this.state.POData.supplierId)
+								{	
+							   this.props.supplierInvoiceDetailActions
+							   .getContactById(this.state.POData.supplierId)
+							   .then((res) => {
+								   if (res.status === 200) {									
+									   this.setState({
+										   contactData: res.data,
+									   });
+								   }
+							   });
+							   }
 							},
 						);
 					}
@@ -157,7 +170,7 @@ class ViewPurchaseOrder extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { POData, currencyData, id,	PoDataList } = this.state;
+		const { POData, currencyData, id,	PoDataList, contactData } = this.state;
 
 		const { profile } = this.props;
 		return (
@@ -218,6 +231,7 @@ class ViewPurchaseOrder extends React.Component {
 										ref={(el) => (this.componentRef = el)}
 										totalNet={this.state.totalNet}
 										companyData={this.state && this.state.companyData ?this.state.companyData:''}
+										contactData={this.state.contactData}
 										status={this.props.location.state.status}
 									/>
 								</PDFExport>
@@ -244,7 +258,7 @@ class ViewPurchaseOrder extends React.Component {
 				{/* <th className="center" style={{ padding: '0.5rem' }}>
 					Po Expiry Date
 				</th> */}
-				<th style={{ padding: '0.5rem', textAlign: 'left' }}>
+				<th style={{ padding: '0.5rem', textAlign: 'right' }}>
 			    {strings.Total+" "+strings.Amount }
 				</th>
 				{/* <th style={{ padding: '0.5rem', textAlign: 'left' }}>
@@ -270,7 +284,7 @@ class ViewPurchaseOrder extends React.Component {
 				{/* <td>{moment(item.poReceiveDate).format(
 				'DD MMM YYYY',
 			)}</td> */}
-							<td>{POData.currencyIsoCode+" "+item.totalAmount}</td>
+							<td align="right">{POData.currencyIsoCode+" "+item.totalAmount}</td>
 							{/* <td>{item.totalVatAmount}</td> */}
 						
 						</tr>

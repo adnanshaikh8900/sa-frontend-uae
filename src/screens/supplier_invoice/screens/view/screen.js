@@ -79,6 +79,7 @@ class ViewInvoice extends React.Component {
 				.then((res) => {
 					let val = 0;
 					if (res.status === 200) {
+						if(res.data.invoiceLineItems&&res.data.invoiceLineItems.length !=0 )
 						res.data.invoiceLineItems.map((item) => {
 							val = val + item.subTotal;
 							return item;
@@ -106,6 +107,18 @@ class ViewInvoice extends React.Component {
 											}
 										});
 								}
+								if(this.state.invoiceData.contactId)
+								{	
+							   this.props.supplierInvoiceDetailActions
+							   .getContactById(this.state.invoiceData.contactId)
+							   .then((res) => {
+								   if (res.status === 200) {									
+									   this.setState({
+										   contactData: res.data,
+									   });
+								   }
+							   });
+							   }
 							},
 						);
 					}
@@ -118,7 +131,7 @@ class ViewInvoice extends React.Component {
 	};
 
 	render() {
-		const { invoiceData, currencyData, id } = this.state;
+		const { invoiceData, currencyData, id , contactData} = this.state;
 
 		const { profile } = this.props;
 		return (
@@ -180,6 +193,7 @@ class ViewInvoice extends React.Component {
 										ref={(el) => (this.componentRef = el)}
 										totalNet={this.state.totalNet}
 										companyData={this.state && this.state.companyData ?this.state.companyData:''}
+										contactData={contactData}
 									/>
 								</PDFExport>
 							</div>

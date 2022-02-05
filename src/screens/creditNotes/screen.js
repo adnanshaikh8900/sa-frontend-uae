@@ -36,7 +36,18 @@ import { selectOptionsFactory } from 'utils';
 import './style.scss';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
+import { upperCase } from 'lodash';
 
+const { ToWords } = require('to-words');
+const toWords = new ToWords({
+	localeCode: 'en-IN',
+	converterOptions: {
+	//   currency: true,
+	  ignoreDecimal: false,
+	  ignoreZeroCurrency: false,
+	  doNotAddOnly: false,
+	}
+  });
 const mapStateToProps = (state) => {
 	return {
 		customer_invoice_list: state.customer_invoice.customer_invoice_list,
@@ -200,18 +211,23 @@ class CreditNotes extends React.Component {
 		this.setState({
 			loading: true,
 		});
+
 		const postingRequestModel = {
 			amount: row.invoiceAmount,
 			postingRefId: row.id,
 			postingRefType: 'CREDIT_NOTE',
+			isCNWithoutProduct :row.isCNWithoutProduct==true?true:false ,
+			amountInWords:upperCase(row.currencyName + " " +(toWords.convert(row.invoiceAmount))+" ONLY" ).replace("POINT","AND"),
+			vatInWords:row.totalVatAmount ? upperCase(row.currencyName + " " +(toWords.convert(row.totalVatAmount))+" ONLY" ).replace("POINT","AND") :"-"
 		};
+		debugger
 		this.props.creditNotesActions
 			.creditNoteposting(postingRequestModel)
 			.then((res) => {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data.message?res.data.message:    'Tax Credit Note Posted Successfully',
+						res.data ? res.data.message : 'Credit Note Posted Successfully'
 					);
 					this.setState({
 						loading: false,
@@ -222,7 +238,7 @@ class CreditNotes extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data ? err.data.message : 'Credit Note Posted Unsuccessfully'
 				);
 				this.setState({
 					loading: false,
@@ -245,7 +261,7 @@ class CreditNotes extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data.message?res.data.message:    'Tax Credit Note Posted Successfully',
+						res.data ? res.data.message : 'Invoice Unposted Successfully'
 					);
 					this.setState({
 						loading: false,
@@ -257,7 +273,7 @@ class CreditNotes extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data ? err.data.message : 'Invoice Unposted Unsuccessfully'
 				);
 				this.setState({
 					loading: false,
@@ -352,18 +368,18 @@ class CreditNotes extends React.Component {
 	};
 
 	renderVatAmount = (cell, row, extraData) => {
-		// return row.vatAmount === 0 ? (
+		// return row.totalVatAmount === 0 ? (
 		// 	<Currency
-		// 		value={row.vatAmount}
+		// 		value={row.totalVatAmount}
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// ) : (
 		// 	<Currency
-		// 		value={row.vatAmount}
+		// 		value={row.totalVatAmount}
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// );
-		return row.vatAmount === 0  ? row.currencyName +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyName +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.totalVatAmount === 0  ? row.currencyName +" "+ row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyName +" "+ row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
 	};
 
 	renderDueAmount =(cell,row,extraData) => {
@@ -376,14 +392,8 @@ class CreditNotes extends React.Component {
 					isOpen={this.state.actionButtons[row.id]}
 					toggle={() => this.toggleActionButton(row.id)}
 				>
-					{/* <DropdownToggle size="lg" color="link" >
-						{this.state.actionButtons[row.id] === true ? (
-							<i style={{color:'grey'}} className="fas fa-ellipsis-h " />
-						) : (
-							<i  style={{color:'grey'}}  className="fas fa-ellipsis-h " />
-						)}
-					</DropdownToggle> */}
-							<DropdownToggle size="sm" color="primary" className="btn-brand icon">
+	
+					<DropdownToggle size="sm" color="primary" className="btn-brand icon">
 						{this.state.actionButtons[row.id] === true ? (
 							<i className="fas fa-chevron-up" />
 						) : (
@@ -397,14 +407,14 @@ class CreditNotes extends React.Component {
 									onClick={() => {
 										this.props.history.push(
 											'/admin/income/credit-notes/detail',
-											{ id: row.id },
+											{ id: row.id ,isCNWithoutProduct:row.isCNWithoutProduct},
 										);
 									}}
 								>
 									<i className="fas fa-edit" /> {strings.Edit}
 								</div>
 							</DropdownItem>
-						)}	{row.statusEnum !== 'Closed' && row.statusEnum !== 'Draft' && row.cnCreatedOnPaidInvoice !==true &&  (
+						)}	{row.statusEnum !== 'Closed' && row.statusEnum !== 'Draft' && row.cnCreatedOnPaidInvoice !==true && row.isCNWithoutProduct !==true &&   (
 							<DropdownItem>
 								<div
 									onClick={() => {
@@ -431,19 +441,7 @@ class CreditNotes extends React.Component {
 								<i className="fas fa-send" />  {strings.Post}
 							</DropdownItem>
 						)}
-						{/* <DropdownItem onClick={() => { this.openInvoicePreviewModal(row.id) }}>
-              <i className="fas fa-eye" /> View
-            </DropdownItem> */}
-						
-						{/* {row.statusEnum === 'Sent' && (
-							<DropdownItem
-								onClick={() => {
-									this.unPostInvoice(row);
-								}}
-							>
-								<i className="fas fa-file" />  {strings.Draft}
-							</DropdownItem>
-						)} */}
+
 									{row.statusEnum !== 'Closed' && row.statusEnum !== 'Draft'  && (
 							<DropdownItem
 								onClick={() =>
@@ -456,28 +454,11 @@ class CreditNotes extends React.Component {
 								<i className="fas fa-university" /> {strings.Refund}
 							</DropdownItem>
 									)}
-						{/* {row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && (
-							<DropdownItem
-								onClick={() => {
-									this.closeInvoice(row.id, row.status);
-								}}
-							>
-								<i className="fa fa-trash-o" /> Delete
-							</DropdownItem>
-						)} */}
-						{/* {row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && (
-							<DropdownItem
-								onClick={() => {
-									this.sendCustomEmail(row.id);
-								}}
-							>
-								<i className="fa fa-send" /> Send Custom Email
-							</DropdownItem>
-						)} */}
+
 						<DropdownItem
 							onClick={() =>
 								this.props.history.push('/admin/income/credit-notes/view', {
-									id: row.id,status:row.status
+									id: row.id,status:row.status,isCNWithoutProduct:row.isCNWithoutProduct
 								})
 							}
 						>
@@ -496,7 +477,7 @@ class CreditNotes extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Invoice Send Successfully',
+						res.data ? res.data.message : 'Email Send Successfully',
 					);
 					this.setState({ openEmailModal: false });
 				}
@@ -504,7 +485,7 @@ class CreditNotes extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					'Please First fill The Mail Configuration Detail',
+					err.data ? err.data.message : 'Email Send Unsuccessfully',
 				);
 			});
 	};
@@ -582,7 +563,7 @@ class CreditNotes extends React.Component {
 					this.initializeData();
 					this.props.commonActions.tostifyAlert(
 						'success',
-						' Customer invoice deleted successfully ',
+						res.data ? res.data.message : 'Customer Invoice Deleted Successfully'
 					);
 					if (customer_invoice_list && customer_invoice_list.length > 0) {
 						this.setState({
@@ -594,7 +575,7 @@ class CreditNotes extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data ? err.data.message : 'Customer Invoice Deleted Unsuccessfully'
 				);
 			});
 	};
@@ -673,14 +654,14 @@ class CreditNotes extends React.Component {
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Invoice Deleted Successfully',
+					res.data ? res.data.message : 'Invoice Deleted Successfully'
 				);
 				this.initializeData();
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data ? err.data.message : 'Invoice Deleted Unsuccessfully'
 				);
 			});
 	};
@@ -762,8 +743,9 @@ class CreditNotes extends React.Component {
 						currencyName:customer.currencyName ? customer.currencyName:'',
 						currencySymbol:customer.currencySymbol ? customer.currencySymbol:'',
 						invoiceAmount: customer.totalAmount,
-						vatAmount: customer.totalVatAmount,
+						totalVatAmount: customer.totalVatAmount,
 						cnCreatedOnPaidInvoice: customer.cnCreatedOnPaidInvoice,
+						isCNWithoutProduct: customer.isCNWithoutProduct,
 				  }))
 				: '';
 
@@ -775,6 +757,8 @@ class CreditNotes extends React.Component {
 		})
 
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="customer-invoice-screen">
 				<div className="animated fadeIn">
 					{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
@@ -993,7 +977,7 @@ class CreditNotes extends React.Component {
 													autoComplete="off"
 													showMonthDropdown
 													showYearDropdown
-													dateFormat="dd/MM/yyyy"
+													dateFormat="dd-MM-yyyy"
 													dropdownMode="select"
 													value={filterData.invoiceDate}
 													onChange={(value) => {
@@ -1004,7 +988,7 @@ class CreditNotes extends React.Component {
 
 											<Col lg={2} className="mb-1">
 												<Input
-												maxLength="10"
+												maxLength="14,2"
 													type="number"
 													min="0"
 													value={filterData.amount}
@@ -1220,6 +1204,7 @@ class CreditNotes extends React.Component {
 					id={this.state.rowId}
 				/>
 				
+			</div>
 			</div>
 		);
 	}

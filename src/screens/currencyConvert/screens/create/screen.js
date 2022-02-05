@@ -145,7 +145,7 @@ class CreateCurrencyConvert extends React.Component {
 					this.setState({ createDisabled: false });
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data.message
+						res.data ? res.data.message : 'Currency Convert Created Successfully'
 					);
 
 					if (this.state.createMore) {
@@ -162,7 +162,7 @@ class CreateCurrencyConvert extends React.Component {
 				this.setState({ createDisabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
-					 err.data.message
+					err.data ? err.data.message : 'Currency Convert Created Unsuccessfully'
 				);
 			});
 			
@@ -182,7 +182,7 @@ class CreateCurrencyConvert extends React.Component {
 				})
 				this.props.commonActions.tostifyAlert(
 					'error',
-				 'Currency Already exists',
+				 	'Currency Already exists',
 				);
 			} else {
 				this.setState({
@@ -228,11 +228,21 @@ class CreateCurrencyConvert extends React.Component {
 												}}
 												validationSchema={Yup.object().shape({
 													currencyCode: Yup.string().required(
-														'Currency is required',
+														'Exchange Currency is Required',
 													),
-													exchangeRate: Yup.string().required(
-														'Exchange Rate is Required',
-													),
+													exchangeRate: Yup.string()
+														.required('Exchange Rate is Required')
+														.test(
+														'exchangeRate',
+														'Exchange Rate should not be equal to 1',
+														(value) => {
+															if (value != 1) {
+																return true;
+															} else {
+																return false;
+																}
+															},
+														),
 												
 												
 												})}
@@ -251,7 +261,7 @@ class CreateCurrencyConvert extends React.Component {
 															<Row>
 																	<Col >
 																		<FormGroup className="mb-3">
-																			<Label htmlFor="active"><span className="text-danger">*</span>{strings.Status}</Label>
+																			<Label htmlFor="active"><span className="text-danger">* </span>{strings.Status}</Label>
 																			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 																				<FormGroup check inline>
 																					<div className="custom-radio custom-control">
@@ -388,64 +398,58 @@ class CreateCurrencyConvert extends React.Component {
 																									: ''
 																							}
 																						/>
-																						{props.errors.exchangecurrencyCode &&
-																							props.touched.exchangecurrencyCode && (
+																						{props.errors.currencyCode &&
+																							props.touched.currencyCode && (
 																								<div className="invalid-feedback">
-																									{props.errors.exchangecurrencyCode}
+																									{props.errors.currencyCode}
 																								</div>
 																							)}
 																			</FormGroup>
 																				</Col>
 																				<FormGroup className="mt-5"><label><b>=</b></label>	</FormGroup>
-																	<Col lg={3}>
+																				<Col lg={3}>
 																	<FormGroup className="mt-2">
-																	<Label htmlFor="Exchange rate">
+																	<Label htmlFor="exchangeRate">
 																	{strings.Exchangerate}
-																	{/* <i
-																		id="ProductcatcodeTooltip"
-																		className="fa fa-question-circle ml-1"
-																	></i>
-																	<UncontrolledTooltip
-																		placement="right"
-																		target="ProductcatcodeTooltip"
-																	>
-																		Product Category Code - Unique identifier code of the product 
-																	</UncontrolledTooltip> */}
 																	</Label>
 																	<Input
-																	type="number"
-																	maxLength='20'
-																	id="exchangeRate"
-																	name="exchangeRate"
-																	placeholder={strings.Enter+strings.Exchangerate}
-																	onChange={(option) => {
-																		if (
-																			option.target.value === '' ||
-																			this.regDecimal.test(option.target.value)
-																		) {
-																			handleChange('exchangeRate')(
-																				option,
-																			);
-																		}
-																	}}
-																	onBlur={handleBlur}
-																	value={values.exchangeRate}
-																	className={
-																		errors.exchangeRate &&
-																		touched.exchangeRate
-																			? 'is-invalid'
-																			: ''
-																	}
-																	/>
-															
-																	{errors.exchangeRate &&
+																			type="text"
+																			maxLength="20"
+																			id="exchangeRate"
+																			name="exchangeRate"
+																			placeholder={strings.Enter+strings.Exchangerate}
+																		
+																			onChange={(option) => {
+																				if (
+																					option.target.value === '' ||
+																					this.regDecimal.test(
+																						option.target.value,
+																					)
+																				) {
+																					props.handleChange('exchangeRate')(
+																						option,
+																					);
+																				}
+																			}}
+																			value={values.exchangeRate}
+																			className={
+																				errors.exchangeRate &&
+																				touched.exchangeRate
+																					? 'is-invalid'
+																					: ''
+																			}
+																		/>
+																			{errors.exchangeRate &&
 																	touched.exchangeRate && (
 																		<div className="invalid-feedback">
 																			{errors.exchangeRate}
 																		</div>
 																	)}
-																	</FormGroup >
-																	</Col>
+																	</FormGroup>
+																		</Col>	
+																	
+
+																
 																	<Col lg={3}>
 																		<FormGroup className="mt-2">
 																		<Label htmlFor="currencyName">

@@ -85,7 +85,7 @@ class ProductModal extends React.Component {
 		};
 		this.formRef = React.createRef();  
 		this.regEx = /^[0-9\d]+$/;
-		this.regExBoth = /[a-zA-Z0-9-./\\|]+$/;
+		this.regExBoth = /[ +a-zA-Z0-9-./\\|!@#$%^&*()_<>,]+$/;
 		// this.regExBoth = /[a-zA-Z0-9 ]+$/;
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
@@ -111,6 +111,7 @@ class ProductModal extends React.Component {
 	
 	console.log(this.state.employeeCode)
 	}
+
 	componentDidMount = () => {
 		this.initializeData();
 	};
@@ -164,7 +165,6 @@ class ProductModal extends React.Component {
 			productPriceType,
 			vatCategoryId,
 			vatIncluded,
-			isActive,
 
 			...(salesUnitPrice.length !== 0 && {
 				salesUnitPrice,
@@ -263,7 +263,7 @@ class ProductModal extends React.Component {
 					className="modal-success contact-modal"
 				>
 					<Formik
-					ref={this.formRef}
+						ref={this.formRef}
 						initialValues={initValue}
 						onSubmit={(values, { resetForm }) => {
 							this.handleSubmit(values, resetForm);

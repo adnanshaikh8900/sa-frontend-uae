@@ -161,8 +161,9 @@ class CreateEmployment extends React.Component {
     .then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert(
-          'success',
-           'New Employment Created Successfully')
+          'success', 
+          res.data ? res.data.message :'Created Successfully'
+          )
         if (this.state.createMore) {
           this.setState({
             createMore: false
@@ -173,7 +174,10 @@ class CreateEmployment extends React.Component {
         }
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
+      this.props.commonActions.tostifyAlert(
+        'error',
+         err.data.message ? err.data.message :'Created Unsuccessfully'
+         )
     })
   }
 
@@ -242,14 +246,13 @@ class CreateEmployment extends React.Component {
                        <Row>
                          
                            <Col lg={10}>
-                      
-                          
                             <Row  >
                             <Col md="4">
                                 <FormGroup>
                                   <Label htmlFor="select">Department </Label>
                                   <Input
                                     type="text"
+                                    maxLength="100"
                                     id="department"
                                     name="department"
                                     value={props.values.department}
@@ -266,7 +269,7 @@ class CreateEmployment extends React.Component {
                               </Col>
                               <Col md="4">
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="dateOfJoining"><span className="text-danger">*</span>Date Of Joining</Label>
+                                  <Label htmlFor="dateOfJoining"><span className="text-danger">* </span>Date Of Joining</Label>
                                   <DatePicker
                                     className={`form-control ${props.errors.dateOfJoining && props.touched.dateOfJoining ? "is-invalid" : ""}`}
                                     id="dateOfJoining"
@@ -274,7 +277,7 @@ class CreateEmployment extends React.Component {
                                     placeholderText="Select Date Of Joining"
                                     showMonthDropdown
                                     showYearDropdown 
-                                    dateFormat="dd/MM/yyyy"
+                                    dateFormat="dd-MM-yyyy"
                                     dropdownMode="select"
                                     selected={props.values.dateOfJoining}
                                     value={props.values.dateOfJoining}
@@ -288,13 +291,14 @@ class CreateEmployment extends React.Component {
                                 </FormGroup>
                               </Col>
                             </Row>
-                     
+
                             <Row className="row-wrapper">
                             <Col md="4">
                                 <FormGroup>
                                   <Label htmlFor="select">Employee Code </Label>
                                   <Input 
                                     type="text"
+                                    maxLength="50"
                                     id="employeeCode"
                                     name="employeeCode"
                                     value={props.values.employeeRole}
@@ -317,7 +321,7 @@ class CreateEmployment extends React.Component {
                                     id="labourCard"
                                     name="labourCard"
                                     value={props.values.labourCard}
-                                    placeholder="Enter labour Card"
+                                    placeholder="Enter Labour Card"
                                     onChange={(option) => {
                                       if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('labourCard')(option) }
                                     }}
@@ -382,6 +386,7 @@ class CreateEmployment extends React.Component {
                                   <Label htmlFor="gender">Passport Number </Label>
                                   <Input 
                                     type="text"
+                                    maxLength="9"
                                     id="passportNumber"
                                     name="passportNumber"
                                     placeholder="Enter Present Address "
@@ -400,7 +405,7 @@ class CreateEmployment extends React.Component {
                               </Col> 
                               <Col md="4">
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="passportExpiryDate"><span className="text-danger">*</span>Passport expiry Date</Label>
+                                  <Label htmlFor="passportExpiryDate"><span className="text-danger">* </span>Passport expiry Date</Label>
                                   <DatePicker
                                     className={`form-control ${props.errors.dateOfJoining && props.touched.dateOfJoining ? "is-invalid" : ""}`}
                                     id="passportExpiryDate"
@@ -408,7 +413,7 @@ class CreateEmployment extends React.Component {
                                     placeholderText="Select passport Expiry Date"
                                     showMonthDropdown
                                     showYearDropdown 
-                                    dateFormat="dd/MM/yyyy"
+                                    dateFormat="dd-MM-yyyy"
                                     dropdownMode="select"
                                     selected={props.values.passportExpiryDate}
                                     value={props.values.passportExpiryDate}
@@ -428,6 +433,7 @@ class CreateEmployment extends React.Component {
                                   <Label htmlFor="gender">Visa Number </Label>
                                   <Input 
                                     type="text" 
+                                    maxLength="9"
                                     id="visaNumber"
                                     name="visaNumber"
                                     placeholder="Enter Present Address "
@@ -446,7 +452,7 @@ class CreateEmployment extends React.Component {
                               </Col>
                               <Col md="4">
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="visaExpiryDate"><span className="text-danger">*</span>Visa ExpiryDate</Label>
+                                  <Label htmlFor="visaExpiryDate"><span className="text-danger">* </span>Visa ExpiryDate</Label>
                                   <DatePicker 
                                     className={`form-control ${props.errors.visaExpiryDate && props.touched.visaExpiryDate ? "is-invalid" : ""}`}
                                     id="visaExpiryDate"
@@ -454,7 +460,7 @@ class CreateEmployment extends React.Component {
                                     placeholderText="Select visa Expiry Date"
                                     showMonthDropdown
                                     showYearDropdown 
-                                    dateFormat="dd/MM/yyyy"
+                                    dateFormat="dd-MM-yyyy"
                                     dropdownMode="select"
                                     selected={props.values.visaExpiryDate}
                                     value={props.values.visaExpiryDate}
@@ -472,7 +478,8 @@ class CreateEmployment extends React.Component {
                                 <FormGroup>
                                   <Label htmlFor="gender">Gross Salary </Label>
                                   <Input  
-                                    type="text" 
+                                    type="text"
+                                    maxLength="14,2"
                                     id="grossSalary"
                                     name="grossSalary"
                                     placeholder="Enter  grossSalary "

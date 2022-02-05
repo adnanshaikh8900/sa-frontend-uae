@@ -69,7 +69,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 			view: false,
 			initValue: {
 				startDate: moment().startOf('month').format('DD/MM/YYYY'),
-				endDate: moment().endOf('month').format('DD/MM/YYYY'),
+				endDate: moment().endOf('month').format('DD-MM-YYYY'),
 				reportBasis: 'ACCRUAL',
 				chartOfAccountId: '',
 			},
@@ -87,7 +87,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 			{ label: strings1.Date, value: 'date', sort: true },
 			{ label: strings1.TransactionType, value: 'transcation_type', sort: false },
 			{ label: strings1.Account, value: 'name', sort: true },
-			{label: strings1.Transaction+" "+strings1.Details,value: 'postingReferenceTypeEnum',sort: true,},
+			{ label: strings1.Transaction+" "+strings1.Details,value: 'postingReferenceTypeEnum',sort: true,},
 			{ label: strings1.Transaction+"#", value: 'transactonRefNo', sort: true },
 			{ label: strings1.Reference+"#", value: 'referenceNo', sort: false,align: 'right'  },
 			{ label: strings1.Debit, value: 'debitAmount', sort: false, align: 'right' },
@@ -145,18 +145,31 @@ class DetailedGeneralLedgerReport extends React.Component {
 			});
 	};
 
-	exportFile = (csvData, fileName, type) => {
-		const fileType =
-			type === 'xls'
-				? 'application/vnd.ms-excel'
-				: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-		const fileExtension = `.${type}`;
-		const ws = XLSX.utils.json_to_sheet(csvData);
-		const wb = { Sheets: { data: ws }, SheetNames: ['data'] };
-		const excelBuffer = XLSX.write(wb, { bookType: type, type: 'array' });
-		const data = new Blob([excelBuffer], { type: fileType });
-		FileSaver.saveAs(data, fileName + fileExtension);
-	};
+	exportFile = () => {
+
+	
+		let dl =""
+		let fn =""
+		let type="csv"
+		var elt = document.getElementById('tbl_exporttable_to_xls');												
+		var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
+		return dl ?
+		  XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
+		  XLSX.writeFile(wb, fn || ('Detailed General Ledger Report.'+ (type || 'csv')));
+
+	   }
+
+	   exportExcelFile  = () => 
+	   {   let dl =""
+		   let fn =""
+		   let type="xlsx"
+		   var elt = document.getElementById('tbl_exporttable_to_xls');												
+		   var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
+		   return dl ?
+			 XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
+			 XLSX.writeFile(wb, fn || ('Detailed General Ledger Report.'+ (type || 'xlsx')));
+   
+	   }
 
 	toggle = () =>
 		this.setState((prevState) => {
@@ -332,14 +345,27 @@ class DetailedGeneralLedgerReport extends React.Component {
 													<DropdownToggle caret>Export As</DropdownToggle>
 													<DropdownMenu>
 														
+													<DropdownItem>
+															
+															<span
+															style={{
+																border: 0,
+    															padding: 0,
+																backgroundColor:"white !important"
+															}}
+														     onClick={()=>{this.exportFile()}}
+															>CSV (Comma Separated Value)</span>
+														</DropdownItem>
 														<DropdownItem>
-															<CSVLink
-																data={csvData}
-																className="csv-btn"
-																filename={'Detailed General Ledger Report.csv'}
-															>
-																CSV (Comma Separated Value)
-															</CSVLink>
+															
+															<span
+															style={{
+																border: 0,
+    															padding: 0,
+																backgroundColor:"white !important"
+															}}
+														     onClick={()=>{this.exportExcelFile()}}
+															>Excel</span>
 														</DropdownItem>
 														<DropdownItem onClick={this.exportPDFWithComponent}>
 															Pdf
@@ -454,7 +480,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 												<b style ={{ fontSize: '18px'}}>{strings.DetailedGeneralLedger}</b>
 												<br/>
 												
-												{strings.From } {initValue.startDate} {strings.To} {initValue.endDate}
+												{strings.From} {(initValue.startDate).replaceAll("/","-")} {strings.To} {initValue.endDate.replaceAll("/","-")} 
 											</div>	
 									</div>
 									<div className='mr-3'>
@@ -484,7 +510,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 									{loading ? (
 										<Loader />
 									) : (
-										<div className="table-wrapper">
+										<div id="tbl_exporttable_to_xls" className="table-wrapper">
 											<Table responsive>
 												<thead>
 													<tr className="header-row">
@@ -492,9 +518,9 @@ class DetailedGeneralLedgerReport extends React.Component {
 															return (
 																<th
 																	key={index}
-																	style={{ fontWeight: '600' ,textAlign:'center'}}
+																	style={{ fontWeight: '600' ,textAlign:'center', color:'black'}}
 																	className={column.align ? 'text-center' : ''}
-																	className="table-header-color"
+																	className="table-header-bg"
 																>
 																	<span>{column.label}</span>
 																	{/* // onClick={() => { column.sort && this.onSort(column.value) }} */}
@@ -534,7 +560,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 																			return (
 																				<tr key={index}>
 																					<td style={{ width: '12%', textAlign: 'center'}}>
-																						{row.date}
+																						{row.date.replaceAll("/","-")}
 																					</td>
 																					<td style={{ width: '18%', textAlign: 'center'}}>
 																						{/* {row.transactionTypeName} */}

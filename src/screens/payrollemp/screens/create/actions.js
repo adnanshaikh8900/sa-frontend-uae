@@ -351,6 +351,7 @@ export const saveSalaryComponent = (obj) => {
 			method: 'GET',
 			url: `/rest/bank/getBankNameList`,
 		};
+
 		return authApi(data)
 			.then((res) => {
 				return res;

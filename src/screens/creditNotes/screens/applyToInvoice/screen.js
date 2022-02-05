@@ -139,7 +139,7 @@ class ApplyToInvoice extends React.Component {
 			{ label: 'Net 30 Days', value: 'NET_30' },
 			{ label: 'Due on Receipt', value: 'DUE_ON_RECEIPT' },
 		];
-		this.placelist = [
+			this.placelist = [
 			{ label: 'Abu Dhabi', value: '1' },
 			{ label: 'Dubai', value: '2' },
 			{ label: 'Sharjah', value: '3' },
@@ -362,7 +362,7 @@ min="0"
 	};
 
 	renderDate = (cell, rows) => {
-		return moment(rows.date).format('DD/MM/YYYY');
+		return moment(rows.date).format('DD-MM-YYYY');
 	};
 	renderCreditAmount = (cell, row, extraData) => {
 		return (
@@ -771,11 +771,11 @@ min="0"
 		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 		const values = value
 			? value
-			: moment(props.values.invoiceDate, 'DD/MM/YYYY').toDate();
+			: moment(props.values.invoiceDate, 'DD-MM-YYYY').toDate();
 		if (temp && values) {
 			const date = moment(values)
 				.add(temp - 1, 'days')
-				.format('DD/MM/YYYY');
+				.format('DD-MM-YYYY');
 			props.setFieldValue('invoiceDueDate', date, true);
 		}
 	};
@@ -848,13 +848,13 @@ min="0"
 	// 	formData.append(
 	// 		'invoiceDate',
 	// 		typeof invoiceDate === 'string'
-	// 			? moment(invoiceDate, 'DD/MM/YYYY').toDate()
+	// 			? moment(invoiceDate, 'DD-MM-YYYY').toDate()
 	// 			: invoiceDate,
 	// 	);
 	// 	formData.append(
 	// 		'invoiceDueDate',
 	// 		typeof invoiceDueDate === 'string'
-	// 			? moment(invoiceDueDate, 'DD/MM/YYYY').toDate()
+	// 			? moment(invoiceDueDate, 'DD-MM-YYYY').toDate()
 	// 			: invoiceDueDate,
 	// 	);
 
@@ -939,7 +939,7 @@ handleSubmit=(data)=>{
 			this.initializeData();
 			this.props.commonActions.tostifyAlert(
 				'success',
-				'Tax Credit Note Applied to Invoices Successfully',
+				res.data ? res.data.message :'Tax Credit Note Applied to Invoices Successfully',
 			);
 			if (this.state.invoice_list && this.state.invoice_list.length > 0) {
 				this.setState({
@@ -1087,7 +1087,7 @@ handleSubmit=(data)=>{
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Data Deleted Successfully',
+						res.data ? res.data.message :'Invoice Deleted Successfully',
 					);
 					this.props.history.push('/admin/income/credit-notes');
 				}
@@ -1095,7 +1095,7 @@ handleSubmit=(data)=>{
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'Invoice Deleted Unsuccessfully',
 				);
 			});
 	};

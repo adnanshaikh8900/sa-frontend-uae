@@ -230,7 +230,7 @@ class Payment extends React.Component {
 
 	renderDate = (cell, rows) => {
 		return rows['paymentDate'] !== null
-			? moment(rows['paymentDate']).format('DD/MM/YYYY')
+			? moment(rows['paymentDate']).format('DD-MM-YYYY')
 			: '';
 	};
 
@@ -335,6 +335,8 @@ class Payment extends React.Component {
 		})
 
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="payment-screen">
 				<div className="animated fadeIn">
 					{dialog}
@@ -430,7 +432,7 @@ class Payment extends React.Component {
 														showMonthDropdown
 														showYearDropdown
 														autoComplete="off"
-														dateFormat="dd/MM/yyyy"
+														dateFormat="dd-MM-yyyy"
 														dropdownMode="select"
 														value={filterData.paymentDate}
 														onChange={(value) => {
@@ -563,6 +565,7 @@ min="0"
 						</CardBody>
 					</Card>
 				</div>
+			</div>
 			</div>
 		);
 	}

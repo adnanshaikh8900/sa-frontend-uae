@@ -30,7 +30,7 @@ import * as CustomerInvoiceActions from '../../../customer_invoice/actions';
 
 import { SupplierModal } from '../../sections';
 import { ProductModal } from '../../../customer_invoice/sections';
-import { InvoiceNumberModel } from '../../../customer_invoice/sections';
+import Switch from "react-switch";
 
 
 import 'react-datepicker/dist/react-datepicker.css';
@@ -50,6 +50,7 @@ const mapStateToProps = (state) => {
 		vat_list: state.quotation.vat_list,
 		product_list: state.quotation.product_list,
 		supplier_list: state.quotation.supplier_list,
+		excise_list: state.quotation.excise_list,
 		country_list: state.quotation.country_list,
 		product_category_list: state.product.product_category_list,
 		universal_currency_list: state.common.universal_currency_list,
@@ -113,14 +114,18 @@ class CreateQuotation extends React.Component {
 					quantity: 1,
 					unitPrice: '',
 					vatCategoryId: '',
+					exciseTaxId:'',
+					exciseAmount:'',
 					subTotal: 0,
+					vatAmount:0,
 					productId: '',
-					
-					
-				},	
+					isExciseTaxExclusive:'',
+				},
 			],
 			idCount: 0,
+			checked:false,
 			initValue: {
+				total_excise: 0,
 				contact_po_number: '',
 				currencyCode: '',
 				poApproveDate: new Date(),
@@ -139,7 +144,7 @@ class CreateQuotation extends React.Component {
 						vatCategoryId: '',
 						subTotal: 0,
 						productId: '',
-					
+						isExciseTaxExclusive:''
 					},
 				],
 				quotation_Number: '',
@@ -189,7 +194,7 @@ class CreateQuotation extends React.Component {
 			{ label: 'Net 30 Days', value: 'NET_30' },
 			{ label: 'Due on Receipt', value: 'DUE_ON_RECEIPT' },
 		];
-		this.placelist = [
+			this.placelist = [
 			{ label: 'Abu Dhabi', value: '1' },
 			{ label: 'Dubai', value: '2' },
 			{ label: 'Sharjah', value: '3' },
@@ -226,6 +231,7 @@ class CreateQuotation extends React.Component {
 				render={({ field, form }) => (
 					<Input
 						type="text"
+						maxLength="250"
 						value={row['description'] !== '' ? row['description'] : ''}
 						onChange={(e) => {
 							this.selectItem(
@@ -255,7 +261,75 @@ class CreateQuotation extends React.Component {
 			/>
 		);
 	};
+	renderExcise = (cell, row, props) => {
+		const { excise_list } = this.props;
+		let idx;
+		this.state.data.map((obj, index) => {
+			if (obj.id === row.id) {
+				idx = index;
+			}
+			return obj;
+		});
 
+		return (
+			<Field
+				name={`lineItemsString.${idx}.exciseTaxId`}
+				render={({ field, form }) => (
+					<Select
+						styles={customStyles}
+						isDisabled={row.exciseTaxId === 0 || row.isExciseTaxExclusive === false}
+						
+						options={
+							excise_list
+								? selectOptionsFactory.renderOptions(
+										'name',
+										'id',
+										excise_list,
+										'Excise',
+								  )
+								: []
+						}
+						value={
+				
+							excise_list &&
+							selectOptionsFactory
+								.renderOptions('name', 'id', excise_list, 'Excise')
+								.find((option) => option.value === +row.exciseTaxId)
+						}
+						id="exciseTaxId"
+						placeholder={strings.Select+strings.Vat}
+						onChange={(e) => {
+							debugger
+							this.selectItem(
+								e.value,
+								row,
+								'exciseTaxId',
+								form,
+								field,
+								props,
+							);
+							
+							this.updateAmount(
+								this.state.data,
+								props,
+							);
+						}}
+						className={`${
+							props.errors.lineItemsString &&
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)].exciseTaxId &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)].exciseTaxId
+								? 'is-invalid'
+								: ''
+						}`}
+					/>
+				)}
+			/>
+		);
+	};
 	renderQuantity = (cell, row, props) => {
 		let idx;
 		this.state.data.map((obj, index) => {
@@ -272,7 +346,7 @@ class CreateQuotation extends React.Component {
 					<div>
 						<Input
 							type="text"
-min="0"
+							min="0"
 							maxLength="10"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
@@ -333,8 +407,8 @@ min="0"
 				render={({ field, form }) => (
 					<Input
 					type="text"
-min="0"
-						maxLength="10"
+					min="0"
+						maxLength="14,2"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -379,7 +453,23 @@ min="0"
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// );
-		return row.subTotal === 0 ? this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.subTotal === 0 ? this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 });
+	};
+
+	renderVatAmount = (cell, row, extraData) => {
+		// return row.subTotal === 0 ? (
+		// 	<Currency
+		// 		value={row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// ) : (
+		// 	<Currency
+		// 		value={row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// );
+		let value =  row.vatAmount && row.vatAmount != 0 ?  row.vatAmount:0
+		return value === 0 ? this.state.supplier_currency_symbol +" "+ value.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ value.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 });
 	};
 
 	componentDidMount = () => {
@@ -410,6 +500,7 @@ min="0"
 			this.setState({prefixData:response.data
 		});
 		});
+		this.props.requestForQuotationAction.getExciseList();
 		this.props.requestForQuotationAction.getVatList();
 		this.props.requestForQuotationAction.getCountryList();
 		this.props.requestForQuotationAction.getProductList();
@@ -470,6 +561,10 @@ min="0"
 					unitPrice: '',
 					vatCategoryId: '',
 					subTotal: 0,
+					exciseTaxId:'',
+					// discountType:'FIXED',
+					vatAmount:0,
+					// discount: 0,
 					productId: '',
 				}),
 				idCount: this.state.idCount + 1,
@@ -503,7 +598,8 @@ min="0"
 		if (
 			name === 'unitPrice' ||
 			name === 'vatCategoryId' ||
-			name === 'quantity'
+			name === 'quantity'||
+			name === 'exciseTaxId'
 		) {
 			form.setFieldValue(
 				field.name,
@@ -593,7 +689,8 @@ min="0"
 				obj['unitPrice'] = result.unitPrice;
 				obj['vatCategoryId'] = result.vatCategoryId;
 				obj['description'] = result.description;
-				
+				obj['exciseTaxId'] = result.exciseTaxId;
+				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive;
 				idx = index;
 			}
 			return obj;
@@ -606,6 +703,11 @@ min="0"
 		form.setFieldValue(
 			`lineItemsString.${idx}.unitPrice`,
 			result.unitPrice,
+			true,
+		);
+		form.setFieldValue(
+			`lineItemsString.${idx}.exciseTaxId`,
+			result.exciseTaxId,
 			true,
 		);
 		form.setFieldValue(
@@ -785,11 +887,11 @@ min="0"
 	// 	const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 	// 	const values = value
 	// 		? value
-	// 		: moment(props.values.invoiceDate, 'DD/MM/YYYY').toDate();
+	// 		: moment(props.values.invoiceDate, 'DD-MM-YYYY').toDate();
 	// 	if (temp && values) {
 	// 		const date = moment(values)
 	// 			.add(temp - 1, 'days')
-	// 			.format('DD/MM/YYYY');
+	// 			.format('DD-MM-YYYY');
 	// 		props.setFieldValue('invoiceDueDate', date, true);
 	// 	}
 	// };
@@ -811,44 +913,94 @@ min="0"
 	};
 
 	updateAmount = (data, props) => {
-		const { vat_list } = this.props;
+		const { vat_list , excise_list} = this.props;
 		const { discountPercentage, discountAmount } = this.state;
-		console.log(discountAmount);
 		let total_net = 0;
+		let total_excise = 0;
 		let total = 0;
 		let total_vat = 0;
+		let net_value = 0;
+		let discount = 0;
 		data.map((obj) => {
 			const index =
 				obj.vatCategoryId !== ''
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
-			if (props.values.discountType.value === 'PERCENTAGE') {
-				var val =
-					((+obj.unitPrice -
-						+((obj.unitPrice * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2 })) *
-						vat *
-						obj.quantity) /
-					100;
-			} else if (props.values.discountType.value === 'FIXED') {
-				var val =
-					(obj.unitPrice * obj.quantity - discountAmount / data.length) *
-					(vat / 100);
-			} else {
-				var val = (+obj.unitPrice * vat * obj.quantity) / 100;
+
+			//Excise calculation
+			if(obj.exciseTaxId !=  0){
+			if(obj.isExciseTaxExclusive === true){
+				if(obj.exciseTaxId === 1){
+				const value = +(obj.unitPrice) / 2 ;
+					net_value = parseFloat(obj.unitPrice) + parseFloat(value) ;
+					obj.exciseAmount = parseFloat(value) * obj.quantity;
+				}else if (obj.exciseTaxId === 2){
+					const value = obj.unitPrice;
+					net_value = parseFloat(obj.unitPrice) +  parseFloat(value) ;
+					obj.exciseAmount = parseFloat(value) * obj.quantity;
+				}
+				else{
+					net_value = obj.unitPrice
+				}
+			}	else{
+				if(obj.exciseTaxId === 1){
+					const value = obj.unitPrice / 3
+					obj.exciseAmount = parseFloat(value) * obj.quantity;
+				net_value = obj.unitPrice}
+				else if (obj.exciseTaxId === 2){
+					const value = obj.unitPrice / 2
+					obj.exciseAmount = parseFloat(value) * obj.quantity;
+				net_value = obj.unitPrice}
+				else{
+					net_value = obj.unitPrice
+				}
 			}
-			total_net = +(total_net + +obj.unitPrice * obj.quantity);
+		}else{
+			net_value = obj.unitPrice;
+			obj.exciseAmount = 0
+		}
+			//vat calculation
+			if (obj.discountType === 'PERCENTAGE') {
+				var val =
+				((+net_value -
+				 (+((net_value * obj.discount)) / 100)) *
+					vat *
+					obj.quantity) /
+				100;
+
+				var val1 =
+				((+net_value -
+				 (+((net_value * obj.discount)) / 100)) * obj.quantity ) ;
+			} else if (obj.discountType === 'FIXED') {
+				var val =
+						 (net_value * obj.quantity - obj.discount ) *
+					(vat / 100);
+
+					var val1 =
+					((net_value * obj.quantity )- obj.discount )
+
+			} else {
+				var val = (+net_value * vat * obj.quantity) / 100;
+				var val1 = net_value * obj.quantity
+			}
+
+			//discount calculation
+			discount = +(discount +(net_value * obj.quantity)) - parseFloat(val1)
+			total_net = +(total_net + net_value * obj.quantity);
 			total_vat = +(total_vat + val);
+			obj.vatAmount = val
 			obj.subTotal =
-				obj.unitPrice && obj.vatCategoryId ? (+obj.unitPrice * obj.quantity)+total_vat : 0;
+			net_value && obj.vatCategoryId ? parseFloat(val1) + parseFloat(val) : 0;
+			total_excise = +(total_excise + obj.exciseAmount)
 			total = total_vat + total_net;
 			return obj;
 		});
 
-		const discount =
-			props.values.discountType.value === 'PERCENTAGE'
-				? +((total_net * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2 })
-				: discountAmount;
+		// const discount =
+		// 	props.values.discountType.value === 'PERCENTAGE'
+		// 		? +((total_net * discountPercentage) / 100)
+		// 		: discountAmount;
 		this.setState(
 			{
 				data,
@@ -857,16 +1009,14 @@ min="0"
 					...{
 						total_net: discount ? total_net - discount : total_net,
 						invoiceVATAmount: total_vat,
-						discount: total_net > discount ? discount : 0,
-						totalAmount: total_net > discount ? total - discount : total,
+						discount:  discount ? discount : 0,
+						totalAmount: total_net > discount ? total - discount : total - discount,
+						total_excise: total_excise
 					},
+
 				},
 			},
-			() => {
-				if (props.values.discountType.value === 'PERCENTAGE') {
-					this.formRef.current.setFieldValue('discount', discount);
-				}
-			},
+
 		);
 	};
 
@@ -878,6 +1028,7 @@ min="0"
 			customerId,
 			quotation_Number,
 			notes,
+			placeOfSupplyId
 		} = data;
 		const { term } = this.state;
 
@@ -890,6 +1041,11 @@ min="0"
 			'quotaionExpiration',
 			quotaionExpiration ? quotaionExpiration : '',
 		);
+		formData.append('totalExciseAmount', this.state.initValue.total_excise);
+		if (placeOfSupplyId) {
+			formData.append('placeOfSupplyId', placeOfSupplyId.value ? placeOfSupplyId.value : placeOfSupplyId);
+		};
+		formData.append('exciseType', this.state.checked);
 		formData.append('notes', notes ? notes : '');
 		formData.append('type', 6);
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
@@ -907,7 +1063,7 @@ min="0"
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'New Quotation Created Successfully.',
+					res.data ? res.data.message :'New Quotation Created Successfully.',
 				);
 				if (this.state.createMore) {
 					this.setState(
@@ -957,7 +1113,7 @@ min="0"
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'New Quotation Created Unsuccessfully',
 				);
 			});
 	};
@@ -1072,6 +1228,7 @@ min="0"
 							quantity: 1,
 							unitPrice: res.data[0].unitPrice,
 							vatCategoryId: res.data[0].vatCategoryId,
+							exciseTaxId: res.data[0].exciseTaxId,
 							subTotal: res.data[0].unitPrice,
 							productId: res.data[0].id,
 						},
@@ -1151,7 +1308,25 @@ min="0"
 			});
 	};
 
+	getTaxTreatment= (opt) => {
 
+		let customer_taxTreatmentId = 0;
+		let customer_item_taxTreatment = ''
+		this.props.supplier_list.map(item => {
+			if(item.label.contactId == opt) {
+				this.setState({
+					customer_taxTreatment: item.label.taxTreatment.id,
+					customer_taxTreatment_des: item.label.taxTreatment.taxTreatment,
+					// customer_currency_symbol: item.label.currency.currencyIsoCode,
+				});
+
+				customer_taxTreatmentId = item.label.taxTreatment.id;
+				customer_item_taxTreatment = item.label.currency
+			}
+		})
+	
+		return customer_taxTreatmentId;
+	}
 
 	render() {
 		strings.setLanguage(this.state.language);
@@ -1172,6 +1347,7 @@ min="0"
 			tmpSupplier_list.push(obj)
 		})
 
+		
 		return (
 			<div className="create-supplier-invoice-screen">
 				<div className=" fadeIn">
@@ -1209,6 +1385,9 @@ min="0"
 														errors.quotation_Number =
 															'Quotation Number already exists';
 													}
+													if (values.quotation_Number==='') {
+														errors.quotation_Number = 'Quotation Number is required';
+													}
 													return errors;
 												}}
 												validationSchema={Yup.object().shape(
@@ -1237,7 +1416,7 @@ min="0"
 																	.required('Value is Required')
 																	.test(
 																		'quantity',
-																		'Quantity Should be Greater than 1',
+																		'Quantity should be greater than 0',
 																		(value) => {
 																			if (value > 0) {
 																				return true;
@@ -1277,11 +1456,12 @@ min="0"
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="quotation_Number">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.QuotationNumber}
 																	</Label>
 																	<Input
 																		type="text"
+																		maxLength="50"
 																		id="quotation_Number"
 																		name="quotation_Number"
 																		placeholder={strings.InvoiceNumber}
@@ -1308,10 +1488,12 @@ min="0"
 																		)}
 																</FormGroup>
 															</Col>
+															</Row>
+															<Row>
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="customerId">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.CustomerName}
 																	</Label>
 																	<Select
@@ -1341,6 +1523,7 @@ min="0"
 																		onChange={(option) => {
 																			if (option && option.value) {
 																				this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
+																				this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(option.value), true);
 																				this.setExchange( this.getCurrency(option.value) );
 																				props.handleChange('customerId')(option);
 																			} else {
@@ -1363,29 +1546,117 @@ min="0"
 																		)}
 																</FormGroup>
 															</Col>
-															<Col>
-																<Label
-																	htmlFor="customerId"
+														
+																			<Col lg={3}>
+															<Label
+																	htmlFor="contactId"
 																	style={{ display: 'block' }}
 																>
-																	{strings.AddNewCustomer}
+																	{strings.AddNewCustomer} 
 																</Label>
-																<Button
-																	type="button"
-																	color="primary"
-																	className="btn-square"
-																	onClick={this.openSupplierModal}
-																>
-																	<i className="fa fa-plus"></i>{' '}{strings.AddACustomer} 
-																</Button>
+															<Button
+                                                                color="primary"
+                                                                className="btn-square"
+                                                                // style={{ marginBottom: '40px' }}
+                                                                onClick={() =>
+																	//  this.props.history.push(`/admin/payroll/employee/create`,{goto:"Expense"})
+																	this.props.history.push(`/admin/master/contact/create`,{gotoParentURL:"/admin/income/quotation/create"})
+																	}
+
+                                                            >
+                                                                <i className="fas fa-plus mr-1" />
+                                         {strings.AddACustomer}
+									</Button></Col>
+									{this.state.customer_taxTreatment_des ?
+															<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="taxTreatmentid">
+																		Tax Treatment
+																	</Label>
+																	<Input
+																	disabled
+																		styles={customStyles}
+																		id="taxTreatmentid"
+																		name="taxTreatmentid"
+																		value={
+																		this.state.customer_taxTreatment_des
+
+																		}
+																		className={
+																			props.errors.taxTreatmentid &&
+																			props.touched.taxTreatmentid
+																				? 'is-invalid'
+																				: ''
+																		}
+																		onChange={(option) => {
+																		props.handleChange('taxTreatmentid')(option);
+
+																	    }}
+
+																	/>
+																	{props.errors.taxTreatmentid &&
+																		props.touched.taxTreatmentid && (
+																			<div className="invalid-feedback">
+																				{props.errors.taxTreatmentid}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>: ''}
+									<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="placeOfSupplyId">
+																		<span className="text-danger">*</span>
+																		{strings.PlaceofSupply}
+																	</Label>
+																	<Select
+																		styles={customStyles}
+																		id="placeOfSupplyId"
+																		name="placeOfSupplyId"
+																		placeholder={strings.Select+strings.PlaceofSupply}
+																		options={
+																			this.placelist
+																				? selectOptionsFactory.renderOptions(
+																						'label',
+																						'value',
+																						this.placelist,
+																						'Place of Supply',
+																						
+																				  )
+																				: []
+																		}
+																		value={
+																			this.state.placelist
+																						}
+																		className={
+																			props.errors.placeOfSupplyId &&
+																			props.touched.placeOfSupplyId
+																				? 'is-invalid'
+																				: ''
+																		}
+																		onChange={(option) =>
+																			props.handleChange('placeOfSupplyId')(
+																				option,
+																			)
+																		}
+																	/>
+																	{props.errors.placeOfSupplyId &&
+																		props.touched.placeOfSupplyId && (
+																			<div className="invalid-feedback">
+																				{props.errors.placeOfSupplyId}
+																			</div>
+																		)}
+																</FormGroup>
 															</Col>
+															
+													
+															
 														</Row>
 														<hr />
 														<Row>
 															{/* <Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="date">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		Start Date
 																	</Label>
 																	<DatePicker
@@ -1402,7 +1673,7 @@ min="0"
 																		showMonthDropdown
 																		showYearDropdown
 																		dropdownMode="select"
-																		dateFormat="dd/MM/yyyy"
+																		dateFormat="dd-MM-yyyy"
 																		maxDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('poApproveDate')(value);
@@ -1419,7 +1690,7 @@ min="0"
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="due_date">
-																	<span className="text-danger">*</span>
+																	<span className="text-danger">* </span>
 																	{strings.ExpirationDate}
 																	</Label>
 																	<DatePicker
@@ -1431,12 +1702,13 @@ min="0"
 																				? 'is-invalid'
 																				: ''
 																		}`}
+																		minDate={new Date()}
 																		placeholderText={strings.OrderDueDate}
 																		selected={props.values.quotaionExpiration}
 																		showMonthDropdown
 																		showYearDropdown
 																		dropdownMode="select"
-																		dateFormat="dd/MM/yyyy"
+																		dateFormat="dd-MM-yyyy"
 																		
 																		onChange={(value) => {
 																			props.handleChange('quotaionExpiration')(value);
@@ -1454,7 +1726,7 @@ min="0"
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currency">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.Currency}
 																	</Label>
 																	<Select
@@ -1531,13 +1803,14 @@ min="0"
 																	color="primary"
 																	className= "btn-square mr-3"
 																	onClick={(e, props) => {
-																		this.openProductModal(props);
+																		this.props.history.push(`/admin/master/product/create`,{gotoParentURL:"/admin/income/quotation/create"})
 																		}}
-																	
-																>
+													                >
 																	<i className="fa fa-plus"></i>{' '}{strings.Addproduct} 
 																</Button>
-															</Col>
+																</Col>
+
+															
 														</Row>
 														<Row>
 															<Col lg={12}>
@@ -1623,12 +1896,42 @@ min="0"
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
+																	width="10%"
+																		dataField="exciseTaxId"
+																		dataFormat={(cell, rows) =>
+																			this.renderExcise(cell, rows, props)
+																		}
+																	>
+																	Excise
+																	<i
+																			id="ExiseTooltip"
+																			className="fa fa-question-circle ml-1"
+																		></i>
+																		<UncontrolledTooltip
+																			placement="right"
+																			target="ExiseTooltip"
+																		>
+																			If Exise Type for a product is Inclusive
+																			then the Excise dropdown will be Disabled
+																		</UncontrolledTooltip>
+																	</TableHeaderColumn> 
+																	<TableHeaderColumn
 																		dataField="vat"
 																		dataFormat={(cell, rows) =>
 																			this.renderVat(cell, rows, props)
 																		}
 																	>
 																		{strings.VAT}
+																	</TableHeaderColumn>
+																	<TableHeaderColumn
+																	width="10%"
+																	dataField="sub_total"
+																	dataFormat={this.renderVatAmount}
+																	className="text-right"
+																	columnClassName="text-right"
+																	formatExtraData={universal_currency_list}
+																	>
+																	Vat amount
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="sub_total"
@@ -1650,7 +1953,7 @@ min="0"
 																		<Label htmlFor="notes">{strings.Notes}</Label>
 																		<Input
 																			type="textarea"
-																			maxLength="255"
+																			maxLength="250"
 																			name="notes"
 																			id="notes"
 																			rows="6"
@@ -1666,7 +1969,23 @@ min="0"
 
 																<Col lg={4}>
 																	<div className="">
-																	
+																	<div className="total-item p-2" >
+																	{/* style={{display:this.state.checked === true ? '':'none'}} */}
+																			<Row>
+																				<Col lg={6}>
+																					<h5 className="mb-0 text-right">
+																					Total Excise
+																					</h5>
+																				</Col>
+																				<Col lg={6} className="text-right">
+																					<label className="mb-0">
+
+																						{this.state.supplier_currency_symbol} &nbsp;
+																						{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
+																					</label>
+																				</Col>
+																			</Row>
+																		</div>
 																		<div className="total-item p-2">
 																			<Row>
 																				<Col lg={6}>

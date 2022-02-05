@@ -13,6 +13,7 @@ import {
 	Input,
 	Label,
 	NavLink,
+	UncontrolledTooltip,
 } from 'reactstrap';
 import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
@@ -37,7 +38,7 @@ import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
 
 import './style.scss';
 import moment from 'moment';
-import API_ROOT_URL from '../../../../constants/config';
+import Switch from "react-switch";
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 
@@ -46,8 +47,9 @@ const mapStateToProps = (state) => {
 		project_list: state.request_for_quotation.project_list,
 		contact_list: state.request_for_quotation.contact_list,
 		currency_list: state.request_for_quotation.currency_list,
-		vat_list: state.request_for_quotation.vat_list,
+		// vat_list: state.request_for_quotation.vat_list,
 		product_list: state.customer_invoice.product_list,
+		excise_list: state.request_for_quotation.excise_list,
 		supplier_list: state.request_for_quotation.supplier_list,
 		country_list: state.request_for_quotation.country_list,
 		product_category_list: state.product.product_category_list,
@@ -118,6 +120,7 @@ class DetailRequestForQuotation extends React.Component {
 			basecurrency:[],
 			supplier_currency: '',
 			disabled1:false,
+			vat_list:[]
 		};
 
 		// this.options = {
@@ -130,7 +133,7 @@ class DetailRequestForQuotation extends React.Component {
 			{ label: 'Net 30 Days', value: 'NET_30' },
 			{ label: 'Due on Receipt', value: 'DUE_ON_RECEIPT' },
 		];
-		this.placelist = [
+			this.placelist = [
 			{ label: 'Abu Dhabi', value: '1' },
 			{ label: 'Dubai', value: '2' },
 			{ label: 'Sharjah', value: '3' },
@@ -168,6 +171,10 @@ class DetailRequestForQuotation extends React.Component {
 	// }
 
 	componentDidMount = () => {
+		this.props.requestForQuotationAction.getVatList().then((res)=>{
+			if(res.status==200)
+			 this.setState({vat_list:res.data})
+		});
 		this.initializeData();
 	};
 
@@ -195,7 +202,8 @@ class DetailRequestForQuotation extends React.Component {
 							// );
 						});
 						this.getCompanyCurrency();
-						this.props.requestForQuotationAction.getVatList();
+						
+						this.props.requestForQuotationAction.getExciseList();
 						this.props.requestForQuotationAction.getSupplierList(
 							this.state.contactType,
 						);
@@ -207,10 +215,16 @@ class DetailRequestForQuotation extends React.Component {
 								current_rfq_id: this.props.location.state.id,
 								initValue: {
 									rfqReceiveDate: res.data.rfqReceiveDate
-										? moment(res.data.rfqReceiveDate).format('DD/MM/YYYY')
+										? moment(res.data.rfqReceiveDate).format('DD-MM-YYYY')
+										: '',
+										rfqReceiveDate1: res.data.rfqReceiveDate
+										? res.data.rfqReceiveDate
 										: '',
 										rfqExpiryDate: res.data.rfqExpiryDate
-										? moment(res.data.rfqExpiryDate).format('DD/MM/YYYY')
+										? moment(res.data.rfqExpiryDate).format('DD-MM-YYYY')
+										: '',
+										rfqExpiryDate1: res.data.rfqExpiryDate
+										?  res.data.rfqExpiryDate
 										: '',
 										supplierId: res.data.supplierId ? res.data.supplierId : '',
 										rfqNumber: res.data.rfqNumber
@@ -226,8 +240,14 @@ class DetailRequestForQuotation extends React.Component {
 										? res.data.poQuatationLineItemRequestModelList
 										: [],
 										fileName: res.data.fileName ? res.data.fileName : '',
+										
+										placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+										total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : 0,
 								},
-								
+								customer_taxTreatment_des : res.data.taxtreatment ? res.data.taxtreatment : '',
+								placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+								total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
+
 								data: res.data.poQuatationLineItemRequestModelList
 									? res.data.poQuatationLineItemRequestModelList
 									: [],
@@ -237,7 +257,7 @@ class DetailRequestForQuotation extends React.Component {
 							},
 							() => {
 								if (this.state.data.length > 0) {
-									this.calTotalNet(this.state.data);
+									this.updateAmount(this.state.data);
 									const { data } = this.state;
 									const idCount =
 										data.length > 0
@@ -290,9 +310,18 @@ class DetailRequestForQuotation extends React.Component {
 	calTotalNet = (data) => {
 		let total_net = 0;
 		data.map((obj) => {
-			total_net = +(total_net + +obj.unitPrice * obj.quantity);
-			return obj;
-		});
+			if(obj.isExciseTaxExclusive === false){
+
+                total_net = +(total_net + +obj.unitPrice  * obj.quantity);
+
+            }else{
+
+                total_net = +(total_net + +(obj.unitPrice + obj.exciseAmount) * obj.quantity);
+
+            }
+        return obj;
+
+        });
 		this.setState({
 			initValue: Object.assign(this.state.initValue, { total_net }),
 		});
@@ -318,6 +347,9 @@ class DetailRequestForQuotation extends React.Component {
 							vatCategoryId: res.data[0].vatCategoryId,
 							subTotal: res.data[0].unitPrice,
 							productId: res.data[0].id,
+							exciseTaxId: res.data[0].exciseTaxId,
+							transactionCategoryId: res.data[0].transactionCategoryId,
+							transactionCategoryLabel: res.data[0].transactionCategoryLabel,
 						},
 					],
 				},
@@ -351,6 +383,76 @@ class DetailRequestForQuotation extends React.Component {
 		});
 	};
 
+	renderExcise = (cell, row, props) => {
+		const { excise_list } = this.props;
+		let idx;
+		this.state.data.map((obj, index) => {
+			if (obj.id === row.id) {
+				idx = index;
+			}
+			return obj;
+		});
+
+		return (
+			<Field
+				name={`lineItemsString.${idx}.exciseTaxId`}
+				render={({ field, form }) => (
+					<Select
+						styles={customStyles}
+						isDisabled={row.exciseTaxId === 0 || row.isExciseTaxExclusive === false}
+						
+						options={
+							excise_list
+								? selectOptionsFactory.renderOptions(
+										'name',
+										'id',
+										excise_list,
+										'Excise',
+								  )
+								: []
+						}
+						value={
+				
+							excise_list &&
+							selectOptionsFactory
+								.renderOptions('name', 'id', excise_list, 'Excise')
+								.find((option) => option.value === +row.exciseTaxId)
+						}
+						id="exciseTaxId"
+						placeholder={"Select Excise"}
+						onChange={(e) => {
+							debugger
+							this.selectItem(
+								e.value,
+								row,
+								'exciseTaxId',
+								form,
+								field,
+								props,
+							);
+							
+							this.updateAmount(
+								this.state.data,
+								props,
+							);
+						}}
+						className={`${
+							props.errors.lineItemsString &&
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)].exciseTaxId &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)].exciseTaxId
+								? 'is-invalid'
+								: ''
+						}`}
+					/>
+				)}
+			/>
+		);
+	};
+
 	renderDescription = (cell, row, props) => {
 		let idx;
 		this.state.data.map((obj, index) => {
@@ -366,6 +468,7 @@ class DetailRequestForQuotation extends React.Component {
 				render={({ field, form }) => (
 					<Input
 					type="text"
+					maxLength="250"
 						value={row['description'] !== '' ? row['description'] : ''}
 						onChange={(e) => {
 							this.selectItem(
@@ -412,7 +515,8 @@ class DetailRequestForQuotation extends React.Component {
 					<div>
 						<Input
 							type="text"
-min="0"
+							min="0"
+							maxLength="10"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
 								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -474,7 +578,7 @@ min="0"
 				render={({ field, form }) => (
 					<Input
 					type="text"
-
+					maxLength="14,2"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (
@@ -535,6 +639,10 @@ min="0"
 					vatCategoryId: '',
 					subTotal: 0,
 					productId: '',
+					exciseTaxId:'',
+					// discountType:'FIXED',
+					vatAmount:0,
+					// discount: 0,
 				}),
 				idCount: this.state.idCount + 1,
 			},
@@ -546,6 +654,21 @@ min="0"
 				);
 			},
 		);
+	};
+
+	renderVatAmount = (cell, row, extraData) => {
+		// return row.subTotal === 0 ? (
+		// 	<Currency
+		// 		value={row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// ) : (
+		// 	<Currency
+		// 		value={row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// );
+		return row.vatAmount === 0 ? this.state.supplier_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
 	};
 
 	selectItem = (e, row, name, form, field, props) => {
@@ -562,7 +685,8 @@ min="0"
 		if (
 			name === 'unitPrice' ||
 			name === 'vatCategoryId' ||
-			name === 'quantity'
+			name === 'quantity'||
+			name === 'exciseTaxId'
 		) {
 			form.setFieldValue(
 				field.name,
@@ -582,7 +706,7 @@ min="0"
 	};
 
 	renderVat = (cell, row, props) => {
-		const { vat_list } = this.props;
+		const { vat_list } = this.state;
 		let vatList = vat_list.length
 			? [{ id: '', vat: 'Select Vat' }, ...vat_list]
 			: vat_list;
@@ -654,8 +778,9 @@ min="0"
 			if (obj.id === row.id) {
 				obj['unitPrice'] = parseInt(result.unitPrice);
 				obj['vatCategoryId'] = parseInt(result.vatCategoryId);
+				obj['exciseTaxId'] = result.exciseTaxId;
 				obj['description'] = result.description;
-			
+				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive;
 				idx = index;
 			}
 			return obj;
@@ -668,6 +793,11 @@ min="0"
 		form.setFieldValue(
 			`lineItemsString.${idx}.unitPrice`,
 			parseInt(result.unitPrice),
+			true,
+		);
+		form.setFieldValue(
+			`lineItemsString.${idx}.exciseTaxId`,
+			result.exciseTaxId,
 			true,
 		);
 		form.setFieldValue(
@@ -792,44 +922,94 @@ min="0"
 	};
 
 	updateAmount = (data, props) => {
-		const { vat_list } = this.props;
+		const { vat_list , excise_list} = this.state;
+		const { discountPercentage, discountAmount } = this.state;
 		let total_net = 0;
+		let total_excise = 0;
 		let total = 0;
 		let total_vat = 0;
-		const { discountPercentage, discountAmount } = this.state;
-
+		let net_value = 0;
+		let discount = 0;
 		data.map((obj) => {
 			const index =
 				obj.vatCategoryId !== ''
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
-			// let val = (((+obj.unitPrice) * vat) / 100)
-			if (props.values.discountType === 'PERCENTAGE') {
-				var val =
-					((+obj.unitPrice -
-						+((obj.unitPrice * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2 })) *
-						vat *
-						obj.quantity) /
-					100;
-			} else if (props.values.discountType === 'FIXED') {
-				var val =
-					(obj.unitPrice * obj.quantity - discountAmount / data.length) *
-					(vat / 100);
-			} else {
-				var val = (+obj.unitPrice * vat * obj.quantity) / 100;
+
+			//Excise calculation
+			if(obj.exciseTaxId !=  0){
+			if(obj.isExciseTaxExclusive === true){
+				if(obj.exciseTaxId === 1){
+				const value = +(obj.unitPrice) / 2 ;
+					net_value = parseFloat(obj.unitPrice) + parseFloat(value) ;
+					obj.exciseAmount = parseFloat(value) * obj.quantity;
+				}else if (obj.exciseTaxId === 2){
+					const value = obj.unitPrice;
+					net_value = parseFloat(obj.unitPrice) +  parseFloat(value) ;
+					obj.exciseAmount = parseFloat(value) * obj.quantity;
+				}
+				else{
+					net_value = obj.unitPrice
+				}
+			}	else{
+				if(obj.exciseTaxId === 1){
+					const value = obj.unitPrice / 3
+					obj.exciseAmount = parseFloat(value) * obj.quantity;
+				net_value = obj.unitPrice}
+				else if (obj.exciseTaxId === 2){
+					const value = obj.unitPrice / 2
+					obj.exciseAmount = parseFloat(value) * obj.quantity;
+				net_value = obj.unitPrice}
+				else{
+					net_value = obj.unitPrice
+				}
 			}
-			total_net = +(total_net + +obj.unitPrice * obj.quantity);
+		}else{
+			net_value = obj.unitPrice;
+			obj.exciseAmount = 0
+		}
+			//vat calculation
+			if (obj.discountType === 'PERCENTAGE') {
+				var val =
+				((+net_value -
+				 (+((net_value * obj.discount)) / 100)) *
+					vat *
+					obj.quantity) /
+				100;
+
+				var val1 =
+				((+net_value -
+				 (+((net_value * obj.discount)) / 100)) * obj.quantity ) ;
+			} else if (obj.discountType === 'FIXED') {
+				var val =
+						 (net_value * obj.quantity - obj.discount ) *
+					(vat / 100);
+
+					var val1 =
+					((net_value * obj.quantity )- obj.discount )
+
+			} else {
+				var val = (+net_value * vat * obj.quantity) / 100;
+				var val1 = net_value * obj.quantity
+			}
+
+			//discount calculation
+			discount = +(discount +(net_value * obj.quantity)) - parseFloat(val1)
+			total_net = +(total_net + net_value * obj.quantity);
 			total_vat = +(total_vat + val);
+			obj.vatAmount = val
 			obj.subTotal =
-				obj.unitPrice && obj.vatCategoryId ? (+obj.unitPrice * obj.quantity)+total_vat : 0;
+			net_value && obj.vatCategoryId ? parseFloat(val1) + parseFloat(val) : 0;
+			total_excise = +(total_excise + obj.exciseAmount)
 			total = total_vat + total_net;
 			return obj;
 		});
-		const discount =
-			props.values.discountType === 'PERCENTAGE'
-				? +((total_net * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2 })
-				: discountAmount;
+
+		// const discount =
+		// 	props.values.discountType.value === 'PERCENTAGE'
+		// 		? +((total_net * discountPercentage) / 100)
+		// 		: discountAmount;
 		this.setState(
 			{
 				data,
@@ -838,19 +1018,16 @@ min="0"
 					...{
 						total_net: discount ? total_net - discount : total_net,
 						totalVatAmount: total_vat,
-						discount: total_net > discount ? discount : 0,
-						totalAmount: total_net > discount ? total - discount : total,
+						discount:  discount ? discount : 0,
+						totalAmount: total_net > discount ? total - discount : total - discount,
+						total_excise: total_excise
 					},
+
 				},
 			},
-			() => {
-				if (props.values.discountType === 'PERCENTAGE') {
-					this.formRef.current.setFieldValue('discount', discount);
-				}
-			},
+
 		);
 	};
-
 	handleSubmit = (data) => {
 		this.setState({ disabled: true });
 		const { current_rfq_id, term } = this.state;
@@ -863,6 +1040,7 @@ min="0"
 			totalVatAmount,
 			totalAmount,
 			currency,
+			placeOfSupplyId
 		} = data;
 
 		let formData = new FormData();
@@ -872,13 +1050,13 @@ min="0"
 		formData.append(
 			'rfqExpiryDate',
 			typeof rfqExpiryDate === 'string'
-				? moment(rfqExpiryDate, 'DD/MM/YYYY').toDate()
+				? moment(rfqExpiryDate, 'DD-MM-YYYY').toDate()
 				: rfqExpiryDate,
 		);
 		formData.append(
 			'rfqReceiveDate',
 			typeof rfqReceiveDate === 'string'
-				? moment(rfqReceiveDate, 'DD/MM/YYYY').toDate()
+				? moment(rfqReceiveDate, 'DD-MM-YYYY').toDate()
 				: rfqReceiveDate,
 		);
 	
@@ -886,7 +1064,10 @@ min="0"
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
 		formData.append('totalVatAmount', this.state.initValue.totalVatAmount);
 		formData.append('totalAmount', this.state.initValue.totalAmount);
-	
+		formData.append('totalExciseAmount', this.state.initValue.total_excise);
+        if(placeOfSupplyId){
+		formData.append('placeOfSupplyId' , placeOfSupplyId.value ? placeOfSupplyId.value : placeOfSupplyId);}
+
 		if (supplierId) {
 			formData.append('supplierId', supplierId);
 		}
@@ -901,14 +1082,14 @@ min="0"
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Request For Quotation Updated Successfully.',
+					res.data ? res.data.message : 'Request For Quotation Updated Successfully'
 				);
 				this.props.history.push('/admin/expense/request-for-quotation');
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data ? err.data.message : 'Request For Quotation Updated Unsuccessfully'
 				);
 			});
 	};
@@ -941,7 +1122,7 @@ min="0"
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Request For Quotation Deleted Successfully',
+						res.data ? res.data.message : 'Request For Quotation Deleted Successfully'
 					);
 					this.props.history.push('/admin/expense/request-for-quotation');
 				}
@@ -949,7 +1130,7 @@ min="0"
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data ? err.data.message : 'Request For Quotation Deleted Unsuccessfully'
 				);
 			});
 	};
@@ -973,11 +1154,11 @@ min="0"
 		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 		const values = value
 			? value
-			: moment(props.values.invoiceDate, 'DD/MM/YYYY').toDate();
+			: moment(props.values.invoiceDate, 'DD-MM-YYYY').toDate();
 		if (temp && values) {
 			const date = moment(values)
 				.add(temp - 1, 'days')
-				.format('DD/MM/YYYY');
+				.format('DD-MM-YYYY');
 			props.setFieldValue('invoiceDueDate', date, true);
 		}
 	};
@@ -1043,7 +1224,23 @@ min="0"
 				this.setState({ loading: false });
 			});
 	};	
-
+	setDate1 = (props, value) => {		
+		const values = value
+			? value
+			: props.values.rfqExpiryDate1
+		if ( values) {	
+			props.setFieldValue('rfqExpiryDate1', values, true);
+		}
+	};
+	
+	setDate2 = (props, value) => {		
+		const values = value
+			? value
+			: props.values.rfqReceiveDate1
+		if ( values) {	
+			props.setFieldValue('rfqReceiveDate1', values, true);
+		}
+	};
 	setExchange = (value) => {
 		let result = this.props.currency_convert_list.filter((obj) => {
 		return obj.currencyCode === value;
@@ -1099,7 +1296,25 @@ min="0"
 
 		return supplier_currencyCode;
 	}
+	getTaxTreatment= (opt) => {
+		
+		let customer_taxTreatmentId = 0;
+		let customer_item_taxTreatment = ''
+		this.props.supplier_list.map(item => {
+			if(item.label.contactId == opt) {
+				this.setState({
+					customer_taxTreatment: item.label.taxTreatment.id,
+					customer_taxTreatment_des: item.label.taxTreatment.taxTreatment,
+					// customer_currency_symbol: item.label.currency.currencyIsoCode,
+				});
 
+				customer_taxTreatmentId = item.label.taxTreatment.id;
+				customer_item_taxTreatment = item.label.currency
+			}
+		})
+	
+		return customer_taxTreatmentId;
+	}
 	render() {
 		strings.setLanguage(this.state.language);
 		const { data, discountOptions, initValue, loading, dialog } = this.state;
@@ -1114,6 +1329,8 @@ min="0"
 		})
 
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="detail-supplier-invoice-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -1204,7 +1421,7 @@ min="0"
 																		.required('Value is Required')
 																		.test(
 																			'quantity',
-																			'Quantity Should be Greater than 1',
+																			'Quantity should be greater than 0',
 																			(value) => {
 																				if (value > 0) {
 																					return true;
@@ -1244,7 +1461,7 @@ min="0"
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="rfqNumber">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			{strings.RFQNumber}
 																		</Label>
 																		<Input
@@ -1274,10 +1491,12 @@ min="0"
 																			)}
 																	</FormGroup>
 																</Col>
+                                                                </Row>
+                                                                <Row>
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="supplierId">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			{strings.SupplierName}
 																		</Label>
 																		<Select
@@ -1306,7 +1525,7 @@ min="0"
 																			onChange={(option) => {
 																				if (option && option.value) {
 																					this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
-																					
+																					this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(option.value), true);
 																					props.handleChange('supplierId')(option);
 																				} else {
 	
@@ -1328,11 +1547,183 @@ min="0"
 																			)}
 																	</FormGroup>
 																</Col>
+																<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="taxTreatmentid">
+																		Tax Treatment
+																	</Label>
+																	<Input
+																	disabled
+																		styles={customStyles}
+																		id="taxTreatmentid"
+																		name="taxTreatmentid"
+																		value={
+																		this.state.customer_taxTreatment_des
+																	 	
+																		}
+																		className={
+																			props.errors.taxTreatmentid &&
+																			props.touched.taxTreatmentid
+																				? 'is-invalid'
+																				: ''
+																		}
+																		onChange={(option) => {
+																		props.handleChange('taxTreatmentid')(option);
+																		
+																	    }}
+
+																	/>
+																	{props.errors.taxTreatmentid &&
+																		props.touched.taxTreatmentid && (
+																			<div className="invalid-feedback">
+																				{props.errors.taxTreatmentid}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
+																<Col lg={3}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="placeOfSupplyId">
+																			<span className="text-danger">* </span>
+																			{strings.PlaceofSupply}
+																		</Label>
+																		<Select
+																			styles={customStyles}
+																			options={
+																				this.placelist
+																					? selectOptionsFactory.renderOptions(
+																							'label',
+																							'value',
+																							this.placelist,
+																							'Place of Supply',
+																					  )
+																					: []
+																			}
+																			id="placeOfSupplyId"
+																			name="placeOfSupplyId"
+																			value={
+																				this.placelist &&
+																				selectOptionsFactory.renderOptions(
+																					'label',
+																					'value',
+																					this.placelist,
+																					'Place of Supply',
+																			  ).find(
+																										(option) =>
+																											option.value ===
+																											props.values
+																												.placeOfSupplyId.toString(),
+																									)
+																							}
+																							onChange={(options) => {
+																								if (options && options.value) {
+																									props.handleChange(
+																										'placeOfSupplyId',
+																									)(options.value);
+																								} else {
+																									props.handleChange(
+																										'placeOfSupplyId',
+																									)('');
+																								}
+																							}}
+																			className={`${
+																				props.errors.placeOfSupplyId &&
+																				props.touched.placeOfSupplyId
+																					? 'is-invalid'
+																					: ''
+																			}`}
+																		/>
+																		{props.errors.placeOfSupplyId &&
+																			props.touched.placeOfSupplyId && (
+																				<div className="invalid-feedback">
+																					{props.errors.placeOfSupplyId}
+																				</div>
+																			)}
+																	</FormGroup>
+																</Col>
 															
+																
+															</Row>
+															
+															<Row>
+																
+																<Col lg={3}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="date">
+																			<span className="text-danger">* </span>
+																			 {strings.RFQDate}
+																		</Label>
+																		<DatePicker
+																			id="rfqReceiveDate"
+																			name="rfqReceiveDate"
+																			placeholderText={strings.RFQDate}
+																			showMonthDropdown
+																			showYearDropdown
+																			dateFormat="dd-MM-yyyy"
+																			dropdownMode="select"
+																			selected={new Date(props.values.rfqReceiveDate1)}
+																			value={props.values.rfqReceiveDate}
+																			onChange={(value) => {
+																				props.handleChange('rfqReceiveDate')(
+																					moment(value).format('DD-MM-YYYY'),
+																				);
+																				this.setDate2(props, value);
+																			}}
+																			className={`form-control ${
+																				props.errors.rfqReceiveDate &&
+																				props.touched.rfqReceiveDate
+																					? 'is-invalid'
+																					: ''
+																			}`}
+																		/>
+																		{props.errors.rfqReceiveDate &&
+																			props.touched.rfqReceiveDate && (
+																				<div className="invalid-feedback">
+																					{props.errors.rfqReceiveDate}
+																				</div>
+																			)}
+																	</FormGroup>
+																</Col>
+																<Col lg={3}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="due_date">
+																	   {strings.RFQDueDate}
+																		</Label>
+																		<div>
+																			<DatePicker
+																				id="rfqExpiryDate"
+																				name="rfqExpiryDate"
+																				placeholderText={strings.DueDate}
+																				value={props.values.rfqExpiryDate}
+																				showMonthDropdown
+																				showYearDropdown
+																				dateFormat="dd-MM-yyyy"
+																				dropdownMode="select"
+																				selected={new Date(props.values.rfqExpiryDate1)}
+																				onChange={(value) => {
+																					props.handleChange('rfqExpiryDate')(value);
+																					this.setDate1(props,value)
+																				}}
+																				className={`form-control ${
+																					props.errors.rfqExpiryDate &&
+																					props.touched.rfqExpiryDate
+																						? 'is-invalid'
+																						: ''
+																				}`}
+																			/>
+																			{props.errors.rfqExpiryDate &&
+																				props.touched.rfqExpiryDate && (
+																					<div className="invalid-feedback">
+																						{props.errors.rfqExpiryDate}
+																					</div>
+																				)}
+																		</div>
+																	</FormGroup>
+																</Col>
 																<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currency">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																	{strings.Currency}
 																	</Label>
 																	<Select
@@ -1385,85 +1776,8 @@ min="0"
 																		)}
 																</FormGroup>
 															</Col>
-															</Row>
-															<hr />
-															<Row>
-																
-																<Col lg={3}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="date">
-																			<span className="text-danger">*</span>
-																			 {strings.RFQDate}
-																		</Label>
-																		<DatePicker
-																			id="rfqReceiveDate"
-																			name="rfqReceiveDate"
-																			placeholderText={strings.RFQDate}
-																			showMonthDropdown
-																			showYearDropdown
-																			dateFormat="dd/MM/yyyy"
-																			dropdownMode="select"
-																			value={props.values.rfqReceiveDate}
-																			onChange={(value) => {
-																				props.handleChange('rfqReceiveDate')(
-																					moment(value).format('DD/MM/YYYY'),
-																				);
-																				this.setDate(props, value);
-																			}}
-																			className={`form-control ${
-																				props.errors.rfqReceiveDate &&
-																				props.touched.rfqReceiveDate
-																					? 'is-invalid'
-																					: ''
-																			}`}
-																		/>
-																		{props.errors.rfqReceiveDate &&
-																			props.touched.rfqReceiveDate && (
-																				<div className="invalid-feedback">
-																					{props.errors.rfqReceiveDate}
-																				</div>
-																			)}
-																	</FormGroup>
-																</Col>
-																<Col lg={3}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="due_date">
-																	   {strings.RFQDueDate}
-																		</Label>
-																		<div>
-																			<DatePicker
-																				id="rfqExpiryDate"
-																				name="rfqExpiryDate"
-																				placeholderText={strings.DueDate}
-																				value={props.values.rfqExpiryDate}
-																				showMonthDropdown
-																				showYearDropdown
-																				dateFormat="dd/MM/yyyy"
-																				dropdownMode="select"
-																				onChange={(value) => {
-																					props.handleChange('rfqExpiryDate')(
-																						value,
-																					);
-																				}}
-																				className={`form-control ${
-																					props.errors.rfqExpiryDate &&
-																					props.touched.rfqExpiryDate
-																						? 'is-invalid'
-																						: ''
-																				}`}
-																			/>
-																			{props.errors.rfqExpiryDate &&
-																				props.touched.rfqExpiryDate && (
-																					<div className="invalid-feedback">
-																						{props.errors.rfqExpiryDate}
-																					</div>
-																				)}
-																		</div>
-																	</FormGroup>
-																</Col>
-																
 																</Row>
-																
+																<hr />
 															<Row>
 																<Col lg={12} className="mb-3">
 																	<Button
@@ -1482,7 +1796,9 @@ min="0"
 																		<i className="fa fa-plus"></i> {strings.Addmore}
 																	</Button>
 																</Col>
-															</Row>
+																
+																				</Row>
+													
 															<Row>
 																<Col lg={12}>
 																	{props.errors.lineItemsString &&
@@ -1571,12 +1887,42 @@ min="0"
 																			{strings.UNITPRICE}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
+																	width="10%"
+																		dataField="exciseTaxId"
+																		dataFormat={(cell, rows) =>
+																			this.renderExcise(cell, rows, props)
+																		}
+																	>
+																	Excise
+																	<i
+																			id="ExiseTooltip"
+																			className="fa fa-question-circle ml-1"
+																		></i>
+																		<UncontrolledTooltip
+																			placement="right"
+																			target="ExiseTooltip"
+																		>
+																			If Exise Type for a product is Inclusive
+																			then the Excise dropdown will be Disabled
+																		</UncontrolledTooltip>
+																	</TableHeaderColumn> 
+																		<TableHeaderColumn
 																			dataField="vat"
 																			dataFormat={(cell, rows) =>
 																				this.renderVat(cell, rows, props)
 																			}
 																		>
 																			{strings.VAT}
+																		</TableHeaderColumn>
+																		<TableHeaderColumn
+																			width="10%"
+																			dataField="sub_total"
+																			dataFormat={this.renderVatAmount}
+																			className="text-right"
+																			columnClassName="text-right"
+																			formatExtraData={universal_currency_list}
+																			>
+																			Vat amount
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="sub_total"
@@ -1597,7 +1943,7 @@ min="0"
 																		<Label htmlFor="notes">{strings.Notes}</Label>
 																		<Input
 																			type="textarea"
-																			maxLength="255"
+																			maxLength="250"
 																			name="notes"
 																			id="notes"
 																			rows="6"
@@ -1668,7 +2014,22 @@ min="0"
 																</Col>
 																	<Col lg={4}>
 																		<div className="">
-																		
+																		<div className="total-item p-2" >
+																			<Row>
+																				<Col lg={6}>
+																					<h5 className="mb-0 text-right">
+																					Total Excise
+																					</h5>
+																				</Col>
+																				<Col lg={6} className="text-right">
+																				<label className="mb-0">
+
+																						{this.state.supplier_currency_symbol} &nbsp;
+																						{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																					</label>
+																				</Col>
+																			</Row>
+																		</div>
 																			<div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>
@@ -1823,11 +2184,12 @@ min="0"
 					}}
 					getCurrentProduct={(e) => this.getCurrentProduct(e)}
 					createProduct={this.props.ProductActions.createAndSaveProduct}
-					vat_list={this.props.vat_list}
+					vat_list={this.state.vat_list}
 					product_category_list={this.props.product_category_list}
 					salesCategory={this.state.salesCategory}
 					purchaseCategory={this.state.purchaseCategory}
 				/>
+			</div>
 			</div>
 		);
 	}

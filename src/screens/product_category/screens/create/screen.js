@@ -107,7 +107,7 @@ class CreateProductCategory extends React.Component {
 					this.setState({ disabled: false });
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data.message
+						res.data ? res.data.message : 'Product Category Created Successfully'
 					);
 
 					if (this.state.createMore) {
@@ -125,7 +125,7 @@ class CreateProductCategory extends React.Component {
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'Product Category Created Unsuccessfully',
 				);
 			});
 	};
@@ -195,7 +195,7 @@ class CreateProductCategory extends React.Component {
 														<form onSubmit={handleSubmit}>
 															<FormGroup>
 																<Label htmlFor="productCategoryCode">
-																	<span className="text-danger">*</span>
+																	<span className="text-danger">* </span>
 																	 {strings.ProductCategoryCode}
 																	<i
 																		id="ProductcatcodeTooltip"
@@ -241,7 +241,7 @@ class CreateProductCategory extends React.Component {
 															</FormGroup>
 															<FormGroup>
 																<Label htmlFor="name">
-																	<span className="text-danger">*</span>
+																	<span className="text-danger">* </span>
 																	{strings.ProductCategoryName}
 																</Label>
 																<Input

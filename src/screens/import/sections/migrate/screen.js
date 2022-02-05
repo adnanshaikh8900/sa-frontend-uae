@@ -112,7 +112,6 @@ class MigarteHistory extends React.Component {
 
 	};
 	finishMigration=()=>{
-		debugger
 		let formData =new FormData()
 		formData.append("name",this.props.location && this.props.location.state && this.props.location.state.name ? this.props.location.state.name :"zoho")
 		formData.append("version",this.props.location && this.props.location.state &&this.props.location.state.version ?this.props.location.state.version :"3.4")
@@ -128,6 +127,31 @@ class MigarteHistory extends React.Component {
 				this.props.commonActions.tostifyAlert(
 					'success',
 					'migration Done Successfully.',
+				);
+			}
+		})
+		.catch((err) => {
+			this.setState({ disabled: false });
+			this.props.commonActions.tostifyAlert(
+				'error',
+				err && err.data ? err.data.message : 'Something Went Wrong',
+			);
+		});
+	}
+
+	rollBackMigration = () => {
+		this.props.importActions
+		.rollBackMigration()
+		.then((res) => {
+			if (res.status === 200) {
+				
+				this.setState({
+					disabled: false,
+					// summaryList: res.data,
+				});
+				this.props.commonActions.tostifyAlert(
+					'success',
+					'Migration Rolled back  Successfully.',
 				);
 			}
 		})
@@ -200,6 +224,7 @@ class MigarteHistory extends React.Component {
 										<FormGroup className="text-center">
 											<Button color="secondary" className="btn-square pull-left"
 												onClick={() => {
+													this.rollBackMigration()
 													this.props.history.push('/admin/settings/import');
 												}}>
 												<i className="far fa-arrow-alt-circle-left"></i> RollBack Migration

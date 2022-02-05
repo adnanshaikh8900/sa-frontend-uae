@@ -60,6 +60,7 @@ class ViewRequestForQuotation extends React.Component {
 			totalNet: 0,
 			currencyData: {},
 			id: '',
+			contactData:{}
 		};
 
 		this.formRef = React.createRef();
@@ -73,6 +74,7 @@ class ViewRequestForQuotation extends React.Component {
 
 	componentDidMount = () => {
 		this.initializeData();
+	
 	};
 
 	initializeData = () => {
@@ -96,6 +98,7 @@ class ViewRequestForQuotation extends React.Component {
 				.then((res) => {
 					let val = 0;
 					if (res.status === 200) {
+						if(res.data.poQuatationLineItemRequestModelList&&res.data.poQuatationLineItemRequestModelList.length !=0 )
 						res.data.poQuatationLineItemRequestModelList.map((item) => {
 							val = val + item.subTotal;
 							return item;
@@ -107,22 +110,18 @@ class ViewRequestForQuotation extends React.Component {
 								id: this.props.location.state.id,
 							},
 							() => {
-								// if (this.state.RFQData.currencyCode) {
-								// 	this.props.supplierInvoiceActions
-								// 		.getCurrencyList()
-								// 		.then((res) => {
-								// 			if (res.status === 200) {
-								// 				const temp = res.data.filter(
-								// 					(item) =>
-								// 						item.currencyCode ===
-								// 						this.state.invoiceData.currencyCode,
-								// 				);
-								// 				this.setState({
-								// 					currencyData: temp,
-								// 				});
-								// 			}
-								// 		});
-								// }
+								if(this.state.RFQData.supplierId)
+								{	
+							   this.props.requestForQuotationViewAction
+							   .getContactById(this.state.RFQData.supplierId)
+							   .then((res) => {
+								   if (res.status === 200) {									
+									   this.setState({
+										   contactData: res.data,
+									   });
+								   }
+							   });
+							   }
 							},
 						);
 					}
@@ -139,7 +138,7 @@ class ViewRequestForQuotation extends React.Component {
 								id: this.props.location.state.id,
 							},
 							() => {
-								
+							
 							},
 						);
 					}
@@ -153,7 +152,7 @@ class ViewRequestForQuotation extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { RFQData, PoDataList,currencyData, id } = this.state;
+		const { RFQData, PoDataList,currencyData, id, contactData } = this.state;
 
 		const { profile } = this.props;
 		return (
@@ -215,6 +214,7 @@ class ViewRequestForQuotation extends React.Component {
 										ref={(el) => (this.componentRef = el)}
 										totalNet={this.state.totalNet}
 										companyData={this.state && this.state.companyData ?this.state.companyData:''}
+										contactData={this.state.contactData}
 									/>
 								</PDFExport>
 							</div>
@@ -240,10 +240,10 @@ class ViewRequestForQuotation extends React.Component {
 									<th className="center" style={{ padding: '0.5rem' }}>
 										{strings.POExpiryDate}
 									</th>
-									<th style={{ padding: '0.5rem', textAlign: 'left' }}>
+									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
 									{strings.Total+" "+strings.Amount}
 									</th>
-									<th style={{ padding: '0.5rem', textAlign: 'left' }}>
+									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
 									{strings.TotalVat+" "+strings.Amount}
 									</th>
 								
@@ -265,8 +265,8 @@ class ViewRequestForQuotation extends React.Component {
 									<td>{moment(item.poReceiveDate).format(
 									'DD MMM YYYY',
 								)}</td>
-												<td>{item.totalAmount}</td>
-												<td>{item.totalVatAmount}</td>
+												<td align="right">{item.totalAmount}</td>
+												<td align="right">{item.totalVatAmount}</td>
 											
 											</tr>
 										);

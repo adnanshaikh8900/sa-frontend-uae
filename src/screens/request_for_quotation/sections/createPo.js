@@ -47,7 +47,8 @@ const mapStateToProps = (state) => {
 		product_category_list: state.product.product_category_list,
 		universal_currency_list: state.common.universal_currency_list,
 		currency_convert_list: state.currencyConvert.currency_convert_list,
-		rfqReceiveDate: state.rfqReceiveDate
+		rfqReceiveDate: state.rfqReceiveDate,
+		excise_list: state.request_for_quotation.excise_list,
 	};
 	
 };
@@ -100,6 +101,7 @@ class CreatePurchaseOrder extends React.Component {
 				},
 			],
 			initValue: {
+				total_excise: 0,
 				poApproveDate: new Date(),
 				poReceiveDate: new Date(new Date().setMonth(new Date().getMonth() + 1)),
 				supplierId: '',
@@ -108,7 +110,7 @@ class CreatePurchaseOrder extends React.Component {
 						id: 0,
 						description: '',
 						quantity: 1,
-						unitPrice: '',
+						unitPrice: 1,
 						vatCategoryId: '',
 						subTotal: 0,
 						productId: '',
@@ -136,7 +138,6 @@ class CreatePurchaseOrder extends React.Component {
 			viewEditor: false,
 			message: '',
 			productId:'',
-			prefixData:'',
 			fileName: '',
 
 		};
@@ -189,6 +190,7 @@ class CreatePurchaseOrder extends React.Component {
 		 	selectedData :nextProps.selectedData,
 			 totalAmount :nextProps.totalAmount,
 			 totalVatAmount :nextProps.totalVatAmount,
+			 totalExciseAmount:nextProps.totalExciseAmount
 		};
         }
 		// else if(prevState.totalAmount !== nextProps.totalAmount)
@@ -402,6 +404,74 @@ min="0"
 			/>
 		);
 	}
+
+	renderExcise = (cell, row, props) => {
+		const { excise_list } = this.props;
+
+		let idx;
+		this.state.selectedData.poQuatationLineItemRequestModelList.map((obj, index) => {
+			if (obj.id === row.id) {
+				idx = index;
+			}
+			return obj;
+		});
+
+		return (
+			<Field
+				name={`poQuatationLineItemRequestModelList.${idx}.exciseTaxId`}
+				render={({ field, form }) => (
+					<Select
+					isDisabled={true}
+						styles={customStyles}
+						options={
+							excise_list
+								? selectOptionsFactory.renderOptions(
+										'name',
+										'id',
+										excise_list,
+										'Excise Tax',
+								  )
+								: []
+						}
+						value={
+							excise_list &&
+							selectOptionsFactory
+								.renderOptions('name', 'id', excise_list, 'Excise Tax')
+								.find((option) => option.value ==row.exciseTaxId)
+						}
+						id="exciseTaxId"
+						placeholder={strings.Select+strings.Vat}
+						onChange={(e) => {
+							this.selectItem(
+								e.value,
+								row,
+								'exciseTaxId',
+								form,
+								field,
+								props,
+							);
+						}}
+						className={`${
+							props.errors.poQuatationLineItemRequestModelList &&
+							props.errors.poQuatationLineItemRequestModelList[parseInt(idx, 10)] &&
+							props.errors.poQuatationLineItemRequestModelList[parseInt(idx, 10)].exciseTaxId &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.poQuatationLineItemRequestModelList &&
+							props.touched.poQuatationLineItemRequestModelList[parseInt(idx, 10)] &&
+							props.touched.poQuatationLineItemRequestModelList[parseInt(idx, 10)].exciseTaxId
+								? 'is-invalid'
+								: ''
+						}`}
+					/>
+				)}
+			/>
+		);
+	}
+
+	renderVatAmount = (cell, row, extraData) => {
+		return row.vatAmount === 0 ? this.state.selectedData.currencyIsoCode +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.selectedData.currencyIsoCode +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+	};
+
 
 	renderVat = (cell, row, props) => {
 		const { vat_list } = this.props;
@@ -628,6 +698,7 @@ min="0"
 		let total_net = 0;
 		let total = 0;
 		let total_vat = 0;
+		let total_excise = 0;
 		const { discountPercentage, discountAmount } = this.state;
 
 		data.map((obj) => {
@@ -656,6 +727,7 @@ min="0"
 			total_net = +(total_net + +obj.unitPrice * obj.quantity);
 			total_vat = +(total_vat + val);
 			total = total_vat + total_net;
+			total_excise = +(total_excise + obj.exciseAmount)
 			return obj;
 		});
 		console.log(total_net,"total_net")
@@ -675,6 +747,7 @@ min="0"
 						totalVatAmount: total_vat,
 						discount: total_net > discount ? discount : 0,
 						totalAmount: total_net > discount ? total - discount : total,
+						total_excise: total_excise
 					},
 				},
 				
@@ -796,6 +869,7 @@ min="0"
         formData.append('totalVatAmount',this.state.totalVatAmount );
 	    formData.append('supplierId', this.state.selectedData.supplierId);
 		formData.append('supplierReferenceNumber',supplierReferenceNumber ? supplierReferenceNumber : '');
+		formData.append('totalExciseAmount', this.state.initValue.total_excise);
 		formData.append('currencyCode', this.state.selectedData.currencyCode);
         if (rfqNumber && rfqNumber.value) {
 			formData.append('rfqNumber', rfqNumber.value);
@@ -807,6 +881,8 @@ min="0"
 			.then((res) => {				
 				if (res.status === 200) {
 					resetForm();
+					this.props.getNextTemplateNo();
+					this.setState({isSubmitting:false})
 					this.props.closePurchaseOrder(true);
 
 					
@@ -849,7 +925,7 @@ min="0"
 			value = value+d.subTotal
 		})
 
-		return value;
+		return value-this.state.totalVatAmount;
 
 
 
@@ -859,7 +935,7 @@ min="0"
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { openPurchaseOrder, closePurchaseOrder, id, supplier_list,rfqReceiveDate } = this.props;
+		const { openPurchaseOrder, closePurchaseOrder, id, supplier_list,rfqReceiveDate,universal_currency_list } = this.props;
 		const { initValue, contentState,data,supplierId } = this.state;
  
 		let tmpSupplier_list = []
@@ -927,42 +1003,42 @@ min="0"
 									}
 								},
 							),
-							// lineItemsString: Yup.array()
-							// 	.required(
-							// 		'Atleast one invoice sub detail is mandatory',
-							// 	)
-							// 	.of(
-							// 		Yup.object().shape({
-							// 			quantity: Yup.string()
-							// 				.required('Value is Required')
-							// 				.test(
-							// 					'quantity',
-							// 					'Quantity Should be Greater than 1',
-							// 					(value) => {
-							// 						if (value > 0) {
-							// 							return true;
-							// 						} else {
-							// 							return false;
-							// 						}
-							// 					},
-							// 				),
-							// 			unitPrice: Yup.string()
-							// 				.required('Value is Required')
-							// 				.test(
-							// 					'Unit Price',
-							// 					'Unit Price Should be Greater than 1',
-							// 					(value) => {
-							// 						if (value > 0) {
-							// 							return true;
-							// 						} else {
-							// 							return false;
-							// 						}
-							// 					},
-							// 				),
+							poQuatationLineItemRequestModelList: Yup.array()
+								.required(
+									'Atleast one invoice sub detail is mandatory',
+								)
+								.of(
+									Yup.object().shape({
+										quantity: Yup.string()
+											.required('Value is Required')
+											.test(
+												'quantity',
+												'Quantity Should be Greater than 0',
+												(value) => {
+													if (value > 0) {
+														return true;
+													} else {
+														return false;
+													}
+												},
+											),
+										unitPrice: Yup.string()
+											.required('Value is Required')
+											.test(
+												'Unit Price',
+												'Unit Price Should be Greater than 1',
+												(value) => {
+													if (value > 0) {
+														return true;
+													} else {
+														return false;
+													}
+												},
+											),
 								
 									
-							// 		}),
-							// 	),
+									}),
+								),
 						}
 						)
 					}
@@ -997,7 +1073,7 @@ min="0"
                                                               <Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="rfqNumber">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		 {strings.RFQNumber}
 																	</Label>
 																	<Input
@@ -1031,10 +1107,11 @@ min="0"
                                                             <Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="po_number">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		 {strings.PONumber}
 																	</Label>
 																	<Input
+																		disabled={true}
 																		type="text"
 																		id="po_number"
 																		name="po_number"
@@ -1070,7 +1147,7 @@ min="0"
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currencyCode">
-																	<span className="text-danger">*</span>
+																	<span className="text-danger">* </span>
 																		{strings.Currency}
 																	</Label>
 																	<Input
@@ -1106,7 +1183,7 @@ min="0"
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="supplierName">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		 {strings.SupplierName}
 																	</Label>
                                                                     <Input
@@ -1184,6 +1261,40 @@ min="0"
 																	<i className="fa fa-plus"></i> Add a Supplier
 																</Button>
 															</Col> */}
+															<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="taxTreatmentid">
+																		Tax Treatment
+																	</Label>
+																	<Input
+																	disabled
+																		styles={customStyles}
+																		id="taxTreatmentid"
+																		name="taxTreatmentid"
+																		value={
+																		this.state.selectedData.taxtreatment
+																	 	
+																		}
+																		className={
+																			props.errors.taxTreatmentid &&
+																			props.touched.taxTreatmentid
+																				? 'is-invalid'
+																				: ''
+																		}
+																		onChange={(option) => {
+																		props.handleChange('taxTreatmentid')(option);
+																		
+																	    }}
+
+																	/>
+																	{props.errors.taxTreatmentid &&
+																		props.touched.taxTreatmentid && (
+																			<div className="invalid-feedback">
+																				{props.errors.taxTreatmentid}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
                                                              <Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="supplierReferenceNumber">
@@ -1224,8 +1335,8 @@ min="0"
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="date">
-																		<span className="text-danger">*</span>
-																		{strings.StartDate}
+																		<span className="text-danger">* </span>
+																		{strings.PODate}
 																	</Label>
 																	<DatePicker
 																		id="date"
@@ -1241,7 +1352,7 @@ min="0"
 																		showMonthDropdown
 																		showYearDropdown
 																		dropdownMode="select"
-																		dateFormat="dd/MM/yyyy"
+																		dateFormat="dd-MM-yyyy"
 																		onChange={(value) => {
 																			props.handleChange('poApproveDate')(value);
 																		}}
@@ -1249,7 +1360,7 @@ min="0"
 																	{
 																		!props.values.poApproveDate && (
 																			<div className="text-danger">
-																				{"Please Select Start Date"}
+																				{"Please Select PO Date"}
 																			</div>
 																		)}
 																</FormGroup>
@@ -1257,8 +1368,8 @@ min="0"
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="due_date">
-																	<span className="text-danger">*</span>
-																		 {strings.EndDate}
+																	<span className="text-danger">* </span>
+																		 {strings.PODueDate}
 																	</Label>
 																	<DatePicker
 																		id="date"
@@ -1274,7 +1385,7 @@ min="0"
 																		showMonthDropdown
 																		showYearDropdown
 																		dropdownMode="select"
-																		dateFormat="dd/MM/yyyy"
+																		dateFormat="dd-MM-yyyy"
 																		onChange={(value) => {
 																			props.handleChange('poReceiveDate')(value);
 																		}}
@@ -1282,7 +1393,7 @@ min="0"
 																																		{
 																		!props.values.poReceiveDate && (
 																			<div className="text-danger">
-																				{"Please Select End Date"}
+																				{"Please Select PO Due Date"}
 																			</div>
 																		)}
 
@@ -1387,12 +1498,40 @@ min="0"
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
+																	width="10%"
+																		dataField="exciseTaxId"
+																		dataFormat={(cell, rows) =>
+																			this.renderExcise(cell, rows, props)
+																		}
+																	>
+																	Excise
+																	<i
+																			id="ExiseTooltip"
+																			className="fa fa-question-circle ml-1"
+																		></i>
+																		<UncontrolledTooltip
+																			placement="right"
+																			target="ExiseTooltip"
+																		>
+																			If Exise Type for a product is Inclusive
+																			then the Excise dropdown will be Disabled
+																		</UncontrolledTooltip>
+																	</TableHeaderColumn> 
+																	<TableHeaderColumn
 																		dataField="vat"
 																		dataFormat={(cell, rows) =>
 																			this.renderVat(cell, rows, props)
 																		}
 																	>
 																		{strings.VAT}
+																	</TableHeaderColumn>
+																	<TableHeaderColumn
+																	width="10%"
+																	dataField="sub_total"
+																	dataFormat={this.renderVatAmount}
+																	className="text-right"
+																	columnClassName="text-right"																	>
+																	Vat amount
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="sub_total"
@@ -1430,7 +1569,22 @@ min="0"
 																</Col>
 																	<Col lg={4}>
 																		<div className="">
-																		
+																	<div className="total-item p-2">
+																			<Row>
+																				<Col lg={6}>
+																					<h5 className="mb-0 text-right">
+																					Total Excise
+																					</h5>
+																				</Col>
+																				<Col lg={6} className="text-right">
+																					<label className="mb-0">
+
+																						{this.state.selectedData.currencyIsoCode} &nbsp;
+																						{this.state.selectedData.totalExciseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2})}
+																					</label>
+																				</Col>
+																			</Row>
+																		</div>
 																			<div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>

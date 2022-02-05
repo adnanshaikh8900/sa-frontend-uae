@@ -115,22 +115,32 @@ class SalesByProduct extends React.Component {
 				this.setState({ loading: false });
 			});
 	};
-	exportFile = () => {
-		return (this.state && this.state.data && this.state.data.salesByProductModelList ? this.state.data.salesByProductModelList :'');
-			};
-		
-	// exportFile = (csvData, fileName, type) => {
-	// 	const fileType =
-	// 		type === 'xls'
-	// 			? 'application/vnd.ms-excel'
-	// 			: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-	// 	const fileExtension = `.${type}`;
-	// 	const ws = XLSX.utils.json_to_sheet(csvData);
-	// 	const wb = { Sheets: { data: ws }, SheetNames: ['data'] };
-	// 	const excelBuffer = XLSX.write(wb, { bookType: type, type: 'array' });
-	// 	const data = new Blob([excelBuffer], { type: fileType });
-	// 	FileSaver.saveAs(data, fileName + fileExtension);
-	// };
+	
+    exportFile = () => {
+
+	
+		let dl =""
+		let fn =""
+		let type="csv"
+		var elt = document.getElementById('tbl_exporttable_to_xls');												
+		var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
+		return dl ?
+		  XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
+		  XLSX.writeFile(wb, fn || ('Sales By Product Report.'+ (type || 'csv')));
+
+	   }
+
+	   exportExcelFile  = () => 
+	   {   let dl =""
+		   let fn =""
+		   let type="xlsx"
+		   var elt = document.getElementById('tbl_exporttable_to_xls');												
+		   var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
+		   return dl ?
+			 XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
+			 XLSX.writeFile(wb, fn || ('Sales By Product Report.'+ (type || 'xlsx')));
+   
+	   }
 
 	toggle = () =>
 		this.setState((prevState) => {
@@ -207,14 +217,27 @@ class SalesByProduct extends React.Component {
 													<DropdownToggle caret>Export As</DropdownToggle>
 													<DropdownMenu>
 														
+													<DropdownItem>
+															
+															<span
+															style={{
+																border: 0,
+    															padding: 0,
+																backgroundColor:"white !important"
+															}}
+														     onClick={()=>{this.exportFile()}}
+															>CSV (Comma Separated Value)</span>
+														</DropdownItem>
 														<DropdownItem>
-															<CSVLink
-																data={this.exportFile()}
-																className="csv-btn"
-																filename={'Sales By Product Report.csv'}
-															>
-																CSV (Comma Separated Value)
-															</CSVLink>
+															
+															<span
+															style={{
+																border: 0,
+    															padding: 0,
+																backgroundColor:"white !important"
+															}}
+														     onClick={()=>{this.exportExcelFile()}}
+															>Excel</span>
 														</DropdownItem>
 														<DropdownItem onClick={this.exportPDFWithComponent}>
 															Pdf
@@ -318,7 +341,8 @@ class SalesByProduct extends React.Component {
 											<br style={{ marginBottom: '5px' }} />
 											<b style ={{ fontSize: '18px'}}>{strings.SalesByProduct}</b>
 											<br style={{ marginBottom: '5px' }} />
-											{strings.From} {initValue.startDate} {strings.To} {initValue.endDate}
+																				{strings.From} {moment(initValue.startDate).format("DD-MM-YYYY")} {strings.To} {initValue.endDate.replaceAll("/","-")} 
+
 											
 									</div>
 									<div>
@@ -327,17 +351,17 @@ class SalesByProduct extends React.Component {
 									{loading ? (
 										<Loader />
 									) : (
-										<div className="table-wrapper">
-													<Table  >
-												<thead className="header-row" >
-													<tr>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.ProductName}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.QuantitySold}</th>
+										<div id="tbl_exporttable_to_xls" className="table-wrapper">
+													<Table className="table-bordered" >
+												<thead className="table-header-bg">
+													<tr >
+														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.ProductName}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.QuantitySold}</th>
 
-														<th style={{ padding: '0.5rem', textAlign: 'right' }}>
+														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>
 															{strings.Total+" "+strings.Amount}
 														</th>
-														<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.Average+" "+strings.Amount}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>{strings.Average+" "+strings.Amount}</th>
 
 													</tr>
 												</thead>

@@ -115,11 +115,17 @@ class DetailProductCategory extends React.Component {
     this.props.detailProductCategoryAction.updateProductCategory(postData).then((res) => {
       if (res.status === 200) {
         this.setState({ disabled: false });
-        this.props.commonActions.tostifyAlert('success', res.data.message)
+        this.props.commonActions.tostifyAlert(
+          'success',
+           res.data ? res.data.message : 'Product Category Updated Successfully'
+           )
         this.props.history.push('/admin/master/product-category')
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err.data.message)
+      this.props.commonActions.tostifyAlert(
+        'error',
+        err.data ? err.data.message : 'Product Category Updated Unsuccessfully'
+         )
     })
   }
 
@@ -146,11 +152,17 @@ class DetailProductCategory extends React.Component {
     this.props.detailProductCategoryAction.deleteProductCategory(current_product_category_id).then((res) => {
       if (res.status === 200) {
         // this.success('Chart Account Deleted Successfully');
-        this.props.commonActions.tostifyAlert('success', res.data.message)
+        this.props.commonActions.tostifyAlert(
+          'success',
+           res.data ? res.data.message : 'Product Category Deleted Successfully'
+           )
         this.props.history.push('/admin/master/product-category')
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error',err.data.message )
+      this.props.commonActions.tostifyAlert(
+        'error',
+         err.data ? err.data.message : 'Product Category Deleted Unsuccessfully'
+         )
     })
   }
 
@@ -169,6 +181,8 @@ class DetailProductCategory extends React.Component {
 			});
 		}
     return (
+      loading ==true? <Loader/> :
+<div>
       <div className="detail-vat-code-screen">
         <div className="animated fadeIn">
           {dialog}
@@ -234,9 +248,10 @@ class DetailProductCategory extends React.Component {
                             {(props) => (
                               <Form onSubmit={props.handleSubmit} name="simpleForm">
                                 <FormGroup>
-                                  <Label htmlFor="productCategoryCode"><span className="text-danger">*</span>{strings.ProductCategoryCode}</Label>
+                                  <Label htmlFor="productCategoryCode"><span className="text-danger">* </span>{strings.ProductCategoryCode}</Label>
                                   <Input
                                     type="text"
+                                    maxLength='20'
                                     id="productCategoryCode"
                                     name="productCategoryCode"
                                     placeholder={strings.Enter+strings.ProductCategoryCode}
@@ -253,7 +268,7 @@ class DetailProductCategory extends React.Component {
                                   )}
                                 </FormGroup>
                                 <FormGroup>
-                                  <Label htmlFor="productCategoryName"><span className="text-danger">*</span>{strings.ProductCategoryName}</Label>
+                                  <Label htmlFor="productCategoryName"><span className="text-danger">* </span>{strings.ProductCategoryName}</Label>
                                   <Input
                                     type="text" maxLength='50'
                                     id="productCategoryName"
@@ -312,6 +327,7 @@ class DetailProductCategory extends React.Component {
             </Col>
           </Row>
         </div>
+      </div>
       </div>
     )
   }

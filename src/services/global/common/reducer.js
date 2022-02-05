@@ -9,6 +9,9 @@ const initState = {
 	currency_list: [],
 	user_role_list: [],
 	company_profile: [],
+	country_list: [],
+	state_list: [],
+	company_type_list:[],
 };
 
 const CommonReducer = (state = initState, action) => {
@@ -60,7 +63,24 @@ const CommonReducer = (state = initState, action) => {
 				...state,
 				universal_currency_list: Object.assign([], payload.data),
 			};
-
+			case COMMON.COUNTRY_LIST:
+				 
+				return {
+					
+					...state,
+					country_list: Object.assign([], payload),
+				};
+				case COMMON.STATE_LIST:
+					return {
+						...state,
+						state_list: Object.assign([], payload),
+					};
+			
+					case COMMON.COMPANY_TYPE :
+						return {
+							...state,
+							company_type_list: Object.assign([], payload),
+						};
 			case COMMON.CURRENCY_LIST:
 			return {
 				...state,

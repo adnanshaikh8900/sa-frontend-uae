@@ -36,6 +36,7 @@ import LocalizedStrings from 'react-localization';
 import { AddEmployeesModal } from './sections';
 import moment from 'moment';
 import { DateRangePicker,isInclusivelyBeforeDay } from 'react-dates';
+import RoleReducer from 'screens/users_roles/screens/create/reducer';
 
 
 const mapStateToProps = (state) => {
@@ -87,13 +88,13 @@ class UpdatePayroll extends React.Component {
 			openModal: false,
 			selectedRows: [],
 			selectedRows1: [],
-			selectRowProp: {
-				mode: 'checkbox',
-				bgColor: 'rgba(0,0,0, 0.05)',
-				clickToSelect: true,
-				onSelect: this.onRowSelect,
-				onSelectAll: this.onSelectAll,
-			},
+			// selectRowProp: {
+			// 	mode: 'checkbox',
+			// 	bgColor: 'rgba(0,0,0, 0.05)',
+			// 	clickToSelect: true,
+			// 	onSelect: this.onRowSelect,
+			// 	onSelectAll: this.onSelectAll,
+			// },
 			 payrollDate: new Date(),
 			payrollSubject:undefined,
 			//  startDate: new Date(date.getFullYear(), date.getMonth(), 1),
@@ -107,7 +108,9 @@ class UpdatePayroll extends React.Component {
 			 payrollApprover:'',
 			 dialog: null,
 			 currencyIsoCode:"AED",
-			 count:0
+			 count:0,
+			 paidDays:30,
+			 checkForLopSetting:false
 		}
 
 		this.regEx = /^[0-9\d]+$/;
@@ -183,7 +186,7 @@ class UpdatePayroll extends React.Component {
 					payrollApprover: res.data.payrollApprover ? res.data.payrollApprover : '',
 					submitButton: res.data.payrollApprover ===null ? true : false,
 					payrollDate: res.data.payrollDate
-						? moment(res.data.payrollDate).format('DD/MM/YYYY')
+						? new Date(res.data.payrollDate)
 						: '',
 					payrollSubject: res.data.payrollSubject ? res.data.payrollSubject : '',
 					runDate: res.data.runDate ? res.data.runDate : '',
@@ -356,10 +359,13 @@ class UpdatePayroll extends React.Component {
 		{formData.append('approverId',  parseInt(payrollApprover) )}
 		
 		formData.append('generatePayrollString', JSON.stringify(this.state.selectedRows1));
-		 formData.append('salaryDate',payrollDate)
+		 formData.append('salaryDate',this.state.payrollDate)
 
-		console.log(this.state.payPeriod,"JSON.stringify(this.state.allPayrollEmployee)",JSON.stringify(this.state.allPayrollEmployee))
-		
+			//Payroll total  amount
+			let totalAmountPayroll=0;
+			this.state.selectedRows1.map((row)=>{totalAmountPayroll +=parseFloat(row.grossPay)})
+			formData.append('totalAmountPayroll', totalAmountPayroll);
+	debugger
 		if(this.state.apiSelector ==="createPayroll"){
 		this.props.createPayrollActions
 			 .updatePayroll(formData)
@@ -394,7 +400,7 @@ class UpdatePayroll extends React.Component {
 	}	
 	}
 	handleDatesChange = ({ startDate, endDate }) => {
-		this.setState({startDate:startDate,endDate:endDate})
+		this.setState({startDate:startDate,endDate:endDate,checkForLopSetting:true})
 		this.calculatePayperioad(startDate, endDate)
 		  };
 	setDate = (props, value) => {
@@ -403,7 +409,7 @@ class UpdatePayroll extends React.Component {
 		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 		const values = value
 			? value
-			: moment(props.values.payrollDate, 'DD/MM/YYYY').toDate();
+			: moment(props.values.payrollDate, 'DD-MM-YYYY').toDate();
 	};
 
 	getAllPayrollEmployee2 = () => {
@@ -419,23 +425,16 @@ class UpdatePayroll extends React.Component {
 	updateAmounts=(row,value)=>{
 		let newData = [...this.state.allPayrollEmployee]
 			newData = newData.map((data) => {
-											if (row.id === data.id) {
-
-														if(data.lopDay<value)
-														{																															
+														if (row.id === data.id) {
 															data.lopDay = value;
-															data.noOfDays = data.noOfDays - 1
-														    data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2)
-															data.netPay =   Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (data.deduction || 0)
-																												
-														}
-														else if(data.lopDay>value)
-															{	
-																data.lopDay = value;
-																data.noOfDays = data.noOfDays + 1
-																data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2)
-																data.netPay   = Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (data.deduction || 0)
-													         }
+															data.noOfDays = 30 - value
+														
+															data.deduction=	((data.originalDeduction/30) * data.noOfDays).toFixed(2)
+															let deduction=data.noOfDays==0 ? 0:data.deduction;
+
+															data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2)
+															data.netPay   = Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (deduction || 0)
+															
 														}
 														data.payrollId = this.state.payroll_id
 														data.salaryDate = this.state.payrollDate
@@ -447,6 +446,24 @@ class UpdatePayroll extends React.Component {
 													this.setState({
 														allPayrollEmployee: newData
 													})
+													
+													let tempList1 = [];
+
+													this.state.allPayrollEmployee.map((row)=>{
+														
+														for(let i=0;i<this.state.selected.length;i++){
+															if(row.empId==this.state.selected[i]){		
+																tempList1.push(row);					
+															}//if
+														}
+													})
+													
+													//
+													this.setState({
+													
+														selectedRows1: tempList1,
+														
+													});
 	}
 
 	getAllPayrollEmployee = () => {
@@ -471,9 +488,21 @@ class UpdatePayroll extends React.Component {
 					}
 					let newData = [...this.state.allPayrollEmployee]
 					newData = newData.map((data) => {					
-							data.noOfDays =this.state.paidDays
+							// data.noOfDays =this.state.paidDays
+							// data.originalGrossPay=data.grossPay		
+					        // data.perDaySal=data.originalGrossPay / data.noOfDays			
+							let tmpPaidDay=this.state.paidDays > 30 ?30	:this.state.paidDays	
+							if(this.state.checkForLopSetting===true)		data.noOfDays =tmpPaidDay
+
+							data.originalDeduction=data.deduction
+							data.deduction=	((data.originalDeduction/30) * data.noOfDays).toFixed(2)
+							data.originalNoOfDays =tmpPaidDay
 							data.originalGrossPay=data.grossPay		
-					        data.perDaySal=data.originalGrossPay / data.noOfDays					
+							data.perDaySal=data.originalGrossPay / 30	
+
+							if(this.state.checkForLopSetting===true)		data.lopDay = 30-tmpPaidDay;
+							data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2)
+							data.netPay   = Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (data.deduction || 0)		
 						return data
 					})
 					console.log(newData)
@@ -524,12 +553,43 @@ class UpdatePayroll extends React.Component {
 		return data
 		
 	}
+
+	renderStatus = (status) => {
+		let classname = '';
+		
+		if (status === 'Approved') {
+			classname = 'label-success';
+		}if (status === 'Paid') {
+			classname = 'label-sent';
+		 } else
+		 if (status === 'UnPaid') {
+			classname = 'label-closed';
+		 } else  if (status === 'Draft') {
+			classname = 'label-currency';
+		} else if (status === 'Paid') {
+			classname = 'label-approved';
+		}else if (status === 'Rejected') {
+			classname = 'label-due';
+		}  if (status === 'Submitted') {
+			classname = 'label-sent';
+		}else if (status === 'Partially Paid') {
+			classname = 'label-PartiallyPaid';
+		}
+		// else {
+		// 	classname = 'label-overdue';
+		// }
+		return (
+			<span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>
+				{status}
+			</span>
+		);
+	};
 	getPayrollEmployeeList = () => {
 		const 	selectRowProp= {
 			mode: 'checkbox',
 			bgColor: 'rgba(0,0,0, 0.05)',
 			selected:this.state.selected,
-			clickToSelect: true,
+			clickToSelect: false,
 			onSelect: this.onRowSelect,
 			onSelectAll: this.onSelectAll,
 		}
@@ -613,15 +673,15 @@ class UpdatePayroll extends React.Component {
 										return (
 											<Input
 												type="number"
-												min="0"
-												max={30}
+												min={0}
+												max={this.state.paidDays}
 												id="lopDay"
 												name="lopDay"
 												value={cell || 0}
 												disabled={this.disableForAddButton() ? true : false}
 												onChange={(evt) => {
 
-													let value = evt.target.value;
+													let value = parseInt(evt.target.value ==="" ? "0":evt.target.value) ;
 
 													if (value > 30 || value < 0) {
 														return;
@@ -635,9 +695,9 @@ class UpdatePayroll extends React.Component {
 										);
 
 									}else if(col.key === 'grossPay'){
-										
-										return  (<div>{this.state.currencyIsoCode ? this.state.currencyIsoCode : "AED"}{" "+cell.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</div>)
-									}
+										let grossPay=parseFloat(cell)
+										return  (<div>{this.state.currencyIsoCode ? this.state.currencyIsoCode : "AED"}{" "+grossPay.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</div>)
+					                	}
 									 else
 									 if(col.key === 'netPay'){
 										return	(<div>{this.state.currencyIsoCode ? this.state.currencyIsoCode : "AED"}{" "+cell.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</div>);
@@ -752,16 +812,16 @@ class UpdatePayroll extends React.Component {
 			this.setState(() => ({
 				selected: [...this.state.selected, row.empId]
 			  }));
-		} else {
-
-			this.state.selectedRows.map((item) => {
-				if (item !== row.empId) {
-					tempList.push(item);
+		} else
+		{
+			this.state.selectedRows1.map((item) => {
+				if (item.empId !== row.empId) {
+					tempList.push(item.empId);
 					tempList1.push(item);
 				}
 				this.setState(() => ({
-					selected: this.state.selected.filter(x => x !== row.empId)
-				  }));
+								selected: this.state.selected.filter(x => x !== row.empId)
+							  }));
 				return item;
 			});
 		}
@@ -860,7 +920,10 @@ class UpdatePayroll extends React.Component {
 					onSelect: this.onRowSelect,
 					onSelectAll: this.onSelectAll,
 				}
+		var today = new Date();
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="create-employee-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -945,7 +1008,7 @@ class UpdatePayroll extends React.Component {
 																<Row>
 																	<Col >
 																		<FormGroup>
-																			<Label htmlFor="payrollSubject">	<span className="text-danger">*</span> Payroll Subject</Label>
+																			<Label htmlFor="payrollSubject">	<span className="text-danger">* </span> Payroll Subject</Label>
 																			<Input
 																				type="text"
 																				id="payrollSubject"
@@ -970,7 +1033,7 @@ class UpdatePayroll extends React.Component {
 																	<Col >
 																		<FormGroup>
 																			<Label htmlFor="date">
-																				<span className="text-danger">*</span>
+																				<span className="text-danger">* </span>
 																				Payroll Date
 																			</Label>
 																			<DatePicker
@@ -979,12 +1042,12 @@ class UpdatePayroll extends React.Component {
 																				placeholderText={strings.payrollDate}
 																				showMonthDropdown
 																				showYearDropdown
-																				dateFormat="dd/MM/yyyy"
+																				dateFormat="dd-MM-yyyy"
 																				dropdownMode="select"
-																				selected={props.values.payrollDate}
+																				selected={this.state.payrollDate}
 																				onChange={(value) => {
 																					props.handleChange('payrollDate')(value);
-
+																					this.setState({payrollDate:value})
 																				}}
 																				disabled={this.disableForAddButton() ? true : false}
 																				className={`form-control ${props.errors.payrollDate &&
@@ -1005,23 +1068,26 @@ class UpdatePayroll extends React.Component {
 
 																	<Col  >
 																	<Label htmlFor="date">
-																				<span className="text-danger">*</span>
+																				<span className="text-danger">* </span>
 																				Pay-period (Start date - End Date)
 																			</Label>
 																	<div style={{display: "flex"}}>
 																	{/* <FormGroup className="mt-2"><i class="far fa-calendar-alt mt-1"></i>&nbsp;</FormGroup> */}
 																	<FormGroup >
 																				<DateRangePicker
-																				startDate={this.state.startDate}
-																				startDateId="tata-start-date"
-																				endDate={this.state.endDate}
-																				endDateId="tata-end-date"
-																				onDatesChange={this.handleDatesChange}
-																				focusedInput={this.state.focusedInput}
-																				disabled={this.disableForAddButton() ? true : false}
-																				onFocusChange={(option)=>{this.setState({focusedInput:option})}}
-																				isOutsideRange={day => !isInclusivelyBeforeDay(day, moment())}
-																				initialVisibleMonth={() => moment().subtract(1, "month")}
+																				displayFormat="DD-MM-YYYY"
+																					startDate={this.state.startDate}
+																					startDateId="tata-start-date"
+																					endDate={this.state.endDate}
+																					endDateId="tata-end-date"
+																					onDatesChange={this.handleDatesChange}
+																					focusedInput={this.state.focusedInput}
+																					disabled={this.disableForAddButton() ? true : false}
+																					onFocusChange={(option)=>{this.setState({focusedInput:option})}}
+																					isOutsideRange={
+																						// () => null
+																						day => isInclusivelyBeforeDay(day, moment(new Date(today.getFullYear(), today.getMonth(),0)))
+																					}
 																				/>																							
 																	
 																			{props.errors.startDate &&
@@ -1087,7 +1153,9 @@ class UpdatePayroll extends React.Component {
 																	</Col>
 																</Row>
 																<Row>
-								
+																	<Col>		
+																				<Label> Status : <span style={{fontSize: "larger"}}>  {this.renderStatus(this.state.status)}</span></Label>					
+																	</Col>
 																</Row>
 																<hr/>
 																<Row>
@@ -1244,6 +1312,7 @@ class UpdatePayroll extends React.Component {
 
 				// employee_list={employee_list.data}				
 				/> */}
+			</div>
 			</div>
 		)
 	}

@@ -153,11 +153,15 @@ class DetailCurrencyConvert extends React.Component {
       if (res.status === 200) {
         this.setState({ disabled: false });
         resetForm();
-        this.props.commonActions.tostifyAlert('success', res.data.message)
+        this.props.commonActions.tostifyAlert(
+			'success', 
+			res.data ? res.data.message : 'Currency Conversion Updated Successfully')
         this.props.history.push('/admin/master/CurrencyConvert')
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err.data.message)
+      this.props.commonActions.tostifyAlert(
+		  'error',
+		   err.data ? err.data.message : 'Currency Conversion Updated Unsuccessfully')
     })
   }
 
@@ -201,11 +205,15 @@ class DetailCurrencyConvert extends React.Component {
     this.props.detailCurrencyConvertAction.deleteCurrencyConvert(current_currency_convert_id).then((res) => {
       if (res.status === 200) {
         // this.success('Chart Account Deleted Successfully');
-        this.props.commonActions.tostifyAlert('success', 'Currency Conversion Deleted Successfully')
+        this.props.commonActions.tostifyAlert('success', 
+			res.data ? res.data.message : 'Currency Conversion Deleted Successfully'
+			)
         this.props.history.push('/admin/master/CurrencyConvert')
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
+      this.props.commonActions.tostifyAlert('error', 
+	  err && err.data ? err.data.message : 'Currency Conversion Deleted Unsuccessfully' 
+	  )
     })
   }
 
@@ -221,6 +229,8 @@ class DetailCurrencyConvert extends React.Component {
 
     const{currencyList} =this.props;
     return (
+		loading ==true? <Loader/> :
+<div>
       <div className="detail-vat-code-screen">
         <div className="animated fadeIn">
           {dialog}
@@ -248,6 +258,9 @@ class DetailCurrencyConvert extends React.Component {
                               exchangeRate: Yup.string().required(
                                 'Exchange Rate is Required',
                               ),
+							  currencyCode: Yup.string().required(
+								'Exchange Currency is Required',
+							),
                           })}
                           >
                             {(props) => (
@@ -256,7 +269,7 @@ class DetailCurrencyConvert extends React.Component {
                                 	<Row>
 																	<Col >
 																		<FormGroup className="mb-3">
-																			<Label htmlFor="active"><span className="text-danger">*</span>{strings.Status}</Label>
+																			<Label htmlFor="active"><span className="text-danger">* </span>{strings.Status}</Label>
 																			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 																				<FormGroup check inline>
 																					<div className="custom-radio custom-control">
@@ -321,12 +334,12 @@ class DetailCurrencyConvert extends React.Component {
 																			
 																		</FormGroup>
 																	</Col></Row>
-                                <Row>
-                                <Col lg={1}>
+                                									<Row>
+                               										 <Col lg={1}>
 																	<FormGroup className="mt-2">
 																	<Label>
-																							 {strings.Value}
-																						</Label>
+																		 {strings.Value}
+																		</Label>
 																	<Input
 																			disabled
 																				id="1"
@@ -336,9 +349,9 @@ class DetailCurrencyConvert extends React.Component {
 																				
 																			/>
 																			</FormGroup>
-                                      </Col>
-																<Col lg={4}>
-                                <FormGroup className="mt-2">
+                                     										 </Col>
+																				<Col lg={4}>
+                                														<FormGroup className="mt-2">
 																						<Label htmlFor="currencyCode">
 																							 {strings.ExchangeCurrency}
 																						</Label>
@@ -397,8 +410,8 @@ class DetailCurrencyConvert extends React.Component {
 																								</div>
 																							)}
 																					</FormGroup>
-                                          </Col>
-                                          <Col lg={4}>
+                                            							</Col>
+                                            							<Col lg={4}>
 															        	<FormGroup className="mt-2">
 															        	<Label htmlFor="productCategoryCode">
 																	 {strings.Exchangerate}
@@ -414,8 +427,8 @@ class DetailCurrencyConvert extends React.Component {
 																	</UncontrolledTooltip> */}
 																</Label>
 																<Input
-																	type="number"
-                                  maxLength='20'
+																	type="text"
+                                    								maxLength="20"
 																	id="exchangeRate"
 																	name="exchangeRate"
 																	placeholder={strings.Enter+strings.Exchangerate}
@@ -508,6 +521,7 @@ class DetailCurrencyConvert extends React.Component {
           </Row>
         </div>
       </div>
+	  </div>
     )
   }
 }

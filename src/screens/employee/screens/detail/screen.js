@@ -105,11 +105,15 @@ class DetailEmployee extends React.Component {
     }
     this.props.employeeDetailActions.updateEmployee(postData).then((res) => {
       if (res.status === 200) {
-        this.props.commonActions.tostifyAlert('success', 'Employee Updated Successfully')
+        this.props.commonActions.tostifyAlert(
+          'success',
+           res.data ? res.data.message : 'Employee Updated Successfully')
         this.props.history.push('/admin/master/employee')
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
+      this.props.commonActions.tostifyAlert(
+        'error', 
+        err && err.data ? err.data.message : 'Employee Updated Unsuccessfully')
     })
   }
 
@@ -134,11 +138,15 @@ class DetailEmployee extends React.Component {
     const { current_employee_id } = this.state;
     this.props.employeeDetailActions.deleteEmployee(current_employee_id).then((res) => {
       if (res.status === 200) {
-        this.props.commonActions.tostifyAlert('success', 'Employee Deleted Successfully !!')
+        this.props.commonActions.tostifyAlert(
+          'success',
+           res.data ? res.data.message : 'Employee Deleted Successfully !!')
         this.props.history.push('/admin/master/employee')
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
+      this.props.commonActions.tostifyAlert(
+        'error',
+         err && err.data ? err.data.message : 'Employee Deleted Unsuccessfully')
     })
   }
 
@@ -153,6 +161,8 @@ class DetailEmployee extends React.Component {
     const { currency_list } = this.props
     const { dialog, loading, initValue } = this.state
     return (
+      loading ==true? <Loader/> :
+<div>
       <div className="detail-employee-screen">
         <div className="animated fadeIn">
           <Row>
@@ -244,6 +254,7 @@ class DetailEmployee extends React.Component {
                                       <Label htmlFor="select"><span className="text-danger">*</span>Email</Label>
                                       <Input
                                         type="email"
+                                        maxLength='80'
                                         id="email"
                                         name="email"
                                         placeholder="Enter Email Address"
@@ -256,7 +267,7 @@ class DetailEmployee extends React.Component {
                                 <Row className="row-wrapper">
                                   <Col md="4">
                                     <FormGroup>
-                                      <Label htmlFor="select"><span className="text-danger">*</span>First Name</Label>
+                                      <Label htmlFor="select"><span className="text-danger">* </span>First Name</Label>
                                       <Input
                                         type="text"
                                         id="firstName"
@@ -275,7 +286,7 @@ class DetailEmployee extends React.Component {
                                   </Col>
                                   <Col md="4">
                                     <FormGroup>
-                                      <Label htmlFor="select"><span className="text-danger">*</span>Middle Name</Label>
+                                      <Label htmlFor="select"><span className="text-danger">* </span>Middle Name</Label>
                                       <Input
                                         type="text"
                                         id="middleName"
@@ -294,7 +305,7 @@ class DetailEmployee extends React.Component {
                                   </Col>
                                   <Col md="4">
                                     <FormGroup>
-                                      <Label htmlFor="select"><span className="text-danger">*</span>Last Name</Label>
+                                      <Label htmlFor="select"><span className="text-danger">* </span>Last Name</Label>
                                       <Input
                                         type="text"
                                         id="lastName"
@@ -356,7 +367,7 @@ class DetailEmployee extends React.Component {
                                         name="dob"
                                         showMonthDropdown
                                         showYearDropdown
-                                        dateFormat="dd/MM/yyyy"
+                                        dateFormat="dd-MM-yyyy"
                                         dropdownMode="select"
                                         placeholderText="Select Date of Birth"
                                         value={moment(props.values.dob).format('DD-MM-YYYY')}
@@ -379,6 +390,7 @@ class DetailEmployee extends React.Component {
                                       <Label htmlFor="billingEmail">Billing Email</Label>
                                       <Input
                                         type="text"
+                                        maxLength='80'
                                         id="billingEmail"
                                         name="billingEmail"
                                         value={props.values.billingEmail}
@@ -400,6 +412,7 @@ class DetailEmployee extends React.Component {
                                       <Label htmlFor="poBoxNumber">Contract PO Number</Label>
                                       <Input
                                         type="text"
+                                        maxLength='8'
                                         id="poBoxNumber"
                                         name="poBoxNumber"
                                         placeholder="Enter Contract PO Number"
@@ -426,6 +439,7 @@ class DetailEmployee extends React.Component {
                                       <Label htmlFor="vatRegestationNo">Tax Registration Number</Label>
                                       <Input
                                         type="text"
+                                        maxLength="15"
                                         id="vatRegestationNo"
                                         name="vatRegestationNo"
                                         placeholder="Enter Tax Registration Number"
@@ -506,6 +520,7 @@ class DetailEmployee extends React.Component {
             </Col>
           </Row>
         </div>
+      </div>
       </div>
     )
   }

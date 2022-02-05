@@ -174,6 +174,8 @@ class DetailDesignation extends React.Component {
     const { currency_list } = this.props
     const { dialog, loading, initValue } = this.state
     return (
+      loading ==true? <Loader/> :
+<div>
       <div className="detail-employee-screen">
         <div className="animated fadeIn">
           <Row>
@@ -226,16 +228,16 @@ class DetailDesignation extends React.Component {
                             <Row  className="row-wrapper">
                             <Col lg={4}>
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span>{strings.DESIGNATIONID}</Label>
+                                  <Label htmlFor="select"><span className="text-danger">* </span>{strings.DESIGNATIONID}</Label>
                                   <Input
                                     type="text"
                                     id="designationId"
                                     name="designationId"
                                     maxLength="9"
                                     value={props.values.designationId}
-                                    placeholder={strings.Enter+strings.designationId}
+                                    placeholder={strings.Enter+strings.DESIGNATIONID}
                                     onChange={(option) => {
-                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('designationId')(option) }
+                                      if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('designationId')(option) }
                                     }}
                                     className={props.errors.designationId && props.touched.designationId ? "is-invalid" : ""}
                                   />
@@ -246,7 +248,7 @@ class DetailDesignation extends React.Component {
                               </Col>
                               <Col lg={4}>
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span>{strings.DesignationName}</Label>
+                                  <Label htmlFor="select"><span className="text-danger">* </span>{strings.DesignationName}</Label>
                                   <Input
                                     type="text"
                                     id="designationName"
@@ -307,6 +309,7 @@ class DetailDesignation extends React.Component {
             </Col>
           </Row>
         </div>
+      </div>
       </div>
     )
   }

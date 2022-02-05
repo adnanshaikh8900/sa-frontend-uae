@@ -82,13 +82,25 @@ class ProductModal extends React.Component {
 			isActive:true,
 			selectedStatus:true,
 		};
-		this.formRef = React.createRef(); 
+		this.formRef = React.createRef();       
 		this.regEx = /^[0-9\d]+$/;
-		this.regExBoth = /[a-zA-Z0-9-./\\|]+$/;
+		this.regExBoth = /[ +a-zA-Z0-9-./\\|!@#$%^&*()_<>,]+$/;
 		// this.regExBoth = /[a-zA-Z0-9 ]+$/;
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 	}
+
+	getData = (data) => {
+		let temp = {};
+		for (let item in data) {
+			if (typeof data[`${item}`] !== 'object') {
+				temp[`${item}`] = data[`${item}`];
+			} else {
+				temp[`${item}`] = data[`${item}`].value;
+			}
+		}
+		return temp;
+	};
 	getProductCode=()=>{
 		const {
 			openProductModal,		
@@ -110,24 +122,13 @@ class ProductModal extends React.Component {
 	
 	console.log(this.state.employeeCode)
 	}
+
 	componentDidMount = () => {
 		this.initializeData();
 	};
 	initializeData = () => {
 		this.getProductCode();
 	};
-	getData = (data) => {
-		let temp = {};
-		for (let item in data) {
-			if (typeof data[`${item}`] !== 'object') {
-				temp[`${item}`] = data[`${item}`];
-			} else {
-				temp[`${item}`] = data[`${item}`].value;
-			}
-		}
-		return temp;
-	};
-
 	// Create or Edit Product
 	handleSubmit = (data, resetForm) => {
 		this.setState({ disabled: true });
@@ -262,8 +263,8 @@ class ProductModal extends React.Component {
 					className="modal-success contact-modal"
 				>
 					<Formik
-						ref={this.formRef}
 						initialValues={initValue}
+						ref={this.formRef}
 						onSubmit={(values, { resetForm }) => {
 							this.handleSubmit(values, resetForm);
 						}}
@@ -781,7 +782,17 @@ class ProductModal extends React.Component {
 																	: ''
 															}
 														/>
-														{strings.SalesInformation}
+														{strings.SalesInformation} 
+														<i
+															id="SalesInfoTooltip"
+															className="fa fa-question-circle ml-1"
+														></i>
+														<UncontrolledTooltip
+															placement="right"
+															target="SalesInfoTooltip"
+														>
+															 If you select Sales-Info then product will available in INCOME 
+														</UncontrolledTooltip>
 														{props.errors.productPriceType &&
 															props.touched.productPriceType && (
 																<div className="invalid-feedback">
@@ -950,6 +961,16 @@ min="0"
 															}
 														/>
 														{strings.PurchaseInformation}
+														<i
+															id="PurchaseInfoTooltip"
+															className="fa fa-question-circle ml-1"
+														></i>
+														<UncontrolledTooltip
+															placement="right"
+															target="PurchaseInfoTooltip"
+														>
+															 If you select Purchase-Info then product will available in EXPENSE
+														</UncontrolledTooltip>
 														{props.errors.productPriceType &&
 															props.touched.productPriceType && (
 																<div className="invalid-feedback">

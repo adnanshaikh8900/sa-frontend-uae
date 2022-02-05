@@ -188,10 +188,18 @@ errors.mobileNumber =
 							mobileNumber: Yup.string()
 								.required('Mobile Number is required'),
 								
-							//     addressLine1: Yup.string()
-							//       .required("Address is required"),
-							//     city: Yup.string()
-							//       .required("City is Required"),
+						    addressLine1: Yup.string()
+							.required("Address Line 1 is required"),
+							 addressLine2: Yup.string()
+							.required("Address Line 2 is required"),
+							 addressLine3: Yup.string()
+							.required("Address Line 3 is required"),
+							 countryId: Yup.string()
+							.required("Country is required"),
+							stateId: Yup.string()
+						    .required("State Region is required"),
+							 city: Yup.string()
+							.required("City is Required"),
 							//     billingEmail: Yup.string()
 							//       .required("Billing Email is Required")
 							//       .email('Invalid Email'),
@@ -296,7 +304,7 @@ errors.mobileNumber =
 											</Col>
 											<Col md="4">
 												<FormGroup>
-												<Label htmlFor="lastName"><span className="text-danger">*</span>{strings.LastName}</Label>
+													<Label htmlFor="lastName"><span className="text-danger">*</span>{strings.LastName}</Label>
 													<Input
 														type="text"
 														maxLength="26"
@@ -644,7 +652,7 @@ errors.mobileNumber =
 										<Row className="row-wrapper">
 											<Col md="4">
 												<FormGroup>
-													<Label htmlFor="addressLine1">{strings.AddressLine1}</Label>
+													<Label htmlFor="addressLine1"><span className="text-danger">*</span>{strings.AddressLine1}</Label>
 													<Input
 														type="text"
 														maxLength="200"
@@ -678,7 +686,7 @@ errors.mobileNumber =
 											</Col>
 											<Col md="4">
 												<FormGroup>
-													<Label htmlFor="addressLine2">{strings.AddressLine2}</Label>
+													<Label htmlFor="addressLine2"><span className="text-danger">*</span>{strings.AddressLine2}</Label>
 													<Input
 														type="text"
 														maxLength="200"
@@ -712,7 +720,7 @@ errors.mobileNumber =
 											</Col>
 											<Col md="4">
 												<FormGroup>
-													<Label htmlFor="addressLine3">{strings.AddressLine3}</Label>
+													<Label htmlFor="addressLine3"><span className="text-danger">*</span>{strings.AddressLine3}</Label>
 													<Input
 														type="text"
 														maxLength="200"
@@ -748,7 +756,7 @@ errors.mobileNumber =
 										<Row className="row-wrapper">
 											<Col md="4">
 												<FormGroup>
-													<Label htmlFor="countryId">{strings.Country}</Label>
+													<Label htmlFor="countryId"><span className="text-danger">*</span>{strings.Country}</Label>
 													<Select
 														options={
 															country_list
@@ -793,7 +801,7 @@ errors.mobileNumber =
 											</Col>
 											<Col md="4">
 												<FormGroup>
-													<Label htmlFor="stateId">{strings.StateRegion}</Label>
+													<Label htmlFor="stateId"><span className="text-danger">*</span>{strings.StateRegion}</Label>
 													<Select
 														options={
 															state_list
@@ -831,7 +839,7 @@ errors.mobileNumber =
 											</Col>
 											<Col md="4">
 												<FormGroup>
-													<Label htmlFor="city">{strings.City}</Label>
+													<Label htmlFor="city"><span className="text-danger">*</span>{strings.City}</Label>
 													<Input
 														// options={city ? selectOptionsFactory.renderOptions('cityName', 'cityCode', cityRegion) : ''}
 														value={props.values.city}

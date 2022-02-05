@@ -19,7 +19,7 @@ import DatePicker from 'react-datepicker';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import * as CustomerRecordPaymentActions from './actions';
-import * as CustomerInvoiceActions from '../../actions';
+import * as CnActions from '../../actions';
 
 import { CustomerModal } from '../../sections';
 import { Loader, ConfirmDeleteModal } from 'components';
@@ -45,8 +45,8 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
-		customerInvoiceActions: bindActionCreators(
-			CustomerInvoiceActions,
+		cnActions: bindActionCreators(
+			CnActions,
 			dispatch,
 		),
 		CustomerRecordPaymentActions: bindActionCreators(
@@ -93,7 +93,9 @@ class Refund extends React.Component {
 				attachmentFile: '',
 				paidInvoiceListStr: [],
 			},
+			amount: this.props.location.state.id.dueAmount,
 			invoiceId: this.props.location.state.id.id,
+			isCNWithoutProduct: this.props.location.state.id.isCNWithoutProduct,
 			contactType: 2,
 			openCustomerModal: false,
 			selectedContact: '',
@@ -103,6 +105,8 @@ class Refund extends React.Component {
 			discountAmount: 0,
 			fileName: '',
 			disabled: false,
+			invoiceNumber:"-",
+			showInvoiceNumber:false
 		};
 
 		// this.options = {
@@ -118,7 +122,6 @@ class Refund extends React.Component {
 		this.regEx = /^[0-9\b]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
-		this.regExAlpha = /^[a-zA-Z0-9!@#$&()-\\`.+,/\"]+$/;
 
 		this.file_size = 1024000;
 		this.supported_format = [
@@ -144,11 +147,11 @@ class Refund extends React.Component {
 						id: this.props.location.state.id.id,
 						date: moment(
 							this.props.location.state.id.invoiceDate,
-							'DD/MM/YYYY',
+							'DD-MM-YYYY',
 						).toDate(),
 						dueDate: moment(
 							this.props.location.state.id.invoiceDueDate,
-							'DD/MM/YYYY',
+							'DD-MM-YYYY',
 						).toDate(),
 						paidAmount: this.props.location.state.id.invoiceAmount,
 						dueAmount: this.props.location.state.id.dueAmount,
@@ -159,11 +162,27 @@ class Refund extends React.Component {
 			},
 		});
 		Promise.all([
-			this.props.customerInvoiceActions.getDepositList(),
-			this.props.customerInvoiceActions.getPaymentMode(),
-			this.props.customerInvoiceActions.getCustomerList(this.state.contactType),
+			this.props.cnActions.getDepositList(),
+			this.props.cnActions.getPaymentMode(),
+			this.props.cnActions.getCustomerList(this.state.contactType),
 		]);
 		this.getReceiptNo();
+		//INV number
+		this.props.cnActions
+			.getInvoicesForCNById(this.props.location.state.id.id)
+			.then((res) => {
+				
+				if (res.status === 200) {
+					if(res.data.length && res.data.length !=0 )
+					this.setState(
+						{
+							invoiceNumber: res.data[0].invoiceNumber,
+							showInvoiceNumber:true
+						},
+						() => {	},
+					);
+				}
+			})
 	};
 
 	getReceiptNo = () => {
@@ -231,7 +250,27 @@ class Refund extends React.Component {
 			props.setFieldValue('attachmentFile', file, true);
 		}
 	};
+	showInvoiceNumber=()=>{
 
+		return(
+			this.state.showInvoiceNumber &&(
+			<Col lg={4}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="project">
+																			
+																			 {strings.InvoiceNumber}
+																		</Label>
+																		<Input
+																			
+																			disabled
+																			id="invoiceNumber"
+																			name="invoiceNumber"
+																			value={this.state.invoiceNumber}
+																		/>
+																	</FormGroup>
+																</Col>)
+		)
+	}
 	handleSubmit = (data) => {
 		this.setState({ disabled: true });
 		const { invoiceId } = this.state;
@@ -247,11 +286,45 @@ class Refund extends React.Component {
 		} = data;
 
 		let formData = new FormData();
-		formData.append('receiptNo', receiptNo !== null ? receiptNo : '');
+	if(this.state.isCNWithoutProduct ==true)
+	{	
+		formData.append('isCNWithoutProduct', this.state.isCNWithoutProduct);
+		formData.append('creditNoteId', this.props.location.state.id.id);
+		formData.append('amountReceived', amount !== null ? amount : '');
+		formData.append('notes', notes !== null ? notes : '');
+
+		formData.append('depositeTo', depositeTo !== null ? depositeTo.value : '');
+		formData.append('payMode', payMode !== null ? payMode.value : '');
+		if (contactId) {
+			formData.append('contactId', contactId);
+		}
+		formData.append(
+			'paymentDate',
+			typeof receiptDate === 'string'
+				? moment(receiptDate, 'DD/MM/YYYY').toDate()
+				: receiptDate,
+		);
+		this.props.CustomerRecordPaymentActions.recordPaymentCNWithoutInvoice(formData)
+			.then((res) => {
+				this.props.commonActions.tostifyAlert(
+					'success',
+					res.data ? res.data.message : 'Credit Refund Successfully',
+				);
+				this.props.history.push('/admin/income/credit-notes');
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Credit Refund Unsuccessfully.',
+				);
+			});
+		}//
+	else
+	{	formData.append('receiptNo', receiptNo !== null ? receiptNo : '');
 		formData.append(
 			'receiptDate',
 			typeof receiptDate === 'string'
-				? moment(receiptDate, 'DD/MM/YYYY').toDate()
+				? moment(receiptDate, 'DD-MM-YYYY').toDate()
 				: receiptDate,
 		);
 		formData.append(
@@ -284,16 +357,17 @@ class Refund extends React.Component {
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'The Refund information for this tax credit note has been saved Successfully.',
+					res.data ? res.data.message : 'Credit Refund Successfully',
 				);
 				this.props.history.push('/admin/income/credit-notes');
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'Credit Refund Unsuccessfully.',
 				);
 			});
+		}//
 	};
 
 	openCustomerModal = (e) => {
@@ -319,7 +393,7 @@ class Refund extends React.Component {
 
 	closeCustomerModal = (res) => {
 		if (res) {
-			this.props.customerInvoiceActions.getCustomerList(this.state.contactType);
+			this.props.cnActions.getCustomerList(this.state.contactType);
 		}
 		this.setState({ openCustomerModal: false });
 	};
@@ -351,7 +425,7 @@ class Refund extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Data Deleted Successfully',
+						res.data ? res.data.message :'Invoice Deleted Successfully',
 					);
 					this.props.history.push('/admin/income/credit-notes');
 				}
@@ -359,7 +433,7 @@ class Refund extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'Invoice Deleted Unsuccessfully',
 				);
 			});
 	};
@@ -464,7 +538,7 @@ class Refund extends React.Component {
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="contactId">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			 {strings.CustomerName}
 																		</Label>
 																		<Select
@@ -496,10 +570,13 @@ class Refund extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
+																{
+																this.state.isCNWithoutProduct !=true &&
+																(this.showInvoiceNumber())}
 																{/* <Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="project">
-																			<span className="text-danger">*</span>{' '}
+																			<span className="text-danger">* </span>{' '}
 																			Payment
 																		</Label>
 																		<Input
@@ -533,12 +610,12 @@ class Refund extends React.Component {
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="project">
-																			<span className="text-danger">*</span>{' '}
-																			 {strings.AmountReceived}
+																			<span className="text-danger">* </span>{' '}
+																			 {strings.AmountPaid}
 																		</Label>
 																		<Input
 																			type="number"
-																			
+																			max={this.state.amount}
 																			id="amount"
 																			name="amount"
 																			value={props.values.amount}
@@ -571,7 +648,7 @@ class Refund extends React.Component {
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="date">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			{strings.PaymentDate}
 																		</Label>
 																		<DatePicker
@@ -580,7 +657,7 @@ class Refund extends React.Component {
 																			placeholderText={strings.PaymentDate}
 																			showMonthDropdown
 																			showYearDropdown
-																			dateFormat="dd/MM/yyyy"
+																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
 																			value={props.values.receiptDate}
 																			selected={props.values.receiptDate}
@@ -609,7 +686,7 @@ class Refund extends React.Component {
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="payMode">
-																			<span className="text-danger">*</span>{' '}
+																			<span className="text-danger">* </span>{' '}
 																			 {strings.PaymentMode}
 																		</Label>
 																		<Select
@@ -653,7 +730,7 @@ class Refund extends React.Component {
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="depositeTo">
-																			<span className="text-danger">*</span>{' '}
+																			<span className="text-danger">* </span>{' '}
 																		      {strings.DepositFrom}
 																		</Label>
 																		<Select
@@ -705,7 +782,7 @@ class Refund extends React.Component {
 																					onChange={(option) => {
 																						if (
 																							option.target.value === '' ||
-																							this.regExAlpha.test(
+																							this.regExBoth.test(
 																								option.target.value,
 																							)
 																						) {
@@ -871,10 +948,10 @@ class Refund extends React.Component {
 						this.closeCustomerModal(e);
 					}}
 					getCurrentUser={(e) => this.getCurrentUser(e)}
-					createCustomer={this.props.customerInvoiceActions.createCustomer}
+					createCustomer={this.props.cnActions.createCustomer}
 					currency_list={this.props.currency_list}
 					country_list={this.props.country_list}
-					getStateList={this.props.customerInvoiceActions.getStateList}
+					getStateList={this.props.cnActions.getStateList}
 				/>
 			</div>
 		);

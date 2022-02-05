@@ -75,9 +75,10 @@ class UpdateEmployeePersonal extends React.Component {
         }
 
         this.regExAlpha = /^[a-zA-Z ]+$/;
+        this.regEx = /^[0-9\d]+$/;
         this.regExBoth = /[a-zA-Z0-9]+$/;
         this.regExSpaceBoth = /[a-zA-Z0-9 ]+$/;
-
+		this.regExAddress = /^[a-zA-Z0-9\s\D,'-/ ]+$/;
         this.formRef = React.createRef();
         this.gender = [
             { label: 'Male', value: 'Male' },
@@ -376,12 +377,18 @@ class UpdateEmployeePersonal extends React.Component {
 
         this.props.detailEmployeePersonalAction.updateEmployeePersonal(formData).then((res) => {
             if (res.status === 200) {
-                this.props.commonActions.tostifyAlert('success', 'Employee Updated Successfully!')
+                this.props.commonActions.tostifyAlert(
+                    'success',
+                     res.data ? res.data.message :'Employee Updated Successfully'
+                     )
                 // this.props.history.push('/admin/payroll/employee')
                 this.props.history.push('/admin/master/employee')
             }
         }).catch((err) => {
-            this.props.commonActions.tostifyAlert('error', err.data.message)
+            this.props.commonActions.tostifyAlert(
+                'error',
+                  err.data.message ? err.data.message :'updated Unsuccessfully'
+                  )
         })
     }
     render() {
@@ -390,6 +397,8 @@ class UpdateEmployeePersonal extends React.Component {
         const { designation_dropdown, country_list, state_list, employee_list_dropdown,salary_role_dropdown } = this.props
 
         return (
+            loading ==true? <Loader/> :
+<div>
             <div className="detail-vat-code-screen">
                 <div className="animated fadeIn">
                     {dialog}
@@ -408,7 +417,7 @@ class UpdateEmployeePersonal extends React.Component {
                                     ) : (
 
                                         <Row>
-                                            <Col lg={8}>
+                                            <Col lg={12}>
                                                 <Formik
                                                     initialValues={initValue}
                                                     ref={this.formRef}
@@ -428,9 +437,20 @@ class UpdateEmployeePersonal extends React.Component {
                                                             errors.emergencyContactNumber1 =
                                                             'Invalid mobile number';
                                                             }
+
                                                             if (checkmobileNumberParam2 === true) {
                                                                 errors.emergencyContactNumber2 =
                                                                 'Invalid mobile number';
+                                                                }
+                                                            
+                                                            if (values.employeeDesignationId && values.employeeDesignationId.label && values.employeeDesignationId.label === "Select Employee Designation") {
+                                                                    errors.employeeDesignationId =
+                                                                    'Designation is Required';
+                                                                }
+
+                                                                if (values.salaryRoleId && values.salaryRoleId.label && values.salaryRoleId.label === "Select Salary Role") {
+                                                                    errors.salaryRoleId =
+                                                                    'Salary Role is Required';
                                                                 }
 
 														return errors;
@@ -462,6 +482,8 @@ class UpdateEmployeePersonal extends React.Component {
                                                         //     .required('status is Required'),
                                                         employeeDesignationId: Yup.string()
                                                             .required('Designation is Required'),
+                                                            salaryRoleId : Yup.string()
+                                                            .required('Salary Role is Required'),
                                                             mobileNumber: Yup.string()
 															.required('Mobile Number is required'),
                                                             emergencyContactName1: Yup.string()
@@ -477,7 +499,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                     {(props) => (
                                                         <Form onSubmit={props.handleSubmit} name="simpleForm">
                                                             <Row>
-                                                                {/* <Col xs="4" md="4" lg={2}>
+                                                                <Col xs="4" md="4" lg={2}>
                                                                                         <FormGroup className="mb-3 text-center">
                                                                                             <ImageUploader
                                                                                                 // withIcon={true}
@@ -507,14 +529,14 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                                 }
                                                                                             />
                                                                                         </FormGroup>
-                                                                                    </Col> */}
+                                                                                    </Col>
 
-                                                                <Col  lg={12}>
+                                                                <Col  xs="4" md="4" lg={10}>
                                                                     <Row className="row-wrapper">
 
                                                                         <Col lg={4}>
                                                                             <FormGroup>
-                                                                                <Label htmlFor="select"><span className="text-danger">*</span> {strings.FirstName}</Label>
+                                                                                <Label htmlFor="select"><span className="text-danger">* </span> {strings.FirstName}</Label>
                                                                                 <Input
                                                                                     type="text"
                                                                                     id="firstName"
@@ -552,7 +574,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                         </Col>
                                                                         <Col lg={4}>
                                                                             <FormGroup>
-                                                                                <Label htmlFor="select"><span className="text-danger">*</span>{strings.LastName}</Label>
+                                                                                <Label htmlFor="select"><span className="text-danger">* </span>{strings.LastName}</Label>
                                                                                 <Input
                                                                                     type="text"
                                                                                     id="lastName"
@@ -574,7 +596,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                     <Row>
                                                                         <Col md="4">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="select"><span className="text-danger">*</span>{strings.Email}</Label>
+                                                                                <Label htmlFor="select"><span className="text-danger">* </span>{strings.Email}</Label>
                                                                                 <Input
                                                                                     type="text"
                                                                                     id="email"
@@ -592,7 +614,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                         <Col md="4">
                                                                             <FormGroup>
                                                                                 <Label htmlFor="mobileNumber">
-                                                                                <span className="text-danger">*</span>  {strings.MobileNumber}
+                                                                                <span className="text-danger">* </span>  {strings.MobileNumber}
                                                                                 </Label>
                                                                                 <PhoneInput
                                                                                     id="mobileNumber"
@@ -624,7 +646,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                         </Col>
                                                                         <Col md="4">
                                                                             <FormGroup className="mb-3">
-                                                                                <Label htmlFor="date"><span className="text-danger">*</span>{strings.DateOfBirth}</Label>
+                                                                                <Label htmlFor="date"><span className="text-danger">* </span>{strings.DateOfBirth}</Label>
                                                                                 <DatePicker
                                                                                     className={`form-control ${props.errors.dob && props.touched.dob ? "is-invalid" : ""}`}
                                                                                     id="dob"
@@ -634,7 +656,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                     showYearDropdown
                                                                                     maxDate={new Date()}
                                                                                     autoComplete={"off"}
-                                                                                    dateFormat="dd/MM/yyyy"
+                                                                                    dateFormat="dd-MM-yyyy"
                                                                                     dropdownMode="select"
                                                                                     selected={props.values.dob}
                                                                                     value={props.values.dob}
@@ -649,7 +671,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                         </Col>
                                                                         <Col md="4">
                                                                             <FormGroup className="mb-3">
-                                                                                <Label htmlFor="active"><span className="text-danger">*</span> {strings.Status}</Label>
+                                                                                <Label htmlFor="active"><span className="text-danger">* </span> {strings.Status}</Label>
                                                                                 <div>
                                                                                     <FormGroup check inline>
                                                                                         <div className="custom-radio custom-control">
@@ -719,7 +741,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                     <Row>
                                                                         <Col md="4">
                                                                             <FormGroup>
-                                                                            <Label htmlFor="gender"><span className="text-danger">*</span>{strings.Gender}</Label>
+                                                                                <Label htmlFor="gender"><span className="text-danger">* </span>{strings.Gender}</Label>
                                                                                 <Select
 
                                                                                     options={
@@ -853,7 +875,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                     <Col md="4">
                                                                             <FormGroup>
 
-                                                                                <Label htmlFor="salaryRoleId">{strings.SalaryRole} </Label>
+                                                                                <Label htmlFor="salaryRoleId"><span className="text-danger">* </span> {strings.SalaryRole} </Label>
                                                                                 <Select
 
                                                                                     options={
@@ -908,7 +930,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                        
                                                                         <Col md="4">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="employeeDesignationId"><span className="text-danger">*</span>{strings.Designation}</Label>
+                                                                                <Label htmlFor="employeeDesignationId"><span className="text-danger">* </span>{strings.Designation}</Label>
                                                                                 <Select
 
                                                                                     options={
@@ -975,43 +997,54 @@ class UpdateEmployeePersonal extends React.Component {
                                                                     <Row className="row-wrapper">
                                                                         <Col md="8">
                                                                             <FormGroup>
-                                                                            <Label htmlFor="gender"><span className="text-danger">*</span> {strings.PresentAddress} </Label>
+                                                                                <Label htmlFor="gender"><span className="text-danger">* </span> {strings.PresentAddress} </Label>
                                                                                 <Input
-                                                                                    type="text"
-                                                                                    id="presentAddress"
-                                                                                    maxLength="26"
-                                                                                    name="presentAddress"
-                                                                                    value={props.values.presentAddress}
-                                                                                    placeholder={strings.Enter+strings.PresentAddress}
-                                                                                    onChange={(option) => {
-                                                                                        if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('presentAddress')(option) }
-                                                                                    }}
-                                                                                    className={props.errors.presentAddress && props.touched.presentAddress ? "is-invalid" : ""}
-                                                                                />
-                                                                              {props.errors.presentAddress && props.touched.presentAddress && (
+                                                                                                        type="text"
+                                                                                                        maxLength="100"
+                                                                                                        id="presentAddress"
+                                                                                                        name="presentAddress"
+                                                                                                        value={props.values.presentAddress}
+                                                                                                        placeholder={strings.Enter+strings.PresentAddress}
+                                                                                                        onChange={(option) => {
+                                                                                                            if (
+                                                                                                                option.target.value === '' ||
+                                                                                                                this.regExAddress.test(
+                                                                                                                    option.target.value,
+                                                                                                                )
+                                                                                                            ){
+                                                                                                                props.handleChange('presentAddress')(option.target.value);																			
+                                                                                                            }
+                                                                                                        }}
+                                                                                                        className={props.errors.presentAddress && props.touched.presentAddress ? "is-invalid" : ""}
+                                                                                                    />
+                                                                                                    {props.errors.presentAddress && props.touched.presentAddress && (
                                                                                                         <div className="invalid-feedback">{props.errors.presentAddress}</div>
                                                                                                     )}
-                                                                            </FormGroup>
+                                                                                                </FormGroup>
+                                                                              
                                                                         </Col>
                                                                         <Col md="4">
                                                                             <FormGroup>
-                                                                            <Label htmlFor="city"><span className="text-danger">*</span>{strings.PinCode} </Label>
+                                                                                <Label htmlFor="city"><span className="text-danger">*</span>{strings.PinCode} </Label>
                                                                                 <Input
-                                                                                    type="text"
-                                                                                    id="pincode"
-                                                                                    name="pincode"
-                                                                                    maxLength="8"
-                                                                                    value={props.values.pincode}
-                                                                                    placeholder={strings.Enter+strings.PinCode}
-                                                                                    onChange={(option) => {
-                                                                                        if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('pincode')(option) }
-                                                                                    }}
-                                                                                    className={props.errors.pincode && props.touched.pincode ? "is-invalid" : ""}
-                                                                                />
-                                                                               {props.errors.pincode && props.touched.pincode && (
+                                                                                                        type="text"
+                                                                                                        maxLength="8"
+                                                                                                        id="pincode"
+                                                                                                        name="pincode"
+                                                                                                        value={props.values.pincode}
+                                                                                                        placeholder={strings.Enter+strings.PinCode}
+
+                                                                                                        onChange={(option) => {
+                                                                                                            if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('pincode')(option) }
+                                                                                                        }}
+                                                                                                        className={props.errors.pincode && props.touched.pincode ? "is-invalid" : ""}
+                                                                                                    />
+                                                                                                    {props.errors.pincode && props.touched.pincode && (
                                                                                                         <div className="invalid-feedback">{props.errors.pincode}</div>
                                                                                                     )}
-                                                                            </FormGroup>
+                                                                                                </FormGroup>
+                          
+                                                                                
                                                                         </Col>
 
                                                                     </Row>
@@ -1019,8 +1052,9 @@ class UpdateEmployeePersonal extends React.Component {
                                                                     <Row className="row-wrapper">
                                                                         <Col md="4">
                                                                             <FormGroup>
-                                                                            <Label htmlFor="countryId"><span className="text-danger">*</span>{strings.Country}</Label>
+                                                                                <Label htmlFor="countryId"><span className="text-danger">*</span>{strings.Country}</Label>
                                                                                 <Select
+                                                                                isDisabled
                                                                                     options={
                                                                                         country_list
                                                                                             ? selectOptionsFactory.renderOptions(
@@ -1077,7 +1111,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                         </Col>
                                                                         <Col md="4">
                                                                             <FormGroup>
-                                                                            <Label htmlFor="stateId"><span className="text-danger">*</span>{strings.StateRegion}</Label>
+                                                                                <Label htmlFor="stateId"><span className="text-danger">* </span>{strings.StateRegion}</Label>
                                                                                 <Select
 
                                                                                     options={
@@ -1134,25 +1168,26 @@ class UpdateEmployeePersonal extends React.Component {
 
                                                                         <Col md="4">
                                                                             <FormGroup>
-                                                                            <Label htmlFor="state"><span className="text-danger">*</span>{strings.City} </Label>
+                                                                                <Label htmlFor="state"><span className="text-danger">* </span>{strings.City} </Label>
                                                                                 <Input
-                                                                                    type="text"
-                                                                                    id="city"
-                                                                                    name="city"
-                                                                                    maxLength="20"
-                                                                                    
-                                                                                    placeholder={strings.Enter+strings.City}
-                                                                                   
-                                                                                    value={props.values.city}
-                                                                                    onChange={(option) => {
-                                                                                        if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('city')(option) }
-                                                                                    }}
-                                                                                    className={props.errors.city && props.touched.city ? "is-invalid" : ""}
-                                                                                />
-                                                                                 {props.errors.city && props.touched.city && (
+                                                                                                        type="text"
+                                                                                                        maxLength="100"
+                                                                                                        id="city"
+                                                                                                        name="city"
+                                                                                                        value={props.values.city}
+                                                                                                        placeholder={strings.Enter+strings.City}
+
+                                                                                                        onChange={(option) => {
+                                                                                                            if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('city')(option) }
+                                                                                                        }}
+                                                                                                        className={props.errors.city && props.touched.city ? "is-invalid" : ""}
+                                                                                                    />
+                                                                                                    {props.errors.city && props.touched.city && (
                                                                                                         <div className="invalid-feedback">{props.errors.city}</div>
                                                                                                     )}
-                                                                            </FormGroup>
+                                                                                                </FormGroup>
+                                               
+                                                                              
                                                                         </Col>
                                                                     </Row>
 
@@ -1165,6 +1200,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                                     <Label htmlFor="university"> {strings.University} </Label>
                                                                                                     <Input
                                                                                                         type="text"
+                                                                                                        maxLength="100"
                                                                                                         id="university"
                                                                                                         name="university"
                                                                                                         placeholder={strings.Enter+strings.University}
@@ -1187,6 +1223,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                                     <Label htmlFor="qualification"> {strings.qualification} </Label>
                                                                                                     <Input
                                                                                                         type="text"
+                                                                                                        maxLength="50"
                                                                                                         id="qualification"
                                                                                                         name="qualification"
                                                                                                         placeholder={strings.Enter+strings.qualification}
@@ -1209,6 +1246,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                                     <Label htmlFor="qualificationYearOfCompletionDate"> {strings.qualificationYearOfCompletionDate} </Label>
                                                                                                     <Input
                                                                                                         type="text"
+                                                                                                        maxLength="10"
                                                                                                         id="qualificationYearOfCompletionDate"
                                                                                                         name="qualificationYearOfCompletionDate"
                                                                                                         placeholder={strings.Enter+strings.qualificationYearOfCompletionDate}
@@ -1234,7 +1272,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                     
                                                                                           <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="emergencyContactName1"><span className="text-danger">*</span>{strings.ContactName1}</Label>
+                                                                                                    <Label htmlFor="emergencyContactName1"><span className="text-danger">* </span>{strings.ContactName1}</Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         maxLength="26"
@@ -1257,7 +1295,7 @@ class UpdateEmployeePersonal extends React.Component {
 
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="emergencyContactNumber1"><span className="text-danger">*</span>{strings.ContactNumber1} </Label>
+                                                                                                    <Label htmlFor="emergencyContactNumber1"><span className="text-danger">* </span>{strings.ContactNumber1} </Label>
                                                                                                     <PhoneInput
                                                                                                         id="emergencyContactNumber1"
                                                                                                         name="emergencyContactNumber1"
@@ -1289,7 +1327,7 @@ class UpdateEmployeePersonal extends React.Component {
 
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="emergencyContactRelationship1"><span className="text-danger">*</span> {strings.Relationship1} </Label>
+                                                                                                    <Label htmlFor="emergencyContactRelationship1"><span className="text-danger">* </span> {strings.Relationship1} </Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         maxLength="26"
@@ -1457,6 +1495,7 @@ class UpdateEmployeePersonal extends React.Component {
                         </Col>
                     </Row>
                 </div>
+            </div>
             </div>
         )
     }

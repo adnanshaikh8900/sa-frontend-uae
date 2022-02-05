@@ -78,6 +78,7 @@ class DetailUser extends React.Component {
 			disabled: false,
 			disabled1:false,
 			timezone: [],
+			exist: false,
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 	}
@@ -281,7 +282,24 @@ class DetailUser extends React.Component {
 				});
 		}
 	};
-
+	validationCheck = (value) => {
+		const data = {
+			moduleType: 9,
+			name: value,
+		};
+		this.props.userDetailActions.checkValidation(data).then((response) => {
+			if (response.data === 'User already exists') {
+				this.setState({
+					exist: true,
+					 disabled: false,
+				})
+			} else {
+				this.setState({
+					exist: false,
+				});
+			}
+		});
+	};
 	render() {
 		strings.setLanguage(this.state.language);
 		const { loading, dialog, timezone,current_user_id } = this.state;
@@ -295,6 +313,8 @@ class DetailUser extends React.Component {
 		console.log(role_list,"role_list")
 		console.log(active_roles_list,"temp_role_list")
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="create-user-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -329,6 +349,22 @@ class DetailUser extends React.Component {
 														//   selectedCurrency: null,
 														//   selectedInvoiceLanguage: null
 														// })
+													}}
+													validate={(values) => {
+														let errors = {};
+														
+														if (this.state.exist === true) {
+															errors.email =
+																'User already exists';
+														}
+	
+														if (errors.length) {
+															this.setState({
+																 disabled: false,
+															})
+														}
+	
+														return errors;
 													}}
 													validationSchema={Yup.object().shape({
 														firstName: Yup.string().required(
@@ -418,7 +454,7 @@ class DetailUser extends React.Component {
 																		<Col lg={6}>
 																			<FormGroup>
 																				<Label htmlFor="select">
-																					<span className="text-danger">*</span>
+																					<span className="text-danger">* </span>
 																					 {strings.FirstName}
 																				</Label>
 																				<Input
@@ -457,7 +493,7 @@ class DetailUser extends React.Component {
 																		<Col lg={6}>
 																			<FormGroup>
 																				<Label htmlFor="select">
-																					<span className="text-danger">*</span>
+																					<span className="text-danger">* </span>
 																					 {strings.LastName}
 																				</Label>
 																				<Input
@@ -498,7 +534,7 @@ class DetailUser extends React.Component {
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="email">
-																					<span className="text-danger">*</span>
+																					<span className="text-danger">* </span>
 																					 {strings.EmailID}
 																				</Label>
 																				<Input
@@ -509,6 +545,9 @@ class DetailUser extends React.Component {
 																					value={props.values.email}
 																					onChange={(value) => {
 																						props.handleChange('email')(value);
+																						this.validationCheck(
+																							value.target.value,
+																						);
 																					}}
 																					className={
 																						props.errors.email &&
@@ -541,7 +580,7 @@ class DetailUser extends React.Component {
 																					name="dob "
 																					showMonthDropdown
 																					showYearDropdown
-																					dateFormat="dd/MM/yyyy"
+																					dateFormat="dd-MM-yyyy"
 																					dropdownMode="select"
 																					maxDate={new Date()}
 																					autoComplete="off"
@@ -645,7 +684,7 @@ class DetailUser extends React.Component {
 																		<Col lg={6}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="contactId">
-																			
+																				
 																		 {strings.Employee} 
 																	</Label>
 																			<Select
@@ -691,7 +730,7 @@ class DetailUser extends React.Component {
 																		<Col lg={6}>
 																			<FormGroup>
 																				<Label htmlFor="roleId">
-																					<span className="text-danger">*</span>
+																					<span className="text-danger">* </span>
 																					 {strings.Role}
 																				</Label>
 																				<Select
@@ -744,7 +783,7 @@ class DetailUser extends React.Component {
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="timeZone">
-																					<span className="text-danger">*</span>
+																					<span className="text-danger">* </span>
 																					 {strings.TimeZonePreference}
 																				</Label>
 																				<Select
@@ -812,7 +851,8 @@ class DetailUser extends React.Component {
 							
 																	
 																	</Row>
-															
+																	
+														
 																</Col>
 															</Row>
 															
@@ -889,6 +929,7 @@ class DetailUser extends React.Component {
 						</Col>
 					</Row>
 				</div>
+			</div>
 			</div>
 		);
 	}

@@ -202,7 +202,7 @@ class CreateGoodsReceivedNote extends React.Component {
 			{ label: 'Net 30 Days', value: 'NET_30' },
 			{ label: 'Due on Receipt', value: 'DUE_ON_RECEIPT' },
 		];
-		this.placelist = [
+			this.placelist = [
 			{ label: 'Abu Dhabi', value: '1' },
 			{ label: 'Dubai', value: '2' },
 			{ label: 'Sharjah', value: '3' },
@@ -239,6 +239,7 @@ class CreateGoodsReceivedNote extends React.Component {
 				render={({ field, form }) => (
 					<Input
 						type="text"
+						maxLength="250"
 						value={row['description'] !== '' ? row['description'] : ''}
 						onChange={(e) => {
 							this.selectItem(
@@ -319,8 +320,8 @@ class CreateGoodsReceivedNote extends React.Component {
 						<Input
 						disabled
 							type="number"
-min="0"
-							maxLength="10"
+							min="0"
+							maxLength="100"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
 								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -379,9 +380,9 @@ min="0"
 				render={({ field, form }) => (
 					<div>
 							<Input
-					type="text"
+							type="text"
 							min="0"
-							//type="number"
+							// type="number"
 							maxLength="10"
 							value={row['grnReceivedQuantity'] !== 0 ? row['grnReceivedQuantity'] : 0}
 							onChange={(e) => {
@@ -430,9 +431,15 @@ min="0"
 									{props.errors.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity}
 								</div>
 							)} */}
-								<div  className="text-danger">
+								{/* <div  className="text-danger">
 									{this.state.grnReceivedQuantityError}
+								</div> */}
+								{row['grnReceivedQuantity'] <= 0 && (
+								<div  className="text-danger">
+									Please Enter Quantity
 								</div>
+								)
+							}
 					</div>
 				)}
 			/>
@@ -453,7 +460,7 @@ this.state.data.map((obj, index) => {
 				render={({ field, form }) => (
 					<Input
 					type="number"
-						maxLength="10"
+						maxLength="14,2"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -498,7 +505,7 @@ this.state.data.map((obj, index) => {
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// );
-		return row.subTotal === 0 ? this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+  row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.subTotal === 0 ? this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+  row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 });
 	};
 
 	componentDidMount = () => {
@@ -934,11 +941,11 @@ this.state.data.map((obj, index) => {
 	// 	const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 	// 	const values = value
 	// 		? value
-	// 		: moment(props.values.invoiceDate, 'DD/MM/YYYY').toDate();
+	// 		: moment(props.values.invoiceDate, 'DD-MM-YYYY').toDate();
 	// 	if (temp && values) {
 	// 		const date = moment(values)
 	// 			.add(temp - 1, 'days')
-	// 			.format('DD/MM/YYYY');
+	// 			.format('DD-MM-YYYY');
 	// 		props.setFieldValue('invoiceDueDate', date, true);
 	// 	}
 	// };
@@ -976,7 +983,7 @@ this.state.data.map((obj, index) => {
 			if (props.values.discountType.value === 'PERCENTAGE') {
 				var val =
 					((+obj.unitPrice -
-						+((obj.unitPrice * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2 })) *
+						+((obj.unitPrice * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })) *
 						vat *
 						obj.grnReceivedQuantity) /
 					100;
@@ -997,7 +1004,7 @@ this.state.data.map((obj, index) => {
 
 		const discount =
 			props.values.discountType.value === 'PERCENTAGE'
-				? +((total_net * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2 })
+				? +((total_net * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })
 				: discountAmount;
 		this.setState(
 			{
@@ -1069,7 +1076,7 @@ this.state.data.map((obj, index) => {
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data.message?res.data.message:"Good Received Note Created Successfully"
+					res.data ? res.data.message : 'Goods Received Note Created Successfully'
 				);
 				if (this.state.createMore) {
 					this.setState(
@@ -1120,7 +1127,7 @@ this.state.data.map((obj, index) => {
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'Goods Received Note Created Unsuccessfully',
 				);
 			});
 	};
@@ -1461,6 +1468,9 @@ console.log(this.state.data)
 														errors.grn_Number =
 															'GRN Number already exists';
 													}
+													if (values.grn_Number==='') {
+														errors.grn_Number = 'GRN Number is required';
+													}
 													return errors;
 												}}
 												validationSchema={Yup.object().shape(
@@ -1523,7 +1533,7 @@ console.log(this.state.data)
 																	.required('Value is Required')
 																	.test(
 																		'grnReceivedQuantity',
-																		'Quantity Should be Greater than 1',
+																		'Quantity should be greater than 0',
 																		(value) => {
 																			if (value > 0) {
 																				return true;
@@ -1621,11 +1631,12 @@ console.log(this.state.data)
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="grn_Number">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.GRNNUMBER}
 																	</Label>
 																	<Input
 																		type="text"
+																		maxLength="50"
 																		id="grn_Number"
 																		name="grn_Number"
 																		placeholder={strings.InvoiceNumber}
@@ -1658,7 +1669,7 @@ console.log(this.state.data)
 														<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="supplierId">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.SupplierName}
 																	</Label>
 																	<Select
@@ -1706,30 +1717,34 @@ console.log(this.state.data)
 																		)}
 																</FormGroup>
 															</Col>
-															<Col lg={3}>
-																<Label
-																	htmlFor="supplierId"
+													
+														 						<Col lg={3}>
+															<Label
+																	htmlFor="contactId"
 																	style={{ display: 'block' }}
 																>
-																	{strings.AddNewSupplier}
+																	{strings.AddNewSupplier} 
 																</Label>
-																<Button
-																	type="button"
-																	color="primary"
-																	className="btn-square"
-																	onClick={this.openSupplierModal}
-																>
-																	<i className="fa fa-plus"></i> {strings.AddASupplier}
-																</Button>
-															</Col>
-														
+															<Button
+                                                                color="primary"
+                                                                className="btn-square"
+                                                                // style={{ marginBottom: '40px' }}
+                                                                onClick={() =>
+																	//  this.props.history.push(`/admin/payroll/employee/create`,{goto:"Expense"})
+																	this.props.history.push(`/admin/master/contact/create`,{gotoParentURL:"/admin/expense/goods-received-note/create"})
+																	}
+
+                                                            >
+                                                                <i className="fas fa-plus mr-1" />
+                                         {strings.AddASupplier}
+									</Button></Col>
 															
 														
 														</Row>
 														<Row>	<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currency">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.Currency}
 																	</Label>
 																	<Select
@@ -1789,7 +1804,7 @@ console.log(this.state.data)
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="date">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.ReceivedDate}
 																	</Label>
 																	<DatePicker
@@ -1806,7 +1821,7 @@ console.log(this.state.data)
 																		showMonthDropdown
 																		showYearDropdown
 																		dropdownMode="select"
-																		dateFormat="dd/MM/yyyy"
+																		dateFormat="dd-MM-yyyy"
 																		maxDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('grnReceiveDate')(value);
@@ -1823,7 +1838,7 @@ console.log(this.state.data)
 															{/* <Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="due_date">
-																	<span className="text-danger">*</span>
+																	<span className="text-danger">* </span>
 																		Expiry Date
 																	</Label>
 																	<DatePicker
@@ -1840,7 +1855,7 @@ console.log(this.state.data)
 																		showMonthDropdown
 																		showYearDropdown
 																		dropdownMode="select"
-																		dateFormat="dd/MM/yyyy"
+																		dateFormat="dd-MM-yyyy"
 																		maxDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('rfqExpiryDate')(value);
@@ -1908,7 +1923,8 @@ console.log(this.state.data)
 																			? `Please add detail to add more`
 																			: ''
 																	}
-																	disabled={this.checkedRow() ? true : false}
+																	disabled={this.checkedRow() ? true : false ||
+																		props.values.poNumber ? true : false}
 																>
 																	<i className="fa fa-plus"></i>&nbsp;{strings.Addmore}
 																</Button>
@@ -1916,11 +1932,10 @@ console.log(this.state.data)
 																	color="primary"
 																	className="btn-square mr-3"
 																	onClick={(e, props) => {
-																		this.openProductModal(props);
+																		this.props.history.push(`/admin/master/product/create`,{gotoParentURL:"/admin/expense/goods-received-note/create"})
 																		}}
-																	
-																
-																>
+																	disabled={props.values.poNumber ? true : false}	
+																	>
 																	<i className="fa fa-plus"></i>&nbsp;{strings.Addproduct}
 																</Button>
 															</Col>
@@ -2058,7 +2073,7 @@ console.log(this.state.data)
 																		<Label htmlFor="grnRemarks">{strings.GRNREMARKS}</Label>
 																		<Input
 																			type="textarea"
-																			maxLength="255"
+																			maxLength="250"
 																			name="grnRemarks"
 																			id="grnRemarks"
 																			rows="6"

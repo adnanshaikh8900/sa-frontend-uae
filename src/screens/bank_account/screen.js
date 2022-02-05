@@ -411,10 +411,10 @@ class BankAccount extends React.Component {
 		this.removeDialog();
 		this.props.bankAccountActions
 			.removeBankAccountByID(_id)
-			.then(() => {
+			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Bank account deleted successfully  ',
+					res.data? res.data.message: 'Bank account Deleted Successfully  ',
 				);
 				this.initializeData();
 				let tempList = [];
@@ -431,7 +431,7 @@ class BankAccount extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'Bank Account Deleted Unsuccessfully',
 				);
 			});
 	};
@@ -531,10 +531,10 @@ class BankAccount extends React.Component {
 		};
 		this.props.bankAccountActions
 			.removeBulkBankAccount(obj)
-			.then(() => {
+			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Bank Account Deleted Successfully',
+					res.data ? res.data.message : 'Bank Account Deleted Successfully',
 				);
 				this.initializeData();
 				this.setState({
@@ -544,7 +544,7 @@ class BankAccount extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'Bank Account Deleted Unsuccessfully',
 				);
 			});
 	};
@@ -616,6 +616,8 @@ class BankAccount extends React.Component {
 		const { universal_currency_list, bank_account_list } = this.props;
 
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="bank-account-screen">
 				<div className="animated fadeIn">
 					{dialog}
@@ -857,7 +859,7 @@ class BankAccount extends React.Component {
 													{strings.BANKBALANCE}
 												</TableHeaderColumn>
 												<TableHeaderColumn
-													// dataAlign="right"
+													
 													dataField="swift_code"
 													export={false}
 													dataSort={false}
@@ -886,7 +888,7 @@ class BankAccount extends React.Component {
 						</CardBody>
 					</Card>
 				</div>
-			</div>
+			</div></div>
 		);
 	}
 }

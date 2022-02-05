@@ -39,7 +39,18 @@ import { selectOptionsFactory } from 'utils';
 import './style.scss';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
+import { upperCase } from 'lodash';
 
+const { ToWords } = require('to-words');
+const toWords = new ToWords({
+	localeCode: 'en-IN',
+	converterOptions: {
+	//   currency: true,
+	  ignoreDecimal: false,
+	  ignoreZeroCurrency: false,
+	  doNotAddOnly: false,
+	}
+  });
 const mapStateToProps = (state) => {
 	return {
 		supplier_invoice_list: state.supplier_invoice.supplier_invoice_list,
@@ -231,27 +242,27 @@ class SupplierInvoice extends React.Component {
 								<div>
 						<label className="font-weight-bold mr-2 ">{strings.InvoiceAmount} : </label>
 						<label>
-					{row.invoiceAmount  === 0 ? row.currencySymbol +" "+ row.invoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencySymbol +" "+ row.invoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+					{row.invoiceAmount  === 0 ? row.currencySymbol +" "+ row.invoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : row.currencySymbol +" "+ row.invoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 						</label>
 					</div>
 					<div style={{display: row.vatAmount === 0 ? 'none' : ''}}>
 					<label className="font-weight-bold mr-2">{strings.VatAmount} : </label>
-					<label>{row.vatAmount === 0  ?  row.currencySymbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) :  row.currencySymbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
+					<label>{row.vatAmount === 0  ?  row.currencySymbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) :  row.currencySymbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}</label>
 					</div>
 					<div style={{display: row.dueAmount === 0 ? 'none' : ''}}>
 						<label className="font-weight-bold mr-2">{strings.DueAmount} : </label>
-						<label>{row.dueAmount === 0  ?  row.currencySymbol +" "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) :  row.currencySymbol +" "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
+						<label>{row.dueAmount === 0  ?  row.currencySymbol +" "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) :  row.currencySymbol +" "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}</label>
 					</div>
 					
 			</div>);
 		};
 
 	renderDueAmount =(cell,row,extraData) => {
-		return row.dueAmount === 0  ? row.currencySymbol+row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencySymbol+row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.dueAmount === 0  ? row.currencySymbol+row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : row.currencySymbol+row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 });
 	}
 
 	renderVatAmount = (cell, row, extraData) => {
-		return row.vatAmount === 0 ? row.currencySymbol+row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencySymbol+row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.vatAmount === 0 ? row.currencySymbol+row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : row.currencySymbol+row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 });
 	};
 	renderCurrency = (cell, row) => {
 		if (row.currencySymbol) {
@@ -329,7 +340,7 @@ class SupplierInvoice extends React.Component {
               <i className="fas fa-eye" /> View
             </DropdownItem> */}
 
-						{row.statusEnum === 'Sent' && (
+						{row.statusEnum === 'Sent'  && row.editFlag==true&& (
 							<DropdownItem
 								onClick={() => {
 									this.unPostInvoice(row);
@@ -391,14 +402,14 @@ class SupplierInvoice extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Invoice Send Successfully',
+						res.data ? res.data.message :'Invoice Posted Successfully',
 					);
 				}
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					'Please First fill The Mail Configuration Detail',
+					err.data ? err.data.message :'Please First fill The Mail Configuration Detail',
 				);
 			});
 	};
@@ -489,7 +500,7 @@ class SupplierInvoice extends React.Component {
 				this.initializeData(filterData);
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Supplier Invoice Deleted Successfully',
+					res.data ? res.data.message : 'Supplier Invoice Deleted Successfully',
 				);
 				if (supplier_invoice_list && supplier_invoice_list.length > 0) {
 					this.setState({
@@ -500,7 +511,7 @@ class SupplierInvoice extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'Supplier Invoice Deleted Unsuccessfully',
 				);
 			});
 	};
@@ -531,6 +542,8 @@ class SupplierInvoice extends React.Component {
 			amount: row.invoiceAmount,
 			postingRefId: row.id,
 			postingRefType: 'INVOICE',
+			amountInWords:upperCase(row.currencyName + " " +(toWords.convert(row.invoiceAmount))+" ONLY" ).replace("POINT","AND"),
+			vatInWords:row.vatAmount ?upperCase(row.currencyName + " " +(toWords.convert(row.vatAmount))+" ONLY" ).replace("POINT","AND") :"-"
 		};
 		this.props.supplierInvoiceActions
 			.postInvoice(postingRequestModel)
@@ -538,7 +551,7 @@ class SupplierInvoice extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Invoice Posted Successfully',
+						'Supplier Invoice Posted Successfully',
 					);
 					this.setState({
 						loading: false,
@@ -550,7 +563,7 @@ class SupplierInvoice extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data ? err.data.message : 'Supplier Invoice Posted Unsuccessfully',
 				);
 				this.setState({
 					loading: false,
@@ -573,7 +586,7 @@ class SupplierInvoice extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Invoice Moved To Draft Successfully',
+						'Supplier Invoice Moved To Draft Successfully',
 					);
 					this.setState({
 						loading: false,
@@ -585,7 +598,7 @@ class SupplierInvoice extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data ? err.data.message : 'Supplier Invoice Moved To Draft Unsuccessfully',
 				);
 				this.setState({
 					loading: false,
@@ -628,7 +641,7 @@ class SupplierInvoice extends React.Component {
 		if (status === 'Paid') {
 			this.props.commonActions.tostifyAlert(
 				'error',
-				'Please delete the receipt first to delete the invoice',
+				'Please Delete The Receipt First To Delete The Invoice',
 			);
 		} else {
 			const message1 = (
@@ -659,14 +672,14 @@ class SupplierInvoice extends React.Component {
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Invoice Deleted Successfully',
+					res.data ? res.data.message : 'Invoice Deleted Successfully',
 				);
 				this.initializeData();
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'Invoice deleted Unsuccessfully',
 				);
 			});
 	};
@@ -751,6 +764,7 @@ console.log(supplier_invoice_list)
 						currencyName:supplier.currencyName ? supplier.currencyName:'',
 						currencySymbol: supplier.currencySymbol ? supplier.currencySymbol : '',
 						contactId: supplier.contactId,
+						editFlag:supplier.editFlag,
 				  }))
 				: '';
 
@@ -763,6 +777,8 @@ console.log(supplier_invoice_list)
 		})		
 
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="supplier-invoice-screen">
 				<div className="animated fadeIn">
 					{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
@@ -981,7 +997,7 @@ console.log(supplier_invoice_list)
 													showYearDropdown
 													autoComplete="off"
 													dropdownMode="select"
-													dateFormat="dd/MM/yyyy"
+													dateFormat="dd-MM-yyyy"
 													selected={filterData.invoiceDate}
 													// value={filterData.invoiceDate}
 													onChange={(value) => {
@@ -999,7 +1015,7 @@ console.log(supplier_invoice_list)
 													showYearDropdown
 													autoComplete="off"
 													dropdownMode="select"
-													dateFormat="dd/MM/yyyy"
+													dateFormat="dd-MM-yyyy"
 													selected={filterData.invoiceDueDate}
 													onChange={(value) => {
 														this.handleChange(value, 'invoiceDueDate');
@@ -1009,8 +1025,8 @@ console.log(supplier_invoice_list)
 											<Col lg={2} className="mb-1">
 												<Input
 													type="number"
-													maxLength="10"
-min="0"
+													maxLength="14,2"
+													min="0"
 													value={filterData.amount}
 													placeholder={strings.Amount}
 													onChange={(e) => {
@@ -1150,7 +1166,7 @@ min="0"
 											>
 												{strings.DUEDATE}
 											</TableHeaderColumn>
-										
+											
 											{/* <TableHeaderColumn
 												dataSort
 												width="5%"
@@ -1207,6 +1223,7 @@ min="0"
 						this.closeEmailModal(e);
 					}}
 				/>
+			</div>
 			</div>
 		);
 	}

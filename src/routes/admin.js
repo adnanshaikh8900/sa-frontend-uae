@@ -97,6 +97,12 @@ import {
 	ReceivableInvoiceSummary,
 	PayablesInvoiceDetailsReport,
 	PayablesInvoiceSummary,
+	PayrollSummaryReport,
+	VatReports,
+	VatPaymentRecord,
+	RecordTaxClaim,
+	RecordVatPayment,
+	ARAgingReport,
 
 
 	// Master Screens
@@ -188,7 +194,13 @@ import {
 	PayrollApproverScreen,
 	UpdatePayroll,
 	Migrate,
-	MigrateHistory
+	MigrateHistory,
+	SOAReport,
+	FtaAuditReport,
+	GenerateAuditFile,
+	ViewFtaAuditReport,
+	ExciseTaxAuditReport,
+	ViewFtaExciseAuditReport
 } from 'screens';
 
 const adminRoutes = [
@@ -603,12 +615,12 @@ const adminRoutes = [
 
 
 	{
-		path: '/admin/payroll/updatePayroll',
+		path: '/admin/payroll/payrollrun/updatePayroll',
 		name: 'GeneratePayroll',
 		component: UpdatePayroll.screen,
 	},
 	{
-		path: '/admin/payroll/createPayrollList',
+		path: '/admin/payroll/payrollrun/createPayrollList',
 		name: 'GeneratePayroll',
 		component: CreatePayroll.screen,
 	},
@@ -639,17 +651,17 @@ const adminRoutes = [
 	// },
 
 	{
-		path: '/admin/payroll/salaryRoles/create',
+		path: '/admin/payroll/config/createSalaryRoles',
 		name: 'CreateSalaryRole',
 		component: CreateSalaryRoles.screen,
 	},
 	{
-		path: '/admin/payroll/salaryRoles/detail',
+		path: '/admin/payroll/config/detailSalaryRoles',
 		name: 'UpdateSalaryRole',
 		component: DetailSalaryRole.screen,
 	},
 	{
-		path: '/admin/payroll/salaryStructure/detail',
+		path: '/admin/payroll/config/detailSalaryStructure',
 		name: 'UpdateSalaryStructure',
 		component: DetailSalaryStructure.screen,
 	},
@@ -680,7 +692,7 @@ const adminRoutes = [
 		component: SalaryTemplate.screen,
 	},
 	{
-		path: '/admin/payroll/salaryStructure/create',
+		path: '/admin/payroll/config/createSalaryStructure',
 		name: 'CreateSalaryStructure',
 		component: CreateSalaryStucture.screen,
 	},
@@ -690,12 +702,12 @@ const adminRoutes = [
 		component: SalaryStucture.screen,
 	},
 	{
-		path: '/admin/payroll/employeeDesignation/create',
+		path: '/admin/payroll/config/createEmployeeDesignation',
 		name: 'CreateEmployeeDesignation',
 		component: CreateDesignation.screen,
 	},
 	{
-		path: '/admin/payroll/employeeDesignation/detail',
+		path: '/admin/payroll/config/detailEmployeeDesignation',
 		name: 'UpdateEmployeeDesignation',
 		component: DetailDesignation.screen,
 	},
@@ -759,9 +771,65 @@ const adminRoutes = [
 		component: TrailBalances.screen,
 	},
 	{
-		path: '/admin/report/vatreturns',
-		name: 'VatReturnReport',
+		path: '/admin/report/ftaAuditReports',
+		name: 'FTA Reports',
+		component: FtaAuditReport.screen,
+	},		
+	{
+		path: '/admin/report/ftaAuditReports/generateftaAuditReport',
+		name: 'Generate FTA Report',
+		component: GenerateAuditFile.screen,
+	},	
+	{
+		path: '/admin/report/ftaAuditReports/view',
+		name: 'View FTA Report',
+		component: ViewFtaAuditReport.screen,
+	},
+	{
+		path: '/admin/report/exciseTaxAuditReports',
+		name: 'FTA Reports',
+		component: ExciseTaxAuditReport.screen,
+	},		
+	{
+		path: '/admin/report/exciseTaxAuditReports/generateexcisetaxAuditReport',
+		name: 'Generate FTA Report',
+		component: GenerateAuditFile.screen,
+	},	
+	{
+		path: '/admin/report/exciseTaxAuditReports/view',
+		name: 'View FTA Report',
+		component: ViewFtaExciseAuditReport.screen,
+	},
+	{
+		path: '/admin/report/vatreports/view',
+		name: 'View Vat Report',
 		component: VatReturnsReport.screen,
+	},
+	{
+		path: '/admin/report/vatreports',
+		name: 'Vat Reports',
+		component: VatReports.screen,
+	},	
+	
+	{
+		path: '/admin/report/vatreports/vatpaymentrecordhistory',
+		name: 'Vat Payment History',
+		component: VatPaymentRecord.screen,
+	},	
+	{
+		path: '/admin/report/vatreports/recordclaimtax',
+		name: 'Record Tax Claim',
+		component: RecordTaxClaim.screen,
+	},	
+	{
+		path: '/admin/report/vatreports/recordtaxpayment',
+		name: 'Record Tax Payment',
+		component: RecordVatPayment.screen,
+	},
+	{
+		path: '/admin/report/arAgingReport',
+		name: 'Record Tax Payment',
+		component: ARAgingReport.screen,
 	},
 	{
 		path: '/admin/report/salesbycustomer',
@@ -818,6 +886,16 @@ const adminRoutes = [
 		name: 'PayableInvoiceSummary',
 		component: PayablesInvoiceSummary.screen,
 	},
+	{
+		path: '/admin/report/payroll-summary',
+		name: 'PayrollSummaryReport',
+		component: PayrollSummaryReport.screen,
+	},	
+	{
+		path: '/admin/report/statementOfAccount',
+		name: 'StatementOfAccount',
+		component: SOAReport.screen,
+	},		
 	{
 		path: '/admin/report/expense-details',
 		name: 'ExpenseDetails',

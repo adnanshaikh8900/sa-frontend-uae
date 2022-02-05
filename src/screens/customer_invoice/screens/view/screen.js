@@ -109,7 +109,19 @@ class ViewCustomerInvoice extends React.Component {
 											}
 										});
 								}
-							},
+								if(this.state.invoiceData.contactId)
+						     {	
+							this.props.supplierInvoiceDetailActions
+							.getContactById(this.state.invoiceData.contactId)
+							.then((res) => {
+								if (res.status === 200) {									
+									this.setState({
+										contactData: res.data,
+									});
+								}
+							});
+							}
+						},
 						);
 					}
 				});
@@ -120,7 +132,7 @@ class ViewCustomerInvoice extends React.Component {
 		this.pdfExportComponent.save();
 	};	
 	render() {
-		const { invoiceData, currencyData, id } = this.state;
+		const { invoiceData, currencyData, id, contactData} = this.state;
 		const { profile } = this.props;
 
 		return (
@@ -172,7 +184,7 @@ class ViewCustomerInvoice extends React.Component {
 							<PDFExport
 									ref={(component) => (this.pdfExportComponent = component)}
 									scale={0.8}
-									paperSize="A4"
+									paperSize="A3"
 									fileName={invoiceData.referenceNumber + ".pdf"}
 								>
 									<InvoiceTemplate
@@ -183,6 +195,7 @@ class ViewCustomerInvoice extends React.Component {
 										ref={(el) => (this.componentRef = el)}
 										totalNet={this.state.totalNet}
 										companyData={this.state && this.state.companyData ?this.state.companyData:''}
+										contactData={contactData}
 									/>
 								</PDFExport>
 							</div>

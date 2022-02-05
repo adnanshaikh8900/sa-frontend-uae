@@ -176,8 +176,9 @@ class CreateEmployeeFinancial extends React.Component {
     .then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert(
-          'success',
-           'New Employee Created Successfully')
+          'success', 
+          res.data ? res.data.message : 'New Employee Created Successfully'
+          )
         if (this.state.createMore) {
           this.setState({
             createMore: false
@@ -188,7 +189,9 @@ class CreateEmployeeFinancial extends React.Component {
         }
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
+      this.props.commonActions.tostifyAlert('error', 
+      err && err.data ? err.data.message : 'Employee Created Unsuccessfully'
+      )
     })
   }
 
@@ -270,6 +273,7 @@ class CreateEmployeeFinancial extends React.Component {
                                   <Label htmlFor="select">Account Holder Name </Label>
                                   <Input
                                     type="text"
+                                    maxLength="100"
                                     id="accountHolderName"
                                     name="accountHolderName"
                                     value={props.values.accountHolderName}
@@ -289,6 +293,7 @@ class CreateEmployeeFinancial extends React.Component {
                                   <Label htmlFor="select">Account Number</Label>
                                   <Input
                                     type="text"
+                                    maxLength="23"
                                     id="accountNumber"
                                     name="accountNumber"
                                     value={props.values.accountNumber}
@@ -311,6 +316,7 @@ class CreateEmployeeFinancial extends React.Component {
                                   <Label htmlFor="select">IBAN Number</Label>
                                   <Input 
                                     type="text"
+                                    maxLength="23"
                                     id="ibanNumber"
                                     name="ibanNumber"
                                     value={props.values.ibanNumber}
@@ -330,6 +336,7 @@ class CreateEmployeeFinancial extends React.Component {
                                   <Label htmlFor="labourCard">Bank Name</Label>
                                   <Input
                                     type="text"
+                                    maxLength="100"
                                     id="bankName"
                                     name="bankName"
                                     value={props.values.bankName}
@@ -355,6 +362,7 @@ class CreateEmployeeFinancial extends React.Component {
                                   <Label htmlFor="select">Branch</Label>
                                   <Input 
                                     type="text"
+                                    maxLength="100"
                                     id="branch"
                                     name="branch"
                                     value={props.values.branch}
@@ -374,6 +382,7 @@ class CreateEmployeeFinancial extends React.Component {
                                   <Label htmlFor="select">Swift Code</Label>
                                   <Input 
                                     type="text"
+                                    maxLength="11"
                                     id="swiftCode"
                                     name="swiftCode"
                                     value={props.values.swiftCode}
@@ -416,7 +425,7 @@ class CreateEmployeeFinancial extends React.Component {
                               </Col> 
                               <Col md="4">
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="passportExpiryDate"><span className="text-danger">*</span>Passport expiry Date</Label>
+                                  <Label htmlFor="passportExpiryDate"><span className="text-danger">* </span>Passport expiry Date</Label>
                                   <DatePicker
                                     className={`form-control ${props.errors.dateOfJoining && props.touched.dateOfJoining ? "is-invalid" : ""}`}
                                     id="passportExpiryDate"
@@ -424,7 +433,7 @@ class CreateEmployeeFinancial extends React.Component {
                                     placeholderText="Select passportExpiryDate"
                                     showMonthDropdown
                                     showYearDropdown 
-                                    dateFormat="dd/MM/yyyy"
+                                    dateFormat="dd-MM-yyyy"
                                     dropdownMode="select"
                                     selected={props.values.passportExpiryDate}
                                     value={props.values.passportExpiryDate}
@@ -443,7 +452,8 @@ class CreateEmployeeFinancial extends React.Component {
                                 <FormGroup>
                                   <Label htmlFor="gender">Visa Number </Label>
                                   <Input 
-                                    type="text" 
+                                    type="text"
+                                    maxLength="16"
                                     id="visaNumber"
                                     name="visaNumber"
                                     placeholder="Enter Present Address "
@@ -462,7 +472,7 @@ class CreateEmployeeFinancial extends React.Component {
                               </Col>
                               <Col md="4">
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="date"><span className="text-danger">*</span>\Visa ExpiryDate</Label>
+                                  <Label htmlFor="date"><span className="text-danger">* </span>\Visa ExpiryDate</Label>
                                   <DatePicker 
                                     className={`form-control ${props.errors.visaExpiryDate && props.touched.visaExpiryDate ? "is-invalid" : ""}`}
                                     id="visaExpiryDate"
@@ -470,7 +480,7 @@ class CreateEmployeeFinancial extends React.Component {
                                     placeholderText="Select visa Expiry Date"
                                     showMonthDropdown
                                     showYearDropdown 
-                                    dateFormat="dd/MM/yyyy"
+                                    dateFormat="dd-MM-yyyy"
                                     dropdownMode="select"
                                     selected={props.values.visaExpiryDate}
                                     value={props.values.visaExpiryDate}

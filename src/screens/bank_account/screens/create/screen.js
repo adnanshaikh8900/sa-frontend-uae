@@ -113,7 +113,9 @@ class CreateBankAccount extends React.Component {
 				countrycode: '',
 				openingDate: new Date(),
 				account_is_for: '',
+				bankId:''
 			},
+			BankList: [],
 			currentData: {},
 			language: window['localStorage'].getItem('language'),
 		};
@@ -132,6 +134,11 @@ class CreateBankAccount extends React.Component {
 
 	componentDidMount = () => {
 		this.initializeData();
+		this.props.createBankAccountActions.getBankList()
+            .then((response) => {
+            	this.setState({bankList:response.data
+            });
+          });
 	};
 
 	initializeData = () => {
@@ -212,6 +219,7 @@ class CreateBankAccount extends React.Component {
 			countrycode,
 			account_is_for,
 			openingDate,
+			bankId
 		} = data;
 		let obj = {
 			bankAccountName: account_name,
@@ -219,20 +227,22 @@ class CreateBankAccount extends React.Component {
 			openingBalance: opening_balance,
 			openingDate: openingDate ? openingDate : null,
 			bankAccountType: account_type ? account_type : '',
-			bankName: bank_name,
+			bankName: bankId && bankId.label ? bankId.label : "",
 			accountNumber: account_number,
 			ifscCode: ifsc_code,
 			swiftCode: swift_code,
 			bankCountry: countrycode ? countrycode : '',
 			personalCorporateAccountInd: account_is_for ? account_is_for : '',
+			// bankId:bankId ? bankId : "",
 		};
+		 
 		this.props.createBankAccountActions
 			.createBankAccount(obj)
 			.then((res) => {
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'New Bank Account Created Successfully.',
+					res.data ? res.data.message : 'New Bank Account Created Successfully.',
 				);
 				if (this.state.createMore) {
 					this.setState({
@@ -248,7 +258,7 @@ class CreateBankAccount extends React.Component {
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data? err.data.message: 'New Bank Account Created Unsuccessfully'
 				);
 			});
 	};
@@ -257,7 +267,7 @@ class CreateBankAccount extends React.Component {
 		strings.setLanguage(this.state.language);
 		const { account_type_list, currency_list,currency_convert_list, country_list } = this.props;
 
-		const { initialVals } = this.state;
+		const { initialVals ,bankList} = this.state;
 		return (
 			<div className="create-bank-account-screen">
 				<div className="animated fadeIn">
@@ -287,7 +297,7 @@ class CreateBankAccount extends React.Component {
 													let errors = {};
 													if (this.state.exist === true) {
 														errors.account_number =
-															'Account Number  already exists';
+															'Account Number already exists';
 													}
 													return errors;
 												}}
@@ -308,10 +318,11 @@ class CreateBankAccount extends React.Component {
 													account_type: Yup.string().required(
 														'Account Type is required',
 													),
-													bank_name: Yup.string()
-														.required('Bank Name is Required')
-														.min(2, 'Bank Name Is Too Short!')
-														.max(30, 'Bank Name Is Too Long!'),
+													// bank_name: Yup.string()
+													// 	.required('Bank Name is Required')
+													// 	.min(2, 'Bank Name Is Too Short!')
+													// 	.max(30, 'Bank Name Is Too Long!'),
+													bankId: Yup.string().required('Bank Name is Required') ,
 													account_number: Yup.string()
 														.required('Account Number is Required')
 														.min(2, 'Account Number Is Too Short!')
@@ -330,12 +341,12 @@ class CreateBankAccount extends React.Component {
 															<Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="account_name">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.AccountName}
 																	</Label>
 																	<Input
 																		type="text"
-																		maxLength="50"
+																		maxLength="100"
 																		id="account_name"
 																		name="account_name"
 																		placeholder={strings.Enter+strings.AccountName}
@@ -370,7 +381,7 @@ class CreateBankAccount extends React.Component {
 															<Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currency">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.Currency}
 																	</Label>
 																	<Select
@@ -430,11 +441,12 @@ class CreateBankAccount extends React.Component {
 															<Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="opening_balance">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.OpeningBalance}
 																	</Label>
 																	<Input
 																		type="type"
+																		maxLength="14,2"
 																		id="opening_balance"
 																		name="opening_balance"
 																		placeholder={strings.Enter+strings.OpeningBalance}
@@ -471,7 +483,7 @@ class CreateBankAccount extends React.Component {
 															<Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="expense_date">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.OpeningDate}
 																	</Label>
 																	<DatePicker
@@ -501,7 +513,7 @@ class CreateBankAccount extends React.Component {
 																		showMonthDropdown
 																		showYearDropdown
 																		dropdownMode="select"
-																		dateFormat="dd/MM/yyyy"
+																		dateFormat="dd-MM-yyyy"
 																		maxDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('openingDate')(value);
@@ -518,7 +530,7 @@ class CreateBankAccount extends React.Component {
 															<Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="account_type">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.AccountType}
 																	</Label>
 																	<Select
@@ -577,7 +589,48 @@ class CreateBankAccount extends React.Component {
 														</Row>
 														<hr />
 														<Row>
-															<Col lg={4}>
+														<Col md="4">
+                                                                                                <FormGroup>
+                                                                                                <Label htmlFor="select"><span className="text-danger">* </span> {strings.BankName} </Label>
+                                                                                                    <Select
+
+                                                                                                        options={
+                                                                                                            bankList
+                                                                                                                ? selectOptionsFactory.renderOptions(
+                                                                                                                    'bankName',
+                                                                                                                    'bankId',
+                                                                                                                    bankList,
+                                                                                                                    'Bank',
+                                                                                                                )
+                                                                                                                : []
+                                                                                                        }
+                                                                                                        value={props.values.bankId}
+                                                                                                        onChange={(option) => {
+                                                                                                            if (option && option.value) {
+                                                                                                                props.handleChange('bankId')(option);
+                                                                                                            } else {
+                                                                                                                props.handleChange('bankId')('');
+                                                                                                            }
+                                                                                                        }}
+                                                                                                        placeholder={strings.Select+strings.BankName}
+                                                                                                        id="bankId"
+                                                                                                        name="bankId"
+                                                                                                        className={
+                                                                                                            props.errors.bankId &&
+                                                                                                                props.touched.bankId
+                                                                                                                ? 'is-invalid'
+                                                                                                                : ''
+                                                                                                        }
+                                                                                                    />
+                                                                                                    {props.errors.bankId &&
+                                                                                                        props.touched.bankId && (
+                                                                                                            <div className="invalid-feedback">
+                                                                                                                {props.errors.bankId}
+                                                                                                            </div>
+                                                                                                        )}
+                                                                                                </FormGroup>
+                                                                                            </Col>
+															{/* <Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="bank_name">
 																		<span className="text-danger">*</span>{strings.BankName}
@@ -611,16 +664,16 @@ class CreateBankAccount extends React.Component {
 																			</div>
 																		)}
 																</FormGroup>
-															</Col>
+															</Col> */}
 															<Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="account_number">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.AccountNumber}
 																	</Label>
 																	<Input
 																		type="text"
-																		maxLength="50"
+																		maxLength="100"
 																		id="account_number"
 																		name="account_number"
 																		placeholder={strings.Enter+strings.AccountNumber}
@@ -810,7 +863,7 @@ class CreateBankAccount extends React.Component {
 															<Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="account_is_for">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.Accountisfor}
 																	</Label>
 																	<Select

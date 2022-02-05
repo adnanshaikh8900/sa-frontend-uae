@@ -193,7 +193,7 @@ class CreateReceipt extends React.Component {
 		formData.append(
 			'receiptDate',
 			typeof receiptDate === 'string'
-				? moment(receiptDate, 'DD/MM/YYYY').toDate()
+				? moment(receiptDate, 'DD-MM-YYYY').toDate()
 				: receiptDate,
 		);
 		formData.append('amount', amount !== null ? amount : '');
@@ -221,14 +221,14 @@ class CreateReceipt extends React.Component {
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Invoice Updated Successfully.',
+					res.data ? res.data.message : 'Payment Recorded Successfully',
 				);
 				this.props.history.push('/admin/income/customer-invoice');
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data ? err.data.message : 'Payment Recorded Unsuccessfully'
 				);
 			});
 	};
@@ -285,7 +285,7 @@ class CreateReceipt extends React.Component {
 	};
 
 	date = (cell, rows, props) => {
-		return <div>{moment.utc(rows.date).format('DD/MM/YYYY')}</div>;
+		return <div>{moment.utc(rows.date).format('DD-MM-YYYY')}</div>;
 	};
 
 	renderAmount = (cell, rows, props) => {
@@ -411,7 +411,7 @@ min="0"
 															<Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="customer_name">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		 {strings.CustomerName} 
 																	</Label>
 																	<Select
@@ -483,14 +483,11 @@ min="0"
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="amount">
-																						<span className="text-danger">
-																							*
-																						</span>
-																						 {strings.AmountReceived} 
+																						<span className="text-danger">* </span>{strings.AmountReceived} 
 																					</Label>
 																					<Input
 																						type="number"
-min="0"
+																						min="0"
 																						id="amount"
 																						name="amount"
 																						readOnly
@@ -541,7 +538,7 @@ min="0"
 																						selected={props.values.receiptDate}
 																						showMonthDropdown
 																						showYearDropdown
-																						dateFormat="dd/MM/yyyy"
+																						dateFormat="dd-MM-yyyy"
 																						dropdownMode="select"
 																						onChange={(value) => {
 																							props.handleChange('receiptDate')(

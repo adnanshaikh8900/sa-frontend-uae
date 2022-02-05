@@ -41,7 +41,23 @@ export const uploadFolder = (obj) => {
 				});
 		};
 	};
-
+	export const rollBackMigration = () => {
+		return (dispatch) => {
+			let data = {
+				method: 'delete',
+				url: '/rest/migration/rollbackMigratedData',
+			};
+			return authApi(data)
+				.then((res) => {
+					if (res.status === 200) {
+						return res;
+					}
+				})
+				.catch((err) => {
+					throw err;
+				});
+		};
+	};
 	
 
 	export const migrate = (obj) => {
@@ -211,4 +227,21 @@ export const uploadFolder = (obj) => {
 		  });
 		}
 	  }
-	 
+
+	  export const downloadcsv = (filename) => {
+		return (dispatch) => {
+			filename=filename.replaceAll(" ","_")
+			let data = {
+				method: 'get',
+				url: `/rest/migration/downloadcsv/${filename}`,
+				data: filename,
+			};
+			return authApi(data)
+				.then((res) => {
+					return res;
+				})
+				.catch((err) => {
+					throw err;
+				});
+		};
+	};

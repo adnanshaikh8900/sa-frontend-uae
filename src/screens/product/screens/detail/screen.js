@@ -41,6 +41,7 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { InventoryHistoryModal} from './sections';
+import Switch from 'react-switch';
 
 
 const mapStateToProps = (state) => {
@@ -94,7 +95,10 @@ class DetailProduct extends React.Component {
 			openModal:false,
 			inventory_history_list:[],
 			inventory_list:[],
-			isActive:false
+			isActive:false,
+			exciseTaxId:'',
+			exciseTaxList:[],
+			exciseTaxCheck:false
 		};
 
 		this.selectRowProp = {
@@ -117,14 +121,36 @@ class DetailProduct extends React.Component {
 		this.regEx = /^[0-9\d]+$/;
 		this.regExBoth = /[a-zA-Z0-9-./\\|]+$/;
 		// this.regExBoth = /[a-zA-Z0-9]+$/;
-		this.regExAlpha = /^[a-zA-Z ]+$/;
+		this.regExAlpha = /[ +a-zA-Z0-9-./\\|!@#$%^&*()_<>,]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,6}$$/;
 	}
 
 	componentDidMount = () => {
 		this.initializeData();
+		this.props.productActions.getExciseTaxList().then((res) => {
+			if (res.status === 200) {
+				this.setState({
+					exciseTaxList:res.data
+				});
+			}
+		});
+		this.getcompanyDetails();
 	};
-	
+	getcompanyDetails=()=>{
+		this.props.productActions.getCompanyDetails().then((res) => {
+			if (res.status === 200) {this.setState({ companyDetails: res.data });
+		
+			// if(res.data && res.data.isRegisteredVat==false)
+			// 		{
+			// 			this.formRef.current.setFieldValue('vatCategoryId',  5, true,true);
+			// 		}
+		}
+
+		})
+		.catch((err) => {		
+			this.props.commonActions.tostifyAlert(	'error',	err && err.data ? err.data.message : 'Something Went Wrong',	);
+		});
+	}
 	onRowSelect = (row, isSelected, e) => {
 		let tempList = [];
 		if (isSelected) {
@@ -219,10 +245,14 @@ class DetailProduct extends React.Component {
 								contactId: res.data.contactId ? res.data.contactId : '',
 								transactionCategoryId: res.data.transactionCategoryId ? res.data.transactionCategoryId : '',
 								inventoryId: res.data.inventoryId ? res.data.inventoryId : '',
+								exciseTaxId:res.data.exciseTaxId ?res.data.exciseTaxId :'',
 							},
+							exciseTaxCheck:res.data.exciseTaxId ?true :false,
+							exciseType:res.data.exciseType ?true :false,
 							count:initCount,
 							isInventoryEnabled: res.data.isInventoryEnabled ? res.data.isInventoryEnabled : '',
 							selectedStatus: res.data.isActive ? true : false,
+							salesProductCheck:res.data.productType=="SERVICE" ? true : false,
 						});
 					} else {
 						this.setState({ loading: false });
@@ -357,6 +387,7 @@ renderName=(cell,row)=>{
 		const purchaseUnitPrice = data['purchaseUnitPrice'];
 		const vatCategoryId = data['vatCategoryId'];
 		const vatIncluded = data['vatIncluded'];
+		const exciseTaxId = data['exciseTaxId'];
 		const inventoryPurchasePrice = data['inventoryPurchasePrice'];
 		const inventoryQty = data['inventoryQty'];
 		const inventoryReorderLevel = data['inventoryReorderLevel'];
@@ -365,7 +396,7 @@ renderName=(cell,row)=>{
 		const transactionCategoryId = this.state.inventoryAccount ? this.state.inventoryAccount[0].value : '';
 		const inventoryId = this.state.inventoryId;
 		const isActive = this.state.selectedStatus;
-
+		const exciseType = this.state.exciseType;
 		let productPriceType;
 		if (data && data['productPriceType'] && data['productPriceType'].includes('SALES')) {
 			productPriceType = 'SALES';
@@ -388,13 +419,14 @@ renderName=(cell,row)=>{
 			productType,
 			productPriceType,
 			vatCategoryId,
+			exciseTaxId,
 			vatIncluded,
 			isInventoryEnabled,
 			contactId,
 			transactionCategoryId,
 			inventoryId,
 			isActive,
-
+			exciseType,
 			...(salesUnitPrice.length !== 0 &&
 				data['productPriceType'].includes('SALES') && {
 					salesUnitPrice,
@@ -439,7 +471,7 @@ renderName=(cell,row)=>{
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data.message
+						res.data ? res.data.message : 'Product Updated Successfully'
 					);
 					this.props.history.push('/admin/master/product');
 				}
@@ -448,11 +480,47 @@ renderName=(cell,row)=>{
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message ,
+					err.data ? err.data.message : 'Product Updated Unsuccessfully',
 				);
 			});
 	};
 
+	ProductvalidationCheck = (value) => {
+		const data = {
+			moduleType: 7,
+			productCode: value,
+		};
+		this.props.productActions
+			.checkProductNameValidation(data)
+			.then((response) => {
+				if (response.data === 'Product code already exists') {
+					this.setState({
+						ProductExist: true,
+					});
+				} else {
+					this.setState({
+						ProductExist: false,
+					});
+				}
+			});
+	};
+	
+	getProductCode=()=>{
+
+		this.props.productActions.getProductCode().then((res) => {
+			if (res.status === 200) {
+				this.setState({
+					initValue: {
+						...this.state.initValue,
+						...{ productCode: res.data },
+					},
+				});
+				this.formRef.current.setFieldValue('productCode', res.data, true,true
+				// this.validationCheck(res.data)
+				);
+			}
+		});
+	}
 	showWarehouseModal = () => {
 		this.setState({ openWarehouseModal: true });
 	};
@@ -514,14 +582,17 @@ renderName=(cell,row)=>{
 			.deleteProduct(current_product_id)
 			.then((res) => {
 				if (res.status === 200) {
-					this.props.commonActions.tostifyAlert('success', res.data.message)
+					this.props.commonActions.tostifyAlert(
+						'success',
+						 res.data ? res.data.message : 'Product Deleted Successfully' ,
+						 )
 					this.props.history.push('/admin/master/product');
 				}
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message ,
+					err.data ? err.data.message : 'Product Deleted Unsuccessfully' ,
 				);
 			});
 	};
@@ -642,8 +713,16 @@ renderName=(cell,row)=>{
 	render() {
 		strings.setLanguage(this.state.language);
 		const { vat_list, product_category_list,supplier_list,inventory_list } = this.props;
-		const { loading, dialog, purchaseCategory, salesCategory, inventoryAccount } = this.state;
+		const { loading, dialog, purchaseCategory, salesCategory, inventoryAccount ,exciseTaxList} = this.state;
 		let tmpSupplier_list = []
+
+		var vat_list_data =[];
+
+		for(let i=0;i<vat_list.length;i++){
+			vat_list_data.push(vat_list[i])			
+		}
+		// if(this.state.companyDetails && this.state.companyDetails.isRegisteredVat==false)		
+			vat_list_data.push({ id: 10,name: "N/A",vat:0})
 
 		supplier_list.map(item => {
 			let obj = {label: item.label.contactName, value: item.value}
@@ -655,6 +734,8 @@ renderName=(cell,row)=>{
 			beforeSaveCell: this.beforeSaveCell,
 		  };
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="detail-product-screen">
 				<div className="animated fadeIn">
 					{dialog}
@@ -700,9 +781,16 @@ renderName=(cell,row)=>{
 													}}
 													validate={(values) => {
 														let errors = {};
-														if (values.purchaseUnitPrice > values.salesUnitPrice) {
-															errors.purchaseUnitPrice = 
-															'Purchase price cannot be greater than Sales price';
+														// if (values.purchaseUnitPrice > values.salesUnitPrice) {
+														// 	errors.purchaseUnitPrice = 
+														// 	'Purchase price cannot be greater than Sales price';
+														// }
+														if(this.state.exciseTaxCheck===true && values.exciseTaxId=='' ){
+															errors.exciseTaxId = 'Excise Tax is requied';
+														}
+														if (this.state.ProductExist === true) {
+															errors.productCode =
+																'Product Code is already exist';
 														}
 														return errors;
 													}}
@@ -808,6 +896,8 @@ renderName=(cell,row)=>{
 																						props.handleChange('productType')(
 																							value,
 																						);
+																						this.setState({exciseTaxCheck:false,exciseType:false})
+																						props.handleChange('exciseTaxId')('',);
 																					}}
 																					checked={
 																						props.values.productType ===
@@ -821,7 +911,7 @@ renderName=(cell,row)=>{
 																</Col>
 																<Col lg={4}>
 																<FormGroup check inline className="mb-3">
-																	<Label className="productlabel"><span className="text-danger">*</span>{strings.Status}</Label>
+																	<Label className="productlabel"><span className="text-danger">* </span>{strings.Status}</Label>
 																	<div className="wrapper">
 																	<Label
 																		className="form-check-label"
@@ -884,7 +974,7 @@ renderName=(cell,row)=>{
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="productName">
-																			<span className="text-danger">*</span> {strings.Name}
+																			<span className="text-danger">* </span> {strings.Name}
 																		</Label>
 																		<Input
 																			type="text"
@@ -893,7 +983,7 @@ renderName=(cell,row)=>{
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
-																					this.regExBoth.test(
+																					this.regExAlpha.test(
 																						option.target.value,
 																					)
 																				) {
@@ -923,13 +1013,15 @@ renderName=(cell,row)=>{
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="productCode">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			 {strings.ProductCode}
 																		</Label>
 																		<Input
 																			type="text"
 																			id="productCode"
 																			name="productCode"
+																			/**Added as per discussion with sajid sir ,disabled product code for sanity*/
+																			disabled
 																			value={props.values.productCode || ''}
 																			placeholder={strings.Enter+strings.ProductCode}
 																			onChange={(option) => {
@@ -943,6 +1035,9 @@ renderName=(cell,row)=>{
 																						option,
 																					);
 																				}
+																				this.ProductvalidationCheck(
+																					option.target.value,
+																				);
 																			}}
 																			className={
 																				props.errors.productCode &&
@@ -1019,10 +1114,11 @@ renderName=(cell,row)=>{
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="vatCategoryId">
-																			<span className="text-danger">*</span>
-																			 {strings.VatPercentage}
+																			<span className="text-danger">* </span>
+																			{strings.VAT+" "+strings.Type}
 																		</Label>
 																		<Select
+																		 isDisabled={this.state.companyDetails && !this.state.companyDetails.isRegisteredVat}
 																			styles={customStyles}
 																			options={
 																				vat_list
@@ -1037,12 +1133,13 @@ renderName=(cell,row)=>{
 																			id="vatCategoryId"
 																			name="vatCategoryId"
 																			value={
-																				vat_list &&
+
+																				vat_list_data &&
 																				selectOptionsFactory
 																					.renderOptions(
 																						'name',
 																						'id',
-																						vat_list,
+																						vat_list_data,
 																						'Vat',
 																					)
 																					.find(
@@ -1103,7 +1200,147 @@ renderName=(cell,row)=>{
 																	</FormGroup>
 																</Col>
 															</Row> */}
+	<Row style={{display: props.values.productType !='SERVICE'   ?'' : 'none'}}		>
+																{this.state.companyDetails && this.state.companyDetails.isRegisteredVat===true &&(<Col lg={4}>
+																<FormGroup check inline className="mb-3">
+																		<Label
+																			className="form-check-label"
+																			check
+																			htmlFor="exciseTaxCheck"
+																		>
+																			<Input
+																				type="checkbox"
+																				id="exciseTaxCheck"
+																				name="exciseTaxCheck"
+																				// onChange={(event) => {
+																				// let edit=props.values.exciseTaxId!='' ?true:false
+																				// 	if(!edit)
+																				// 	{
+																				// 	if (this.state.exciseTaxCheck===true)
+																				// 	 	this.setState({exciseTaxCheck:false})
+																				// 	else 
+																				// 		this.setState({exciseTaxCheck:true})
+																				// 	}
+																				
+																				// }}
+																				onChange={(event) => {
+																					if (
+																						this.state.exciseTaxCheck===true
+																						)
+																					 {
+																						this.setState({exciseTaxCheck:false,exciseType:false})
+																						props.handleChange('exciseTaxId')(
+																							'',
+																						);
+																					} else {
+																						this.setState({exciseTaxCheck:true})
+																					}
+																				}}
+																				checked={this.state.exciseTaxCheck}
+																				
+																			/>
+																			Excise Product ?
+																		</Label>
+																	</FormGroup>
+																</Col>)}
+																
+																{this.state.exciseTaxCheck===true&&(	
+															
+																<Col  style={{display: props.values.productType !='SERVICE'   ?'' : 'none'}} lg={4}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="exciseTaxId">
+																			<span className="text-danger">* </span>
+																			Excise Tax Type
+																		</Label>
+																		<Select
+																		// isDisabled={props.values.exciseTaxId!='' ?true:false}
+																			styles={customStyles}
+																			options={
+																				exciseTaxList
+																					? selectOptionsFactory.renderOptions(
+																							'name',
+																							'id',
+																							exciseTaxList,
+																							'Excise Tax Slab',
+																					  )
+																					: []
+																			}
+																			id="exciseTaxId"
+																			name="exciseTaxId"
+																			placeholder={strings.Select+ "Excise Tax Slab"}
+																			value={
+																				exciseTaxList
+																				&& selectOptionsFactory.renderOptions(
+																							'name',
+																							'id',
+																							exciseTaxList,
+																							'Excise Tax Slab',
+																					  )
+																					.find(
+																						(option) =>
+																							option.value ===
+																							+props.values.exciseTaxId,
+																					)
+																			}
+																			onChange={(option) => {
+																				
+																				if (option && option.value) {
+																					props.handleChange('exciseTaxId')(
+																						option,
+																					);
+																				} else {
+																					props.handleChange('exciseTaxId')(
+																						'',
+																					);
+																				}
+																			}}
+																			className={
+																				props.errors.exciseTaxId &&
+																				props.touched.exciseTaxId
+																					? 'is-invalid'
+																					: ''
+																			}
+																		/>
+																		{props.errors.exciseTaxId &&
+																			props.touched.exciseTaxId && (
+																				<div className="invalid-feedback">
+																					{props.errors.exciseTaxId}
+																				</div>
+																			)}
+																	</FormGroup>
+																</Col>
 
+															)}
+																</Row>
+																{this.state.exciseTaxCheck===true&&(	<Row style={{display: props.values.productType !='SERVICE'   ?'' : 'none'}}>
+															<Col >
+																<label className='mr-4'><b>Excise Type</b></label>
+																	{this.state.exciseType === false ?
+																	 <span style={{color : "#0069d9"}} className='mr-4'><b>Inclusive</b></span> :
+																	 <span className='mr-4'>Inclusive</span>}
+																	<Switch
+																		checked={this.state.exciseType}
+																		onChange={(exciseType) => {
+																			props.handleChange('exciseType')(exciseType);
+																			this.setState({exciseType,},	() => {},);
+																		}}
+																		onColor="#2064d8"
+																		onHandleColor="#2693e6"
+																		handleDiameter={25}
+																		uncheckedIcon={false}
+																		checkedIcon={false}
+																		boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+																		activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+																		height={20}
+																		width={48}
+																	className="react-switch "
+																	/>
+																	{this.state.exciseType === true ? 
+																	<span style={{color : "#0069d9"}} className='ml-4'><b>Exclusive</b></span>
+																	 : <span className='ml-4'>Exclusive</span>
+																	}	
+																</Col>
+															</Row>)}
 															<Row className="secondary-info">
 																<Col lg={8}>
 																	<FormGroup check inline className="mb-3">
@@ -1161,7 +1398,7 @@ renderName=(cell,row)=>{
 																	<Row><Col>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="salesUnitPrice">
-																			<span className="text-danger">*</span>{' '}
+																			<span className="text-danger">* </span>{' '}
 																			 {strings.SellingPrice}
 																		</Label>
 																		<Input
@@ -1207,6 +1444,7 @@ renderName=(cell,row)=>{
 																	</Col><Col>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="transactionCategoryId">
+																		<span className="text-danger">* </span>{' '}
 																		{strings.Account}
 																		</Label>
 																		<Select
@@ -1360,7 +1598,7 @@ renderName=(cell,row)=>{
 																	<Row><Col>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="salesUnitPrice">
-																			<span className="text-danger">*</span>{' '}
+																			<span className="text-danger">* </span>{' '}
 																			 {strings.PurchasePrice}
 																		</Label>
 																		<Input
@@ -1409,6 +1647,7 @@ renderName=(cell,row)=>{
 																	<Col>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="transactionCategoryId">
+																		<span className="text-danger">* </span>{' '}
 																		{strings.Account}
 																		</Label>
 																		<Select
@@ -1494,6 +1733,7 @@ renderName=(cell,row)=>{
 																			type="textarea"
 																			name="purchaseDescription"
 																			id="purchaseDescription"
+																			maxLength='255'
 																			rows="3"
 																			placeholder={strings.Description}
 																			onChange={(value) => {
@@ -1520,7 +1760,7 @@ renderName=(cell,row)=>{
 
 																			}}>
 															
-																	<Col lg={8}>
+																	<Col lg={8} style={{display: props.values.isInventoryEnabled != true ? 'none' : ''}}>
 																	<FormGroup check inline className="mb-3">
 																		<Label
 																			className="form-check-label"
@@ -1799,7 +2039,7 @@ min="0"
 																			// 		: true
 																			// }
 																			type="number"
-min="0"
+																			min="0"
 																			maxLength="200"
 																			name="inventoryReorderLevel"
 																			id="inventoryReorderLevel"
@@ -1963,6 +2203,7 @@ min="0"
 					// id={this.state.rowId}
 					 inventory_history_list={this.state.inventory_history_list}
 				/>
+			</div>
 			</div>
 		);
 	}

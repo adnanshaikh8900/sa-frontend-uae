@@ -81,6 +81,7 @@ class UpdateSalaryComponent extends React.Component {
         this.regEx = /^[0-9\d]+$/;
         this.regExBoth = /[a-zA-Z0-9]+$/;
         this.regExAlpha = /^[a-zA-Z ]+$/;
+        this.regDec1=/^\d{1,2}\.\d{1,2}$|^\d{1,2}$/;
 
         this.formRef = React.createRef();
 
@@ -134,10 +135,10 @@ handleChange = (evt) => {
                 }
             }).catch((err) => {
                 this.setState({ loading: false })
-                this.props.history.push('/admin/payroll/employee')
+                this.props.history.push('/admin/master/employee')
             })
         } else {
-            this.props.history.push('/admin/payroll/employee')
+            this.props.history.push('/admin/master/employee')
         }
     }
     openSalaryComponentFixed = (props) => {
@@ -193,11 +194,17 @@ handleChange = (evt) => {
         formData.append('salaryComponentString', JSON.stringify(this.state.list));
         this.props.detailSalaryComponentAction.updateEmployeeBank(formData).then((res) => {
             if (res.status === 200) {
-                this.props.commonActions.tostifyAlert('success', 'Employee Updated Successfully!')
-                this.props.history.push('/admin/payroll/employee')
+                this.props.commonActions.tostifyAlert(
+                    'success', 
+                    'Employee Updated Successfully.'
+                )
+                this.props.history.push('/admin/master/employee')
             }
         }).catch((err) => {
-            this.props.commonActions.tostifyAlert('error', err.data.message)
+            this.props.commonActions.tostifyAlert(
+                'error', 
+                err.data.message ? err.data.message :'Employee Updated Unsuccessfully'
+            )
         })
     }
 
@@ -272,7 +279,7 @@ handleChange = (evt) => {
                 var salaryMonthy = obj.flatAmount;
                 obj.monthlyAmount = salaryMonthy;
                 obj.yearlyAmount = salaryMonthy * 12;
-                totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
+                // totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
             }
 
             return obj;
@@ -433,7 +440,7 @@ handleChange = (evt) => {
                 var salaryMonthy = obj.flatAmount;
                 obj.monthlyAmount = salaryMonthy;
                 obj.yearlyAmount = salaryMonthy * 12;
-                totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
+                // totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
             }
 
             return obj;
@@ -476,6 +483,8 @@ handleChange = (evt) => {
         console.log(this.state.Fixed_Allowance, "Fixed_Allowance")
      
         return (
+            loading ==true? <Loader/> :
+<div>
             <div className="detail-vat-code-screen">
                 <div className="animated fadeIn">
                     {dialog}
@@ -485,7 +494,7 @@ handleChange = (evt) => {
                                 <CardHeader>
                                     <div className="h4 mb-0 d-flex align-items-center">
                                         <i className="nav-icon icon-briefcase" />
-                                        <span className="ml-2"> {strings.UpdateEmployementDetails}</span>
+                                        <span className="ml-2"> {strings.Update +" "+strings.SalaryDetails}</span>
                                     </div>
                                 </CardHeader>
                                 <CardBody>
@@ -513,6 +522,7 @@ handleChange = (evt) => {
                                                                 id="CTC"
                                                                 size="30"
                                                                 name="CTC"
+                                                                maxLength='14,2'
                                                                 style={{textAlign:"center"}}
                                                                 value={this.state.CTC ? this.state.CTC : props.values.CTC}
                                                                 placeholder={strings.Enter+"CTC"}
@@ -572,16 +582,22 @@ handleChange = (evt) => {
                                                                                     <td style={{border:"1px solid #c8ced3"}}>
                                                                                         <Input
                                                                                             type="number"
-min="0"
+                                                                                            min="0"
+                                                                                            max="99"
+															                                step="0.01"
                                                                                             size="30"
+                                                                                            maxLength={2}
                                                                                             style={{textAlign:"center"}}
                                                                                             id="formula"
                                                                                             name="formula"
                                                                                             value={item.formula}
                                                                                            // onChange={(e)=>{this.handleChange(e)}}   
                                                                                            onChange={(option) => {
-                                                                                            if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('formula')(option) }
-                                                                                            this.updateSalary1(this.state.CTC,option.target.value,item.id);
+                                                                                            if (option.target.value === '' || this.regDec1.test(option.target.value)) {
+                                                                                                 props.handleChange('formula')(option) 
+                                                                                                 this.updateSalary1(this.state.CTC,option.target.value,item.id);
+                                                                                        }
+                                                                                            
 
                                                                                         }}                                  
                                                                                                 />
@@ -609,7 +625,7 @@ min="0"
                                                                                 ) : (
                                                                                     <td style={{border:"1px solid #c8ced3"}} >
                                                                                         <Input
-                                                                                  
+                                                                                            maxLength="8"
                                                                                             type="text"
                                                                                             size="30"
                                                                                             style={{textAlign:"center"}}
@@ -692,12 +708,18 @@ min="0"
                                                                                     <td style={{border:"1px solid  #c8ced3"}}>
                                                                                         <Input
                                                                                             type="number"
-min="0"
+                                                                                            // min="0"
+                                                                                            min="0"
+                                                                                             max="99"
+                                                                                            step="0.01"
+                                                                                            maxLength={2}
                                                                                             style={{textAlign:"center"}}
                                                                                             size="30"
                                                                                             onChange={(option) => {
-                                                                                                if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('formula')(option) }
+                                                                                                if (option.target.value === '' || this.regDec1.test(option.target.value)) { props.handleChange('formula')(option)
                                                                                                 this.updateSalary1(this.state.CTC,option.target.value,item.id);
+                                                                                             }
+                                                                                               
     
                                                                                             }}     
                                                                                             value={item.formula}
@@ -726,6 +748,7 @@ min="0"
                                                                                 ) : (
                                                                                     <td style={{border:"1px solid  #c8ced3"}} >
                                                                                         <Input
+                                                                                        maxLength="8"
                                                                                             type="text"
                                                                                             size="30"
                                                                                             style={{textAlign:"center"}}
@@ -810,13 +833,19 @@ min="0"
                                                                                     <td style={{border:"1px solid #c8ced3"}}>
                                                                                         <Input
                                                                                             type="number"
-min="0"
+                                                                                            // min="0"
+                                                                                            min="0"
+                                                                                            max="99"
+                                                                                            step="0.01"
+                                                                                            maxLength={2}
                                                                                             size="30"
                                                                                             className="text-center"
                                                                                             value={item.formula}
                                                                                             onChange={(option) => {
-                                                                                                if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('formula')(option) }
+                                                                                                if (option.target.value === '' || this.regDec1.test(option.target.value)) { props.handleChange('formula')(option) 
                                                                                                 this.updateSalary1(this.state.CTC,option.target.value,item.id);
+                                                                                            }
+                                                                                               
     
                                                                                             }}   
                                                                                         />{' '}% of Basic
@@ -838,6 +867,7 @@ min="0"
                                                                                 ) : (
                                                                                     <td style={{border:"1px solid #c8ced3"}} >
                                                                                         <Input
+                                                                                        maxLength="8"
                                                                                             type="text"
                                                                                             size="30"
                                                                                             onChange={(option) => {
@@ -956,7 +986,7 @@ min="0"
                                                                         className="btn-square"
                                                                         onClick={() => {
                                                                             this.props.history.push(
-                                                                                '/admin/payroll/employee',
+                                                                                '/admin/master/employee',
                                                                             );
                                                                         }}
                                                                     >
@@ -1008,6 +1038,7 @@ min="0"
                     selectedData={this.state.selectedData}
 
                 />
+            </div>
             </div>
         )
     }

@@ -103,8 +103,8 @@ class UsersRoles extends React.Component {
 	};
 
 	goToDetail = (row) => {
-		{row.roleCode === 1 ? 
-			this.props.commonActions.tostifyAlert('error', 'You cannot edit Admin Role')
+		{row.roleCode === 1 || row.roleCode === 2 ||row.roleCode === 3 ||row.roleCode === 104 ||row.roleCode === 105 ? 
+			this.props.commonActions.tostifyAlert('error', 'You cannot edit '+row.roleName+' Role')
 			 :
 			this.props.history.push('/admin/settings/user-role/update', {
 			id: row.roleCode,
@@ -150,6 +150,8 @@ class UsersRoles extends React.Component {
 		};
 		const { role_list } = this.props;
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="transaction-category-screen">
 				<div className="animated fadeIn">
 					<ToastContainer
@@ -298,6 +300,7 @@ class UsersRoles extends React.Component {
 						</ModalFooter>
 					</Modal>
 				</div>
+			</div>
 			</div>
 		);
 	}

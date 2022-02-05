@@ -168,6 +168,8 @@ class DetailVatCode extends React.Component {
 		const { loading, dialog } = this.state;
 
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="detail-vat-code-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -207,7 +209,7 @@ class DetailVatCode extends React.Component {
 														>
 															<FormGroup>
 																<Label htmlFor="name">
-																	<span className="text-danger">*</span>
+																	<span className="text-danger">* </span>
 																	{strings.VatCategoryName}
 																</Label>
 																<Input
@@ -238,7 +240,7 @@ class DetailVatCode extends React.Component {
 															</FormGroup>
 															<FormGroup>
 																<Label htmlFor="name">
-																	<span className="text-danger">*</span>
+																	<span className="text-danger">* </span>
 																 {strings.Percentage}
 																</Label>
 																<Input
@@ -326,6 +328,7 @@ class DetailVatCode extends React.Component {
 						</Col>
 					</Row>
 				</div>
+			</div>
 			</div>
 		);
 	}

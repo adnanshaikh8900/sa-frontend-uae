@@ -191,6 +191,8 @@ class DetailSalaryTemplate extends React.Component {
     const { currency_list,salary_structure_dropdown,salary_role_dropdown } = this.props
     const { dialog, loading, initValue } = this.state
     return (
+      loading ==true? <Loader/> :
+<div>
       <div className="detail-employee-screen">
         <div className="animated fadeIn">
           <Row>
@@ -242,7 +244,7 @@ class DetailSalaryTemplate extends React.Component {
                             
                             <Col lg={4}>
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span>Description</Label>
+                                  <Label htmlFor="select"><span className="text-danger">* </span>Description</Label>
                                   <Input
                                     type="text"
                                     id="description"
@@ -261,7 +263,7 @@ class DetailSalaryTemplate extends React.Component {
                               </Col>
                               <Col lg={4}>
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span>Formula</Label>
+                                  <Label htmlFor="select"><span className="text-danger">* </span>Formula</Label>
                                   <Input
                                     type="text"
                                     id="formula"
@@ -284,7 +286,7 @@ class DetailSalaryTemplate extends React.Component {
                               
                               <Col lg={4}>
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span>Salary Role</Label>
+                                  <Label htmlFor="select"><span className="text-danger">* </span>Salary Role</Label>
                                   <Select
 																		styles={customStyles}
 																		options={
@@ -344,7 +346,7 @@ class DetailSalaryTemplate extends React.Component {
                               </Col>
                               <Col lg={4}>
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span>Salary Structure</Label>
+                                  <Label htmlFor="select"><span className="text-danger">* </span>Salary Structure</Label>
                                   <Select
 																		styles={customStyles}
 																		options={
@@ -444,6 +446,7 @@ class DetailSalaryTemplate extends React.Component {
             </Col>
           </Row>
         </div>
+      </div>
       </div>
     )
   }

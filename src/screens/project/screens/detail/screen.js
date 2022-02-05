@@ -215,6 +215,8 @@ class DetailProject extends React.Component {
     const { currency_list, country_list,contact_list} = this.props
     const { initValue , loading , dialog} = this.state;
     return (
+      loading ==true? <Loader/> :
+<div>
       <div className="create-product-screen">
         <div className="animated fadeIn">
       {dialog}
@@ -259,7 +261,7 @@ class DetailProject extends React.Component {
                             <Row>
                               <Col lg={4}>
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="projectName"><span className="text-danger">*</span>Project Name</Label>
+                                  <Label htmlFor="projectName"><span className="text-danger">* </span>Project Name</Label>
                                   <Input
                                     type="text"
                                     id="name"
@@ -282,7 +284,7 @@ class DetailProject extends React.Component {
                               </Col>
                               <Col lg={4}>
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="contactId"><span className="text-danger">*</span>Contact</Label>
+                                  <Label htmlFor="contactId"><span className="text-danger">* </span>Contact</Label>
                                   <Select
                                     options={contact_list ? selectOptionsFactory.renderOptions('label', 'value', contact_list,'Contact Name') : []}
                                     onChange={(option) => {
@@ -367,7 +369,7 @@ class DetailProject extends React.Component {
                               <Col lg={4}>
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="currencyCode">
-                                    <span className="text-danger">*</span>Currency
+                                    <span className="text-danger">* </span>Currency
                                       </Label>
                                   <Select
                                     options={currency_list ? selectCurrencyFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
@@ -511,7 +513,7 @@ class DetailProject extends React.Component {
 					countryList={country_list}
 					getStateList={this.props.projectActions.getStateList}
         />
-
+      </div>
       </div>
     )
   }

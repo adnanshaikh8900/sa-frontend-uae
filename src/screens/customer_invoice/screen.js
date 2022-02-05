@@ -39,7 +39,18 @@ import LocalizedStrings from 'react-localization';
 import './style.scss';
 import { CreateCreditNoteModal } from './sections';
 import moment from 'moment';
+import { upperCase } from 'lodash';
 
+const { ToWords } = require('to-words');
+const toWords = new ToWords({
+	localeCode: 'en-IN',
+	converterOptions: {
+	//   currency: true,
+	  ignoreDecimal: false,
+	  ignoreZeroCurrency: false,
+	  doNotAddOnly: false,
+	}
+  });
 const mapStateToProps = (state) => {
 	return {
 		customer_invoice_list: state.customer_invoice.customer_invoice_list,
@@ -222,6 +233,8 @@ class CustomerInvoice extends React.Component {
 			amount: row.invoiceAmount,
 			postingRefId: row.id,
 			postingRefType: 'INVOICE',
+			amountInWords:upperCase(row.currencyName + " " +(toWords.convert(row.invoiceAmount))+" ONLY" ).replace("POINT","AND"),
+			vatInWords:row.vatAmount ?upperCase(row.currencyName + " " +(toWords.convert(row.vatAmount))+" ONLY" ).replace("POINT","AND") :"-"
 		};
 		this.props.customerInvoiceActions
 			.postInvoice(postingRequestModel)
@@ -229,7 +242,7 @@ class CustomerInvoice extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Invoice Posted Successfully',
+						'Customer Invoice Posted Successfully'
 					);
 					this.setState({
 						loading: false,
@@ -241,7 +254,7 @@ class CustomerInvoice extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					'Customer Invoice Posted Unsuccessfully'
 				);
 				this.setState({
 					loading: false,
@@ -264,7 +277,7 @@ class CustomerInvoice extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data.message ?res.data.message:   'Invoice Moved To Draft Successfully',
+						'Customer Invoice Moved To Draft Successfully'
 					);
 					this.setState({
 						loading: false,
@@ -276,7 +289,7 @@ class CustomerInvoice extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					'Customer Invoice Moved To Draft Unsuccessfully'
 				);
 				this.setState({
 					loading: false,
@@ -310,10 +323,16 @@ class CustomerInvoice extends React.Component {
 		} else {
 			classname = 'label-overdue';
 		}
-		return (
+		return (<>
 			<span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>
 				{row.status}
 			</span>
+			{
+				row.cnCreatedOnPaidInvoice==true && (row.status=="Paid" || row.status=="Partially Paid") &&(
+					<><br/>( Credit Note Created )</>
+				)
+			}
+			</>
 		);
 	};
 
@@ -333,23 +352,27 @@ class CustomerInvoice extends React.Component {
 		console.log(totalAmount,"00000000")
 		console.log(totalVatAmount,"00000000")
 	};
+	updateParentSelelectedData= (data) => {
+		this.setState({selectedData:data})
+		console.log(data,"NEW DATA...")
+	};
 	renderInvoiceAmount = (cell, row, extraData) => {
 		return (
 			<div>
 				<div>
 					<label className="font-weight-bold mr-2 ">{strings.InvoiceAmount} : </label>
 					<label>
-						{row.invoiceAmount === 0 ? row.currencySymbol +" "+ row.invoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }): row.currencySymbol +" "+ row.invoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+						{row.invoiceAmount === 0 ? row.currencySymbol +" "+ row.invoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }): row.currencySymbol +" "+ row.invoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 					
 					</label>
 				</div>
 				<div style={{ display: row.vatAmount === 0 ? 'none' : '' }}>
 					<label className="font-weight-bold mr-2">{strings.VatAmount} : </label>
-					<label>{row.vatAmount === 0 ? row.currencySymbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }): row.currencySymbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
+					<label>{row.vatAmount === 0 ? row.currencySymbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }): row.currencySymbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}</label>
 				</div>
 				<div style={{ display: row.dueAmount === 0 ? 'none' : '' }}>
 					<label className="font-weight-bold mr-2">{strings.DueAmount} : </label>
-					<label>{row.dueAmount === 0 ? row.currencySymbol +" "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencySymbol +" "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
+					<label>{row.dueAmount === 0 ? row.currencySymbol +" "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : row.currencySymbol +" "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}</label>
 				</div>
 
 			</div>);
@@ -382,11 +405,11 @@ class CustomerInvoice extends React.Component {
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// );
-		return row.vatAmount === 0 ? row.currencySymbol + row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencySymbol + row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.vatAmount === 0 ? row.currencySymbol + row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : row.currencySymbol + row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 });
 	};
 
 	renderDueAmount = (cell, row, extraData) => {
-		return row.dueAmount === 0 ? row.currencySymbol + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencySymbol + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.dueAmount === 0 ? row.currencySymbol + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : row.currencySymbol + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 });
 	}
 	renderActions = (cell, row) => {
 		return (
@@ -430,7 +453,7 @@ class CustomerInvoice extends React.Component {
               <i className="fas fa-eye" /> View
             </DropdownItem> */}
 
-						{row.statusEnum === 'Sent' && (
+						{row.statusEnum === 'Sent' && row.editFlag==true && (
 							<DropdownItem
 								onClick={() => {
 									this.unPostInvoice(row);
@@ -469,7 +492,7 @@ class CustomerInvoice extends React.Component {
 								<i className="fa fa-send" /> Send Custom Email
 							</DropdownItem>
 						)} */}
-							 {row.statusEnum === 'Paid'  && row.cnCreatedOnPaidInvoice !==true && ( 
+							 {row.statusEnum === 'Paid'  && row.remainingInvoiceAmount !==true && ( 
 							<DropdownItem
 							onClick={() => {
 							this.renderActionForState(row.id);
@@ -496,6 +519,7 @@ class CustomerInvoice extends React.Component {
 	};
 	renderActionForState = (id) => {
 		this.props.customerInvoiceActions.getVatList();
+		this.props.customerInvoiceActions.getExciseList();
 		this.props.customerInvoiceActions.getProductList();
 
 
@@ -530,10 +554,10 @@ class CustomerInvoice extends React.Component {
 		// 					exchangeRate:res.data.exchangeRate ? res.data.exchangeRate : '',
 		// 					currencyName:res.data.currencyName ? res.data.currencyName : '',
 		// 					invoiceDueDate: res.data.invoiceDueDate
-		// 						? moment(res.data.invoiceDueDate).format('DD/MM/YYYY')
+		// 						? moment(res.data.invoiceDueDate).format('DD-MM-YYYY')
 		// 						: '',
 		// 					invoiceDate: res.data.invoiceDate
-		// 						? moment(res.data.invoiceDate).format('DD/MM/YYYY')
+		// 						? moment(res.data.invoiceDate).format('DD-MM-YYYY')
 		// 						: '',
 		// 					contactId: res.data.contactId ? res.data.contactId : '',
 		// 					project: res.data.projectId ? res.data.projectId : '',
@@ -612,10 +636,10 @@ class CustomerInvoice extends React.Component {
 				    selectedData:res.data,
 					invoiceNumber:res.data.referenceNumber,
 					rfqReceiveDate: res.data.invoiceDate
-						? moment(res.data.invoiceDate).format('DD/MM/YYYY')
+						? moment(res.data.invoiceDate).format('DD-MM-YYYY')
 						: '',
 						rfqExpiryDate: res.data.invoiceDueDate
-						? moment(res.data.invoiceDueDate).format('DD/MM/YYYY')
+						? moment(res.data.invoiceDueDate).format('DD-MM-YYYY')
 						: '',
 						supplierId: res.data.supplierId ? res.data.supplierId : '',
 						rfqNumber: res.data.referenceNumber
@@ -653,7 +677,7 @@ class CustomerInvoice extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Invoice Send Successfully',
+						res.data ? res.data.message : 'Invoice Posted Successfully.'
 					);
 					this.setState({ openEmailModal: false });
 				}
@@ -661,7 +685,7 @@ class CustomerInvoice extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					'Please First fill The Mail Configuration Detail',
+					err.data ? err.data.message : 'Invoice Posted Successfully.'
 				);
 			});
 	};
@@ -739,7 +763,7 @@ class CustomerInvoice extends React.Component {
 					this.initializeData();
 					this.props.commonActions.tostifyAlert(
 						'success',
-						' Customer invoice deleted successfully ',
+						res.data ? res.data.message : 'Customer Invoice Deleted Successfully'
 					);
 					if (customer_invoice_list && customer_invoice_list.length > 0) {
 						this.setState({
@@ -751,7 +775,7 @@ class CustomerInvoice extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data ? err.data.message : 'Customer Invoice Deleted Unsuccessfully'
 				);
 			});
 	};
@@ -830,14 +854,14 @@ class CustomerInvoice extends React.Component {
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Invoice Deleted Successfully',
+					res.data ? res.data.message : 'Customer Invoice Deleted Successfully'
 				);
 				this.initializeData();
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data ? err.data.message : 'Customer Invoice Deleted Unsuccessfully'
 				);
 			});
 	};
@@ -921,6 +945,7 @@ class CustomerInvoice extends React.Component {
 					invoiceAmount: customer.totalAmount,
 					vatAmount: customer.totalVatAmount,
 					cnCreatedOnPaidInvoice:customer.cnCreatedOnPaidInvoice,
+					editFlag:customer.editFlag,
 				}))
 				: '';
 
@@ -932,7 +957,8 @@ class CustomerInvoice extends React.Component {
 		})
 
 		return (
-			<div className="customer-invoice-screen">
+			loading ==true? <Loader/> :
+<div> <div className="customer-invoice-screen">
 				<div className="animated fadeIn">
 					{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
 					<Card>
@@ -1150,9 +1176,9 @@ class CustomerInvoice extends React.Component {
 													autoComplete="off"
 													showMonthDropdown
 													showYearDropdown
-													dateFormat="dd/MM/yyyy"
+													dateFormat="dd-MM-yyyy"
 													dropdownMode="select"
-											//	 value={filterData.invoiceDate}
+												 value={filterData.invoiceDate}
 													onChange={(value) => {
 														this.handleChange(value, 'invoiceDate');
 													}}
@@ -1167,7 +1193,7 @@ class CustomerInvoice extends React.Component {
 													showMonthDropdown
 													showYearDropdown
 													dropdownMode="select"
-													dateFormat="dd/MM/yyyy"
+													dateFormat="dd-MM-yyyy"
 													autoComplete="off"
 													selected={filterData.invoiceDueDate}
 													onChange={(value) => {
@@ -1178,8 +1204,8 @@ class CustomerInvoice extends React.Component {
 											<Col lg={2} className="mb-1">
 												<Input
 													type="number"
-													maxLength="10"
-min="0"
+													maxLength="14,2"
+													min="0"
 													value={filterData.amount}
 													placeholder={strings.Amount}
 
@@ -1377,10 +1403,15 @@ min="0"
 					openModal={this.state.openModal}
 					closeModal={(e) => {
 						this.closeModal(e);
+						this.initializeData();
 					}}
 				updateParentAmount={
 					(e,e1) => {
 						this.updateParentAmount(e,e1);
+				}}
+				updateParentSelelectedData={
+					(e) => {
+						this.updateParentSelelectedData(e);
 				}}
 				invoiceNumber={this.state.invoiceNumber}
 				id={this.state.rowId}
@@ -1408,7 +1439,8 @@ min="0"
 					}}
 					id={this.state.rowId}
 				/>
-			</div>
+			</div></div>
+			
 		);
 	}
 }

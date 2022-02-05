@@ -136,10 +136,11 @@ class CreateChartAccount extends React.Component {
 			.then((res) => {
 				if (res.status === 200) {
 					this.setState({ disabled: false });
-					this.props.commonActions.tostifyAlert(
-						'success',
-						'New Chart of Account Created Successfully',
-					);
+					this.props.commonActions.tostifyAlert
+						(
+						'success', 
+						res.data ? res.data.message :'New Chart Of Account Created Successfully',
+						);
 					if (this.state.createMore) {
 						this.setState({
 							createMore: false,
@@ -154,8 +155,8 @@ class CreateChartAccount extends React.Component {
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
-				);
+					err && err.data ? err.data.message : 'New Chart Of Account Created Unsuccessfully',
+					);
 			});
 	};
 
@@ -236,7 +237,7 @@ class CreateChartAccount extends React.Component {
                             </FormGroup> */}
 														<FormGroup>
 															<Label htmlFor="name">
-																<span className="text-danger">*</span>{strings.Name}
+																<span className="text-danger">* </span>{strings.Name}
 															</Label>
 															<Input
 																type="text" maxLength='50'
@@ -271,7 +272,7 @@ class CreateChartAccount extends React.Component {
 														</FormGroup>
 														<FormGroup>
 															<Label htmlFor="name">
-																<span className="text-danger">*</span>{strings.Type}
+																<span className="text-danger">* </span>{strings.Type}
 															</Label>
 															{/* <Select
                                 className="select-default-width"

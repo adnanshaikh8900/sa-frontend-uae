@@ -25,6 +25,7 @@ import {
 	selectOptionsFactory,
 	cryptoService,
 	selectCurrencyFactory,
+	api,
 } from 'utils';
 
 import DatePicker from 'react-datepicker';
@@ -34,6 +35,7 @@ import * as Yup from 'yup';
 import * as ProfileActions from './actions';
 import { CommonActions, AuthActions } from 'services/global';
 import './style.scss';
+import { upperFirst } from 'lodash-es';
 
 import 'react-datepicker/dist/react-datepicker.css';
 // import 'react-images-uploader/styles.css'
@@ -44,6 +46,8 @@ import PhoneInput  from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css'
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
+import { Message } from '@material-ui/icons';
+import PasswordChecklist from "react-password-checklist"
 
 const mapStateToProps = (state) => {
 	return {
@@ -87,6 +91,15 @@ class Profile extends React.Component {
 			companyLogo: [],
 			companyLogoFile: [],
 			initUserData: {},
+			displayRules:false,
+			isPasswordShown: false,
+			initValue: {
+				password: "",
+				confirmPassword: '',
+				currentPassword: '',
+			
+			  },
+			email:'',
 			initCompanyData: {
 				companyName: '',
 				companyRegistrationNumber: '',
@@ -112,10 +125,12 @@ class Profile extends React.Component {
 				companyStateRegion: '',
 				companyPostZipCode: '',
 				companyPoBoxNumber: '',
-				companyCountryCode: '',
+				companyCountryCode: 229,
 				companyExpenseBudget: '',
 				companyRevenueBudget: '',
 				dateFormat: '',
+				telephoneNumber:'',
+				fax:'',
 			},
 			// companyId: '',
 			imageState: true,
@@ -127,17 +142,19 @@ class Profile extends React.Component {
 				companyAddressLine2: '',
 				companyAddressLine3: '',
 				companyCity: '',
-				companyStateRegion: '',
+				companyStateCode: '',
 				companyPostZipCode: '',
 				companyPoBoxNumber: '',
-				companyCountryCode: '',
+				companyCountryCode: 229,
 			},
 			timezone: [],
 		};
 
 		this.regEx = /^[0-9\d]+$/;
-		this.regExBoth = /[a-zA-Z0-9]+$/;
-		this.regExAlpha = /^[a-zA-Z ]+$/;
+		this.regExBoth = /[a-zA-Z0-9-\d]+$/;
+		this.regExAlpha = /^[a-zA-Z0-9_\-@#$&*().''<>/ ]+$/;
+		this.regExTelephone = /^[0-9-\d]+$/;
+		this.regExAlpha1 = /^[a-zA-Z ]+$/;
 	}
 
 	toggle = (tabPane, tab) => {
@@ -162,6 +179,23 @@ class Profile extends React.Component {
 	};
 	componentDidMount = () => {
 		this.getUserData();
+		this.props.profileActions
+				.getCompanyTypeList2()
+				.then((res) => {
+					if (res.status === 200) {
+						this.setState({
+							companyTypeList: res.data,
+						});
+					}
+				})
+				.catch((err) => {
+					this.props.commonActions.tostifyAlert(
+						'error',
+						err && err.data ? err.data.message : 'Something Went Wrong',
+					);
+					
+				});
+		
 	};
 
 	uploadUserImage = (picture, file) => {
@@ -213,6 +247,8 @@ class Profile extends React.Component {
 								lastName: res.data.lastName ? res.data.lastName : '',
 								email: res.data.email ? res.data.email : '',
 								password: '',
+								confirmPassword:'',
+								currentPassword:'',
 								dob: res.data.dob
 									? moment(res.data.dob, 'DD-MM-YYYY').toDate()
 									: '',
@@ -222,6 +258,7 @@ class Profile extends React.Component {
 								timezone: res.data.timeZone ? res.data.timeZone : '',
 								// companyId: res.data.companyId ? res.data.companyId : '',
 							},
+							userId: res.data.id ? res.data.id : '',
 							loading: false,
 							selectedStatus: res.data.active ? true : false,
 							userPhoto: res.data.profilePicByteArray
@@ -245,6 +282,11 @@ class Profile extends React.Component {
 		this.props.profileActions.getStateList(countryCode, type);
 	};
 
+	togglePasswordVisiblity = () => {
+		const { isPasswordShown } = this.state;
+		this.setState({ isPasswordShown: !isPasswordShown });
+	};
+
 	handleUserSubmit = (data) => {
 		const {
 			firstName,
@@ -252,6 +294,8 @@ class Profile extends React.Component {
 			email,
 			dob,
 			password,
+			confirmPassword,
+			currentPassword,
 			roleId,
 			timezone,
 		} = data;
@@ -271,10 +315,20 @@ class Profile extends React.Component {
 		if (password.length > 0) {
 			formData.append('password ', password);
 		}
+		
+		if (currentPassword.length > 0) {
+			formData.append('currentPassword ', currentPassword);
+		}
+		if (confirmPassword.length > 0) {
+			formData.append('confirmPassword ', confirmPassword);
+		}
 		if (this.state.userPhotoFile.length > 0) {
 			formData.append('profilePic', userPhotoFile[0]);
 		}
-
+		// if (currentPassword.length > 0) {
+		// 	formData.append('currentPassword ', currentPassword);
+		// }
+		
 		this.props.profileActions
 			.updateUser(formData)
 			.then((res) => {
@@ -383,7 +437,16 @@ class Profile extends React.Component {
 										? res.data.companyRevenueBudget
 										: '',
 									dateFormat: res.data.dateFormat ? res.data.dateFormat : '',
+									isDesignatedZone: res.data.isDesignatedZone ? res.data.isDesignatedZone : '',
+									isRegisteredVat: res.data.isRegisteredVat ? res.data.isRegisteredVat : '',
+									companyStateCode: res.data.companyStateCode ? res.data.companyStateCode :'',
+									vatRegistrationDate: res.data.vatRegistrationDate
+									? res.data.vatRegistrationDate
+									: '',
 								},
+								email: res.data.email
+										? res.data.email
+										: '',
 								companyLogo: res.data.companyLogoByteArray
 									? this.state.companyLogo.concat(res.data.companyLogoByteArray)
 									: [],
@@ -460,6 +523,54 @@ class Profile extends React.Component {
 				});
 			});
 	};
+
+	resetPassword = (email) => {
+		debugger
+		
+			let data = {
+			  method: 'post',
+			  url: '/public/forgotPassword',
+			  data: { "username": email,url:window.location.href }
+			}
+			api(data).then((res) => {
+			  this.setState({
+				alert: <Message
+				  type="success"
+				  content="We Have Sent You a Verification Email. Please Check Your Mail Box."
+				/>
+			  },() => {
+				  setTimeout(() => {
+					this.props.history.push('/login')
+				}, 1500);
+			  })
+			}).catch((err) => {
+			  this.setState({
+				alert: <Message
+				  type="danger"
+				  content="Invalid Email Address"
+				/>
+			  })
+			})
+		  }
+		  validateCurrentPassword = (username,password) => {
+			let obj = {
+				username,
+				password
+			};
+			this.props.authActions
+				.logIn(obj)
+				.then((res) => {
+			debugger
+					this.setState({ currentPasswordMatched: true });
+				})
+				.catch((err) => {
+					debugger
+					if(err.status==401)
+					this.setState({ currentPasswordMatched: false });
+					
+				});
+		};
+
 	handleCompanySubmit = (data) => {
 		const {
 			companyName,
@@ -490,6 +601,15 @@ class Profile extends React.Component {
 			companyExpenseBudget,
 			companyRevenueBudget,
 			dateFormat,
+			isDesignatedZone,
+			isRegisteredVat,
+			companyStateCode,
+			vatRegistrationDate,
+			fax,
+			telephoneNumber,
+			
+
+
 		} = data;
 		const { companyAddress, isSame } = this.state;
 		let formData = new FormData();
@@ -548,6 +668,30 @@ class Profile extends React.Component {
 			'invoicingCountryCode',
 			invoicingCountryCode ? invoicingCountryCode : '',
 		);
+		formData.append(
+			'companyStateCode',
+			companyStateCode ? companyStateCode : '',
+		);
+		formData.append(
+			'isDesignatedZone',
+			isDesignatedZone ? isDesignatedZone : '',
+		);
+		formData.append(
+			'isRegisteredVat',
+			isRegisteredVat ? isRegisteredVat : 0,
+		);
+		formData.append(
+			'vatRegistrationDate',
+			vatRegistrationDate !== null ? moment(vatRegistrationDate) : '',
+		);
+		formData.append(
+			'fax',
+			fax ? fax : '',
+		);
+		formData.append(
+			'phoneNumber',
+			telephoneNumber ? telephoneNumber : '',
+		);
 		formData.append('currencyCode', currencyCode ? currencyCode : '');
 		formData.append('dateFormat', dateFormat ? dateFormat : '');
 		formData.append(
@@ -580,7 +724,7 @@ class Profile extends React.Component {
 		);
 		formData.append(
 			'companyCountryCode',
-			isSame ? companyAddress.companyCountryCode : companyCountryCode,
+			isSame ? companyAddress.companyCountryCode : '229',
 		);
 		// formData.append("isSame", isSame);
 
@@ -607,9 +751,39 @@ class Profile extends React.Component {
 			});
 	};
 
+	handlePasswordSubmit = (data) => {
+		const {
+			currentPassword,
+			password,
+		} = data;
+		let formData = new FormData();
+		formData.append('id', this.state.userId ? this.state.userId : '');
+		formData.append('currentPassword', currentPassword ? currentPassword : '');
+		formData.append('password', password ? password : '');
+
+		this.props.profileActions
+			.resetNewpassword(formData)
+			.then((res) => {
+				
+				if (res.status === 200) {
+					this.props.history.push('/login');
+					this.props.commonActions.tostifyAlert(
+						'success',
+						'Password Updated Successfully. Please Login With New Password',
+					);
+				}
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+			});
+	}
+
 	render() {
 		strings.setLanguage(this.state.language);
-		const { loading, isSame, timezone } = this.state;
+		const { loading, isSame, timezone ,companyTypeList ,isPasswordShown} = this.state;
 		const {
 			currency_list,
 			country_list,
@@ -618,6 +792,8 @@ class Profile extends React.Component {
 			company_state_list,
 		} = this.props;
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="profile-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -655,6 +831,16 @@ class Profile extends React.Component {
 												 {strings.CompanyProfile}
 											</NavLink>
 										</NavItem>
+										<NavItem>
+											<NavLink
+												active={this.state.activeTab[0] === '3'}
+												onClick={() => {
+													this.toggle(0, '3');
+												}}
+											>
+												 {strings.PasswordSettings}
+											</NavLink>
+										</NavItem>
 									</Nav>
 									<TabContent activeTab={this.state.activeTab[0]}>
 										<TabPane tabId="1">
@@ -685,19 +871,25 @@ class Profile extends React.Component {
 																	email: Yup.string()
 																		.required('Email is Required')
 																		.email('Invalid Email'),
-																	password: Yup.string()
-																		// .required("Password is Required")
-																		// .min(8, "Password Too Short")
-																		.matches(
-																			/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
-																			'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character',
-																		),
-																	confirmPassword: Yup.string()
-																		// .required('Confirm Password is Required')
-																		.oneOf(
-																			[Yup.ref('password'), null],
-																			'Passwords must match',
-																		),
+																	roleId: Yup.string().required(
+																		'Role is Required',
+																	),
+																	timezone: Yup.string().required(
+																		'Time Zone is Required',
+																	),
+																	// password: Yup.string()
+																	// 	 .required("Password is Required")
+																	// 	// .min(8, "Password Too Short")
+																	// 	.matches(
+																	// 		/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
+																	// 		'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character',
+																	// 	),
+																	// confirmPassword: Yup.string()
+																	// 	 .required('Confirm Password is Required')
+																	// 	.oneOf(
+																	// 		[Yup.ref('password'), null],
+																	// 		'Passwords must match',
+																	// 	),
 																	dob: Yup.string().required('DOB is Required'),
 																})}
 															>
@@ -715,8 +907,7 @@ class Profile extends React.Component {
 																							<Label htmlFor="select">
 																								<span className="text-danger">
 																									*
-																							</span>
-																							{strings.FirstName}
+																							</span> {strings.FirstName}
 																						</Label>
 																							<Input
 																								type="text"
@@ -755,8 +946,7 @@ class Profile extends React.Component {
 																							<Label htmlFor="select">
 																								<span className="text-danger">
 																									*
-																							</span>
-																							 {strings.LastName}
+																							</span> {strings.LastName}
 																						</Label>
 																							<Input
 																								type="text"
@@ -797,8 +987,7 @@ class Profile extends React.Component {
 																							<Label htmlFor="email">
 																								<span className="text-danger">
 																									*
-																							</span>
-																							{strings.EmailID}
+																							</span> {strings.EmailID}
 																						</Label>
 																							<Input
 																								type="text"
@@ -831,8 +1020,7 @@ class Profile extends React.Component {
 																							<Label htmlFor="date">
 																								<span className="text-danger">
 																									*
-																							</span>
-																							{strings.DateOfBirth}
+																							</span> {strings.DateOfBirth}
 																						</Label>
 																							<DatePicker
 																								className={`form-control ${props.errors.dob &&
@@ -844,7 +1032,7 @@ class Profile extends React.Component {
 																								name="dob "
 																								showMonthDropdown
 																								showYearDropdown
-																								dateFormat="dd/MM/yyyy"
+																								dateFormat="dd-MM-yyyy"
 																								dropdownMode="select"
 																								placeholderText={strings.Enter+strings.DateOfBirth}
 																								maxDate={new Date()}
@@ -875,7 +1063,10 @@ class Profile extends React.Component {
 																				<Row>
 																					<Col lg={6}>
 																						<FormGroup>
-																							<Label htmlFor="roleId">{strings.Role}</Label>
+																							<Label htmlFor="roleId">
+																							<span className="text-danger">
+																									*
+																							</span> {strings.Role}</Label>
 																							<Select
 																								styles={customStyles}
 																								options={
@@ -937,10 +1128,10 @@ class Profile extends React.Component {
 																							<Label htmlFor="roleId">
 																								<span className="text-danger">
 																									*
-																							</span>
-																							{strings.TimeZonePreference}
+																							</span> {strings.TimeZonePreference}
 																						</Label>
 																							<Select
+																								isDisabled
 																								styles={customStyles}
 																								options={timezone ? timezone : []}
 																								value={
@@ -1050,76 +1241,7 @@ class Profile extends React.Component {
                                         </FormGroup>
                                       </Col> */}
 																				</Row>
-																				<Row>
-																					<Col lg={6}>
-																						<FormGroup>
-																							<Label htmlFor="select">
-																								 {strings.Password}
-																						</Label>
-																							<Input
-																								type="password"
-																								id="password"
-																								name="password"
-																								autoComplete="new-password"
-																								placeholder={strings.Enter+strings.Password}
-																								onChange={(value) => {
-																									props.handleChange('password')(
-																										value,
-																									);
-																								}}
-																								className={
-																									props.errors.password &&
-																										props.touched.password
-																										? 'is-invalid'
-																										: ''
-																								}
-																							/>
-																							{props.errors.password &&
-																								props.touched.password ? (
-																									<div className="invalid-feedback">
-																										{props.errors.password}
-																									</div>
-																								) : (
-																									<span className="password-msg">
-																										Must Contain 8 Characters, One
-																										Uppercase, One Lowercase, One
-																										Number and one special case
-																										Character.
-																									</span>
-																								)}
-																						</FormGroup>
-																					</Col>
-																					<Col lg={6}>
-																						<FormGroup>
-																							<Label htmlFor="select">
-																								{strings.ConfirmPassword}
-																						</Label>
-																							<Input
-																								type="password"
-																								id="confirmPassword"
-																								name="confirmPassword"
-																								placeholder={strings.Enter+strings.ConfirmPassword}
-																								onChange={(value) => {
-																									props.handleChange(
-																										'confirmPassword',
-																									)(value);
-																								}}
-																								className={
-																									props.errors.confirmPassword &&
-																										props.touched.confirmPassword
-																										? 'is-invalid'
-																										: ''
-																								}
-																							/>
-																							{props.errors.confirmPassword &&
-																								props.touched.confirmPassword && (
-																									<div className="invalid-feedback">
-																										{props.errors.confirmPassword}
-																									</div>
-																								)}
-																						</FormGroup>
-																					</Col>
-																				</Row>
+																			
 																				{/* {this.state.userId !== 1 &&
 																				(
 																				<Row>
@@ -1239,6 +1361,7 @@ class Profile extends React.Component {
 																				lg={12}
 																				className="mt-5 d-flex flex-wrap align-items-center  justify-content-end"
 																			>
+																				
 																				<FormGroup className="text-right">
 																					<Button
 																						type="submit"
@@ -1293,6 +1416,61 @@ class Profile extends React.Component {
 															//   lastName: Yup.()
 															//     .required("Last Name is Required"),
 															// })}
+															validationSchema={Yup.object().shape({
+																companyName: Yup.string().required(
+																	'Company Name is required',
+																),
+																companyRegistrationNumber: Yup.string().required(
+																	'Company Registration Number is required',
+																),
+																vatRegistrationNumber: Yup.string().required(
+																	'Tax Registration Number is required')
+																	.test(
+																		'vatRegistrationNumber',
+																		'Invalid TRN',
+																		(value) => {
+																			if (value > 15) {
+																				return true;
+																			} else {
+																				return false;
+																			}
+																		},
+																	),
+																emailAddress: Yup.string()
+																	.required('Email is Required')
+																	.email('Invalid Email'),
+																companyTypeCode: Yup.string().required(
+																	'Company/Business Type is required',
+																),
+																phoneNumber: Yup.string().required(
+																	'Mobile Number is required',
+																),
+																companyAddressLine1: Yup.string().required(
+																	'Company Address Line 1 is required',
+																),
+																// companyAddressLine2: Yup.string().required(
+																// 	'Company Address Line 2 is required',
+																// ),
+																// companyAddressLine3: Yup.string().required(
+																// 	'Company Address Line 3 is required',
+																// ),
+																companyCountryCode: Yup.string().required(
+																	'Country is required',
+																)
+																.nullable(),
+																companyStateCode: Yup.string().required(
+																	'State is required',
+																),
+																companyCity: Yup.string().required(
+																	'City is required',
+																),
+																// companyPoBoxNumber: Yup.string().required(
+																// 	'PO Box Number is required',
+																// ),
+																companyPostZipCode: Yup.string().required(
+																	'Post Zip Code is required',
+																),
+															})}
 															>
 																{(props) => (
 																	<Form onSubmit={props.handleSubmit}>
@@ -1352,9 +1530,10 @@ class Profile extends React.Component {
 																					<Col lg={4}>
 																						<FormGroup className="mb-3">
 																							<Label htmlFor="product_code">
-																								 {strings.CompanyName}
+																							<span className="text-danger">*</span> {strings.CompanyName}
 																						</Label>
 																							<Input
+																								maxLength={150}
 																								type="text"
 																								id="companyName"
 																								name="companyName"
@@ -1372,15 +1551,29 @@ class Profile extends React.Component {
 																										)(option);
 																									}
 																								}}
+																								value={props.values.companyName}
+																								className={
+																									props.errors.companyName &&
+																									props.touched.companyName
+																										? 'is-invalid'
+																										: ''
+																								}
 																							/>
+																							{props.errors.companyName &&
+																								props.touched.companyName && (
+																									<div className="invalid-feedback">
+																										{props.errors.companyName}
+																									</div>
+																								)}
 																						</FormGroup>
 																					</Col>
 																					<Col lg={4}>
 																						<FormGroup className="mb-3">
 																							<Label htmlFor="product_code">
-																								 {strings.CompanyRegistrationNo}
+																							<span className="text-danger">*</span> {strings.CompanyRegistrationNo}
 																						</Label>
 																							<Input
+																								maxLength={20}
 																								type="text"
 																								id="companyRegistrationNumber"
 																								name="companyRegistrationNumber"
@@ -1397,140 +1590,45 @@ class Profile extends React.Component {
 																										props.handleChange('companyRegistrationNumber')(
 																											option,
 																										);
-																									} else {
-																										props.handleChange('companyRegistrationNumber')(
-																											option,
-																										);
-																								}}
-																							}
-																							/>
-																						</FormGroup>
-																					</Col>
-																					<Col lg={4}>
-																						<FormGroup className="mb-3">
-																							<Label htmlFor="product_code">
-																							 {strings.VATRegistrationNo}
-																						</Label>
-																							<Input
-																								type="text"
-																								id="vatRegistrationNumber"
-																								maxLength="15"
-																								name="vatRegistrationNumber"
-																								placeholder={strings.Enter+strings.VATRegistrationNo}
-																								value={
-																									props.values
-																										.vatRegistrationNumber
+																									} 
 																								}
-																								onChange={(option) => {
-																									if (
-																										option.target.value === '' ||
-																										this.regEx.test(option.target.value)
-																									) {
-																										props.handleChange('vatRegistrationNumber')(
-																											option,
-																										);
-																									} else {
-																										props.handleChange('vatRegistrationNumber')(
-																											option,
-																										);
-																								}}
 																							}
-																							/>
-																						</FormGroup>
-																					</Col>
-																				</Row>
-																				
-																				<Row>
-																					<Col lg={4}>
-																						<FormGroup className="mb-3">
-																							<Label htmlFor="product_code">
-																								{strings.Website}
-																						</Label>
-																							<Input
-																								type="text"
-																								id="website"
-																								name="website"
-																								placeholder={strings.Enter+strings.Website}
-																								value={props.values.website}
-																								onChange={(option) => {
-																									props.handleChange('website')(
-																										option,
-																									);
-																								}}
-																							/>
-																						</FormGroup>
-																					</Col>
-																					<Col lg={4}>
-																						<FormGroup className="mb-3">
-																							<Label htmlFor="product_code">
-																								 {strings.EmailAddress}
-																						</Label>
-																							<Input
-																								type="text"
-																								id="emailAddress"
-																								name="emailAddress"
-																								placeholder={strings.Enter+strings.Email}
-																								value={props.values.emailAddress}
-																								onChange={(option) => {
-																									props.handleChange(
-																										'emailAddress',
-																									)(option);
-																								}}
-																							/>
-																						</FormGroup>
-																					</Col>
-																					<Col lg={4}>
-																						<FormGroup className="mb-3">
-																							<Label htmlFor="phoneNumber">
-																							 {strings.MobileNumber}
-																						</Label>
-																							<PhoneInput
-																								country={"ae"}
-																								enableSearch={true}
-																								international
-																								value={props.values.phoneNumber}
-																								placeholder={strings.Enter+strings.MobileNumber}
-																								onChange={(option) => {
-																									props.handleChange(
-																										'phoneNumber',
-																									)(option);
-																								}}
+																							value={props.values.companyRegistrationNumber}
 																								className={
-																									props.errors.phoneNumber &&
-																										props.touched.phoneNumber
+																									props.errors.companyRegistrationNumber &&
+																									props.touched.companyRegistrationNumber
 																										? 'is-invalid'
 																										: ''
 																								}
 																							/>
-																							{props.errors.phoneNumber &&
-																								props.touched.phoneNumber && (
+																							{props.errors.companyRegistrationNumber &&
+																								props.touched.companyRegistrationNumber && (
 																									<div className="invalid-feedback">
-																										{props.errors.phoneNumber}
+																										{props.errors.companyRegistrationNumber}
 																									</div>
 																								)}
 																						</FormGroup>
 																					</Col>
-																				</Row>
-																				<Row>
-																					{/* <Col lg={4}>
+																					<Col lg={4}>
 																						<FormGroup>
 																							<Label htmlFor="companyId">
-																								 {strings.CompanyTypeCode}
+																							<span className="text-danger">*</span> {strings.CompanyBusinessType}
 																						</Label>
 																							<Select
+																							// isDisabled
 																								options={
-																									company_type_list
+																									companyTypeList
 																										? selectOptionsFactory.renderOptions(
 																											'label',
 																											'value',
-																											company_type_list,
-																											'Company Type Code',
+																											companyTypeList,
+																											'Company Type',
 																										)
 																										: []
 																								}
 																								value={
-																									company_type_list &&
-																									company_type_list.find(
+																									companyTypeList &&
+																									companyTypeList.find(
 																										(option) =>
 																											option.value ===
 																											+props.values
@@ -1567,67 +1665,41 @@ class Profile extends React.Component {
 																						</FormGroup>
 																					</Col>
 																					<Col lg={4}>
-																						<FormGroup>
-																							<Label htmlFor="industryTypeCode">
-																								 {strings.IndustryTypeCode}
+																						<FormGroup className="mb-3">
+																							<Label htmlFor="product_code">
+																							<span className="text-danger">*</span> {strings.EmailAddress}
 																						</Label>
-																							<Select
-																								options={
-																									industry_type_list
-																										? selectOptionsFactory.renderOptions(
-																											'label',
-																											'value',
-																											industry_type_list,
-																											'Industry Type Code',
-																										)
-																										: []
-																								}
-																								value={
-																									industry_type_list &&
-																									industry_type_list.find(
-																										(option) =>
-																											option.value ===
-																											+props.values
-																												.industryTypeCode,
-																									)
-																								}
+																							<Input
+																								maxLength={80}
+																								type="text"
+																								id="emailAddress"
+																								name="emailAddress"
+																								placeholder={strings.Enter+strings.Email}
+																								value={props.values.emailAddress}
 																								onChange={(option) => {
-																									if (option && option.value) {
-																										props.handleChange(
-																											'industryTypeCode',
-																										)(option.value);
-																									} else {
-																										props.handleChange(
-																											'industryTypeCode',
-																										)('');
-																									}
+																									props.handleChange(
+																										'emailAddress',
+																									)(option);
 																								}}
-																								placeholder={strings.Select+strings.IndustryTypeCode}
-																								id="industryTypeCode"
-																								name="industryTypeCode"
 																								className={
-																									props.errors.industryTypeCode &&
-																										props.touched.industryTypeCode
+																									props.errors.emailAddress &&
+																										props.touched.emailAddress
 																										? 'is-invalid'
 																										: ''
 																								}
 																							/>
-																							{props.errors.industryTypeCode &&
-																								props.touched
-																									.industryTypeCode && (
+																							{props.errors.emailAddress &&
+																								props.touched.emailAddress && (
 																									<div className="invalid-feedback">
-																										{
-																											props.errors
-																												.industryTypeCode
-																										}
+																										{props.errors.emailAddress}
 																									</div>
 																								)}
 																						</FormGroup>
-																					</Col> */}
+																					</Col>
 																					<Col lg={4}>
 																						<FormGroup>
 																							<Label htmlFor="currencyCode">
-																							   {strings.CurrencyCode}
+																							<span className="text-danger">*</span> {strings.CurrencyCode}
 																						</Label>
 																							<Select
 																								isDisabled
@@ -1686,11 +1758,774 @@ class Profile extends React.Component {
 																								)}
 																						</FormGroup>
 																					</Col>
+																					<Col lg={4}>
+																						<FormGroup className="mb-3">
+																							<Label htmlFor="product_code">
+																								{strings.Website}
+																						</Label>
+																							<Input
+																								maxLength={50}
+																								type="text"
+																								id="website"
+																								name="website"
+																								placeholder={strings.Enter+strings.Website}
+																								value={props.values.website}
+																								onChange={(option) => {
+																									props.handleChange('website')(
+																										option,
+																									);
+																								}}
+																							/>
+																						</FormGroup>
+																					</Col>
 																				</Row>
+																				
+																				<Row>
+																					<Col lg={4}>
+																				<FormGroup className="mb-3">
+																					<Label htmlFor="telephoneNumber">
+																					{strings.Telephone}
+																				</Label>
+																					<Input
+																						maxLength={15}
+																						type="text"
+																						id="telephoneNumber"
+																						name="telephoneNumber"
+																						placeholder={strings.Enter+"Telephone Number"}
+																						value={ props.values.telephoneNumber
+																						}
+																						onChange={(option) => {
+																							if (
+																								option.target.value === '' ||
+																								this.regExTelephone.test(
+																									option.target.value,
+																								)
+																							) {
+																								props.handleChange(
+																									'telephoneNumber',
+																								)(option);
+																							}
+																						}}
+																						value={props.values.telephoneNumber}
+																						className={
+																							props.errors.telephoneNumber &&
+																							props.touched.telephoneNumber
+																							? 'is-invalid'
+																							: ''
+																						}
+																					/>
+																					{props.errors.telephoneNumber &&
+																						props.touched.telephoneNumber && (
+																						<div className="invalid-feedback">
+																							{props.errors.telephoneNumber}
+																						</div>
+																					)}
+																				</FormGroup>
+																				</Col>
+																				<Col lg={4}>
+																						<FormGroup className="mb-3">
+																							<Label htmlFor="phoneNumber">
+																							<span className="text-danger">*</span> {strings.MobileNumber}
+																						</Label>
+																							<PhoneInput
+																								country={"ae"}
+																								enableSearch={true}
+																								international
+																								value={props.values.phoneNumber}
+																								placeholder={strings.Enter+strings.MobileNumber}
+																								onChange={(option) => {
+																									props.handleChange(
+																										'phoneNumber',
+																									)(option);
+																								}}
+																								isValid
+																								// className={
+																								// 	props.errors.phoneNumber &&
+																								// 		props.touched.phoneNumber
+																								// 		? 'is-invalid'
+																								// 		: ''
+																								// }
+																							/>
+																							{props.errors.phoneNumber &&
+																								props.touched.phoneNumber && (
+																									<div style={{color:"red"}}>
+																										{props.errors.phoneNumber}
+																									</div>
+																								)}
+																						</FormGroup>
+																					</Col>
+																				</Row>
+																				<Row>
+																				
+
+																					
+																					
+																			
+																			
+																					{/* <Col lg={4}>
+																						<FormGroup>
+																							<Label htmlFor="industryTypeCode">
+																								 {strings.IndustryTypeCode}
+																						</Label>
+																							<Select
+																								options={
+																									industry_type_list
+																										? selectOptionsFactory.renderOptions(
+																											'label',
+																											'value',
+																											industry_type_list,
+																											'Industry Type Code',
+																										)
+																										: []
+																								}
+																								value={
+																									industry_type_list &&
+																									industry_type_list.find(
+																										(option) =>
+																											option.value ===
+																											+props.values
+																												.industryTypeCode,
+																									)
+																								}
+																								onChange={(option) => {
+																									if (option && option.value) {
+																										props.handleChange(
+																											'industryTypeCode',
+																										)(option.value);
+																									} else {
+																										props.handleChange(
+																											'industryTypeCode',
+																										)('');
+																									}
+																								}}
+																								placeholder={strings.Select+strings.IndustryTypeCode}
+																								id="industryTypeCode"
+																								name="industryTypeCode"
+																								className={
+																									props.errors.industryTypeCode &&
+																										props.touched.industryTypeCode
+																										? 'is-invalid'
+																										: ''
+																								}
+																							/>
+																							{props.errors.industryTypeCode &&
+																								props.touched
+																									.industryTypeCode && (
+																									<div className="invalid-feedback">
+																										{
+																											props.errors
+																												.industryTypeCode
+																										}
+																									</div>
+																								)}
+																						</FormGroup>
+																					</Col>
+																					 */}
+																				</Row>
+																				
+																				<Row>
+																				<Col lg={12}>
+																			<h5 className="mt-3 mb-3">{strings.CompanyAddress}</h5>
+																			</Col>
+																		</Row>
+																		<Row style={{ display: props.values.countryName !== 1 ? '' : 'none' }}>
+																		<Col lg={4}>
+																				<FormGroup className="mb-3">
+																					<Label htmlFor="product_code">
+																					<span className="text-danger">*</span> {strings.CompanyAddressLine1}
+																				</Label>
+																					<Input
+																						maxLength={100}
+																						type="text"
+																						id="companyAddressLine1"
+																						name="companyAddressLine1"
+																						placeholder={strings.Enter+strings.CompanyAddressLine1}
+																						rows="5"
+																						value={
+																							isSame
+																								? this.state.companyAddress
+																									.companyAddressLine1
+																								: props.values.companyAddressLine1
+																						}
+																						onChange={(option) => {
+																							props.handleChange(
+																								'companyAddressLine1',
+																							)(option);
+																						}}
+																						value={props.values.companyAddressLine1}
+																						className={
+																							props.errors.companyAddressLine1 &&
+																							props.touched.companyAddressLine1
+																							? 'is-invalid'
+																							: ''
+																						}
+																					/>
+																					{props.errors.companyAddressLine1 &&
+																								props.touched.companyAddressLine1 && (
+																									<div className="invalid-feedback">
+																										{props.errors.companyAddressLine1}
+																									</div>
+																								)}
+																				</FormGroup>
+																			</Col>
+
+																			<Col lg={4}>
+																				<FormGroup className="mb-3">
+																					<Label htmlFor="product_code">
+																					{/* <span className="text-danger">*</span> */}
+																						 {strings.CompanyAddressLine2}
+																				</Label>
+																					<Input
+																						maxLength={100}
+																						type="text"
+																						id="companyAddressLine2"
+																						name="companyAddressLine2"
+																						placeholder={strings.Enter+strings.CompanyAddressLine2}
+																						rows="5"
+																						value={
+																							isSame
+																								? this.state.companyAddress
+																									.companyAddressLine2
+																								: props.values.companyAddressLine2
+																						}
+																						onChange={(option) => {
+																							props.handleChange(
+																								'companyAddressLine2',
+																							)(option);
+																						}}
+																						value={props.values.companyAddressLine2}
+																						className={
+																							props.errors.companyAddressLine2 &&
+																							props.touched.companyAddressLine2
+																							? 'is-invalid'
+																							: ''
+																						}
+																					/>
+																					{props.errors.companyAddressLine2 &&
+																								props.touched.companyAddressLine2 && (
+																									<div className="invalid-feedback">
+																										{props.errors.companyAddressLine2}
+																									</div>
+																								)}
+																				</FormGroup>
+																			</Col>
+																			<Col lg={4}>
+																				<FormGroup className="mb-3">
+																					<Label htmlFor="companyPostZipCode">
+																					<span className="text-danger">*</span> {strings.PostZipCode}
+																				</Label>
+																					<Input
+																						maxLength={8}
+																						type="text"
+																						id="companyPostZipCode"
+																						name="companyPostZipCode"
+																						placeholder={strings.Enter+strings.PostZipCode}
+																						value={
+																							isSame
+																								? this.state.companyAddress
+																									.companyPostZipCode
+																								: props.values.companyPostZipCode
+																						}
+																						onChange={(option) => {
+																							if (
+																								option.target.value === '' ||
+																								this.regEx.test(
+																									option.target.value,
+																								)
+																							) {
+																								props.handleChange(
+																									'companyPostZipCode',
+																								)(option);
+																							}
+																						}}
+																						value={props.values.companyPostZipCode}
+																						className={
+																							props.errors.companyPostZipCode &&
+																							props.touched.companyPostZipCode
+																							? 'is-invalid'
+																							: ''
+																						}
+																					/>
+																					{props.errors.companyPostZipCode &&
+																						props.touched.companyPostZipCode && (
+																						<div className="invalid-feedback">
+																							{props.errors.companyPostZipCode}
+																						</div>
+																					)}
+																				</FormGroup>
+																			</Col>
+
+																			<Col lg={4}>
+																				<FormGroup>
+																					<Label htmlFor="companyCountryCode">
+																					<span className="text-danger">*</span> {strings.CountryCode}
+																						{/* <Col> */}
+																				
+																			{/* </Col> */}
+																				</Label>
+																					<Select
+																						isDisabled
+																						options={
+																							country_list
+																								? selectOptionsFactory.renderOptions(
+																									'countryName',
+																									'countryCode',
+																									country_list,
+																									'Country',
+																								)
+																								: []
+																						}
+																						value={
+																							isSame
+																								? country_list &&
+																								selectOptionsFactory
+																									.renderOptions(
+																										'countryName',
+																										'countryCode',
+																										country_list,
+																										'Country',
+																									)
+																									.find(
+																										(option) =>
+																											option.value ===
+																											+this.state.companyAddress
+																												.companyCountryCode,
+																									)
+																								: country_list &&
+																								selectOptionsFactory
+																									.renderOptions(
+																										'countryName',
+																										'countryCode',
+																										country_list,
+																										'Country',
+																									)
+																									.find(
+																										(option) =>
+																											option.value ===
+																											+props.values
+																												.companyCountryCode,
+																									)
+																						}
+																						onChange={(option) => {
+																							if (option && option.value) {
+																								props.handleChange(
+																									'companyCountryCode',
+																								)(option.value, 'company');
+																								props.handleChange(
+																									'companyStateCode',
+																								)('');
+																								this.getStateList(
+																									option.value,
+																									'company',
+																								);
+																							} else {
+																								props.handleChange(
+																									'companyCountryCode',
+																								)('');
+																								props.handleChange(
+																									'companyStateCode',
+																								)('');
+																							}
+																						}}
+																						placeholder={strings.Select+strings.CountryCode}
+																						id="companyCountryCode"
+																						name="companyCountryCode"
+																						className={
+																							props.errors.companyCountryCode &&
+																								props.touched.companyCountryCode
+																								? 'is-invalid'
+																								: ''
+																						}
+																					/>
+																					{props.errors.companyCountryCode &&
+																						props.touched.companyCountryCode && (
+																							<div className="invalid-feedback">
+																								{props.errors.companyCountryCode}
+																							</div>
+																						)}
+																				</FormGroup>
+																			</Col>
+																			<Col lg={4}>
+																				<FormGroup className="mb-3">
+																					<Label htmlFor="product_code">
+																					<span className="text-danger">*</span> {props.values.companyCountryCode === 229 ? strings.Emirates : strings.StateRegion}
+																				</Label>
+																					<Select
+																						options={selectOptionsFactory.renderOptions(
+																							'label',
+																							'value',
+																							isSame
+																								? invoicing_state_list
+																								: company_state_list,
+																							'Emirates',
+																						)}
+																						value={
+																							isSame
+																								? invoicing_state_list.find(
+																									(option) =>
+																										option.value ===
+																										+this.state.companyAddress
+																											.companyStateCode,
+																								)
+																								: company_state_list.find(
+																									(option) =>
+																										option.value ===
+																										+props.values
+																											.companyStateCode,
+																								)
+																						}
+																						onChange={(option) => {
+																							if (option && option.value) {
+																								props.handleChange(
+																									'companyStateCode',
+																								)(option.value);
+																							} else {
+																								props.handleChange(
+																									'companyStateCode',
+																								)('');
+																							}
+																						}}
+																						placeholder={strings.Select+strings.Emirates}
+																						id="companyStateCode"
+																						name="companyStateCode"
+																						className={
+																							props.errors.companyStateCode &&
+																								props.touched.companyStateCode
+																								? 'is-invalid'
+																								: ''
+																						}
+																					/>
+																					{props.errors.companyStateCode &&
+																						props.touched.companyStateCode && (
+																							<div className="invalid-feedback">
+																								{props.errors.companyStateRegion}
+																							</div>
+																						)}
+																				</FormGroup>
+																			</Col>
+																			<Col lg={4}>
+																				<FormGroup className="mb-3">
+																					<Label htmlFor="companyCity">
+																					<span className="text-danger">*</span> {strings.City}
+																				</Label>
+																					<Input
+																						maxLength={20}
+																						type="text"
+																						id="companyCity"
+																						name="companyCity"
+																						placeholder={strings.Enter+strings.City}
+																						value={
+																							isSame
+																								? this.state.companyAddress
+																									.companyCity
+																								: props.values.companyCity
+																						}
+																						onChange={(option) => {
+																							if (
+																								option.target.value === '' ||
+																								this.regExAlpha1.test(
+																									option.target.value,
+																								)
+																							) {
+																								option = upperFirst(option.target.value)
+																								props.handleChange('companyCity')(option);
+																							}
+																						}}
+																						value={props.values.companyCity}
+																						className={
+																							props.errors.companyCity &&
+																							props.touched.companyCity
+																							? 'is-invalid'
+																							: ''
+																						}
+																					/>
+																					{props.errors.companyCity &&
+																						props.touched.companyCity && (
+																						<div className="invalid-feedback">
+																							{props.errors.companyCity}
+																						</div>
+																					)}
+																				</FormGroup>
+																			</Col>
+																			
+																		</Row>
+																		
+																		<Row>
+
+																			<Col lg={4}>
+																				<FormGroup className="mb-3">
+																					<Label htmlFor="companyPoBoxNumber">
+																					{/* <span className="text-danger">*</span> */}
+																						 {strings.POBoxNumber}
+																				</Label>
+																					<Input
+																						maxLength={6}
+																						type="text"
+																						id="companyPoBoxNumber"
+																						name="companyPoBoxNumber"
+																						placeholder={strings.Enter+strings.POBoxNumber}
+																						value={
+																							isSame
+																								? this.state.companyAddress
+																									.companyPoBoxNumber
+																								: props.values.companyPoBoxNumber
+																						}
+																						onChange={(option) => {
+																							if (
+																								option.target.value === '' ||
+																								this.regEx.test(
+																									option.target.value,
+																								)
+																							) {
+																								props.handleChange(
+																									'companyPoBoxNumber',
+																								)(option);
+																							}
+																						}}
+																						value={props.values.companyPoBoxNumber}
+																						className={
+																							props.errors.companyPoBoxNumber &&
+																							props.touched.companyPoBoxNumber
+																							? 'is-invalid'
+																							: ''
+																						}
+																					/>
+																					{props.errors.companyPoBoxNumber &&
+																						props.touched.companyPoBoxNumber && (
+																						<div className="invalid-feedback">
+																							{props.errors.companyPoBoxNumber}
+																						</div>
+																					)}
+																				</FormGroup>
+																				
+																			</Col>
+																			<Col lg={4}>
+																				<FormGroup className="mb-3">
+																					<Label htmlFor="fax">
+																					{/* <span className="text-danger">*</span> */}
+																					{strings.Fax}
+																				</Label>
+																					<Input
+																						maxLength={8}
+																						type="text"
+																						id="fax"
+																						name="fax"
+																						placeholder={strings.Enter+"Fax"}
+																						rows="5"
+
+																						onChange={(option) => {
+																							if (
+																								option.target.value === '' ||
+																								this.regEx.test(
+																									option.target.value,
+																								)
+																							) {
+																								option = upperFirst(option.target.value)
+																								props.handleChange('fax')(option);
+																							}
+																						}}
+																						value={props.values.fax}
+																				
+																					/>
+																				
+																				</FormGroup>
 																			</Col>
 																		</Row>
 
-																		<h5 className="mt-3 mb-3">{strings.CompanyCost}</h5>
+
+																		<Row className={"mt-3"}>
+																			<Col lg={4}>
+																				<FormGroup className="mb-3" check inline >
+																					<div>
+																						<Input
+																							// className="custom-control-input"
+																							type="checkbox"
+																							id="inline-radio2"
+																							name="SMTP-auth"
+																							// value={props.values.isDesignatedZone}
+																							checked={props.values.isDesignatedZone}
+																							onChange={(value) => {
+																								if(value != null){
+																								props.handleChange('isDesignatedZone')(
+																									value,
+																								);
+																								}else{
+																									props.handleChange('isDesignatedZone')(
+																										'',
+																									);
+																								}
+																							}}
+																						/>
+																						<label htmlFor="inline-radio2">
+																						{strings.CompanyLoatedInDesignatedZone}
+																					</label>
+																					</div>
+																				</FormGroup>
+																				</Col>
+																				<Col lg={4}>
+																				<FormGroup check inline className="mb-3">
+																					<div>
+																						<Input
+																							// className="custom-control-input"
+																							type="checkbox"
+																							id="inline-radio1"
+																							name="SMTP-auth"
+																							checked={props.values.isRegisteredVat}
+																							onChange={(value) => {
+																								if(value != null){
+																								props.handleChange('isRegisteredVat')(
+																									value,
+																								);
+																								}else{
+																									props.handleChange('isRegisteredVat')(
+																										'',
+																									);
+																								}
+																							}}
+																						/>
+																						<label htmlFor="inline-radio1">
+																						{strings.CompanyVatRegistered}
+																					</label>
+																					</div>
+																				</FormGroup>
+																			</Col>
+																		</Row>
+																		
+																		<Row style={{display: props.values.isRegisteredVat === true ? '' : 'none'}}>
+																			<Col lg={4}>
+																						<FormGroup className="mb-3">
+																							<Label htmlFor="product_code">
+																							<span className="text-danger">*</span> {strings.TaxRegistrationNumber}
+																						</Label>
+																							<Input
+																								type="text"
+																								id="vatRegistrationNumber"
+																								minLength="15"
+																								maxLength="15"
+																								name="vatRegistrationNumber"
+																								placeholder={strings.Enter+strings.TaxRegistrationNumber}
+																								value={
+																									props.values
+																										.vatRegistrationNumber
+																								}
+																								onChange={(option) => {
+																									if (
+																										option.target.value === '' ||
+																										this.regEx.test(option.target.value)
+																									) {
+																										props.handleChange('vatRegistrationNumber')(
+																											option,
+																										);
+																									} 
+																								}
+																							}
+																							value={props.values.vatRegistrationNumber}
+																								className={
+																									props.errors.vatRegistrationNumber &&
+																									props.touched.vatRegistrationNumber
+																										? 'is-invalid'
+																										: ''
+																								}
+																							/>
+																							{props.errors.vatRegistrationNumber &&
+																								props.touched.vatRegistrationNumber && (
+																									<div className="invalid-feedback">
+																										{props.errors.vatRegistrationNumber}
+																									</div>
+																								)}
+																								<div className="VerifyTRN">
+																		<br/>
+																		<b>	<a target="_blank" rel="noopener noreferrer"  href="https://eservices.tax.gov.ae/en-us/trn-verify" style={{ color: '#2266d8' }}  >{strings.VerifyTRN}</a></b>
+														</div>
+																						</FormGroup>
+																					</Col>
+																					<Col lg={4}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="expense_date">
+																			<span className="text-danger">*</span> {strings.VatRegisteredOn}
+																		</Label>
+																		<DatePicker
+																			id="date"
+																			minDate={new Date("01/01/2018")}
+																			name="vatRegistrationDate"
+																			className={`form-control ${
+																				props.errors.vatRegistrationDate &&
+																				props.touched.vatRegistrationDate
+																					? 'is-invalid'
+																					: ''
+																			}`}
+																			
+																			value={moment(
+																				props.values.vatRegistrationDate,
+																			).format('DD-MM-YYYY')}
+																			showMonthDropdown
+																			showYearDropdown
+																			dropdownMode="select"
+																			dateFormat="dd-MM-yyyy"
+																		 maxDate={new Date()}
+																			onChange={(value) => {
+																				props.handleChange('vatRegistrationDate')(
+																					value,
+																				);
+																			}}
+																		/>
+																		{props.errors.vatRegistrationDate &&
+																			props.touched.vatRegistrationDate && (
+																				<div className="invalid-feedback">
+																					{props.errors.vatRegistrationDate}
+																				</div>
+																			)}
+																	</FormGroup>
+																</Col>
+																					{/* <Col lg={3}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="date">
+																			<span className="text-danger">*</span>
+																			Vat Registration Date
+																		</Label>
+																		<DatePicker
+																			id="vatRegistrationDate"
+																			name="vatRegistrationDate"
+																			showMonthDropdown
+																			showYearDropdown
+																			dateFormat="dd-MM-yyyy"
+																			dropdownMode="select"
+																			 value={props.values.vatRegistrationDate}
+																			 selected={new Date(props.values.vatRegistrationDate)} 
+																			
+																			onChange={(value) => {
+																			
+																				props.handleChange('vatRegistrationDate')(
+																					value
+																				);
+																				this.setDate(props, value);
+																			}}
+																			className={`form-control ${
+																				props.errors.vatRegistrationDate &&
+																				props.touched.vatRegistrationDate
+																					? 'is-invalid'
+																					: ''
+																			}`}
+																		/>
+																		{props.errors.vatRegistrationDate &&
+																			props.touched.vatRegistrationDate && (
+																				<div className="invalid-feedback">
+																					{props.errors.vatRegistrationDate}
+																				</div>
+																			)}
+																	</FormGroup>
+																</Col> */}
+																			
+																			
+																		
+																		</Row>
+
+																		
+																		
+																			</Col>
+																		</Row>
+
+																		{/* <h5 className="mt-3 mb-3">{strings.CompanyCost}</h5>
 																		<Row>
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
@@ -1748,9 +2583,9 @@ class Profile extends React.Component {
 																					/>
 																				</FormGroup>
 																			</Col>
-																		</Row>
+																		</Row> */}
 
-																		<h5 className="mt-3 mb-3">
+																		{/* <h5 className="mt-3 mb-3">
 																			{strings.InvoicingAddress}
 																	</h5>
 																		<Row>
@@ -1944,12 +2779,12 @@ class Profile extends React.Component {
 																							</div>
 																						)}
 																				</FormGroup>
-																			</Col>
-																			<Col lg={4}>
+																			</Col> */}
+																			{/* <Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="product_code">
 																						 {strings.StateRegion}
-																				</Label>
+																				</Label> */}
 																					{/* <Input
                                             type="text"
                                             id="invoicingStateRegion"
@@ -1967,7 +2802,7 @@ class Profile extends React.Component {
                                               })
                                             }}
                                           /> */}
-																					<Select
+																					{/* <Select
 																						options={
 																							invoicing_state_list
 																								? selectOptionsFactory.renderOptions(
@@ -2108,9 +2943,9 @@ class Profile extends React.Component {
 																						}}
 																					/>
 																				</FormGroup>
-																			</Col>
-																			<Col lg={4}>
-																				<FormGroup className="mb-3">
+																			</Col> */}
+																			{/* <Col lg={4}> */}
+																				{/* <FormGroup className="mb-3">
 																					<Label htmlFor="invoicingPostZipCode">
 																						{strings.PostZipCode}
 																				</Label>
@@ -2146,7 +2981,7 @@ class Profile extends React.Component {
 																						}}
 																					/>
 																				</FormGroup>
-																			</Col>
+																			</Col> */}
 																			{/* <Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="dateFormat">
@@ -2160,7 +2995,7 @@ class Profile extends React.Component {
 																						value={props.values.dateFormat}
 																						showMonthDropdown
 																						showYearDropdown
-																						dateFormat="dd/MM/yyyy"
+																						dateFormat="dd-MM-yyyy"
 																						dropdownMode="select"
 																						onChange={(option) => {
 																							props.handleChange('dateFormat')(
@@ -2170,10 +3005,40 @@ class Profile extends React.Component {
 																					/>
 																				</FormGroup>
 																			</Col> */}
-																		</Row>
+																		{/* </Row> */}
 
-																		<h5 className="mt-3 mb-3">{strings.CompanyAddress}</h5>
-																		<Row>
+																	
+																		{/* <Row className={"mt-4"}>
+																		<Col lg={12}>
+																		<FormGroup check inline >
+																					<div>
+																						<Input
+																							// className="custom-control-input"
+																							type="checkbox"
+																							id="inline-radio2"
+																							name="SMTP-auth"
+																							// value={props.values.isDesignatedZone}
+																							checked={props.values.isDesignatedZone}
+																							onChange={(value) => {
+																								if(value != null){
+																								props.handleChange('IsDesignatedZone')(
+																									value,
+																								);
+																								}else{
+																									props.handleChange('IsDesignatedZone')(
+																										'',
+																									);
+																								}
+																							}}
+																						/>
+																						<label htmlFor="inline-radio2">
+																						{strings.CompanyLoatedInDesignatedZone}
+																					</label>
+																					</div>
+																				</FormGroup>
+																				</Col>
+																		</Row> */}
+																		{/* <Row>
 																			<Col lg={12}>
 																				<FormGroup check inline className="mb-3">
 																					<div>
@@ -2182,28 +3047,166 @@ class Profile extends React.Component {
 																							type="checkbox"
 																							id="inline-radio1"
 																							name="SMTP-auth"
-																							checked={this.state.isSame}
-																							onChange={(e) => {
-																								this.setState({
-																									isSame: !this.state.isSame,
-																								});
+																							checked={props.values.isRegisteredVat}
+																							onChange={(value) => {
+																								if(value != null){
+																								props.handleChange('isRegisteredVat')(
+																									value,
+																								);
+																								}else{
+																									props.handleChange('isRegisteredVat')(
+																										'',
+																									);
+																								}
 																							}}
 																						/>
 																						<label htmlFor="inline-radio1">
-																						{strings.CompanyAddressIsSameAsInvoicingAddress}
+																						{strings.CompanyVatRegistered}
 																					</label>
 																					</div>
 																				</FormGroup>
 																			</Col>
-																		</Row>
-																		<Row>
+																		</Row> */}
+
+																		{/* <Row style={{display: props.values.isRegisteredVat === true ? '' : 'none'}}>
 																			<Col lg={4}>
+																						<FormGroup className="mb-3">
+																							<Label htmlFor="product_code">
+																							<span className="text-danger">*</span>
+																							 {strings.TaxRegistrationNumber}
+																						</Label>
+																							<Input
+																								type="text"
+																								id="vatRegistrationNumber"
+																								maxLength="15"
+																								name="vatRegistrationNumber"
+																								placeholder={strings.Enter+strings.TaxRegistrationNumber}
+																								value={
+																									props.values
+																										.vatRegistrationNumber
+																								}
+																								onChange={(option) => {
+																									if (
+																										option.target.value === '' ||
+																										this.regEx.test(option.target.value)
+																									) {
+																										props.handleChange('vatRegistrationNumber')(
+																											option,
+																										);
+																									} else {
+																										props.handleChange('vatRegistrationNumber')(
+																											option,
+																										);
+																								}}
+																							}
+																							value={props.values.vatRegistrationNumber}
+																								className={
+																									props.errors.vatRegistrationNumber &&
+																									props.touched.vatRegistrationNumber
+																										? 'is-invalid'
+																										: ''
+																								}
+																							/>
+																							{props.errors.vatRegistrationNumber &&
+																								props.touched.vatRegistrationNumber && (
+																									<div className="invalid-feedback">
+																										{props.errors.vatRegistrationNumber}
+																									</div>
+																								)}
+																						</FormGroup>
+																					</Col>
+																					<Col lg={3}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="expense_date">
+																			<span className="text-danger">*</span>
+																			Vat Registered On 
+																		</Label>
+																		<DatePicker
+																			id="date"
+																			name="vatRegistrationDate"
+																			className={`form-control ${
+																				props.errors.vatRegistrationDate &&
+																				props.touched.vatRegistrationDate
+																					? 'is-invalid'
+																					: ''
+																			}`}
+																			
+																			value={moment(
+																				props.values.vatRegistrationDate,
+																			).format('DD-MM-YYYY')}
+																			showMonthDropdown
+																			showYearDropdown
+																			dropdownMode="select"
+																			dateFormat="dd-MM-yyyy"
+																		 maxDate={new Date()}
+																			onChange={(value) => {
+																				props.handleChange('vatRegistrationDate')(
+																					value,
+																				);
+																			}}
+																		/>
+																		{props.errors.vatRegistrationDate &&
+																			props.touched.vatRegistrationDate && (
+																				<div className="invalid-feedback">
+																					{props.errors.vatRegistrationDate}
+																				</div>
+																			)}
+																	</FormGroup>
+																</Col> */}
+																					{/* <Col lg={3}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="date">
+																			<span className="text-danger">*</span>
+																			Vat Registration Date
+																		</Label>
+																		<DatePicker
+																			id="vatRegistrationDate"
+																			name="vatRegistrationDate"
+																			showMonthDropdown
+																			showYearDropdown
+																			dateFormat="dd-MM-yyyy"
+																			dropdownMode="select"
+																			 value={props.values.vatRegistrationDate}
+																			 selected={new Date(props.values.vatRegistrationDate)} 
+																			
+																			onChange={(value) => {
+																			
+																				props.handleChange('vatRegistrationDate')(
+																					value
+																				);
+																				this.setDate(props, value);
+																			}}
+																			className={`form-control ${
+																				props.errors.vatRegistrationDate &&
+																				props.touched.vatRegistrationDate
+																					? 'is-invalid'
+																					: ''
+																			}`}
+																		/>
+																		{props.errors.vatRegistrationDate &&
+																			props.touched.vatRegistrationDate && (
+																				<div className="invalid-feedback">
+																					{props.errors.vatRegistrationDate}
+																				</div>
+																			)}
+																	</FormGroup>
+																</Col> */}
+																			{/* </Row> */}
+																		{/* <h5 className="mt-3 mb-3">{strings.CompanyAddress}</h5>
+																		<Row>
+																			
+																		
+																		</Row> */}
+
+																		{/* <Row style={{ display: props.values.countryName !== 1 ? '' : 'none' }}>
+																		<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="product_code">
+																					<span className="text-danger">*</span>
 																						 {strings.CompanyAddressLine1}
 																				</Label>
 																					<Input
-																						type="textarea"
+																						type="text"
 																						id="companyAddressLine1"
 																						name="companyAddressLine1"
 																						placeholder={strings.Enter+strings.CompanyAddressLine1}
@@ -2219,67 +3222,33 @@ class Profile extends React.Component {
 																								'companyAddressLine1',
 																							)(option);
 																						}}
-																					/>
-																				</FormGroup>
-																			</Col>
-																			<Col lg={4}>
-																				<FormGroup className="mb-3">
-																					<Label htmlFor="companyAddressLine2">
-																						 {strings.CompanyAddressLine2}
-																				</Label>
-																					<Input
-																						type="textarea"
-																						id="companyAddressLine2"
-																						name="companyAddressLine2"
-																						placeholder={strings.Enter+strings.CompanyAddressLine2}
-																						rows="5"
-																						value={
-																							isSame
-																								? this.state.companyAddress
-																									.companyAddressLine2
-																								: props.values.companyAddressLine2
+																						value={props.values.companyAddressLine1}
+																						className={
+																							props.errors.companyAddressLine1 &&
+																							props.touched.companyAddressLine1
+																							? 'is-invalid'
+																							: ''
 																						}
-																						onChange={(option) => {
-																							props.handleChange(
-																								'companyAddressLine2',
-																							)(option);
-																						}}
 																					/>
+																					{props.errors.companyAddressLine1 &&
+																								props.touched.companyAddressLine1 && (
+																									<div className="invalid-feedback">
+																										{props.errors.companyAddressLine1}
+																									</div>
+																								)}
 																				</FormGroup>
 																			</Col>
-																			<Col lg={4}>
-																				<FormGroup className="mb-3">
-																					<Label htmlFor="companyAddressLine3">
-																						 {strings.CompanyAddressLine3}
-																				</Label>
-																					<Input
-																						type="textarea"
-																						id="companyAddressLine3"
-																						name="companyAddressLine3"
-																						placeholder={strings.Enter+strings.CompanyAddressLine3}
-																						rows="5"
-																						value={
-																							isSame
-																								? this.state.companyAddress
-																									.companyAddressLine3
-																								: props.values.companyAddressLine3
-																						}
-																						onChange={(option) => {
-																							props.handleChange(
-																								'companyAddressLine3',
-																							)(option);
-																						}}
-																					/>
-																				</FormGroup>
-																			</Col>
-																		</Row>
+																			
 
-																		<Row>
 																			<Col lg={4}>
 																				<FormGroup>
 																					<Label htmlFor="companyCountryCode">
-																						{strings.CountryCode}
-																				</Label>
+																					<span className="text-danger">*</span>
+																						{strings.CountryCode} */}
+																						{/* <Col> */}
+																				
+																			{/* </Col> */}
+																				{/* </Label>
 																					<Select
 																						options={
 																							country_list
@@ -2328,7 +3297,7 @@ class Profile extends React.Component {
 																									'companyCountryCode',
 																								)(option.value, 'company');
 																								props.handleChange(
-																									'companyStateRegion',
+																									'companyStateCode',
 																								)('');
 																								this.getStateList(
 																									option.value,
@@ -2339,7 +3308,7 @@ class Profile extends React.Component {
 																									'companyCountryCode',
 																								)('');
 																								props.handleChange(
-																									'companyStateRegion',
+																									'companyStateCode',
 																								)('');
 																							}
 																						}}
@@ -2364,19 +3333,9 @@ class Profile extends React.Component {
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="product_code">
-																						 {strings.StateRegion}
+																					<span className="text-danger">*</span>
+																						{props.values.companyCountryCode === 229 ? strings.Emirates : strings.StateRegion}
 																				</Label>
-																					{/* <Input
-                                            type="text"
-                                            id="companyStateRegion"
-                                            name="companyStateRegion"
-                                            placeholder="Enter State Region"
-                                            value={isSame ? this.state.companyAddress.companyStateRegion : props.values.companyStateRegion}
-
-                                            onChange={(option) => {
-                                              props.handleChange('companyStateRegion')(option)
-                                            }}
-                                          /> */}
 																					<Select
 																						options={selectOptionsFactory.renderOptions(
 																							'label',
@@ -2384,7 +3343,7 @@ class Profile extends React.Component {
 																							isSame
 																								? invoicing_state_list
 																								: company_state_list,
-																							'State',
+																							'State/Province',
 																						)}
 																						value={
 																							isSame
@@ -2392,47 +3351,51 @@ class Profile extends React.Component {
 																									(option) =>
 																										option.value ===
 																										+this.state.companyAddress
-																											.companyStateRegion,
+																											.companyStateCode,
 																								)
 																								: company_state_list.find(
 																									(option) =>
 																										option.value ===
 																										+props.values
-																											.companyStateRegion,
+																											.companyStateCode,
 																								)
 																						}
 																						onChange={(option) => {
 																							if (option && option.value) {
 																								props.handleChange(
-																									'companyStateRegion',
+																									'companyStateCode',
 																								)(option.value);
 																							} else {
 																								props.handleChange(
-																									'companyStateRegion',
+																									'companyStateCode',
 																								)('');
 																							}
 																						}}
 																						placeholder={strings.Select+strings.StateRegion}
-																						id="companyStateRegion"
-																						name="companyStateRegion"
+																						id="companyStateCode"
+																						name="companyStateCode"
 																						className={
-																							props.errors.companyStateRegion &&
-																								props.touched.companyStateRegion
+																							props.errors.companyStateCode &&
+																								props.touched.companyStateCode
 																								? 'is-invalid'
 																								: ''
 																						}
 																					/>
-																					{props.errors.companyStateRegion &&
-																						props.touched.companyStateRegion && (
+																					{props.errors.companyStateCode &&
+																						props.touched.companyStateCode && (
 																							<div className="invalid-feedback">
 																								{props.errors.companyStateRegion}
 																							</div>
 																						)}
 																				</FormGroup>
 																			</Col>
-																			<Col lg={4}>
+																			
+																		</Row> */}
+																		{/* <Row>
+																		<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="companyCity">
+																					<span className="text-danger">*</span>
 																						 {strings.City}
 																				</Label>
 																					<Input
@@ -2451,45 +3414,26 @@ class Profile extends React.Component {
 																								option,
 																							);
 																						}}
-																					/>
-																				</FormGroup>
-																			</Col>
-																		</Row>
-																		<Row>
-																			<Col lg={4}>
-																				<FormGroup className="mb-3">
-																					<Label htmlFor="companyPoBoxNumber">
-																						 {strings.POBoxNumber}
-																				</Label>
-																					<Input
-																						type="text"
-																						id="companyPoBoxNumber"
-																						name="companyPoBoxNumber"
-																						placeholder={strings.Enter+strings.POBoxNumber}
-																						value={
-																							isSame
-																								? this.state.companyAddress
-																									.companyPoBoxNumber
-																								: props.values.companyPoBoxNumber
+																						value={props.values.companyCity}
+																						className={
+																							props.errors.companyCity &&
+																							props.touched.companyCity
+																							? 'is-invalid'
+																							: ''
 																						}
-																						onChange={(option) => {
-																							if (
-																								option.target.value === '' ||
-																								this.regExBoth.test(
-																									option.target.value,
-																								)
-																							) {
-																								props.handleChange(
-																									'companyRevenueBudget',
-																								)(option);
-																							}
-																						}}
 																					/>
+																					{props.errors.companyCity &&
+																						props.touched.companyCity && (
+																						<div className="invalid-feedback">
+																							{props.errors.companyCity}
+																						</div>
+																					)}
 																				</FormGroup>
 																			</Col>
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="companyPostZipCode">
+																					<span className="text-danger">*</span>
 																						 {strings.PostZipCode}
 																				</Label>
 																					<Input
@@ -2511,14 +3455,51 @@ class Profile extends React.Component {
 																								)
 																							) {
 																								props.handleChange(
-																									'companyRevenueBudget',
+																									'companyPostZipCode',
 																								)(option);
 																							}
 																						}}
+																						value={props.values.companyPostZipCode}
+																						className={
+																							props.errors.companyPostZipCode &&
+																							props.touched.companyPostZipCode
+																							? 'is-invalid'
+																							: ''
+																						}
 																					/>
+																					{props.errors.companyPostZipCode &&
+																						props.touched.companyPostZipCode && (
+																						<div className="invalid-feedback">
+																							{props.errors.companyPostZipCode}
+																						</div>
+																					)}
 																				</FormGroup>
 																			</Col>
-																		</Row>
+																			<Col lg={4}>
+																				<FormGroup className="mb-3">
+																					<Label htmlFor="fax"> */}
+																					{/* <span className="text-danger">*</span> */}
+																						{/* Fax
+																				</Label>
+																					<Input
+																						type="text"
+																						id="fax"
+																						name="fax"
+																						placeholder={strings.Enter+"Fax"}
+																						rows="5"
+																						
+																						onChange={(option) => {
+																							props.handleChange(
+																								'fax',
+																							)(option);
+																						}}
+																						value={props.values.fax}
+																				
+																					/>
+																				
+																				</FormGroup>
+																			</Col>
+																		</Row> */}
 
 																		<Row>
 																			<Col lg={12} className="mt-5">
@@ -2552,12 +3533,296 @@ class Profile extends React.Component {
 													</Row>
 												)}
 										</TabPane>
+										<TabPane tabId="3">{loading ? (
+												<Loader></Loader>
+											) : (
+												<Row>
+													<Col lg="12">
+													<Formik
+																initialValues={this.state.initValue}
+																onSubmit={(values, { resetForm }) => {
+																	this.handlePasswordSubmit(values);
+																	// resetForm(this.state.initValue)
+
+																	// this.setState({
+																	//   selectedContactCurrency: null,
+																	//   selectedCurrency: null,
+																	//   selectedInvoiceLanguage: null
+																	// })
+																}}
+															// validationSchema={Yup.object().shape({
+															//   firstName: Yup.()
+															//     .required("First Name is Required"),
+															//   lastName: Yup.()
+															//     .required("Last Name is Required"),
+															// })}
+															validate={(values)=>{
+																
+																let errors={};
+																	if(this.state.currentPasswordMatched==false)
+																	errors.currentPassword="Please Enter The Correct Password"
+																return errors;
+
+															}}
+															validationSchema={Yup.object().shape({
+																currentPassword: Yup.string().required(
+																	'Current Password is Required',
+																),
+																// password: Yup.string().required(
+																// 	'New Password is Required',
+																// ),
+																// confirmPassword: Yup.string().required(
+																// 	'Confirm Password is Required',
+																// ),
+																password: Yup.string()
+																	 .required("Password is Required")
+																	// .min(8, "Password Too Short")
+																	.matches(
+																		/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
+																		'Must Contain 8 Characters,Must contain max 16 Characters, One Uppercase, One Lowercase, One Number and one special case Character',
+																	),
+																confirmPassword: Yup.string()
+																	 .required('Confirm Password is Required')
+																	.oneOf(
+																		[Yup.ref('password'), null],
+																		'Passwords must match',
+																	),
+															})}
+
+															>
+																{(props) => (
+																	<Form
+																		onSubmit={props.handleSubmit}
+																		encType="multipart/form-data"
+																	>
+
+																		<Row>
+																			<Col lg={10}>
+																				<Row>
+																				<Col lg={4}>
+																						<FormGroup>
+																							<Label htmlFor="select">
+																							<span className="text-danger">
+																									*
+																							</span> {strings.CurrentPassword}
+																						</Label>
+																							<Input
+																							onPaste={(e)=>{
+																								e.preventDefault()
+																								return false;
+																							  }} onCopy={(e)=>{
+																								e.preventDefault()
+																								return false;
+																							  }}
+																								minLength={8}
+																								maxLength={16}
+																								type="password"
+																								id="currentPassword"
+																								name="currentPassword"
+																								autoComplete="current-password"
+																								placeholder={strings.Enter+strings.CurrentPassword}
+																								onChange={(option) => {
+																									props.handleChange('currentPassword')(
+																										option,
+																									);
+																									
+																									this.validateCurrentPassword(this.state.initUserData.email,option.target.value)
+																								}}
+																								className={
+																									props.errors.currentPassword &&
+																										props.touched.currentPassword
+																										? 'is-invalid'
+																										: ''
+																								}
+																							/>
+																							{props.errors.currentPassword &&
+																								props.touched.currentPassword ? (
+																									<div className="invalid-feedback">
+																										{props.errors.currentPassword}
+																									</div>
+																								) : (
+																									<span className="password-msg">
+																										{/* Must Contain 8 Characters, One
+																										Uppercase, One Lowercase, One
+																										Number and one special case
+																										Character. */}
+																									</span>
+																								)}
+																						</FormGroup>
+																					</Col>
+																					<Col lg={4}>
+																						<FormGroup>
+																							<Label htmlFor="select">
+																							<span className="text-danger">
+																									*
+																							</span> {strings.NewPassword}
+																						</Label>
+																						{/* <div> */}
+																							<Input
+																							onPaste={(e)=>{
+																								e.preventDefault()
+																								return false;
+																							  }} onCopy={(e)=>{
+																								e.preventDefault()
+																								return false;
+																							  }}
+																							  type={
+																								this.state.isPasswordShown
+																									? 'text'
+																									: 'password'
+																								}
+																							// onselectstart="return false"
+																							// oncopy="return false"
+																							// ondrop="return false"
+																							// onpaste="return false"
+																								minLength={8}
+																								maxLength={16}
+																								type="password"
+																								id="password"
+																								name="password"
+																								autoComplete="new-password"
+																								value={props.values.password}
+																								placeholder={strings.Enter+strings.NewPassword}
+																								onChange={(value) => {
+																									props.handleChange('password')(
+																										value,
+																									);
+																									this.setState({displayRules:true})
+																								}}
+																								className={
+																									props.errors.password &&
+																										props.touched.password
+																										? 'is-invalid'
+																										: ''
+																								}
+																							/>
+																							{/* <i className={`fa ${isPasswordShown ? "fa-eye-slash" : "fa-eye"} password-icon fa-lg`}
+																								onClick={this.togglePasswordVisiblity}
+																							></i> */}
+																						{/* </div> */}
+																							{props.errors.password &&
+																							props.touched.password && (
+																								<div className="invalid-feedback">
+																									{props.errors.password}
+																								</div>
+																							)}
+																						{this.state.displayRules==true&&(<PasswordChecklist
+																							rules={["maxLength", "minLength", "specialChar", "number", "capital"]}
+																							minLength={8}
+																							maxLength={16}
+																							value={props.values.password}
+																							valueAgain={props.values.confirmPassword}
+																						/>)}
+																						</FormGroup>
+																					</Col>
+																					<Col lg={4}>
+																						<FormGroup>
+																							<Label htmlFor="select">
+																							<span className="text-danger">
+																									*
+																							</span> {strings.ConfirmPassword}
+																						</Label>
+																							<Input
+																							onPaste={(e)=>{
+																								e.preventDefault()
+																								return false;
+																							  }} onCopy={(e)=>{
+																								e.preventDefault()
+																								return false;
+																							  }}
+																							// onselectstart="return false"
+																							// oncopy="return false"
+																							// ondrop="return false"
+																							// onpaste="return false"
+																								minLength={8}
+																								maxLength={16}
+																								type="password"
+																								id="confirmPassword"
+																								name="confirmPassword"
+																								value={props.values.confirmPassword}
+																								placeholder={strings.Enter+strings.ConfirmPassword}
+																								onChange={(value) => {
+																									props.handleChange(
+																										'confirmPassword',
+																									)(value);
+																								}}
+																								className={
+																									props.errors.confirmPassword &&
+																										props.touched.confirmPassword
+																										? 'is-invalid'
+																										: ''
+																								}
+																							/>
+																							{props.errors.confirmPassword &&
+																							props.touched.confirmPassword && (
+																								<div className="invalid-feedback">
+																									{props.errors.confirmPassword}
+																								</div>
+																							)}
+																						{this.state.displayRules==true&&(<PasswordChecklist
+																							rules={[ "match"]}
+																							minLength={8}
+																							value={props.values.password}
+																							valueAgain={props.values.confirmPassword}
+																						/>)}
+																						</FormGroup>
+																					</Col>
+																				</Row>
+																				
+																			</Col>
+																			
+																		</Row>
+																		<Row>
+																			<Col
+																				lg={12}
+																				className="mt-5 d-flex flex-wrap align-items-center  justify-content-end"
+																			>
+																				<FormGroup className="text-right">
+																				{/* <Button
+																					color="primary"
+																					type="button"
+																					className="btn-square mr-3 submit-btn"
+																					//   disabled={isSubmitting}
+																					onClick={() => { 
+																						this.resetPassword(props.values.email) }}
+																					>
+																					{strings.ResetPassword}
+																				</Button> */}
+																					<Button
+																						type="submit"
+																						color="primary"
+																						className="btn-square mr-3"
+																					>
+																						<i className="fa fa-dot-circle-o"></i>{' '}
+																					 {strings.Update}
+																				</Button>
+																					<Button
+																						color="secondary"
+																						className="btn-square"
+																						onClick={() => {
+																							this.props.history.push(
+																								'/admin/dashboard',
+																							);
+																						}}
+																					>
+																						<i className="fa fa-ban"></i> {strings.Cancel}
+																				</Button>
+																				</FormGroup>
+																			</Col>
+																		</Row>
+																	</Form>
+																)}
+															</Formik>
+												</Col>
+											</Row>
+											)}</TabPane>
 									</TabContent>
 								</CardBody>
 							</Card>
 						</Col>
 					</Row>
 				</div>
+			</div>
 			</div>
 		);
 	}

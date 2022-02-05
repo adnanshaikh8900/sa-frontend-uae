@@ -45,6 +45,8 @@ const mapStateToProps = (state) => {
 		vendor_list: state.bank_account.vendor_list,
 		vat_list: state.bank_account.vat_list,
 		currency_convert_list: state.currencyConvert.currency_convert_list,
+		UnPaidPayrolls_List:state.bank_account.UnPaidPayrolls_List
+
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -96,6 +98,7 @@ class CreateBankTransaction extends React.Component {
 				attachment: '',
 				customerId: '',
 				invoiceIdList: '',
+				payrollListIds:'',
 				vatId: '',
 				vendorId: '',
 				employeeId: '',
@@ -191,6 +194,7 @@ class CreateBankTransaction extends React.Component {
 	}
 
 	componentDidMount = () => {
+		this.props.transactionActions.getUnPaidPayrollsList();
 		this.initializeData();
 	};
 
@@ -271,6 +275,7 @@ class CreateBankTransaction extends React.Component {
 			coaCategoryId,
 			transactionCategoryId,
 			invoiceIdList,
+			payrollListIds,
 			reference,
 			exchangeRate,
 			customerId,
@@ -292,6 +297,16 @@ class CreateBankTransaction extends React.Component {
 			}));
 			console.log(result);
 		}
+		if (
+			payrollListIds &&
+			expenseCategory.value &&
+			expenseCategory.label === 'Salaries and Employee Wages'
+		 ) {
+			var result1 = payrollListIds.map((o) => ({
+			   payrollId: o.value,
+			}));
+			console.log(result1);
+		 }
 		let formData = new FormData();
 		formData.append('bankId ', bankAccountId ? bankAccountId : '');
 		formData.append(
@@ -357,6 +372,17 @@ class CreateBankTransaction extends React.Component {
 		if (this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
+		if (
+			payrollListIds &&
+			expenseCategory.value &&
+			expenseCategory.label === 'Salaries and Employee Wages'
+		 ) {
+			
+			formData.append(
+			   'payrollListIds',
+			   payrollListIds ? JSON.stringify(result1) : '',
+			);
+		 }
 		this.props.transactionCreateActions
 			.createTransaction(formData)
 			.then((res) => {
@@ -462,6 +488,47 @@ class CreateBankTransaction extends React.Component {
 		});
 		this.formRef.current.setFieldValue('invoiceIdList', option, true);
 	};
+	payrollList = (option) => {
+		this.setState({
+		   initValue: {
+			  ...this.state.initValue,
+			  ...{
+				 payrollListIds: option,
+			  },
+		   },
+		});
+		this.formRef.current.setFieldValue('payrollListIds', option, true);
+	 };
+	 getPayrollList=(UnPaidPayrolls_List,props)=>{
+   
+		return(<Col lg={3}>
+		   <FormGroup className="mb-3">
+			  <Label htmlFor="payrollListIds">
+				 Payolls
+			  </Label>
+			  <Select
+				 styles={customStyles}
+				 isMulti
+				 className="select-default-width"
+				 options={
+					UnPaidPayrolls_List &&
+					UnPaidPayrolls_List
+					   ? UnPaidPayrolls_List
+					   : []
+				 }
+				 // options={
+				 //     invoice_list ? invoice_list.data : []
+				 // }
+				 id="payrollListIds"
+				 onChange={(option) => {
+					props.handleChange('payrollListIds')(
+					   option,
+					);
+					this.payrollList(option);
+				 }}/>
+		   </FormGroup>
+		</Col>);
+	 }
 	getCompanyCurrency = (basecurrency) => {
 		this.props.currencyConvertActions
 			.getCompanyCurrency()
@@ -572,6 +639,7 @@ class CreateBankTransaction extends React.Component {
 			vendor_list,
 			vat_list,
 			currency_convert_list,
+			UnPaidPayrolls_List,
 		} = this.props;
 		return (
 			<div className="create-bank-transaction-screen">
@@ -743,7 +811,7 @@ class CreateBankTransaction extends React.Component {
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="date">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.TransactionDate}
 																	</Label>
 																	<DatePicker
@@ -754,7 +822,7 @@ class CreateBankTransaction extends React.Component {
 																		maxDate={new Date()}
 																		showMonthDropdown
 																		showYearDropdown
-																		dateFormat="dd/MM/yyyy"
+																		dateFormat="dd-MM-yyyy"
 																		dropdownMode="select"
 																		value={props.values.transactionDate}
 																		selected={props.values.transactionDate}
@@ -782,13 +850,13 @@ class CreateBankTransaction extends React.Component {
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="transactionAmount">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.Amount}
 																	</Label>
 																	<Input
 																		type="number"
-min="0"
-																		maxLength="10"
+																		min="0"
+																		maxLength="100"
 																		id="transactionAmount"
 																		name="transactionAmount"
 																		placeholder={strings.Amount}
@@ -829,7 +897,7 @@ min="0"
 																	<Col lg={3}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="expenseCategory">
-																				<span className="text-danger">*</span>
+																				<span className="text-danger">* </span>
 																				Expense Category
 																			</Label>
 																			<Select
@@ -867,9 +935,13 @@ min="0"
 																				)}
 																		</FormGroup>
 																	</Col>
+																	{props.values.expenseCategory && props.values.expenseCategory.value && props.values.expenseCategory.value==34 &&
+																		(
+																		this.getPayrollList(UnPaidPayrolls_List,props)
+																		)}
 																	{props.values.coaCategoryId &&
 																		props.values.coaCategoryId.label ===
-																			'Expense' && (
+																			'Expense'  && props.values.expenseCategory && props.values.expenseCategory.value !==34 && (
 																			<Col lg={3}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="vatId">Vat</Label>
@@ -924,7 +996,7 @@ min="0"
 																	<Row>
 																		<Col lg={3}>
 																				<FormGroup className="mb-3">
-																					<Label htmlFor="currencyCode"><span className="text-danger">*</span>
+																					<Label htmlFor="currencyCode"><span className="text-danger">* </span>
 																						Currency
 																					</Label>
 																					<Select
@@ -1175,7 +1247,7 @@ min="0"
 																	<Col lg={3}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="transactionCategoryId">
-																				<span className="text-danger">*</span>
+																				<span className="text-danger">* </span>
 																				Category
 																			</Label>
 																			<Select
@@ -1271,7 +1343,7 @@ min="0"
 																{props.values.coaCategoryId.value === 6 && (
 																	<Col lg={3}>
 																		<FormGroup className="mb-3">
-																			<Label htmlFor="employeeId"><span className="text-danger">*</span>User
+																			<Label htmlFor="employeeId"><span className="text-danger">* </span>User
 																			</Label>
 																			<Select
 																				styles={customStyles}
@@ -1288,13 +1360,19 @@ min="0"
 																					);
 																				}}
 																			/>
+																			{props.errors.employeeId &&
+																			props.touched.employeeId &&  (
+																					<div className="invalid-feedback">
+																						{props.errors.employeeId}
+																					</div>
+																				)}
 																		</FormGroup>
 																	</Col>
 																)}
 																{props.values.coaCategoryId.value === 12 && (
 																	<Col lg={3}>
 																		<FormGroup className="mb-3">
-																			<Label htmlFor="employeeId"><span className="text-danger">*</span>User</Label>
+																			<Label htmlFor="employeeId"><span className="text-danger">* </span>User</Label>
 																			<Select
 																				styles={customStyles}
 																				className="select-default-width"
@@ -1316,6 +1394,12 @@ min="0"
 																					);
 																				}}
 																			/>
+																			{props.errors.employeeId &&
+																				props.touched.employeeId && (
+																					<div className="invalid-feedback">
+																						{props.errors.employeeId}
+																					</div>
+																				)}
 																		</FormGroup>
 																	</Col>
 																)}
@@ -1405,7 +1489,10 @@ min="0"
 																		rows="6"
 																		placeholder={strings.Description}
 																		onChange={(option) =>
-																			props.handleChange('description')(option)
+																			{
+																				if(!option.target.value.includes("="))
+																				props.handleChange('description')(option)
+																			}
 																		}
 																		value={props.values.description}
 																	/>

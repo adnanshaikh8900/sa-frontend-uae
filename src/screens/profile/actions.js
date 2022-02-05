@@ -140,6 +140,21 @@ export const updateCompany = (obj) => {
   }
 }
 
+export const resetNewpassword = (obj) => {
+  return (dispatch) => {
+    let data = {
+      method: 'POST',
+      url: '/rest/user/resetNewpassword',
+      data: obj
+    }
+    return authFileUploadApi(data).then((res) => {
+      return res
+    }).catch((err) => {
+      throw err
+    })
+  }
+}
+
 export const getRoleList = (obj) => {
 
   return (dispatch) => {
@@ -175,6 +190,21 @@ export const getStateList = (countryCode,type) => {
           type: PROFILE[`${types}`],
           payload: res.data
         })
+      }
+    }).catch((err) => {
+      throw err
+    })
+  }
+}
+export const getCompanyTypeList2 = () => {
+  return (dispatch) => {
+    let data = {
+      method: 'get',
+      url: `/rest/datalist/getCompanyType`
+    }
+    return authApi(data).then((res) => {
+      if (res.status === 200) {
+        return res;
       }
     }).catch((err) => {
       throw err

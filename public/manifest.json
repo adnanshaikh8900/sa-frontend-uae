@@ -3,8 +3,8 @@
   "name": "simplevat-frontend",
   "icons": [
     {
-      "src": "./favicon.png",
-      "sizes": "100x100",
+      "src": "./SimpleAccounts-icon.png",
+      "sizes": "60x60",
       "type": "image/png"
     }
   ],

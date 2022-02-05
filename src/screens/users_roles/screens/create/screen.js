@@ -63,7 +63,9 @@ class CreateRole extends React.Component {
 			disabled: false,
 			selectedStatus: true,
 			isActive: true,
+			isChecked: true,
 			expanded: ["SelectAll"],
+			validationForSelect:0
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regExDecimal = /^[0-9]*(\.[0-9]{0,2})?$/;
@@ -191,12 +193,28 @@ class CreateRole extends React.Component {
 	onCheck = (checked, targetNode) => {
 		this.setState({ checked }, () => {
 		});
+		if(Array.isArray(checked) && checked.length !==0 )
+		this.setState({validationForSelect:checked[0]})
+		else
+		this.setState({validationForSelect:checked.length})
 	};
 
 	onExpand = (expanded) => {
 		this.setState({ expanded });
 	};
 
+	// toggleChange = () => {
+	// 	this.setState({
+	// 	  isChecked: !this.state.isChecked,
+	// 	});
+		
+	//   }
+getvalidation=()=>{
+	
+		let msg=	this.state && this.state.validationForSelect && this.state.validationForSelect!=0 ?
+																		 "" :  "Note: Please select atleast 1 module"
+																		 return<div><b>{msg}</b></div> 
+}
 	render() {
 		strings.setLanguage(this.state.language);
 		const { loading, vat_list } = this.state;
@@ -252,7 +270,8 @@ class CreateRole extends React.Component {
 											<Formik
 												initialValues={this.state.initValue}
 												onSubmit={(values, { resetForm }) => {
-													this.handleSubmit(values, resetForm);
+													if(this.state.validationForSelect>0){	this.handleSubmit(values, resetForm);}
+												
 													// resetForm(this.state.initValue)
 												}}
 												validate={(values) => {
@@ -277,7 +296,7 @@ class CreateRole extends React.Component {
 														<Row>
 																	<Col >
 																		<FormGroup className="mb-3">
-																			<Label htmlFor="active"><span className="text-danger">*</span>{strings.Status}</Label>
+																			<Label htmlFor="active"><span className="text-danger">* </span>{strings.Status}</Label>
 																			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 																				<FormGroup check inline>
 																					<div className="custom-radio custom-control">
@@ -344,7 +363,7 @@ class CreateRole extends React.Component {
 																	</Col></Row>
 														<FormGroup>
 															<Label htmlFor="name">
-																<span className="text-danger">*</span> {strings.Name}
+																<span className="text-danger">* </span> {strings.Name}
 															</Label>
 															<Input
 																type="text"
@@ -409,7 +428,11 @@ class CreateRole extends React.Component {
 															/>
 														</FormGroup>
 														<FormGroup>
-															<Label ><span className="text-danger">*</span> {strings.Modules}</Label>
+															<Label ><span className="text-danger">* </span> {strings.Modules} 
+															{
+																this.getvalidation()
+															}
+															</Label>
 															<CheckboxTree
 																id="RoleList"
 																name="RoleList"
@@ -421,6 +444,9 @@ class CreateRole extends React.Component {
 																checkModel="all"
 																onCheck={this.onCheck}
 																onExpand={this.onExpand}
+																type="checkbox"
+																defaultChecked={this.state.isChecked}
+																onChange={this.toggleChange}
 															/>
 														</FormGroup>
 														{/* <FormGroup>
@@ -464,6 +490,7 @@ class CreateRole extends React.Component {
 																Delete
 															</Label>
 														</FormGroup> */}
+														
 														<FormGroup className="text-right mt-5">
 															<Button
 																type="button"
@@ -476,6 +503,11 @@ class CreateRole extends React.Component {
 																		props.handleSubmit();
 																	});
 																}}
+																// disabled={!this.state.submitButton && this.state.selectedRows && this.state.selectedRows.length !=0 ? false :true}
+																// title={
+																// 	this.state && this.state.validationForSelect && this.state.validationForSelect!=0 ?
+																// 																			 "" :  "Please select atleast 1 module"
+																// }
 															>
 																<i className="fa fa-dot-circle-o"></i>{' '} 
 																{this.state.disabled

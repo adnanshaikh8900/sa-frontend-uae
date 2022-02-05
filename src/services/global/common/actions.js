@@ -1,5 +1,5 @@
 import { COMMON, USERS_ROLES } from 'constants/types';
-import { authApi } from 'utils';
+import { api,authApi } from 'utils';
 
 export const startRequest = () => {
 	return (dispatch) => {
@@ -81,7 +81,76 @@ export const getRoleList = (id) => {
 			});
 	};
 };
+export const getStateList = (countryCode) => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: '/rest/company/getState?countryCode=' + 229,
+		};
+		if (229) {
+			return api(data)
+				.then((res) => {
+					if (res.status === 200) {
+						dispatch({
+							type: COMMON.STATE_LIST,
+							payload: res.data,
+						});
+					}
+				})
+				.catch((err) => {
+					throw err;
+				});
+		} else {
+			dispatch({
+				type: COMMON.STATE_LIST,
+				payload: [],
+			});
+		}
+	};
+};
 
+export const getCountryList = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: '/rest/company/getCountry',
+		};
+		return api(data)
+			.then((res) => {
+				if (res.status === 200) {
+					dispatch({
+						type: COMMON.COUNTRY_LIST,
+						payload: res.data,
+					});
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+export const getCompanyTypeListRegister = () => {
+	debugger
+	return (dispatch) => {
+	  let data = {
+		method: 'get',
+		url: `/rest/company/getCompanyType`
+	  }
+	  return api(data)
+	  .then((res) => {
+		  if (res.status === 200) {
+			  dispatch({
+				  type: COMMON.COMPANY_TYPE,
+				  payload: res.data,
+			  });
+		  }
+		  console.log(res)
+	  })
+	  .catch((err) => {
+		  throw err;
+	  });
+};
+  };
 export const getCurrencyList = () => {
 	return (dispatch) => {
 		let data = {

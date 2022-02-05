@@ -129,12 +129,14 @@ class ExpenseTemplate extends Component {
 	<tr>      <td className="ml-3" style={{width:'245px'}}>	<b>{strings.Receipt+" "+strings.Description }</b> : </td>  
 	          <td>{expenseData.receiptAttachmentDescription} </td>
 	</tr>
-	<tr>      <td className="ml-3" style={{width:'245px'}}> <b>{strings.PostedDate }</b> : </td>
-<td>
-{expenseData.expenseStatus === "Posted" ?   
-	moment(expenseData.lastUpdateDate).format('DD/MM/YYYY')
-	:""}</td>
-</tr>
+
+	<tr>      <td className="ml-3" style={{width:'245px'}}>	<b>{strings.PostedDate }</b> : </td> 
+	          <td>
+			  {expenseData.expenseStatus === "Posted" ?    
+				  moment(expenseData.lastUpdateDate).format('DD/MM/YYYY')
+				  :"-"}</td>
+	</tr> 
+ 
 </tbody>
 </Table>
                                   

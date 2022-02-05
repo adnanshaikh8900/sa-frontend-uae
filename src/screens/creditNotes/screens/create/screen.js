@@ -35,6 +35,8 @@ import './style.scss';
 import moment from 'moment';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import Switch from "react-switch";
+import { Checkbox } from '@material-ui/core';
 
 const mapStateToProps = (state) => {
 	return {
@@ -43,6 +45,7 @@ const mapStateToProps = (state) => {
 		vat_list: state.customer_invoice.vat_list,
 		product_list: state.customer_invoice.product_list,
 		customer_list: state.customer_invoice.customer_list,
+		excise_list: state.customer_invoice.excise_list,
 		country_list: state.customer_invoice.country_list,
 		product_category_list: state.product.product_category_list,
 		universal_currency_list: state.common.universal_currency_list,
@@ -99,8 +102,14 @@ class CreateCreditNote extends React.Component {
 					quantity: 1,
 					unitPrice: '',
 					vatCategoryId: '',
+					exciseTaxId:'',
+					exciseAmount:'',
 					subTotal: 0,
+					vatAmount:0,
 					productId: '',
+					isExciseTaxExclusive:'',
+					discountType: 'FIXED',
+					discount: 0,
 				},
 			],
 			idCount: 0,
@@ -137,8 +146,12 @@ class CreateCreditNote extends React.Component {
 				email:'',
 				discount: 0,
 				discountPercentage: '',
-				discountType: { value: 'FIXED', label: 'Fixed' },
+				discountType: 'FIXED',
+				creditAmount:0,
+				total_excise: 0,
 			},
+			total_excise: 0,
+			// excisetype: { value: 'Inclusive', label: 'Inclusive' },
 			currentData: {},
 			contactType: 2,
 			openMultiSupplierProductModal: false,
@@ -159,7 +172,11 @@ class CreateCreditNote extends React.Component {
 			// exchangeRate:'',		
 			basecurrency:[],
 			inventoryList:[],
+            remainingInvoiceAmount:'',
 			invoiceSelected:false,
+			isCreatedWIWP:false,
+			quantityExceeded:'',
+			isCreatedWithoutInvoice:false
 		};
 
 		this.formRef = React.createRef();
@@ -181,7 +198,7 @@ class CreateCreditNote extends React.Component {
 			{ label: 'Net 30 Days', value: 'NET_30' },
 			{ label: 'Due on Receipt', value: 'DUE_ON_RECEIPT' },
 		];
-		this.placelist = [
+			this.placelist = [
 			{ label: 'Abu Dhabi', value: '1' },
 			{ label: 'Dubai', value: '2' },
 			{ label: 'Sharjah', value: '3' },
@@ -194,7 +211,6 @@ class CreateCreditNote extends React.Component {
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 		this.regDecimalP = /(^100(\.0{1,2})?$)|(^([1-9]([0-9])?|0)(\.[0-9]{1,2})?$)/;
-		this.regExAlpha = /^[a-zA-Z0-9!@#$&()-\\`.+,/\"]+$/;
 	}
 
 	// renderActions (cell, row) {
@@ -231,7 +247,9 @@ class CreateCreditNote extends React.Component {
 				name={`lineItemsString.${idx}.description`}
 				render={({ field, form }) => (
 					<Input
+					disabled
 						type="text"
+						maxLength="250"
 						value={row['description'] !== '' ? row['description'] : ''}
 						onChange={(e) => {
 							this.selectItem(e.target.value, row, 'description', form, field);
@@ -269,7 +287,8 @@ class CreateCreditNote extends React.Component {
 					<div>
 						<Input
 							type="text"
-min="0"
+							min="0"
+							maxLength="10"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
 								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -281,7 +300,10 @@ min="0"
 										field,
 										props,
 									);
+
+									this.setState({currentRow:row})
 								}
+
 							}}
 							placeholder={strings.Quantity}
 							className={`form-control  ${props.errors.lineItemsString &&
@@ -326,9 +348,10 @@ min="0"
 				name={`lineItemsString.${idx}.unitPrice`}
 				render={({ field, form }) => (
 					<Input
+					disabled
 					type="text"
-min="0"
-						maxLength="10"
+					min="0"
+						maxLength="14,2"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (
@@ -366,17 +389,130 @@ min="0"
 		return row.subTotal === 0 ? this.state.customer_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.customer_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
 
 }
+
+renderVatAmount = (cell, row,extraData) => {
+	return row.vatAmount === 0 ? this.state.customer_currency_symbol +" "+  row.vatAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 }): this.state.customer_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 });
+
+}
+
+renderDiscount = (cell, row, props) => {
+	const { discountOptions } = this.state;
+   let idx;
+   this.state.data.map((obj, index) => {
+	   if (obj.id === row.id) {
+		   idx = index;
+	   }
+	   return obj;
+   });
+
+   return (
+	   <Field
+			name={`lineItemsString.${idx}.discountType`}
+		   render={({ field, form }) => (
+		   <div>
+		   <div  class="input-group">
+			   <Input
+			         disabled
+					 type="text"
+					   min="0"
+					maxLength="14,2"
+					value={row['discount'] !== 0 ? row['discount'] : 0}
+					onChange={(e) => {
+					   if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+						   this.selectItem(
+							   e.target.value,
+							   row,
+							   'discount',
+							   form,
+							   field,
+							   props,
+						   );
+					   }
+				   
+						   this.updateAmount(
+							   this.state.data,
+							   props,
+						   );
+				   
+				   }}
+				   placeholder={strings.discount}
+				   className={`form-control 
+	   ${
+					   props.errors.lineItemsString &&
+					   props.errors.lineItemsString[parseInt(idx, 10)] &&
+					   props.errors.lineItemsString[parseInt(idx, 10)].discount &&
+					   Object.keys(props.touched).length > 0 &&
+					   props.touched.lineItemsString &&
+					   props.touched.lineItemsString[parseInt(idx, 10)] &&
+					   props.touched.lineItemsString[parseInt(idx, 10)].discount
+						   ? 'is-invalid'
+						   : ''
+				   }`}
+type="text"
+/>
+<div class="dropdown open input-group-append">
+
+	<div 	style={{width:'100px'}}>
+	<Select
+
+                                                                                       isDisabled={true}
+																					   options={discountOptions}
+																					   id="discountType"
+																					   name="discountType"
+																					   value={
+																					discountOptions &&
+																						selectOptionsFactory
+																							.renderOptions('label', 'value', discountOptions, 'discount')
+																							.find((option) => option.value == row.discountType)
+																					   }
+																					   onChange={(e) => {
+																						   this.selectItem(
+																							   e.value,
+																							   row,
+																							   'discountType',
+																							   form,
+																							   field,
+																							   props,
+																						   );
+																						   this.updateAmount(
+																							   this.state.data,
+																							   props,
+																						   );
+																					   }}
+																				   />
+		 </div>
+		  </div>
+		  </div>
+		   </div>
+
+			   )}
+
+	   />
+   );
+}
+
+discountType = (row) =>
+
+{
+	debugger
+	
+		return this.state.discountOptions &&
+		selectOptionsFactory
+			.renderOptions('label', 'value', this.state.discountOptions, 'discount')
+			.find((option) => option.value === +row.discountType)
+}
+
 	setDate = (props, value) => {
 		const { term } = this.state;
 		const val = term ? term.value.split('_') : '';
 		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 		const values = value
 			? value
-			: moment(props.values.creditNoteDate, 'DD/MM/YYYY').toDate();
+			: moment(props.values.creditNoteDate, 'DD-MM-YYYY').toDate();
 		// if (temp && values) {
 		// 	const date = moment(values)
 		// 		.add(temp - 1, 'days')
-		// 		.format('DD/MM/YYYY');
+		// 		.format('DD-MM-YYYY');
 		// 	props.setFieldValue('invoiceDueDate', date, true);
 		// }
 	};
@@ -428,6 +564,7 @@ min="0"
 		this.props.creditNotesActions.getInvoiceListForDropdown();
 		this.props.creditNotesActions.getCustomerList(this.state.contactType);
 		this.props.creditNotesActions.getCountryList();
+		this.props.creditNotesActions.getExciseList();
 		this.props.creditNotesActions.getVatList();
 		this.props.creditNotesActions.getProductList();
 		this.props.productActions.getProductCategoryList();
@@ -448,12 +585,12 @@ min="0"
 			// 	true,
 			// );
 		});
-		this.props.creditNotesActions.getInvoicePrefix().then((response) => {
-			this.setState({
-				prefixData: response.data
+		// this.props.creditNotesActions.getInvoicePrefix().then((response) => {
+		// 	this.setState({
+		// 		prefixData: response.data
 
-			});
-		});
+		// 	});
+		// });
 		this.getCompanyCurrency();
 		this.salesCategory();
 		this.purchaseCategory();
@@ -514,6 +651,74 @@ min="0"
 		}
 	};
 
+	renderExcise = (cell, row, props) => {
+		const { excise_list } = this.props;
+		let idx;
+		this.state.data.map((obj, index) => {
+			if (obj.id === row.id) {
+				idx = index;
+			}
+			return obj;
+		});
+
+		return (
+			<Field
+				name={`lineItemsString.${idx}.exciseTaxId`}
+				render={({ field, form }) => (
+					<Select
+						styles={customStyles}
+						isDisabled={true}
+						options={
+							excise_list
+								? selectOptionsFactory.renderOptions(
+										'name',
+										'id',
+										excise_list,
+										'Excise',
+								  )
+								: []
+						}
+						value={
+				
+							excise_list &&
+							selectOptionsFactory
+								.renderOptions('name', 'id', excise_list, 'Excise')
+								.find((option) => option.value === +row.exciseTaxId)
+						}
+						id="exciseTaxId"
+						placeholder={strings.Select+strings.Vat}
+						onChange={(e) => {
+							
+							this.selectItem(
+								e.value,
+								row,
+								'exciseTaxId',
+								form,
+								field,
+								props,
+							);
+							
+							this.updateAmount(
+								this.state.data,
+								props,
+							);
+						}}
+						className={`${
+							props.errors.lineItemsString &&
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)].exciseTaxId &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)].exciseTaxId
+								? 'is-invalid'
+								: ''
+						}`}
+					/>
+				)}
+			/>
+		);
+	};
 	addRow = () => {
 		const data = [...this.state.data];
 		this.setState(
@@ -526,6 +731,9 @@ min="0"
 					vatCategoryId: '',
 					productId: '',
 					subTotal: 0,
+					discountType:'FIXED',
+					discount: 0,
+					exciseTaxId:'',
 				}),
 				idCount: this.state.idCount + 1,
 			},
@@ -595,6 +803,7 @@ min="0"
 				name={`lineItemsString.${idx}.vatCategoryId`}
 				render={({ field, form }) => (
 					<Select
+					isDisabled
 						styles={customStyles}
 						options={
 							vat_list
@@ -650,6 +859,9 @@ min="0"
 				obj['unitPrice'] = result.unitPrice;
 				obj['vatCategoryId'] = result.vatCategoryId;
 				obj['description'] = result.description;
+				obj['exciseTaxId'] = result.exciseTaxId;
+				obj['discountType'] = result.discountType;
+				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive
 				idx = index;
 			}
 			return obj;
@@ -665,8 +877,18 @@ min="0"
 			true,
 		);
 		form.setFieldValue(
+			`lineItemsString.${idx}.exciseTaxId`,
+			result.exciseTaxId,
+			true,
+		);
+		form.setFieldValue(
 			`lineItemsString.${idx}.description`,
 			result.description,
+			true,
+		);
+		form.setFieldValue(
+			`lineItemsString.${idx}.discountType`,
+			result.discountType,
 			true,
 		);
 		this.updateAmount(data, props);
@@ -694,6 +916,7 @@ min="0"
 				name={`lineItemsString.${idx}.productId`}
 				render={({ field, form }) => (
 					<Select
+					isDisabled
 						styles={customStyles}
 						options={
 							product_list
@@ -845,44 +1068,94 @@ min="0"
 	};
 
 	updateAmount = (data, props) => {
-		const { vat_list } = this.props;
+		const { vat_list , excise_list} = this.props;
 		const { discountPercentage, discountAmount } = this.state;
 		let total_net = 0;
+		let total_excise = 0;
 		let total = 0;
 		let total_vat = 0;
+		let net_value = 0;
+		let discount = 0;
 		data.map((obj) => {
 			const index =
 				obj.vatCategoryId !== ''
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
-			if (props.values.discountType.value === 'PERCENTAGE') {
-				var val =
-					((+obj.unitPrice -
-						+((obj.unitPrice * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2 })) *
-						vat *
-						obj.quantity) /
-					100;
-			} else if (props.values.discountType.value === 'FIXED') {
-				console.log(obj.unitPrice - discountAmount);
-				var val =
-					(obj.unitPrice * obj.quantity - discountAmount / data.length) *
-					(vat / 100);
-			} else {
-				var val = (+obj.unitPrice * vat * obj.quantity) / 100;
+
+			//Excise calculation
+			if(obj.exciseTaxId !=  0){
+				if(obj.isExciseTaxExclusive === true){
+				if(obj.exciseTaxId === 1){
+				const value = +(obj.unitPrice) / 2 ;
+					net_value = parseFloat(obj.unitPrice) + parseFloat(value) ;
+					obj.exciseAmount = parseFloat(value) * obj.quantity;
+				}else if (obj.exciseTaxId === 2){
+					const value = obj.unitPrice;
+					net_value = parseFloat(obj.unitPrice) +  parseFloat(value) ;
+					obj.exciseAmount = parseFloat(value) * obj.quantity;
+				}
+				else{
+					net_value = obj.unitPrice
+				}
+			}	else{
+				if(obj.exciseTaxId === 1){
+					const value = obj.unitPrice / 3
+					obj.exciseAmount = parseFloat(value) * obj.quantity;
+				net_value = obj.unitPrice}
+				else if (obj.exciseTaxId === 2){
+					const value = obj.unitPrice / 2
+					obj.exciseAmount = parseFloat(value) * obj.quantity;
+				net_value = obj.unitPrice}
+				else{
+					net_value = obj.unitPrice
+				}
 			}
-			total_net = +(total_net + +obj.unitPrice * obj.quantity);
+		}else{
+			net_value = obj.unitPrice;
+			obj.exciseAmount = 0
+		}
+			//vat calculation
+			if (obj.discountType === 'PERCENTAGE') {
+				var val =
+				((+net_value -
+				 (+((net_value * obj.discount)) / 100)) *
+					vat *
+					obj.quantity) /
+				100;
+
+				var val1 =
+				((+net_value -
+				 (+((net_value * obj.discount)) / 100)) * obj.quantity ) ;
+			} else if (obj.discountType === 'FIXED') {
+				var val =
+						 (net_value * obj.quantity - obj.discount ) *
+					(vat / 100);
+
+					var val1 =
+					((net_value * obj.quantity )- obj.discount )
+
+			} else {
+				var val = (+net_value * vat * obj.quantity) / 100;
+				var val1 = net_value * obj.quantity
+			}
+
+			//discount calculation
+			discount = +(discount +(net_value * obj.quantity)) - parseFloat(val1)
+			total_net = +(total_net + net_value * obj.quantity);
 			total_vat = +(total_vat + val);
+			obj.vatAmount = val
 			obj.subTotal =
-				obj.unitPrice && obj.vatCategoryId ? (+obj.unitPrice * obj.quantity)+total_vat : 0;
+			net_value && obj.vatCategoryId ? parseFloat(val1) + parseFloat(val) : 0;
+			total_excise = +(total_excise + obj.exciseAmount)
 			total = total_vat + total_net;
 			return obj;
 		});
 
-		const discount =
-			props.values.discountType.value === 'PERCENTAGE'
-				? +((total_net * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2 })
-				: discountAmount;
+		// const discount =
+		// 	props.values.discountType.value === 'PERCENTAGE'
+		// 		? +((total_net * discountPercentage) / 100)
+		// 		: discountAmount;
 		this.setState(
 			{
 				data,
@@ -890,19 +1163,18 @@ min="0"
 					...this.state.initValue,
 					...{
 						total_net: discount ? total_net - discount : total_net,
-						totalVatAmount: total_vat,
-						discount: total_net > discount ? discount : 0,
-						totalAmount: total_net > discount ? total - discount : total,
+						invoiceVATAmount: total_vat,
+						discount:  discount ? discount : 0,
+						totalAmount: total_net > discount ? total - discount : total - discount,
+						total_excise: total_excise
 					},
+
 				},
 			},
-			() => {
-				if (props.values.discountType.value === 'PERCENTAGE') {
-					this.formRef.current.setFieldValue('discount', discount);
-				}
-			},
+
 		);
 	};
+
 	handleFileChange = (e, props) => {
 		e.preventDefault();
 		let reader = new FileReader();
@@ -932,14 +1204,15 @@ min="0"
 			discountType,
 			discountPercentage,
 			notes,
-			email
+			email,
+			creditAmount
 		} = data;
 		const { term } = this.state;
 		const formData = new FormData();
-		if (invoiceNumber && invoiceNumber.value) {
-			formData.append('invoiceId', invoiceNumber.value);
-			formData.append('cnCreatedOnPaidInvoice','1');
-		}
+
+		formData.append('isCreatedWithoutInvoice',this.state.isCreatedWIWP);
+		
+
 
 			// formData.append('invoiceNumber',this.state.referenceNumber !== null ? this.state.selectedData.referenceNumber : '');
 
@@ -953,13 +1226,13 @@ min="0"
 		);
 		// formData.append(
 		// 	'invoiceDueDate',
-		// 	invoiceDueDate ? moment(invoiceDueDate, 'DD/MM/YYYY').toDate() : null,
+		// 	invoiceDueDate ? moment(invoiceDueDate, 'DD-MM-YYYY').toDate() : null,
 		// );
 		formData.append(
 			'creditNoteDate',
 			creditNoteDate
 				?
-						moment(creditNoteDate,'DD/MM/YYYY')
+						moment(creditNoteDate,'DD-MM-YYYY')
 						.toDate()
 				: null,
 		);
@@ -982,19 +1255,27 @@ min="0"
 		formData.append('notes', notes !== null ? notes : '');
 		formData.append('email', email !== null ? email : '');
 		formData.append('type', 7);
-		formData.append('lineItemsString', JSON.stringify(this.state.data));
-		formData.append('totalVatAmount', this.state.initValue.totalVatAmount);
-		formData.append('totalAmount', this.state.initValue.totalAmount);
-		formData.append('discount', discount);
-		if (discountType && discountType.value) {
-			formData.append('discountType', discountType.value);
+		if(this.state.isCreatedWIWP ===true)
+		formData.append('totalAmount', creditAmount);
+
+if (invoiceNumber && invoiceNumber.value) {
+	formData.append('invoiceId', invoiceNumber.value);
+	formData.append('cnCreatedOnPaidInvoice','1');
+	}	
+		if(this.state.isCreatedWIWP ===false)
+		{
+							
+				formData.append('lineItemsString', JSON.stringify(this.state.data));
+				formData.append('totalVatAmount', this.state.initValue.totalVatAmount);
+				formData.append('totalAmount', this.state.initValue.totalAmount);
+				formData.append('discount', this.state.initValue.discount);
+				
+				formData.append('totalExciseTaxAmount', this.state.initValue.total_excise);
 		}
 		// if (term && term.value) {
 		// 	formData.append('term', term.value);
 		// }
-		if (discountType.value === 'PERCENTAGE') {
-			formData.append('discountPercentage', discountPercentage);
-		}
+	
 		if (contactId && contactId.value) {
 			formData.append('contactId', contactId.value);
 		}
@@ -1017,7 +1298,7 @@ min="0"
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'New Tax Credit Note Created Successfully.',
+					res.data ? res.data.message :'New Tax Credit Note Created Successfully.'
 				);
 				if (this.state.createMore) {
 					this.setState(
@@ -1041,7 +1322,7 @@ min="0"
 								...this.state.initValue,
 								...{
 									total_net: 0,
-									invoiceVATAmount: 0,
+									totalVatAmount: 0,
 									totalAmount: 0,
 									discountType: '',
 									discount: 0,
@@ -1067,7 +1348,7 @@ min="0"
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'New Tax Credit Note Created Unsuccessfully.',
 				);
 			});
 	};
@@ -1146,12 +1427,15 @@ min="0"
 					data: [
 						{
 							id: 0,
+							discount:0,
 							description: res.data[0].description,
 							quantity: 1,
 							unitPrice: res.data[0].unitPrice,
 							vatCategoryId: res.data[0].vatCategoryId,
 							subTotal: res.data[0].unitPrice,
 							productId: res.data[0].id,
+							discountType: res.data[0].discountType,
+							exciseTaxId: res.data[0].exciseTaxId,
 						},
 					],
 				},
@@ -1180,6 +1464,16 @@ min="0"
 			this.formRef.current.setFieldValue(
 				`lineItemsString.${0}.productId`,
 				res.data[0].id,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.discountType`,
+				1,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.exciseTaxId`,
+				1,
 				true,
 			);
 		});
@@ -1231,6 +1525,25 @@ min="0"
 	
 		return customer_currencyCode;
 	}
+	getTaxTreatment= (opt) => {
+		
+		let customer_taxTreatmentId = 0;
+		let customer_item_taxTreatment = ''
+		this.props.customer_list.map(item => {
+			if(item.label.contactId == opt) {
+				this.setState({
+					customer_taxTreatment: item.label.taxTreatment.id,
+					customer_taxTreatment_des: item.label.taxTreatment.taxTreatment,
+					// customer_currency_symbol: item.label.currency.currencyIsoCode,
+				});
+
+				customer_taxTreatmentId = item.label.taxTreatment.id;
+				customer_item_taxTreatment = item.label.currency
+			}
+		})
+	
+		return customer_taxTreatmentId;
+	}
 
 	invoiceValue = (e, row, name, form, field, props) => {
 		const { invoice_list } = this.props;
@@ -1276,18 +1589,22 @@ min="0"
 				this.setState(
 					{
 						option : {
-							label: response.data.name,
+							label: response.data.organisationName === '' ?  response.data.name : response.data.organisationName,
 							value: response.data.contactId,
 						},
 					data:response.data.invoiceLineItems ,
 					totalAmount:response.data.totalAmount,
 					customer_currency:response.data.currencyCode,
+					remainingInvoiceAmount:response.data.remainingInvoiceAmount,
+				
 					initValue: {
 						...this.state.initValue,
 						...{
 							totalVatAmount: response.data.totalVatAmount,
 							totalAmount: response.data.totalAmount,
-							total_net: response.data.totalAmount -response.data.totalVatAmount 
+							total_net: response.data.totalAmount -response.data.totalVatAmount ,
+							discount:response.data.discount,
+							total_excise:response.data.totalExciseAmount,
 						},
 					},
 	
@@ -1317,8 +1634,11 @@ min="0"
 	
 				);
 				this.formRef.current.setFieldValue('contactId', this.state.option, true);
+				this.formRef.current.setFieldValue('remainingInvoiceAmount', this.state.remainingInvoiceAmount, true);
+				
 				this.formRef.current.setFieldValue('currencyCode', this.state.customer_currency, true);
 				this.getCurrency(this.state.option.value)	
+				this.getTaxTreatment(this.state.option.value)	
 				console.log(this.state.data,"api")
 				console.log("option ",this.state.option)
 				console.log(this.state.initValue.totalAmount,"this.state.initValue.totalAmount+++++++")
@@ -1377,13 +1697,32 @@ min="0"
 												}}
 												validate={(values) => {
 													let errors = {};
-													if (exist === true) {
-														errors.creditNoteNumber =
-															'Tax Credit Note Number cannot be same';
-													}
+													 
+													if (exist === true) 
+													{
+														errors.creditNoteNumber ='Tax Credit Note Number cannot be same';
+													}	
+													
+													if(this.state.isCreatedWIWP==false && !values.invoiceNumber)
+													{
+														errors.invoiceNumber =	'Invoice Number is Required';}
+													if(this.state.isCreatedWIWP==true && this.state.invoiceSelected ==true && !values.creditAmount)
+														{
+															errors.creditAmount =	'Credit Amount is Required';}
+													// if(this.state.invoiceSelected && this.state.initValue.totalAmount>this.state.remainingInvoiceAmount)
+													// {
+													// 	errors.remainingInvoiceAmount =	'Invoice Total Amount Cannot be greater than  Remaining Invoice Amount';
+													// }	
+													// if(this.state.remainingInvoiceAmount && values.creditAmount<this.state.remainingInvoiceAmount)		
+													// {
+													// 	errors.creditAmount = 'Credit Amount Cannot be less than Remaining Invoice Amount';
+													// }														
 													return errors;
 												}}
 												validationSchema={Yup.object().shape({
+													// invoiceNumber: Yup.string().required(
+													// 	'Invoice Number is Required',
+													// ),
 													creditNoteNumber: Yup.string().required(
 														'Tax Credit Note Number is Required',
 													),
@@ -1401,46 +1740,46 @@ min="0"
 													creditNoteDate: Yup.string().required(
 														'Tax Credit Note Date is Required',
 													),
-													lineItemsString: Yup.array()
-														.required(
-															'Atleast one Tax Credit Note sub detail is mandatory',
-														)
-														.of(
-															Yup.object().shape({
-																quantity: Yup.string()
-																	.required('Value is Required')
-																	.test(
-																		'quantity',
-																		'Quantity Should be Greater than 1',
-																		(value) => {
-																			if (value > 0) {
-																				return true;
-																			} else {
-																				return false;
-																			}
-																		},
-																	),
-																unitPrice: Yup.string()
-																	.required('Value is Required')
-																	.test(
-																		'Unit Price',
-																		'Unit Price Should be Greater than 1',
-																		(value) => {
-																			if (value > 0) {
-																				return true;
-																			} else {
-																				return false;
-																			}
-																		},
-																	),
-																vatCategoryId: Yup.string().required(
-																	'Value is Required',
-																),
-																productId: Yup.string().required(
-																	'Product is Required',
-																),
-															}),
-														),
+													// lineItemsString: Yup.array()
+													// 	.required(
+													// 		'Atleast one Tax Credit Note sub detail is mandatory',
+													// 	)
+													// 	.of(
+													// 		Yup.object().shape({
+													// 			quantity: Yup.string()
+													// 				.required('Value is Required')
+													// 				.test(
+													// 					'quantity',
+													// 					'Quantity should be greater than 0',
+													// 					(value) => {
+													// 						if (value > 0) {
+													// 							return true;
+													// 						} else {
+													// 							return false;
+													// 						}
+													// 					},
+													// 				),
+													// 			unitPrice: Yup.string()
+													// 				.required('Value is Required')
+													// 				.test(
+													// 					'Unit Price',
+													// 					'Unit Price Should be Greater than 1',
+													// 					(value) => {
+													// 						if (value > 0) {
+													// 							return true;
+													// 						} else {
+													// 							return false;
+													// 						}
+													// 					},
+													// 				),
+													// 			vatCategoryId: Yup.string().required(
+													// 				'Value is Required',
+													// 			),
+													// 			productId: Yup.string().required(
+													// 				'Product is Required',
+													// 			),
+													// 		}),
+													// 	),
 													attachmentFile: Yup.mixed()
 														.test(
 															'fileType',
@@ -1479,10 +1818,34 @@ min="0"
 											>
 												{(props) => (
 													<Form onSubmit={props.handleSubmit}>
+
+																<Row  style={{display:this.state.invoiceSelected===true ? '':'none'}}>
+																			<Col lg={4}>
+																				<Checkbox 
+																				checked={this.state.isCreatedWIWP}
+																				onChange={(check)=>{
+																					this.setState({isCreatedWIWP:!this.state.isCreatedWIWP})
+																				}}
+																				/>	Create Credit Note Without Product 
+																				</Col>
+																				</Row>
+																{this.state.invoiceSelected==false &&(<Row  >
+																			<Col lg={4}>
+																				<Checkbox 
+																				checked={this.state.isCreatedWithoutInvoice}
+																				onChange={(check)=>{
+																					this.setState({isCreatedWithoutInvoice:!this.state.isCreatedWithoutInvoice})
+																					this.setState({isCreatedWIWP:!this.state.isCreatedWIWP})
+																				}}
+																				/>	Create Credit Note Without Invoice
+																				</Col>
+																				</Row>)}
+																				<hr />
+
 														<Row>
-														<Col lg={3}>
+														{this.state.isCreatedWithoutInvoice===false &&(<Col lg={3}>
 																<FormGroup className="mb-3">
-																	<Label htmlFor="invoiceNumber">
+																	<Label htmlFor="invoiceNumber"><span className="text-danger">* </span>
 																	{strings.InvoiceNumber}
 																	</Label>
 																	<Select
@@ -1508,7 +1871,7 @@ min="0"
 																				 props.handleChange('invoiceNumber')(option);
 																				this.setState({invoiceSelected :true})
 																			} else {
-
+																				this.setState({invoiceSelected :false})
 																				props.handleChange('invoiceNumber')('');
 																			}
 
@@ -1536,17 +1899,18 @@ min="0"
 																			</div>
 																		)}
 																</FormGroup>
-															</Col>
+															</Col>)}
 
 														</Row>
 														<Row>
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="creditNoteNumber">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		 {strings.CreditNoteNumber}
 																	</Label>
 																	<Input
+																		maxLength="50"
 																		type="text"
 																		id="creditNoteNumber"
 																		name="creditNoteNumber"
@@ -1577,7 +1941,7 @@ min="0"
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="contactId">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		 {strings.CustomerName}
 																	</Label>
 																	<Select
@@ -1597,10 +1961,11 @@ min="0"
 																		}
 																		value={props.values.contactId}
 																		
-																		isDisabled={this.state.invoiceSelected}
+																		// isDisabled={this.state.invoiceSelected}
 																		onChange={(option) => {
 																			if (option && option.value) {
 																				this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
+																				this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(option.value), true);
 																				// this.setExchange( this.getCurrency(option.value) );
 																				props.handleChange('contactId')(option);
 																			} else {
@@ -1622,7 +1987,44 @@ min="0"
 																		)}
 																</FormGroup>
 															</Col>
-															<Col>
+															
+															<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="taxTreatmentid">
+																		Tax Treatment
+																	</Label>
+																	<Input
+																	disabled
+																		styles={customStyles}
+																		id="taxTreatmentid"
+																		name="taxTreatmentid"
+																		placeholder='Tax Treatment'
+																		value={
+																		this.state.customer_taxTreatment_des
+																	 	
+																		}
+																		className={
+																			props.errors.taxTreatmentid &&
+																			props.touched.taxTreatmentid
+																				? 'is-invalid'
+																				: ''
+																		}
+																		onChange={(option) => {
+																		props.handleChange('taxTreatmentid')(option);
+																		
+																	    }}
+
+																	/>
+																	{props.errors.taxTreatmentid &&
+																		props.touched.taxTreatmentid && (
+																			<div className="invalid-feedback">
+																				{props.errors.taxTreatmentid}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
+
+															{/* <Col>
 																<Label
 																	htmlFor="contactId"
 																	style={{ display: 'block' }}
@@ -1639,7 +2041,7 @@ min="0"
 																>
 																	<i className="fa fa-plus"></i> {strings.AddACustomer}
 																</Button>
-															</Col>
+															</Col> */}
 															{/* <Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">
@@ -1775,7 +2177,7 @@ min="0"
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="date">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		 {strings.CreditNoteDate}
 																	</Label>
 																	<DatePicker
@@ -1784,7 +2186,7 @@ min="0"
 																		placeholderText={strings.CreditNoteDate}
 																		showMonthDropdown
 																		showYearDropdown
-																		dateFormat="dd/MM/yyyy"
+																		dateFormat="dd-MM-yyyy"
 																		dropdownMode="select"
 																		value={props.values.creditNoteDate}
 																		selected={props.values.creditNoteDate}
@@ -1820,7 +2222,7 @@ min="0"
 																			showMonthDropdown
 																			showYearDropdown
 																			disabled
-																			dateFormat="dd/MM/yyyy"
+																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
 																			value={props.values.invoiceDueDate}
 																			onChange={(value) => {
@@ -1837,7 +2239,7 @@ min="0"
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currency">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		 {strings.Currency}
 																	</Label>
 																	<Select
@@ -1892,6 +2294,63 @@ min="0"
 																		)}
 																</FormGroup>
 															</Col>
+															
+															{(this.state.isCreatedWIWP===false || this.state.invoiceSelected==true) &&(<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="remainingInvoiceAmount">
+																
+																	Remaining Invoice Amount
+																	</Label>
+																	<Input
+																		type="text"
+																		id="remainingInvoiceAmount"
+																		name="remainingInvoiceAmount"
+																		placeholder='Remaining invoice Amount'
+																		disabled={true}
+																		value={this.state.remainingInvoiceAmount}																							
+																	/>
+																	{props.errors.remainingInvoiceAmount &&
+																	 (
+																			<div className="text-danger">
+																				{props.errors.remainingInvoiceAmount}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>)}
+                                                            
+															{this.state.isCreatedWIWP===true &&(<Col  lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="creditAmount"><span className="text-danger">* </span>
+																	Credit Amount
+																	</Label>
+																	<Input
+																		type="text"
+																		id="creditAmount"
+																		name="creditAmount"
+																		placeholder={strings.Enter+" Credit Amount"}																		
+																		value={this.state.creditAmount}
+																		// onBlur={props.handleBlur('currencyCode')}
+																		onChange={(value) => {
+																			props.handleChange('creditAmount')(
+																				value,
+																			);
+																		}}
+																		className={
+																			props.errors.creditAmount &&
+																			props.touched.creditAmount
+																				? 'is-invalid'
+																				: ''
+																		}
+																	/>
+																	{props.errors.creditAmount &&
+																	 (
+																			<div className="invalid-feedback">
+																				{props.errors.creditAmount}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>)}
+
 															{/* <Col lg={3}>
 												<FormGroup>
 													<Label htmlFor="email">
@@ -1994,8 +2453,8 @@ min="0"
 																			/>
 														</Col>
 														</Row> */}
-														<hr style={{display: props.values.exchangeRate === 1 ? 'none' : ''}} />
-														<Col lg={8} className="mb-3">
+													
+														{/* <Col lg={8} className="mb-3">
 															<Button
 																color="primary"
 																className={`btn-square mr-3 ${
@@ -2021,8 +2480,10 @@ min="0"
 															>
 																<i className="fa fa-plus"></i> {strings.Addproduct}
 															</Button>
-														</Col>
-														<Row>
+														</Col> */}
+														
+													
+														{this.state.isCreatedWIWP===false &&(<Row>
 															{props.errors.lineItemsString &&
 																typeof props.errors.lineItemsString ===
 																	'string' && (
@@ -2106,12 +2567,51 @@ min="0"
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
+																	width="10%"
+																		dataField="exciseTaxId"
+																		dataFormat={(cell, rows) =>
+																			this.renderExcise(cell, rows, props)
+																		}
+																	>
+																	Excise
+																	<i
+																			id="ExiseTooltip"
+																			className="fa fa-question-circle ml-1"
+																		></i>
+																		<UncontrolledTooltip
+																			placement="right"
+																			target="ExiseTooltip"
+																		>
+																			If Exise Type for a product is Inclusive
+																			then the Excise dropdown will be Disabled
+																		</UncontrolledTooltip>
+																	</TableHeaderColumn> 
+																	<TableHeaderColumn
+																		width="12%"
+																		dataField="discount"
+																		dataFormat={(cell, rows) =>
+																			this.renderDiscount(cell, rows, props)
+																		}
+																	>
+																	DisCount
+																	</TableHeaderColumn>
+																	<TableHeaderColumn
 																		dataField="vat"
 																		dataFormat={(cell, rows) =>
 																			this.renderVat(cell, rows, props)
 																		}
 																	>
 																		{strings.VAT}
+																	</TableHeaderColumn>
+																	<TableHeaderColumn
+
+																		dataField="vat_amount"
+																		dataFormat={this.renderVatAmount}
+																		className="text-right"
+																		columnClassName="text-right"
+																		formatExtraData={universal_currency_list}
+																	>
+																		Vat amount
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="sub_total"
@@ -2124,7 +2624,7 @@ min="0"
 																	</TableHeaderColumn>
 																</BootstrapTable>
 															</Col>
-														</Row>
+															</Row>)}
 														{this.state.data.length > 0 ? (
 															<Row>
 																<Col lg={8}>
@@ -2132,7 +2632,7 @@ min="0"
 																		<Label htmlFor="notes">{strings.Notes}</Label>
 																		<Input
 																			type="textarea"
-																			maxLength="255"
+																			maxLength="250"
 																			name="notes"
 																			id="notes"
 																			rows="6"
@@ -2154,11 +2654,27 @@ min="0"
 																					maxLength="100"
 																					id="receiptNumber"
 																					name="receiptNumber"
+																					value={props.values.receiptNumber}
+																					placeholder={strings.ReceiptNumber}
+																					onChange={(value) => {
+																						props.handleChange('receiptNumber')(value);
+
+																					}}
+																					className={props.errors.receiptNumber && props.touched.receiptNumber ? "is-invalid" : " "}
+																				/>
+																				{props.errors.receiptNumber && props.touched.receiptNumber && (
+																					<div className="invalid-feedback">{props.errors.receiptNumber}</div>
+																				)}
+																				{/* <Input
+																					type="text"
+																					maxLength="100"
+																					id="receiptNumber"
+																					name="receiptNumber"
 																					placeholder={strings.ReceiptNumber}
 																					onChange={(option) => {
 																						if (
 																							option.target.value === '' ||
-																							this.regExAlpha.test(
+																							this.regExBoth.test(
 																								option.target.value,
 																							)
 																						) {
@@ -2168,7 +2684,7 @@ min="0"
 																						}
 																					}}
 																					value={props.values.receiptNumber}
-																				/>
+																				/> */}
 																			</FormGroup>
 																		</Col>
 																		<Col lg={6}>
@@ -2236,7 +2752,7 @@ min="0"
 																		</Label>
 																		<Input
 																			type="textarea"
-																			maxLength="255"
+																			maxLength="250"
 																			name="receiptAttachmentDescription"
 																			id="receiptAttachmentDescription"
 																			rows="5"
@@ -2254,7 +2770,7 @@ min="0"
 																	</FormGroup>
 																</Col>
 																<Col lg={4}>
-																	<div className="">
+																{this.state.isCreatedWIWP===false &&(	<div className="">
 																		<div className="total-item p-2">
 																			{/* <Row>
 																				<Col lg={6}>
@@ -2396,6 +2912,40 @@ min="0"
 																				</Col>
 																			</Row> */}
 																		</div>
+																		<div className="total-item p-2" >
+																			<Row>
+																				<Col lg={6}>
+																					<h5 className="mb-0 text-right">
+																					Total Excise
+																					</h5>
+																				</Col>
+																				<Col lg={6} className="text-right">
+																					<label className="mb-0">
+
+																						{this.state.customer_currency_symbol} &nbsp;
+																						{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																					</label>
+																				</Col>
+																			</Row>
+																		</div>
+																			<div className="total-item p-2">
+																			<Row>
+																				<Col lg={6}>
+																					<h5 className="mb-0 text-right">
+																						 {strings.Discount}
+																					</h5>
+																				</Col>
+																				<Col lg={6} className="text-right">
+																					<label className="mb-0">
+																				
+																						{this.state.customer_currency_symbol} &nbsp;
+																							{initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																					
+																					</label>
+																				</Col>
+																			</Row>
+																		</div>
+																		
 																		<div className="total-item p-2">
 																			<Row>
 																				<Col lg={6}>
@@ -2430,7 +2980,7 @@ min="0"
 																					<label className="mb-0">
 																					{/* {universal_currency_list[0] && (
 																						<Currency
-																						value={initValue.invoiceVATAmount.toFixed(
+																						value={initValue.totalVatAmount.toFixed(
 																									2,
 																							)}
 																							currencySymbol={this.state.customer_currency_IsoCode}
@@ -2442,23 +2992,7 @@ min="0"
 																				</Col>
 																			</Row>
 																		</div>
-																		{/* <div className="total-item p-2">
-																			<Row>
-																				<Col lg={6}>
-																					<h5 className="mb-0 text-right">
-																						 {strings.Discount}
-																					</h5>
-																				</Col>
-																				<Col lg={6} className="text-right">
-																					<label className="mb-0">
-																				
-																						{this.state.customer_currency_symbol} &nbsp;
-																							{initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																					
-																					</label>
-																				</Col>
-																			</Row>
-																		</div> */}
+																	
 																		<div className="total-item p-2">
 																			<Row>
 																				<Col lg={6}>
@@ -2474,7 +3008,7 @@ min="0"
 																				</Col>
 																			</Row>
 																		</div>
-																	</div>
+																	</div>)}
 																</Col>
 															</Row>
 														) : null}

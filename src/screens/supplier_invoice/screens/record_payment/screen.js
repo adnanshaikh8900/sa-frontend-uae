@@ -120,7 +120,6 @@ class RecordSupplierPayment extends React.Component {
 		this.regEx = /^[0-9\b]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
-		this.regExAlpha = /^[a-zA-Z0-9!@#$&()-\\`.+,/\"]+$/;
 
 		this.file_size = 1024000;
 		this.supported_format = [
@@ -147,11 +146,11 @@ class RecordSupplierPayment extends React.Component {
 						id: this.props.location.state.id.id,
 						date: moment(
 							this.props.location.state.id.invoiceDate,
-							'DD/MM/YYYY',
+							'DD-MM-YYYY',
 						).toDate(),
 						dueDate: moment(
 							this.props.location.state.id.invoiceDueDate,
-							'DD/MM/YYYY',
+							'DD-MM-YYYY',
 						).toDate(),
 						paidAmount: this.props.location.state.id.invoiceAmount,
 						dueAmount: this.props.location.state.id.dueAmount,
@@ -254,7 +253,7 @@ class RecordSupplierPayment extends React.Component {
 		formData.append(
 			'paymentDate',
 			typeof paymentDate === 'string'
-				? moment(paymentDate, 'DD/MM/YYYY').toDate()
+				? moment(paymentDate, 'DD-MM-YYYY').toDate()
 				: paymentDate,
 		);
 		formData.append(
@@ -285,14 +284,14 @@ class RecordSupplierPayment extends React.Component {
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Payment Recorded Successfully.',
+					res.data ? res.data.message : 'Payment Recorded Successfully.',
 				);
 				this.props.history.push('/admin/expense/supplier-invoice');
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'Payment Recorded Unsuccessfully.',
 				);
 			});
 	};
@@ -352,7 +351,7 @@ class RecordSupplierPayment extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Data Deleted Successfully',
+						res.data ? res.data.message : 'Supplier Invoice Deleted Successfully',
 					);
 					this.props.history.push('/admin/revenue/customer-invoice');
 				}
@@ -360,7 +359,7 @@ class RecordSupplierPayment extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'Supplier Invoice Deleted Unsuccessfully',
 				);
 			});
 	};
@@ -383,6 +382,8 @@ class RecordSupplierPayment extends React.Component {
 		})
 
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="detail-customer-invoice-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -479,7 +480,7 @@ class RecordSupplierPayment extends React.Component {
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="contactId">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																		   {strings.SupplierName}
 																		</Label>
 																		<Select
@@ -514,7 +515,7 @@ class RecordSupplierPayment extends React.Component {
 																{/* <Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="project">
-																			<span className="text-danger">*</span>{' '}
+																			<span className="text-danger">* </span>{' '}
 																			Payment
 																		</Label>
 																		<Input
@@ -548,12 +549,12 @@ class RecordSupplierPayment extends React.Component {
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="project">
-																			<span className="text-danger">*</span>{' '}
+																			<span className="text-danger">* </span>{' '}
 																			{strings.AmountPaid}
 																		</Label>
 																		<Input
 																		type="number"
-																		
+																		maxLength="14,2"
 																		id="amount"
 																			name="amount"
 																			value={props.values.amount}
@@ -586,7 +587,7 @@ class RecordSupplierPayment extends React.Component {
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="date">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			 {strings.PaymentDate}
 																		</Label>
 																		<DatePicker
@@ -595,7 +596,7 @@ class RecordSupplierPayment extends React.Component {
 																			placeholderText={strings.PaymentDate}
 																			showMonthDropdown
 																			showYearDropdown
-																			dateFormat="dd/MM/yyyy"
+																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
 																			value={props.values.paymentDate}
 																			selected={props.values.paymentDate}
@@ -624,7 +625,7 @@ class RecordSupplierPayment extends React.Component {
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="payMode">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			 {strings.PaymentMode}
 																		</Label>
 																		<Select
@@ -668,7 +669,7 @@ class RecordSupplierPayment extends React.Component {
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="depositeTo">
-																			<span className="text-danger">*</span>{' '}
+																			<span className="text-danger">* </span>{' '}
 																			{strings.PaidThrough}
 																		</Label>
 																		<Select
@@ -714,13 +715,14 @@ class RecordSupplierPayment extends React.Component {
 																				</Label>
 																				<Input
 																					type="text"
+																					maxLength="100"
 																					id="referenceCode"
 																					name="referenceCode"
 																					placeholder={strings.Enter+strings.ReceiptNumber}
 																					onChange={(option) => {
 																						if (
 																							option.target.value === '' ||
-																							this.regExAlpha.test(
+																							this.regExBoth.test(
 																								option.target.value,
 																							)
 																						) {
@@ -740,6 +742,7 @@ class RecordSupplierPayment extends React.Component {
 																				<Label htmlFor="notes">{strings.Notes}</Label>
 																				<Input
 																					type="textarea"
+																					maxLength="250"
 																					name="notes"
 																					id="notes"
 																					rows="5"
@@ -891,6 +894,7 @@ class RecordSupplierPayment extends React.Component {
 					country_list={this.props.country_list}
 					getStateList={this.props.SupplierInvoiceActions.getStateList}
 				/>
+			</div>
 			</div>
 		);
 	}

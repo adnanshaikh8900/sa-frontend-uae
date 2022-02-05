@@ -41,7 +41,18 @@ import './style.scss';
 import CreateGoodsReceivedNote from './sections/createGRN';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
+import { upperCase } from 'lodash';
 
+const { ToWords } = require('to-words');
+const toWords = new ToWords({
+	localeCode: 'en-IN',
+	converterOptions: {
+	//   currency: true,
+	  ignoreDecimal: false,
+	  ignoreZeroCurrency: false,
+	  doNotAddOnly: false,
+	}
+  });
 const mapStateToProps = (state) => {
 	return {
 		supplier_list: state.purchase_order.supplier_list,
@@ -203,7 +214,7 @@ class PurchaseOrder extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Purchase Order Closed Successfully',
+						res.data? res.data.message: 'Status Changed Successfully'
 					);
 					this.setState({
 						loading: false,
@@ -214,7 +225,7 @@ class PurchaseOrder extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					'Something Went Wrong',
+					err.data? err.data.message: ' Status Changed Unsuccessfully '
 				);
 			});
 	};
@@ -345,7 +356,7 @@ class PurchaseOrder extends React.Component {
 							{row.status === "Approved" && (
 							<DropdownItem
 								onClick={() => {
-									this.sendMail(row.id);
+									this.sendMail(row);
 								}}
 							>
 								<i className="fas fa-send" /> {strings.Send}
@@ -408,10 +419,11 @@ class PurchaseOrder extends React.Component {
 				this.props.purchaseOrderAction
 				.changeStatus(id)
 				.then((res) => {
+					 
 					if (res.status === 200) {
 						this.props.commonActions.tostifyAlert(
 							'success',
-							 'Purchase Order Approved Successfully',
+							res.data? res.data.message: 'Status Changed Successfully'
 
 						);
 						this.setState({
@@ -423,6 +435,7 @@ class PurchaseOrder extends React.Component {
 		.catch((err) => {
 			this.props.commonActions.tostifyAlert(
 				'error',
+				err.data? err.data.message: ' Status Changed Unsuccessfully '
 			);
 		});
 	
@@ -459,28 +472,28 @@ class PurchaseOrder extends React.Component {
 			console.log('selecteddata ',this.state.selectedData)
 		});
 	}
-	sendMail = (id,status) => {
-		this.props.purchaseOrderAction
-			.sendMail(id)
-			.then((res) => {
-				if (res.status === 200) {
-					this.props.commonActions.tostifyAlert(
-						'success',
-						'Purchase Order Send Successfully',
-					);
-					this.setState({
-						loading: false,
-					});
-					this.initializeData();
-				}
-			})
-			.catch((err) => {
-				this.props.commonActions.tostifyAlert(
-					'error',
-					'Something When Wrong',
-				);
-			});
-	};
+	// sendMail = (id,status) => {
+	// 	this.props.purchaseOrderAction
+	// 		.sendMail(id)
+	// 		.then((res) => {
+	// 			if (res.status === 200) {
+	// 				this.props.commonActions.tostifyAlert(
+	// 					'success',
+	// 					res.data ? res.data.message : 'Email Send Successfully'
+	// 				);
+	// 				this.setState({
+	// 					loading: false,
+	// 				});
+	// 				this.initializeData();
+	// 			}
+	// 		})
+	// 		.catch((err) => {
+	// 			this.props.commonActions.tostifyAlert(
+	// 				'error',
+	// 				err.data ? err.data.message : 'Email Send Unsuccessfully'
+	// 			);
+	// 		});
+	// };
 
 	onSizePerPageList = (sizePerPage) => {
 		if (this.options.sizePerPage !== sizePerPage) {
@@ -568,7 +581,7 @@ class PurchaseOrder extends React.Component {
 				this.initializeData(filterData);
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Supplier Invoice Deleted Successfully',
+					res.data ? res.data.message : 'Purchase Order Deleted Successfully'
 				);
 				if (supplier_invoice_list && supplier_invoice_list.length > 0) {
 					this.setState({
@@ -579,7 +592,7 @@ class PurchaseOrder extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data ? err.data.message : 'Purchase Order Deleted Unsuccessfully'
 				);
 			});
 	};
@@ -602,38 +615,40 @@ class PurchaseOrder extends React.Component {
 		this.initializeData();
 	};
 
-	postInvoice = (row) => {
+	sendMail = (row) => {
 		this.setState({
 			loading: true,
 		});
 		const postingRequestModel = {
-			amount: row.invoiceAmount,
+		
 			postingRefId: row.id,
-			postingRefType: 'INVOICE',
+		
+			amountInWords:upperCase(row.currencyName + " " +(toWords.convert(row.totalAmount)) ).replace("POINT","AND"),
+			vatInWords:row.totalVatAmount ? upperCase(row.currencyName + " " +(toWords.convert(row.totalVatAmount)) ).replace("POINT","AND") :"-"
 		};
 		this.props.purchaseOrderAction
-			.postInvoice(postingRequestModel)
+			.sendMail(postingRequestModel)
 			.then((res) => {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Invoice Posted Successfully',
+						res.data ? res.data.message : 'Purchase Order Posted Successfully'
 					);
 					this.setState({
 						loading: false,
 					});
-					this.getOverdue();
 					this.initializeData();
 				}
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data ? err.data.message : 'Purchase Order Posted Unsuccessfully'
 				);
 				this.setState({
 					loading: false,
 				});
+				this.initializeData();
 			});
 	};
 
@@ -652,7 +667,8 @@ class PurchaseOrder extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Invoice Moved To Draft Successfully',
+						res.data ? res.data.message : 'Purchase Order Unposted Successfully'
+
 					);
 					this.setState({
 						loading: false,
@@ -664,7 +680,7 @@ class PurchaseOrder extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data ? err.data.message : 'Purchase Order Unposted Unsuccessfully'
 				);
 				this.setState({
 					loading: false,
@@ -738,14 +754,14 @@ class PurchaseOrder extends React.Component {
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Invoice Deleted Successfully',
+					res.data ? res.data.message : 'Purchase Order Deleted Successfully'
 				);
 				this.initializeData();
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data ? err.data.message : 'Purchase Order Deleted Unsuccessfully'
 				);
 			});
 	};
@@ -825,6 +841,7 @@ class PurchaseOrder extends React.Component {
 						totalAmount: supplier.totalAmount,
 						totalVatAmount: supplier.totalVatAmount,
 						currencyCode: supplier.currencyCode,
+						currencyName:supplier.currencyName,
 				  }))
 				: '';
 
@@ -837,6 +854,8 @@ class PurchaseOrder extends React.Component {
 		})		
 
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="supplier-invoice-screen">
 				<div className="animated fadeIn">
 					{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
@@ -937,7 +956,7 @@ class PurchaseOrder extends React.Component {
 													showYearDropdown
 													autoComplete="off"
 													dropdownMode="select"
-													dateFormat="dd/MM/yyyy"
+													dateFormat="dd-MM-yyyy"
 													selected={filterData.invoiceDate}
 													// value={filterData.invoiceDate}
 													onChange={(value) => {
@@ -955,7 +974,7 @@ class PurchaseOrder extends React.Component {
 													showYearDropdown
 													autoComplete="off"
 													dropdownMode="select"
-													dateFormat="dd/MM/yyyy"
+													dateFormat="dd-MM-yyyy"
 													selected={filterData.invoiceDueDate}
 													onChange={(value) => {
 														this.handleChange(value, 'invoiceDueDate');
@@ -1056,7 +1075,7 @@ class PurchaseOrder extends React.Component {
 												dataField="poNumber"
 												
 												dataSort
-											//	width="10%"
+												width="10%"
 												className="table-header-bg"
 											>
 												{strings.PONUMBER} 
@@ -1064,13 +1083,13 @@ class PurchaseOrder extends React.Component {
 											<TableHeaderColumn
 												dataField="supplierName"
 												// dataSort
-											//	width="12%"
+												width="15%"
 												className="table-header-bg"
 											>
 												{strings.SUPPLIERNAME} 
 											</TableHeaderColumn>
 											<TableHeaderColumn
-											//	width="10%"
+												width="10%"
 												dataField="status"
 												dataFormat={this.renderRFQStatus}
 												dataSort
@@ -1081,7 +1100,7 @@ class PurchaseOrder extends React.Component {
 											<TableHeaderColumn
 												dataField="poApproveDate"
 												dataSort
-											//	width="7%"
+												width="10%"
 												dataFormat={this.pODate}
 												className="table-header-bg"
 											>
@@ -1090,7 +1109,7 @@ class PurchaseOrder extends React.Component {
 											<TableHeaderColumn
 												dataField="poReceiveDate"
 												dataSort
-											//	width="7%"
+												width="10%"
 												dataFormat={this.rfqDueDate}
 												className="table-header-bg"
 											>
@@ -1101,7 +1120,7 @@ class PurchaseOrder extends React.Component {
 												dataAlign="right"
 												dataField="totalAmount"
 												dataSort
-												width="20%"
+												width="25%"
 												dataFormat={this.renderrfqAmount}
 												className="table-header-bg"
 												formatExtraData={universal_currency_list}
@@ -1120,7 +1139,7 @@ class PurchaseOrder extends React.Component {
 											<TableHeaderColumn
 												className="text-right"
 												columnClassName="text-right"
-												//width="5%"
+												width="5%"
 												dataFormat={this.renderActions}
 												className="table-header-bg"
 											></TableHeaderColumn>
@@ -1158,10 +1177,14 @@ class PurchaseOrder extends React.Component {
 				//	nextprefixData={this.state.nextprefixData}
 					getVat={this.props.purchaseOrderAction.getVatList()}
 					getProductList={this.props.purchaseOrderAction.getProductList()}
-					
+					getNextGrnNo={()=>{
+						this.props.goodsReceivedNoteCreateAction.getInvoiceNo().then((response) => {
+						this.setState({prefixData:response.data	});
+						});}}
 					createGRN={this.props.goodsReceivedNoteCreateAction.createGNR}
 
 				/>
+			</div>
 			</div>
 		);
 	}

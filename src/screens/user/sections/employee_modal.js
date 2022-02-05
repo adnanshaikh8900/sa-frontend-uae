@@ -114,7 +114,7 @@ class EmployeeModal extends React.Component {
 		// 	lastName: data.lastName,
 		// 	middleName: data.middleName,
 		// 	email: data.email,
-		// 	dob: moment(data.dob, 'DD/MM/YYYY').toDate(),
+		// 	dob: moment(data.dob, 'DD-MM-YYYY').toDate(),
 		// }
 		this.props
 			.createEmployee(formData)
@@ -383,7 +383,7 @@ class EmployeeModal extends React.Component {
 																				name="dob"
 																				showMonthDropdown
 																				showYearDropdown
-																				dateFormat="dd/MM/yyyy"
+																				dateFormat="dd-MM-yyyy"
 																				dropdownMode="select"
 																				placeholderText="Enter Date of Birth"
 																				maxDate={new Date()}

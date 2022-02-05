@@ -41,7 +41,7 @@ import moment from 'moment'
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 function dateFormat(value, row, index) {
-	return moment(value).format('DD/MM/YYYY');
+	return moment(value).format('DD-MM-YYYY');
  }
 
 const mapStateToProps = (state) => {
@@ -231,7 +231,7 @@ class InventoryHistory extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Product Updated Successfully',
+						res.data ? res.data.message : 'Product Updated Successfully',
 					);
 					this.props.history.push('/admin/master/product');
 				}
@@ -239,7 +239,7 @@ class InventoryHistory extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'Product Updated Unsuccessfully',
 				);
 			});
 	};
@@ -304,7 +304,7 @@ class InventoryHistory extends React.Component {
 	};
 
 	renderDate = (cell, rows) => {
-		return moment(rows.date).format('DD/MM/YYYY');
+		return moment(rows.date).format('DD-MM-YYYY');
 	};
 	getInventoryById = (data) => {
 		this.getInventoryId();
@@ -316,14 +316,17 @@ class InventoryHistory extends React.Component {
 			.deleteProduct(current_product_id)
 			.then((res) => {
 				if (res.status === 200) {
-					this.props.commonActions.tostifyAlert('success', 'Product Deleted Successfully')
+					this.props.commonActions.tostifyAlert(
+						'success',
+						res.data ? res.data.message : 'Product Deleted Successfully'
+						)
 					this.props.history.push('/admin/master/product');
 				}
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'Product Deleted Unsuccessfully',
 				);
 			});
 	};
@@ -362,6 +365,8 @@ class InventoryHistory extends React.Component {
 		// }
 	 console.log(singleObject)
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="detail-product-screen">
 				<div className="animated fadeIn">
 					{dialog}
@@ -485,6 +490,7 @@ class InventoryHistory extends React.Component {
 					openModal={this.state.openWarehouseModal}
 					closeWarehouseModal={this.closeWarehouseModal}
 				/>
+			</div>
 			</div>
 		);
 	}

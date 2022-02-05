@@ -148,6 +148,7 @@ class FinancialReport extends React.Component {
 											this.props.history.push('/admin/report/horizontalbalancesheet')}>{strings.HorizontalBalanceSheet}</a></h6>
 											<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
 											this.props.history.push('/admin/report/trailbalances')}>{strings.TrailBalances}</a></h6>
+											
 
 									</div>
 										</Col>
@@ -161,9 +162,12 @@ class FinancialReport extends React.Component {
 											></img>	<h5  className="mb-3 mt-2">{strings.VatReports}</h5></div>
 										<div className="mt-2 ml-4">
 										<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
-									this.props.history.push('/admin/report/vatreturns')}>{strings.VatReturnsReport}</a></h6>
-										{/* <h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
-									this.props.history.push('/admin/report/vat-transactions')}>{strings.VatTransactionReport}</a></h6> */}
+									this.props.history.push('/admin/report/vatreports')}>Vat Report</a></h6>
+										<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
+									this.props.history.push('/admin/report/ftaAuditReports')}>FTA Audit Report</a></h6>
+									<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
+									this.props.history.push('/admin/report/exciseTaxAuditReports')}>Excise Tax Report</a></h6>
+									
 									</div>
 										</Col>
 										<Col  className="report-section ml-4">
@@ -183,6 +187,8 @@ class FinancialReport extends React.Component {
 										</Col>
 
 									</Row>
+									
+									
 									<Row className="mt-4">
 									
 									<Col  className="report-section ml-4">
@@ -295,6 +301,30 @@ class FinancialReport extends React.Component {
 											this.props.history.push('/admin/report/receivable-invoice-details')}>{strings.Receivable+" "+strings.Invoice+" "+strings.Details}</a></h6> */}
 									</div>
 									</Col>
+									<Col  className="report-section ml-4">
+										<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "37px",width:"350px" }}>
+											<img
+											className="ml-2 mr-2 mt-2 mb-2 "
+											src={Vat}
+											style={{height:'25px'}}
+											></img>	<h5 className="mb-3 mt-2">{strings.Payroll +"s"}</h5></div>
+											<div className="mt-2 ml-4">
+											<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
+											this.props.history.push('/admin/report/payroll-summary')}>{strings.Payroll+"s  "+strings.Summary}</a></h6>	
+									</div>
+									</Col>
+									<Col  className="report-section ml-4">
+										<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "37px",width:"350px" }}>
+											<img
+											className="ml-2 mr-2 mt-2 mb-2 "
+											src={Financial}
+											style={{height:'25px'}}
+											></img>	<h5 className="mb-3 mt-2">Statements</h5></div>
+											<div className="mt-2 ml-4">
+											<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
+											this.props.history.push('/admin/report/statementOfAccount')}>SOA (Statement of Account)</a></h6>	
+									</div>
+									</Col>
 									{/* <Col  className="report-section ml-4">
 										<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "37px",width:"350px" }}>
 											<img
@@ -328,7 +358,21 @@ class FinancialReport extends React.Component {
 									</div>
 									</Col> */}
 									</Row>
-								
+								<Row xs="3" className="mt-4">
+								<Col  className="report-section ml-4">
+										<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "37px",width:"350px" }}>
+											<img
+												className="ml-2 mr-2 mt-2 mb-2 "
+											src={Sales}
+											style={{height:'25px'}}
+											></img>	<h5 className="mb-3 mt-2">AR-Aging Report</h5></div>
+											<div className="mt-2 ml-4">
+											<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
+											this.props.history.push('/admin/report/arAgingReport')}>{strings.ARAgingReport}</a></h6>
+									
+									</div>
+										</Col>
+								</Row>
 						</CardBody>
 					</Card>
 				</div>

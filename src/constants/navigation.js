@@ -263,63 +263,63 @@ export default {
 			path: 'Template',
 		},
 
-		// {
-		// 	name: strings.Payroll,
-		// 	url: '/admin/payroll',
-		// 	icon: 'fas fa-users-cog',
-		// 	children: [
-		// 		// {
-		// 		// 	name: strings.Employee,
-		// 		// 	url: '/admin/payroll/employee',
-		// 		// 	icon: 'fas fa-user-plus',
-		// 		// 	path: 'ViewEmployee',
-		// 		// },
-		// 		{
-		// 			name: strings.PayrollRun,
-		// 			url: '/admin/payroll/payrollrun',
-		// 			icon: 'fas fa-money-check-alt',
-		// 			path: 'ViewPayroll',
-		// 		},
-		// 		{
-		// 			name: strings.PayrollConfigurations,
-		// 			url: '/admin/payroll/config',
-		// 			icon: 'fas fa-cogs',
-		// 			path: 'ViewSalaryRole',
-		// 		},
-		// 		// {
-		// 		// 	name: strings.SalaryRoles,
-		// 		// 	url: '/admin/payroll/salaryRoles',
-		// 		// 	icon: 'fas fa-user-tie',
-		// 		// 	path: 'ViewSalaryRole',
-		// 		// },
-		// 		// {
-		// 		// 	name: strings.SalaryTemplates,
-		// 		// 	url: '/admin/payroll/salaryTemplate',
-		// 		// 	icon: 'fas fa-chalkboard-teacher',
-		// 		// 	path: 'ViewSalaryTemplate',
-		// 		// },
-		// 		// {
-		// 		// 	name: strings.SalaryStructure,
-		// 		// 	url: '/admin/payroll/salaryStructure',
-		// 		// 	icon: 'fas fa-chalkboard-teacher',
-		// 		// 	path: 'ViewSalaryStructure',
-		// 		// },
-		// 		// {
-		// 		// 	name: strings.EmployeeDesignation,
-		// 		// 	url: '/admin/payroll/employeeDesignation',
-		// 		// 	icon: 'fas fa-id-card-alt',
-		// 		// 	path: 'ViewEmployeeDesignation',
-		// 		// },
+		{
+			name: strings.Payroll,
+			url: '/admin/payroll',
+			icon: 'fas fa-users-cog',
+			children: [
+				// {
+				// 	name: strings.Employee,
+				// 	url: '/admin/payroll/employee',
+				// 	icon: 'fas fa-user-plus',
+				// 	path: 'ViewEmployee',
+				// },
+				{
+					name: strings.PayrollRun,
+					url: '/admin/payroll/payrollrun',
+					icon: 'fas fa-money-check-alt',
+					path: 'ViewPayroll',
+				},
+				{
+					name: strings.PayrollConfigurations,
+					url: '/admin/payroll/config',
+					icon: 'fas fa-cogs',
+					path: 'ViewSalaryRole',
+				},
+				// {
+				// 	name: strings.SalaryRoles,
+				// 	url: '/admin/payroll/salaryRoles',
+				// 	icon: 'fas fa-user-tie',
+				// 	path: 'ViewSalaryRole',
+				// },
+				// {
+				// 	name: strings.SalaryTemplates,
+				// 	url: '/admin/payroll/salaryTemplate',
+				// 	icon: 'fas fa-chalkboard-teacher',
+				// 	path: 'ViewSalaryTemplate',
+				// },
+				// {
+				// 	name: strings.SalaryStructure,
+				// 	url: '/admin/payroll/salaryStructure',
+				// 	icon: 'fas fa-chalkboard-teacher',
+				// 	path: 'ViewSalaryStructure',
+				// },
+				// {
+				// 	name: strings.EmployeeDesignation,
+				// 	url: '/admin/payroll/employeeDesignation',
+				// 	icon: 'fas fa-id-card-alt',
+				// 	path: 'ViewEmployeeDesignation',
+				// },
 
-		// 		// {
-		// 		// 	name: 'Journals',
-		// 		// 	url: '/admin/accountant/journal',
-		// 		// 	icon: 'fa fa-diamond',
-		// 		// 	path: 'ViewJournal',
-		// 		// },
+				// {
+				// 	name: 'Journals',
+				// 	url: '/admin/accountant/journal',
+				// 	icon: 'fa fa-diamond',
+				// 	path: 'ViewJournal',
+				// },
 		
-		// 	],
-		// },
+			],
+		},
 		// {
 		//   name: 'Settings',
 		//   url: '/admin/settings',

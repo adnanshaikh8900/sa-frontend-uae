@@ -261,6 +261,10 @@ getPhoto=()=>{
 
 	return image;
 }
+renderSalaryDate=(cell,row)=>{
+	let salaryDateString=moment(row.salaryDate).format('DD/MM/YYYY')	
+	return salaryDateString
+}
 	render() {
 		strings.setLanguage(this.state.language);
 		console.log(this.state.Fixed)
@@ -290,7 +294,7 @@ getPhoto=()=>{
 										 {strings.OverView}
 									</NavLink>
 								</NavItem>
-								{/* <NavItem>
+								<NavItem>
 									<NavLink
 										active={this.state.activeTab[0] === '2'}
 										onClick={() => {
@@ -309,7 +313,7 @@ getPhoto=()=>{
 									>
 										 {strings.Payslips}
 									</NavLink>
-								</NavItem> */}
+								</NavItem>
 
 							</Nav>
 							<TabContent activeTab={this.state.activeTab[0]}>
@@ -469,7 +473,7 @@ getPhoto=()=>{
 
 
 {/* salary EDIT */}
-								{/* <TabPane tabId="2">
+								<TabPane tabId="2">
 									<div className="table-wrapper">
 										<Row>
 											<Col>
@@ -523,7 +527,9 @@ getPhoto=()=>{
 																			this.state.Fixed
 																		).map((item) => (
 																			<tr className="p-1">
-																					<td  className="text-left" style={{border:"3px solid #dfe9f7"}} >{item.description}<div className=''>{item.description === 'Basic SALARY' ? '% of CTC' : '% of Baisc'}</div></td>
+																					<td  className="text-left" style={{border:"3px solid #dfe9f7"}} >{item.description}<div className=''>
+																						{/* {item.description === 'Basic SALARY' ? '% of CTC' : '% of Baisc'} */}
+																					</div></td>
 																				<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.monthlyAmount ? item.monthlyAmount.toLocaleString() : '' }</td>
 																				<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.yearlyAmount ? item.yearlyAmount.toLocaleString() :''}</td>
 																			</tr>
@@ -606,6 +612,7 @@ getPhoto=()=>{
 													className="table-header-bg"
 													dataField="salaryDate"
 													width="15%"
+													dataFormat={this.renderSalaryDate}
 												>
 													 {strings.SalaryDate}
 													</TableHeaderColumn>
@@ -630,7 +637,7 @@ getPhoto=()=>{
 									
 
 									</div>
-								</TabPane> */}
+								</TabPane>
 
 							</TabContent>
 

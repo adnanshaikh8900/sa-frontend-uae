@@ -145,7 +145,7 @@ class Receipt extends React.Component {
 
 	renderDate = (cell, rows) => {
 		return rows['receiptDate'] !== null
-			? moment(rows['receiptDate']).format('DD/MM/YYYY')
+			? moment(rows['receiptDate']).format('DD-MM-YYYY')
 			: '';
 	};
 
@@ -261,7 +261,7 @@ class Receipt extends React.Component {
 				this.initializeData();
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data.message,
+					res.data ? res.data.message : 'Deleted Successfully'
 				);
 				if (receipt_list && receipt_list.length > 0) {
 					this.setState({
@@ -272,7 +272,7 @@ class Receipt extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message,
+					err.data ? err.data.message : 'Deleted Unsuccessfully'
 				);
 			});
 	};
@@ -356,6 +356,8 @@ class Receipt extends React.Component {
 		})
 
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="receipt-screen">
 				<div className="animated fadeIn">
 					{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
@@ -487,7 +489,7 @@ class Receipt extends React.Component {
 														autoComplete="off"
 														showMonthDropdown
 														showYearDropdown
-														dateFormat="dd/MM/yyyy"
+														dateFormat="dd-MM-yyyy"
 														dropdownMode="select"
 														onChange={(value) => {
 															this.handleChange(value, 'receiptDate');
@@ -627,6 +629,7 @@ class Receipt extends React.Component {
 						</CardBody>
 					</Card>
 				</div>
+			</div>
 			</div>
 		);
 	}

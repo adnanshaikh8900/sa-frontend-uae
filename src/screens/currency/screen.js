@@ -113,6 +113,8 @@ class Currency extends React.Component {
     })) : ""
 
     return (
+      loading ==true? <Loader/> :
+<div>
       <div className="transaction-category-screen">
         <div className="animated fadeIn">
           <ToastContainer
@@ -209,7 +211,7 @@ class Currency extends React.Component {
                     />
                   </FormGroup>
                   <FormGroup>
-                    <Label htmlFor="categoryName"><span className="text-danger">*</span>Currency Name</Label>
+                    <Label htmlFor="categoryName"><span className="text-danger">* </span>Currency Name</Label>
                     <Input
                       type="text"
                       id="categoryName"
@@ -219,7 +221,7 @@ class Currency extends React.Component {
                     />
                   </FormGroup>
                   <FormGroup>
-                    <Label htmlFor="categoryCode"><span className="text-danger">*</span>Symbol</Label>
+                    <Label htmlFor="categoryCode"><span className="text-danger">* </span>Symbol</Label>
                     <Input
                       type="text"
                       id="categoryCode"
@@ -237,6 +239,7 @@ class Currency extends React.Component {
             </Form>
           </Modal>
         </div>
+      </div>
       </div>
     )
   }

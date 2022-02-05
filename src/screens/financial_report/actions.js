@@ -21,9 +21,66 @@ export const getProfitAndLossReport = (postData) => {
 			});
 	};
 };
+
+export const getAgingReport = (postData) => {
+	const { endDate } = postData;
+	let url = `/rest/simpleaccountReports/getAgingReport?endDate=${endDate}`;
+
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url,
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
 export const getSalesByCustomer = (postData) => {
 	const { startDate, endDate} = postData
 	let url = `/rest/simpleaccountReports/salesbycustomer?startDate=${startDate}&endDate=${endDate}`
+	return (dispatch) => {
+	  let data = {
+		method: 'get',
+		url
+	  }
+	  return authApi(data).then((res) => {
+		if (res.status === 200) {
+		  return res
+		}
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }
+
+  export const getFtaAuditReport = (postData) => {
+	const { startDate, endDate ,companyId, userId,taxAgencyId} = postData
+	let url = `/rest/simpleaccountReports/getFtaAuditReport?startDate=${startDate}&endDate=${endDate}&companyId=${companyId}&userId=${userId}&taxAgencyId=${taxAgencyId}`
+	return (dispatch) => {
+	  let data = {
+		method: 'get',
+		url
+	  }
+	  return authApi(data).then((res) => {
+		if (res.status === 200) {
+		  return res
+		}
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }
+
+  export const getFtaExciseAuditReport = (postData) => {
+	const { startDate, endDate ,companyId, userId,taxAgencyId} = postData
+	let url = `/rest/simpleaccountReports/getFtaExciseAuditReport?startDate=${startDate}&endDate=${endDate}&companyId=${companyId}&userId=${userId}&taxAgencyId=${taxAgencyId}`
 	return (dispatch) => {
 	  let data = {
 		method: 'get',
@@ -261,6 +318,69 @@ export const getBalanceReport = (postData) => {
 								data: res.data,
 							},
 						});
+						return res;
+					}
+				})
+				.catch((err) => {
+					throw err;
+				});
+		};
+	};
+
+	
+
+	export const getPayrollSummaryReport = (postData) => {
+		const { startDate, endDate } = postData;
+		let url = `/rest/simpleaccountReports/getPayrollSummary?startDate=${startDate}&endDate=${endDate}`;
+	
+		return (dispatch) => {
+			let data = {
+				method: 'get',
+				url,
+			};
+			return authApi(data)
+				.then((res) => {
+					if (res.status === 200) {
+						return res;
+					}
+				})
+				.catch((err) => {
+					throw err;
+				});
+		};
+	};
+
+	export const getCustomerList = () => {
+		return (dispatch) => {
+			let data = {
+				method: 'get',
+				url: `/rest/contact/getContactsForDropdown?contactType=2`,
+			};
+			return authApi(data)
+				.then((res) => {
+					if (res.status === 200) {
+						return res.data;
+					}
+					return res;
+				})
+				.catch((err) => {
+					throw err;
+				});
+		};
+	};
+	
+	export const getSOA = (postData) => {
+		const { startDate, endDate,customerId } = postData;
+		let url = `/rest/simpleaccountReports/StatementOfAccountReport?startDate=${startDate}&endDate=${endDate}&customerId=${customerId}`;
+	
+		return (dispatch) => {
+			let data = {
+				method: 'get',
+				url,
+			};
+			return authApi(data)
+				.then((res) => {
+					if (res.status === 200) {
 						return res;
 					}
 				})

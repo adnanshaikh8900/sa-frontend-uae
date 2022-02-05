@@ -49,6 +49,22 @@ export const recordPayment = (obj) => {
 			});
 	};
 };
+export const recordPaymentCNWithoutInvoice = (obj) => {
+	return (dispatch) => {
+		let data = {
+			method: 'post',
+			url: '/rest/creditNote/recordPaymentCNWithoutInvoice',
+			data: obj,
+		};
+		return authFileUploadApi(data)
+			.then((res) => {
+				return res;
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
 
 export const deleteInvoice = (id) => {
 	return (dispatch) => {

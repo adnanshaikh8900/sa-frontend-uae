@@ -14,7 +14,7 @@ const { ToWords } = require('to-words');
 const toWords = new ToWords({
 	localeCode: 'en-IN',
 	converterOptions: {
-  //currency: true,
+	//   currency: true,
 	  ignoreDecimal: false,
 	  ignoreZeroCurrency: false,
 	  doNotAddOnly: false,
@@ -102,9 +102,30 @@ class InvoiceTemplate extends Component {
 			)
 			return val && val.label ? val.label :''
 		}
-	render() {
+		companyMobileNumber=(number)=>{
+
+			let	number1=	number.split(",")
+
+			if(number1.length!=0)
+				number1=number1[0];
+				return number1
+			}
+
+			renderExcise=(item)=>{
+			if(item.exciseTaxId && item.exciseTaxId==1)
+					{
+					  return '50 %'
+					}
+					else
+					if(item.exciseTaxId && item.exciseTaxId==2)
+					{
+					  return '100 %'
+					}
+				}
+        
+render() {
 		strings.setLanguage(this.state.language);
-		const { invoiceData, currencyData, totalNet, companyData,status } = this.props;
+		const { invoiceData, currencyData, totalNet, totalExciseAmount,companyData,status, contactData } = this.props;
 			return (
 			<div>
 				<Card id="singlePage" className="box">
@@ -125,7 +146,7 @@ class InvoiceTemplate extends Component {
 								padding:'7px',borderColor:'#c8ced3'
 							}}
 						>
-							<div style={{ width: '150%' }}>
+							<div style={{ width: '200%' }}>
 								<div className="companyDetails">
 									<img
 										src={
@@ -137,27 +158,32 @@ class InvoiceTemplate extends Component {
 										}
 										className=""
 										alt=""
-										style={{ width: ' 100px' }}
+										style={{ width: ' 240px' }}
 									/>
-									 <div className="mb-1 ml-2"><b>{strings.CompanyName} : </b> {companyData.companyName}</div>
-									<div className="mb-1 ml-2"><b>{strings.CompanyRegistrationNo} : </b> {companyData.companyRegistrationNumber}</div>
-									<div className="mb-1 ml-2"><b>{strings.VATRegistrationNo} : </b> {companyData.vatRegistrationNumber}</div>
-									<div className="mb-1 ml-2"><b>{strings.MobileNumber} : </b> {companyData.phoneNumber}</div>
-
+									
 								</div>
+								<div style={{ marginTop: '4.2rem' }}>
+								<div className="mb-1 ml-2"><b>{strings.CompanyName} : </b> {companyData.companyName}</div>
+									<div className="mb-1 ml-2"><b>{strings.CompanyAddress} : </b> {companyData.companyAddressLine1+","+companyData.companyAddressLine2}</div>
+									<div className="mb-1 ml-2"><b>{strings.PinCode} : </b> {companyData.companyPostZipCode}</div>
+									<div className="mb-1 ml-2"><b>{strings.StateRegion} : </b> {companyData.companyStateName}</div>
+									<div className="mb-1 ml-2"><b>{strings.Country} : </b> {companyData.companyCountryName}</div>
+									<div className="mb-1 ml-2"><b>{strings.VATRegistrationNo} : </b> {companyData.vatRegistrationNumber}</div>
+									<div className="mb-1 ml-2"><b>{strings.MobileNumber} : </b> {this.companyMobileNumber(companyData.phoneNumber?"+"+companyData.phoneNumber:'')}</div>
 							</div>
-							<div style={{ width: '130%',justifyContent:'center' }}>
+							</div>
+							<div style={{ width: '200%',justifyContent:'center',marginTop:'5rem'}}>
 							
 									<div
 										style={{
-											width: '130%',
-											fontSize: '2rem',
+											width: '100%',
+											fontSize: '1.5rem',
 											fontWeight: '700',
 											textTransform: 'uppercase',
 											color: 'black',
 										}}
 									>
-									 {strings.Tax+" "+strings.Invoice}
+									 {strings.Tax+" "+strings.Invoice+" "+strings.Details}
 									</div>
 								
 							</div>
@@ -170,17 +196,27 @@ class InvoiceTemplate extends Component {
 								}}
 							>
 								<div 	style={{
-									width: '62%',
+									width: '70%',
 									margin:'1.5rem 9.0rem 0.5rem 4rem',
 									// // border:'1px solid',
-									// marginTop:'2.5rem',
-									// marginLeft:'6rem'
+									marginTop:'6.5rem',
+									 marginLeft:'8rem'
 								}}>
 								<h4 className="mb-1 ml-2"><b>{companyData && companyData.company
 											? companyData.company.companyName
 											: ''}</b></h4>
-								<h6 className="mb-1 ml-2">{strings.Invoice } # {invoiceData.referenceNumber}</h6>
-								<h6 className="mb-1 ml-2"><b>{strings.BalanceDue}: {invoiceData.dueAmount ? (
+								<h4 className="mb-1 ml-2"><b>{strings.Invoice } # {invoiceData.referenceNumber}</b></h4>
+							    <br/>
+								<h6 className="mb-1 ml-2"><b>{strings.BillTo} ,</b></h6>
+								<div className="mb-1 ml-2"><b>{strings.Name} : </b>{invoiceData.organisationName ? invoiceData.organisationName : invoiceData.name}</div>
+								{contactData && contactData.addressLine1 &&(<div className="mb-1 ml-2"><b>{strings.BillingAddress} : </b> {contactData.addressLine1}</div>)}
+								{contactData && contactData.postZipCode &&(	<div className="mb-1 ml-2"><b>{strings.PinCode} : </b> {contactData.postZipCode}</div>)}
+								{contactData&&contactData.billingStateName&&(<div className="mb-1 ml-2"><b>{strings.StateRegion} : </b> {contactData.billingStateName}</div>)}
+								{contactData && contactData.billingCountryName &&(<div className="mb-1 ml-2"><b>{strings.Country} : </b> {contactData.billingCountryName}</div>)}
+								<div className="mb-1 ml-2"><b>{strings.VATRegistrationNo} : </b> {invoiceData.taxRegistrationNo}</div>
+								{contactData&&contactData.mobileNumber&&(   <div className="mb-1 ml-2"><b>{strings.MobileNumber} : </b>+{contactData.mobileNumber}</div>)}
+								<span className="mb-1 ml-2"><b>{strings.Status} : </b> {this.renderInvoiceStatus(invoiceData.status)}</span>
+								<div className="mb-1 ml-2" style={{marginLeft:'8rem'}}><b>{strings.BalanceDue} : {invoiceData.dueAmount ? (
 														<Currency
 															value={invoiceData.dueAmount}
 															currencySymbol={
@@ -198,8 +234,8 @@ class InvoiceTemplate extends Component {
 																	: 'USD'
 															}
 														/>
-													)}</b></h6>
-													<span className="mb-1 ml-2">{strings.Status}:  {this.renderInvoiceStatus(invoiceData.status)}</span>
+													)}</b></div>
+								
 													{/* <div
 														className={`ribbon ${this.getRibbonColor(
 															invoiceData,
@@ -223,28 +259,9 @@ class InvoiceTemplate extends Component {
 									borderBottom:'1px solid',borderColor:'#c8ced3'
 							}}
 						>
-							<div style={{width: '444%'}}>
-								<div
-									style={{
-										width: '70%',
-										margin:'0.5rem',
-										border:'1px solid',borderColor:'#c8ced3'
-									}}
-								>
-									<div style={{ fontWeight: '600' }} className="mb-1 mt-1 ml-2">
-										<b>{strings.BillTo },</b>
-									</div>
-									<div className="mb-1 ml-2"><b>{strings.Name}:</b> {invoiceData.organisationName ? invoiceData.organisationName : invoiceData.name}</div>
-									<div className="mb-1 ml-2"><b>TRN:</b> {invoiceData.taxRegistrationNo}</div>
-									{/* <div className="mb-1 ml-2"><b>{strings.Company }:</b> {invoiceData.organisationName}</div> */}
-									
-									<div className="mb-1 ml-2"><b>{strings.Email}:</b> {invoiceData.email}</div>
-									<div className="mb-3 ml-2"><b>{strings.Address}:</b> {invoiceData.address}</div>
-								</div>
-							</div>
-							<div
+						<div
 								style={{
-									width: '150%',
+									width: '100%',
 									display: 'flex',
 									justifyContent: 'space-between',
 								}}
@@ -276,7 +293,7 @@ class InvoiceTemplate extends Component {
 										</tbody>
 									</Table>
 								</div>
-							</div>
+								</div>
 						</div>
 						<Table  >
 							<thead className="header-row">
@@ -290,11 +307,17 @@ class InvoiceTemplate extends Component {
 									<th className="center" style={{ padding: '0.5rem' }}>
 										{strings.Quantity}
 									</th>
-									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
+								    <th style={{ padding: '0.5rem', textAlign: 'right' }}>
 										{strings.UnitCost }
 									</th>
-									<th style={{ padding: '0.5rem', textAlign: 'right' ,   width: "60px" }}>{strings.Vat }</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
+										{strings.Discount }
+									</th>
+									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.DiscountType}</th>
+									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.Excise}</th>
+									<th style={{ padding: '0.5rem', textAlign: 'right' ,  width: "60px" }}>{strings.Vat }</th>
+									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.VatAmount}</th>
+									<th style={{ padding: '0.5rem', textAlign: 'right'}}>
 										{strings.SubTotal }
 									</th>
 								</tr>
@@ -319,9 +342,23 @@ class InvoiceTemplate extends Component {
 														}
 													/>
 												</td>
+												{/* <td style={{ textAlign: 'right', width: '20%' }}>
+													<Currency
+														value={item.discount}
+														currencySymbol={
+															currencyData[0]
+																? currencyData[0].currencyIsoCode
+																: 'USD'
+														}
+													/>
+												</td> */}
+												<td style={{ textAlign: 'right' }}>{item.discount}</td>
+												<td style={{ textAlign: 'right' }}>{item.discountType}</td>
+												<td style={{ textAlign: 'right' }}>{item.exciseTaxId ? this.renderExcise(item):"-"}</td>
 												<td
 													style={{ textAlign: 'right' }}
 												>{`${item.vatPercentage}%`}</td>
+													<td style={{ textAlign: 'right' }}>{item.vatAmount}</td>
 												<td style={{ textAlign: 'right' }}>
 													<Currency
 														value={item.subTotal}
@@ -383,14 +420,21 @@ class InvoiceTemplate extends Component {
 								<div style={{ width: '100%' }}>
 								<Table className="table-clear cal-table">
 									<tbody>
-										<tr >
-											<td style={{ width: '40%' }}><strong>{strings.SubTotal }</strong></td>
-											<td style={{display: 'flex',justifyContent: 'space-between',}}>
+									<tr >
+											<td style={{ width: '40%' }}>
+												<strong>{strings.TotalExcise}</strong>
+											</td>
+											<td
+												style={{
+													display: 'flex',
+													justifyContent: 'space-between',
+												}}
+											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													 {totalNet ? (
+													{invoiceData.totalExciseAmount ? (
 														<Currency
-															value={totalNet}
+															value={invoiceData.totalExciseAmount}
 															currencySymbol={
 																currencyData[0]
 																	? currencyData[0].currencyIsoCode
@@ -404,12 +448,13 @@ class InvoiceTemplate extends Component {
 																currencyData[0]
 																	? currencyData[0].currencyIsoCode
 																	: 'USD'
-															} 
+															}
 														/>
-													)}  
+													)}
 												</span>
 											</td>
 										</tr>
+										
 										<tr >
 											<td style={{ width: '40%' }}>
 												<strong>
@@ -429,7 +474,7 @@ class InvoiceTemplate extends Component {
 												<span>
 													{invoiceData.discount ? (
 														<Currency
-															value={invoiceData.discount ? '-'+invoiceData.discount : invoiceData.discount}
+															value={invoiceData.discount ? +invoiceData.discount : invoiceData.discount}
 															currencySymbol={
 																currencyData[0]
 																	? currencyData[0].currencyIsoCode
@@ -446,6 +491,33 @@ class InvoiceTemplate extends Component {
 															}
 														/>
 													)}
+												</span>
+											</td>
+										</tr>
+										<tr >
+											<td style={{ width: '40%' }}><strong>{strings.TotalNet }</strong></td>
+											<td style={{display: 'flex',justifyContent: 'space-between',}}>
+												<span style={{ marginLeft: '2rem' }}></span>
+												<span>
+													 {totalNet ? (
+														<Currency
+															value={totalNet-invoiceData.totalVatAmount}
+															currencySymbol={
+																currencyData[0]
+																	? currencyData[0].currencyIsoCode
+																	: 'USD'
+															}
+														/>
+													) : (
+														<Currency
+															value={0}
+															currencySymbol={
+																currencyData[0]
+																	? currencyData[0].currencyIsoCode
+																	: 'USD'
+															} 
+														/>
+													)}  
 												</span>
 											</td>
 										</tr>

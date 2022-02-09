@@ -10,8 +10,8 @@ import {
 } from 'reactstrap';
 
 import { InvoiceTemplate } from 'components'
-import Basic from 'assets/images/invoice-template/Basic.jpg';
-import simple2 from 'assets/images/invoice-template/simple2.png';
+import Theme1 from 'assets/images/invoice-template/Theme1.png';
+import Theme2 from 'assets/images/invoice-template/Theme2.png';
 
 import * as TemplateActions from './actions';
 // import { Templates } from './sections';
@@ -96,8 +96,8 @@ class Template extends React.Component {
 						</CardHeader>
 					
 						<CardBody>
-							<InvoiceTemplate templateId="1" enable={this.state.enable1}  templateTitle="Basic" templateImg={Basic}></InvoiceTemplate>
-							<InvoiceTemplate templateId="2" enable={this.state.enable2} templateTitle="simple2" templateImg={simple2}></InvoiceTemplate>
+							<InvoiceTemplate templateId="1" enable={this.state.enable1}  templateTitle="Theme1" templateImg={Theme1}></InvoiceTemplate>
+							<InvoiceTemplate templateId="2" enable={this.state.enable2} templateTitle="Theme2" templateImg={Theme2}></InvoiceTemplate>
 						{/* <InvoiceTemplate templateId="3" templateTitle="Horizon" templateImg={horizon}></InvoiceTemplate>
 							<InvoiceTemplate templateId="4" templateTitle="Elliot Jay stocks" templateImg={ejs}></InvoiceTemplate>
 							<InvoiceTemplate templateId="5" templateTitle="Union" templateImg={union}></InvoiceTemplate>

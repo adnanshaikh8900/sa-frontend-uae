@@ -121,6 +121,7 @@ RecieptNumber:"عدد إيصال",
       Notes: "ملاحظات / مذكرات التسليم",
       DiscountType: "نوع الخصم",
       Excise:"ضريبة",
+      ExciseAmount:"مبلغ الضريبة",
       ReceiptNumber: "رقم الإيصال / الرقم المرجعي",
       ReceiptAttachment: "مرفق الإيصال",
       DiscountAmount: "مبلغ الخصم",
@@ -210,7 +211,8 @@ Attachment:"مرفق",
 //Supplier Invoice
 SupplierInvoices:"فواتير المورد",						
 SUPPLIERNAME:"اسم المورد",										
-INVOICEAMOUNT:"مبلغ الفاتورة",		
+INVOICEAMOUNT:"مبلغ الفاتورة",
+SupplierInvoice:"فاتورة المورد",			
 		
 //Create invoice
 SupplierName:"اسم المورد",			

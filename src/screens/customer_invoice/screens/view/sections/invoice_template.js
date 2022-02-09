@@ -181,9 +181,10 @@ render() {
 											fontWeight: '700',
 											textTransform: 'uppercase',
 											color: 'black',
+											textAlign:'center',
 										}}
 									>
-									 {strings.Tax+" "+strings.Invoice+" "+strings.Details}
+									 {strings.Tax+" "+strings.Invoice}
 									</div>
 								
 							</div>
@@ -315,7 +316,8 @@ render() {
 									</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.DiscountType}</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.Excise}</th>
-									<th style={{ padding: '0.5rem', textAlign: 'right' ,  width: "60px" }}>{strings.Vat }</th>
+									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.ExciseAmount}</th>
+									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.Vat }</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.VatAmount}</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right'}}>
 										{strings.SubTotal }
@@ -355,6 +357,7 @@ render() {
 												<td style={{ textAlign: 'right' }}>{item.discount}</td>
 												<td style={{ textAlign: 'right' }}>{item.discountType}</td>
 												<td style={{ textAlign: 'right' }}>{item.exciseTaxId ? this.renderExcise(item):"-"}</td>
+												<td style={{ textAlign: 'right' }}>{item.exciseAmount}</td>
 												<td
 													style={{ textAlign: 'right' }}
 												>{`${item.vatPercentage}%`}</td>

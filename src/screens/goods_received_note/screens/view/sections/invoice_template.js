@@ -111,12 +111,10 @@ class RFQTemplate extends Component {
 											fontWeight: '700',
 											textTransform: 'uppercase',
 											color: 'black',
+											marginLeft:'4rem',
 										}}
 									>
-									{strings.GoodsReceivedNotes
-									+" "+
-									strings.Details
-									}
+									{strings.GoodsReceivedNotes}
 									</div>
 
 							</div>

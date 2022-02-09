@@ -155,10 +155,7 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 											color: 'black',
 										}}
 									>
-									{strings.PurchaseOrder
-									+" "+
-									strings.Details
-									}
+									{strings.PurchaseOrder}
 									</div>
 
 							</div>
@@ -276,6 +273,7 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 										{strings.UnitCost }
 									</th>
 									<th style={{ padding: '0.5rem' }}>{strings.Excise}</th>
+									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.ExciseAmount}</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.Vat}</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.VatAmount}</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
@@ -305,6 +303,7 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 												{POData.currencyIsoCode + " " +item.unitPrice}
 												</td>
 												<td>{item.exciseTaxId ? this.renderExcise(item):"-"}</td>
+												<td style={{ textAlign: 'right' }}>{item.exciseAmount}</td>
 												<td
 													style={{ textAlign: 'right' }}
 												>{`${item.vatPercentage}%`}</td>

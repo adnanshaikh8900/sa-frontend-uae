@@ -13,7 +13,7 @@ function updateMailTheme(id, templateTitle) {
       method: 'Post',
       url: `/rest/templates/updateMailTemplateTheme?templateId=${id}`,
     };
-    toast.success(templateTitle + "   Theme selected Successfully...!")
+    toast.success(templateTitle + " Selected Successfully...!")
     window.location.reload(false);
     return authApi(data)
       .then((res) => {

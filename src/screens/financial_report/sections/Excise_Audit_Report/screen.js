@@ -501,7 +501,7 @@ class ViewFtaExciseAuditReport extends React.Component {
 																						{this.state.FtaExciseAuditData.taxAgencyAgentNumber}
 																					</td>
 																					<td style={{ width: '13%', textAlign: 'center'}}>
-																					{this.renderDate(this.state.FtaExciseAuditData.startDate,'')}																					</td>
+																					{this.renderDate(this.state.FtaExciseAuditData.startDate,'').replaceAll("/","-")}																					</td>
 																					<td style={{ width: '12%', textAlign: 'center'}}>
 																					{this.renderDate(this.state.FtaExciseAuditData.endDate,'')}																					</td>
 																					<td style={{ width: '18%', textAlign: 'center'}}>

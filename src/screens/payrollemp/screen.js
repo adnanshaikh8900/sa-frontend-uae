@@ -403,7 +403,7 @@ class PayrollEmployee extends React.Component {
     }
     renderDate=(data)=>{
         
-            return moment(data.value).format("D MMM YYYY")
+            return moment(data.value).format("DD-MM-YYYY")
     }
     render() {
         strings.setLanguage(this.state.language);
@@ -588,10 +588,10 @@ class PayrollEmployee extends React.Component {
 
                                                                                         <AgGridColumn field="mobileNumber" 
 
-                                                                                        headerName=  {strings.MobileNumber}
-                                                                                        sortable={ true }
+                                                                                        headerName={strings.MobileNumber}
+                                                                                        sortable={true}
                                                                                         enablePivot={true} 
-                                                                                        filter={ true }
+                                                                                        filter={true}
                                                                                         cellRendererFramework={(params)=>
                                                                                             <PhoneInput     
                                                                                             className="mobileNumberCSS"                                                                     

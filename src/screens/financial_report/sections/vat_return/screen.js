@@ -68,8 +68,8 @@ class VatReturnsReport extends React.Component {
 			dropdownOpen: false,
 			view: false,
 			initValue: {
-				startDate: moment().startOf('month').format('DD/MM/YYYY'),
-				endDate: moment().endOf('month').format('DD/MM/YYYY'),
+				startDate: moment().startOf('month').format('DD-MM-YYYY'),
+				endDate: moment().endOf('month').format('DD-MM-YYYY'),
 				reportBasis: 'ACCRUAL',
 				chartOfAccountId: '',
 			},
@@ -420,7 +420,7 @@ class VatReturnsReport extends React.Component {
 											<br style={{ marginBottom: '5px' }} />
 											<b style ={{ fontSize: '18px'}}>{strings.VatReturns}</b>
 											<br style={{ marginBottom: '5px' }} />
-											{strings.From} {initValue.startDate} {strings.To} {initValue.endDate}
+											{strings.From} {moment(initValue.startDate).format('DD-MM-YYYY')} {strings.To} {moment(initValue.endDate).format('DD-MM-YYYY')}
 									</div>
 									<div>
 									</div>									

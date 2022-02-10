@@ -341,7 +341,7 @@ class Expense extends React.Component {
 					<label className="font-weight-bold mr-2 ">{strings.ActualExpenseAmount} : </label>
 					<label>
 						
-						{row.exclusiveVat != true ? row.currencyName +" "+ (row.expenseAmount-row.expenseVatAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2 }): row.currencyName +" "+ (row.expenseAmount+row.expenseVatAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+						{row.exclusiveVat != true ? row.currencyName +" "+ (row.expenseAmount-row.expenseVatAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2}): row.currencyName +" "+ (row.expenseAmount+row.expenseVatAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
 					
 					</label>
 			</div>
@@ -349,14 +349,14 @@ class Expense extends React.Component {
 			<div style={{ display: row.expenseVatAmount === 0 ? 'none' : '' }}>
 			    <label className="font-weight-bold mr-2">{strings.VatAmount} : </label>
 				<label>{row.expenseVatAmount === 0 ?
-				 row.currencyName  +" "+ row.expenseVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) 
+				 row.currencyName  +" "+ row.expenseVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2}) 
 				 :
-				 row.currencyName  +" "+ row.expenseVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
+				 row.currencyName  +" "+ row.expenseVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2})}</label>
 			</div>
 		)}
 			<div style={{ display: row.expenseAmount === 0 ? 'none' : '' }}>
 					<label className="font-weight-bold mr-2">{strings.ExpenseAmount} : </label>
-					<label>{row.expenseAmount === 0 ? row.currencyName  +" "+row.expenseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }): row.currencyName  +" "+row.expenseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
+					<label>{row.expenseAmount === 0 ? row.currencyName  +" "+row.expenseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2}): row.currencyName  +" "+row.expenseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2})}</label>
 			</div>
 		</div>
 		
@@ -375,7 +375,7 @@ class Expense extends React.Component {
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// );
-		return row.vatAmount === 0 ? row.currencySymbol + row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencySymbol + row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.vatAmount === 0 ? row.currencySymbol + row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2}) : row.currencySymbol + row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2});
 	};
 
 	renderCurrency = (cell, row) => {

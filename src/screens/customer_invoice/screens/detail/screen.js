@@ -44,7 +44,7 @@ const mapStateToProps = (state) => {
 		project_list: state.customer_invoice.project_list,
 		contact_list: state.customer_invoice.contact_list,
 		currency_list: state.customer_invoice.currency_list,
-		vat_list: state.customer_invoice.vat_list,
+		// vat_list: state.customer_invoice.vat_list,
 		excise_list: state.customer_invoice.excise_list,
 		product_list: state.customer_invoice.product_list,
 		customer_list: state.customer_invoice.customer_list,
@@ -161,6 +161,10 @@ class DetailCustomerInvoice extends React.Component {
 	}
 
 	componentDidMount = () => {
+		this.props.customerInvoiceActions.getVatList().then((res)=>{
+			if(res.status==200)
+			 this.setState({vat_list:res.data})
+		});
 		this.initializeData();
 	};
 	salesCategory = () => {
@@ -192,7 +196,7 @@ class DetailCustomerInvoice extends React.Component {
 				.then((res) => {
 					if (res.status === 200) {
 						this.getCompanyCurrency();
-						this.props.customerInvoiceActions.getVatList();
+						// this.state.customerInvoiceActions.getVatList();
 						this.props.customerInvoiceActions.getCustomerList(
 							this.state.contactType,
 						);
@@ -780,7 +784,8 @@ class DetailCustomerInvoice extends React.Component {
 	};
 
 	renderVat = (cell, row, props) => {
-		const { vat_list } = this.props;
+		// const { vat_list } = this.props;
+		const { vat_list } = this.state;
 		let vatList = vat_list.length
 			? [{ id: '', vat: 'Select Vat' }, ...vat_list]
 			: vat_list;
@@ -1010,7 +1015,9 @@ class DetailCustomerInvoice extends React.Component {
 	};
 
 	updateAmount = (data, props) => {
-		const { vat_list , excise_list} = this.props;
+		// const { vat_list , excise_list} = this.props;
+		const { vat_list , excise_list} = this.state;
+
 		const { discountPercentage, discountAmount } = this.state;
 		let total_net = 0;
 		let total_excise = 0;
@@ -2605,7 +2612,8 @@ class DetailCustomerInvoice extends React.Component {
 					}}
 					getCurrentProduct={(e) => this.getCurrentProduct(e)}
 					createProduct={this.props.productActions.createAndSaveProduct}
-					vat_list={this.props.vat_list}
+					// vat_list={this.props.vat_list}
+					vat_list={this.state.vat_list}
 					product_category_list={this.props.product_category_list}
 					salesCategory={this.state.salesCategory}
 					purchaseCategory={this.state.purchaseCategory}

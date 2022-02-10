@@ -270,6 +270,7 @@ class DetailEmployee extends React.Component {
                                       <Label htmlFor="select"><span className="text-danger">* </span>First Name</Label>
                                       <Input
                                         type="text"
+                                        maxLength="100"
                                         id="firstName"
                                         name="firstName"
                                         value={props.values.firstName}
@@ -289,6 +290,7 @@ class DetailEmployee extends React.Component {
                                       <Label htmlFor="select"><span className="text-danger">* </span>Middle Name</Label>
                                       <Input
                                         type="text"
+                                        maxLength="100"
                                         id="middleName"
                                         name="middleName"
                                         value={props.values.middleName}
@@ -308,6 +310,7 @@ class DetailEmployee extends React.Component {
                                       <Label htmlFor="select"><span className="text-danger">* </span>Last Name</Label>
                                       <Input
                                         type="text"
+                                        maxLength="100"
                                         id="lastName"
                                         name="lastName"
                                         value={props.values.lastName}

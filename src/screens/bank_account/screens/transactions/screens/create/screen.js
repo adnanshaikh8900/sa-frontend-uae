@@ -692,13 +692,13 @@ class CreateBankTransaction extends React.Component {
 														values.coaCategoryId.value === 6) &&
 														!values.employeeId
 													){
-														errors.employeeId = 'User is required'
+														errors.employeeId = 'User is Required'
 													}
 													if(
 														(values.coaCategoryId.label ===
 															'Expense' ) && !values.currencyCode
 													){
-														errors.currencyCode = " Currency is required"
+														errors.currencyCode = " Currency is Required"
 													}
 													return errors;
 												}}

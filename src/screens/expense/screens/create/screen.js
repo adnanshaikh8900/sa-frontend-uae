@@ -729,33 +729,33 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 															'Expense Number already exists';
 													}
 													if(values.currency ==='' || values.currency === 150){
-														errors.currency="Currency is required "
+														errors.currency="Currency is Required "
 													}
 													if(this.state.showPlacelist===true && values.placeOfSupplyId ===''){
-														errors.placeOfSupplyId="Place Of Supply is required"
+														errors.placeOfSupplyId="Place Of Supply is Required"
 													}
 
 													return errors;
 												}}
 												validationSchema={Yup.object().shape({
 													expenseNumber: Yup.string().required(
-														'Expense number is required',
+														'Expense number is Required',
 													),
 													taxTreatmentId: Yup.string().required(
-														'Tax Treatment is required',
+														'Tax Treatment is Required',
 													),
 													expenseCategory: Yup.string().required(
-														'Expense Category is required',
+														'Expense Category is Required',
 													),
 													expenseDate: Yup.date().required(
 														'Expense Date is Required',
 													),
 													
 													currency: Yup.string().required(
-														'Currency is required',
+														'Currency is Required',
 													),
 													payee: Yup.string().required(
-														'Paid By is required',
+														'Paid By is Required',
 													),
 													expenseAmount: Yup.string()
 														.required('Amount is Required')
@@ -778,7 +778,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 														'Vat is Required',
 													),
 													payMode: Yup.string().required(
-														'Pay Through is required',
+														'Pay Through is Required',
 													),
 													attachmentFile: Yup.mixed()
 														.test(

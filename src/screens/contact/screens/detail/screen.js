@@ -561,7 +561,7 @@ class DetailContact extends React.Component {
 															errors.vatRegistrationNumber =	'Tax Registration Number is Required';
 														
 															if(values.vatRegistrationNumber.length!=15){
-																errors.vatRegistrationNumber="Please enter 15 digit Tax Registration Number"
+																errors.vatRegistrationNumber="Please Enter 15 Digit Tax Registration Number"
 															}}
 														// if( values.stateId ===''){
 														// 	errors.stateId =
@@ -599,7 +599,7 @@ class DetailContact extends React.Component {
 															.required('Email is Required')
 															.email('Invalid Email'),
 														mobileNumber: Yup.string()
-															.required('Mobile Number is required'),
+															.required('Mobile Number is Required'),
 														currencyCode: Yup.string()
 															.required('Please Select Currency')
 															.nullable(),

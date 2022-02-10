@@ -420,7 +420,7 @@ class VatReturnsReport extends React.Component {
 											<br style={{ marginBottom: '5px' }} />
 											<b style ={{ fontSize: '18px'}}>{strings.VatReturns}</b>
 											<br style={{ marginBottom: '5px' }} />
-											{strings.From} {moment(initValue.startDate).format('DD-MM-YYYY')} {strings.To} {moment(initValue.endDate).format('DD-MM-YYYY')}
+											{strings.From} {initValue.startDate.replaceAll("/","-")} {strings.To} {initValue.endDate.replaceAll("/","-")}
 									</div>
 									<div>
 									</div>									

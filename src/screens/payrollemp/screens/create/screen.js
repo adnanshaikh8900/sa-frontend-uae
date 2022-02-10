@@ -2816,7 +2816,7 @@ existForAccountNumber = (value) => {
                                                                                                         type="text"
                                                                                                         id="iban"
                                                                                                         name="iban"
-                                                                                                        maxLength="34"
+                                                                                                        maxLength="23"
                                                                                                         value={props.values.iban}
                                                                                                         placeholder={strings.Enter+strings.IBANNumber}
                                                                                                         onChange={(value) => {

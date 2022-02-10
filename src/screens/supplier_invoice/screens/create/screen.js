@@ -1675,10 +1675,10 @@ class CreateSupplierInvoice extends React.Component {
 													let errors = {};
 													if (this.state.exist === true) {
 														errors.invoice_number =
-															'Invoice Number already exists';
+															'Invoice Number Already Exists';
 													}
 													if (values.invoice_number==='') {
-														errors.invoice_number = 'Invoice Number is required';
+														errors.invoice_number = 'Invoice Number is Required';
 													}
 													if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")
 													{

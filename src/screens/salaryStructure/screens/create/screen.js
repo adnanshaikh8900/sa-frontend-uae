@@ -164,7 +164,7 @@ class CreateSalaryStructure extends React.Component {
                           type: Yup.string()
                             .required("Salary Structure Type is Required"),
                             name: Yup.string()
-                            .required("salary Structure Name is Required"),
+                            .required("Salary Structure Name is Required"),
                         
                         })}
                       >

@@ -256,6 +256,10 @@ class RFQTemplate extends Component {
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
 										{strings.UnitCost }
 									</th>
+									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
+										{strings.Discount }
+									</th>
+									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.DiscountType}</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.Excise}</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.ExciseAmount}</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.Vat }</th>
@@ -286,6 +290,8 @@ class RFQTemplate extends Component {
 													/> */}
 												{QuotationData.currencyIsoCode + " " +item.unitPrice}
 												</td>
+												<td style={{ textAlign: 'right' }}>{item.discount}</td>
+												<td style={{ textAlign: 'right' }}>{item.discountType}</td>
 												<td style={{ textAlign: 'right' }}>{item.exciseTaxId ? this.renderExcise(item):"-"}</td>
 												<td style={{ textAlign: 'right' }}>{item.exciseAmount}</td>
 												<td
@@ -368,6 +374,23 @@ class RFQTemplate extends Component {
 												</span>
 											</td>
 										</tr>
+										<tr >
+											<td style={{ width: '40%' }}>
+												<strong>{strings.Discount}</strong>
+											</td>
+											<td
+												style={{
+													display: 'flex',
+													justifyContent: 'space-between',
+												}}
+											>
+												<span style={{ marginLeft: '2rem' }}></span>
+												<span>
+												{QuotationData.discount? QuotationData.currencyIsoCode + " " +QuotationData.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0 } 
+												</span>
+											</td>
+										</tr>
+
 										<tr>
 											<td style={{ width: '40%' }}>
 												<strong>Total Net</strong>

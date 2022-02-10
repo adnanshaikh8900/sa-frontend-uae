@@ -958,7 +958,7 @@ class ExplainTrasactionDetail extends React.Component {
 																values.coaCategoryId.value === 6) &&
 																!values.employeeId
 															){
-																errors.employeeId = 'Uxser is required'
+																errors.employeeId = 'User is Required'
 															}
 															return errors;
 														}}

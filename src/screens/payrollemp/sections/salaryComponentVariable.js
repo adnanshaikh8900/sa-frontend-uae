@@ -220,14 +220,14 @@ class SalaryComponentVariable extends React.Component {
 									}
 
 									if(values.type.label && values.type.label ==="% of Basic" && values.formula==""){
-										errors.formula="Percentage is required"
+										errors.formula="Percentage is Required"
 									}else
 									if(values.type.label && values.type.label ==="Flat Amount" && values.flatAmount==""){
-										errors.flatAmount="Flat Amount is required"
+										errors.flatAmount="Flat Amount is Required"
 									}
 						}
 						else if(this.state.selectDisable===true && (!values.id || values.id.label== "Select Type") ){
-							   errors.id="Component is required"
+							   errors.id="Component is Required"
 						}
 							return errors;
 						}}

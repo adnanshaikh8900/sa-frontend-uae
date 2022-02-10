@@ -229,7 +229,7 @@ class SalaryComponentDeduction extends React.Component {
 									// }
 						}
 						else if(this.state.selectDisable===true && (!values.id || values.id.label== "Select Type")){
-							   errors.id="Component is required"
+							   errors.id="Component is Required"
 						}
 							return errors;
 						}}

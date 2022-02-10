@@ -382,6 +382,7 @@ class CreateEmployeeFinancial extends React.Component {
                                   <Label htmlFor="select">Swift Code</Label>
                                   <Input 
                                     type="text"
+                                    minLength='8'
                                     maxLength="11"
                                     id="swiftCode"
                                     name="swiftCode"

@@ -1613,7 +1613,7 @@ discountType = (row) =>
 															'Invoice Number already exists';
 													}
 													if (values.invoice_number==='') {
-														errors.invoice_number = 'Invoice Number is required';
+														errors.invoice_number = 'Invoice Number is Required';
 													}
 													if (param === true) {
 														errors.discount =

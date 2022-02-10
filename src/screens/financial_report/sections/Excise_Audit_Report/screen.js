@@ -90,7 +90,7 @@ class ViewFtaExciseAuditReport extends React.Component {
 			{ label: 'Period End ', value: 'endDate', sort: false },
 			{ label: 'FAF Creation Date ', value: 'creationDate', sort: false },
 			{ label: 'Product Version ', value: 'productVersion', sort: false },
-			{ label: 'FAFVersion ', value: 'fafVersion', sort: false },
+			{ label: 'FAF Version ', value: 'fafVersion', sort: false },
 		];
 		this.columnHeaderCustomer = [
 			{ label: 'Customer Name', value: 'customerName', sort: true },
@@ -244,8 +244,6 @@ class ViewFtaExciseAuditReport extends React.Component {
 	};
 
 	exportFile = () => {
-
-	
 		let dl =""
 		let fn =""
 		let type="csv"
@@ -482,35 +480,35 @@ class ViewFtaExciseAuditReport extends React.Component {
 																					<td style={{ width: '18%', textAlign: 'center'}}>
 																						{this.state.FtaExciseAuditData.taxablePersonNameEn}
 																					</td>
-																					<td style={{ width: '13%', textAlign: 'center'}}>
+																					<td style={{ width: '13%', textAlign: 'left'}}>
 																						{this.state.FtaExciseAuditData.taxablePersonNameAr}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{this.state.FtaExciseAuditData.taxRegistrationNumber}
 																					</td>
-																					<td style={{ width: '18%', textAlign: 'center'}}>
+																					<td style={{ width: '18%', textAlign: 'left'}}>
 																						{this.state.FtaExciseAuditData.taxAgencyName}
 																					</td>
-																					<td style={{ width: '13%', textAlign: 'center'}}>
+																					<td style={{ width: '13%', textAlign: 'left'}}>
 																						{this.state.FtaExciseAuditData.taxAgencyNumber}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{this.state.FtaExciseAuditData.taxAgentName}
 																					</td>
-																					<td style={{ width: '18%', textAlign: 'center'}}>
+																					<td style={{ width: '18%', textAlign: 'left'}}>
 																						{this.state.FtaExciseAuditData.taxAgencyAgentNumber}
 																					</td>
-																					<td style={{ width: '13%', textAlign: 'center'}}>
+																					<td style={{ width: '13%', textAlign: 'left'}}>
 																					{this.renderDate(this.state.FtaExciseAuditData.startDate,'').replaceAll("/","-")}																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																					{this.renderDate(this.state.FtaExciseAuditData.endDate,'')}																					</td>
-																					<td style={{ width: '18%', textAlign: 'center'}}>
+																					<td style={{ width: '18%', textAlign: 'left'}}>
 																					{this.renderDate(this.state.FtaExciseAuditData.creationDate,'')}
 																					</td>
-																					<td style={{ width: '13%', textAlign: 'center'}}>
+																					<td style={{ width: '13%', textAlign: 'left'}}>
 																						{this.state.FtaExciseAuditData.productVersion}
 																					</td>
-																					<td style={{ width: '13%', textAlign: 'center'}}>
+																					<td style={{ width: '13%', textAlign: 'left'}}>
 																						{this.state.FtaExciseAuditData.fafVersion}
 																					</td>
 																				
@@ -703,31 +701,31 @@ class ViewFtaExciseAuditReport extends React.Component {
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['lineNo']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['productName']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['productType']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['productDescription']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['purchaseValue']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['exciseTaxValue']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['taxCode']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['fcycode']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['purchaseFCY']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['exciseTaxFCY']}
 																					</td>
 																					
@@ -853,32 +851,32 @@ class ViewFtaExciseAuditReport extends React.Component {
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['lineNo']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['productName']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['productType']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['productDescription']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['supplyValue']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['exciseTaxValue']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['excisetaxCode']}
 																					</td>
 																				
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['fcycode']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['supplyFCY']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['exciseTaxFCY']}
 																					</td>
 																				
@@ -1002,10 +1000,10 @@ class ViewFtaExciseAuditReport extends React.Component {
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['credit']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['debit']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['balance']}
 																					</td>
 																				
@@ -1096,34 +1094,34 @@ class ViewFtaExciseAuditReport extends React.Component {
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{this.state.FtaExciseAuditData.warehouseID}
 																					</td>
-																					<td style={{ width: '18%', textAlign: 'center'}}>
+																					<td style={{ width: '18%', textAlign: 'left'}}>
 																						{this.state.FtaExciseAuditData.productCode}
 																					</td>
-																					<td style={{ width: '13%', textAlign: 'center'}}>
+																					<td style={{ width: '13%', textAlign: 'left'}}>
 																						{this.state.FtaExciseAuditData.exciseRate}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{this.state.FtaExciseAuditData.trandsctionType}
 																					</td>
-																					<td style={{ width: '18%', textAlign: 'center'}}>
+																					<td style={{ width: '18%', textAlign: 'left'}}>
 																						{this.state.FtaExciseAuditData.momentDetails}
 																					</td>
-																					<td style={{ width: '13%', textAlign: 'center'}}>
+																					<td style={{ width: '13%', textAlign: 'left'}}>
 																						{this.state.FtaExciseAuditData.transferID}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{this.state.FtaExciseAuditData.transactionDate}
 																					</td>
-																					<td style={{ width: '18%', textAlign: 'center'}}>
+																					<td style={{ width: '18%', textAlign: 'left'}}>
 																						{this.state.FtaExciseAuditData.taxPaymentDate}
 																					</td>
-																					<td style={{ width: '13%', textAlign: 'center'}}>
+																					<td style={{ width: '13%', textAlign: 'left'}}>
 																						{this.state.FtaExciseAuditData.stockDutyStatus}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{this.state.FtaExciseAuditData.stockAdjustment}
 																					</td>
-																					<td style={{ width: '18%', textAlign: 'center'}}>
+																					<td style={{ width: '18%', textAlign: 'left'}}>
 																						{this.state.FtaExciseAuditData.goodsLocation}
 																					</td>
 																				

@@ -893,7 +893,7 @@ min="0"
 															.of(
 																Yup.object().shape({
 																	transactionCategoryId: Yup.string().required(
-																		'Account is required',
+																		'Account is Required',
 																	),
 																	debitAmount: Yup.number().required(),
 																	creditAmount: Yup.number().required(),

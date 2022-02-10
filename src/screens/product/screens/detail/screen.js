@@ -786,11 +786,11 @@ renderName=(cell,row)=>{
 														// 	'Purchase price cannot be greater than Sales price';
 														// }
 														if(this.state.exciseTaxCheck===true && values.exciseTaxId=='' ){
-															errors.exciseTaxId = 'Excise Tax is requied';
+															errors.exciseTaxId = 'Excise Tax is Requied';
 														}
 														if (this.state.ProductExist === true) {
 															errors.productCode =
-																'Product Code is already exist';
+																'Product Code is Already Exist';
 														}
 														return errors;
 													}}
@@ -841,10 +841,10 @@ renderName=(cell,row)=>{
 															},
 														),
 														productPriceType: Yup.string().required(
-															'At least one Selling type is required',
+															'At Least One Selling Type is Required',
 														),
 														productCode: Yup.string().required(
-															'Product code is required',
+															'Product Code is Required',
 														),
 														vatCategoryId: Yup.string()
 															.required('Vat Category is Required')
@@ -978,6 +978,7 @@ renderName=(cell,row)=>{
 																		</Label>
 																		<Input
 																			type="text"
+																			maxLength="100"
 																			id="productName"
 																			name="productName"
 																			onChange={(option) => {
@@ -1351,6 +1352,7 @@ renderName=(cell,row)=>{
 																		>
 																			<Input
 																				type="checkbox"
+																				maxLength="14,2"
 																				id="productPriceTypeOne"
 																				name="productPriceTypeOne"
 																				onChange={(event) => {
@@ -1403,8 +1405,7 @@ renderName=(cell,row)=>{
 																		</Label>
 																		<Input
 																			type="text"
-																			// min="0.00"
-																			maxLength = "10"
+																			maxLength="14,2"
 																			id="salesUnitPrice"
 																			name="salesUnitPrice"
 																			placeholder={strings.Enter+strings.SellingPrice}
@@ -1526,6 +1527,7 @@ renderName=(cell,row)=>{
 																					: true
 																			}
 																			type="textarea"
+																			maxLength="250"
 																			name="salesDescription"
 																			id="salesDescription"
 																			rows="3"
@@ -1550,6 +1552,7 @@ renderName=(cell,row)=>{
 																		>
 																			<Input
 																				type="checkbox"
+																				maxLength="14,2"
 																				id="productPriceTypetwo"
 																				name="productPriceTypetwo"
 																				onChange={(event) => {
@@ -1604,8 +1607,7 @@ renderName=(cell,row)=>{
 																		<Input
 																		disabled={props.values.isInventoryEnabled===true }
 																			type="text"
-																			// min="0"
-																			maxLength = "10"
+																			maxLength="14,2"
 																			id="purchaseUnitPrice"
 																			name="purchaseUnitPrice"
 																			placeholder={strings.Enter+strings.PurchasePrice}

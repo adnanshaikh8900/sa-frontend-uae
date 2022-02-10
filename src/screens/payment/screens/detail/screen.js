@@ -316,8 +316,8 @@ class DetailPayment extends React.Component {
                         // })
                         // }
                         validationSchema={Yup.object().shape({
-                          supplier: Yup.string().required("Supplier is required"),
-                          invoiceId: Yup.string().required("Invoice Number is required"),
+                          supplier: Yup.string().required("Supplier is Required"),
+                          invoiceId: Yup.string().required("Invoice Number is Required"),
                           payment_date: Yup.date().required("Payment Date is Required"),
                           currency: Yup.string().required("Currency is Required"),
                           invoiceAmount: Yup.string()

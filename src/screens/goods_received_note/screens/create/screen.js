@@ -1469,7 +1469,7 @@ console.log(this.state.data)
 															'GRN Number already exists';
 													}
 													if (values.grn_Number==='') {
-														errors.grn_Number = 'GRN Number is required';
+														errors.grn_Number = 'GRN Number is Required';
 													}
 													return errors;
 												}}

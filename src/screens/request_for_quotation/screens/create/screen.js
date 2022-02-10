@@ -1390,7 +1390,7 @@ class CreateRequestForQuotation extends React.Component {
 															'RFQ number already exists';
 													}
 													if (values.rfq_number==='') {
-														errors.rfq_number = 'RFQ Number is required';
+														errors.rfq_number = 'RFQ Number is Required';
 													}
 													return errors;
 												}}

@@ -400,19 +400,19 @@ min="0"
 											}}
 											validationSchema={Yup.object().shape({
 												contactId: Yup.string().required(
-													'Supplier is required',
+													'Supplier is Required',
 												),
 												paymentDate: Yup.date().required(
 													'Payment Date is Required',
 												),
 												depositeTo: Yup.string().required(
-													'Deposit to is required',
+													'Deposit to is Required',
 												),
 												paidInvoiceListStr: Yup.string().required(
 													'Please select atleast one invoice',
 												),
 												amount: Yup.string()
-													.required('Amount is required')
+													.required('Amount is Required')
 													.matches(/^[0-9]+([,.][0-9]+)?$/, {
 														message: 'Please enter valid Amount.',
 														excludeEmptyString: false,

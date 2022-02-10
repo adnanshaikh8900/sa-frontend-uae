@@ -485,7 +485,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                             salaryRoleId : Yup.string()
                                                             .required('Salary Role is Required'),
                                                             mobileNumber: Yup.string()
-															.required('Mobile Number is required'),
+															.required('Mobile Number is Required'),
                                                             emergencyContactName1: Yup.string()
                                                            .required('Contact Name 1 is Required') ,
                                                             emergencyContactNumber1:Yup.string()

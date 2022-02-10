@@ -1627,7 +1627,7 @@ getrfqDetails = (e, row, props,form,field) => {
 															'PO Number already exists';
 													}
 													if (values.po_number==='') {
-														errors.po_number = 'PO Number is required';
+														errors.po_number = 'PO Number is Required';
 													}
 													return errors;
 												}}

@@ -1418,13 +1418,13 @@ class Profile extends React.Component {
 															// })}
 															validationSchema={Yup.object().shape({
 																companyName: Yup.string().required(
-																	'Company Name is required',
+																	'Company Name is Required',
 																),
 																companyRegistrationNumber: Yup.string().required(
-																	'Company Registration Number is required',
+																	'Company Registration Number is Required',
 																),
 																vatRegistrationNumber: Yup.string().required(
-																	'Tax Registration Number is required')
+																	'Tax Registration Number is Required')
 																	.test(
 																		'vatRegistrationNumber',
 																		'Invalid TRN',
@@ -1440,35 +1440,35 @@ class Profile extends React.Component {
 																	.required('Email is Required')
 																	.email('Invalid Email'),
 																companyTypeCode: Yup.string().required(
-																	'Company/Business Type is required',
+																	'Company/Business Type is Required',
 																),
 																phoneNumber: Yup.string().required(
-																	'Mobile Number is required',
+																	'Mobile Number is Required',
 																),
 																companyAddressLine1: Yup.string().required(
-																	'Company Address Line 1 is required',
+																	'Company Address Line 1 is Required',
 																),
 																// companyAddressLine2: Yup.string().required(
-																// 	'Company Address Line 2 is required',
+																// 	'Company Address Line 2 is Required',
 																// ),
 																// companyAddressLine3: Yup.string().required(
-																// 	'Company Address Line 3 is required',
+																// 	'Company Address Line 3 is Required',
 																// ),
 																companyCountryCode: Yup.string().required(
-																	'Country is required',
+																	'Country is Required',
 																)
 																.nullable(),
 																companyStateCode: Yup.string().required(
-																	'State is required',
+																	'State is Required',
 																),
 																companyCity: Yup.string().required(
-																	'City is required',
+																	'City is Required',
 																),
 																// companyPoBoxNumber: Yup.string().required(
-																// 	'PO Box Number is required',
+																// 	'PO Box Number is Required',
 																// ),
 																companyPostZipCode: Yup.string().required(
-																	'Post Zip Code is required',
+																	'Post Zip Code is Required',
 																),
 															})}
 															>
@@ -1535,6 +1535,7 @@ class Profile extends React.Component {
 																							<Input
 																								maxLength={150}
 																								type="text"
+																								maxLength='100'
 																								id="companyName"
 																								name="companyName"
 																								placeholder={strings.Enter+strings.CompanyName}
@@ -1672,6 +1673,7 @@ class Profile extends React.Component {
 																							<Input
 																								maxLength={80}
 																								type="text"
+																								maxLength='80'
 																								id="emailAddress"
 																								name="emailAddress"
 																								placeholder={strings.Enter+strings.Email}
@@ -1764,8 +1766,9 @@ class Profile extends React.Component {
 																								{strings.Website}
 																						</Label>
 																							<Input
-																								maxLength={50}
+																								
 																								type="text"
+																								maxLength='50'
 																								id="website"
 																								name="website"
 																								placeholder={strings.Enter+strings.Website}
@@ -1935,8 +1938,8 @@ class Profile extends React.Component {
 																					<span className="text-danger">*</span> {strings.CompanyAddressLine1}
 																				</Label>
 																					<Input
-																						maxLength={100}
 																						type="text"
+																						maxLength='100'
 																						id="companyAddressLine1"
 																						name="companyAddressLine1"
 																						placeholder={strings.Enter+strings.CompanyAddressLine1}
@@ -1976,8 +1979,8 @@ class Profile extends React.Component {
 																						 {strings.CompanyAddressLine2}
 																				</Label>
 																					<Input
-																						maxLength={100}
 																						type="text"
+																						maxLength='100'
 																						id="companyAddressLine2"
 																						name="companyAddressLine2"
 																						placeholder={strings.Enter+strings.CompanyAddressLine2}
@@ -2015,8 +2018,8 @@ class Profile extends React.Component {
 																					<span className="text-danger">*</span> {strings.PostZipCode}
 																				</Label>
 																					<Input
-																						maxLength={8}
 																						type="text"
+																						maxLength='8'
 																						id="companyPostZipCode"
 																						name="companyPostZipCode"
 																						placeholder={strings.Enter+strings.PostZipCode}
@@ -2209,8 +2212,8 @@ class Profile extends React.Component {
 																					<span className="text-danger">*</span> {strings.City}
 																				</Label>
 																					<Input
-																						maxLength={20}
 																						type="text"
+																						maxLength='100'
 																						id="companyCity"
 																						name="companyCity"
 																						placeholder={strings.Enter+strings.City}
@@ -3585,7 +3588,7 @@ class Profile extends React.Component {
 																	 .required('Confirm Password is Required')
 																	.oneOf(
 																		[Yup.ref('password'), null],
-																		'Passwords must match',
+																		'Passwords Must Match',
 																	),
 															})}
 

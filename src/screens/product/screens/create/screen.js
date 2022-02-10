@@ -452,21 +452,21 @@ try {
 												validate={(values) => {
 													let errors = {};
 													if (!values.productName) {
-														errors.productName = 'Product  Name is  required';
+														errors.productName = 'Product  Name is Required';
 													}
 													if (this.state.exist === true) {
 														errors.productName =
-															'Product  Name is already exist';
+															'Product  Name is Already Exist';
 													}
 													if (this.state.ProductExist === true) {
 														errors.productCode =
-															'Product Code is already exist';
+															'Product Code is Already Exist';
 													}
 													if (values.productName==='') {
-														errors.productName = 'Product Name is required';
+														errors.productName = 'Product Name is Required';
 													}
 													if (values.productCode==='') {
-														errors.productCode = 'Product Code is required';
+														errors.productCode = 'Product Code is Required';
 													}
 													// if (values.inventoryReorderLevel > values.inventoryQty)
 													// {
@@ -499,20 +499,20 @@ try {
 														// }														
 														if(values.inventoryPurchasePrice ==='')
 														errors.inventoryPurchasePrice = 
-														'Inventory Purchase Price is requied';
+														'Inventory Purchase Price is Requied';
 
 														// if(values.inventoryReorderLevel ==='')
 														// errors.inventoryReorderLevel = 
-														// 'Inventory Reorder Level is requied';
+														// 'Inventory Reorder Level is Requied';
 
 														if(values.inventoryQty ==='')
 														errors.inventoryQty = 
-														'Inventory Quantity is requied';
+														'Inventory Quantity is Requied';
 														
 													}
 
 													if(this.state.exciseTaxCheck===true && values.exciseTaxId=='' ){
-														errors.exciseTaxId = 'Excise Tax is requied';
+														errors.exciseTaxId = 'Excise Tax is Requied';
 													}
 													return errors;
 												}}
@@ -562,10 +562,10 @@ try {
 														},
 													),
 													productPriceType: Yup.string().required(
-														'At least one Selling type is required',
+														'At least one Selling type is Required',
 													),
 													productCode: Yup.string().required(
-														'Product code is required',
+														'Product code is Required',
 													),
 													vatCategoryId: Yup.string()
 														.required('Vat Category is Required')

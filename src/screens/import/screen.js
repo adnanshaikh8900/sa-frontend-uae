@@ -272,7 +272,7 @@ class Import extends React.Component {
 						});
 						this.props.commonActions.tostifyAlert(
 							'success',
-							'Date saved Successfully.',
+							'Date Saved Successfully.',
 						);
 						this.toggle(0, '2')
 					}
@@ -310,7 +310,7 @@ class Import extends React.Component {
 						});
 						this.props.commonActions.tostifyAlert(
 							'success',
-							'Migration Data saved Successfully.',
+							'Migration Data Saved Successfully.',
 						);
 						
 						this.props.history.push('/admin/settings/migrate',{name:this.state.name, version:this.state.version})
@@ -389,7 +389,7 @@ class Import extends React.Component {
 					{	
 						this.props.commonActions.tostifyAlert(
 							'success',
-							'Migration Data saved Successfully.',
+							'Migration Data Saved Successfully.',
 						);
 					
 						this.props.history.push('/admin/settings/migrate',{name:this.state.name, version:this.state.version})
@@ -988,10 +988,10 @@ class Import extends React.Component {
 															let errors = {};
 
 															if (values.date === '' && values.date === null) {
-																errors.date = 'Date is required';
+																errors.date = 'Date is Required';
 															}
 															if (values.date === undefined) {
-																errors.date = 'Date is required';
+																errors.date = 'Date is Required';
 															}
 
 															return errors;
@@ -999,7 +999,7 @@ class Import extends React.Component {
 
 														validationSchema={Yup.object().shape({
 															date: Yup.string().required(
-																'Date is required',
+																'Date is Required',
 															),
 														})}
 

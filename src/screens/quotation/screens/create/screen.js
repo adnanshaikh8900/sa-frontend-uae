@@ -1386,7 +1386,7 @@ class CreateQuotation extends React.Component {
 															'Quotation Number already exists';
 													}
 													if (values.quotation_Number==='') {
-														errors.quotation_Number = 'Quotation Number is required';
+														errors.quotation_Number = 'Quotation Number is Required';
 													}
 													return errors;
 												}}

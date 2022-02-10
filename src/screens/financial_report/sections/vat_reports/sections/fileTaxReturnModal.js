@@ -94,6 +94,7 @@ class FileTaxReturnModal extends React.Component {
 				taxablePersonNameInArabic: '',
 			},
 			isTANMandetory:false,
+			isTAANMandetory:false,
 			dialog: null,
 			filterData: {
 				name: '',
@@ -129,6 +130,7 @@ class FileTaxReturnModal extends React.Component {
 					);
 					resetForm();
 					this.setState({isTANMandetory:false})
+					this.setState({isTAANMandetory:false})
 					this.props.closeModal(true);
 				}
 			})
@@ -196,15 +198,18 @@ dateLimit=()=>{
 							if (this.state.isTANMandetory === true &&( values.taxAgencyNumber=="" ||values.taxAgencyNumber==undefined)) 
 							{
 								errors.taxAgencyNumber ='TAN is Required';
-							}													
-																			
+							}
+							else if (this.state.isTAANMandetory === true && (values.taxAgentApprovalNumber=="" || values.taxAgentApprovalNumber==undefined))
+							{
+								errors.taxAgentApprovalNumber = 'TAAN is Required';
+							}												
 							return errors;
 						}}
 						validationSchema={Yup.object().shape({
-							taxAgentName: Yup.string().required('Tax Agent Name is Required'),
+							// taxAgentName: Yup.string().required('Tax Agent Name is Required'),
 							taxablePersonNameInEnglish: Yup.string().required('Taxable Person Name In English is Required'),
-							taxablePersonNameInArabic: Yup.string().required('Taxable Person Name In Arabic is Required'),
-							taxAgentApprovalNumber: Yup.string().required('Tax Agent Approval Number is Required'),
+							// taxablePersonNameInArabic: Yup.string().required('Taxable Person Name In Arabic is Required'),
+							// taxAgentApprovalNumber: Yup.string().required('TAAN is Required'),
 							vatRegistrationNumber: Yup.string().required('Tax Registration Number is Required'),
 							taxFiledOn: Yup.string().required(
 								'Date of Filling is Required',
@@ -248,7 +253,7 @@ dateLimit=()=>{
 															</FormGroup>
 														</Col>
 														<Col lg={4}>
-															<FormGroup className="mb-3"><span className="text-danger">* </span>
+															<FormGroup className="mb-3"><span className="text-danger"> </span>
 																<Label htmlFor="taxablePersonNameInArabic">Taxable Person Name (Arabic)</Label>
 																<Input
 																	type="text"
@@ -270,7 +275,7 @@ dateLimit=()=>{
 															</FormGroup>
 														</Col>
 														<Col lg={4}>
-															<FormGroup className="mb-3"><span className="text-danger">* </span>
+															<FormGroup className="mb-3">
 																<Label htmlFor="taxAgentName">Tax Agent Name</Label>
 																<Input
 																	type="text"
@@ -278,9 +283,16 @@ dateLimit=()=>{
 																	id="taxAgentName"
 																	maxLength="100"
 																	placeholder={"Enter Agenct Name"}
-																	onChange={(option) =>
+																	onChange={(option) =>{
 																		props.handleChange('taxAgentName')(option)
-																	}
+
+																		if(option.target.value !=""){
+																			this.setState({isTAANMandetory:true})
+																		}else{
+																			this.setState({isTAANMandetory:false})
+
+																		}
+																	}}
 																	defaultValue={props.values.taxAgentName}
 																/>
 																
@@ -313,8 +325,7 @@ dateLimit=()=>{
 																			else{
 																			    this.setState({isTANMandetory:false})
 																			}
-																		}
-																	}
+																		}}
 																	defaultValue={props.values.taxAgencyName}
 																/>
 															</FormGroup>
@@ -337,9 +348,7 @@ dateLimit=()=>{
 																			) {																				
 																				props.handleChange('taxAgencyNumber')(option)
 																			}
-																		}
-																		
-																	}
+																		}}
 																	value={props.values.taxAgencyNumber}
 																/>
 																	{props.errors.taxAgencyNumber &&												
@@ -351,22 +360,23 @@ dateLimit=()=>{
 															</FormGroup>
 														</Col>
 														<Col lg={4}>
-															<FormGroup className="mb-3"><span className="text-danger">* </span>
+															<FormGroup className="mb-3">
+																{this.state.isTAANMandetory === true &&(<span className="text-danger">* </span>)}
 																<Label htmlFor="taxAgentApprovalNumber">Tax Agent Approval Number (TAAN) </Label>
 																<Input
 																	type="text"
 																	name="taxAgentApprovalNumber"
 																	id="taxAgentApprovalNumber"
 																	maxLength="8"
-																	placeholder={"Enter Agent Approval Number"}
-															
-																	onChange={(option) => {
-																		
+																	autoComplete='off'
+																	placeholder={"Enter Tax Agent Approval Number (TAAN)"}
+																	onChange={(option) => 
+																		{
 																		if (
 																			option.target.value === '' ||
 																			this.regEx.test(option.target.value)
 																		) {
-																			props.handleChange('taxAgentApprovalNumber')(option);
+																			props.handleChange('taxAgentApprovalNumber')(option)
 																		}
 																	}}
 																	value={props.values.taxAgentApprovalNumber}
@@ -477,6 +487,7 @@ dateLimit=()=>{
 											className="btn-square"
 											onClick={() => {											
 												this.setState({isTANMandetory:false})
+												this.setState({isTAANMandetory:false})
 												closeModal(false);
 											}}
 										>

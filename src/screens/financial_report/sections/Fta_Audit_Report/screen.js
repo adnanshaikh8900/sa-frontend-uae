@@ -81,15 +81,15 @@ class ViewFtaAuditReport extends React.Component {
 			{ label: 'Company Name', value: 'companyName', sort: true },
 			{ label: 'Taxable Person Name En', value: 'taxablePersonNameEn', sort: false },
 			{ label: 'Taxable Person Name Ar', value: 'taxablePersonNameAr', sort: true },
-			{label: 'Tax Registration Number',value: 'taxRegistrationNumber',sort: true,},
+			{ label: 'Tax Registration Number',value: 'taxRegistrationNumber',sort: true,},
 			{ label: 'Tax Agency Name', value: 'TaxAgencyName', sort: true },
 			{ label: 'Tax Agency Number', value: 'taxAgencyNumber', sort: false,align: 'right'  },
-			{ label: 'TaxAgentName', value: 'TaxAgentName', sort: false },
+			{ label: 'Tax Agent Name', value: 'TaxAgentName', sort: false },
 			{ label: 'Tax Agency Agent Number', value: 'taxAgencyAgentNumber', sort: false },
 			{ label: 'Period Start ', value: 'startDate', sort: false },
 			{ label: 'Period End ', value: 'endDate', sort: false },
-			{ label: 'FAFCreationDate ', value: 'creationDate', sort: false },
-			{ label: 'ProductVersion ', value: 'productVersion', sort: false },
+			{ label: 'FAF Creation Date ', value: 'creationDate', sort: false },
+			{ label: 'Product Version ', value: 'productVersion', sort: false },
 		];
 		this.columnHeaderCustomer = [
 			{ label: 'Customer Name', value: 'customerName', sort: true },
@@ -130,8 +130,8 @@ class ViewFtaAuditReport extends React.Component {
 			{ label: 'Supplier Country', value: 'supplierCountry', sort: false },
 			{ label: 'Supplier TRN', value: 'supplierTRN', sort: true },
 			{ label: 'Invoice Date', value: 'invoiceDate', sort: true },
-			{ label: 'Invoice No', value: 'invoiceNo', sort: false },
-			{ label: 'Permit.No', value: 'permitNo', sort: true },
+			{ label: 'Invoice No.', value: 'invoiceNo', sort: false },
+			{ label: 'Permit No.', value: 'permitNo', sort: true },
 			{ label: 'Transaction ID', value: 'transactionID', sort: true },
 			{ label: 'Line No.', value: 'lineNo', sort: false },
 			{ label: 'Product Name', value: 'productName', sort: true },
@@ -139,9 +139,9 @@ class ViewFtaAuditReport extends React.Component {
 			{ label: 'Product Description', value: 'productDescription', sort: false },
 			{ label: 'Purchase Amount AED', value: 'purchaseValue', sort: true },
 			{ label: 'VAT Amount AED', value: 'vatvalue', sort: true },
-			{ label: 'TaxCode', value: 'taxCode', sort: false },
+			{ label: 'Tax Code', value: 'taxCode', sort: false },
 			{ label: 'VAT Amount FCY', value: 'vatfcy', sort: true },
-			{ label: 'PurchaseFCY', value: 'purchaseFCY', sort: true },
+			{ label: 'Purchase FCY', value: 'purchaseFCY', sort: true },
 			{ label: 'FCY Code', value: 'fcycode', sort: false },
 		];
 		this.columnHeaderSupplierTotal = [
@@ -166,7 +166,7 @@ class ViewFtaAuditReport extends React.Component {
 			{ label: 'Transaction Count Total', value: 'transactionCountTotal', sort: true },
 			{ label: 'Total Credit', value: 'totalCredit', sort: false },
 			{ label: 'Total Debit', value: 'totalDebit', sort: true },
-			{label: 'GLTCurrencyt', value: 'gltcurrency', sort: true }
+			{ label: 'GLT Currencyt', value: 'gltcurrency', sort: true }
 		];
 	}
 
@@ -177,7 +177,6 @@ class ViewFtaAuditReport extends React.Component {
 	};
 
 	initializeData = () => {
-		debugger
 		const { initValue } = this.state;
 		const postData = {
 			startDate: initValue.startDate,
@@ -191,7 +190,6 @@ class ViewFtaAuditReport extends React.Component {
 			.then((res) => {
 				const tempData = [];
 				if (res.status === 200) {
-					debugger
 					// res.data.map((item) => {
 					// 	item.map((val) => {
 					// 		tempData.push(val);
@@ -199,7 +197,7 @@ class ViewFtaAuditReport extends React.Component {
 					// 	});
 					// 	return item;
 					// });
-					debugger
+					
 					this.setState(
 						{ FtaAuditData: res.data, csvData: tempData },
 						() => {
@@ -323,9 +321,9 @@ class ViewFtaAuditReport extends React.Component {
 														     onClick={()=>{this.exportExcelFile()}}
 															>Excel</span>
 														</DropdownItem>
-														{/* <DropdownItem onClick={this.exportPDFWithComponent}>
+														<DropdownItem onClick={this.exportPDFWithComponent}>
 															Pdf
-														</DropdownItem> */}
+														</DropdownItem>
 														
 													</DropdownMenu>
 												</Dropdown>
@@ -372,7 +370,9 @@ class ViewFtaAuditReport extends React.Component {
 											<Table responsive>
 											<tr>
 													<td>
+													<b><h5>
 													Company Information Table
+													</h5></b>
 													</td>
 												</tr>
 												<Table>
@@ -396,43 +396,43 @@ class ViewFtaAuditReport extends React.Component {
 												<tbody className="data-column">
 												
 																				<tr>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{this.state.FtaAuditData.companyName}
 																					</td>
-																					<td style={{ width: '18%', textAlign: 'center'}}>
+																					<td style={{ width: '18%', textAlign: 'left'}}>
 																						{this.state.FtaAuditData.taxablePersonNameEn}
 																					</td>
-																					<td style={{ width: '13%', textAlign: 'center'}}>
+																					<td style={{ width: '13%', textAlign: 'left'}}>
 																						{this.state.FtaAuditData.taxablePersonNameAr}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{this.state.FtaAuditData.taxRegistrationNumber}
 																					</td>
-																					<td style={{ width: '18%', textAlign: 'center'}}>
+																					<td style={{ width: '18%', textAlign: 'left'}}>
 																						{this.state.FtaAuditData.taxAgencyName}
 																					</td>
-																					<td style={{ width: '13%', textAlign: 'center'}}>
+																					<td style={{ width: '13%', textAlign: 'left'}}>
 																						{this.state.FtaAuditData.taxAgencyNumber}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{this.state.FtaAuditData.taxAgentName}
 																					</td>
-																					<td style={{ width: '18%', textAlign: 'center'}}>
+																					<td style={{ width: '18%', textAlign: 'left'}}>
 																						{this.state.FtaAuditData.taxAgencyAgentNumber}
 																					</td>
-																					<td style={{ width: '13%', textAlign: 'center'}}>
+																					<td style={{ width: '13%', textAlign: 'left'}}>
 																						
 																						{this.renderDate(this.state.FtaAuditData.startDate,'')}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																					
 																						{this.renderDate(this.state.FtaAuditData.endDate,'')}
 																					</td>
-																					<td style={{ width: '18%', textAlign: 'center'}}>
+																					<td style={{ width: '18%', textAlign: 'left'}}>
 																				
 																						{this.renderDate(this.state.FtaAuditData.creationDate,'')}
 																					</td>
-																					<td style={{ width: '13%', textAlign: 'center'}}>
+																					<td style={{ width: '13%', textAlign: 'left'}}>
 																						{this.state.FtaAuditData.productVersion}
 																					</td>
 																				
@@ -445,9 +445,9 @@ class ViewFtaAuditReport extends React.Component {
 															<> </>
 													</tr>
 													<tr>
-													<td>
-													Customer Data Audit File
-													</td>
+													<td><b><h5>
+													Costumer Data Audit File
+													</h5></b></td>
 												</tr>
 												<Table>
 												
@@ -471,19 +471,19 @@ class ViewFtaAuditReport extends React.Component {
 													{this.state.FtaAuditData &&
 														this.state.FtaAuditData.customerDataResponseModels.map(
 															(item, index) => {
-																debugger
+
 																return (
 																	<>
 																		
 																	
 																				<tr key={index}>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['customerName']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['customerCountry']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['customerTRN']}
 																					</td>
 																					
@@ -500,9 +500,9 @@ class ViewFtaAuditReport extends React.Component {
 												<> </>
 													</tr>
 													<tr>
-													<td>
-													Supplier Data Audit File
-													</td>
+												<td><b><h5>
+												Supplier Data Audit File</h5></b>
+												</td>
 												</tr>
 												<Table>
 												
@@ -531,13 +531,13 @@ class ViewFtaAuditReport extends React.Component {
 																		
 																		
 																				<tr key={index}>
-																				<td style={{ width: '12%', textAlign: 'center'}}>
+																				<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['supplierName']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['supplierCountry']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['supplierTRN']}
 																					</td>
 																					
@@ -555,9 +555,9 @@ class ViewFtaAuditReport extends React.Component {
 												</tr>
 												
 												<tr>
-													<td>
-													Supply Data Information
-													</td>
+												<td><b><h5>
+												Supplier Data Information</h5></b>
+												</td>
 												</tr>
 												<Table>
 												
@@ -586,55 +586,55 @@ class ViewFtaAuditReport extends React.Component {
 																		
 																		
 																				<tr key={index}>
-																				<td style={{ width: '12%', textAlign: 'center'}}>
+																				<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['customerName']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['customerCountry']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['customerTRN']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{this.renderDate(item['invoiceDate'],item)}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['invoiceNo']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['permitNo']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['transactionID']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['lineNo']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['productName']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['productType']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['productDescription']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['supplyValue']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['vatvalue']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['taxCode']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['supplyFCY']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['vatfcy']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['fcycode']}
 																					</td>
 																				
@@ -650,9 +650,9 @@ class ViewFtaAuditReport extends React.Component {
 													<> </>
 												</tr>
 												<tr>
-													<td>
+													<td><b><h5>
 													Customer Supply Listing Total
-													</td>
+													</h5></b></td>
 												</tr>
 												<Table>
 												
@@ -678,13 +678,13 @@ class ViewFtaAuditReport extends React.Component {
 																		
 																		
 																				<tr >
-																				<td style={{ width: '12%', textAlign: 'center'}}>
+																				<td style={{ width: '12%', textAlign: 'left'}}>
 																				{this.state.FtaAuditData.customerTransactionCountTotal}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																					{this.state.FtaAuditData.supplyTotal}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																					{this.state.FtaAuditData.customerVATTotal}
 																					</td>
 																					
@@ -700,9 +700,9 @@ class ViewFtaAuditReport extends React.Component {
 												<> </>
 												</tr>
 												<tr>
-													<td>
+													<td><b><h5>
 													Supply Data Information
-													</td>
+													</h5></b></td>
 												</tr>
 												<Table>
 												
@@ -731,55 +731,55 @@ class ViewFtaAuditReport extends React.Component {
 																		
 																		
 																				<tr key={index}>
-																				<td style={{ width: '12%', textAlign: 'center'}}>
+																				<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['supplierName']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['supplierCountry']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['supplierTRN']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																					{this.renderDate(item['invoiceDate'],item)}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['invoiceNo']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['permitNo']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['transactionID']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['lineNo']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['productName']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['productType']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['productDescription']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['purchaseValue']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['vatvalue']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['taxCode']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['purchaseFCY']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['vatfcy']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['fcycode']}
 																					</td>
 																				
@@ -795,9 +795,9 @@ class ViewFtaAuditReport extends React.Component {
 													<> </>
 												</tr>
 												<tr>
-													<td>
+													<td><b><h5>
 													Supplier Purchase Listing Total
-													</td>
+													</h5></b></td>
 												</tr>
 												<Table>
 												
@@ -823,13 +823,13 @@ class ViewFtaAuditReport extends React.Component {
 																		
 																		
 																				<tr >
-																				<td style={{ width: '12%', textAlign: 'center'}}>
+																				<td style={{ width: '12%', textAlign: 'left'}}>
 																				{this.state.FtaAuditData.supplierTransactionCountTotal}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																					{this.state.FtaAuditData.purchaseTotal}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																					{this.state.FtaAuditData.supplierVATTotal}
 																					</td>
 																					
@@ -844,9 +844,9 @@ class ViewFtaAuditReport extends React.Component {
 												<> </>
 												</tr>
 												<tr>
-													<td>
+													<td><b><h5>
 													General Ledger Table
-													</td>
+													</h5></b></td>
 												</tr>
 												<Table>
 												
@@ -875,35 +875,35 @@ class ViewFtaAuditReport extends React.Component {
 																		
 																		
 																				<tr key={index}>
-																				<td style={{ width: '12%', textAlign: 'center'}}>
+																				<td style={{ width: '12%', textAlign: 'left'}}>
 																						
 																						{this.renderDate(item['transactionDate'],item)}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['accountID']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['accountName']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['transactionDescription']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['name']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['transactionID']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['sourceType']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['credit']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['debit']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['balance']}
 																					</td>
 																				
@@ -919,9 +919,9 @@ class ViewFtaAuditReport extends React.Component {
 													<> </>
 												</tr>
 												<tr>
-													<td>
+													<td><b><h5>
 													General Ledger Table Total
-													</td>
+													</h5></b></td>
 												</tr>
 												<Table>
 												
@@ -947,16 +947,16 @@ class ViewFtaAuditReport extends React.Component {
 																		
 																		
 																				<tr >
-																				<td style={{ width: '12%', textAlign: 'center'}}>
+																				<td style={{ width: '12%', textAlign: 'left'}}>
 																				{this.state.FtaAuditData.transactionCountTotal}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																					{this.state.FtaAuditData.totalCredit}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																					{this.state.FtaAuditData.totalDebit}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																					{this.state.FtaAuditData.gltcurrency}
 																					</td>
 																				

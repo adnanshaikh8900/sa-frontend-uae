@@ -861,6 +861,7 @@ RemainingBalance:"Remaining Balance",
 
 
 //View
+InvoiceAmountIn:"Invoice Amount In",
 BalanceDue:"Balance Due",	
 BillTo:"Bill To",	
 CreditTo:"Credit To",

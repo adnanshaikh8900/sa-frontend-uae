@@ -137,12 +137,10 @@ class RFQTemplate extends Component {
 											fontWeight: '700',
 											textTransform: 'uppercase',
 											color: 'black',
+											marginLeft:'4rem',
 										}}
 									>
-									{strings.Quotation
-									+" "+
-									strings.Details
-									}
+									{strings.Quotation}
 									</div>
 
 							</div>
@@ -259,6 +257,7 @@ class RFQTemplate extends Component {
 										{strings.UnitCost }
 									</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.Excise}</th>
+									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.ExciseAmount}</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.Vat }</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.VatAmount }</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
@@ -288,6 +287,7 @@ class RFQTemplate extends Component {
 												{QuotationData.currencyIsoCode + " " +item.unitPrice}
 												</td>
 												<td style={{ textAlign: 'right' }}>{item.exciseTaxId ? this.renderExcise(item):"-"}</td>
+												<td style={{ textAlign: 'right' }}>{item.exciseAmount}</td>
 												<td
 													style={{ textAlign: 'right' }}
 												>{`${item.vatPercentage}%`}</td>

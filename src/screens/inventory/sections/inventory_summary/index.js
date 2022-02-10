@@ -59,7 +59,7 @@ class InventorySummary extends React.Component {
 			initValue: {
 				startDate: moment().startOf('month').format('DD/MM/YYYY'),
 				// endDate: moment().endOf('month').format('DD/MM/YYYY'),
-				endDate: moment().local().format('DD/MM/YYYY'),
+				endDate: moment().local().format('DD-MM-YYYY'),
 				
 			},
 			openModal:false,
@@ -370,7 +370,7 @@ class InventorySummary extends React.Component {
 											<br/>
 											<br/>
 										
-											As on {initValue.endDate}
+											As on {initValue.endDate.replaceAll("/","-")}
 											
 									</div>
 									

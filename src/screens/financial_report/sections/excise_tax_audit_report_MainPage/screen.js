@@ -342,12 +342,12 @@ class ExciseTaxAuditReport extends React.Component {
 		let dateArr = cell ? cell.split("-") : [];
 
 
-		return (<>{dateArr[1]}</>);
+		return (<>{dateArr[1].replaceAll("/","-")}</>);
 	};
 	renderStartDate = (cell, row) => {
 		let dateArr = cell ? cell.split("-") : [];
 
-		return (<>{dateArr[0]}</>);
+		return (<>{dateArr[0].replaceAll("/","-")}</>);
 	};
 	render() {
 		var { ftaAuditReporttDataList, csvFileNamesData, dialog } = this.state;

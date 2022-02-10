@@ -310,9 +310,9 @@ class ProductModal extends React.Component {
 								otherwise: Yup.string(),
 							}),
 							productPriceType: Yup.string().required(
-								'At least one Selling type is required',
+								'At least one Selling type is Required',
 							),
-							productCode: Yup.string().required('Product Code is required'),
+							productCode: Yup.string().required('Product Code is Required'),
 							vatCategoryId: Yup.string()
 								.required('Vat Category is Required')
 								.nullable(),

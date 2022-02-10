@@ -829,6 +829,7 @@ RemainingBalance:"Solde restant",
 
 
 //View
+InvoiceAmountIn:"Montant de la facture en entrée",
 BalanceDue:"Solde dû",	
 BillTo:"Facturer à",	
 Company:"Compagnie",	

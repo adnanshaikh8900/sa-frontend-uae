@@ -629,6 +629,40 @@ render() {
 												</b>
 											</td>
 										</tr>
+										{invoiceData.exchangeRate == 1 ? " ":
+										<tr style={{ background: '#f2f2f2' }}>
+											<td style={{ width: '40%' }}>
+												<strong>{strings.InvoiceAmountIn}{" "+invoiceData.baseCurrencyIsoCode}</strong>
+											</td>
+											<td>
+												<b
+													style={{
+														fontWeight: '600',
+														display: 'flex',
+														justifyContent: 'space-between',
+													}}
+												>
+													<span style={{ marginLeft: '2rem' }}></span>
+													<span>
+														{invoiceData.totalAmount ? (
+															<Currency
+															value={invoiceData.totalAmount * invoiceData.exchangeRate}
+																currencySymbol={
+																	invoiceData.baseCurrencyIsoCode
+																}
+															/>
+														) : (
+															<Currency
+																value={0}
+																currencySymbol={
+																	invoiceData.baseCurrencyIsoCode
+																}
+															/>
+														)}
+													</span>
+												</b>
+											</td>
+										</tr>}
 									</tbody>
 								</Table>
 								</div>		

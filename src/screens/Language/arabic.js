@@ -834,6 +834,7 @@ RemainingBalance:"الرصيد المتبقي",
 
 
 //View
+InvoiceAmountIn:"مبلغ الفاتورة",
 BalanceDue:"الرصيد المستحق",	
 BillTo:"مشروع قانون ل",	
 Company:"شركة",	

@@ -1429,7 +1429,7 @@ class DetailContact extends React.Component {
 																				props.handleChange('stateId')('');
 																			}
 																		}}
-																		placeholder={strings.Select + props.values.billingcountryId === 229 ? "Emirites" : "State / Provinces"}
+																		placeholder={strings.Select + props.values.billingcountryId === 229 || props.values.billingcountryId.value === 229 ? "Emirites" : "State / Provinces"}
 																		id="stateId"
 																		name="stateId"
 																		className={

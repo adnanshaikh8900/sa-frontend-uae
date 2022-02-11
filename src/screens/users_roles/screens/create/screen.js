@@ -285,7 +285,7 @@ getvalidation=()=>{
 												}}
 												validationSchema={Yup.object().shape({
 													name: Yup.string().required(
-														'Role Name is required',
+														'Role Name is Required',
 													),
 												
 

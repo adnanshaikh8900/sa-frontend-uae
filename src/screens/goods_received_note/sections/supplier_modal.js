@@ -186,21 +186,21 @@ errors.mobileNumber =
 								.email('Invalid Email'),
 							//telephone: Yup.number().required('Telephone Number is Required'),
 							mobileNumber: Yup.string()
-								.required('Mobile Number is required'),
+								.required('Mobile Number is Required'),
 								addressLine1: Yup.string()
-								.required("Address Line 1 is required"),
+								.required("Address Line 1 is Required"),
 								 addressLine2: Yup.string()
-								.required("Address Line 2 is required"),
+								.required("Address Line 2 is Required"),
 								 addressLine3: Yup.string()
-								.required("Address Line 3 is required"),
+								.required("Address Line 3 is Required"),
 								 countryId: Yup.string()
-								.required("Country is required"),
+								.required("Country is Required"),
 								stateId: Yup.string()
-								.required("State Region is required"),
+								.required("State Region is Required"),
 								 city: Yup.string()
 								.required("City is Required"),
 							//     addressLine1: Yup.string()
-							//       .required("Address is required"),
+							//       .required("Address is Required"),
 							// countryId: Yup.string()
 							// 	.required('Country is Required')
 							// 	.nullable(),
@@ -251,7 +251,7 @@ errors.mobileNumber =
 													</Label>
 													<Input
 														type="text"
-														maxLength="26"
+														maxLength="100"
 														id="firstName"
 														name="firstName"
 														onChange={(option) => {
@@ -283,7 +283,7 @@ errors.mobileNumber =
 													<Label htmlFor="middleName">{strings.MiddleName}</Label>
 													<Input
 														type="text"
-														maxLength="26"
+														maxLength="100"
 														id="middleName "
 														name="middleName "
 														onChange={(option) => {
@@ -316,7 +316,7 @@ errors.mobileNumber =
 													<Label htmlFor="lastName"><span className="text-danger">*</span>{strings.LastName}</Label>
 													<Input
 														type="text"
-														maxLength="26"
+														maxLength="100"
 														id="lastName"
 														name="lastName"
 														onChange={(option) => {
@@ -407,7 +407,7 @@ errors.mobileNumber =
 													<Label htmlFor="organizationName">{strings.OrganizationName}</Label>
 													<Input
 														type="text"
-														maxLength="26"
+														maxLength="100"
 														id="organizationName "
 														name="organizationName "
 														onChange={(option) => {
@@ -555,7 +555,7 @@ errors.mobileNumber =
 													<Label htmlFor="select">{strings.POBoxNumber}</Label>
 													<Input
 														type="text"
-														maxLength="10"
+														maxLength="50"
 														id="poBoxNumber"
 														name="poBoxNumber"
 														onChange={(value) => {
@@ -842,7 +842,7 @@ errors.mobileNumber =
 														id="city"
 														name="city"
 														type="text"
-														maxLength="20"
+														maxLength="100"
 														className={
 															props.errors.city && props.touched.city
 																? 'is-invalid'

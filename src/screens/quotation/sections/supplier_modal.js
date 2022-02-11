@@ -185,24 +185,24 @@ errors.mobileNumber =
 								.email('Invalid Email'),
 							//telephone: Yup.number().required('Telephone Number is Required'),
 							mobileNumber: Yup.string()
-								.required('Mobile Number is required'),
+								.required('Mobile Number is Required'),
                             	addressLine1: Yup.string()
-								.required("Address Line 1 is required"),
+								.required("Address Line 1 is Required"),
 								 addressLine2: Yup.string()
-								.required("Address Line 2 is required"),
+								.required("Address Line 2 is Required"),
 								 addressLine3: Yup.string()
-								.required("Address Line 3 is required"),
+								.required("Address Line 3 is Required"),
 								 countryId: Yup.string()
-								.required("Country is required"),
+								.required("Country is Required"),
 								stateId: Yup.string()
-								.required("State Region is required"),
+								.required("State Region is Required"),
 								 city: Yup.string()
 								.required("City is Required"),
 
 								
 						
 							//     addressLine1: Yup.string()
-							//       .required("Address is required"),
+							//       .required("Address is Required"),
 							// countryId: Yup.string()
 							// 	.required('Country is Required')
 							// 	.nullable(),

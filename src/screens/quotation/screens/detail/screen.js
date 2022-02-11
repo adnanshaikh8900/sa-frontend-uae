@@ -213,6 +213,13 @@ class DetailQuotation extends React.Component {
 										: [],
 										placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 										total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
+										discount: res.data.discount ? res.data.discount : 0,
+										discountPercentage: res.data.discountPercentage
+											? res.data.discountPercentage
+											: 0,
+										discountType: res.data.discountType
+											? res.data.discountType
+											: '',
 								
 								},
 								customer_taxTreatment_des : res.data.taxtreatment ? res.data.taxtreatment : '',
@@ -222,7 +229,10 @@ class DetailQuotation extends React.Component {
 									? res.data.poQuatationLineItemRequestModelList
 									: [],
 								selectedContact: res.data.customerId ? res.data.customerId : '',
-							
+								discountAmount: res.data.discount ? res.data.discount : 0,
+								discountPercentage: res.data.discountPercentage
+									? res.data.discountPercentage
+									: 0,
 								loading: false,
 							},
 							() => {
@@ -576,6 +586,127 @@ min="0"
 			/>
 		);
 	};
+
+	
+	renderDiscount = (cell, row, props) => {
+        const { discountOptions } = this.state;
+       let idx;
+       this.state.data.map((obj, index) => {
+           if (obj.id === row.id) {
+               idx = index;
+           }
+           return obj;
+       });
+
+       return (
+           <Field
+               // name={`lineItemsString.${idx}.vatCategoryId`}
+               render={({ field, form }) => (
+               <div>
+               <div  class="input-group">
+                   <Input
+                   type="text"
+                   min="0"
+                       maxLength="14,2"
+                       value={row['discount'] !== 0 ? row['discount'] : 0}
+                       onChange={(e) => {
+                           if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+                               this.selectItem(
+                                   e.target.value,
+                                   row,
+                                   'discount',
+                                   form,
+                                   field,
+                                   props,
+                               );
+                           }
+
+                               this.updateAmount(
+                                   this.state.data,
+                                   props,
+                               );
+
+                       }}
+                       placeholder={strings.discount}
+                       className={`form-control
+           ${
+                           props.errors.lineItemsString &&
+                           props.errors.lineItemsString[parseInt(idx, 10)] &&
+                           props.errors.lineItemsString[parseInt(idx, 10)].discount &&
+                           Object.keys(props.touched).length > 0 &&
+                           props.touched.lineItemsString &&
+                           props.touched.lineItemsString[parseInt(idx, 10)] &&
+                           props.touched.lineItemsString[parseInt(idx, 10)].discount
+                               ? 'is-invalid'
+                               : ''
+                       }`}
+   type="text"
+   />
+    <div class="dropdown open input-group-append">
+
+        <div 	style={{width:'100px'}}>
+        <Select
+
+
+                                                                                           options={discountOptions}
+                                                                                           id="discountType"
+                                                                                           name="discountType"
+                                                                                           value={
+                                                                                               discountOptions &&
+                                                                                               selectOptionsFactory
+                                                                                                   .renderOptions('label', 'value', discountOptions, 'discount')
+                                                                                                   .find((option) => option.value == row.discountType)
+                                                                                           }
+                                                                                           // onChange={(item) => {
+                                                                                           // 	props.handleChange(
+                                                                                           // 		'discountType',
+                                                                                           // 	)(item);
+                                                                                           // 	props.handleChange(
+                                                                                           // 		'discountPercentage',
+                                                                                           // 	)('');
+                                                                                           // 	props.setFieldValue(
+                                                                                           // 		'discount',
+                                                                                           // 		0,
+                                                                                           // 	);
+                                                                                           // 	this.setState(
+                                                                                           // 		{
+                                                                                           // 			discountPercentage: '',
+                                                                                           // 			discountAmount: 0,
+                                                                                           // 		},
+                                                                                           // 		() => {
+                                                                                           // 			this.updateAmount(
+                                                                                           // 				this.state.data,
+                                                                                           // 				props,
+                                                                                           // 			);
+                                                                                           // 		},
+                                                                                           // 	);
+                                                                                           // }}
+                                                                                           onChange={(e) => {
+                                                                                               this.selectItem(
+                                                                                                   e.value,
+                                                                                                   row,
+                                                                                                   'discountType',
+                                                                                                   form,
+                                                                                                   field,
+                                                                                                   props,
+                                                                                               );
+                                                                                               this.updateAmount(
+                                                                                                   this.state.data,
+                                                                                                   props,
+                                                                                               );
+                                                                                           }}
+                                                                                       />
+             </div>
+              </div>
+              </div>
+               </div>
+
+                   )}
+
+           />
+       );
+   }
+
 	renderSubTotal = (cell, row,extraData) => {
 		// return row.subTotal ? (
 		// 	<Currency
@@ -615,6 +746,8 @@ min="0"
 					vatCategoryId: '',
 					subTotal: 0,
 					productId: '',
+					discountType :'FIXED',
+					discount: 0,
 				}),
 				idCount: this.state.idCount + 1,
 			},
@@ -996,6 +1129,9 @@ min="0"
 			customerId,
 			quotationNumber,
 			notes,
+			discount,
+			discountType,
+			discountPercentage,
 			totalVatAmount,
 			totalAmount,
 			currency,
@@ -1019,6 +1155,7 @@ min="0"
 		formData.append('totalVatAmount', this.state.initValue.totalVatAmount);
 		formData.append('totalAmount', this.state.initValue.totalAmount);
 		formData.append('totalExciseAmount', this.state.initValue.total_excise);
+		formData.append('discount',this.state.initValue.discount);
         if(placeOfSupplyId){
 		formData.append('placeOfSupplyId' , placeOfSupplyId.value ? placeOfSupplyId.value : placeOfSupplyId);}
 		// formData.append('exciseType', this.state.checked);
@@ -1250,6 +1387,20 @@ min="0"
 	
 		return customer_taxTreatmentId;
 	}
+	checkAmount=(discount)=>{
+		const { initValue } = this.state;
+		   if(discount >= initValue.totalAmount){
+				   this.setState({
+					   param:true
+				   });
+		   }
+		   else{
+			   this.setState({
+				   param:false
+			   });
+		   }
+
+	   }
 	render() {
 		strings.setLanguage(this.state.language);
 		const { data, discountOptions, initValue, loading, dialog } = this.state;
@@ -1851,6 +2002,15 @@ console.log(this.state.supplier_currency)
 																			then the Excise dropdown will be Disabled
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn> 
+																	<TableHeaderColumn
+																	width="12%"
+																		dataField="discount"
+																		dataFormat={(cell, rows) =>
+																			this.renderDiscount(cell, rows, props)
+																		}
+																	>
+																	Discount Type
+																	</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="vat"
 																			dataFormat={(cell, rows) =>
@@ -1920,6 +2080,24 @@ console.log(this.state.supplier_currency)
 																				</Col>
 																			</Row>
 																		</div>
+																		<div className="total-item p-2">
+																				<Row>
+																					<Col lg={6}>
+																						<h5 className="mb-0 text-right">
+																							{strings.Discount}
+																						</h5>
+																					</Col>
+																					<Col lg={6} className="text-right">
+																						<label className="mb-0">
+																						{this.state.supplier_currency_symbol} &nbsp;
+																							{this.state.initValue.discount  ? '-'+initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })
+																							
+																						}
+																						
+																						</label>
+																					</Col>
+																				</Row>
+																			</div>
 																			<div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>

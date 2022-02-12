@@ -228,7 +228,7 @@ class GenerateVatReportModal extends React.Component {
 																	</b>	
 
 															</FormGroup>
-															
+
 														</Col>
 													{/* <Col lg={4}>
 													{this.props.monthOption==0	?	(<FormGroup className="mb-3">

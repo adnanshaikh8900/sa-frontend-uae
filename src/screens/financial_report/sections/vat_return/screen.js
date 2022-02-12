@@ -106,6 +106,8 @@ class VatReturnsReport extends React.Component {
 			nameForRasAlKhalmah: '',
 			totalVatForRasAlKhaimah: '',
 			zeroRatedSupplies:'',
+			reverseChargeProvisionsTotalAmount:'',
+			reverseChargeProvisionsVatAmount:'',
 			totalValueOfDueTaxForThePeriod:'',
 			standardRatedExpensesTotalAmount:'',
 			standardRatedExpensesVatAmount:'',
@@ -828,15 +830,42 @@ class VatReturnsReport extends React.Component {
 																<td className="mainLable ">3</td>
 																<td className="pt-0 pb-0">Supplies subject to the reverse charge provisions</td>
 																<td className="pt-0 pb-0 " style={{ textAlign: 'right' }}>
-																			{this.state.data[
+																{this.state.data[
+																				'reverseChargeProvisionsTotalAmount'
+																			] ? (
+																		<Currency
+																			value={this.state.data[
 																				'reverseChargeProvisionsTotalAmount'
 																			] }
-																		
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		'0.00'
+																	)}
 																</td>
 																<td className="pt-0 pb-0 " style={{ textAlign: 'right' }}>
 																			{this.state.data[
 																				'reverseChargeProvisionsVatAmount'
-																			]}
+																			] ? (
+																		<Currency
+																			value={this.state.data[
+																				'reverseChargeProvisionsVatAmount'
+																			] }
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		'0.00'
+																	)}
 																			
 																</td>
 																<td className="pt-0 pb-0 " style={{ textAlign: 'right' }}>

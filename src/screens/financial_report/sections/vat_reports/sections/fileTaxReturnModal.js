@@ -319,7 +319,7 @@ dateLimit=()=>{
 													<Row>
 														<Col lg={4}>
 															<FormGroup className="mb-3">
-															{this.state.isTANMandetory === true &&(<span className="text-danger">* </span>)}
+															{this.state.isTANMandetory === true &&(<span className="text-danger"> </span>)}
 																<Label htmlFor="taxAgencyName">Tax Agency Name </Label>
 																<Input
 																	type="text"

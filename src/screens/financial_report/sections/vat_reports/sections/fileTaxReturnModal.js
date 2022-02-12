@@ -95,6 +95,7 @@ class FileTaxReturnModal extends React.Component {
 			},
 			isTANMandetory:false,
 			isTAANMandetory:false,
+			isTaxAgentName:false,
 			dialog: null,
 			filterData: {
 				name: '',
@@ -198,8 +199,16 @@ dateLimit=()=>{
 							if (this.state.isTANMandetory === true &&( values.taxAgencyNumber=="" ||values.taxAgencyNumber==undefined)) 
 							{
 								errors.taxAgencyNumber ='TAN is Required';
-							}
-							else if (this.state.isTAANMandetory === true && (values.taxAgentApprovalNumber=="" || values.taxAgentApprovalNumber==undefined))
+								if (values.taxAgentApprovalNumber=="" || values.taxAgentApprovalNumber==undefined)
+								{
+									errors.taxAgentApprovalNumber = 'TAAN is Required';
+								}
+								if (values.taxAgentName=="" || values.tax==undefined)
+								{
+									errors.taxAgentName = 'Tax Agent Name is Required';
+								}
+							}debugger
+							if (this.state.isTAANMandetory === true && (values.taxAgentApprovalNumber=="" || values.taxAgentApprovalNumber==undefined))
 							{
 								errors.taxAgentApprovalNumber = 'TAAN is Required';
 							}												
@@ -276,6 +285,7 @@ dateLimit=()=>{
 														</Col>
 														<Col lg={4}>
 															<FormGroup className="mb-3">
+															{this.state.isTANMandetory === true &&(<span className="text-danger">* </span>)}
 																<Label htmlFor="taxAgentName">Tax Agent Name</Label>
 																<Input
 																	type="text"
@@ -309,6 +319,7 @@ dateLimit=()=>{
 													<Row>
 														<Col lg={4}>
 															<FormGroup className="mb-3">
+															{this.state.isTANMandetory === true &&(<span className="text-danger"> </span>)}
 																<Label htmlFor="taxAgencyName">Tax Agency Name </Label>
 																<Input
 																	type="text"
@@ -361,7 +372,9 @@ dateLimit=()=>{
 														</Col>
 														<Col lg={4}>
 															<FormGroup className="mb-3">
-																{this.state.isTAANMandetory === true &&(<span className="text-danger">* </span>)}
+																	
+																{(this.state.isTANMandetory === true || this.state.isTAANMandetory) &&(<span className="text-danger">* </span>)}
+															
 																<Label htmlFor="taxAgentApprovalNumber">Tax Agent Approval Number (TAAN) </Label>
 																<Input
 																	type="text"

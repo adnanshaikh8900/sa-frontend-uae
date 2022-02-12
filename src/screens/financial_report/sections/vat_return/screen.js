@@ -106,6 +106,8 @@ class VatReturnsReport extends React.Component {
 			nameForRasAlKhalmah: '',
 			totalVatForRasAlKhaimah: '',
 			zeroRatedSupplies:'',
+			reverseChargeProvisionsTotalAmount:'',
+			reverseChargeProvisionsVatAmount:'',
 			totalValueOfDueTaxForThePeriod:'',
 			standardRatedExpensesTotalAmount:'',
 			standardRatedExpensesVatAmount:'',
@@ -828,16 +830,43 @@ class VatReturnsReport extends React.Component {
 																<td className="mainLable ">3</td>
 																<td className="pt-0 pb-0">Supplies subject to the reverse charge provisions</td>
 																<td className="pt-0 pb-0 " style={{ textAlign: 'right' }}>
-																			{/* {this.state.data[
-																				'totalAmountForDubai'
-																			] } */}
-																			0.00
+																{this.state.data[
+																				'reverseChargeProvisionsTotalAmount'
+																			] ? (
+																		<Currency
+																			value={this.state.data[
+																				'reverseChargeProvisionsTotalAmount'
+																			] }
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		'0.00'
+																	)}
 																</td>
 																<td className="pt-0 pb-0 " style={{ textAlign: 'right' }}>
-																			{/* {this.state.data[
-																				'totalVatForDubai'
-																			]} */}
-																			0.00
+																			{this.state.data[
+																				'reverseChargeProvisionsVatAmount'
+																			] ? (
+																		<Currency
+																			value={this.state.data[
+																				'reverseChargeProvisionsVatAmount'
+																			] }
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		'0.00'
+																	)}
+																			
 																</td>
 																<td className="pt-0 pb-0 " style={{ textAlign: 'right' }}>
 																			{/* {this.state.data[
@@ -1069,12 +1098,12 @@ class VatReturnsReport extends React.Component {
 																<td className="mainLable ">10</td>
 																<td className="pt-0 pb-0">{strings.Suppliessubjecttothereversechargeprovisions}</td>
 																<td className="pt-0 pb-0 " style={{ textAlign: 'right' }}>
-																			{/* {this.state.data[
-																				'standardRatedExpensesTotalAmount'
+																			{this.state.data[
+																				'reverseChargeProvisionsTotalAmount'
 																			] ? (
 																		<Currency
 																			value={this.state.data[
-																				'standardRatedExpensesTotalAmount'
+																				'reverseChargeProvisionsTotalAmount'
 																			] }
 																			currencySymbol={
 																				universal_currency_list[0]
@@ -1085,16 +1114,16 @@ class VatReturnsReport extends React.Component {
 																		/>
 																	) : (
 																		'0.00'
-																	)} */} 0.00
+																	)}
 																			
 																</td>
 																<td className="pt-0 pb-0 " style={{ textAlign: 'right' }}>
-																			{/* {this.state.data[
-																				'standardRatedExpensesVatAmount'
+																			{this.state.data[
+																				'reverseChargeProvisionsVatAmount'
 																			] ? (
 																		<Currency
 																			value={this.state.data[
-																				'standardRatedExpensesVatAmount'
+																				'reverseChargeProvisionsVatAmount'
 																			] }
 																			currencySymbol={
 																				universal_currency_list[0]
@@ -1105,7 +1134,7 @@ class VatReturnsReport extends React.Component {
 																		/>
 																	) : (
 																		'0.00'
-																	)} */}0.00
+																	)}
 																	
 																</td>
 																<td className="pt-0 pb-0 " style={{ textAlign: 'right' }}>

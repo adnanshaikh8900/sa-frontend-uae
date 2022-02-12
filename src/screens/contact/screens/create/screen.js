@@ -1188,7 +1188,8 @@ class CreateContact extends React.Component {
 																				)
 																				: []
 																		}
-																		value={props.values.billingStateProvince}
+																		// value={props.values.billingStateProvince}
+																		
 																		onChange={(option) => {
 																			if (option && option.value) {
 																				props.handleChange('billingStateProvince')(option);																	
@@ -1196,7 +1197,7 @@ class CreateContact extends React.Component {
 																				props.handleChange('stateId')('');
 																			}
 																		}}
-																		placeholder={strings.Select + props.values.billingcountryId === 229 ? "Emirates" : "State / Provinces"}
+																		placeholder={strings.Select + props.values.billingcountryId === 229 || props.values.billingcountryId.value === 229 ? "Emirites" : "State / Provinces"}
 																		id="stateId"
 																		name="stateId"
 																		className={
@@ -1512,7 +1513,8 @@ class CreateContact extends React.Component {
 																				)
 																				: []
 																		}
-																		value={ country_list &&
+																		value={
+																			country_list &&
 																				selectOptionsFactory
 																					.renderOptions(
 																						'countryName',
@@ -1523,7 +1525,7 @@ class CreateContact extends React.Component {
 																					.find(
 																						(option) =>
 																							option.value ===
-																							+props.values.shippingCountryId.value,
+																							+props.values.shippingCountryId,
 																					)
 																		}
 																		onChange={(option) => {
@@ -1532,9 +1534,9 @@ class CreateContact extends React.Component {
 																				this.getStateListForShippingAddress(option.value);
 																			} else {
 																				props.handleChange('shippingCountryId')('');
-																				// this.getStateListForShippingAddress("");
+																				// this.getStateListForShippingAddress('');
 																			}
-																			props.handleChange('stateId')({
+																			props.handleChange('shippingStateId')({
 																				label: 'Select State',
 																				value: '',
 																			});
@@ -1561,9 +1563,10 @@ class CreateContact extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="shippingStateId"><span className="text-danger">* </span>
 																		{/* {strings.StateRegion} */}
-																		{props.values.billingcountryId === 229 ? "Emirites" : "State / Provinces"}
+																		{props.values.shippingCountryId === 229 || props.values.shippingCountryId.value === 229? "Emirites" : "State / Provinces"}
 																	</Label>
 																	<Select
+																		
 																		styles={customStyles}
 																		options={
 																			state_list_for_shipping
@@ -1571,14 +1574,15 @@ class CreateContact extends React.Component {
 																					'label',
 																					'value',
 																					state_list_for_shipping,
-																					props.values.billingcountryId === 229 ? "Emirites" : "State / Provinces",
+																					props.values.shippingCountryId === 229 || props.values.shippingCountryId.value === 229? "Emirites" : "State / Provinces",
 																				)
 																				: []
 																		}
-																		value={ state_list_for_shipping.find(
+																		value={
+																			state_list_for_shipping.find(
 																					(option) =>
 																						option.value ===
-																						+props.values.shippingStateId.value,
+																						+props.values.shippingStateId,
 																				)
 																		}
 																		onChange={(option) => {
@@ -1588,7 +1592,7 @@ class CreateContact extends React.Component {
 																				props.handleChange('shippingStateId')('');
 																			}
 																		}}
-																		placeholder={strings.Select + props.values.billingcountryId === 229 ? "Emirites" : "State / Provinces"}
+																		placeholder={strings.Select + props.values.shippingCountryId === 229 || props.values.shippingCountryId.value === 229 ? "Emirites" : "State / Provinces"}
 																		id="shippingStateId"
 																		name="shippingStateId"
 																		className={

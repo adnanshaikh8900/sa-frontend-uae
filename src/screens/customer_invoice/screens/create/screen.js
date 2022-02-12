@@ -2191,7 +2191,7 @@ discountType = (row) =>
 															</Col>
 															<Col  lg={2}>
 															<Input
-																type="number"
+																type="text"
 															min="0"	
 																		disabled
 																				id="currencyName"

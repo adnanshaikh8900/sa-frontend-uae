@@ -151,8 +151,8 @@ class GenerateVatReportModal extends React.Component {
 		const postData = {
 			// startDate: moment(this.state.initValue.startDate).format('DD/MM/YYYY'),
 			// endDate: moment(this.state.initValue.endDate).format('DD/MM/YYYY'),
-			startDate:this.getStartDate().replaceAll("/","-"),
-			endDate:this.getEndDate().replaceAll("/","-")
+			startDate:this.getStartDate().replaceAll("-","/"),
+			endDate:this.getEndDate().replaceAll("-","/")
 		};
 
 		this.props.vatReportActions
@@ -228,7 +228,7 @@ class GenerateVatReportModal extends React.Component {
 																	</b>	
 
 															</FormGroup>
-															
+
 														</Col>
 													{/* <Col lg={4}>
 													{this.props.monthOption==0	?	(<FormGroup className="mb-3">

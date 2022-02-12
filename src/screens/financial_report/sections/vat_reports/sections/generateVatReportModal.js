@@ -353,6 +353,8 @@ class GenerateVatReportModal extends React.Component {
 								<Button
 									color="primary"
 									className="btn-square "
+									title={this.state.monthlyDate ? "" :"Please Select Month"}
+									disabled={this.state.monthlyDate ? false :true}
 									onClick={this.generateReport}
 								// disabled={selectedRows.length === 0}
 

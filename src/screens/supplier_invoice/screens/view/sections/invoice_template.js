@@ -412,11 +412,29 @@ class InvoiceTemplate extends Component {
 												<td style={{ textAlign: 'right' }}>{item.discount}</td>
 												<td style={{ textAlign: 'right' }}>{item.discountType}</td>
 												<td>{item.exciseTaxId ? this.renderExcise(item):"-"}</td>
-												<td style={{ textAlign: 'right' }}>{item.exciseAmount}</td>
+												<td style={{ textAlign: 'right' }}>
+													<Currency
+														value={item.exciseAmount}
+														currencySymbol={
+															currencyData[0]
+																? currencyData[0].currencyIsoCode
+																: 'USD'
+														}
+													/>
+												</td>
 												<td
 													style={{ textAlign: 'right' }}
 												>{`${item.vatPercentage}%`}</td>
-													<td style={{ textAlign: 'right' }}>{item.vatAmount}</td>
+											    <td style={{ textAlign: 'right' }}>
+												<Currency
+														value={item.vatAmount}
+														currencySymbol={
+															currencyData[0]
+																? currencyData[0].currencyIsoCode
+																: 'USD'
+														}
+													/>
+												</td>
 												<td style={{ textAlign: 'right' }}>
 													<Currency
 														value={item.subTotal}

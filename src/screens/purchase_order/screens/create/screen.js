@@ -564,7 +564,7 @@ class CreatePurchaseOrder extends React.Component {
 		// 	/>
 		// );
 		let value =  row.vatAmount && row.vatAmount != 0 ?  row.vatAmount:0
-		return value === 0 ? this.state.supplier_currency_symbol +" "+ value.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ row.value.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return value === 0 ? this.state.supplier_currency_symbol +" "+ value.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ value.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
 	};
 
 	componentDidMount = () => {

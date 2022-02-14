@@ -215,6 +215,25 @@ class Contact extends React.Component {
         );
 
     };
+	getActionButtons = (params) => {
+		return (
+	<>
+	{/* BUTTON ACTIONS */}
+			{/* View */}
+			<Button
+				className="Ag-gridActionButtons btn-sm"
+				title='Edit'
+				color="secondary"
+
+					onClick={()=>
+						
+						this.goToDetail(params.data.id)  }
+			
+			>		<i className="fas fa-edit"/> </Button>
+	</>
+		)
+	}
+
 	bulkDelete = () => {
 		const { selectedRows } = this.state;
 		this.props.contactActions
@@ -487,9 +506,7 @@ class Contact extends React.Component {
 							cursor: 'pointer',
 							}}
 						
-							onClick={()=>{
-								
-								this.goToDetail(params.data.id) }}                                                                  
+						                                                
 			>
 			{params.value}
 			</label>
@@ -524,7 +541,18 @@ class Contact extends React.Component {
 													<label className="badge label-due"> InActive</label>
 										}
 				></AgGridColumn>  
-			
+				<AgGridColumn field="action"
+										// className="Ag-gridActionButtons"
+										headerName="Actions"
+										cellRendererFramework={(params) =>
+											<div
+											 className="Ag-gridActionButtons"
+											 >
+												{this.getActionButtons(params)}
+											</div>
+
+										}
+									></AgGridColumn>
 			</AgGridReact>  
 			<div className="example-header mt-1">
 					Page Size:

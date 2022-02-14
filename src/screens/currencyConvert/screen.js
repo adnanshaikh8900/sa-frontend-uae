@@ -392,6 +392,23 @@ class CurrencyConvert extends React.Component {
 		);
 	};
 
+	getActionButtons = (params) => {
+		return (
+	<>
+	{/* BUTTON ACTIONS */}
+			{/* View */}
+			<Button
+				className="Ag-gridActionButtons btn-sm"
+				title='Edit'
+				color="secondary"
+
+				onClick={()=>this.goToCurrencyDetail(params.data.currencyConversionId) }    
+			
+			>		<i className="fas fa-edit"/> </Button>
+	</>
+		)
+	}
+
 	render() {
 		strings.setLanguage(this.state.language);
 		const {
@@ -603,7 +620,7 @@ class CurrencyConvert extends React.Component {
 					style={{
 						cursor: 'pointer',
 						}}
-					onClick={()=>this.goToCurrencyDetail(params.data.currencyConversionId) }                                                             
+				                                                         
 		>
 		{params.value}
 		</label>
@@ -639,6 +656,18 @@ class CurrencyConvert extends React.Component {
 													<label className="badge label-due"> InActive</label>
 										}
 				></AgGridColumn>  
+					<AgGridColumn field="action"
+										// className="Ag-gridActionButtons"
+										headerName="Actions"
+										cellRendererFramework={(params) =>
+											<div
+											 className="Ag-gridActionButtons"
+											 >
+												{this.getActionButtons(params)}
+											</div>
+
+										}
+									></AgGridColumn> 	
 			
 			</AgGridReact>  
 			<div className="example-header mt-1">

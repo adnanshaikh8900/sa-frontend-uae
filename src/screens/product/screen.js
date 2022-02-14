@@ -448,6 +448,24 @@ class Product extends React.Component {
 		);
 	};
 
+	getActionButtons = (params) => {
+		return (
+	<>
+	{/* BUTTON ACTIONS */}
+			{/* View */}
+			
+			<Button
+				className="Ag-gridActionButtons btn-sm"
+				title='Edit'
+				color="secondary"
+					onClick={()=>
+						this.goToProductDetail(params.data.id)  }
+			
+			>		<i className="fas fa-edit"/> </Button> 
+	</>
+		)
+	}
+
 	render() {
 		strings.setLanguage(this.state.language);
 		const {
@@ -700,10 +718,7 @@ class Product extends React.Component {
 					className="mb-0 label-bank"
 					style={{
 						cursor: 'pointer',
-						}}
-					
-						onClick={()=>{							
-							this.goToProductDetail(params.data.id) }}                                                                  
+						}}                                 
 		>
 		{params.value}
 		</label>
@@ -773,7 +788,18 @@ class Product extends React.Component {
 													<label className="badge label-due"> InActive</label>
 										}
 				></AgGridColumn>  
-			
+				<AgGridColumn field="action"
+										// className="Ag-gridActionButtons"
+										headerName="Actions"
+										cellRendererFramework={(params) =>
+											<div
+											 className="Ag-gridActionButtons"
+											 >
+												{this.getActionButtons(params)}
+											</div>
+
+										}
+									></AgGridColumn>
 			</AgGridReact>  
 			<div className="example-header mt-1">
 					Page Size:

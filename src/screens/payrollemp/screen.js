@@ -392,6 +392,27 @@ class PayrollEmployee extends React.Component {
             this.csvLink.current.link.click()
         }
     }
+    getActionButtons = (params) => {
+		return (
+	<>
+	{/* BUTTON ACTIONS */}
+			{/* View */}
+			<Button
+				className="Ag-gridActionButtons btn-sm"
+				title='Edit'
+				color="secondary"
+
+                onClick={
+                    () =>{ 
+                                                          
+                    this.props.history.push('/admin/master/employee/viewEmployee',{ id: params.data.id })
+                        }                                                                                               
+}                                            
+			
+			>		<i className="fas fa-edit"/> </Button>
+	</>
+		)
+	}
 
     clearAll = () => {
         this.setState({
@@ -552,7 +573,7 @@ class PayrollEmployee extends React.Component {
                                                                                         headerName=   {strings.EmployeeCode}
                                                                                         sortable={ true } 
                                                                                         filter={ true } 
-                                                                                        checkboxSelection={true}
+                                                                                        // checkboxSelection={true}
                                                                                         enablePivot={true} 
                                                                                        ></AgGridColumn>
 
@@ -566,13 +587,7 @@ class PayrollEmployee extends React.Component {
                                                                                                                             style={{
                                                                                                                                 cursor: 'pointer',
                                                                                                                                 }}
-                                                                                                                            onClick={
-                                                                                                                                                        () =>{ 
-                                                                                                                                                        // this.props.history.push('/admin/payroll/employee/viewEmployee',
-                                                                                                                                                        // { id: row.id })                                         
-                                                                                                                                                        this.props.history.push('/admin/master/employee/viewEmployee',{ id: params.data.id })
-                                                                                                                                                            }                                                                                               
-                                                                                                                    }                                                                                           
+                                                                                                                                                                          
                                                                                                                 >
                                                                                                                     {params.data.fullName}
                                                                                                                 </label>
@@ -624,7 +639,18 @@ class PayrollEmployee extends React.Component {
                                                                                                                             <label className="badge label-due"> InActive</label>
                                                                                                              }
                                                                                         ></AgGridColumn>  
-                                                                                  
+                                                                                  	<AgGridColumn field="action"
+										// className="Ag-gridActionButtons"
+										headerName="Actions"
+										cellRendererFramework={(params) =>
+											<div
+											 className="Ag-gridActionButtons"
+											 >
+												{this.getActionButtons(params)}
+											</div>
+
+										}
+									></AgGridColumn>
                                                                                     </AgGridReact>  
                                                                                     <div className="example-header mt-1">
                                                                                             Page Size:

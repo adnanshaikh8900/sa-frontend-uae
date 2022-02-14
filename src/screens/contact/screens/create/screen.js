@@ -311,8 +311,9 @@ class CreateContact extends React.Component {
 													// if (values.stateId.label && values.stateId.label === 'Select State') {
 													// 	errors.stateId ='State is Required';
 													// }
-													
-													if (values.vatRegistrationNumber === '' && this.state.isRegisteredForVat==true){
+				                                    
+													if (this.state.isRegisteredForVat==true){
+														if(values.vatRegistrationNumber=="")
 														errors.vatRegistrationNumber =	'Tax Registration Number is Required';
 													
 														if(values.vatRegistrationNumber.length!=15){
@@ -1045,6 +1046,7 @@ class CreateContact extends React.Component {
 																	</Label>
 																	<Input
 																		type="text"
+																		minLength="15"
 																		maxLength="15"
 																		id="vatRegistrationNumber"
 																		name="vatRegistrationNumber"
@@ -1188,7 +1190,7 @@ class CreateContact extends React.Component {
 																				)
 																				: []
 																		}
-																		// value={props.values.billingStateProvince}
+																		value={props.values.billingStateProvince}
 																		
 																		onChange={(option) => {
 																			if (option && option.value) {
@@ -1197,7 +1199,7 @@ class CreateContact extends React.Component {
 																				props.handleChange('stateId')('');
 																			}
 																		}}
-																		placeholder={strings.Select + props.values.billingcountryId === 229 || props.values.billingcountryId.value === 229 ? "Emirites" : "State / Provinces"}
+																		placeholder={strings.Select + props.values.billingcountryId === 229 || props.values.billingcountryId.value === 229 ? "Emirates" : "State / Provinces"}
 																		id="stateId"
 																		name="stateId"
 																		className={
@@ -1525,7 +1527,7 @@ class CreateContact extends React.Component {
 																					.find(
 																						(option) =>
 																							option.value ===
-																							+props.values.shippingCountryId,
+																							+props.values.shippingCountryId.value,
 																					)
 																		}
 																		onChange={(option) => {
@@ -1536,7 +1538,7 @@ class CreateContact extends React.Component {
 																				props.handleChange('shippingCountryId')('');
 																				// this.getStateListForShippingAddress('');
 																			}
-																			props.handleChange('shippingStateId')({
+																			props.handleChange('stateId')({
 																				label: 'Select State',
 																				value: '',
 																			});
@@ -1563,7 +1565,7 @@ class CreateContact extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="shippingStateId"><span className="text-danger">* </span>
 																		{/* {strings.StateRegion} */}
-																		{props.values.shippingCountryId === 229 || props.values.shippingCountryId.value === 229? "Emirites" : "State / Provinces"}
+																		{props.values.shippingCountryId.value === 229 ? "Emirates" : "State / Provinces"}
 																	</Label>
 																	<Select
 																		
@@ -1574,7 +1576,7 @@ class CreateContact extends React.Component {
 																					'label',
 																					'value',
 																					state_list_for_shipping,
-																					props.values.shippingCountryId === 229 || props.values.shippingCountryId.value === 229? "Emirites" : "State / Provinces",
+																					props.values.shippingCountryId.value === 229 ? "Emirates" : "State / Provinces",
 																				)
 																				: []
 																		}
@@ -1582,7 +1584,7 @@ class CreateContact extends React.Component {
 																			state_list_for_shipping.find(
 																					(option) =>
 																						option.value ===
-																						+props.values.shippingStateId,
+																						+props.values.shippingStateId.value,
 																				)
 																		}
 																		onChange={(option) => {
@@ -1592,7 +1594,7 @@ class CreateContact extends React.Component {
 																				props.handleChange('shippingStateId')('');
 																			}
 																		}}
-																		placeholder={strings.Select + props.values.shippingCountryId === 229 || props.values.shippingCountryId.value === 229 ? "Emirites" : "State / Provinces"}
+																			placeholder={ props.values.shippingCountryId.value === 229 ? "Emirates" : "State / Provinces"}
 																		id="shippingStateId"
 																		name="shippingStateId"
 																		className={

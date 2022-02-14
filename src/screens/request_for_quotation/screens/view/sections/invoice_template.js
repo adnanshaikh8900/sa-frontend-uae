@@ -260,14 +260,18 @@ class RFQTemplate extends Component {
 																: 'USD'
 														}
 													/> */}
-													{RFQData.currencyIsoCode + " " +item.unitPrice}
+													{RFQData.currencyIsoCode + " " +item.unitPrice.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
 												</td>
 												<td>{item.exciseTaxId ? this.renderExcise(item):"-"}</td>
-												<td style={{ textAlign: 'right' }}>{item.exciseAmount}</td>
+											    <td style={{ textAlign: 'right' }}>
+												{RFQData.currencyIsoCode + " " +item.exciseAmount.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
+												</td>
 												<td
 													style={{ textAlign: 'right' }}
 												>{`${item.vatPercentage}%`}</td>
-												<td style={{ textAlign: 'right' }}>{item.vatAmount}</td>
+												<td style={{ textAlign: 'right' }}>
+												{RFQData.currencyIsoCode + " " +item.vatAmount.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
+												</td>
 												<td style={{ textAlign: 'right' }}>
 													{/* <Currency
 														value={item.subTotal}
@@ -277,7 +281,7 @@ class RFQTemplate extends Component {
 																: 'USD'
 														}
 													/> */}
-													{RFQData.currencyIsoCode + " " +item.subTotal}
+													{RFQData.currencyIsoCode + " " +item.subTotal.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
 												</td>
 											</tr>
 										);

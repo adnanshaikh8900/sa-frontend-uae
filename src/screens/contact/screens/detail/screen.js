@@ -557,7 +557,8 @@ class DetailContact extends React.Component {
 														}
 
 														
-														if (values.vatRegistrationNumber === '' && this.state.isRegisteredForVat==true){
+														if (this.state.isRegisteredForVat==true){
+															if(values.vatRegistrationNumber=="")
 															errors.vatRegistrationNumber =	'Tax Registration Number is Required';
 														
 															if(values.vatRegistrationNumber.length!=15){
@@ -1394,7 +1395,7 @@ class DetailContact extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="stateId"><span className="text-danger">* </span>
 																		{/* {strings.StateRegion} */}
-																		{props.values.billingcountryId.value === 229 ? "Emirites" : "State / Provinces"}
+																		{props.values.billingcountryId.value === 229 ? "Emirates" : "State / Provinces"}
 																	</Label>
 																	<Select
 																		styles={customStyles}
@@ -1404,7 +1405,7 @@ class DetailContact extends React.Component {
 																					'label',
 																					'value',
 																					state_list,
-																					props.values.billingcountryId.value === 229 ? "Emirites" : "State / Provinces",
+																					props.values.billingcountryId.value === 229 ? "Emirates" : "State / Provinces",
 																				)
 																				: []
 																		}
@@ -1414,7 +1415,7 @@ class DetailContact extends React.Component {
 																				'label',
 																				'value',
 																				state_list,
-																				props.values.billingcountryId.value === 229 ? "Emirites" : "State / Provinces",
+																				props.values.billingcountryId.value === 229 ? "Emirates" : "State / Provinces",
 																			).find(
 																			(option) =>
 																				option.value ===
@@ -1429,7 +1430,7 @@ class DetailContact extends React.Component {
 																				props.handleChange('stateId')('');
 																			}
 																		}}
-																		placeholder={strings.Select + props.values.billingcountryId === 229 || props.values.billingcountryId.value === 229 ? "Emirites" : "State / Provinces"}
+																		placeholder={strings.Select + props.values.billingcountryId === 229 || props.values.billingcountryId.value === 229 ? "Emirates" : "State / Provinces"}
 																		id="stateId"
 																		name="stateId"
 																		className={
@@ -1790,7 +1791,7 @@ class DetailContact extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="shippingStateId"><span className="text-danger">* </span>
 																		{/* {strings.StateRegion} */}
-																		{props.values.shippingCountryId === 229 || props.values.shippingCountryId.value === 229? "Emirites" : "State / Provinces"}
+																		{props.values.shippingCountryId === 229 || props.values.shippingCountryId.value === 229? "Emirates" : "State / Provinces"}
 																	</Label>
 																	<Select
 																		
@@ -1801,7 +1802,7 @@ class DetailContact extends React.Component {
 																					'label',
 																					'value',
 																					state_list_for_shipping,
-																					props.values.shippingCountryId === 229 || props.values.shippingCountryId.value === 229? "Emirites" : "State / Provinces",
+																					props.values.shippingCountryId === 229 || props.values.shippingCountryId.value === 229? "Emirates" : "State / Provinces",
 																				)
 																				: []
 																		}
@@ -1819,7 +1820,7 @@ class DetailContact extends React.Component {
 																				props.handleChange('shippingStateId')('');
 																			}
 																		}}
-																		placeholder={strings.Select + props.values.shippingCountryId === 229 || props.values.shippingCountryId.value === 229 ? "Emirites" : "State / Provinces"}
+																		placeholder={strings.Select + props.values.shippingCountryId === 229 || props.values.shippingCountryId.value === 229 ? "Emirates" : "State / Provinces"}
 																		id="shippingStateId"
 																		name="shippingStateId"
 																		className={

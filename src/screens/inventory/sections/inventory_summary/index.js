@@ -341,8 +341,8 @@ class InventorySummary extends React.Component {
 				style={{padding:"0px"}}
 				 color="link"
 					onClick={() => {
-						if(params.supplierId !== null && params.productId !== null){
-							this.props.productActions.getInventoryHistory({p_id:params.productId,s_id:params.supplierId}).then((res) => {
+						if(params.data.supplierId !== null && params.data.productId !== null){
+							this.props.productActions.getInventoryHistory({p_id:params.data.productId,s_id:params.data.supplierId}).then((res) => {
 								if (res.status === 200) {
 									this.setState({
 

@@ -499,9 +499,11 @@ class ViewFtaExciseAuditReport extends React.Component {
 																						{this.state.FtaExciseAuditData.taxAgencyAgentNumber}
 																					</td>
 																					<td style={{ width: '13%', textAlign: 'left'}}>
-																						{this.renderDate(this.state.FtaExciseAuditData.startDate,'').replaceAll("/","-")}																					</td>
+																						{this.renderDate(this.state.FtaExciseAuditData.startDate,'').replaceAll("/","-")}
+																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
-																						{this.renderDate(this.state.FtaExciseAuditData.endDate,'')}																					</td>
+																						{this.renderDate(this.state.FtaExciseAuditData.endDate,'')}
+																					</td>
 																					<td style={{ width: '18%', textAlign: 'left'}}>
 																						{this.renderDate(this.state.FtaExciseAuditData.creationDate,'')}
 																					</td>

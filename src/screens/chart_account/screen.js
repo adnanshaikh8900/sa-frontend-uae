@@ -734,7 +734,7 @@ class ChartAccount extends React.Component {
 				></AgGridColumn>   */}
 
 					<AgGridColumn
-				headerName={strings.Account}
+				headerName={strings.ACCOUNT}
 				sortable={ true } 
 				filter={ true } 
 				enablePivot={true}
@@ -754,7 +754,7 @@ class ChartAccount extends React.Component {
 				></AgGridColumn>
 			<AgGridColumn field="action"
 										// className="Ag-gridActionButtons"
-										headerName="Actions"
+										headerName="ACTIONS"
 										cellRendererFramework={(params) =>
 											<div
 											 className="Ag-gridActionButtons"

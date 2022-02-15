@@ -611,7 +611,7 @@ class CurrencyConvert extends React.Component {
 					>
 
 				<AgGridColumn field="currencyName" 
-				headerName=   {strings.Currency}
+				headerName=   {strings.CURRENCY}
 				sortable={ true } 
 				filter={ true } 
 				enablePivot={true} 
@@ -645,7 +645,7 @@ class CurrencyConvert extends React.Component {
 			
 				
 				<AgGridColumn
-				headerName={strings.Status}
+				headerName={strings.STATUS}
 				field="isActive" 
 				sortable={ true }
 				filter={ true }
@@ -658,7 +658,7 @@ class CurrencyConvert extends React.Component {
 				></AgGridColumn>  
 					<AgGridColumn field="action"
 										// className="Ag-gridActionButtons"
-										headerName="Actions"
+										headerName="ACTIONS"
 										cellRendererFramework={(params) =>
 											<div
 											 className="Ag-gridActionButtons"

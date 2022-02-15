@@ -75,17 +75,17 @@ Relationship2:"Relationship 2",
 
 
       //Dashboard
-      SupplierCustomerPaidInvoices: "Supplier & Customer Paid Invoices",
-      Banking: "Banking",
-      Lastupdatedon: "Last updated on",
+      SupplierCustomerPaidInvoices: "SUPPLIER & CUSTOMER PAID INVOICES",
+      Banking: "BANKING",
+      Lastupdatedon: "LAST UPDATED ON",
       BALANCE: "BALANCE",
       ALLBANKACCOUNTS: "ALL BANK ACCOUNTS",
-      Cashflow: "Cashflow",
+      Cashflow: "CASHFLOW",
       INFLOW: "INFLOW",
       OUTFLOW: "OUTFLOW",
       NET: "NET",
       Net: "Net",
-      ProfitLoss: "Profit & Loss",
+      ProfitLoss: "PROFIT & LOSS",
 
       //Customer invoice
       CustomerInvoices: "Customer Invoices",
@@ -369,7 +369,8 @@ SubTotal:"Sub Total",
 ChartofAccounts:"Chart of Accounts",				
 CODE:"CODE",
 Code:"Code",		
-NAME:"NAME",		
+NAME:"NAME",	
+ACCOUNT:"ACCOUNT",	
 				
 AddnewAccount:"Add new Account",
 Print:"Print",		
@@ -384,13 +385,16 @@ Contact:"Contact",
 EMAIL:"EMAIL",		
 Addnewcontact:"Add New Contact",
 TaxTreatment:"Tax Treatment",	
+STATUS:"STATUS",
 
 //Product
-Products:"Products",		 		
+Products:"Products",		
 PRODUCTCODE:"PRODUCT CODE",				
 VATPERCENTAGE:"VAT PERCENTAGE",				
 AddnewProduct:"Add New Product",	
-ProductType:"Product Type",	
+ProductType:"PRODUCT TYPE",	
+INVENTORY:"INVENTORY",
+VATTYPE:"VAT TYPE",
 
 //Add product
 CreateProduct:"Create Product",		
@@ -419,8 +423,8 @@ AddNewProductCategory:"Add New Product Category",
 
 //Add Product Category
 NewProductCategory:"New Product Category",		
-ProductCategoryCode:"Product Category Code",		
-ProductCategoryName:"Product Category Name",	
+ProductCategoryCode:"PRODUCT CATEGORY CODE",		
+ProductCategoryName:"PRODUCT CATEGORY NAME",	
 
 //VatCategory	
 VatCategories:"Vat Categories",		
@@ -444,8 +448,9 @@ AddNewCurrencyConversion:"Add New Currency Conversion",
 NewCurrencyConversion:"New Currency Conversion",			
 Value:"Value",			
 ExchangeCurrency:"Exchange Currency",			
-Exchangerate:"Exchange Rate",			
-BaseCurrency:"Base Currency",			
+Exchangerate:"EXCHANGE RATE",			
+BaseCurrency:"Base Currency",	
+CURRENCY:"CURRENCY",		
 
 //Inventory
 

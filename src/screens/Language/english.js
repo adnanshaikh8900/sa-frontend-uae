@@ -76,7 +76,8 @@ Relationship2:"Relationship 2",
 
       //Dashboard
       SupplierCustomerPaidInvoices: "SUPPLIER & CUSTOMER PAID INVOICES",
-      Banking: "BANKING",
+      Banking: "Banking",
+      BANKING: "BANKING",
       Lastupdatedon: "LAST UPDATED ON",
       BALANCE: "BALANCE",
       ALLBANKACCOUNTS: "ALL BANK ACCOUNTS",

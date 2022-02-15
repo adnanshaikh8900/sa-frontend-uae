@@ -1367,7 +1367,7 @@ class DetailRequestForQuotation extends React.Component {
 														supplierId: Yup.string().required(
 															'Supplier is Required',
 														),
-														// placeOfSupplyId: Yup.string().required('Place of supply is Required'),
+														placeOfSupplyId: Yup.string().required('Place of Supply is Required'),
 														
 														rfqReceiveDate: Yup.string().required(
 															'Order Date is Required',
@@ -1679,7 +1679,7 @@ class DetailRequestForQuotation extends React.Component {
 																		{props.errors.rfqReceiveDate &&
 																			props.touched.rfqReceiveDate && (
 																				<div className="invalid-feedback">
-																					{props.errors.rfqReceiveDate}
+																					{props.errors.rfqReceiveDate.includes("nullable()") ? "Order Date is Required" :props.errors.rfqReceiveDate}
 																				</div>
 																			)}
 																	</FormGroup>

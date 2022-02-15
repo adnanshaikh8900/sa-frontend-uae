@@ -1552,7 +1552,7 @@ class CreateSupplierInvoice extends React.Component {
 		this.props.supplierInvoiceCreateActions
 			.checkValidation(data)
 			.then((response) => {
-				if (response.data === 'Invoice Number already exists') {
+				if (response.data === 'Invoice Number Already Exists') {
 					this.setState(
 						{
 							exist: true,
@@ -1682,7 +1682,7 @@ class CreateSupplierInvoice extends React.Component {
 													}
 													if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")
 													{
-                                                        errors.placeOfSupplyId ='Place of supply is Required';
+                                                        errors.placeOfSupplyId ='Place of Supply is Required';
                                                    }
 												   if (values.term && values.term.label && values.term.label === "Select Terms") {
 													errors.term ='Term is Required';
@@ -1700,7 +1700,7 @@ class CreateSupplierInvoice extends React.Component {
 													contactId: Yup.string().required(
 														'Supplier is Required',
 													),
-													placeOfSupplyId: Yup.string().required('Place of supply is Required'),
+													placeOfSupplyId: Yup.string().required('Place of Supply is Required'),
 													term: Yup.string().required('Term is Required'),
 													invoiceDate: Yup.string().required(
 														'Invoice Date is Required',
@@ -2116,7 +2116,7 @@ class CreateSupplierInvoice extends React.Component {
 																	{props.errors.invoiceDate &&
 																		props.touched.invoiceDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.invoiceDate}
+																				{props.errors.invoiceDate.includes("nullable()") ? "Invoice Date is Required" :props.errors.invoiceDate}		
 																			</div>
 																		)}
 																</FormGroup>
@@ -2152,7 +2152,8 @@ class CreateSupplierInvoice extends React.Component {
 																		{props.errors.invoiceDueDate &&
 																			props.touched.invoiceDueDate && (
 																				<div className="invalid-feedback">
-																					{props.errors.invoiceDueDate}
+																					{props.errors.invoiceDueDate}		
+
 																				</div>
 																			)}
 																	</div>

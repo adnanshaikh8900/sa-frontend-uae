@@ -81,9 +81,9 @@ class ViewFtaAuditReport extends React.Component {
 			{ label: 'Company Name', value: 'companyName', sort: true },
 			{ label: 'Taxable Person Name En', value: 'taxablePersonNameEn', sort: false },
 			{ label: 'Taxable Person Name Ar', value: 'taxablePersonNameAr', sort: true },
-			{ label: 'Tax Registration Number',value: 'taxRegistrationNumber',sort: true,},
+			{ label: 'Tax Registration Number',value: 'taxRegistrationNumber',sort: true},
 			{ label: 'Tax Agency Name', value: 'TaxAgencyName', sort: true },
-			{ label: 'Tax Agency Number', value: 'taxAgencyNumber', sort: false,align: 'right'  },
+			{ label: 'Tax Agency Number', value: 'taxAgencyNumber', sort: false },
 			{ label: 'Tax Agent Name', value: 'TaxAgentName', sort: false },
 			{ label: 'Tax Agency Agent Number', value: 'taxAgencyAgentNumber', sort: false },
 			{ label: 'Period Start ', value: 'startDate', sort: false },
@@ -166,7 +166,7 @@ class ViewFtaAuditReport extends React.Component {
 			{ label: 'Transaction Count Total', value: 'transactionCountTotal', sort: true },
 			{ label: 'Total Credit', value: 'totalCredit', sort: false },
 			{ label: 'Total Debit', value: 'totalDebit', sort: true },
-			{ label: 'GLT Currencyt', value: 'gltcurrency', sort: true }
+			{ label: 'GLT Currency', value: 'gltcurrency', sort: true }
 		];
 	}
 
@@ -213,11 +213,11 @@ class ViewFtaAuditReport extends React.Component {
 			});
 	};
 	renderDate = (cell, row) => {
-		debugger
 		return cell ? moment(cell)
 			.format('DD-MM-YYYY') 
 			// .format('LL')
 			: '-';
+			
 	};
 	exportFile = () => {
 		let dl =""
@@ -425,14 +425,15 @@ class ViewFtaAuditReport extends React.Component {
 																						{this.renderDate(this.state.FtaAuditData.startDate,'')}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
-																					
-																						{this.renderDate(this.state.FtaAuditData.endDate,'')}
+																					{(this.state.FtaAuditData.endDate).replaceAll("/","-")}
+																						{/* {this.renderDate(this.state.FtaAuditData.endDate,'').replaceAll("/","-")} */}
 																					</td>
 																					<td style={{ width: '18%', textAlign: 'left'}}>
 																				
 																						{this.renderDate(this.state.FtaAuditData.creationDate,'')}
 																					</td>
 																					<td style={{ width: '13%', textAlign: 'left'}}>
+																						{/* {this.renderDate(this.state.FtaAuditData.productVersion).replaceAll("/","-")} */}
 																						{this.state.FtaAuditData.productVersion}
 																					</td>
 																				

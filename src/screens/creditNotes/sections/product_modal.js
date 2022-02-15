@@ -213,7 +213,7 @@ class ProductModal extends React.Component {
 			name: value,
 		};
 		this.props.productActions.checkValidation(data).then((response) => {
-			if (response.data === 'Product name already exists') {
+			if (response.data === 'Product name Already Exists') {
 				this.setState({
 					exist: true,
 				});
@@ -233,7 +233,7 @@ class ProductModal extends React.Component {
 		this.props.productActions
 			.checkProductNameValidation(data)
 			.then((response) => {
-				if (response.data === 'Product code already exists') {
+				if (response.data === 'Product code Already Exists') {
 					this.setState({
 						ProductExist: true,
 					});

@@ -540,7 +540,7 @@ discountType = (row) =>
 		this.props.creditNotesCreateActions
 			.checkValidation(data)
 			.then((response) => {
-				if (response.data === 'Invoice Number already exists') {
+				if (response.data === 'Invoice Number Already Exists') {
 					this.setState(
 						{
 							exist: true,
@@ -2203,7 +2203,7 @@ if (invoiceNumber && invoiceNumber.value) {
 																	{props.errors.creditNoteDate &&
 																		props.touched.creditNoteDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.creditNoteDate}
+																				{props.errors.creditNoteDate.includes("nullable()") ? "Tax Credit Note Date is Required" :props.errors.creditNoteDate}		
 																			</div>
 																		)}
 																</FormGroup>

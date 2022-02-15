@@ -183,7 +183,7 @@ class CreateBankAccount extends React.Component {
 		this.props.createBankAccountActions
 			.checkValidation(data)
 			.then((response) => {
-				if (response.data === 'Bank Account already exists') {
+				if (response.data === 'Bank Account Already Exists') {
 					this.setState({
 						exist: true,
 					});
@@ -297,7 +297,7 @@ class CreateBankAccount extends React.Component {
 													let errors = {};
 													if (this.state.exist === true) {
 														errors.account_number =
-															'Account Number already exists';
+															'Account Number Already Exists';
 													}
 													return errors;
 												}}
@@ -522,7 +522,8 @@ class CreateBankAccount extends React.Component {
 																	{props.errors.openingDate &&
 																		props.touched.openingDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.openingDate}
+																				{props.errors.openingDate.includes("nullable()") ? "Opening Date is Required" :props.errors.openingDate}
+
 																			</div>
 																		)}
 																</FormGroup>

@@ -1426,8 +1426,9 @@ class DetailPurchaseOrder extends React.Component {
 														// rfqNumber: Yup.string().required(
 														// 	'Rfq Number is Required',
 														// ),
-														// placeOfSupplyId: Yup.string().required('Place of supply is Required'),
-														
+														// placeOfSupplyId: Yup.string().required(
+														// 	'Place of Supply is Required'
+														// ),
 														poApproveDate: Yup.string().required(
 															'Order Date is Required',
 														),

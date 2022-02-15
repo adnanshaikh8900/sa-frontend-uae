@@ -271,7 +271,8 @@ class CreateOpeningBalance extends React.Component {
 																	{props.errors.effectiveDate &&
 																		props.touched.effectiveDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.effectiveDate}
+																				{props.errors.effectiveDate.includes("nullable()") ? "Opening Date is Required" :props.errors.effectiveDate}
+
 																			</div>
 																		)}
 																</FormGroup>

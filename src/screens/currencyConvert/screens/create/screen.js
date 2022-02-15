@@ -175,7 +175,7 @@ class CreateCurrencyConvert extends React.Component {
 			currencyCode: value,
 		};
 		this.props.createCurrencyConvertActions.checkValidation(data).then((response) => {
-			if (response.data === 'Currency Conversions already exists') {
+			if (response.data === 'Currency Conversions Already Exists') {
 				this.setState({
 					exist: true,
 					createDisabled: false,
@@ -222,7 +222,7 @@ class CreateCurrencyConvert extends React.Component {
 													let errors = {};
 													if (this.state.exist === true) {
 														errors.currencyCode =
-															'Currency already exists';
+															'Currency Already Exists';
 													}
 													return errors;
 												}}

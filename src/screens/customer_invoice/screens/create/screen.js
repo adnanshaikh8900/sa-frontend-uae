@@ -450,7 +450,7 @@ renderVatAmount = (cell, row,extraData) => {
 		this.props.customerInvoiceCreateActions
 			.checkValidation(data)
 			.then((response) => {
-				if (response.data === 'Invoice Number already exists') {
+				if (response.data === 'Invoice Number Already Exists') {
 					this.setState(
 						{
 							exist: true,
@@ -1670,7 +1670,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 													let errors = {};
 													if (exist === true) {
 														errors.invoice_number =
-															'Invoice Number already exists';
+															'Invoice Number Already Exists';
 													}
 													if (values.invoice_number==='') {
 														errors.invoice_number = 'Invoice Number is Required';
@@ -1682,7 +1682,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 													
 													if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
 														errors.placeOfSupplyId =
-														'Place of supply is Required';
+														'Place of Supply is Required';
 													}
 													if (values.term && values.term.label && values.term.label === "Select Terms") {
 														errors.term =
@@ -1717,7 +1717,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 													contactId: Yup.string().required(
 														'Customer is Required',
 													),
-													placeOfSupplyId: Yup.string().required('Place of supply is Required'),
+													placeOfSupplyId: Yup.string().required('Place of Supply is Required'),
 													term: Yup.string().required('Term is Required'),
 													currency: Yup.string().required(
 														'Currency is Required',
@@ -2109,7 +2109,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																	{props.errors.invoiceDate &&
 																		props.touched.invoiceDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.invoiceDate}
+																				{props.errors.invoiceDate.includes("nullable()") ? "Invoice Date is Required" :props.errors.invoiceDate}
 																			</div>
 																		)}
 																</FormGroup>

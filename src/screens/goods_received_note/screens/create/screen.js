@@ -435,7 +435,7 @@ class CreateGoodsReceivedNote extends React.Component {
 									{this.state.grnReceivedQuantityError}
 								</div> */}
 								{row['grnReceivedQuantity'] <= 0 && (
-								<div  className="text-danger">
+								<div  className="invalid-feedback">
 									Please Enter Quantity
 								</div>
 								)
@@ -1300,7 +1300,7 @@ this.state.data.map((obj, index) => {
 		this.props.goodsReceivedNoteCreateAction
 			.checkValidation(data)
 			.then((response) => {
-				if (response.data === 'grnNumber already exists') {
+				if (response.data === 'GRN Number Already Exists') {
 					this.setState(
 						{
 							exist: true,
@@ -1466,7 +1466,7 @@ console.log(this.state.data)
 													let errors = {};
 													if (this.state.exist === true) {
 														errors.grn_Number =
-															'GRN Number already exists';
+															'GRN Number Already Exists';
 													}
 													if (values.grn_Number==='') {
 														errors.grn_Number = 'GRN Number is Required';
@@ -1830,7 +1830,8 @@ console.log(this.state.data)
 																	{props.errors.grnReceiveDate &&
 																		props.touched.grnReceiveDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.grnReceiveDate}
+																				{props.errors.grnReceiveDate.includes("nullable()") ? "Order Date is Required" :props.errors.grnReceiveDate}
+
 																			</div>
 																		)}
 																</FormGroup>

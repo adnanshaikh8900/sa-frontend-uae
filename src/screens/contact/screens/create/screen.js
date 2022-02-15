@@ -311,7 +311,7 @@ class CreateContact extends React.Component {
 													// if (values.stateId.label && values.stateId.label === 'Select State') {
 													// 	errors.stateId ='State is Required';
 													// }
-				                                    
+
 													if (this.state.isRegisteredForVat==true){
 														if(values.vatRegistrationNumber=="")
 														errors.vatRegistrationNumber =	'Tax Registration Number is Required';
@@ -325,22 +325,22 @@ class CreateContact extends React.Component {
 													// 		'Discount amount Cannot be greater than Invoice Total Amount';
 													// }
 													if(values.billingPostZipCode.length!=6){
-														errors.billingPostZipCode="Please enter 6 digit Postal Zip Code"
+														errors.billingPostZipCode="Please Enter 6 Digit Postal Zip Code"
 													}
 
 													if(values.shippingPostZipCode.length!=6){
-														errors.shippingPostZipCode="Please enter 6 digit Postal Zip Code"
+														errors.shippingPostZipCode="Please Enter 6 Digit Postal Zip Code"
 													}
 
 													if(this.state.showbillingFaxErrorMsg==true)
-													errors.billingFax="Please enter 8 digit Fax"
+													errors.billingFax="Please Enter 8 Digit Fax"
 
 													
 													if(this.state.showshippingFaxErrorMsg==true)
-													errors.shippingFax="Please enter 8 digit Fax"
+													errors.shippingFax="Please Enter 8 Digit Fax"
 
 													if(this.state.showpoBoxNumberErrorMsg==true)
-													errors.poBoxNumber="Please enter 6 digit PO Box Number"
+													errors.poBoxNumber="Please Enter 6 Digit PO Box Number"
 
 
 													return errors;
@@ -901,7 +901,7 @@ class CreateContact extends React.Component {
 																	/>
 																	{props.errors.mobileNumber &&
 																		props.touched.mobileNumber && (
-																			<div style={{ color: "red" }}>
+																			<div  className="invalid-feedback">
 																				{props.errors.mobileNumber}
 																			</div>
 																		)}

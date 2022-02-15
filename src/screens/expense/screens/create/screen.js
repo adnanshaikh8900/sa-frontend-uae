@@ -387,7 +387,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 		this.props.expenseCreateActions
 			.checkExpenseCodeValidation(data)
 			.then((response) => {
-				if (response.data === 'Expense Number already exists') {
+				if (response.data === 'Expense Number Already Exists') {
 					this.setState({
 						exist: true,
 					});
@@ -726,7 +726,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 													// }
 													if (exist === true) {
 														errors.expenseNumber =
-															'Expense Number already exists';
+															'Expense Number Already Exists';
 													}
 													if(values.currency ==='' || values.currency === 150){
 														errors.currency="Currency is Required "
@@ -1294,7 +1294,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																	/>
 																	{props.errors.currency &&
 																		props.touched.currency && (
-																			<div style={{color:"red"}}>
+																			<div className='invalid-feedback'>
 																				{props.errors.currency}
 																			</div>
 																		)}

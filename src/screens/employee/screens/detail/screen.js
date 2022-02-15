@@ -379,8 +379,11 @@ class DetailEmployee extends React.Component {
                                           props.handleChange("dob")(value)
                                         }}
                                       />
-                                      {props.errors.dob && props.touched.dob && (
-                                        <div className="invalid-feedback">{props.errors.dob}</div>
+                                      {props.errors.dob && 
+                                        props.touched.dob && (
+                                        <div className="invalid-feedback">
+                                      {props.errors.dob.includes("nullable()") ? "DOB is Required" :props.errors.dob}
+                                        </div>
                                       )}
                                     </FormGroup>
                                   </Col>

@@ -1434,7 +1434,7 @@ discountType = (row) =>
 		this.props.quotationCreateAction
 			.checkValidation(data)
 			.then((response) => {
-				if (response.data === 'QuotationNumber already exists') {
+				if (response.data === 'Quotation Number Already Exists') {
 					this.setState(
 						{
 							exist: true,
@@ -1526,7 +1526,7 @@ discountType = (row) =>
 													let errors = {};
 													if (this.state.exist === true) {
 														errors.quotation_Number =
-															'Quotation Number already exists';
+															'Quotation Number Already Exists';
 													}
 													if (values.quotation_Number==='') {
 														errors.quotation_Number = 'Quotation Number is Required';
@@ -1542,10 +1542,10 @@ discountType = (row) =>
 														quotation_Number: Yup.string().required(
 														'Invoice Number is Required',
 													),
-													customerId: Yup.string().required(
-														'Supplier is Required',
+														customerId: Yup.string().required(
+														'Customer is Required',
 													),
-													// placeOfSupplyId: Yup.string().required('Place of supply is Required'),
+														placeOfSupplyId: Yup.string().required('Place of Supply is Required'),
 													
 													// poApproveDate: Yup.string().required(
 													// 	'Order Date is Required',
@@ -1864,7 +1864,8 @@ discountType = (row) =>
 																	{props.errors.quotaionExpiration &&
 																		props.touched.quotaionExpiration && (
 																			<div className="invalid-feedback">
-																				{props.errors.quotaionExpiration}
+																				{/* {props.errors.quotaionExpiration} */}
+																				{props.errors.quotaionExpiration.includes("nullable()") ? "Date is Required" :props.errors.quotaionExpiration}
 																			</div>
 																		)}
 																	

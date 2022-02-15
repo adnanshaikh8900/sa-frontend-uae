@@ -493,7 +493,7 @@ renderName=(cell,row)=>{
 		this.props.productActions
 			.checkProductNameValidation(data)
 			.then((response) => {
-				if (response.data === 'Product code already exists') {
+				if (response.data === 'Product Code Already Exists') {
 					this.setState({
 						ProductExist: true,
 					});
@@ -790,7 +790,7 @@ renderName=(cell,row)=>{
 														}
 														if (this.state.ProductExist === true) {
 															errors.productCode =
-																'Product Code is Already Exist';
+																'Product Code Already Exist';
 														}
 														return errors;
 													}}

@@ -1636,7 +1636,7 @@ class DetailSupplierInvoice extends React.Component {
 															'Supplier is Required',
 														),
 														term: Yup.string().required('Term is Required'),
-														placeOfSupplyId: Yup.string().required('Place of supply is Required'),
+														placeOfSupplyId: Yup.string().required('Place of Supply is Required'),
 														invoiceDate: Yup.string().required(
 															'Invoice Date is Required',
 														),
@@ -1999,7 +1999,7 @@ class DetailSupplierInvoice extends React.Component {
 																		{props.errors.invoiceDate &&
 																			props.touched.invoiceDate && (
 																				<div className="invalid-feedback">
-																					{props.errors.invoiceDate}
+																				{props.errors.invoiceDate.includes("nullable()") ? "Invoice Date is Required" :props.errors.invoiceDate}
 																				</div>
 																			)}
 																	</FormGroup>

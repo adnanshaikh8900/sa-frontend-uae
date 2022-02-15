@@ -1602,7 +1602,7 @@ class DetailCustomerInvoice extends React.Component {
 														let errors = {};
 														// if (exist === true) {
 														// 	errors.invoice_number =
-														// 		'Invoice Number already exists';
+														// 		'Invoice Number Already Exists';
 														// }
 														if (param === true) {
 															errors.discount =
@@ -1644,7 +1644,7 @@ class DetailCustomerInvoice extends React.Component {
 														contactId: Yup.string().required(
 															'Supplier is Required',
 														),
-														term: Yup.string().required('term is Required'),
+														term: Yup.string().required('Term is Required'),
 													//	placeOfSupplyId: Yup.string().required('Place of supply is Required'),
 														invoiceDate: Yup.string().required(
 															'Invoice Date is Required',
@@ -2045,8 +2045,7 @@ class DetailCustomerInvoice extends React.Component {
 																		{props.errors.invoiceDate &&
 																			props.touched.invoiceDate && (
 																				<div className="invalid-feedback">
-																					{props.errors.invoiceDate}
-																				</div>
+																					{props.errors.invoiceDate.includes("nullable()") ? "Invoice Date is Required" :props.errors.invoiceDate}																				</div>
 																			)}
 																	</FormGroup>
 																</Col>
@@ -2081,8 +2080,7 @@ class DetailCustomerInvoice extends React.Component {
 																			{props.errors.invoiceDueDate &&
 																				props.touched.invoiceDueDate && (
 																					<div className="invalid-feedback">
-																						{props.errors.invoiceDueDate}
-																					</div>
+																						{props.errors.invoiceDate.includes("nullable()") ? "Invoice Date is Required" :props.errors.invoiceDate}																							</div>
 																				)}
 																		</div>
 																	</FormGroup>

@@ -331,7 +331,7 @@ validationCheck = (value) => {
     this.props.createPayrollEmployeeActions
         .checkValidation(data)
         .then((response) => {
-            if (response.data === 'employeeCode already exists') {
+            if (response.data === 'Employee Code Already Exists') {
                 this.setState(
                     {
                         exist: true,
@@ -356,7 +356,7 @@ existForAccountNumber = (value) => {
     this.props.createPayrollEmployeeActions
         .checkValidation(data)
         .then((response) => {
-            if (response.data === 'accountNumber already exists') {
+            if (response.data === 'Account Number Already Exists') {
                 this.setState(
                     {
                         existForAccountNumber: true,
@@ -1123,7 +1123,7 @@ existForAccountNumber = (value) => {
                                 </NavItem>
                                 <NavItem>
                                     <NavLink
-                                        // active={this.state.activeTab[0] === '2'}
+                                        active={this.state.activeTab[0] === '2'}
                                         // onClick={() => {
                                         //     this.toggle(0, '2');
                                         // }}
@@ -1403,8 +1403,12 @@ existForAccountNumber = (value) => {
                                                                                                             props.handleChange("dob")(value)
                                                                                                         }}
                                                                                                     />
-                                                                                                    {props.errors.dob && props.touched.dob && (
-                                                                                                        <div className="invalid-feedback">{props.errors.dob}</div>
+                                                                                                    {props.errors.dob && 
+                                                                                                        props.touched.dob && (
+                                                                                                        <div className="invalid-feedback">
+                                                                                                            {props.errors.dob.includes("nullable()") ? "DOB is Required" :props.errors.dob}
+
+                                                                                                        </div>
                                                                                                     )}
                                                                                                 </FormGroup>
                                                                                             </Col>
@@ -1435,8 +1439,11 @@ existForAccountNumber = (value) => {
                                                                                                                 : ''
                                                                                                         }
                                                                                                     />
-                                                                                                     {props.errors.mobileNumber && props.touched.mobileNumber && (
-                                                                                                        <div className="text-danger">{props.errors.mobileNumber}</div>
+                                                                                                     {props.errors.mobileNumber &&
+                                                                                                      props.touched.mobileNumber && (
+                                                                                                        <div className="text-danger">
+                                                                                                            {props.errors.mobileNumber}
+                                                                                                        </div>
                                                                                                     )}
                                                                                                    
                                                                                                 </FormGroup>
@@ -1898,7 +1905,10 @@ existForAccountNumber = (value) => {
                                                                                             </Col>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="stateId"><span className="text-danger">* </span>{strings.StateRegion}</Label>
+                                                                                                    <Label htmlFor="stateId"><span className="text-danger">* </span>
+                                                                                                    {props.values.countryId.value === 229 ? "Emirates" : "State / Provinces"}
+
+                                                                                                    </Label>
                                                                                                     <Select
 
                                                                                                         options={
@@ -1919,7 +1929,7 @@ existForAccountNumber = (value) => {
                                                                                                                 props.handleChange('stateId')('');
                                                                                                             }
                                                                                                         }}
-                                                                                                        placeholder={strings.Select+strings.StateRegion}
+                                                                                                        placeholder={strings.Select + props.values.countryId === 229 || props.values.countryId.value === 229 ? "Emirates" : "State / Provinces"}
                                                                                                         id="stateId"
                                                                                                         name="stateId"
                                                                                                         className={
@@ -2625,7 +2635,7 @@ existForAccountNumber = (value) => {
                                                                             let errors = {};
                                                                             if (existForAccountNumber === true) {
                                                                                 errors.accountNumber =
-                                                                                    'Account Number already exists';
+                                                                                    'Account Number Already Exists';
                                                                             }
                                                                             return errors;
                                                                         }}

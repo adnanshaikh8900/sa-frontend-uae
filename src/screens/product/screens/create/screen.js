@@ -361,7 +361,7 @@ try {
 			name: value,
 		};
 		this.props.productActions.checkValidation(data).then((response) => {
-			if (response.data === 'Product name already exists') {
+			if (response.data === 'Product Name Already Exists') {
 				this.setState({
 					exist: true,
 				});
@@ -381,7 +381,7 @@ try {
 		this.props.productActions
 			.checkProductNameValidation(data)
 			.then((response) => {
-				if (response.data === 'Product code already exists') {
+				if (response.data === 'Product Code Already Exists') {
 					this.setState({
 						ProductExist: true,
 					});
@@ -452,15 +452,15 @@ try {
 												validate={(values) => {
 													let errors = {};
 													if (!values.productName) {
-														errors.productName = 'Product  Name is Required';
+														errors.productName = 'Product Name Required';
 													}
 													if (this.state.exist === true) {
 														errors.productName =
-															'Product  Name is Already Exist';
+															'Product Name Already Exist';
 													}
 													if (this.state.ProductExist === true) {
 														errors.productCode =
-															'Product Code is Already Exist';
+															'Product Code Already Exist';
 													}
 													if (values.productName==='') {
 														errors.productName = 'Product Name is Required';

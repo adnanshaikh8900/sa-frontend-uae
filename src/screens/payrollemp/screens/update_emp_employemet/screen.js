@@ -210,7 +210,7 @@ class UpdateEmployeeEmployment extends React.Component {
     this.props.createPayrollEmployeeActions
         .checkValidation(data)
         .then((response) => {
-            if (response.data === 'employeeCode already exists') {
+            if (response.data === 'Employee Code Already Exists') {
                 this.setState(
                     {
                         exist: true,

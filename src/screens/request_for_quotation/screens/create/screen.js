@@ -1281,7 +1281,7 @@ class CreateRequestForQuotation extends React.Component {
 		this.props.requestForQuotationCreateAction
 			.checkValidation(data)
 			.then((response) => {
-				if (response.data === 'rfqNumber already exists') {
+				if (response.data === 'RFQ Number Already Exists') {
 					this.setState(
 						{
 							exist: true,
@@ -1387,7 +1387,7 @@ class CreateRequestForQuotation extends React.Component {
 													let errors = {};
 													if (this.state.exist === true) {
 														errors.rfq_number =
-															'RFQ number already exists';
+															'RFQ number Already Exists';
 													}
 													if (values.rfq_number==='') {
 														errors.rfq_number = 'RFQ Number is Required';
@@ -1402,7 +1402,9 @@ class CreateRequestForQuotation extends React.Component {
 													supplierId: Yup.string().required(
 														'Supplier is Required',
 													),
-													// placeOfSupplyId: Yup.string().required('Place of supply is Required'),
+													placeOfSupplyId: Yup.string().required(
+														'Place of Supply is Required'
+													),
 													
 													rfqReceiveDate: Yup.string().required(
 														'Order Date is Required',
@@ -1721,7 +1723,8 @@ class CreateRequestForQuotation extends React.Component {
 																	{props.errors.rfqReceiveDate &&
 																		props.touched.rfqReceiveDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.rfqReceiveDate}
+																				{props.errors.rfqReceiveDate.includes("nullable()") ? "Order Date is Required" :props.errors.rfqReceiveDate}		
+
 																			</div>
 																		)}
 																</FormGroup>
@@ -1754,7 +1757,7 @@ class CreateRequestForQuotation extends React.Component {
 																	{props.errors.rfqExpiryDate &&
 																		props.touched.rfqExpiryDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.rfqExpiryDate}
+																				{props.errors.rfqExpiryDate.includes("nullable()") ? "Order Due Date is Required" :props.errors.rfqExpiryDate}
 																			</div>
 																		)}
 																	

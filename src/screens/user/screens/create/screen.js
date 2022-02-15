@@ -234,7 +234,7 @@ class CreateUser extends React.Component {
 			name: value,
 		};
 		this.props.userCreateActions.checkValidation(data).then((response) => {
-			if (response.data === 'User already exists') {
+			if (response.data === 'User Already Exists') {
 				this.setState({
 					exist: true,
 					createDisabled: false,
@@ -320,7 +320,7 @@ class CreateUser extends React.Component {
 													let errors = {};
 													if (this.state.exist === true) {
 														errors.email =
-															'User already exists';
+															'User Already Exists';
 													}
 
 													if (errors.length) {

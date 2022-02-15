@@ -114,7 +114,7 @@ class CreateChartAccount extends React.Component {
 		this.props.createChartOfAccontActions
 			.checkValidation(data)
 			.then((response) => {
-				if (response.data === 'transactionCategoryName already exists') {
+				if (response.data === 'Transaction Category Name Already Exists') {
 					this.setState({
 						exist: true,
 					});

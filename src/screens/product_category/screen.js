@@ -552,7 +552,7 @@ class ProductCategory extends React.Component {
 					>
 
 				<AgGridColumn field="productCategoryCode" 
-				headerName=   {strings.CODE}
+				headerName=   {strings.ProductCategoryCode}
 				sortable={ true } 
 				filter={ true } 
 				enablePivot={true} 
@@ -576,7 +576,7 @@ class ProductCategory extends React.Component {
 				></AgGridColumn> 
 				<AgGridColumn field="action"
 										// className="Ag-gridActionButtons"
-										headerName="Actions"
+										headerName="ACTIONS"
 										cellRendererFramework={(params) =>
 											<div
 											 className="Ag-gridActionButtons"

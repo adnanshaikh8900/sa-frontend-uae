@@ -514,7 +514,7 @@ class Contact extends React.Component {
 				></AgGridColumn>
 
 				<AgGridColumn field="email" 
-				headerName=	{strings.Email}
+				headerName=	{strings.EMAIL}
 				sortable={ true }
 				filter={ true }
 				enablePivot={true}
@@ -530,7 +530,7 @@ class Contact extends React.Component {
 
 
 				<AgGridColumn
-				headerName={strings.Status}
+				headerName={strings.STATUS}
 				field="isActive" 
 				sortable={ true }
 				filter={ true }

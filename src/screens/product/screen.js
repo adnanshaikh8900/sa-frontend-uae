@@ -736,7 +736,7 @@ class Product extends React.Component {
 
 			
 <AgGridColumn field="isInventoryEnabled" 
-				headerName=  {strings.Inventory}
+				headerName=  {strings.INVENTORY}
 				sortable={ true }
 				enablePivot={true} 
 				filter={ true }
@@ -748,7 +748,7 @@ class Product extends React.Component {
 				></AgGridColumn>  
 				
 				<AgGridColumn field="vatPercentage" 
-				headerName=  {strings.Vat+" "+strings.Type}
+				headerName=  {strings.VATTYPE}
 				sortable={ true }
 				enablePivot={true} 
 				filter={ true }
@@ -756,7 +756,7 @@ class Product extends React.Component {
 				></AgGridColumn>  
 
 <AgGridColumn field="exciseTax" 
-				headerName= 'Excise Slab'
+				headerName= 'EXCISE SLAB'
 				sortable={ true }
 				filter={ true }
 				enablePivot={true}
@@ -777,7 +777,7 @@ class Product extends React.Component {
 				></AgGridColumn>  
 
 				<AgGridColumn
-				headerName={strings.Status}
+				headerName={strings.STATUS}
 				field="isActive" 
 				sortable={ true }
 				filter={ true }
@@ -790,7 +790,7 @@ class Product extends React.Component {
 				></AgGridColumn>  
 				<AgGridColumn field="action"
 										// className="Ag-gridActionButtons"
-										headerName="Actions"
+										headerName="ACTIONS"
 										cellRendererFramework={(params) =>
 											<div
 											 className="Ag-gridActionButtons"

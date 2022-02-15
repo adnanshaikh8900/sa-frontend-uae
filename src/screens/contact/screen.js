@@ -543,7 +543,7 @@ class Contact extends React.Component {
 				></AgGridColumn>  
 				<AgGridColumn field="action"
 										// className="Ag-gridActionButtons"
-										headerName="Actions"
+										headerName="ACTIONS"
 										cellRendererFramework={(params) =>
 											<div
 											 className="Ag-gridActionButtons"

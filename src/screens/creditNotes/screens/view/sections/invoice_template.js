@@ -305,7 +305,7 @@ class InvoiceTemplate extends Component {
 														currencySymbol={
 															currencyData[0]
 																? currencyData[0].currencyIsoCode
-																: 'USD'
+																: 'AED'
 														}
 													/>
 												</td>

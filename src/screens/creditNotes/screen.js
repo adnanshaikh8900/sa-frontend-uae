@@ -220,7 +220,7 @@ class CreditNotes extends React.Component {
 			amountInWords:upperCase(row.currencyName + " " +(toWords.convert(row.invoiceAmount))+" ONLY" ).replace("POINT","AND"),
 			vatInWords:row.totalVatAmount ? upperCase(row.currencyName + " " +(toWords.convert(row.totalVatAmount))+" ONLY" ).replace("POINT","AND") :"-"
 		};
-		debugger
+		 
 		this.props.creditNotesActions
 			.creditNoteposting(postingRequestModel)
 			.then((res) => {

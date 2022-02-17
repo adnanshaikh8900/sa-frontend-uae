@@ -947,7 +947,7 @@ class DetailCustomerInvoice extends React.Component {
 		// 	 data.map(function (o2) {
 		// 		if( o1.id !== o2.productId)
 		// 		{	
-		// 			debugger
+		// 			 
 		// 			product_list2.push(o1)
 		// 	 // return the ones with equal id.
 		// 		}

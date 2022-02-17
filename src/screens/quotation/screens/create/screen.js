@@ -302,7 +302,7 @@ class CreateQuotation extends React.Component {
 						id="exciseTaxId"
 						placeholder={strings.Select+strings.Vat}
 						onChange={(e) => {
-							debugger
+							 
 							this.selectItem(
 								e.value,
 								row,

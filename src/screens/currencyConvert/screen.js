@@ -123,7 +123,7 @@ class CurrencyConvert extends React.Component {
 
 
 	goToCurrencyDetail = (currencyId) => {
-		debugger
+		 
 		{currencyId === 1 ? (	
 			this.props.commonActions.tostifyAlert(
 			'error',

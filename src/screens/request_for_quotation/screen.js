@@ -629,7 +629,7 @@ class RequestForQuotation extends React.Component {
 		this.setState({
 			loading: true,
 		});
-		debugger
+		 
 		const postingRequestModel = {
 			postingRefId: row.id,
 			amountInWords:upperCase(row.currencyName + " " +(toWords.convert(row.totalAmount)) ).replace("POINT","AND"),

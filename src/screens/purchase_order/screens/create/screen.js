@@ -298,7 +298,7 @@ class CreatePurchaseOrder extends React.Component {
 						id="exciseTaxId"
 						placeholder={strings.Select+strings.Vat}
 						onChange={(e) => {
-							debugger
+							 
 							this.selectItem(
 								e.value,
 								row,
@@ -449,7 +449,7 @@ class CreatePurchaseOrder extends React.Component {
 // 		   }
 // 		   return obj;
 // 	   });
-// 	   debugger
+// 	    
 // 	   console.log('DiscountType:'+row.discountType)
 // 	   return (
 // 		   <Field

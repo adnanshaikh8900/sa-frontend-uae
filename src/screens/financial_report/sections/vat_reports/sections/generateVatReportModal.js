@@ -236,7 +236,7 @@ class GenerateVatReportModal extends React.Component {
 																<DatePicker
 																		selected={this.state.monthlyDate}
 																		onChange={(date) =>{
-																			debugger
+																			 
 																			this.setState({monthlyDate:date})
 																		}}
 																		selectsStart
@@ -252,7 +252,7 @@ class GenerateVatReportModal extends React.Component {
 																<DatePicker
 																selected={this.state.monthlyDate}
 																onChange={(date) =>{
-																	debugger
+																	 
 																	this.setState({monthlyDate:date})
 																}}
 																	dateFormat="yyyy, QQQ"

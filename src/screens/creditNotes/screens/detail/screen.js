@@ -404,7 +404,7 @@ class DetailCreditNote extends React.Component {
 						id="exciseTaxId"
 						placeholder={strings.Select+strings.Vat}
 						onChange={(e) => {
-							debugger
+							 
 							this.selectItem(
 								e.value,
 								row,
@@ -806,7 +806,7 @@ class DetailCreditNote extends React.Component {
 	discountType = (row) =>
 
 {
-	debugger
+	 
 	
 		return this.state.discountOptions &&
 		selectOptionsFactory

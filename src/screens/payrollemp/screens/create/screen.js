@@ -2286,7 +2286,7 @@ existForAccountNumber = (value) => {
                                                                         })}
                                                                         validate={(values) => {
                                                                             let errors = {};
-                                                                            debugger
+                                                                             
                                                                             if (exist === true  && values.employeeCode!="") {
                                                                                 errors.employeeCode =
                                                                                 'Employee Code Number Already Exists';

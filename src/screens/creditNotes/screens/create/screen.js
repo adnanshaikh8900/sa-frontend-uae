@@ -494,7 +494,7 @@ type="text"
 discountType = (row) =>
 
 {
-	debugger
+	 
 	
 		return this.state.discountOptions &&
 		selectOptionsFactory

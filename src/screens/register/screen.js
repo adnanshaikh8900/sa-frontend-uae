@@ -600,7 +600,7 @@ class Register extends React.Component {
 																					value={props.values.timeZone}
 																					onChange={(option) => {
 																						if (option && option.value) {
-																							debugger
+																							 
 																							props.handleChange('timeZone')(
 																								option.value,
 																							);

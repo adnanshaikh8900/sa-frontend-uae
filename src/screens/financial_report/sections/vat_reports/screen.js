@@ -462,7 +462,7 @@ class VatReports extends React.Component {
 				<b>Delete Vat Report File ?</b>
 			</text>
 		const message = 'This vat report file will be deleted permanently and cannot be recovered. ';
-		debugger
+		 
 		this.setState({
 			dialog: (
 				<ConfirmDeleteModal

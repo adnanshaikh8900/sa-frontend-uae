@@ -98,7 +98,8 @@ class DetailProduct extends React.Component {
 			isActive:false,
 			exciseTaxId:'',
 			exciseTaxList:[],
-			exciseTaxCheck:false
+			exciseTaxCheck:false,
+			disableEditing:true
 		};
 
 		this.selectRowProp = {
@@ -121,6 +122,7 @@ class DetailProduct extends React.Component {
 		this.regEx = /^[0-9\d]+$/;
 		this.regExBoth = /[a-zA-Z0-9-./\\|]+$/;
 		// this.regExBoth = /[a-zA-Z0-9]+$/;
+		this.regDecimal5 =/^\d{0,10}$/;
 		this.regExAlpha = /[ +a-zA-Z0-9-./\\|!@#$%^&*()_<>,]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,6}$$/;
 	}
@@ -270,7 +272,9 @@ class DetailProduct extends React.Component {
 			.then((res) => {
 				if (res.status === 200 && res.data !== null) {
 					this.setState({ loading: false,
-						inventoryId: res.data.inventoryId ? res.data.inventoryId : ''});
+						inventoryId: res.data.inventoryId ? res.data.inventoryId : '',
+						reOrderLevel: res.data[0].reOrderLevel ? res.data[0].reOrderLevel : 0,
+					});
 				}
 			})
 		}
@@ -643,7 +647,7 @@ renderName=(cell,row)=>{
 	renderActions = (cell, row) => {
 		return (
 			<Row>
-			<div>
+			{/* <div>
 				<Button
 				className="btn btn-sm pdf-btn"
 				onClick={(e, ) => {
@@ -652,7 +656,7 @@ renderName=(cell,row)=>{
 				>
 				<i class="far fa-edit fa-lg"></i>
 				</Button>
-			</div>
+			</div> */}
 			<div>
 			<Button
 				className="btn btn-sm pdf-btn ml-3"
@@ -669,6 +673,96 @@ renderName=(cell,row)=>{
 			
 			
 		);
+	};
+
+	renderReorderLevel = (cell, row) => {
+		return (
+			<Row>
+			<Col>
+			<Input 
+				type="text"
+				min="0"
+				max="2000"
+				maxLength='10'
+				name="inventoryReorderLevel"
+				id="inventoryReorderLevel"
+				value={this.state.reOrderLevel}
+				// disabled={this.state.disableEditing}
+				onChange={(option)=>{
+					if(this.regDecimal5.test(option.target.value))
+					{
+						this.setState({reOrderLevel:option.target.value != ''?option.target.value:0 , disableEditing:false})
+					}
+				}}/></Col>	
+
+		     <Col> {this.state.disableEditing==false &&(<div>
+				<Button
+					color="primary"
+				className="btn btn-primary btn-sm pdf-btn  ml-1 mt-1 primary"
+				onClick={(e, ) => {this.updateReorderLevel(row)	}}
+				>
+		         <i class="fas fa-check"></i>
+				</Button>
+			</div>)}</Col> 
+			</Row>			
+		);
+	};
+
+	updateReorderLevel = (data) => {
+		const inventoryId =  data['inventoryId'];
+		const productCode = data['productCode'];
+		const contactId = data['supplierId'];
+		const isInventoryEnabled = data['isInventoryEnabled'];
+		const transactionCategoryId = data['transactionCategoryId'];
+	
+		const productName = data['productName'];
+		const productType = data['productType'];
+		const inventoryQty = data['inventoryQty'];
+		const inventoryReorderLevel = this.state.reOrderLevel;
+		const inventoryPurchasePrice = data['inventoryPurchasePrice'];
+		const dataNew = {			
+			productCode,
+			productName,
+			productType,
+			isInventoryEnabled,
+			contactId,
+			transactionCategoryId,
+			inventoryId,
+			inventoryQty,
+			inventoryReorderLevel,
+			inventoryPurchasePrice,		
+		};
+		const postData = this.getReorderData(dataNew);
+		this.props.productActions
+			.updateInventory(postData)
+			.then((res) => {
+				if (res.status === 200) {
+					// this.setState({ disabled: false });
+					this.props.commonActions.tostifyAlert(
+						'success',
+						res.data ? res.data.message : 'Re-Order Level Updated Successfully',
+					);
+					this.setState({disableEditing:true})
+					// this.props.history.push('/admin/master/product');
+				}
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Updated Unsuccessfully',
+				);
+			});
+	};
+	getReorderData = (data) => {
+		let temp = {};
+		for (let item in data) {
+			if (typeof data[`${item}`] !== 'object') {
+				temp[`${item}`] = data[`${item}`];
+			} else {
+				temp[`${item}`] = data[`${item}`].value;
+			}
+		}
+		return temp;
 	};
 	// renderActions = (cell, row) => {
 	// 	return (
@@ -2093,6 +2187,7 @@ min="0"
 											<TableHeaderColumn
 												dataField="reOrderLevel" 
 												className="table-header-bg"
+												dataFormat={this.renderReorderLevel}
 											>
 											 {strings.ReOrderLevel}
 											</TableHeaderColumn>
@@ -2111,6 +2206,7 @@ min="0"
 											<TableHeaderColumn
 												className="text-right"
 												columnClassName="text-right"
+												width='5%'
 												dataFormat={this.renderActions}
 												className="table-header-bg"
 											></TableHeaderColumn>

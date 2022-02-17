@@ -11,20 +11,43 @@
       padding: 0.4em 0.6em;
       font-size: 90%;
     }
-    .react-tel-input .form-control {
-      position: relative;
-      font-size: 14px;
-      letter-spacing: 0.01rem;
-      margin-top: 3px !important;
-      margin-bottom: 3px !important;
-      padding-left: 41px;
-      margin-left: -1px;
-      background: #FFFFFF;
-      border: 1px solid #CACACA;
-      border-radius: 5px;
-      line-height: 1px;
-      height: 35px;
-      width: 160px;
-      outline: none;
-  }
+    .mobileNumberCSS{
+
+      .form-control:disabled,
+    
+      .form-control[readonly]
+    
+       { background-color: white!important;
+    
+    }
+    
+    .react-tel-input
+    
+    .form-control{
+    
+      border: 0px !important;
+      margin-top: 2px !important;
+    }
+    
+    .react-tel-input
+    
+     .flag-dropdown{border:0px !important}
+    
+    .react-tel-input
+    
+    .selected-flag
+    
+    .arrow
+    
+    {border-left: 0px !important;
+    
+       border-right: 0px !important;}
+    
+    .react-tel-input
+    
+    .form-control
+    
+    {width: 180px !important;}
+    
+    }
 }

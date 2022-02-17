@@ -120,7 +120,9 @@ class DetailRequestForQuotation extends React.Component {
 			basecurrency:[],
 			supplier_currency: '',
 			disabled1:false,
-			vat_list:[]
+			vat_list:[],
+			dateChanged: false,
+			dateChanged1: false
 		};
 
 		// this.options = {
@@ -244,6 +246,18 @@ class DetailRequestForQuotation extends React.Component {
 										placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 										total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : 0,
 								},
+										rfqExpiryDateNoChange: res.data.rfqExpiryDate
+										?  moment(res.data.rfqExpiryDate)
+										: '',
+										rfqReceiveDateNoChange: res.data.rfqReceiveDate
+										? moment(res.data.rfqReceiveDate)
+										: '',	
+										rfqReceiveDate: res.data.rfqReceiveDate
+										? res.data.rfqReceiveDate
+										: '',	
+										rfqExpiryDate: res.data.rfqExpiryDate
+										? res.data.rfqExpiryDate
+										: '',
 								customer_taxTreatment_des : res.data.taxtreatment ? res.data.taxtreatment : '',
 								placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 								total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
@@ -421,7 +435,7 @@ class DetailRequestForQuotation extends React.Component {
 						id="exciseTaxId"
 						placeholder={"Select Excise"}
 						onChange={(e) => {
-							debugger
+							 
 							this.selectItem(
 								e.value,
 								row,
@@ -1042,24 +1056,44 @@ class DetailRequestForQuotation extends React.Component {
 			currency,
 			placeOfSupplyId
 		} = data;
-
+debugger
 		let formData = new FormData();
 		formData.append('type', 3);
 		formData.append('id', current_rfq_id);
 		formData.append('rfqNumber', rfqNumber ? rfqNumber : '');
-		formData.append(
-			'rfqExpiryDate',
-			typeof rfqExpiryDate === 'string'
-				? moment(rfqExpiryDate, 'DD-MM-YYYY').toDate()
-				: rfqExpiryDate,
-		);
-		formData.append(
-			'rfqReceiveDate',
-			typeof rfqReceiveDate === 'string'
-				? moment(rfqReceiveDate, 'DD-MM-YYYY').toDate()
-				: rfqReceiveDate,
-		);
-	
+
+		if(this.state.dateChanged === true)
+		{
+			formData.append(
+				'rfqReceiveDate',
+				typeof rfqReceiveDate === 'string'
+					? this.state.rfqReceiveDate
+					: rfqReceiveDate,
+			);
+		}else{
+			formData.append(
+				'rfqReceiveDate',
+				typeof rfqReceiveDate === 'string'
+					? this.state.rfqReceiveDateNoChange
+					: '',
+			);
+		
+		}
+		if(this.state.dateChanged1 === true){
+			formData.append(
+				'rfqExpiryDate',
+				typeof rfqExpiryDate === 'string'
+					? this.state.rfqExpiryDate
+					: rfqExpiryDate,
+			);
+		}else{
+			formData.append(
+				'rfqExpiryDate',
+				typeof rfqExpiryDate === 'string'
+					? this.state.rfqExpiryDateNoChange
+					: '',
+			);
+		}
 		formData.append('notes', notes ? notes : '');
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
 		formData.append('totalVatAmount', this.state.initValue.totalVatAmount);
@@ -1149,20 +1183,36 @@ class DetailRequestForQuotation extends React.Component {
 		this.setState({ openProductModal: false });
 	};
 	setDate = (props, value) => {
-		const { term } = this.state;
-		const val = term.split('_');
-		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
-		const values = value
+		debugger
+		this.setState({
+			dateChanged: true,
+		});
+		const values1 = value
 			? value
-			: moment(props.values.invoiceDate, 'DD-MM-YYYY').toDate();
-		if (temp && values) {
-			const date = moment(values)
-				.add(temp - 1, 'days')
-				.format('DD-MM-YYYY');
-			props.setFieldValue('invoiceDueDate', date, true);
+			: props.values.rfqReceiveDate1
+		if (values1 ) {
+			this.setState({
+				rfqReceiveDate: moment(values1),
+			});
+			props.setFieldValue('rfqReceiveDate1', values1, true);
 		}
 	};
-
+setDate1= (props, value) => {
+	debugger
+	this.setState({
+		dateChanged1: true,
+	});
+	
+	const values2 = value ? value
+	: props.values.rfqExpiryDate1	
+	if ( values2) {
+		this.setState({
+			rfqExpiryDate: moment(values2),
+		});
+		props.setFieldValue('rfqExpiryDate1', values2, true);
+	
+	}
+};
 	getCurrentProduct = () => {
 		this.props.customerInvoiceActions.getProductList().then((res) => {
 			this.setState(
@@ -1224,23 +1274,7 @@ class DetailRequestForQuotation extends React.Component {
 				this.setState({ loading: false });
 			});
 	};	
-	setDate1 = (props, value) => {		
-		const values = value
-			? value
-			: props.values.rfqExpiryDate1
-		if ( values) {	
-			props.setFieldValue('rfqExpiryDate1', values, true);
-		}
-	};
-	
-	setDate2 = (props, value) => {		
-		const values = value
-			? value
-			: props.values.rfqReceiveDate1
-		if ( values) {	
-			props.setFieldValue('rfqReceiveDate1', values, true);
-		}
-	};
+
 	setExchange = (value) => {
 		let result = this.props.currency_convert_list.filter((obj) => {
 		return obj.currencyCode === value;
@@ -1661,13 +1695,13 @@ class DetailRequestForQuotation extends React.Component {
 																			showYearDropdown
 																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
-																			selected={new Date(props.values.rfqReceiveDate1)}
 																			value={props.values.rfqReceiveDate}
+																			selected={new Date(props.values.rfqReceiveDate1)} 
 																			onChange={(value) => {
 																				props.handleChange('rfqReceiveDate')(
-																					moment(value).format('DD-MM-YYYY'),
+																					value,
 																				);
-																				this.setDate2(props, value);
+																				this.setDate(props, value);
 																			}}
 																			className={`form-control ${
 																				props.errors.rfqReceiveDate &&

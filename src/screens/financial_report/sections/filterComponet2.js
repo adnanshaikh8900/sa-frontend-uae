@@ -110,7 +110,7 @@ class FilterComponent2 extends Component {
 													dropdownMode="select"
 													dateFormat="dd-MM-yyyy"
 													// onChange={(value) => {
-													// 	debugger
+													// 	 
 													// 	props.handleChange('endDate')(value);
 													// 	if (moment(value).isBefore(props.values.endDate)) {
 													// 		props.setFieldValue(

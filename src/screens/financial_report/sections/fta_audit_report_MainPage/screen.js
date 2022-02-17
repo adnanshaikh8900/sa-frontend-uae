@@ -209,7 +209,7 @@ class FtaAuditReport extends React.Component {
 					// this.props.ftaReport
 					// .getFtaAuditReport(postData)
 					// .then((res) => {
-					// 	debugger
+					// 	 
 					// 	if (res.status === 200) {
 					// 		const blob = new Blob([res.data], { type: 'application/csv' });
 					// 		download(blob,params.data.taxReturns+".csv" )

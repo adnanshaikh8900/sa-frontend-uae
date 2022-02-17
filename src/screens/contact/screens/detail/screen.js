@@ -1651,7 +1651,7 @@ class DetailContact extends React.Component {
 
 																			
 																				if (this.state.isSame==false) {
-																					debugger
+																					 
 																					this.setState({isSame: !this.state.isSame,});
 																				    this.getStateListForShippingAddress(props.values.billingcountryId.value ?props.values.billingcountryId.value :props.values.billingcountryId);
 																					props.handleChange('shippingAddress')(props.values.billingAddress);

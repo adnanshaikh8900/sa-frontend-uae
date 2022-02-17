@@ -169,7 +169,7 @@ class DetailExpense extends React.Component {
 						this.props.expenseActions.getPaymentMode();
 						this.props.expenseActions.getUserForDropdown();
 						this.props.expenseCreateActions.getPaytoList();
-						debugger
+						 
 						const {vat_list}=this.props
 					let vatCategoryId=
 						vat_list ?
@@ -432,7 +432,7 @@ class DetailExpense extends React.Component {
 	};
 	getcurentCompanyUser=()=>{
 		this.props.expenseCreateActions.checkAuthStatus().then((response) => {
-			debugger
+			 
 			let userStateName    = response.data.company.companyStateCode.stateName ?response.data.company.companyStateCode.stateName:'';
 			let isDesignatedZone =response.data.company.isDesignatedZone?response.data.company.isDesignatedZone:false;
 				

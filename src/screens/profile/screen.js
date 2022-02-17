@@ -525,7 +525,7 @@ class Profile extends React.Component {
 	};
 
 	resetPassword = (email) => {
-		debugger
+		 
 		
 			let data = {
 			  method: 'post',
@@ -560,11 +560,11 @@ class Profile extends React.Component {
 			this.props.authActions
 				.logIn(obj)
 				.then((res) => {
-			debugger
+			 
 					this.setState({ currentPasswordMatched: true });
 				})
 				.catch((err) => {
-					debugger
+					 
 					if(err.status==401)
 					this.setState({ currentPasswordMatched: false });
 					

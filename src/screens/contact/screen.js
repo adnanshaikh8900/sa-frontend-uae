@@ -193,7 +193,7 @@ class Contact extends React.Component {
 	};
 
 	goToDetail = (contactId) => {
-		debugger
+		 
 		this.props.history.push('/admin/master/contact/detail', { id: contactId });
 	};
 	renderStatus = (cell, row) => {

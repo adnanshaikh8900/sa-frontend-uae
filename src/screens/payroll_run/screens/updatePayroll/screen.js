@@ -365,7 +365,7 @@ class UpdatePayroll extends React.Component {
 			let totalAmountPayroll=0;
 			this.state.selectedRows1.map((row)=>{totalAmountPayroll +=parseFloat(row.grossPay)})
 			formData.append('totalAmountPayroll', totalAmountPayroll);
-	debugger
+	 
 		if(this.state.apiSelector ==="createPayroll"){
 		this.props.createPayrollActions
 			 .updatePayroll(formData)

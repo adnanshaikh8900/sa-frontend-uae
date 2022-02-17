@@ -46,8 +46,7 @@ const mapStateToProps = (state) => {
 		project_list: state.request_for_quotation.project_list,
 		contact_list: state.request_for_quotation.contact_list,
 		currency_list: state.request_for_quotation.currency_list,
-		vat_list: state.request_for_quotation.vat_list,
-		product_list: state.customer_invoice.product_list,
+        product_list: state.customer_invoice.product_list,
 		excise_list: state.request_for_quotation.excise_list,
 		supplier_list: state.request_for_quotation.supplier_list,
 		country_list: state.request_for_quotation.country_list,
@@ -120,6 +119,9 @@ class DetailQuotation extends React.Component {
 			basecurrency:[],
 			supplier_currency: '',
 			disabled1:false,
+			dateChanged: false,
+			vat_list:[],
+
 
 			language: window['localStorage'].getItem('language'),
 		};
@@ -172,6 +174,12 @@ class DetailQuotation extends React.Component {
 	// }
 
 	componentDidMount = () => {
+		this.props.requestForQuotationAction.getVatList().then((res)=>{
+			debugger
+			if(res.status===200)
+			this.setState({vat_list:res.data})
+			
+		});
 		this.initializeData();
 	};
 
@@ -182,7 +190,7 @@ class DetailQuotation extends React.Component {
 				.then((res) => {
 					if (res.status === 200) {
 						this.getCompanyCurrency();
-						this.props.requestForQuotationAction.getVatList();
+					
 						this.props.requestForQuotationAction.getSupplierList(
 							this.state.contactType,
 						);
@@ -197,6 +205,9 @@ class DetailQuotation extends React.Component {
 								initValue: {
 									quotaionExpiration: res.data.quotaionExpiration
 										? moment(res.data.quotaionExpiration).format('DD-MM-YYYY')
+										: '',
+										quotaionExpiration1: res.data.quotaionExpiration
+										? res.data.quotaionExpiration
 										: '',
 										customerId: res.data.customerId ? res.data.customerId : '',
 										quotationNumber: res.data.quotationNumber
@@ -222,6 +233,12 @@ class DetailQuotation extends React.Component {
 											: '',
 								
 								},
+								quotaionExpirationNotChanged: res.data.quotaionExpiration
+										? moment(res.data.quotaionExpiration)
+										: '',
+										quotaionExpiration: res.data.quotaionExpiration
+										? res.data.quotaionExpiration
+										: '',		
 								customer_taxTreatment_des : res.data.taxtreatment ? res.data.taxtreatment : '',
 								placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 								total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
@@ -796,7 +813,7 @@ min="0"
 	};
 
 	renderVat = (cell, row, props) => {
-		const { vat_list } = this.props;
+		const { vat_list } = this.state;
 		let vatList = vat_list.length
 			? [{ id: '', vat: 'Select Vat' }, ...vat_list]
 			: vat_list;
@@ -1012,9 +1029,9 @@ min="0"
 	};
 
 	updateAmount = (data, props) => {
-		debugger
-		const { vat_list , excise_list} = this.props;
-		const { discountPercentage, discountAmount } = this.state;
+		
+		const { excise_list} = this.state;
+		const { discountPercentage, discountAmount, vat_list } = this.state;
 		let total_net = 0;
 		let total_excise = 0;
 		let total = 0;
@@ -1142,13 +1159,22 @@ min="0"
 		formData.append('type', 6);
 		formData.append('id', current_po_id);
 		formData.append('quotationNumber', quotationNumber ? quotationNumber : '');
-	
+	if(this.state.dateChanged === true){
 		formData.append(
 			'quotaionExpiration',
 			typeof quotaionExpiration === 'string'
-				? moment(quotaionExpiration, 'DD-MM-YYYY').toDate()
+				? this.state.quotaionExpiration
 				: quotaionExpiration,
 		);
+	}else{
+		formData.append(
+			'quotaionExpiration',
+			typeof quotaionExpiration === 'string'
+				? this.state.quotaionExpirationNotChanged
+				: " ",
+		);
+	}
+		
 	
 		formData.append('notes', notes ? notes : '');
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
@@ -1237,19 +1263,20 @@ min="0"
 		this.setState({ openProductModal: false });
 	};
 	setDate = (props, value) => {
-		const { term } = this.state;
-		const val = term.split('_');
-		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
-		const values = value
-			? value
-			: moment(props.values.invoiceDate, 'DD-MM-YYYY').toDate();
-		if (temp && values) {
-			const date = moment(values)
-				.add(temp - 1, 'days')
-				.format('DD-MM-YYYY');
-			props.setFieldValue('invoiceDueDate', date, true);
-		}
-	};
+        debugger
+        this.setState({
+            dateChanged: true,
+        });
+        const values1 = value
+            ? value
+            : props.values.quotaionExpiration1
+        if (values1 ) {
+            this.setState({
+                quotaionExpiration: moment(values1),
+            });
+            props.setFieldValue('quotaionExpiration1', values1, true);
+        }
+    };
 
 	getCurrentProduct = () => {
 		this.props.customerInvoiceActions.getProductList().then((res) => {
@@ -1794,9 +1821,10 @@ console.log(this.state.supplier_currency)
 																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
 																			value={props.values.quotaionExpiration}
+																			selected={new Date(props.values.quotaionExpiration1)}
 																			onChange={(value) => {
 																				props.handleChange('quotaionExpiration')(
-																					moment(value).format('DD-MM-YYYY'),
+																					value
 																				);
 																				this.setDate(props, value);
 																			}}
@@ -2252,7 +2280,7 @@ console.log(this.state.supplier_currency)
 					}}
 					getCurrentProduct={(e) => this.getCurrentProduct(e)}
 					createProduct={this.props.ProductActions.createAndSaveProduct}
-					vat_list={this.props.vat_list}
+					vat_list={this.state.vat_list}
 					product_category_list={this.props.product_category_list}
 					salesCategory={this.state.salesCategory}
 					purchaseCategory={this.state.purchaseCategory}

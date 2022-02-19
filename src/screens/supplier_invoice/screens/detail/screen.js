@@ -45,7 +45,6 @@ const mapStateToProps = (state) => {
 		contact_list: state.supplier_invoice.contact_list,
 		currency_list: state.supplier_invoice.currency_list,
 		excise_list: state.supplier_invoice.excise_list,
-		vat_list: state.supplier_invoice.vat_list,
 		product_list: state.customer_invoice.product_list,
 		supplier_list: state.supplier_invoice.supplier_list,
 		country_list: state.supplier_invoice.country_list,
@@ -171,6 +170,11 @@ class DetailSupplierInvoice extends React.Component {
 	// }
 
 	componentDidMount = () => {
+		this.props.supplierInvoiceActions.getVatList().then((res)=>{
+			if(res.status===200)
+			this.setState({vat_list:res.data})
+			
+		});
 		this.initializeData();
 	};
 
@@ -181,7 +185,6 @@ class DetailSupplierInvoice extends React.Component {
 				.then((res) => {
 					if (res.status === 200) {
 						this.getCompanyCurrency();
-						this.props.supplierInvoiceActions.getVatList();
 						this.props.supplierInvoiceActions.getSupplierList(
 							this.state.contactType,
 						);
@@ -837,7 +840,7 @@ class DetailSupplierInvoice extends React.Component {
 	};
 
 	renderVat = (cell, row, props) => {
-		const { vat_list } = this.props;
+		const { vat_list } = this.state;
 		let vatList = vat_list.length
 			? [{ id: '', vat: 'Select Vat' }, ...vat_list]
 			: vat_list;
@@ -1122,8 +1125,8 @@ class DetailSupplierInvoice extends React.Component {
 	};
 
 	updateAmount = (data, props) => {
-		const { vat_list , excise_list} = this.props;
-		const { discountPercentage, discountAmount } = this.state;
+		const {excise_list} = this.props;
+		const { discountPercentage, discountAmount, vat_list } = this.state;
 		let total_net = 0;
 		let total_excise = 0;
 		let total = 0;
@@ -2676,7 +2679,7 @@ class DetailSupplierInvoice extends React.Component {
 					}}
 					getCurrentProduct={(e) => this.getCurrentProduct(e)}
 					createProduct={this.props.ProductActions.createAndSaveProduct}
-					vat_list={this.props.vat_list}
+					vat_list={this.state.vat_list}
 					product_category_list={this.props.product_category_list}
 					salesCategory={this.state.salesCategory}
 					purchaseCategory={this.state.purchaseCategory}

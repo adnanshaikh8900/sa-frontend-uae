@@ -1275,7 +1275,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 		);
 		formData.append(
 			'shippingCountry',
-			shippingCountryId.value !== null ? shippingCountryId.value : shippingCountryId,
+			shippingCountryId.value  ? shippingCountryId.value : shippingCountryId,
 		);
 		formData.append(
 			'shippingState',
@@ -1283,19 +1283,19 @@ if(changeShippingAddress && changeShippingAddress==true)
 		);
 		formData.append(
 			'shippingCity',
-			shippingCity !== null ? shippingCity : '',
+			shippingCity  ? shippingCity : '',
 		);
 		formData.append(
 			'shippingPostZipCode',
-			shippingPostZipCode !== null ? shippingPostZipCode : '',
+			shippingPostZipCode  ? shippingPostZipCode : '',
 		);
 		formData.append(
 			'shippingTelephone',
-			shippingTelephone !== null ? shippingTelephone : '',
+			shippingTelephone  ? shippingTelephone : '',
 		);
 		formData.append(
 			'shippingFax',
-			shippingFax !== null ? shippingFax : '',
+			shippingFax ? shippingFax : '',
 		);
 	}//
 		formData.append('notes', notes !== null ? notes : '');

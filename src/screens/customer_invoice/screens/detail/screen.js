@@ -1234,11 +1234,11 @@ class DetailCustomerInvoice extends React.Component {
 		);
 		formData.append(
 			'shippingCountry',
-			shippingCountryId.value !== null ? shippingCountryId.value : shippingCountryId,
+			shippingCountryId.value ? shippingCountryId.value : shippingCountryId,
 		);
 		formData.append(
 			'shippingState',
-			shippingStateId.value !== null ? shippingStateId.value : shippingStateId,
+			shippingStateId.value ? shippingStateId.value : shippingStateId,
 		);
 		formData.append(
 			'shippingCity',

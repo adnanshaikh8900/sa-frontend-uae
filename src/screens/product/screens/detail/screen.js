@@ -99,7 +99,8 @@ class DetailProduct extends React.Component {
 			exciseTaxId:'',
 			exciseTaxList:[],
 			exciseTaxCheck:false,
-			disableEditing:true
+//			disableEditing:true,
+			inventoryTableData:[]
 		};
 
 		this.selectRowProp = {
@@ -271,10 +272,17 @@ class DetailProduct extends React.Component {
 			this.props.productActions.getInventoryByProductId(this.props.location.state.id)
 			.then((res) => {
 				if (res.status === 200 && res.data !== null) {
-					this.setState({ loading: false,
-						inventoryId: res.data.inventoryId ? res.data.inventoryId : '',
-						reOrderLevel: res.data[0].reOrderLevel ? res.data[0].reOrderLevel : 0,
-					});
+			                                	let tempTableData =res.data
+                                    					tempTableData.map((obj)=>{
+                                    					    obj.disableEditing=true;
+                                    					});
+
+                                                        this.setState({ loading: false,
+                                                            inventoryId: res.data.inventoryId ? res.data.inventoryId : '',
+                                                            inventoryTableData:tempTableData,
+                                                        });
+
+
 				}
 			})
 		}
@@ -686,16 +694,24 @@ renderName=(cell,row)=>{
 				maxLength='10'
 				name="inventoryReorderLevel"
 				id="inventoryReorderLevel"
-				value={this.state.reOrderLevel}
+				value={cell}
 				// disabled={this.state.disableEditing}
 				onChange={(option)=>{
 					if(this.regDecimal5.test(option.target.value))
 					{
-						this.setState({reOrderLevel:option.target.value != ''?option.target.value:0 , disableEditing:false})
+					let tempTableData =[...this.state.inventoryTableData]
+					tempTableData.map((obj)=>{
+					if(obj.inventoryId==row.inventoryId)
+					    {
+					    obj.reOrderLevel=option.target.value != ''?option.target.value:0;
+					    obj.disableEditing=false;
+					    }
+					})
+                       this.setState({inventoryTableData:tempTableData})
 					}
 				}}/></Col>	
 
-		     <Col> {this.state.disableEditing==false &&(<div>
+		     <Col> {row.disableEditing==false &&(<div>
 				<Button
 					color="primary"
 				className="btn btn-primary btn-sm pdf-btn  ml-1 mt-1 primary"
@@ -718,7 +734,7 @@ renderName=(cell,row)=>{
 		const productName = data['productName'];
 		const productType = data['productType'];
 		const inventoryQty = data['inventoryQty'];
-		const inventoryReorderLevel = this.state.reOrderLevel;
+		const inventoryReorderLevel = data['reOrderLevel'];
 		const inventoryPurchasePrice = data['inventoryPurchasePrice'];
 		const dataNew = {			
 			productCode,
@@ -742,7 +758,13 @@ renderName=(cell,row)=>{
 						'success',
 						res.data ? res.data.message : 'Re-Order Level Updated Successfully',
 					);
-					this.setState({disableEditing:true})
+//					this.setState({disableEditing:true})
+                    let tempTableData =[...this.state.inventoryTableData]
+					tempTableData.map((obj)=>{
+					if(obj.inventoryId==data.inventoryId)
+					    obj.disableEditing=true;
+					})
+                       this.setState({inventoryTableData:tempTableData})
 					// this.props.history.push('/admin/master/product');
 				}
 			})
@@ -807,7 +829,7 @@ renderName=(cell,row)=>{
 	render() {
 		strings.setLanguage(this.state.language);
 		const { vat_list, product_category_list,supplier_list,inventory_list } = this.props;
-		const { loading, dialog, purchaseCategory, salesCategory, inventoryAccount ,exciseTaxList} = this.state;
+		const { loading, dialog, purchaseCategory, salesCategory, inventoryAccount ,exciseTaxList,inventoryTableData} = this.state;
 		let tmpSupplier_list = []
 
 		var vat_list_data =[];
@@ -2158,7 +2180,7 @@ min="0"
 											selectRow={this.selectRowProp}
 											search={false}
 											options={this.options}
-											data={inventory_list ? inventory_list : []}
+											data={inventoryTableData ? inventoryTableData : []}
 											version="4"
 											hover
 											responsive

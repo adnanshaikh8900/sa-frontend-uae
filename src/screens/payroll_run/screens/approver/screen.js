@@ -293,8 +293,8 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 			.generateSifFile(this.state.payroll_id,this.state.existEmpList)
 			.then((res) => {
 				if (res.status === 200) {
-					const blob = new Blob([res.data],{type:'application/sif'});
-					download(blob,this.state.payrollSubject ?this.state.payrollSubject+'.SIF':"payroll.SIF")
+					const blob = new Blob([res.data[1]],{type:'application/sif'});
+					download(blob,res.data[0] ?res.data[0]+'.SIF':"payroll.SIF")
 					this.props.commonActions.tostifyAlert('success', 'SIF File Downloaded Successfully')
 				}
 			}).catch((err) => {

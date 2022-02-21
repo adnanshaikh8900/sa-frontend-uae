@@ -164,6 +164,7 @@ class CreateEmployeePayroll extends React.Component {
                 passportExpiryDate: '',
                 visaNumber: '',
                 employeeCode:'',
+                agentId:'',
                 visaExpiryDate: '',
                 dateOfJoining: '',
                 department: '',
@@ -522,7 +523,8 @@ existForAccountNumber = (value) => {
             department,
             labourCard,
             grossSalary,
-            salaryRoleId
+            salaryRoleId,
+            agentId
         } = data;
 
 
@@ -545,6 +547,10 @@ existForAccountNumber = (value) => {
         formData.append(
             'employeeCode',
             employeeCode != null ? employeeCode : '',
+        )
+        formData.append(
+            'agentId',
+            agentId != null ? agentId : '',
         )
         formData.append('dateOfJoining', dateOfJoining ? moment(dateOfJoining).format('DD-MM-YYYY') : '')
         if (salaryRoleId && salaryRoleId.value) {
@@ -1124,9 +1130,9 @@ existForAccountNumber = (value) => {
                                 <NavItem>
                                     <NavLink
                                         active={this.state.activeTab[0] === '2'}
-                                        // onClick={() => {
-                                        //     this.toggle(0, '2');
-                                        // }}
+                                        onClick={() => {
+                                            this.toggle(0, '2');
+                                        }}
                                     >
                                         {strings.Employment}
 									</NavLink>
@@ -2277,7 +2283,9 @@ existForAccountNumber = (value) => {
                                                                         }}
                                                                         validationSchema={Yup.object().shape({
                                                                             employeeCode: Yup.string()
-                                                                                .required("Employee Code is Required"),
+                                                                                .required("Employee Unique Id is Required"),
+                                                                                agentId: Yup.string()
+                                                                                .required("Agent Id is Required"),
                                                                             //     salaryRoleId: Yup.string()
                                                                             // .required("salary Role is Required"),
                                                                 
@@ -2307,10 +2315,11 @@ existForAccountNumber = (value) => {
                                                                                         <Row>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="select"><span className="text-danger">* </span> {strings.EmployeeCode}  </Label>
+                                                                                                    <Label htmlFor="select"><span className="text-danger">* </span>Employee Unique ID </Label>
                                                                                                     <Input
                                                                                                         type="text"
-                                                                                                        maxLength="50"
+                                                                                                        maxLength="14"
+                                                                                                        minLength="14"
                                                                                                         id="employeeCode"
                                                                                                         name="employeeCode"
                                                                                                         value={props.values.employeeCode}
@@ -2332,29 +2341,33 @@ existForAccountNumber = (value) => {
                                                                                                     )}
                                                                                                 </FormGroup>
                                                                                             </Col>
-
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="labourCard"> {strings.LabourCard}</Label>
+                                                                                                    <Label htmlFor="select"><span className="text-danger">* </span>Agent ID </Label>
                                                                                                     <Input
                                                                                                         type="text"
-                                                                                                        maxLength="14"
-                                                                                                        id="labourCard"
-                                                                                                        name="labourCard"
-                                                                                                        value={props.values.labourCard}
-                                                                                                        placeholder={strings.Enter+strings.LabourCard}
-                                                                                                        onChange={(option) => {
-                                                                                                            if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('labourCard')(option) }
-                                                                                                        }}
-                                                                                                        className={props.errors.labourCard && props.touched.labourCard ? "is-invalid" : ""}
-                                                                                                    />                                                                                         {props.errors.labourCard && props.touched.labourCard && (
-                                                                                                        <div className="invalid-feedback">
-                                                                                                            {props.errors.labourCard}
-                                                                                                        </div>
-                                                                                                    )}
+                                                                                                        maxLength="9"
+                                                                                                        minLength="9"
+                                                                                                        id="agentId"
+                                                                                                        name="agentId"
+                                                                                                        value={props.values.agentId}
+                                                                                                        placeholder={strings.Enter+" Agent Id"}
+                                                                                                       
 
+                                                                                                        onChange={(option) => {
+                                                                                                            props.handleChange('agentId')(
+                                                                                                                option,
+                                                                                                            );
+                                                                                                            // this.validationCheck(option.target.value);
+                                                                                                        }}
+                                                                                                        className={props.errors.agentId && props.touched.agentId ? "is-invalid" : ""}
+                                                                                                    />
+                                                                                                    {props.errors.agentId && props.touched.agentId && (
+                                                                                                        <div className="invalid-feedback">{props.errors.agentId}</div>
+                                                                                                    )}
                                                                                                 </FormGroup>
                                                                                             </Col>
+                                                                                         
                                                                                             {/* <Col md="4">
                                                                                                 <FormGroup>
                                                                                                     <Label htmlFor="salaryRoleId"><span className="text-danger">*</span> {strings.SalaryRole} </Label>
@@ -2571,7 +2584,30 @@ existForAccountNumber = (value) => {
                                                                                                 </FormGroup>
                                                                                             </Col>
                                                                                         </Row>
+                                                                                        <Row>
+                                                                                        <Col md="4">
+                                                                                                <FormGroup>
+                                                                                                    <Label htmlFor="labourCard"> {strings.LabourCard}</Label>
+                                                                                                    <Input
+                                                                                                        type="text"
+                                                                                                        maxLength="14"
+                                                                                                        id="labourCard"
+                                                                                                        name="labourCard"
+                                                                                                        value={props.values.labourCard}
+                                                                                                        placeholder={strings.Enter+strings.LabourCard}
+                                                                                                        onChange={(option) => {
+                                                                                                            if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('labourCard')(option) }
+                                                                                                        }}
+                                                                                                        className={props.errors.labourCard && props.touched.labourCard ? "is-invalid" : ""}
+                                                                                                    />                                                                                         {props.errors.labourCard && props.touched.labourCard && (
+                                                                                                        <div className="invalid-feedback">
+                                                                                                            {props.errors.labourCard}
+                                                                                                        </div>
+                                                                                                    )}
 
+                                                                                                </FormGroup>
+                                                                                            </Col>
+                                                                                        </Row>
 
                                                                                     </Col>
 

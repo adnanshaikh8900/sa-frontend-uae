@@ -39,6 +39,7 @@ import moment from 'moment';
 import { Date } from 'core-js';
 import download from 'downloadjs';
 import { align } from '@progress/kendo-drawing';
+import { toast } from 'react-toastify';
 
 const mapStateToProps = (state) => {
 	return {
@@ -325,12 +326,11 @@ class Import extends React.Component {
 					);
 				});
 	}
-	Upload = (data) => {
+	Upload = (validFiles) => {
 		this.setState({ loading: true, disabled: true });
 
 		let formData = new FormData();
-
-		for (const file of this.uploadFile.files) {
+		for (const file of validFiles) {
 			formData.append('files', file);
 		}
 
@@ -1249,16 +1249,67 @@ class Import extends React.Component {
 																							type="file"
 																							accept=".csv"
 																							onChange={(e) => {
-																								this.setState({
-																									fileName: e.target.value
-																										.split('\\')
-																										.pop(),
-																								});
-																								this.Upload();
+																							
+																							let validFiles=[]
+																							let inValidFiles=[] 
+																							let inValidFilesString=""
+																								if(e.target.files.length && e.target.files.length!=0)
+																								{
+																											
+																											for (const file of e.target.files) {
+																												
+																												if( file.name &&
+																													file.name=='Chart Of Accounts.csv' ||
+																													file.name=='Contacts.csv'  ||
+																													file.name=='Credit Note.csv'  ||
+																													file.name=='Invoice.csv'  ||
+																													file.name=='Opening Balances.csv'  ||
+																													file.name=='Product.csv'
+																													)
+																													validFiles.push(file)
+																												else
+																												{ 
+																													// inValidFilesString= inValidFilesString+" "+ file.name+" , " ;
+																													inValidFiles.push(file.name)
+																													
+																												}
+																											}
+																											
+																										this.setState({	fileName: e.target.value.split('\\').pop(),
+																															validFiles:validFiles,
+																															inValidFiles:inValidFiles,
+																														});
+																										// toast.error(inValidFilesString +" are Not valid files .")
+																										if(validFiles.length!=0)					 
+																												this.Upload(validFiles);
+																										else
+																												toast.success("Please Select Valid Files !")
+																												
+																							     }
+																								else{
+																									this.setState({	validFiles:validFiles,inValidFiles:inValidFiles,});
+																								   }
+																			
 																							}}
 																						/>
 																					</div>
-
+																					<div>
+																			{this.state.inValidFiles && this.state.inValidFiles.length!=0 &&
+																			(
+																				<div className='m-1' style={{ border:"1px solid red" }}>
+																						<>&nbsp;&nbsp; Invalid Files are :</>
+																						{this.state.inValidFiles.map((name,index)=>{
+																							return(
+																								<>
+																							<tr className='text-danger'> <td>{index+1}</td><td>{name}</td></tr>
+																								</>
+																							)
+																						})	}
+																				</div>
+																				
+																			)
+																			}
+																		</div>
 
 																				</div>
 																			</Col>
@@ -1300,7 +1351,7 @@ class Import extends React.Component {
 																	<Row><Col>
 																	{this.state.selectedRows.length > 0 ? (	<Button color="primary" className="btn-square pull-left"
 																			onClick={() => { this.DeleteFile() }}>
-																			<i className="far fa-arrow-alt-circle-left"></i> Delete
+																		<i className="fa fa-trash"></i> Delete
 																		</Button>) : ''}
 																		</Col>
 																	</Row>

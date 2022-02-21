@@ -34,7 +34,7 @@ import LocalizedStrings from 'react-localization';
 
 import { toast } from 'react-toastify';
 import { Table } from '@material-ui/core';
-
+import {CreateCompanyDetails  } from './sections';
 const mapStateToProps = (state) => {
 
 	return {
@@ -86,10 +86,11 @@ class PayrollRun extends React.Component {
 			activeTab: new Array(4).fill('1'),
 			csvData: [],
 			view: false,
-			openPayrollModal: false,
+			openModal: false,
 			selectedData: '',
 			current_employee: '',
 			lop: '',
+			disableCreating:true
 		};
 
 		this.options = {
@@ -535,7 +536,7 @@ class PayrollRun extends React.Component {
 		this.props.payRollActions.getSalaryDetailByEmployeeIdNoOfDays(employeeId).then((res) => {
 			this.setState({
 				current_employee: employeeId,
-				openPayrollModal: true, rowId: employeeId,
+				openModal: true, rowId: employeeId,
 				selectedData: res.data,
 				employeename: res.data.employeeName,
 				netPay: res.data.netPay,
@@ -638,11 +639,11 @@ class PayrollRun extends React.Component {
 		);
 	};
 
-	openPayrollModal = (props) => {
-		this.setState({ openPayrollModal: true });
+	openModal = (props) => {
+		this.setState({ openModal: true });
 	};
-	closePayrollModal = (res) => {
-		this.setState({ openPayrollModal: false });
+	closeModal  = (res) => {
+		this.setState({ openModal: false });
 		this.initializeData();
 	};
 
@@ -721,8 +722,10 @@ class PayrollRun extends React.Component {
 													</ButtonGroup>
 												</div>
 												<Row className="mb-4 ">
+											
 													{userForCheckApprover === "Payroll Approver" ? ""
 														: <Col>
+														
 															<Button
 																color="primary"
 																className="btn-square mt-2 pull-right"
@@ -730,11 +733,27 @@ class PayrollRun extends React.Component {
 																onClick={() =>
 																	this.props.history.push('/admin/payroll/payrollrun/createPayrollList')
 																}
+																// disabled={this.state.disableCreating}
 															// disabled={selectedRows.length === 0}
 															>
 																<i className="fas fa-plus mr-1" />
 
 																Create New Payroll
+															</Button>
+															<Button
+																color="primary"
+																className="btn-square mt-2 pull-right"
+																// onClick={}
+																onClick={() =>
+																	{
+																		this.setState({openModal:true,disableCreating:false})
+																	}
+																}
+															
+															>
+																<i className="fas fa-plus mr-1" />
+
+																Create Company Details
 															</Button>
 														</Col>
 													}
@@ -879,6 +898,12 @@ class PayrollRun extends React.Component {
 
 
 				/> */}
+				<CreateCompanyDetails
+				openModal={this.state.openModal}
+				closeModal ={(e) => {
+					this.closeModal (e);
+				}}
+				/>
 			</div>
 			</div>
 		);

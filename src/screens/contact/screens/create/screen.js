@@ -1476,6 +1476,7 @@ class CreateContact extends React.Component {
 																				props.handleChange('shippingAddress')(
 																					option,
 																				);
+																				this.setState({isSame: false,});
 																			}
 																		}}
 																		value={props.values.shippingAddress}
@@ -1528,6 +1529,7 @@ class CreateContact extends React.Component {
 																			if (option && option.value) {
 																				props.handleChange('shippingCountryId')(option);
 																				this.getStateListForShippingAddress(option.value);
+																				this.setState({isSame: false,});
 																			} else {
 																				props.handleChange('shippingCountryId')('');
 																				// this.getStateListForShippingAddress('');
@@ -1582,6 +1584,7 @@ class CreateContact extends React.Component {
 																		onChange={(option) => {
 																			if (option && option.value) {
 																				props.handleChange('shippingStateId')(option);
+																				this.setState({isSame: false,});
 																			} else {
 																				props.handleChange('shippingStateId')('');
 																			}
@@ -1620,6 +1623,7 @@ class CreateContact extends React.Component {
 																			) {
 																				option = upperFirst(option.target.value)
 																				props.handleChange('shippingCity')(option);
+																				this.setState({isSame: false,});
 																			}
 																		}}
 																		placeholder={strings.Enter + strings.City}
@@ -1661,6 +1665,7 @@ class CreateContact extends React.Component {
 																				props.handleChange('shippingPostZipCode')(
 																					option.target.value,
 																				);
+																				this.setState({isSame: false,});
 																			}
 																		}}
 																		value={props.values.shippingPostZipCode}

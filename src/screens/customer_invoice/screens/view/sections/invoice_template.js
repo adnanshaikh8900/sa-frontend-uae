@@ -93,6 +93,24 @@ class InvoiceTemplate extends Component {
 	// 		<div>{term}</div>
 	// 	);
 	// }
+	renderShippingAddress =()=>{
+		const { invoiceData, currencyData, totalNet, totalExciseAmount,companyData,status, contactData } = this.props;
+//ischanged at inv level
+
+let shippingAddress="";
+if(invoiceData.changeShippingAddress && invoiceData.changeShippingAddress==true)
+{
+ shippingAddress=invoiceData.shippingAddress ? invoiceData.shippingAddress:"";
+}else{
+	if(contactData && contactData.isBillingAndShippingAddressSame &&contactData.isBillingAndShippingAddressSame==true)
+	shippingAddress=contactData.addressLine1 ? contactData.addressLine1:"";
+	else
+	shippingAddress=contactData.addressLine2 ? contactData.addressLine2:"";
+}
+
+
+    return(	<div className="mb-1 ml-2"><b>{strings.ShippingAddress} : </b>{shippingAddress}</div>);
+	}
 	getTerms=(term)=>{
 
 		let	val=	this.termList &&
@@ -211,6 +229,7 @@ render() {
 								<h6 className="mb-1 ml-2"><b>{strings.BillTo} ,</b></h6>
 								<div className="mb-1 ml-2"><b>{strings.Name} : </b>{invoiceData.organisationName ? invoiceData.organisationName : invoiceData.name}</div>
 								{contactData && contactData.addressLine1 &&(<div className="mb-1 ml-2"><b>{strings.BillingAddress} : </b> {contactData.addressLine1}</div>)}
+										{invoiceData && contactData&&( this.renderShippingAddress())}
 								{contactData && contactData.postZipCode &&(	<div className="mb-1 ml-2"><b>{strings.PinCode} : </b> {contactData.postZipCode}</div>)}
 								{contactData&&contactData.billingStateName&&(<div className="mb-1 ml-2"><b>{strings.StateRegion} : </b> {contactData.billingStateName}</div>)}
 								{contactData && contactData.billingCountryName &&(<div className="mb-1 ml-2"><b>{strings.Country} : </b> {contactData.billingCountryName}</div>)}

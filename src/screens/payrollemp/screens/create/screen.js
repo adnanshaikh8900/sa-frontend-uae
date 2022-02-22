@@ -2355,9 +2355,7 @@ existForAccountNumber = (value) => {
                                                                                                        
 
                                                                                                         onChange={(option) => {
-                                                                                                            props.handleChange('agentId')(
-                                                                                                                option,
-                                                                                                            );
+                                                                                                            if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('agentId')(option) }
                                                                                                             // this.validationCheck(option.target.value);
                                                                                                         }}
                                                                                                         className={props.errors.agentId && props.touched.agentId ? "is-invalid" : ""}

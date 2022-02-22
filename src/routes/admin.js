@@ -716,12 +716,14 @@ const adminRoutes = [
 		name: 'ViewEmployeeDesignation',
 		component: Designation.screen,
 	},
-	{
-		redirect: true,
-		path: '/admin/payroll',
-		pathTo: '/admin/payroll/employee',
-		name: 'Employee',
-	},
+    {
+
+        redirect: true,
+        path: '/admin/payroll',
+        pathTo: '/admin/payroll/payrollrun',
+        name: 'Payroll',
+
+    },
 
 	
 	{

@@ -1468,7 +1468,7 @@ class CreatePurchaseOrder extends React.Component {
 		this.props.purchaseOrderCreateAction
 			.checkValidation(data)
 			.then((response) => {
-				if (response.data === 'poNumber already exists') {
+				if (response.data === 'Po Number Already Exists') {
 					this.setState(
 						{
 							exist: true,

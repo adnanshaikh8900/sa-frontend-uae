@@ -198,7 +198,7 @@ class CreateChartAccount extends React.Component {
 													let errors = {};
 													if (this.state.exist === true) {
 														errors.transactionCategoryName =
-															'Chart Of Account Name is already exist';
+															'Chart Of Account Name is Already Exist';
 													}
 													return errors;
 												}}

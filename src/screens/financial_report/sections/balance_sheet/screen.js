@@ -69,7 +69,7 @@ class BalanceSheet extends React.Component {
 			view: false,
 			initValue: {
 				startDate: moment().startOf('month').format('DD/MM/YYYY'),
-				endDate: moment().endOf('month').format('DD-MM-YYYY'),
+				endDate: moment().endOf('month').format('DD/MM/YYYY'),
 				reportBasis: 'ACCRUAL',
 				chartOfAccountId: '',
 			},
@@ -378,7 +378,7 @@ class BalanceSheet extends React.Component {
 										
 											<b style ={{ fontSize: '18px'}}>{strings.BalanceSheet}</b>
 											<br/>
-											{strings.Ason} {initValue.endDate}
+											{strings.Ason}  {initValue.endDate.replaceAll("/","-")} 
 											
 									</div>
 									<div>

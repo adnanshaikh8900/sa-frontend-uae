@@ -223,6 +223,7 @@ class DetailCreditNote extends React.Component {
 									contact_po_number: res.data.contactPoNumber
 										? res.data.contactPoNumber
 										: '',
+										vatCategoryId : res.data.vatCategoryId ? res.data.vatCategoryId : '',
 									currency: res.data.currencyCode ? res.data.currencyCode : '',
 									exchangeRate:res.data.exchangeRate ? res.data.exchangeRate : '',
 									currencyName:res.data.currencyName ? res.data.currencyName : '',
@@ -260,6 +261,7 @@ class DetailCreditNote extends React.Component {
 									filePath: res.data.filePath ? res.data.filePath : '',
 									total_excise: res.data.totalExciseTaxAmount ? res.data.totalExciseTaxAmount : 0,
 								},
+								vatCategoryId: res.data.vatCategoryId ? res.data.vatCategoryId : '',
 								customer_taxTreatment_des : res.data.taxTreatment ? res.data.taxTreatment : '',
 								checked: res.data.exciseType ? res.data.exciseType : res.data.exciseType,
 								discountAmount: res.data.discount ? res.data.discount : 0,
@@ -1119,6 +1121,7 @@ class DetailCreditNote extends React.Component {
 			discount,
 			discountType,
 			discountPercentage,
+			vatCategoryId
 		} = data;
 
 		let formData = new FormData();
@@ -1140,7 +1143,9 @@ class DetailCreditNote extends React.Component {
 		// 		? moment(invoiceDueDate, 'DD-MM-YYYY').toDate()
 		// 		: invoiceDueDate,
 		// );
-
+		if (vatCategoryId && vatCategoryId.value) {
+			formData.append('vatCategoryId', vatCategoryId.value);
+		}
 		formData.append('exchangeRate',  this.state.initValue.exchangeRate);
 		
 		formData.append(
@@ -1447,7 +1452,7 @@ class DetailCreditNote extends React.Component {
 		strings.setLanguage(this.state.language);
 		const { data, discountOptions, initValue, loading, dialog } = this.state;
 
-		const { project_list, currency_list,currency_convert_list, customer_list,universal_currency_list } = this.props;
+		const { project_list, currency_list,currency_convert_list, customer_list,universal_currency_list,vat_list } = this.props;
 
 		let tmpCustomer_list = []
 
@@ -2019,7 +2024,67 @@ class DetailCreditNote extends React.Component {
 																			</div>
 																		)}
 																</FormGroup>
-															</Col>)}
+															</Col>
+															)}
+{this.props.location.state.isCNWithoutProduct==true &&(
+<Col lg={3}>
+				<FormGroup className="mb-3">
+					<Label htmlFor="vatCategoryId"><span className="text-danger">* </span>{strings.Vat}</Label>
+					<Select
+						
+						className="select-default-width"
+					
+						options={
+							vat_list
+								? selectOptionsFactory.renderOptions(
+										'name',
+										'id',
+										vat_list,
+										'Vat',
+								  )
+								: []
+						}
+						value={vat_list &&
+							selectOptionsFactory.renderOptions(
+									'name',
+									'id',
+									vat_list,
+									'Vat',
+							  ).find(
+																					(option) =>
+																		 				option.value ===
+																						 props.values.vatCategoryId
+																	 				// +this.state.vatCategoryId,
+																	 		)}
+						onChange={(option) => {
+							if (option && option.value) {
+								props.handleChange('vatCategoryId')(
+									option,
+								);
+							} else {
+								props.handleChange('vatCategoryId')('');
+							}
+						}}
+						
+						placeholder={strings.Select+strings.Vat }
+						id="vatCategoryId"
+						name="vatCategoryId"
+						className={
+							props.errors.vatCategoryId &&
+							props.touched.vatCategoryId
+								? 'is-invalid'
+								: ''
+						}
+					/>
+					{props.errors.vatCategoryId &&
+						props.touched.vatCategoryId && (
+							<div className="invalid-feedback">
+								{props.errors.vatCategoryId}
+							</div>
+						)}
+					
+				</FormGroup>
+			</Col>)}
 																</Row>
 																<hr />
 																{/* <Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>

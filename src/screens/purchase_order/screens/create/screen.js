@@ -1642,7 +1642,7 @@ getrfqDetails = (e, row, props,form,field) => {
                                                     // rfqNumber: Yup.string().required(
 													// 	'Rfq Number is Required',
 													// ),
-													// placeOfSupplyId: Yup.string().required('Place of supply is Required'),
+													placeOfSupplyId: Yup.string().required('Place of supply is Required'),
 													
 													poApproveDate: Yup.string().required(
 														'Order Date is Required',
@@ -1837,7 +1837,6 @@ getrfqDetails = (e, row, props,form,field) => {
 
 
 																	<Select
-																		styles={customStyles}
 																		id="supplierId"
 																		name="supplierId"
 																		placeholder={strings.Select+strings.SupplierName}
@@ -1946,7 +1945,6 @@ getrfqDetails = (e, row, props,form,field) => {
 																		{strings.PlaceofSupply}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		id="placeOfSupplyId"
 																		name="placeOfSupplyId"
 																		placeholder={strings.Select+strings.PlaceofSupply}

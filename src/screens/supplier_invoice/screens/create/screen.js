@@ -1835,7 +1835,6 @@ class CreateSupplierInvoice extends React.Component {
 																		{strings.SupplierName} 
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		id="contactId"
 																		name="contactId"
 																		placeholder={strings.Select+strings.SupplierName}
@@ -1930,7 +1929,6 @@ class CreateSupplierInvoice extends React.Component {
 																	</Label>
 																	<Input
 																	disabled
-																		styles={customStyles}
 																		id="taxTreatmentid"
 																		name="taxTreatmentid"
 																		value={
@@ -1964,7 +1962,6 @@ class CreateSupplierInvoice extends React.Component {
 																		{strings.PlaceofSupply} 
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		id="placeOfSupplyId"
 																		name="placeOfSupplyId"
 																		placeholder={strings.Select+strings.PlaceofSupply}
@@ -2037,7 +2034,6 @@ class CreateSupplierInvoice extends React.Component {
 																		</UncontrolledTooltip>
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		options={
 																			this.termList
 																				? selectOptionsFactory.renderOptions(

@@ -1539,7 +1539,6 @@ class CreateRequestForQuotation extends React.Component {
 																		{strings.SupplierName}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		id="supplierId"
 																		name="supplierId"
 																		placeholder={strings.Select+strings.SupplierName}
@@ -1652,7 +1651,6 @@ class CreateRequestForQuotation extends React.Component {
 																		{strings.PlaceofSupply}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		id="placeOfSupplyId"
 																		name="placeOfSupplyId"
 																		placeholder={strings.Select+strings.PlaceofSupply}

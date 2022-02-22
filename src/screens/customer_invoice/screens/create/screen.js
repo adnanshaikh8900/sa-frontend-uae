@@ -1853,7 +1853,6 @@ if(changeShippingAddress && changeShippingAddress==true)
 																	{strings.CustomerName}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		id="contactId"
 																		name="contactId"
 																		placeholder={strings.Select+strings.CustomerName} 
@@ -1953,7 +1952,6 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		{strings.PlaceofSupply}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		id="placeOfSupplyId"
 																		name="placeOfSupplyId"
 																		placeholder={strings.Select+strings.PlaceofSupply}
@@ -2029,7 +2027,6 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		</UncontrolledTooltip>
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		options={
 																			this.termList
 																				? selectOptionsFactory.renderOptions(
@@ -2280,8 +2277,6 @@ if(changeShippingAddress && changeShippingAddress==true)
 																<FormGroup>
 																	<Label htmlFor="shippingCountryId"><span className="text-danger">* </span>{strings.Country}</Label>
 																	<Select
-																	
-																		styles={customStyles}
 																		options={
 																			country_list
 																				? selectOptionsFactory.renderOptions(
@@ -2344,7 +2339,6 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		{props.values.shippingCountryId.value === 229 ? "Emirites" : "State / Provinces"}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		options={
 																			state_list_for_shipping
 																				? selectOptionsFactory.renderOptions(

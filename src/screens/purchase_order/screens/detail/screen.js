@@ -1742,7 +1742,6 @@ debugger
 																			{strings.PlaceofSupply}
 																		</Label>
 																		<Select
-																			styles={customStyles}
 																			options={
 																				this.placelist
 																					? selectOptionsFactory.renderOptions(

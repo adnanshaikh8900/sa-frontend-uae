@@ -641,7 +641,6 @@ class DetailExpense extends React.Component {
 				<FormGroup className="mb-3">
 					<Label htmlFor="vatCategoryId"><span className="text-danger">* </span>{strings.Tax}</Label>
 					<Select
-						styles={customStyles}
 						className="select-default-width"
 						id="vatCategoryId"
 						name="vatCategoryId"
@@ -900,7 +899,6 @@ class DetailExpense extends React.Component {
 																			<span className="text-danger">* </span>{strings.TaxTreatment}
 																		</Label>
 																		<Select
-																			styles={customStyles}
 																			options={
 																				taxTreatmentList
 																					? selectOptionsFactory.renderOptions(
@@ -976,7 +974,6 @@ class DetailExpense extends React.Component {
 																	</Label>
 																	<Select
 																	isDisabled={this.state.lockPlacelist}
-																		styles={customStyles}
 																		id="placeOfSupplyId"
 																		name="placeOfSupplyId"
 																		placeholder={strings.Select+strings.PlaceofSupply}
@@ -1036,7 +1033,6 @@ class DetailExpense extends React.Component {
 																			 {strings.ExpenseCategory}
 																		</Label>
 																		<Select
-																			styles={customStyles}
 																			id="expenseCategory"
 																			name="expenseCategory"
 																			options={
@@ -1088,7 +1084,6 @@ class DetailExpense extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="payee">	<span className="text-danger">* </span>{strings.PaidBy}</Label>
 																		<Select
-																			styles={customStyles}
 																			options={
 																				pay_to_list
 																					? selectOptionsFactory.renderOptions(
@@ -1179,7 +1174,6 @@ class DetailExpense extends React.Component {
 																			{strings.Currency}
 																		</Label>
 																		<Select
-																			styles={customStyles}
 																			id="currencyCode"
 																			name="currencyCode"
 																			options={

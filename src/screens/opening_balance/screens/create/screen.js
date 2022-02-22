@@ -206,7 +206,6 @@ class CreateOpeningBalance extends React.Component {
 																{strings.TransactionCategory}
 																</Label>
 																		<Select
-																		styles={customStyles}
 																		id="transactionCategoryId"
 																		name="transactionCategoryId"
 																		placeholder={strings.Select+strings.TransactionCategory}

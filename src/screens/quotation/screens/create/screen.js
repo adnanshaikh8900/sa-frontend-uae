@@ -1644,7 +1644,6 @@ discountType = (row) =>
 																		{strings.CustomerName}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		id="customerId"
 																		name="customerId"
 																		placeholder={strings.Select+strings.CustomerName}
@@ -1756,7 +1755,6 @@ discountType = (row) =>
 																		{strings.PlaceofSupply}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		id="placeOfSupplyId"
 																		name="placeOfSupplyId"
 																		placeholder={strings.Select+strings.PlaceofSupply}

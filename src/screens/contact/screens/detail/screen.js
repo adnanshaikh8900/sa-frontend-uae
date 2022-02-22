@@ -844,7 +844,6 @@ class DetailContact extends React.Component {
 																			 {strings.ContactType}
 																		</Label>
 																		<Select
-																			styles={customStyles}
 																			options={
 																				contact_type_list
 																					? selectOptionsFactory.renderOptions(
@@ -1175,7 +1174,6 @@ class DetailContact extends React.Component {
 																		<span className="text-danger">* </span>{strings.TaxTreatment}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		options={
 																			taxTreatmentList
 																				? selectOptionsFactory.renderOptions(
@@ -1326,7 +1324,6 @@ class DetailContact extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="billingcountryId"><span className="text-danger">* </span>{strings.Country}</Label>
 																	<Select
-																		styles={customStyles}
 																		options={
 																			country_list
 																				? selectOptionsFactory.renderOptions(
@@ -1398,7 +1395,6 @@ class DetailContact extends React.Component {
 																		{props.values.billingcountryId.value === 229 ? "Emirates" : "State / Provinces"}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		options={
 																			state_list
 																				? selectOptionsFactory.renderOptions(
@@ -1729,8 +1725,6 @@ class DetailContact extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="shippingCountryId"><span className="text-danger">* </span>{strings.Country}</Label>
 																	<Select
-																	
-																		styles={customStyles}
 																		options={
 																			country_list
 																				? selectOptionsFactory.renderOptions(
@@ -1794,8 +1788,6 @@ class DetailContact extends React.Component {
 																		{props.values.shippingCountryId === 229 || props.values.shippingCountryId.value === 229? "Emirates" : "State / Provinces"}
 																	</Label>
 																	<Select
-																		
-																		styles={customStyles}
 																		options={
 																			state_list_for_shipping
 																				? selectOptionsFactory.renderOptions(

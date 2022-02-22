@@ -1782,7 +1782,6 @@ class DetailCustomerInvoice extends React.Component {
 																			{strings.CustomerName}
 																		</Label>
 																		<Select
-																			styles={customStyles}
 																			id="contactId"
 																			name="contactId"
 																			options={
@@ -1890,7 +1889,6 @@ class DetailCustomerInvoice extends React.Component {
 																			{strings.PlaceofSupply}
 																		</Label>
 																		<Select
-																			styles={customStyles}
 																			options={
 																				this.placelist
 																					? selectOptionsFactory.renderOptions(
@@ -1954,7 +1952,6 @@ class DetailCustomerInvoice extends React.Component {
 																			<i className="fa fa-question-circle"></i>
 																		</Label>
 																		<Select
-																			styles={customStyles}
 																			options={
 																				this.termList
 																					? selectOptionsFactory.renderOptions(
@@ -2226,8 +2223,6 @@ class DetailCustomerInvoice extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="shippingCountryId"><span className="text-danger">* </span>{strings.Country}</Label>
 																	<Select
-																	
-																		styles={customStyles}
 																		options={
 																			country_list
 																				? selectOptionsFactory.renderOptions(
@@ -2291,7 +2286,6 @@ class DetailCustomerInvoice extends React.Component {
 																		{props.values.shippingCountryId.value === 229 ? "Emirites" : "State / Provinces"}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		options={
 																			state_list_for_shipping
 																				? selectOptionsFactory.renderOptions(

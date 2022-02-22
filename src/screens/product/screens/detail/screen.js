@@ -1236,7 +1236,6 @@ renderName=(cell,row)=>{
 																		</Label>
 																		<Select
 																		 isDisabled={this.state.companyDetails && !this.state.companyDetails.isRegisteredVat}
-																			styles={customStyles}
 																			options={
 																				vat_list
 																					? selectOptionsFactory.renderOptions(
@@ -1371,7 +1370,6 @@ renderName=(cell,row)=>{
 																		</Label>
 																		<Select
 																		// isDisabled={props.values.exciseTaxId!='' ?true:false}
-																			styles={customStyles}
 																			options={
 																				exciseTaxList
 																					? selectOptionsFactory.renderOptions(

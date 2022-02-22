@@ -1534,7 +1534,6 @@ setDate1= (props, value) => {
 																			{strings.SupplierName}
 																		</Label>
 																		<Select
-																			styles={customStyles}
 																			id="supplierId"
 																			name="supplierId"
 																			onBlur={props.handlerBlur}
@@ -1622,7 +1621,6 @@ setDate1= (props, value) => {
 																			{strings.PlaceofSupply}
 																		</Label>
 																		<Select
-																			styles={customStyles}
 																			options={
 																				this.placelist
 																					? selectOptionsFactory.renderOptions(

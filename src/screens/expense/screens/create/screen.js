@@ -880,7 +880,6 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																			<span className="text-danger">* </span>{strings.TaxTreatment}
 																		</Label>
 																		<Select
-																			styles={customStyles}
 																			options={
 																				taxTreatmentList
 																					? selectOptionsFactory.renderOptions(
@@ -942,7 +941,6 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																	</Label>
 																	<Select
 																	isDisabled={this.state.lockPlacelist}
-																		styles={customStyles}
 																		id="placeOfSupplyId"
 																		name="placeOfSupplyId"
 																		placeholder={strings.Select+strings.PlaceofSupply}
@@ -995,9 +993,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		<span className="text-danger">* </span>
 																		{strings.ExpenseCategory}
 																	</Label>
-																	<Select
-																		styles={customStyles}
-																		
+																	<Select	
 																		options={
 																			expense_categories_list
 																				? selectOptionsFactory.renderOptions(
@@ -1083,7 +1079,6 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		<span className="text-danger">* </span>{strings.PaidBy}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		options={
 																			pay_to_list
 																				? selectOptionsFactory.renderOptions(
@@ -1248,7 +1243,6 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		{strings.Currency}  
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		id="currency"
 																		name="currency"
 																		options={
@@ -1304,9 +1298,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="payMode"><span className="text-danger">* </span> {strings.PayThrough}</Label>
 																		<Select
-																			styles={customStyles}
-																			
-																			options={
+																		options={
 																				pay_mode_list
 																					? selectOptionsFactory.renderOptions(
 																							'label',

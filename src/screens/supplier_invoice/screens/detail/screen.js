@@ -1759,7 +1759,6 @@ class DetailSupplierInvoice extends React.Component {
 																		{strings.SupplierName}
 																		</Label>
 																		<Select
-																			styles={customStyles}
 																			id="contactId"
 																			name="contactId"
 																			onBlur={props.handlerBlur}
@@ -1849,7 +1848,6 @@ class DetailSupplierInvoice extends React.Component {
 																			 {strings.PlaceofSupply}
 																		</Label>
 																		<Select
-																			styles={customStyles}
 																			options={
 																				this.placelist
 																					? selectOptionsFactory.renderOptions(
@@ -1913,7 +1911,6 @@ class DetailSupplierInvoice extends React.Component {
 																			<i className="fa fa-question-circle"></i>
 																		</Label>
 																		<Select
-																			styles={customStyles}
 																			options={
 																				this.termList
 																					? selectOptionsFactory.renderOptions(

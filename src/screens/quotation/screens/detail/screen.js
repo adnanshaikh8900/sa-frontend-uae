@@ -1641,7 +1641,6 @@ console.log(this.state.supplier_currency)
 																				{strings.CustomerName}
 																		</Label>
 																		<Select
-																			styles={customStyles}
 																			id="customerId"
 																			name="customerId"
 																			onBlur={props.handlerBlur}
@@ -1745,7 +1744,6 @@ console.log(this.state.supplier_currency)
 																			{strings.PlaceofSupply}
 																		</Label>
 																		<Select
-																			styles={customStyles}
 																			options={
 																				this.placelist
 																					? selectOptionsFactory.renderOptions(

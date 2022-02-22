@@ -869,7 +869,6 @@ try {
 																		</Label>
 																		<Select
 																	    	 isDisabled={this.state.companyDetails && !this.state.companyDetails.isRegisteredVat}
-																			styles={customStyles}
 																			options={
 																				vat_list
 																					? selectOptionsFactory.renderOptions(
@@ -956,7 +955,6 @@ try {
 																			Excise Tax Type
 																		</Label>
 																		<Select
-																			styles={customStyles}
 																			options={
 																				exciseTaxList
 																					? selectOptionsFactory.renderOptions(

@@ -1849,7 +1849,6 @@ if (invoiceNumber && invoiceNumber.value) {
 																	{strings.InvoiceNumber}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		id="invoiceNumber"
 																		name="invoiceNumber"
 																		placeholder={strings.Select+strings.InvoiceNumber}
@@ -1945,7 +1944,6 @@ if (invoiceNumber && invoiceNumber.value) {
 																		 {strings.CustomerName}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		id="contactId"
 																		name="contactId"
 																		placeholder={strings.Select+strings.CustomerName}

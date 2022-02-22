@@ -146,7 +146,7 @@ calculatePayperioad=(startDate,endDate)=>{
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))+1; 
 	
     this.setState({paidDays:diffDays});
-	this.getAllPayrollEmployee()
+	this.getAllPayrollEmployee(endDate)
 	console.log(diffTime + " milliseconds");
     console.log(diffDays + " days");
 	console.log(this.state.paidDays,"paid-Days",diffDays)
@@ -315,9 +315,10 @@ calculatePayperioad=(startDate,endDate)=>{
 	}
 
 
-	getAllPayrollEmployee = () => {
+	getAllPayrollEmployee = (endDate) => {
 		//maintaining new state
-		this.props.createPayrollActions.getAllPayrollEmployee().then((res) => {
+		let date=endDate ?endDate :this.state.endDate;
+		this.props.createPayrollActions.getAllPayrollEmployee(moment(date).format("DD/MM/YYYY")).then((res) => {
 			if (res.status === 200) {
 
 				this.setState({
@@ -858,8 +859,8 @@ showTotal=()=>{
 																				endDateId="endDate"
 																				focusedInput={this.state.focusedInput}
 																				isOutsideRange={
-																					// () => null
-																					day => isInclusivelyBeforeDay(day, moment(new Date(today.getFullYear(), today.getMonth(),0)))
+																					 () => null
+																					// day => isInclusivelyBeforeDay(day, moment(new Date(today.getFullYear(), today.getMonth(),0)))
 																				}
 																				onDatesChange={this.handleDateChange}
 																				onFocusChange={this.handleFocusChange}

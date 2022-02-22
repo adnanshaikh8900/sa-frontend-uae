@@ -67,7 +67,7 @@ class UpdateEmployeeEmployment extends React.Component {
         this.regExAlpha = /^[a-zA-Z ]+$/;
         this.regExBoth = /[a-zA-Z0-9]+$/;
         this.regExSpaceBoth = /[a-zA-Z0-9 ]+$/;
-
+        this.regEx = /^[0-9\d]+$/;
         this.formRef = React.createRef();
     }
 
@@ -332,10 +332,8 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                                                        
 
                                                                                                         onChange={(option) => {
-                                                                                                            props.handleChange('agentId')(
-                                                                                                                option,
-                                                                                                            );
-                                                                                                            // this.validationCheck(option.target.value);
+                                                                                                            if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('agentId')(option) }
+                                                                                                                 // this.validationCheck(option.target.value);
                                                                                                         }}
                                                                                                         className={props.errors.agentId && props.touched.agentId ? "is-invalid" : ""}
                                                                                                     />

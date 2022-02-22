@@ -114,7 +114,7 @@ class CreateCompanyDetails extends React.Component {
 			if (res.status === 200) {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Company Details Updated Successfully',
+					'Company Details Saved Successfully',
 				);
 				this.props.closeModal(false);				
 			}

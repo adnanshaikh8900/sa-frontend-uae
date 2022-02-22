@@ -157,11 +157,11 @@ export const removeEmployee = (ids) => {
 	}
 }
 
-export const getAllPayrollEmployee2 = (_id) => {
+export const getAllPayrollEmployee2 = (_id,payrollDate) => {
 	return (dispatch) => {
 	  let data = {
 		method: 'GET',
-		url: `/rest/payroll/getAllPayrollEmployee?payrollid=${_id}`
+		url: `/rest/payroll/getAllPayrollEmployee?payrollid=${_id}&payrollDate=${payrollDate}`
 	  }
   
 	  return authApi(data).then((res) => {

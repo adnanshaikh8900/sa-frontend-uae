@@ -1085,7 +1085,7 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 																				{props.errors.comment}
 																			</div>
 																		)}
-																		{this.state.status && (this.state.status==="Approved" ||this.state.status==="Partially Paid"  ||this.state.status==="Paid" ) ? 
+																		{this.state.status && (this.state.status==="Approved" || this.state.status==="Rejected" ||this.state.status==="Partially Paid"  ||this.state.status==="Paid" ) ? 
 																''	:
 																		(
 																			<Button
@@ -1095,7 +1095,10 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 																			onClick={() =>
 																				this.rejectPayroll()
 																			}
-																		// disabled={selectedRows.length === 0}
+																		disabled={this.state.comment==""?true:false}
+																		title={
+																			this.state.comment==""?"Please Enter Comment":""
+																		}
 																		>
 																			<i class="fas fa-user-times mr-1"></i>
 

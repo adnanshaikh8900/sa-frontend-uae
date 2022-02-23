@@ -274,7 +274,7 @@ class UpdatePayroll extends React.Component {
 			return true;
 		}
 		else
-			if (this.state.status === "Submitted") {
+			if (this.state.status === "Submitted" || this.state.status==="Approved") {
 				return true;
 			} else {
 				return false;
@@ -293,7 +293,7 @@ class UpdatePayroll extends React.Component {
 			}
 	};
 	disableForAddButton = () => {
-		if (this.state.status === "Submitted") {
+		if (this.state.status === "Submitted" || this.state.status==="Approved") {
 			return true;
 		} else {
 			return false;
@@ -1220,7 +1220,7 @@ class UpdatePayroll extends React.Component {
 
 
 																<Col>
-																{this.state.status && this.state.status==="Submitted" ?(""):(<>
+																{this.state.status && (this.state.status==="Submitted" ||this.state.status==="Approved")?(""):(<>
 																	<Button
 																			type="button"
 																			color="danger"
@@ -1244,7 +1244,7 @@ class UpdatePayroll extends React.Component {
 																	>
 																		<i className="fa fa-ban"></i> {strings.Cancel}
 																	</Button>
-																	{this.state.status && this.state.status==="Submitted" ?(""):
+																	{this.state.status && (this.state.status==="Submitted" ||this.state.status==="Approved") ?(""):
 																	(		<>
 																	
 																	<Button

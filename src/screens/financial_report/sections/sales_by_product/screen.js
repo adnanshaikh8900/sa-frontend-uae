@@ -341,7 +341,7 @@ class SalesByProduct extends React.Component {
 											<br style={{ marginBottom: '5px' }} />
 											<b style ={{ fontSize: '18px'}}>{strings.SalesByProduct}</b>
 											<br style={{ marginBottom: '5px' }} />
-																				{strings.From} {moment(initValue.startDate).format("DD-MM-YYYY")} {strings.To} {initValue.endDate.replaceAll("/","-")} 
+											{strings.From} {(initValue.startDate).replaceAll("/","-")} {strings.To} {initValue.endDate.replaceAll("/","-")} 
 
 											
 									</div>
@@ -357,10 +357,7 @@ class SalesByProduct extends React.Component {
 													<tr >
 														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.ProductName}</th>
 														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.QuantitySold}</th>
-
-														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>
-															{strings.Total+" "+strings.Amount}
-														</th>
+														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>{strings.Total+" "+strings.Amount}</th>
 														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>{strings.Average+" "+strings.Amount}</th>
 
 													</tr>

@@ -1258,9 +1258,9 @@ discountType = (row) =>
 		formData.append('type', 7);
 		if(this.state.isCreatedWIWP ===true)
 		formData.append('totalAmount', creditAmount);
-		if (vatCategoryId && vatCategoryId.value) {
-			formData.append('vatCategoryId', vatCategoryId.value);
-		}
+	
+			formData.append('vatCategoryId', 2);
+		
 if (invoiceNumber && invoiceNumber.value) {
 	formData.append('invoiceId', invoiceNumber.value);
 	formData.append('cnCreatedOnPaidInvoice','1');
@@ -2354,54 +2354,6 @@ if (invoiceNumber && invoiceNumber.value) {
 																</FormGroup>
 															</Col>
 															)}
-	{this.state.isCreatedWIWP===true &&(
-<Col lg={3}>
-				<FormGroup className="mb-3">
-					<Label htmlFor="vatCategoryId"><span className="text-danger">* </span>{strings.Vat}</Label>
-					<Select
-						
-						className="select-default-width"
-					
-						options={
-							vat_list
-								? selectOptionsFactory.renderOptions(
-										'name',
-										'id',
-										vat_list,
-										'Vat',
-								  )
-								: []
-						}
-						value={props.values.vatCategoryId}
-						onChange={(option) => {
-							if (option && option.value) {
-								props.handleChange('vatCategoryId')(
-									option,
-								);
-							} else {
-								props.handleChange('vatCategoryId')('');
-							}
-						}}
-						
-						placeholder={strings.Select+strings.Vat }
-						id="vatCategoryId"
-						name="vatCategoryId"
-						className={
-							props.errors.vatCategoryId &&
-							props.touched.vatCategoryId
-								? 'is-invalid'
-								: ''
-						}
-					/>
-					{props.errors.vatCategoryId &&
-						props.touched.vatCategoryId && (
-							<div className="invalid-feedback">
-								{props.errors.vatCategoryId}
-							</div>
-						)}
-					
-				</FormGroup>
-			</Col>	)}
 															{/* <Col lg={3}>
 												<FormGroup>
 													<Label htmlFor="email">

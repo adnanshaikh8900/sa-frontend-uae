@@ -500,7 +500,7 @@ this.props.financialReportActions
 									paperSize="A3"
 									fileName={'Statement Of Account ( '+this.state.customerName+' ).pdf'}
 								>
-								<Card><CardBody>	
+								<Card id="section-to-print"><CardBody>	
 									<div style={{
 
 										display: 'flex',
@@ -576,7 +576,7 @@ this.props.financialReportActions
 											</td>
 										</tr>
 										<tr>
-											<td><b>Amount Paid</b></td>
+											<td><b>Amount Received</b></td>
 											<td style={{textAlign:"right"}}> 
 											{/* {this.state.totalAmountPaid} */}
 											<Currency

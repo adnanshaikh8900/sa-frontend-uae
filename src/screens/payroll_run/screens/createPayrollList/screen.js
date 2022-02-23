@@ -318,6 +318,7 @@ calculatePayperioad=(startDate,endDate)=>{
 	getAllPayrollEmployee = (endDate) => {
 		//maintaining new state
 		let date=endDate ?endDate :this.state.endDate;
+		let month =moment(date).format("MMMM"); 
 		this.props.createPayrollActions.getAllPayrollEmployee(moment(date).format("DD/MM/YYYY")).then((res) => {
 			if (res.status === 200) {
 
@@ -326,8 +327,12 @@ calculatePayperioad=(startDate,endDate)=>{
 				})
 
 				let newData = [...this.state.allPayrollEmployee]
-				newData = newData.map((data) => {	
-					let tmpPaidDay=this.state.paidDays > 30 ?30	:this.state.paidDays				
+				newData = newData.map((data) => {			
+					 	/** if month is of 31 days and 28days so its will be treated as 30 days only , 
+						  * need to handle this in future release */
+						//for  month wise case handling ,need to add switch in future 
+						 let tmpPaidDay=this.state.paidDays > 30 ?30	:
+										( this.state.paidDays==28 && month=="February" ? 30 :this.state.paidDays	)			
 						data.noOfDays =tmpPaidDay
 						data.originalNoOfDays =tmpPaidDay
 						data.originalGrossPay=data.grossPay

@@ -469,6 +469,7 @@ class UpdatePayroll extends React.Component {
 	getAllPayrollEmployee = (endDate) => {
 		if(this.state.payrollId){
 			let date=endDate ?endDate :this.state.endDate;
+			let month=moment(date).format("MMMM");
 		this.props.createPayrollActions.getAllPayrollEmployee2(this.state.payrollId,moment(date).format("DD/MM/YYYY")).then((res) => {
 			if (res.status === 200) {
 
@@ -492,7 +493,8 @@ class UpdatePayroll extends React.Component {
 							// data.noOfDays =this.state.paidDays
 							// data.originalGrossPay=data.grossPay		
 					        // data.perDaySal=data.originalGrossPay / data.noOfDays			
-							let tmpPaidDay=this.state.paidDays > 30 ?30	:this.state.paidDays	
+							let tmpPaidDay=this.state.paidDays > 30 ?30	:
+										( this.state.paidDays==28 && month=="February" ? 30 :this.state.paidDays	)		
 							if(this.state.checkForLopSetting===true)		data.noOfDays =tmpPaidDay
 
 							data.originalDeduction=data.deduction

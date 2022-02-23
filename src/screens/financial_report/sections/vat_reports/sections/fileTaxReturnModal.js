@@ -118,11 +118,15 @@ class FileTaxReturnModal extends React.Component {
 	handleSubmit = (data, resetForm, setSubmitting) => {
 		this.setState({ disabled: true });
 
+
+	let formData = new FormData();
+	for ( var key in data ) {	
+		formData.append(key, data[key]);
+	}
+
 		this.props.vatreportActions
-			.fileVatReport(data)
+			.fileVatReport(formData)
 			.then((res) => {
-				let resConfig = JSON.parse(res.config.data);
-				
 				if (res.status === 200) {
 					this.setState({ disabled: false });
 					this.props.commonActions.tostifyAlert(
@@ -137,7 +141,7 @@ class FileTaxReturnModal extends React.Component {
 			})
 			.catch((err) => {
 				this.setState({ disabled: false });
-				this.displayMsg(err);
+				// this.displayMsg(err);
 				this.formikRef.current.setSubmitting(false);
 			});
 	};
@@ -456,7 +460,7 @@ dateLimit=()=>{
 																		placeholderText={"Tax Filed On"}
 																		showMonthDropdown
 																		showYearDropdown
-																		autoComplete='off'
+																	
 																		dateFormat="dd-MM-yyyy"
 																		dropdownMode="select"
 																		minDate={this.dateLimit()}

@@ -155,10 +155,7 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 											color: 'black',
 										}}
 									>
-									{strings.PurchaseOrder
-									+" "+
-									strings.Details
-									}
+									{strings.PurchaseOrder}
 									</div>
 
 							</div>
@@ -276,6 +273,7 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 										{strings.UnitCost }
 									</th>
 									<th style={{ padding: '0.5rem' }}>{strings.Excise}</th>
+									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.ExciseAmount}</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.Vat}</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.VatAmount}</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
@@ -302,13 +300,18 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 																: 'USD'
 														}
 													/> */}
-												{POData.currencyIsoCode + " " +item.unitPrice}
+												{POData.currencyIsoCode + " " +item.unitPrice.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
 												</td>
 												<td>{item.exciseTaxId ? this.renderExcise(item):"-"}</td>
+												<td style={{ textAlign: 'right' }}>
+												{POData.currencyIsoCode + " " +item.exciseAmount.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
+												</td>
 												<td
 													style={{ textAlign: 'right' }}
 												>{`${item.vatPercentage}%`}</td>
-												<td style={{ textAlign: 'right' }}>{item.vatAmount}</td>
+												<td style={{ textAlign: 'right' }}>
+												{POData.currencyIsoCode + " " +item.vatAmount.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
+												</td>
 												<td style={{ textAlign: 'right' }}>
 													{/* <Currency
 														value={item.subTotal}
@@ -318,7 +321,7 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 																: 'USD'
 														}
 													/> */}
-													{POData.currencyIsoCode + " " +item.subTotal}
+													{POData.currencyIsoCode + " " +item.subTotal.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
 												</td>
 											</tr>
 										);

@@ -193,7 +193,7 @@ class Contact extends React.Component {
 	};
 
 	goToDetail = (contactId) => {
-		debugger
+		 
 		this.props.history.push('/admin/master/contact/detail', { id: contactId });
 	};
 	renderStatus = (cell, row) => {
@@ -215,6 +215,25 @@ class Contact extends React.Component {
         );
 
     };
+	getActionButtons = (params) => {
+		return (
+	<>
+	{/* BUTTON ACTIONS */}
+			{/* View */}
+			<Button
+				className="Ag-gridActionButtons btn-sm"
+				title='Edit'
+				color="secondary"
+
+					onClick={()=>
+						
+						this.goToDetail(params.data.id)  }
+			
+			>		<i className="fas fa-edit"/> </Button>
+	</>
+		)
+	}
+
 	bulkDelete = () => {
 		const { selectedRows } = this.state;
 		this.props.contactActions
@@ -375,6 +394,8 @@ class Contact extends React.Component {
 		const { contact_list, contact_type_list } = this.props;
 
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="contact-screen">
 				<div className="animated fadeIn">
 					{dialog}
@@ -485,9 +506,7 @@ class Contact extends React.Component {
 							cursor: 'pointer',
 							}}
 						
-							onClick={()=>{
-								
-								this.goToDetail(params.data.id) }}                                                                  
+						                                                
 			>
 			{params.value}
 			</label>
@@ -495,7 +514,7 @@ class Contact extends React.Component {
 				></AgGridColumn>
 
 				<AgGridColumn field="email" 
-				headerName=	{strings.Email}
+				headerName=	{strings.EMAIL}
 				sortable={ true }
 				filter={ true }
 				enablePivot={true}
@@ -511,7 +530,7 @@ class Contact extends React.Component {
 
 
 				<AgGridColumn
-				headerName={strings.Status}
+				headerName={strings.STATUS}
 				field="isActive" 
 				sortable={ true }
 				filter={ true }
@@ -522,7 +541,18 @@ class Contact extends React.Component {
 													<label className="badge label-due"> InActive</label>
 										}
 				></AgGridColumn>  
-			
+				<AgGridColumn field="action"
+										// className="Ag-gridActionButtons"
+										headerName="ACTIONS"
+										cellRendererFramework={(params) =>
+											<div
+											 className="Ag-gridActionButtons"
+											 >
+												{this.getActionButtons(params)}
+											</div>
+
+										}
+									></AgGridColumn>
 			</AgGridReact>  
 			<div className="example-header mt-1">
 					Page Size:
@@ -569,6 +599,7 @@ class Contact extends React.Component {
 						</CardBody>
 					</Card>
 				</div>
+			</div>
 			</div>
 		);
 	}

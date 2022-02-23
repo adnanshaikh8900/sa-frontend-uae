@@ -159,6 +159,7 @@ export const getVatList = () => {
 							data: res.data,
 						},
 					});
+					return res;
 				}
 			})
 			.catch((err) => {

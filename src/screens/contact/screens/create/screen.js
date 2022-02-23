@@ -311,14 +311,40 @@ class CreateContact extends React.Component {
 													// if (values.stateId.label && values.stateId.label === 'Select State') {
 													// 	errors.stateId ='State is Required';
 													// }
-													if (values.vatRegistrationNumber === '' && this.state.isRegisteredForVat==true)
+
+													if (this.state.isRegisteredForVat==true){
+														if(values.vatRegistrationNumber=="")
 														errors.vatRegistrationNumber =	'Tax Registration Number is Required';
+													
+														if(values.vatRegistrationNumber.length!=15){
+															errors.vatRegistrationNumber="Please enter 15 digit Tax Registration Number"
+														}}
 												
 													// if (param === true) {
 													// 	errors.discount =
 													// 		'Discount amount Cannot be greater than Invoice Total Amount';
 													// }
+													if(values.billingPostZipCode.length!=6){
+														errors.billingPostZipCode="Please Enter 6 Digit Postal Zip Code"
+													}
+
+													if(values.shippingPostZipCode.length!=6){
+														errors.shippingPostZipCode="Please Enter 6 Digit Postal Zip Code"
+													}
+
+													if(this.state.showbillingFaxErrorMsg==true)
+													errors.billingFax="Please Enter 8 Digit Fax"
+
+													
+													if(this.state.showshippingFaxErrorMsg==true)
+													errors.shippingFax="Please Enter 8 Digit Fax"
+
+													if(this.state.showpoBoxNumberErrorMsg==true)
+													errors.poBoxNumber="Please Enter 6 Digit PO Box Number"
+
+
 													return errors;
+													
 												}}
 												validationSchema={Yup.object().shape({
 													firstName: Yup.string().required(
@@ -357,7 +383,7 @@ class CreateContact extends React.Component {
 													//   'Telephone Number is Required',
 													// ),
 													mobileNumber: Yup.string()
-														.required('Mobile Number is required')
+														.required('Mobile Number is Required')
 
 													,
 													// billingEmail: Yup.string().email("Invalid Billing  Email "),
@@ -638,7 +664,6 @@ class CreateContact extends React.Component {
 																		{strings.ContactType}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		options={
 																			contact_type_list
 																				? selectOptionsFactory.renderOptions(
@@ -875,7 +900,7 @@ class CreateContact extends React.Component {
 																	/>
 																	{props.errors.mobileNumber &&
 																		props.touched.mobileNumber && (
-																			<div style={{ color: "red" }}>
+																			<div  className="invalid-feedback">
 																				{props.errors.mobileNumber}
 																			</div>
 																		)}
@@ -887,7 +912,8 @@ class CreateContact extends React.Component {
 																	<Label htmlFor="select">{strings.POBoxNumber}</Label>
 																	<Input
 																		type="text"
-																		maxLength="8"
+																		minLength="6"
+																		maxLength="6"
 																		id="poBoxNumber"
 																		name="poBoxNumber"
 																		placeholder={strings.Enter + strings.POBoxNumber}
@@ -896,6 +922,10 @@ class CreateContact extends React.Component {
 																				option.target.value === '' ||
 																				this.regEx.test(option.target.value)
 																			) {
+																				if(option.target.value.length !=6 && option.target.value !="")
+																				this.setState({showpoBoxNumberErrorMsg:true})
+																				else
+																				this.setState({showpoBoxNumberErrorMsg:false})
 																				props.handleChange('poBoxNumber')(
 																					option,
 																				);
@@ -933,7 +963,7 @@ class CreateContact extends React.Component {
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||
-																				this.regExAlpha.test(
+																				this.regExAddress.test(
 																					option.target.value,
 																				)
 																			) {
@@ -959,7 +989,6 @@ class CreateContact extends React.Component {
 																		<span className="text-danger">* </span>{strings.TaxTreatment}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		options={
 																			taxTreatmentList
 																				? selectOptionsFactory.renderOptions(
@@ -1015,6 +1044,7 @@ class CreateContact extends React.Component {
 																	</Label>
 																	<Input
 																		type="text"
+																		minLength="15"
 																		maxLength="15"
 																		id="vatRegistrationNumber"
 																		name="vatRegistrationNumber"
@@ -1096,7 +1126,6 @@ class CreateContact extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="billingcountryId"><span className="text-danger">* </span>{strings.Country}</Label>
 																	<Select
-																		styles={customStyles}
 																		options={
 																			country_list
 																				? selectOptionsFactory.renderOptions(
@@ -1147,7 +1176,6 @@ class CreateContact extends React.Component {
 																		{props.values.billingcountryId.value === 229 ? "Emirates" : "State / Provinces"}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		options={
 																			state_list
 																				? selectOptionsFactory.renderOptions(
@@ -1159,6 +1187,7 @@ class CreateContact extends React.Component {
 																				: []
 																		}
 																		value={props.values.billingStateProvince}
+																		
 																		onChange={(option) => {
 																			if (option && option.value) {
 																				props.handleChange('billingStateProvince')(option);																	
@@ -1166,7 +1195,7 @@ class CreateContact extends React.Component {
 																				props.handleChange('stateId')('');
 																			}
 																		}}
-																		placeholder={strings.Select + props.values.billingcountryId === 229 ? "Emirates" : "State / Provinces"}
+																		placeholder={strings.Select + props.values.billingcountryId === 229 || props.values.billingcountryId.value === 229 ? "Emirates" : "State / Provinces"}
 																		id="stateId"
 																		name="stateId"
 																		className={
@@ -1260,7 +1289,7 @@ class CreateContact extends React.Component {
 																	</Label>
 																	<Input
 																		type="text"
-																		maxLength="8"
+																		maxLength="6"
 																		id="billingPostZipCode"
 																		name="billingPostZipCode"
 																		placeholder={strings.Enter + strings.PostZipCode}
@@ -1340,6 +1369,10 @@ class CreateContact extends React.Component {
 																				option.target.value === '' ||
 																				this.regEx.test(option.target.value)
 																			) {
+																				if(option.target.value.length !=8 && option.target.value !="")
+																				this.setState({showbillingFaxErrorMsg:true})
+																				else
+																				this.setState({showbillingFaxErrorMsg:false})
 																				props.handleChange('billingFax')(
 																					option,
 																				);
@@ -1387,6 +1420,10 @@ class CreateContact extends React.Component {
 																					props.handleChange('shippingTelephone')(props.values.billingPhoneNumber);
 																					props.handleChange('shippingPostZipCode')(props.values.billingPostZipCode);
 																					props.handleChange('shippingFax')(props.values.billingFax);
+																					if(props.values.billingFax.length !=8 && props.values.billingFax !="")
+																				this.setState({showshippingFaxErrorMsg:true})
+																				else
+																				this.setState({showshippingFaxErrorMsg:false})
 																				} else {
 																					this.setState({isSame: !this.state.isSame,});
 
@@ -1439,6 +1476,7 @@ class CreateContact extends React.Component {
 																				props.handleChange('shippingAddress')(
 																					option,
 																				);
+																				this.setState({isSame: false,});
 																			}
 																		}}
 																		value={props.values.shippingAddress}
@@ -1462,8 +1500,6 @@ class CreateContact extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="shippingCountryId"><span className="text-danger">* </span>{strings.Country}</Label>
 																	<Select
-																	
-																		styles={customStyles}
 																		options={
 																			country_list
 																				? selectOptionsFactory.renderOptions(
@@ -1474,7 +1510,8 @@ class CreateContact extends React.Component {
 																				)
 																				: []
 																		}
-																		value={ country_list &&
+																		value={
+																			country_list &&
 																				selectOptionsFactory
 																					.renderOptions(
 																						'countryName',
@@ -1492,9 +1529,10 @@ class CreateContact extends React.Component {
 																			if (option && option.value) {
 																				props.handleChange('shippingCountryId')(option);
 																				this.getStateListForShippingAddress(option.value);
+																				this.setState({isSame: false,});
 																			} else {
 																				props.handleChange('shippingCountryId')('');
-																				// this.getStateListForShippingAddress("");
+																				// this.getStateListForShippingAddress('');
 																			}
 																			props.handleChange('stateId')({
 																				label: 'Select State',
@@ -1523,21 +1561,21 @@ class CreateContact extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="shippingStateId"><span className="text-danger">* </span>
 																		{/* {strings.StateRegion} */}
-																		{props.values.billingcountryId === 229 ? "Emirites" : "State / Provinces"}
+																		{props.values.shippingCountryId.value === 229 ? "Emirates" : "State / Provinces"}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		options={
 																			state_list_for_shipping
 																				? selectOptionsFactory.renderOptions(
 																					'label',
 																					'value',
 																					state_list_for_shipping,
-																					props.values.billingcountryId === 229 ? "Emirites" : "State / Provinces",
+																					props.values.shippingCountryId.value === 229 ? "Emirates" : "State / Provinces",
 																				)
 																				: []
 																		}
-																		value={ state_list_for_shipping.find(
+																		value={
+																			state_list_for_shipping.find(
 																					(option) =>
 																						option.value ===
 																						+props.values.shippingStateId.value,
@@ -1546,11 +1584,12 @@ class CreateContact extends React.Component {
 																		onChange={(option) => {
 																			if (option && option.value) {
 																				props.handleChange('shippingStateId')(option);
+																				this.setState({isSame: false,});
 																			} else {
 																				props.handleChange('shippingStateId')('');
 																			}
 																		}}
-																		placeholder={strings.Select + props.values.billingcountryId === 229 ? "Emirites" : "State / Provinces"}
+																			placeholder={ props.values.shippingCountryId.value === 229 ? "Emirates" : "State / Provinces"}
 																		id="shippingStateId"
 																		name="shippingStateId"
 																		className={
@@ -1584,6 +1623,7 @@ class CreateContact extends React.Component {
 																			) {
 																				option = upperFirst(option.target.value)
 																				props.handleChange('shippingCity')(option);
+																				this.setState({isSame: false,});
 																			}
 																		}}
 																		placeholder={strings.Enter + strings.City}
@@ -1613,7 +1653,7 @@ class CreateContact extends React.Component {
 																	<Input
 																	
 																		type="text"
-																		maxLength="8"
+																		maxLength="6"
 																		id="shippingPostZipCode"
 																		name="shippingPostZipCode"
 																		placeholder={strings.Enter + strings.PostZipCode}
@@ -1625,6 +1665,7 @@ class CreateContact extends React.Component {
 																				props.handleChange('shippingPostZipCode')(
 																					option.target.value,
 																				);
+																				this.setState({isSame: false,});
 																			}
 																		}}
 																		value={props.values.shippingPostZipCode}
@@ -1696,6 +1737,10 @@ class CreateContact extends React.Component {
 																				option.target.value === '' ||
 																				this.regEx.test(option.target.value)
 																			) {
+																				if(option.target.value.length !=8 && option.target.value !="")
+																				this.setState({showshippingFaxErrorMsg:true})
+																				else
+																				this.setState({showshippingFaxErrorMsg:false})
 																				props.handleChange('shippingFax')(
 																					option,
 																				);

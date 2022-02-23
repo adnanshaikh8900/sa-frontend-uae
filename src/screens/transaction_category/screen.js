@@ -153,6 +153,8 @@ class TransactionCategory extends React.Component {
     };
 
     return (
+      loading ==true? <Loader/> :
+<div>
       <div className="transaction-category-screen">
         <div className="animated fadeIn">
           <ToastContainer
@@ -282,6 +284,7 @@ class TransactionCategory extends React.Component {
             </ModalFooter>
           </Modal>
         </div>
+      </div>
       </div>
     )
   }

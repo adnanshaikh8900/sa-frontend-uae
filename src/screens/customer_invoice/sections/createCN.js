@@ -422,6 +422,19 @@ class CreateCreditNoteModal extends React.Component {
 		);
 	}
 
+	renderVatAmount = (cell, row,extraData) => {
+		return row.vatAmount === 0 ? this.state.selectedData.currencyIsoCode +" "+  row.vatAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2,maximumFractionDigits: 2 }): this.state.selectedData.currencyIsoCode +" "+ row.vatAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2,maximumFractionDigits: 2 });
+	
+	}
+
+	rendertotalexcise=()=>{
+		const {initValue}= this.state
+		
+		let val=initValue.total_excise.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})
+		
+		return parseFloat(val).toFixed(2)
+	}
+
 	renderVat = (cell, row, props) => {
 		const { vat_list } = this.props;
 		let vatList = vat_list.length
@@ -1481,21 +1494,14 @@ class CreateCreditNoteModal extends React.Component {
 																			service
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn>
-																	<TableHeaderColumn
-																		dataField="vat"
-																		dataFormat={(cell, rows) =>
-																			this.renderVat(cell, rows, props)
-																		}
-																	>
-																		{strings.VAT}
-																	</TableHeaderColumn>
+
 																	<TableHeaderColumn
 																		dataField="vat"
 																		dataFormat={(cell, rows) =>
 																			this.renderExcise(cell, rows, props)
 																		}
 																	>
-																	Excise
+																	{strings.Excise}
 																	<i
 																			id="ExiseTooltip"
 																			className="fa fa-question-circle ml-1"
@@ -1507,6 +1513,25 @@ class CreateCreditNoteModal extends React.Component {
 																			If Exise Type for a product is Inclusive
 																			then the Excise dropdown will be Disabled
 																		</UncontrolledTooltip>
+																	</TableHeaderColumn>
+																	
+																	<TableHeaderColumn
+																		dataField="vat"
+																		dataFormat={(cell, rows) =>
+																			this.renderVat(cell, rows, props)
+																		}
+																	>
+																		{strings.VAT}
+																	</TableHeaderColumn>
+
+																	<TableHeaderColumn
+																		dataField="vat_amount"
+																		dataFormat={this.renderVatAmount}
+																		className="text-right"
+																		columnClassName="text-right"
+																	
+																	>
+																		{strings.VatAmount}
 																	</TableHeaderColumn>
 																	
 																	<TableHeaderColumn
@@ -1545,6 +1570,24 @@ class CreateCreditNoteModal extends React.Component {
 																</Col>
 																	<Col lg={4}>
 																		<div className="">
+
+																		<div className="total-item p-2">
+																				<Row>
+																					<Col lg={6}>
+																						<h5 className="mb-0 text-right">
+																							 {strings.TotalExcise}
+																						</h5>
+																					</Col>
+																					<Col lg={6} className="text-right">
+																						<label className="mb-0">
+																					            {this.state.selectedData.currencyIsoCode}  &nbsp;
+																								{this.state.selectedData.totalExciseAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
+																						
+																						</label>
+																					</Col>
+																				</Row>
+																			</div>
+
 																		<div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>
@@ -1582,7 +1625,7 @@ class CreateCreditNoteModal extends React.Component {
 																							/>
 																							)} */}
 																								{this.state.selectedData.currencyIsoCode}  &nbsp;
-																								{this.getTotalNet().toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
+																								{(this.state.selectedData.totalAmount-this.state.selectedData.totalVatAmount).toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
 																							{/* {this.getTotalNet()} */}
 																						</label>
 																					</Col>

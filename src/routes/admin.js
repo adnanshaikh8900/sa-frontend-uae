@@ -102,6 +102,7 @@ import {
 	VatPaymentRecord,
 	RecordTaxClaim,
 	RecordVatPayment,
+	ARAgingReport,
 
 
 	// Master Screens
@@ -197,7 +198,9 @@ import {
 	SOAReport,
 	FtaAuditReport,
 	GenerateAuditFile,
-	ViewFtaAuditReport
+	ViewFtaAuditReport,
+	ExciseTaxAuditReport,
+	ViewFtaExciseAuditReport
 } from 'screens';
 
 const adminRoutes = [
@@ -713,12 +716,14 @@ const adminRoutes = [
 		name: 'ViewEmployeeDesignation',
 		component: Designation.screen,
 	},
-	{
-		redirect: true,
-		path: '/admin/payroll',
-		pathTo: '/admin/payroll/employee',
-		name: 'Employee',
-	},
+    {
+
+        redirect: true,
+        path: '/admin/payroll',
+        pathTo: '/admin/payroll/payrollrun',
+        name: 'Payroll',
+
+    },
 
 	
 	{
@@ -783,6 +788,21 @@ const adminRoutes = [
 		component: ViewFtaAuditReport.screen,
 	},
 	{
+		path: '/admin/report/exciseTaxAuditReports',
+		name: 'FTA Reports',
+		component: ExciseTaxAuditReport.screen,
+	},		
+	{
+		path: '/admin/report/exciseTaxAuditReports/generateexcisetaxAuditReport',
+		name: 'Generate FTA Report',
+		component: GenerateAuditFile.screen,
+	},	
+	{
+		path: '/admin/report/exciseTaxAuditReports/view',
+		name: 'View FTA Report',
+		component: ViewFtaExciseAuditReport.screen,
+	},
+	{
 		path: '/admin/report/vatreports/view',
 		name: 'View Vat Report',
 		component: VatReturnsReport.screen,
@@ -807,7 +827,12 @@ const adminRoutes = [
 		path: '/admin/report/vatreports/recordtaxpayment',
 		name: 'Record Tax Payment',
 		component: RecordVatPayment.screen,
-	},	
+	},
+	{
+		path: '/admin/report/arAgingReport',
+		name: 'Record Tax Payment',
+		component: ARAgingReport.screen,
+	},
 	{
 		path: '/admin/report/salesbycustomer',
 		name: 'SalesByCustomer',

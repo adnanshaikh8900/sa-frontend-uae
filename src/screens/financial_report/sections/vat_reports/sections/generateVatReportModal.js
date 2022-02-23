@@ -87,8 +87,10 @@ class GenerateVatReportModal extends React.Component {
 			selectedRows: [],
 			actionButtons: {},
 			initValue: {
-				startDate: firstdayoflastmonth.setMonth(firstdayoflastmonth.getMonth()-1),
-				endDate: lastdayoflastmonth.setMonth(lastdayoflastmonth.getMonth(), 0),
+				// startDate: firstdayoflastmonth.setMonth(firstdayoflastmonth.getMonth()-1),
+				// endDate: lastdayoflastmonth.setMonth(lastdayoflastmonth.getMonth(), 0),
+				startDate:new Date(),
+				endDate:new Date(new Date().setMonth(new Date().getMonth() + this.props.monthOption))
 			},
 			dialog: null,
 			filterData: {
@@ -125,7 +127,13 @@ class GenerateVatReportModal extends React.Component {
 		this.pdfExportComponent.save();
 	};
 	componentDidMount = () => {
-
+		
+		this.setState(
+			{...this.state.initValue,
+			initValue: {
+				startDate:new Date(),
+				endDate:new Date(new Date().setMonth(new Date().getMonth() + this.props.monthOption))
+			} })
 	};
 
 	handleChange = (val, name) => {
@@ -141,15 +149,17 @@ class GenerateVatReportModal extends React.Component {
 		this.setState({ disabled: true });
 		const { initValue } = this.state;
 		const postData = {
-			startDate: moment(this.state.initValue.startDate).format('DD/MM/YYYY'),
-			endDate: moment(this.state.initValue.endDate).format('DD/MM/YYYY'),
+			// startDate: moment(this.state.initValue.startDate).format('DD/MM/YYYY'),
+			// endDate: moment(this.state.initValue.endDate).format('DD/MM/YYYY'),
+			startDate:this.getStartDate().replaceAll("-","/"),
+			endDate:this.getEndDate().replaceAll("-","/")
 		};
 
 		this.props.vatReportActions
 			.generateReport(postData)
 			.then((res) => {
 				if (res.status === 200) {
-					this.props.commonActions.tostifyAlert('success',	res.data && res.data.message?res.data.message:  'Vat Report Generated Successfully')
+					this.props.commonActions.tostifyAlert('success', res.data && res.data.message?res.data.message: 'Vat Report Generated Successfully')
 				}
 				closeModal(false);
 			}).catch((err) => {
@@ -160,7 +170,7 @@ class GenerateVatReportModal extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { openModal, closeModal } = this.props;
+		const { openModal, closeModal,monthOption } = this.props;
 		const { initValue, loading } = this.state;
 
 		var lastdayoflastmonth = new Date();
@@ -176,7 +186,7 @@ class GenerateVatReportModal extends React.Component {
 							<Col lg={12}>
 								<div className="h4 mb-0 d-flex align-items-center">
 									<i className="nav-icon fas fa-user-tie" />
-									<span className="ml-2">Report Filling</span>
+									<span className="ml-2">Report Filing ( <b>{this.props.monthOption==0?"Monthly":"Quarterly"}</b> )</span>
 								</div>
 							</Col>
 						</Row>
@@ -196,25 +206,87 @@ class GenerateVatReportModal extends React.Component {
 											{(props) => (
 												<Form>
 													<Row>
+													<Col lg={4}>
+												<FormGroup className="mb-3">
+																<Label htmlFor="startDate"><span className="text-danger">* </span>Select Month</Label>
+														<b>	<DatePicker
+																		selected={this.state.monthlyDate}
+																		onChange={(date) =>{
+																				this.setState({monthlyDate:date})
+																		}}
+																		selectsStart
+																		 dateFormat='MMMM - yyyy'
+																		//  format='yyyy-MM'
+																		minDate={new Date("01/01/2018")}
+																		showMonthYearPicker
+																		withPortal
+																		placeholderText={'Month For Vat Report'}
+    																  portalId="root-portal"
+																	  className={`text-center`}
+																	  Style={{textAlign:"center !important"}}
+																	/>
+																	</b>	
+
+															</FormGroup>
+
+														</Col>
+													{/* <Col lg={4}>
+													{this.props.monthOption==0	?	(<FormGroup className="mb-3">
+																<Label htmlFor="startDate">Select Month</Label>
+																<DatePicker
+																		selected={this.state.monthlyDate}
+																		onChange={(date) =>{
+																			 
+																			this.setState({monthlyDate:date})
+																		}}
+																		selectsStart
+																		dateFormat="MM/yyyy"
+																		showMonthYearPicker
+																	/>
+
+															</FormGroup>
+															)
+															 :
+															(<FormGroup className="mb-3">
+																<Label htmlFor="startDate">Select Quarter</Label>
+																<DatePicker
+																selected={this.state.monthlyDate}
+																onChange={(date) =>{
+																	 
+																	this.setState({monthlyDate:date})
+																}}
+																	dateFormat="yyyy, QQQ"
+																	showQuarterYearPicker
+																	/>
+
+															</FormGroup>)
+															}
+														</Col> */}
+													</Row>
+													<Row>
 														<Col lg={4}>
 															<FormGroup className="mb-3">
 																<Label htmlFor="startDate">{strings.StartDate}</Label>
-																<DatePicker
+																<Input value={this.getStartDate()} 	placeholder="Select Month For Start Date" disabled/>	
+																{/* <DatePicker
 																	id="date"
 																	name="startDate"
 																	className={`form-control`}
 																	placeholderText="From"
 																	showMonthDropdown
-																	showYearDropdown
+																	showYearDropdown																	
 																	autoComplete="off"
 																	minDate={new Date("01/01/2018")}
 																	// maxDate={firstdayoflastmonth.setMonth(firstdayoflastmonth.getMonth()-1)}
 																	maxDate={new Date(Date.now() - 86400000)}
 																	value={moment(props.values.startDate).format(
 																		'DD-MM-YYYY',
-																	)}
+																	)}   
 																	dropdownMode="select"
-																	dateFormat="dd-MM-yyyy"
+																	dateFormat="DD-MM-YYYY"
+																	withPortal
+    																  portalId="root-portal"
+																	// disabledDate={disabledDate}
 																	// onChange={(value) => {
 																	// 	props.handleChange('startDate')(value);
 																	// 	if (moment(value).isBefore(props.values.startDate)) {
@@ -229,33 +301,38 @@ class GenerateVatReportModal extends React.Component {
 																		props.handleChange('startDate')(value);
 																		this.setState({...this.state.initValue,initValue: {startDate: value,endDate:this.state.initValue.endDate} })
 																	}}
-																/>
+																/> */}
 															</FormGroup>
 														</Col>
 														<Col lg={4}>
 															<FormGroup className="mb-3">
 																<Label htmlFor="endDate">{strings.EndDate}</Label>
-																<DatePicker
+																<Input value={this.getEndDate()} placeholder="Select Month For End Date" disabled/>																{/* <DatePicker
 																	id="date"
+																	disabled
 																	name="endDate"
 																	className={`form-control`}
 																	autoComplete="off"
 																	minDate={new Date("01/01/2018")}
 																	// maxDate={lastdayoflastmonth.setMonth(lastdayoflastmonth.getMonth(), 0)}
-																	maxDate={new Date(Date.now() - 86400000)}
+																	// maxDate={new Date(Date.now() - 86400000)}
 																	placeholderText="From"
 																	showMonthDropdown
 																	showYearDropdown
-																	value={moment(props.values.endDate).format(
-																		'DD-MM-YYYY',
-																	)}
+																
+																		value={moment(this.state.initValue.startDate).endOf(
+																		'quarter'
+																	).format("DD-MM-YYYY")}
+																	// value={moment(props.values.endDate).format(
+																	// 	'DD-MM-YYYY',
+																	// )}
 																	dropdownMode="select"
 																	dateFormat="dd-MM-yyyy"
 																	onChange={(value) => {
 																		props.handleChange('endDate')(value);
 																		this.setState({...this.state.initValue,initValue: {endDate: value,startDate:this.state.initValue.startDate} })
 																	}}
-																/>
+																/> */}
 															</FormGroup>
 														</Col>
 													</Row>
@@ -276,6 +353,8 @@ class GenerateVatReportModal extends React.Component {
 								<Button
 									color="primary"
 									className="btn-square "
+									title={this.state.monthlyDate ? "" :"Please Select Month"}
+									disabled={this.state.monthlyDate ? false :true}
 									onClick={this.generateReport}
 								// disabled={selectedRows.length === 0}
 
@@ -302,6 +381,68 @@ class GenerateVatReportModal extends React.Component {
 			</div>
 		);
 	}
+
+//
+
+getStartDate=()=>{
+	const { monthOption} = this.props;
+
+		if(this.state.monthlyDate){
+
+			let date=moment(this.state.monthlyDate).format("DD-MM-YYYY")
+		
+			return date;
+		}
+	}
+
+	//
+	getEndDate=()=>{
+		const { monthOption} = this.props;
+	
+			if(this.state.monthlyDate){
+
+				let date=moment(this.state.monthlyDate).format("DD/MM/YYYY")
+				var datearray = date.split("/");
+
+				let month=( parseInt(datearray[1]) +monthOption)
+
+				if(( parseInt(datearray[1]) +monthOption) >12)
+						{
+							if(( parseInt(datearray[1]) +monthOption) ==13)
+							month=1
+							if(( parseInt(datearray[1]) +monthOption) ==14)
+							month=2
+							if(( parseInt(datearray[1]) +monthOption) ==15)
+							month=3
+						}
+				let day=0		
+				switch(month){
+					case 1:
+					case 3:	
+					case 5:
+					case 7:
+					case 8:	
+					case 10:
+					case 12:	
+					         day=31
+					        break;
+
+					case 2:day=28
+							break;
+
+					case 4:	
+					case 6:
+					case 9:
+					case 11:	
+					        day=30
+					        break;
+				}
+				return	(day +"-"+ month +"-"+ parseInt(datearray[2]));
+			}
+		}
+
+		//
+
 }
 
 

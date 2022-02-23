@@ -47,7 +47,7 @@ const mapStateToProps = (state) => {
 		project_list: state.request_for_quotation.project_list,
 		contact_list: state.request_for_quotation.contact_list,
 		currency_list: state.request_for_quotation.currency_list,
-		vat_list: state.request_for_quotation.vat_list,
+		// vat_list: state.request_for_quotation.vat_list,
 		product_list: state.customer_invoice.product_list,
 		excise_list: state.request_for_quotation.excise_list,
 		supplier_list: state.request_for_quotation.supplier_list,
@@ -120,6 +120,9 @@ class DetailRequestForQuotation extends React.Component {
 			basecurrency:[],
 			supplier_currency: '',
 			disabled1:false,
+			vat_list:[],
+			dateChanged: false,
+			dateChanged1: false
 		};
 
 		// this.options = {
@@ -170,6 +173,10 @@ class DetailRequestForQuotation extends React.Component {
 	// }
 
 	componentDidMount = () => {
+		this.props.requestForQuotationAction.getVatList().then((res)=>{
+			if(res.status==200)
+			 this.setState({vat_list:res.data})
+		});
 		this.initializeData();
 	};
 
@@ -197,7 +204,7 @@ class DetailRequestForQuotation extends React.Component {
 							// );
 						});
 						this.getCompanyCurrency();
-						this.props.requestForQuotationAction.getVatList();
+						
 						this.props.requestForQuotationAction.getExciseList();
 						this.props.requestForQuotationAction.getSupplierList(
 							this.state.contactType,
@@ -212,8 +219,14 @@ class DetailRequestForQuotation extends React.Component {
 									rfqReceiveDate: res.data.rfqReceiveDate
 										? moment(res.data.rfqReceiveDate).format('DD-MM-YYYY')
 										: '',
+										rfqReceiveDate1: res.data.rfqReceiveDate
+										? res.data.rfqReceiveDate
+										: '',
 										rfqExpiryDate: res.data.rfqExpiryDate
 										? moment(res.data.rfqExpiryDate).format('DD-MM-YYYY')
+										: '',
+										rfqExpiryDate1: res.data.rfqExpiryDate
+										?  res.data.rfqExpiryDate
 										: '',
 										supplierId: res.data.supplierId ? res.data.supplierId : '',
 										rfqNumber: res.data.rfqNumber
@@ -233,6 +246,18 @@ class DetailRequestForQuotation extends React.Component {
 										placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 										total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : 0,
 								},
+										rfqExpiryDateNoChange: res.data.rfqExpiryDate
+										?  moment(res.data.rfqExpiryDate)
+										: '',
+										rfqReceiveDateNoChange: res.data.rfqReceiveDate
+										? moment(res.data.rfqReceiveDate)
+										: '',	
+										rfqReceiveDate: res.data.rfqReceiveDate
+										? res.data.rfqReceiveDate
+										: '',	
+										rfqExpiryDate: res.data.rfqExpiryDate
+										? res.data.rfqExpiryDate
+										: '',
 								customer_taxTreatment_des : res.data.taxtreatment ? res.data.taxtreatment : '',
 								placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 								total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
@@ -246,7 +271,7 @@ class DetailRequestForQuotation extends React.Component {
 							},
 							() => {
 								if (this.state.data.length > 0) {
-									this.calTotalNet(this.state.data);
+									this.updateAmount(this.state.data);
 									const { data } = this.state;
 									const idCount =
 										data.length > 0
@@ -299,9 +324,18 @@ class DetailRequestForQuotation extends React.Component {
 	calTotalNet = (data) => {
 		let total_net = 0;
 		data.map((obj) => {
-			total_net = +(total_net + +obj.unitPrice * obj.quantity);
-			return obj;
-		});
+			if(obj.isExciseTaxExclusive === false){
+
+                total_net = +(total_net + +obj.unitPrice  * obj.quantity);
+
+            }else{
+
+                total_net = +(total_net + +(obj.unitPrice + obj.exciseAmount) * obj.quantity);
+
+            }
+        return obj;
+
+        });
 		this.setState({
 			initValue: Object.assign(this.state.initValue, { total_net }),
 		});
@@ -401,7 +435,7 @@ class DetailRequestForQuotation extends React.Component {
 						id="exciseTaxId"
 						placeholder={"Select Excise"}
 						onChange={(e) => {
-							debugger
+							 
 							this.selectItem(
 								e.value,
 								row,
@@ -558,7 +592,7 @@ class DetailRequestForQuotation extends React.Component {
 				render={({ field, form }) => (
 					<Input
 					type="text"
-					maxLength="17,3"
+					maxLength="14,2"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (
@@ -686,7 +720,7 @@ class DetailRequestForQuotation extends React.Component {
 	};
 
 	renderVat = (cell, row, props) => {
-		const { vat_list } = this.props;
+		const { vat_list } = this.state;
 		let vatList = vat_list.length
 			? [{ id: '', vat: 'Select Vat' }, ...vat_list]
 			: vat_list;
@@ -902,7 +936,7 @@ class DetailRequestForQuotation extends React.Component {
 	};
 
 	updateAmount = (data, props) => {
-		const { vat_list , excise_list} = this.props;
+		const { vat_list , excise_list} = this.state;
 		const { discountPercentage, discountAmount } = this.state;
 		let total_net = 0;
 		let total_excise = 0;
@@ -997,7 +1031,7 @@ class DetailRequestForQuotation extends React.Component {
 					...this.state.initValue,
 					...{
 						total_net: discount ? total_net - discount : total_net,
-						invoiceVATAmount: total_vat,
+						totalVatAmount: total_vat,
 						discount:  discount ? discount : 0,
 						totalAmount: total_net > discount ? total - discount : total - discount,
 						total_excise: total_excise
@@ -1022,24 +1056,44 @@ class DetailRequestForQuotation extends React.Component {
 			currency,
 			placeOfSupplyId
 		} = data;
-
+debugger
 		let formData = new FormData();
 		formData.append('type', 3);
 		formData.append('id', current_rfq_id);
 		formData.append('rfqNumber', rfqNumber ? rfqNumber : '');
-		formData.append(
-			'rfqExpiryDate',
-			typeof rfqExpiryDate === 'string'
-				? moment(rfqExpiryDate, 'DD-MM-YYYY').toDate()
-				: rfqExpiryDate,
-		);
-		formData.append(
-			'rfqReceiveDate',
-			typeof rfqReceiveDate === 'string'
-				? moment(rfqReceiveDate, 'DD-MM-YYYY').toDate()
-				: rfqReceiveDate,
-		);
-	
+
+		if(this.state.dateChanged === true)
+		{
+			formData.append(
+				'rfqReceiveDate',
+				typeof rfqReceiveDate === 'string'
+					? this.state.rfqReceiveDate
+					: rfqReceiveDate,
+			);
+		}else{
+			formData.append(
+				'rfqReceiveDate',
+				typeof rfqReceiveDate === 'string'
+					? this.state.rfqReceiveDateNoChange
+					: '',
+			);
+		
+		}
+		if(this.state.dateChanged1 === true){
+			formData.append(
+				'rfqExpiryDate',
+				typeof rfqExpiryDate === 'string'
+					? this.state.rfqExpiryDate
+					: rfqExpiryDate,
+			);
+		}else{
+			formData.append(
+				'rfqExpiryDate',
+				typeof rfqExpiryDate === 'string'
+					? this.state.rfqExpiryDateNoChange
+					: '',
+			);
+		}
 		formData.append('notes', notes ? notes : '');
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
 		formData.append('totalVatAmount', this.state.initValue.totalVatAmount);
@@ -1129,20 +1183,36 @@ class DetailRequestForQuotation extends React.Component {
 		this.setState({ openProductModal: false });
 	};
 	setDate = (props, value) => {
-		const { term } = this.state;
-		const val = term.split('_');
-		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
-		const values = value
+		debugger
+		this.setState({
+			dateChanged: true,
+		});
+		const values1 = value
 			? value
-			: moment(props.values.invoiceDate, 'DD-MM-YYYY').toDate();
-		if (temp && values) {
-			const date = moment(values)
-				.add(temp - 1, 'days')
-				.format('DD-MM-YYYY');
-			props.setFieldValue('invoiceDueDate', date, true);
+			: props.values.rfqReceiveDate1
+		if (values1 ) {
+			this.setState({
+				rfqReceiveDate: moment(values1),
+			});
+			props.setFieldValue('rfqReceiveDate1', values1, true);
 		}
 	};
-
+setDate1= (props, value) => {
+	debugger
+	this.setState({
+		dateChanged1: true,
+	});
+	
+	const values2 = value ? value
+	: props.values.rfqExpiryDate1	
+	if ( values2) {
+		this.setState({
+			rfqExpiryDate: moment(values2),
+		});
+		props.setFieldValue('rfqExpiryDate1', values2, true);
+	
+	}
+};
 	getCurrentProduct = () => {
 		this.props.customerInvoiceActions.getProductList().then((res) => {
 			this.setState(
@@ -1293,6 +1363,8 @@ class DetailRequestForQuotation extends React.Component {
 		})
 
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="detail-supplier-invoice-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -1329,7 +1401,7 @@ class DetailRequestForQuotation extends React.Component {
 														supplierId: Yup.string().required(
 															'Supplier is Required',
 														),
-														// placeOfSupplyId: Yup.string().required('Place of supply is Required'),
+														placeOfSupplyId: Yup.string().required('Place of Supply is Required'),
 														
 														rfqReceiveDate: Yup.string().required(
 															'Order Date is Required',
@@ -1462,7 +1534,6 @@ class DetailRequestForQuotation extends React.Component {
 																			{strings.SupplierName}
 																		</Label>
 																		<Select
-																			styles={customStyles}
 																			id="supplierId"
 																			name="supplierId"
 																			onBlur={props.handlerBlur}
@@ -1550,7 +1621,6 @@ class DetailRequestForQuotation extends React.Component {
 																			{strings.PlaceofSupply}
 																		</Label>
 																		<Select
-																			styles={customStyles}
 																			options={
 																				this.placelist
 																					? selectOptionsFactory.renderOptions(
@@ -1624,9 +1694,10 @@ class DetailRequestForQuotation extends React.Component {
 																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
 																			value={props.values.rfqReceiveDate}
+																			selected={new Date(props.values.rfqReceiveDate1)} 
 																			onChange={(value) => {
 																				props.handleChange('rfqReceiveDate')(
-																					moment(value).format('DD-MM-YYYY'),
+																					value,
 																				);
 																				this.setDate(props, value);
 																			}}
@@ -1640,7 +1711,7 @@ class DetailRequestForQuotation extends React.Component {
 																		{props.errors.rfqReceiveDate &&
 																			props.touched.rfqReceiveDate && (
 																				<div className="invalid-feedback">
-																					{props.errors.rfqReceiveDate}
+																					{props.errors.rfqReceiveDate.includes("nullable()") ? "Order Date is Required" :props.errors.rfqReceiveDate}
 																				</div>
 																			)}
 																	</FormGroup>
@@ -1660,10 +1731,10 @@ class DetailRequestForQuotation extends React.Component {
 																				showYearDropdown
 																				dateFormat="dd-MM-yyyy"
 																				dropdownMode="select"
+																				selected={new Date(props.values.rfqExpiryDate1)}
 																				onChange={(value) => {
-																					props.handleChange('rfqExpiryDate')(
-																						value,
-																					);
+																					props.handleChange('rfqExpiryDate')(value);
+																					this.setDate1(props,value)
 																				}}
 																				className={`form-control ${
 																					props.errors.rfqExpiryDate &&
@@ -2145,11 +2216,12 @@ class DetailRequestForQuotation extends React.Component {
 					}}
 					getCurrentProduct={(e) => this.getCurrentProduct(e)}
 					createProduct={this.props.ProductActions.createAndSaveProduct}
-					vat_list={this.props.vat_list}
+					vat_list={this.state.vat_list}
 					product_category_list={this.props.product_category_list}
 					salesCategory={this.state.salesCategory}
 					purchaseCategory={this.state.purchaseCategory}
 				/>
+			</div>
 			</div>
 		);
 	}

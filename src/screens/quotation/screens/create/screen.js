@@ -115,7 +115,9 @@ class CreateQuotation extends React.Component {
 					unitPrice: '',
 					vatCategoryId: '',
 					exciseTaxId:'',
+					discountType: 'FIXED',
 					exciseAmount:'',
+					discount: 0,
 					subTotal: 0,
 					vatAmount:0,
 					productId: '',
@@ -135,6 +137,9 @@ class CreateQuotation extends React.Component {
 				placeOfSupplyId: '',
 				project: '',
 				exchangeRate:'',
+				discount: 0,
+				discountPercentage: 0,
+				discountType:"FIXED",
 				lineItemsString: [
 					{
 						id: 0,
@@ -144,7 +149,8 @@ class CreateQuotation extends React.Component {
 						vatCategoryId: '',
 						subTotal: 0,
 						productId: '',
-						isExciseTaxExclusive:''
+						isExciseTaxExclusive:'',
+				
 					},
 				],
 				quotation_Number: '',
@@ -153,9 +159,7 @@ class CreateQuotation extends React.Component {
 				term: '',
 				totalAmount: 0,
 				notes: '',
-				discount: 0,
-				discountPercentage: 0,
-				discountType: { value: 'FIXED', label: 'Fixed' },
+			
 			},
 			currentData: {},
 			contactType: 2,
@@ -164,14 +168,13 @@ class CreateQuotation extends React.Component {
 			openInvoiceNumberModel: false,
 			selectedContact: '',
 			createMore: false,
-			
-			
 			prefix: '',
-			selectedType: { value: 'FIXED', label: 'Fixed' },
+			// selectedType: { value: 'FIXED', label: 'Fixed' },
 			discountPercentage: '',
 			discountAmount: 0,
 			purchaseCategory: [],	
 			exist: false,
+			param:false,
 		};
 
 		this.formRef = React.createRef();
@@ -299,7 +302,7 @@ class CreateQuotation extends React.Component {
 						id="exciseTaxId"
 						placeholder={strings.Select+strings.Vat}
 						onChange={(e) => {
-							debugger
+							 
 							this.selectItem(
 								e.value,
 								row,
@@ -408,7 +411,7 @@ class CreateQuotation extends React.Component {
 					<Input
 					type="text"
 					min="0"
-						maxLength="17,3"
+						maxLength="14,2"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -468,7 +471,8 @@ class CreateQuotation extends React.Component {
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// );
-		return row.vatAmount === 0 ? this.state.supplier_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 });
+		let value =  row.vatAmount && row.vatAmount != 0 ?  row.vatAmount:0
+		return value === 0 ? this.state.supplier_currency_symbol +" "+ value.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ value.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 });
 	};
 
 	componentDidMount = () => {
@@ -561,9 +565,9 @@ class CreateQuotation extends React.Component {
 					vatCategoryId: '',
 					subTotal: 0,
 					exciseTaxId:'',
-					// discountType:'FIXED',
+				    discountType:'FIXED',
 					vatAmount:0,
-					// discount: 0,
+					discount: 0,
 					productId: '',
 				}),
 				idCount: this.state.idCount + 1,
@@ -616,6 +620,109 @@ class CreateQuotation extends React.Component {
 			});
 		}
 	};
+
+	renderDiscount = (cell, row, props) => {
+		const { discountOptions } = this.state;
+	   let idx;
+	   this.state.data.map((obj, index) => {
+		   if (obj.id === row.id) {
+			   idx = index;
+		   }
+		   return obj;
+	   });
+
+	   return (
+		   <Field
+			    name={`lineItemsString.${idx}.discountType`}
+			   render={({ field, form }) => (
+			   <div>
+			   <div  class="input-group">
+				   <Input
+	 					type="text"
+				   	    min="0"
+					    maxLength="14,2"
+					    value={row['discount'] !== 0 ? row['discount'] : 0}
+					    onChange={(e) => {
+						   if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+							   this.selectItem(
+								   e.target.value,
+								   row,
+								   'discount',
+								   form,
+								   field,
+								   props,
+							   );
+						   }
+					   
+							   this.updateAmount(
+								   this.state.data,
+								   props,
+							   );
+					   
+					   }}
+					   placeholder={strings.discount}
+					   className={`form-control 
+		   ${
+						   props.errors.lineItemsString &&
+						   props.errors.lineItemsString[parseInt(idx, 10)] &&
+						   props.errors.lineItemsString[parseInt(idx, 10)].discount &&
+						   Object.keys(props.touched).length > 0 &&
+						   props.touched.lineItemsString &&
+						   props.touched.lineItemsString[parseInt(idx, 10)] &&
+						   props.touched.lineItemsString[parseInt(idx, 10)].discount
+							   ? 'is-invalid'
+							   : ''
+					   }`}
+   type="text"
+   />
+	<div class="dropdown open input-group-append">
+
+		<div 	style={{width:'100px'}}>
+		<Select
+
+
+																						   options={discountOptions}
+																						   id="discountType"
+																						   name="discountType"
+																						   value={
+																						discountOptions &&
+																							selectOptionsFactory
+																								.renderOptions('label', 'value', discountOptions, 'discount')
+																								.find((option) => option.value == row.discountType)
+																						   }
+																						   onChange={(e) => {
+																							   this.selectItem(
+																								   e.value,
+																								   row,
+																								   'discountType',
+																								   form,
+																								   field,
+																								   props,
+																							   );
+																							   this.updateAmount(
+																								   this.state.data,
+																								   props,
+																							   );
+																						   }}
+																					   />
+			 </div>
+			  </div>
+			  </div>
+			   </div>
+
+				   )}
+
+		   />
+	   );
+   }
+discountType = (row) =>
+
+{
+		return this.state.discountOptions &&
+		selectOptionsFactory
+			.renderOptions('label', 'value', this.state.discountOptions, 'discount')
+			.find((option) => option.value === +row.discountType)
+}
 
 	renderVat = (cell, row, props) => {
 		const { vat_list } = this.props;
@@ -689,6 +796,7 @@ class CreateQuotation extends React.Component {
 				obj['vatCategoryId'] = result.vatCategoryId;
 				obj['description'] = result.description;
 				obj['exciseTaxId'] = result.exciseTaxId;
+				obj['discountType'] = result.discountType;
 				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive;
 				idx = index;
 			}
@@ -712,6 +820,11 @@ class CreateQuotation extends React.Component {
 		form.setFieldValue(
 			`lineItemsString.${idx}.description`,
 			result.description,
+			true,
+		);
+		form.setFieldValue(
+			`lineItemsString.${idx}.discountType`,
+			result.discountType,
 			true,
 		);
 		this.updateAmount(data, props);
@@ -1027,7 +1140,10 @@ class CreateQuotation extends React.Component {
 			customerId,
 			quotation_Number,
 			notes,
-			placeOfSupplyId
+			placeOfSupplyId,
+			discount,
+			discountType,
+			discountPercentage,
 		} = data;
 		const { term } = this.state;
 
@@ -1050,6 +1166,7 @@ class CreateQuotation extends React.Component {
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
 		formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
 		formData.append('totalAmount', this.state.initValue.totalAmount);
+		formData.append('discount',this.state.initValue.discount);
 		if (customerId && customerId.value) {
 			formData.append('customerId', customerId.value);
 		}
@@ -1139,6 +1256,21 @@ class CreateQuotation extends React.Component {
 		}
 	};
 
+	checkAmount=(discount)=>{
+		const { initValue } = this.state;
+			if(discount >= initValue.totalAmount){
+					this.setState({
+						param:true
+					});
+			}
+			else{
+				this.setState({
+					param:false
+				});
+			}
+
+	}
+
 	getCurrentUser = (data) => {
 		
 		let option;
@@ -1225,11 +1357,13 @@ class CreateQuotation extends React.Component {
 							id: 0,
 							description: res.data[0].description,
 							quantity: 1,
+							discount:0,
 							unitPrice: res.data[0].unitPrice,
 							vatCategoryId: res.data[0].vatCategoryId,
 							exciseTaxId: res.data[0].exciseTaxId,
 							subTotal: res.data[0].unitPrice,
 							productId: res.data[0].id,
+							discountType: res.data[0].discountType,
 						},
 					],
 				},
@@ -1247,6 +1381,16 @@ class CreateQuotation extends React.Component {
 			);
 			this.formRef.current.setFieldValue(
 				`lineItemsString.${0}.quantity`,
+				1,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.discount`,
+				1,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.discountType`,
 				1,
 				true,
 			);
@@ -1290,7 +1434,7 @@ class CreateQuotation extends React.Component {
 		this.props.quotationCreateAction
 			.checkValidation(data)
 			.then((response) => {
-				if (response.data === 'QuotationNumber already exists') {
+				if (response.data === 'Quotation Number Already Exists') {
 					this.setState(
 						{
 							exist: true,
@@ -1330,7 +1474,7 @@ class CreateQuotation extends React.Component {
 	render() {
 		strings.setLanguage(this.state.language);
 
-		const { data, discountOptions, initValue, prefix } = this.state;
+		const { data, discountOptions, initValue, prefix,param} = this.state;
 
 		const {
 			currency_list,
@@ -1382,10 +1526,14 @@ class CreateQuotation extends React.Component {
 													let errors = {};
 													if (this.state.exist === true) {
 														errors.quotation_Number =
-															'Quotation Number already exists';
+															'Quotation Number Already Exists';
 													}
 													if (values.quotation_Number==='') {
-														errors.quotation_Number = 'Quotation Number is required';
+														errors.quotation_Number = 'Quotation Number is Required';
+													}
+													if (param === true) {
+														errors.discount =
+															'Discount amount Cannot be greater than Invoice Total Amount';
 													}
 													return errors;
 												}}
@@ -1394,10 +1542,10 @@ class CreateQuotation extends React.Component {
 														quotation_Number: Yup.string().required(
 														'Invoice Number is Required',
 													),
-													customerId: Yup.string().required(
-														'Supplier is Required',
+														customerId: Yup.string().required(
+														'Customer is Required',
 													),
-													// placeOfSupplyId: Yup.string().required('Place of supply is Required'),
+														placeOfSupplyId: Yup.string().required('Place of Supply is Required'),
 													
 													// poApproveDate: Yup.string().required(
 													// 	'Order Date is Required',
@@ -1496,7 +1644,6 @@ class CreateQuotation extends React.Component {
 																		{strings.CustomerName}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		id="customerId"
 																		name="customerId"
 																		placeholder={strings.Select+strings.CustomerName}
@@ -1608,7 +1755,6 @@ class CreateQuotation extends React.Component {
 																		{strings.PlaceofSupply}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		id="placeOfSupplyId"
 																		name="placeOfSupplyId"
 																		placeholder={strings.Select+strings.PlaceofSupply}
@@ -1716,7 +1862,8 @@ class CreateQuotation extends React.Component {
 																	{props.errors.quotaionExpiration &&
 																		props.touched.quotaionExpiration && (
 																			<div className="invalid-feedback">
-																				{props.errors.quotaionExpiration}
+																				{/* {props.errors.quotaionExpiration} */}
+																				{props.errors.quotaionExpiration.includes("nullable()") ? "Date is Required" :props.errors.quotaionExpiration}
 																			</div>
 																		)}
 																	
@@ -1915,6 +2062,15 @@ class CreateQuotation extends React.Component {
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn> 
 																	<TableHeaderColumn
+																		width="12%"
+																		dataField="discount"
+																		dataFormat={(cell, rows) =>
+																			this.renderDiscount(cell, rows, props)
+																		}
+																	>
+																	DisCount
+																	</TableHeaderColumn>
+																	<TableHeaderColumn
 																		dataField="vat"
 																		dataFormat={(cell, rows) =>
 																			this.renderVat(cell, rows, props)
@@ -1981,6 +2137,34 @@ class CreateQuotation extends React.Component {
 
 																						{this.state.supplier_currency_symbol} &nbsp;
 																						{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
+																					</label>
+																				</Col>
+																			</Row>
+																		</div>
+																		<div className="total-item p-2">
+																			<Row>
+																				<Col lg={6}>
+																					<h5 className="mb-0 text-right">
+																					{strings.Discount}
+																					</h5>
+																				</Col>
+																				<Col lg={6} className="text-right">
+																					<label className="mb-0">
+																						{/* {universal_currency_list[0] && (
+																							<Currency
+																								value={initValue.total_net.toFixed(
+																									2,
+																								)}
+																								currencySymbol={
+																									universal_currency_list[0]
+																										? universal_currency_list[0]
+																												.currencyIsoCode
+																										: 'USD'
+																								}
+																							/>
+																						)} */}
+																						{this.state.customer_currency_symbol} &nbsp;
+																						{initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>

@@ -299,7 +299,7 @@ class CreateJournal extends React.Component {
 				render={({ field, form }) => (
 					<Input
 						type="text"
-						maxLength="100"
+						maxLength="250"
 						value={row['description'] !== '' ? row['description'] : ''}
 						onChange={(e) => {
 							this.selectItem(e.target.value, row, 'description', form, field);
@@ -391,8 +391,8 @@ class CreateJournal extends React.Component {
 				render={({ field, form }) => (
 					<Input
 					type="number"
-min="0"
-					maxLength="9"
+					min="0"
+					maxLength="14,2"
 						value={row['debitAmount'] !== 0 ? row['debitAmount'] : 0}
 						onChange={(e) => {
 							if (
@@ -442,8 +442,8 @@ min="0"
 				render={({ field, form }) => (
 					<Input
 					type="number"
-min="0"
-					maxLength="9"
+					min="0"
+					maxLength="14,2"
 						value={row['creditAmount'] !== 0 ? row['creditAmount'] : 0}
 						onChange={(e) => {
 							if (
@@ -734,7 +734,7 @@ min="0"
 														.of(
 															Yup.object().shape({
 																transactionCategoryId: Yup.string().required(
-																	'Account is required',
+																	'Account is Required',
 																),
 																debitAmount: Yup.number().required(),
 																creditAmount: Yup.number().required(),
@@ -819,7 +819,7 @@ min="0"
 																	<Label htmlFor="description">{strings.Notes}</Label>
 																	<Input
 																		type="textarea"
-																		maxLength="255"
+																		maxLength="250"
 																		name="description"
 																		id="description"
 																		rows="5"

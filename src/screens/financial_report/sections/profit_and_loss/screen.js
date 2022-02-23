@@ -63,8 +63,8 @@ class ProfitAndLossReport extends React.Component {
 			dropdownOpen: false,
 			view: false,
 			initValue: {
-				startDate: moment().startOf('month').format('DD-MM-YYYY'),
-				endDate: moment().endOf('month').format('DD-MM-YYYY'),
+				startDate: moment().startOf('month').format('DD/MM/YYYY'),
+				endDate: moment().endOf('month').format('DD/MM/YYYY'),
 				reportBasis: 'ACCRUAL',
 				chartOfAccountId: '',
 			},
@@ -361,7 +361,7 @@ class ProfitAndLossReport extends React.Component {
 											<br style={{ marginBottom: '5px' }} />
 											<b style ={{ fontSize: '18px'}}>{strings.ProfitandLoss}</b>
 											<br style={{ marginBottom: '5px' }} />
-											{strings.From} {moment(initValue.startDate).format('DD-MM-YYYY')} {strings.To} {initValue.endDate}
+											{strings.From} {(initValue.startDate).replaceAll("/","-")} {strings.To} {initValue.endDate.replaceAll("/","-")} 
 											
 									</div>
 									<div>
@@ -372,7 +372,7 @@ class ProfitAndLossReport extends React.Component {
 									) : (
 										<div className="table-wrapper">
 											<Table id="tbl_exporttable_to_xls" responsive className="table-bordered">
-												<thead className="thead-dark ">
+												<thead>
 													<tr className="header-row">
 														{this.columnHeader.map((column, index) => {
 															return (
@@ -380,7 +380,7 @@ class ProfitAndLossReport extends React.Component {
 																	key={index}
 																	style={{ fontWeight: '600', color:'black' }}
 																	className={column.align ? 'text-right' : '' }
-																	className="table-header-color"
+																	className="table-header-bg"
 																>
 																	{column.label}
 																</th>

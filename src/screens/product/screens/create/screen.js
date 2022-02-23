@@ -361,7 +361,7 @@ try {
 			name: value,
 		};
 		this.props.productActions.checkValidation(data).then((response) => {
-			if (response.data === 'Product name already exists') {
+			if (response.data === 'Product Name Already Exists') {
 				this.setState({
 					exist: true,
 				});
@@ -381,7 +381,7 @@ try {
 		this.props.productActions
 			.checkProductNameValidation(data)
 			.then((response) => {
-				if (response.data === 'Product code already exists') {
+				if (response.data === 'Product Code Already Exists') {
 					this.setState({
 						ProductExist: true,
 					});
@@ -452,21 +452,21 @@ try {
 												validate={(values) => {
 													let errors = {};
 													if (!values.productName) {
-														errors.productName = 'Product  Name is  required';
+														errors.productName = 'Product Name Required';
 													}
 													if (this.state.exist === true) {
 														errors.productName =
-															'Product  Name is already exist';
+															'Product Name Already Exist';
 													}
 													if (this.state.ProductExist === true) {
 														errors.productCode =
-															'Product Code is already exist';
+															'Product Code Already Exist';
 													}
 													if (values.productName==='') {
-														errors.productName = 'Product Name is required';
+														errors.productName = 'Product Name is Required';
 													}
 													if (values.productCode==='') {
-														errors.productCode = 'Product Code is required';
+														errors.productCode = 'Product Code is Required';
 													}
 													// if (values.inventoryReorderLevel > values.inventoryQty)
 													// {
@@ -499,20 +499,20 @@ try {
 														// }														
 														if(values.inventoryPurchasePrice ==='')
 														errors.inventoryPurchasePrice = 
-														'Inventory Purchase Price is requied';
+														'Inventory Purchase Price is Requied';
 
 														// if(values.inventoryReorderLevel ==='')
 														// errors.inventoryReorderLevel = 
-														// 'Inventory Reorder Level is requied';
+														// 'Inventory Reorder Level is Requied';
 
 														if(values.inventoryQty ==='')
 														errors.inventoryQty = 
-														'Inventory Quantity is requied';
+														'Inventory Quantity is Requied';
 														
 													}
 
 													if(this.state.exciseTaxCheck===true && values.exciseTaxId=='' ){
-														errors.exciseTaxId = 'Excise Tax is requied';
+														errors.exciseTaxId = 'Excise Tax is Requied';
 													}
 													return errors;
 												}}
@@ -562,10 +562,10 @@ try {
 														},
 													),
 													productPriceType: Yup.string().required(
-														'At least one Selling type is required',
+														'At least one Selling type is Required',
 													),
 													productCode: Yup.string().required(
-														'Product code is required',
+														'Product code is Required',
 													),
 													vatCategoryId: Yup.string()
 														.required('Vat Category is Required')
@@ -762,6 +762,9 @@ try {
 																			maxLength="50"
 																			id="productCode"
 																			name="productCode"
+	                         /**Added as per discussion with sajid sir ,disabled product code for sanity*/
+
+																			disabled
 																			placeholder={strings.Enter+strings.ProductCode}
 																			onChange={(option) => {
 																				if (
@@ -866,7 +869,6 @@ try {
 																		</Label>
 																		<Select
 																	    	 isDisabled={this.state.companyDetails && !this.state.companyDetails.isRegisteredVat}
-																			styles={customStyles}
 																			options={
 																				vat_list
 																					? selectOptionsFactory.renderOptions(
@@ -953,7 +955,6 @@ try {
 																			Excise Tax Type
 																		</Label>
 																		<Select
-																			styles={customStyles}
 																			options={
 																				exciseTaxList
 																					? selectOptionsFactory.renderOptions(
@@ -1139,7 +1140,7 @@ try {
 																		>
 																			<Input
 																				type="checkbox"
-																				max="17,3"
+																				max="14,2"
 																				id="productPriceTypeOne"
 																				name="productPriceTypeOne"
 																				onChange={(event) => {
@@ -1205,7 +1206,7 @@ try {
 																		</Label>
 																		<Input
 																			type="text"
-																			maxLength="17,3"
+																			maxLength="14,2"
 																			id="salesUnitPrice"
 																			name="salesUnitPrice"
 																			placeholder={strings.Enter+strings.SellingPrice}
@@ -1341,7 +1342,7 @@ try {
 																			<Input
 																				type="checkbox"
 																				id="productPriceTypetwo"
-																				maxLength="17,3"
+																				maxLength="14,2"
 																				name="productPriceTypetwo"
 																				onChange={(event) => {
 																					if (
@@ -1407,7 +1408,7 @@ try {
 																		</Label>
 																		<Input
 																		type="text"
-																			maxLength="17,3"
+																			maxLength="14,2"
 																			id="purchaseUnitPrice"
 																			name="purchaseUnitPrice"
 																			
@@ -1703,7 +1704,7 @@ try {
 																		<Input
 																			type="text"
 																			min="0"
-																			maxLength="17,3"
+																			maxLength="14,2"
 																			id="inventoryPurchasePrice"
 																			name="inventoryPurchasePrice"
 																			placeholder={strings.Enter+strings.PurchasePrice}

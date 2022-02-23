@@ -271,6 +271,8 @@ class Employment extends React.Component {
 
 
     return (
+      loading ==true? <Loader/> :
+<div>
       <div className="employee-screen">
         <div className="animated fadeIn">
           {dialog}
@@ -427,6 +429,7 @@ class Employment extends React.Component {
             </CardBody>
           </Card>
         </div>
+      </div>
       </div>
     )
   }

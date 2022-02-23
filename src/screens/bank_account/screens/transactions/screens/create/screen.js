@@ -692,13 +692,13 @@ class CreateBankTransaction extends React.Component {
 														values.coaCategoryId.value === 6) &&
 														!values.employeeId
 													){
-														errors.employeeId = 'User is required'
+														errors.employeeId = 'User is Required'
 													}
 													if(
 														(values.coaCategoryId.label ===
 															'Expense' ) && !values.currencyCode
 													){
-														errors.currencyCode = " Currency is required"
+														errors.currencyCode = " Currency is Required"
 													}
 													return errors;
 												}}
@@ -1489,7 +1489,10 @@ class CreateBankTransaction extends React.Component {
 																		rows="6"
 																		placeholder={strings.Description}
 																		onChange={(option) =>
-																			props.handleChange('description')(option)
+																			{
+																				if(!option.target.value.includes("="))
+																				props.handleChange('description')(option)
+																			}
 																		}
 																		value={props.values.description}
 																	/>

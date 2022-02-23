@@ -230,6 +230,8 @@ class LogIn extends React.Component {
 																						? 'text'
 																						: 'password'
 																				}
+																				minLength={8}
+																				maxLength={16}
 																				id="password"
 																				name="password"
 																				placeholder="Enter password"
@@ -246,14 +248,14 @@ class LogIn extends React.Component {
 																						: ''
 																				}
 																			/>
-																		{/* <i   className={`fa ${ isPasswordShown ? "fa-eye-slash" : "fa-eye" } password-icon fa-lg`}
+																		<i   className={`fa ${ isPasswordShown ? "fa-eye" : "fa-eye-slash" } password-icon fa-lg`}
 																		onClick={this.togglePasswordVisiblity}
-																	> */}
+																	>
 																		{/* <img 
 																			src={eye}
 																			style={{ width: '20px' }}
 																		/> */}
-																		{/* </i> */}
+																		</i>
 																	
 																			{props.errors.password &&
 																				props.touched.password && (

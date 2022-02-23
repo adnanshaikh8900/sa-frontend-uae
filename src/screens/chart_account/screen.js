@@ -242,6 +242,25 @@ class ChartAccount extends React.Component {
 		}
 	};
 
+	getActionButtons = (params) => {
+		return (
+	<>
+	{/* BUTTON ACTIONS */}
+			{/* View */}
+			{params.data.editableFlag === true ?(
+			<Button
+				className="Ag-gridActionButtons btn-sm"
+				title='Edit'
+				color="secondary"
+					onClick={()=>
+						
+						this.goToTransactionCategoryDetail(params.data.transactionCategoryId)  }
+			
+			>		<i className="fas fa-edit"/> </Button>):''} 
+	</>
+		)
+	}
+
 	removeBulk = () => {
 		this.removeDialog();
 		let { selectedRows } = this.state;
@@ -401,6 +420,8 @@ class ChartAccount extends React.Component {
 			}),
 		};
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="chart-account-screen">
 				<div className="animated fadeIn">
 					{dialog}
@@ -667,9 +688,7 @@ class ChartAccount extends React.Component {
 					style={{
 						cursor: 'pointer',
 						}}
-					onClick={()=>
-						params.data.editableFlag === true ?
-						this.goToTransactionCategoryDetail(params.data.transactionCategoryId) : ''}                                                             
+				                                                          
 		>
 		{params.value}
 		</div>
@@ -715,7 +734,7 @@ class ChartAccount extends React.Component {
 				></AgGridColumn>   */}
 
 					<AgGridColumn
-				headerName={strings.Account}
+				headerName={strings.ACCOUNT}
 				sortable={ true } 
 				filter={ true } 
 				enablePivot={true}
@@ -733,7 +752,18 @@ class ChartAccount extends React.Component {
 					// 								<label className="badge label-due"> InActive</label>
 										}
 				></AgGridColumn>
-			
+			<AgGridColumn field="action"
+										// className="Ag-gridActionButtons"
+										headerName="ACTIONS"
+										cellRendererFramework={(params) =>
+											<div
+											 className="Ag-gridActionButtons"
+											 >
+												{this.getActionButtons(params)}
+											</div>
+
+										}
+									></AgGridColumn>
 			</AgGridReact>  
 			<div className="example-header mt-1">
 					Page Size:
@@ -752,7 +782,7 @@ class ChartAccount extends React.Component {
 						</CardBody>
 					</Card>
 				</div>
-			</div>
+			</div></div>
 		);
 	}
 }

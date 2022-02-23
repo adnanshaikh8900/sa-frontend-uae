@@ -453,7 +453,7 @@ class CustomerInvoice extends React.Component {
               <i className="fas fa-eye" /> View
             </DropdownItem> */}
 
-						{row.statusEnum === 'Sent' && (
+						{row.statusEnum === 'Sent' && row.editFlag==true && (
 							<DropdownItem
 								onClick={() => {
 									this.unPostInvoice(row);
@@ -945,6 +945,7 @@ class CustomerInvoice extends React.Component {
 					invoiceAmount: customer.totalAmount,
 					vatAmount: customer.totalVatAmount,
 					cnCreatedOnPaidInvoice:customer.cnCreatedOnPaidInvoice,
+					editFlag:customer.editFlag,
 				}))
 				: '';
 
@@ -956,7 +957,8 @@ class CustomerInvoice extends React.Component {
 		})
 
 		return (
-			<div className="customer-invoice-screen">
+			loading ==true? <Loader/> :
+<div> <div className="customer-invoice-screen">
 				<div className="animated fadeIn">
 					{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
 					<Card>
@@ -1437,7 +1439,8 @@ class CustomerInvoice extends React.Component {
 					}}
 					id={this.state.rowId}
 				/>
-			</div>
+			</div></div>
+			
 		);
 	}
 }

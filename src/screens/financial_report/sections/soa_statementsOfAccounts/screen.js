@@ -72,7 +72,7 @@ class SOAReport extends React.Component {
 			view: false,
 			initValue: {
 				startDate: moment().startOf('month').format('DD/MM/YYYY'),
-				endDate: moment().endOf('month').format('YYYY/MM/DD hh:mm'),
+				endDate: moment().endOf('month').format('DD/MM/YYYY'),
 			},
 			csvData: [],
 			activePage: 1,
@@ -120,8 +120,6 @@ class SOAReport extends React.Component {
 			// 	this.initializeData();
 			// },
 		);
-
-
 		const postData = {
 			startDate: this.state.initValue.startDate,
 			endDate: this.state.initValue.endDate,
@@ -386,7 +384,7 @@ this.props.financialReportActions
 								/>{' '}
 							</div> */}
 							<div>
-				<Card>
+			
 					<CardBody>
 						<Formik initialValues={initValue}>
 							{(props) => (
@@ -432,9 +430,7 @@ this.props.financialReportActions
 													showYearDropdown
 													autoComplete="off"
 													maxDate={new Date()}
-													value={moment(props.values.startDate).format(
-														'DD-MM-YYYY',
-													)}
+													value={props.values.startDate}
 													dropdownMode="select"
 													dateFormat="dd-MM-yyyy"
 											
@@ -456,9 +452,7 @@ this.props.financialReportActions
 													placeholderText="To"
 													showMonthDropdown
 													showYearDropdown
-													value={moment(props.values.endDate).format(
-														'DD-MM-YYYY',
-													)}
+													value={props.values.endDate}
 													dropdownMode="select"
 													dateFormat="dd-MM-yyyy"
 						
@@ -492,15 +486,21 @@ this.props.financialReportActions
 							)}
 						</Formik>
 					</CardBody>
-				</Card>
+			
+					</div>
 			</div>
-							{soa_data.length!=0 &&(<CardBody id="section-to-print">
+					</Card>
+
+							{soa_data.length!=0 &&(
+						
+								
 								<PDFExport
 									ref={(component) => (this.pdfExportComponent = component)}
 									scale={0.8}
 									paperSize="A3"
 									fileName={'Statement Of Account ( '+this.state.customerName+' ).pdf'}
 								>
+								<Card><CardBody>	
 									<div style={{
 
 										display: 'flex',
@@ -533,7 +533,7 @@ this.props.financialReportActions
 											<br style={{ marginBottom: '5px' }} />
 											<b style={{ fontSize: '18px' }}>Statement of Account ( {this.state.customerName} )</b>
 											<br style={{ marginBottom: '5px' }} />
-											{strings.From} {initValue.startDate} {strings.To} {initValue.endDate}
+											{strings.From} {(initValue.startDate).replaceAll("/","-")} {strings.To} {initValue.endDate.replaceAll("/","-")} 
 
 										</div>
 										<div>
@@ -670,10 +670,11 @@ this.props.financialReportActions
 										</div>
 									)}
 									<div style={{ textAlignLast: 'center' }}> {strings.PoweredBy} <b>SimpleAccounts</b></div>
+									</CardBody>
+									</Card>
 								</PDFExport>
-							</CardBody>)}
-						</div>
-					</Card>
+							)}
+					
 				</div>
 			</div>
 		);

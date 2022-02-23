@@ -344,7 +344,8 @@ class PurchaseByVendor extends React.Component {
 											<br style={{ marginBottom: '5px' }} />
 											<b style ={{ fontSize: '18px'}}>{strings.PurhaseByVendor}</b>
 											<br style={{ marginBottom: '5px' }} />
-											{strings.From} {initValue.startDate} {strings.To} {initValue.endDate}
+											{strings.From} {(initValue.startDate).replaceAll("/","-")} {strings.To} {initValue.endDate.replaceAll("/","-")} 
+
 											
 									</div>
 									<div>
@@ -354,8 +355,8 @@ class PurchaseByVendor extends React.Component {
 										<Loader />
 									) : (
 										<div id="tbl_exporttable_to_xls" className="table-wrapper">
-											<Table  >
-												<thead className="header-row" >
+											<Table className="table-bordered">
+												<thead className="table-header-bg" >
 													<tr>
 														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.Vendor+" "+strings.Name}</th>
 														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.InvoiceCount}</th>

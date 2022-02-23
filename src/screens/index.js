@@ -193,6 +193,9 @@ import RecordVatPayment from './financial_report/sections/vat_reports/screens/re
 import FtaAuditReport from './financial_report/sections/fta_audit_report_MainPage'
 import GenerateAuditFile from './financial_report/sections/fta_audit_report_MainPage/screens/generate_Fta_audit_report'
 import ViewFtaAuditReport from './financial_report/sections/Fta_Audit_Report';
+import ExciseTaxAuditReport from './financial_report/sections/excise_tax_audit_report_MainPage'
+import ViewFtaExciseAuditReport from './financial_report/sections/Excise_Audit_Report'
+import ARAgingReport from './financial_report/sections/ar_aging_report'
 export {
 	LogIn,
 	LogInTwo,
@@ -368,5 +371,8 @@ export {
 	RecordVatPayment,
 	FtaAuditReport,
 	GenerateAuditFile,
-	ViewFtaAuditReport
+	ViewFtaAuditReport,
+	ExciseTaxAuditReport,
+	ViewFtaExciseAuditReport,
+	ARAgingReport
 };

@@ -130,7 +130,7 @@ export const getCountryList = () => {
 	};
 };
 export const getCompanyTypeListRegister = () => {
-	debugger
+	 
 	return (dispatch) => {
 	  let data = {
 		method: 'get',

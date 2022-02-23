@@ -517,6 +517,8 @@ class DetailContact extends React.Component {
 		const { initValue, loading, dialog, checkmobileNumberParam , taxTreatmentList,isSame,state_list_for_shipping} = this.state;
 		
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="create-contact-screen">
 				<div className="animated fadeIn">
 					{dialog}
@@ -555,10 +557,13 @@ class DetailContact extends React.Component {
 														}
 
 														
-														if (values.vatRegistrationNumber === '' && this.state.isRegisteredForVat==true)
-														errors.vatRegistrationNumber =	'Tax Registration Number is Required';
-												
-
+														if (this.state.isRegisteredForVat==true){
+															if(values.vatRegistrationNumber=="")
+															errors.vatRegistrationNumber =	'Tax Registration Number is Required';
+														
+															if(values.vatRegistrationNumber.length!=15){
+																errors.vatRegistrationNumber="Please Enter 15 Digit Tax Registration Number"
+															}}
 														// if( values.stateId ===''){
 														// 	errors.stateId =
 														// 	'State is Required';
@@ -595,7 +600,7 @@ class DetailContact extends React.Component {
 															.required('Email is Required')
 															.email('Invalid Email'),
 														mobileNumber: Yup.string()
-															.required('Mobile Number is required'),
+															.required('Mobile Number is Required'),
 														currencyCode: Yup.string()
 															.required('Please Select Currency')
 															.nullable(),
@@ -839,7 +844,6 @@ class DetailContact extends React.Component {
 																			 {strings.ContactType}
 																		</Label>
 																		<Select
-																			styles={customStyles}
 																			options={
 																				contact_type_list
 																					? selectOptionsFactory.renderOptions(
@@ -1170,7 +1174,6 @@ class DetailContact extends React.Component {
 																		<span className="text-danger">* </span>{strings.TaxTreatment}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		options={
 																			taxTreatmentList
 																				? selectOptionsFactory.renderOptions(
@@ -1321,7 +1324,6 @@ class DetailContact extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="billingcountryId"><span className="text-danger">* </span>{strings.Country}</Label>
 																	<Select
-																		styles={customStyles}
 																		options={
 																			country_list
 																				? selectOptionsFactory.renderOptions(
@@ -1390,17 +1392,16 @@ class DetailContact extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="stateId"><span className="text-danger">* </span>
 																		{/* {strings.StateRegion} */}
-																		{props.values.billingcountryId.value === 229 ? "Emirites" : "State / Provinces"}
+																		{props.values.billingcountryId.value === 229 ? "Emirates" : "State / Provinces"}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		options={
 																			state_list
 																				? selectOptionsFactory.renderOptions(
 																					'label',
 																					'value',
 																					state_list,
-																					props.values.billingcountryId.value === 229 ? "Emirites" : "State / Provinces",
+																					props.values.billingcountryId.value === 229 ? "Emirates" : "State / Provinces",
 																				)
 																				: []
 																		}
@@ -1410,7 +1411,7 @@ class DetailContact extends React.Component {
 																				'label',
 																				'value',
 																				state_list,
-																				props.values.billingcountryId.value === 229 ? "Emirites" : "State / Provinces",
+																				props.values.billingcountryId.value === 229 ? "Emirates" : "State / Provinces",
 																			).find(
 																			(option) =>
 																				option.value ===
@@ -1425,7 +1426,7 @@ class DetailContact extends React.Component {
 																				props.handleChange('stateId')('');
 																			}
 																		}}
-																		placeholder={strings.Select + props.values.billingcountryId === 229 ? "Emirites" : "State / Provinces"}
+																		placeholder={strings.Select + props.values.billingcountryId === 229 || props.values.billingcountryId.value === 229 ? "Emirates" : "State / Provinces"}
 																		id="stateId"
 																		name="stateId"
 																		className={
@@ -1646,7 +1647,7 @@ class DetailContact extends React.Component {
 
 																			
 																				if (this.state.isSame==false) {
-																					debugger
+																					 
 																					this.setState({isSame: !this.state.isSame,});
 																				    this.getStateListForShippingAddress(props.values.billingcountryId.value ?props.values.billingcountryId.value :props.values.billingcountryId);
 																					props.handleChange('shippingAddress')(props.values.billingAddress);
@@ -1701,6 +1702,7 @@ class DetailContact extends React.Component {
 																				props.handleChange('shippingAddress')(
 																					option,
 																				);
+																				this.setState({isSame: false,});
 																			}
 																		}}
 																		value={props.values.shippingAddress}
@@ -1724,8 +1726,6 @@ class DetailContact extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="shippingCountryId"><span className="text-danger">* </span>{strings.Country}</Label>
 																	<Select
-																	
-																		styles={customStyles}
 																		options={
 																			country_list
 																				? selectOptionsFactory.renderOptions(
@@ -1755,6 +1755,7 @@ class DetailContact extends React.Component {
 																			if (option && option.value) {
 																				props.handleChange('shippingCountryId')(option);
 																				this.getStateListForShippingAddress(option.value);
+																				this.setState({isSame: false,});
 																			} else {
 																				props.handleChange('shippingCountryId')('');
 																				// this.getStateListForShippingAddress('');
@@ -1786,18 +1787,16 @@ class DetailContact extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="shippingStateId"><span className="text-danger">* </span>
 																		{/* {strings.StateRegion} */}
-																		{props.values.shippingCountryId === 229 || props.values.shippingCountryId.value === 229? "Emirites" : "State / Provinces"}
+																		{props.values.shippingCountryId === 229 || props.values.shippingCountryId.value === 229? "Emirates" : "State / Provinces"}
 																	</Label>
 																	<Select
-																		
-																		styles={customStyles}
 																		options={
 																			state_list_for_shipping
 																				? selectOptionsFactory.renderOptions(
 																					'label',
 																					'value',
 																					state_list_for_shipping,
-																					props.values.shippingCountryId === 229 || props.values.shippingCountryId.value === 229? "Emirites" : "State / Provinces",
+																					props.values.shippingCountryId === 229 || props.values.shippingCountryId.value === 229? "Emirates" : "State / Provinces",
 																				)
 																				: []
 																		}
@@ -1811,11 +1810,12 @@ class DetailContact extends React.Component {
 																		onChange={(option) => {
 																			if (option && option.value) {
 																				props.handleChange('shippingStateId')(option);
+																				this.setState({isSame: false,});
 																			} else {
 																				props.handleChange('shippingStateId')('');
 																			}
 																		}}
-																		placeholder={strings.Select + props.values.shippingCountryId === 229 || props.values.shippingCountryId.value === 229 ? "Emirites" : "State / Provinces"}
+																		placeholder={strings.Select + props.values.shippingCountryId === 229 || props.values.shippingCountryId.value === 229 ? "Emirates" : "State / Provinces"}
 																		id="shippingStateId"
 																		name="shippingStateId"
 																		className={
@@ -1847,6 +1847,7 @@ class DetailContact extends React.Component {
 																			) {
 																				option = upperFirst(option.target.value)
 																				props.handleChange('shippingCity')(option);
+																				this.setState({isSame: false,});
 																			}
 																		}}
 																		placeholder={strings.Enter + strings.City}
@@ -1888,6 +1889,7 @@ class DetailContact extends React.Component {
 																				props.handleChange('shippingPostZipCode')(
 																					option,
 																				);
+																				this.setState({isSame: false,});
 																			}
 																		}}
 																		value={props.values.shippingPostZipCode}
@@ -2049,6 +2051,7 @@ class DetailContact extends React.Component {
 						</Row>
 					)}
 				</div>
+			</div>
 			</div>
 		);
 	}

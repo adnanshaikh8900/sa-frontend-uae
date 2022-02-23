@@ -361,7 +361,7 @@ class CreditNoteDetailsReport extends React.Component {
 											
 											<b style ={{ fontSize: '18px'}}>{strings.CreditNoteDetails}</b>
 											<br style={{ marginBottom: '5px' }} />
-											{strings.From} {initValue.startDate} {strings.To} {initValue.endDate}
+											{strings.From} {(initValue.startDate).replaceAll("/","-")} {strings.To} {initValue.endDate.replaceAll("/","-")} 
 											
 									</div>
 									<div>
@@ -371,8 +371,8 @@ class CreditNoteDetailsReport extends React.Component {
 										<Loader />
 									) : (
 										<div id="tbl_exporttable_to_xls" className="table-wrapper">
-												<Table >
-												<thead className="header-row" >
+												<Table className="table-bordered">
+												<thead className="table-header-bg">
 													<tr>
 														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.Credit+" "+strings.Number}</th>
 														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.CustomerName}</th>
@@ -394,7 +394,7 @@ class CreditNoteDetailsReport extends React.Component {
 																	<td style={{ textAlign: 'center'}}>{item.creditNoteNumber}</td>
 																	<td style={{ textAlign: 'center'}}>{item.customerName}</td>
 																	<td style={{ textAlign: 'center'}}>{item.creditNoteDate ? (
-																		moment(item.creditNoteDate).format('DD/MM/YYYY')
+																		moment(item.creditNoteDate).format('DD-MM-YYYY')
 																	) : (" ")}</td>
 
 																	<td style={{ textAlign: 'center' }}>{item.status}</td>

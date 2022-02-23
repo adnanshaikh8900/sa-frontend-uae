@@ -98,7 +98,9 @@ class DetailProduct extends React.Component {
 			isActive:false,
 			exciseTaxId:'',
 			exciseTaxList:[],
-			exciseTaxCheck:false
+			exciseTaxCheck:false,
+//			disableEditing:true,
+			inventoryTableData:[]
 		};
 
 		this.selectRowProp = {
@@ -121,6 +123,7 @@ class DetailProduct extends React.Component {
 		this.regEx = /^[0-9\d]+$/;
 		this.regExBoth = /[a-zA-Z0-9-./\\|]+$/;
 		// this.regExBoth = /[a-zA-Z0-9]+$/;
+		this.regDecimal5 =/^\d{0,10}$/;
 		this.regExAlpha = /[ +a-zA-Z0-9-./\\|!@#$%^&*()_<>,]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,6}$$/;
 	}
@@ -269,8 +272,17 @@ class DetailProduct extends React.Component {
 			this.props.productActions.getInventoryByProductId(this.props.location.state.id)
 			.then((res) => {
 				if (res.status === 200 && res.data !== null) {
-					this.setState({ loading: false,
-						inventoryId: res.data.inventoryId ? res.data.inventoryId : ''});
+			                                	let tempTableData =res.data
+                                    					tempTableData.map((obj)=>{
+                                    					    obj.disableEditing=true;
+                                    					});
+
+                                                        this.setState({ loading: false,
+                                                            inventoryId: res.data.inventoryId ? res.data.inventoryId : '',
+                                                            inventoryTableData:tempTableData,
+                                                        });
+
+
 				}
 			})
 		}
@@ -493,7 +505,7 @@ renderName=(cell,row)=>{
 		this.props.productActions
 			.checkProductNameValidation(data)
 			.then((response) => {
-				if (response.data === 'Product code already exists') {
+				if (response.data === 'Product Code Already Exists') {
 					this.setState({
 						ProductExist: true,
 					});
@@ -643,7 +655,7 @@ renderName=(cell,row)=>{
 	renderActions = (cell, row) => {
 		return (
 			<Row>
-			<div>
+			{/* <div>
 				<Button
 				className="btn btn-sm pdf-btn"
 				onClick={(e, ) => {
@@ -652,7 +664,7 @@ renderName=(cell,row)=>{
 				>
 				<i class="far fa-edit fa-lg"></i>
 				</Button>
-			</div>
+			</div> */}
 			<div>
 			<Button
 				className="btn btn-sm pdf-btn ml-3"
@@ -669,6 +681,110 @@ renderName=(cell,row)=>{
 			
 			
 		);
+	};
+
+	renderReorderLevel = (cell, row) => {
+		return (
+			<Row>
+			<Col>
+			<Input 
+				type="text"
+				min="0"
+				max="2000"
+				maxLength='10'
+				name="inventoryReorderLevel"
+				id="inventoryReorderLevel"
+				value={cell}
+				// disabled={this.state.disableEditing}
+				onChange={(option)=>{
+					if(this.regDecimal5.test(option.target.value))
+					{
+					let tempTableData =[...this.state.inventoryTableData]
+					tempTableData.map((obj)=>{
+					if(obj.inventoryId==row.inventoryId)
+					    {
+					    obj.reOrderLevel=option.target.value != ''?option.target.value:0;
+					    obj.disableEditing=false;
+					    }
+					})
+                       this.setState({inventoryTableData:tempTableData})
+					}
+				}}/></Col>	
+
+		     <Col> {row.disableEditing==false &&(<div>
+				<Button
+					color="primary"
+				className="btn btn-primary btn-sm pdf-btn  ml-1 mt-1 primary"
+				onClick={(e, ) => {this.updateReorderLevel(row)	}}
+				>
+		         <i class="fas fa-check"></i>
+				</Button>
+			</div>)}</Col> 
+			</Row>			
+		);
+	};
+
+	updateReorderLevel = (data) => {
+		const inventoryId =  data['inventoryId'];
+		const productCode = data['productCode'];
+		const contactId = data['supplierId'];
+		const isInventoryEnabled = data['isInventoryEnabled'];
+		const transactionCategoryId = data['transactionCategoryId'];
+	
+		const productName = data['productName'];
+		const productType = data['productType'];
+		const inventoryQty = data['inventoryQty'];
+		const inventoryReorderLevel = data['reOrderLevel'];
+		const inventoryPurchasePrice = data['inventoryPurchasePrice'];
+		const dataNew = {			
+			productCode,
+			productName,
+			productType,
+			isInventoryEnabled,
+			contactId,
+			transactionCategoryId,
+			inventoryId,
+			inventoryQty,
+			inventoryReorderLevel,
+			inventoryPurchasePrice,		
+		};
+		const postData = this.getReorderData(dataNew);
+		this.props.productActions
+			.updateInventory(postData)
+			.then((res) => {
+				if (res.status === 200) {
+					// this.setState({ disabled: false });
+					this.props.commonActions.tostifyAlert(
+						'success',
+						res.data ? res.data.message : 'Re-Order Level Updated Successfully',
+					);
+//					this.setState({disableEditing:true})
+                    let tempTableData =[...this.state.inventoryTableData]
+					tempTableData.map((obj)=>{
+					if(obj.inventoryId==data.inventoryId)
+					    obj.disableEditing=true;
+					})
+                       this.setState({inventoryTableData:tempTableData})
+					// this.props.history.push('/admin/master/product');
+				}
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Updated Unsuccessfully',
+				);
+			});
+	};
+	getReorderData = (data) => {
+		let temp = {};
+		for (let item in data) {
+			if (typeof data[`${item}`] !== 'object') {
+				temp[`${item}`] = data[`${item}`];
+			} else {
+				temp[`${item}`] = data[`${item}`].value;
+			}
+		}
+		return temp;
 	};
 	// renderActions = (cell, row) => {
 	// 	return (
@@ -713,7 +829,7 @@ renderName=(cell,row)=>{
 	render() {
 		strings.setLanguage(this.state.language);
 		const { vat_list, product_category_list,supplier_list,inventory_list } = this.props;
-		const { loading, dialog, purchaseCategory, salesCategory, inventoryAccount ,exciseTaxList} = this.state;
+		const { loading, dialog, purchaseCategory, salesCategory, inventoryAccount ,exciseTaxList,inventoryTableData} = this.state;
 		let tmpSupplier_list = []
 
 		var vat_list_data =[];
@@ -734,6 +850,8 @@ renderName=(cell,row)=>{
 			beforeSaveCell: this.beforeSaveCell,
 		  };
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="detail-product-screen">
 				<div className="animated fadeIn">
 					{dialog}
@@ -784,11 +902,11 @@ renderName=(cell,row)=>{
 														// 	'Purchase price cannot be greater than Sales price';
 														// }
 														if(this.state.exciseTaxCheck===true && values.exciseTaxId=='' ){
-															errors.exciseTaxId = 'Excise Tax is requied';
+															errors.exciseTaxId = 'Excise Tax is Requied';
 														}
 														if (this.state.ProductExist === true) {
 															errors.productCode =
-																'Product Code is already exist';
+																'Product Code Already Exist';
 														}
 														return errors;
 													}}
@@ -839,10 +957,10 @@ renderName=(cell,row)=>{
 															},
 														),
 														productPriceType: Yup.string().required(
-															'At least one Selling type is required',
+															'At Least One Selling Type is Required',
 														),
 														productCode: Yup.string().required(
-															'Product code is required',
+															'Product Code is Required',
 														),
 														vatCategoryId: Yup.string()
 															.required('Vat Category is Required')
@@ -976,6 +1094,7 @@ renderName=(cell,row)=>{
 																		</Label>
 																		<Input
 																			type="text"
+																			maxLength="100"
 																			id="productName"
 																			name="productName"
 																			onChange={(option) => {
@@ -1018,6 +1137,8 @@ renderName=(cell,row)=>{
 																			type="text"
 																			id="productCode"
 																			name="productCode"
+																			/**Added as per discussion with sajid sir ,disabled product code for sanity*/
+																			disabled
 																			value={props.values.productCode || ''}
 																			placeholder={strings.Enter+strings.ProductCode}
 																			onChange={(option) => {
@@ -1115,7 +1236,6 @@ renderName=(cell,row)=>{
 																		</Label>
 																		<Select
 																		 isDisabled={this.state.companyDetails && !this.state.companyDetails.isRegisteredVat}
-																			styles={customStyles}
 																			options={
 																				vat_list
 																					? selectOptionsFactory.renderOptions(
@@ -1250,7 +1370,6 @@ renderName=(cell,row)=>{
 																		</Label>
 																		<Select
 																		// isDisabled={props.values.exciseTaxId!='' ?true:false}
-																			styles={customStyles}
 																			options={
 																				exciseTaxList
 																					? selectOptionsFactory.renderOptions(
@@ -1347,6 +1466,7 @@ renderName=(cell,row)=>{
 																		>
 																			<Input
 																				type="checkbox"
+																				maxLength="14,2"
 																				id="productPriceTypeOne"
 																				name="productPriceTypeOne"
 																				onChange={(event) => {
@@ -1399,8 +1519,7 @@ renderName=(cell,row)=>{
 																		</Label>
 																		<Input
 																			type="text"
-																			// min="0.00"
-																			maxLength = "10"
+																			maxLength="14,2"
 																			id="salesUnitPrice"
 																			name="salesUnitPrice"
 																			placeholder={strings.Enter+strings.SellingPrice}
@@ -1522,6 +1641,7 @@ renderName=(cell,row)=>{
 																					: true
 																			}
 																			type="textarea"
+																			maxLength="250"
 																			name="salesDescription"
 																			id="salesDescription"
 																			rows="3"
@@ -1546,6 +1666,7 @@ renderName=(cell,row)=>{
 																		>
 																			<Input
 																				type="checkbox"
+																				maxLength="14,2"
 																				id="productPriceTypetwo"
 																				name="productPriceTypetwo"
 																				onChange={(event) => {
@@ -1600,8 +1721,7 @@ renderName=(cell,row)=>{
 																		<Input
 																		disabled={props.values.isInventoryEnabled===true }
 																			type="text"
-																			// min="0"
-																			maxLength = "10"
+																			maxLength="14,2"
 																			id="purchaseUnitPrice"
 																			name="purchaseUnitPrice"
 																			placeholder={strings.Enter+strings.PurchasePrice}
@@ -2058,7 +2178,7 @@ min="0"
 											selectRow={this.selectRowProp}
 											search={false}
 											options={this.options}
-											data={inventory_list ? inventory_list : []}
+											data={inventoryTableData ? inventoryTableData : []}
 											version="4"
 											hover
 											responsive
@@ -2087,6 +2207,7 @@ min="0"
 											<TableHeaderColumn
 												dataField="reOrderLevel" 
 												className="table-header-bg"
+												dataFormat={this.renderReorderLevel}
 											>
 											 {strings.ReOrderLevel}
 											</TableHeaderColumn>
@@ -2105,6 +2226,7 @@ min="0"
 											<TableHeaderColumn
 												className="text-right"
 												columnClassName="text-right"
+												width='5%'
 												dataFormat={this.renderActions}
 												className="table-header-bg"
 											></TableHeaderColumn>
@@ -2199,6 +2321,7 @@ min="0"
 					// id={this.state.rowId}
 					 inventory_history_list={this.state.inventory_history_list}
 				/>
+			</div>
 			</div>
 		);
 	}

@@ -351,7 +351,7 @@ class CreateCreditNote extends React.Component {
 					disabled
 					type="text"
 					min="0"
-						maxLength="17,3"
+						maxLength="14,2"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (
@@ -412,6 +412,7 @@ renderDiscount = (cell, row, props) => {
 		   <div>
 		   <div  class="input-group">
 			   <Input
+			         disabled
 					 type="text"
 					   min="0"
 					maxLength="14,2"
@@ -454,7 +455,7 @@ type="text"
 	<div 	style={{width:'100px'}}>
 	<Select
 
-
+                                                                                       isDisabled={true}
 																					   options={discountOptions}
 																					   id="discountType"
 																					   name="discountType"
@@ -493,7 +494,7 @@ type="text"
 discountType = (row) =>
 
 {
-	debugger
+	 
 	
 		return this.state.discountOptions &&
 		selectOptionsFactory
@@ -539,7 +540,7 @@ discountType = (row) =>
 		this.props.creditNotesCreateActions
 			.checkValidation(data)
 			.then((response) => {
-				if (response.data === 'Invoice Number already exists') {
+				if (response.data === 'Invoice Number Already Exists') {
 					this.setState(
 						{
 							exist: true,
@@ -1204,7 +1205,8 @@ discountType = (row) =>
 			discountPercentage,
 			notes,
 			email,
-			creditAmount
+			creditAmount,
+			vatCategoryId
 		} = data;
 		const { term } = this.state;
 		const formData = new FormData();
@@ -1256,7 +1258,9 @@ discountType = (row) =>
 		formData.append('type', 7);
 		if(this.state.isCreatedWIWP ===true)
 		formData.append('totalAmount', creditAmount);
-
+		if (vatCategoryId && vatCategoryId.value) {
+			formData.append('vatCategoryId', vatCategoryId.value);
+		}
 if (invoiceNumber && invoiceNumber.value) {
 	formData.append('invoiceId', invoiceNumber.value);
 	formData.append('cnCreatedOnPaidInvoice','1');
@@ -1655,6 +1659,7 @@ if (invoiceNumber && invoiceNumber.value) {
 			invoice_list,
 			universal_currency_list,
 			currency_convert_list,
+			vat_list,
 		} = this.props;
 
 		
@@ -1848,7 +1853,6 @@ if (invoiceNumber && invoiceNumber.value) {
 																	{strings.InvoiceNumber}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		id="invoiceNumber"
 																		name="invoiceNumber"
 																		placeholder={strings.Select+strings.InvoiceNumber}
@@ -1944,7 +1948,6 @@ if (invoiceNumber && invoiceNumber.value) {
 																		 {strings.CustomerName}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		id="contactId"
 																		name="contactId"
 																		placeholder={strings.Select+strings.CustomerName}
@@ -2202,7 +2205,7 @@ if (invoiceNumber && invoiceNumber.value) {
 																	{props.errors.creditNoteDate &&
 																		props.touched.creditNoteDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.creditNoteDate}
+																				{props.errors.creditNoteDate.includes("nullable()") ? "Tax Credit Note Date is Required" :props.errors.creditNoteDate}		
 																			</div>
 																		)}
 																</FormGroup>
@@ -2317,7 +2320,8 @@ if (invoiceNumber && invoiceNumber.value) {
 																</FormGroup>
 															</Col>)}
                                                             
-															{this.state.isCreatedWIWP===true &&(<Col  lg={3}>
+															{this.state.isCreatedWIWP===true &&(
+															<Col  lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="creditAmount"><span className="text-danger">* </span>
 																	Credit Amount
@@ -2348,8 +2352,56 @@ if (invoiceNumber && invoiceNumber.value) {
 																			</div>
 																		)}
 																</FormGroup>
-															</Col>)}
-
+															</Col>
+															)}
+	{this.state.isCreatedWIWP===true &&(
+<Col lg={3}>
+				<FormGroup className="mb-3">
+					<Label htmlFor="vatCategoryId"><span className="text-danger">* </span>{strings.Vat}</Label>
+					<Select
+						
+						className="select-default-width"
+					
+						options={
+							vat_list
+								? selectOptionsFactory.renderOptions(
+										'name',
+										'id',
+										vat_list,
+										'Vat',
+								  )
+								: []
+						}
+						value={props.values.vatCategoryId}
+						onChange={(option) => {
+							if (option && option.value) {
+								props.handleChange('vatCategoryId')(
+									option,
+								);
+							} else {
+								props.handleChange('vatCategoryId')('');
+							}
+						}}
+						
+						placeholder={strings.Select+strings.Vat }
+						id="vatCategoryId"
+						name="vatCategoryId"
+						className={
+							props.errors.vatCategoryId &&
+							props.touched.vatCategoryId
+								? 'is-invalid'
+								: ''
+						}
+					/>
+					{props.errors.vatCategoryId &&
+						props.touched.vatCategoryId && (
+							<div className="invalid-feedback">
+								{props.errors.vatCategoryId}
+							</div>
+						)}
+					
+				</FormGroup>
+			</Col>	)}
 															{/* <Col lg={3}>
 												<FormGroup>
 													<Label htmlFor="email">
@@ -2911,6 +2963,22 @@ min="0"
 																				</Col>
 																			</Row> */}
 																		</div>
+																		<div className="total-item p-2" >
+																			<Row>
+																				<Col lg={6}>
+																					<h5 className="mb-0 text-right">
+																					Total Excise
+																					</h5>
+																				</Col>
+																				<Col lg={6} className="text-right">
+																					<label className="mb-0">
+
+																						{this.state.customer_currency_symbol} &nbsp;
+																						{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																					</label>
+																				</Col>
+																			</Row>
+																		</div>
 																			<div className="total-item p-2">
 																			<Row>
 																				<Col lg={6}>
@@ -2928,22 +2996,7 @@ min="0"
 																				</Col>
 																			</Row>
 																		</div>
-																		<div className="total-item p-2" >
-																			<Row>
-																				<Col lg={6}>
-																					<h5 className="mb-0 text-right">
-																					Total Excise
-																					</h5>
-																				</Col>
-																				<Col lg={6} className="text-right">
-																					<label className="mb-0">
-
-																						{this.state.customer_currency_symbol} &nbsp;
-																						{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																					</label>
-																				</Col>
-																			</Row>
-																		</div>
+																		
 																		<div className="total-item p-2">
 																			<Row>
 																				<Col lg={6}>

@@ -435,7 +435,7 @@ class CreateGoodsReceivedNote extends React.Component {
 									{this.state.grnReceivedQuantityError}
 								</div> */}
 								{row['grnReceivedQuantity'] <= 0 && (
-								<div  className="text-danger">
+								<div  className="invalid-feedback">
 									Please Enter Quantity
 								</div>
 								)
@@ -460,7 +460,7 @@ this.state.data.map((obj, index) => {
 				render={({ field, form }) => (
 					<Input
 					type="number"
-						maxLength="17,3"
+						maxLength="14,2"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -1300,7 +1300,7 @@ this.state.data.map((obj, index) => {
 		this.props.goodsReceivedNoteCreateAction
 			.checkValidation(data)
 			.then((response) => {
-				if (response.data === 'grnNumber already exists') {
+				if (response.data === 'GRN Number Already Exists') {
 					this.setState(
 						{
 							exist: true,
@@ -1466,10 +1466,10 @@ console.log(this.state.data)
 													let errors = {};
 													if (this.state.exist === true) {
 														errors.grn_Number =
-															'GRN Number already exists';
+															'GRN Number Already Exists';
 													}
 													if (values.grn_Number==='') {
-														errors.grn_Number = 'GRN Number is required';
+														errors.grn_Number = 'GRN Number is Required';
 													}
 													return errors;
 												}}
@@ -1673,7 +1673,6 @@ console.log(this.state.data)
 																		{strings.SupplierName}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		id="supplierId"
 																		name="supplierId"
 																		placeholder={strings.Select+strings.SupplierName}
@@ -1830,7 +1829,8 @@ console.log(this.state.data)
 																	{props.errors.grnReceiveDate &&
 																		props.touched.grnReceiveDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.grnReceiveDate}
+																				{props.errors.grnReceiveDate.includes("nullable()") ? "Order Date is Required" :props.errors.grnReceiveDate}
+
 																			</div>
 																		)}
 																</FormGroup>
@@ -1923,7 +1923,8 @@ console.log(this.state.data)
 																			? `Please add detail to add more`
 																			: ''
 																	}
-																	disabled={this.checkedRow() ? true : false}
+																	disabled={this.checkedRow() ? true : false ||
+																		props.values.poNumber ? true : false}
 																>
 																	<i className="fa fa-plus"></i>&nbsp;{strings.Addmore}
 																</Button>
@@ -1933,6 +1934,7 @@ console.log(this.state.data)
 																	onClick={(e, props) => {
 																		this.props.history.push(`/admin/master/product/create`,{gotoParentURL:"/admin/expense/goods-received-note/create"})
 																		}}
+																	disabled={props.values.poNumber ? true : false}	
 																	>
 																	<i className="fa fa-plus"></i>&nbsp;{strings.Addproduct}
 																</Button>

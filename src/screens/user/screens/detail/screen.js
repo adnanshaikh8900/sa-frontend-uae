@@ -288,7 +288,7 @@ class DetailUser extends React.Component {
 			name: value,
 		};
 		this.props.userDetailActions.checkValidation(data).then((response) => {
-			if (response.data === 'User already exists') {
+			if (response.data === 'User Already Exists') {
 				this.setState({
 					exist: true,
 					 disabled: false,
@@ -313,6 +313,8 @@ class DetailUser extends React.Component {
 		console.log(role_list,"role_list")
 		console.log(active_roles_list,"temp_role_list")
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="create-user-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -353,7 +355,7 @@ class DetailUser extends React.Component {
 														
 														if (this.state.exist === true) {
 															errors.email =
-																'User already exists';
+																'User Already Exists';
 														}
 	
 														if (errors.length) {
@@ -927,6 +929,7 @@ class DetailUser extends React.Component {
 						</Col>
 					</Row>
 				</div>
+			</div>
 			</div>
 		);
 	}

@@ -855,6 +855,8 @@ min="0"
 		const { currency_list,universal_currency_list } = this.props;
 
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="detail-journal-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -891,7 +893,7 @@ min="0"
 															.of(
 																Yup.object().shape({
 																	transactionCategoryId: Yup.string().required(
-																		'Account is required',
+																		'Account is Required',
 																	),
 																	debitAmount: Yup.number().required(),
 																	creditAmount: Yup.number().required(),
@@ -1389,6 +1391,7 @@ min="0"
 						</Col>
 					</Row>
 				</div>
+			</div>
 			</div>
 		);
 	}

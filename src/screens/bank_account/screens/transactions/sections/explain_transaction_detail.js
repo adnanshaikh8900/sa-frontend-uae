@@ -504,7 +504,7 @@ class ExplainTrasactionDetail extends React.Component {
 		formData.append('bankId ', bankId ? bankId : '');
 		formData.append(
 			'date',
-			typeof date === 'object' ? moment(date).format('DD-MM-YYYY') : date,
+			typeof date === 'object' ? moment(date).format('DD/MM/YYYY') : date.replaceAll("-","/"),
 		);
 		formData.append(
 			'exchangeRate',
@@ -690,6 +690,7 @@ class ExplainTrasactionDetail extends React.Component {
 		let formData = new FormData();
 		for (var key in this.state.unexplainValue) {
 			formData.append(key, this.state.unexplainValue[key]);
+			formData.set('date',JSON.stringify(this.state.unexplainValue['date'].replaceAll("-","/")),);
 			if (
 				Object.keys(this.state.unexplainValue['explainParamList']).length > 0
 			) {
@@ -957,7 +958,7 @@ class ExplainTrasactionDetail extends React.Component {
 																values.coaCategoryId.value === 6) &&
 																!values.employeeId
 															){
-																errors.employeeId = 'Uxser is required'
+																errors.employeeId = 'User is Required'
 															}
 															return errors;
 														}}
@@ -2184,10 +2185,12 @@ min="0"
 																				id="description"
 																				rows="6"
 																				placeholder={strings.Description}
-																				onChange={(option) =>
+																				onChange={(option) =>{
+																					
+																					if(!option.target.value.includes("="))
 																					props.handleChange('description')(
 																						option,
-																					)
+																					)}
 																				}
 																				value={props.values.description}
 																			/>

@@ -178,7 +178,7 @@ class CreateRole extends React.Component {
 			name: value,
 		};
 		this.props.RoleActions.checkValidation(data).then((response) => {
-			if (response.data === 'Role name already exists') {
+			if (response.data === 'Role Name Already Exists') {
 				this.setState({
 					roleexist: true,
 				})
@@ -285,7 +285,7 @@ getvalidation=()=>{
 												}}
 												validationSchema={Yup.object().shape({
 													name: Yup.string().required(
-														'Role Name is required',
+														'Role Name is Required',
 													),
 												
 

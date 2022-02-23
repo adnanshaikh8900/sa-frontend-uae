@@ -240,7 +240,7 @@ class CreateRequestForQuotation extends React.Component {
 						id="exciseTaxId"
 						placeholder={"Select Excise"}
 						onChange={(e) => {
-							debugger
+							 
 							this.selectItem(
 								e.value,
 								row,
@@ -395,7 +395,7 @@ class CreateRequestForQuotation extends React.Component {
 					<Input
 					type="text"
 					min="0"
-						maxLength="17,3"
+						maxLength="14,2"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -458,7 +458,8 @@ class CreateRequestForQuotation extends React.Component {
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// );
-		return row.vatAmount === 0 ? this.state.supplier_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 });
+		let value =  row.vatAmount && row.vatAmount != 0 ?  row.vatAmount:0
+		return value === 0 ? this.state.supplier_currency_symbol +" "+ value.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ value.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 });
 	};
 
 	componentDidMount = () => {
@@ -1280,7 +1281,7 @@ class CreateRequestForQuotation extends React.Component {
 		this.props.requestForQuotationCreateAction
 			.checkValidation(data)
 			.then((response) => {
-				if (response.data === 'rfqNumber already exists') {
+				if (response.data === 'RFQ Number Already Exists') {
 					this.setState(
 						{
 							exist: true,
@@ -1386,10 +1387,10 @@ class CreateRequestForQuotation extends React.Component {
 													let errors = {};
 													if (this.state.exist === true) {
 														errors.rfq_number =
-															'RFQ number already exists';
+															'RFQ number Already Exists';
 													}
 													if (values.rfq_number==='') {
-														errors.rfq_number = 'RFQ Number is required';
+														errors.rfq_number = 'RFQ Number is Required';
 													}
 													return errors;
 												}}
@@ -1401,7 +1402,9 @@ class CreateRequestForQuotation extends React.Component {
 													supplierId: Yup.string().required(
 														'Supplier is Required',
 													),
-													// placeOfSupplyId: Yup.string().required('Place of supply is Required'),
+													placeOfSupplyId: Yup.string().required(
+														'Place of Supply is Required'
+													),
 													
 													rfqReceiveDate: Yup.string().required(
 														'Order Date is Required',
@@ -1536,7 +1539,6 @@ class CreateRequestForQuotation extends React.Component {
 																		{strings.SupplierName}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		id="supplierId"
 																		name="supplierId"
 																		placeholder={strings.Select+strings.SupplierName}
@@ -1649,7 +1651,6 @@ class CreateRequestForQuotation extends React.Component {
 																		{strings.PlaceofSupply}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		id="placeOfSupplyId"
 																		name="placeOfSupplyId"
 																		placeholder={strings.Select+strings.PlaceofSupply}
@@ -1720,7 +1721,8 @@ class CreateRequestForQuotation extends React.Component {
 																	{props.errors.rfqReceiveDate &&
 																		props.touched.rfqReceiveDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.rfqReceiveDate}
+																				{props.errors.rfqReceiveDate.includes("nullable()") ? "Order Date is Required" :props.errors.rfqReceiveDate}		
+
 																			</div>
 																		)}
 																</FormGroup>
@@ -1753,7 +1755,7 @@ class CreateRequestForQuotation extends React.Component {
 																	{props.errors.rfqExpiryDate &&
 																		props.touched.rfqExpiryDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.rfqExpiryDate}
+																				{props.errors.rfqExpiryDate.includes("nullable()") ? "Order Due Date is Required" :props.errors.rfqExpiryDate}
 																			</div>
 																		)}
 																	

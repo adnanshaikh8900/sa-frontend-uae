@@ -223,6 +223,7 @@ class DetailCreditNote extends React.Component {
 									contact_po_number: res.data.contactPoNumber
 										? res.data.contactPoNumber
 										: '',
+										vatCategoryId : res.data.vatCategoryId ? res.data.vatCategoryId : '',
 									currency: res.data.currencyCode ? res.data.currencyCode : '',
 									exchangeRate:res.data.exchangeRate ? res.data.exchangeRate : '',
 									currencyName:res.data.currencyName ? res.data.currencyName : '',
@@ -260,6 +261,7 @@ class DetailCreditNote extends React.Component {
 									filePath: res.data.filePath ? res.data.filePath : '',
 									total_excise: res.data.totalExciseTaxAmount ? res.data.totalExciseTaxAmount : 0,
 								},
+								vatCategoryId: res.data.vatCategoryId ? res.data.vatCategoryId : '',
 								customer_taxTreatment_des : res.data.taxTreatment ? res.data.taxTreatment : '',
 								checked: res.data.exciseType ? res.data.exciseType : res.data.exciseType,
 								discountAmount: res.data.discount ? res.data.discount : 0,
@@ -277,7 +279,7 @@ class DetailCreditNote extends React.Component {
 							},
 							() => {
 								if (this.state.data.length > 0) {
-									this.calTotalNet(this.state.data);
+									this.updateAmount(this.state.data);
 									const { data } = this.state;
 									const idCount =
 										data.length > 0
@@ -309,9 +311,18 @@ class DetailCreditNote extends React.Component {
 	calTotalNet = (data) => {
 		let total_net = 0;
 		data.map((obj) => {
-			total_net = +(total_net + (obj.exciseAmount +obj.unitPrice) * obj.quantity);
-			return obj;
-		});
+			if(obj.isExciseTaxExclusive === false){
+
+                total_net = +(total_net + +obj.unitPrice  * obj.quantity);
+
+            }else{
+
+                total_net = +(total_net + +(obj.unitPrice + obj.exciseAmount) * obj.quantity);
+
+            }
+        return obj;
+
+        });
 		total_net=total_net-this.state.discountAmount
 		this.setState({
 			initValue: Object.assign(this.state.initValue, { total_net }),
@@ -395,7 +406,7 @@ class DetailCreditNote extends React.Component {
 						id="exciseTaxId"
 						placeholder={strings.Select+strings.Vat}
 						onChange={(e) => {
-							debugger
+							 
 							this.selectItem(
 								e.value,
 								row,
@@ -797,7 +808,7 @@ class DetailCreditNote extends React.Component {
 	discountType = (row) =>
 
 {
-	debugger
+	 
 	
 		return this.state.discountOptions &&
 		selectOptionsFactory
@@ -1110,6 +1121,7 @@ class DetailCreditNote extends React.Component {
 			discount,
 			discountType,
 			discountPercentage,
+			vatCategoryId
 		} = data;
 
 		let formData = new FormData();
@@ -1131,7 +1143,9 @@ class DetailCreditNote extends React.Component {
 		// 		? moment(invoiceDueDate, 'DD-MM-YYYY').toDate()
 		// 		: invoiceDueDate,
 		// );
-
+		if (vatCategoryId && vatCategoryId.value) {
+			formData.append('vatCategoryId', vatCategoryId.value);
+		}
 		formData.append('exchangeRate',  this.state.initValue.exchangeRate);
 		
 		formData.append(
@@ -1438,7 +1452,7 @@ class DetailCreditNote extends React.Component {
 		strings.setLanguage(this.state.language);
 		const { data, discountOptions, initValue, loading, dialog } = this.state;
 
-		const { project_list, currency_list,currency_convert_list, customer_list,universal_currency_list } = this.props;
+		const { project_list, currency_list,currency_convert_list, customer_list,universal_currency_list,vat_list } = this.props;
 
 		let tmpCustomer_list = []
 
@@ -1448,6 +1462,8 @@ class DetailCreditNote extends React.Component {
 		})
 
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="detail-customer-invoice-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -2008,7 +2024,67 @@ class DetailCreditNote extends React.Component {
 																			</div>
 																		)}
 																</FormGroup>
-															</Col>)}
+															</Col>
+															)}
+{this.props.location.state.isCNWithoutProduct==true &&(
+<Col lg={3}>
+				<FormGroup className="mb-3">
+					<Label htmlFor="vatCategoryId"><span className="text-danger">* </span>{strings.Vat}</Label>
+					<Select
+						
+						className="select-default-width"
+					
+						options={
+							vat_list
+								? selectOptionsFactory.renderOptions(
+										'name',
+										'id',
+										vat_list,
+										'Vat',
+								  )
+								: []
+						}
+						value={vat_list &&
+							selectOptionsFactory.renderOptions(
+									'name',
+									'id',
+									vat_list,
+									'Vat',
+							  ).find(
+																					(option) =>
+																		 				option.value ===
+																						 props.values.vatCategoryId
+																	 				// +this.state.vatCategoryId,
+																	 		)}
+						onChange={(option) => {
+							if (option && option.value) {
+								props.handleChange('vatCategoryId')(
+									option,
+								);
+							} else {
+								props.handleChange('vatCategoryId')('');
+							}
+						}}
+						
+						placeholder={strings.Select+strings.Vat }
+						id="vatCategoryId"
+						name="vatCategoryId"
+						className={
+							props.errors.vatCategoryId &&
+							props.touched.vatCategoryId
+								? 'is-invalid'
+								: ''
+						}
+					/>
+					{props.errors.vatCategoryId &&
+						props.touched.vatCategoryId && (
+							<div className="invalid-feedback">
+								{props.errors.vatCategoryId}
+							</div>
+						)}
+					
+				</FormGroup>
+			</Col>)}
 																</Row>
 																<hr />
 																{/* <Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
@@ -2389,6 +2465,22 @@ min="0"
 																	</FormGroup>
 																</Col>
 																	<Col lg={4}>
+																	<div className="total-item p-2" >
+																			<Row>
+																				<Col lg={6}>
+																					<h5 className="mb-0 text-right">
+																					Total Excise
+																					</h5>
+																				</Col>
+																				<Col lg={6} className="text-right">
+																					<label className="mb-0">
+
+																						{this.state.customer_currency_symbol} &nbsp;
+																						{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																					</label>
+																				</Col>
+																			</Row>
+																		</div>
 																		<div className="">
 																			{/* <div className="total-item p-2">
 																				<Row>
@@ -2552,22 +2644,7 @@ min="0"
 																				</Col>
 																			</Row>
 																		</div>
-																		<div className="total-item p-2" >
-																			<Row>
-																				<Col lg={6}>
-																					<h5 className="mb-0 text-right">
-																					Total Excise
-																					</h5>
-																				</Col>
-																				<Col lg={6} className="text-right">
-																					<label className="mb-0">
-
-																						{this.state.customer_currency_symbol} &nbsp;
-																						{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																					</label>
-																				</Col>
-																			</Row>
-																		</div>
+																		
 																			<div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>
@@ -2743,6 +2820,7 @@ min="0"
 					salesCategory={this.state.salesCategory}
 					purchaseCategory={this.state.purchaseCategory}
 				/>
+			</div>
 			</div>
 		);
 	}

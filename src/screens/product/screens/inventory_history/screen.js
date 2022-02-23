@@ -365,6 +365,8 @@ class InventoryHistory extends React.Component {
 		// }
 	 console.log(singleObject)
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="detail-product-screen">
 				<div className="animated fadeIn">
 					{dialog}
@@ -488,6 +490,7 @@ class InventoryHistory extends React.Component {
 					openModal={this.state.openWarehouseModal}
 					closeWarehouseModal={this.closeWarehouseModal}
 				/>
+			</div>
 			</div>
 		);
 	}

@@ -146,7 +146,7 @@ calculatePayperioad=(startDate,endDate)=>{
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))+1; 
 	
     this.setState({paidDays:diffDays});
-	this.getAllPayrollEmployee()
+	this.getAllPayrollEmployee(endDate)
 	console.log(diffTime + " milliseconds");
     console.log(diffDays + " days");
 	console.log(this.state.paidDays,"paid-Days",diffDays)
@@ -315,9 +315,11 @@ calculatePayperioad=(startDate,endDate)=>{
 	}
 
 
-	getAllPayrollEmployee = () => {
+	getAllPayrollEmployee = (endDate) => {
 		//maintaining new state
-		this.props.createPayrollActions.getAllPayrollEmployee().then((res) => {
+		let date=endDate ?endDate :this.state.endDate;
+		let month =moment(date).format("MMMM"); 
+		this.props.createPayrollActions.getAllPayrollEmployee(moment(date).format("DD/MM/YYYY")).then((res) => {
 			if (res.status === 200) {
 
 				this.setState({
@@ -325,8 +327,12 @@ calculatePayperioad=(startDate,endDate)=>{
 				})
 
 				let newData = [...this.state.allPayrollEmployee]
-				newData = newData.map((data) => {	
-					let tmpPaidDay=this.state.paidDays > 30 ?30	:this.state.paidDays				
+				newData = newData.map((data) => {			
+					 	/** if month is of 31 days and 28days so its will be treated as 30 days only , 
+						  * need to handle this in future release */
+						//for  month wise case handling ,need to add switch in future 
+						 let tmpPaidDay=this.state.paidDays > 30 ?30	:
+										( this.state.paidDays==28 && month=="February" ? 30 :this.state.paidDays	)			
 						data.noOfDays =tmpPaidDay
 						data.originalNoOfDays =tmpPaidDay
 						data.originalGrossPay=data.grossPay
@@ -701,6 +707,8 @@ showTotal=()=>{
 		console.log(employee_list.data, "employee_list.data")
 		var today = new Date();
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="create-employee-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -856,8 +864,8 @@ showTotal=()=>{
 																				endDateId="endDate"
 																				focusedInput={this.state.focusedInput}
 																				isOutsideRange={
-																					// () => null
-																					day => isInclusivelyBeforeDay(day, moment(new Date(today.getFullYear(), today.getMonth(),0)))
+																					 () => null
+																					// day => isInclusivelyBeforeDay(day, moment(new Date(today.getFullYear(), today.getMonth(),0)))
 																				}
 																				onDatesChange={this.handleDateChange}
 																				onFocusChange={this.handleFocusChange}
@@ -1057,6 +1065,7 @@ showTotal=()=>{
 
 				// employee_list={employee_list.data}				
 				/> */}
+			</div>
 			</div>
 		)
 	}

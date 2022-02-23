@@ -93,6 +93,24 @@ class InvoiceTemplate extends Component {
 	// 		<div>{term}</div>
 	// 	);
 	// }
+	renderShippingAddress =()=>{
+		const { invoiceData, currencyData, totalNet, totalExciseAmount,companyData,status, contactData } = this.props;
+//ischanged at inv level
+
+let shippingAddress="";
+if(invoiceData.changeShippingAddress && invoiceData.changeShippingAddress==true)
+{
+ shippingAddress=invoiceData.shippingAddress ? invoiceData.shippingAddress:"";
+}else{
+	if(contactData && contactData.isBillingAndShippingAddressSame &&contactData.isBillingAndShippingAddressSame==true)
+	shippingAddress=contactData.addressLine1 ? contactData.addressLine1:"";
+	else
+	shippingAddress=contactData.addressLine2 ? contactData.addressLine2:"";
+}
+
+
+    return(	<div className="mb-1 ml-2"><b>{strings.ShippingAddress} : </b>{shippingAddress}</div>);
+	}
 	getTerms=(term)=>{
 
 		let	val=	this.termList &&
@@ -181,9 +199,10 @@ render() {
 											fontWeight: '700',
 											textTransform: 'uppercase',
 											color: 'black',
+											textAlign:'center',
 										}}
 									>
-									 {strings.Tax+" "+strings.Invoice+" "+strings.Details}
+									 {strings.Tax+" "+strings.Invoice}
 									</div>
 								
 							</div>
@@ -210,6 +229,7 @@ render() {
 								<h6 className="mb-1 ml-2"><b>{strings.BillTo} ,</b></h6>
 								<div className="mb-1 ml-2"><b>{strings.Name} : </b>{invoiceData.organisationName ? invoiceData.organisationName : invoiceData.name}</div>
 								{contactData && contactData.addressLine1 &&(<div className="mb-1 ml-2"><b>{strings.BillingAddress} : </b> {contactData.addressLine1}</div>)}
+										{invoiceData && contactData&&( this.renderShippingAddress())}
 								{contactData && contactData.postZipCode &&(	<div className="mb-1 ml-2"><b>{strings.PinCode} : </b> {contactData.postZipCode}</div>)}
 								{contactData&&contactData.billingStateName&&(<div className="mb-1 ml-2"><b>{strings.StateRegion} : </b> {contactData.billingStateName}</div>)}
 								{contactData && contactData.billingCountryName &&(<div className="mb-1 ml-2"><b>{strings.Country} : </b> {contactData.billingCountryName}</div>)}
@@ -315,7 +335,8 @@ render() {
 									</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.DiscountType}</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.Excise}</th>
-									<th style={{ padding: '0.5rem', textAlign: 'right' ,  width: "60px" }}>{strings.Vat }</th>
+									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.ExciseAmount}</th>
+									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.Vat }</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.VatAmount}</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right'}}>
 										{strings.SubTotal }
@@ -355,10 +376,29 @@ render() {
 												<td style={{ textAlign: 'right' }}>{item.discount}</td>
 												<td style={{ textAlign: 'right' }}>{item.discountType}</td>
 												<td style={{ textAlign: 'right' }}>{item.exciseTaxId ? this.renderExcise(item):"-"}</td>
+											    <td style={{ textAlign: 'right' }}>
+													<Currency
+														value={item.exciseAmount}
+														currencySymbol={
+															currencyData[0]
+																? currencyData[0].currencyIsoCode
+																: 'USD'
+														}
+													/>
+												</td>
 												<td
 													style={{ textAlign: 'right' }}
 												>{`${item.vatPercentage}%`}</td>
-													<td style={{ textAlign: 'right' }}>{item.vatAmount}</td>
+												<td style={{ textAlign: 'right' }}>
+													<Currency
+														value={item.vatAmount}
+														currencySymbol={
+															currencyData[0]
+																? currencyData[0].currencyIsoCode
+																: 'USD'
+														}
+													/>
+												</td>
 												<td style={{ textAlign: 'right' }}>
 													<Currency
 														value={item.subTotal}
@@ -626,6 +666,40 @@ render() {
 												</b>
 											</td>
 										</tr>
+										{invoiceData.exchangeRate == 1 ? " ":
+										<tr style={{ background: '#f2f2f2' }}>
+											<td style={{ width: '40%' }}>
+												<strong>{strings.InvoiceAmountIn}{" "+invoiceData.baseCurrencyIsoCode}</strong>
+											</td>
+											<td>
+												<b
+													style={{
+														fontWeight: '600',
+														display: 'flex',
+														justifyContent: 'space-between',
+													}}
+												>
+													<span style={{ marginLeft: '2rem' }}></span>
+													<span>
+														{invoiceData.totalAmount ? (
+															<Currency
+															value={invoiceData.totalAmount * invoiceData.exchangeRate}
+																currencySymbol={
+																	invoiceData.baseCurrencyIsoCode
+																}
+															/>
+														) : (
+															<Currency
+																value={0}
+																currencySymbol={
+																	invoiceData.baseCurrencyIsoCode
+																}
+															/>
+														)}
+													</span>
+												</b>
+											</td>
+										</tr>}
 									</tbody>
 								</Table>
 								</div>		

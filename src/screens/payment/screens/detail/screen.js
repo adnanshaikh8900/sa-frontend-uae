@@ -261,6 +261,8 @@ class DetailPayment extends React.Component {
     } = this.props;
 
     return (
+      loading ==true? <Loader/> :
+<div>
       <div className="detail-payment-screen">
         <div className="animated fadeIn">
           {dialog}
@@ -314,8 +316,8 @@ class DetailPayment extends React.Component {
                         // })
                         // }
                         validationSchema={Yup.object().shape({
-                          supplier: Yup.string().required("Supplier is required"),
-                          invoiceId: Yup.string().required("Invoice Number is required"),
+                          supplier: Yup.string().required("Supplier is Required"),
+                          invoiceId: Yup.string().required("Invoice Number is Required"),
                           payment_date: Yup.date().required("Payment Date is Required"),
                           currency: Yup.string().required("Currency is Required"),
                           invoiceAmount: Yup.string()
@@ -655,6 +657,7 @@ min="0"
           currency_list={this.props.currency_list}
           country_list={this.props.country_list}
         />
+      </div>
       </div>
     );
   }

@@ -319,6 +319,8 @@ class DetailTransactionCategory extends React.Component {
     }
 
     return (
+      loading ==true? <Loader/> :
+<div>
       <div className="detial-transaction-category-screen">
         <div className="animated fadeIn">
           <Row>
@@ -493,6 +495,7 @@ class DetailTransactionCategory extends React.Component {
               ""
             )}
         </div>
+      </div>
       </div>
     )
   }

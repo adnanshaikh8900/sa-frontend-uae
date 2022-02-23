@@ -412,7 +412,8 @@ class CreateSupplierInvoice extends React.Component {
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// );
-		return row.vatAmount === 0 ? this.state.supplier_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 });
+		let value =  row.vatAmount && row.vatAmount != 0 ?  row.vatAmount:0
+		return value === 0 ? this.state.supplier_currency_symbol +" "+ value.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ value.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 });
 	};
 
 	componentDidMount = () => {
@@ -1551,7 +1552,7 @@ class CreateSupplierInvoice extends React.Component {
 		this.props.supplierInvoiceCreateActions
 			.checkValidation(data)
 			.then((response) => {
-				if (response.data === 'Invoice Number already exists') {
+				if (response.data === 'Invoice Number Already Exists') {
 					this.setState(
 						{
 							exist: true,
@@ -1604,14 +1605,6 @@ class CreateSupplierInvoice extends React.Component {
 		})
 	
 		return customer_taxTreatmentId;
-	}
-
-	rendertotalexcise=()=>{
-		const {initValue}= this.state
-
-		let val=initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })
-
-		return parseFloat(val).toFixed(2)
 	}
 
 	rendertotalexcise=()=>{
@@ -1682,14 +1675,14 @@ class CreateSupplierInvoice extends React.Component {
 													let errors = {};
 													if (this.state.exist === true) {
 														errors.invoice_number =
-															'Invoice Number already exists';
+															'Invoice Number Already Exists';
 													}
 													if (values.invoice_number==='') {
-														errors.invoice_number = 'Invoice Number is required';
+														errors.invoice_number = 'Invoice Number is Required';
 													}
 													if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")
 													{
-                                                        errors.placeOfSupplyId ='Place of supply is Required';
+                                                        errors.placeOfSupplyId ='Place of Supply is Required';
                                                    }
 												   if (values.term && values.term.label && values.term.label === "Select Terms") {
 													errors.term ='Term is Required';
@@ -1707,7 +1700,7 @@ class CreateSupplierInvoice extends React.Component {
 													contactId: Yup.string().required(
 														'Supplier is Required',
 													),
-													placeOfSupplyId: Yup.string().required('Place of supply is Required'),
+													placeOfSupplyId: Yup.string().required('Place of Supply is Required'),
 													term: Yup.string().required('Term is Required'),
 													invoiceDate: Yup.string().required(
 														'Invoice Date is Required',
@@ -1842,7 +1835,6 @@ class CreateSupplierInvoice extends React.Component {
 																		{strings.SupplierName} 
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		id="contactId"
 																		name="contactId"
 																		placeholder={strings.Select+strings.SupplierName}
@@ -1937,7 +1929,6 @@ class CreateSupplierInvoice extends React.Component {
 																	</Label>
 																	<Input
 																	disabled
-																		styles={customStyles}
 																		id="taxTreatmentid"
 																		name="taxTreatmentid"
 																		value={
@@ -1971,7 +1962,6 @@ class CreateSupplierInvoice extends React.Component {
 																		{strings.PlaceofSupply} 
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		id="placeOfSupplyId"
 																		name="placeOfSupplyId"
 																		placeholder={strings.Select+strings.PlaceofSupply}
@@ -2044,7 +2034,6 @@ class CreateSupplierInvoice extends React.Component {
 																		</UncontrolledTooltip>
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		options={
 																			this.termList
 																				? selectOptionsFactory.renderOptions(
@@ -2123,7 +2112,7 @@ class CreateSupplierInvoice extends React.Component {
 																	{props.errors.invoiceDate &&
 																		props.touched.invoiceDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.invoiceDate}
+																				{props.errors.invoiceDate.includes("nullable()") ? "Invoice Date is Required" :props.errors.invoiceDate}		
 																			</div>
 																		)}
 																</FormGroup>
@@ -2159,7 +2148,8 @@ class CreateSupplierInvoice extends React.Component {
 																		{props.errors.invoiceDueDate &&
 																			props.touched.invoiceDueDate && (
 																				<div className="invalid-feedback">
-																					{props.errors.invoiceDueDate}
+																					{props.errors.invoiceDueDate}		
+
 																				</div>
 																			)}
 																	</div>
@@ -2627,11 +2617,9 @@ class CreateSupplierInvoice extends React.Component {
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
-																					
 																						{this.state.supplier_currency_symbol} &nbsp;
-																						{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																						{this.state.customer_currency_symbol} &nbsp;
-																						{this.rendertotalexcise()}
+																						{initValue.total_excise.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}	
 																					</label>
 																				</Col>
 																			</Row>

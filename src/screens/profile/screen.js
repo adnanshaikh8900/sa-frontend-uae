@@ -91,6 +91,14 @@ class Profile extends React.Component {
 			companyLogo: [],
 			companyLogoFile: [],
 			initUserData: {},
+			displayRules:false,
+			isPasswordShown: false,
+			initValue: {
+				password: "",
+				confirmPassword: '',
+				currentPassword: '',
+			
+			  },
 			email:'',
 			initCompanyData: {
 				companyName: '',
@@ -274,6 +282,11 @@ class Profile extends React.Component {
 		this.props.profileActions.getStateList(countryCode, type);
 	};
 
+	togglePasswordVisiblity = () => {
+		const { isPasswordShown } = this.state;
+		this.setState({ isPasswordShown: !isPasswordShown });
+	};
+
 	handleUserSubmit = (data) => {
 		const {
 			firstName,
@@ -303,6 +316,9 @@ class Profile extends React.Component {
 			formData.append('password ', password);
 		}
 		
+		if (currentPassword.length > 0) {
+			formData.append('currentPassword ', currentPassword);
+		}
 		if (confirmPassword.length > 0) {
 			formData.append('confirmPassword ', confirmPassword);
 		}
@@ -509,7 +525,7 @@ class Profile extends React.Component {
 	};
 
 	resetPassword = (email) => {
-		debugger
+		 
 		
 			let data = {
 			  method: 'post',
@@ -536,7 +552,24 @@ class Profile extends React.Component {
 			  })
 			})
 		  }
-	
+		  validateCurrentPassword = (username,password) => {
+			let obj = {
+				username,
+				password
+			};
+			this.props.authActions
+				.logIn(obj)
+				.then((res) => {
+			 
+					this.setState({ currentPasswordMatched: true });
+				})
+				.catch((err) => {
+					 
+					if(err.status==401)
+					this.setState({ currentPasswordMatched: false });
+					
+				});
+		};
 
 	handleCompanySubmit = (data) => {
 		const {
@@ -731,7 +764,7 @@ class Profile extends React.Component {
 		this.props.profileActions
 			.resetNewpassword(formData)
 			.then((res) => {
-				debugger
+				
 				if (res.status === 200) {
 					this.props.history.push('/login');
 					this.props.commonActions.tostifyAlert(
@@ -750,7 +783,7 @@ class Profile extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { loading, isSame, timezone ,companyTypeList} = this.state;
+		const { loading, isSame, timezone ,companyTypeList ,isPasswordShown} = this.state;
 		const {
 			currency_list,
 			country_list,
@@ -759,6 +792,8 @@ class Profile extends React.Component {
 			company_state_list,
 		} = this.props;
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="profile-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -803,7 +838,7 @@ class Profile extends React.Component {
 													this.toggle(0, '3');
 												}}
 											>
-												 {strings.ResetPassword}
+												 {strings.PasswordSettings}
 											</NavLink>
 										</NavItem>
 									</Nav>
@@ -1383,13 +1418,13 @@ class Profile extends React.Component {
 															// })}
 															validationSchema={Yup.object().shape({
 																companyName: Yup.string().required(
-																	'Company Name is required',
+																	'Company Name is Required',
 																),
 																companyRegistrationNumber: Yup.string().required(
-																	'Company Registration Number is required',
+																	'Company Registration Number is Required',
 																),
 																vatRegistrationNumber: Yup.string().required(
-																	'Tax Registration Number is required')
+																	'Tax Registration Number is Required')
 																	.test(
 																		'vatRegistrationNumber',
 																		'Invalid TRN',
@@ -1405,35 +1440,35 @@ class Profile extends React.Component {
 																	.required('Email is Required')
 																	.email('Invalid Email'),
 																companyTypeCode: Yup.string().required(
-																	'Company/Business Type is required',
+																	'Company/Business Type is Required',
 																),
 																phoneNumber: Yup.string().required(
-																	'Mobile Number is required',
+																	'Mobile Number is Required',
 																),
 																companyAddressLine1: Yup.string().required(
-																	'Company Address Line 1 is required',
+																	'Company Address Line 1 is Required',
 																),
 																// companyAddressLine2: Yup.string().required(
-																// 	'Company Address Line 2 is required',
+																// 	'Company Address Line 2 is Required',
 																// ),
 																// companyAddressLine3: Yup.string().required(
-																// 	'Company Address Line 3 is required',
+																// 	'Company Address Line 3 is Required',
 																// ),
 																companyCountryCode: Yup.string().required(
-																	'Country is required',
+																	'Country is Required',
 																)
 																.nullable(),
 																companyStateCode: Yup.string().required(
-																	'State is required',
+																	'State is Required',
 																),
 																companyCity: Yup.string().required(
-																	'City is required',
+																	'City is Required',
 																),
 																// companyPoBoxNumber: Yup.string().required(
-																// 	'PO Box Number is required',
+																// 	'PO Box Number is Required',
 																// ),
 																companyPostZipCode: Yup.string().required(
-																	'Post Zip Code is required',
+																	'Post Zip Code is Required',
 																),
 															})}
 															>
@@ -1500,6 +1535,7 @@ class Profile extends React.Component {
 																							<Input
 																								maxLength={150}
 																								type="text"
+																								maxLength='100'
 																								id="companyName"
 																								name="companyName"
 																								placeholder={strings.Enter+strings.CompanyName}
@@ -1637,6 +1673,7 @@ class Profile extends React.Component {
 																							<Input
 																								maxLength={80}
 																								type="text"
+																								maxLength='80'
 																								id="emailAddress"
 																								name="emailAddress"
 																								placeholder={strings.Enter+strings.Email}
@@ -1729,8 +1766,9 @@ class Profile extends React.Component {
 																								{strings.Website}
 																						</Label>
 																							<Input
-																								maxLength={50}
+																								
 																								type="text"
+																								maxLength='50'
 																								id="website"
 																								name="website"
 																								placeholder={strings.Enter+strings.Website}
@@ -1900,8 +1938,8 @@ class Profile extends React.Component {
 																					<span className="text-danger">*</span> {strings.CompanyAddressLine1}
 																				</Label>
 																					<Input
-																						maxLength={100}
 																						type="text"
+																						maxLength='100'
 																						id="companyAddressLine1"
 																						name="companyAddressLine1"
 																						placeholder={strings.Enter+strings.CompanyAddressLine1}
@@ -1941,8 +1979,8 @@ class Profile extends React.Component {
 																						 {strings.CompanyAddressLine2}
 																				</Label>
 																					<Input
-																						maxLength={100}
 																						type="text"
+																						maxLength='100'
 																						id="companyAddressLine2"
 																						name="companyAddressLine2"
 																						placeholder={strings.Enter+strings.CompanyAddressLine2}
@@ -1980,8 +2018,8 @@ class Profile extends React.Component {
 																					<span className="text-danger">*</span> {strings.PostZipCode}
 																				</Label>
 																					<Input
-																						maxLength={8}
 																						type="text"
+																						maxLength='8'
 																						id="companyPostZipCode"
 																						name="companyPostZipCode"
 																						placeholder={strings.Enter+strings.PostZipCode}
@@ -2174,8 +2212,8 @@ class Profile extends React.Component {
 																					<span className="text-danger">*</span> {strings.City}
 																				</Label>
 																					<Input
-																						maxLength={20}
 																						type="text"
+																						maxLength='100'
 																						id="companyCity"
 																						name="companyCity"
 																						placeholder={strings.Enter+strings.City}
@@ -3504,7 +3542,7 @@ class Profile extends React.Component {
 												<Row>
 													<Col lg="12">
 													<Formik
-																// initialValues={this.state.initCompanyData}
+																initialValues={this.state.initValue}
 																onSubmit={(values, { resetForm }) => {
 																	this.handlePasswordSubmit(values);
 																	// resetForm(this.state.initValue)
@@ -3521,21 +3559,38 @@ class Profile extends React.Component {
 															//   lastName: Yup.()
 															//     .required("Last Name is Required"),
 															// })}
-															// // validationSchema={Yup.object().shape({
-															// // 	password: Yup.string()
-															// // 		 .required("Password is Required")
-															// // 		// .min(8, "Password Too Short")
-															// // 		.matches(
-															// // 			/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
-															// // 			'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character',
-															// // 		),
-															// // 	confirmPassword: Yup.string()
-															// // 		 .required('Confirm Password is Required')
-															// // 		.oneOf(
-															// // 			[Yup.ref('password'), null],
-															// // 			'Passwords must match',
-															// // 		),
-															// })}
+															validate={(values)=>{
+																
+																let errors={};
+																	if(this.state.currentPasswordMatched==false)
+																	errors.currentPassword="Please Enter The Correct Password"
+																return errors;
+
+															}}
+															validationSchema={Yup.object().shape({
+																currentPassword: Yup.string().required(
+																	'Current Password is Required',
+																),
+																// password: Yup.string().required(
+																// 	'New Password is Required',
+																// ),
+																// confirmPassword: Yup.string().required(
+																// 	'Confirm Password is Required',
+																// ),
+																password: Yup.string()
+																	 .required("Password is Required")
+																	// .min(8, "Password Too Short")
+																	.matches(
+																		/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
+																		'Must Contain 8 Characters,Must contain max 16 Characters, One Uppercase, One Lowercase, One Number and one special case Character',
+																	),
+																confirmPassword: Yup.string()
+																	 .required('Confirm Password is Required')
+																	.oneOf(
+																		[Yup.ref('password'), null],
+																		'Passwords Must Match',
+																	),
+															})}
 
 															>
 																{(props) => (
@@ -3555,15 +3610,26 @@ class Profile extends React.Component {
 																							</span> {strings.CurrentPassword}
 																						</Label>
 																							<Input
+																							onPaste={(e)=>{
+																								e.preventDefault()
+																								return false;
+																							  }} onCopy={(e)=>{
+																								e.preventDefault()
+																								return false;
+																							  }}
+																								minLength={8}
+																								maxLength={16}
 																								type="password"
 																								id="currentPassword"
 																								name="currentPassword"
 																								autoComplete="current-password"
-																								placeholder={strings.Enter+strings.Password}
-																								onChange={(value) => {
+																								placeholder={strings.Enter+strings.CurrentPassword}
+																								onChange={(option) => {
 																									props.handleChange('currentPassword')(
-																										value,
+																										option,
 																									);
+																									
+																									this.validateCurrentPassword(this.state.initUserData.email,option.target.value)
 																								}}
 																								className={
 																									props.errors.currentPassword &&
@@ -3594,6 +3660,7 @@ class Profile extends React.Component {
 																									*
 																							</span> {strings.NewPassword}
 																						</Label>
+																						{/* <div> */}
 																							<Input
 																							onPaste={(e)=>{
 																								e.preventDefault()
@@ -3602,19 +3669,28 @@ class Profile extends React.Component {
 																								e.preventDefault()
 																								return false;
 																							  }}
+																							  type={
+																								this.state.isPasswordShown
+																									? 'text'
+																									: 'password'
+																								}
 																							// onselectstart="return false"
 																							// oncopy="return false"
 																							// ondrop="return false"
 																							// onpaste="return false"
+																								minLength={8}
+																								maxLength={16}
 																								type="password"
 																								id="password"
 																								name="password"
 																								autoComplete="new-password"
-																								placeholder={strings.Enter+strings.Password}
+																								value={props.values.password}
+																								placeholder={strings.Enter+strings.NewPassword}
 																								onChange={(value) => {
 																									props.handleChange('password')(
 																										value,
 																									);
+																									this.setState({displayRules:true})
 																								}}
 																								className={
 																									props.errors.password &&
@@ -3623,19 +3699,23 @@ class Profile extends React.Component {
 																										: ''
 																								}
 																							/>
+																							{/* <i className={`fa ${isPasswordShown ? "fa-eye-slash" : "fa-eye"} password-icon fa-lg`}
+																								onClick={this.togglePasswordVisiblity}
+																							></i> */}
+																						{/* </div> */}
 																							{props.errors.password &&
-																								props.touched.password ? (
-																									<div className="invalid-feedback">
-																										{props.errors.password}
-																									</div>
-																								) : (
-																									<span className="password-msg">
-																										Must Contain 8 Characters, One
-																										Uppercase, One Lowercase, One
-																										Number and one special case
-																										Character.
-																									</span>
-																								)}
+																							props.touched.password && (
+																								<div className="invalid-feedback">
+																									{props.errors.password}
+																								</div>
+																							)}
+																						{this.state.displayRules==true&&(<PasswordChecklist
+																							rules={["maxLength", "minLength", "specialChar", "number", "capital"]}
+																							minLength={8}
+																							maxLength={16}
+																							value={props.values.password}
+																							valueAgain={props.values.confirmPassword}
+																						/>)}
 																						</FormGroup>
 																					</Col>
 																					<Col lg={4}>
@@ -3657,9 +3737,12 @@ class Profile extends React.Component {
 																							// oncopy="return false"
 																							// ondrop="return false"
 																							// onpaste="return false"
+																								minLength={8}
+																								maxLength={16}
 																								type="password"
 																								id="confirmPassword"
 																								name="confirmPassword"
+																								value={props.values.confirmPassword}
 																								placeholder={strings.Enter+strings.ConfirmPassword}
 																								onChange={(value) => {
 																									props.handleChange(
@@ -3674,11 +3757,17 @@ class Profile extends React.Component {
 																								}
 																							/>
 																							{props.errors.confirmPassword &&
-																								props.touched.confirmPassword && (
-																									<div className="invalid-feedback">
-																										{props.errors.confirmPassword}
-																									</div>
-																								)}
+																							props.touched.confirmPassword && (
+																								<div className="invalid-feedback">
+																									{props.errors.confirmPassword}
+																								</div>
+																							)}
+																						{this.state.displayRules==true&&(<PasswordChecklist
+																							rules={[ "match"]}
+																							minLength={8}
+																							value={props.values.password}
+																							valueAgain={props.values.confirmPassword}
+																						/>)}
 																						</FormGroup>
 																					</Col>
 																				</Row>
@@ -3736,6 +3825,7 @@ class Profile extends React.Component {
 						</Col>
 					</Row>
 				</div>
+			</div>
 			</div>
 		);
 	}

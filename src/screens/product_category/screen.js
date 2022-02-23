@@ -328,6 +328,24 @@ class ProductCategory extends React.Component {
 		);
 	};
 
+	
+	getActionButtons = (params) => {
+		return (
+	<>
+	{/* BUTTON ACTIONS */}
+			{/* View */}
+			
+			<Button
+				className="Ag-gridActionButtons btn-sm"
+				title='Edit'
+				color="secondary"
+					onClick={()=>
+						this.goToCategoryDetail(params.data.id)  }
+			
+			>		<i className="fas fa-edit"/> </Button> 
+	</>
+		)
+	}
 	render() {
 		strings.setLanguage(this.state.language);
 		const {
@@ -343,6 +361,8 @@ class ProductCategory extends React.Component {
 		// let display_data = this.filterVatList(vatList)
 
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="vat-code-screen">
 				<div className="animated fadeIn">
 					<Card>
@@ -532,7 +552,7 @@ class ProductCategory extends React.Component {
 					>
 
 				<AgGridColumn field="productCategoryCode" 
-				headerName=   {strings.CODE}
+				headerName=   {strings.ProductCategoryCode}
 				sortable={ true } 
 				filter={ true } 
 				enablePivot={true} 
@@ -541,7 +561,7 @@ class ProductCategory extends React.Component {
 					style={{
 						cursor: 'pointer',
 						}}
-					onClick={()=>this.goToCategoryDetail(params.data.id) }                                                             
+					                                                  
 		>
 		{params.value}
 		</label>
@@ -553,7 +573,19 @@ class ProductCategory extends React.Component {
 				sortable={ true }
 				filter={ true }
 				enablePivot={true}
-				></AgGridColumn>  			
+				></AgGridColumn> 
+				<AgGridColumn field="action"
+										// className="Ag-gridActionButtons"
+										headerName="ACTIONS"
+										cellRendererFramework={(params) =>
+											<div
+											 className="Ag-gridActionButtons"
+											 >
+												{this.getActionButtons(params)}
+											</div>
+
+										}
+									></AgGridColumn> 			
 			</AgGridReact>  
 			<div className="example-header mt-1">
 					Page Size:
@@ -583,6 +615,7 @@ class ProductCategory extends React.Component {
             </ModalFooter>
           </Modal> */}
 				</div>
+			</div>
 			</div>
 		);
 	}

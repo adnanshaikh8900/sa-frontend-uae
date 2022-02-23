@@ -397,6 +397,8 @@ class UpdateEmployeePersonal extends React.Component {
         const { designation_dropdown, country_list, state_list, employee_list_dropdown,salary_role_dropdown } = this.props
 
         return (
+            loading ==true? <Loader/> :
+<div>
             <div className="detail-vat-code-screen">
                 <div className="animated fadeIn">
                     {dialog}
@@ -483,7 +485,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                             salaryRoleId : Yup.string()
                                                             .required('Salary Role is Required'),
                                                             mobileNumber: Yup.string()
-															.required('Mobile Number is required'),
+															.required('Mobile Number is Required'),
                                                             emergencyContactName1: Yup.string()
                                                            .required('Contact Name 1 is Required') ,
                                                             emergencyContactNumber1:Yup.string()
@@ -636,8 +638,11 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                     //         : ''
                                                                                     // }
                                                                                 />
-                                                                                {props.errors.mobileNumber && props.touched.mobileNumber && (
-                                                                                    <div style={{color:"red"}}>{props.errors.mobileNumber}</div>
+                                                                                {props.errors.mobileNumber && 
+                                                                                    props.touched.mobileNumber && (
+                                                                                    <div style={{color:"red"}}>
+                                                                                        {props.errors.mobileNumber}
+                                                                                    </div>
                                                                                 )}
 
                                                                             </FormGroup>
@@ -662,8 +667,11 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                         props.handleChange("dob")(value)
                                                                                     }}
                                                                                 />
-                                                                                {props.errors.dob && props.touched.dob && (
-                                                                                    <div className="invalid-feedback">{props.errors.dob}</div>
+                                                                                {props.errors.dob && 
+                                                                                    props.touched.dob && (
+                                                                                    <div className="invalid-feedback">
+                                                                                        {props.errors.dob.includes("nullable()") ? "DOB is Required" :props.errors.dob}
+                                                                                    </div>
                                                                                 )}
                                                                             </FormGroup>
                                                                         </Col>
@@ -1493,6 +1501,7 @@ class UpdateEmployeePersonal extends React.Component {
                         </Col>
                     </Row>
                 </div>
+            </div>
             </div>
         )
     }

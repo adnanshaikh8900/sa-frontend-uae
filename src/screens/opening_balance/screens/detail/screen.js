@@ -158,6 +158,8 @@ class DetailOpeningBalance extends React.Component {
 			}),
 		};
     return (
+      loading ==true? <Loader/> :
+<div>
       <div className="detail-vat-code-screen">
         <div className="animated fadeIn">
           {dialog}
@@ -275,8 +277,8 @@ class DetailOpeningBalance extends React.Component {
 																	</Label>
 																	<Input
 																		type="number"
-min="0"
-																		maxLength="10"
+                                    min="0"
+																		maxLength="14,2"
 																		name="openingBalance"
 																		id="openingBalance"
 																		rows="5"
@@ -334,6 +336,7 @@ min="0"
             </Col>
           </Row>
         </div>
+      </div>
       </div>
     )
   }

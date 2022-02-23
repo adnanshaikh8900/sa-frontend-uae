@@ -220,7 +220,7 @@ class CreditNotes extends React.Component {
 			amountInWords:upperCase(row.currencyName + " " +(toWords.convert(row.invoiceAmount))+" ONLY" ).replace("POINT","AND"),
 			vatInWords:row.totalVatAmount ? upperCase(row.currencyName + " " +(toWords.convert(row.totalVatAmount))+" ONLY" ).replace("POINT","AND") :"-"
 		};
-		debugger
+		 
 		this.props.creditNotesActions
 			.creditNoteposting(postingRequestModel)
 			.then((res) => {
@@ -757,6 +757,8 @@ class CreditNotes extends React.Component {
 		})
 
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="customer-invoice-screen">
 				<div className="animated fadeIn">
 					{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
@@ -986,7 +988,7 @@ class CreditNotes extends React.Component {
 
 											<Col lg={2} className="mb-1">
 												<Input
-												maxLength="17,3"
+												maxLength="14,2"
 													type="number"
 													min="0"
 													value={filterData.amount}
@@ -1202,6 +1204,7 @@ class CreditNotes extends React.Component {
 					id={this.state.rowId}
 				/>
 				
+			</div>
 			</div>
 		);
 	}

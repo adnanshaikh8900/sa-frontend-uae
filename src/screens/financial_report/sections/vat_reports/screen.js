@@ -28,6 +28,8 @@ import download from 'downloadjs';
 import { DeleteModal, FileTaxReturnModal, GenerateVatReportModal, VatSettingModal } from './sections';
 import { AgGridReact, AgGridColumn } from 'ag-grid-react/lib/agGridReact';
 import { ConfirmDeleteModal, Currency } from 'components';
+import { selectOptionsFactory } from 'utils';
+import Select from 'react-select';
 const mapStateToProps = (state) => {
 	return {
 		version: state.common.version,
@@ -58,6 +60,11 @@ class VatReports extends React.Component {
 			openFileTaxRetrunModal: false,
 			coaName: '',
 			vatReportDataList:[],
+			options:[
+				{label:"Montly",value:0},		{label:"Quarterly",value:2},
+			],
+			enbaleReportGeneration:false,
+			monthOption:0,
 			// vatReportDataList: [
 			// 	{
 			// 	id:11,	taxReturns: "30/11/2021-14/12/2021", totalTaxPayable: 3000, totalTaxReclaimable: null, filedOn: "2021-12-23T06:41:37", status: "Paid", balanceDue: null, currency: "AED", currency: "AED", action: true
@@ -351,7 +358,7 @@ class VatReports extends React.Component {
 			{/* Record Payment */}
 			{params.data.status === "Filed" || params.data.status === "Partially Paid" ? (
 				<Button
-					title='Record Payment'
+					title={params.data.totalTaxReclaimable != 0?'Record Tax Claim':'Record Tax Payment'}
 					color="secondary"
 					className=" btn-sm"
 					onClick={() => {
@@ -455,7 +462,7 @@ class VatReports extends React.Component {
 				<b>Delete Vat Report File ?</b>
 			</text>
 		const message = 'This vat report file will be deleted permanently and cannot be recovered. ';
-		debugger
+		 
 		this.setState({
 			dialog: (
 				<ConfirmDeleteModal
@@ -515,10 +522,10 @@ class VatReports extends React.Component {
 		let startDate = moment(dateArr[0]).format('DD-MM-YYYY')
 		let endDate = moment(dateArr[1]).format('DD-MM-YYYY')
 
-		return (<>{dateArr[0]}</>);
+		return (<>{dateArr[0].replaceAll("/","-")}</>);
 	};
 	render() {
-		const { vatReportDataList, csvFileNamesData, dialog } = this.state;
+		const { vatReportDataList, csvFileNamesData, dialog ,options} = this.state;
 
 
 		return (
@@ -593,11 +600,25 @@ class VatReports extends React.Component {
 											</Button>
 
 											<Button name="button" color="primary" className="btn-square pull-right "
+											disabled={!this.state.enbaleReportGeneration}
+											title={!this.state.enbaleReportGeneration?"Select VAT Reporting Period":""}
 												onClick={() => {
 													this.setState({ openModal: true })
 												}}>
 												<i class="fas fa-plus"></i> Generate Vat Report
 											</Button>
+										<Col lg={3} className=" pull-right ">
+												<Select 
+
+														options={options}
+														id="option"
+														name="option"
+														placeholder="VAT Reporting Period"
+														onChange={(e) => {															
+														this.setState({enbaleReportGeneration:true,monthOption:e.value})														
+														}}
+														/>
+														</Col>
 											{/* <Button color="primary" className="btn-square  pull-right"
 												onClick={() => {
 													this.setState({ openVatSettingModal: true })
@@ -687,7 +708,7 @@ class VatReports extends React.Component {
 									></AgGridColumn>
 
 									<AgGridColumn
-										headerName="status"
+										headerName="Status"
 										field="status"
 										sortable={true}
 										enablePivot={true}
@@ -743,6 +764,7 @@ class VatReports extends React.Component {
 				</div>
 				<GenerateVatReportModal
 					openModal={this.state.openModal}
+					monthOption={this.state.monthOption}
 					closeModal={(e) => {
 						this.closeModal(e);
 						this.getInitialData();

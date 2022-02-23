@@ -304,6 +304,8 @@ strings.setLanguage(this.state.language);
     const { salaryRole_list,salaryStructure_list } = this.props
 console.log("strings",strings)
     return (
+      loading ==true? <Loader/> :
+<div>
       <div className="employee-screen">
         <div className="animated fadeIn">
           {dialog}
@@ -432,6 +434,7 @@ console.log("strings",strings)
             </CardBody>
           </Card>
         </div>
+      </div>
       </div>
     )
   }

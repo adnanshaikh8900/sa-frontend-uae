@@ -206,7 +206,6 @@ class CreateOpeningBalance extends React.Component {
 																{strings.TransactionCategory}
 																</Label>
 																		<Select
-																		styles={customStyles}
 																		id="transactionCategoryId"
 																		name="transactionCategoryId"
 																		placeholder={strings.Select+strings.TransactionCategory}
@@ -271,7 +270,8 @@ class CreateOpeningBalance extends React.Component {
 																	{props.errors.effectiveDate &&
 																		props.touched.effectiveDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.effectiveDate}
+																				{props.errors.effectiveDate.includes("nullable()") ? "Opening Date is Required" :props.errors.effectiveDate}
+
 																			</div>
 																		)}
 																</FormGroup>
@@ -287,7 +287,7 @@ class CreateOpeningBalance extends React.Component {
 																	</Label>
 																	<Input
 																		type="number"
-																		maxLength="15"
+																		maxLength="14,2"
 																		name="openingBalance"
 																		id="openingBalance"
 																		rows="5"

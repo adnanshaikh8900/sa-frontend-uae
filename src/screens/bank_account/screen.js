@@ -315,7 +315,7 @@ class BankAccount extends React.Component {
 		// 	/>
 		// );
 
-		return row.openingBalance ? row.currancyName+" " + row.openingBalance.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currancyName+" " + row.openingBalance.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.openingBalance ? row.currancyName+" " + row.openingBalance.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 }) : row.currancyName+" " + row.openingBalance.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 });
 	};
 	renderActions = (cell, row) => {
 		return (
@@ -454,7 +454,7 @@ class BankAccount extends React.Component {
 								extraData[0] ? extraData[0].currencyIsoCode : 'USD'
 							}
 						/> */}
-						{row.closingBalance ? row.currancyName+" " + row.closingBalance.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currancyName+" " + row.closingBalance.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+						{row.closingBalance ? row.currancyName+" " + row.closingBalance.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 }) : row.currancyName+" " + row.closingBalance.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })}
 					</label>
 				</div>
 				<div>
@@ -616,6 +616,8 @@ class BankAccount extends React.Component {
 		const { universal_currency_list, bank_account_list } = this.props;
 
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="bank-account-screen">
 				<div className="animated fadeIn">
 					{dialog}
@@ -886,7 +888,7 @@ class BankAccount extends React.Component {
 						</CardBody>
 					</Card>
 				</div>
-			</div>
+			</div></div>
 		);
 	}
 }

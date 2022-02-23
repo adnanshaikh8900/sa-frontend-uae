@@ -163,7 +163,7 @@ class CreateSalaryRoles extends React.Component {
                          }}
                         validationSchema={Yup.object().shape({
                           salaryRoleName: Yup.string()
-                            .required("salary Role Name is Required"),
+                            .required("Salary Role Name is Required"),
                          
                         })}
                       >

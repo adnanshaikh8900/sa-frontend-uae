@@ -400,7 +400,7 @@ class PayrollSummaryReport extends React.Component {
 											<br style={{ marginBottom: '5px' }} />
 											<b style ={{ fontSize: '18px'}}>{strings.Payroll+"s  "+strings.Summary}</b>
 											<br style={{ marginBottom: '5px' }} />
-											{strings.From } {initValue.startDate} {strings.To } {initValue.endDate}
+											{strings.From} {(initValue.startDate).replaceAll("/","-")} {strings.To} {initValue.endDate.replaceAll("/","-")} 
 											
 									</div>
 									<div>
@@ -411,7 +411,7 @@ class PayrollSummaryReport extends React.Component {
 									) : (
 										<div id="tbl_exporttable_to_xls" className="table-wrapper">
 											<Table >
-												<thead className="header-row" >
+												<thead className="table-header-bg">
 													<tr>
 														<th style={{ padding: '0.5rem', textAlign: 'center' ,width:"10%", color:'black'}}>	Payroll Date</th>
 														<th style={{ padding: '0.5rem', textAlign: 'center', width:"25%", color:'black'}}>	Payroll Subject</th>

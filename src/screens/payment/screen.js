@@ -335,6 +335,8 @@ class Payment extends React.Component {
 		})
 
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="payment-screen">
 				<div className="animated fadeIn">
 					{dialog}
@@ -563,6 +565,7 @@ min="0"
 						</CardBody>
 					</Card>
 				</div>
+			</div>
 			</div>
 		);
 	}

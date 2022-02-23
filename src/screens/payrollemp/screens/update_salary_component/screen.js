@@ -483,6 +483,8 @@ handleChange = (evt) => {
         console.log(this.state.Fixed_Allowance, "Fixed_Allowance")
      
         return (
+            loading ==true? <Loader/> :
+<div>
             <div className="detail-vat-code-screen">
                 <div className="animated fadeIn">
                     {dialog}
@@ -1036,6 +1038,7 @@ handleChange = (evt) => {
                     selectedData={this.state.selectedData}
 
                 />
+            </div>
             </div>
         )
     }

@@ -387,7 +387,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 		this.props.expenseCreateActions
 			.checkExpenseCodeValidation(data)
 			.then((response) => {
-				if (response.data === 'Expense Number already exists') {
+				if (response.data === 'Expense Number Already Exists') {
 					this.setState({
 						exist: true,
 					});
@@ -726,36 +726,36 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 													// }
 													if (exist === true) {
 														errors.expenseNumber =
-															'Expense Number already exists';
+															'Expense Number Already Exists';
 													}
 													if(values.currency ==='' || values.currency === 150){
-														errors.currency="Currency is required "
+														errors.currency="Currency is Required "
 													}
 													if(this.state.showPlacelist===true && values.placeOfSupplyId ===''){
-														errors.placeOfSupplyId="Place Of Supply is required"
+														errors.placeOfSupplyId="Place Of Supply is Required"
 													}
 
 													return errors;
 												}}
 												validationSchema={Yup.object().shape({
 													expenseNumber: Yup.string().required(
-														'Expense number is required',
+														'Expense number is Required',
 													),
 													taxTreatmentId: Yup.string().required(
-														'Tax Treatment is required',
+														'Tax Treatment is Required',
 													),
 													expenseCategory: Yup.string().required(
-														'Expense Category is required',
+														'Expense Category is Required',
 													),
 													expenseDate: Yup.date().required(
 														'Expense Date is Required',
 													),
 													
 													currency: Yup.string().required(
-														'Currency is required',
+														'Currency is Required',
 													),
 													payee: Yup.string().required(
-														'Paid By is required',
+														'Paid By is Required',
 													),
 													expenseAmount: Yup.string()
 														.required('Amount is Required')
@@ -778,7 +778,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 														'Vat is Required',
 													),
 													payMode: Yup.string().required(
-														'Pay Through is required',
+														'Pay Through is Required',
 													),
 													attachmentFile: Yup.mixed()
 														.test(
@@ -880,7 +880,6 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																			<span className="text-danger">* </span>{strings.TaxTreatment}
 																		</Label>
 																		<Select
-																			styles={customStyles}
 																			options={
 																				taxTreatmentList
 																					? selectOptionsFactory.renderOptions(
@@ -942,7 +941,6 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																	</Label>
 																	<Select
 																	isDisabled={this.state.lockPlacelist}
-																		styles={customStyles}
 																		id="placeOfSupplyId"
 																		name="placeOfSupplyId"
 																		placeholder={strings.Select+strings.PlaceofSupply}
@@ -995,9 +993,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		<span className="text-danger">* </span>
 																		{strings.ExpenseCategory}
 																	</Label>
-																	<Select
-																		styles={customStyles}
-																		
+																	<Select	
 																		options={
 																			expense_categories_list
 																				? selectOptionsFactory.renderOptions(
@@ -1083,7 +1079,6 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		<span className="text-danger">* </span>{strings.PaidBy}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		options={
 																			pay_to_list
 																				? selectOptionsFactory.renderOptions(
@@ -1164,7 +1159,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																	<Input
 																		type="text"
 																		min="0"
-																		maxLength="17,3"
+																		maxLength="14,2"
 																		name="expenseAmount"
 																		id="expenseAmount"
 																		rows="5"
@@ -1248,7 +1243,6 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		{strings.Currency}  
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		id="currency"
 																		name="currency"
 																		options={
@@ -1294,7 +1288,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																	/>
 																	{props.errors.currency &&
 																		props.touched.currency && (
-																			<div style={{color:"red"}}>
+																			<div className='invalid-feedback'>
 																				{props.errors.currency}
 																			</div>
 																		)}
@@ -1304,9 +1298,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="payMode"><span className="text-danger">* </span> {strings.PayThrough}</Label>
 																		<Select
-																			styles={customStyles}
-																			
-																			options={
+																		options={
 																				pay_mode_list
 																					? selectOptionsFactory.renderOptions(
 																							'label',

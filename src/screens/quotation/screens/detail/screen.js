@@ -46,8 +46,7 @@ const mapStateToProps = (state) => {
 		project_list: state.request_for_quotation.project_list,
 		contact_list: state.request_for_quotation.contact_list,
 		currency_list: state.request_for_quotation.currency_list,
-		vat_list: state.request_for_quotation.vat_list,
-		product_list: state.customer_invoice.product_list,
+        product_list: state.customer_invoice.product_list,
 		excise_list: state.request_for_quotation.excise_list,
 		supplier_list: state.request_for_quotation.supplier_list,
 		country_list: state.request_for_quotation.country_list,
@@ -120,6 +119,9 @@ class DetailQuotation extends React.Component {
 			basecurrency:[],
 			supplier_currency: '',
 			disabled1:false,
+			dateChanged: false,
+			vat_list:[],
+
 
 			language: window['localStorage'].getItem('language'),
 		};
@@ -172,6 +174,12 @@ class DetailQuotation extends React.Component {
 	// }
 
 	componentDidMount = () => {
+		this.props.requestForQuotationAction.getVatList().then((res)=>{
+			debugger
+			if(res.status===200)
+			this.setState({vat_list:res.data})
+			
+		});
 		this.initializeData();
 	};
 
@@ -182,7 +190,7 @@ class DetailQuotation extends React.Component {
 				.then((res) => {
 					if (res.status === 200) {
 						this.getCompanyCurrency();
-						this.props.requestForQuotationAction.getVatList();
+					
 						this.props.requestForQuotationAction.getSupplierList(
 							this.state.contactType,
 						);
@@ -197,6 +205,9 @@ class DetailQuotation extends React.Component {
 								initValue: {
 									quotaionExpiration: res.data.quotaionExpiration
 										? moment(res.data.quotaionExpiration).format('DD-MM-YYYY')
+										: '',
+										quotaionExpiration1: res.data.quotaionExpiration
+										? res.data.quotaionExpiration
 										: '',
 										customerId: res.data.customerId ? res.data.customerId : '',
 										quotationNumber: res.data.quotationNumber
@@ -213,8 +224,21 @@ class DetailQuotation extends React.Component {
 										: [],
 										placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 										total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
+										discount: res.data.discount ? res.data.discount : 0,
+										discountPercentage: res.data.discountPercentage
+											? res.data.discountPercentage
+											: 0,
+										discountType: res.data.discountType
+											? res.data.discountType
+											: '',
 								
 								},
+								quotaionExpirationNotChanged: res.data.quotaionExpiration
+										? moment(res.data.quotaionExpiration)
+										: '',
+										quotaionExpiration: res.data.quotaionExpiration
+										? res.data.quotaionExpiration
+										: '',		
 								customer_taxTreatment_des : res.data.taxtreatment ? res.data.taxtreatment : '',
 								placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 								total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
@@ -222,12 +246,15 @@ class DetailQuotation extends React.Component {
 									? res.data.poQuatationLineItemRequestModelList
 									: [],
 								selectedContact: res.data.customerId ? res.data.customerId : '',
-							
+								discountAmount: res.data.discount ? res.data.discount : 0,
+								discountPercentage: res.data.discountPercentage
+									? res.data.discountPercentage
+									: 0,
 								loading: false,
 							},
 							() => {
 								if (this.state.data.length > 0) {
-									this.calTotalNet(this.state.data);
+									this.updateAmount(this.state.data);
 									const { data } = this.state;
 									const idCount =
 										data.length > 0
@@ -279,9 +306,18 @@ class DetailQuotation extends React.Component {
 	calTotalNet = (data) => {
 		let total_net = 0;
 		data.map((obj) => {
-			total_net = +(total_net + +obj.unitPrice * obj.quantity);
-			return obj;
-		});
+			if(obj.isExciseTaxExclusive === false){
+
+                total_net = +(total_net + +obj.unitPrice  * obj.quantity);
+
+            }else{
+
+                total_net = +(total_net + +(obj.unitPrice + obj.exciseAmount) * obj.quantity);
+
+            }
+    return obj;
+
+        });
 		this.setState({
 			initValue: Object.assign(this.state.initValue, { total_net }),
 		});
@@ -567,6 +603,127 @@ min="0"
 			/>
 		);
 	};
+
+	
+	renderDiscount = (cell, row, props) => {
+        const { discountOptions } = this.state;
+       let idx;
+       this.state.data.map((obj, index) => {
+           if (obj.id === row.id) {
+               idx = index;
+           }
+           return obj;
+       });
+
+       return (
+           <Field
+               // name={`lineItemsString.${idx}.vatCategoryId`}
+               render={({ field, form }) => (
+               <div>
+               <div  class="input-group">
+                   <Input
+                   type="text"
+                   min="0"
+                       maxLength="14,2"
+                       value={row['discount'] !== 0 ? row['discount'] : 0}
+                       onChange={(e) => {
+                           if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+                               this.selectItem(
+                                   e.target.value,
+                                   row,
+                                   'discount',
+                                   form,
+                                   field,
+                                   props,
+                               );
+                           }
+
+                               this.updateAmount(
+                                   this.state.data,
+                                   props,
+                               );
+
+                       }}
+                       placeholder={strings.discount}
+                       className={`form-control
+           ${
+                           props.errors.lineItemsString &&
+                           props.errors.lineItemsString[parseInt(idx, 10)] &&
+                           props.errors.lineItemsString[parseInt(idx, 10)].discount &&
+                           Object.keys(props.touched).length > 0 &&
+                           props.touched.lineItemsString &&
+                           props.touched.lineItemsString[parseInt(idx, 10)] &&
+                           props.touched.lineItemsString[parseInt(idx, 10)].discount
+                               ? 'is-invalid'
+                               : ''
+                       }`}
+   type="text"
+   />
+    <div class="dropdown open input-group-append">
+
+        <div 	style={{width:'100px'}}>
+        <Select
+
+
+                                                                                           options={discountOptions}
+                                                                                           id="discountType"
+                                                                                           name="discountType"
+                                                                                           value={
+                                                                                               discountOptions &&
+                                                                                               selectOptionsFactory
+                                                                                                   .renderOptions('label', 'value', discountOptions, 'discount')
+                                                                                                   .find((option) => option.value == row.discountType)
+                                                                                           }
+                                                                                           // onChange={(item) => {
+                                                                                           // 	props.handleChange(
+                                                                                           // 		'discountType',
+                                                                                           // 	)(item);
+                                                                                           // 	props.handleChange(
+                                                                                           // 		'discountPercentage',
+                                                                                           // 	)('');
+                                                                                           // 	props.setFieldValue(
+                                                                                           // 		'discount',
+                                                                                           // 		0,
+                                                                                           // 	);
+                                                                                           // 	this.setState(
+                                                                                           // 		{
+                                                                                           // 			discountPercentage: '',
+                                                                                           // 			discountAmount: 0,
+                                                                                           // 		},
+                                                                                           // 		() => {
+                                                                                           // 			this.updateAmount(
+                                                                                           // 				this.state.data,
+                                                                                           // 				props,
+                                                                                           // 			);
+                                                                                           // 		},
+                                                                                           // 	);
+                                                                                           // }}
+                                                                                           onChange={(e) => {
+                                                                                               this.selectItem(
+                                                                                                   e.value,
+                                                                                                   row,
+                                                                                                   'discountType',
+                                                                                                   form,
+                                                                                                   field,
+                                                                                                   props,
+                                                                                               );
+                                                                                               this.updateAmount(
+                                                                                                   this.state.data,
+                                                                                                   props,
+                                                                                               );
+                                                                                           }}
+                                                                                       />
+             </div>
+              </div>
+              </div>
+               </div>
+
+                   )}
+
+           />
+       );
+   }
+
 	renderSubTotal = (cell, row,extraData) => {
 		// return row.subTotal ? (
 		// 	<Currency
@@ -606,6 +763,8 @@ min="0"
 					vatCategoryId: '',
 					subTotal: 0,
 					productId: '',
+					discountType :'FIXED',
+					discount: 0,
 				}),
 				idCount: this.state.idCount + 1,
 			},
@@ -654,7 +813,7 @@ min="0"
 	};
 
 	renderVat = (cell, row, props) => {
-		const { vat_list } = this.props;
+		const { vat_list } = this.state;
 		let vatList = vat_list.length
 			? [{ id: '', vat: 'Select Vat' }, ...vat_list]
 			: vat_list;
@@ -870,8 +1029,9 @@ min="0"
 	};
 
 	updateAmount = (data, props) => {
-		const { vat_list , excise_list} = this.props;
-		const { discountPercentage, discountAmount } = this.state;
+		
+		const { excise_list} = this.state;
+		const { discountPercentage, discountAmount, vat_list } = this.state;
 		let total_net = 0;
 		let total_excise = 0;
 		let total = 0;
@@ -965,7 +1125,7 @@ min="0"
 					...this.state.initValue,
 					...{
 						total_net: discount ? total_net - discount : total_net,
-						invoiceVATAmount: total_vat,
+						totalVatAmount: total_vat,
 						discount:  discount ? discount : 0,
 						totalAmount: total_net > discount ? total - discount : total - discount,
 						total_excise: total_excise
@@ -986,6 +1146,9 @@ min="0"
 			customerId,
 			quotationNumber,
 			notes,
+			discount,
+			discountType,
+			discountPercentage,
 			totalVatAmount,
 			totalAmount,
 			currency,
@@ -996,19 +1159,29 @@ min="0"
 		formData.append('type', 6);
 		formData.append('id', current_po_id);
 		formData.append('quotationNumber', quotationNumber ? quotationNumber : '');
-	
+	if(this.state.dateChanged === true){
 		formData.append(
 			'quotaionExpiration',
 			typeof quotaionExpiration === 'string'
-				? moment(quotaionExpiration, 'DD-MM-YYYY').toDate()
+				? this.state.quotaionExpiration
 				: quotaionExpiration,
 		);
+	}else{
+		formData.append(
+			'quotaionExpiration',
+			typeof quotaionExpiration === 'string'
+				? this.state.quotaionExpirationNotChanged
+				: " ",
+		);
+	}
+		
 	
 		formData.append('notes', notes ? notes : '');
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
 		formData.append('totalVatAmount', this.state.initValue.totalVatAmount);
 		formData.append('totalAmount', this.state.initValue.totalAmount);
 		formData.append('totalExciseAmount', this.state.initValue.total_excise);
+		formData.append('discount',this.state.initValue.discount);
         if(placeOfSupplyId){
 		formData.append('placeOfSupplyId' , placeOfSupplyId.value ? placeOfSupplyId.value : placeOfSupplyId);}
 		// formData.append('exciseType', this.state.checked);
@@ -1090,19 +1263,20 @@ min="0"
 		this.setState({ openProductModal: false });
 	};
 	setDate = (props, value) => {
-		const { term } = this.state;
-		const val = term.split('_');
-		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
-		const values = value
-			? value
-			: moment(props.values.invoiceDate, 'DD-MM-YYYY').toDate();
-		if (temp && values) {
-			const date = moment(values)
-				.add(temp - 1, 'days')
-				.format('DD-MM-YYYY');
-			props.setFieldValue('invoiceDueDate', date, true);
-		}
-	};
+        debugger
+        this.setState({
+            dateChanged: true,
+        });
+        const values1 = value
+            ? value
+            : props.values.quotaionExpiration1
+        if (values1 ) {
+            this.setState({
+                quotaionExpiration: moment(values1),
+            });
+            props.setFieldValue('quotaionExpiration1', values1, true);
+        }
+    };
 
 	getCurrentProduct = () => {
 		this.props.customerInvoiceActions.getProductList().then((res) => {
@@ -1240,6 +1414,20 @@ min="0"
 	
 		return customer_taxTreatmentId;
 	}
+	checkAmount=(discount)=>{
+		const { initValue } = this.state;
+		   if(discount >= initValue.totalAmount){
+				   this.setState({
+					   param:true
+				   });
+		   }
+		   else{
+			   this.setState({
+				   param:false
+			   });
+		   }
+
+	   }
 	render() {
 		strings.setLanguage(this.state.language);
 		const { data, discountOptions, initValue, loading, dialog } = this.state;
@@ -1254,6 +1442,8 @@ min="0"
 		})
 console.log(this.state.supplier_currency)
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="detail-supplier-invoice-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -1451,7 +1641,6 @@ console.log(this.state.supplier_currency)
 																				{strings.CustomerName}
 																		</Label>
 																		<Select
-																			styles={customStyles}
 																			id="customerId"
 																			name="customerId"
 																			onBlur={props.handlerBlur}
@@ -1555,7 +1744,6 @@ console.log(this.state.supplier_currency)
 																			{strings.PlaceofSupply}
 																		</Label>
 																		<Select
-																			styles={customStyles}
 																			options={
 																				this.placelist
 																					? selectOptionsFactory.renderOptions(
@@ -1631,9 +1819,10 @@ console.log(this.state.supplier_currency)
 																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
 																			value={props.values.quotaionExpiration}
+																			selected={new Date(props.values.quotaionExpiration1)}
 																			onChange={(value) => {
 																				props.handleChange('quotaionExpiration')(
-																					moment(value).format('DD-MM-YYYY'),
+																					value
 																				);
 																				this.setDate(props, value);
 																			}}
@@ -1839,6 +2028,15 @@ console.log(this.state.supplier_currency)
 																			then the Excise dropdown will be Disabled
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn> 
+																	<TableHeaderColumn
+																	width="12%"
+																		dataField="discount"
+																		dataFormat={(cell, rows) =>
+																			this.renderDiscount(cell, rows, props)
+																		}
+																	>
+																	Discount Type
+																	</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="vat"
 																			dataFormat={(cell, rows) =>
@@ -1908,6 +2106,24 @@ console.log(this.state.supplier_currency)
 																				</Col>
 																			</Row>
 																		</div>
+																		<div className="total-item p-2">
+																				<Row>
+																					<Col lg={6}>
+																						<h5 className="mb-0 text-right">
+																							{strings.Discount}
+																						</h5>
+																					</Col>
+																					<Col lg={6} className="text-right">
+																						<label className="mb-0">
+																						{this.state.supplier_currency_symbol} &nbsp;
+																							{this.state.initValue.discount  ? '-'+initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })
+																							
+																						}
+																						
+																						</label>
+																					</Col>
+																				</Row>
+																			</div>
 																			<div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>
@@ -2062,11 +2278,12 @@ console.log(this.state.supplier_currency)
 					}}
 					getCurrentProduct={(e) => this.getCurrentProduct(e)}
 					createProduct={this.props.ProductActions.createAndSaveProduct}
-					vat_list={this.props.vat_list}
+					vat_list={this.state.vat_list}
 					product_category_list={this.props.product_category_list}
 					salesCategory={this.state.salesCategory}
 					purchaseCategory={this.state.purchaseCategory}
 				/>
+			</div>
 			</div>
 		);
 	}

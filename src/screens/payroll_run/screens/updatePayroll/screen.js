@@ -158,7 +158,7 @@ class UpdatePayroll extends React.Component {
 		const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))+1; 
 		
 		this.setState({paidDays:diffDays});
-		this.getAllPayrollEmployee()
+		this.getAllPayrollEmployee(endDate);
 		console.log(diffTime + " milliseconds");
 		console.log(diffDays + " days");
 		console.log(this.state.paidDays,"paid-Days",diffDays)
@@ -365,7 +365,7 @@ class UpdatePayroll extends React.Component {
 			let totalAmountPayroll=0;
 			this.state.selectedRows1.map((row)=>{totalAmountPayroll +=parseFloat(row.grossPay)})
 			formData.append('totalAmountPayroll', totalAmountPayroll);
-	debugger
+	 
 		if(this.state.apiSelector ==="createPayroll"){
 		this.props.createPayrollActions
 			 .updatePayroll(formData)
@@ -466,13 +466,15 @@ class UpdatePayroll extends React.Component {
 													});
 	}
 
-	getAllPayrollEmployee = () => {
+	getAllPayrollEmployee = (endDate) => {
 		if(this.state.payrollId){
-		this.props.createPayrollActions.getAllPayrollEmployee2(this.state.payrollId).then((res) => {
+			let date=endDate ?endDate :this.state.endDate;
+			let month=moment(date).format("MMMM");
+		this.props.createPayrollActions.getAllPayrollEmployee2(this.state.payrollId,moment(date).format("DD/MM/YYYY")).then((res) => {
 			if (res.status === 200) {
 
 				if(res.data.length===0){
-					this.props.createPayrollActions.getAllPayrollEmployee(this.state.payrollId).then((res) => {
+					this.props.createPayrollActions.getAllPayrollEmployee(this.state.payrollId,date).then((res) => {
 						if (res.status === 200) {
 
 								this.setState({
@@ -491,7 +493,8 @@ class UpdatePayroll extends React.Component {
 							// data.noOfDays =this.state.paidDays
 							// data.originalGrossPay=data.grossPay		
 					        // data.perDaySal=data.originalGrossPay / data.noOfDays			
-							let tmpPaidDay=this.state.paidDays > 30 ?30	:this.state.paidDays	
+							let tmpPaidDay=this.state.paidDays > 30 ?30	:
+										( this.state.paidDays==28 && month=="February" ? 30 :this.state.paidDays	)		
 							if(this.state.checkForLopSetting===true)		data.noOfDays =tmpPaidDay
 
 							data.originalDeduction=data.deduction
@@ -922,6 +925,8 @@ class UpdatePayroll extends React.Component {
 				}
 		var today = new Date();
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="create-employee-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -1083,8 +1088,8 @@ class UpdatePayroll extends React.Component {
 																					disabled={this.disableForAddButton() ? true : false}
 																					onFocusChange={(option)=>{this.setState({focusedInput:option})}}
 																					isOutsideRange={
-																						// () => null
-																						day => isInclusivelyBeforeDay(day, moment(new Date(today.getFullYear(), today.getMonth(),0)))
+																						 () => null
+																						// day => isInclusivelyBeforeDay(day, moment(new Date(today.getFullYear(), today.getMonth(),0)))
 																					}
 																				/>																							
 																	
@@ -1310,6 +1315,7 @@ class UpdatePayroll extends React.Component {
 
 				// employee_list={employee_list.data}				
 				/> */}
+			</div>
 			</div>
 		)
 	}

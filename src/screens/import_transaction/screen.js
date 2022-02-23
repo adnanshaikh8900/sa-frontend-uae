@@ -323,7 +323,7 @@ class ImportTransaction extends React.Component {
 	// 				// let tableDateFormat=moment(tableDataDate).creationData();
 	// 				// if(tableDateFormat=="Invalid Date")
 	// 				//    tableDateFormat=new Date(tableDataDate).format("DD/MM/YYYY");
-	// 				debugger
+	// 				 
 	// 		}
 	// 		this.setState({isDateFormatAndFileDateFormatSame:true});
 	// 		return true

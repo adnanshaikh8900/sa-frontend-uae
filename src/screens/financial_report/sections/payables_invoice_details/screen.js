@@ -486,7 +486,7 @@ class PayablesInvoiceDetailsReport extends React.Component {
 												<b style={{ fontSize: '18px' }}>{strings.PayableInvoiceDetails}</b>
 												<br />
 
-												{strings.From} {initValue.startDate} {strings.To} {initValue.endDate}
+												{strings.From} {(initValue.startDate).replaceAll("/","-")} {strings.To} {initValue.endDate.replaceAll("/","-")} 
 											</div>
 										</div>
 										<div className='mr-3'>
@@ -526,7 +526,7 @@ class PayablesInvoiceDetailsReport extends React.Component {
 																	key={index}
 																	style={{ fontWeight: '600' ,textAlign:'center', color:'black'}}
 																	className={column.align ? 'text-center' : ''}
-																	className="table-header-color"
+																	className="table-header-bg"
 																>
 																	<span>{column.label}</span>
 																	{/* // onClick={() => { column.sort && this.onSort(column.value) }} */}

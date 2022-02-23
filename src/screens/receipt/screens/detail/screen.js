@@ -192,6 +192,8 @@ class DetailReceipt extends React.Component {
     const { loading, dialog, initValue } = this.state
 
     return (
+      loading ==true? <Loader/> :
+<div>
       <div className="detail-receipt-screen">
         <div className="animated fadeIn">
           <Row>
@@ -230,9 +232,9 @@ class DetailReceipt extends React.Component {
                                 referenceCode: Yup.string()
                                   .required("Reference Number is Required"),
                                 contactId: Yup.string()
-                                  .required('Customer is required'),
+                                  .required('Customer is Required'),
                                 amount: Yup.string()
-                                  .required('Amount is required')
+                                  .required('Amount is Required')
                                   .matches(/^[0-9]+$/, { message: "Please enter valid Amount.", excludeEmptyString: false })
 
                               })}
@@ -428,6 +430,7 @@ min="0"
             </Col>
           </Row>
         </div>
+      </div>
       </div>
     )
   }

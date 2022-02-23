@@ -629,7 +629,7 @@ class RequestForQuotation extends React.Component {
 		this.setState({
 			loading: true,
 		});
-		debugger
+		 
 		const postingRequestModel = {
 			postingRefId: row.id,
 			amountInWords:upperCase(row.currencyName + " " +(toWords.convert(row.totalAmount)) ).replace("POINT","AND"),
@@ -853,6 +853,8 @@ class RequestForQuotation extends React.Component {
 		})		
 
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="supplier-invoice-screen">
 				<div className="animated fadeIn">
 					{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
@@ -1182,8 +1184,13 @@ class RequestForQuotation extends React.Component {
 				//	getProductList={this.props.purchaseOrderAction.getProductList()}
 					createPO={this.props.purchaseOrderCreateAction.createPO}
                     totalAmount={this.state.totalAmount}
+					getNextTemplateNo={()=>{
+						this.props.purchaseOrderCreateAction.getPoNo().then((response) => {
+							this.setState({prefixData:response.data	});
+							});}}
 					totalVatAmount={this.state.totalVatAmount}
 				/>
+			</div>
 			</div>
 		); 
 	}

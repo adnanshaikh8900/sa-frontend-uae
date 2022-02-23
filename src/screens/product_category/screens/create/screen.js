@@ -162,7 +162,7 @@ class CreateProductCategory extends React.Component {
 													let errors = {};
 													if (!values.productCategoryName) {
 														errors.productCategoryName =
-															'Product Category Name is  required';
+															'Product Category Name is Required';
 													}
 
 													if (
@@ -172,7 +172,7 @@ class CreateProductCategory extends React.Component {
 														)
 													) {
 														errors.productCategoryCode =
-															'Product Category Code already Exists';
+															'Product Category Code Already Exists';
 													}
 
 													if (!values.productCategoryCode) {
@@ -209,7 +209,8 @@ class CreateProductCategory extends React.Component {
 																	</UncontrolledTooltip>
 																</Label>
 																<Input
-																	type="text" maxLength='20'
+																	type="text" 
+																	maxLength='20'
 																	id="productCategoryCode"
 																	name="productCategoryCode"
 																	placeholder={strings.Enter+strings.ProductCategoryCode}
@@ -245,7 +246,8 @@ class CreateProductCategory extends React.Component {
 																	{strings.ProductCategoryName}
 																</Label>
 																<Input
-																	type="text" maxLength='50'
+																	type="text"
+																	maxLength='50'
 																	id="productCategoryName"
 																	name="productCategoryName"
 																	placeholder={strings.Enter+strings.ProductCategoryName}

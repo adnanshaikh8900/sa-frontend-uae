@@ -752,6 +752,8 @@ class Quatation extends React.Component {
 				})
 		
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="supplier-invoice-screen">
 				<div className="animated fadeIn">
 					{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
@@ -1058,6 +1060,7 @@ class Quatation extends React.Component {
 						this.closeEmailModal(e);
 					}}
 				/>
+			</div>
 			</div>
 		);
 	}

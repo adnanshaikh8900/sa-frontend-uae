@@ -448,6 +448,24 @@ class Product extends React.Component {
 		);
 	};
 
+	getActionButtons = (params) => {
+		return (
+	<>
+	{/* BUTTON ACTIONS */}
+			{/* View */}
+			
+			<Button
+				className="Ag-gridActionButtons btn-sm"
+				title='Edit'
+				color="secondary"
+					onClick={()=>
+						this.goToProductDetail(params.data.id)  }
+			
+			>		<i className="fas fa-edit"/> </Button> 
+	</>
+		)
+	}
+
 	render() {
 		strings.setLanguage(this.state.language);
 		const {
@@ -461,6 +479,8 @@ class Product extends React.Component {
 		const { product_list, vat_list, universal_currency_list } = this.props;
 
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="product-screen">
 				<div className="animated fadeIn">
 					{dialog}
@@ -698,10 +718,7 @@ class Product extends React.Component {
 					className="mb-0 label-bank"
 					style={{
 						cursor: 'pointer',
-						}}
-					
-						onClick={()=>{							
-							this.goToProductDetail(params.data.id) }}                                                                  
+						}}                                 
 		>
 		{params.value}
 		</label>
@@ -719,7 +736,7 @@ class Product extends React.Component {
 
 			
 <AgGridColumn field="isInventoryEnabled" 
-				headerName=  {strings.Inventory}
+				headerName=  {strings.INVENTORY}
 				sortable={ true }
 				enablePivot={true} 
 				filter={ true }
@@ -731,7 +748,7 @@ class Product extends React.Component {
 				></AgGridColumn>  
 				
 				<AgGridColumn field="vatPercentage" 
-				headerName=  {strings.Vat+" "+strings.Type}
+				headerName=  {strings.VATTYPE}
 				sortable={ true }
 				enablePivot={true} 
 				filter={ true }
@@ -739,7 +756,7 @@ class Product extends React.Component {
 				></AgGridColumn>  
 
 <AgGridColumn field="exciseTax" 
-				headerName= 'Excise Slab'
+				headerName= 'EXCISE SLAB'
 				sortable={ true }
 				filter={ true }
 				enablePivot={true}
@@ -760,7 +777,7 @@ class Product extends React.Component {
 				></AgGridColumn>  
 
 				<AgGridColumn
-				headerName={strings.Status}
+				headerName={strings.STATUS}
 				field="isActive" 
 				sortable={ true }
 				filter={ true }
@@ -771,7 +788,18 @@ class Product extends React.Component {
 													<label className="badge label-due"> InActive</label>
 										}
 				></AgGridColumn>  
-			
+				<AgGridColumn field="action"
+										// className="Ag-gridActionButtons"
+										headerName="ACTIONS"
+										cellRendererFramework={(params) =>
+											<div
+											 className="Ag-gridActionButtons"
+											 >
+												{this.getActionButtons(params)}
+											</div>
+
+										}
+									></AgGridColumn>
 			</AgGridReact>  
 			<div className="example-header mt-1">
 					Page Size:
@@ -789,6 +817,7 @@ class Product extends React.Component {
 						</CardBody>
 					</Card>
 				</div>
+			</div>
 			</div>
 		);
 	}

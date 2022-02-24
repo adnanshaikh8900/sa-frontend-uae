@@ -136,6 +136,7 @@ class Profile extends React.Component {
 			imageState: true,
 			flag: true,
 			selectedStatus: false,
+			checkmobileNumberParam: false,
 			isSame: false,
 			companyAddress: {
 				companyAddressLine1: '',
@@ -783,7 +784,7 @@ class Profile extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { loading, isSame, timezone ,companyTypeList ,isPasswordShown} = this.state;
+		const { loading, isSame, timezone ,companyTypeList ,isPasswordShown,checkmobileNumberParam} = this.state;
 		const {
 			currency_list,
 			country_list,
@@ -1416,6 +1417,16 @@ class Profile extends React.Component {
 															//   lastName: Yup.()
 															//     .required("Last Name is Required"),
 															// })}
+															validate={(values) => {
+																let errors = {};
+			
+																if (checkmobileNumberParam == true) {
+																	errors.phoneNumber =
+																		'Invalid mobile number';
+																}
+																return errors;
+															}}
+			
 															validationSchema={Yup.object().shape({
 																companyName: Yup.string().required(
 																	'Company Name is Required',
@@ -1830,6 +1841,12 @@ class Profile extends React.Component {
 																							<Label htmlFor="phoneNumber">
 																							<span className="text-danger">*</span> {strings.MobileNumber}
 																						</Label>
+																						<div className={
+																		                 props.errors.phoneNumber &&
+																		                 props.touched.phoneNumber
+																		                 ? ' is-invalidMobile '
+																			             : ''
+												                                         }>
 																							<PhoneInput
 																								country={"ae"}
 																								enableSearch={true}
@@ -1840,6 +1857,7 @@ class Profile extends React.Component {
 																									props.handleChange(
 																										'phoneNumber',
 																									)(option);
+																									option.length !== 12 ? this.setState({ checkmobileNumberParam: true }) : this.setState({ checkmobileNumberParam: false });
 																								}}
 																								isValid
 																								// className={
@@ -1848,7 +1866,7 @@ class Profile extends React.Component {
 																								// 		? 'is-invalid'
 																								// 		: ''
 																								// }
-																							/>
+																							/></div>
 																							{props.errors.phoneNumber &&
 																								props.touched.phoneNumber && (
 																									<div style={{color:"red"}}>

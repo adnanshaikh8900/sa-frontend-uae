@@ -965,7 +965,6 @@ class DetailContact extends React.Component {
 																			 {strings.CurrencyCode}
 																		</Label>
 																		<Select
-																			styles={customStyles}
 																			options={
 																				currency_list
 																					? selectCurrencyFactory.renderOptions(
@@ -1062,7 +1061,12 @@ class DetailContact extends React.Component {
 																			<span className="text-danger">* </span>
 																			 {strings.MobileNumber}
 																		</Label>
-																	
+																	    <div 	className={
+																		props.errors.mobileNumber &&
+																		props.touched.mobileNumber
+																			? ' is-invalidMobile '
+																			: ''
+																	}>
 																		<PhoneInput
 																			id="mobileNumber"
 																			name="mobileNumber"
@@ -1084,7 +1088,7 @@ class DetailContact extends React.Component {
 																			// 		? 'is-invalid'
 																			// 		: ''
 																			// }
-																		/>
+																		/></div>
 																		{props.errors.mobileNumber &&
 																			props.touched.mobileNumber && (
 																				<div style={{color:"red"}}>

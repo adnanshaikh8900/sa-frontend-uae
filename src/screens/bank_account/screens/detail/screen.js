@@ -456,7 +456,6 @@ class DetailBankAccount extends React.Component {
 																	<span className="text-danger">* </span>{strings.Currency}
 																</Label>
 																<Select
-																	styles={customStyles}
 																	id="currency"
 																	name="currency"
 																	options={
@@ -604,7 +603,6 @@ class DetailBankAccount extends React.Component {
 																	{strings.AccountType}
 																</Label>
 																<Select
-																	styles={customStyles}
 																	id="account_type"
 																	name="account_type"
 																	options={
@@ -923,7 +921,6 @@ class DetailBankAccount extends React.Component {
 																	<span className="text-danger">* </span>{strings.Accountisfor}
 																</Label>
 																<Select
-																	styles={customStyles}
 																	id="account_is_for"
 																	name="account_is_for"
 																	options={

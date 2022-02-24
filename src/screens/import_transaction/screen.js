@@ -451,6 +451,12 @@ class ImportTransaction extends React.Component {
 																				},
 																			});
 																		}}
+																		className={
+																			this.state.error &&
+																			this.state.error.name
+																			? 'is-invalid'
+																			: ''
+																	}
 																	/>
 																	{this.state.error &&
 																		this.state.error.name && (

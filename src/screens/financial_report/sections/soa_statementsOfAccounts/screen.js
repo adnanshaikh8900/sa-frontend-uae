@@ -71,8 +71,9 @@ class SOAReport extends React.Component {
 			dropdownOpen: false,
 			view: false,
 			initValue: {
-				startDate: moment().startOf('month').format('DD/MM/YYYY'),
-				endDate: moment().endOf('month').format('DD/MM/YYYY'),
+				startDate:"",
+				endDate:"",
+				// endDate:new Date(new Date().setMonth(new Date().getMonth() + 1))
 			},
 			csvData: [],
 			activePage: 1,
@@ -429,8 +430,8 @@ this.props.financialReportActions
 													showMonthDropdown
 													showYearDropdown
 													autoComplete="off"
-													maxDate={new Date()}
-													value={props.values.startDate}
+													// maxDate={new Date()}
+													value={props.values.startDate!="" ?moment(props.values.startDate).format("DD-MM-YYYY"):""}
 													dropdownMode="select"
 													dateFormat="dd-MM-yyyy"
 											
@@ -448,11 +449,11 @@ this.props.financialReportActions
 													name="endDate"
 													className={`form-control`}
 													autoComplete="off"
-													maxDate={new Date()}
+													// maxDate={new Date()}
 													placeholderText="To"
 													showMonthDropdown
 													showYearDropdown
-													value={props.values.endDate}
+													value={props.values.endDate!="" ?moment(props.values.endDate).format("DD-MM-YYYY"):""}
 													dropdownMode="select"
 													dateFormat="dd-MM-yyyy"
 						

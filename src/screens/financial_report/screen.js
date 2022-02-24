@@ -314,7 +314,7 @@ class FinancialReport extends React.Component {
 									</div>
 									</Col>
 									<Col  className="report-section ml-4">
-										<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "37px",width:"350px" }}>
+										{/* <div className="d-flex" style={{ backgroundColor: "#e8effb", height: "37px",width:"350px" }}>
 											<img
 											className="ml-2 mr-2 mt-2 mb-2 "
 											src={Financial}
@@ -323,7 +323,7 @@ class FinancialReport extends React.Component {
 											<div className="mt-2 ml-4">
 											<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
 											this.props.history.push('/admin/report/statementOfAccount')}>SOA (Statement of Account)</a></h6>	
-									</div>
+									</div> */}
 									</Col>
 									{/* <Col  className="report-section ml-4">
 										<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "37px",width:"350px" }}>

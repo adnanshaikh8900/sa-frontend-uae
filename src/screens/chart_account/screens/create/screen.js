@@ -298,7 +298,6 @@ class CreateChartAccount extends React.Component {
                                 <div className="invalid-feedback">{props.errors.chartOfAccount}</div>
                               )} */}
 															<Select
-															styles={customStyles}
 																id="chartOfAccount"
 																name="chartOfAccount"
 																placeholder={strings.Select+strings.Type}

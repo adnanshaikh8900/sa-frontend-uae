@@ -1279,12 +1279,12 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																			this.setCurrency(option.value);
 																		     }
 																		   }}
-																		// className={
-																		// 	props.errors.currency &&
-																		// 	props.touched.currency
-																		// 		? 'is-invalid'
-																		// 		: ''
-																		// }
+																		className={
+																			props.errors.currency &&
+																			props.touched.currency
+																				? 'is-invalid'
+																				: ''
+																		}
 																	/>
 																	{props.errors.currency &&
 																		props.touched.currency && (

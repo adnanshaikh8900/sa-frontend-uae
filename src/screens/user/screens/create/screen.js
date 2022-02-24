@@ -721,7 +721,6 @@ class CreateUser extends React.Component {
 																				 {strings.TimeZonePreference}
 																			</Label>
 																			<Select
-																				styles={customStyles}
 																				id="timezone"
 																				name="timezone"
 																				placeholder={strings.Select + strings.TimeZonePreference}

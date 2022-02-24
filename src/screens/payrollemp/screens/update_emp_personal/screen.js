@@ -616,6 +616,12 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                 <Label htmlFor="mobileNumber">
                                                                                 <span className="text-danger">* </span>  {strings.MobileNumber}
                                                                                 </Label>
+                                                                                <div 	className={
+																		        props.errors.mobileNumber &&
+																		        props.touched.mobileNumber
+																			    ? ' is-invalidMobile '
+																			    : ''
+															                    }>
                                                                                 <PhoneInput
                                                                                     id="mobileNumber"
                                                                                     name="mobileNumber"
@@ -637,7 +643,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                     //         ? 'is-invalid'
                                                                                     //         : ''
                                                                                     // }
-                                                                                />
+                                                                                /></div>
                                                                                 {props.errors.mobileNumber && 
                                                                                     props.touched.mobileNumber && (
                                                                                     <div style={{color:"red"}}>
@@ -1302,6 +1308,12 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
                                                                                                     <Label htmlFor="emergencyContactNumber1"><span className="text-danger">* </span>{strings.ContactNumber1} </Label>
+                                                                                                    <div 	className={
+																		                            props.errors.mobileNumber &&
+																		                            props.touched.mobileNumber
+																		                        	? ' is-invalidMobile '
+																			                        : ''
+												                                                    }>
                                                                                                     <PhoneInput
                                                                                                         id="emergencyContactNumber1"
                                                                                                         name="emergencyContactNumber1"
@@ -1323,7 +1335,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                                                 ? 'text-danger'
                                                                                                                 : ''
                                                                                                         }
-                                                                                                    />
+                                                                                                    /></div>
                                                                                                      {props.errors.emergencyContactNumber1 && props.touched.emergencyContactNumber1 && (
                                                                                                         <div className="text-danger">{props.errors.emergencyContactNumber1}</div>
                                                                                                     )}

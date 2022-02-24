@@ -385,7 +385,6 @@ class CreateBankAccount extends React.Component {
 																		{strings.Currency}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		id="currency"
 																		name="currency"
 																		placeholder={strings.Select+strings.Currency}
@@ -535,7 +534,6 @@ class CreateBankAccount extends React.Component {
 																		{strings.AccountType}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		id="account_type"
 																		name="account_type"
 																		options={
@@ -868,7 +866,6 @@ class CreateBankAccount extends React.Component {
 																		{strings.Accountisfor}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		id="account_is_for"
 																		name="account_is_for"
 																		options={

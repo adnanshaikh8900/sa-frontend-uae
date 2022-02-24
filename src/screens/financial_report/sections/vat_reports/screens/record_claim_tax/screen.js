@@ -235,7 +235,7 @@ class RecordTaxClaim extends React.Component {
 														// payMode: Yup.string().required(
 														// 	'Payment mode is Required',
 														// ),
-														amount: Yup.mixed()
+														amount: Yup.mixed().required("Amount is Required")
 														.test(
 															'amount',
 															'Amount  should be equal to total tax reclaimable amount',

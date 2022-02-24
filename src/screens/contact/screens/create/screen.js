@@ -782,8 +782,6 @@ class CreateContact extends React.Component {
 																		{strings.Currency}
 																	</Label>
 																	<Select
-																
-																		styles={customStyles}
 																		options={
 																			currency_list
 																				? selectCurrencyFactory.renderOptions(

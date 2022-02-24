@@ -766,7 +766,6 @@ class CreateBankTransaction extends React.Component {
 																		 {strings.TransactionType}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		options={categoriesList}
 																		value={props.values.coaCategoryId}
 																		onChange={(option) => {

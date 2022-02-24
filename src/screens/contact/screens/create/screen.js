@@ -875,6 +875,12 @@ class CreateContact extends React.Component {
 																		<span className="text-danger">* </span>
 																		{strings.MobileNumber}
 																	</Label>
+																	<div 	className={
+																		props.errors.mobileNumber &&
+																		props.touched.mobileNumber
+																			? ' is-invalidMobile '
+																			: ''
+																	}>
 																	<PhoneInput
 																		enableSearch={true}
 																		id="mobileNumber"
@@ -897,7 +903,7 @@ class CreateContact extends React.Component {
 																	// 		? 'is-invalid'
 																	// 		: ''
 																	// }
-																	/>
+																	/></div>
 																	{props.errors.mobileNumber &&
 																		props.touched.mobileNumber && (
 																			<div  className="invalid-feedback">

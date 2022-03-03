@@ -763,7 +763,6 @@ class CreateJournal extends React.Component {
 																		showMonthDropdown
 																		showYearDropdown
 																		dateFormat="dd-MM-yyyy"
-																		minDate={new Date()}
 																		dropdownMode="select"
 																		onChange={(value) => {
 																			props.handleChange('journalDate')(value);

@@ -928,7 +928,6 @@ min="0"
 																			showMonthDropdown
 																			showYearDropdown
 																			dateFormat="dd-MM-yyyy"
-																			minDate={new Date()}
 																			dropdownMode="select"
 																			autoComplete="off"
 																			value={

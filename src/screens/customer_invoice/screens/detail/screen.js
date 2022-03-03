@@ -615,7 +615,7 @@ class DetailCustomerInvoice extends React.Component {
 							min="0"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
-								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+								if (e.target.value === '' || this.regEx.test(e.target.value)) {
 									var { product_list } = this.props;
 									product_list=product_list.filter((obj)=>obj.id == row.productId)
 									
@@ -2021,6 +2021,7 @@ class DetailCustomerInvoice extends React.Component {
 																			showMonthDropdown
 																			showYearDropdown
 																			dateFormat="dd-MM-yyyy"
+																		    minDate={new Date()}
 																			dropdownMode="select"
 																			 value={props.values.invoiceDate}
 																			 selected={new Date(props.values.invoiceDate1)} 

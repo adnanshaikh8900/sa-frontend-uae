@@ -291,7 +291,7 @@ class CreateCreditNote extends React.Component {
 							maxLength="10"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
-								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+								if (e.target.value === '' || this.regEx.test(e.target.value)) {
 									this.selectItem(
 										e.target.value,
 										row,
@@ -1963,7 +1963,7 @@ if (invoiceNumber && invoiceNumber.value) {
 																		}
 																		value={props.values.contactId}
 																		
-																		// isDisabled={this.state.invoiceSelected}
+																		isDisabled={this.state.invoiceSelected}
 																		onChange={(option) => {
 																			if (option && option.value) {
 																				this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
@@ -2189,6 +2189,7 @@ if (invoiceNumber && invoiceNumber.value) {
 																		showMonthDropdown
 																		showYearDropdown
 																		dateFormat="dd-MM-yyyy"
+																		minDate={new Date()}
 																		dropdownMode="select"
 																		value={props.values.creditNoteDate}
 																		selected={props.values.creditNoteDate}

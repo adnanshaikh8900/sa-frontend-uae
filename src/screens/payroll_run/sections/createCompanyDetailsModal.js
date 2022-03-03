@@ -215,6 +215,12 @@ class CreateCompanyDetails extends React.Component {
 																			
 																	}
 																	}
+																	className={
+																		props.errors.companyNumber &&
+																		props.touched.companyNumber
+																			? 'is-invalid'
+																			: ''
+																	}
 																	defaultValue={props.values.companyNumber}
 																/>
 																{props.errors.companyNumber &&												
@@ -241,6 +247,12 @@ class CreateCompanyDetails extends React.Component {
 																			 props.handleChange('companyBankCode')(option.target.value);
 																		 }
 																	  }
+																	}
+																	className={
+																		props.errors.companyBankCode &&
+																		props.touched.companyBankCode
+																			? 'is-invalid'
+																			: ''
 																	}
 																	defaultValue={props.values.companyBankCode}
 																/>

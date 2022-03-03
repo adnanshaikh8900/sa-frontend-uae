@@ -1059,7 +1059,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		showYearDropdown
 																		dropdownMode="select"
 																		dateFormat="dd-MM-yyyy"
-																		maxDate={new Date()}
+																		minDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('expenseDate')(value);
 																		}}

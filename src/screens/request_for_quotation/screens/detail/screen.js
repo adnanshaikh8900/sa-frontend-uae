@@ -533,7 +533,7 @@ class DetailRequestForQuotation extends React.Component {
 							maxLength="10"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
-								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+								if (e.target.value === '' || this.regEx.test(e.target.value)) {
 									this.selectItem(
 										e.target.value,
 										row,
@@ -1692,6 +1692,7 @@ setDate1= (props, value) => {
 																			showMonthDropdown
 																			showYearDropdown
 																			dateFormat="dd-MM-yyyy"
+																			minDate={new Date()}
 																			dropdownMode="select"
 																			value={props.values.rfqReceiveDate}
 																			selected={new Date(props.values.rfqReceiveDate1)} 
@@ -1731,6 +1732,7 @@ setDate1= (props, value) => {
 																				showYearDropdown
 																				dateFormat="dd-MM-yyyy"
 																				dropdownMode="select"
+																				minDate={new Date()}
 																				selected={new Date(props.values.rfqExpiryDate1)}
 																				onChange={(value) => {
 																					props.handleChange('rfqExpiryDate')(value);

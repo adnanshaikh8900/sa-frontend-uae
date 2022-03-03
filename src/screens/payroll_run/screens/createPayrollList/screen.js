@@ -258,7 +258,7 @@ calculatePayperioad=(startDate,endDate)=>{
 		formData.append('salaryDate',payrollDate)
 		//Payroll total  amount
 		let totalAmountPayroll=0;
-		this.state.selectedRows1.map((row)=>{totalAmountPayroll +=parseFloat(row.grossPay)})
+		this.state.selectedRows1.map((row)=>{totalAmountPayroll +=parseFloat(row.netPay)})
 		formData.append('totalAmountPayroll', totalAmountPayroll);
 
 		if(this.state.apiSelector ==="createPayroll"){
@@ -1010,7 +1010,7 @@ showTotal=()=>{
 																	        disabled={!this.state.submitButton && this.state.selectedRows && this.state.selectedRows.length !=0 ? false :true}
 																			title={
 																			this.state.submitButton
-																				? `Please Select Approver Before Submitting  Payroll !`
+																				? ` Please select approver for payroll submission !`
 																				: ''
 																		}
 																						
@@ -1034,7 +1034,7 @@ showTotal=()=>{
 																							title={
 																								this.state.selectedRows && this.state.selectedRows.length !=0
 																								? ''
-																								: `Please Select Employees Before creating  Payroll !`
+																								: `Please select at least one employee for payroll creation !`
 																						}
 																	>
 																		<i className="fa fa-dot-circle-o  mr-1"></i> Create

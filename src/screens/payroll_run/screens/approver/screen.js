@@ -516,7 +516,7 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 			<Label> Status : <span style={{fontSize: "larger"}}>  {this.renderStatus(this.state.status)}</span></Label>					
 			</Col>
 			<Col>
-			{this.state.status && (this.state.status==="Approved") ? 
+			{this.state.status && (this.state.status==="Approved" || this.state.status==="Paid" ||this.state.status==="Partially Paid") ? 
 																(
 																	<Button
 																	type="button"
@@ -1056,7 +1056,7 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 																''	: (
 																		<div>
 
-																		<Label htmlFor="payrollSubject">Comment </Label>
+																		<Label htmlFor="payrollSubject">Reason  </Label>
 																		<Input
 																			// className="mt-4 pull-right"
 																			type="text"
@@ -1065,7 +1065,7 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 																			name="comment"
 																			value={this.state.comment}
 																			disabled={this.state.status==="Approved" ?true :false }
-																			placeholder={strings.Enter + " Reason"}
+																			placeholder={strings.Enter + " reason for rejecting the payroll"}
 																			onChange={(event) => {
 																				this.setState({
 																					comment: event.target.value
@@ -1116,7 +1116,7 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 
 																<Col>
 																<ButtonGroup className="mt-5 pull-right ">
-																{this.state.status && (this.state.status==="Approved"  ||this.state.status==="Partially Paid"  ||this.state.status==="Paid" ) ? 
+																{this.state.status && (this.state.status==="Approved"  ||this.state.status==="Partially Paid"  ||this.state.status==="Paid" ||this.state.status==="Rejected" ) ? 
 																""	:
 																	(
 																		<Button

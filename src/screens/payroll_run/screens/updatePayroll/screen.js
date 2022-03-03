@@ -274,7 +274,7 @@ class UpdatePayroll extends React.Component {
 			return true;
 		}
 		else
-			if (this.state.status === "Submitted" || this.state.status==="Approved") {
+			if (this.state.status === "Submitted" || this.state.status==="Approved" || this.state.status==="Partially Paid"|| this.state.status==="Paid") {
 				return true;
 			} else {
 				return false;
@@ -293,7 +293,7 @@ class UpdatePayroll extends React.Component {
 			}
 	};
 	disableForAddButton = () => {
-		if (this.state.status === "Submitted" || this.state.status==="Approved") {
+		if (this.state.status === "Submitted" || this.state.status==="Approved"|| this.state.status==="Partially Paid"|| this.state.status==="Paid") {
 			return true;
 		} else {
 			return false;
@@ -363,7 +363,7 @@ class UpdatePayroll extends React.Component {
 
 			//Payroll total  amount
 			let totalAmountPayroll=0;
-			this.state.selectedRows1.map((row)=>{totalAmountPayroll +=parseFloat(row.grossPay)})
+			this.state.selectedRows1.map((row)=>{totalAmountPayroll +=parseFloat(row.netPay)})
 			formData.append('totalAmountPayroll', totalAmountPayroll);
 	 
 		if(this.state.apiSelector ==="createPayroll"){
@@ -1220,7 +1220,7 @@ class UpdatePayroll extends React.Component {
 
 
 																<Col>
-																{this.state.status && (this.state.status==="Submitted" ||this.state.status==="Approved")?(""):(<>
+																{this.state.status && (this.state.status==="Submitted" ||this.state.status==="Approved"||this.state.status=="Partially Paid"|| this.state.status==="Paid")?(""):(<>
 																	<Button
 																			type="button"
 																			color="danger"
@@ -1244,7 +1244,7 @@ class UpdatePayroll extends React.Component {
 																	>
 																		<i className="fa fa-ban"></i> {strings.Cancel}
 																	</Button>
-																	{this.state.status && (this.state.status==="Submitted" ||this.state.status==="Approved") ?(""):
+																	{this.state.status && (this.state.status==="Submitted" ||this.state.status==="Approved" || this.state.status==="Partially Paid"|| this.state.status==="Paid") ?(""):
 																	(		<>
 																	
 																	<Button
@@ -1259,7 +1259,7 @@ class UpdatePayroll extends React.Component {
 																		// disabled={this.state.allPayrollEmployee && this.state.allPayrollEmployee.length === 0 ?true :false}
 																		title={
 																			this.state.submitButton
-																				? `Please Select Approver Before Submitting  Payroll !`
+																				? `Please select approver for payroll submission!`
 																				: ''
 																		}
 														
@@ -1279,7 +1279,7 @@ class UpdatePayroll extends React.Component {
 																							title={
 																								this.state.selectedRows && this.state.selectedRows.length !=0
 																								? ''
-																								: `Please Select Employees Before creating  Payroll !`
+																								: `Please select at least one employee for payroll update !`
 																						}
 																	>
 																		<i className="fa fa-dot-circle-o  mr-1"></i> Update

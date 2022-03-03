@@ -413,6 +413,14 @@ class RecordCustomerPayment extends React.Component {
 													onSubmit={(values, { resetForm }) => {
 														this.handleSubmit(values);
 													}}
+													validate={(values) => {
+                                                    let errors = {};
+													 if (values.amount == 0) {
+                                                      errors.amount =
+                                                    'Amount Cannot be recorded zero';
+												 }
+                                                 return errors
+												 }}
 													validationSchema={Yup.object().shape({
 														depositeTo: Yup.string().required(
 															'Deposit To is Required',
@@ -566,6 +574,7 @@ class RecordCustomerPayment extends React.Component {
 																					props.handleChange('amount')(option);
 																				}
 																			}}
+																			placeholder={strings.AmountReceived}
 																			className={
 																				props.errors.amount &&
 																				props.touched.amount

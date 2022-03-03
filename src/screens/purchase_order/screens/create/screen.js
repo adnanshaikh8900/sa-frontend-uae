@@ -349,7 +349,7 @@ class CreatePurchaseOrder extends React.Component {
 							maxLength="10"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
-								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+								if (e.target.value === '' || this.regEx.test(e.target.value)) {
 									this.selectItem(
 										e.target.value,
 										row,
@@ -2009,7 +2009,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																		showYearDropdown
 																		dropdownMode="select"
 																		dateFormat="dd-MM-yyyy"
-																		maxDate={new Date()}
+																		minDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('poApproveDate')(value);
 																		}}
@@ -2043,7 +2043,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																		showYearDropdown
 																		dropdownMode="select"
 																		dateFormat="dd-MM-yyyy"
-
+																		minDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('poReceiveDate')(value);
 																		}}

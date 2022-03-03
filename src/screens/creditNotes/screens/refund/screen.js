@@ -487,6 +487,14 @@ class Refund extends React.Component {
 													onSubmit={(values, { resetForm }) => {
 														this.handleSubmit(values);
 													}}
+													validate={(values) => {
+														let errors = {};
+														 if (values.amount == 0) {
+														  errors.amount =
+														'Amount Cannot be recorded zero';
+													 }
+													 return errors
+													 }}
 													validationSchema={Yup.object().shape({
 														depositeTo: Yup.string().required(
 															'Deposit To is Required',
@@ -627,6 +635,7 @@ class Refund extends React.Component {
 																					props.handleChange('amount')(option);
 																				}
 																			}}
+																			placeholder={strings.AmountPaid}
 																			className={
 																				props.errors.amount &&
 																				props.touched.amount

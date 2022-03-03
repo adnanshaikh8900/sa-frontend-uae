@@ -1692,7 +1692,6 @@ setDate1= (props, value) => {
 																			showMonthDropdown
 																			showYearDropdown
 																			dateFormat="dd-MM-yyyy"
-																			minDate={new Date()}
 																			dropdownMode="select"
 																			value={props.values.rfqReceiveDate}
 																			selected={new Date(props.values.rfqReceiveDate1)} 
@@ -1732,7 +1731,6 @@ setDate1= (props, value) => {
 																				showYearDropdown
 																				dateFormat="dd-MM-yyyy"
 																				dropdownMode="select"
-																				minDate={new Date()}
 																				selected={new Date(props.values.rfqExpiryDate1)}
 																				onChange={(value) => {
 																					props.handleChange('rfqExpiryDate')(value);

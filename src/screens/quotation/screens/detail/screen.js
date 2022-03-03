@@ -1812,7 +1812,6 @@ console.log(this.state.supplier_currency)
 																		<DatePicker
 																			id="quotaionExpiration"
 																			name="quotaionExpiration"
-																			minDate={new Date()}
 																			placeholderText={strings.InvoiceDate}
 																			showMonthDropdown
 																			showYearDropdown

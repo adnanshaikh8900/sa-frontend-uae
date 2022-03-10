@@ -57,8 +57,8 @@ class ArAgingReport extends React.Component {
 			ArAgingReport: [],
 			view: false,
 			initValue: {
-				startDate: moment().startOf('month').format('DD-MM-YYYY'),
-				endDate: new Date(),
+				startDate: moment().startOf('month').format('DD/MM/YYYY'),
+				endDate: moment().endOf('month').format('DD/MM/YYYY'),
 
 			},
 			csvData: [],
@@ -95,8 +95,8 @@ class ArAgingReport extends React.Component {
 		this.setState(
 			{
 				initValue: {
-					startDate: moment(value.startDate).format('DD-MM-YYYY'),
-					endDate: moment(value.endDate).format('DD-MM-YYYY'),
+					// 	startDate: moment(value.startDate).format('DD/MM/YYYY'),
+					endDate: moment(value.endDate).format('DD/MM/YYYY'),
 				},
 				loading: true,
 				view: !this.state.view,
@@ -115,7 +115,7 @@ class ArAgingReport extends React.Component {
 	initializeData = () => {
 		const { initValue } = this.state;
 		const postData = {
-			// startDate: initValue.startDate,
+			startDate: initValue.startDate,
 			endDate: initValue.endDate,
 		};
 		this.props.financialReportActions
@@ -361,7 +361,7 @@ class ArAgingReport extends React.Component {
 											<b style={{ fontSize: '18px' }}>{strings.ARAgingReport}</b>
 											<br style={{ marginUp: '5px' }} />
 																						 
-											{strings.Ason} {moment(initValue.endDate).format("DD-MM-YYYY")}
+											{strings.Ason} {initValue.endDate.replaceAll("/","-")} 
 										</div>
 										<div>
 										</div>

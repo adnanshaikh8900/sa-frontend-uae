@@ -392,6 +392,27 @@ class PayrollEmployee extends React.Component {
             this.csvLink.current.link.click()
         }
     }
+    getActionButtons = (params) => {
+		return (
+	<>
+	{/* BUTTON ACTIONS */}
+			{/* View */}
+			<Button
+				className="Ag-gridActionButtons btn-sm"
+				title='Edit'
+				color="secondary"
+
+                onClick={
+                    () =>{ 
+                                                          
+                    this.props.history.push('/admin/master/employee/viewEmployee',{ id: params.data.id })
+                        }                                                                                               
+}                                            
+			
+			>		<i className="fas fa-edit"/> </Button>
+	</>
+		)
+	}
 
     clearAll = () => {
         this.setState({
@@ -403,7 +424,7 @@ class PayrollEmployee extends React.Component {
     }
     renderDate=(data)=>{
         
-            return moment(data.value).format("D MMM YYYY")
+            return moment(data.value).format("DD-MM-YYYY")
     }
     render() {
         strings.setLanguage(this.state.language);
@@ -549,15 +570,15 @@ class PayrollEmployee extends React.Component {
                                                                                             >
 
                                                                                         <AgGridColumn field="employeeCode" 
-                                                                                        headerName=   {strings.EmployeeCode}
+                                                                                        headerName=   {strings.EMPLOYEECODE}
                                                                                         sortable={ true } 
                                                                                         filter={ true } 
-                                                                                        checkboxSelection={true}
+                                                                                        // checkboxSelection={true}
                                                                                         enablePivot={true} 
                                                                                        ></AgGridColumn>
 
                                                                                         <AgGridColumn field="fullName" 
-                                                                                        headerName=       {strings.FullName}
+                                                                                        headerName=       {strings.FULLNAME}
                                                                                         sortable={ true }
                                                                                         filter={ true }
                                                                                         enablePivot={true}
@@ -566,13 +587,7 @@ class PayrollEmployee extends React.Component {
                                                                                                                             style={{
                                                                                                                                 cursor: 'pointer',
                                                                                                                                 }}
-                                                                                                                            onClick={
-                                                                                                                                                        () =>{ 
-                                                                                                                                                        // this.props.history.push('/admin/payroll/employee/viewEmployee',
-                                                                                                                                                        // { id: row.id })                                         
-                                                                                                                                                        this.props.history.push('/admin/master/employee/viewEmployee',{ id: params.data.id })
-                                                                                                                                                            }                                                                                               
-                                                                                                                    }                                                                                           
+                                                                                                                                                                          
                                                                                                                 >
                                                                                                                     {params.data.fullName}
                                                                                                                 </label>
@@ -580,7 +595,7 @@ class PayrollEmployee extends React.Component {
                                                                                         ></AgGridColumn>  
 
                                                                                         <AgGridColumn field="email" 
-                                                                                        headerName=  {strings.Email}
+                                                                                        headerName=  {strings.EMAIL}
                                                                                         sortable={ true } 
                                                                                         filter={ true }
                                                                                         enablePivot={true}  
@@ -588,10 +603,10 @@ class PayrollEmployee extends React.Component {
 
                                                                                         <AgGridColumn field="mobileNumber" 
 
-                                                                                        headerName=  {strings.MobileNumber}
-                                                                                        sortable={ true }
+                                                                                        headerName={strings.MOBILENUMBER}
+                                                                                        sortable={true}
                                                                                         enablePivot={true} 
-                                                                                        filter={ true }
+                                                                                        filter={true}
                                                                                         cellRendererFramework={(params)=>
                                                                                             <PhoneInput     
                                                                                             className="mobileNumberCSS"                                                                     
@@ -605,7 +620,7 @@ class PayrollEmployee extends React.Component {
 
                                                                                     
                                                                                         <AgGridColumn field="dob" 
-                                                                                        headerName=  {strings.DateOfBirth}
+                                                                                        headerName=  {strings.DATEOFBIRTH}
                                                                                         sortable={ true } 
                                                                                         enablePivot={true} 
                                                                                         filter={ true } 
@@ -613,7 +628,7 @@ class PayrollEmployee extends React.Component {
                                                                                       ></AgGridColumn>
 
                                                                                         <AgGridColumn
-                                                                                        headerName={strings.Status}
+                                                                                        headerName={strings.STATUS}
                                                                                         field="isActive" 
                                                                                         sortable={ true }
                                                                                         filter={ true }
@@ -624,7 +639,18 @@ class PayrollEmployee extends React.Component {
                                                                                                                             <label className="badge label-due"> InActive</label>
                                                                                                              }
                                                                                         ></AgGridColumn>  
-                                                                                  
+                                                                                  	<AgGridColumn field="action"
+										                                            // className="Ag-gridActionButtons"
+										                                                headerName="ACTIONS"
+										                                                cellRendererFramework={(params) =>
+											                                            <div
+											                                                className="Ag-gridActionButtons"
+											                                                                                >
+												                                            {this.getActionButtons(params)}
+											                                            </div>
+
+										                                                }
+									                                                ></AgGridColumn>
                                                                                     </AgGridReact>  
                                                                                     <div className="example-header mt-1">
                                                                                             Page Size:

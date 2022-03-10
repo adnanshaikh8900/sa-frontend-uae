@@ -158,7 +158,7 @@ class UpdatePayroll extends React.Component {
 		const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))+1; 
 		
 		this.setState({paidDays:diffDays});
-		this.getAllPayrollEmployee()
+		this.getAllPayrollEmployee(endDate);
 		console.log(diffTime + " milliseconds");
 		console.log(diffDays + " days");
 		console.log(this.state.paidDays,"paid-Days",diffDays)
@@ -274,7 +274,7 @@ class UpdatePayroll extends React.Component {
 			return true;
 		}
 		else
-			if (this.state.status === "Submitted") {
+			if (this.state.status === "Submitted" || this.state.status==="Approved" || this.state.status==="Partially Paid"|| this.state.status==="Paid") {
 				return true;
 			} else {
 				return false;
@@ -293,7 +293,7 @@ class UpdatePayroll extends React.Component {
 			}
 	};
 	disableForAddButton = () => {
-		if (this.state.status === "Submitted") {
+		if (this.state.status === "Submitted" || this.state.status==="Approved"|| this.state.status==="Partially Paid"|| this.state.status==="Paid") {
 			return true;
 		} else {
 			return false;
@@ -363,9 +363,9 @@ class UpdatePayroll extends React.Component {
 
 			//Payroll total  amount
 			let totalAmountPayroll=0;
-			this.state.selectedRows1.map((row)=>{totalAmountPayroll +=parseFloat(row.grossPay)})
+			this.state.selectedRows1.map((row)=>{totalAmountPayroll +=parseFloat(row.netPay)})
 			formData.append('totalAmountPayroll', totalAmountPayroll);
-	debugger
+	 
 		if(this.state.apiSelector ==="createPayroll"){
 		this.props.createPayrollActions
 			 .updatePayroll(formData)
@@ -466,13 +466,15 @@ class UpdatePayroll extends React.Component {
 													});
 	}
 
-	getAllPayrollEmployee = () => {
+	getAllPayrollEmployee = (endDate) => {
 		if(this.state.payrollId){
-		this.props.createPayrollActions.getAllPayrollEmployee2(this.state.payrollId).then((res) => {
+			let date=endDate ?endDate :this.state.endDate;
+			let month=moment(date).format("MMMM");
+		this.props.createPayrollActions.getAllPayrollEmployee2(this.state.payrollId,moment(date).format("DD/MM/YYYY")).then((res) => {
 			if (res.status === 200) {
 
 				if(res.data.length===0){
-					this.props.createPayrollActions.getAllPayrollEmployee(this.state.payrollId).then((res) => {
+					this.props.createPayrollActions.getAllPayrollEmployee(this.state.payrollId,date).then((res) => {
 						if (res.status === 200) {
 
 								this.setState({
@@ -491,7 +493,8 @@ class UpdatePayroll extends React.Component {
 							// data.noOfDays =this.state.paidDays
 							// data.originalGrossPay=data.grossPay		
 					        // data.perDaySal=data.originalGrossPay / data.noOfDays			
-							let tmpPaidDay=this.state.paidDays > 30 ?30	:this.state.paidDays	
+							let tmpPaidDay=this.state.paidDays > 30 ?30	:
+										( this.state.paidDays==28 && month=="February" ? 30 :this.state.paidDays	)		
 							if(this.state.checkForLopSetting===true)		data.noOfDays =tmpPaidDay
 
 							data.originalDeduction=data.deduction
@@ -1085,8 +1088,8 @@ class UpdatePayroll extends React.Component {
 																					disabled={this.disableForAddButton() ? true : false}
 																					onFocusChange={(option)=>{this.setState({focusedInput:option})}}
 																					isOutsideRange={
-																						// () => null
-																						day => isInclusivelyBeforeDay(day, moment(new Date(today.getFullYear(), today.getMonth(),0)))
+																						 () => null
+																						// day => isInclusivelyBeforeDay(day, moment(new Date(today.getFullYear(), today.getMonth(),0)))
 																					}
 																				/>																							
 																	
@@ -1217,7 +1220,7 @@ class UpdatePayroll extends React.Component {
 
 
 																<Col>
-																{this.state.status && this.state.status==="Submitted" ?(""):(<>
+																{this.state.status && (this.state.status==="Submitted" ||this.state.status==="Approved"||this.state.status=="Partially Paid"|| this.state.status==="Paid")?(""):(<>
 																	<Button
 																			type="button"
 																			color="danger"
@@ -1241,7 +1244,7 @@ class UpdatePayroll extends React.Component {
 																	>
 																		<i className="fa fa-ban"></i> {strings.Cancel}
 																	</Button>
-																	{this.state.status && this.state.status==="Submitted" ?(""):
+																	{this.state.status && (this.state.status==="Submitted" ||this.state.status==="Approved" || this.state.status==="Partially Paid"|| this.state.status==="Paid") ?(""):
 																	(		<>
 																	
 																	<Button
@@ -1256,7 +1259,7 @@ class UpdatePayroll extends React.Component {
 																		// disabled={this.state.allPayrollEmployee && this.state.allPayrollEmployee.length === 0 ?true :false}
 																		title={
 																			this.state.submitButton
-																				? `Please Select Approver Before Submitting  Payroll !`
+																				? `Please select approver for payroll submission!`
 																				: ''
 																		}
 														
@@ -1276,7 +1279,7 @@ class UpdatePayroll extends React.Component {
 																							title={
 																								this.state.selectedRows && this.state.selectedRows.length !=0
 																								? ''
-																								: `Please Select Employees Before creating  Payroll !`
+																								: `Please select at least one employee for payroll update !`
 																						}
 																	>
 																		<i className="fa fa-dot-circle-o  mr-1"></i> Update

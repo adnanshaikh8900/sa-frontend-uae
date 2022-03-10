@@ -34,7 +34,7 @@ import LocalizedStrings from 'react-localization';
 
 import { toast } from 'react-toastify';
 import { Table } from '@material-ui/core';
-
+import {CreateCompanyDetails  } from './sections';
 const mapStateToProps = (state) => {
 
 	return {
@@ -86,10 +86,12 @@ class PayrollRun extends React.Component {
 			activeTab: new Array(4).fill('1'),
 			csvData: [],
 			view: false,
-			openPayrollModal: false,
+			openModal: false,
 			selectedData: '',
 			current_employee: '',
 			lop: '',
+			disableCreating:true,
+			disableCreatePayroll:false
 		};
 
 		this.options = {
@@ -124,6 +126,7 @@ class PayrollRun extends React.Component {
 
 		this.props.payRollActions.getUserAndRole();
 		this.initializeData();
+		this.disableCreatePayroll()
 	};
 	toggle = (tabPane, tab) => {
 		const newArray = this.state.activeTab.slice();
@@ -535,7 +538,7 @@ class PayrollRun extends React.Component {
 		this.props.payRollActions.getSalaryDetailByEmployeeIdNoOfDays(employeeId).then((res) => {
 			this.setState({
 				current_employee: employeeId,
-				openPayrollModal: true, rowId: employeeId,
+				openModal: true, rowId: employeeId,
 				selectedData: res.data,
 				employeename: res.data.employeeName,
 				netPay: res.data.netPay,
@@ -638,12 +641,13 @@ class PayrollRun extends React.Component {
 		);
 	};
 
-	openPayrollModal = (props) => {
-		this.setState({ openPayrollModal: true });
+	openModal = (props) => {
+		this.setState({ openModal: true });
 	};
-	closePayrollModal = (res) => {
-		this.setState({ openPayrollModal: false });
+	closeModal  = (res) => {
+		this.setState({ openModal: false });
 		this.initializeData();
+		this.disableCreatePayroll();
 	};
 
 	grossSalary = (cell, row, extraData) => {
@@ -656,6 +660,24 @@ class PayrollRun extends React.Component {
 
 	earnings = (cell, row, extraData) => {
 		return row.earnings ? row.earnings.toLocaleString() : row.earnings.toLocaleString();
+	}
+
+	disableCreatePayroll=()=>{
+		
+			this.props.payRollActions.getCompanyDetails().then((res)=>{			
+			if(res.status==200){
+				
+					let	companyNumber=res.data.companyNumber?res.data.companyNumber:"";
+					let	companyBankCode=res.data.companyBankCode?res.data.companyBankCode:"";
+	
+					if(companyNumber=="" || companyBankCode=="")
+					this.setState({disableCreatePayroll:true}) ;
+					else 
+					this.setState({disableCreatePayroll:false}) ;
+			}
+		});
+	
+		
 	}
 
 	render() {
@@ -721,20 +743,37 @@ class PayrollRun extends React.Component {
 													</ButtonGroup>
 												</div>
 												<Row className="mb-4 ">
+											
 													{userForCheckApprover === "Payroll Approver" ? ""
 														: <Col>
+														
+															<Button
+																color="primary"
+																disabled={this.state.disableCreatePayroll==true?true:false}
+																title={this.state.disableCreatePayroll==true?"Please Create Company Details":""}
+																className="btn-square mt-2 pull-right"
+																onClick={() =>
+																	this.props.history.push('/admin/payroll/payrollrun/createPayrollList')
+																}
+															>
+																<i className="fas fa-plus mr-1" />
+
+																Create New Payroll
+															</Button>
 															<Button
 																color="primary"
 																className="btn-square mt-2 pull-right"
 																// onClick={}
 																onClick={() =>
-																	this.props.history.push('/admin/payroll/payrollrun/createPayrollList')
+																	{
+																		this.setState({openModal:true,disableCreating:false})
+																	}
 																}
-															// disabled={selectedRows.length === 0}
+															
 															>
 																<i className="fas fa-plus mr-1" />
 
-																Create New Payroll
+																Create Company Details
 															</Button>
 														</Col>
 													}
@@ -843,7 +882,7 @@ class PayrollRun extends React.Component {
 															 dataFormat={this.renderComment}
 															
 														>
-															comment
+															Reason 
 														</TableHeaderColumn>
 
 
@@ -879,6 +918,12 @@ class PayrollRun extends React.Component {
 
 
 				/> */}
+				<CreateCompanyDetails
+				openModal={this.state.openModal}
+				closeModal ={(e) => {
+					this.closeModal (e);
+				}}
+				/>
 			</div>
 			</div>
 		);

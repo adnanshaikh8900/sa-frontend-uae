@@ -240,7 +240,7 @@ class CreateRequestForQuotation extends React.Component {
 						id="exciseTaxId"
 						placeholder={"Select Excise"}
 						onChange={(e) => {
-							debugger
+							 
 							this.selectItem(
 								e.value,
 								row,
@@ -337,7 +337,7 @@ class CreateRequestForQuotation extends React.Component {
 							maxLength="10"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
-								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+								if (e.target.value === '' || this.regEx.test(e.target.value)) {
 									this.selectItem(
 										e.target.value,
 										row,
@@ -1281,7 +1281,7 @@ class CreateRequestForQuotation extends React.Component {
 		this.props.requestForQuotationCreateAction
 			.checkValidation(data)
 			.then((response) => {
-				if (response.data === 'rfqNumber already exists') {
+				if (response.data === 'RFQ Number Already Exists') {
 					this.setState(
 						{
 							exist: true,
@@ -1387,10 +1387,10 @@ class CreateRequestForQuotation extends React.Component {
 													let errors = {};
 													if (this.state.exist === true) {
 														errors.rfq_number =
-															'RFQ number already exists';
+															'RFQ number Already Exists';
 													}
 													if (values.rfq_number==='') {
-														errors.rfq_number = 'RFQ Number is required';
+														errors.rfq_number = 'RFQ Number is Required';
 													}
 													return errors;
 												}}
@@ -1402,7 +1402,9 @@ class CreateRequestForQuotation extends React.Component {
 													supplierId: Yup.string().required(
 														'Supplier is Required',
 													),
-													// placeOfSupplyId: Yup.string().required('Place of supply is Required'),
+													placeOfSupplyId: Yup.string().required(
+														'Place of Supply is Required'
+													),
 													
 													rfqReceiveDate: Yup.string().required(
 														'Order Date is Required',
@@ -1537,7 +1539,6 @@ class CreateRequestForQuotation extends React.Component {
 																		{strings.SupplierName}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		id="supplierId"
 																		name="supplierId"
 																		placeholder={strings.Select+strings.SupplierName}
@@ -1650,7 +1651,6 @@ class CreateRequestForQuotation extends React.Component {
 																		{strings.PlaceofSupply}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		id="placeOfSupplyId"
 																		name="placeOfSupplyId"
 																		placeholder={strings.Select+strings.PlaceofSupply}
@@ -1712,7 +1712,6 @@ class CreateRequestForQuotation extends React.Component {
 																		showYearDropdown
 																		dropdownMode="select"
 																		dateFormat="dd-MM-yyyy"
-																		
 																		onChange={(value) => {
 																			props.handleChange('rfqReceiveDate')(value);
 																		
@@ -1721,7 +1720,8 @@ class CreateRequestForQuotation extends React.Component {
 																	{props.errors.rfqReceiveDate &&
 																		props.touched.rfqReceiveDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.rfqReceiveDate}
+																				{props.errors.rfqReceiveDate.includes("nullable()") ? "Order Date is Required" :props.errors.rfqReceiveDate}		
+
 																			</div>
 																		)}
 																</FormGroup>
@@ -1754,7 +1754,7 @@ class CreateRequestForQuotation extends React.Component {
 																	{props.errors.rfqExpiryDate &&
 																		props.touched.rfqExpiryDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.rfqExpiryDate}
+																				{props.errors.rfqExpiryDate.includes("nullable()") ? "Order Due Date is Required" :props.errors.rfqExpiryDate}
 																			</div>
 																		)}
 																	

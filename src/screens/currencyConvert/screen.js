@@ -123,7 +123,7 @@ class CurrencyConvert extends React.Component {
 
 
 	goToCurrencyDetail = (currencyId) => {
-		debugger
+		 
 		{currencyId === 1 ? (	
 			this.props.commonActions.tostifyAlert(
 			'error',
@@ -392,6 +392,23 @@ class CurrencyConvert extends React.Component {
 		);
 	};
 
+	getActionButtons = (params) => {
+		return (
+	<>
+	{/* BUTTON ACTIONS */}
+			{/* View */}
+			<Button
+				className="Ag-gridActionButtons btn-sm"
+				title='Edit'
+				color="secondary"
+
+				onClick={()=>this.goToCurrencyDetail(params.data.currencyConversionId) }    
+			
+			>		<i className="fas fa-edit"/> </Button>
+	</>
+		)
+	}
+
 	render() {
 		strings.setLanguage(this.state.language);
 		const {
@@ -594,7 +611,7 @@ class CurrencyConvert extends React.Component {
 					>
 
 				<AgGridColumn field="currencyName" 
-				headerName=   {strings.Currency}
+				headerName=   {strings.CURRENCY}
 				sortable={ true } 
 				filter={ true } 
 				enablePivot={true} 
@@ -603,7 +620,7 @@ class CurrencyConvert extends React.Component {
 					style={{
 						cursor: 'pointer',
 						}}
-					onClick={()=>this.goToCurrencyDetail(params.data.currencyConversionId) }                                                             
+				                                                         
 		>
 		{params.value}
 		</label>
@@ -628,7 +645,7 @@ class CurrencyConvert extends React.Component {
 			
 				
 				<AgGridColumn
-				headerName={strings.Status}
+				headerName={strings.STATUS}
 				field="isActive" 
 				sortable={ true }
 				filter={ true }
@@ -639,6 +656,18 @@ class CurrencyConvert extends React.Component {
 													<label className="badge label-due"> InActive</label>
 										}
 				></AgGridColumn>  
+					<AgGridColumn field="action"
+										// className="Ag-gridActionButtons"
+										headerName="ACTIONS"
+										cellRendererFramework={(params) =>
+											<div
+											 className="Ag-gridActionButtons"
+											 >
+												{this.getActionButtons(params)}
+											</div>
+
+										}
+									></AgGridColumn> 	
 			
 			</AgGridReact>  
 			<div className="example-header mt-1">

@@ -8,7 +8,9 @@ import {
 	ButtonGroup,
 
 } from 'reactstrap';
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import { AgGridReact,AgGridColumn } from 'ag-grid-react/lib/agGridReact';
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import * as ProductActions from '../../../product/actions';
 
 import moment from 'moment';
@@ -59,7 +61,7 @@ class InventorySummary extends React.Component {
 			initValue: {
 				startDate: moment().startOf('month').format('DD/MM/YYYY'),
 				// endDate: moment().endOf('month').format('DD/MM/YYYY'),
-				endDate: moment().local().format('DD/MM/YYYY'),
+				endDate: moment().local().format('DD-MM-YYYY'),
 				
 			},
 			openModal:false,
@@ -188,6 +190,14 @@ class InventorySummary extends React.Component {
 		}
 	};
 
+	onPageSizeChanged = (newPageSize) => {
+		var value = document.getElementById('page-size').value;
+		this.gridApi.paginationSetPageSize(Number(value));
+	};
+	onGridReady = (params) => {
+		this.gridApi = params.api;
+		this.gridColumnApi = params.columnApi;
+	};
 	onPageChange = (page, sizePerPage) => {
 		if (this.options.page !== page) {
 			this.options.page = page;
@@ -319,6 +329,52 @@ class InventorySummary extends React.Component {
 			</div>
 		);
 	};
+
+	getActionButtons = (params) => {
+		return (
+	<>
+	{/* BUTTON ACTIONS */}
+			{/* View */}
+			<div>
+				<Button
+				className="btn btn-lg "
+				style={{padding:"0px"}}
+				 color="link"
+					onClick={() => {
+						if(params.data.supplierId !== null && params.data.productId !== null){
+							this.props.productActions.getInventoryHistory({p_id:params.data.productId,s_id:params.data.supplierId}).then((res) => {
+								if (res.status === 200) {
+									this.setState({
+
+										inventory_history_list:res.data,
+											});
+
+								}
+							})
+							.catch((err) => {
+								
+							});
+
+						
+				
+							
+						this.viewPaySlip({ });
+						}//if
+						else {
+							this.props.commonActions.tostifyAlert(
+								'success',"Sorry , No supplier Available to View Inventory History List")
+						}
+					}
+
+					}
+				>
+						<i class="fa fa-history fa-lg"></i> 
+						</Button>
+
+			</div>
+	</>
+		)
+	}
 	render() {
 		strings.setLanguage(this.state.language);
 		const { loading, initValue} = this.state;
@@ -370,7 +426,7 @@ class InventorySummary extends React.Component {
 											<br/>
 											<br/>
 										
-											As on {initValue.endDate}
+											As on {initValue.endDate.replaceAll("/","-")}
 											
 									</div>
 									
@@ -396,64 +452,151 @@ class InventorySummary extends React.Component {
 									{loading ? (
 										<Loader />
 									) : (
-										<div>
-											<BootstrapTable
-												selectRow={this.selectRowProp}
-												search={false}
-												options={this.options}
-												data={
-													summary_list && summary_list.data
-														? summary_list.data
-														: []
-												}
-												version="4"
-												hover
-												pagination={
-													summary_list &&
-													summary_list.data &&
-													summary_list.data.length > 0
-														? true
-														: false
-												}
-												remote
-												fetchInfo={{
-													dataTotalSize: summary_list.count
-														? summary_list.count
-														: 0,
-												}}
-												className="product-table"
-												trClassName="cursor-pointer"
-												csvFileName="Inventory Summary List.csv"
-												ref={(node) => (this.table = node)}
-											>
-												<TableHeaderColumn isKey dataField="productName" dataSort className="table-header-bg">
-												{strings.PRODUCTNAME}
-												</TableHeaderColumn >
-												<TableHeaderColumn dataField="productCode" dataSort className="table-header-bg">
-												{strings.PRODUCTCODE}
-												</TableHeaderColumn>
-												<TableHeaderColumn  dataField="purchaseOrder" dataSort className="table-header-bg">
-												{strings.ORDERQUANTITY}
-												</TableHeaderColumn >
-												<TableHeaderColumn  dataField="quantitySold" dataSort className="table-header-bg">
-												{strings.QUANTITYSOLD}
-												</TableHeaderColumn >
-												<TableHeaderColumn  dataField="stockInHand" dataSort className="table-header-bg">
-												{strings.STOCKINHAND}
-												</TableHeaderColumn >
-												<TableHeaderColumn  dataField="supplierName" dataFormat={this.renderName} dataSort className="table-header-bg">
-												{strings.SUPPLIERNAME}
-												</TableHeaderColumn >
-												<TableHeaderColumn
-												className="text-right table-header-bg"
-												columnClassName="text-right"
-												dataFormat={this.renderActions}
-												dataField="purchaseOrder"
+										// <div>
+										// 	<BootstrapTable
+										// 		selectRow={this.selectRowProp}
+										// 		search={false}
+										// 		options={this.options}
+										// 		data={
+										// 			summary_list && summary_list.data
+										// 				? summary_list.data
+										// 				: []
+										// 		}
+										// 		version="4"
+										// 		hover
+										// 		pagination={
+										// 			summary_list &&
+										// 			summary_list.data &&
+										// 			summary_list.data.length > 0
+										// 				? true
+										// 				: false
+										// 		}
+										// 		remote
+										// 		fetchInfo={{
+										// 			dataTotalSize: summary_list.count
+										// 				? summary_list.count
+										// 				: 0,
+										// 		}}
+										// 		className="product-table"
+										// 		trClassName="cursor-pointer"
+										// 		csvFileName="Inventory Summary List.csv"
+										// 		ref={(node) => (this.table = node)}
+										// 	>
+										// 		<TableHeaderColumn isKey dataField="productName" dataSort className="table-header-bg">
+										// 		{strings.PRODUCTNAME}
+										// 		</TableHeaderColumn >
+										// 		<TableHeaderColumn dataField="productCode" dataSort className="table-header-bg">
+										// 		{strings.PRODUCTCODE}
+										// 		</TableHeaderColumn>
+										// 		<TableHeaderColumn  dataField="purchaseOrder" dataSort className="table-header-bg">
+										// 		{strings.ORDERQUANTITY}
+										// 		</TableHeaderColumn >
+										// 		<TableHeaderColumn  dataField="quantitySold" dataSort className="table-header-bg">
+										// 		{strings.QUANTITYSOLD}
+										// 		</TableHeaderColumn >
+										// 		<TableHeaderColumn  dataField="stockInHand" dataSort className="table-header-bg">
+										// 		{strings.STOCKINHAND}
+										// 		</TableHeaderColumn >
+										// 		<TableHeaderColumn  dataField="supplierName" dataFormat={this.renderName} dataSort className="table-header-bg">
+										// 		{strings.SUPPLIERNAME}
+										// 		</TableHeaderColumn >
+										// 		<TableHeaderColumn
+										// 		className="text-right table-header-bg"
+										// 		columnClassName="text-right"
+										// 		dataFormat={this.renderActions}
+										// 		dataField="purchaseOrder"
 
 												
-											     ></TableHeaderColumn>
-											</BootstrapTable>
-										</div>
+										// 	     ></TableHeaderColumn>
+										// 	</BootstrapTable>
+										// </div>
+											<div className="ag-theme-alpine mb-3" style={{ height: 590,width:"100%" }}>
+											<AgGridReact
+												rowData={summary_list && summary_list.data
+													? summary_list.data
+													: []}
+													//  suppressDragLeaveHidesColumns={true}
+												// pivotMode={true}
+												// suppressPaginationPanel={false}
+												pagination={true}
+												rowSelection="multiple"
+												// paginationPageSize={10}
+												// paginationAutoPageSize={true}
+												paginationPageSize={this.state.paginationPageSize}
+													floatingFilter={true}
+													defaultColDef={{ 
+																resizable: true,
+																flex: 1,
+																sortable: true
+															}}
+												sideBar="columns"
+												onGridReady={this.onGridReady}
+													>
+								
+												<AgGridColumn field="productName" 
+												headerName=	{strings.PRODUCTNAME}
+												sortable={ true } 
+												filter={ true } 
+												enablePivot={true} 
+									
+												></AgGridColumn>
+								
+												<AgGridColumn field="productCode" 
+												headerName=	{strings.PRODUCTCODE}
+												sortable={ true }
+												filter={ true }
+												enablePivot={true}
+												></AgGridColumn>  
+								
+												<AgGridColumn field="purchaseOrder" 
+												headerName=	 {strings.ORDERQUANTITY}
+												sortable={ true }
+												filter={ true }
+												enablePivot={true}
+												></AgGridColumn>  
+											
+											<AgGridColumn field="quantitySold" 
+												headerName=	{strings.QUANTITYSOLD}
+												sortable={ true }
+												filter={ true }
+												enablePivot={true}
+												></AgGridColumn>  
+													<AgGridColumn field="stockInHand" 
+												headerName=	 {strings.STOCKINHAND}
+												sortable={ true }
+												filter={ true }
+												enablePivot={true}
+												></AgGridColumn>  
+												<AgGridColumn field="supplierName" 
+												headerName=	 {strings.SUPPLIERNAME}
+												sortable={ true }
+												filter={ true }
+												enablePivot={true}
+												></AgGridColumn>  
+											
+												<AgGridColumn field="action"
+																		// className="Ag-gridActionButtons"
+																		headerName="Actions"
+																		cellRendererFramework={(params) =>
+																			<div
+																			 className="Ag-gridActionButtons"
+																			 >
+																				{this.getActionButtons(params)}
+																			</div>
+								
+																		}
+																	></AgGridColumn>
+											</AgGridReact>  
+											<div className="example-header mt-1">
+													Page Size:
+													<select onChange={() => this.onPageSizeChanged()} id="page-size">
+													<option value="10" selected={true}>10</option>
+													<option value="100">100</option>
+													<option value="500">500</option>
+													<option value="1000">1000</option>
+													</select>
+												</div>   																	
+										</div>	
 									)}
 									<div style={{ textAlignLast:'right'}}> {strings.PoweredBy} <b>SimpleAccounts</b></div> 
 								</PDFExport>

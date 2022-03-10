@@ -196,7 +196,7 @@ class ExciseTaxAuditReport extends React.Component {
 				className="btn-sm"
 				onClick={() => {
 					this.setState({current_report_id:params.data.id})
-					let dateArr = params.data.taxReturns ? params.data.taxReturns.split("-") : [];debugger
+					let dateArr = params.data.taxReturns ? params.data.taxReturns.split("-") : []; 
 					this.props.history.push('/admin/report/exciseTaxAuditReports/view', {startDate:dateArr[0],endDate:dateArr[1],userId:params.data.userId,	companyId:1,taxAgencyId:params.data.taxAgencyId})
 
 					// const postData = {
@@ -208,7 +208,7 @@ class ExciseTaxAuditReport extends React.Component {
 					// this.props.ftaReport
 					// .getFtaAuditReport(postData)
 					// .then((res) => {
-					// 	debugger
+					// 	 
 					// 	if (res.status === 200) {
 					// 		const blob = new Blob([res.data], { type: 'application/csv' });
 					// 		download(blob,params.data.taxReturns+".csv" )
@@ -342,12 +342,12 @@ class ExciseTaxAuditReport extends React.Component {
 		let dateArr = cell ? cell.split("-") : [];
 
 
-		return (<>{dateArr[1]}</>);
+		return (<>{dateArr[1].replaceAll("/","-")}</>);
 	};
 	renderStartDate = (cell, row) => {
 		let dateArr = cell ? cell.split("-") : [];
 
-		return (<>{dateArr[0]}</>);
+		return (<>{dateArr[0].replaceAll("/","-")}</>);
 	};
 	render() {
 		var { ftaAuditReporttDataList, csvFileNamesData, dialog } = this.state;

@@ -137,7 +137,7 @@ class VatPaymentRecord extends React.Component {
 		let startDate = moment(dateArr[0]).format('DD-MM-YYYY')
 		let endDate = moment(dateArr[1]).format('DD-MM-YYYY')
 
-		return (<>{dateArr[0]}</>);
+		return (<>{dateArr[0].replaceAll("/","-")}</>);
 	};
 
 	render() {

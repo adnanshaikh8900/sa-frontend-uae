@@ -18,6 +18,7 @@ GotoFAQ:"Aller à la FAQ",
 ContactUs:"Nous contacter",
 DepositFrom:"Dépôt De",   
 Vat:"T.V.A",  
+ACCOUNT:"Compte",	
 RecieptNumber:"Numéro de reçu",
           //sidebar
         Import:"Importer",
@@ -124,6 +125,7 @@ RecieptNumber:"Numéro de reçu",
       Notes: "Notes / Bons de livraisonNotes",
       DiscountType: "Type d’escompte",
       Excise:"Exciser",
+      ExciseAmount:"Montant d'accise",
       ReceiptNumber: "Numéro de reçu / Numéro de référence",
       ReceiptAttachment: "Pièce jointe reciept",
       DiscountAmount: "Montant de l’escompte",
@@ -213,6 +215,7 @@ Attachment:"Attachement",
 SupplierInvoices:"Factures fournisseur",						
 SUPPLIERNAME:"NOM DU FOURNISSEUR",										
 INVOICEAMOUNT:"MONTANT DE LA FACTURE",		
+SupplierInvoice:"Facture fournisseur",	
 		
 //Create invoice
 SupplierName:"Nom du fournisseur",			
@@ -369,7 +372,10 @@ Addnewcontact:"Ajouter un nouveau contact",
 Products:"Produits",		 		
 PRODUCTCODE:"CODE PRODUIT",				
 VATPERCENTAGE:"POURCENTAGE DE TVA",				
-AddnewProduct:"Ajouter un nouveau produit",		
+AddnewProduct:"Ajouter un nouveau produit",
+ProductType: "Type de produit",
+Inventory:"INVENTAIRE",
+VATTYPE:"TYPE DE TVA",
 
 //Add product
 CreateProduct:"Créer un produit",		
@@ -827,6 +833,7 @@ RemainingBalance:"Solde restant",
 
 
 //View
+InvoiceAmountIn:"Montant de la facture en entrée",
 BalanceDue:"Solde dû",	
 BillTo:"Facturer à",	
 Company:"Compagnie",	

@@ -183,7 +183,7 @@ class CreateBankAccount extends React.Component {
 		this.props.createBankAccountActions
 			.checkValidation(data)
 			.then((response) => {
-				if (response.data === 'Bank Account already exists') {
+				if (response.data === 'Bank Account Already Exists') {
 					this.setState({
 						exist: true,
 					});
@@ -297,14 +297,14 @@ class CreateBankAccount extends React.Component {
 													let errors = {};
 													if (this.state.exist === true) {
 														errors.account_number =
-															'Account Number already exists';
+															'Account Number Already Exists';
 													}
 													return errors;
 												}}
 												validationSchema={Yup.object().shape({
 													account_name: Yup.string()
 														.required('Account Name is Required')
-														.min(2, 'Account Name Is Too Short!'),
+														.min(2, 'Account Name is Too Short!'),
 														// .max(, 'Account Name Is Too Long!'),
 													opening_balance: Yup.string().required(
 														'Opening Balance is Required',
@@ -313,10 +313,10 @@ class CreateBankAccount extends React.Component {
 														'Opening Date is Required',
 													),
 													currency: Yup.string().required(
-														'Currency is required',
+														'Currency is Required',
 													),
 													account_type: Yup.string().required(
-														'Account Type is required',
+														'Account Type is Required',
 													),
 													// bank_name: Yup.string()
 													// 	.required('Bank Name is Required')
@@ -325,10 +325,10 @@ class CreateBankAccount extends React.Component {
 													bankId: Yup.string().required('Bank Name is Required') ,
 													account_number: Yup.string()
 														.required('Account Number is Required')
-														.min(2, 'Account Number Is Too Short!')
-														.max(30, 'Account Number Is Too Long!'),
+														.min(2, 'Account Number is Too Short!')
+														.max(30, 'Account Number is Too Long!'),
 													account_is_for: Yup.string().required(
-														'Account for is required',
+														'Account for is Required',
 													),
 													// swift_code: Yup.string().required(
 													// 	'Please Enter Valid Swift Code',
@@ -385,7 +385,6 @@ class CreateBankAccount extends React.Component {
 																		{strings.Currency}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		id="currency"
 																		name="currency"
 																		placeholder={strings.Select+strings.Currency}
@@ -522,7 +521,8 @@ class CreateBankAccount extends React.Component {
 																	{props.errors.openingDate &&
 																		props.touched.openingDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.openingDate}
+																				{props.errors.openingDate.includes("nullable()") ? "Opening Date is Required" :props.errors.openingDate}
+
 																			</div>
 																		)}
 																</FormGroup>
@@ -534,7 +534,6 @@ class CreateBankAccount extends React.Component {
 																		{strings.AccountType}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		id="account_type"
 																		name="account_type"
 																		options={
@@ -867,7 +866,6 @@ class CreateBankAccount extends React.Component {
 																		{strings.Accountisfor}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		id="account_is_for"
 																		name="account_is_for"
 																		options={

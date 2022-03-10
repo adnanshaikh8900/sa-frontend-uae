@@ -223,6 +223,7 @@ class DetailCreditNote extends React.Component {
 									contact_po_number: res.data.contactPoNumber
 										? res.data.contactPoNumber
 										: '',
+										
 									currency: res.data.currencyCode ? res.data.currencyCode : '',
 									exchangeRate:res.data.exchangeRate ? res.data.exchangeRate : '',
 									currencyName:res.data.currencyName ? res.data.currencyName : '',
@@ -260,6 +261,7 @@ class DetailCreditNote extends React.Component {
 									filePath: res.data.filePath ? res.data.filePath : '',
 									total_excise: res.data.totalExciseTaxAmount ? res.data.totalExciseTaxAmount : 0,
 								},
+								
 								customer_taxTreatment_des : res.data.taxTreatment ? res.data.taxTreatment : '',
 								checked: res.data.exciseType ? res.data.exciseType : res.data.exciseType,
 								discountAmount: res.data.discount ? res.data.discount : 0,
@@ -404,7 +406,7 @@ class DetailCreditNote extends React.Component {
 						id="exciseTaxId"
 						placeholder={strings.Select+strings.Vat}
 						onChange={(e) => {
-							debugger
+							 
 							this.selectItem(
 								e.value,
 								row,
@@ -456,7 +458,7 @@ class DetailCreditNote extends React.Component {
 							maxLength="10"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
-								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+								if (e.target.value === '' || this.regEx.test(e.target.value)) {
 									this.selectItem(
 										e.target.value,
 										row,
@@ -806,7 +808,7 @@ class DetailCreditNote extends React.Component {
 	discountType = (row) =>
 
 {
-	debugger
+	 
 	
 		return this.state.discountOptions &&
 		selectOptionsFactory
@@ -1119,6 +1121,7 @@ class DetailCreditNote extends React.Component {
 			discount,
 			discountType,
 			discountPercentage,
+			vatCategoryId
 		} = data;
 
 		let formData = new FormData();
@@ -1140,7 +1143,7 @@ class DetailCreditNote extends React.Component {
 		// 		? moment(invoiceDueDate, 'DD-MM-YYYY').toDate()
 		// 		: invoiceDueDate,
 		// );
-
+		formData.append('vatCategoryId', 2);
 		formData.append('exchangeRate',  this.state.initValue.exchangeRate);
 		
 		formData.append(
@@ -1447,7 +1450,7 @@ class DetailCreditNote extends React.Component {
 		strings.setLanguage(this.state.language);
 		const { data, discountOptions, initValue, loading, dialog } = this.state;
 
-		const { project_list, currency_list,currency_convert_list, customer_list,universal_currency_list } = this.props;
+		const { project_list, currency_list,currency_convert_list, customer_list,universal_currency_list,vat_list } = this.props;
 
 		let tmpCustomer_list = []
 
@@ -2019,7 +2022,9 @@ class DetailCreditNote extends React.Component {
 																			</div>
 																		)}
 																</FormGroup>
-															</Col>)}
+															</Col>
+															)}
+
 																</Row>
 																<hr />
 																{/* <Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>

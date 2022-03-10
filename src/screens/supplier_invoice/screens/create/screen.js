@@ -295,7 +295,7 @@ class CreateSupplierInvoice extends React.Component {
 							maxLength="10"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
-								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+								if (e.target.value === '' || this.regEx.test(e.target.value)) {
 									this.selectItem(
 										e.target.value,
 										row,
@@ -1552,7 +1552,7 @@ class CreateSupplierInvoice extends React.Component {
 		this.props.supplierInvoiceCreateActions
 			.checkValidation(data)
 			.then((response) => {
-				if (response.data === 'Invoice Number already exists') {
+				if (response.data === 'Invoice Number Already Exists') {
 					this.setState(
 						{
 							exist: true,
@@ -1675,14 +1675,14 @@ class CreateSupplierInvoice extends React.Component {
 													let errors = {};
 													if (this.state.exist === true) {
 														errors.invoice_number =
-															'Invoice Number already exists';
+															'Invoice Number Already Exists';
 													}
 													if (values.invoice_number==='') {
-														errors.invoice_number = 'Invoice Number is required';
+														errors.invoice_number = 'Invoice Number is Required';
 													}
 													if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")
 													{
-                                                        errors.placeOfSupplyId ='Place of supply is Required';
+                                                        errors.placeOfSupplyId ='Place of Supply is Required';
                                                    }
 												   if (values.term && values.term.label && values.term.label === "Select Terms") {
 													errors.term ='Term is Required';
@@ -1700,7 +1700,7 @@ class CreateSupplierInvoice extends React.Component {
 													contactId: Yup.string().required(
 														'Supplier is Required',
 													),
-													placeOfSupplyId: Yup.string().required('Place of supply is Required'),
+													placeOfSupplyId: Yup.string().required('Place of Supply is Required'),
 													term: Yup.string().required('Term is Required'),
 													invoiceDate: Yup.string().required(
 														'Invoice Date is Required',
@@ -1835,7 +1835,6 @@ class CreateSupplierInvoice extends React.Component {
 																		{strings.SupplierName} 
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		id="contactId"
 																		name="contactId"
 																		placeholder={strings.Select+strings.SupplierName}
@@ -1930,7 +1929,6 @@ class CreateSupplierInvoice extends React.Component {
 																	</Label>
 																	<Input
 																	disabled
-																		styles={customStyles}
 																		id="taxTreatmentid"
 																		name="taxTreatmentid"
 																		value={
@@ -1964,7 +1962,6 @@ class CreateSupplierInvoice extends React.Component {
 																		{strings.PlaceofSupply} 
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		id="placeOfSupplyId"
 																		name="placeOfSupplyId"
 																		placeholder={strings.Select+strings.PlaceofSupply}
@@ -2037,7 +2034,6 @@ class CreateSupplierInvoice extends React.Component {
 																		</UncontrolledTooltip>
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		options={
 																			this.termList
 																				? selectOptionsFactory.renderOptions(
@@ -2116,7 +2112,7 @@ class CreateSupplierInvoice extends React.Component {
 																	{props.errors.invoiceDate &&
 																		props.touched.invoiceDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.invoiceDate}
+																				{props.errors.invoiceDate.includes("nullable()") ? "Invoice Date is Required" :props.errors.invoiceDate}		
 																			</div>
 																		)}
 																</FormGroup>
@@ -2152,7 +2148,8 @@ class CreateSupplierInvoice extends React.Component {
 																		{props.errors.invoiceDueDate &&
 																			props.touched.invoiceDueDate && (
 																				<div className="invalid-feedback">
-																					{props.errors.invoiceDueDate}
+																					{props.errors.invoiceDueDate}		
+
 																				</div>
 																			)}
 																	</div>

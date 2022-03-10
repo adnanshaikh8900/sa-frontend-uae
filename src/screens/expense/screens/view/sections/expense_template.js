@@ -81,7 +81,7 @@ class ExpenseTemplate extends Component {
 							</div>
 												</div>
 									<div style={{textAlign:'center'}}><h4> {expenseData.payee} </h4></div>
-									<div style={{textAlign:'center'}}><b>{strings.ExpenseDate}</b> : {moment(expenseData.expenseDate ).format('DD/MM/YYYY')}</div>
+									<div style={{textAlign:'center'}}><b>{strings.ExpenseDate}</b> : {moment(expenseData.expenseDate ).format('DD-MM-YYYY')}</div>
 					</div>
 <div style={{backgroundColor:'rgb(32 100 216)', height:'45px'}}></div>
 					<div className="card text-start border"
@@ -133,7 +133,7 @@ class ExpenseTemplate extends Component {
 	<tr>      <td className="ml-3" style={{width:'245px'}}>	<b>{strings.PostedDate }</b> : </td> 
 	          <td>
 			  {expenseData.expenseStatus === "Posted" ?    
-				  moment(expenseData.lastUpdateDate).format('DD/MM/YYYY')
+				  moment(expenseData.lastUpdateDate).format('DD-MM-YYYY')
 				  :"-"}</td>
 	</tr> 
  

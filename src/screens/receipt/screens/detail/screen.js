@@ -232,9 +232,9 @@ class DetailReceipt extends React.Component {
                                 referenceCode: Yup.string()
                                   .required("Reference Number is Required"),
                                 contactId: Yup.string()
-                                  .required('Customer is required'),
+                                  .required('Customer is Required'),
                                 amount: Yup.string()
-                                  .required('Amount is required')
+                                  .required('Amount is Required')
                                   .matches(/^[0-9]+$/, { message: "Please enter valid Amount.", excludeEmptyString: false })
 
                               })}

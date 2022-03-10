@@ -352,10 +352,10 @@ min="0"
 														'Receipt Date is Required',
 													),
 													contactId: Yup.string().required(
-														'Customer is required',
+														'Customer is Required',
 													),
 													depositeTo: Yup.string().required(
-														'Deposit to is required',
+														'Deposit to is Required',
 													),
 													payMode: Yup.string().required(
 														'Payment mode is Required',
@@ -364,7 +364,7 @@ min="0"
 														'Please select atleast one invoice',
 													),
 													amount: Yup.string()
-														.required('Amount is required')
+														.required('Amount is Required')
 														.matches(/^[0-9]+([,.][0-9]+)?$/, {
 															message: 'Please enter valid Amount.',
 															excludeEmptyString: false,

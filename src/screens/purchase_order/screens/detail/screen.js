@@ -46,7 +46,6 @@ const mapStateToProps = (state) => {
 		project_list: state.request_for_quotation.project_list,
 		contact_list: state.request_for_quotation.contact_list,
 		currency_list: state.request_for_quotation.currency_list,
-		vat_list: state.request_for_quotation.vat_list,
 		product_list: state.customer_invoice.product_list,
 		excise_list: state.request_for_quotation.excise_list,
 		supplier_list: state.request_for_quotation.supplier_list,
@@ -113,7 +112,7 @@ class DetailPurchaseOrder extends React.Component {
 			current_supplier_id: null,
 			term: '',
 			placeOfSupply: '',
-			selectedType: '',
+
 			discountPercentage: '',
 			discountAmount: 0,
 			fileName: '',
@@ -122,6 +121,8 @@ class DetailPurchaseOrder extends React.Component {
 			supplier_currency: '',
 			disabled1:false,
 			selectedType: 'FIXED',
+			dateChanged: false,
+			dateChanged1: false
 		};
 
 		// this.options = {
@@ -172,6 +173,12 @@ class DetailPurchaseOrder extends React.Component {
 	// }
 
 	componentDidMount = () => {
+		this.props.requestForQuotationAction.getVatList().then((res)=>{
+			debugger
+			if(res.status===200)
+			this.setState({vat_list:res.data})
+			
+		});
 		this.initializeData();
 	};
 
@@ -182,7 +189,6 @@ class DetailPurchaseOrder extends React.Component {
 				.then((res) => {
 					if (res.status === 200) {
 						this.getCompanyCurrency();
-						this.props.requestForQuotationAction.getVatList();
 						this.props.requestForQuotationAction.getSupplierList(
 							this.state.contactType,
 						);
@@ -198,8 +204,14 @@ class DetailPurchaseOrder extends React.Component {
 									poApproveDate: res.data.poApproveDate
 										? moment(res.data.poApproveDate).format('DD-MM-YYYY')
 										: '',
+										poApproveDate1: res.data.poApproveDate
+										? res.data.poApproveDate
+										: '',
 										poReceiveDate: res.data.poReceiveDate
 										? moment(res.data.poReceiveDate).format('DD-MM-YYYY')
+										: '',
+										poReceiveDate1: res.data.poReceiveDate
+										? res.data.poReceiveDate
 										: '',
 										supplierId: res.data.supplierId ? res.data.supplierId : '',
 										poNumber: res.data.poNumber
@@ -222,6 +234,18 @@ class DetailPurchaseOrder extends React.Component {
 										// discount: res.data.discount ? res.data.discount : 0,
 								
 								},
+								poApproveDateNotChanged : res.data.poApproveDate
+								? moment(res.data.poApproveDate)
+								: '',
+								poReceiveDateNotChanged: res.data.poReceiveDate
+								? moment(res.data.poReceiveDate)
+								: '',
+								poApproveDate: res.data.poApproveDate
+								? res.data.poApproveDate
+								: '',
+								poReceiveDate: res.data.poReceiveDate
+										? res.data.poReceiveDate
+										: '',
 								customer_taxTreatment_des : res.data.taxtreatment ? res.data.taxtreatment : '',
 								placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 								total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
@@ -394,7 +418,7 @@ class DetailPurchaseOrder extends React.Component {
 						id="exciseTaxId"
 						placeholder={"Select Excise"}
 						onChange={(e) => {
-							debugger
+							 
 							this.selectItem(
 								e.value,
 								row,
@@ -491,7 +515,7 @@ class DetailPurchaseOrder extends React.Component {
 							maxLength="10"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
-								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+								if (e.target.value === '' || this.regEx.test(e.target.value)) {
 									this.selectItem(
 										e.target.value,
 										row,
@@ -774,7 +798,7 @@ class DetailPurchaseOrder extends React.Component {
 	};
 
 	renderVat = (cell, row, props) => {
-		const { vat_list } = this.props;
+		const { vat_list } = this.state;
 		let vatList = vat_list.length
 			? [{ id: '', vat: 'Select Vat' }, ...vat_list]
 			: vat_list;
@@ -991,8 +1015,8 @@ class DetailPurchaseOrder extends React.Component {
 	};
 
 	updateAmount = (data, props) => {
-		const { vat_list , excise_list} = this.props;
-		const { discountPercentage, discountAmount } = this.state;
+		const {excise_list} = this.props;
+		const { discountPercentage, discountAmount, vat_list} = this.state;
 		let total_net = 0;
 		let total_excise = 0;
 		let total = 0;
@@ -1113,24 +1137,44 @@ class DetailPurchaseOrder extends React.Component {
 			currency,
 			placeOfSupplyId
 		} = data;
-
+debugger
 		let formData = new FormData();
 		formData.append('type', 4);
 		formData.append('id', current_po_id);
 		formData.append('poNumber', poNumber ? poNumber : '');
-		formData.append(
-			'poReceiveDate',
-			typeof poReceiveDate === 'string'
-				? moment(poReceiveDate, 'DD-MM-YYYY').toDate()
-				: poReceiveDate,
-		);
-		formData.append(
-			'poApproveDate',
-			typeof poApproveDate === 'string'
-				? moment(poApproveDate, 'DD-MM-YYYY').toDate()
-				: poApproveDate,
-		);
-	
+		if(this.state.dateChanged1 === true)
+		{
+			formData.append(
+				'poReceiveDate',
+				typeof poReceiveDate === 'string'
+					? this.state.poReceiveDate
+					: poReceiveDate,
+			);
+		}else{
+			formData.append(
+				'poReceiveDate',
+				typeof poReceiveDate === 'string'
+					? this.state.poReceiveDateNotChanged
+					: '',
+			);
+		
+		}
+		if(this.state.dateChanged === true){
+			formData.append(
+				'poApproveDate',
+				typeof poApproveDate === 'string'
+					? this.state.poApproveDate
+					: poApproveDate,
+			);
+		}else{
+			formData.append(
+				'poApproveDate',
+				typeof poApproveDate === 'string'
+					? this.state.poApproveDateNotChanged
+					: '',
+			);
+		}
+		
 		formData.append('notes', notes ? notes : '');
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
 		formData.append('totalVatAmount', this.state.initValue.totalVatAmount);
@@ -1220,20 +1264,36 @@ class DetailPurchaseOrder extends React.Component {
 		this.setState({ openProductModal: false });
 	};
 	setDate = (props, value) => {
-		const { term } = this.state;
-		const val = term.split('_');
-		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
-		const values = value
+		debugger
+		this.setState({
+			dateChanged: true,
+		});
+		const values1 = value
 			? value
-			: moment(props.values.invoiceDate, 'DD-MM-YYYY').toDate();
-		if (temp && values) {
-			const date = moment(values)
-				.add(temp - 1, 'days')
-				.format('DD-MM-YYYY');
-			props.setFieldValue('invoiceDueDate', date, true);
+			: props.values.poApproveDate1
+		if (values1 ) {
+			this.setState({
+				poApproveDate: moment(values1),
+			});
+			props.setFieldValue('poApproveDate1', values1, true);
 		}
 	};
-
+	setDate1= (props, value) => {
+		debugger
+		this.setState({
+			dateChanged1: true,
+		});
+		
+		const values2 = value ? value
+		: props.values.poReceiveDate1	
+		if ( values2) {
+			this.setState({
+				poReceiveDate: moment(values2),
+			});
+			props.setFieldValue('poReceiveDate1', values2, true);
+		
+		}
+	};
 	getCurrentProduct = () => {
 		this.props.customerInvoiceActions.getProductList().then((res) => {
 			this.setState(
@@ -1426,8 +1486,9 @@ class DetailPurchaseOrder extends React.Component {
 														// rfqNumber: Yup.string().required(
 														// 	'Rfq Number is Required',
 														// ),
-														// placeOfSupplyId: Yup.string().required('Place of supply is Required'),
-														
+														// placeOfSupplyId: Yup.string().required(
+														// 	'Place of Supply is Required'
+														// ),
 														poApproveDate: Yup.string().required(
 															'Order Date is Required',
 														),
@@ -1681,7 +1742,6 @@ class DetailPurchaseOrder extends React.Component {
 																			{strings.PlaceofSupply}
 																		</Label>
 																		<Select
-																			styles={customStyles}
 																			options={
 																				this.placelist
 																					? selectOptionsFactory.renderOptions(
@@ -1751,15 +1811,16 @@ class DetailPurchaseOrder extends React.Component {
 																		<DatePicker
 																			id="poApproveDate"
 																			name="poApproveDate"
-																			placeholderText={strings.InvoiceDate}
+																			placeholderText={strings.PODate}
 																			showMonthDropdown
 																			showYearDropdown
 																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
 																			value={props.values.poApproveDate}
+																			selected={new Date(props.values.poApproveDate1)} 
 																			onChange={(value) => {
 																				props.handleChange('poApproveDate')(
-																					moment(value).format('DD-MM-YYYY'),
+																				value
 																				);
 																				this.setDate(props, value);
 																			}}
@@ -1790,15 +1851,16 @@ class DetailPurchaseOrder extends React.Component {
 																				name="poReceiveDate"
 																				placeholderText={strings.DueDate}
 																				value={props.values.poReceiveDate}
+																				selected={new Date(props.values.poReceiveDate1)}
 																				showMonthDropdown
 																				showYearDropdown
 																				dateFormat="dd-MM-yyyy"
 																				dropdownMode="select"
 																				onChange={(value) => {
 																					props.handleChange('poReceiveDate')(
-																						moment(value).format('DD-MM-YYYY'),
+																						value
 																					);
-																					this.setDate(props, value);
+																					this.setDate1(props, value);
 																				}}
 																				className={`form-control ${
 																					props.errors.poReceiveDate &&
@@ -2272,7 +2334,7 @@ class DetailPurchaseOrder extends React.Component {
 					}}
 					getCurrentProduct={(e) => this.getCurrentProduct(e)}
 					createProduct={this.props.ProductActions.createAndSaveProduct}
-					vat_list={this.props.vat_list}
+					vat_list={this.state.vat_list}
 					product_category_list={this.props.product_category_list}
 					salesCategory={this.state.salesCategory}
 					purchaseCategory={this.state.purchaseCategory}

@@ -120,6 +120,7 @@ class DetailGoodsReceivedNote extends React.Component {
 			basecurrency:[],
 			supplier_currency: '',
 			disabled1:false,
+			dateChanged: false,
 		};
 
 		// this.options = {
@@ -195,6 +196,9 @@ class DetailGoodsReceivedNote extends React.Component {
 									grnReceiveDate: res.data.grnReceiveDate
 										? moment(res.data.grnReceiveDate).format('DD-MM-YYYY')
 										: '',
+										grnReceiveDate1: res.data.grnReceiveDate
+										? res.data.grnReceiveDate
+										: '',
 										supplierId: res.data.supplierId ? res.data.supplierId : '',
 										grnNumber: res.data.grnNumber
 										? res.data.grnNumber
@@ -213,7 +217,12 @@ class DetailGoodsReceivedNote extends React.Component {
 										poNumber: res.data.poNumber ? res.data.poNumber : '',
 								
 								},
-								
+								grnReceiveDateNotChanged: res.data.grnReceiveDate
+										? moment(res.data.grnReceiveDate)
+										: '',
+								grnReceiveDate: res.data.grnReceiveDate
+										? res.data.grnReceiveDate
+										: '',
 								data: res.data.poQuatationLineItemRequestModelList
 									? res.data.poQuatationLineItemRequestModelList
 									: [],
@@ -441,7 +450,7 @@ class DetailGoodsReceivedNote extends React.Component {
 							min="0"
 							value={row['grnReceivedQuantity'] !== 0 ? row['grnReceivedQuantity'] : 0}
 							onChange={(e) => {
-								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+								if (e.target.value === '' || this.regEx.test(e.target.value)) {
 									this.selectItem(
 										e.target.value,
 										row,
@@ -504,7 +513,7 @@ class DetailGoodsReceivedNote extends React.Component {
 min="0"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
-								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+								if (e.target.value === '' || this.regEx.test(e.target.value)) {
 									this.selectItem(
 										e.target.value,
 										row,
@@ -955,17 +964,26 @@ min="0"
 			poNumber,
 			currency,
 		} = data;
-
+debugger
 		let formData = new FormData();
 		formData.append('type', 5);
 		formData.append('id', current_grn_id);
 		formData.append('grnNumber', grnNumber ? grnNumber : '');
+	if(this.state.dateChanged === true){
 		formData.append(
 			'grnReceiveDate',
 			typeof grnReceiveDate === 'string'
-				? moment(grnReceiveDate, 'DD-MM-YYYY').toDate()
+				? this.state.grnReceiveDate
 				: grnReceiveDate,
 		);
+	}else{
+		formData.append(
+			'grnReceiveDate',
+			typeof grnReceiveDate === 'string'
+				? this.state.grnReceiveDateNotChanged
+				: "",
+		);
+	}
 		formData.append('grnRemarks', grnRemarks ? grnRemarks : '');
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
 		formData.append('totalVatAmount', this.state.initValue.totalVatAmount);
@@ -1050,17 +1068,18 @@ min="0"
 		this.setState({ openProductModal: false });
 	};
 	setDate = (props, value) => {
-		const { term } = this.state;
-		const val = term.split('_');
-		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
-		const values = value
+		debugger
+		this.setState({
+			dateChanged: true,
+		});
+		const values1 = value
 			? value
-			: moment(props.values.invoiceDate, 'DD-MM-YYYY').toDate();
-		if (temp && values) {
-			const date = moment(values)
-				.add(temp - 1, 'days')
-				.format('DD-MM-YYYY');
-			props.setFieldValue('invoiceDueDate', date, true);
+			: props.values.grnReceiveDate1
+		if (values1 ) {
+			this.setState({
+				grnReceiveDate: moment(values1),
+			});
+			props.setFieldValue('grnReceiveDate1', values1, true);
 		}
 	};
 
@@ -1518,9 +1537,10 @@ min="0"
 																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
 																			value={props.values.grnReceiveDate}
+																			selected={new Date(props.values.grnReceiveDate1)} 
 																			onChange={(value) => {
 																				props.handleChange('grnReceiveDate')(
-																					moment(value).format('DD-MM-YYYY'),
+																				value
 																				);
 																				this.setDate(props, value);
 																			}}

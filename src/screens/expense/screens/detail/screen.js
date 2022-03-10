@@ -169,7 +169,7 @@ class DetailExpense extends React.Component {
 						this.props.expenseActions.getPaymentMode();
 						this.props.expenseActions.getUserForDropdown();
 						this.props.expenseCreateActions.getPaytoList();
-						debugger
+						 
 						const {vat_list}=this.props
 					let vatCategoryId=
 						vat_list ?
@@ -432,7 +432,7 @@ class DetailExpense extends React.Component {
 	};
 	getcurentCompanyUser=()=>{
 		this.props.expenseCreateActions.checkAuthStatus().then((response) => {
-			debugger
+			 
 			let userStateName    = response.data.company.companyStateCode.stateName ?response.data.company.companyStateCode.stateName:'';
 			let isDesignatedZone =response.data.company.isDesignatedZone?response.data.company.isDesignatedZone:false;
 				
@@ -641,7 +641,6 @@ class DetailExpense extends React.Component {
 				<FormGroup className="mb-3">
 					<Label htmlFor="vatCategoryId"><span className="text-danger">* </span>{strings.Tax}</Label>
 					<Select
-						styles={customStyles}
 						className="select-default-width"
 						id="vatCategoryId"
 						name="vatCategoryId"
@@ -766,28 +765,28 @@ class DetailExpense extends React.Component {
 														}
 
 														if(this.state.showPlacelist===true && values.placeOfSupplyId ===''){
-															errors.placeOfSupplyId="Place Of Supply is required"
+															errors.placeOfSupplyId="Place Of Supply is Required"
 														}
 														return errors;
 													}}
 													validationSchema={Yup.object().shape({
 														expenseNumber: Yup.string().required(
-															'Expense number is required',
+															'Expense number is Required',
 														),
 														expenseCategory: Yup.string().required(
-															'Expense Category is required',
+															'Expense Category is Required',
 														),
 														expenseDate: Yup.date().required(
 															'Expense Date is Required',
 														),
 														taxTreatmentId: Yup.string().required(
-															'Tax Treatment is required',
+															'Tax Treatment is Required',
 														),
 														currency: Yup.string().required(
-															'Currency is required',
+															'Currency is Required',
 														),
 														payMode: Yup.string().required(
-															'Pay Through is required',
+															'Pay Through is Required',
 														),
 														expenseAmount: Yup.string()
 															.required('Amount is Required')
@@ -900,7 +899,6 @@ class DetailExpense extends React.Component {
 																			<span className="text-danger">* </span>{strings.TaxTreatment}
 																		</Label>
 																		<Select
-																			styles={customStyles}
 																			options={
 																				taxTreatmentList
 																					? selectOptionsFactory.renderOptions(
@@ -976,7 +974,6 @@ class DetailExpense extends React.Component {
 																	</Label>
 																	<Select
 																	isDisabled={this.state.lockPlacelist}
-																		styles={customStyles}
 																		id="placeOfSupplyId"
 																		name="placeOfSupplyId"
 																		placeholder={strings.Select+strings.PlaceofSupply}
@@ -1036,7 +1033,6 @@ class DetailExpense extends React.Component {
 																			 {strings.ExpenseCategory}
 																		</Label>
 																		<Select
-																			styles={customStyles}
 																			id="expenseCategory"
 																			name="expenseCategory"
 																			options={
@@ -1088,7 +1084,6 @@ class DetailExpense extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="payee">	<span className="text-danger">* </span>{strings.PaidBy}</Label>
 																		<Select
-																			styles={customStyles}
 																			options={
 																				pay_to_list
 																					? selectOptionsFactory.renderOptions(
@@ -1157,7 +1152,6 @@ class DetailExpense extends React.Component {
 																			showYearDropdown
 																			dropdownMode="select"
 																			dateFormat="dd-MM-yyyy"
-																			// maxDate={new Date()}
 																			onChange={(value) => {
 																				props.handleChange('expenseDate')(
 																					value,
@@ -1179,7 +1173,6 @@ class DetailExpense extends React.Component {
 																			{strings.Currency}
 																		</Label>
 																		<Select
-																			styles={customStyles}
 																			id="currencyCode"
 																			name="currencyCode"
 																			options={

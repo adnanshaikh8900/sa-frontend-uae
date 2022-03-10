@@ -295,10 +295,10 @@ this.props.supplierInvoiceDetailActions
 									<th className="center" style={{ padding: '0.5rem' }}>
 									Invoice Due Date
 									</th> */}
-									<th style={{ padding: '0.5rem', textAlign: 'left' }}>
+									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
 									{strings.Total+" "+strings.Amount}
 									</th>
-									<th style={{ padding: '0.5rem', textAlign: 'left' }}>
+									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
 									{strings.TotalVat+" "+strings.Amount}
 									</th>
 								
@@ -320,7 +320,7 @@ this.props.supplierInvoiceDetailActions
 									<td>{moment(item.poReceiveDate).format(
 									'DD MMM YYYY',
 								)}</td> */}
-												<td>{item.totalAmount ? <Currency
+												<td align="right">{item.totalAmount ? <Currency
 														value={item.totalAmount}
 														currencySymbol={
 															currencyData[0]
@@ -329,7 +329,7 @@ this.props.supplierInvoiceDetailActions
 														}
 													/>:0}</td>
 
-												<td>{item.totalVatAmount ? <Currency
+												<td align="right">{item.totalVatAmount ? <Currency
 														value={item.totalVatAmount}
 														currencySymbol={
 															currencyData[0]

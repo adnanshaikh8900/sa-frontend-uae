@@ -130,6 +130,11 @@ class CreateCustomerInvoice extends React.Component {
 				project: '',
 				term: '',
 				exchangeRate:'',
+				shippingAddress: '',
+				shippingCountryId:'',
+				shippingStateId:'',
+				shippingCity:'',
+                shippingPostZipCode:'',
 				lineItemsString: [
 					{
 						id: 0,
@@ -170,6 +175,7 @@ class CreateCustomerInvoice extends React.Component {
 			exchangeRate:'',		
 			basecurrency:[],
 			inventoryList:[],
+			state_list_for_shipping:[],
 			param:false,
 			date:'',
 		};
@@ -207,10 +213,12 @@ class CreateCustomerInvoice extends React.Component {
 		];
 		this.regEx = /^[0-9\b]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
+		this.regExTelephone = /^[0-9-]+$/;
+		this.regExAddress = /^[a-zA-Z0-9\s\D,'-/]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 		this.regDec1=/^\d{1,2}\.\d{1,2}$|^\d{1,2}$/;
 		this.regDecimalP = /(^100(\.0{1,2})?$)|(^([1-9]([0-9])?|0)(\.[0-9]{1,2})?$)/;
-		this.regExAlpha = /^[a-zA-Z0-9!@#$&()-\\`.+,/\"]+$/;
+		this.regExAlpha = /^[a-zA-Z ]+$/;
 	}
 
 	// renderActions (cell, row) {
@@ -291,7 +299,7 @@ class CreateCustomerInvoice extends React.Component {
 							min="0"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
-								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+								if (e.target.value === '' || this.regEx.test(e.target.value)) {
 									var { product_list } = this.props;
 									product_list=product_list.filter((obj)=>obj.id == row.productId)
 									
@@ -442,7 +450,7 @@ renderVatAmount = (cell, row,extraData) => {
 		this.props.customerInvoiceCreateActions
 			.checkValidation(data)
 			.then((response) => {
-				if (response.data === 'Invoice Number already exists') {
+				if (response.data === 'Invoice Number Already Exists') {
 					this.setState(
 						{
 							exist: true,
@@ -719,9 +727,7 @@ renderVatAmount = (cell, row,extraData) => {
 discountType = (row) =>
 
 {
-	debugger
-	
-		return this.state.discountOptions &&
+  	return this.state.discountOptions &&
 		selectOptionsFactory
 			.renderOptions('label', 'value', this.state.discountOptions, 'discount')
 			.find((option) => option.value === +row.discountType)
@@ -827,7 +833,6 @@ discountType = (row) =>
 						id="exciseTaxId"
 						placeholder={"Select Excise"}
 						onChange={(e) => {
-							debugger
 							this.selectItem(
 								e.value,
 								row,
@@ -1210,10 +1215,18 @@ discountType = (row) =>
 			placeOfSupplyId,
 			project,
 			invoice_number,
+			shippingAddress,
+			shippingCountryId,
+			shippingStateId,
+			shippingCity,
+			shippingPostZipCode,
+			shippingTelephone,
+			shippingFax,
 			discount,
 			discountType,
 			discountPercentage,
 			notes,
+			changeShippingAddress
 		} = data;
 		const { term } = this.state;
 		const formData = new FormData();
@@ -1249,6 +1262,42 @@ discountType = (row) =>
 			'receiptAttachmentDescription',
 			receiptAttachmentDescription !== null ? receiptAttachmentDescription : '',
 		);
+		
+if(changeShippingAddress && changeShippingAddress==true)
+		{
+			formData.append(
+				'changeShippingAddress',
+				changeShippingAddress !== null ? changeShippingAddress : '',
+			);
+			formData.append(
+			'shippingAddress',
+			shippingAddress !== null ? shippingAddress : '',
+		);
+		formData.append(
+			'shippingCountry',
+			shippingCountryId.value  ? shippingCountryId.value : shippingCountryId,
+		);
+		formData.append(
+			'shippingState',
+			shippingStateId.value !== null ? shippingStateId.value : shippingStateId,
+		);
+		formData.append(
+			'shippingCity',
+			shippingCity  ? shippingCity : '',
+		);
+		formData.append(
+			'shippingPostZipCode',
+			shippingPostZipCode  ? shippingPostZipCode : '',
+		);
+		formData.append(
+			'shippingTelephone',
+			shippingTelephone  ? shippingTelephone : '',
+		);
+		formData.append(
+			'shippingFax',
+			shippingFax ? shippingFax : '',
+		);
+	}//
 		formData.append('notes', notes !== null ? notes : '');
 		formData.append('type', 2);
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
@@ -1561,11 +1610,22 @@ discountType = (row) =>
 		
 		return parseFloat(val).toFixed(2)
 	}
+
+	getStateList = (countryCode) => {
+		this.props.customerInvoiceActions.getStateList(countryCode);
+	};
+	getStateListForShippingAddress = (countryCode) => {
+		this.props.customerInvoiceActions.getStateListForShippingAddress(countryCode)
+		.then((res)=>{
+						this.setState({state_list_for_shipping:res})
+		});
+	};
 	render() {
 		strings.setLanguage(this.state.language);
-		const { data, discountOptions, initValue, exist, param,prefix ,tax_treatment_list} = this.state;
+		const { data, discountOptions, initValue, exist, param,prefix ,tax_treatment_list,state_list_for_shipping} = this.state;
 		const {
 			customer_list,
+			country_list,
 			universal_currency_list,
 			currency_convert_list,
 		} = this.props;
@@ -1610,10 +1670,10 @@ discountType = (row) =>
 													let errors = {};
 													if (exist === true) {
 														errors.invoice_number =
-															'Invoice Number already exists';
+															'Invoice Number Already Exists';
 													}
 													if (values.invoice_number==='') {
-														errors.invoice_number = 'Invoice Number is required';
+														errors.invoice_number = 'Invoice Number is Required';
 													}
 													if (param === true) {
 														errors.discount =
@@ -1622,13 +1682,32 @@ discountType = (row) =>
 													
 													if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
 														errors.placeOfSupplyId =
-														'Place of supply is Required';
+														'Place of Supply is Required';
 													}
 													if (values.term && values.term.label && values.term.label === "Select Terms") {
 														errors.term =
 														'Term is Required';
 													}
-												
+										
+													if(values.changeShippingAddress==true){
+														if(values.shippingAddress =="")  errors.shippingAddress ='Shipping Address is Required';
+												    }
+
+													if(values.changeShippingAddress==true){
+														if(values.shippingCountryId =="")  errors.shippingCountryId ='Country is Required';
+													}
+
+													if(values.changeShippingAddress==true){
+														if(values.shippingStateId =="")  errors.shippingStateId ='State is Required';
+											        }
+
+													if(values.changeShippingAddress==true){
+														if(values.shippingCity =="")  errors.shippingCity ='City is Required';
+													}
+
+													if(values.changeShippingAddress==true){
+														if(values.shippingPostZipCode =="")  errors.shippingPostZipCode ='City is Required';
+													}
 														return errors;
 												}}
 												validationSchema={Yup.object().shape({
@@ -1638,7 +1717,7 @@ discountType = (row) =>
 													contactId: Yup.string().required(
 														'Customer is Required',
 													),
-													placeOfSupplyId: Yup.string().required('Place of supply is Required'),
+													placeOfSupplyId: Yup.string().required('Place of Supply is Required'),
 													term: Yup.string().required('Term is Required'),
 													currency: Yup.string().required(
 														'Currency is Required',
@@ -1774,7 +1853,6 @@ discountType = (row) =>
 																	{strings.CustomerName}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		id="contactId"
 																		name="contactId"
 																		placeholder={strings.Select+strings.CustomerName} 
@@ -1874,7 +1952,6 @@ discountType = (row) =>
 																		{strings.PlaceofSupply}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		id="placeOfSupplyId"
 																		name="placeOfSupplyId"
 																		placeholder={strings.Select+strings.PlaceofSupply}
@@ -1950,7 +2027,6 @@ discountType = (row) =>
 																		</UncontrolledTooltip>
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		options={
 																			this.termList
 																				? selectOptionsFactory.renderOptions(
@@ -2030,7 +2106,7 @@ discountType = (row) =>
 																	{props.errors.invoiceDate &&
 																		props.touched.invoiceDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.invoiceDate}
+																				{props.errors.invoiceDate.includes("nullable()") ? "Invoice Date is Required" :props.errors.invoiceDate}
 																			</div>
 																		)}
 																</FormGroup>
@@ -2124,6 +2200,347 @@ discountType = (row) =>
 																</FormGroup>
 															</Col>
 														</Row>
+														<hr/>
+														<Row>
+															<Col>
+															<FormGroup check inline className="mb-3">
+																					<div>
+																						<Input
+																							// className="custom-control-input"
+																							type="checkbox"
+																							id="inline-radio1"
+																							name="SMTP-auth"
+																							checked={props.values.changeShippingAddress}
+																							onChange={(value) => {
+																								if(value != null){
+																								props.handleChange('changeShippingAddress')(
+																									value,
+																								);
+																								}else{
+																									props.handleChange('changeShippingAddress')(
+																										'',
+																									);
+																								}
+																							}}
+																						/>
+																						<label htmlFor="inline-radio1">
+																						Do you want to change the Shipping Address for this invoice ?
+																					</label>
+																					</div>
+																				</FormGroup>
+														
+                                                                    </Col>
+														</Row>
+														
+														<Row style={{display: props.values.changeShippingAddress === true ? '' : 'none'}}>
+															<Col md="4">
+																<FormGroup>
+																	<Label htmlFor="shippingAddress"><span className="text-danger">* </span>
+																		{strings.ShippingAddress}
+																	</Label>
+																	<Input
+																	type="text"
+																		maxLength="100"
+																		id="shippingAddress"
+																		name="shippingAddress"
+																		placeholder={strings.Enter + strings.ShippingAddress}
+																		onChange={(option) => {
+																			if (
+																				option.target.value === '' ||
+																				this.regExAddress.test(
+																					option.target.value,
+																				)
+																			) {
+																				
+																				props.handleChange('shippingAddress')(
+																					option,
+																				);
+																			}
+																		}}
+																		value={props.values.shippingAddress}
+																		className={
+																			props.errors.shippingAddress &&
+																				props.touched.shippingAddress
+																				? 'is-invalid'
+																				: ''
+																		}
+																	/>
+																	{props.errors.shippingAddress &&
+																		props.touched.shippingAddress && (
+																			<div className="invalid-feedback">
+																				{props.errors.shippingAddress}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
+															<Col md="4">
+																<FormGroup>
+																	<Label htmlFor="shippingCountryId"><span className="text-danger">* </span>{strings.Country}</Label>
+																	<Select
+																		options={
+																			country_list
+																				? selectOptionsFactory.renderOptions(
+																					'countryName',
+																					'countryCode',
+																					country_list,
+																					'Country',
+																				)
+																				: []
+																		}
+																		value={ country_list &&
+																				selectOptionsFactory
+																					.renderOptions(
+																						'countryName',
+																						'countryCode',
+																						country_list,
+																						'Country',
+																					)
+																					.find(
+																						(option) =>
+																							option.value ===
+																							+props.values.shippingCountryId.value,
+																					)
+																		}
+																		onChange={(option) => {
+																			if (option && option.value) {
+																				props.handleChange('shippingCountryId')(option);
+																				this.getStateListForShippingAddress(option.value);
+																			} else {
+																				props.handleChange('shippingCountryId')('');
+																				// this.getStateListForShippingAddress("");
+																			}
+																			props.handleChange('stateId')({
+																				label: 'Select State',
+																				value: '',
+																			});
+																		}}
+																		placeholder={strings.Select + strings.Country}
+																		id="shippingCountryId"
+																		name="shippingCountryId"
+																		className={
+																			props.errors.shippingCountryId &&
+																				props.touched.shippingCountryId
+																				? 'is-invalid'
+																				: ''
+																		}
+																	/>
+																	{props.errors.shippingCountryId &&
+																		props.touched.shippingCountryId && (
+																			<div className="invalid-feedback">
+																				{props.errors.shippingCountryId}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
+															<Col md="4">
+																<FormGroup>
+																	<Label htmlFor="shippingStateId"><span className="text-danger">* </span>
+																		{/* {strings.StateRegion} */}
+																		{props.values.shippingCountryId.value === 229 ? "Emirites" : "State / Provinces"}
+																	</Label>
+																	<Select
+																		options={
+																			state_list_for_shipping
+																				? selectOptionsFactory.renderOptions(
+																					'label',
+																					'value',
+																					state_list_for_shipping,
+																					props.values.shippingCountryId.value === 229 ? "Emirites" : "State / Provinces",
+																				)
+																				: []
+																		}
+																		value={ state_list_for_shipping.find(
+																					(option) =>
+																						option.value ===
+																						+props.values.shippingStateId.value,
+																				)
+																		}
+																		onChange={(option) => {
+																			if (option && option.value) {
+																				props.handleChange('shippingStateId')(option);
+																			} else {
+																				props.handleChange('shippingStateId')('');
+																			}
+																		}}
+																		placeholder={props.values.shippingCountryId.value == 229 ? "Emirites" : "State / Provinces"}
+																		id="shippingStateId"
+																		name="shippingStateId"
+																		className={
+																			props.errors.shippingStateId &&
+																				props.touched.shippingStateId
+																				? 'is-invalid'
+																				: ''
+																		}
+																	/>
+																	{props.errors.shippingStateId &&
+																		props.touched.shippingStateId && (
+																			<div className="invalid-feedback">
+																				{props.errors.shippingStateId}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
+														</Row>
+														<Row style={{display: props.values.changeShippingAddress === true ? '' : 'none'}}>
+														<Col md="4">
+																<FormGroup>
+																	<Label htmlFor="shippingCity"><span className="text-danger">* </span>{strings.City}</Label>
+																	<Input
+																
+																		// options={city ? selectOptionsFactory.renderOptions('cityName', 'cityCode', cityRegion) : ''}
+																		value={props.values.shippingCity}
+																		onChange={(option) => {
+																			if (
+																				option.target.value === '' ||
+																				this.regExAlpha.test(
+																					option.target.value,
+																				)
+																			) {
+																				
+																				props.handleChange('shippingCity')(option);
+																			}
+																		}}
+																		placeholder={strings.Enter + strings.City}
+																		id="shippingCity"
+																		name="shippingCity"
+																		type="text"
+																		maxLength="100"
+																		className={
+																			props.errors.shippingCity && props.touched.shippingCity
+																				? 'is-invalid'
+																				: ''
+																		}
+																	/>
+																	{props.errors.shippingCity && props.touched.shippingCity && (
+																		<div className="invalid-feedback">
+																			{props.errors.shippingCity}
+																		</div>
+																	)}
+																</FormGroup>
+															</Col>
+
+															<Col md="4">
+																<FormGroup>
+																	<Label htmlFor="shippingPostZipCode"><span className="text-danger">* </span>
+																		{strings.PostZipCode}
+																	</Label>
+																	<Input
+																	
+																		type="text"
+																		maxLength="6"
+																		id="shippingPostZipCode"
+																		name="shippingPostZipCode"
+																		placeholder={strings.Enter + strings.PostZipCode}
+																		onChange={(option) => {
+																			if (
+																				option.target.value === '' ||
+																				this.regEx.test(option.target.value)
+																			) {
+																				props.handleChange('shippingPostZipCode')(
+																					option.target.value,
+																				);
+																			}
+																		}}
+																		value={props.values.shippingPostZipCode}
+																		className={
+																			props.errors.shippingPostZipCode &&
+																				props.touched.shippingPostZipCode
+																				? 'is-invalid'
+																				: ''
+																		}
+																	/>
+																	{props.errors.shippingPostZipCode &&
+																		props.touched.shippingPostZipCode && (
+																			<div className="invalid-feedback">
+																				{props.errors.shippingPostZipCode}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
+
+
+
+															<Col md="4">
+																<FormGroup>
+																	<Label htmlFor="shippingTelephone">{strings.Telephone}</Label>
+																	<Input
+																		maxLength="15"
+																		type="text"
+																		id="shippingTelephone"
+																		name="shippingTelephone"
+																		placeholder={strings.Enter + strings.TelephoneNumber}
+																		onChange={(option) => {
+																			if (
+																				option.target.value === '' ||
+																				this.regExTelephone.test(option.target.value)
+																			) {
+																				props.handleChange('shippingTelephone')(option);
+																			}
+																		}}
+																		value={props.values.shippingTelephone}
+																		className={
+																			props.errors.shippingTelephone &&
+																				props.touched.shippingTelephone
+																				? 'is-invalid'
+																				: ''
+																		}
+																	/>
+																	{props.errors.shippingTelephone &&
+																		props.touched.shippingTelephone && (
+																			<div className="invalid-feedback">
+																				{props.errors.shippingTelephone}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
+
+														</Row>
+														<Row style={{display: props.values.changeShippingAddress === true ? '' : 'none'}}>
+														<Col md="4">
+																<FormGroup>
+																	<Label htmlFor="shippingFax">
+																		{strings.Fax}
+																	</Label>
+																	<Input
+																		type="text"
+																		maxLength="8"
+																		id="shippingFax"
+																		name="shippingFax"
+																		placeholder={strings.Enter + strings.Fax}
+																		onChange={(option) => {
+																			if (
+																				option.target.value === '' ||
+																				this.regEx.test(option.target.value)
+																			) {
+																				if(option.target.value.length !=8 && option.target.value !="")
+																				this.setState({showshippingFaxErrorMsg:true})
+																				else
+																				this.setState({showshippingFaxErrorMsg:false})
+																				props.handleChange('shippingFax')(
+																					option,
+																				);
+																			}
+																	
+
+																			}}
+																		value={props.values.shippingFax}
+																		className={
+																			props.errors.shippingFax &&
+																				props.touched.shippingFax
+																				? 'is-invalid'
+																				: ''
+																		}
+																	/>
+																	{props.errors.shippingFax &&
+																		props.touched.shippingFax && (
+																			<div className="invalid-feedback">
+																				{props.errors.shippingFax}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
+									
+														</Row>
 														<hr />
 																<Row style={{display: props.values.exchangeRate === 1  ? 'none' : ''}}>
 																<Col>
@@ -2191,7 +2608,7 @@ discountType = (row) =>
 															</Col>
 															<Col  lg={2}>
 															<Input
-																type="number"
+																type="text"
 															min="0"	
 																		disabled
 																				id="currencyName"

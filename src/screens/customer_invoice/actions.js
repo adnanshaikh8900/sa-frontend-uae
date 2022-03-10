@@ -160,6 +160,7 @@ export const getVatList = () => {
 							data: res.data,
 						},
 					});
+					return res;
 				}
 			})
 			.catch((err) => {
@@ -554,5 +555,26 @@ export const updateInvoicePrefix = (obj) => {
 			.catch((err) => {
 				throw err;
 			});
+	};
+};
+export const getStateListForShippingAddress = (countryCode) => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: '/rest/datalist/getstate?countryCode=' + countryCode,
+		};
+		if (countryCode) {
+			return authApi(data)
+				.then((res) => {
+					if (res.status === 200) {
+						return res.data;
+					}
+				})
+				.catch((err) => {
+					throw err;
+				});
+		} else {
+			return []
+		}
 	};
 };

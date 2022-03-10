@@ -213,7 +213,7 @@ class ProductModal extends React.Component {
 			name: value,
 		};
 		this.props.productActions.checkValidation(data).then((response) => {
-			if (response.data === 'Product name already exists') {
+			if (response.data === 'Product name Already Exists') {
 				this.setState({
 					exist: true,
 				});
@@ -233,7 +233,7 @@ class ProductModal extends React.Component {
 		this.props.productActions
 			.checkProductNameValidation(data)
 			.then((response) => {
-				if (response.data === 'Product code already exists') {
+				if (response.data === 'Product code Already Exists') {
 					this.setState({
 						ProductExist: true,
 					});
@@ -310,9 +310,9 @@ class ProductModal extends React.Component {
 								otherwise: Yup.string(),
 							}),
 							productPriceType: Yup.string().required(
-								'At least one Selling type is required',
+								'At least one Selling type is Required',
 							),
-							productCode: Yup.string().required('Product Code is required'),
+							productCode: Yup.string().required('Product Code is Required'),
 							vatCategoryId: Yup.string()
 								.required('Vat Category is Required')
 								.nullable(),

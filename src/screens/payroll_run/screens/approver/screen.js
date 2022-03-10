@@ -293,8 +293,8 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 			.generateSifFile(this.state.payroll_id,this.state.existEmpList)
 			.then((res) => {
 				if (res.status === 200) {
-					const blob = new Blob([res.data],{type:'application/sif'});
-					download(blob,this.state.payrollSubject ?this.state.payrollSubject+'.SIF':"payroll.SIF")
+					const blob = new Blob([res.data[1]],{type:'application/sif'});
+					download(blob,res.data[0] ?res.data[0]+'.SIF':"payroll.SIF")
 					this.props.commonActions.tostifyAlert('success', 'SIF File Downloaded Successfully')
 				}
 			}).catch((err) => {
@@ -516,7 +516,7 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 			<Label> Status : <span style={{fontSize: "larger"}}>  {this.renderStatus(this.state.status)}</span></Label>					
 			</Col>
 			<Col>
-			{this.state.status && (this.state.status==="Approved") ? 
+			{this.state.status && (this.state.status==="Approved" || this.state.status==="Paid" ||this.state.status==="Partially Paid") ? 
 																(
 																	<Button
 																	type="button"
@@ -1056,7 +1056,7 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 																''	: (
 																		<div>
 
-																		<Label htmlFor="payrollSubject">Comment </Label>
+																		<Label htmlFor="payrollSubject">Reason  </Label>
 																		<Input
 																			// className="mt-4 pull-right"
 																			type="text"
@@ -1065,7 +1065,7 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 																			name="comment"
 																			value={this.state.comment}
 																			disabled={this.state.status==="Approved" ?true :false }
-																			placeholder={strings.Enter + " Reason"}
+																			placeholder={strings.Enter + " reason for rejecting the payroll"}
 																			onChange={(event) => {
 																				this.setState({
 																					comment: event.target.value
@@ -1085,7 +1085,7 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 																				{props.errors.comment}
 																			</div>
 																		)}
-																		{this.state.status && (this.state.status==="Approved" ||this.state.status==="Partially Paid"  ||this.state.status==="Paid" ) ? 
+																		{this.state.status && (this.state.status==="Approved" || this.state.status==="Rejected" ||this.state.status==="Partially Paid"  ||this.state.status==="Paid" ) ? 
 																''	:
 																		(
 																			<Button
@@ -1095,7 +1095,10 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 																			onClick={() =>
 																				this.rejectPayroll()
 																			}
-																		// disabled={selectedRows.length === 0}
+																		disabled={this.state.comment==""?true:false}
+																		title={
+																			this.state.comment==""?"Please Enter Comment":""
+																		}
 																		>
 																			<i class="fas fa-user-times mr-1"></i>
 
@@ -1113,7 +1116,7 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 
 																<Col>
 																<ButtonGroup className="mt-5 pull-right ">
-																{this.state.status && (this.state.status==="Approved"  ||this.state.status==="Partially Paid"  ||this.state.status==="Paid" ) ? 
+																{this.state.status && (this.state.status==="Approved"  ||this.state.status==="Partially Paid"  ||this.state.status==="Paid" ||this.state.status==="Rejected" ) ? 
 																""	:
 																	(
 																		<Button

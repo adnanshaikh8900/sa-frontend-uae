@@ -146,7 +146,7 @@ calculatePayperioad=(startDate,endDate)=>{
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))+1; 
 	
     this.setState({paidDays:diffDays});
-	this.getAllPayrollEmployee()
+	this.getAllPayrollEmployee(endDate)
 	console.log(diffTime + " milliseconds");
     console.log(diffDays + " days");
 	console.log(this.state.paidDays,"paid-Days",diffDays)
@@ -258,7 +258,7 @@ calculatePayperioad=(startDate,endDate)=>{
 		formData.append('salaryDate',payrollDate)
 		//Payroll total  amount
 		let totalAmountPayroll=0;
-		this.state.selectedRows1.map((row)=>{totalAmountPayroll +=parseFloat(row.grossPay)})
+		this.state.selectedRows1.map((row)=>{totalAmountPayroll +=parseFloat(row.netPay)})
 		formData.append('totalAmountPayroll', totalAmountPayroll);
 
 		if(this.state.apiSelector ==="createPayroll"){
@@ -315,9 +315,11 @@ calculatePayperioad=(startDate,endDate)=>{
 	}
 
 
-	getAllPayrollEmployee = () => {
+	getAllPayrollEmployee = (endDate) => {
 		//maintaining new state
-		this.props.createPayrollActions.getAllPayrollEmployee().then((res) => {
+		let date=endDate ?endDate :this.state.endDate;
+		let month =moment(date).format("MMMM"); 
+		this.props.createPayrollActions.getAllPayrollEmployee(moment(date).format("DD/MM/YYYY")).then((res) => {
 			if (res.status === 200) {
 
 				this.setState({
@@ -325,8 +327,12 @@ calculatePayperioad=(startDate,endDate)=>{
 				})
 
 				let newData = [...this.state.allPayrollEmployee]
-				newData = newData.map((data) => {	
-					let tmpPaidDay=this.state.paidDays > 30 ?30	:this.state.paidDays				
+				newData = newData.map((data) => {			
+					 	/** if month is of 31 days and 28days so its will be treated as 30 days only , 
+						  * need to handle this in future release */
+						//for  month wise case handling ,need to add switch in future 
+						 let tmpPaidDay=this.state.paidDays > 30 ?30	:
+										( this.state.paidDays==28 && month=="February" ? 30 :this.state.paidDays	)			
 						data.noOfDays =tmpPaidDay
 						data.originalNoOfDays =tmpPaidDay
 						data.originalGrossPay=data.grossPay
@@ -858,8 +864,8 @@ showTotal=()=>{
 																				endDateId="endDate"
 																				focusedInput={this.state.focusedInput}
 																				isOutsideRange={
-																					// () => null
-																					day => isInclusivelyBeforeDay(day, moment(new Date(today.getFullYear(), today.getMonth(),0)))
+																					 () => null
+																					// day => isInclusivelyBeforeDay(day, moment(new Date(today.getFullYear(), today.getMonth(),0)))
 																				}
 																				onDatesChange={this.handleDateChange}
 																				onFocusChange={this.handleFocusChange}
@@ -1004,7 +1010,7 @@ showTotal=()=>{
 																	        disabled={!this.state.submitButton && this.state.selectedRows && this.state.selectedRows.length !=0 ? false :true}
 																			title={
 																			this.state.submitButton
-																				? `Please Select Approver Before Submitting  Payroll !`
+																				? ` Please select approver for payroll submission !`
 																				: ''
 																		}
 																						
@@ -1028,7 +1034,7 @@ showTotal=()=>{
 																							title={
 																								this.state.selectedRows && this.state.selectedRows.length !=0
 																								? ''
-																								: `Please Select Employees Before creating  Payroll !`
+																								: `Please select at least one employee for payroll creation !`
 																						}
 																	>
 																		<i className="fa fa-dot-circle-o  mr-1"></i> Create

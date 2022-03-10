@@ -216,7 +216,7 @@ class DetailProductCategory extends React.Component {
                             let errors = {};
                             if (!values.productCategoryName) {
                               errors.productCategoryName =
-                                'Product Category Name is  required';
+                                'Product Category Name is Required';
                             }
                             
                             let check=false;
@@ -234,7 +234,7 @@ class DetailProductCategory extends React.Component {
                                 && 
                                !(this.state.productCategoryCode===values.productCategoryCode)){
                               errors.productCategoryCode =
-                                'Product Category Code already Exists';
+                                'Product Category Code Already Exists';
                             }
                             
                             if (!values.productCategoryCode ) {
@@ -270,7 +270,8 @@ class DetailProductCategory extends React.Component {
                                 <FormGroup>
                                   <Label htmlFor="productCategoryName"><span className="text-danger">* </span>{strings.ProductCategoryName}</Label>
                                   <Input
-                                    type="text" maxLength='50'
+                                    type="text" 
+                                    maxLength='50'
                                     id="productCategoryName"
                                     name="productCategoryName"
                                     placeholder={strings.Enter+strings.ProductCategoryName}

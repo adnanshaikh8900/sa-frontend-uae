@@ -291,7 +291,7 @@ class CreateCreditNote extends React.Component {
 							maxLength="10"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
-								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+								if (e.target.value === '' || this.regEx.test(e.target.value)) {
 									this.selectItem(
 										e.target.value,
 										row,
@@ -494,7 +494,7 @@ type="text"
 discountType = (row) =>
 
 {
-	debugger
+	 
 	
 		return this.state.discountOptions &&
 		selectOptionsFactory
@@ -540,7 +540,7 @@ discountType = (row) =>
 		this.props.creditNotesCreateActions
 			.checkValidation(data)
 			.then((response) => {
-				if (response.data === 'Invoice Number already exists') {
+				if (response.data === 'Invoice Number Already Exists') {
 					this.setState(
 						{
 							exist: true,
@@ -1205,7 +1205,8 @@ discountType = (row) =>
 			discountPercentage,
 			notes,
 			email,
-			creditAmount
+			creditAmount,
+			vatCategoryId
 		} = data;
 		const { term } = this.state;
 		const formData = new FormData();
@@ -1257,7 +1258,9 @@ discountType = (row) =>
 		formData.append('type', 7);
 		if(this.state.isCreatedWIWP ===true)
 		formData.append('totalAmount', creditAmount);
-
+	
+			formData.append('vatCategoryId', 2);
+		
 if (invoiceNumber && invoiceNumber.value) {
 	formData.append('invoiceId', invoiceNumber.value);
 	formData.append('cnCreatedOnPaidInvoice','1');
@@ -1656,6 +1659,7 @@ if (invoiceNumber && invoiceNumber.value) {
 			invoice_list,
 			universal_currency_list,
 			currency_convert_list,
+			vat_list,
 		} = this.props;
 
 		
@@ -1849,7 +1853,6 @@ if (invoiceNumber && invoiceNumber.value) {
 																	{strings.InvoiceNumber}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		id="invoiceNumber"
 																		name="invoiceNumber"
 																		placeholder={strings.Select+strings.InvoiceNumber}
@@ -1945,7 +1948,6 @@ if (invoiceNumber && invoiceNumber.value) {
 																		 {strings.CustomerName}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		id="contactId"
 																		name="contactId"
 																		placeholder={strings.Select+strings.CustomerName}
@@ -1961,7 +1963,7 @@ if (invoiceNumber && invoiceNumber.value) {
 																		}
 																		value={props.values.contactId}
 																		
-																		// isDisabled={this.state.invoiceSelected}
+																		isDisabled={this.state.invoiceSelected}
 																		onChange={(option) => {
 																			if (option && option.value) {
 																				this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
@@ -2203,7 +2205,7 @@ if (invoiceNumber && invoiceNumber.value) {
 																	{props.errors.creditNoteDate &&
 																		props.touched.creditNoteDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.creditNoteDate}
+																				{props.errors.creditNoteDate.includes("nullable()") ? "Tax Credit Note Date is Required" :props.errors.creditNoteDate}		
 																			</div>
 																		)}
 																</FormGroup>
@@ -2318,7 +2320,8 @@ if (invoiceNumber && invoiceNumber.value) {
 																</FormGroup>
 															</Col>)}
                                                             
-															{this.state.isCreatedWIWP===true &&(<Col  lg={3}>
+															{this.state.isCreatedWIWP===true &&(
+															<Col  lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="creditAmount"><span className="text-danger">* </span>
 																	Credit Amount
@@ -2349,8 +2352,8 @@ if (invoiceNumber && invoiceNumber.value) {
 																			</div>
 																		)}
 																</FormGroup>
-															</Col>)}
-
+															</Col>
+															)}
 															{/* <Col lg={3}>
 												<FormGroup>
 													<Label htmlFor="email">

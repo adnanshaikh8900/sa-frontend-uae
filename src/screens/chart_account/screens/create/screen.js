@@ -114,7 +114,7 @@ class CreateChartAccount extends React.Component {
 		this.props.createChartOfAccontActions
 			.checkValidation(data)
 			.then((response) => {
-				if (response.data === 'transactionCategoryName already exists') {
+				if (response.data === 'Transaction Category Name Already Exists') {
 					this.setState({
 						exist: true,
 					});
@@ -198,7 +198,7 @@ class CreateChartAccount extends React.Component {
 													let errors = {};
 													if (this.state.exist === true) {
 														errors.transactionCategoryName =
-															'Chart Of Account Name is already exist';
+															'Chart Of Account Name is Already Exist';
 													}
 													return errors;
 												}}
@@ -298,7 +298,6 @@ class CreateChartAccount extends React.Component {
                                 <div className="invalid-feedback">{props.errors.chartOfAccount}</div>
                               )} */}
 															<Select
-															styles={customStyles}
 																id="chartOfAccount"
 																name="chartOfAccount"
 																placeholder={strings.Select+strings.Type}

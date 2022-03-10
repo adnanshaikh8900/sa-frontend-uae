@@ -324,7 +324,7 @@ class CreateGoodsReceivedNote extends React.Component {
 							maxLength="100"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
-								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+								if (e.target.value === '' || this.regEx.test(e.target.value)) {
 									this.selectItem(
 										e.target.value,
 										row,
@@ -386,7 +386,7 @@ class CreateGoodsReceivedNote extends React.Component {
 							maxLength="10"
 							value={row['grnReceivedQuantity'] !== 0 ? row['grnReceivedQuantity'] : 0}
 							onChange={(e) => {
-								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+								if (e.target.value === '' || this.regEx.test(e.target.value)) {
 									this.selectItem(
 										e.target.value,
 										row,
@@ -435,7 +435,7 @@ class CreateGoodsReceivedNote extends React.Component {
 									{this.state.grnReceivedQuantityError}
 								</div> */}
 								{row['grnReceivedQuantity'] <= 0 && (
-								<div  className="text-danger">
+								<div  className="invalid-feedback">
 									Please Enter Quantity
 								</div>
 								)
@@ -1300,7 +1300,7 @@ this.state.data.map((obj, index) => {
 		this.props.goodsReceivedNoteCreateAction
 			.checkValidation(data)
 			.then((response) => {
-				if (response.data === 'grnNumber already exists') {
+				if (response.data === 'GRN Number Already Exists') {
 					this.setState(
 						{
 							exist: true,
@@ -1466,10 +1466,10 @@ console.log(this.state.data)
 													let errors = {};
 													if (this.state.exist === true) {
 														errors.grn_Number =
-															'GRN Number already exists';
+															'GRN Number Already Exists';
 													}
 													if (values.grn_Number==='') {
-														errors.grn_Number = 'GRN Number is required';
+														errors.grn_Number = 'GRN Number is Required';
 													}
 													return errors;
 												}}
@@ -1673,7 +1673,6 @@ console.log(this.state.data)
 																		{strings.SupplierName}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		id="supplierId"
 																		name="supplierId"
 																		placeholder={strings.Select+strings.SupplierName}
@@ -1822,7 +1821,6 @@ console.log(this.state.data)
 																		showYearDropdown
 																		dropdownMode="select"
 																		dateFormat="dd-MM-yyyy"
-																		maxDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('grnReceiveDate')(value);
 																		}}
@@ -1830,7 +1828,8 @@ console.log(this.state.data)
 																	{props.errors.grnReceiveDate &&
 																		props.touched.grnReceiveDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.grnReceiveDate}
+																				{props.errors.grnReceiveDate.includes("nullable()") ? "Order Date is Required" :props.errors.grnReceiveDate}
+
 																			</div>
 																		)}
 																</FormGroup>

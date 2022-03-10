@@ -144,7 +144,7 @@ class UpdateEmployeeBank extends React.Component {
         this.props.createPayrollEmployeeActions
             .checkValidation(data)
             .then((response) => {
-                if (response.data === 'accountNumber already exists') {
+                if (response.data === 'Account Number Already Exists') {
                     this.setState(
                         {
                             existForAccountNumber: true,
@@ -265,7 +265,7 @@ class UpdateEmployeeBank extends React.Component {
                                                         let errors = {};
                                                         if (existForAccountNumber === true) {
                                                             errors.accountNumber =
-                                                                'Account Number already exists';
+                                                                'Account Number Already Exists';
                                                         }
                                                         return errors;
                                                     }}
@@ -274,8 +274,8 @@ class UpdateEmployeeBank extends React.Component {
                                                             .required("Account Holder Name is Required"),
                                                         accountNumber: Yup.string()
                                                         .required("Account Number is Required"),
-                                                        // bankName: Yup.string()
-                                                        // .required("Bank Name is Required"),
+                                                        bankName: Yup.string()
+                                                        .required("Bank Name is Required"),
                                                         bankId: Yup.string()
                                                         .required('Bank is Required') ,
                                                         swiftCode: Yup.string()
@@ -457,7 +457,7 @@ class UpdateEmployeeBank extends React.Component {
                                                                                     type="text"
                                                                                     id="iban"
                                                                                     name="iban"
-                                                                                    maxLength="34"
+                                                                                    maxLength="23"
                                                                                     value={props.values.iban}
                                                                                     placeholder={strings.Enter+strings.IBANNumber}
                                                                                     onChange={(value) => {

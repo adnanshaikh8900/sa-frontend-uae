@@ -71,8 +71,9 @@ class SOAReport extends React.Component {
 			dropdownOpen: false,
 			view: false,
 			initValue: {
-				startDate: moment().startOf('month').format('DD/MM/YYYY'),
-				endDate: moment().endOf('month').format('YYYY/MM/DD hh:mm'),
+				startDate:"",
+				endDate:"",
+				// endDate:new Date(new Date().setMonth(new Date().getMonth() + 1))
 			},
 			csvData: [],
 			activePage: 1,
@@ -120,8 +121,6 @@ class SOAReport extends React.Component {
 			// 	this.initializeData();
 			// },
 		);
-
-
 		const postData = {
 			startDate: this.state.initValue.startDate,
 			endDate: this.state.initValue.endDate,
@@ -431,10 +430,8 @@ this.props.financialReportActions
 													showMonthDropdown
 													showYearDropdown
 													autoComplete="off"
-													maxDate={new Date()}
-													value={moment(props.values.startDate).format(
-														'DD-MM-YYYY',
-													)}
+													// maxDate={new Date()}
+													value={props.values.startDate!="" ?moment(props.values.startDate).format("DD-MM-YYYY"):""}
 													dropdownMode="select"
 													dateFormat="dd-MM-yyyy"
 											
@@ -452,13 +449,11 @@ this.props.financialReportActions
 													name="endDate"
 													className={`form-control`}
 													autoComplete="off"
-													maxDate={new Date()}
+													// maxDate={new Date()}
 													placeholderText="To"
 													showMonthDropdown
 													showYearDropdown
-													value={moment(props.values.endDate).format(
-														'DD-MM-YYYY',
-													)}
+													value={props.values.endDate!="" ?moment(props.values.endDate).format("DD-MM-YYYY"):""}
 													dropdownMode="select"
 													dateFormat="dd-MM-yyyy"
 						
@@ -506,7 +501,7 @@ this.props.financialReportActions
 									paperSize="A3"
 									fileName={'Statement Of Account ( '+this.state.customerName+' ).pdf'}
 								>
-								<Card><CardBody>	
+								<Card id="section-to-print"><CardBody>	
 									<div style={{
 
 										display: 'flex',
@@ -582,7 +577,7 @@ this.props.financialReportActions
 											</td>
 										</tr>
 										<tr>
-											<td><b>Amount Paid</b></td>
+											<td><b>Amount Received</b></td>
 											<td style={{textAlign:"right"}}> 
 											{/* {this.state.totalAmountPaid} */}
 											<Currency

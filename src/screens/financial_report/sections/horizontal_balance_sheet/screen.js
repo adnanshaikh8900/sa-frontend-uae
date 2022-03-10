@@ -71,7 +71,7 @@ class HorizontalBalanceSheet extends React.Component {
 			view: false,
 			initValue: {
 				startDate: moment().startOf('month').format('DD/MM/YYYY'),
-				endDate: moment().endOf('month').format('DD-MM-YYYY'),
+				endDate: moment().endOf('month').format('DD/MM/YYYY'),
 				reportBasis: 'ACCRUAL',
 				chartOfAccountId: '',
 			},
@@ -378,7 +378,7 @@ class HorizontalBalanceSheet extends React.Component {
 										
 											<b style ={{ fontSize: '18px'}}>{strings.HorizontalBalanceSheet}</b>
 											<br/>
-										{strings.Ason } {initValue.endDate}
+										{strings.Ason }  {initValue.endDate.replaceAll("/","-")} 
 											
 									</div>
 									<div>

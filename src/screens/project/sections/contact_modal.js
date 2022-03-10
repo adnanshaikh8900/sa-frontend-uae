@@ -143,7 +143,7 @@ class ContactModal extends React.Component {
               telephone: Yup.number()
                 .required("Telephone Number is Required"),
               mobileNumber: Yup.string()
-                .required("Mobile Number is required"),
+                .required("Mobile Number is Required"),
               postZipCode: Yup.string()
                 .required("Postal Code is Required"),
               vatRegistrationNumber: Yup.string()

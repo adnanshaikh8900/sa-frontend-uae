@@ -144,9 +144,9 @@ class SupplierModal extends React.Component {
                 telephone: Yup.number()
                   .required("Telephone Number is Required"),
                   mobileNumber: Yup.string()
-                  .required("Mobile Number is required"),
+                  .required("Mobile Number is Required"),
                  //     addressLine1: Yup.string()
-                //       .required("Address is required"),
+                //       .required("Address is Required"),
                 countryId: Yup.string().required("Country is Required")
                   .nullable(),
                   stateId: Yup.string()

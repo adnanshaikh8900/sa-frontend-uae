@@ -25,7 +25,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-toastify/dist/ReactToastify.css';
 import PasswordChecklist from "react-password-checklist"
-
+import PhoneInput  from "react-phone-input-2";
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';
 import {data}  from '../Language/index'
@@ -99,13 +99,14 @@ class Register extends React.Component {
 				TaxRegistrationNumber:'',
 				vatRegistrationDate:'',
 				companyAddress1:'',
-				
+				phoneNumber: '',
 
 			},
 			userDetail: false,
 			show: false,
 			togglePassword: '***********',
 			loading: false,
+			checkphoneNumberParam: false,
 			// timeZone: "Asia/Dubai",
 			// timezone: {	label: "Asia/Dubai",value: "Asia/Dubai"	},
 		};
@@ -172,11 +173,13 @@ class Register extends React.Component {
 				IsDesignatedZone,
 				IsRegistered,
 				TaxRegistrationNumber,
+				phoneNumber,
 				vatRegistrationDate,
 				companyAddress1,
                 companyAddress2
 
 		} = data;
+		
 		let obj = {
 			companyName: companyName,
 			currencyCode: currencyCode ? currencyCode : '',
@@ -205,6 +208,7 @@ class Register extends React.Component {
 		formData.append('timeZone', 'Asia/Dubai')
 		formData.append('countryId', countryId ? countryId : '229')
 		formData.append('stateId', stateId ? stateId.value : '')
+		formData.append('phoneNumber', phoneNumber ? phoneNumber :'')
 		if (IsDesignatedZone) {
 			formData.append('IsDesignatedZone', IsDesignatedZone);
 		}
@@ -253,7 +257,7 @@ class Register extends React.Component {
 	};
 
 	render() {
-		const { isPasswordShown, companyTypeList } = this.state;
+		const { isPasswordShown, companyTypeList,checkphoneNumberParam } = this.state;
 		const customStyles = {
 			control: (base, state) => ({
 				...base,
@@ -297,6 +301,17 @@ class Register extends React.Component {
 														onSubmit={(values, { resetForm }) => {
 															this.handleSubmit(values, resetForm);
 														}}
+														validate={(values) => {
+															let errors = {};
+		
+															if (checkphoneNumberParam == true) {
+																errors.phoneNumber =
+																	'Invalid mobile number';
+															}
+															return errors;
+														}}
+		
+							
 														validationSchema={Yup.object().shape({
 															companyName: Yup.string().required(
 																'Company Name is Required',
@@ -327,6 +342,9 @@ class Register extends React.Component {
 																.email('Invalid Email'),
 															timeZone: Yup.string().required(
 																'Time Zone is Required',
+															),
+															phoneNumber: Yup.string().required(
+																'Mobile Number is Required',
 															),
 															TaxRegistrationNumber: Yup.string().when(
 																'IsRegistered',
@@ -600,7 +618,7 @@ class Register extends React.Component {
 																					value={props.values.timeZone}
 																					onChange={(option) => {
 																						if (option && option.value) {
-																							debugger
+																							 
 																							props.handleChange('timeZone')(
 																								option.value,
 																							);
@@ -744,7 +762,43 @@ class Register extends React.Component {
 																		)}
 																</FormGroup>
 															</Col>
-													
+															<Col lg={4}>
+																						<FormGroup className="mb-3 phoneNumber">
+																							<Label htmlFor="phoneNumber">
+																							<span className="text-danger">*</span> {strings.MobileNumber}
+																						</Label>
+																							<PhoneInput
+																								country={"ae"}
+																								enableSearch={true}
+																								international
+																								style={{width:"260px !important"}}
+																								value={props.values.phoneNumber}
+																								placeholder={strings.Enter+strings.MobileNumber}
+																								onChange={(option) => {
+																									props.handleChange(
+																										'phoneNumber',
+																									)(option);
+																									
+																									option.length !== 12 ? this.setState({ checkphoneNumberParam: true }) : this.setState({ checkphoneNumberParam: false });
+																								}}
+																								isValid
+																								className="phoneNumber"
+																								className={
+																									props.errors.phoneNumber &&
+																										props.touched.phoneNumber
+																										? ' invalid-feedback is-invalid '
+																										: ''
+																								}
+																							/>
+																							{props.errors.phoneNumber &&
+																								props.touched.phoneNumber && (
+																									<div className="invalid-feedback">
+																										{props.errors.phoneNumber}
+																									</div>
+																								)}
+																						</FormGroup>
+																					</Col>
+																		
 															</Row>
 															{/* style={{display:props.values.countryId.value === 229 ? '' : 'none'}} */}
 															<Row >

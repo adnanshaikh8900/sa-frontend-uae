@@ -298,7 +298,7 @@ class CreatePurchaseOrder extends React.Component {
 						id="exciseTaxId"
 						placeholder={strings.Select+strings.Vat}
 						onChange={(e) => {
-							debugger
+							 
 							this.selectItem(
 								e.value,
 								row,
@@ -349,7 +349,7 @@ class CreatePurchaseOrder extends React.Component {
 							maxLength="10"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
-								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+								if (e.target.value === '' || this.regEx.test(e.target.value)) {
 									this.selectItem(
 										e.target.value,
 										row,
@@ -449,7 +449,7 @@ class CreatePurchaseOrder extends React.Component {
 // 		   }
 // 		   return obj;
 // 	   });
-// 	   debugger
+// 	    
 // 	   console.log('DiscountType:'+row.discountType)
 // 	   return (
 // 		   <Field
@@ -564,7 +564,7 @@ class CreatePurchaseOrder extends React.Component {
 		// 	/>
 		// );
 		let value =  row.vatAmount && row.vatAmount != 0 ?  row.vatAmount:0
-		return value === 0 ? this.state.supplier_currency_symbol +" "+ value.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ row.value.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return value === 0 ? this.state.supplier_currency_symbol +" "+ value.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ value.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
 	};
 
 	componentDidMount = () => {
@@ -1468,7 +1468,7 @@ class CreatePurchaseOrder extends React.Component {
 		this.props.purchaseOrderCreateAction
 			.checkValidation(data)
 			.then((response) => {
-				if (response.data === 'poNumber already exists') {
+				if (response.data === 'Po Number Already Exists') {
 					this.setState(
 						{
 							exist: true,
@@ -1627,7 +1627,7 @@ getrfqDetails = (e, row, props,form,field) => {
 															'PO Number already exists';
 													}
 													if (values.po_number==='') {
-														errors.po_number = 'PO Number is required';
+														errors.po_number = 'PO Number is Required';
 													}
 													return errors;
 												}}
@@ -1642,7 +1642,7 @@ getrfqDetails = (e, row, props,form,field) => {
                                                     // rfqNumber: Yup.string().required(
 													// 	'Rfq Number is Required',
 													// ),
-													// placeOfSupplyId: Yup.string().required('Place of supply is Required'),
+													placeOfSupplyId: Yup.string().required('Place of supply is Required'),
 													
 													poApproveDate: Yup.string().required(
 														'Order Date is Required',
@@ -1837,7 +1837,6 @@ getrfqDetails = (e, row, props,form,field) => {
 
 
 																	<Select
-																		styles={customStyles}
 																		id="supplierId"
 																		name="supplierId"
 																		placeholder={strings.Select+strings.SupplierName}
@@ -1946,7 +1945,6 @@ getrfqDetails = (e, row, props,form,field) => {
 																		{strings.PlaceofSupply}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		id="placeOfSupplyId"
 																		name="placeOfSupplyId"
 																		placeholder={strings.Select+strings.PlaceofSupply}
@@ -2011,7 +2009,6 @@ getrfqDetails = (e, row, props,form,field) => {
 																		showYearDropdown
 																		dropdownMode="select"
 																		dateFormat="dd-MM-yyyy"
-																		maxDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('poApproveDate')(value);
 																		}}
@@ -2045,7 +2042,6 @@ getrfqDetails = (e, row, props,form,field) => {
 																		showYearDropdown
 																		dropdownMode="select"
 																		dateFormat="dd-MM-yyyy"
-
 																		onChange={(value) => {
 																			props.handleChange('poReceiveDate')(value);
 																		}}

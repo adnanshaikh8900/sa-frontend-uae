@@ -94,6 +94,8 @@ class FileTaxReturnModal extends React.Component {
 				taxablePersonNameInArabic: '',
 			},
 			isTANMandetory:false,
+			isTAANMandetory:false,
+			isTaxAgentName:false,
 			dialog: null,
 			filterData: {
 				name: '',
@@ -116,11 +118,15 @@ class FileTaxReturnModal extends React.Component {
 	handleSubmit = (data, resetForm, setSubmitting) => {
 		this.setState({ disabled: true });
 
+
+	let formData = new FormData();
+	for ( var key in data ) {	
+		formData.append(key, data[key]);
+	}
+
 		this.props.vatreportActions
-			.fileVatReport(data)
+			.fileVatReport(formData)
 			.then((res) => {
-				let resConfig = JSON.parse(res.config.data);
-				
 				if (res.status === 200) {
 					this.setState({ disabled: false });
 					this.props.commonActions.tostifyAlert(
@@ -129,12 +135,13 @@ class FileTaxReturnModal extends React.Component {
 					);
 					resetForm();
 					this.setState({isTANMandetory:false})
+					this.setState({isTAANMandetory:false})
 					this.props.closeModal(true);
 				}
 			})
 			.catch((err) => {
 				this.setState({ disabled: false });
-				this.displayMsg(err);
+				// this.displayMsg(err);
 				this.formikRef.current.setSubmitting(false);
 			});
 	};
@@ -196,15 +203,26 @@ dateLimit=()=>{
 							if (this.state.isTANMandetory === true &&( values.taxAgencyNumber=="" ||values.taxAgencyNumber==undefined)) 
 							{
 								errors.taxAgencyNumber ='TAN is Required';
-							}													
-																			
+								if (values.taxAgentApprovalNumber=="" || values.taxAgentApprovalNumber==undefined)
+								{
+									errors.taxAgentApprovalNumber = 'TAAN is Required';
+								}
+								if (values.taxAgentName=="" || values.tax==undefined)
+								{
+									errors.taxAgentName = 'Tax Agent Name is Required';
+								}
+							} 
+							if (this.state.isTAANMandetory === true && (values.taxAgentApprovalNumber=="" || values.taxAgentApprovalNumber==undefined))
+							{
+								errors.taxAgentApprovalNumber = 'TAAN is Required';
+							}												
 							return errors;
 						}}
 						validationSchema={Yup.object().shape({
-							taxAgentName: Yup.string().required('Tax Agent Name is Required'),
+							// taxAgentName: Yup.string().required('Tax Agent Name is Required'),
 							taxablePersonNameInEnglish: Yup.string().required('Taxable Person Name In English is Required'),
-							taxablePersonNameInArabic: Yup.string().required('Taxable Person Name In Arabic is Required'),
-							taxAgentApprovalNumber: Yup.string().required('Tax Agent Approval Number is Required'),
+							// taxablePersonNameInArabic: Yup.string().required('Taxable Person Name In Arabic is Required'),
+							// taxAgentApprovalNumber: Yup.string().required('TAAN is Required'),
 							vatRegistrationNumber: Yup.string().required('Tax Registration Number is Required'),
 							taxFiledOn: Yup.string().required(
 								'Date of Filling is Required',
@@ -248,7 +266,7 @@ dateLimit=()=>{
 															</FormGroup>
 														</Col>
 														<Col lg={4}>
-															<FormGroup className="mb-3"><span className="text-danger">* </span>
+															<FormGroup className="mb-3"><span className="text-danger"> </span>
 																<Label htmlFor="taxablePersonNameInArabic">Taxable Person Name (Arabic)</Label>
 																<Input
 																	type="text"
@@ -270,7 +288,8 @@ dateLimit=()=>{
 															</FormGroup>
 														</Col>
 														<Col lg={4}>
-															<FormGroup className="mb-3"><span className="text-danger">* </span>
+															<FormGroup className="mb-3">
+															{this.state.isTANMandetory === true &&(<span className="text-danger">* </span>)}
 																<Label htmlFor="taxAgentName">Tax Agent Name</Label>
 																<Input
 																	type="text"
@@ -278,9 +297,16 @@ dateLimit=()=>{
 																	id="taxAgentName"
 																	maxLength="100"
 																	placeholder={"Enter Agenct Name"}
-																	onChange={(option) =>
+																	onChange={(option) =>{
 																		props.handleChange('taxAgentName')(option)
-																	}
+
+																		if(option.target.value !=""){
+																			this.setState({isTAANMandetory:true})
+																		}else{
+																			this.setState({isTAANMandetory:false})
+
+																		}
+																	}}
 																	defaultValue={props.values.taxAgentName}
 																/>
 																
@@ -297,6 +323,7 @@ dateLimit=()=>{
 													<Row>
 														<Col lg={4}>
 															<FormGroup className="mb-3">
+															{this.state.isTANMandetory === true &&(<span className="text-danger"> </span>)}
 																<Label htmlFor="taxAgencyName">Tax Agency Name </Label>
 																<Input
 																	type="text"
@@ -313,8 +340,7 @@ dateLimit=()=>{
 																			else{
 																			    this.setState({isTANMandetory:false})
 																			}
-																		}
-																	}
+																		}}
 																	defaultValue={props.values.taxAgencyName}
 																/>
 															</FormGroup>
@@ -337,9 +363,7 @@ dateLimit=()=>{
 																			) {																				
 																				props.handleChange('taxAgencyNumber')(option)
 																			}
-																		}
-																		
-																	}
+																		}}
 																	value={props.values.taxAgencyNumber}
 																/>
 																	{props.errors.taxAgencyNumber &&												
@@ -351,22 +375,25 @@ dateLimit=()=>{
 															</FormGroup>
 														</Col>
 														<Col lg={4}>
-															<FormGroup className="mb-3"><span className="text-danger">* </span>
+															<FormGroup className="mb-3">
+																	
+																{(this.state.isTANMandetory === true || this.state.isTAANMandetory) &&(<span className="text-danger">* </span>)}
+															
 																<Label htmlFor="taxAgentApprovalNumber">Tax Agent Approval Number (TAAN) </Label>
 																<Input
 																	type="text"
 																	name="taxAgentApprovalNumber"
 																	id="taxAgentApprovalNumber"
 																	maxLength="8"
-																	placeholder={"Enter Agent Approval Number"}
-															
-																	onChange={(option) => {
-																		
+																	autoComplete='off'
+																	placeholder={"Enter Tax Agent Approval Number (TAAN)"}
+																	onChange={(option) => 
+																		{
 																		if (
 																			option.target.value === '' ||
 																			this.regEx.test(option.target.value)
 																		) {
-																			props.handleChange('taxAgentApprovalNumber')(option);
+																			props.handleChange('taxAgentApprovalNumber')(option)
 																		}
 																	}}
 																	value={props.values.taxAgentApprovalNumber}
@@ -433,7 +460,7 @@ dateLimit=()=>{
 																		placeholderText={"Tax Filed On"}
 																		showMonthDropdown
 																		showYearDropdown
-																		autoComplete='off'
+																	
 																		dateFormat="dd-MM-yyyy"
 																		dropdownMode="select"
 																		minDate={this.dateLimit()}
@@ -477,6 +504,7 @@ dateLimit=()=>{
 											className="btn-square"
 											onClick={() => {											
 												this.setState({isTANMandetory:false})
+												this.setState({isTAANMandetory:false})
 												closeModal(false);
 											}}
 										>

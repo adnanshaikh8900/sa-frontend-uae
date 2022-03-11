@@ -1853,7 +1853,7 @@ discountType = (row) =>
 																		showYearDropdown
 																		dropdownMode="select"
 																		dateFormat="dd-MM-yyyy"
-																		
+																		minDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('quotaionExpiration')(value);
 																		}}

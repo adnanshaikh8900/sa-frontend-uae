@@ -638,7 +638,6 @@ class RecordSupplierPayment extends React.Component {
 																			 {strings.PaymentMode}
 																		</Label>
 																		<Select
-																			styles={customStyles}
 																			options={
 																				pay_mode
 																					? selectOptionsFactory.renderOptions(
@@ -682,7 +681,6 @@ class RecordSupplierPayment extends React.Component {
 																			{strings.PaidThrough}
 																		</Label>
 																		<Select
-																			styles={customStyles}
 																			options={deposit_list}
 																			value={props.values.depositeTo}
 																			onChange={(option) => {

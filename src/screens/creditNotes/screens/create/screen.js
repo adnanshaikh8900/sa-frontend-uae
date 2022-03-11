@@ -2189,6 +2189,7 @@ if (invoiceNumber && invoiceNumber.value) {
 																		showMonthDropdown
 																		showYearDropdown
 																		dateFormat="dd-MM-yyyy"
+																		minDate={new Date()}
 																		dropdownMode="select"
 																		value={props.values.creditNoteDate}
 																		selected={props.values.creditNoteDate}

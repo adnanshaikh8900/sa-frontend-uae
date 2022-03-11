@@ -1980,6 +1980,7 @@ class DetailSupplierInvoice extends React.Component {
 																			showMonthDropdown
 																			showYearDropdown
 																			dateFormat="dd-MM-yyyy"
+																			minDate={new Date()}
 																			dropdownMode="select"
 																			value={props.values.invoiceDate}
 																			selected={new Date(props.values.invoiceDate1)} 

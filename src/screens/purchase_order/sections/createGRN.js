@@ -1226,7 +1226,7 @@ min="0"
 																		showYearDropdown
 																		dropdownMode="select"
 																		dateFormat="dd-MM-yyyy"
-																		maxDate={new Date()}
+																		minDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('grnReceiveDate')(value);
 																		}}

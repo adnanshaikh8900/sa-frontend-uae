@@ -1712,6 +1712,7 @@ class CreateRequestForQuotation extends React.Component {
 																		showYearDropdown
 																		dropdownMode="select"
 																		dateFormat="dd-MM-yyyy"
+																		minDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('rfqReceiveDate')(value);
 																		
@@ -1747,6 +1748,7 @@ class CreateRequestForQuotation extends React.Component {
 																		showYearDropdown
 																		dropdownMode="select"
 																		dateFormat="dd-MM-yyyy"
+																		minDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('rfqExpiryDate')(value);
 																		}}

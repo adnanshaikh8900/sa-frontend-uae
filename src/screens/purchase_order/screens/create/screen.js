@@ -2009,6 +2009,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																		showYearDropdown
 																		dropdownMode="select"
 																		dateFormat="dd-MM-yyyy"
+																		minDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('poApproveDate')(value);
 																		}}
@@ -2042,6 +2043,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																		showYearDropdown
 																		dropdownMode="select"
 																		dateFormat="dd-MM-yyyy"
+																		minDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('poReceiveDate')(value);
 																		}}

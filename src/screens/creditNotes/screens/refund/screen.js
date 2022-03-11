@@ -699,7 +699,6 @@ class Refund extends React.Component {
 																			 {strings.PaymentMode}
 																		</Label>
 																		<Select
-																			styles={customStyles}
 																			options={
 																				pay_mode
 																					? selectOptionsFactory.renderOptions(
@@ -743,7 +742,6 @@ class Refund extends React.Component {
 																		      {strings.DepositFrom}
 																		</Label>
 																		<Select
-																			styles={customStyles}
 																			options={deposit_list}
 																			value={props.values.depositeFrom}
 																			onChange={(option) => {

@@ -1535,6 +1535,7 @@ debugger
 																			showMonthDropdown
 																			showYearDropdown
 																			dateFormat="dd-MM-yyyy"
+																			minDate={new Date()}
 																			dropdownMode="select"
 																			value={props.values.grnReceiveDate}
 																			selected={new Date(props.values.grnReceiveDate1)} 

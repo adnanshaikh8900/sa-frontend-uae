@@ -367,6 +367,7 @@ class UpdatePayroll extends React.Component {
 			formData.append('totalAmountPayroll', totalAmountPayroll);
 	 
 		if(this.state.apiSelector ==="createPayroll"){
+			this.setState({ loading:true, loadingMsg:"Updating Payroll..."});
 		this.props.createPayrollActions
 			 .updatePayroll(formData)
 			// .createPayroll(JSON.stringify(employeeListIds),payrollSubject,this.state.payPeriod,JSON.stringify(this.state.allPayrollEmployee),payrollDate)
@@ -376,13 +377,14 @@ class UpdatePayroll extends React.Component {
 					this.tableApiCallsOnStatus()
 					this.props.history.push(`/admin/payroll/payrollrun`);
 					// resetForm(this.state.initValue)
+					this.setState({ loading:false,});
 				}
 			}).catch((err) => {
 				this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
 			})
 	}else {
 		if(this.state.apiSelector==="createAndSubmitPayroll"){
-
+			this.setState({ loading:true,loadingMsg:"Submitting Payroll..."});
 			this.props.createPayrollActions
 			 .updateAndSubmitPayroll(formData)
 			// .createPayroll(JSON.stringify(employeeListIds),payrollSubject,this.state.payPeriod,JSON.stringify(this.state.allPayrollEmployee),payrollDate)
@@ -392,6 +394,7 @@ class UpdatePayroll extends React.Component {
 					this.tableApiCallsOnStatus()
 					this.props.history.push(`/admin/payroll/payrollrun`);
 					// resetForm(this.state.initValue)
+					this.setState({ loading:false,});
 				}
 			}).catch((err) => {
 				this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')

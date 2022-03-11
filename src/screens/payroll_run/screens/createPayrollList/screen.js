@@ -106,7 +106,8 @@ class CreatePayrollList extends React.Component {
 			paidDays:30,
 			countForTableApiCall:0,
 			focusedInput:null,
-			currencyIsoCode:"AED"
+			currencyIsoCode:"AED",
+			loadingMsg:"Loading..."
 		}
 
 		this.regEx = /^[0-9\d]+$/;
@@ -262,6 +263,7 @@ calculatePayperioad=(startDate,endDate)=>{
 		formData.append('totalAmountPayroll', totalAmountPayroll);
 
 		if(this.state.apiSelector ==="createPayroll"){
+			this.setState({ loading:true, loadingMsg:"Creating Payroll..."});
 		this.props.createPayrollActions
 			 .createPayroll(formData)
 						.then((res) => {
@@ -269,14 +271,14 @@ calculatePayperioad=(startDate,endDate)=>{
 					this.props.commonActions.tostifyAlert('success', 'Payroll created Successfully')				
 					this.tableApiCallsOnStatus()
 					this.props.history.push(`/admin/payroll/payrollrun`);
-			
+					this.setState({ loading:false,});
 				}
 			}).catch((err) => {
 				this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
 			})
 	}else {
 		if(this.state.apiSelector==="createAndSubmitPayroll"){
-
+			this.setState({ loading:true,loadingMsg:"Submitting Payroll..."});
 			this.props.createPayrollActions
 			 .createAndSubmitPayroll(formData)
 					.then((res) => {
@@ -284,7 +286,7 @@ calculatePayperioad=(startDate,endDate)=>{
 					this.props.commonActions.tostifyAlert('success', 'Payroll created And Submitted Successfully')				
 					this.tableApiCallsOnStatus()
 					this.props.history.push(`/admin/payroll/payrollrun`);
-				
+					this.setState({ loading:false,});
 				}
 			}).catch((err) => {
 				this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
@@ -703,11 +705,11 @@ showTotal=()=>{
 		strings.setLanguage(this.state.language);
 
 		const { employee_list, approver_dropdown_list } = this.props
-		const { loading, initValue } = this.state
+		const { loading, initValue,loadingMsg } = this.state
 		console.log(employee_list.data, "employee_list.data")
 		var today = new Date();
 		return (
-			loading ==true? <Loader/> :
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 <div>
 			<div className="create-employee-screen">
 				<div className="animated fadeIn">

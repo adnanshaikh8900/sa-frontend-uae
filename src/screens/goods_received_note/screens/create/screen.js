@@ -118,16 +118,20 @@ class CreateGoodsReceivedNote extends React.Component {
 			disabled: false,
 			data: [
 				{
-					id: 0,
-					description: '',
-					grnReceivedQuantity: 0,
-					quantity: 1,
-					unitPrice: '',
-					vatCategoryId: '',
-					subTotal: 0,
-					productId: '',
-
-
+						id: 0,
+						description: '',
+						quantity: 1,
+						unitPrice: '',
+						grnReceivedQuantity: 0,
+						vatCategoryId: '',
+						exciseTaxId:'',
+						exciseAmount:'',
+						// discountType:'FIXED',
+						// discount:0,
+						subTotal: 0,
+						vatAmount:0,
+						productId: '',
+						isExciseTaxExclusive:''
 				},
 			],
 			idCount: 0,
@@ -747,6 +751,8 @@ this.state.data.map((obj, index) => {
 				obj['unitPrice'] = result.unitPrice;
 				obj['vatCategoryId'] = result.vatCategoryId;
 				obj['description'] = result.description;
+				obj['exciseTaxId'] = result.exciseTaxId;
+				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive;
 				
 				idx = index;
 			}
@@ -760,6 +766,11 @@ this.state.data.map((obj, index) => {
 		form.setFieldValue(
 			`lineItemsString.${idx}.unitPrice`,
 			result.unitPrice,
+			true,
+		);
+		form.setFieldValue(
+			`lineItemsString.${idx}.exciseTaxId`,
+			result.exciseTaxId,
 			true,
 		);
 		form.setFieldValue(
@@ -967,45 +978,94 @@ this.state.data.map((obj, index) => {
 	};
 
 	updateAmount = (data, props) => {
-		const { vat_list } = this.props;
+		debugger
+		const { vat_list , excise_list} = this.props;
 		const { discountPercentage, discountAmount } = this.state;
-		console.log(discountAmount);
 		let total_net = 0;
+		let total_excise = 0;
 		let total = 0;
 		let total_vat = 0;
+		let net_value = 0;
+		let discount = 0;
 		data.map((obj) => {
 			const index =
 				obj.vatCategoryId !== ''
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
-
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
-			if (props.values.discountType.value === 'PERCENTAGE') {
-				var val =
-					((+obj.unitPrice -
-						+((obj.unitPrice * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })) *
-						vat *
-						obj.grnReceivedQuantity) /
-					100;
-			} else if (props.values.discountType.value === 'FIXED') {
-				var val =
-					(obj.unitPrice * obj.grnReceivedQuantity - discountAmount / data.length) *
-					(vat / 100);
-			} else {
-				var val = (+obj.unitPrice * vat * obj.grnReceivedQuantity) / 100;
+
+			//Excise calculation
+			if(obj.exciseTaxId !=  0){
+			if(obj.isExciseTaxExclusive === true){
+				if(obj.exciseTaxId === 1){
+				const value = +(obj.unitPrice) / 2 ;
+					net_value = parseFloat(obj.unitPrice) + parseFloat(value) ;
+					obj.exciseAmount = parseFloat(value) * obj.grnReceivedQuantity;
+				}else if (obj.exciseTaxId === 2){
+					const value = obj.unitPrice;
+					net_value = parseFloat(obj.unitPrice) +  parseFloat(value) ;
+					obj.exciseAmount = parseFloat(value) * obj.grnReceivedQuantity;
+				}
+				else{
+					net_value = obj.unitPrice
+				}
+			}	else{
+				if(obj.exciseTaxId === 1){
+					const value = obj.unitPrice / 3
+					obj.exciseAmount = parseFloat(value) * obj.grnReceivedQuantity;
+				net_value = obj.unitPrice}
+				else if (obj.exciseTaxId === 2){
+					const value = obj.unitPrice / 2
+					obj.exciseAmount = parseFloat(value) * obj.grnReceivedQuantity;
+				net_value = obj.unitPrice}
+				else{
+					net_value = obj.unitPrice
+				}
 			}
-			total_net = +(total_net + +obj.unitPrice * obj.quantity);
+		}else{
+			net_value = obj.unitPrice;
+			obj.exciseAmount = 0
+		}
+			//vat calculation
+			if (obj.discountType === 'PERCENTAGE') {
+				var val =
+				((+net_value -
+				 (+((net_value * obj.discount)) / 100)) *
+					vat *
+					obj.grnReceivedQuantity) /
+				100;
+				var val1 =
+				((+net_value -
+				 (+((net_value * obj.discount)) / 100)) * obj.grnReceivedQuantity ) ;
+			} else if (obj.discountType === 'FIXED') {
+				var val =
+						 (net_value * obj.grnReceivedQuantity - obj.discount ) *
+					(vat / 100);
+
+					var val1 =
+					((net_value * obj.grnReceivedQuantity )- obj.discount )
+
+			} else {
+				var val = (+net_value * vat * obj.grnReceivedQuantity) / 100;
+				var val1 = net_value * obj.grnReceivedQuantity
+			}
+			console.log('value '+val)
+			//discount calculation
+			discount = +(discount +(net_value * obj.grnReceivedQuantity)) - parseFloat(val1)
+			total_net = +(total_net + net_value * obj.grnReceivedQuantity);
 			total_vat = +(total_vat + val);
+			obj.vatAmount = val
 			obj.subTotal =
-				obj.unitPrice && obj.vatCategoryId ? (+obj.unitPrice * obj.quantity)+total_vat : 0;
+			net_value && obj.vatCategoryId ? parseFloat(val1) + parseFloat(val) : 0;
+			total_excise = +(total_excise + obj.exciseAmount)
 			total = total_vat + total_net;
 			return obj;
 		});
 
-		const discount =
-			props.values.discountType.value === 'PERCENTAGE'
-				? +((total_net * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })
-				: discountAmount;
+		// const discount =
+		// 	props.values.discountType.value === 'PERCENTAGE'
+		// 		? +((total_net * discountPercentage) / 100)
+		// 		: discountAmount;
 		this.setState(
 			{
 				data,
@@ -1013,21 +1073,20 @@ this.state.data.map((obj, index) => {
 					...this.state.initValue,
 					...{
 						total_net: discount ? total_net - discount : total_net,
-						invoiceVATAmount: total_vat,
-						discount: total_net > discount ? discount : 0,
-						totalAmount: total_net > discount ? total - discount : total,
+						totalVatAmount: total_vat,
+						discount:  discount ? discount : 0,
+						totalAmount: total_net > discount ? total - discount : total - discount,
+						total_excise: total_excise
 					},
+
 				},
 			},
-			() => {
-				if (props.values.discountType.value === 'PERCENTAGE') {
-					this.formRef.current.setFieldValue('discount', discount);
-				}
-			},
+
 		);
 	};
 
 	handleSubmit = (data, resetForm) => {
+		debugger
 		this.setState({ disabled: true });
 		const {
 			contact_po_number,
@@ -1055,7 +1114,8 @@ this.state.data.map((obj, index) => {
 		formData.append('grnRemarks', grnRemarks ? grnRemarks : '');
         formData.append('type', 5);
         formData.append('lineItemsString', JSON.stringify(this.state.data));
-        formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
+		formData.append('totalExciseAmount', this.state.initValue.total_excise);
+        formData.append('totalVatAmount', this.state.initValue.totalVatAmount);
 		formData.append('totalAmount', this.state.initValue.totalAmount);
 		if (supplierId && supplierId.value) {
 			formData.append('supplierId', supplierId.value);
@@ -1328,6 +1388,7 @@ this.state.data.map((obj, index) => {
 				obj['unitPrice'] = result.unitPrice;
 				obj['vatCategoryId'] = result.vatCategoryId;
 				obj['description'] = result.description;
+				obj['exciseTaxId'] = result.exciseTaxId;
 				idx = index;
 			}
 			return obj;

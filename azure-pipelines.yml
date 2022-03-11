@@ -2,7 +2,6 @@ name: $(TeamProject)_$(Build.DefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd
 trigger:
   branches:
     include:
-      - master
       - develop
 
 variables:

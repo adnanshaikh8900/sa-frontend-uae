@@ -37,6 +37,7 @@ import { AddEmployeesModal } from './sections';
 import moment from 'moment';
 import { DateRangePicker,isInclusivelyBeforeDay } from 'react-dates';
 import RoleReducer from 'screens/users_roles/screens/create/reducer';
+import { toast } from 'react-toastify';
 
 
 const mapStateToProps = (state) => {
@@ -1127,7 +1128,7 @@ class UpdatePayroll extends React.Component {
 																							'name',
 																							'userId',
 																							approver_dropdown_list.data,
-																							'User',
+																							'Approver',
 																						)
 																						.find(
 																							(option) =>
@@ -1142,7 +1143,7 @@ class UpdatePayroll extends React.Component {
 																							'name',
 																							'userId',
 																							approver_dropdown_list.data,
-																							'User',
+																							'Approver',
 																						)
 																						: []
 																				}
@@ -1151,7 +1152,9 @@ class UpdatePayroll extends React.Component {
 																					if (option && option.value) {
 																						this.setState({ userId: option.value,payrollApprover:option.value ,	submitButton:false})
 																						
-																					}
+																					}else
+																					this.setState({ userId: "",payrollApprover:"" ,	submitButton:true})
+																						
 																				}}
 																			/>
 
@@ -1255,11 +1258,16 @@ class UpdatePayroll extends React.Component {
 																		className="btn-square pull-right"
 																		// onClick={}
 																		onClick={() => {
-																			this.setState({apiSelector:"createAndSubmitPayroll"})
-																				props.handleSubmit()
+																			if(this.state.submitButton)
+																			toast.error(`Please select approver for payroll submission!`)
+																			else
+																			if(!this.state.submitButton && this.state.selectedRows && this.state.selectedRows.length !=0)
+																	     	{	this.setState({apiSelector:"createAndSubmitPayroll"})
+																				props.handleSubmit()}
+																			else
+																			toast.error(`Please select at least one employee for payroll update !`)
 																								}}
-																								disabled={!this.state.submitButton && this.state.selectedRows && this.state.selectedRows.length !=0 ? false :true}
-																		// disabled={this.state.allPayrollEmployee && this.state.allPayrollEmployee.length === 0 ?true :false}
+																		// disabled={!this.state.submitButton && this.state.selectedRows && this.state.selectedRows.length !=0 ? false :true}
 																		title={
 																			this.state.submitButton
 																				? `Please select approver for payroll submission!`
@@ -1275,10 +1283,13 @@ class UpdatePayroll extends React.Component {
 																	<Button type="button" color="primary" className="btn-square pull-right "
 																
 																	onClick={() => {
+																		if(this.state.selectedRows && this.state.selectedRows.length !=0){
 																		this.setState({apiSelector:"createPayroll"})
-																			props.handleSubmit()
+																			props.handleSubmit()}
+																			else
+																			toast.error(`Please select at least one employee for payroll update !`)
 																							}}
-																							disabled={this.state.selectedRows && this.state.selectedRows.length !=0 ? false :true}
+																		// disabled={this.state.selectedRows && this.state.selectedRows.length !=0 ? false :true}
 																							title={
 																								this.state.selectedRows && this.state.selectedRows.length !=0
 																								? ''

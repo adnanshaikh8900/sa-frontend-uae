@@ -38,6 +38,7 @@ import moment from 'moment';
 import "react-dates/initialize";
 import { DateRangePicker ,isInclusivelyAfterDay,isInclusivelyBeforeDay} from 'react-dates';
 import "react-dates/lib/css/_datepicker.css";
+import { toast } from 'react-toastify';
 
 const mapStateToProps = (state) => {
 
@@ -905,7 +906,7 @@ showTotal=()=>{
 																							'name',
 																							'userId',
 																							approver_dropdown_list.data,
-																							'User',
+																							'Approver',
 																						)
 																						: []
 																				}
@@ -916,8 +917,14 @@ showTotal=()=>{
 																						this.setState({
 																							 userId: option.value ,
 																							 submitButton:false
+																						})	
+																					}
+																					else{
+																						props.handleChange('payrollApprover')('');
+																						this.setState({
+																							 userId: '' ,
+																							 submitButton:true
 																						})
-																						
 																					}
 																				}}
 																			/>
@@ -1004,40 +1011,47 @@ showTotal=()=>{
 																	<Button
 																		color="primary"
 																		className="btn-square pull-right"
-																		// onClick={}
 																		onClick={() => {
-																			this.setState({apiSelector:"createAndSubmitPayroll"})
-																				props.handleSubmit()
-																								}}																		
-																	        disabled={!this.state.submitButton && this.state.selectedRows && this.state.selectedRows.length !=0 ? false :true}
+
+																			if(this.state.submitButton)
+																				toast.error(` Please select approver for payroll submission !`)
+																			else
+																			if(!this.state.submitButton && this.state.selectedRows && this.state.selectedRows.length !=0)
+																			{this.setState({apiSelector:"createAndSubmitPayroll"})
+																				props.handleSubmit()}
+																			else	
+																				toast.error(` Please select at least one employee for payroll creation !`)		
+																				}}
+																																				
+																	        // disabled={!this.state.submitButton && this.state.selectedRows && this.state.selectedRows.length !=0 ? false :true}
 																			title={
 																			this.state.submitButton
 																				? ` Please select approver for payroll submission !`
 																				: ''
 																		}
 																						
-
-																	// 	title={
-																	// 		this.state.selectedRows && this.state.selectedRows.length !=0
-																	// 		? ''
-																	// 		: `Please Select Employees Before creating  Payroll !`
-																	// }
 																			>
 
 																		<i class="fas fa-check-double  mr-1"></i> Create and Submit
 																	</Button>
 																	<Button type="button" color="primary" className="btn-square pull-right "														
-																    	onClick={() => {
-																		this.setState({apiSelector:"createPayroll"})
-																			props.handleSubmit()
-																							}}
+																    	onClick={
+																			() => {
+																				if(this.state.selectedRows && this.state.selectedRows.length !=0)
+																			{	this.setState({apiSelector:"createPayroll"})
+																				props.handleSubmit()}
+																				else
+																				toast.error(` Please select at least one employee for payroll creation !`)		
+																			
+																				}
+																			}
 																							
-																							disabled={this.state.selectedRows && this.state.selectedRows.length !=0 ? false :true}
-																							title={
-																								this.state.selectedRows && this.state.selectedRows.length !=0
-																								? ''
-																								: `Please select at least one employee for payroll creation !`
-																						}
+																		// disabled={this.state.selectedRows && this.state.selectedRows.length !=0 ? false :true}
+																		title={
+																				this.state.selectedRows && this.state.selectedRows.length !=0
+																					? ''
+																					: `Please select at least one employee for payroll creation !`
+																				}
 																	>
 																		<i className="fa fa-dot-circle-o  mr-1"></i> Create
 																	</Button>

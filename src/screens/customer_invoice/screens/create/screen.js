@@ -178,6 +178,8 @@ class CreateCustomerInvoice extends React.Component {
 			state_list_for_shipping:[],
 			param:false,
 			date:'',
+			contactId:'',
+			isQuotationSelected:false
 		};
 
 		this.formRef = React.createRef();
@@ -466,8 +468,110 @@ renderVatAmount = (cell, row,extraData) => {
 				}
 			});
 	};
-
+	getQuotationDetails=(quotationId)=>{
+this.props.customerInvoiceCreateActions.getQuotationById(quotationId)
+										.then((res)=>{
+											if (res.status === 200) {
+												this.getCompanyCurrency();
+												// this.purchaseCategory();
+												this.setState(
+													{
+														isQuotationSelected:true,
+														contactId: res.data.customerId,
+														quotationId: quotationId,
+														initValue: {
+															quotaionExpiration: res.data.quotaionExpiration
+																? moment(res.data.quotaionExpiration).format('DD-MM-YYYY')
+																: '',
+																quotaionExpiration1: res.data.quotaionExpiration
+																? res.data.quotaionExpiration
+																: '',
+																contactId: res.data.customerId ? res.data.customerId : '',
+																quotationNumber: res.data.quotationNumber
+																? res.data.quotationNumber
+																: '',
+																invoiceVATAmount: res.data.totalVatAmount
+																? res.data.totalVatAmount
+																: 0,
+																totalAmount: res.data.totalAmount ? res.data.totalAmount : 0,
+																total_net: 0,
+																notes: res.data.notes ? res.data.notes : '',
+																lineItemsString: res.data.poQuatationLineItemRequestModelList
+																? res.data.poQuatationLineItemRequestModelList
+																: [],
+																placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+																total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
+																discount: res.data.discount ? res.data.discount : 0,
+																discountPercentage: res.data.discountPercentage
+																	? res.data.discountPercentage
+																	: 0,
+																discountType: res.data.discountType
+																	? res.data.discountType
+																	: '',
+														
+														},
+														invoiceDateNoChange: res.data.quotaionExpiration
+																? moment(res.data.quotaionExpiration)
+																: '',
+														invoiceDueDateNoChange: res.data.quotaionExpiration
+																? res.data.quotaionExpiration
+																: '',		
+														customer_taxTreatment_des : res.data.taxtreatment ? res.data.taxtreatment : '',
+														placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+														total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
+														data: res.data.poQuatationLineItemRequestModelList
+															? res.data.poQuatationLineItemRequestModelList
+															: [],
+													
+												
+														// 
+							
+														discountAmount: res.data.discount ? res.data.discount : 0,
+														discountPercentage: res.data.discountPercentage
+															? res.data.discountPercentage
+															: '',
+													
+														selectedContact: res.data.customerId ? res.data.customerId : '',
+														// term: res.data.term ? res.data.term : '',
+														placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+														loading: false,
+													
+													},
+													() => {
+														if (this.state.data.length > 0) {
+															this.updateAmount(this.state.data);
+															const { data } = this.state;
+															const idCount =
+																data.length > 0
+																	? Math.max.apply(
+																			Math,
+																			data.map((item) => {
+																				return item.id;
+																			}),
+																	  )
+																	: 0;
+															this.setState({
+																idCount,
+															});
+														this.formRef.current.setFieldValue('contactId', res.data.customerId, true);
+														this.formRef.current.setFieldValue('placeOfSupplyId', res.data.placeOfSupplyId, true);
+														this.formRef.current.setFieldValue('currency', this.getCurrency(res.data.customerId), true);
+														this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(res.data.customerId), true);
+													   this.setExchange( this.getCurrency(res.data.customerId) );
+														} else {
+															this.setState({
+																idCount: 0,
+															});
+														}
+													}
+												);
+												this.getCurrency(res.data.customerId)	
+											}
+										})
+	}
 	componentDidMount = () => {
+		if(this.props.location.state && this.props.location.state.quotationId)
+		this.getQuotationDetails(this.props.location.state.quotationId);
 		this.getInitialData();
 	};
 
@@ -1226,10 +1330,14 @@ discountType = (row) =>
 			discountType,
 			discountPercentage,
 			notes,
-			changeShippingAddress
+			changeShippingAddress,
+			quotationId
 		} = data;
 		const { term } = this.state;
 		const formData = new FormData();
+		formData.append(
+			'quotationId',this.state.quotationId ?this.state.quotationId : null
+		)
 		formData.append(
 			'referenceNumber',
 			invoice_number !== null ? this.state.prefix + invoice_number : '',
@@ -1310,9 +1418,13 @@ if(changeShippingAddress && changeShippingAddress==true)
 			formData.append('term', term.value);
 		}
 
+		if(this.state.quotationId != null){
+			formData.append('contactId', this.state.contactId);
+		}else{
 		if (contactId && contactId.value) {
 			formData.append('contactId', contactId.value);
-		}
+		}}
+
 		if (placeOfSupplyId && placeOfSupplyId.value) {
 			formData.append('placeOfSupplyId', placeOfSupplyId.value);
 		}
@@ -1558,6 +1670,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 						...{ invoice_number: res.data },
 					},
 				});
+				if( res &&  res.data)
 				this.formRef.current.setFieldValue('invoice_number', res.data, true,this.validationCheck(res.data));
 			}
 		});
@@ -1746,19 +1859,19 @@ if(changeShippingAddress && changeShippingAddress==true)
 																			}
 																		},
 																	),
-																unitPrice: Yup.string()
-																	.required('Value is Required')
-																	.test(
-																		'Unit Price',
-																		'Unit Price Should be Greater than 1',
-																		(value) => {
-																			if (value > 0) {
-																				return true;
-																			} else {
-																				return false;
-																			}
-																		},
-																	),
+																// unitPrice: Yup.string()
+																// 	.required('Value is Required')
+																// 	.test(
+																// 		'Unit Price',
+																// 		'Unit Price Should be Greater than 1',
+																// 		(value) => {
+																// 			if (value > 0) {
+																// 				return true;
+																// 			} else {
+																// 				return false;
+																// 			}
+																// 		},
+																// 	),
 																vatCategoryId: Yup.string().required(
 																	'Value is Required',
 																),
@@ -1843,6 +1956,27 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		)}
 																</FormGroup>
 															</Col>
+															{/* {this.state.isQuotationSelected==true &&(
+																<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="quotationNumber">
+																		<span className="text-danger">* </span>
+																		{strings.QuotationNumber}
+																	</Label>
+																	<Input
+																		type="text"
+																		maxLength='50'
+																		id="quotationNumber"
+																		name="quotationNumber"
+																		placeholder={strings.QuotationNumber}
+																		value={props.values.quotationNumber}
+																		
+																	/>
+																	
+																</FormGroup>
+															</Col>
+
+															)} */}
 															</Row>
 														<hr />
 														<Row>
@@ -1853,6 +1987,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																	{strings.CustomerName}
 																	</Label>
 																	<Select
+																	isDisabled={this.state.isQuotationSelected}
 																		id="contactId"
 																		name="contactId"
 																		placeholder={strings.Select+strings.CustomerName} 
@@ -1862,11 +1997,22 @@ if(changeShippingAddress && changeShippingAddress==true)
 																						'label',
 																						'value',
 																						tmpCustomer_list,
-																						'Customer',
+																						strings.CustomerName,
 																				  )
 																				: []
 																		}
 																		value={props.values.contactId}
+																		value={
+																			tmpCustomer_list &&
+																			selectOptionsFactory.renderOptions(
+																				'label',
+																				'value',
+																				tmpCustomer_list,
+																				strings.CustomerName,
+																		  ).find(
+																				(option) => option.value == (this.state.quotationId ? this.state.contactId:props.values.contactId)
+																			)
+																		}
 																		onChange={(option) => {
 																			if (option && option.value) {
 																				this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
@@ -1952,6 +2098,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		{strings.PlaceofSupply}
 																	</Label>
 																	<Select
+																		isDisabled={this.state.isQuotationSelected}
 																		id="placeOfSupplyId"
 																		name="placeOfSupplyId"
 																		placeholder={strings.Select+strings.PlaceofSupply}
@@ -1966,7 +2113,21 @@ if(changeShippingAddress && changeShippingAddress==true)
 																				  )
 																				: []
 																		}
-																		value={this.state.placelist}
+																		value={
+																			this.placelist &&
+																			selectOptionsFactory.renderOptions(
+																				'label',
+																				'value',
+																				this.placelist,
+																				'Place of Supply',
+																		  ).find(
+																									(option) =>
+																										option.value ==
+																										(this.state.quotationId ? this.state.placeOfSupplyId:props.values
+																											.placeOfSupplyId.toString())
+																										
+																								)
+																						}
 																		className={
 																			props.errors.placeOfSupplyId &&
 																			props.touched.placeOfSupplyId

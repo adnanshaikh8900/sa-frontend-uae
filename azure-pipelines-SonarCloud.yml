@@ -56,5 +56,11 @@ stages:
               scannerMode: 'MSBuild'
               projectKey: 'simplevat-frontend-reactjs'
               projectName: 'simplevat-frontend-reactjs'
-          
+              
+
+          - task: Npm@1
+            inputs:
+              command: 'custom'
+              customCommand: 'run build'
+
           - task: SonarCloudAnalyze@1

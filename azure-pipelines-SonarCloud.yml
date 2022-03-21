@@ -53,9 +53,11 @@ stages:
             inputs:
               SonarCloud: 'Sonar-Cloud'
               organization: 'datainn'
-              scannerMode: 'MSBuild'
-              projectKey: 'simplevat-frontend-reactjs'
-              projectName: 'simplevat-frontend-reactjs'
+              scannerMode: 'CLI'
+              configMode: 'manual'
+              cliProjectKey: 'simplevat-frontend-reactjs'
+              cliProjectName: 'simplevat-frontend-reactjs'
+              cliSources: '.'
               
 
           - task: Npm@1

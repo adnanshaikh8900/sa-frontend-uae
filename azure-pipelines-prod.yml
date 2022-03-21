@@ -8,7 +8,7 @@ trigger:
       - master
   tags:
     include:
-      - '*-beta*'
+      - '*.*.*'
   paths:
     exclude:
       - '*'

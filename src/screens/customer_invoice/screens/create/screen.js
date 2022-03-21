@@ -468,7 +468,13 @@ renderVatAmount = (cell, row,extraData) => {
 	};
 
 	componentDidMount = () => {
+		
+	//  let mockdata={"id":1054,"firstName":"Kishore","middleName":"","lastName":"Jackson","organization":"",currencyCode:150,"email":"suraj.rahade123@datainn.io","mobileNumber":"911111111111","telephone":null,"currencySymbol":"د.إ","contactType":3,"nextDueDate":null,"dueAmount":null,"contactTypeString":"Both","isActive":true,"fullName":"Kishore Jackson"}
+	// 	 this.getCurrentUser(mockdata);
+		
 		this.getInitialData();
+		if(this.props.location.state &&this.props.location.state.contactData)
+		this.getCurrentUser(this.props.location.state.contactData);
 	};
 
 	getInitialData = () => {
@@ -1445,7 +1451,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 				value: data.id,
 			};
 		}
-		
+
 		let result = this.props.currency_convert_list.filter((obj) => {
 			return obj.currencyCode === data.currencyCode;
 		});

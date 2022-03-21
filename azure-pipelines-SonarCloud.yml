@@ -1,0 +1,60 @@
+name: $(TeamProject)_$(Build.DefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+trigger:
+  branches:
+    include:
+      - develop
+
+variables:
+  ${{ if eq(variables['Build.SourceBranchName'], 'master') }}:
+    containerRegistryConnection: 'SimpleAccountsAzureContainerRegistryConnection'
+    containerRegistryName: 'simpleaccounts'
+    tag: latest
+  ${{ else }}:
+    containerRegistryConnection: 'DataInnAzureContainerRegistryConnection'
+    containerRegistryName: 'datainn'
+    tag: 0.0.3-alpha-$(Build.BuildId)
+
+  npm_config_cache: $(Pipeline.Workspace)/.npm
+  docker_cashe_path: simpleaccounts-frontend-$(Build.SourceBranchName)
+
+
+stages:
+  - stage: ci_build_simpleaccounts
+    displayName: CI Build for simpleaccounts
+    pool:
+      vmImage: 'ubuntu-latest'
+    jobs:
+      - job: build
+        displayName: Build & Push simpleaccounts Application
+        timeoutInMinutes: 30
+
+        steps:
+          - task: NodeTool@0
+            displayName: Install Node.js
+            inputs:
+              versionSpec: '14.x'
+
+          - task: CmdLine@2
+            inputs:
+              script: 'npm i --package-lock-only'
+            displayName: 'Generate package-lock.json'
+
+          - task: Cache@2
+            inputs:
+              key: 'npm | "$(Agent.OS)" | package-lock.json'
+              restoreKeys: |
+                npm | "$(Agent.OS)"
+              path: $(npm_config_cache)
+            displayName: Cache npm
+          - script: npm ci
+            displayName: npm ci
+
+          - task: SonarCloudPrepare@1
+            inputs:
+              SonarCloud: 'Sonar-Cloud'
+              organization: 'datainn'
+              scannerMode: 'MSBuild'
+              projectKey: 'simplevat-frontend-reactjs'
+              projectName: 'simplevat-frontend-reactjs'
+          
+          - task: SonarCloudAnalyze@1

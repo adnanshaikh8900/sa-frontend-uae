@@ -508,34 +508,34 @@ this.props.customerInvoiceCreateActions.getQuotationById(quotationId)
 																discountType: res.data.discountType
 																	? res.data.discountType
 																	: '',
-														
+
 														},
 														invoiceDateNoChange: res.data.quotaionExpiration
 																? moment(res.data.quotaionExpiration)
 																: '',
 														invoiceDueDateNoChange: res.data.quotaionExpiration
 																? res.data.quotaionExpiration
-																: '',		
+																: '',
 														customer_taxTreatment_des : res.data.taxtreatment ? res.data.taxtreatment : '',
 														placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 														total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
 														data: res.data.poQuatationLineItemRequestModelList
 															? res.data.poQuatationLineItemRequestModelList
 															: [],
-													
-												
-														// 
-							
+
+
+														//
+
 														discountAmount: res.data.discount ? res.data.discount : 0,
 														discountPercentage: res.data.discountPercentage
 															? res.data.discountPercentage
 															: '',
-													
+
 														selectedContact: res.data.customerId ? res.data.customerId : '',
 														// term: res.data.term ? res.data.term : '',
 														placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 														loading: false,
-													
+
 													},
 													() => {
 														if (this.state.data.length > 0) {
@@ -565,7 +565,7 @@ this.props.customerInvoiceCreateActions.getQuotationById(quotationId)
 														}
 													}
 												);
-												this.getCurrency(res.data.customerId)	
+												this.getCurrency(res.data.customerId)
 											}
 										})
 	}
@@ -573,6 +573,9 @@ this.props.customerInvoiceCreateActions.getQuotationById(quotationId)
 		if(this.props.location.state && this.props.location.state.quotationId)
 		this.getQuotationDetails(this.props.location.state.quotationId);
 		this.getInitialData();
+		if(this.props.location.state &&this.props.location.state.contactData){
+		this.getCurrentUser(this.props.location.state.contactData);
+	  }
 	};
 
 	getInitialData = () => {
@@ -1970,9 +1973,9 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		name="quotationNumber"
 																		placeholder={strings.QuotationNumber}
 																		value={props.values.quotationNumber}
-																		
+
 																	/>
-																	
+
 																</FormGroup>
 															</Col>
 
@@ -2125,7 +2128,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																										option.value ==
 																										(this.state.quotationId ? this.state.placeOfSupplyId:props.values
 																											.placeOfSupplyId.toString())
-																										
+
 																								)
 																						}
 																		className={

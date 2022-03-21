@@ -473,8 +473,9 @@ renderVatAmount = (cell, row,extraData) => {
 	// 	 this.getCurrentUser(mockdata);
 		
 		this.getInitialData();
-		if(this.props.location.state &&this.props.location.state.contactData)
+		if(this.props.location.state &&this.props.location.state.contactData){
 		this.getCurrentUser(this.props.location.state.contactData);
+	  }
 	};
 
 	getInitialData = () => {
@@ -1456,20 +1457,22 @@ if(changeShippingAddress && changeShippingAddress==true)
 			return obj.currencyCode === data.currencyCode;
 		});
 		
-	    this.formRef.current.setFieldValue('currency', result[0].currencyCode, true);
-		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
-		this.formRef.current.setFieldValue('taxTreatmentid', result[0].taxTreatmentid, true);
-		
 		this.setState({
 			customer_currency: data.currencyCode,
-			customer_currency_des: result[0].currencyName,
-		})
-		
-		// this.setState({
-			//   selectedContact: option
-			// })
-			console.log('data11', option)
+			customer_currency_des: result[0]  && result[0].currencyName ? result[0].currencyName:"AED",
+			customer_currency_symbol:data.currencyIso ?data.currencyIso:"AED",
+			customer_taxTreatment_des:data.taxTreatment?data.taxTreatment:""
+		});
+
 		this.formRef.current.setFieldValue('contactId', option, true);
+
+		if(result[0] && result[0].currencyCode)
+		this.formRef.current.setFieldValue('currency',result[0].currencyCode, true);
+
+		this.formRef.current.setFieldValue('taxTreatmentid', data.taxTreatmentId, true);
+
+		if( result[0] &&  result[0].exchangeRate)
+		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
 	};
 
 	getCurrentNumber = (data) => {

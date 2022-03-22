@@ -523,7 +523,12 @@ Post:"Post",
 Last12Months:"Last 12 Months",	
 Last6Months:"Last 6 Months",	
 Last3Months:"Last 3 Months",	
-
+CreateCustomerInvoice:"Create Customer Invoice",
+CreateSupplierInvoice:"Create Supplier Invoice",
+MarkAsApproved:"Mark As Approved",
+MarkAsRejected:"Mark As Rejected",
+Invoiced:"Invoiced",
+SendAgain:"Send Again",
 
 //credit notes
 CreditNotes:" Tax Credit Notes",

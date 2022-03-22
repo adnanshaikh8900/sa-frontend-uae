@@ -181,7 +181,14 @@ class Quatation extends React.Component {
 			classname = 'label-closed';
 		} else if (row.status === 'Sent') {
 			classname = 'label-sent';
-		}else {
+		} else if(row.status === 'Posted'){
+			classname = 'label-posted';
+		} else if(row.status === 'Approved'){
+			classname = 'label-success'
+		} else if(row.status === 'Rejected'){
+			classname = 'label-due'
+		}
+		else {
 			classname = 'label-overdue';
 		}
 		return (
@@ -277,7 +284,7 @@ class Quatation extends React.Component {
 						)}
 					</DropdownToggle>
 					<DropdownMenu right>
-					{row.status !== 'Closed' && row.status !== "Sent" && (
+					{row.status == "Draft" && (
 							<DropdownItem
 								onClick={() =>
 									this.props.history.push(
@@ -288,7 +295,7 @@ class Quatation extends React.Component {
 							>
 								<i className="fas fa-edit" />  {strings.Edit} </DropdownItem>
 					)}
-							{row.status !== 'Closed' && row.status !== "Sent" && (
+							{row.status === 'Draft' && (
 							<DropdownItem
 								onClick={() => {
 									this.sendMail(row.id);
@@ -296,10 +303,52 @@ class Quatation extends React.Component {
 							>
 								<i className="fas fa-send" />  {strings.Send}
 							</DropdownItem>)}
+
+							{row.status === 'Approved' && (
+							<DropdownItem
+							onClick={() =>
+								this.props.history.push(
+									'/admin/income/customer-invoice/create',
+									{ quotationId: row.id },
+								)
+							}>
+								<i className="fas fa-plus" />{strings.CreateCustomerInvoice}
+							</DropdownItem>
+							)}
+
 							{row.status === 'Sent' && (
 							<DropdownItem
 							onClick={() => {
-							this.changeStatus(row.id);
+								this.sendMail(row.id);
+							}}
+							>
+								<i className="fas fa-send" />{strings.SendAgain}
+							</DropdownItem>
+							)}
+
+							{row.status != 'Draft' && row.status != 'Approved' && row.status != 'Closed' && row.status != "Invoiced" && (
+							<DropdownItem
+							onClick={() => {
+								this.changeStatus(row.id,"Approved");
+							}}
+							>
+								<i className="fa fa-check-circle-o" />{strings.MarkAsApproved}
+							</DropdownItem>
+							)}
+
+							{row.status != 'Draft' && row.status != 'Rejected' && row.status != 'Closed' && row.status != 'Invoiced' &&(
+							<DropdownItem
+							onClick={() => {
+								this.changeStatus(row.id,"Rejected");
+							}}
+							>
+								<i className="fa fa-ban" />{strings.MarkAsRejected}
+							</DropdownItem>
+							)}
+							{row.status != 'Draft' && row.status != 'Closed'&&(
+							<DropdownItem
+							onClick={() => {
+							this.changeStatus(row.id,"Closed");
 							}}
 							>
 								<i className="far fa-times-circle" />  {strings.Close}
@@ -348,9 +397,9 @@ class Quatation extends React.Component {
 			</div>
 		);
 	};
-	changeStatus = (id) => {
+	changeStatus = (id,status) => {
 		this.props.quotationAction
-		.changeStatus(id)
+		.changeStatus(id,status)
 		.then((res) => {
 			if (res.status === 200) {
 				this.props.commonActions.tostifyAlert(
@@ -397,7 +446,50 @@ class Quatation extends React.Component {
 				);
 			});
 	};
-
+	// 	postQuotation = (id) => {
+	// 	this.props.goodsReceivedNoteAction
+	// 		.postQUOTATION(id)
+	// 		.then((res) => {
+	// 			if (res.status === 200) {
+	// 				this.props.commonActions.tostifyAlert(
+	// 					'success',
+	// 					res.data ? res.data.message : 'Send Successfully'
+	// 				);
+	// 				this.setState({
+	// 					loading: false,
+	// 				});
+	// 				this.initializeData();
+	// 			}
+	// 		})
+	// 		.catch((err) => {
+	// 			this.props.commonActions.tostifyAlert(
+	// 				'error',
+	// 				err.data ? err.data.message : 'Send Unsuccessfully'
+	// 			);
+	// 		});
+	// };
+	// postQuotation = (id) => {
+	// 	this.props.quotationAction
+	// 		.postQUOTATION(id)
+	// 		.then((res) => {
+	// 			if (res.status === 200) {
+	// 				this.props.commonActions.tostifyAlert(
+	// 					'success',
+	// 					res.data ? res.data.message : 'Send Successfully'
+	// 				);
+	// 				this.setState({
+	// 					loading: false,
+	// 				});
+	// 				this.initializeData();
+	// 			}
+	// 		})
+	// 		.catch((err) => {
+	// 			this.props.commonActions.tostifyAlert(
+	// 				'error',
+	// 				err.data ? err.data.message : 'Send Unsuccessfully'
+	// 			);
+	// 		});
+	// };
 	onSizePerPageList = (sizePerPage) => {
 		if (this.options.sizePerPage !== sizePerPage) {
 			this.options.sizePerPage = sizePerPage;

@@ -497,6 +497,12 @@ Post:"Poster",
 Last12Months:"Les 12 derniers mois",	
 Last6Months:"Les 6 derniers mois",	
 Last3Months:"Les 3 derniers mois",	
+CreateCustomerInvoice:"Créer une facture client",
+CreateSupplierInvoice:"Créer une facture fournisseur",
+MarkAsApproved:"Marquer comme approuvé",
+MarkAsRejected:"Marquer comme rejeté",
+Invoiced:"Facturé",
+SendAgain:"Envoyer à nouveau",
 
 //credit notes
 CreditNotes:"Notes de crédit d'impôt",	

@@ -237,7 +237,7 @@ class CreateContact extends React.Component {
 							&& this.props.location.state
 							&& this.props.location.state.gotoParentURL
 						)
-						    this.props.history.push(this.props.location.state.gotoParentURL,{contactData:res.data})
+						    this.props.history.push(this.props.location.state.gotoParentURL)
 						else
 						    this.props.history.push('/admin/master/contact');
 

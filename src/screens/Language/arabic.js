@@ -502,6 +502,12 @@ Post:"بريد",
 Last12Months:"آخر 12 شهرا",	
 Last6Months:"آخر 6 أشهر",	
 Last3Months:"آخر 3 أشهر",	
+CreateCustomerInvoice:"إنشاء فاتورة العميل",
+CreateSupplierInvoice:"إنشاء فاتورة المورد",
+MarkAsApproved:"وضع علامة على أنه موافق عليه",
+MarkAsRejected:"وضع علامة مرفوضة",
+Invoiced:"مفوترة",
+SendAgain:"أعد الإرسال",
 
 //credit notes
 CreditNotes:"إشعارات الائتمان الضريبي",	

@@ -553,6 +553,11 @@ this.props.customerInvoiceCreateActions.getQuotationById(quotationId)
 															this.setState({
 																idCount,
 															});
+																this.formRef.current.setFieldValue(
+																	'lineItemsString',
+																	this.state.data,
+																	true,
+																);
 														this.formRef.current.setFieldValue('contactId', res.data.customerId, true);
 														this.formRef.current.setFieldValue('placeOfSupplyId', res.data.placeOfSupplyId, true);
 														this.formRef.current.setFieldValue('currency', this.getCurrency(res.data.customerId), true);

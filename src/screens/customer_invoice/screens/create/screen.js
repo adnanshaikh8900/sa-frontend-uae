@@ -155,6 +155,7 @@ class CreateCustomerInvoice extends React.Component {
 				discountType: "FIXED",
 				total_excise: 0,
 			},
+			taxType: false,
 			// excisetype: { value: 'Inclusive', label: 'Inclusive' },
 			currentData: {},
 			contactType: 2,
@@ -517,7 +518,7 @@ this.props.customerInvoiceCreateActions.getQuotationById(quotationId)
 																? res.data.quotaionExpiration
 																: '',
 														customer_taxTreatment_des : res.data.taxtreatment ? res.data.taxtreatment : '',
-														placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+														// placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 														total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
 														data: res.data.poQuatationLineItemRequestModelList
 															? res.data.poQuatationLineItemRequestModelList
@@ -794,7 +795,6 @@ this.props.customerInvoiceCreateActions.getQuotationById(quotationId)
 							   ? 'is-invalid'
 							   : ''
 					   }`}
-   type="text"
    />
 	<div class="dropdown open input-group-append">
 
@@ -1210,70 +1210,118 @@ discountType = (row) =>
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
+
 			//Excise calculation
+			debugger
 			if(obj.exciseTaxId !=  0){
-			if(obj.isExciseTaxExclusive === true){
-				if(obj.exciseTaxId === 1){
-				const value = +(obj.unitPrice) / 2 ;
-					net_value = parseFloat(obj.unitPrice) + parseFloat(value) ;
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
-				}else if (obj.exciseTaxId === 2){
-					const value = obj.unitPrice;
-					net_value = parseFloat(obj.unitPrice) +  parseFloat(value) ;
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
+				if(obj.isExciseTaxExclusive === true){
+					if(obj.exciseTaxId === 1){
+					const value = +(obj.unitPrice) / 2 ;
+						net_value = parseFloat(obj.unitPrice) + parseFloat(value) ;
+						obj.exciseAmount = parseFloat(value) * obj.quantity;
+					}else if (obj.exciseTaxId === 2){
+						const value = obj.unitPrice;
+						net_value = parseFloat(obj.unitPrice) +  parseFloat(value) ;
+						obj.exciseAmount = parseFloat(value) * obj.quantity;
+					}
+					else{
+						net_value = obj.unitPrice
+					}
+				}	else{
+					if(obj.exciseTaxId === 1){
+						const value = obj.unitPrice / 3
+						obj.exciseAmount = parseFloat(value) * obj.quantity;
+					net_value = obj.unitPrice}
+					else if (obj.exciseTaxId === 2){
+						const value = obj.unitPrice / 2
+						obj.exciseAmount = parseFloat(value) * obj.quantity;
+					net_value = obj.unitPrice}
+					else{
+						net_value = obj.unitPrice
+					}
 				}
-				else{
-					net_value = obj.unitPrice
-				}
-			}	else{
-				if(obj.exciseTaxId === 1){
-					const value = obj.unitPrice / 3
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
-				net_value = obj.unitPrice}
-				else if (obj.exciseTaxId === 2){
-					const value = obj.unitPrice / 2
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
-				net_value = obj.unitPrice}
-				else{
-					net_value = obj.unitPrice
-				}
+			}else{
+				net_value = obj.unitPrice;
+				obj.exciseAmount = 0
 			}
-		}else{
-			net_value = obj.unitPrice;
-			obj.exciseAmount = 0
-		}
 			//vat calculation
 			if (obj.discountType === 'PERCENTAGE') {
-				var val =
-				((+net_value -
-				 (+((net_value * obj.discount)) / 100)) *
-					vat *
-					obj.quantity) /
-				100;
-
-				var val1 =
-				((+net_value -
-				 (+((net_value * obj.discount)) / 100)) * obj.quantity ) ;
-			} else if (obj.discountType === 'FIXED') {
-				var val =
-						 (net_value * obj.quantity - obj.discount ) *
-					(vat / 100);
+	
+				if (this.state.taxType === false) {
+					
+					var val =
+						((+net_value - (+((net_value * obj.discount)) / 100)) * vat * obj.quantity) / 100;
 
 					var val1 =
-					((net_value * obj.quantity )- obj.discount )
+						((+net_value -
+							(+((net_value * obj.discount)) / 100)) * obj.quantity);
+				} else {
+					var val =
+						((+net_value - (+((net_value * obj.discount)) / 100)) * (vat/ (100 + vat)*100) * obj.quantity) / 100; 
+
+					var val1 =
+						((+net_value -
+							(+((net_value * obj.discount)) / 100)) * obj.quantity);
+				}
+			} else if (obj.discountType === 'FIXED') {
+				if (this.state.taxType === false) {
+
+					var val =
+						(net_value * obj.quantity - obj.discount) *
+						(vat / 100);
+					var val1 =
+						((net_value * obj.quantity) - obj.discount)
+				}
+				else {
+					var val =
+						((net_value * vat / (100 + vat)) * obj.quantity - obj.discount)
+					var val1 =
+						((net_value * obj.quantity) - obj.discount) - val
+				}
 
 			} else {
 				var val = (+net_value * vat * obj.quantity) / 100;
 				var val1 = net_value * obj.quantity
 			}
+			if(obj.exciseTaxId !=  0){
+				debugger
+				if(this.state.taxType === true){
+					if(obj.isExciseTaxExclusive === false){
+					if(obj.exciseTaxId === 1){
+						const value = (net_value - val) / 3
+						obj.exciseAmount = parseFloat(value) * obj.quantity;
+					}
+					else if (obj.exciseTaxId === 2){
+						const value = (net_value - val) / 2
+						obj.exciseAmount = parseFloat(value) * obj.quantity;
+					}
+				}else{
+					if(obj.exciseTaxId === 1){
+						const value = +(net_value - val) / 3 ;
+							// net_value = parseFloat(obj.unitPrice) + parseFloat(value) ;
+							obj.exciseAmount = parseFloat(value) * obj.quantity;
+						}else if (obj.exciseTaxId === 2){
+							const value = (net_value - val) / 2;
+							// net_value = parseFloat(obj.unitPrice) +  parseFloat(value) ;
+							obj.exciseAmount = parseFloat(value) * obj.quantity;
+						}
+						else{
+							net_value = obj.unitPrice
+						}
+				}
+			}
 
+			}
+			debugger
 			//discount calculation
-			discount = +(discount +(net_value * obj.quantity)) - parseFloat(val1)
-			total_net = +(total_net + net_value * obj.quantity);
-			total_vat = +(total_vat + val);
 			obj.vatAmount = val
 			obj.subTotal =
 			net_value && obj.vatCategoryId ? parseFloat(val1) + parseFloat(val) : 0;
+
+			discount = +(discount +(parseFloat(val1) * obj.quantity)) - parseFloat(val1)
+			total_net = +(total_net + parseFloat(val1) * obj.quantity);
+			total_vat = +(total_vat + val);
+			
 			total_excise = +(total_excise + obj.exciseAmount)
 			total = total_vat + total_net;
 			return obj;
@@ -1343,8 +1391,9 @@ discountType = (row) =>
 		} = data;
 		const { term } = this.state;
 		const formData = new FormData();
+		formData.append('taxType', this.state.taxType)
 		formData.append(
-			'quotationId',this.state.quotationId ?this.state.quotationId : null
+			'quotationId',this.state.quotationId ? this.state.quotationId : ''
 		)
 		formData.append(
 			'referenceNumber',
@@ -1558,33 +1607,30 @@ if(changeShippingAddress && changeShippingAddress==true)
 
 		let option;
 		if (data.label || data.value) {
-			option = data;
+		   option = data;
 		} else {
-			option = {
-				label: `${data.fullName}`,
-				value: data.id,
-			};
+		   option = {
+			  label: `${data.fullName}`,
+			  value: data.id,
+		   };
 		}
-		
+	 
 		let result = this.props.currency_convert_list.filter((obj) => {
-			return obj.currencyCode === data.currencyCode;
+		   return obj.currencyCode === data.currencyCode;
 		});
-		
-	    this.formRef.current.setFieldValue('currency', result[0].currencyCode, true);
-		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
-		this.formRef.current.setFieldValue('taxTreatmentid', result[0].taxTreatmentid, true);
-		
 		this.setState({
-			customer_currency: data.currencyCode,
-			customer_currency_des: result[0].currencyName,
-		})
-		
-		// this.setState({
-			//   selectedContact: option
-			// })
-			console.log('data11', option)
+		   customer_currency: data.currencyCode,
+		   customer_currency_des: result[0]  && result[0].currencyName ? result[0].currencyName:"AED",
+		   customer_currency_symbol:data.currencyIso ?data.currencyIso:"AED",
+		   customer_taxTreatment_des:data.taxTreatment?data.taxTreatment:""
+		});
 		this.formRef.current.setFieldValue('contactId', option, true);
-	};
+		if(result[0] && result[0].currencyCode)
+		this.formRef.current.setFieldValue('currency',result[0].currencyCode, true);
+		this.formRef.current.setFieldValue('taxTreatmentid', data.taxTreatmentId, true);
+		if( result[0] &&  result[0].exchangeRate)
+		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
+	 };
 
 	getCurrentNumber = (data) => {
 		this.getInvoiceNo();
@@ -2817,6 +2863,44 @@ if(changeShippingAddress && changeShippingAddress==true)
 																<i className="fa fa-plus"></i> {strings.Addproduct}
 															</Button>
 														</Col>
+
+														<Col  >
+																<label className='mr-4'><b>Tax Type</b></label>
+																{this.state.taxType === false ?
+																	<span style={{ color: "#0069d9" }} className='mr-4'><b>Exclusive</b></span> :
+																	<span className='mr-4'>Exclusive</span>}
+																<Switch
+																	value={props.values.taxType}
+																	checked={this.state.taxType}
+																	onChange={(taxType) => {
+
+																		props.handleChange('taxType')(taxType);
+																		this.setState({ taxType }, () => {
+																			this.updateAmount(
+																				this.state.data,
+																				props
+																			)
+																		});
+
+
+																	}}
+
+																	onColor="#2064d8"
+																	onHandleColor="#2693e6"
+																	handleDiameter={25}
+																	uncheckedIcon={false}
+																	checkedIcon={false}
+																	boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+																	activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+																	height={20}
+																	width={48}
+																	className="react-switch "
+																/>
+																{this.state.taxType === true ?
+																	<span style={{ color: "#0069d9" }} className='ml-4'><b>Inclusive</b></span>
+																	: <span className='ml-4'>Inclusive</span>
+																}
+															</Col>
                                                        </Row>
 														<Row>
 															{props.errors.lineItemsString &&

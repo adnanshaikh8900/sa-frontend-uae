@@ -37,7 +37,7 @@ import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
 
 import './style.scss';
 import moment from 'moment';
-import {data}  from '../../../Language/index'
+import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import Switch from "react-switch";
 
@@ -92,19 +92,16 @@ class CreateSupplierInvoice extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			supplier_currency_symbol:'',
+			supplier_currency_symbol: '',
 			loading: false,
 			discountOptions: [
 				{ value: 'FIXED', label: 'FIXED' },
 				{ value: 'PERCENTAGE', label: '%' },
 			],
-			exciseTypeOption:[
-				{ value: 'Inclusive', label: 'Inclusive' },
-				{ value: 'Exclusive', label: 'Exclusive' },
-			],
+
 			discount_option: '',
 			disabled: false,
-			isReverseChargeEnabled : false,
+			isReverseChargeEnabled: false,
 			data: [
 				{
 					id: 0,
@@ -112,12 +109,12 @@ class CreateSupplierInvoice extends React.Component {
 					quantity: 1,
 					unitPrice: '',
 					vatCategoryId: '',
-					exciseTaxId:'',
-					discountType : 'FIXED',
-					exciseAmount:'',
+					exciseTaxId: '',
+					discountType: 'FIXED',
+					exciseAmount: '',
 					discount: 0,
 					subTotal: 0,
-					vatAmount:0,
+					vatAmount: 0,
 					productId: '',
 					transactionCategoryId: '',
 					transactionCategoryLabel: '',
@@ -135,7 +132,7 @@ class CreateSupplierInvoice extends React.Component {
 				contactId: '',
 				placeOfSupplyId: '',
 				project: '',
-				exchangeRate:'',
+				exchangeRate: '',
 				lineItemsString: [
 					{
 						id: 0,
@@ -146,7 +143,7 @@ class CreateSupplierInvoice extends React.Component {
 						subTotal: 0,
 						productId: '',
 						transactionCategoryId: '',
-						isExciseTaxExclusive:''
+						isExciseTaxExclusive: ''
 					},
 				],
 				invoice_number: '',
@@ -157,12 +154,12 @@ class CreateSupplierInvoice extends React.Component {
 				notes: '',
 				discount: 0,
 				discountPercentage: 0,
-				discountType:'FIXED',
+				discountType: 'FIXED',
 				total_excise: 0,
 
 			},
-			discountType : "FIXED",
-			// excisetype: { value: 'Inclusive', label: 'Inclusive' },
+			discountType: "FIXED",
+			taxType: false,
 			currentData: {},
 			contactType: 1,
 			openSupplierModal: false,
@@ -177,10 +174,10 @@ class CreateSupplierInvoice extends React.Component {
 			discountPercentage: '',
 			discountAmount: 0,
 			purchaseCategory: [],
-			exchangeRate:'',	
-			basecurrency:[],
+			exchangeRate: '',
+			basecurrency: [],
 			language: window['localStorage'].getItem('language'),
-			param:false,
+			param: false,
 			date: ''
 		};
 
@@ -207,7 +204,7 @@ class CreateSupplierInvoice extends React.Component {
 			{ label: 'Net 60 Days', value: 'NET_60' },
 			{ label: 'Due on Receipt', value: 'DUE_ON_RECEIPT' },
 		];
-			this.placelist = [
+		this.placelist = [
 			{ label: 'Abu Dhabi', value: '1' },
 			{ label: 'Dubai', value: '2' },
 			{ label: 'Sharjah', value: '3' },
@@ -219,7 +216,7 @@ class CreateSupplierInvoice extends React.Component {
 		this.regEx = /^[0-9\b]+$/;
 		this.regExBoth = /[a-zA-Z0-9 /D]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
-		this.regDec1=/^\d{1,2}\.\d{1,2}$|^\d{1,2}$/;
+		this.regDec1 = /^\d{1,2}\.\d{1,2}$|^\d{1,2}$/;
 	}
 
 	renderProductName = (cell, row) => {
@@ -258,17 +255,16 @@ class CreateSupplierInvoice extends React.Component {
 						}}
 						placeholder={strings.Description}
 						className={`form-control 
-            ${
-							props.errors.lineItemsString &&
-							props.errors.lineItemsString[parseInt(idx, 10)] &&
-							props.errors.lineItemsString[parseInt(idx, 10)].description &&
-							Object.keys(props.touched).length > 0 &&
-							props.touched.lineItemsString &&
-							props.touched.lineItemsString[parseInt(idx, 10)] &&
-							props.touched.lineItemsString[parseInt(idx, 10)].description
+            ${props.errors.lineItemsString &&
+								props.errors.lineItemsString[parseInt(idx, 10)] &&
+								props.errors.lineItemsString[parseInt(idx, 10)].description &&
+								Object.keys(props.touched).length > 0 &&
+								props.touched.lineItemsString &&
+								props.touched.lineItemsString[parseInt(idx, 10)] &&
+								props.touched.lineItemsString[parseInt(idx, 10)].description
 								? 'is-invalid'
 								: ''
-						}`}
+							}`}
 					/>
 				)}
 			/>
@@ -308,17 +304,16 @@ class CreateSupplierInvoice extends React.Component {
 							}}
 							placeholder={strings.Quantity}
 							className={`form-control 
-            ${
-							props.errors.lineItemsString &&
-							props.errors.lineItemsString[parseInt(idx, 10)] &&
-							props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
-							Object.keys(props.touched).length > 0 &&
-							props.touched.lineItemsString &&
-							props.touched.lineItemsString[parseInt(idx, 10)] &&
-							props.touched.lineItemsString[parseInt(idx, 10)].quantity
-								? 'is-invalid'
-								: ''
-						}`}
+            ${props.errors.lineItemsString &&
+									props.errors.lineItemsString[parseInt(idx, 10)] &&
+									props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
+									Object.keys(props.touched).length > 0 &&
+									props.touched.lineItemsString &&
+									props.touched.lineItemsString[parseInt(idx, 10)] &&
+									props.touched.lineItemsString[parseInt(idx, 10)].quantity
+									? 'is-invalid'
+									: ''
+								}`}
 						/>
 						{props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -351,8 +346,8 @@ class CreateSupplierInvoice extends React.Component {
 				name={`lineItemsString.${idx}.unitPrice`}
 				render={({ field, form }) => (
 					<Input
-					type="text"
-					min="0"
+						type="text"
+						min="0"
 						maxLength="14,2"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
@@ -369,17 +364,16 @@ class CreateSupplierInvoice extends React.Component {
 						}}
 						placeholder={strings.UnitPrice}
 						className={`form-control 
-            ${
-							props.errors.lineItemsString &&
-							props.errors.lineItemsString[parseInt(idx, 10)] &&
-							props.errors.lineItemsString[parseInt(idx, 10)].unitPrice &&
-							Object.keys(props.touched).length > 0 &&
-							props.touched.lineItemsString &&
-							props.touched.lineItemsString[parseInt(idx, 10)] &&
-							props.touched.lineItemsString[parseInt(idx, 10)].unitPrice
+            ${props.errors.lineItemsString &&
+								props.errors.lineItemsString[parseInt(idx, 10)] &&
+								props.errors.lineItemsString[parseInt(idx, 10)].unitPrice &&
+								Object.keys(props.touched).length > 0 &&
+								props.touched.lineItemsString &&
+								props.touched.lineItemsString[parseInt(idx, 10)] &&
+								props.touched.lineItemsString[parseInt(idx, 10)].unitPrice
 								? 'is-invalid'
 								: ''
-						}`}
+							}`}
 					/>
 				)}
 			/>
@@ -398,7 +392,7 @@ class CreateSupplierInvoice extends React.Component {
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// );
-		return row.subTotal === 0 ? this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 });
+		return row.subTotal === 0 ? this.state.supplier_currency_symbol + " " + row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : this.state.supplier_currency_symbol + " " + row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 	};
 	renderVatAmount = (cell, row, extraData) => {
 		// return row.subTotal === 0 ? (
@@ -412,8 +406,8 @@ class CreateSupplierInvoice extends React.Component {
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// );
-		let value =  row.vatAmount && row.vatAmount != 0 ?  row.vatAmount:0
-		return value === 0 ? this.state.supplier_currency_symbol +" "+ value.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ value.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 });
+		let value = row.vatAmount && row.vatAmount != 0 ? row.vatAmount : 0
+		return value === 0 ? this.state.supplier_currency_symbol + " " + value.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : this.state.supplier_currency_symbol + " " + value.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 	};
 
 	componentDidMount = () => {
@@ -441,8 +435,9 @@ class CreateSupplierInvoice extends React.Component {
 			// );
 		});
 		this.props.supplierInvoiceActions.getInvoicePrefix().then((response) => {
-			this.setState({prefixData:response.data
-			
+			this.setState({
+				prefixData: response.data
+
 			});
 		});
 		this.props.supplierInvoiceActions.getVatList();
@@ -475,20 +470,20 @@ class CreateSupplierInvoice extends React.Component {
 			console.log(err);
 		}
 	};
-    checkAmount=(discount)=>{
+	checkAmount = (discount) => {
 		const { initValue } = this.state;
-		   if(discount >= initValue.totalAmount){
-				   this.setState({
-					   param:true
-				   });
-		   }
-		   else{
-			   this.setState({
-				   param:false
-			   });
-		   }
+		if (discount >= initValue.totalAmount) {
+			this.setState({
+				param: true
+			});
+		}
+		else {
+			this.setState({
+				param: false
+			});
+		}
 
-	   }
+	}
 	purchaseCategory = () => {
 		try {
 			this.props.ProductActions.getTransactionCategoryListForPurchaseProduct(
@@ -499,7 +494,7 @@ class CreateSupplierInvoice extends React.Component {
 						{
 							purchaseCategory: res.data,
 						},
-						() => {},
+						() => { },
 					);
 				}
 			});
@@ -519,9 +514,9 @@ class CreateSupplierInvoice extends React.Component {
 					unitPrice: '',
 					vatCategoryId: '',
 					subTotal: 0,
-					exciseTaxId:'',
-					discountType:'FIXED',
-					vatAmount:0,
+					exciseTaxId: '',
+					discountType: 'FIXED',
+					vatAmount: 0,
 					discount: 0,
 					productId: '',
 				}),
@@ -577,7 +572,7 @@ class CreateSupplierInvoice extends React.Component {
 	};
 
 	renderDiscount = (cell, row, props) => {
-		 const { discountOptions } = this.state;
+		const { discountOptions } = this.state;
 		let idx;
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -590,106 +585,105 @@ class CreateSupplierInvoice extends React.Component {
 			<Field
 				// name={`lineItemsString.${idx}.vatCategoryId`}
 				render={({ field, form }) => (
-				<div>
-				<div  class="input-group">
-					<Input
-					type="text"
-					min="0"
-						maxLength="14,2"
-						value={row['discount'] !== 0 ? row['discount'] : 0}
-						onChange={(e) => {
-							if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
-								this.selectItem(
-									e.target.value,
-									row,
-									'discount',
-									form,
-									field,
-									props,
-								);
-							}
-						
-								this.updateAmount(
-									this.state.data,
-									props,
-								);
-						
-						}}
-						placeholder={strings.discount}
-						className={`form-control 
-            ${
-							props.errors.lineItemsString &&
-							props.errors.lineItemsString[parseInt(idx, 10)] &&
-							props.errors.lineItemsString[parseInt(idx, 10)].discount &&
-							Object.keys(props.touched).length > 0 &&
-							props.touched.lineItemsString &&
-							props.touched.lineItemsString[parseInt(idx, 10)] &&
-							props.touched.lineItemsString[parseInt(idx, 10)].discount
-								? 'is-invalid'
-								: ''
-						}`}
-	type="text"
-	/>
-	 <div class="dropdown open input-group-append">
+					<div>
+						<div class="input-group">
+							<Input
+								type="text"
+								min="0"
+								maxLength="14,2"
+								value={row['discount'] !== 0 ? row['discount'] : 0}
+								onChange={(e) => {
+									if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+										this.selectItem(
+											e.target.value,
+											row,
+											'discount',
+											form,
+											field,
+											props,
+										);
+									}
 
-		 <div 	style={{width:'100px'}}>
-		 <Select
+									this.updateAmount(
+										this.state.data,
+										props,
+									);
+
+								}}
+								placeholder={strings.discount}
+								className={`form-control 
+            ${props.errors.lineItemsString &&
+										props.errors.lineItemsString[parseInt(idx, 10)] &&
+										props.errors.lineItemsString[parseInt(idx, 10)].discount &&
+										Object.keys(props.touched).length > 0 &&
+										props.touched.lineItemsString &&
+										props.touched.lineItemsString[parseInt(idx, 10)] &&
+										props.touched.lineItemsString[parseInt(idx, 10)].discount
+										? 'is-invalid'
+										: ''
+									}`}
+
+							/>
+							<div class="dropdown open input-group-append">
+
+								<div style={{ width: '100px' }}>
+									<Select
 
 
-																							options={discountOptions}
-																							id="discountType"
-																							name="discountType"
-																							value={
-																								discountOptions &&
-																								selectOptionsFactory
-																									.renderOptions('label', 'value', discountOptions, 'discount')
-																									.find((option) => option.value == row.discountType)
-																							}
-																							// onChange={(item) => {
-																							// 	props.handleChange(
-																							// 		'discountType',
-																							// 	)(item);
-																							// 	props.handleChange(
-																							// 		'discountPercentage',
-																							// 	)('');
-																							// 	props.setFieldValue(
-																							// 		'discount',
-																							// 		0,
-																							// 	);
-																							// 	this.setState(
-																							// 		{
-																							// 			discountPercentage: '',
-																							// 			discountAmount: 0,
-																							// 		},
-																							// 		() => {
-																							// 			this.updateAmount(
-																							// 				this.state.data,
-																							// 				props,
-																							// 			);
-																							// 		},
-																							// 	);
-																							// }}
-																							onChange={(e) => {
-																								this.selectItem(
-																									e.value,
-																									row,
-																									'discountType',
-																									form,
-																									field,
-																									props,
-																								);
-																								this.updateAmount(
-																									this.state.data,
-																									props,
-																								);
-																							}}
-																						/>
-			  </div>
-			   </div>
-			   </div>
-			    </div>
+										options={discountOptions}
+										id="discountType"
+										name="discountType"
+										value={
+											discountOptions &&
+											selectOptionsFactory
+												.renderOptions('label', 'value', discountOptions, 'discount')
+												.find((option) => option.value == row.discountType)
+										}
+										// onChange={(item) => {
+										// 	props.handleChange(
+										// 		'discountType',
+										// 	)(item);
+										// 	props.handleChange(
+										// 		'discountPercentage',
+										// 	)('');
+										// 	props.setFieldValue(
+										// 		'discount',
+										// 		0,
+										// 	);
+										// 	this.setState(
+										// 		{
+										// 			discountPercentage: '',
+										// 			discountAmount: 0,
+										// 		},
+										// 		() => {
+										// 			this.updateAmount(
+										// 				this.state.data,
+										// 				props,
+										// 			);
+										// 		},
+										// 	);
+										// }}
+										onChange={(e) => {
+											this.selectItem(
+												e.value,
+												row,
+												'discountType',
+												form,
+												field,
+												props,
+											);
+											this.updateAmount(
+												this.state.data,
+												props,
+											);
+										}}
+									/>
+								</div>
+							</div>
+						</div>
+					</div>
 
-					)}
+				)}
 
 			/>
 		);
@@ -715,11 +709,11 @@ class CreateSupplierInvoice extends React.Component {
 						options={
 							vat_list
 								? selectOptionsFactory.renderOptions(
-										'name',
-										'id',
-										vat_list,
-										'Vat',
-								  )
+									'name',
+									'id',
+									vat_list,
+									'Vat',
+								)
 								: []
 						}
 						value={
@@ -729,7 +723,7 @@ class CreateSupplierInvoice extends React.Component {
 								.find((option) => option.value === +row.vatCategoryId)
 						}
 						id="vatCategoryId"
-						placeholder={strings.Select+strings.Vat}
+						placeholder={strings.Select + strings.Vat}
 						onChange={(e) => {
 							this.selectItem(
 								e.value,
@@ -740,17 +734,16 @@ class CreateSupplierInvoice extends React.Component {
 								props,
 							);
 						}}
-						className={`${
-							props.errors.lineItemsString &&
-							props.errors.lineItemsString[parseInt(idx, 10)] &&
-							props.errors.lineItemsString[parseInt(idx, 10)].vatCategoryId &&
-							Object.keys(props.touched).length > 0 &&
-							props.touched.lineItemsString &&
-							props.touched.lineItemsString[parseInt(idx, 10)] &&
-							props.touched.lineItemsString[parseInt(idx, 10)].vatCategoryId
+						className={`${props.errors.lineItemsString &&
+								props.errors.lineItemsString[parseInt(idx, 10)] &&
+								props.errors.lineItemsString[parseInt(idx, 10)].vatCategoryId &&
+								Object.keys(props.touched).length > 0 &&
+								props.touched.lineItemsString &&
+								props.touched.lineItemsString[parseInt(idx, 10)] &&
+								props.touched.lineItemsString[parseInt(idx, 10)].vatCategoryId
 								? 'is-invalid'
 								: ''
-						}`}
+							}`}
 					/>
 				)}
 			/>
@@ -776,11 +769,11 @@ class CreateSupplierInvoice extends React.Component {
 						options={
 							excise_list
 								? selectOptionsFactory.renderOptions(
-										'name',
-										'id',
-										excise_list,
-										'Excise',
-								  )
+									'name',
+									'id',
+									excise_list,
+									'Excise',
+								)
 								: []
 						}
 						value={
@@ -807,17 +800,16 @@ class CreateSupplierInvoice extends React.Component {
 								props,
 							);
 						}}
-						className={`${
-							props.errors.lineItemsString &&
-							props.errors.lineItemsString[parseInt(idx, 10)] &&
-							props.errors.lineItemsString[parseInt(idx, 10)].exciseTaxId &&
-							Object.keys(props.touched).length > 0 &&
-							props.touched.lineItemsString &&
-							props.touched.lineItemsString[parseInt(idx, 10)] &&
-							props.touched.lineItemsString[parseInt(idx, 10)].exciseTaxId
+						className={`${props.errors.lineItemsString &&
+								props.errors.lineItemsString[parseInt(idx, 10)] &&
+								props.errors.lineItemsString[parseInt(idx, 10)].exciseTaxId &&
+								Object.keys(props.touched).length > 0 &&
+								props.touched.lineItemsString &&
+								props.touched.lineItemsString[parseInt(idx, 10)] &&
+								props.touched.lineItemsString[parseInt(idx, 10)].exciseTaxId
 								? 'is-invalid'
 								: ''
-						}`}
+							}`}
 					/>
 				)}
 			/>
@@ -906,15 +898,15 @@ class CreateSupplierInvoice extends React.Component {
 						options={
 							product_list
 								? selectOptionsFactory.renderOptions(
-										'name',
-										'id',
-										product_list,
-										'Product',
-								  )
+									'name',
+									'id',
+									product_list,
+									'Product',
+								)
 								: []
 						}
 						id="productId"
-						placeholder={strings.Select+strings.Product}
+						placeholder={strings.Select + strings.Product}
 						onChange={(e) => {
 							if (e && e.label !== 'Select Product') {
 								this.selectItem(e.value, row, 'productId', form, field, props);
@@ -943,21 +935,20 @@ class CreateSupplierInvoice extends React.Component {
 						value={
 							product_list && row.productId
 								? selectOptionsFactory
-										.renderOptions('name', 'id', product_list, 'Product')
-										.find((option) => option.value === +row.productId)
+									.renderOptions('name', 'id', product_list, 'Product')
+									.find((option) => option.value === +row.productId)
 								: []
 						}
-						className={`${
-							props.errors.lineItemsString &&
-							props.errors.lineItemsString[parseInt(idx, 10)] &&
-							props.errors.lineItemsString[parseInt(idx, 10)].productId &&
-							Object.keys(props.touched).length > 0 &&
-							props.touched.lineItemsString &&
-							props.touched.lineItemsString[parseInt(idx, 10)] &&
-							props.touched.lineItemsString[parseInt(idx, 10)].productId
+						className={`${props.errors.lineItemsString &&
+								props.errors.lineItemsString[parseInt(idx, 10)] &&
+								props.errors.lineItemsString[parseInt(idx, 10)].productId &&
+								Object.keys(props.touched).length > 0 &&
+								props.touched.lineItemsString &&
+								props.touched.lineItemsString[parseInt(idx, 10)] &&
+								props.touched.lineItemsString[parseInt(idx, 10)].productId
 								? 'is-invalid'
 								: ''
-						}`}
+							}`}
 					/>
 				)}
 			/>
@@ -1029,26 +1020,25 @@ class CreateSupplierInvoice extends React.Component {
 						value={
 							purchaseCategory && row.transactionCategoryLabel
 								? purchaseCategory
-										.find((item) => item.label === row.transactionCategoryLabel)
-										.options.find(
-											(item) => item.value === +row.transactionCategoryId,
-										)
+									.find((item) => item.label === row.transactionCategoryLabel)
+									.options.find(
+										(item) => item.value === +row.transactionCategoryId,
+									)
 								: row.transactionCategoryId
 						}
-						placeholder={strings.Select+strings.Account}
-						className={`${
-							props.errors.lineItemsString &&
-							props.errors.lineItemsString[parseInt(idx, 10)] &&
-							props.errors.lineItemsString[parseInt(idx, 10)]
-								.transactionCategoryId &&
-							Object.keys(props.touched).length > 0 &&
-							props.touched.lineItemsString &&
-							props.touched.lineItemsString[parseInt(idx, 10)] &&
-							props.touched.lineItemsString[parseInt(idx, 10)]
-								.transactionCategoryId
+						placeholder={strings.Select + strings.Account}
+						className={`${props.errors.lineItemsString &&
+								props.errors.lineItemsString[parseInt(idx, 10)] &&
+								props.errors.lineItemsString[parseInt(idx, 10)]
+									.transactionCategoryId &&
+								Object.keys(props.touched).length > 0 &&
+								props.touched.lineItemsString &&
+								props.touched.lineItemsString[parseInt(idx, 10)] &&
+								props.touched.lineItemsString[parseInt(idx, 10)]
+									.transactionCategoryId
 								? 'is-invalid'
 								: ''
-						}`}
+							}`}
 					/>
 				)}
 			/>
@@ -1101,15 +1091,15 @@ class CreateSupplierInvoice extends React.Component {
 		const values = value
 			? value
 			: moment(props.values.invoiceDate, 'DD-MM-YYYY').toDate();
-			if (temp && values) {
-				this.setState({
-					date: moment(values).add(temp, 'days'),
-				});
-				const date1 = moment(values)
+		if (temp && values) {
+			this.setState({
+				date: moment(values).add(temp, 'days'),
+			});
+			const date1 = moment(values)
 				.add(temp, 'days')
 				.format('DD-MM-YYYY')
-				props.setFieldValue('invoiceDueDate',date1, true);
-			}
+			props.setFieldValue('invoiceDueDate', date1, true);
+		}
 	};
 
 	setExchange = (value) => {
@@ -1118,14 +1108,14 @@ class CreateSupplierInvoice extends React.Component {
 		});
 
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
-		};
+	};
 
 	setCurrency = (value) => {
 		let result = this.props.currency_convert_list.filter((obj) => {
 			return obj.currencyCode === value;
 		});
-		
-	    this.formRef.current.setFieldValue('curreancyname', result[0].currencyName, true);
+
+		this.formRef.current.setFieldValue('curreancyname', result[0].currencyName, true);
 	};
 
 	updateAmount = (data, props) => {
@@ -1145,69 +1135,116 @@ class CreateSupplierInvoice extends React.Component {
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
 
 			//Excise calculation
+			debugger
 			if(obj.exciseTaxId !=  0){
-			if(obj.isExciseTaxExclusive === true){
-				if(obj.exciseTaxId === 1){
-				const value = +(obj.unitPrice) / 2 ;
-					net_value = parseFloat(obj.unitPrice) + parseFloat(value) ;
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
-				}else if (obj.exciseTaxId === 2){
-					const value = obj.unitPrice;
-					net_value = parseFloat(obj.unitPrice) +  parseFloat(value) ;
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
+				if(obj.isExciseTaxExclusive === true){
+					if(obj.exciseTaxId === 1){
+					const value = +(obj.unitPrice) / 2 ;
+						net_value = parseFloat(obj.unitPrice) + parseFloat(value) ;
+						obj.exciseAmount = parseFloat(value) * obj.quantity;
+					}else if (obj.exciseTaxId === 2){
+						const value = obj.unitPrice;
+						net_value = parseFloat(obj.unitPrice) +  parseFloat(value) ;
+						obj.exciseAmount = parseFloat(value) * obj.quantity;
+					}
+					else{
+						net_value = obj.unitPrice
+					}
+				}	else{
+					if(obj.exciseTaxId === 1){
+						const value = obj.unitPrice / 3
+						obj.exciseAmount = parseFloat(value) * obj.quantity;
+					net_value = obj.unitPrice}
+					else if (obj.exciseTaxId === 2){
+						const value = obj.unitPrice / 2
+						obj.exciseAmount = parseFloat(value) * obj.quantity;
+					net_value = obj.unitPrice}
+					else{
+						net_value = obj.unitPrice
+					}
 				}
-				else{
-					net_value = obj.unitPrice
-				}
-			}	else{
-				if(obj.exciseTaxId === 1){
-					const value = obj.unitPrice / 3
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
-				net_value = obj.unitPrice}
-				else if (obj.exciseTaxId === 2){
-					const value = obj.unitPrice / 2
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
-				net_value = obj.unitPrice}
-				else{
-					net_value = obj.unitPrice
-				}
+			}else{
+				net_value = obj.unitPrice;
+				obj.exciseAmount = 0
 			}
-		}else{
-			net_value = obj.unitPrice;
-			obj.exciseAmount = 0
-		}
 			//vat calculation
 			if (obj.discountType === 'PERCENTAGE') {
-				var val =
-				((+net_value -
-				 (+((net_value * obj.discount)) / 100)) *
-					vat *
-					obj.quantity) /
-				100;
-
-				var val1 =
-				((+net_value -
-				 (+((net_value * obj.discount)) / 100)) * obj.quantity ) ;
-			} else if (obj.discountType === 'FIXED') {
-				var val =
-						 (net_value * obj.quantity - obj.discount ) *
-					(vat / 100);
+	
+				if (this.state.taxType === false) {
+					
+					var val =
+						((+net_value - (+((net_value * obj.discount)) / 100)) * vat * obj.quantity) / 100;
 
 					var val1 =
-					((net_value * obj.quantity )- obj.discount )
+						((+net_value -
+							(+((net_value * obj.discount)) / 100)) * obj.quantity);
+				} else {
+					var val =
+						((+net_value - (+((net_value * obj.discount)) / 100)) * (vat/ (100 + vat)*100) * obj.quantity) / 100; 
+
+					var val1 =
+						((+net_value -
+							(+((net_value * obj.discount)) / 100)) * obj.quantity);
+				}
+			} else if (obj.discountType === 'FIXED') {
+				if (this.state.taxType === false) {
+
+					var val =
+						(net_value * obj.quantity - obj.discount) *
+						(vat / 100);
+					var val1 =
+						((net_value * obj.quantity) - obj.discount)
+				}
+				else {
+					var val =
+						((net_value * vat / (100 + vat)) * obj.quantity - obj.discount)
+					var val1 =
+						((net_value * obj.quantity) - obj.discount) - val
+				}
 
 			} else {
 				var val = (+net_value * vat * obj.quantity) / 100;
 				var val1 = net_value * obj.quantity
 			}
+			if(obj.exciseTaxId !=  0){
+				debugger
+				if(this.state.taxType === true){
+					if(obj.isExciseTaxExclusive === false){
+					if(obj.exciseTaxId === 1){
+						const value = (net_value - val) / 3
+						obj.exciseAmount = parseFloat(value) * obj.quantity;
+					}
+					else if (obj.exciseTaxId === 2){
+						const value = (net_value - val) / 2
+						obj.exciseAmount = parseFloat(value) * obj.quantity;
+					}
+				}else{
+					if(obj.exciseTaxId === 1){
+						const value = +(net_value - val) / 3 ;
+							// net_value = parseFloat(obj.unitPrice) + parseFloat(value) ;
+							obj.exciseAmount = parseFloat(value) * obj.quantity;
+						}else if (obj.exciseTaxId === 2){
+							const value = (net_value - val) / 2;
+							// net_value = parseFloat(obj.unitPrice) +  parseFloat(value) ;
+							obj.exciseAmount = parseFloat(value) * obj.quantity;
+						}
+						else{
+							net_value = obj.unitPrice
+						}
+				}
+			}
 
+			}
+			debugger
 			//discount calculation
-			discount = +(discount +(net_value * obj.quantity)) - parseFloat(val1)
-			total_net = +(total_net + net_value * obj.quantity);
-			total_vat = +(total_vat + val);
 			obj.vatAmount = val
 			obj.subTotal =
 			net_value && obj.vatCategoryId ? parseFloat(val1) + parseFloat(val) : 0;
+
+			discount = +(discount +(parseFloat(val1) * obj.quantity)) - parseFloat(val1)
+			total_net = +(total_net + parseFloat(val1) * obj.quantity);
+			total_vat = +(total_vat + val);
+			
 			total_excise = +(total_excise + obj.exciseAmount)
 			total = total_vat + total_net;
 			return obj;
@@ -1261,6 +1298,7 @@ class CreateSupplierInvoice extends React.Component {
 		const { term } = this.state;
 
 		let formData = new FormData();
+		formData.append('taxType', this.state.taxType)
 		formData.append(
 			'referenceNumber',
 			invoice_number ? this.state.prefix + invoice_number : '',
@@ -1272,9 +1310,9 @@ class CreateSupplierInvoice extends React.Component {
 		formData.append(
 			'invoiceDate',
 			invoiceDate
-				?invoiceDate
-						// moment(invoiceDate,'DD-MM-YYYY')
-						// .toDate()
+				? invoiceDate
+				// moment(invoiceDate,'DD-MM-YYYY')
+				// .toDate()
 				: null,
 		);
 		formData.append('receiptNumber', receiptNumber ? receiptNumber : '');
@@ -1293,9 +1331,9 @@ class CreateSupplierInvoice extends React.Component {
 		formData.append('totalAmount', this.state.initValue.totalAmount);
 		formData.append('totalExciseAmount', this.state.initValue.total_excise);
 		formData.append('exciseType', this.state.checked);
-		formData.append('isReverseChargeEnabled',this.state.isReverseChargeEnabled);
+		formData.append('isReverseChargeEnabled', this.state.isReverseChargeEnabled);
 		formData.append('exchangeRate', exchangeRate);
-        formData.append('discount',this.state.initValue.discount);
+		formData.append('discount', this.state.initValue.discount);
 
 		if (term && term.value) {
 			formData.append('term', term.value);
@@ -1379,7 +1417,7 @@ class CreateSupplierInvoice extends React.Component {
 			});
 	};
 	openInvoiceNumberModel = (props) => {
-		this.setState({ openInvoiceNumberModel : true });
+		this.setState({ openInvoiceNumberModel: true });
 	};
 
 	openSupplierModal = (e) => {
@@ -1394,14 +1432,14 @@ class CreateSupplierInvoice extends React.Component {
 		let reader = new FileReader();
 		let file = e.target.files[0];
 		if (file) {
-			reader.onloadend = () => {};
+			reader.onloadend = () => { };
 			reader.readAsDataURL(file);
 			props.setFieldValue('attachmentFile', file, true);
 		}
 	};
 
 	getCurrentUser = (data) => {
-		
+
 		let option;
 		if (data.label || data.value) {
 			option = data;
@@ -1411,12 +1449,12 @@ class CreateSupplierInvoice extends React.Component {
 				value: data.id,
 			};
 		}
-		
+
 		let result = this.props.currency_convert_list.filter((obj) => {
 			return obj.currencyCode === data.currencyCode;
 		});
-		
-	    this.formRef.current.setFieldValue('currency', result[0].currencyCode, true);
+
+		this.formRef.current.setFieldValue('currency', result[0].currencyCode, true);
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
 
 		this.setState({
@@ -1460,7 +1498,7 @@ class CreateSupplierInvoice extends React.Component {
 				);
 				this.setState({ loading: false });
 			});
-	};	
+	};
 	getCurrentProduct = () => {
 		this.props.supplierInvoiceActions.getProductList().then((res) => {
 			this.setState(
@@ -1539,7 +1577,7 @@ class CreateSupplierInvoice extends React.Component {
 						},
 					},
 				});
-				this.formRef.current.setFieldValue('invoice_number', res.data, true,this.validationCheck(res.data));
+				this.formRef.current.setFieldValue('invoice_number', res.data, true, this.validationCheck(res.data));
 			}
 		});
 	};
@@ -1573,7 +1611,7 @@ class CreateSupplierInvoice extends React.Component {
 		let supplier_currencyCode = 0;
 
 		this.props.supplier_list.map(item => {
-			if(item.label.contactId == opt) {
+			if (item.label.contactId == opt) {
 				this.setState({
 					supplier_currency: item.label.currency.currencyCode,
 					supplier_currency_des: item.label.currency.currencyName,
@@ -1587,12 +1625,12 @@ class CreateSupplierInvoice extends React.Component {
 		return supplier_currencyCode;
 	}
 
-	getTaxTreatment= (opt) => {
-		
+	getTaxTreatment = (opt) => {
+
 		let customer_taxTreatmentId = 0;
 		let customer_item_taxTreatment = ''
 		this.props.supplier_list.map(item => {
-			if(item.label.contactId == opt) {
+			if (item.label.contactId == opt) {
 				this.setState({
 					customer_taxTreatment: item.label.taxTreatment.id,
 					customer_taxTreatment_des: item.label.taxTreatment.taxTreatment,
@@ -1603,21 +1641,21 @@ class CreateSupplierInvoice extends React.Component {
 				customer_item_taxTreatment = item.label.currency
 			}
 		})
-	
+
 		return customer_taxTreatmentId;
 	}
 
-	rendertotalexcise=()=>{
-		const {initValue}= this.state
+	rendertotalexcise = () => {
+		const { initValue } = this.state
 
-		let val=initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })
+		let val = initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 
 		return parseFloat(val).toFixed(2)
 	}
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { data, discountOptions, initValue, prefix ,param} = this.state;
+		const { data, discountOptions, initValue, prefix, param } = this.state;
 
 		const {
 			currency_list,
@@ -1629,7 +1667,7 @@ class CreateSupplierInvoice extends React.Component {
 		let tmpSupplier_list = []
 
 		supplier_list.map(item => {
-			let obj = {label: item.label.contactName, value: item.value}
+			let obj = { label: item.label.contactName, value: item.value }
 			tmpSupplier_list.push(obj)
 		})
 
@@ -1677,16 +1715,15 @@ class CreateSupplierInvoice extends React.Component {
 														errors.invoice_number =
 															'Invoice Number Already Exists';
 													}
-													if (values.invoice_number==='') {
+													if (values.invoice_number === '') {
 														errors.invoice_number = 'Invoice Number is Required';
 													}
-													if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")
-													{
-                                                        errors.placeOfSupplyId ='Place of Supply is Required';
-                                                   }
-												   if (values.term && values.term.label && values.term.label === "Select Terms") {
-													errors.term ='Term is Required';
-												}
+													if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
+														errors.placeOfSupplyId = 'Place of Supply is Required';
+													}
+													if (values.term && values.term.label && values.term.label === "Select Terms") {
+														errors.term = 'Term is Required';
+													}
 													if (param === true) {
 														errors.discount =
 															'Discount amount Cannot be greater than Invoice Total Amount';
@@ -1812,7 +1849,7 @@ class CreateSupplierInvoice extends React.Component {
 																		}}
 																		className={
 																			props.errors.invoice_number &&
-																			props.touched.invoice_number
+																				props.touched.invoice_number
 																				? 'is-invalid'
 																				: ''
 																		}
@@ -1825,27 +1862,27 @@ class CreateSupplierInvoice extends React.Component {
 																		)}
 																</FormGroup>
 															</Col>
-															</Row>
-															<hr />
-															<Row>
+														</Row>
+														<hr />
+														<Row>
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="contactId">
 																		<span className="text-danger">* </span>
-																		{strings.SupplierName} 
+																		{strings.SupplierName}
 																	</Label>
 																	<Select
 																		id="contactId"
 																		name="contactId"
-																		placeholder={strings.Select+strings.SupplierName}
+																		placeholder={strings.Select + strings.SupplierName}
 																		options={
 																			tmpSupplier_list
 																				? selectOptionsFactory.renderOptions(
-																						'label',
-																						'value',
-																						tmpSupplier_list,
-																						'Supplier Name',
-																				  )
+																					'label',
+																					'value',
+																					tmpSupplier_list,
+																					'Supplier Name',
+																				)
 																				: []
 																		}
 																		value={props.values.contactId}
@@ -1853,7 +1890,7 @@ class CreateSupplierInvoice extends React.Component {
 																			if (option && option.value) {
 																				this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
 																				this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(option.value), true);
-																				this.setExchange( this.getCurrency(option.value) );
+																				this.setExchange(this.getCurrency(option.value));
 																				props.handleChange('contactId')(option);
 																			} else {
 
@@ -1862,7 +1899,7 @@ class CreateSupplierInvoice extends React.Component {
 																		}}
 																		className={
 																			props.errors.contactId &&
-																			props.touched.contactId
+																				props.touched.contactId
 																				? 'is-invalid'
 																				: ''
 																		}
@@ -1875,25 +1912,25 @@ class CreateSupplierInvoice extends React.Component {
 																		)}
 																</FormGroup>
 															</Col>
-															<Col  lg={3}>
+															<Col lg={3}>
 																<Label
 																	htmlFor="contactId"
 																	style={{ display: 'block' }}
 																>
-																	{strings.AddNewSupplier} 
+																	{strings.AddNewSupplier}
 																</Label>
 																<Button
 																	type="button"
 																	color="primary"
 																	className="btn-square"
 																	onClick={(e, props) => {
-																		this.props.history.push(`/admin/master/contact/create`,{gotoParentURL:"/admin/expense/supplier-invoice/create"})
+																		this.props.history.push(`/admin/master/contact/create`, { gotoParentURL: "/admin/expense/supplier-invoice/create" })
 																	}}
 																>
 																	<i className="fa fa-plus"></i> {strings.AddASupplier}
 																</Button>
 															</Col>
-														
+
 															{/* <Col lg={3}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="receiptNumber">
@@ -1921,65 +1958,65 @@ class CreateSupplierInvoice extends React.Component {
 																				/>
 																			</FormGroup>
 																		</Col> */}
-															{this.state.customer_taxTreatment_des ? 
-															<Col lg={3}>
-																<FormGroup className="mb-3">
-																	<Label htmlFor="taxTreatmentid">
-																		Tax Treatment
-																	</Label>
-																	<Input
-																	disabled
-																		id="taxTreatmentid"
-																		name="taxTreatmentid"
-																		value={
-																		this.state.customer_taxTreatment_des
-																	 	
-																		}
-																		className={
-																			props.errors.taxTreatmentid &&
-																			props.touched.taxTreatmentid
-																				? 'is-invalid'
-																				: ''
-																		}
-																		onChange={(option) => {
-																		props.handleChange('taxTreatmentid')(option);
-																		
-																	    }}
+															{this.state.customer_taxTreatment_des ?
+																<Col lg={3}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="taxTreatmentid">
+																			Tax Treatment
+																		</Label>
+																		<Input
+																			disabled
+																			id="taxTreatmentid"
+																			name="taxTreatmentid"
+																			value={
+																				this.state.customer_taxTreatment_des
 
-																	/>
-																	{props.errors.taxTreatmentid &&
-																		props.touched.taxTreatmentid && (
-																			<div className="invalid-feedback">
-																				{props.errors.taxTreatmentid}
-																			</div>
-																		)}
-																</FormGroup>
-															</Col>: ''}
+																			}
+																			className={
+																				props.errors.taxTreatmentid &&
+																					props.touched.taxTreatmentid
+																					? 'is-invalid'
+																					: ''
+																			}
+																			onChange={(option) => {
+																				props.handleChange('taxTreatmentid')(option);
+
+																			}}
+
+																		/>
+																		{props.errors.taxTreatmentid &&
+																			props.touched.taxTreatmentid && (
+																				<div className="invalid-feedback">
+																					{props.errors.taxTreatmentid}
+																				</div>
+																			)}
+																	</FormGroup>
+																</Col> : ''}
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">
 																		<span className="text-danger">* </span>
-																		{strings.PlaceofSupply} 
+																		{strings.PlaceofSupply}
 																	</Label>
 																	<Select
 																		id="placeOfSupplyId"
 																		name="placeOfSupplyId"
-																		placeholder={strings.Select+strings.PlaceofSupply}
+																		placeholder={strings.Select + strings.PlaceofSupply}
 																		options={
 																			this.placelist
 																				? selectOptionsFactory.renderOptions(
-																						'label',
-																						'value',
-																						this.placelist,
-																						'Place of Supply',
-																						
-																				  )
+																					'label',
+																					'value',
+																					this.placelist,
+																					'Place of Supply',
+
+																				)
 																				: []
 																		}
 																		value={this.state.placelist}
 																		className={
 																			props.errors.placeOfSupplyId &&
-																			props.touched.placeOfSupplyId
+																				props.touched.placeOfSupplyId
 																				? 'is-invalid'
 																				: ''
 																		}
@@ -2037,16 +2074,16 @@ class CreateSupplierInvoice extends React.Component {
 																		options={
 																			this.termList
 																				? selectOptionsFactory.renderOptions(
-																						'label',
-																						'value',
-																						this.termList,
-																						'Terms',
-																				  )
+																					'label',
+																					'value',
+																					this.termList,
+																					'Terms',
+																				)
 																				: []
 																		}
 																		id="term"
 																		name="term"
-																		placeholder={strings.Select+strings.Terms}
+																		placeholder={strings.Select + strings.Terms}
 																		value={this.state.term}
 																		onChange={(option) => {
 																			props.handleChange('term')(option);
@@ -2086,7 +2123,7 @@ class CreateSupplierInvoice extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="date">
 																		<span className="text-danger">* </span>
-																		{strings.InvoiceDate} 
+																		{strings.InvoiceDate}
 																	</Label>
 																	<DatePicker
 																		id="invoiceDate"
@@ -2103,17 +2140,16 @@ class CreateSupplierInvoice extends React.Component {
 																			props.handleChange('invoiceDate')(value);
 																			this.setDate(props, value);
 																		}}
-																		className={`form-control ${
-																			props.errors.invoiceDate &&
-																			props.touched.invoiceDate
+																		className={`form-control ${props.errors.invoiceDate &&
+																				props.touched.invoiceDate
 																				? 'is-invalid'
 																				: ''
-																		}`}
+																			}`}
 																	/>
 																	{props.errors.invoiceDate &&
 																		props.touched.invoiceDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.invoiceDate.includes("nullable()") ? "Invoice Date is Required" :props.errors.invoiceDate}		
+																				{props.errors.invoiceDate.includes("nullable()") ? "Invoice Date is Required" : props.errors.invoiceDate}
 																			</div>
 																		)}
 																</FormGroup>
@@ -2121,7 +2157,7 @@ class CreateSupplierInvoice extends React.Component {
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="due_date">
-																	{strings.InvoiceDueDate} 
+																		{strings.InvoiceDueDate}
 																	</Label>
 																	<div>
 																		<DatePicker
@@ -2139,17 +2175,16 @@ class CreateSupplierInvoice extends React.Component {
 																					value,
 																				);
 																			}}
-																			className={`form-control ${
-																				props.errors.invoiceDueDate &&
-																				props.touched.invoiceDueDate
+																			className={`form-control ${props.errors.invoiceDueDate &&
+																					props.touched.invoiceDueDate
 																					? 'is-invalid'
 																					: ''
-																			}`}
+																				}`}
 																		/>
 																		{props.errors.invoiceDueDate &&
 																			props.touched.invoiceDueDate && (
 																				<div className="invalid-feedback">
-																					{props.errors.invoiceDueDate}		
+																					{props.errors.invoiceDueDate}
 
 																				</div>
 																			)}
@@ -2163,22 +2198,22 @@ class CreateSupplierInvoice extends React.Component {
 																		{strings.Currency}
 																	</Label>
 																	<Select
-																	isDisabled={true}
-																	placeholder={strings.Select+strings.Currency}
+																		isDisabled={true}
+																		placeholder={strings.Select + strings.Currency}
 																		styles={customStyles}
 																		options={
 																			currency_convert_list
 																				? selectCurrencyFactory.renderOptions(
-																						'currencyName',
-																						'currencyCode',
-																						currency_convert_list,
-																						'Currency',
-																				  )
+																					'currencyName',
+																					'currencyCode',
+																					currency_convert_list,
+																					'Currency',
+																				)
 																				: []
 																		}
 																		id="currency"
 																		name="currency"
-																		value={																		
+																		value={
 																			currency_convert_list &&
 																			selectCurrencyFactory
 																				.renderOptions(
@@ -2197,13 +2232,12 @@ class CreateSupplierInvoice extends React.Component {
 																			props.handleChange('currency')(option);
 																			this.setExchange(option.value);
 																			this.setCurrency(option.value)
-																		   }}
-																		className={`${
-																			props.errors.currency &&
-																			props.touched.currency
+																		}}
+																		className={`${props.errors.currency &&
+																				props.touched.currency
 																				? 'is-invalid'
 																				: ''
-																		}`}
+																			}`}
 																	/>
 																	{props.errors.currency &&
 																		props.touched.currency && (
@@ -2215,36 +2249,38 @@ class CreateSupplierInvoice extends React.Component {
 															</Col>
 														</Row>
 														<hr />
-																<Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
-																<Col>
+														<Row style={{ display: props.values.exchangeRate === 1 ? 'none' : '' }}>
+															<Col>
 																<Label>
-																{strings.CurrencyExchangeRate} 
-																	</Label>	
-																</Col>
-																</Row>
-																<Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
-																<Col md={1}>
+																	{strings.CurrencyExchangeRate}
+															
+																</Label>
+																	
+															</Col>
+														</Row>
+														<Row style={{ display: props.values.exchangeRate === 1 ? 'none' : '' }}>
+															<Col md={1}>
 																<Input
-																		disabled
-																				id="1"
-																				name="1"
-																				value=	{
-																					1 }
-																				
-																			/>
-																</Col>
-																<Col md={2}>
+																	disabled
+																	id="1"
+																	name="1"
+																	value={
+																		1}
+
+																/>
+															</Col>
+															<Col md={2}>
 																<FormGroup className="mb-3">
 																	{/* <Label htmlFor="exchangeRate">
 																		Exchange rate
 																	</Label> */}
 																	<div>
 																		<Input
-																		disabled	
+																			disabled
 																			className="form-control"
 																			id="curreancyname"
 																			name="curreancyname"
-																			
+
 																			value={this.state.supplier_currency_des}
 																			onChange={(value) => {
 																				props.handleChange('curreancyname')(
@@ -2268,7 +2304,7 @@ class CreateSupplierInvoice extends React.Component {
 																			className="form-control"
 																			id="exchangeRate"
 																			name="exchangeRate"
-																			
+
 																			value={props.values.exchangeRate}
 																			onChange={(value) => {
 																				props.handleChange('exchangeRate')(
@@ -2279,26 +2315,25 @@ class CreateSupplierInvoice extends React.Component {
 																	</div>
 																</FormGroup>
 															</Col>
-														
+
 															<Col md={2}>
-															<Input
-																		disabled
-																				id="currencyName"
-																				name="currencyName"
-																				value=	{
-																					this.state.basecurrency.currencyName }
-																				
-																			/>
-														</Col>
+																<Input
+																	disabled
+																	id="currencyName"
+																	name="currencyName"
+																	value={
+																		this.state.basecurrency.currencyName}
+
+																/>
+															</Col>
 														</Row>
-														<hr style={{display: props.values.exchangeRate === 1 ? 'none' : ''}} />
+														<hr style={{ display: props.values.exchangeRate === 1 ? 'none' : '' }} />
 														<Row className="mb-3">
 															<Col lg={8} className="mb-3">
 																<Button
 																	color="primary"
-																	className={`btn-square mr-3 ${
-																		this.checkedRow() ? `disabled-cursor` : ``
-																	} `}
+																	className={`btn-square mr-3 ${this.checkedRow() ? `disabled-cursor` : ``
+																		} `}
 																	onClick={this.addRow}
 																	title={
 																		this.checkedRow()
@@ -2307,21 +2342,57 @@ class CreateSupplierInvoice extends React.Component {
 																	}
 																	disabled={this.checkedRow() ? true : false}
 																>
-																	<i className="fa fa-plus"></i> {strings.Addmore} 
+																	<i className="fa fa-plus"></i> {strings.Addmore}
 																</Button>
 																<Button
 																	color="primary"
-																	className= "btn-square "
+																	className="btn-square "
 																	onClick={(e, props) => {
-																		this.props.history.push(`/admin/master/product/create`,{gotoParentURL:"/admin/expense/supplier-invoice/create"})
-																		}}
+																		this.props.history.push(`/admin/master/product/create`, { gotoParentURL: "/admin/expense/supplier-invoice/create" })
+																	}}
 																>
-																	<i className="fa fa-plus"></i> {strings.Addproduct} 
+																	<i className="fa fa-plus"></i> {strings.Addproduct}
 																</Button>
-																</Col>
+															</Col>
+															<Col  >
+																<label className='mr-4'><b>Tax Type</b></label>
+																{this.state.taxType === false ?
+																	<span style={{ color: "#0069d9" }} className='mr-4'><b>Exclusive</b></span> :
+																	<span className='mr-4'>Exclusive</span>}
+																<Switch
+																	value={props.values.taxType}
+																	checked={this.state.taxType}
+																	onChange={(taxType) => {
 
-															
-																				</Row>
+																		props.handleChange('taxType')(taxType);
+																		this.setState({ taxType }, () => {
+																			this.updateAmount(
+																				this.state.data,
+																				props
+																			)
+																		});
+
+
+																	}}
+
+																	onColor="#2064d8"
+																	onHandleColor="#2693e6"
+																	handleDiameter={25}
+																	uncheckedIcon={false}
+																	checkedIcon={false}
+																	boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+																	activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+																	height={20}
+																	width={48}
+																	className="react-switch "
+																/>
+																{this.state.taxType === true ?
+																	<span style={{ color: "#0069d9" }} className='ml-4'><b>Inclusive</b></span>
+																	: <span className='ml-4'>Inclusive</span>
+																}
+															</Col>
+
+														</Row>
 														<Row>
 															<Col lg={12}>
 																{props.errors.lineItemsString &&
@@ -2355,7 +2426,7 @@ class CreateSupplierInvoice extends React.Component {
 																		}
 																	></TableHeaderColumn>
 																	<TableHeaderColumn
-																	width="16%"
+																		width="16%"
 																		dataField="product"
 																		dataFormat={(cell, rows) =>
 																			this.renderProduct(cell, rows, props)
@@ -2377,7 +2448,7 @@ class CreateSupplierInvoice extends React.Component {
 																			this.renderAccount(cell, rows, props)
 																		}
 																	>
-																		{strings.Account} 
+																		{strings.Account}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="description"
@@ -2385,7 +2456,7 @@ class CreateSupplierInvoice extends React.Component {
 																			this.renderDescription(cell, rows, props)
 																		}
 																	>
-																		{strings.DESCRIPTION} 
+																		{strings.DESCRIPTION}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="quantity"
@@ -2394,10 +2465,10 @@ class CreateSupplierInvoice extends React.Component {
 																			this.renderQuantity(cell, rows, props)
 																		}
 																	>
-																		{strings.QUANTITY} 
+																		{strings.QUANTITY}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
-																	width="10%"
+																		width="10%"
 																		dataField="unitPrice"
 																		dataFormat={(cell, rows) =>
 																			this.renderUnitPrice(cell, rows, props)
@@ -2406,14 +2477,14 @@ class CreateSupplierInvoice extends React.Component {
 																		Unit Price
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
-																	width="10%"
+																		width="10%"
 																		dataField="exciseTaxId"
 																		dataFormat={(cell, rows) =>
 																			this.renderExcise(cell, rows, props)
 																		}
 																	>
-																	Excise
-																	<i
+																		Excise
+																		<i
 																			id="ExiseTooltip"
 																			className="fa fa-question-circle ml-1"
 																		></i>
@@ -2426,13 +2497,13 @@ class CreateSupplierInvoice extends React.Component {
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
-																	width="12%"
+																		width="12%"
 																		dataField="discount"
 																		dataFormat={(cell, rows) =>
 																			this.renderDiscount(cell, rows, props)
 																		}
 																	>
-																	Discount Type
+																		Discount Type
 																	</TableHeaderColumn>
 
 																	<TableHeaderColumn
@@ -2445,14 +2516,14 @@ class CreateSupplierInvoice extends React.Component {
 																		{strings.VAT}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
-																	width="10%"
-																	dataField="sub_total"
-																	dataFormat={this.renderVatAmount}
-																	className="text-right"
-																	columnClassName="text-right"
-																	formatExtraData={universal_currency_list}
+																		width="10%"
+																		dataField="sub_total"
+																		dataFormat={this.renderVatAmount}
+																		className="text-right"
+																		columnClassName="text-right"
+																		formatExtraData={universal_currency_list}
 																	>
-																	Vat amount
+																		Vat amount
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		width="10%"
@@ -2468,18 +2539,18 @@ class CreateSupplierInvoice extends React.Component {
 															</Col>
 														</Row>
 														<Row className="ml-4">
-														<Col className="ml-4">
-                                                            <Input
-																type="checkbox"
-                                                                id="isReverseChargeEnabled"
-                                                                checked={this.state.isReverseChargeEnabled}
-                                                                onChange={(option)=>{
-                                                                        this.setState({isReverseChargeEnabled:!this.state.isReverseChargeEnabled})
-                                                                }}
-                                                            />
-                                                            <Label>Is Reverse Charge</Label>
-                                                            </Col>
-															</Row>
+															<Col className="ml-4">
+																<Input
+																	type="checkbox"
+																	id="isReverseChargeEnabled"
+																	checked={this.state.isReverseChargeEnabled}
+																	onChange={(option) => {
+																		this.setState({ isReverseChargeEnabled: !this.state.isReverseChargeEnabled })
+																	}}
+																/>
+																<Label>Is Reverse Charge</Label>
+															</Col>
+														</Row>
 														<hr />
 														{this.state.data.length > 0 ? (
 															<Row>
@@ -2504,7 +2575,7 @@ class CreateSupplierInvoice extends React.Component {
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="receiptNumber">
-																				{strings.ReceiptNumber}
+																					{strings.ReceiptNumber}
 																				</Label>
 																				<Input
 																					type="text"
@@ -2542,7 +2613,7 @@ class CreateSupplierInvoice extends React.Component {
 																								className="btn-square mr-3"
 																							>
 																								<i className="fa fa-upload"></i>{' '}
-																								{strings.upload} 
+																								{strings.upload}
 																							</Button>
 																							<input
 																								id="fileInput"
@@ -2585,7 +2656,7 @@ class CreateSupplierInvoice extends React.Component {
 																	</Row>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="receiptAttachmentDescription">
-																		{strings.AttachmentDescription}
+																			{strings.AttachmentDescription}
 																		</Label>
 																		<Input
 																			type="textarea"
@@ -2608,19 +2679,19 @@ class CreateSupplierInvoice extends React.Component {
 																</Col>
 
 																<Col lg={4}>
-																	<div className="">																		
-																	<div className="total-item p-2" >
+																	<div className="">
+																		<div className="total-item p-2" >
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
-																					Total Excise
+																						Total Excise
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
 																						{this.state.supplier_currency_symbol} &nbsp;
 																						{this.state.customer_currency_symbol} &nbsp;
-																						{initValue.total_excise.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}	
+																						{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>
@@ -2629,7 +2700,7 @@ class CreateSupplierInvoice extends React.Component {
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
-																					{strings.Discount}
+																						{strings.Discount}
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-right">
@@ -2648,7 +2719,7 @@ class CreateSupplierInvoice extends React.Component {
 																							/>
 																						)} */}
 																						{this.state.supplier_currency_symbol} &nbsp;
-																						{initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
+																						{initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>
@@ -2657,7 +2728,7 @@ class CreateSupplierInvoice extends React.Component {
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
-																					{strings.TotalNet}
+																						{strings.TotalNet}
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-right">
@@ -2676,7 +2747,7 @@ class CreateSupplierInvoice extends React.Component {
 																							/>
 																						)} */}
 																						{this.state.supplier_currency_symbol} &nbsp;
-																						{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
+																						{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>
@@ -2702,7 +2773,7 @@ class CreateSupplierInvoice extends React.Component {
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
-																					{strings.TotalVat} 
+																						{strings.TotalVat}
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-right">
@@ -2721,17 +2792,17 @@ class CreateSupplierInvoice extends React.Component {
 																							/>
 																						)} */}
 																						{this.state.supplier_currency_symbol} &nbsp;
-																						{initValue.invoiceVATAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
+																						{initValue.invoiceVATAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>
 																		</div>
-																		
+
 																		<div className="total-item p-2">
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
-																					{strings.Total}
+																						{strings.Total}
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-right">
@@ -2750,7 +2821,7 @@ class CreateSupplierInvoice extends React.Component {
 																							/>
 																						)} */}
 																						{this.state.supplier_currency_symbol} &nbsp;
-																						{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
+																						{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>
@@ -2762,7 +2833,7 @@ class CreateSupplierInvoice extends React.Component {
 														<Row>
 															<Col lg={12} className="mt-5">
 																<FormGroup className="text-right">
-																<Button
+																	<Button
 																		type="button"
 																		color="primary"
 																		className="btn-square mr-3"
@@ -2810,7 +2881,7 @@ class CreateSupplierInvoice extends React.Component {
 																			);
 																		}}
 																	>
-																		<i className="fa fa-ban mr-1"></i>{strings.Cancel} 
+																		<i className="fa fa-ban mr-1"></i>{strings.Cancel}
 																	</Button>
 																</FormGroup>
 															</Col>
@@ -2855,7 +2926,7 @@ class CreateSupplierInvoice extends React.Component {
 					}}
 					inventory_list={this.state.inventoryList}
 				/> */}
-					{/* <InvoiceNumberModel
+				{/* <InvoiceNumberModel
 					openInvoiceNumberModel={this.state.openInvoiceNumberModel}
 					closeInvoiceNumberModel={(e) => {
 						this.closeInvoiceNumberModel(e);

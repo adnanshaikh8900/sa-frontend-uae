@@ -222,6 +222,8 @@ ExpenseCategory:"Expense Category",
 PaidBy:"Paid By",		
 ExpenseDate:"Expense Date",						
 Tax:"Tax",		
+Business: "Claimable",
+NonBusiness: "Non-Claimable",
 				
 Attachment:"Attachment",				
 

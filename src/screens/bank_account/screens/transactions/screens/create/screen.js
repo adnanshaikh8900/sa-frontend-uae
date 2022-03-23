@@ -32,6 +32,8 @@ import './style.scss';
 import {data}  from '../../../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { selectOptionsFactory, selectCurrencyFactory } from 'utils';
+import Switch from "react-switch";
+
 const mapStateToProps = (state) => {
 	return {
 		transaction_category_list: state.bank_account.transaction_category_list,
@@ -104,7 +106,9 @@ class CreateBankTransaction extends React.Component {
 				employeeId: '',
 				currencyCode: '',
 				exchangeRate:'',
+				isReasonEnabled:false,
 			},
+			isReasonEnabled:false,
 			transactionCategoryList: [],
 			moneyCategoryList:[],
 			totalAmount: '',
@@ -285,6 +289,7 @@ class CreateBankTransaction extends React.Component {
 			expenseCategory,
 			currencyCode,
 			userId,
+			isReasonEnabled,
 		} = data;
 		if (
 			invoiceIdList &&
@@ -308,6 +313,7 @@ class CreateBankTransaction extends React.Component {
 			console.log(result1);
 		 }
 		let formData = new FormData();
+		formData.append('expenseType1',  this.state.isReasonEnabled == true ? "BUSINESS" : "NON_BUSINESS");
 		formData.append('bankId ', bankAccountId ? bankAccountId : '');
 		formData.append(
 			'date',
@@ -987,6 +993,40 @@ class CreateBankTransaction extends React.Component {
 																				</FormGroup>
 																			</Col>
 																		)}
+																		<Col className='mb-3' lg={3}>
+																<Label htmlFor="inline-radio3"><span className="text-danger">* </span>{strings.ExpenseType}</Label>
+																<div>
+																	{this.state.isReasonEnabled === false ?
+																		<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Business}</b></span> :
+																		<span className='mr-4'>{strings.Business}</span>}
+
+																	<Switch
+																		checked={this.state.isReasonEnabled}
+																		onChange={(isReasonEnabled) => {
+																			props.handleChange('isReasonEnabled')(isReasonEnabled);
+																			this.setState({ isReasonEnabled, }, () => { },);
+																			if (this.state.isReasonEnabled == true)
+																				this.setState({ isReasonEnabled: true })
+																		}}
+																		onColor="#2064d8"
+																		onHandleColor="#2693e6"
+																		handleDiameter={25}
+																		uncheckedIcon={false}
+																		checkedIcon={false}
+																		boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+																		activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+																		height={20}
+																		width={48}
+																		className="react-switch"
+																	/>
+
+																	{this.state.isReasonEnabled === true ?
+																		<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.NonBusiness}</b></span>
+																		: <span className='ml-4'>{strings.NonBusiness}</span>
+																	}
+																</div>
+
+															</Col>
 																</Row>
 															)}
 																{props.values.coaCategoryId &&
@@ -1251,7 +1291,7 @@ class CreateBankTransaction extends React.Component {
 																			</Label>
 																			<Select
 																				styles={customStyles}
-																				className="select-default-width"
+																				// className="select-default-width"
 																				options={
 																					transactionCategoryList
 																						? transactionCategoryList.categoriesList

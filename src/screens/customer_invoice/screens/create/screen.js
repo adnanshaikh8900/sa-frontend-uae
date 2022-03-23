@@ -1212,7 +1212,7 @@ discountType = (row) =>
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
 
 			//Excise calculation
-			debugger
+			
 			if(obj.exciseTaxId !=  0){
 				if(obj.isExciseTaxExclusive === true){
 					if(obj.exciseTaxId === 1){
@@ -1284,7 +1284,7 @@ discountType = (row) =>
 				var val1 = net_value * obj.quantity
 			}
 			if(obj.exciseTaxId !=  0){
-				debugger
+				
 				if(this.state.taxType === true){
 					if(obj.isExciseTaxExclusive === false){
 					if(obj.exciseTaxId === 1){
@@ -1312,7 +1312,7 @@ discountType = (row) =>
 			}
 
 			}
-			debugger
+			
 			//discount calculation
 			obj.vatAmount = val
 			obj.subTotal =
@@ -1607,30 +1607,34 @@ if(changeShippingAddress && changeShippingAddress==true)
 
 		let option;
 		if (data.label || data.value) {
-		   option = data;
+			option = data;
 		} else {
-		   option = {
-			  label: `${data.fullName}`,
-			  value: data.id,
-		   };
+			option = {
+				label: `${data.fullName}`,
+				value: data.id,
+			};
 		}
-	 
+
 		let result = this.props.currency_convert_list.filter((obj) => {
-		   return obj.currencyCode === data.currencyCode;
+			return obj.currencyCode === data.currencyCode;
 		});
+		
 		this.setState({
-		   customer_currency: data.currencyCode,
-		   customer_currency_des: result[0]  && result[0].currencyName ? result[0].currencyName:"AED",
-		   customer_currency_symbol:data.currencyIso ?data.currencyIso:"AED",
-		   customer_taxTreatment_des:data.taxTreatment?data.taxTreatment:""
+			customer_currency: data.currencyCode,
+			customer_currency_des: result[0]  && result[0].currencyName ? result[0].currencyName:"AED",
+			customer_currency_symbol:data.currencyIso ?data.currencyIso:"AED",
+			customer_taxTreatment_des:data.taxTreatment?data.taxTreatment:""
 		});
 		this.formRef.current.setFieldValue('contactId', option, true);
+
 		if(result[0] && result[0].currencyCode)
 		this.formRef.current.setFieldValue('currency',result[0].currencyCode, true);
+
 		this.formRef.current.setFieldValue('taxTreatmentid', data.taxTreatmentId, true);
+
 		if( result[0] &&  result[0].exchangeRate)
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
-	 };
+	};
 
 	getCurrentNumber = (data) => {
 		this.getInvoiceNo();
@@ -2055,18 +2059,22 @@ if(changeShippingAddress && changeShippingAddress==true)
 																				  )
 																				: []
 																		}
-																		value={props.values.contactId}
 																		value={
-																			tmpCustomer_list &&
+																			this.state.quotationId ?
+
+																			 tmpCustomer_list &&
 																			selectOptionsFactory.renderOptions(
 																				'label',
 																				'value',
 																				tmpCustomer_list,
 																				strings.CustomerName,
-																		  ).find(
-																				(option) => option.value == (this.state.quotationId ? this.state.contactId:props.values.contactId)
-																			)
-																		}
+																		  ).find((option) => option.value == this.state.contactId)
+																			
+																		  :
+																		  
+																		  props.values.contactId
+																			}
+															
 																		onChange={(option) => {
 																			if (option && option.value) {
 																				this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);

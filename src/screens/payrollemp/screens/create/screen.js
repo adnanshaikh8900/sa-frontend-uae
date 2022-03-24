@@ -1426,9 +1426,9 @@ existForAccountNumber = (value) => {
                                                                                                         <div 	className={
 																	                                 	props.errors.mobileNumber &&
 																		                                props.touched.mobileNumber
-																			                            ? ' is-invalidMobile '
-																			                            : ''
-																	                                    }>
+																			                                ? ' is-invalidMobile '
+																			                                : ''
+																	                                }>
                                                                                                     <PhoneInput
                                                                                                         id="mobileNumber"
                                                                                                         name="mobileNumber"
@@ -1442,18 +1442,19 @@ existForAccountNumber = (value) => {
                                                                                                             props.handleChange('mobileNumber')(
                                                                                                                 option,
                                                                                                             );
-                                                                                                            option.length!==12 ?  this.setState({checkmobileNumberParam:true}) :this.setState({checkmobileNumberParam:false});
+                                                                                                            option.length !==12 ? this.setState({checkmobileNumberParam: true }) : this.setState({ checkmobileNumberParam: false });
                                                                                                         }}
-                                                                                                        className={
-                                                                                                            props.errors.mobileNumber &&
-                                                                                                                props.touched.mobileNumber
-                                                                                                                ? 'text-danger'
-                                                                                                                : ''
-                                                                                                        }
+                                                                                                        isValid
+                                                                                                        // className={
+                                                                                                        //     props.errors.mobileNumber &&
+                                                                                                        //         props.touched.mobileNumber
+                                                                                                        //         ? 'text-danger'
+                                                                                                        //         : ''
+                                                                                                        // }
                                                                                                     /></div>
                                                                                                      {props.errors.mobileNumber &&
                                                                                                       props.touched.mobileNumber && (
-                                                                                                        <div className="text-danger">
+                                                                                                        <div className="invalid-feedback">
                                                                                                             {props.errors.mobileNumber}
                                                                                                         </div>
                                                                                                     )}
@@ -2101,6 +2102,7 @@ existForAccountNumber = (value) => {
 																			                        ? ' is-invalidMobile '
 																			                        : ''
 																	                                }>
+                                                                                                        
                                                                                                     <PhoneInput
                                                                                                         id="emergencyContactNumber1"
                                                                                                         name="emergencyContactNumber1"
@@ -2108,25 +2110,28 @@ existForAccountNumber = (value) => {
                                                                                                         enableSearch={true}
                                                                                                         international
                                                                                                         value={props.values.emergencyContactNumber1}
-                                                                                                        placeholder={strings.Enter+strings.ContactNumber1}
+                                                                                                        placeholder={strings.Enter+strings.emergencyContactNumber1}
                                                                                                         onBlur={props.handleBlur('emergencyContactNumber1')}
                                                                                                         onChange={(option) => {
                                                                                                             props.handleChange('emergencyContactNumber1')(
                                                                                                                 option,
                                                                                                             );
-                                                                                                            option.length!==12 ?  this.setState({checkmobileNumberParam1:true}) :this.setState({checkmobileNumberParam1:false});
+                                                                                                            option.length !==12 ? this.setState({checkmobileNumberParam: true }) : this.setState({ checkmobileNumberParam: false });
                                                                                                         }}
-                                                                                                        className={
-                                                                                                            props.errors.emergencyContactNumber1 &&
-                                                                                                                props.touched.emergencyContactNumber1
-                                                                                                                ? 'text-danger'
-                                                                                                                : ''
-                                                                                                        }
+                                                                                                        isValid
+                                                                                                        // className={
+                                                                                                        //     props.errors.mobileNumber &&
+                                                                                                        //         props.touched.mobileNumber
+                                                                                                        //         ? 'text-danger'
+                                                                                                        //         : ''
+                                                                                                        // }
                                                                                                     /></div>
-                                                                                                     {props.errors.emergencyContactNumber1 && props.touched.emergencyContactNumber1 && (
-                                                                                                        <div className="text-danger">{props.errors.emergencyContactNumber1}</div>
+                                                                                                     {props.errors.emergencyContactNumber1 &&
+                                                                                                      props.touched.emergencyContactNumber1 && (
+                                                                                                        <div className="invalid-feedback">
+                                                                                                            {props.errors.emergencyContactNumber1}
+                                                                                                        </div>
                                                                                                     )}
-                                                                                                   
                                                                                                 </FormGroup>
                             
                                                                                             </Col>

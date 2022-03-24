@@ -76,6 +76,7 @@ class CreateProduct extends React.Component {
 				productCode: '',
 				vatCategoryId:'',
 				exciseTaxId:'',
+				unitTypeId:'',
 				productCategoryId: '',
 				productWarehouseId: '',
 				vatIncluded: false,
@@ -111,6 +112,7 @@ class CreateProduct extends React.Component {
 			isActive:true,
 			selectedStatus:true,
 			exciseTaxList:[],
+			unitTypeList:[],
 			exciseTaxCheck:false,
 			exciseType:false,
 			exciseAmount:0			
@@ -159,6 +161,13 @@ class CreateProduct extends React.Component {
 			if (res.status === 200) {
 				this.setState({
 					exciseTaxList:res.data
+				});
+			}
+		});
+		this.props.productActions.getUnitTypeList().then((res) => {
+			if (res.status === 200) {
+				this.setState({
+					unitTypeList:res.data
 				});
 			}
 		});
@@ -267,6 +276,7 @@ try {
 		const isActive = this.state.productActive;
 		const exciseType = this.state.exciseType;
 		const exciseAmount=this.state.exciseAmount;
+		const unitTypeId=data['unitTypeId'];
 		let productPriceType;
 		if (data['productPriceType'].includes('SALES')) {
 			productPriceType = 'SALES';
@@ -296,6 +306,7 @@ try {
 			productCategoryId,
 			isActive,
 			exciseType,
+			unitTypeId,
 			...(salesUnitPrice.length !== 0 && {
 				salesUnitPrice,
 			}),
@@ -413,7 +424,7 @@ try {
 	render() {
 		strings.setLanguage(this.state.language);
 		const { vat_list, product_category_list,supplier_list,inventory_account_list} = this.props;
-		const { initValue, purchaseCategory, salesCategory,inventoryAccount,exciseTaxList } = this.state;
+		const { initValue, purchaseCategory, salesCategory,inventoryAccount,exciseTaxList,unitTypeList } = this.state;
 
 		let tmpSupplier_list = []
 
@@ -911,6 +922,43 @@ try {
 																					{props.errors.vatCategoryId}
 																				</div>
 																			)}
+																	</FormGroup>
+																</Col>
+															</Row>
+															<Row>
+															<Col  lg={4}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="unitTypeId">
+																			Unit Type
+																		</Label>
+																		<Select
+																			options={
+																				unitTypeList
+																					? selectOptionsFactory.renderOptions(
+																							'unitType',
+																							'unitTypeId',
+																							unitTypeList,
+																							'Unit Type',
+																					  )
+																					: []
+																			}
+																			id="unitTypeId"
+																			name="unitTypeId"
+																			placeholder={strings.Select+ "Unit Type"}
+																			value={props.values.unitTypeId}
+																			onChange={(option) => {
+																				
+																				if (option && option.value) {
+																					props.handleChange('unitTypeId')(
+																						option,
+																					);
+																				} else {
+																					props.handleChange('unitTypeId')(
+																						'',
+																					);
+																				}
+																			}}																			
+																		/>																	
 																	</FormGroup>
 																</Col>
 															</Row>

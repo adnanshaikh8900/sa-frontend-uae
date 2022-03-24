@@ -886,6 +886,8 @@ class DetailCustomerInvoice extends React.Component {
 				obj['description'] = result.description;
 				obj['exciseTaxId'] = result.exciseTaxId;
 				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive;
+				obj['unitType']=result.unitType;
+				obj['unitTypeId']=result.unitTypeId;
 				idx = index;
 			}
 			return obj;
@@ -1452,6 +1454,11 @@ class DetailCustomerInvoice extends React.Component {
 			this.formRef.current.setFieldValue(
 				`lineItemsString.${0}.unitPrice`,
 				res.data[0].unitPrice,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.unitType`,
+				res.data[0].unitType,
 				true,
 			);
 			this.formRef.current.setFieldValue(
@@ -2740,13 +2747,28 @@ class DetailCustomerInvoice extends React.Component {
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="quantity"
-																			width="5%"
+																			width="10%"
 																			dataFormat={(cell, rows) =>
 																				this.renderQuantity(cell, rows, props)
 																			}
 																		>
 																			{strings.QUANTITY}
 																		</TableHeaderColumn>
+																		<TableHeaderColumn
+																			dataField="unitType"
+																			width="2%"
+																     	>	<i
+																		 id="unitTooltip"
+																		 className="fa fa-question-circle ml-1"
+																	 ></i>
+																	 
+																	 <UncontrolledTooltip
+																		 placement="right"
+																		 target="unitTooltip"
+																	 >
+																		Units / Measurements
+																	 </UncontrolledTooltip>
+																 </TableHeaderColumn> 
 																		<TableHeaderColumn
 																			dataField="unitPrice"
 																			dataFormat={(cell, rows) =>

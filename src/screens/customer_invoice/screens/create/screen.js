@@ -113,7 +113,9 @@ class CreateCustomerInvoice extends React.Component {
 					subTotal: 0,
 					vatAmount:0,
 					productId: '',
-					isExciseTaxExclusive: ''
+					isExciseTaxExclusive: '',
+					unitType:'',
+					unitTypeId:''
 
 				},
 			],
@@ -691,6 +693,8 @@ this.props.customerInvoiceCreateActions.getQuotationById(quotationId)
 					vatAmount:0,
 					discount: 0,
 					productId: '',
+					unitType:'',
+					unitTypeId:''
 				}),
 				idCount: this.state.idCount + 1,
 			},
@@ -988,7 +992,9 @@ discountType = (row) =>
 				obj['description'] = result.description;
 				obj['exciseTaxId'] = result.exciseTaxId;
 				obj['discountType'] = result.discountType;
-				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive
+				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive;
+				obj['unitType']=result.unitType;
+				obj['unitTypeId']=result.unitTypeId;
 				idx = index;
 			}
 			return obj;
@@ -1657,6 +1663,8 @@ if(changeShippingAddress && changeShippingAddress==true)
 							subTotal: res.data[0].unitPrice,
 							productId: res.data[0].id,
 							discountType: res.data[0].discountType,
+							unitType:res.data[0].unitType,
+							unitTypeId:res.data[0].unitTypeId,
 						},
 					],
 				},
@@ -1670,6 +1678,11 @@ if(changeShippingAddress && changeShippingAddress==true)
 			this.formRef.current.setFieldValue(
 				`lineItemsString.${0}.unitPrice`,
 				res.data[0].unitPrice,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.unitType`,
+				res.data[0].unitType,
 				true,
 			);
 			this.formRef.current.setFieldValue(
@@ -2977,6 +2990,18 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		{strings.QUANTITY}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
+																			dataField="unitType"
+																			width="2%"
+																     	>	<i
+																		 id="unitTooltip"
+																		 className="fa fa-question-circle"
+																	 /> <UncontrolledTooltip
+																		 placement="right"
+																		 target="unitTooltip"
+																	 >
+																		Units / Measurements</UncontrolledTooltip>
+																		</TableHeaderColumn>
+																		<TableHeaderColumn
 																		width="10%"
 																		dataField="unitPrice"
 																		dataFormat={(cell, rows) =>

@@ -1,7 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-
+import { AgGridReact, AgGridColumn } from 'ag-grid-react/lib/agGridReact';
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import {
 	Card,
 	CardHeader,
@@ -116,12 +118,13 @@ class RequestForQuotation extends React.Component {
 				amount: '',
 				status: '',
 				contactType: 1,
+				paginationPageSize:10,
 			},
 			rfqReceiveDate:'',
 						rfqExpiryDate:'',
 						supplierId:'',
 						rfqNumber:'',
-					totalVatAmount:'',
+						totalVatAmount:'',
 						totalAmount:'',
 						total_net:'',
 					notes:'',
@@ -155,6 +158,39 @@ class RequestForQuotation extends React.Component {
 		};
 		this.csvLink = React.createRef();
 	}
+
+	onPageSizeChanged = (newPageSize) => {
+
+        var value = document.getElementById('page-size').value;
+
+        this.gridApi.paginationSetPageSize(Number(value));
+
+    };
+
+    onGridReady = (params) => {
+
+        this.gridApi = params.api;
+
+        this.gridColumnApi = params.columnApi;
+
+		this.gridApi.resetRowHeights();
+    };
+
+
+
+    onBtnExport = () => {
+
+        this.gridApi.exportDataAsCsv();
+
+    };
+
+
+
+    onBtnExportexcel = () => {
+
+        this.gridApi.exportDataAsExcel();
+
+    };
 
 	componentDidMount = () => {
 		let { filterData } = this.state;
@@ -237,6 +273,59 @@ class RequestForQuotation extends React.Component {
 			</span>
 		);
 	};
+	getActionButtons = (row) => {
+		return (
+	<>
+	{/* BUTTON ACTIONS */}
+			{/* View */}
+			<Button
+				className="Ag-gridActionButtons btn-sm"
+				title='view'
+				color="secondary"
+				onClick={() =>
+				{
+					this.props.history.push(
+						'/admin/expense/request-for-quotation/view',
+						{ id: row.id },
+					)}
+				}
+			
+			>	<i className="fas fa-eye" /> </Button>&nbsp;&nbsp;
+			{row.status !== 'Sent' && row.status !== "Closed" && (
+			<Button
+				className="Ag-gridActionButtons btn-sm"
+				title='Edit'
+				color="secondary"
+				onClick={() =>
+				{
+					this.props.history.push(
+						'/admin/expense/request-for-quotation/detail',
+						{ id: row.id },
+					)}
+				}
+
+			>		<i className="fas fa-edit"/> </Button>)}
+				{row.status !== 'Sent' && row.status !== "Closed"  ? (<>&nbsp;&nbsp;</>) : ''}
+				{ row.status !== "Closed"  && (
+			<Button
+				className="Ag-gridActionButtons btn-sm"
+				title='send'
+				color="secondary"
+				onClick={() => {this.sendMail(row);}}
+			
+			>		<i className="fas fa-send"/> </Button>)}&nbsp;&nbsp;
+				{row.status === 'Sent' && (
+			<Button
+				className="Ag-gridActionButtons btn-sm"
+				title='creat purchase order'
+				color="secondary"
+				onClick={() => {this.renderActionForState(row.id);}}
+			
+			>		<i className="fas fa-plus"/> </Button>)}
+
+	</>
+		)
+	}
 
 	sortColumn = (sortName, sortOrder) => {
 		this.options.sortName = sortName;
@@ -302,6 +391,20 @@ class RequestForQuotation extends React.Component {
 			actionButtons: temp,
 		});
 	};
+	renderAmount =  (amount, params) => {
+		let {universal_currency_list}=this.props;
+		if (amount != null && amount != 0)
+			return (
+				<>
+					<Currency
+						value={amount}
+						currencySymbol={universal_currency_list[0] ? universal_currency_list[0].currencyIsoCode : 'AED'}					/>
+				</>
+
+			)
+		else
+			return ("---")
+	};			
 
 	renderActions = (cell, row) => {
 		return (
@@ -327,11 +430,10 @@ class RequestForQuotation extends React.Component {
 									)
 								}
 							>
-								
 								<i className="fas fa-edit" /> {strings.Edit}
 							</DropdownItem>
-								)}
-								{row.status === 'Sent' && (
+					)}
+					{row.status === 'Sent' && (
 							<DropdownItem
 							onClick={() => {
 							this.renderActionForState(row.id);
@@ -713,10 +815,6 @@ class RequestForQuotation extends React.Component {
 		this.setState({ openInvoicePreviewModal: false });
 	};
 
-
-
-
-
 	closeInvoice = (id, status) => {
 		if (status === 'Paid') {
 			this.props.commonActions.tostifyAlert(
@@ -1046,8 +1144,151 @@ class RequestForQuotation extends React.Component {
 									</Button>
 									</div>
 									</Row> 
+								
+						<div className="ag-theme-alpine mb-3" style={{ height: 550, width: "100%" }}>
+
+							<AgGridReact
+
+									rowData={
+										request_for_quotation_data
+											? request_for_quotation_data
+											: []}
+									pagination={true}
+									rowSelection="multiple"
+									paginationPageSize={this.state.paginationPageSize}
+									floatingFilter={true}
+									defaultColDef={{
+										resizable: true,
+										flex: 1,
+										sortable: true
+									}}
+									sideBar="columns"
+									onGridReady={this.onGridReady}
 									
-										<BootstrapTable
+								>	
+									<AgGridColumn 
+												field="rfqNumber" 
+												headerName=	{strings.RFQNUMBER}
+												sortable={ true } 
+												filter={ true } 
+												enablePivot={ true } 
+												// cellRendererFramework={(params) => params.data.request_for_quotation_list === "" || params.data.request_for_quotation_list === null ?
+												// 	params.data.request_for_quotation_list
+												// 	:
+												// 	params.data.grnNumber}
+												cellRendererFramework={(params) => <label
+													className="mb-0 label-bank"
+													style={{
+														cursor: 'pointer',
+														}}               
+										>
+										{params.value}
+										</label>
+								}
+											></AgGridColumn>
+
+									<AgGridColumn 
+										field="supplierName"
+										headerName={strings.SUPPLIERNAME}
+										sortable={true}
+										filter={true}
+										enablePivot={true}
+
+										// cellRendererFramework={(params) =>
+										// 	<>
+										// 		{this.renderTaxReturns(params.value, params)}
+										// 	</>
+										// }
+									></AgGridColumn>
+
+									<AgGridColumn 
+										field="renderRFQStatus"
+										headerName={strings.STATUS}
+										sortable={true}
+										filter={true}
+										enablePivot={true}
+
+										cellRendererFramework={(params) => <label
+											className="mb-0 label-bank"
+											style={{
+												cursor: 'pointer',
+												}}               
+												>
+												{this.renderRFQStatus(params.value, params.data,request_for_quotation_list)}
+												</label>
+												}
+									></AgGridColumn>
+
+									<AgGridColumn 
+										field="rfqReceiveDate"
+										headerName={strings.RFQDATE}
+										sortable={true}
+										filter={true}
+										enablePivot={true}
+
+										// cellRendererFramework={(params) =>
+										// 	<>
+										// 		{this.renderTaxReturns(params.value, params)}
+										// 	</>
+										// }
+									></AgGridColumn>
+									
+									<AgGridColumn 
+										field="rfqExpiryDate"
+										headerName={strings.RFQDUEDATE}
+										sortable={true}
+										filter={true}
+										enablePivot={true}
+
+										// cellRendererFramework={(params) =>
+										// 	<>
+										// 		{this.renderTaxReturns(params.value, params)}
+										// 	</>
+										// }
+									></AgGridColumn>
+
+									<AgGridColumn 
+										field="totalAmount"
+										headerName={strings.AMOUNT}
+										sortable={true}
+										filter={true}
+										enablePivot={true}
+
+										cellRendererFramework={(params) =>
+											<>
+												{this.renderAmount(params.value, params.data,request_for_quotation_list)}
+											</>
+										}
+									></AgGridColumn>
+
+									<AgGridColumn 
+										field="action"
+										// className="Ag-gridActionButtons"
+										headerName="ACTIONS"
+										cellRendererFramework={(params) =>
+											<div
+											 className="Ag-gridActionButtons"
+											 >
+												{this.getActionButtons(params.data)}
+											</div>
+
+										}
+									></AgGridColumn>
+
+							</AgGridReact>
+								
+							<div className="example-header mt-1">
+												Page Size:
+												<select onChange={() => this.onPageSizeChanged()} id="page-size">
+												<option value="10" selected={true}>10</option>
+												<option value="100">100</option>
+												<option value="500">500</option>
+												<option value="1000">1000</option>
+												</select>
+											</div>
+						</div>
+
+										{/* <BootstrapTable
 											selectRow={this.selectRowProp}
 											search={false}
 											options={this.options}
@@ -1077,15 +1318,7 @@ class RequestForQuotation extends React.Component {
 											>
 											{strings.RFQNUMBER}
 											</TableHeaderColumn>
-											{/* <TableHeaderColumn
-												dataField="poList"
-												dataFormat={this.renderpoList}
-												dataSort
-											//	width="10%"
-												className="table-header-bg"
-											>
-												PO's
-											</TableHeaderColumn> */}
+											
 											<TableHeaderColumn
 												dataField="supplierName"
 												dataSort
@@ -1133,15 +1366,7 @@ class RequestForQuotation extends React.Component {
 											>
 												 {strings.AMOUNT}
 											</TableHeaderColumn>
-											{/* <TableHeaderColumn
-												dataField="dueAmount"
-												dataSort
-												width="5%"
-												dataFormat={this.renderDueAmount}
-												className="table-header-bg"
-											>
-												Due Amount
-											</TableHeaderColumn> */}
+											
 											<TableHeaderColumn
 												className="text-right"
 												columnClassName="text-right"
@@ -1149,7 +1374,7 @@ class RequestForQuotation extends React.Component {
 												dataFormat={this.renderActions}
 												className="table-header-bg"
 											></TableHeaderColumn>
-										</BootstrapTable>
+										</BootstrapTable> */}
 									
 								</Col>
 							</Row>

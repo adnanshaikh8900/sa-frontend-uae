@@ -514,6 +514,8 @@ this.state.data.map((obj, index) => {
 
 	componentDidMount = () => {
 		this.getInitialData();
+		if(this.props.location.state &&this.props.location.state.contactData)
+				this.getCurrentUser(this.props.location.state.contactData);
 	};
 
 	getInitialData = () => {
@@ -1215,7 +1217,7 @@ this.state.data.map((obj, index) => {
 	};
 
 	getCurrentUser = (data) => {
-		
+
 		let option;
 		if (data.label || data.value) {
 			option = data;
@@ -1225,25 +1227,28 @@ this.state.data.map((obj, index) => {
 				value: data.id,
 			};
 		}
-		
+
 		let result = this.props.currency_convert_list.filter((obj) => {
 			return obj.currencyCode === data.currencyCode;
 		});
 		
-	    this.formRef.current.setFieldValue('currency', result[0].currencyCode, true);
-		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
-
 		this.setState({
-			supplier_currency: data.currencyCode,
-			supplier_currency_des: result[0].currencyName,
-		})
+			customer_currency: data.currencyCode,
+			supplier_currency_des: result[0]  && result[0].currencyName ? result[0].currencyName:"AED",
+			supplier_currency_symbol:data.currencyIso ?data.currencyIso:"AED",
+			customer_taxTreatment_des:data.taxTreatment?data.taxTreatment:""
+		});
 
-		// this.setState({
-		//   selectedContact: option
-		// })
-		this.formRef.current.setFieldValue('supplierId', option, true);
+		this.formRef.current.setFieldValue('contactId', option, true);
+
+		if(result[0] && result[0].currencyCode)
+		this.formRef.current.setFieldValue('currency',result[0].currencyCode, true);
+
+		this.formRef.current.setFieldValue('taxTreatmentid', data.taxTreatmentId, true);
+
+		if( result[0] &&  result[0].exchangeRate)
+		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
 	};
-
 	closeSupplierModal = (res) => {
 		if (res) {
 			this.props.goodsReceivedNoteAction.getSupplierList(this.state.contactType);
@@ -1749,9 +1754,20 @@ console.log(this.state.data)
 																		}
 
 																		value={
-																	props.values.supplierId
-																		//	this.state.supplierList
-																		}
+																			this.state.quotationId ?
+
+																			tmpSupplier_list &&
+																		   selectOptionsFactory.renderOptions(
+																			   'label',
+																			   'value',
+																			   tmpSupplier_list,
+																			   strings.CustomerName,
+																		 ).find((option) => option.value == this.state.contactId)
+																		   
+																		 :
+																		 
+																		 props.values.contactId
+																		   }
 																		onChange={(option) => {
 																			if (option && option.value) {
 																				this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);

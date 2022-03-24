@@ -407,3 +407,17 @@ export const getCompanyDetails = () => {
 	  })
 	}
   }
+  export const getUnitTypeList = () => {
+	return (dispatch) => {
+	  let data = {
+		method: 'GET',
+		url: `/rest/datalist/getUnitTypeList`
+	  }
+  
+	  return authApi(data).then((res) => {
+		return res
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }

@@ -98,6 +98,7 @@ class DetailProduct extends React.Component {
 			isActive:false,
 			exciseTaxId:'',
 			exciseTaxList:[],
+			unitTypeList:[],
 			exciseTaxCheck:false,
 //			disableEditing:true,
 			inventoryTableData:[]
@@ -130,6 +131,13 @@ class DetailProduct extends React.Component {
 
 	componentDidMount = () => {
 		this.initializeData();
+		this.props.productActions.getUnitTypeList().then((res) => {
+			if (res.status === 200) {
+				this.setState({
+					unitTypeList:res.data
+				});
+			}
+		});
 		this.props.productActions.getExciseTaxList().then((res) => {
 			if (res.status === 200) {
 				this.setState({
@@ -249,6 +257,7 @@ class DetailProduct extends React.Component {
 								transactionCategoryId: res.data.transactionCategoryId ? res.data.transactionCategoryId : '',
 								inventoryId: res.data.inventoryId ? res.data.inventoryId : '',
 								exciseTaxId:res.data.exciseTaxId ?res.data.exciseTaxId :'',
+								unitTypeId:res.data.unitTypeId?res.data.unitTypeId:"",
 							},
 							exciseTaxCheck:res.data.exciseTaxId ?true :false,
 							exciseType:res.data.exciseType ?true :false,
@@ -409,6 +418,7 @@ renderName=(cell,row)=>{
 		const inventoryId = this.state.inventoryId;
 		const isActive = this.state.selectedStatus;
 		const exciseType = this.state.exciseType;
+		const unitTypeId=data["unitTypeId"];
 		let productPriceType;
 		if (data && data['productPriceType'] && data['productPriceType'].includes('SALES')) {
 			productPriceType = 'SALES';
@@ -439,6 +449,7 @@ renderName=(cell,row)=>{
 			inventoryId,
 			isActive,
 			exciseType,
+			unitTypeId,
 			...(salesUnitPrice.length !== 0 &&
 				data['productPriceType'].includes('SALES') && {
 					salesUnitPrice,
@@ -829,7 +840,7 @@ renderName=(cell,row)=>{
 	render() {
 		strings.setLanguage(this.state.language);
 		const { vat_list, product_category_list,supplier_list,inventory_list } = this.props;
-		const { loading, dialog, purchaseCategory, salesCategory, inventoryAccount ,exciseTaxList,inventoryTableData} = this.state;
+		const { loading, dialog, purchaseCategory, salesCategory, inventoryAccount ,exciseTaxList,inventoryTableData,unitTypeList} = this.state;
 		let tmpSupplier_list = []
 
 		var vat_list_data =[];
@@ -1292,6 +1303,55 @@ renderName=(cell,row)=>{
 																					{props.errors.vatCategoryId}
 																				</div>
 																			)}
+																	</FormGroup>
+																</Col>
+															</Row>
+															<Row>
+															<Col  lg={4}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="unitTypeId">
+																			Unit Type
+																		</Label>
+																		<Select
+																			options={
+																				unitTypeList
+																					? selectOptionsFactory.renderOptions(
+																							'unitType',
+																							'unitTypeId',
+																							unitTypeList,
+																							'Unit Type',
+																					  )
+																					: []
+																			}
+																			id="unitTypeId"
+																			name="unitTypeId"
+																			placeholder={strings.Select+ "Unit Type"}
+																			value={
+																				unitTypeList
+																				&& selectOptionsFactory.renderOptions(
+																					'unitType',
+																					'unitTypeId',
+																					unitTypeList,
+																					'Unit Type',
+																			  )
+																					.find(
+																						(option) =>
+																							option.value ==props.values.unitTypeId,
+																					)
+																			}
+																			onChange={(option) => {
+																				
+																				if (option && option.value) {
+																					props.handleChange('unitTypeId')(
+																						option,
+																					);
+																				} else {
+																					props.handleChange('unitTypeId')(
+																						'',
+																					);
+																				}
+																			}}																			
+																		/>																	
 																	</FormGroup>
 																</Col>
 															</Row>

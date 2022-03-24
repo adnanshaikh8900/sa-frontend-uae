@@ -521,6 +521,8 @@ class CreateSupplierInvoice extends React.Component {
 					vatAmount: 0,
 					discount: 0,
 					productId: '',
+					unitType:'',
+					unitTypeId:''
 				}),
 				idCount: this.state.idCount + 1,
 			},
@@ -831,6 +833,8 @@ class CreateSupplierInvoice extends React.Component {
 				obj['transactionCategoryId'] = result.transactionCategoryId;
 				obj['transactionCategoryLabel'] = result.transactionCategoryLabel;
 				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive;
+				obj['unitType']=result.unitType;
+				obj['unitTypeId']=result.unitTypeId;
 				idx = index;
 			}
 			return obj;
@@ -2486,6 +2490,21 @@ class CreateSupplierInvoice extends React.Component {
 																	>
 																		{strings.QUANTITY}
 																	</TableHeaderColumn>
+																	<TableHeaderColumn
+																			dataField="unitType"
+																			width="2%"
+																     	>	<i
+																		 id="unitTooltip"
+																		 className="fa fa-question-circle ml-1"
+																	 ></i>
+																	 
+																	 <UncontrolledTooltip
+																		 placement="right"
+																		 target="unitTooltip"
+																	 >
+																		Units / Measurements
+																	 </UncontrolledTooltip>
+																 </TableHeaderColumn> 
 																	<TableHeaderColumn
 																		width="10%"
 																		dataField="unitPrice"

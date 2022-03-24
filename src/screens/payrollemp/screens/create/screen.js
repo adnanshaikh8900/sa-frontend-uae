@@ -2119,12 +2119,6 @@ existForAccountNumber = (value) => {
                                                                                                             option.length !==12 ? this.setState({checkmobileNumberParam: true }) : this.setState({ checkmobileNumberParam: false });
                                                                                                         }}
                                                                                                         isValid
-                                                                                                        // className={
-                                                                                                        //     props.errors.mobileNumber &&
-                                                                                                        //         props.touched.mobileNumber
-                                                                                                        //         ? 'text-danger'
-                                                                                                        //         : ''
-                                                                                                        // }
                                                                                                     /></div>
                                                                                                      {props.errors.emergencyContactNumber1 &&
                                                                                                       props.touched.emergencyContactNumber1 && (

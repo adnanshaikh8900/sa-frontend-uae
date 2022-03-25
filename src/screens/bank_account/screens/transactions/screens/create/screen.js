@@ -106,9 +106,9 @@ class CreateBankTransaction extends React.Component {
 				employeeId: '',
 				currencyCode: '',
 				exchangeRate:'',
-				isReasonEnabled:false,
+
 			},
-			isReasonEnabled:false,
+			expenseType:false,
 			transactionCategoryList: [],
 			moneyCategoryList:[],
 			totalAmount: '',
@@ -289,7 +289,7 @@ class CreateBankTransaction extends React.Component {
 			expenseCategory,
 			currencyCode,
 			userId,
-			isReasonEnabled,
+			expenseType,
 		} = data;
 		if (
 			invoiceIdList &&
@@ -313,7 +313,7 @@ class CreateBankTransaction extends React.Component {
 			console.log(result1);
 		 }
 		let formData = new FormData();
-		formData.append('expenseType1',  this.state.isReasonEnabled == true ? "BUSINESS" : "NON_BUSINESS");
+		formData.append('expenseType',  this.state.expenseType);
 		formData.append('bankId ', bankAccountId ? bankAccountId : '');
 		formData.append(
 			'date',
@@ -996,17 +996,17 @@ class CreateBankTransaction extends React.Component {
 																		<Col className='mb-3' lg={3}>
 																<Label htmlFor="inline-radio3"><span className="text-danger">* </span>{strings.ExpenseType}</Label>
 																<div>
-																	{this.state.isReasonEnabled === false ?
-																		<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Business}</b></span> :
-																		<span className='mr-4'>{strings.Business}</span>}
+																	{this.state.expenseType === false ?
+																		<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Claimable}</b></span> :
+																		<span className='mr-4'>{strings.Claimable}</span>}
 
 																	<Switch
-																		checked={this.state.isReasonEnabled}
-																		onChange={(isReasonEnabled) => {
-																			props.handleChange('isReasonEnabled')(isReasonEnabled);
-																			this.setState({ isReasonEnabled, }, () => { },);
-																			if (this.state.isReasonEnabled == true)
-																				this.setState({ isReasonEnabled: true })
+																		checked={this.state.expenseType}
+																		onChange={(expenseType) => {
+																			props.handleChange('expenseType')(expenseType);
+																			this.setState({ expenseType, }, () => { },);
+																			// if (this.state.expenseType == true)
+																			// 	this.setState({ expenseType: true })
 																		}}
 																		onColor="#2064d8"
 																		onHandleColor="#2693e6"
@@ -1020,9 +1020,9 @@ class CreateBankTransaction extends React.Component {
 																		className="react-switch"
 																	/>
 
-																	{this.state.isReasonEnabled === true ?
-																		<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.NonBusiness}</b></span>
-																		: <span className='ml-4'>{strings.NonBusiness}</span>
+																	{this.state.expenseType === true ?
+																		<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.NonClaimable}</b></span>
+																		: <span className='ml-4'>{strings.NonClaimable}</span>
 																	}
 																</div>
 

@@ -992,8 +992,8 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																<Label htmlFor="inline-radio3"><span className="text-danger">* </span>{strings.ExpenseType}</Label>
 																<div>
 																	{this.state.expenseType === false ?
-																		<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Business}</b></span> :
-																		<span className='mr-4'>{strings.Business}</span>}
+																		<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Claimable}</b></span> :
+																		<span className='mr-4'>{strings.Claimable}</span>}
 
 																	<Switch
 																		checked={this.state.expenseType}
@@ -1016,8 +1016,8 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																	/>
 
 																	{this.state.expenseType === true ?
-																		<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.NonBusiness}</b></span>
-																		: <span className='ml-4'>{strings.NonBusiness}</span>
+																		<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.NonClaimable}</b></span>
+																		: <span className='ml-4'>{strings.NonClaimable}</span>
 																	}
 																</div>
 

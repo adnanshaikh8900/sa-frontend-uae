@@ -168,14 +168,17 @@ class InvoiceTemplate extends Component {
 									</h6> */}
 								</div>
 							</div>
-							<div style={{ width: '200%',justifyContent:'center', marginTop:'5rem' }}>
+							<div style={{ width: '200%',justifyContent:'center', marginTop:'2rem' }}>
 								<table>
 									<tbody>
 									<tr style={{
 										width: '100%',
 										margin:'0.5rem',
 										marginTop:'2.5rem',
-										marginLeft:'6rem'
+										marginLeft:'6rem',
+										display:'flex',
+										textAlign:'center',
+										justifyContent:'center'
 									}}>
 												<td
 													style={{

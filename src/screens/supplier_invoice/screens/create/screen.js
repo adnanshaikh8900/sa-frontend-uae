@@ -412,6 +412,8 @@ class CreateSupplierInvoice extends React.Component {
 
 	componentDidMount = () => {
 		this.getInitialData();
+		if(this.props.location.state &&this.props.location.state.contactData)
+				this.getCurrentUser(this.props.location.state.contactData);
 	};
 
 	getInitialData = () => {
@@ -519,6 +521,8 @@ class CreateSupplierInvoice extends React.Component {
 					vatAmount: 0,
 					discount: 0,
 					productId: '',
+					unitType:'',
+					unitTypeId:''
 				}),
 				idCount: this.state.idCount + 1,
 			},
@@ -829,6 +833,8 @@ class CreateSupplierInvoice extends React.Component {
 				obj['transactionCategoryId'] = result.transactionCategoryId;
 				obj['transactionCategoryLabel'] = result.transactionCategoryLabel;
 				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive;
+				obj['unitType']=result.unitType;
+				obj['unitTypeId']=result.unitTypeId;
 				idx = index;
 			}
 			return obj;
@@ -1453,19 +1459,23 @@ class CreateSupplierInvoice extends React.Component {
 		let result = this.props.currency_convert_list.filter((obj) => {
 			return obj.currencyCode === data.currencyCode;
 		});
-
-		this.formRef.current.setFieldValue('currency', result[0].currencyCode, true);
-		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
-
+		
 		this.setState({
-			supplier_currency: data.currencyCode,
-			supplier_currency_des: result[0].currencyName,
-		})
+			customer_currency: data.currencyCode,
+			supplier_currency_des: result[0]  && result[0].currencyName ? result[0].currencyName:"AED",
+			customer_currency_symbol:data.currencyIso ?data.currencyIso:"AED",
+			customer_taxTreatment_des:data.taxTreatment?data.taxTreatment:""
+		});
 
-		// this.setState({
-		//   selectedContact: option
-		// })
 		this.formRef.current.setFieldValue('contactId', option, true);
+
+		if(result[0] && result[0].currencyCode)
+		this.formRef.current.setFieldValue('currency',result[0].currencyCode, true);
+
+		this.formRef.current.setFieldValue('taxTreatmentid', data.taxTreatmentId, true);
+
+		if( result[0] &&  result[0].exchangeRate)
+		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
 	};
 
 	closeSupplierModal = (res) => {
@@ -1885,7 +1895,20 @@ class CreateSupplierInvoice extends React.Component {
 																				)
 																				: []
 																		}
-																		value={props.values.contactId}
+																		value={this.state.quotationId ?
+
+																			tmpSupplier_list &&
+																		   selectOptionsFactory.renderOptions(
+																			   'label',
+																			   'value',
+																			   tmpSupplier_list,
+																			   strings.CustomerName,
+																		 ).find((option) => option.value == this.state.contactId)
+																		   
+																		 :
+																		 
+																		 props.values.contactId
+																		   }
 																		onChange={(option) => {
 																			if (option && option.value) {
 																				this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
@@ -2467,6 +2490,21 @@ class CreateSupplierInvoice extends React.Component {
 																	>
 																		{strings.QUANTITY}
 																	</TableHeaderColumn>
+																	<TableHeaderColumn
+																			dataField="unitType"
+																			width="2%"
+																     	>	<i
+																		 id="unitTooltip"
+																		 className="fa fa-question-circle ml-1"
+																	 ></i>
+																	 
+																	 <UncontrolledTooltip
+																		 placement="right"
+																		 target="unitTooltip"
+																	 >
+																		Units / Measurements
+																	 </UncontrolledTooltip>
+																 </TableHeaderColumn> 
 																	<TableHeaderColumn
 																		width="10%"
 																		dataField="unitPrice"

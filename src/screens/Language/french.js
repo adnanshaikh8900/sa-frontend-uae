@@ -209,7 +209,9 @@ PaidBy:"Payé par",
 ExpenseDate:"Date des dépenses",						
 Tax:"Taxe",			
 Description:"Description",				
-Attachment:"Attachement",				
+Attachment:"Attachement",			
+Claimable: "Réclamable",
+NonClaimable : "Non réclamable",	
 
 //Supplier Invoice
 SupplierInvoices:"Factures fournisseur",						

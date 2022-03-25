@@ -90,6 +90,7 @@ class DetailExpense extends React.Component {
 			disabled: false,
 			disabled1:false,
 			exclusiveVat:true,
+			expenseType:true,
 			isReverseChargeEnabled:false,
 			showReverseCharge:false,
 			lockPlacelist:false,
@@ -221,6 +222,7 @@ class DetailExpense extends React.Component {
 									taxTreatmentId:res.data.taxTreatmentId ?res.data.taxTreatmentId:'',
 									
 								},
+								expenseType: res.data.expenseType ? true : false,
 								showPlacelist:res.data.taxTreatmentId !=8?true:false,
 								lockPlacelist:res.data.taxTreatmentId ==7?true:false,
 								isReverseChargeEnabled:res.data.isReverseChargeEnabled ?res.data.isReverseChargeEnabled:false,
@@ -275,8 +277,9 @@ class DetailExpense extends React.Component {
 			taxTreatmentId,
 		} = data;
 		const exclusiveVat = this.state.selectedStatus;
-
+		const expenseType = this.state.selectedStatus;
 		let formData = new FormData();
+		formData.append('expenseType',  this.state.expenseType);
 		formData.append('expenseNumber', expenseNumber);
 		formData.append('expenseId', current_expense_id);
 		formData.append('payee', payee ? payee.value : '');
@@ -1023,6 +1026,41 @@ class DetailExpense extends React.Component {
 																		)}
 																</FormGroup>
 															</Col>)}
+
+															<Col className='mb-3' lg={3}>
+															<Label htmlFor="inline-radio3"><span className="text-danger">* </span>{strings.ExpenseType}</Label>
+															<div>
+																{this.state.expenseType === false ?
+																	<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Claimable}</b></span> :
+																	<span className='mr-4'>{strings.Claimable}</span>}
+
+																<Switch
+																	checked={this.state.expenseType}
+																	onChange={(expenseType) => {
+																		props.handleChange('expenseType')(expenseType);
+																		this.setState({ expenseType, }, () => { },);
+																		// if (this.state.expenseType == true)
+																		// 	this.setState({ expenseType: true })
+																	}}
+																	onColor="#2064d8"
+																	onHandleColor="#2693e6"
+																	handleDiameter={25}
+																	uncheckedIcon={false}
+																	checkedIcon={false}
+																	boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+																	activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+																	height={20}
+																	width={48}
+																	className="react-switch"
+																/>
+
+																{this.state.expenseType === true ?
+																	<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.NonClaimable}</b></span>
+																	: <span className='ml-4'>{strings.NonClaimable}</span>
+																}
+																</div>
+
+															</Col>
 															
 														</Row>
 															<Row>

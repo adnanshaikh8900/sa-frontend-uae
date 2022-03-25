@@ -891,7 +891,6 @@ class Profile extends React.Component {
 																	// 		[Yup.ref('password'), null],
 																	// 		'Passwords must match',
 																	// 	),
-																	dob: Yup.string().required('DOB is Required'),
 																})}
 															>
 																{(props) => (
@@ -1019,9 +1018,7 @@ class Profile extends React.Component {
 																					<Col lg={6}>
 																						<FormGroup className="mb-3">
 																							<Label htmlFor="date">
-																								<span className="text-danger">
-																									*
-																							</span> {strings.DateOfBirth}
+																								 {strings.DateOfBirth}
 																						</Label>
 																							<DatePicker
 																								className={`form-control ${props.errors.dob &&

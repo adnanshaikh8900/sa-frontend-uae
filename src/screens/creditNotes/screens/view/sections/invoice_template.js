@@ -410,7 +410,7 @@ class InvoiceTemplate extends Component {
 											</td>
 										</tr> */}
 										
-										<tr >
+										{isCNWithoutProduct==false&&(<tr >
 											<td style={{ width: '40%' }}>
 												<strong>{strings.TotalExcise}</strong>
 											</td>
@@ -443,7 +443,7 @@ class InvoiceTemplate extends Component {
 													)}
 												</span>
 											</td>
-										</tr>
+										</tr>)}
                                         {isCNWithoutProduct==false&&(<tr >
 											<td style={{ width: '40%' }}>
 												<strong>

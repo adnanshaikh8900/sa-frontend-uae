@@ -1704,7 +1704,7 @@ if (invoiceNumber && invoiceNumber.value) {
 													 
 													if (exist === true) 
 													{
-														errors.creditNoteNumber ='Tax Credit Note Number cannot be same';
+														errors.creditNoteNumber ='Tax Credit Note Number Cannot be Same';
 													}	
 													
 													if(this.state.isCreatedWIWP==false && !values.invoiceNumber)

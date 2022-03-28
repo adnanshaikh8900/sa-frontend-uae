@@ -2055,20 +2055,20 @@ if(changeShippingAddress && changeShippingAddress==true)
 																<FormGroup className="mb-3">
 																	<Label htmlFor="contactId">
 																		<span className="text-danger">* </span>
-																	{strings.CustomerName}
+																	{strings.Customer}
 																	</Label>
 																	<Select
 																	isDisabled={this.state.isQuotationSelected}
 																		id="contactId"
 																		name="contactId"
-																		placeholder={strings.Select+strings.CustomerName} 
+																		placeholder={strings.Select + strings.Customer} 
 																		options={
 																			tmpCustomer_list
 																				? selectOptionsFactory.renderOptions(
 																						'label',
 																						'value',
 																						tmpCustomer_list,
-																						strings.CustomerName,
+																						strings.Customer,
 																				  )
 																				: []
 																		}
@@ -2080,7 +2080,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																				'label',
 																				'value',
 																				tmpCustomer_list,
-																				strings.CustomerName,
+																				strings.Customer,
 																		  ).find((option) => option.value == this.state.contactId)
 																			
 																		  :

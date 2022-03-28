@@ -1811,7 +1811,7 @@ class DetailSupplierInvoice extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="contactId">
 																			<span className="text-danger">* </span>
-																		{strings.SupplierName}
+																		{strings.Supplier}
 																		</Label>
 																		<Select
 																			id="contactId"

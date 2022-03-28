@@ -108,6 +108,7 @@ RecieptNumber:"Numéro de reçu",
       CreateInvoice: "Créer une facture",
       InvoiceNumber: "Numéro de facture",
       CustomerName: "Nom du client",
+      Customer: "Cliente",
       AddNewCustomer: "Ajouter un nouveau client",
       PlaceofSupply: "Lieu d’approvisionnement",
       Terms: "Petits caractères",
@@ -220,7 +221,8 @@ INVOICEAMOUNT:"MONTANT DE LA FACTURE",
 SupplierInvoice:"Facture fournisseur",	
 		
 //Create invoice
-SupplierName:"Nom du fournisseur",			
+SupplierName:"Nom du fournisseur",	
+Supplier:"Le fournisseur",		
 AddNewSupplier:"Ajouter un nouveau fournisseur",														
 AddASupplier:"Ajouter Un Fournisseur",
 

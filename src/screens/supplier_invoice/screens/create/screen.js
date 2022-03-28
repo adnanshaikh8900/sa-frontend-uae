@@ -1879,12 +1879,12 @@ class CreateSupplierInvoice extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="contactId">
 																		<span className="text-danger">* </span>
-																		{strings.SupplierName}
+																		{strings.Supplier} 
 																	</Label>
 																	<Select
 																		id="contactId"
 																		name="contactId"
-																		placeholder={strings.Select + strings.SupplierName}
+																		placeholder={strings.Select + strings.Supplier}
 																		options={
 																			tmpSupplier_list
 																				? selectOptionsFactory.renderOptions(

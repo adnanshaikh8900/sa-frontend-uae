@@ -104,6 +104,7 @@ RecieptNumber:"عدد إيصال",
       CreateInvoice: "إنشاء فاتورة",
       InvoiceNumber: "رقم الفاتورة",
       CustomerName: "اسم العميل",
+      Customer: "عميل",
       AddNewCustomer: "إضافة عميل جديد",
       PlaceofSupply: "مكان التوريد",
       Terms: "مصطلحات",
@@ -218,7 +219,8 @@ INVOICEAMOUNT:"مبلغ الفاتورة",
 SupplierInvoice:"فاتورة المورد",			
 		
 //Create invoice
-SupplierName:"اسم المورد",			
+SupplierName:"اسم المورد",
+Supplier:"المورد",			
 AddNewSupplier:"إضافة مورد جديد",			
 			
 													

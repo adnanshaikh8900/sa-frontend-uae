@@ -103,14 +103,14 @@ class CreateBankAccount extends React.Component {
 			disabled: false,
 			initialVals: {
 				account_name: '',
-				currency: '',
+				currency: 150,
 				opening_balance: '',
 				account_type: 2,
 				bank_name: '',
 				account_number: '',
 				ifsc_code: '',
 				swift_code: '',
-				countrycode: '',
+				countrycode: 229,
 				openingDate: new Date(),
 				account_is_for: '',
 				bankId:''
@@ -410,7 +410,7 @@ class CreateBankAccount extends React.Component {
 																				.find(
 																					(option) =>
 																						option.value ===
-																						+props.values.currencyCode,
+																						+props.values.currency,
 																				)
 																		}
 																		onChange={(option) => {

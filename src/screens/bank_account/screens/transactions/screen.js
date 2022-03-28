@@ -219,6 +219,7 @@ class BankTransactions extends React.Component {
 					bankAccountCurrencyIsoCode: res.bankAccountCurrencyIsoCode,
 					currentBalance: res.currentBalance,
 					closingBalance: res.closingBalance,
+					openingBalance:res.openingBalance,
 					accounName: res.bankAccountName,
 					transactionCount: res.transactionCount
 				});
@@ -802,6 +803,15 @@ class BankTransactions extends React.Component {
 
 													{this.state.closingBalance ? (
 														this.state.closingBalance.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })): ( 0)}
+													</h3>
+												</Col>
+												<Col lg={3}>
+													<h5>{strings.OpeningBalance}</h5>
+													<h3>
+													{this.state.bankAccountCurrencyIsoCode} &nbsp;
+
+													{this.state.openingBalance ? (
+														this.state.openingBalance.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })): ( 0)}
 													</h3>
 												</Col>
 											</Row>

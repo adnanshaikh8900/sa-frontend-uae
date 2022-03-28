@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { AgGridReact, AgGridColumn } from 'ag-grid-react/lib/agGridReact';
-import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+// import { AgGridReact, AgGridColumn } from 'ag-grid-react/lib/agGridReact';
+// import 'ag-grid-community/dist/styles/ag-grid.css';
+// import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import {
 	Card,
 	CardHeader,
@@ -118,7 +118,7 @@ class RequestForQuotation extends React.Component {
 				amount: '',
 				status: '',
 				contactType: 1,
-				paginationPageSize:10,
+				// paginationPageSize:10,
 			},
 			rfqReceiveDate:'',
 						rfqExpiryDate:'',
@@ -159,38 +159,38 @@ class RequestForQuotation extends React.Component {
 		this.csvLink = React.createRef();
 	}
 
-	onPageSizeChanged = (newPageSize) => {
+	// onPageSizeChanged = (newPageSize) => {
 
-        var value = document.getElementById('page-size').value;
+    //     var value = document.getElementById('page-size').value;
 
-        this.gridApi.paginationSetPageSize(Number(value));
+    //     this.gridApi.paginationSetPageSize(Number(value));
 
-    };
+    // };
 
-    onGridReady = (params) => {
+    // onGridReady = (params) => {
 
-        this.gridApi = params.api;
+    //     this.gridApi = params.api;
 
-        this.gridColumnApi = params.columnApi;
+    //     this.gridColumnApi = params.columnApi;
 
-		this.gridApi.resetRowHeights();
-    };
-
-
-
-    onBtnExport = () => {
-
-        this.gridApi.exportDataAsCsv();
-
-    };
+	// 	this.gridApi.resetRowHeights();
+    // };
 
 
 
-    onBtnExportexcel = () => {
+    // onBtnExport = () => {
 
-        this.gridApi.exportDataAsExcel();
+    //     this.gridApi.exportDataAsCsv();
 
-    };
+    // };
+
+
+
+    // onBtnExportexcel = () => {
+
+    //     this.gridApi.exportDataAsExcel();
+
+    // };
 
 	componentDidMount = () => {
 		let { filterData } = this.state;
@@ -273,59 +273,59 @@ class RequestForQuotation extends React.Component {
 			</span>
 		);
 	};
-	getActionButtons = (row) => {
-		return (
-	<>
-	{/* BUTTON ACTIONS */}
-			{/* View */}
-			<Button
-				className="Ag-gridActionButtons btn-sm"
-				title='view'
-				color="secondary"
-				onClick={() =>
-				{
-					this.props.history.push(
-						'/admin/expense/request-for-quotation/view',
-						{ id: row.id },
-					)}
-				}
+	// getActionButtons = (row) => {
+	// 	return (
+	// <>
+	// {/* BUTTON ACTIONS */}
+	// 		{/* View */}
+	// 		<Button
+	// 			className="Ag-gridActionButtons btn-sm"
+	// 			title='view'
+	// 			color="secondary"
+	// 			onClick={() =>
+	// 			{
+	// 				this.props.history.push(
+	// 					'/admin/expense/request-for-quotation/view',
+	// 					{ id: row.id },
+	// 				)}
+	// 			}
 			
-			>	<i className="fas fa-eye" /> </Button>&nbsp;&nbsp;
-			{row.status !== 'Sent' && row.status !== "Closed" && (
-			<Button
-				className="Ag-gridActionButtons btn-sm"
-				title='Edit'
-				color="secondary"
-				onClick={() =>
-				{
-					this.props.history.push(
-						'/admin/expense/request-for-quotation/detail',
-						{ id: row.id },
-					)}
-				}
+	// 		>	<i className="fas fa-eye" /> </Button>&nbsp;&nbsp;
+	// 		{row.status !== 'Sent' && row.status !== "Closed" && (
+	// 		<Button
+	// 			className="Ag-gridActionButtons btn-sm"
+	// 			title='Edit'
+	// 			color="secondary"
+	// 			onClick={() =>
+	// 			{
+	// 				this.props.history.push(
+	// 					'/admin/expense/request-for-quotation/detail',
+	// 					{ id: row.id },
+	// 				)}
+	// 			}
 
-			>		<i className="fas fa-edit"/> </Button>)}
-				{row.status !== 'Sent' && row.status !== "Closed"  ? (<>&nbsp;&nbsp;</>) : ''}
-				{ row.status !== "Closed"  && (
-			<Button
-				className="Ag-gridActionButtons btn-sm"
-				title='send'
-				color="secondary"
-				onClick={() => {this.sendMail(row);}}
+	// 		>		<i className="fas fa-edit"/> </Button>)}
+	// 			{row.status !== 'Sent' && row.status !== "Closed"  ? (<>&nbsp;&nbsp;</>) : ''}
+	// 			{ row.status !== "Closed"  && (
+	// 		<Button
+	// 			className="Ag-gridActionButtons btn-sm"
+	// 			title='send'
+	// 			color="secondary"
+	// 			onClick={() => {this.sendMail(row);}}
 			
-			>		<i className="fas fa-send"/> </Button>)}&nbsp;&nbsp;
-				{row.status === 'Sent' && (
-			<Button
-				className="Ag-gridActionButtons btn-sm"
-				title='creat purchase order'
-				color="secondary"
-				onClick={() => {this.renderActionForState(row.id);}}
+	// 		>		<i className="fas fa-send"/> </Button>)}&nbsp;&nbsp;
+	// 			{row.status === 'Sent' && (
+	// 		<Button
+	// 			className="Ag-gridActionButtons btn-sm"
+	// 			title='creat purchase order'
+	// 			color="secondary"
+	// 			onClick={() => {this.renderActionForState(row.id);}}
 			
-			>		<i className="fas fa-plus"/> </Button>)}
+	// 		>		<i className="fas fa-plus"/> </Button>)}
 
-	</>
-		)
-	}
+	// </>
+	// 	)
+	// }
 
 	sortColumn = (sortName, sortOrder) => {
 		this.options.sortName = sortName;
@@ -391,20 +391,20 @@ class RequestForQuotation extends React.Component {
 			actionButtons: temp,
 		});
 	};
-	renderAmount =  (amount, params) => {
-		let {universal_currency_list}=this.props;
-		if (amount != null && amount != 0)
-			return (
-				<>
-					<Currency
-						value={amount}
-						currencySymbol={universal_currency_list[0] ? universal_currency_list[0].currencyIsoCode : 'AED'}					/>
-				</>
+	// renderAmount =  (amount, params) => {
+	// 	let {universal_currency_list}=this.props;
+	// 	if (amount != null && amount != 0)
+	// 		return (
+	// 			<>
+	// 				<Currency
+	// 					value={amount}
+	// 					currencySymbol={universal_currency_list[0] ? universal_currency_list[0].currencyIsoCode : 'AED'}					/>
+	// 			</>
 
-			)
-		else
-			return ("---")
-	};			
+	// 		)
+	// 	else
+	// 		return ("---")
+	// };			
 
 	renderActions = (cell, row) => {
 		return (
@@ -1144,7 +1144,7 @@ class RequestForQuotation extends React.Component {
 									</Button>
 									</div>
 									</Row> 
-								
+{/* 								
 						<div className="ag-theme-alpine mb-3" style={{ height: 550, width: "100%" }}>
 
 							<AgGridReact
@@ -1286,9 +1286,9 @@ class RequestForQuotation extends React.Component {
 												<option value="1000">1000</option>
 												</select>
 											</div>
-						</div>
+						</div> */}
 
-										{/* <BootstrapTable
+										<BootstrapTable
 											selectRow={this.selectRowProp}
 											search={false}
 											options={this.options}
@@ -1374,7 +1374,7 @@ class RequestForQuotation extends React.Component {
 												dataFormat={this.renderActions}
 												className="table-header-bg"
 											></TableHeaderColumn>
-										</BootstrapTable> */}
+										</BootstrapTable>
 									
 								</Col>
 							</Row>

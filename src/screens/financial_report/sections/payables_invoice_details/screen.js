@@ -349,26 +349,24 @@ class PayablesInvoiceDetailsReport extends React.Component {
 													<DropdownToggle caret>Export As</DropdownToggle>
 													<DropdownMenu>
 														
-													<DropdownItem>
-															
+													<DropdownItem onClick={()=>{this.exportFile()}}>
 															<span
 															style={{
 																border: 0,
     															padding: 0,
 																backgroundColor:"white !important"
 															}}
-														     onClick={()=>{this.exportFile()}}
+														  
 															>CSV (Comma Separated Value)</span>
 														</DropdownItem>
-														<DropdownItem>
-															
+														<DropdownItem onClick={()=>{this.exportExcelFile()}}>
 															<span
 															style={{
 																border: 0,
     															padding: 0,
 																backgroundColor:"white !important"
 															}}
-														     onClick={()=>{this.exportExcelFile()}}
+														 
 															>Excel</span>
 														</DropdownItem>
 														<DropdownItem onClick={this.exportPDFWithComponent}>

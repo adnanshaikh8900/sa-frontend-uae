@@ -176,16 +176,16 @@ class CreateCompanyDetails extends React.Component {
 						validate={(values) => {
 							let errors = {};
 							if(values.companyBankCode.length <9 && values.companyBankCode.length !=0)
-							errors.companyBankCode="Company Bank Code should be 9 digits numeric ";	
+							errors.companyBankCode="Company Bank Code Should Be 9 Digits Numeric ";	
 							
 							if(values.companyNumber.length <13 && values.companyNumber.length !=0)
-							errors.companyNumber="Company Number should be 13 digits numeric ";	
+							errors.companyNumber="Company Number Should Be 13 Digits Numeric ";	
 							
 							if(this.state.invalidCompanyBankCode && this.state.invalidCompanyBankCode==true)
-							errors.companyBankCode="Company Bank Code should be  numeric ";	
+							errors.companyBankCode="Company Bank Code Should Be Alpha Numeric ";	
 
 							if(this.state.invalidCompanyNumber && this.state.invalidCompanyNumber==true)
-							errors.companyNumber="Company Number should be numeric ";	
+							errors.companyNumber="Company Number Should Be Numeric ";	
 
 							return errors;
 						}}

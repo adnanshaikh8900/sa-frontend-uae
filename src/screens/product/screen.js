@@ -503,13 +503,13 @@ class Product extends React.Component {
 			<div className="product-screen">
 				<div className="animated fadeIn">
 					 <div className="button-bar">
-            <button onClick={() => this.sizeToFit()}>Size to Fit</button>
+            {/* <button onClick={() => this.sizeToFit()}>Size to Fit</button>
             <button onClick={() => this.autoSizeAll(false)}>
               Auto-Size All
             </button>
             <button onClick={() => this.autoSizeAll(true)}>
               Auto-Size All (Skip Header)
-            </button>
+            </button> */}
           </div>
 					{dialog}
 					{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}

@@ -382,6 +382,7 @@ class RecordVatPayment extends React.Component {
 																		</Label>
 																		<Input
 																			type="number"
+																			min="0"
 																			placeholder='Enter Amount Paid'
 																			id="amount"
 																			name="amount"

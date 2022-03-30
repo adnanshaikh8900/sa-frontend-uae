@@ -117,7 +117,8 @@ class RecordCustomerPayment extends React.Component {
 			{ label: 'Due on Receipt', value: 'DUE_ON_RECEIPT' },
 		];
 		this.regEx = /^[0-9\b]+$/;
-		this.regExBoth = /[a-zA-Z0-9]+$/;
+		//this.regExBoth = /[a-zA-Z0-9]+$/;
+		this.regExBoth = /^[a-zA-Z0-9\s\D,'-/]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 
 		this.file_size = 1024000;

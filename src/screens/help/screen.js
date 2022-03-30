@@ -28,6 +28,7 @@ class Help extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
+		const gettingStarted = require('assets/images/settings/gettingStarted.png');
 		const faqIcon = require('assets/images/settings/faq.png');
 		const userIcon = require('assets/images/settings/user.png');
 		const versionimage = require('assets/images/settings/version.png');
@@ -49,7 +50,7 @@ class Help extends React.Component {
 										<CardBody>
 										<div>
 											<div className="text-center">
-												<img src={faqIcon} width="40%" alt=""></img>
+												<img src={gettingStarted} width="50%" alt=""></img>
 											</div>
 											<div><h4>{strings.GettingStarted}</h4></div>
 											<p>

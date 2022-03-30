@@ -561,9 +561,10 @@ class RecordSupplierPayment extends React.Component {
 																			{strings.AmountPaid}
 																		</Label>
 																		<Input
-																		type="number"
-																		maxLength="14,2"
-																		id="amount"
+																			type="number"
+																			min="0"
+																			maxLength="14,2"
+																			id="amount"
 																			name="amount"
 																			value={props.values.amount}
 																			onChange={(option) => {

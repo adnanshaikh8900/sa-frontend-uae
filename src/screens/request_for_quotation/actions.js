@@ -452,7 +452,7 @@ export const changeStatus = (id,status) => {
 	return (dispatch) => {
 		let data = {
 			method: 'post',
-			url: `/rest/poquatation/changeStatus?id=${id},status=${status}`,
+			url: `/rest/poquatation/changeStatus?id=${id}&status=${status}`,
 		};
 		return authApi(data)
 			.then((res) => {

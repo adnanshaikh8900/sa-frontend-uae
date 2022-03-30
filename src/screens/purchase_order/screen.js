@@ -207,9 +207,9 @@ class PurchaseOrder extends React.Component {
 		);
 	};
 
-	close = (id) => {
+	close = (id,status) => {
 		this.props.purchaseOrderAction
-			.changeStatus(id)
+			.changeStatus(id,status)
 			.then((res) => {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
@@ -366,7 +366,7 @@ class PurchaseOrder extends React.Component {
 							{row.status === 'Draft' && (
 								<DropdownItem
 							onClick={() => {
-							this.changeStatus(row.id);
+							this.changeStatus(row.id,row.statusEnum);
 							}}
 							>
 								<i className="fas fa-send" />  {strings.Approve}
@@ -415,9 +415,9 @@ class PurchaseOrder extends React.Component {
 		);
 	};
 
-	changeStatus = (id) => {
+	changeStatus = (id,status) => {
 				this.props.purchaseOrderAction
-				.changeStatus(id)
+				.changeStatus(id,status)
 				.then((res) => {
 					 
 					if (res.status === 200) {
@@ -842,6 +842,7 @@ class PurchaseOrder extends React.Component {
 						totalVatAmount: supplier.totalVatAmount,
 						currencyCode: supplier.currencyCode,
 						currencyName:supplier.currencyName,
+						statusEnum:supplier.statusEnum
 				  }))
 				: '';
 

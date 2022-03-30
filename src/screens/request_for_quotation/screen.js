@@ -455,7 +455,7 @@ class RequestForQuotation extends React.Component {
 							{row.status === 'Sent' && (
 							<DropdownItem
 							onClick={() => {
-							this.changeStatus(row.id);
+							this.changeStatus(row.id,row.statusEnum);
 							}}
 							>
 								<i className="far fa-times-circle" /> {strings. Close}
@@ -505,9 +505,9 @@ class RequestForQuotation extends React.Component {
 		);
 	};
 
-	changeStatus = (id) => {
+	changeStatus = (id,status) => {
 				this.props.requestForQuotationAction
-				.changeStatus(id)
+				.changeStatus(id,status)
 				.then((res) => {
 					if (res.status === 200) {
 						this.props.commonActions.tostifyAlert(
@@ -938,6 +938,7 @@ class RequestForQuotation extends React.Component {
 						totalVatAmount: supplier.totalVatAmount,
 						currencyCode: supplier.currencyCode,
 						currencyName:supplier.currencyName,
+						statusEnum:supplier.statusEnum
 					
 				  }))
 				: '';

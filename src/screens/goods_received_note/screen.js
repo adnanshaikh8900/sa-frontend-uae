@@ -355,9 +355,9 @@ class GoodsReceivedNote extends React.Component {
 		);
 	};
 
-	changeStatus = (id) => {
+	changeStatus = (id,status) => {
 		this.props.goodsReceivedNoteAction
-		.saveInvoice(id)
+		.saveInvoice(id,status)
 		.then((res) => {
 			if (res.status === 200) {
 				this.props.commonActions.tostifyAlert(
@@ -438,9 +438,9 @@ class GoodsReceivedNote extends React.Component {
 				);
 			});
 	};
-	close = (id) => {
+	close = (id,status) => {
 		this.props.goodsReceivedNoteAction
-			.changeStatus(id)
+			.changeStatus(id,status)
 			.then((res) => {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
@@ -804,6 +804,7 @@ class GoodsReceivedNote extends React.Component {
 							: '',
 						totalAmount: supplier.totalAmount,
 						totalVatAmount: supplier.totalVatAmount,
+						statusEnum:supplier.statusEnum
 					
 				  }))
 				: '';

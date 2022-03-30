@@ -70,6 +70,7 @@ class InventorySummary extends React.Component {
 			activePage: 1,
 			sizePerPage: 10,
 			totalCount: 0,
+			paginationPageSize:10,
 			sort: {
 				column: null,
 				direction: 'desc',

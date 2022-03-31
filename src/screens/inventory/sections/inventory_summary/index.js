@@ -414,7 +414,7 @@ class InventorySummary extends React.Component {
 								
 									
 									</div>			
-									<div style={{textAlign:'right'}} >
+									<div style={{textAlign:'center'}} >
 								
 										<h2>
 										{company_profile &&

@@ -275,8 +275,12 @@ class Product extends React.Component {
 		this.gridColumnApi = params.columnApi;
 	};
 
-
-	onSizePerPageList = (sizePerPage) => {
+	onFirstDataRendered = (params) => {
+		params.api.sizeColumnsToFit();
+		this.autoSizeAll(true);
+	   };
+    
+   onSizePerPageList = (sizePerPage) => {
 		if (this.options.sizePerPage !== sizePerPage) {
 			this.options.sizePerPage = sizePerPage;
 			this.initializeData();
@@ -466,6 +470,19 @@ class Product extends React.Component {
 		)
 	}
 
+	sizeToFit = () => {
+		this.gridApi.sizeColumnsToFit();
+	   };
+	 
+	   autoSizeAll = (skipHeader) => {
+		  debugger
+		const allColumnIds = [];
+		this.gridColumnApi.getAllColumns().forEach((column) => {
+		  allColumnIds.push(column.getId());
+		});
+		this.gridColumnApi.autoSizeColumns(allColumnIds, skipHeader);
+	   };
+
 	render() {
 		strings.setLanguage(this.state.language);
 		const {
@@ -483,6 +500,15 @@ class Product extends React.Component {
 <div>
 			<div className="product-screen">
 				<div className="animated fadeIn">
+				<div className="button-bar">
+      {/* <button onClick={() => this.sizeToFit()}>Size to Fit</button>
+      <button onClick={() => this.autoSizeAll(false)}>
+        Auto-Size All
+      </button>
+      <button onClick={() => this.autoSizeAll(true)}>
+        Auto-Size All (Skip Header)
+      </button> */}
+    </div>
 					{dialog}
 					{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
 					<Card>
@@ -690,8 +716,8 @@ class Product extends React.Component {
 							}}
 				sideBar="columns"
 				onGridReady={this.onGridReady}
-					>
-
+                onFirstDataRendered={this.onFirstDataRendered.bind(this)}
+ 					>
 				<AgGridColumn field="productCode" 
 				headerName= {strings.PRODUCTCODE}
 				sortable={ true } 

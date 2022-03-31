@@ -110,6 +110,7 @@ Relationship2:"Relationship 2",
       CreateInvoice: "Create Invoice",
       InvoiceNumber: "Invoice Number",
       CustomerName: "Customer Name",
+      Customer:"Customer",
       AddNewCustomer: "Add New Customer",
       PlaceofSupply: "Place of Supply",
       Terms: "Terms",
@@ -233,7 +234,8 @@ BillFrom:"Bill From",
 SupplierInvoice:"Supplier Invoice",	
 		
 //Create invoice
-SupplierName:"Supplier Name",			
+SupplierName:"Supplier Name",	
+Supplier:"Supplier",		
 AddNewSupplier:"Add New Supplier",			
 			
 

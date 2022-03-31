@@ -468,6 +468,8 @@ renderVatAmount = (cell, row,extraData) => {
 	};
 
 	componentDidMount = () => {
+		if(this.props.location.state &&this.props.location.state.contactData)
+		this.getCurrentUser(this.props.location.state.contactData);
 		this.getInitialData();
 	};
 
@@ -1433,7 +1435,6 @@ if(changeShippingAddress && changeShippingAddress==true)
 	// 	}
 	// 	this.formRef.current.setFieldValue('contactId', option, true);
 	// };
-	
 	getCurrentUser = (data) => {
 
 		let option;
@@ -1445,26 +1446,29 @@ if(changeShippingAddress && changeShippingAddress==true)
 				value: data.id,
 			};
 		}
-		
+
 		let result = this.props.currency_convert_list.filter((obj) => {
 			return obj.currencyCode === data.currencyCode;
 		});
 		
-	    this.formRef.current.setFieldValue('currency', result[0].currencyCode, true);
-		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
-		this.formRef.current.setFieldValue('taxTreatmentid', result[0].taxTreatmentid, true);
-		
 		this.setState({
 			customer_currency: data.currencyCode,
-			customer_currency_des: result[0].currencyName,
-		})
-		
-		// this.setState({
-			//   selectedContact: option
-			// })
-			console.log('data11', option)
+			customer_currency_des: result[0]  && result[0].currencyName ? result[0].currencyName:"AED",
+			customer_currency_symbol:data.currencyIso ?data.currencyIso:"AED",
+			customer_taxTreatment_des:data.taxTreatment?data.taxTreatment:""
+		});
+
 		this.formRef.current.setFieldValue('contactId', option, true);
+
+		if(result[0] && result[0].currencyCode)
+		this.formRef.current.setFieldValue('currency',result[0].currencyCode, true);
+
+		this.formRef.current.setFieldValue('taxTreatmentid', data.taxTreatmentId, true);
+
+		if( result[0] &&  result[0].exchangeRate)
+		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
 	};
+
 
 	getCurrentNumber = (data) => {
 		this.getInvoiceNo();
@@ -1850,12 +1854,12 @@ if(changeShippingAddress && changeShippingAddress==true)
 																<FormGroup className="mb-3">
 																	<Label htmlFor="contactId">
 																		<span className="text-danger">* </span>
-																	{strings.CustomerName}
+																	{strings.Customer}
 																	</Label>
 																	<Select
 																		id="contactId"
 																		name="contactId"
-																		placeholder={strings.Select+strings.CustomerName} 
+																		placeholder={strings.Select+strings.Customer} 
 																		options={
 																			tmpCustomer_list
 																				? selectOptionsFactory.renderOptions(
@@ -1866,7 +1870,21 @@ if(changeShippingAddress && changeShippingAddress==true)
 																				  )
 																				: []
 																		}
-																		value={props.values.contactId}
+																		value={this.state.quotationId ?
+
+																			tmpCustomer_list &&
+																		   selectOptionsFactory.renderOptions(
+																			  'label',
+																			  'value',
+																			  tmpCustomer_list,
+																			  strings.CustomerName,
+																		  ).find((option) => option.value == this.state.contactId)
+																		   
+																		  :
+																		  
+																		  props.values.contactId
+																		   }
+
 																		onChange={(option) => {
 																			if (option && option.value) {
 																				this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);

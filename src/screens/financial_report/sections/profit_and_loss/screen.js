@@ -230,7 +230,7 @@ class ProfitAndLossReport extends React.Component {
 													<DropdownToggle caret>Export As</DropdownToggle>
 													<DropdownMenu>
 													
-														<DropdownItem>
+														<DropdownItem onClick={()=>{this.exportFile()}}>
 															{/* <CSVLink
 																data={this.exportFile()}
 																className="csv-btn"
@@ -244,19 +244,16 @@ class ProfitAndLossReport extends React.Component {
     															padding: 0,
 																backgroundColor:"white !important"
 															}}
-														     onClick={()=>{this.exportFile()}}
 															>CSV (Comma Separated Value)</span>
 														</DropdownItem>
-														<DropdownItem>
-															
+														<DropdownItem onClick={()=>{this.exportExcelFile()}}>
 															<span
 															style={{
 																border: 0,
     															padding: 0,
 																backgroundColor:"white !important"
 															}}
-														     onClick={()=>{this.exportExcelFile()}}
-															>Excel</span>
+														    >Excel</span>
 														</DropdownItem>
 															<DropdownItem onClick={this.exportPDFWithComponent}>
 															Pdf

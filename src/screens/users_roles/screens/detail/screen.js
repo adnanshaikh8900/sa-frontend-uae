@@ -538,7 +538,6 @@ class UpdateRole extends React.Component {
 																
 																	)}</Col>
 															
-																	<Col>
 																	<Button
 																	type="button"
 																	name="submit"
@@ -568,8 +567,7 @@ class UpdateRole extends React.Component {
 																>
 																	<i className="fa fa-ban"></i> {strings.Cancel}
 																</Button>
-																	</Col>
-																</Row>
+																	</Row>
 																
 															{/* <FormGroup className="text-right mt-5"> */}
 																

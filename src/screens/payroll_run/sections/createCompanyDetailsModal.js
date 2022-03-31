@@ -182,7 +182,7 @@ class CreateCompanyDetails extends React.Component {
 							errors.companyNumber="Company Number Should Be 13 Digits Numeric ";	
 							
 							if(this.state.invalidCompanyBankCode && this.state.invalidCompanyBankCode==true)
-							errors.companyBankCode="Company Bank Code Should Be Alpha Numeric ";	
+							errors.companyBankCode="Company Bank Code Should Be Numeric ";	
 
 							if(this.state.invalidCompanyNumber && this.state.invalidCompanyNumber==true)
 							errors.companyNumber="Company Number Should Be Numeric ";	

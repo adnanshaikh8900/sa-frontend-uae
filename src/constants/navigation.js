@@ -272,7 +272,7 @@ export default {
 					name: strings.PayrollRun,
 					url: '/admin/payroll/payrollrun',
 					icon: 'fas fa-money-check-alt',
-					path: 'Payroll',
+					path: 'PayrollRun',
 				},
 				{
 					name: strings.PayrollConfigurations,

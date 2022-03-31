@@ -415,9 +415,8 @@ class RecordCustomerPayment extends React.Component {
 													}}
 													validate={(values) => {
                                                     let errors = {};
-													 if (values.amount == 0) {
-                                                      errors.amount =
-                                                    'Amount Cannot be recorded zero';
+													 if (values.amount < 1) {
+                                                      errors.amount ='Amount Cannot be Less Than 1';
 												 }
                                                  return errors
 												 }}
@@ -561,7 +560,7 @@ class RecordCustomerPayment extends React.Component {
 																		</Label>
 																		<Input
 																			type="number"
-																			min="0"
+																			// min="1"
 																			maxLength="14,2"
 																			id="amount"
 																			name="amount"

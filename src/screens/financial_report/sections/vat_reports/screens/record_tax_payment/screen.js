@@ -237,6 +237,13 @@ class RecordVatPayment extends React.Component {
 													onSubmit={(values, { resetForm }) => {
 														this.handleSubmit(values);
 													}}
+													validate={(values) => {
+														let errors = {};
+														 if (values.amount < 1) {
+														  errors.amount ='Amount Cannot be Less Than 1';
+													 }
+													 return errors
+													}}
 													validationSchema={Yup.object().shape({
 														paidThrough: Yup.string().required(
 															'Paid Through is Required',

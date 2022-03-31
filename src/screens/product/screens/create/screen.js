@@ -1694,52 +1694,57 @@ try {
 																	</FormGroup></Col>
 																	<Col>
 																	<FormGroup className="mb-3">
-																		<Label htmlFor="inventoryQty">
-																			{/* <span className="text-danger">* </span>{' '} */}
-																			<span className="text-danger">* </span>	 {strings.OpeningBalanceQuantity}
-																			
-																		</Label>
-																		<Input
-																			type="text"
-																			min="0"
-																			maxLength="10"
-																			id="inventoryQty"
-																			name="inventoryQty"
-																			placeholder={strings.Enter+strings.OpeningBalanceQuantity}
-																			onChange={(option) => {
-																				if (
-																					option.target.value === '' ||
-																					this.regEx.test(
-																						option.target.value,
-																					)
-																				) {
-																					props.handleChange(
-																						'inventoryQty',
-																					)(option);
-																				}
-																			}}
-																			// readOnly={
-																			// 	props.values.productPriceType.includes(
-																			// 		'INVENTORY',
-																			// 	)
-																			// 		? false
-																			// 		: true
-																			// }
-																			value={props.values.inventoryQty}
-																			className={
-																				props.errors.inventoryQty &&
-																				props.touched.inventoryQty
-																					? 'is-invalid'
-																					: ''
+																	<Label htmlFor="contactId">
+																		{/* <span className="text-danger">* </span> */}
+																		  {strings.SupplierName}
+																	</Label>
+																	<Select
+																		// isDisabled={
+																		// 	props.values.productPriceType.includes(
+																		// 		'INVENTORY',
+																		// 	)
+																		// 		? false
+																		// 		: true
+																		// }
+																		styles={customStyles}
+																		id="contactId"
+																		name="contactId"
+																		placeholder={strings.Select+strings.SupplierName}
+																		options={
+																			tmpSupplier_list
+																				? selectOptionsFactory.renderOptions(
+																						'label',
+																						'value',
+																						tmpSupplier_list,
+																						'Supplier Name',
+																				  )
+																				: []
+																		}
+																		value={props.values.contactId}
+																		onChange={(option) => {
+																			if (option && option.value) {
+																				
+																				props.handleChange('contactId')(option);
+																			} else {
+
+																				props.handleChange('contactId')('');
 																			}
-																		/>
-																		{props.errors.inventoryQty &&
-																			props.touched.inventoryQty && (
-																				<div className="invalid-feedback">
-																					{props.errors.inventoryQty}
-																				</div>
-																			)}
-																	</FormGroup>
+																		}}
+																		className={
+																			props.errors.contactId &&
+																			props.touched.contactId
+																				? 'is-invalid'
+																				: ''
+																		}
+																	/>
+																	{props.errors.contactId &&
+																		props.touched.contactId && (
+																			<div className="invalid-feedback">
+																				{props.errors.contactId}
+																			</div>
+																		)}
+																</FormGroup>
+																	
 																	</Col>
 																</Row>
 																<Row style={{display: props.values.isInventoryEnabled === false ? 'none' : ''}}>
@@ -1796,56 +1801,52 @@ try {
 																	</Col>
 																	<Col>
 																	<FormGroup className="mb-3">
-																	<Label htmlFor="contactId">
-																		{/* <span className="text-danger">* </span> */}
-																		  {strings.SupplierName}
-																	</Label>
-																	<Select
-																		// isDisabled={
-																		// 	props.values.productPriceType.includes(
-																		// 		'INVENTORY',
-																		// 	)
-																		// 		? false
-																		// 		: true
-																		// }
-																		styles={customStyles}
-																		id="contactId"
-																		name="contactId"
-																		placeholder={strings.Select+strings.SupplierName}
-																		options={
-																			tmpSupplier_list
-																				? selectOptionsFactory.renderOptions(
-																						'label',
-																						'value',
-																						tmpSupplier_list,
-																						'Supplier Name',
-																				  )
-																				: []
-																		}
-																		value={props.values.contactId}
-																		onChange={(option) => {
-																			if (option && option.value) {
-																				
-																				props.handleChange('contactId')(option);
-																			} else {
-
-																				props.handleChange('contactId')('');
+																		<Label htmlFor="inventoryQty">
+																			{/* <span className="text-danger">* </span>{' '} */}
+																			<span className="text-danger">* </span>	 {strings.OpeningBalanceQuantity}
+																			
+																		</Label>
+																		<Input
+																			type="text"
+																			min="0"
+																			maxLength="10"
+																			id="inventoryQty"
+																			name="inventoryQty"
+																			placeholder={strings.Enter+strings.OpeningBalanceQuantity}
+																			onChange={(option) => {
+																				if (
+																					option.target.value === '' ||
+																					this.regEx.test(
+																						option.target.value,
+																					)
+																				) {
+																					props.handleChange(
+																						'inventoryQty',
+																					)(option);
+																				}
+																			}}
+																			// readOnly={
+																			// 	props.values.productPriceType.includes(
+																			// 		'INVENTORY',
+																			// 	)
+																			// 		? false
+																			// 		: true
+																			// }
+																			value={props.values.inventoryQty}
+																			className={
+																				props.errors.inventoryQty &&
+																				props.touched.inventoryQty
+																					? 'is-invalid'
+																					: ''
 																			}
-																		}}
-																		className={
-																			props.errors.contactId &&
-																			props.touched.contactId
-																				? 'is-invalid'
-																				: ''
-																		}
-																	/>
-																	{props.errors.contactId &&
-																		props.touched.contactId && (
-																			<div className="invalid-feedback">
-																				{props.errors.contactId}
-																			</div>
-																		)}
-																</FormGroup>
+																		/>
+																		{props.errors.inventoryQty &&
+																			props.touched.inventoryQty && (
+																				<div className="invalid-feedback">
+																					{props.errors.inventoryQty}
+																				</div>
+																			)}
+																	</FormGroup>
 														
 																</Col>
 																</Row>

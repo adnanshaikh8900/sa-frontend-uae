@@ -1891,7 +1891,7 @@ class CreateSupplierInvoice extends React.Component {
 																					'label',
 																					'value',
 																					tmpSupplier_list,
-																					'Supplier Name',
+																					'Supplier',
 																				)
 																				: []
 																		}

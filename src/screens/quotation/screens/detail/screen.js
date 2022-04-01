@@ -888,6 +888,8 @@ min="0"
 				obj['exciseTaxId'] = result.exciseTaxId;
 				obj['description'] = result.description;
 				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive;
+				obj['unitType']=result.unitType;
+				obj['unitTypeId']=result.unitTypeId;
 				idx = index;
 			}
 			return obj;
@@ -1304,6 +1306,11 @@ min="0"
 			this.formRef.current.setFieldValue(
 				`lineItemsString.${0}.unitPrice`,
 				res.data[0].unitPrice,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.unitType`,
+				res.data[0].unitType,
 				true,
 			);
 			this.formRef.current.setFieldValue(
@@ -2000,6 +2007,21 @@ console.log(this.state.supplier_currency)
 																		>
 																			{strings.QUANTITY}
 																		</TableHeaderColumn>
+																		<TableHeaderColumn
+																			dataField="unitType"
+																			width="2%"
+																     	>	<i
+																		 id="unitTooltip"
+																		 className="fa fa-question-circle ml-1"
+																	 ></i>
+																	 
+																	 <UncontrolledTooltip
+																		 placement="right"
+																		 target="unitTooltip"
+																	 >
+																		Units / Measurements
+																	 </UncontrolledTooltip>
+																 </TableHeaderColumn> 
 																		<TableHeaderColumn
 																			dataField="unitPrice"
 																			dataFormat={(cell, rows) =>

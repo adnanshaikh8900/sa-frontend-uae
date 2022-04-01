@@ -127,8 +127,9 @@ class CreateRequestForQuotation extends React.Component {
 						vatCategoryId: '',
 						subTotal: 0,
 						productId: '',
-						isExciseTaxExclusive:''
-					
+						isExciseTaxExclusive: '',
+						unitType:'',
+						unitTypeId:''					
 					},
 				],
 				rfq_number: '',
@@ -560,6 +561,8 @@ class CreateRequestForQuotation extends React.Component {
 					vatAmount:0,
 					// discount: 0,
 					productId: '',
+					unitType:'',
+					unitTypeId:''
 				}),
 				idCount: this.state.idCount + 1,
 			},
@@ -685,7 +688,8 @@ class CreateRequestForQuotation extends React.Component {
 				obj['exciseTaxId'] = result.exciseTaxId;
 				obj['description'] = result.description;
 				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive;
-				
+				obj['unitType']=result.unitType;
+				obj['unitTypeId']=result.unitTypeId;				
 				idx = index;
 			}
 			return obj;
@@ -1223,6 +1227,8 @@ class CreateRequestForQuotation extends React.Component {
 							productId: res.data[0].id,
 							transactionCategoryId: res.data[0].transactionCategoryId,
 							transactionCategoryLabel: res.data[0].transactionCategoryLabel,
+							unitType:res.data[0].unitType,
+							unitTypeId:res.data[0].unitTypeId,
 						},
 					],
 				},
@@ -1236,6 +1242,11 @@ class CreateRequestForQuotation extends React.Component {
 			this.formRef.current.setFieldValue(
 				`lineItemsString.${0}.unitPrice`,
 				res.data[0].unitPrice,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.unitType`,
+				res.data[0].unitType,
 				true,
 			);
 			this.formRef.current.setFieldValue(
@@ -1935,6 +1946,18 @@ class CreateRequestForQuotation extends React.Component {
 																		{strings.QUANTITY}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
+																	dataField="unitType"
+																	width="2%"
+																 >	<i
+																 id="unitTooltip"
+																 className="fa fa-question-circle"
+															 /> <UncontrolledTooltip
+																 placement="right"
+																 target="unitTooltip"
+															 >
+																Units / Measurements</UncontrolledTooltip>
+																</TableHeaderColumn>
+																<TableHeaderColumn
 																		dataField="unitPrice"
 																		dataFormat={(cell, rows) =>
 																			this.renderUnitPrice(cell, rows, props)

@@ -30,7 +30,7 @@ import { MultiSupplierProductModal } from '../../sections';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
-import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
+import { optionFactory, selectCurrencyFactory, selectOptionsFactory } from 'utils';
 import Switch from "react-switch";
 
 import './style.scss';
@@ -1053,7 +1053,7 @@ discountType = (row) =>
 							styles={customStyles}
 							options={
 								product_list
-									? selectOptionsFactory.renderOptions(
+									? optionFactory.renderOptions(
 											'name',
 											'id',
 											product_list,
@@ -1087,6 +1087,9 @@ discountType = (row) =>
 										// if(response.data.length !== 0 && response.data.length !== 1){
 										// this.openMultiSupplierProductModal(response);}
 									});
+									if(this.checkedRow()==false)
+									   this.addRow();
+									   console.log(this.state.data,"prodlist")
 								} else {
 									form.setFieldValue(
 										`lineItemsString.${idx}.productId`,
@@ -1149,6 +1152,7 @@ discountType = (row) =>
 
 
 	deleteRow = (e, row, props) => {
+		debugger
 		const id = row['id'];
 		let newData = [];
 		e.preventDefault();
@@ -3372,6 +3376,12 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		className="btn-square mr-3"
 																		disabled={this.state.disabled}
 																		onClick={() => {
+																			let newData=[]
+																			const data = this.state.data;
+
+																			newData = data.filter((obj) => obj.productId !== "");
+																			props.setFieldValue('lineItemsString', newData, true);
+																			this.updateAmount(newData, props);
 																			this.setState(
 																				{ createMore: false },
 																				() => {
@@ -3391,6 +3401,11 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		className="btn-square mr-3"
 																		disabled={this.state.disabled}
 																		onClick={() => {
+																			let newData=[]
+																			const data = this.state.data;																			
+																			newData = data.filter((obj) => obj.productId !== "");
+																			props.setFieldValue('lineItemsString', newData, true);
+																			this.updateAmount(newData, props);
 																			this.setState(
 																				{
 																					createMore: true,

@@ -233,14 +233,17 @@ class PurchaseOrder extends React.Component {
 	renderRFQStatus = (cell, row) => {
 		let classname = '';
 		if (row.status === 'Approved') {
-			classname = 'label-approved';
+			classname = 'label-success';
 		} else if (row.status === 'Draft') {
 			classname = 'label-draft';
 		} else if (row.status === 'Closed') {
 			classname = 'label-closed';
-		}else if (row.status === 'Send') {
-			classname = 'label-due';
-		} else {
+		}else if (row.status === 'Sent') {
+			classname = 'label-sent';
+		}else if(row.status === 'Rejected'){
+			classname = 'label-due'
+		}
+		 else {
 			classname = 'label-overdue';
 		}
 		return (
@@ -346,14 +349,17 @@ class PurchaseOrder extends React.Component {
 					)}
 					{row.status === "Approved" && (
 							<DropdownItem
-							onClick={() => {
-								this.renderActionForState(row.id);
-							}}
-							>
+							onClick={() =>
+								this.props.history.push(
+									'/admin/expense/goods-received-note/create',
+									{ poId: row.id ,poNumber:row.poNumber},
+								)
+							}
+						>
 								<i className="fas fa-plus" />   {strings.CreateGRN}
 							</DropdownItem>
 							)}
-							{row.status === "Approved" && (
+							{row.status === "Draft" && (
 							<DropdownItem
 								onClick={() => {
 									this.sendMail(row);
@@ -363,22 +369,43 @@ class PurchaseOrder extends React.Component {
 							</DropdownItem>)}
 					
 						
-							{row.status === 'Draft' && (
+							{/* {row.status !== 'Approved' && (
 								<DropdownItem
 							onClick={() => {
-							this.changeStatus(row.id,row.statusEnum);
+							this.changeStatus(row.id,"Approved");
 							}}
 							>
 								<i className="fas fa-send" />  {strings.Approve}
 							</DropdownItem>
-							)}
-							{row.status === 'Approved' &&(
-								<DropdownItem
+							)} */}
+							
+							{row.status === 'Sent' && (
+							<DropdownItem
 							onClick={() => {
-							this.close(row.id);
+								this.sendMail(row);
 							}}
 							>
-							<i className="far fa-times-circle" />  {strings.Close}
+								<i className="fas fa-send" />{strings.SendAgain}
+							</DropdownItem>
+							)}
+
+							{row.status != 'Draft' && row.status != 'Approved' && row.status != 'Closed' && row.status != "Invoiced" && (
+							<DropdownItem
+							onClick={() => {
+								this.changeStatus(row.id,"Approved");
+							}}
+							>
+								<i className="fa fa-check-circle-o" />{strings.MarkAsApproved}
+							</DropdownItem>
+							)}
+
+							{row.status != 'Draft' && row.status != 'Rejected' && row.status != 'Closed' && row.status != 'Invoiced' &&(
+							<DropdownItem
+							onClick={() => {
+								this.changeStatus(row.id,"Rejected");
+							}}
+							>
+								<i className="fa fa-ban" />{strings.MarkAsRejected}
 							</DropdownItem>
 							)}
 					<DropdownItem
@@ -391,6 +418,15 @@ class PurchaseOrder extends React.Component {
 						>
 							<i className="fas fa-eye" />  {strings.View}
 						</DropdownItem>
+						{(row.status === 'Approved'||row.status === 'Sent'||row.status === 'Rejected')	 &&(
+								<DropdownItem
+							onClick={() => {
+							this.close(row.id,"Closed");
+							}}
+							>
+							<i className="far fa-times-circle" />  {strings.Close}
+							</DropdownItem>
+							)}
 						{/* {row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && (
 							<DropdownItem
 								onClick={() => {

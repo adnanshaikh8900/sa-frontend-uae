@@ -144,6 +144,7 @@ class CreateGoodsReceivedNote extends React.Component {
 				placeOfSupplyId: '',
 				project: '',
 				exchangeRate:'',
+				poNumber:'',
 				lineItemsString: [
 					{
 						id: 0,
@@ -513,6 +514,10 @@ this.state.data.map((obj, index) => {
 	};
 
 	componentDidMount = () => {
+		if(this.props.location.state && this.props.location.state.poId){
+			this.props.goodsReceivedNoteAction.getPurchaseOrderListForDropdown();
+			let option={value:this.props.location.state.poId,label:this.props.location.state.poNumber}
+			this.getPoDetails(option, option.value, undefined)}
 		this.getInitialData();
 		if(this.props.location.state &&this.props.location.state.contactData)
 				this.getCurrentUser(this.props.location.state.contactData);
@@ -980,7 +985,6 @@ this.state.data.map((obj, index) => {
 	};
 
 	updateAmount = (data, props) => {
-		debugger
 		const { vat_list , excise_list} = this.props;
 		const { discountPercentage, discountAmount } = this.state;
 		let total_net = 0;
@@ -1088,7 +1092,6 @@ this.state.data.map((obj, index) => {
 	};
 
 	handleSubmit = (data, resetForm) => {
-		debugger
 		this.setState({ disabled: true });
 		const {
 			contact_po_number,
@@ -1643,6 +1646,7 @@ console.log(this.state.data)
 																	{strings.PONumber}
 																	</Label>
 																	<Select
+																	    isDisabled={this.props.location.state && this.props.location.state.poId ?true:false}
 																		styles={customStyles}
 																		id="poNumber"
 																		name="poNumber"
@@ -1657,7 +1661,17 @@ console.log(this.state.data)
 																				  )
 																				: []
 																		}
-																		value={props.values.poNumber}
+																		value={
+																			po_list &&this.props.location.state &&	this.props.location.state.poId ?
+																			selectOptionsFactory.renderOptions(
+																				'label',
+																				'value',
+																				po_list,
+																				'PO Number',
+																		  )
+																			.find((option) => option.value == this.props.location.state.poId):
+																			props.values.poNumber
+																		}
 
 																		onChange={(option) => {
 																			if (option && option.value) {
@@ -1754,20 +1768,21 @@ console.log(this.state.data)
 																		}
 
 																		value={
-																			this.state.quotationId ?
+																		// 	this.state.quotationId ?
 
-																			tmpSupplier_list &&
-																		   selectOptionsFactory.renderOptions(
-																			   'label',
-																			   'value',
-																			   tmpSupplier_list,
-																			   strings.CustomerName,
-																		 ).find((option) => option.value == this.state.contactId)
+																		// 	tmpSupplier_list &&
+																		//    selectOptionsFactory.renderOptions(
+																		// 	   'label',
+																		// 	   'value',
+																		// 	   tmpSupplier_list,
+																		// 	   strings.CustomerName,
+																		//  ).find((option) => option.value == this.state.contactId)
 																		   
-																		 :
+																		//  :
 																		 
-																		 props.values.contactId
+																		 props.values.supplierId
 																		   }
+																		   isDisabled={this.props.location.state &&	this.props.location.state.poId ?true:false}
 																		onChange={(option) => {
 																			if (option && option.value) {
 																				this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
@@ -1794,7 +1809,7 @@ console.log(this.state.data)
 																</FormGroup>
 															</Col>
 													
-														 						<Col lg={3}>
+															{this.props.location.state &&	this.props.location.state.poId ?"":<Col lg={3}>
 															<Label
 																	htmlFor="contactId"
 																	style={{ display: 'block' }}
@@ -1813,7 +1828,7 @@ console.log(this.state.data)
                                                             >
                                                                 <i className="fas fa-plus mr-1" />
                                          {strings.AddASupplier}
-									</Button></Col>
+									</Button></Col>}
 															
 														
 														</Row>
@@ -2005,7 +2020,7 @@ console.log(this.state.data)
 																>
 																	<i className="fa fa-plus"></i>&nbsp;{strings.Addmore}
 																</Button>
-																<Button
+																{this.props.location.state &&	this.props.location.state.poId ?"":<Button
 																	color="primary"
 																	className="btn-square mr-3"
 																	onClick={(e, props) => {
@@ -2014,7 +2029,7 @@ console.log(this.state.data)
 																	disabled={props.values.poNumber ? true : false}	
 																	>
 																	<i className="fa fa-plus"></i>&nbsp;{strings.Addproduct}
-																</Button>
+																</Button>}
 															</Col>
 														</Row>
 														<Row>

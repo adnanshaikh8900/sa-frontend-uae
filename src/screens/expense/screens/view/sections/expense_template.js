@@ -8,6 +8,8 @@ import {data}  from '../../../../Language/index'
 import LocalizedStrings from 'react-localization';
 
 let strings = new LocalizedStrings(data);
+const ZERO=0.00
+
 class ExpenseTemplate extends Component {
 	constructor(props) {
 		super(props);
@@ -23,10 +25,11 @@ class ExpenseTemplate extends Component {
 			return 'saved-color';
 		}
 	};
+	
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { expenseData,companyData} = this.props;
+		const { expenseData,companyData,currencyIsoCode,Currency} = this.props;
 		return (
 			<div>
 				<Card id="singlePage" className="box">
@@ -106,7 +109,11 @@ class ExpenseTemplate extends Component {
 	</tr>
 
 	<tr>      <td className="ml-3" style={{width:'245px'}}>  <b>{strings.ExpenseAmount }</b> :	</td> 
-	           <td>{expenseData.expenseAmount}</td>
+						<td>	
+							{expenseData.expenseAmount? expenseData.currencyName + " " +expenseData.expenseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):expenseData.currencyName + " " +ZERO.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}  
+						</td>
+						
+	           {/* <td>{expenseData.expenseAmount}</td> */}
     </tr>
 
 	{/* <tr>      <td className="ml-3" style={{width:'245px'}}>  <b>Expense No</b> : </td>  

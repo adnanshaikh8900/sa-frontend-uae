@@ -121,7 +121,9 @@ class CreateQuotation extends React.Component {
 					subTotal: 0,
 					vatAmount:0,
 					productId: '',
-					isExciseTaxExclusive:'',
+					isExciseTaxExclusive: '',
+					unitType:'',
+					unitTypeId:''
 				},
 			],
 			idCount: 0,
@@ -572,6 +574,8 @@ class CreateQuotation extends React.Component {
 					vatAmount:0,
 					discount: 0,
 					productId: '',
+					unitType:'',
+					unitTypeId:''
 				}),
 				idCount: this.state.idCount + 1,
 			},
@@ -801,6 +805,8 @@ discountType = (row) =>
 				obj['exciseTaxId'] = result.exciseTaxId;
 				obj['discountType'] = result.discountType;
 				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive;
+				obj['unitType']=result.unitType;
+				obj['unitTypeId']=result.unitTypeId;
 				idx = index;
 			}
 			return obj;
@@ -1370,6 +1376,8 @@ discountType = (row) =>
 							subTotal: res.data[0].unitPrice,
 							productId: res.data[0].id,
 							discountType: res.data[0].discountType,
+							unitType:res.data[0].unitType,
+							unitTypeId:res.data[0].unitTypeId,
 						},
 					],
 				},
@@ -2041,6 +2049,18 @@ discountType = (row) =>
 																	>
 																		{strings.QUANTITY}
 																	</TableHeaderColumn>
+																	<TableHeaderColumn
+																			dataField="unitType"
+																			width="2%"
+																     	>	<i
+																		 id="unitTooltip"
+																		 className="fa fa-question-circle"
+																	 /> <UncontrolledTooltip
+																		 placement="right"
+																		 target="unitTooltip"
+																	 >
+																		Units / Measurements</UncontrolledTooltip>
+																		</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="unitPrice"
 																		dataFormat={(cell, rows) =>

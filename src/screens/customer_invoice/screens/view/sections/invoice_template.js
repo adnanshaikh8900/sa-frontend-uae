@@ -353,7 +353,7 @@ render() {
 												<td>{item.productName}</td>
 												<td>{item.description}</td>
 												<td>{item.quantity}</td>
-												<td style={{ textAlign: 'right', width: '20%' }}>
+												<td style={{ textAlign: 'right', width: '10%' }}>
 													<Currency
 														value={item.unitPrice}
 														currencySymbol={
@@ -363,8 +363,9 @@ render() {
 														}
 													/>
 												</td>
-												{/* <td style={{ textAlign: 'right', width: '20%' }}>
-													<Currency
+										
+												{/* <td style={{ textAlign: 'right', width: '10%' }}>
+												<Currency
 														value={item.discount}
 														currencySymbol={
 															currencyData[0]
@@ -373,8 +374,19 @@ render() {
 														}
 													/>
 												</td> */}
-												<td style={{ textAlign: 'right' }}>{item.discount}</td>
+												<td style={{ textAlign: 'right' }}>
+												<Currency
+														value={item.discount}
+														currencySymbol={
+															currencyData[0]
+																? currencyData[0].currencyIsoCode
+																: 'USD'
+														}
+													/>
+												</td>
+												
 												<td style={{ textAlign: 'right' }}>{item.discountType}</td>
+												
 												<td style={{ textAlign: 'right' }}>{item.exciseTaxId ? this.renderExcise(item):"-"}</td>
 											    <td style={{ textAlign: 'right' }}>
 													<Currency

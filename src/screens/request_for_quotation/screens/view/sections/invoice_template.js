@@ -19,7 +19,7 @@ const toWords = new ToWords({
 	}
   });
 let strings = new LocalizedStrings(data);
-
+const ZERO=0.00
 class RFQTemplate extends Component {
 	constructor(props) {
 		super(props);
@@ -344,7 +344,7 @@ class RFQTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-												{RFQData.totalExciseAmount? RFQData.currencyIsoCode + " " +RFQData.totalExciseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0 } 
+												{RFQData.totalExciseAmount? RFQData.currencyIsoCode + " " +RFQData.totalExciseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):RFQData.currencyIsoCode + " " +ZERO.toLocaleString(navigator.language, { minimumFractionDigits: 2 })} 
 												</span>
 											</td>
 										</tr>

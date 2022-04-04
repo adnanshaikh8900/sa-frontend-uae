@@ -2863,7 +2863,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 														<hr style={{display: props.values.exchangeRate === 1 ? 'none' : ''}} />
 														<Row className="mb-3">
 														<Col lg={8} className="mb-3">
-															{/* <Button
+															<Button
 																color="primary"
 																className={`btn-square mr-3 ${
 																	this.checkedRow() ? `disabled-cursor` : ``
@@ -2877,7 +2877,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																disabled={this.checkedRow() ? true : false}
 															>
 																<i className="fa fa-plus"></i> {strings.Addmore}
-															</Button> */}
+															</Button>
 															<Button
 																color="primary"
 																className= "btn-square mr-3"

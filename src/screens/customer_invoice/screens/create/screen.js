@@ -2854,14 +2854,14 @@ if(changeShippingAddress && changeShippingAddress==true)
 																</FormGroup>
 															</Col>
 															<Col  lg={2}>
-															<Input
-																type="text"
-															min="0"	
+																	<Input
+																		type="text"
+																		min="0"	
 																		disabled
-																				id="currencyName"
-																				name="currencyName"
-																				value=	{
-																					this.state.basecurrency.currencyName }
+																		id="currencyName"
+																		name="currencyName"
+																		value=	{
+																		this.state.basecurrency.currencyName }
 																				
 																			/>
 														</Col>
@@ -2960,7 +2960,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																	className="invoice-create-table"
 																>
 																	<TableHeaderColumn
-																	width="5%"
+																		width="5%"
 																		dataAlign="center"
 																		dataFormat={(cell, rows) =>
 																			this.renderActions(cell, rows, props)
@@ -3001,9 +3001,10 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		{strings.QUANTITY}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
+																			width="3%"
 																			dataField="unitType"
-																			width="2%"
-																     	>	<i
+																     	>
+																			 	<i
 																		 id="unitTooltip"
 																		 className="fa fa-question-circle"
 																	 /> <UncontrolledTooltip
@@ -3033,7 +3034,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
-																	width="10%"
+																		width="10%"
 																		dataField="exciseTaxId"
 																		dataFormat={(cell, rows) =>
 																			this.renderExcise(cell, rows, props)

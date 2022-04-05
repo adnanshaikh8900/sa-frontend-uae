@@ -111,6 +111,84 @@ if(invoiceData.changeShippingAddress && invoiceData.changeShippingAddress==true)
 
     return(	<div className="mb-1 ml-2"><b>{strings.ShippingAddress} : </b>{shippingAddress}</div>);
 	}
+
+	renderShippingPostZipCode =()=>{
+		const { invoiceData, currencyData, totalNet, totalExciseAmount,companyData,status, contactData } = this.props;
+//ischanged at inv level
+
+let shippingPostZipCode="";
+if(invoiceData.changeShippingAddress && invoiceData.changeShippingAddress==true)
+{
+	shippingPostZipCode=invoiceData.shippingPostZipCode ? invoiceData.shippingPostZipCode:"";
+}else{
+	if(contactData && contactData.isBillingAndShippingAddressSame &&contactData.isBillingAndShippingAddressSame==true)
+	shippingPostZipCode=contactData.postZipCode ? contactData.postZipCode:"";
+	else
+	shippingPostZipCode=contactData.shippingPostZipCode ? contactData.shippingPostZipCode:"";
+}
+
+
+    return(	<div className="mb-1 ml-2"><b>{strings.PinCode} : </b>{shippingPostZipCode}</div>);
+	}
+
+	renderShippingCity =()=>{
+		const { invoiceData, currencyData, totalNet, totalExciseAmount,companyData,status, contactData } = this.props;
+//ischanged at inv level
+
+let shippingCity="";
+if(invoiceData.changeShippingAddress && invoiceData.changeShippingAddress==true)
+{
+	shippingCity=invoiceData.shippingCity ? invoiceData.shippingCity:"";
+}else{
+	if(contactData && contactData.isBillingAndShippingAddressSame &&contactData.isBillingAndShippingAddressSame==true)
+	shippingCity=contactData.city ? contactData.city:"";
+	else
+	shippingCity=contactData.shippingCity ? contactData.shippingCity:"";
+}
+
+
+    return(	<div className="mb-1 ml-2"><b>{strings.City} : </b>{shippingCity}</div>);
+	}
+
+	
+	rendershippingCountry =()=>{
+		const { invoiceData, currencyData, totalNet, totalExciseAmount,companyData,status, contactData } = this.props;
+//ischanged at inv level
+
+let shippingCountry="";
+if(invoiceData.changeShippingAddress && invoiceData.changeShippingAddress==true)
+{
+	shippingCountry=invoiceData.shippingCountryName ? invoiceData.shippingCountryName:"";
+}else{
+	if(contactData && contactData.isBillingAndShippingAddressSame &&contactData.isBillingAndShippingAddressSame==true)
+	shippingCountry=contactData.billingCountryName ? contactData.billingCountryName:"";
+	else
+	shippingCountry=contactData.shippingCountryName ? contactData.shippingCountryName:"";
+}
+
+
+    return(	<div className="mb-1 ml-2"><b>{strings.Country} : </b>{shippingCountry}</div>);
+	}
+
+		
+	rendershippingState =()=>{
+		const { invoiceData, currencyData, totalNet, totalExciseAmount,companyData,status, contactData } = this.props;
+//ischanged at inv level
+
+let shippingState="";
+if(invoiceData.changeShippingAddress && invoiceData.changeShippingAddress==true)
+{
+	shippingState=invoiceData.shippingStateName ? invoiceData.shippingStateName:"";
+}else{
+	if(contactData && contactData.isBillingAndShippingAddressSame &&contactData.isBillingAndShippingAddressSame==true)
+	shippingState=contactData.billingStateName ? contactData.billingStateName:"";
+	else
+	shippingState=contactData.shippingStateName ? contactData.shippingStateName:"";
+}
+
+
+    return(	<div className="mb-1 ml-2"><b>{strings.StateRegion} : </b>{shippingState}</div>);
+	}
 	getTerms=(term)=>{
 
 		let	val=	this.termList &&
@@ -229,10 +307,11 @@ render() {
 								<h6 className="mb-1 ml-2"><b>{strings.BillTo} ,</b></h6>
 								<div className="mb-1 ml-2"><b>{strings.Name} : </b>{invoiceData.organisationName ? invoiceData.organisationName : invoiceData.name}</div>
 								{contactData && contactData.addressLine1 &&(<div className="mb-1 ml-2"><b>{strings.BillingAddress} : </b> {contactData.addressLine1}</div>)}
-										{invoiceData && contactData&&( this.renderShippingAddress())}
-								{contactData && contactData.postZipCode &&(	<div className="mb-1 ml-2"><b>{strings.PinCode} : </b> {contactData.postZipCode}</div>)}
-								{contactData&&contactData.billingStateName&&(<div className="mb-1 ml-2"><b>{strings.StateRegion} : </b> {contactData.billingStateName}</div>)}
-								{contactData && contactData.billingCountryName &&(<div className="mb-1 ml-2"><b>{strings.Country} : </b> {contactData.billingCountryName}</div>)}
+								{invoiceData && contactData&&( this.renderShippingAddress())}
+								{invoiceData && contactData&&( this.renderShippingPostZipCode())}
+								{invoiceData && contactData&&( this.rendershippingCountry())}
+								{invoiceData && contactData&&( this.rendershippingState())}
+								{invoiceData && contactData&&( this.renderShippingCity())}
 								<div className="mb-1 ml-2"><b>{strings.VATRegistrationNo} : </b> {invoiceData.taxRegistrationNo}</div>
 								{contactData&&contactData.mobileNumber&&(   <div className="mb-1 ml-2"><b>{strings.MobileNumber} : </b>+{contactData.mobileNumber}</div>)}
 								<span className="mb-1 ml-2"><b>{strings.Status} : </b> {this.renderInvoiceStatus(invoiceData.status)}</span>

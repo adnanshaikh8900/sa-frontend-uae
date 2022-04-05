@@ -1651,25 +1651,31 @@ if(changeShippingAddress && changeShippingAddress==true)
 
 	getCurrentProduct = () => {
 		this.props.customerInvoiceActions.getProductList().then((res) => {
+			debugger
+			let newData=[]
+																			const data = this.state.data;
+																			newData = data.filter((obj) => obj.productId !== "");
+																			// props.setFieldValue('lineItemsString', newData, true);
+																			// this.updateAmount(newData, props);
 			this.setState(
 				{
-					data: [
-						{
-							id: 0,
-							description: res.data[0].description,
-							quantity: 1,
-							discount:0,
-							unitPrice: res.data[0].unitPrice,
-							vatCategoryId: res.data[0].vatCategoryId,
-							exciseTaxId: res.data[0].exciseTaxId,
-							vatAmount:res.data[0].vatAmount,
-							subTotal: res.data[0].unitPrice,
-							productId: res.data[0].id,
-							discountType: res.data[0].discountType,
-							unitType:res.data[0].unitType,
-							unitTypeId:res.data[0].unitTypeId,
-						},
-					],
+					data: newData.concat({
+						id: this.state.idCount + 1,
+						description: res.data[0].description,
+						quantity: 1,
+						discount:0,
+						unitPrice: res.data[0].unitPrice,
+						vatCategoryId: res.data[0].vatCategoryId,
+						exciseTaxId: res.data[0].exciseTaxId,
+						vatAmount:res.data[0].vatAmount ?res.data[0].vatAmount:0,
+						subTotal: res.data[0].unitPrice,
+						productId: res.data[0].id,
+						discountType: res.data[0].discountType,
+						unitType:res.data[0].unitType,
+						unitTypeId:res.data[0].unitTypeId,
+					}),
+					idCount: this.state.idCount + 1,
+					
 				},
 				() => {
 					const values = {
@@ -2128,7 +2134,8 @@ if(changeShippingAddress && changeShippingAddress==true)
 																	color="primary"
 																	className="btn-square mr-3 mb-3"
 																	onClick={(e, props) => {
-																		this.props.history.push(`/admin/master/contact/create`,{gotoParentURL:"/admin/income/customer-invoice/create"})
+																		this.openCustomerModal()
+																		// this.props.history.push(`/admin/master/contact/create`,{gotoParentURL:"/admin/income/customer-invoice/create"})
 																	}}
 																>
 																	<i className="fa fa-plus"></i> {strings.AddACustomer}
@@ -2881,7 +2888,8 @@ if(changeShippingAddress && changeShippingAddress==true)
 																color="primary"
 																className= "btn-square mr-3"
 																onClick={(e, props) => {
-																	this.props.history.push(`/admin/master/product/create`,{gotoParentURL:"/admin/income/customer-invoice/create"})
+																	this.openProductModal()
+																	// this.props.history.push(`/admin/master/product/create`,{gotoParentURL:"/admin/income/customer-invoice/create"})
 																	}}
 																>
 																<i className="fa fa-plus"></i> {strings.Addproduct}
@@ -3449,19 +3457,26 @@ if(changeShippingAddress && changeShippingAddress==true)
 					closeCustomerModal={(e) => {
 						this.closeCustomerModal(e);
 					}}
-					getCurrentUser={(e) => this.getCurrentUser(e)}
-					createCustomer={this.props.customerInvoiceActions.createCustomer}
-					currency_list={this.props.currency_convert_list}
-					currency={this.state.currency}
-					country_list={this.props.country_list}
-					getStateList={this.props.customerInvoiceActions.getStateList}
+					getCurrentUser={(e) =>{
+						this.props.customerInvoiceActions.getCustomerList(this.state.contactType);
+						this.getCurrentUser(e);
+					}}
+					// createCustomer={this.props.customerInvoiceActions.createCustomer}
+					// currency_list={this.props.currency_convert_list}
+					// currency={this.state.currency}
+					// country_list={this.props.country_list}
+					// getStateList={this.props.customerInvoiceActions.getStateList}
 				/>
 				<ProductModal
 					openProductModal={this.state.openProductModal}
 					closeProductModal={(e) => {
 						this.closeProductModal(e);
 					}}
-					getCurrentProduct={(e) => this.getCurrentProduct(e)}
+					getCurrentProduct={(e) =>
+						{ 
+							this.props.customerInvoiceActions.getProductList();
+							this.getCurrentProduct(e)}
+						}
 					createProduct={this.props.productActions.createAndSaveProduct}
 					vat_list={this.props.vat_list}
 					product_category_list={this.props.product_category_list}
@@ -3475,17 +3490,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 						this.closeMultiSupplierProductModal(e);
 					}}
 					inventory_list={this.state.inventoryList}
-				/>}
-				{/* <InvoiceNumberModel
-					openInvoiceNumberModel={this.state.openInvoiceNumberModel}
-					closeInvoiceNumberModel={(e) => {
-						this.closeInvoiceNumberModel(e);
-					}}
-					getCurrentNumber={(e) => this.getCurrentNumber(e)}
-						prefix ={this.state.prefixData}
-						updatePrefix={this.props.customerInvoiceActions.updateInvoicePrefix}
-					
-				/> */}
+				/>}			
 			</div>
 		);
 	}

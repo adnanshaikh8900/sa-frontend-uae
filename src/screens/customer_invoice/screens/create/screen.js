@@ -3384,12 +3384,17 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		className="btn-square mr-3"
 																		disabled={this.state.disabled}
 																		onClick={() => {
-																			let newData=[]
-																			const data = this.state.data;
-
-																			newData = data.filter((obj) => obj.productId !== "");
-																			props.setFieldValue('lineItemsString', newData, true);
-																			this.updateAmount(newData, props);
+																			if(this.state.data.length === 1)
+																				{
+																				console.log(props.errors,"ERRORs")
+																				}
+																				else
+																				{ let newData=[]
+																				const data = this.state.data;
+																				newData = data.filter((obj) => obj.productId !== "");
+																				props.setFieldValue('lineItemsString', newData, true);
+																				this.updateAmount(newData, props);
+																				}
 																			this.setState(
 																				{ createMore: false },
 																				() => {
@@ -3409,11 +3414,17 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		className="btn-square mr-3"
 																		disabled={this.state.disabled}
 																		onClick={() => {
-																			let newData=[]
-																			const data = this.state.data;																			
+																			if(this.state.data.length === 1)
+																			{
+																			console.log(props.errors,"ERRORs")
+																			}
+																			else
+																			{ let newData=[]
+																			const data = this.state.data;
 																			newData = data.filter((obj) => obj.productId !== "");
 																			props.setFieldValue('lineItemsString', newData, true);
 																			this.updateAmount(newData, props);
+																			}
 																			this.setState(
 																				{
 																					createMore: true,

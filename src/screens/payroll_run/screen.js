@@ -185,7 +185,7 @@ class PayrollRun extends React.Component {
 			this.props.history.push('/admin/payroll/payrollrun/updatePayroll', { id: row.id })
 		}
 		else
-			if (userValue === row.payrollApprover && userLabel === "Payroll Approver") {
+			if (userValue === row.payrollApprover && userLabel === "Payroll Approver" && row.status!=="Draft") {
 				this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
 			}
 			else

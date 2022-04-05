@@ -569,6 +569,11 @@ class CreatePurchaseOrder extends React.Component {
 	};
 
 	componentDidMount = () => {
+		if(this.props.location.state && this.props.location.state.rfqId){
+			this.props.purchaseOrderAction.getRFQList();
+			let option={value:this.props.location.state.rfqId,label:this.props.location.state.rfqNumber}
+			this.getrfqDetails(option, option.value, undefined)
+	}
         this.getInitialData();
 		if(this.props.location.state &&this.props.location.state.contactData)
 				this.getCurrentUser(this.props.location.state.contactData);
@@ -1573,6 +1578,7 @@ getrfqDetails = (e, row, props,form,field) => {
 			// },
 
             );
+			
 			this.formRef.current.setFieldValue('supplierId', this.state.option, true);
 			this.formRef.current.setFieldValue('currencyCode', this.state.supplier_currency, true);
 			this.formRef.current.setFieldValue('placeOfSupplyId', this.state.placelist, true);
@@ -1754,6 +1760,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																	{strings.RFQNumber}
 																	</Label>
 																	<Select
+																  isDisabled={this.props.location.state && this.props.location.state.rfqId ?true:false}
 																		styles={customStyles}
 																		id="rfqNumber"
 																		name="rfqNumber"
@@ -1768,7 +1775,17 @@ getrfqDetails = (e, row, props,form,field) => {
 																				  )
 																				: []
 																		}
-																		value={props.values.rfqNumber}
+																		value={
+																			rfq_list.data &&this.props.location.state &&	this.props.location.state.rfqId ?
+																			selectOptionsFactory.renderOptions(
+																				'label',
+																				'value',
+																				rfq_list.data,
+																				'RFQ Number',
+																		  )
+																			.find((option) => option.value == this.props.location.state.rfqId):
+																			props.values.rfqNumber
+																		}
 
 																		onChange={(option) => {
 																			if (option && option.value) {
@@ -1869,20 +1886,21 @@ getrfqDetails = (e, row, props,form,field) => {
 																		}
 
 																		value={
-																			this.state.quotationId ?
+																		// 	this.state.quotationId ?
 
-																			tmpSupplier_list &&
-																		   selectOptionsFactory.renderOptions(
-																			   'label',
-																			   'value',
-																			   tmpSupplier_list,
-																			   strings.CustomerName,
-																		 ).find((option) => option.value == this.state.contactId)
+																		// 	tmpSupplier_list &&
+																		//    selectOptionsFactory.renderOptions(
+																		// 	   'label',
+																		// 	   'value',
+																		// 	   tmpSupplier_list,
+																		// 	   strings.CustomerName,
+																		//  ).find((option) => option.value == this.state.contactId)
 																		   
-																		 :
+																		//  :
 																		 
-																		 props.values.contactId
+																		 props.values.supplierId
 																		   }
+																		  isDisabled={this.props.location.state &&	this.props.location.state.rfqId ?true:false}
 																		onChange={(option) => {
 																			if (option && option.value) {
 																				this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
@@ -1909,8 +1927,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																		)}
 																</FormGroup>
 															</Col>
-														
-																		<Col lg={3}>
+															{this.props.location.state &&	this.props.location.state.rfqId ?"":<Col lg={3}>
 															<Label
 																	htmlFor="contactId"
 																	style={{ display: 'block' }}
@@ -1929,7 +1946,8 @@ getrfqDetails = (e, row, props,form,field) => {
                                                             >
                                                                 <i className="fas fa-plus mr-1" />
                                          {strings.AddASupplier}
-									</Button></Col>
+									</Button></Col>}
+																		
 									{this.state.customer_taxTreatment_des ? 
 															<Col lg={3}>
 																<FormGroup className="mb-3">
@@ -2001,6 +2019,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																				option,
 																			)
 																		}
+																		isDisabled={this.props.location.state &&	this.props.location.state.rfqId ?true:false}
 																	/>
 																	{props.errors.placeOfSupplyId &&
 																		props.touched.placeOfSupplyId && (
@@ -2193,7 +2212,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																>
 																	<i className="fa fa-plus"></i> {strings.Addmore}
 																</Button>
-																<Button
+																{this.props.location.state &&	this.props.location.state.rfqId ?"":<Button
 																	color="primary"
 																	className= "btn-square mr-3"
 																	onClick={(e, props) => {
@@ -2201,7 +2220,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																		}}
 																>
 																	<i className="fa fa-plus"></i> {strings.Addproduct}
-																</Button>
+																</Button>}                                                                                                             
 								                                </Col>
 																</Row>
 													
@@ -2270,8 +2289,8 @@ getrfqDetails = (e, row, props,form,field) => {
 																		{strings.QUANTITY}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
+																	width="3%"
 																	dataField="unitType"
-																	width="2%"
 																 >	<i
 																 id="unitTooltip"
 																 className="fa fa-question-circle"

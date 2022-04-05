@@ -23,6 +23,8 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
+import * as XLSX from 'xlsx';
+
 
 import { Loader } from 'components';
 
@@ -40,6 +42,7 @@ const mapDispatchToProps = (dispatch) => {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
+const Papa = require("papaparse")
 
 let strings = new LocalizedStrings(data);
 class ImportTransaction extends React.Component {
@@ -54,10 +57,13 @@ class ImportTransaction extends React.Component {
 				skipRows: '',
 				headerRowNo: '',
 				textQualifier: '',
-				dateFormatId: 3,
+				dateFormatId:'',
 				delimiter: '',
 				otherDilimiterStr: '',
+				EndRows: '',
+				skipColumns:[],
 			},
+			dateFormat : "DD-MM-YYYY",
 			// DateErrorMessage:"-",
 			isDateFormatAndFileDateFormatSame:true,
 			showMessage: false,
@@ -76,6 +82,31 @@ class ImportTransaction extends React.Component {
 			selectedConfiguration: '',
 			selectError: [],
 			error: {},
+			config :{
+				delimiter: "",	// auto-detect
+				newline: "",	// auto-detect
+				quoteChar: '"',
+				escapeChar: '"',
+			
+				preview: "",
+				encoding: "",
+				worker: false,
+				comments: false,
+				step: undefined,
+				complete: undefined,
+				error: undefined,
+				download: false,
+				downloadRequestHeaders: undefined,
+				downloadRequestBody: undefined,
+				skipEmptyLines: true,
+				chunk: undefined,
+				chunkSize: undefined,
+				fastMode: undefined,
+				beforeFirstChunk: undefined,
+				withCredentials: undefined,
+				transform: undefined,
+				// delimitersToGuess: [',','#', '\t', '|', ';', Papa.RECORD_SEP, Papa.UNIT_SEP]
+			},
 		};
 
 		this.formRef = React.createRef();
@@ -98,7 +129,17 @@ class ImportTransaction extends React.Component {
 					configurationList: res.data,
 				});
 			});
-
+			this.props.importTransactionActions
+			.getTableHeaderList()
+			.then((res) => {
+				let temp = [...res.data];
+				// temp.unshift({ label: 'Select', value: '' })
+				this.setState({
+					tableHeader: this.state.tableHeader.concat(res.data),
+					selectedValue: this.state.tableHeader.concat(temp),
+				});
+			});
+	
 			this.props.importTransactionActions.getDelimiterList().then((res) => {
 				this.setState(
 					{
@@ -329,6 +370,7 @@ class ImportTransaction extends React.Component {
 	// 		return true
 	// }
 	handleSave = () => {
+		debugger	
 		let optionErr = [...this.state.selectError];
 		let item = this.state.selectedValueDropdown
 			.map((item, index) => {
@@ -380,6 +422,116 @@ class ImportTransaction extends React.Component {
 			});
 		}
 	};
+	processData = dataString => {
+		debugger
+	   let parse = Papa.parse(dataString , this.state.config )
+	   debugger
+	   const skipColumns = this.state.initValue.skipColumns 
+		 const dataStringLines = parse.data.slice(this.state.skipRows,this.state.EndRows);
+		 const header = parse.data[this.state.headerRowNo === undefined ? 0 : this.state.headerRowNo-1]
+		 console.log(dataStringLines)
+		  let headers =header
+		
+		debugger
+	   const list = [];
+	 
+
+	   
+	   for (let i = 1; i < dataStringLines.length; i++) {
+		   debugger
+		 let row = dataStringLines[i];
+		 if (headers && row.length == headers.length) {
+		   const obj = {};
+		   for (let j = 0; j < headers.length; j++) {
+			   if(!skipColumns.includes(j)) {
+				   debugger
+			 let d = row[j];
+			 if (d.length > 0) {
+			   if (d[0] == '"')
+				 d = d.substring(1, d.length - 1);
+			   if (d[d.length - 1] == '"')
+				 d = d.substring(d.length - 2, 1);
+			 }
+			//  if (j==0){
+			// 	d = moment(d).format(this.state.dateFormat)
+			//  }
+			
+		 
+		   if(headers[j] ){
+			obj[headers[j]] = d;
+			 }
+			}
+		   }
+   
+		   // remove the blank rows
+		   if (Object.values(obj).filter(x => x).length > 0) {
+			 list.push(obj);
+		   }
+		 }
+	   }
+	   headers =skipColumns.length > 0 ? 
+	   header.filter((row,id)=>!skipColumns.includes(id)):header
+	 
+	   // prepare columns list from headers
+	   const columns = headers.map(c => ({
+		 name: c,
+		 selector: c,
+	   }));
+   debugger
+	//    this.setState({tableData:list,tableDataKey:columns,parse:parse});	
+	   
+	   this.setState(
+		{
+			tableData:list,
+			tableDataKey: headers,
+			parse:parse
+		},
+		() => {
+			debugger
+			let obj = { label: 'Select', value: '' };
+			let tempObj = { label: '', status: false };
+			let tempStatus = [...this.state.columnStatus];
+			let tempDropDown = [...this.state.selectedValueDropdown];
+			let tempError = [...this.state.selectError];
+			this.state.tableDataKey.map((name, index) => {
+				tempStatus.push(tempObj);
+				tempDropDown.push(obj);
+				tempError.push(false);
+
+				return name;
+			});
+			this.setState({
+				loading: false,
+				selectedValueDropdown: tempDropDown,
+				columnStatus: tempStatus,
+				selectError: tempError,
+			});
+		},
+	);
+}
+	 
+	 
+	handleFileUpload = e => {
+		
+   const file = this.uploadFile.files[0];
+   const reader = new FileReader();
+   reader.onload = (evt) => {
+	 /* Parse data */
+	 const bstr = evt.target.result;
+	 const wb = XLSX.read(bstr, { type: 'binary' });
+	 /* Get first worksheet */
+	 const wsname = wb.SheetNames[0];
+	 const ws = wb.Sheets[wsname];
+	 /* Convert array of arrays */
+	 const data = XLSX.utils.sheet_to_csv(ws, { header: 1 });
+	 
+	 
+	 this.processData(data);
+
+	 this.setState({dataString: data})
+   };
+   reader.readAsBinaryString(file);
+ }
 
 	render() {
 		strings.setLanguage(this.state.language);
@@ -390,6 +542,7 @@ class ImportTransaction extends React.Component {
 			configurationList,
 			showMessage,
 		} = this.state;
+		
 		const { date_format_list } = this.props;
 		const bankAccountId = this.props.location.state.bankAccountId;
 		return (
@@ -512,7 +665,7 @@ class ImportTransaction extends React.Component {
 																						headerRowNo: data[0].headerRowNo,
 																						textQualifier:
 																							data[0].textQualifier,
-																						dateFormatId: data[0].dateFormatId,
+																						// dateFormatId: data[0].dateFormatId,
 																						otherDilimiterStr:
 																							data[0].otherDilimiterStr,
 																					},
@@ -541,18 +694,14 @@ class ImportTransaction extends React.Component {
 																<fieldset>
 																	<legend> {strings.Parameters}</legend>
 																	<Row>
-																		<Col lg={3}>
-																			{this.state.delimiterList &&
-																				this.state.delimiterList.map(
-																					(option, index, array) => {
-																						return (
-																							<div key={index}>
+																	<Col lg={6} >
+																		<Row>
 																								<FormGroup
 																									check
 																									inline
 																									className="mb-3"
 																								>
-																									<Input
+																									{/* <Input
 																										className="form-check-input"
 																										type="radio"
 																										id={option.value}
@@ -571,22 +720,24 @@ class ImportTransaction extends React.Component {
 																											this.setState({
 																												selectedDelimiter:
 																													e.target.value,
-																											});
+																													config: {delimiter :e.target.value}	}
+																													, () => {
+																														this.processData(this.state.dataString)
+																													});
 																											this.handleInputChange(
 																												'otherDilimiterStr',
 																												'',
 																											);
 																										}}
-																									/>
+																									/> */}
 																									<Label
 																										className="form-check-label"
 																										check
 																										htmlFor="vatIncluded"
 																									>
-																										{option.label}
+																										Delimiter
 																									</Label>
-																									{index ===
-																									array.length - 1 ? (
+																									
 																										<Input
 																											className="ml-3"
 																											type="text"
@@ -596,104 +747,42 @@ class ImportTransaction extends React.Component {
 																													.otherDilimiterStr ||
 																												''
 																											}
-																											disabled={
-																												this.state
-																													.selectedDelimiter !==
-																												'OTHER'
-																											}
+																											// disabled={
+																											// 	this.state
+																											// 		.selectedDelimiter !==
+																											// 	'OTHER'
+																											// }
 																											onChange={(e) => {
+																												this.setState({
+																													
+																														config: {delimiter :e.target.value}	}
+																														, () => {
+																															this.processData(this.state.dataString)
+																														});
 																												this.handleInputChange(
 																													'otherDilimiterStr',
 																													e.target.value,
 																												);
+
 																											}}
 																										/>
-																									) : null}
+																									
 																								</FormGroup>
-																							</div>
-																						);
-																					},
-																				)}
-																		</Col>
-																		<Col lg={6} className="table_option">
-																			<Row>
-																				<Col md="5">
-																					<label htmlFor="Other">
-																						<span className="text-danger">
-																							*
-																						</span>
-																						 {strings.ProvideSample}
-																					</label>
-																				</Col>
-																				<Col md="7">
-																					<FormGroup className="mb-0">
-																						<Button
-																							color="primary"
-																							onClick={() => {
-																								document
-																									.getElementById('fileInput')
-																									.click();
-																							}}
-																							className="btn-square mr-3"
-																						>
-																							<i className="fa fa-upload"></i>{' '}
-																							{strings.upload}
-																						</Button>
-																						<input
-																							id="fileInput"
-																							ref={(ref) => {
-																								this.uploadFile = ref;
-																							}}
-																							type="file"
-																							style={{ display: 'none' }}
-																							onChange={(e) => {
-																								this.setState({
-																									fileName: e.target.value
-																										.split('\\')
-																										.pop(),
-																									error: {
-																										...this.state.error,
-																										...{ file: '' },
-																									},
-																								});
-																							}}
-																						/>
-																							{this.state.fileName && (
-																								<div>
-																									<i
-																										className="fa fa-close"
-																										onClick={() =>
-																											this.setState({
-																												fileName: '',
-																											})
-																										}
-																									></i>{' '}
-																									{this.state.fileName}
-																								</div>
-																							)}
-																					</FormGroup>
-																					{this.state.error &&
-																						this.state.error.file && (
-																							<div className="is-invalid">
-																								{this.state.error.file}
-																							</div>
-																						)}
-																				</Col>
-																			</Row>
-																			{/* <Row className="mt-3">
-																				<Col md={5}>
+																					</Row>
+																					<Row className="mt-4">
+																				<Col md={2}>
 																					<Label htmlFor="skip_rows">
-																						{strings.SkipRows}
+																						Include Rows From
 																					</Label>
 																				</Col>
-																				<Col md={7}>
+																				<Col md={4}>
 																					<FormGroup className="">
 																						<Input
 																							type="text"
 																							name=""
 																							id=""
 																							rows="6"
-																							placeholder="Enter No of Rows"
+																							placeholder="Enter Number of Row"
 																							value={
 																								this.state.initValue.skipRows ||
 																								''
@@ -703,19 +792,53 @@ class ImportTransaction extends React.Component {
 																									'skipRows',
 																									e.target.value,
 																								);
+																								this.setState({
+																									skipRows : e.target.value
+																								})
+																								
+																							}}
+																						/>
+																					</FormGroup>
+																				</Col>
+																			
+																					<Label htmlFor="skip_rows">
+																						To
+																					</Label>
+																			
+																				<Col md={4}>
+																					<FormGroup className="">
+																						<Input
+																							type="text"
+																							name=""
+																							id=""
+																							rows="6"
+																							placeholder="Enter Number of Row"
+																							value={
+																								this.state.initValue.EndRows ||
+																								''
+																							}
+																							onChange={(e) => {
+																								this.handleInputChange(
+																									'EndRows',
+																									e.target.value,
+																								);
+																								this.setState({
+																									EndRows : e.target.value
+																								})
+																								
 																							}}
 																						/>
 																					</FormGroup>
 																				</Col>
 																			</Row>
-																			<Row>
-																				<Col md={5}>
+																			<Row className="mt-4">
+																				<Col md={2}>
 																					{' '}
 																					<Label htmlFor="description">
 																						 {strings.HeaderRowsNumber}
 																					</Label>
 																				</Col>
-																				<Col md={7}>
+																				<Col md={5}>
 																					<FormGroup className="">
 																						<Input
 																							type="text"
@@ -732,41 +855,50 @@ class ImportTransaction extends React.Component {
 																									'headerRowNo',
 																									e.target.value,
 																								);
+																								this.setState({
+																									headerRowNo : e.target.value
+																								})
+																								
 																							}}
 																						/>
 																					</FormGroup>
 																				</Col>
 																			</Row>
 																			<Row>
-																				<Col md={5}>
+																				<Col md={2}>
 																					<Label htmlFor="description">
-																						 {strings.TextQualifier}
+																						Skip Columns
 																					</Label>
 																				</Col>
-																				<Col md={7}>
+																				<Col md={5}>
 																					<FormGroup className="">
 																						<Input
 																							type="text"
 																							name=""
 																							id=""
 																							rows="6"
-																							placeholder="Text Qualifier"
+																							placeholder="Enter Number of Columns"
 																							value={
 																								this.state.initValue
-																									.textQualifier || ''
+																									.skipColumns || ''
 																							}
 																							onChange={(e) => {
 																								this.handleInputChange(
-																									'textQualifier',
+																									'skipColumns',
 																									e.target.value,
 																								);
+																								this.setState({
+																									skipColumns:e.target.value
+																								})
+																								
 																							}}
+																							
 																						/>
 																					</FormGroup>
 																				</Col>
-																			</Row> */}
+																			</Row>
 																			<Row className="mt-3">
-																				<Col md={5}>
+																				<Col md={2}>
 																					<Label htmlFor="description">
 																						<span className="text-danger">
 																							*
@@ -774,13 +906,13 @@ class ImportTransaction extends React.Component {
 																						 {strings.DateFormat}
 																					</Label>
 																				</Col>
-																				<Col md={7}>
+																				<Col md={5}>
 																					<FormGroup
 																						className=""
 																						style={{ flexDirection: 'column' }}
 																					>
 																						<Select
-																						isDisabled
+																					
 																							type=""
 																							options={
 																								date_format_list
@@ -822,6 +954,9 @@ class ImportTransaction extends React.Component {
 																											...{ dateFormatId: '' },
 																										},
 																										dateFormat:option.label
+																										
+																									}, () => {
+																										this.processData(this.state.dataString)
 																									});
 																								} else {
 																									this.handleInputChange(
@@ -849,6 +984,76 @@ class ImportTransaction extends React.Component {
 																					</FormGroup>
 																				</Col>
 																			</Row>
+																							
+																		</Col>
+																		<Col lg={6} className="table_option">
+																			<Row>
+																				<Col md="5">
+																					<label htmlFor="Other">
+																						<span className="text-danger">
+																							*
+																						</span>
+																						 {strings.ProvideSample}
+																					</label>
+																				</Col>
+																				<Col md="7">
+																					<FormGroup className="mb-0">
+																						<Button
+																							color="primary"
+																							onClick={() => {
+																								document
+																									.getElementById('fileInput')
+																									.click();
+																							}}
+																							className="btn-square mr-3"
+																						>
+																							<i className="fa fa-upload"></i>{' '}
+																							{strings.upload}
+																						</Button>
+																						<input
+																							id="fileInput"
+																							ref={(ref) => {
+																								this.uploadFile = ref;
+																							}}
+																							type="file"
+																							style={{ display: 'none' }}
+																							onChange={(e) => {
+                                                                                                this.setState({
+                                                                                                    fileName: e.target.value
+                                                                                                        .split('\\')
+                                                                                                        .pop(),
+                                                                                                    error: {
+                                                                                                        ...this.state.error,
+                                                                                                        ...{ file: '' },
+                                                                                                    },
+                                                                                                });
+																								this.handleFileUpload()
+                                                                                            }}
+																								// onChange={this.handleFileUpload}
+																						/>
+																							{this.state.fileName && (
+																								<div>
+																									<i
+																										className="fa fa-close"
+																										onClick={() =>
+																											this.setState({
+																												fileName: '',
+																											})
+																										}
+																									></i>{' '}
+																									{this.state.fileName}
+																								</div>
+																							)}
+																					</FormGroup>
+																					{this.state.error &&
+																						this.state.error.file && (
+																							<div className="is-invalid">
+																								{this.state.error.file}
+																							</div>
+																						)}
+																				</Col>
+																			</Row>
+																			
 																		</Col>
 
 																		<Col
@@ -864,7 +1069,12 @@ class ImportTransaction extends React.Component {
 																					onClick={() => {
 																						
 																						// if(this.setDateMessage())
-																					{	this.handleApply();}
+																						if(this.state.dataString != null)
+
+																						
+																					{	this.handleFileUpload();}else{
+																						this.processData(this.state.dataString)
+																					}
 																					}}
 																				>
 																					<i className="fa fa-dot-circle-o"></i>{' '}
@@ -906,16 +1116,16 @@ class ImportTransaction extends React.Component {
 																		}}
 																	>
 																		<FormGroup
-																			className={`mb-0 ${
-																				this.state.columnStatus[`${index}`]
-																					.status
-																					? 'is-invalid'
-																					: ''
-																			} ${
-																				this.state.selectError[`${index}`]
-																					? 'invalid-select'
-																					: ''
-																			}`}
+																			// className={`mb-0 ${
+																			// 	this.state.columnStatus[`${index}`]
+																			// 		.status
+																			// 		? 'is-invalid'
+																			// 		: ''
+																			// } ${
+																			// 	this.state.selectError[`${index}`]
+																			// 		? 'invalid-select'
+																			// 		: ''
+																			// }`}
 																		>
 																			<Select
 																				type=""
@@ -943,7 +1153,7 @@ class ImportTransaction extends React.Component {
 																				// className={}
 																			/>
 																		</FormGroup>
-																		<p
+																		{/* <p
 																			className={
 																				this.state.columnStatus[`${index}`]
 																					.status
@@ -952,16 +1162,18 @@ class ImportTransaction extends React.Component {
 																			}
 																		>
 																			*Already Selected
-																		</p>
+																		</p> */}
 																	</Col>
 																);
 															})
 														) : null}
 														{/* <div> */}
+														
 														{this.state.tableDataKey.length > 0  &&this.state.isDateFormatAndFileDateFormatSame==true? (
+															
 															<BootstrapTable
 																data={tableData}
-																keyField={this.state.tableDataKey[0]}
+																keyField={this.state.tableDataKey}
 															>
 																{this.state.tableDataKey.map((name) => (
 																	<TableHeaderColumn
@@ -972,8 +1184,12 @@ class ImportTransaction extends React.Component {
 																	</TableHeaderColumn>
 																))}
 															</BootstrapTable>
+															// <TableWrapper data={tableData} keyField={this.state.tableDataKey}/>
 														) : null}
+															
 														{/* </div> */}
+
+												
 														<Row style={{ width: '100%' }}>
 															<Col lg={12} className="mt-2">
 																<FormGroup className="text-right">

@@ -264,7 +264,12 @@ class RequestForQuotation extends React.Component {
 			classname = 'label-draft';
 		} else if (row.status === 'Sent') {
 			classname = 'label-sent';
-		} else {
+		} else if(row.status === 'Approved'){
+			classname = 'label-success'
+		} else if(row.status === 'Rejected'){
+			classname = 'label-due'
+		}
+		else {
 			classname = 'label-overdue';
 		}
 		return (
@@ -421,7 +426,7 @@ class RequestForQuotation extends React.Component {
 						)}
 					</DropdownToggle>
 					<DropdownMenu right>
-					{row.status !== 'Sent' && row.status !== "Closed" && (
+					{row.status !== 'Sent' && row.status !== "Closed"&& row.status !== "Approved"&&row.status !== "Rejected"    && (
 							<DropdownItem
 								onClick={() =>
 									this.props.history.push(
@@ -433,16 +438,19 @@ class RequestForQuotation extends React.Component {
 								<i className="fas fa-edit" /> {strings.Edit}
 							</DropdownItem>
 					)}
-					{row.status === 'Sent' && (
+					{(row.status === 'Sent' || row.status === "Approved" )&& (
 							<DropdownItem
-							onClick={() => {
-							this.renderActionForState(row.id);
-							}}
-							>
+							onClick={() =>
+								this.props.history.push(
+									'/admin/expense/purchase-order/create',
+									{ rfqId: row.id,rfqNumber:row.rfqNumber},
+								)
+							}
+						>
 								<i className="fas fa-plus" /> {strings.CreatePO}
 							</DropdownItem>
 							)}
-							{ row.status !== "Closed"  && (
+							{ row.status !== "Closed" && row.status !== "Approved" &&row.status !== "Rejected"   && (
 							<DropdownItem
 								onClick={() => {
 									this.sendMail(row);
@@ -451,8 +459,32 @@ class RequestForQuotation extends React.Component {
 								<i className="fas fa-send" /> {strings.Send}
 							</DropdownItem>
 							)}
+
+                          {row.status != 'Draft' && 
+							row.status != 'Approved' && 
+							row.status != 'Closed' && 
+							row.status != "Invoiced" && 
+							(
+							<DropdownItem
+							onClick={() => {
+								this.changeStatus(row.id,"Approved");
+							}}
+							>
+								<i className="fa fa-check-circle-o" />{strings.MarkAsApproved}
+							</DropdownItem>
+							)}
+
+							{row.status != 'Draft' && row.status != 'Rejected' && row.status != 'Closed' && row.status != 'Invoiced' &&(
+							<DropdownItem
+							onClick={() => {
+								this.changeStatus(row.id,"Rejected");
+							}}
+							>
+								<i className="fa fa-ban" />{strings.MarkAsRejected}
+							</DropdownItem>
+							)}
 							
-							{row.status === 'Sent' && (
+							{(row.status === 'Sent'|| row.status === "Approved"|| row.status === "Rejected"  ) && (
 							<DropdownItem
 							onClick={() => {
 							this.changeStatus(row.id,row.statusEnum);

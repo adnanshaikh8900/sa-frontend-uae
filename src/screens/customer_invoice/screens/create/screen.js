@@ -1152,7 +1152,6 @@ discountType = (row) =>
 
 
 	deleteRow = (e, row, props) => {
-		debugger
 		const id = row['id'];
 		let newData = [];
 		e.preventDefault();
@@ -2123,7 +2122,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		)}
 																</FormGroup>
 															</Col>
-															<Col  lg={3}>
+															{this.props.location.state &&	this.props.location.state.quotationId ?"":<Col  lg={3}>
 																<Label
 																	htmlFor="contactId"
 																	style={{ display: 'block' }}
@@ -2141,7 +2140,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																>
 																	<i className="fa fa-plus"></i> {strings.AddACustomer}
 																</Button>
-															</Col>
+															</Col>}
 															{this.state.customer_taxTreatment_des ?
 															<Col lg={3}>
 																<FormGroup className="mb-3">
@@ -2885,7 +2884,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 															>
 																<i className="fa fa-plus"></i> {strings.Addmore}
 															</Button>
-															<Button
+															{this.props.location.state &&	this.props.location.state.quotationId ?"":<Button
 																color="primary"
 																className= "btn-square mr-3"
 																onClick={(e, props) => {
@@ -2894,7 +2893,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																	}}
 																>
 																<i className="fa fa-plus"></i> {strings.Addproduct}
-															</Button>
+															</Button>}
 														</Col>
 
 														<Col  >

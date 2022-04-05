@@ -1434,6 +1434,7 @@ class CreateContact extends React.Component {
 																			
 																				if (this.state.isSame==false) {
 																					this.setState({isSame: !this.state.isSame,});
+																					if(props.values.billingcountryId)
 																					this.getStateListForShippingAddress(props.values.billingcountryId.value ?props.values.billingcountryId.value :props.values.billingcountryId);
 																					props.handleChange('shippingAddress')(props.values.billingAddress);
 																					props.handleChange('shippingCity')(props.values.billingCity);

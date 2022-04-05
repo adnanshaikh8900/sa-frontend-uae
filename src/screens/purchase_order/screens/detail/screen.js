@@ -2084,8 +2084,8 @@ debugger
 																			 {strings.QUANTITY}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
+																			width="3%"
 																			dataField="unitType"
-																			width="2%"
 																     	>	<i
 																		 id="unitTooltip"
 																		 className="fa fa-question-circle ml-1"

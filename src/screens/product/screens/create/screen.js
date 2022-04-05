@@ -353,6 +353,12 @@ try {
 						resetForm(this.state.initValue);
 						// this.props.history.push('/admin/master/product/create')
 					} else {
+						if(this.props.isParentComponentPresent &&this.props.isParentComponentPresent ==true)
+						{
+							this.props.getCurrentProductData(res.data);
+							this.props.closeModal(true);
+						 }
+						else
 						this.props.history.push('/admin/master/product');
 					}
 				}
@@ -717,6 +723,7 @@ try {
 																			maxLength="100"
 																			id="productName"
 																			name="productName"
+																			autoComplete="Off"
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
@@ -1257,6 +1264,7 @@ try {
 																			maxLength="14,2"
 																			id="salesUnitPrice"
 																			name="salesUnitPrice"
+																			autoComplete="Off"
 																			placeholder={strings.Enter+strings.SellingPrice}
 																			readOnly={
 																				props.values.productPriceType.includes(
@@ -1459,7 +1467,7 @@ try {
 																			maxLength="14,2"
 																			id="purchaseUnitPrice"
 																			name="purchaseUnitPrice"
-																			
+																			autoComplete="Off"
 																			placeholder={strings.Enter+strings.PurchasePrice}
 																			disabled={props.values.isInventoryEnabled===true }
 																			onChange={(option) => {
@@ -1569,6 +1577,7 @@ try {
 																			}
 																			type="textarea"
 																			maxLength="250"
+																			autoComplete="Off"
 																			name="purchaseDescription"
 																			id="purchaseDescription"
 																			rows="3"
@@ -1760,6 +1769,7 @@ try {
 																			maxLength="14,2"
 																			id="inventoryPurchasePrice"
 																			name="inventoryPurchasePrice"
+																			autoComplete="Off"
 																			placeholder={strings.Enter+strings.PurchasePrice}
 																			onChange={(option) => {
 																				if (
@@ -1812,6 +1822,7 @@ try {
 																			maxLength="10"
 																			id="inventoryQty"
 																			name="inventoryQty"
+																			autoComplete="Off"
 																			placeholder={strings.Enter+strings.OpeningBalanceQuantity}
 																			onChange={(option) => {
 																				if (
@@ -1870,6 +1881,7 @@ try {
 																			maxLength="10"
 																			name="inventoryReorderLevel"
 																			id="inventoryReorderLevel"
+																			autoComplete="Off"
 																			rows="3"
 																			placeholder={strings.Enter+strings.InventoryReorderLevel}
 																			// onChange={(value) => {
@@ -1933,7 +1945,7 @@ try {
 																			? 'Creating...'
 																			: strings.Create }
 																		</Button>
-																		<Button
+																		{this.props.isParentComponentPresent &&this.props.isParentComponentPresent ==true ?"":(<Button
 																			name="button"
 																			color="primary"
 																			className="btn-square mr-3"
@@ -1950,16 +1962,18 @@ try {
 																			<i className="fa fa-refresh"></i> 	{this.state.disabled
 																			? 'Creating...'
 																			: strings.CreateandMore }
-																		</Button>
+																		</Button>)}
 																		<Button
 																		color="secondary"
 																		className="btn-square"
 																		onClick={() => {
-																			if(this.props.location
-																				&& this.props.location.state
-																				&& this.props.location.state.gotoParentURL
-																			)
-																				this.props.history.push(this.props.location.state.gotoParentURL)
+																			// if(this.props.location
+																			// 	&& this.props.location.state
+																			// 	&& this.props.location.state.gotoParentURL
+																			// )
+																			// 	this.props.history.push(this.props.location.state.gotoParentURL)
+																			if(this.props.isParentComponentPresent &&this.props.isParentComponentPresent ==true)
+																	        	this.props.closeModal(true);
 																			else
 																				this.props.history.push('/admin/master/product');
 													

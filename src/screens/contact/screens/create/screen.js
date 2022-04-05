@@ -233,11 +233,16 @@ class CreateContact extends React.Component {
 						this.setState({ createMore: false });
 					} else {
 						
-						if(this.props.location
-							&& this.props.location.state
-							&& this.props.location.state.gotoParentURL
-						)
-						    this.props.history.push(this.props.location.state.gotoParentURL,{contactData:res.data})
+						// if(this.props.location
+						// 	&& this.props.location.state
+						// 	&& this.props.location.state.gotoParentURL
+						// )
+						//     this.props.history.push(this.props.location.state.gotoParentURL,{contactData:res.data})
+						if(this.props.isParentComponentPresent &&this.props.isParentComponentPresent ==true)
+						{
+							this.props.getCurrentContactData(res.data);
+							this.props.closeModal(true);
+						 }
 						else
 						    this.props.history.push('/admin/master/contact');
 
@@ -547,6 +552,7 @@ class CreateContact extends React.Component {
 																		maxLength="100"
 																		id="firstName"
 																		name="firstName"
+																		autoComplete="Off"
 																		placeholder={strings.Enter + strings.FirstName}
 																		onChange={(option) => {
 																			if (
@@ -586,6 +592,7 @@ class CreateContact extends React.Component {
 																		maxLength="100"
 																		id="middleName "
 																		name="middleName "
+																		autoComplete="Off"
 																		placeholder={strings.Enter + strings.MiddleName}
 																		onChange={(option) => {
 																			if (
@@ -624,6 +631,7 @@ class CreateContact extends React.Component {
 																		maxLength="100"
 																		id="lastName"
 																		name="lastName"
+																		autoComplete="Off"
 																		placeholder={strings.Enter + strings.LastName}
 																		onChange={(option) => {
 																			if (
@@ -712,6 +720,7 @@ class CreateContact extends React.Component {
 																		maxLength="100"
 																		id="organization"
 																		name="organization"
+																		autoComplete="Off"
 																		placeholder={strings.Enter + strings.OrganizationName}
 																		onChange={(option) => {
 																			if (
@@ -752,6 +761,7 @@ class CreateContact extends React.Component {
 																		maxLength="80"
 																		id="email"
 																		name="email"
+																		autoComplete="Off"
 																		placeholder={strings.Enter + strings.EmailAddress}
 																		onChange={(option) => {
 																			props.handleChange('email')(option);
@@ -842,6 +852,7 @@ class CreateContact extends React.Component {
 																		type="text"
 																		id="telephone"
 																		name="telephone"
+																		autoComplete="Off"
 																		placeholder={strings.Enter + strings.TelephoneNumber}
 																		onChange={(option) => {
 																			if (
@@ -920,6 +931,7 @@ class CreateContact extends React.Component {
 																		maxLength="6"
 																		id="poBoxNumber"
 																		name="poBoxNumber"
+																		autoComplete="Off"
 																		placeholder={strings.Enter + strings.POBoxNumber}
 																		onChange={(option) => {
 																			if (
@@ -963,6 +975,7 @@ class CreateContact extends React.Component {
 																		id="website"
 																		name="website"
 																		maxLength="100"
+																		autoComplete="Off"
 																		placeholder={strings.Enter + strings.Website}
 																		onChange={(option) => {
 																			if (
@@ -1052,6 +1065,7 @@ class CreateContact extends React.Component {
 																		maxLength="15"
 																		id="vatRegistrationNumber"
 																		name="vatRegistrationNumber"
+																		autoComplete="Off"
 																		placeholder={strings.Enter + strings.TaxRegistrationNumber}
 																		onChange={(option) => {
 																			if (
@@ -1258,6 +1272,7 @@ class CreateContact extends React.Component {
 																		type="text"
 																		maxLength="100"
 																		value={props.values.billingCity}
+																		autoComplete="Off"
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||
@@ -1296,6 +1311,7 @@ class CreateContact extends React.Component {
 																		maxLength="6"
 																		id="billingPostZipCode"
 																		name="billingPostZipCode"
+																		autoComplete="Off"
 																		placeholder={strings.Enter + strings.PostZipCode}
 																		onChange={(option) => {
 																			if (
@@ -1332,6 +1348,7 @@ class CreateContact extends React.Component {
 																		type="text"
 																		id="billingPhoneNumber"
 																		name="billingPhoneNumber"
+																		autoComplete="Off"
 																		placeholder={strings.Enter + strings.TelephoneNumber}
 																		onChange={(option) => {
 																			if (
@@ -1367,6 +1384,7 @@ class CreateContact extends React.Component {
 																		maxLength="8"
 																		id="billingFax"
 																		name="billingFax"
+																		autoComplete="Off"
 																		placeholder={strings.Enter + strings.Fax}
 																		onChange={(option) => {
 																			if (
@@ -1468,6 +1486,7 @@ class CreateContact extends React.Component {
 																		maxLength="100"
 																		id="shippingAddress"
 																		name="shippingAddress"
+																		autoComplete="Off"
 																		placeholder={strings.Enter + strings.ShippingAddress}
 																		onChange={(option) => {
 																			if (
@@ -1615,7 +1634,7 @@ class CreateContact extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="shippingCity"><span className="text-danger">* </span>{strings.City}</Label>
 																	<Input
-																
+																	autoComplete="Off"
 																		// options={city ? selectOptionsFactory.renderOptions('cityName', 'cityCode', cityRegion) : ''}
 																		value={props.values.shippingCity}
 																		onChange={(option) => {
@@ -1660,6 +1679,7 @@ class CreateContact extends React.Component {
 																		maxLength="6"
 																		id="shippingPostZipCode"
 																		name="shippingPostZipCode"
+																		autoComplete="Off"
 																		placeholder={strings.Enter + strings.PostZipCode}
 																		onChange={(option) => {
 																			if (
@@ -1699,6 +1719,7 @@ class CreateContact extends React.Component {
 																		type="text"
 																		id="shippingTelephone"
 																		name="shippingTelephone"
+																		autoComplete="Off"
 																		placeholder={strings.Enter + strings.TelephoneNumber}
 																		onChange={(option) => {
 																			if (
@@ -1735,6 +1756,7 @@ class CreateContact extends React.Component {
 																		maxLength="8"
 																		id="shippingFax"
 																		name="shippingFax"
+																		autoComplete="Off"
 																		placeholder={strings.Enter + strings.Fax}
 																		onChange={(option) => {
 																			if (
@@ -1791,7 +1813,7 @@ class CreateContact extends React.Component {
 																			? 'Creating...'
 																			: strings.Create}
 																	</Button>
-																	<Button
+																{this.props.isParentComponentPresent &&this.props.isParentComponentPresent ==true ?"":(	<Button
 																		name="button"
 																		color="primary"
 																		className="btn-square mr-3"
@@ -1808,16 +1830,18 @@ class CreateContact extends React.Component {
 																		<i className="fa fa-refresh"></i> 	{this.state.disabled
 																			? 'Creating...'
 																			: strings.CreateandMore}
-																	</Button>
+																	</Button>)}
 																	<Button
 																		color="secondary"
 																		className="btn-square"
 																		onClick={() => {
-																			if(this.props.location
-																				&& this.props.location.state
-																				&& this.props.location.state.gotoParentURL
-																			)
-																				this.props.history.push(this.props.location.state.gotoParentURL)
+																			// if(this.props.location
+																			// 	&& this.props.location.state
+																			// 	&& this.props.location.state.gotoParentURL
+																			// )
+																			// 	this.props.history.push(this.props.location.state.gotoParentURL)																		
+																			if(this.props.isParentComponentPresent &&this.props.isParentComponentPresent ==true)
+																			this.props.closeModal(true); 
 																			else
 																				this.props.history.push('/admin/master/contact');
 													

@@ -80,12 +80,12 @@ class ProfitAndLossReport extends Component {
 		}
 		const series = [
 			{
-				name: 'Income',
+				name: 'Income ',
 				type: 'column',
 				data: data.income.incomeData,
 			},
 			{
-				name: 'Expenses',
+				name: 'Expenses ',
 				type: 'line',
 				data: data.expense.expenseData,
 			},

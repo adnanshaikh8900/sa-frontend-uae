@@ -33,7 +33,7 @@ import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
-import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
+import { optionFactory, selectCurrencyFactory, selectOptionsFactory } from 'utils';
 
 import './style.scss';
 import moment from 'moment';
@@ -942,7 +942,7 @@ class DetailPurchaseOrder extends React.Component {
 						styles={customStyles}
 						options={
 							product_list
-								? selectOptionsFactory.renderOptions(
+								? optionFactory.renderOptions(
 										'name',
 										'id',
 										product_list,
@@ -961,6 +961,8 @@ class DetailPurchaseOrder extends React.Component {
 							if (e && e.label !== 'Select Product') {
 								this.selectItem(e.value, row, 'productId', form, field, props);
 								this.prductValue(e.value, row, 'productId', form, field, props);
+								if(this.checkedRow()==false)
+								this.addRow();
 							}
 						}}
 						className={`${
@@ -2307,6 +2309,20 @@ debugger
 																			color="primary"
 																			className="btn-square mr-3"
 																			disabled={this.state.disabled}
+																			onClick={() => {
+																				if(this.state.data.length === 1)
+																					{
+																					console.log(props.errors,"ERRORs")
+																					}
+																					else
+																					{ let newData=[]
+																					const data = this.state.data;
+																					newData = data.filter((obj) => obj.productId !== "");
+																					props.setFieldValue('lineItemsString', newData, true);
+																					this.updateAmount(newData, props);
+																					}
+																				
+																			}}
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
 																			{this.state.disabled

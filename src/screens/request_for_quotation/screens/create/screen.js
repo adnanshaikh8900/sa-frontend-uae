@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import {   Loader } from 'components';
 import { bindActionCreators } from 'redux';
 import {
 	Card,
@@ -158,6 +159,7 @@ class CreateRequestForQuotation extends React.Component {
 			purchaseCategory: [],
 			exist: false,
 			language: window['localStorage'].getItem('language'),	
+			loadingMsg:"Loading..."
 	
 		};
 
@@ -1074,6 +1076,7 @@ class CreateRequestForQuotation extends React.Component {
 		if (currency !== null && currency) {
 			formData.append('currencyCode', this.state.supplier_currency);
 		}
+		this.setState({ loading:true, loadingMsg:"Creating Request For Quotation..."});
 		this.props.requestForQuotationCreateAction
 			.createRFQ(formData)
 			.then((res) => {
@@ -1125,6 +1128,7 @@ class CreateRequestForQuotation extends React.Component {
 					);
 				} else {
 					this.props.history.push('/admin/expense/request-for-quotation');
+					this.setState({ loading:false,});
 				}
 			})
 			.catch((err) => {
@@ -1362,7 +1366,7 @@ class CreateRequestForQuotation extends React.Component {
 	}
 	render() {
 		strings.setLanguage(this.state.language);
-		const { data, discountOptions, initValue, prefix,data1 } = this.state;
+		const { data, discountOptions, initValue, prefix,data1,loading,loadingMsg } = this.state;
 
 		const {
 			currency_list,
@@ -1379,6 +1383,8 @@ class CreateRequestForQuotation extends React.Component {
 		})
 		console.log("date1",new Date(this.state.date1))
 		return (
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
+			<div>
 			<div className="create-supplier-invoice-screen">
 				<div className=" fadeIn">
 					<Row>
@@ -1399,6 +1405,13 @@ class CreateRequestForQuotation extends React.Component {
 									</Row>
 								</CardHeader>
 								<CardBody>
+								{loading ? (
+										<Row>
+											<Col lg={12}>
+												<Loader />
+											</Col>
+										</Row>
+									) : (
 									<Row>
 										<Col lg={12}>
 											<Formik
@@ -2311,6 +2324,7 @@ class CreateRequestForQuotation extends React.Component {
 											</Formik>
 										</Col>
 									</Row>
+									)}
 								</CardBody>
 							</Card>
 						</Col>
@@ -2357,6 +2371,7 @@ class CreateRequestForQuotation extends React.Component {
 					updatePrefix={this.props.customerInvoiceActions.updateInvoicePrefix}
 					
 				/> */}
+			</div>
 			</div>
 		);
 	}

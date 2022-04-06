@@ -101,6 +101,7 @@ class CreditNotes extends React.Component {
 				overDueAmountMonthly: '',
 			},
 			rowId: '',
+			loadingMsg:"Loading..."
 		};
 
 		this.options = {
@@ -220,7 +221,7 @@ class CreditNotes extends React.Component {
 			amountInWords:upperCase(row.currencyName + " " +(toWords.convert(row.invoiceAmount))+" ONLY" ).replace("POINT","AND"),
 			vatInWords:row.totalVatAmount ? upperCase(row.currencyName + " " +(toWords.convert(row.totalVatAmount))+" ONLY" ).replace("POINT","AND") :"-"
 		};
-		 
+		this.setState({ loading:true, loadingMsg:"Posting Credit Note..."});
 		this.props.creditNotesActions
 			.creditNoteposting(postingRequestModel)
 			.then((res) => {
@@ -233,6 +234,7 @@ class CreditNotes extends React.Component {
 						loading: false,
 					});
 					this.initializeData();
+					this.setState({ loading:false,});
 				}
 			})
 			.catch((err) => {
@@ -713,7 +715,7 @@ class CreditNotes extends React.Component {
 	render() {
 		strings.setLanguage(this.state.language);
 		const {
-			loading,
+			loading,loadingMsg,
 			filterData,
 			dialog,
 			selectedRows,
@@ -757,7 +759,7 @@ class CreditNotes extends React.Component {
 		})
 
 		return (
-			loading ==true? <Loader/> :
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 <div>
 			<div className="customer-invoice-screen">
 				<div className="animated fadeIn">

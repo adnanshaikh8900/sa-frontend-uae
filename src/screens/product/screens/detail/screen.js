@@ -100,6 +100,7 @@ class DetailProduct extends React.Component {
 			exciseTaxList:[],
 			unitTypeList:[],
 			exciseTaxCheck:false,
+			loadingMsg:"Loading",
 //			disableEditing:true,
 			inventoryTableData:[]
 		};
@@ -487,6 +488,7 @@ renderName=(cell,row)=>{
 				
 		};
 		const postData = this.getData(dataNew);
+		this.setState({ loading:true, loadingMsg:"Updating Product..."});
 		this.props.detailProductActions
 			.updateProduct(postData)
 			.then((res) => {
@@ -497,6 +499,7 @@ renderName=(cell,row)=>{
 						res.data ? res.data.message : 'Product Updated Successfully'
 					);
 					this.props.history.push('/admin/master/product');
+					this.setState({ loading:false,});
 				}
 			})
 			.catch((err) => {
@@ -601,6 +604,7 @@ renderName=(cell,row)=>{
 	removeProduct = () => {
 		this.setState({ disabled1: true });
 		const { current_product_id } = this.state;
+		this.setState({ loading:true, loadingMsg:"Deleting Product..."});
 		this.props.detailProductActions
 			.deleteProduct(current_product_id)
 			.then((res) => {
@@ -610,6 +614,7 @@ renderName=(cell,row)=>{
 						 res.data ? res.data.message : 'Product Deleted Successfully' ,
 						 )
 					this.props.history.push('/admin/master/product');
+					this.setState({ loading:false,});
 				}
 			})
 			.catch((err) => {
@@ -840,7 +845,7 @@ renderName=(cell,row)=>{
 	render() {
 		strings.setLanguage(this.state.language);
 		const { vat_list, product_category_list,supplier_list,inventory_list } = this.props;
-		const { loading, dialog, purchaseCategory, salesCategory, inventoryAccount ,exciseTaxList,inventoryTableData,unitTypeList} = this.state;
+		const { loading, dialog, purchaseCategory, loadingMsg , salesCategory, inventoryAccount ,exciseTaxList,inventoryTableData,unitTypeList} = this.state;
 		let tmpSupplier_list = []
 
 		var vat_list_data =[];
@@ -861,7 +866,7 @@ renderName=(cell,row)=>{
 			beforeSaveCell: this.beforeSaveCell,
 		  };
 		return (
-			loading ==true? <Loader/> :
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 <div>
 			<div className="detail-product-screen">
 				<div className="animated fadeIn">
@@ -883,6 +888,9 @@ renderName=(cell,row)=>{
 										</Row>
 									</CardHeader>
 									<CardBody>
+									{loading ? (
+										<Loader />
+									) : (
 										<Row>
 											<Col lg={12}>
 												<Formik
@@ -2353,6 +2361,7 @@ min="0"
 												</Formik>
 											</Col>
 										</Row>
+									)}
 									</CardBody>
 								</Card>
 							</Col>

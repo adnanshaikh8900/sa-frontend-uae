@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Loader } from 'components';
 import { bindActionCreators } from 'redux';
 import {
 	Card,
@@ -111,6 +112,7 @@ class CreateExpense extends React.Component {
 			],
 			showPlacelist:false,
 			lockPlacelist:false,
+			loadingMsg:"Loading...",
 			userStateName:''
 		};
 		this.formRef = React.createRef();
@@ -122,7 +124,6 @@ class CreateExpense extends React.Component {
 		this.regExAlpha = /^[a-zA-Z0-9!@#$&()-\\`.+,/\"]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
-
 		this.file_size = 1024000;
 		this.supported_format = [
 			'image/png',
@@ -290,6 +291,7 @@ class CreateExpense extends React.Component {
 		if (this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
+		this.setState({ loading:true, loadingMsg:"Creating Expense..."});
 		this.props.expenseCreateActions
 			.createExpense(formData)
 			.then((res) => {
@@ -307,6 +309,7 @@ class CreateExpense extends React.Component {
 						});
 					} else {
 						this.props.history.push('/admin/expense/expense');
+						this.setState({ loading:false,});
 					}
 				}
 			})
@@ -664,7 +667,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 	}
 	render() {
 		strings.setLanguage(this.state.language);
-		const { initValue, payMode ,exist,taxTreatmentList,placelist,vat_list} = this.state;
+		const { initValue, payMode ,exist,taxTreatmentList,placelist,vat_list,loading,loadingMsg} = this.state;
 		const {
 			// currency_list,
 			expense_categories_list,
@@ -687,6 +690,8 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 			}),
 		};
 		return (
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
+			<div>
 			<div className="create-expense-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -703,6 +708,13 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 									</Row>
 								</CardHeader>
 								<CardBody>
+								{loading ? (
+										<Row>
+											<Col lg={12}>
+												<Loader />
+											</Col>
+										</Row>
+									) : (
 									<Row>
 										<Col lg={12}>
 											<Formik
@@ -764,7 +776,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 													expenseAmount: Yup.string()
 														.required('Amount is Required')
 														.matches(
-															/^[0-9][0-9]*[.]?[0-9]{0,2}$$/,
+															 /^[0-9][0-9]*[.]?[0-9]{0,2}$$/,
 															'Enter a Valid Amount',
 														)
 														.test(
@@ -1733,11 +1745,13 @@ min="0"
 											</Formik>
 										</Col>
 									</Row>
+									)}
 								</CardBody>
 							</Card>
 						</Col>
 					</Row>
 				</div>
+			</div>
 			</div>
 		);
 	}

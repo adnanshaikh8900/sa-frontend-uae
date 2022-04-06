@@ -827,6 +827,7 @@ min="0"
 				journalLineItems: data,
 			};
 				this.setState({ disabled2: true });
+				this.setState({ loading:true, loadingMsg:"Updating Journal..."});
 			this.props.journalDetailActions
 		
 				.updateJournal(postData)
@@ -838,6 +839,7 @@ min="0"
 							res.data ? res.data.message :'Journal Updated Successfully',
 						);
 						this.props.history.push('/admin/accountant/journal');
+						this.setState({ loading:false,});
 					}
 				})
 				.catch((err) => {
@@ -851,11 +853,12 @@ min="0"
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { data, initValue, dialog, loading } = this.state;
+		const { data, initValue, dialog, loading,loadingMsg } = this.state;
 		const { currency_list,universal_currency_list } = this.props;
 
 		return (
-			loading ==true? <Loader/> :
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
+		
 <div>
 			<div className="detail-journal-screen">
 				<div className="animated fadeIn">

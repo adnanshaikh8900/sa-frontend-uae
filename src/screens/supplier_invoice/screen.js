@@ -114,6 +114,7 @@ class SupplierInvoice extends React.Component {
 				overDueAmountMonthly: '',
 			},
 			language: window['localStorage'].getItem('language'),
+			loadingMsg:"Loading..."
 		};
 
 		this.options = {
@@ -545,6 +546,7 @@ class SupplierInvoice extends React.Component {
 			amountInWords:upperCase(row.currencyName + " " +(toWords.convert(row.invoiceAmount))+" ONLY" ).replace("POINT","AND"),
 			vatInWords:row.vatAmount ?upperCase(row.currencyName + " " +(toWords.convert(row.vatAmount))+" ONLY" ).replace("POINT","AND") :"-"
 		};
+		this.setState({ loading:true, loadingMsg:"Supplier Invoice Posting..."});
 		this.props.supplierInvoiceActions
 			.postInvoice(postingRequestModel)
 			.then((res) => {
@@ -558,6 +560,7 @@ class SupplierInvoice extends React.Component {
 					});
 					this.getOverdue();
 					this.initializeData();
+					this.setState({ loading:false,});
 				}
 			})
 			.catch((err) => {
@@ -729,7 +732,7 @@ class SupplierInvoice extends React.Component {
 	render() {
 		strings.setLanguage(this.state.language);
 		const {
-			loading,
+			loading,loadingMsg,
 			filterData,
 			dialog,
 			selectedRows,
@@ -777,7 +780,7 @@ console.log(supplier_invoice_list)
 		})		
 
 		return (
-			loading ==true? <Loader/> :
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 <div>
 			<div className="supplier-invoice-screen">
 				<div className="animated fadeIn">

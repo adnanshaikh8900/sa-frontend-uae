@@ -85,6 +85,7 @@ class Expense extends React.Component {
 			csvData: [],
 			view: false,
 			language: window['localStorage'].getItem('language'),
+			loadingMsg:"Loading..."
 		};
 
 		this.options = {
@@ -416,6 +417,7 @@ class Expense extends React.Component {
 			postingRefType: 'EXPENSE',
 			postingChartOfAccountId: row.chartOfAccountId,
 		};
+		this.setState({ loading:true, loadingMsg:"Expense Posting..."});
 		this.props.expenseActions
 			.postExpense(postingRequestModel)
 			.then((res) => {
@@ -428,6 +430,7 @@ class Expense extends React.Component {
 						loading: false,
 					});
 					this.initializeData();
+					this.setState({ loading:false,});
 				}
 			})
 			.catch((err) => {
@@ -635,7 +638,7 @@ class Expense extends React.Component {
 	render() {
 		strings.setLanguage(this.state.language);
 		const {
-			loading,
+			loading,loadingMsg,
 			dialog,
 			filterData,
 			selectedRows,
@@ -653,7 +656,7 @@ class Expense extends React.Component {
 		// }
 
 		return (
-			loading ==true? <Loader/> :
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 <div>
 			<div className="expense-screen">
 				<div className="animated fadeIn">

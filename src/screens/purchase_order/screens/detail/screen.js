@@ -122,7 +122,8 @@ class DetailPurchaseOrder extends React.Component {
 			disabled1:false,
 			selectedType: 'FIXED',
 			dateChanged: false,
-			dateChanged1: false
+			dateChanged1: false,
+			loadingMsg:"Loading..."
 		};
 
 		// this.options = {
@@ -1201,6 +1202,7 @@ debugger
 		if (currency !== null && currency) {
 			formData.append('currencyCode', this.state.supplier_currency);
 		}
+		this.setState({ loading:true, loadingMsg:"Updating Purchase Order..."});
 		this.props.purchaseOrderDetailsAction
 			.updatePO(formData)
 			.then((res) => {
@@ -1209,6 +1211,7 @@ debugger
 					res.data ? res.data.message : 'Purchase Order Updated Successfully'
 				);
 				this.props.history.push('/admin/expense/purchase-order');
+				this.setState({ loading:false,});
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
@@ -1240,6 +1243,7 @@ debugger
 	removePo = () => {
 		this.setState({ disabled1: true });
 		const { current_po_id } = this.state;
+		this.setState({ loading:true, loadingMsg:"Deleting Purchase Order..."});
 		this.props.purchaseOrderDetailsAction
 			.deletePo(current_po_id)
 			.then((res) => {
@@ -1249,6 +1253,7 @@ debugger
 						res.data ? res.data.message : 'Purchase Order Deleted Successfully'
 					);
 					this.props.history.push('/admin/expense/purchase-order');
+					this.setState({ loading:false,});
 				}
 			})
 			.catch((err) => {
@@ -1442,7 +1447,7 @@ debugger
 	}
 	render() {
 		strings.setLanguage(this.state.language);
-		const { data, discountOptions, initValue, loading, dialog } = this.state;
+		const { data, discountOptions, initValue, loading, dialog ,loadingMsg} = this.state;
 
 		const { project_list, currency_list,currency_convert_list, supplier_list,universal_currency_list,rfq_list } = this.props;
 
@@ -1454,7 +1459,7 @@ debugger
 		})
 
 		return (
-			loading ==true? <Loader/> :
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 <div>
 			<div className="detail-supplier-invoice-screen">
 				<div className="animated fadeIn">

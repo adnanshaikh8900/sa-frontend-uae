@@ -18,7 +18,7 @@ import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import DatePicker from 'react-datepicker';
 import { Formik, Field } from 'formik';
-import { Currency } from 'components';
+import { Currency,Loader } from 'components';
 import * as Yup from 'yup';
 import * as SupplierInvoiceCreateActions from './actions';
 import * as GoodsReceivedNoteCreateAction from './actions'
@@ -185,6 +185,7 @@ class CreateGoodsReceivedNote extends React.Component {
 			exist: false,
 			language: window['localStorage'].getItem('language'),
 			grnReceivedQuantityError:"Please Enter Quantity",
+			loadingMsg:"Loading..."
 		};
 
 		this.formRef = React.createRef();
@@ -1137,6 +1138,7 @@ this.state.data.map((obj, index) => {
 			formData.append('currencyCode', this.state.supplier_currency);
 
 		formData.append('supplierReferenceNumber', supplierReferenceNumber ? supplierReferenceNumber : '');
+		this.setState({ loading:true, loadingMsg:"Creating Goods Received Note..."});
 		this.props.goodsReceivedNoteCreateAction
 			.createGNR(formData)
 			.then((res) => {
@@ -1188,6 +1190,7 @@ this.state.data.map((obj, index) => {
 					);
 				} else {
 					this.props.history.push('/admin/expense/goods-received-note');
+					this.setState({ loading:false,});
 				}
 			})
 			.catch((err) => {
@@ -1495,7 +1498,7 @@ this.state.data.map((obj, index) => {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { data, discountOptions, initValue, prefix } = this.state;
+		const { data, discountOptions, initValue, prefix ,loading,loadingMsg} = this.state;
 
 		const {
 			currency_list,
@@ -1512,6 +1515,8 @@ console.log(this.state.data)
 			tmpSupplier_list.push(obj)
 		})
 		return (
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
+			<div>
 			<div className="create-supplier-invoice-screen">
 				<div className=" fadeIn">
 					<Row>
@@ -1532,6 +1537,13 @@ console.log(this.state.data)
 									</Row>
 								</CardHeader>
 								<CardBody>
+								{loading ? (
+										<Row>
+											<Col lg={12}>
+												<Loader />
+											</Col>
+										</Row>
+									) : (
 									<Row>
 										<Col lg={12}>
 											<Formik
@@ -2334,6 +2346,7 @@ console.log(this.state.data)
 											</Formik>
 										</Col>
 									</Row>
+									)}
 								</CardBody>
 							</Card>
 						</Col>
@@ -2380,6 +2393,7 @@ console.log(this.state.data)
 					updatePrefix={this.props.customerInvoiceActions.updateInvoicePrefix}
 					
 				/> */}
+			</div>
 			</div>
 		);
 	}

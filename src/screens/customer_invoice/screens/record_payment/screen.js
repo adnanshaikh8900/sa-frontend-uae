@@ -104,6 +104,7 @@ class RecordCustomerPayment extends React.Component {
 			discountAmount: 0,
 			fileName: '',
 			disabled: false,
+			loadingMsg:"Loading..."
 		};
 
 		// this.options = {
@@ -280,6 +281,7 @@ class RecordCustomerPayment extends React.Component {
 		if (this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
+		this.setState({ loading:true, loadingMsg:"Payment Recording..."});
 		this.props.CustomerRecordPaymentActions.recordPayment(formData)
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
@@ -287,6 +289,7 @@ class RecordCustomerPayment extends React.Component {
 					res.data ? res.data.message : 'Payment Recorded Successfully',
 				);
 				this.props.history.push('/admin/income/customer-invoice');
+				this.setState({ loading:false,});
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
@@ -372,7 +375,7 @@ class RecordCustomerPayment extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { initValue, loading, dialog } = this.state;
+		const { initValue, loading, dialog ,loadingMsg} = this.state;
 		const { pay_mode, customer_list, deposit_list } = this.props;
 
 		let tmpcustomer_list = []
@@ -383,6 +386,8 @@ class RecordCustomerPayment extends React.Component {
 		})
 
 		return (
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
+			<div>
 			<div className="detail-customer-invoice-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -902,6 +907,7 @@ class RecordCustomerPayment extends React.Component {
 					country_list={this.props.country_list}
 					getStateList={this.props.customerInvoiceActions.getStateList}
 				/>
+			</div>
 			</div>
 		);
 	}

@@ -18,7 +18,7 @@ import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import DatePicker from 'react-datepicker';
 import { Formik, Field } from 'formik';
-import { Currency } from 'components';
+import { Currency ,Loader} from 'components';
 import * as Yup from 'yup';
 import * as SupplierInvoiceCreateActions from './actions';
 import * as SupplierInvoiceActions from '../../actions';
@@ -178,7 +178,8 @@ class CreateSupplierInvoice extends React.Component {
 			basecurrency: [],
 			language: window['localStorage'].getItem('language'),
 			param: false,
-			date: ''
+			date: '',
+			loadingMsg:"Loading..."
 		};
 
 		this.formRef = React.createRef();
@@ -1363,6 +1364,7 @@ class CreateSupplierInvoice extends React.Component {
 		if (this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
+		this.setState({ loading:true, loadingMsg:"Creating New Invoice..."});
 		this.props.supplierInvoiceCreateActions
 			.createInvoice(formData)
 			.then((res) => {
@@ -1414,6 +1416,7 @@ class CreateSupplierInvoice extends React.Component {
 					);
 				} else {
 					this.props.history.push('/admin/expense/supplier-invoice');
+					this.setState({ loading:false,});
 				}
 			})
 			.catch((err) => {
@@ -1676,7 +1679,7 @@ class CreateSupplierInvoice extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { data, discountOptions, initValue, prefix, param } = this.state;
+		const { data, discountOptions, initValue, prefix, param,loading,loadingMsg } = this.state;
 
 		const {
 			currency_list,
@@ -1693,6 +1696,8 @@ class CreateSupplierInvoice extends React.Component {
 		})
 
 		return (
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
+			<div>
 			<div className="create-supplier-invoice-screen">
 				<div className=" fadeIn">
 					<Row>
@@ -1713,6 +1718,13 @@ class CreateSupplierInvoice extends React.Component {
 									</Row>
 								</CardHeader>
 								<CardBody>
+								{loading ? (
+										<Row>
+											<Col lg={12}>
+												<Loader />
+											</Col>
+										</Row>
+									) : (
 									<Row>
 										<Col lg={12}>
 											<Formik
@@ -2964,6 +2976,7 @@ class CreateSupplierInvoice extends React.Component {
 											</Formik>
 										</Col>
 									</Row>
+									)}
 								</CardBody>
 							</Card>
 						</Col>
@@ -3017,6 +3030,7 @@ class CreateSupplierInvoice extends React.Component {
 					updatePrefix={this.props.customerInvoiceActions.updateInvoicePrefix}
 					
 				/> */}
+			</div>
 			</div>
 		);
 	}

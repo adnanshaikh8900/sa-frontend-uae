@@ -137,6 +137,7 @@ class RequestForQuotation extends React.Component {
 			view: false,
 			rowId: '',
 			language: window['localStorage'].getItem('language'),
+			loadingMsg:"Loading..."
 		};
 
 		this.options = {
@@ -769,6 +770,7 @@ class RequestForQuotation extends React.Component {
 			amountInWords:upperCase(row.currencyName + " " +(toWords.convert(row.totalAmount)) ).replace("POINT","AND"),
 			vatInWords:row.totalVatAmount ? upperCase(row.currencyName + " " +(toWords.convert(row.totalVatAmount)) ).replace("POINT","AND") :"-"
 		};
+		this.setState({ loading:true, loadingMsg:"Sent Request For Quotation..."});
 		this.props.requestForQuotationAction
 			.sendMail(postingRequestModel)
 			.then((res) => {
@@ -781,6 +783,7 @@ class RequestForQuotation extends React.Component {
 						loading: false,
 					});
 					this.initializeData();
+					this.setState({ loading:false,});
 				}
 			})
 			.catch((err) => {
@@ -939,7 +942,7 @@ class RequestForQuotation extends React.Component {
 	render() {
 		strings.setLanguage(this.state.language);
 		const {
-			loading,
+			loading,loadingMsg,
 			filterData,
 			dialog,
 			selectedRows,
@@ -984,7 +987,7 @@ class RequestForQuotation extends React.Component {
 		})		
 
 		return (
-			loading ==true? <Loader/> :
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 <div>
 			<div className="supplier-invoice-screen">
 				<div className="animated fadeIn">

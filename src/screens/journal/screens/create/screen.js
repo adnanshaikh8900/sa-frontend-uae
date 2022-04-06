@@ -21,7 +21,7 @@ import DatePicker from 'react-datepicker';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 
-import { Currency } from 'components';
+import { Currency , Loader} from 'components';
 import { CommonActions } from 'services/global';
 import { selectCurrencyFactory } from 'utils';
 import * as JournalActions from '../../actions';
@@ -119,6 +119,7 @@ class CreateJournal extends React.Component {
 				],
 			},
 			submitJournal: false,
+			loadingMsg:"Loading..."
 			
 		};
 
@@ -617,6 +618,7 @@ class CreateJournal extends React.Component {
 				totalDebitAmount: initValue.totalDebitAmount,
 				journalLineItems: data,
 			};
+			this.setState({ loading:true, loadingMsg:"Creating New Journal..."});
 			this.props.journalCreateActions
 				.createJournal(postData)
 				.then((res) => {
@@ -683,6 +685,7 @@ class CreateJournal extends React.Component {
 							);
 						} else {
 							this.props.history.push('/admin/accountant/journal');
+							this.setState({ loading:false,});
 						}
 					}
 				})
@@ -698,10 +701,12 @@ class CreateJournal extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { data, initValue } = this.state;
+		const { data, initValue ,loading,loadingMsg} = this.state;
 		const { currency_list,universal_currency_list } = this.props;
 
 		return (
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
+			<div>
 			<div className="create-journal-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -718,6 +723,13 @@ class CreateJournal extends React.Component {
 									</Row>
 								</CardHeader>
 								<CardBody>
+								{loading ? (
+										<Row>
+											<Col lg={12}>
+												<Loader />
+											</Col>
+										</Row>
+									) : (
 									<Row>
 										<Col lg={12}>
 											<Formik
@@ -1172,11 +1184,13 @@ class CreateJournal extends React.Component {
 											</Formik>
 										</Col>
 									</Row>
+									)}
 								</CardBody>
 							</Card>
 						</Col>
 					</Row>
 				</div>
+			</div>
 			</div>
 		);
 	}

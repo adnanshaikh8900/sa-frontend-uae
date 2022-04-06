@@ -64,6 +64,7 @@ class DetailBankAccount extends React.Component {
 		super(props);
 		this.state = {
 			language: window['localStorage'].getItem('language'),
+			loading:false,
 			// country_list: [
 			// 	{
 			// 		countryCode: 229,
@@ -107,6 +108,7 @@ class DetailBankAccount extends React.Component {
 			exist: false,
 			initialVals: null,
 			currentData: {},
+			loadingMsg:"Loading...",
 			bankList:[]
 		};
 
@@ -219,7 +221,7 @@ class DetailBankAccount extends React.Component {
 			bankCountry: data.countryId,
 			bankAccountType: data.account_type,
 		};
-		 
+		this.setState({ loading:true, loadingMsg:"Updating Bank Account Details..."});
 		this.props.detailBankAccountActions
 			.updateBankAccount(obj)
 			.then((res) => {
@@ -230,6 +232,7 @@ class DetailBankAccount extends React.Component {
 						res.data ? res.data.message : 'Bank Account Details Updated Successfully',
 					);
 					this.props.history.push('/admin/banking/bank-account');
+					this.setState({ loading:false,});
 				}
 			})
 			.catch((err) => {
@@ -280,6 +283,7 @@ class DetailBankAccount extends React.Component {
 		this.setState({ disabled1: true });
 		let { current_bank_account_id } = this.state;
 		this.removeDialog();
+		this.setState({ loading:true, loadingMsg:"Deleting Bank Account ..."});
 		this.props.detailBankAccountActions
 			.removeBankAccountByID(current_bank_account_id)
 			.then((res) => {
@@ -289,6 +293,7 @@ class DetailBankAccount extends React.Component {
 					res.data ? res.data.message : 'Bank Account Deleted Successfully',
 				);
 				this.props.history.push('/admin/banking/bank-account');
+				this.setState({ loading:false,});
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
@@ -341,9 +346,11 @@ class DetailBankAccount extends React.Component {
 		strings.setLanguage(this.state.language);
 		const { account_type_list, currency_list, country_list } = this.props;
 
-		const { initialVals, current_bank_account, dialog, current_bank_account_id ,bankList} = this.state;
+		const { initialVals, current_bank_account, dialog, current_bank_account_id ,bankList,loading,loadingMsg} = this.state;
 
 		return (
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
+			<div>
 			<div className="detail-bank-account-screen">
 				<div className="animated fadeIn">
 					{dialog}
@@ -364,6 +371,10 @@ class DetailBankAccount extends React.Component {
 							</Row>
 						</CardHeader>
 						<CardBody>
+						{dialog}
+									{loading ? (
+										<Loader />
+									) : (
 							<Row>
 								<Col lg={12}>
 									{initialVals ? (
@@ -1023,9 +1034,11 @@ class DetailBankAccount extends React.Component {
 									)}
 								</Col>
 							</Row>
+									)}
 						</CardBody>
 					</Card>
 				</div>
+			</div>
 			</div>
 		);
 	}

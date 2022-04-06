@@ -117,6 +117,7 @@ class CustomerInvoice extends React.Component {
 			},
 			rowId: '',
 			language: window['localStorage'].getItem('language'),
+			loadingMsg:"Loading..."
 		};
 
 		this.options = {
@@ -236,6 +237,7 @@ class CustomerInvoice extends React.Component {
 			amountInWords:upperCase(row.currencyName + " " +(toWords.convert(row.invoiceAmount))+" ONLY" ).replace("POINT","AND"),
 			vatInWords:row.vatAmount ?upperCase(row.currencyName + " " +(toWords.convert(row.vatAmount))+" ONLY" ).replace("POINT","AND") :"-"
 		};
+		this.setState({ loading:true, loadingMsg:"Customer Invoice Posting..."});
 		this.props.customerInvoiceActions
 			.postInvoice(postingRequestModel)
 			.then((res) => {
@@ -249,6 +251,7 @@ class CustomerInvoice extends React.Component {
 					});
 					this.getOverdue();
 					this.initializeData();
+					this.setState({ loading:false,});
 				}
 			})
 			.catch((err) => {
@@ -913,7 +916,7 @@ class CustomerInvoice extends React.Component {
 	render() {
 		strings.setLanguage(this.state.language);
 		const {
-			loading,
+			loading,loadingMsg,
 			filterData,
 			dialog,
 			selectedRows,
@@ -957,7 +960,7 @@ class CustomerInvoice extends React.Component {
 		})
 
 		return (
-			loading ==true? <Loader/> :
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 <div> <div className="customer-invoice-screen">
 				<div className="animated fadeIn">
 					{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}

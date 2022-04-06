@@ -15,6 +15,7 @@ import {
 	UncontrolledTooltip,
 } from 'reactstrap';
 import Select from 'react-select';
+import {  Loader } from 'components';
 import _ from 'lodash';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -118,6 +119,7 @@ class CreateBankAccount extends React.Component {
 			BankList: [],
 			currentData: {},
 			language: window['localStorage'].getItem('language'),
+			loadingMsg:"Loading..."
 		};
 		this.formRef = React.createRef();
 		this.regExAlpha = /^[a-zA-Z_ ]+$/;
@@ -235,7 +237,7 @@ class CreateBankAccount extends React.Component {
 			personalCorporateAccountInd: account_is_for ? account_is_for : '',
 			// bankId:bankId ? bankId : "",
 		};
-		 
+		this.setState({ loading:true, loadingMsg:"Creating New Bank Account..."});
 		this.props.createBankAccountActions
 			.createBankAccount(obj)
 			.then((res) => {
@@ -252,6 +254,7 @@ class CreateBankAccount extends React.Component {
 					resetForm(this.state.initialVals);
 				} else {
 					this.props.history.push('/admin/banking/bank-account');
+					this.setState({ loading:false,});
 				}
 			})
 			.catch((err) => {
@@ -267,8 +270,10 @@ class CreateBankAccount extends React.Component {
 		strings.setLanguage(this.state.language);
 		const { account_type_list, currency_list,currency_convert_list, country_list } = this.props;
 
-		const { initialVals ,bankList} = this.state;
+		const { initialVals ,bankList,loading,loadingMsg} = this.state;
 		return (
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
+			<div>
 			<div className="create-bank-account-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -285,6 +290,13 @@ class CreateBankAccount extends React.Component {
 									</Row>
 								</CardHeader>
 								<CardBody>
+								{loading ? (
+										<Row>
+											<Col lg={12}>
+												<Loader />
+											</Col>
+										</Row>
+									) : (
 									<Row>
 										<Col lg={12}>
 											<Formik
@@ -976,11 +988,13 @@ class CreateBankAccount extends React.Component {
 											</Formik>
 										</Col>
 									</Row>
+									)}
 								</CardBody>
 							</Card>
 						</Col>
 					</Row>
 				</div>
+			</div>
 			</div>
 		);
 	}

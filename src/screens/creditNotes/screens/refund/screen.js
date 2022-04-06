@@ -106,7 +106,8 @@ class Refund extends React.Component {
 			fileName: '',
 			disabled: false,
 			invoiceNumber:"-",
-			showInvoiceNumber:false
+			showInvoiceNumber:false,
+			loadingMsg:"Loading..."
 		};
 
 		// this.options = {
@@ -304,6 +305,7 @@ class Refund extends React.Component {
 				? moment(receiptDate, 'DD/MM/YYYY').toDate()
 				: receiptDate,
 		);
+		this.setState({ loading:true, loadingMsg:"Credit Refunding..."});
 		this.props.CustomerRecordPaymentActions.recordPaymentCNWithoutInvoice(formData)
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
@@ -311,6 +313,7 @@ class Refund extends React.Component {
 					res.data ? res.data.message : 'Credit Refund Successfully',
 				);
 				this.props.history.push('/admin/income/credit-notes');
+				this.setState({ loading:false,});
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
@@ -353,6 +356,7 @@ class Refund extends React.Component {
 			'invoiceAmount',
 			this.props.location.state.id.invoiceAmount ?this.props.location.state.id.invoiceAmount :"00000",
 		);
+		this.setState({ loading:true, loadingMsg:"Creating Refund..."});
 		this.props.CustomerRecordPaymentActions.recordPayment(formData)
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
@@ -360,6 +364,7 @@ class Refund extends React.Component {
 					res.data ? res.data.message : 'Credit Refund Successfully',
 				);
 				this.props.history.push('/admin/income/credit-notes');
+				this.setState({ loading:false,});
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
@@ -419,6 +424,7 @@ class Refund extends React.Component {
 
 	removeInvoice = () => {
 		const { current_customer_id } = this.state;
+		this.setState({ loading:true, loadingMsg:"Deleting Invoice..."});
 		this.props.customerInvoiceDetailActions
 			.deleteInvoice(current_customer_id)
 			.then((res) => {
@@ -428,6 +434,7 @@ class Refund extends React.Component {
 						res.data ? res.data.message :'Invoice Deleted Successfully',
 					);
 					this.props.history.push('/admin/income/credit-notes');
+					this.setState({ loading:false,});
 				}
 			})
 			.catch((err) => {
@@ -446,7 +453,7 @@ class Refund extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { initValue, loading, dialog } = this.state;
+		const { initValue, loading, dialog ,loadingMsg} = this.state;
 		const { pay_mode, customer_list, deposit_list } = this.props;
 
 		let tmpcustomer_list = []
@@ -457,6 +464,7 @@ class Refund extends React.Component {
 		})
 
 		return (
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 			<div className="detail-customer-invoice-screen">
 				<div className="animated fadeIn">
 					<Row>

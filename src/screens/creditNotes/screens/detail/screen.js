@@ -111,6 +111,7 @@ class DetailCreditNote extends React.Component {
 			fileName: '',
 			basecurrency:[],
 			customer_currency: '',
+			loadingMsg:"Loading...",
 			showInvoiceNumber:false
 		};
 
@@ -1194,6 +1195,8 @@ class DetailCreditNote extends React.Component {
 		// if (this.uploadFile.files[0]) {
 		// 	formData.append('attachmentFile', this.uploadFile.files[0]);
 		// }
+
+		this.setState({ loading:true, loadingMsg:"Updating Credit Note..."});
 		this.props.creditNotesDetailActions
 			.UpdateCreditNotes(formData)
 			.then((res) => {
@@ -1203,6 +1206,7 @@ class DetailCreditNote extends React.Component {
 					res.data ? res.data.message : 'Credit Note Updated Successfully'
 				);
 				this.props.history.push('/admin/income/credit-notes');
+				this.setState({ loading:false,});
 			})
 			.catch((err) => {
 				this.setState({ disabled: false });
@@ -1348,7 +1352,9 @@ class DetailCreditNote extends React.Component {
 		this.setState({ disabled1: true });
 		const { current_customer_id } = this.state;
 		if(this.props.location.state.isCNWithoutProduct!=true)
-		{this.props.creditNotesDetailActions
+		
+		{this.setState({ loading:true, loadingMsg:"Deleting Credit Note..."});
+			this.props.creditNotesDetailActions
 			.deleteInvoice(current_customer_id)
 			.then((res) => {
 				if (res.status === 200) {
@@ -1357,6 +1363,7 @@ class DetailCreditNote extends React.Component {
 						res.data ? res.data.message : 'Credit Note Deleted Successfully'
 					);
 					this.props.history.push('/admin/income/credit-notes');
+					this.setState({ loading:false,});
 				}
 			})
 			.catch((err) => {
@@ -1451,7 +1458,7 @@ class DetailCreditNote extends React.Component {
 		const { data, discountOptions, initValue, loading, dialog } = this.state;
 
 		const { project_list, currency_list,currency_convert_list, customer_list,universal_currency_list,vat_list } = this.props;
-
+		const {  loadingMsg } = this.state
 		let tmpCustomer_list = []
 
 		customer_list.map(item => {
@@ -1460,7 +1467,7 @@ class DetailCreditNote extends React.Component {
 		})
 
 		return (
-			loading ==true? <Loader/> :
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 <div>
 			<div className="detail-customer-invoice-screen">
 				<div className="animated fadeIn">

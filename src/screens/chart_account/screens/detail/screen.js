@@ -69,6 +69,7 @@ class DetailChartAccount extends React.Component {
 			coaId: '',
 			disabled: false,
 			disabled1:false,
+			loadingMsg:"Loading..."
 		};
 		// this.regExAlpha = /^[a-zA-Z]+$/;
 		this.regExAlpha = /^[A-Za-z0-9 !@#$%^&*)(+=._-]+$/;
@@ -185,6 +186,7 @@ class DetailChartAccount extends React.Component {
 	removeChartAccount = () => {
 		this.setState({ disabled1: true });
 		const id = this.props.location.state.id;
+		this.setState({ loading:true, loadingMsg:"Deleting Chart Of Account..."});
 		this.props.detailChartOfAccontActions
 			.deleteChartAccount(id)
 			.then((res) => {
@@ -194,6 +196,7 @@ class DetailChartAccount extends React.Component {
 						res.data ? res.data.message : 'Chart Of Account Deleted Successfully'
 					);
 					this.props.history.push('/admin/master/chart-account');
+					this.setState({ loading:false,});
 				}
 			})
 			.catch((err) => {
@@ -219,6 +222,7 @@ class DetailChartAccount extends React.Component {
 			chartOfAccount: data.chartOfAccount.value,
 			transactionCategoryId: id,
 		};
+		this.setState({ loading:true, loadingMsg:"Updating Chart Of Account..."});
 		this.props.detailChartOfAccontActions
 			.updateTransactionCategory(postData)
 			.then((res) => {
@@ -231,6 +235,7 @@ class DetailChartAccount extends React.Component {
 
 					);
 					this.props.history.push('/admin/master/chart-account');
+					this.setState({ loading:false,});
 				}
 			})
 			.catch((err) => {
@@ -253,12 +258,12 @@ class DetailChartAccount extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { loading, dialog } = this.state;
+		const { loading, dialog ,loadingMsg} = this.state;
 		// const { sub_transaction_type_list } = this.props
 
 		return (
-			loading ==true? <Loader/> :
-<div>
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
+			<div>
 			<div className="chart-account-screen">
 				<div className="animated fadeIn">
 					{dialog}

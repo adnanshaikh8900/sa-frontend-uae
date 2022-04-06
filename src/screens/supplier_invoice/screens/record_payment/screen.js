@@ -105,6 +105,7 @@ class RecordSupplierPayment extends React.Component {
 			discountAmount: 0,
 			fileName: '',
 			disabled: false,
+			loadingMsg:"Loading..."
 		};
 
 		// this.options = {
@@ -280,6 +281,8 @@ class RecordSupplierPayment extends React.Component {
 			'invoiceAmount',
 			this.props.location.state.id.invoiceAmount ?this.props.location.state.id.invoiceAmount :"00000",
 		);
+
+		this.setState({ loading:true, loadingMsg:"Payment Recording..."});
 		this.props.SupplierRecordPaymentActions.recordPayment(formData)
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
@@ -287,6 +290,7 @@ class RecordSupplierPayment extends React.Component {
 					res.data ? res.data.message : 'Payment Recorded Successfully.',
 				);
 				this.props.history.push('/admin/expense/supplier-invoice');
+				this.setState({ loading:false,});
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
@@ -372,7 +376,7 @@ class RecordSupplierPayment extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { initValue, loading, dialog } = this.state;
+		const { initValue, loading, dialog ,loadingMsg} = this.state;
 		const { pay_mode, supplier_list, deposit_list } = this.props;
 		let tmpSupplier_list = []
 
@@ -382,7 +386,7 @@ class RecordSupplierPayment extends React.Component {
 		})
 
 		return (
-			loading ==true? <Loader/> :
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 <div>
 			<div className="detail-customer-invoice-screen">
 				<div className="animated fadeIn">

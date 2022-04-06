@@ -15,7 +15,7 @@ import {
 	UncontrolledTooltip,
 } from 'reactstrap';
 import Select from 'react-select';
-
+import {   Loader } from 'components';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
@@ -67,7 +67,7 @@ class CreateProduct extends React.Component {
 		super(props);
 		this.state = {
 			language: window['localStorage'].getItem('language'),
-			loading: true,
+			loading: false,
 			openWarehouseModal: false,
 			contactType:1,
 			initValue: {
@@ -115,7 +115,8 @@ class CreateProduct extends React.Component {
 			unitTypeList:[],
 			exciseTaxCheck:false,
 			exciseType:false,
-			exciseAmount:0			
+			exciseAmount:0	,
+			loadingMsg:"Loading"		
 		};
 		this.formRef = React.createRef();       
 		this.regEx = /^[0-9\d]+$/;
@@ -336,6 +337,7 @@ try {
 			}),
 		};
 		const postData = this.getData(dataNew);
+		this.setState({ loading:true, loadingMsg:"Creating Product..."});
 		this.props.productActions
 			.createAndSaveProduct(postData)
 			.then((res) => {
@@ -360,6 +362,7 @@ try {
 						 }
 						else
 						this.props.history.push('/admin/master/product');
+						this.setState({ loading:false,});
 					}
 				}
 			})
@@ -431,7 +434,7 @@ try {
 		strings.setLanguage(this.state.language);
 		const { vat_list, product_category_list,supplier_list,inventory_account_list} = this.props;
 		const { initValue, purchaseCategory, salesCategory,inventoryAccount,exciseTaxList,unitTypeList } = this.state;
-
+		const { loading, loadingMsg } = this.state
 		let tmpSupplier_list = []
 
 		supplier_list.map(item => {
@@ -442,6 +445,8 @@ try {
 		console.log(this.state.ReOrderLevel)
 		console.log(this.state.PurchaseQuantity)
 		return (
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
+			<div>
 			<div className="create-product-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -458,6 +463,13 @@ try {
 									</Row>
 								</CardHeader>
 								<CardBody>
+								{loading ? (
+										<Row>
+											<Col lg={12}>
+												<Loader />
+											</Col>
+										</Row>
+									) : (
 									<Row>
 										<Col lg={12}>
 											<Formik
@@ -1991,6 +2003,7 @@ try {
 											</Formik>
 										</Col>
 									</Row>
+									)}
 								</CardBody>
 							</Card>
 						</Col>
@@ -2001,6 +2014,7 @@ try {
 					openModal={this.state.openWarehouseModal}
 					closeWarehouseModal={this.closeWarehouseModal}
 				/>
+			</div>
 			</div>
 		);
 	}

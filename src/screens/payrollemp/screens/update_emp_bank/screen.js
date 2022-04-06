@@ -66,6 +66,7 @@ class UpdateEmployeeBank extends React.Component {
             bloodGroup: '',
             current_employee_id: null,
             existForAccountNumber: false,
+            loadingMsg:"Loading..."
         }
         this.regExAlpha = /^[a-zA-Z ]+$/;
         this.regExBoth = /[a-zA-Z0-9]+$/;
@@ -210,6 +211,7 @@ class UpdateEmployeeBank extends React.Component {
             'swiftCode',
             swiftCode !== null ? swiftCode : '',
         );
+        this.setState({ loading:true, loadingMsg:"Updating Employee Bank..."});
         this.props.detailEmployeeBankAction.updateEmployeeBank(formData).then((res) => {
             if (res.status === 200) {
                 this.props.commonActions.tostifyAlert(
@@ -218,6 +220,7 @@ class UpdateEmployeeBank extends React.Component {
                      )
                 // this.props.history.push('/admin/payroll/employee')
                   this.props.history.push('/admin/master/employee')
+                  this.setState({ loading:false,});
             }
         }).catch((err) => {
             this.props.commonActions.tostifyAlert(
@@ -228,14 +231,14 @@ class UpdateEmployeeBank extends React.Component {
     }
     render() {
         strings.setLanguage(this.state.language);
-        const { loading, initValue, dialog ,bankList ,existForAccountNumber } = this.state
+        const { loading, initValue, dialog ,bankList ,existForAccountNumber,loadingMsg } = this.state
         const { designation_dropdown, country_list, state_list, employee_list_dropdown } = this.props
         console.log(this.state.gender, "gender")
         console.log(this.state.bloodGroup, "blood")
         console.log(this.state.selectedStatus)
 
         return (
-            loading ==true? <Loader/> :
+            loading ==true? <Loader loadingMsg={loadingMsg}/> :
 <div>
             <div className="detail-vat-code-screen">
                 <div className="animated fadeIn">

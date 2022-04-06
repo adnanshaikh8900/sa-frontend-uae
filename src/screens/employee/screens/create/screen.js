@@ -17,7 +17,7 @@ import Select from 'react-select'
 import DatePicker from 'react-datepicker'
 import { Formik } from 'formik';
 import * as Yup from "yup";
-
+import {  Loader } from 'components';
 import {
   CommonActions
 } from 'services/global' 
@@ -63,6 +63,7 @@ class CreateEmployee extends React.Component {
         vatRegestationNo: '',
         currencyCode: '',
         poBoxNumber: '',
+        loadingMsg:"Loading..."
       },
     }
 
@@ -80,6 +81,7 @@ class CreateEmployee extends React.Component {
     if(postData.currencyCode.value) {
       postData = {...postData,...{currencyCode: postData.currencyCode.value}}
     }
+    this.setState({ loading:true, loadingMsg:"Creating New Employee..."});
     this.props.employeeCreateActions.createEmployee(postData).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert(
@@ -92,6 +94,7 @@ class CreateEmployee extends React.Component {
           resetForm(this.state.initValue)
         } else {
           this.props.history.push('/admin/master/employee')
+          this.setState({ loading:false,});
         }
       }
     }).catch((err) => {
@@ -104,7 +107,10 @@ class CreateEmployee extends React.Component {
   render() {
 
     const { currency_list } = this.props
+    const { loading, loadingMsg } = this.state
     return (
+      loading ==true? <Loader loadingMsg={loadingMsg}/> :
+      <div>
       <div className="create-employee-screen">
         <div className="animated fadeIn">
           <Row>
@@ -121,6 +127,13 @@ class CreateEmployee extends React.Component {
                   </Row>
                 </CardHeader>
                 <CardBody>
+                {loading ? (
+										<Row>
+											<Col lg={12}>
+												<Loader />
+											</Col>
+										</Row>
+									) : (
                   <Row>
                     <Col lg={12}>
                       <Formik
@@ -475,11 +488,13 @@ class CreateEmployee extends React.Component {
                       </Formik>
                     </Col>
                   </Row>
+                  )}
                 </CardBody>
               </Card>
             </Col>
           </Row>
         </div>
+      </div>
       </div>
     )
   }

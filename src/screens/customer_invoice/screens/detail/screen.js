@@ -3116,12 +3116,17 @@ class DetailCustomerInvoice extends React.Component {
 																			className="btn-square mr-3"
 																			disabled={this.state.disabled}
 																			onClick={() => {
-																				let newData=[]
-																				const data = this.state.data;	
-																				newData = data.filter((obj) => obj.productId !== "");
-																				props.setFieldValue('lineItemsString', newData, true);
-																				
-																			}}
+																				if(this.state.data.length === 1)
+																					{
+																					console.log(props.errors,"ERRORs")
+																					}
+																					else
+																					{ let newData=[]
+																					const data = this.state.data;
+																					newData = data.filter((obj) => obj.productId !== "");
+																					props.setFieldValue('lineItemsString', newData, true);
+																					this.updateAmount(newData, props);
+																					}}}
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
 																			{this.state.disabled

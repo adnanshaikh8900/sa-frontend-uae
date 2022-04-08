@@ -416,7 +416,17 @@ class InvoiceTemplate extends Component {
 														}
 													/>
 												</td>
-												<td style={{ textAlign: 'right' }}>{item.discount}</td>
+												<td style={{ textAlign: 'right' }}>
+												<Currency
+														value={item.discount}
+														currencySymbol={
+															currencyData[0]
+																? currencyData[0].currencyIsoCode
+																: 'USD'
+														}
+													/>
+												</td>
+
 												<td style={{ textAlign: 'right' }}>{item.discountType}</td>
 												<td>{item.exciseTaxId ? this.renderExcise(item):"-"}</td>
 												<td style={{ textAlign: 'right' }}>

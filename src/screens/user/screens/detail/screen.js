@@ -79,6 +79,7 @@ class DetailUser extends React.Component {
 			disabled1:false,
 			timezone: [],
 			exist: false,
+			loadingMsg:"Loading..."
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 	}
@@ -260,6 +261,7 @@ class DetailUser extends React.Component {
 		}
 		if (this.state.initValue !== data) {
 			this.setState({ disabled: true });
+			{this.setState({ loading:true, loadingMsg:"Updating User"})} 
 			this.props.userDetailActions
 				.updateUser(formData)
 				.then((res) => {
@@ -271,6 +273,7 @@ class DetailUser extends React.Component {
 						);
 					//	this.updateRoles(+current_user_id);
 						this.props.history.push('/admin/settings/user');
+						{this.setState({ loading:false,})}
 					}
 				})
 				.catch((err) => {
@@ -302,7 +305,7 @@ class DetailUser extends React.Component {
 	};
 	render() {
 		strings.setLanguage(this.state.language);
-		const { loading, dialog, timezone,current_user_id } = this.state;
+		const { loading, dialog, timezone,current_user_id ,loadingMsg} = this.state;
 		const { role_list,employee_list } = this.props;
 		const { isPasswordShown } = this.state;
 
@@ -312,8 +315,9 @@ class DetailUser extends React.Component {
 		})
 		console.log(role_list,"role_list")
 		console.log(active_roles_list,"temp_role_list")
+
 		return (
-			loading ==true? <Loader/> :
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 <div>
 			<div className="create-user-screen">
 				<div className="animated fadeIn">

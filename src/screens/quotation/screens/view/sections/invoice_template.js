@@ -10,6 +10,7 @@ import {data}  from '../../../../Language/index'
 import LocalizedStrings from 'react-localization';
 
 const { ToWords } = require('to-words');
+const ZERO=0.00
 const toWords = new ToWords({
 	localeCode: 'en-IN',
 	converterOptions: {
@@ -294,7 +295,10 @@ class RFQTemplate extends Component {
 													/> */}
 												{QuotationData.currencyIsoCode + " " +item.unitPrice.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
 												</td>
-												<td style={{ textAlign: 'right' }}>{item.discount}</td>
+												
+												<td style={{ textAlign: 'right' }}>
+												{QuotationData.currencyIsoCode + " " +item.discount.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
+												</td>
 												<td style={{ textAlign: 'right' }}>{item.discountType}</td>
 												<td style={{ textAlign: 'right' }}>{item.exciseTaxId ? this.renderExcise(item):"-"}</td>
 												<td style={{ textAlign: 'right' }}>
@@ -378,7 +382,8 @@ class RFQTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-												{QuotationData.totalExciseAmount? QuotationData.currencyIsoCode + " " +QuotationData.totalExciseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0 } 
+												{/* {QuotationData.totalExciseAmount? QuotationData.currencyIsoCode + " " +QuotationData.totalExciseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0. }  */}
+												{QuotationData.totalExciseAmount? QuotationData.currencyIsoCode + " " +QuotationData.totalExciseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):QuotationData.currencyIsoCode + " " +ZERO.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}  
 												</span>
 											</td>
 										</tr>
@@ -394,7 +399,7 @@ class RFQTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-												{QuotationData.discount? QuotationData.currencyIsoCode + " " +QuotationData.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0 } 
+												{QuotationData.discount? QuotationData.currencyIsoCode + " " +QuotationData.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):QuotationData.currencyIsoCode + " " +ZERO.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}  
 												</span>
 											</td>
 										</tr>

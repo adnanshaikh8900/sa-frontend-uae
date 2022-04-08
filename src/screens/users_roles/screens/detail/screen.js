@@ -62,6 +62,7 @@ class UpdateRole extends React.Component {
 			current_role_id:null,
 			dialog: null,
 			expanded: ["SelectAll"],
+			loadingMsg:"Loading..."
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regExDecimal = /^[0-9]*(\.[0-9]{0,2})?$/;
@@ -196,6 +197,7 @@ class UpdateRole extends React.Component {
 			roleID: this.props.location.state.id,
 			isActive:this.state.isActive
 		};
+		{this.setState({ loading:true, loadingMsg:"Updating Users Role"})} 
 		this.props.RoleActions.updateRole(obj)
 			.then((res) => {
 				if (res.status === 200) {
@@ -211,6 +213,7 @@ class UpdateRole extends React.Component {
 						});
 					} else {
 						this.props.history.push('/admin/settings/user-role');
+						{this.setState({ loading:false,})}
 					}
 				}
 			})
@@ -297,7 +300,7 @@ class UpdateRole extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { loading, initValue,dialog ,current_role_id} = this.state;
+		const { loading, initValue,dialog ,current_role_id,loadingMsg} = this.state;
 		const { checked, expanded } = this.state;
 		const nodes = [
 			{
@@ -320,7 +323,7 @@ class UpdateRole extends React.Component {
 		  ];
 		  
 		return (
-			loading ==true? <Loader/> :
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 <div>
 			<div className="role-create-screen">
 				<div className="animated fadeIn">

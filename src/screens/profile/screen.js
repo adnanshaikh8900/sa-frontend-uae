@@ -147,6 +147,7 @@ class Profile extends React.Component {
 				companyPostZipCode: '',
 				companyPoBoxNumber: '',
 				companyCountryCode: 229,
+				loadingMsg:"Loading..."
 			},
 			timezone: [],
 		};
@@ -329,7 +330,7 @@ class Profile extends React.Component {
 		// if (currentPassword.length > 0) {
 		// 	formData.append('currentPassword ', currentPassword);
 		// }
-		
+		{this.setState({ loading:true, loadingMsg:"Updating Users Profile"})} 
 		this.props.profileActions
 			.updateUser(formData)
 			.then((res) => {
@@ -343,6 +344,7 @@ class Profile extends React.Component {
 						this.props.history.push('/login');
 					});
 					this.props.history.push('/admin/dashboard');
+					{this.setState({ loading:false,})}
 				}
 			})
 			.catch((err) => {
@@ -732,6 +734,7 @@ class Profile extends React.Component {
 		if (this.state.companyLogoFile.length > 0) {
 			formData.append('companyLogo', this.state.companyLogoFile[0]);
 		}
+		{this.setState({ loading:true, loadingMsg:"Updating Company"})} 
 		this.props.profileActions
 			.updateCompany(formData)
 			.then((res) => {
@@ -741,6 +744,7 @@ class Profile extends React.Component {
 						'Company Updated Successfully',
 					);
 					this.props.history.push('/admin/dashboard');
+					{this.setState({ loading:false,})}
 					this.props.commonActions.getCurrencyList();
 				}
 			})
@@ -762,6 +766,7 @@ class Profile extends React.Component {
 		formData.append('currentPassword', currentPassword ? currentPassword : '');
 		formData.append('password', password ? password : '');
 
+		{this.setState({ loading:true, loadingMsg:"Updating Password"})} 
 		this.props.profileActions
 			.resetNewpassword(formData)
 			.then((res) => {
@@ -772,6 +777,7 @@ class Profile extends React.Component {
 						'success',
 						'Password Updated Successfully. Please Login With New Password',
 					);
+					{this.setState({ loading:false,})}
 				}
 			})
 			.catch((err) => {
@@ -784,7 +790,7 @@ class Profile extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { loading, isSame, timezone ,companyTypeList ,isPasswordShown,checkmobileNumberParam} = this.state;
+		const { loading, isSame, timezone ,companyTypeList ,isPasswordShown,checkmobileNumberParam,loadingMsg} = this.state;
 		const {
 			currency_list,
 			country_list,
@@ -793,7 +799,7 @@ class Profile extends React.Component {
 			company_state_list,
 		} = this.props;
 		return (
-			loading ==true? <Loader/> :
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 <div>
 			<div className="profile-screen">
 				<div className="animated fadeIn">
@@ -811,6 +817,7 @@ class Profile extends React.Component {
 									</Row>
 								</CardHeader>
 								<CardBody>
+									
 									<Nav tabs>
 										<NavItem>
 											<NavLink

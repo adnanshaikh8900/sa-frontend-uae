@@ -33,7 +33,7 @@ import { ProductModal } from '../../../customer_invoice/sections';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
-import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
+import { optionFactory,selectCurrencyFactory, selectOptionsFactory } from 'utils';
 
 import './style.scss';
 import moment from 'moment';
@@ -907,7 +907,7 @@ class CreateSupplierInvoice extends React.Component {
 						styles={customStyles}
 						options={
 							product_list
-								? selectOptionsFactory.renderOptions(
+								? optionFactory.renderOptions(
 										'name',
 										'id',
 										product_list,
@@ -921,6 +921,8 @@ class CreateSupplierInvoice extends React.Component {
 							if (e && e.label !== 'Select Product') {
 								this.selectItem(e.value, row, 'productId', form, field, props);
 								this.prductValue(e.value, row, 'productId', form, field, props);
+								if(this.checkedRow()==false)
+								this.addRow();
 							} else {
 								form.setFieldValue(
 									`lineItemsString.${idx}.productId`,
@@ -1419,9 +1421,9 @@ class CreateSupplierInvoice extends React.Component {
 		});
 		
 		this.setState({
-			customer_currency: data.currencyCode,
-			customer_currency_des: result[0]  && result[0].currencyName ? result[0].currencyName:"AED",
-			customer_currency_symbol:data.currencyIso ?data.currencyIso:"AED",
+			supplier_currency: data.currencyCode,
+			supplier_currency_des: result[0]  && result[0].currencyName ? result[0].currencyName:"AED",
+			supplier_currency_symbol:data.currencyIso ?data.currencyIso:"AED",
 			customer_taxTreatment_des:data.taxTreatment?data.taxTreatment:""
 		});
 
@@ -1470,11 +1472,15 @@ class CreateSupplierInvoice extends React.Component {
 	};	
 	getCurrentProduct = () => {
 		this.props.supplierInvoiceActions.getProductList().then((res) => {
+			let newData=[]
+			const data = this.state.data;
+			newData = data.filter((obj) => obj.productId !== "");
+			// props.setFieldValue('lineItemsString', newData, true);
+			// this.updateAmount(newData, props);
 			this.setState(
 				{
-					data: [
-						{
-							id: 0,
+					data: newData.concat({
+						id: this.state.idCount + 1,
 							description: res.data[0].description,
 							quantity: 1,
 							unitPrice: res.data[0].unitPrice,
@@ -1484,8 +1490,11 @@ class CreateSupplierInvoice extends React.Component {
 							productId: res.data[0].id,
 							transactionCategoryId: res.data[0].transactionCategoryId,
 							transactionCategoryLabel: res.data[0].transactionCategoryLabel,
-						},
-					],
+							discount:0,
+							vatAmount:res.data[0].vatAmount ?res.data[0].vatAmount:0,
+							discountType: res.data[0].discountType,
+						}),
+					idCount: this.state.idCount + 1,
 				},
 				() => {
 					const values = {
@@ -1907,7 +1916,8 @@ class CreateSupplierInvoice extends React.Component {
 																	color="primary"
 																	className="btn-square"
 																	onClick={(e, props) => {
-																		this.props.history.push(`/admin/master/contact/create`,{gotoParentURL:"/admin/expense/supplier-invoice/create"})
+																		// this.props.history.push(`/admin/master/contact/create`,{gotoParentURL:"/admin/expense/supplier-invoice/create"})
+																		this.openSupplierModal()
 																	}}
 																>
 																	<i className="fa fa-plus"></i> {strings.AddASupplier}
@@ -2332,7 +2342,8 @@ class CreateSupplierInvoice extends React.Component {
 																	color="primary"
 																	className= "btn-square "
 																	onClick={(e, props) => {
-																		this.props.history.push(`/admin/master/product/create`,{gotoParentURL:"/admin/expense/supplier-invoice/create"})
+																		// this.props.history.push(`/admin/master/product/create`,{gotoParentURL:"/admin/expense/supplier-invoice/create"})
+																		this.openProductModal()
 																		}}
 																>
 																	<i className="fa fa-plus"></i> {strings.Addproduct} 
@@ -2787,6 +2798,17 @@ class CreateSupplierInvoice extends React.Component {
 																		className="btn-square mr-3"
 																		disabled={this.state.disabled}
 																		onClick={() => {
+																			if(this.state.data.length === 1)
+																			{
+																			console.log(props.errors,"ERRORs")
+																			}
+																			else
+																			{ let newData=[]
+																			const data = this.state.data;
+																			newData = data.filter((obj) => obj.productId !== "");
+																			props.setFieldValue('lineItemsString', newData, true);
+																			this.updateAmount(newData, props);
+																			}
 																			this.setState(
 																				{ createMore: false },
 																				() => {
@@ -2806,6 +2828,17 @@ class CreateSupplierInvoice extends React.Component {
 																		className="btn-square mr-3"
 																		disabled={this.state.disabled}
 																		onClick={() => {
+																			if(this.state.data.length === 1)
+																			{
+																			console.log(props.errors,"ERRORs")
+																			}
+																			else
+																			{ let newData=[]
+																			const data = this.state.data;
+																			newData = data.filter((obj) => obj.productId !== "");
+																			props.setFieldValue('lineItemsString', newData, true);
+																			this.updateAmount(newData, props);
+																			}
 																			this.setState(
 																				{ createMore: true },
 																				() => {
@@ -2844,12 +2877,18 @@ class CreateSupplierInvoice extends React.Component {
 						</Col>
 					</Row>
 				</div>
+				
 				<SupplierModal
 					openSupplierModal={this.state.openSupplierModal}
 					closeSupplierModal={(e) => {
 						this.closeSupplierModal(e);
 					}}
-					getCurrentUser={(e) => this.getCurrentUser(e)}
+					getCurrentUser={(e) =>
+						{		
+							this.props.supplierInvoiceActions.getSupplierList(this.state.contactType);
+							this.getCurrentUser(e);
+						}
+						}
 					createSupplier={this.props.supplierInvoiceActions.createSupplier}
 					getStateList={this.props.supplierInvoiceActions.getStateList}
 					currency_list={this.props.currency_convert_list}
@@ -2860,7 +2899,10 @@ class CreateSupplierInvoice extends React.Component {
 					closeProductModal={(e) => {
 						this.closeProductModal(e);
 					}}
-					getCurrentProduct={(e) => this.getCurrentProduct(e)}
+					getCurrentProduct={(e) =>{ 
+						this.props.supplierInvoiceActions.getProductList();
+						this.getCurrentProduct(e);
+					}}
 					createProduct={this.props.ProductActions.createAndSaveProduct}
 					vat_list={this.props.vat_list}
 					product_category_list={this.props.product_category_list}

@@ -270,6 +270,9 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 									<th className="center" style={{ padding: '0.5rem' }}>
 										{strings.Quantity }
 									</th>
+									<th className="center" style={{ padding: '0.5rem' }}>
+										{strings.UnitType}
+									</th>
 					                <th style={{ padding: '0.5rem', textAlign: 'right' }}>
 										{strings.UnitCost }
 									</th>
@@ -292,6 +295,7 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 												<td>{item.productName}</td>
 												<td>{item.description}</td>
 												<td>{item.quantity}</td>
+												<td>{item.unitType}</td>
 												<td style={{ textAlign: 'right', width: '20%' }}>
 													{/* <Currency
 														value={item.unitPrice}

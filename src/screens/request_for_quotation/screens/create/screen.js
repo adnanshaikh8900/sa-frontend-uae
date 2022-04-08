@@ -1176,6 +1176,7 @@ class CreateRequestForQuotation extends React.Component {
 		});
 
 		this.formRef.current.setFieldValue('contactId', option, true);
+		this.formRef.current.setFieldValue('supplierId', option, true);
 
 		if(result[0] && result[0].currencyCode)
 		this.formRef.current.setFieldValue('currency',result[0].currencyCode, true);

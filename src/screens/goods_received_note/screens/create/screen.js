@@ -131,7 +131,9 @@ class CreateGoodsReceivedNote extends React.Component {
 						subTotal: 0,
 						vatAmount:0,
 						productId: '',
-						isExciseTaxExclusive:''
+						isExciseTaxExclusive:'',
+						unitType:'',
+						unitTypeId:''
 				},
 			],
 			idCount: 0,
@@ -611,6 +613,8 @@ this.state.data.map((obj, index) => {
 					vatCategoryId: '',
 					subTotal: 0,
 					productId: '',
+					unitType:'',
+					unitTypeId:''
 				}),
 				idCount: this.state.idCount + 1,
 			},
@@ -760,6 +764,8 @@ this.state.data.map((obj, index) => {
 				obj['description'] = result.description;
 				obj['exciseTaxId'] = result.exciseTaxId;
 				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive;
+				obj['unitType']=result.unitType;
+				obj['unitTypeId']=result.unitTypeId;
 				
 				idx = index;
 			}
@@ -1324,6 +1330,11 @@ this.state.data.map((obj, index) => {
 			this.formRef.current.setFieldValue(
 				`lineItemsString.${0}.unitPrice`,
 				res.data[0].unitPrice,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.unitType`,
+				res.data[0].unitType,
 				true,
 			);
 			this.formRef.current.setFieldValue(
@@ -2113,6 +2124,18 @@ console.log(this.state.data)
 																	>
 																		{strings.RECEIVEDQUANTITY}
 																	</TableHeaderColumn>
+																	<TableHeaderColumn
+																	width="3%"
+																	dataField="unitType"
+																 >	<i
+																 id="unitTooltip"
+																 className="fa fa-question-circle"
+															 /> <UncontrolledTooltip
+																 placement="right"
+																 target="unitTooltip"
+															 >
+																Units / Measurements</UncontrolledTooltip>
+																</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="quantity"
 																		width="10%"

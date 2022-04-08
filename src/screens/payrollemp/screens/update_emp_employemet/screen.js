@@ -62,6 +62,7 @@ class UpdateEmployeeEmployment extends React.Component {
             selectedStatus: '',
             gender: '',
             bloodGroup: '',
+            loadingMsg:"Loading...",
             current_employee_id: null
         }
         this.regExAlpha = /^[a-zA-Z ]+$/;
@@ -194,6 +195,7 @@ class UpdateEmployeeEmployment extends React.Component {
         formData.append('passportExpiryDate', passportExpiryDate ? moment(passportExpiryDate).format('DD-MM-YYYY') : '');
         formData.append('visaExpiryDate', visaExpiryDate ? moment(visaExpiryDate).format('DD-MM-YYYY') : '');
     
+        this.setState({ loading:true, loadingMsg:"Updating Employee ..."});
         this.props.detailEmployeeEmployementAction.updateEmployment(formData).then((res) => {
             if (res.status === 200) {
                 this.props.commonActions.tostifyAlert(
@@ -202,6 +204,7 @@ class UpdateEmployeeEmployment extends React.Component {
                      )
                 // this.props.history.push('/admin/payroll/employee')
                 this.props.history.push('/admin/master/employee')
+                this.setState({ loading:false,});
             }
         }).catch((err) => {
             this.props.commonActions.tostifyAlert(
@@ -237,11 +240,11 @@ class UpdateEmployeeEmployment extends React.Component {
 };
     render() {
         strings.setLanguage(this.state.language);
-        const { loading, initValue, dialog,exist } = this.state
+        const { loading, initValue, dialog,exist,loadingMsg } = this.state
         const { salary_role_dropdown } = this.props
 
         return (
-            loading ==true? <Loader/> :
+            loading ==true? <Loader loadingMsg={loadingMsg}/> :
 <div>
             <div className="detail-vat-code-screen">
                 <div className="animated fadeIn">

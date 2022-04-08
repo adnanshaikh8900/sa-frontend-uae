@@ -17,7 +17,7 @@ import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { EmployeeModal } from '../../sections';
-import { ImageUploader } from 'components';
+import { ImageUploader,Loader } from 'components';
 
 import * as UserActions from '../../actions';
 import * as UserCreateActions from './actions';
@@ -97,6 +97,7 @@ class CreateUser extends React.Component {
 			selectedStatus: true,
 			useractive: true,
 			openEmployeeModal: false,
+			loadingMsg:"Loading..."
 
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
@@ -199,6 +200,7 @@ class CreateUser extends React.Component {
 		formData.append('employeeId',employeeId ? employeeId.value : '');
 		formData.append('url',window.location.origin);
 
+		{this.setState({ loading:true, loadingMsg:"Creating User"})} 
 		this.props.userCreateActions
 			.createUser(formData)
 			.then((res) => {
@@ -215,6 +217,7 @@ class CreateUser extends React.Component {
 						resetForm();
 					} else {
 						this.props.history.push('/admin/settings/user');
+						{this.setState({ loading:false,})}
 					}
 				}
 			})
@@ -271,7 +274,7 @@ class CreateUser extends React.Component {
 		strings.setLanguage(this.state.language);
 		const { role_list, employee_list,salary_role_dropdown,designation_dropdown } = this.props;
 		const { timezone } = this.state;
-		const { isPasswordShown } = this.state;
+		const { isPasswordShown,loading,loadingMsg } = this.state;
 
 		let active_roles_list=[];
 		role_list && role_list.length!==0 && role_list.map(row => {	
@@ -285,6 +288,8 @@ class CreateUser extends React.Component {
 		// })
 
 		return (
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
+			<div>
 			<div className="create-user-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -301,6 +306,13 @@ class CreateUser extends React.Component {
 									</Row>
 								</CardHeader>
 								<CardBody>
+								{loading ? (
+														<Row>
+															<Col lg={12}>
+																<Loader />
+															</Col>
+														</Row>
+													) : (
 									<Row>
 										<Col lg={12}>
 											<Formik
@@ -1063,6 +1075,7 @@ class CreateUser extends React.Component {
 											</Formik>
 										</Col>
 									</Row>
+													)}
 								</CardBody>
 							</Card>
 						</Col>
@@ -1081,6 +1094,7 @@ class CreateUser extends React.Component {
 				// country_list={this.props.country_list}
 				// getStateList={this.props.customerInvoiceActions.getStateList}
 				/>
+			</div>
 			</div>
 		);
 	}

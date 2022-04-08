@@ -76,6 +76,7 @@ class UpdateSalaryComponent extends React.Component {
             openSalaryComponentFixed: false,
             openSalaryComponentVariable: false,
             openSalaryComponentDeduction: false,
+            loadingMsg:"Loading...."
         }
         
         this.regEx = /^[0-9\d]+$/;
@@ -192,6 +193,7 @@ handleChange = (evt) => {
         formData.append('grossSalary', CTC != null ? CTC : '')
 
         formData.append('salaryComponentString', JSON.stringify(this.state.list));
+        this.setState({ loading:true, loadingMsg:"Updating Salary Details ..."});
         this.props.detailSalaryComponentAction.updateEmployeeBank(formData).then((res) => {
             if (res.status === 200) {
                 this.props.commonActions.tostifyAlert(
@@ -199,6 +201,7 @@ handleChange = (evt) => {
                     'Employee Updated Successfully.'
                 )
                 this.props.history.push('/admin/master/employee')
+                this.setState({ loading:false,});
             }
         }).catch((err) => {
             this.props.commonActions.tostifyAlert(
@@ -477,13 +480,13 @@ handleChange = (evt) => {
 
     render() {
         strings.setLanguage(this.state.language);
-        const { loading, initValue, dialog } = this.state
+        const { loading,loadingMsg, initValue, dialog } = this.state
         const { designation_dropdown, country_list, state_list, employee_list_dropdown } = this.props
         console.log(this.state.CTC, "Fixed")
         console.log(this.state.Fixed_Allowance, "Fixed_Allowance")
      
         return (
-            loading ==true? <Loader/> :
+            loading ==true? <Loader loadingMsg={loadingMsg}/> :
 <div>
             <div className="detail-vat-code-screen">
                 <div className="animated fadeIn">

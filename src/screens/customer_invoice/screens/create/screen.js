@@ -26,7 +26,7 @@ import * as ProductActions from '../../../product/actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 import { CustomerModal, ProductModal,InvoiceNumberModel} from '../../sections';
 import { MultiSupplierProductModal } from '../../sections';
-
+import {  ImageUploader, Loader } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
@@ -182,7 +182,8 @@ class CreateCustomerInvoice extends React.Component {
 			param:false,
 			date:'',
 			contactId:'',
-			isQuotationSelected:false
+			isQuotationSelected:false,
+			loadingMsg:"Loading..."
 		};
 
 		this.formRef = React.createRef();
@@ -1504,6 +1505,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
 
+		this.setState({ loading:true, loadingMsg:"Creating Invoice..."});
 		this.props.customerInvoiceCreateActions
 			.createInvoice(formData)
 			.then((res) => {
@@ -1555,10 +1557,12 @@ if(changeShippingAddress && changeShippingAddress==true)
 					);
 				} else {
 					this.props.history.push('/admin/income/customer-invoice');
+					this.setState({ loading:false,});
 				}
 			})
 			.catch((err) => {
 				this.setState({ disabled: false });
+
 				this.props.commonActions.tostifyAlert(
 					'error',
 					err && err.data ? err.data.message : 'Invoice Created Unsuccessfully',
@@ -1815,6 +1819,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 	};
 	render() {
 		strings.setLanguage(this.state.language);
+		const { loading, loadingMsg } = this.state
 		const { data, discountOptions, initValue, exist, param,prefix ,tax_treatment_list,state_list_for_shipping} = this.state;
 		const {
 			customer_list,
@@ -1831,6 +1836,8 @@ if(changeShippingAddress && changeShippingAddress==true)
 		})
 
 		return (
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
+			<div>
 			<div className="create-customer-invoice-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -1851,6 +1858,13 @@ if(changeShippingAddress && changeShippingAddress==true)
 									</Row>
 								</CardHeader>
 								<CardBody>
+								{loading ? (
+										<Row>
+											<Col lg={12}>
+												<Loader />
+											</Col>
+										</Row>
+									) : (
 									<Row>
 										<Col lg={12}>
 											<Formik
@@ -3459,6 +3473,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 											</Formik>
 										</Col>
 									</Row>
+									)}
 								</CardBody>
 							</Card>
 						</Col>
@@ -3503,6 +3518,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 					}}
 					inventory_list={this.state.inventoryList}
 				/>}			
+			</div>
 			</div>
 		);
 	}

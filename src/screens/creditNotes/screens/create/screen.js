@@ -23,6 +23,7 @@ import * as CreditNotesCreateActions from './actions';
 import * as CreditNotesActions from '../../actions';
 import * as ProductActions from '../../../product/actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
+import {  ImageUploader, Loader } from 'components';
 import { CustomerModal, ProductModal,InvoiceNumberModel} from '../../sections';
 import { MultiSupplierProductModal } from '../../sections';
 
@@ -176,7 +177,8 @@ class CreateCreditNote extends React.Component {
 			invoiceSelected:false,
 			isCreatedWIWP:false,
 			quantityExceeded:'',
-			isCreatedWithoutInvoice:false
+			isCreatedWithoutInvoice:false,
+			loadingMsg:"Loading"
 		};
 
 		this.formRef = React.createRef();
@@ -1294,7 +1296,8 @@ if (invoiceNumber && invoiceNumber.value) {
 		if (this.uploadFile && this.uploadFile.files && this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
-	
+
+		this.setState({ loading:true, loadingMsg:"Creating Credit Note..."});
 		this.props.creditNotesCreateActions
 			.createCreditNote(formData)
 			.then((res) => {
@@ -1345,6 +1348,7 @@ if (invoiceNumber && invoiceNumber.value) {
 					);
 				} else {
 					this.props.history.push('/admin/income/credit-notes');
+					this.setState({ loading:false,});
 				}
 			})
 			.catch((err) => {
@@ -1653,6 +1657,7 @@ if (invoiceNumber && invoiceNumber.value) {
 	
 	render() {
 		strings.setLanguage(this.state.language);
+		const { loading, loadingMsg } = this.state
 		const { data, discountOptions, initValue, exist, prefix } = this.state;
 		const {
 			customer_list,
@@ -1671,6 +1676,8 @@ if (invoiceNumber && invoiceNumber.value) {
 		})
 
 		return (
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
+			<div>
 			<div className="create-customer-invoice-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -1691,6 +1698,13 @@ if (invoiceNumber && invoiceNumber.value) {
 									</Row>
 								</CardHeader>
 								<CardBody>
+								{loading ? (
+										<Row>
+											<Col lg={12}>
+												<Loader />
+											</Col>
+										</Row>
+									) : (
 									<Row>
 										<Col lg={12}>
 											<Formik
@@ -3081,6 +3095,7 @@ min="0"
 											</Formik>
 										</Col>
 									</Row>
+									)}
 								</CardBody>
 							</Card>
 						</Col>
@@ -3128,6 +3143,7 @@ min="0"
 						updatePrefix={this.props.creditNotesActions.updateInvoicePrefix}
 					
 				/> */}
+			</div>
 			</div>
 		);
 	}

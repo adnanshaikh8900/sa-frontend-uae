@@ -14,6 +14,7 @@ import {
 	Label,
 } from 'reactstrap';
 import Select from 'react-select';
+import { ImageUploader, Loader } from 'components';
 import { upperFirst } from 'lodash-es';
 import { selectOptionsFactory, selectCurrencyFactory } from 'utils';
 
@@ -61,7 +62,8 @@ class CreateContact extends React.Component {
 		super(props);
 		this.state = {
 			language: window['localStorage'].getItem('language'),
-			loading: true,
+			loading: false,
+			
 			initValue: {
 				billingEmail: '',
 				city: '',
@@ -99,6 +101,7 @@ class CreateContact extends React.Component {
 				shippingCity:'',
 				shippingFax:'',
 				taxTreatmentId:'',
+			
 
 
 			},
@@ -109,6 +112,7 @@ class CreateContact extends React.Component {
 			isActive: true,
 			isRegisteredForVat: false,
 			isSame: false,
+			//loadingMsg:"Loading...",
 			// billingAddress: {
 			// 	billingcountryId: '',
 			// 	billingStateProvince: '',
@@ -170,6 +174,8 @@ class CreateContact extends React.Component {
 							: '',
 					},
 				},
+				
+				
 			});
 			// this.formRef.current.setFieldValue(
 			// 	'currencyCode',
@@ -215,14 +221,16 @@ class CreateContact extends React.Component {
 		return temp;
 	};
 	handleSubmit = (data, resetForm) => {
+		this.setState({ loading:true, loadingMsg:"Creating Contact..."});
 		this.setState({ disabled: true });
 		const postData = this.getData(data);
-
+	
 		this.props.createContactActions
 			.createContact(postData)
 			.then((res) => {
 				if (res.status === 200) {
-					this.setState({ disabled: false });
+				this.setState({ disabled: false });
+			
 					this.props.commonActions.tostifyAlert(
 						'success',
 						"Contact Created Successfully"
@@ -245,6 +253,7 @@ class CreateContact extends React.Component {
 						 }
 						else
 						    this.props.history.push('/admin/master/contact');
+							this.setState({ loading:false,});
 
 					}
 				}
@@ -276,8 +285,12 @@ class CreateContact extends React.Component {
 			contact_type_list,
 			state_list,
 		} = this.props;
-		const { initValue, checkmobileNumberParam, taxTreatmentList, isSame ,state_list_for_shipping} = this.state;
+		const { initValue, checkmobileNumberParam, taxTreatmentList, isSame ,state_list_for_shipping } = this.state;
+		const {loading, loadingMsg}=this.state;
+
 		return (
+			 loading ==true? <Loader loadingMsg={loadingMsg}/> :
+			<div>
 			<div className="create-contact-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -294,6 +307,13 @@ class CreateContact extends React.Component {
 									</Row>
 								</CardHeader>
 								<CardBody>
+								{loading ? (
+										<Row>
+											<Col lg={12}>
+												<Loader />
+											</Col>
+										</Row>
+									) : (
 									<Row>
 										<Col lg={12}>
 											<Formik
@@ -1859,11 +1879,13 @@ class CreateContact extends React.Component {
 											</Formik>
 										</Col>
 									</Row>
+									)}
 								</CardBody>
 							</Card>
 						</Col>
 					</Row>
 				</div>
+			</div>
 			</div>
 		);
 	}

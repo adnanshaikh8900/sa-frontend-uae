@@ -31,7 +31,7 @@ import * as CustomerInvoiceActions from '../../../customer_invoice/actions';
 import { CustomerModal } from '../../../customer_invoice/sections/index';
 import { ProductModal } from '../../../customer_invoice/sections';
 import Switch from "react-switch";
-
+import {  ImageUploader, Loader } from 'components';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -177,6 +177,7 @@ class CreateQuotation extends React.Component {
 			purchaseCategory: [],	
 			exist: false,
 			param:false,
+			loadingMsg:"Loading"
 		};
 
 		this.formRef = React.createRef();
@@ -1184,6 +1185,7 @@ discountType = (row) =>
 		if (currency !== null && currency) {
 			formData.append('currencyCode', this.state.supplier_currency);
 		}
+		this.setState({ loading:true, loadingMsg:"Creating Quotation..."});
 		this.props.quotationCreateAction
 			.createQuotation(formData)
 			.then((res) => {
@@ -1234,6 +1236,7 @@ discountType = (row) =>
 					);
 				} else {
 					this.props.history.push('/admin/income/quotation');
+					this.setState({ loading:false,});
 				}
 			})
 			.catch((err) => {
@@ -1496,7 +1499,7 @@ discountType = (row) =>
 
 	render() {
 		strings.setLanguage(this.state.language);
-
+		const { loading, loadingMsg } = this.state
 		const { data, discountOptions, initValue, prefix,param} = this.state;
 
 		const {
@@ -1515,6 +1518,8 @@ discountType = (row) =>
 
 		
 		return (
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
+			<div>
 			<div className="create-supplier-invoice-screen">
 				<div className=" fadeIn">
 					<Row>
@@ -1535,6 +1540,13 @@ discountType = (row) =>
 									</Row>
 								</CardHeader>
 								<CardBody>
+								{loading ? (
+										<Row>
+											<Col lg={12}>
+												<Loader />
+											</Col>
+										</Row>
+									) : (
 									<Row>
 										<Col lg={12}>
 											<Formik
@@ -2396,6 +2408,7 @@ discountType = (row) =>
 											</Formik>
 										</Col>
 									</Row>
+									)}
 								</CardBody>
 							</Card>
 						</Col>
@@ -2442,6 +2455,7 @@ discountType = (row) =>
 					updatePrefix={this.props.customerInvoiceActions.updateInvoicePrefix}
 					
 				/> */}
+			</div>
 			</div>
 		);
 	}

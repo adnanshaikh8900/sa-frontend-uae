@@ -128,6 +128,7 @@ class DetailCustomerInvoice extends React.Component {
 			shippingPostZipCode:'',
 			shippingTelephone:'',
 			shippingFax:'',
+			loadingMsg:"Loading",
 		datesChanged : false	};
 
 		// this.options = {
@@ -1376,6 +1377,7 @@ class DetailCustomerInvoice extends React.Component {
 		if (this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
+		this.setState({ loading:true, loadingMsg:"Updating Invoice..."});
 		this.props.customerInvoiceDetailActions
 			.updateInvoice(formData)
 			.then((res) => {
@@ -1385,6 +1387,7 @@ class DetailCustomerInvoice extends React.Component {
 					res.data ? res.data.message : 'Invoice Updated Successfully'
 				);
 				this.props.history.push('/admin/income/customer-invoice');
+				this.setState({ loading:false,});
 			})
 			.catch((err) => {
 				this.setState({ disabled: false });
@@ -1527,6 +1530,7 @@ class DetailCustomerInvoice extends React.Component {
 	removeInvoice = () => {
 		this.setState({ disabled1: true });
 		const { current_customer_id } = this.state;
+		this.setState({ loading:true, loadingMsg:"Deleting Invoice..."});
 		this.props.customerInvoiceDetailActions
 			.deleteInvoice(current_customer_id)
 			.then((res) => {
@@ -1536,6 +1540,7 @@ class DetailCustomerInvoice extends React.Component {
 						res.data ? res.data.message : 'Invoice Deleted Successfully'
 					);
 					this.props.history.push('/admin/income/customer-invoice');
+					this.setState({ loading:false,});
 				}
 			})
 			.catch((err) => {
@@ -1616,15 +1621,16 @@ class DetailCustomerInvoice extends React.Component {
 		const { project_list, currency_list,currency_convert_list, customer_list,universal_currency_list,country_list,} = this.props;
 
 		let tmpCustomer_list = []
-
+		const {  loadingMsg } = this.state
 		customer_list.map(item => {
 			let obj = {label: item.label.contactName, value: item.value}
 			tmpCustomer_list.push(obj)
 		})
 
 		return (
-			loading ==true? <Loader/> :
-<div><div className="detail-customer-invoice-screen">
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
+<div>
+	<div className="detail-customer-invoice-screen">
 				<div className="animated fadeIn">
 					<Row>
 						<Col lg={12} className="mx-auto">
@@ -1640,6 +1646,7 @@ class DetailCustomerInvoice extends React.Component {
 									</Row>
 								</CardHeader>
 								<CardBody>
+									
 									{dialog}
 									{loading ? (
 										<Loader />

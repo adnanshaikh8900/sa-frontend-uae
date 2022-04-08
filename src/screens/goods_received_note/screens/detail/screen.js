@@ -122,6 +122,7 @@ class DetailGoodsReceivedNote extends React.Component {
 			supplier_currency: '',
 			disabled1:false,
 			dateChanged: false,
+			loadingMsg:"Loading..."
 		};
 
 		// this.options = {
@@ -1063,6 +1064,7 @@ debugger
 		if (currency !== null && currency) {
 			formData.append('currencyCode', this.state.supplier_currency);
 		}
+		this.setState({ loading:true, loadingMsg:"Updating Goods Received Note..."});
 		this.props.goodsReceivedNoteDetailsAction
 			.updateGRN(formData)
 			.then((res) => {
@@ -1071,6 +1073,7 @@ debugger
 					res.data ? res.data.message : 'Goods Received Note Updated Successfully'
 				);
 				this.props.history.push('/admin/expense/goods-received-note');
+				this.setState({ loading:false,});
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
@@ -1102,6 +1105,7 @@ debugger
 	removerfq = () => {
 		this.setState({ disabled1: true });
 		const { current_grn_id } = this.state;
+		this.setState({ loading:true, loadingMsg:"Deleting Goods Received Note..."});
 		this.props.goodsReceivedNoteDetailsAction
 			.deletegrn(current_grn_id)
 			.then((res) => {
@@ -1111,6 +1115,7 @@ debugger
 						res.data ? res.data.message : 'Goods Received Note Deleted Successfully'
 					);
 					this.props.history.push('/admin/expense/goods-received-note');
+					this.setState({ loading:false,});
 				}
 			})
 			.catch((err) => {
@@ -1259,7 +1264,7 @@ debugger
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { data, discountOptions, initValue, loading, dialog } = this.state;
+		const { data, discountOptions, initValue, loading, dialog,loadingMsg } = this.state;
 
 		const { project_list, currency_list,currency_convert_list, supplier_list,universal_currency_list } = this.props;
 
@@ -1271,7 +1276,7 @@ debugger
 		})
 
 		return (
-			loading ==true? <Loader/> :
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 <div>
 			<div className="detail-supplier-invoice-screen">
 				<div className="animated fadeIn">

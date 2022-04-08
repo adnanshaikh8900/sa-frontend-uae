@@ -66,6 +66,7 @@ class CreateOpeningBalance extends React.Component {
 			loading: false,
 			createMore: false,
 			disabled: false,
+			loadingMsg:"Loading..."
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
@@ -100,7 +101,8 @@ class CreateOpeningBalance extends React.Component {
 			formData.append(`persistModelList[${0}].transactionCategoryId`, data.transactionCategoryId.value);
 		    formData.append(`persistModelList[${0}].effectiveDate`, moment(data.effectiveDate));
 			formData.append(`persistModelList[${0}].openingBalance`, data.openingBalance);
-	
+		
+			this.setState({ loading:true, loadingMsg:"Creating New Opening Balance..."});
 			this.props.createOpeningBalancesActions
 				.addOpeningBalance(formData)
 				.then((res) => {
@@ -117,6 +119,7 @@ class CreateOpeningBalance extends React.Component {
 							});
 						} else {
 							this.props.history.push('/admin/accountant/opening-balance');
+							this.setState({ loading:false,});
 						}
 					}
 				})
@@ -132,7 +135,7 @@ class CreateOpeningBalance extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { loading, initValue} = this.state;
+		const { loading, initValue,loadingMsg} = this.state;
 		
 		const{transaction_category_list} =this.props;
 		const customStyles = {
@@ -146,6 +149,8 @@ class CreateOpeningBalance extends React.Component {
 			}),
 		};
 		return (
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
+			<div>
 			<div className="vat-code-create-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -158,6 +163,13 @@ class CreateOpeningBalance extends React.Component {
 									</div>
 								</CardHeader>
 								<CardBody>
+								{loading ? (
+										<Row>
+											<Col lg={12}>
+												<Loader />
+											</Col>
+										</Row>
+									) : (
 									<Row>
 										<Col lg={10}>
 											<Formik
@@ -347,12 +359,14 @@ class CreateOpeningBalance extends React.Component {
 											</Formik>
 										</Col>
 									</Row>
+									)}
 								</CardBody>
 							</Card>
 						</Col>
 					</Row>
 					{loading ? <Loader></Loader> : ''}
 				</div>
+			</div>
 			</div>
 		);
 	}

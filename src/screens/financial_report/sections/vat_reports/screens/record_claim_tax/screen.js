@@ -84,6 +84,7 @@ class RecordTaxClaim extends React.Component {
 			fileName: '',
 			disabled: false,
 			deposit_list:[],
+			loadingMsg:"Loading..."
 		};
 		this.formRef = React.createRef();
 
@@ -161,6 +162,7 @@ class RecordTaxClaim extends React.Component {
 		if (this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
+		this.setState({ loading:true, loadingMsg:"Tax Claim Recording..."});
 		this.props.vatreportActions.recordVatPayment(formData)
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
@@ -168,6 +170,7 @@ class RecordTaxClaim extends React.Component {
 					res.data ? res.data.message : 'Tax Claim Recorded Successfully',
 				);
 				this.props.history.push('/admin/report/vatreports');
+				this.setState({ loading:false,});
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert( 
@@ -187,7 +190,7 @@ class RecordTaxClaim extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { initValue, loading, dialog ,headerValue,deposit_list} = this.state;
+		const { initValue, loading, dialog ,headerValue,deposit_list,loadingMsg} = this.state;
 		const { pay_mode, customer_list,  } = this.props;
 
 		let tmpcustomer_list = []
@@ -198,6 +201,8 @@ class RecordTaxClaim extends React.Component {
 		})
 
 		return (
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
+<div>
 			<div className="detail-customer-invoice-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -630,6 +635,7 @@ class RecordTaxClaim extends React.Component {
 					</Row>
 				</div>
 
+			</div>
 			</div>
 		);
 	}

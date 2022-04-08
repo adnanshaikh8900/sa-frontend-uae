@@ -66,6 +66,7 @@ class DetailProductCategory extends React.Component {
       current_product_category_id: null,
       disabled: false,
       disabled1:false,
+      loadingMsg:"Loading",
     }
     this.regExAlpha = /^[a-zA-Z ]+$/;
     this.regExBoth = /^[a-zA-Z0-9\s,'-/()]+$/;
@@ -112,6 +113,7 @@ class DetailProductCategory extends React.Component {
       productCategoryName: productCategoryName ? productCategoryName : '',
       productCategoryCode: productCategoryCode ? productCategoryCode : ''
     }
+    this.setState({ loading:true, loadingMsg:"Updating Product Category..."});
     this.props.detailProductCategoryAction.updateProductCategory(postData).then((res) => {
       if (res.status === 200) {
         this.setState({ disabled: false });
@@ -120,6 +122,7 @@ class DetailProductCategory extends React.Component {
            res.data ? res.data.message : 'Product Category Updated Successfully'
            )
         this.props.history.push('/admin/master/product-category')
+        this.setState({ loading:false,});
       }
     }).catch((err) => {
       this.props.commonActions.tostifyAlert(
@@ -149,6 +152,7 @@ class DetailProductCategory extends React.Component {
   removeProductCategory = () => {
     this.setState({ disabled1: true });
     const {current_product_category_id} = this.state
+    this.setState({ loading:true, loadingMsg:"Deleting Product Category..."});
     this.props.detailProductCategoryAction.deleteProductCategory(current_product_category_id).then((res) => {
       if (res.status === 200) {
         // this.success('Chart Account Deleted Successfully');
@@ -157,6 +161,7 @@ class DetailProductCategory extends React.Component {
            res.data ? res.data.message : 'Product Category Deleted Successfully'
            )
         this.props.history.push('/admin/master/product-category')
+        this.setState({ loading:false,});
       }
     }).catch((err) => {
       this.props.commonActions.tostifyAlert(
@@ -174,6 +179,7 @@ class DetailProductCategory extends React.Component {
 
   render() {
     strings.setLanguage(this.state.language);
+    const {  loadingMsg } = this.state
     const { loading, initValue,dialog, product_category_list} = this.state
     if (product_category_list) {
 			var ProductCategoryList = product_category_list.map((item) => {
@@ -181,7 +187,7 @@ class DetailProductCategory extends React.Component {
 			});
 		}
     return (
-      loading ==true? <Loader/> :
+      loading ==true? <Loader loadingMsg={loadingMsg}/> :
 <div>
       <div className="detail-vat-code-screen">
         <div className="animated fadeIn">

@@ -53,6 +53,7 @@ class DetailEmployee extends React.Component {
       initValue: {},
       current_employee_id: null,
       dialog: false,
+      loadingMsg:"Loading..."
     }
 
     this.regEx = /^[0-9\d]+$/;
@@ -103,12 +104,14 @@ class DetailEmployee extends React.Component {
     if(typeof postData.currencyCode === 'object') {
       postData.currencyCode = data.currencyCode.value
     }
+    this.setState({ loading:true, loadingMsg:"Updating Employee..."});
     this.props.employeeDetailActions.updateEmployee(postData).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert(
           'success',
            res.data ? res.data.message : 'Employee Updated Successfully')
         this.props.history.push('/admin/master/employee')
+        this.setState({ loading:false,});
       }
     }).catch((err) => {
       this.props.commonActions.tostifyAlert(
@@ -136,12 +139,14 @@ class DetailEmployee extends React.Component {
 
   removeEmployee = () => {
     const { current_employee_id } = this.state;
+    this.setState({ loading:true, loadingMsg:"Deleting Employee..."});
     this.props.employeeDetailActions.deleteEmployee(current_employee_id).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert(
           'success',
            res.data ? res.data.message : 'Employee Deleted Successfully !!')
         this.props.history.push('/admin/master/employee')
+        this.setState({ loading:false,});
       }
     }).catch((err) => {
       this.props.commonActions.tostifyAlert(
@@ -159,9 +164,9 @@ class DetailEmployee extends React.Component {
   render() {
 
     const { currency_list } = this.props
-    const { dialog, loading, initValue } = this.state
+    const { dialog, loading, initValue,loadingMsg } = this.state
     return (
-      loading ==true? <Loader/> :
+      loading ==true? <Loader loadingMsg={loadingMsg}/> :
 <div>
       <div className="detail-employee-screen">
         <div className="animated fadeIn">

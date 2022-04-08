@@ -109,6 +109,7 @@ class DetailContact extends React.Component {
 			checkmobileNumberParam:false,
 			selectedStatus: false,
 			isActive: false,
+			loadingMsg:"Loading",
 			// billingAddress: {
 			// 	billingcountryId: '',
 			// 	billingStateProvince: '',
@@ -118,6 +119,7 @@ class DetailContact extends React.Component {
 			// 	billingPhoneNumber: '',
 			// 	billingFax: '',
 			// },
+			
 		};
 		
 		this.regEx = /^[0-9\d]+$/;
@@ -403,18 +405,21 @@ class DetailContact extends React.Component {
 		let postData = this.getData(data);
 
 		postData = { ...postData, ...{ contactId: current_contact_id } };
-
+		this.setState({ loading:true, loadingMsg:"Updating Contact..."});
 		this.props.detailContactActions
 			.updateContact(postData)
 			.then((res) => {
 				if (res.status === 200) {
+				
 					this.setState({ disabled: false });
 					resetForm();
+					
 					this.props.commonActions.tostifyAlert(
 						'success',
 						res.data ? res.data.message : 'Contact Updated Successfully',
 					);
 					this.props.history.push('/admin/master/contact');
+					this.setState({ loading:false,});
 				}
 			})
 			.catch((err) => {
@@ -437,6 +442,7 @@ class DetailContact extends React.Component {
 	deleteContact = () => {
 	
 		const { current_contact_id } = this.state;
+
 		this.props.contactActions
 			.getInvoicesCountContact(current_contact_id)
 			.then((res) => {
@@ -471,6 +477,7 @@ class DetailContact extends React.Component {
 	removeContact = () => {
 		this.setState({ disabled1: true });
 		const { current_contact_id } = this.state;
+		this.setState({ loading:true, loadingMsg:"Deleting Contact..."});
 		this.props.detailContactActions
 			.deleteContact(current_contact_id)
 			.then((res) => {
@@ -481,6 +488,7 @@ class DetailContact extends React.Component {
 					);
 					
 					this.props.history.push('/admin/master/contact');
+					this.setState({ loading:false,});
 				}
 			})
 			.catch((err) => {
@@ -515,9 +523,10 @@ class DetailContact extends React.Component {
 			state_list,
 		} = this.props;
 		const { initValue, loading, dialog, checkmobileNumberParam , taxTreatmentList,isSame,state_list_for_shipping} = this.state;
+		const {  loadingMsg } = this.state
 		
 		return (
-			loading ==true? <Loader/> :
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 <div>
 			<div className="create-contact-screen">
 				<div className="animated fadeIn">
@@ -540,6 +549,9 @@ class DetailContact extends React.Component {
 										
 									</CardHeader>
 									<CardBody>
+									{loading ? (
+										<Loader />
+									) : (
 										<Row>
 											
 											<Col lg={12}>
@@ -2049,6 +2061,7 @@ class DetailContact extends React.Component {
 												</Formik>
 											</Col>
 										</Row>
+									)}
 									</CardBody>
 								</Card>
 							</Col>

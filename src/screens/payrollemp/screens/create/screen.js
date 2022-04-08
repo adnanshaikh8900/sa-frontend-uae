@@ -34,7 +34,7 @@ import {
 import DatePicker from 'react-datepicker'
 import { Formik } from 'formik';
 import * as Yup from "yup";
-import { ImageUploader } from 'components';
+import { ImageUploader ,Loader} from 'components';
 import {
     CommonActions
 } from 'services/global'
@@ -88,6 +88,7 @@ class CreateEmployeePayroll extends React.Component {
        
         this.state = {
             language: window['localStorage'].getItem('language'),
+            loading:false,
             Fixed: [
                 {
                     description: '',
@@ -211,6 +212,7 @@ class CreateEmployeePayroll extends React.Component {
             checkmobileNumberParam:false,
             checkmobileNumberParam1:false,
             checkmobileNumberParam2:false,
+            loadingMsg:"Loading..."
         }        
         this.formRef = React.createRef();       
         this.regEx = /^[0-9\d]+$/;
@@ -397,6 +399,7 @@ existForAccountNumber = (value) => {
         formData.append('grossSalary', CTC != null ? CTC : '')
 
         formData.append('salaryComponentString', JSON.stringify(this.state.list));
+        this.setState({ loading:true, loadingMsg:"Creating New Employee..."});
         this.props.createPayrollEmployeeActions
             .saveSalaryComponent(formData)
             .then((res) => {
@@ -408,6 +411,7 @@ existForAccountNumber = (value) => {
                     this.getSalaryComponentByEmployeeId();
                     // this.props.history.push('/admin/payroll/employee');
                     this.props.history.push('/admin/master/employee');
+                    this.setState({ loading:false,});
                 }
             }).catch((err) => {
 
@@ -475,6 +479,7 @@ existForAccountNumber = (value) => {
             swiftCode != null ? swiftCode : '',
         )
         if(this.state.selectedData.employeeBankDetailsId === null || this.state.selectedData.employeeBankDetailsId === ""){
+            this.setState({ loading:true, loadingMsg:"Creating Finacial Details..."});
             this.props.createPayrollEmployeeActions
             .saveEmployeeBankDetails(formData)
             .then((res) => {
@@ -486,6 +491,7 @@ existForAccountNumber = (value) => {
                     this.toggle(0, '4')
                     this.getSalaryComponentByEmployeeId();
                     this.renderActionForState(this.state.employeeid)
+                    this.setState({ loading:false,});
                 }
             }).catch((err) => {
 
@@ -495,6 +501,7 @@ existForAccountNumber = (value) => {
                      )
             })
         }else{
+            this.setState({ loading:true, loadingMsg:"Updating Employee..."});
             this.props.detailEmployeeBankAction.updateEmployeeBank(formData).then((res) => {
                 if (res.status === 200) {
                     this.props.commonActions.tostifyAlert(
@@ -504,6 +511,7 @@ existForAccountNumber = (value) => {
                     this.toggle(0, '4')
                     this.getSalaryComponentByEmployeeId();
                     this.renderActionForState(this.state.employeeid)
+                    this.setState({ loading:false,});
                 }
             }).catch((err) => {
                 this.props.commonActions.tostifyAlert('error',  err.data.message ? err.data.message :'Updated Unssccessfully')
@@ -569,6 +577,7 @@ existForAccountNumber = (value) => {
             grossSalary != null ? grossSalary : '',
         )
         if(this.state.selectedData.employmentId === null || this.state.selectedData.employmentId === "" ){
+            this.setState({ loading:true, loadingMsg:"Creating Employee Details..."});
         this.props.createPayrollEmployeeActions
             .saveEmployment(formData)
             .then((res) => {
@@ -579,6 +588,8 @@ existForAccountNumber = (value) => {
                         )
                     this.toggle(0, '3')
                     this.renderActionForState(this.state.employeeid)
+                    this.setState({ loading:false,});
+
                 }
             }).catch((err) => {
 
@@ -588,6 +599,7 @@ existForAccountNumber = (value) => {
                      )
             })
         }else{
+            this.setState({ loading:true, loadingMsg:"Updating Employement Details..."});
             this.props.detailEmployeeEmployementAction.updateEmployment(formData).then((res) => {
                 if (res.status === 200) {
                     this.props.commonActions.tostifyAlert(
@@ -596,6 +608,7 @@ existForAccountNumber = (value) => {
                          )
                     this.toggle(0, '3')
                     this.renderActionForState(this.state.employeeid)
+                    this.setState({ loading:false,});
                 }
             }).catch((err) => {
                 this.props.commonActions.tostifyAlert(
@@ -740,6 +753,7 @@ existForAccountNumber = (value) => {
             formData.append('employeeDesignationId', employeeDesignationId.value);
         }
         if(this.state.employeeid === null || this.state.employeeid === ""){ 
+            this.setState({ loading:true, loadingMsg:"Creating Employee Basic Details..."});
         this.props.createPayrollEmployeeActions
             .createEmployee(formData)
             .then((res) => {
@@ -754,7 +768,8 @@ existForAccountNumber = (value) => {
                     })
                     
                     if(this.props.location && this.props.location.state && this.props.location.state.goto && this.props.location.state.goto==="Expense"){                    
-                            this.props.history.push(`/admin/expense/expense/create`)                       
+                            this.props.history.push(`/admin/expense/expense/create`)  
+                            this.setState({ loading:false,});                     
                     }
                     this.toggle(0, '2')
                     this.renderActionForState(this.state.employeeid)
@@ -770,6 +785,7 @@ existForAccountNumber = (value) => {
             })
         }
         else{
+            this.setState({ loading:true, loadingMsg:"Updating Employee Details..."});
             this.props.detailEmployeePersonalAction.updateEmployeePersonal(formData).then((res) => {
                 if (res.status === 200) {
                     this.props.commonActions.tostifyAlert(
@@ -778,6 +794,8 @@ existForAccountNumber = (value) => {
                         )
                     this.toggle(0, '2')
                     this.renderActionForState(this.state.employeeid)
+                    this.setState({ loading:false,});   
+                    
                 }
             }).catch((err) => {
                 this.props.commonActions.tostifyAlert(
@@ -1099,9 +1117,11 @@ existForAccountNumber = (value) => {
     }
     render() {
         strings.setLanguage(this.state.language);
-        const {	exist,checkmobileNumberParam,checkmobileNumberParam1,checkmobileNumberParam2,existForAccountNumber,bankList}=this.state
+        const {	exist,checkmobileNumberParam,checkmobileNumberParam1,checkmobileNumberParam2,existForAccountNumber,bankList,loading,loadingMsg}=this.state
         const { salary_role_dropdown, designation_dropdown, country_list, state_list, employee_list_dropdown } = this.props
         return (
+            loading ==true? <Loader loadingMsg={loadingMsg}/> :
+         
             <div className="financial-report-screen">
                 <div className="animated fadeIn">
                     <Card>
@@ -1115,7 +1135,16 @@ existForAccountNumber = (value) => {
                                 </Col>
                             </Row>
                         </CardHeader>
+                        {loading ? (
+										<Row>
+											<Col lg={12}>
+												<Loader />
+											</Col>
+										</Row>
+									) : (
+                                    
                         <CardBody >
+                        
                             <Nav className="justify-content-center" tabs pills  >
                                 <NavItem>
                                     <NavLink
@@ -3476,9 +3505,11 @@ existForAccountNumber = (value) => {
                                 </TabPane>
 
                             </TabContent>
-
+                                   
                         </CardBody>
+                        )}
                     </Card>
+                    
                 </div>
                 <DesignationModal
                     openDesignationModal={this.state.openDesignationModal}

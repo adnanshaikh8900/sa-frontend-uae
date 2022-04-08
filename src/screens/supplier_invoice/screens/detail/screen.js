@@ -116,7 +116,8 @@ class DetailSupplierInvoice extends React.Component {
 			disabled: false,
 			disabled1:false,
 			date:'',
-			datesChanged : false
+			datesChanged : false,
+			loadingMsg:"Loading..."
 		};
 
 		// this.options = {
@@ -1375,6 +1376,7 @@ class DetailSupplierInvoice extends React.Component {
 		if (this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
+		this.setState({ loading:true, loadingMsg:"Updating Invoice..."});
 		this.props.supplierInvoiceDetailActions
 			.updateInvoice(formData)
 			.then((res) => {
@@ -1384,6 +1386,7 @@ class DetailSupplierInvoice extends React.Component {
 					res.data ? res.data.message : 'Invoice Updated Successfully.',
 				);
 				this.props.history.push('/admin/expense/supplier-invoice');
+				this.setState({ loading:false,});
 			})
 			.catch((err) => {
 				this.setState({ disabled: false });
@@ -1416,6 +1419,7 @@ class DetailSupplierInvoice extends React.Component {
 	removeInvoice = () => {
 		this.setState({ disabled1: true });
 		const { current_supplier_id } = this.state;
+		this.setState({ loading:true, loadingMsg:"Deleting Invoice..."});
 		this.props.supplierInvoiceDetailActions
 			.deleteInvoice(current_supplier_id)
 			.then((res) => {
@@ -1425,6 +1429,7 @@ class DetailSupplierInvoice extends React.Component {
 						res.data ? res.data.message : 'Invoice Deleted Successfully',
 					);
 					this.props.history.push('/admin/expense/supplier-invoice');
+					this.setState({ loading:false,});
 				}
 			})
 			.catch((err) => {
@@ -1638,7 +1643,7 @@ class DetailSupplierInvoice extends React.Component {
 	   }
 	render() {
 		strings.setLanguage(this.state.language);
-		const { data, discountOptions, initValue, loading, dialog,param } = this.state;
+		const { data, discountOptions, initValue, loading, dialog,param ,loadingMsg} = this.state;
 
 		const { project_list, currency_list,currency_convert_list, supplier_list,universal_currency_list } = this.props;
 
@@ -1650,7 +1655,7 @@ class DetailSupplierInvoice extends React.Component {
 		})
 
 		return (
-			loading ==true? <Loader/> :
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 <div>
 			<div className="detail-supplier-invoice-screen">
 				<div className="animated fadeIn">

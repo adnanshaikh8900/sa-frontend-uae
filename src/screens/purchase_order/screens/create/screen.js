@@ -28,6 +28,8 @@ import * as ProductActions from '../../../product/actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 
 import { SupplierModal } from '../../../supplier_invoice/sections/index';
+import {   Loader } from 'components';
+//import { SupplierModal } from '../../sections';
 import { ProductModal } from '../../../customer_invoice/sections';
 
 import 'react-datepicker/dist/react-datepicker.css';
@@ -172,6 +174,7 @@ class CreatePurchaseOrder extends React.Component {
 			purchaseCategory: [],
 			exist: false,
 			language: window['localStorage'].getItem('language'),	
+			loadingMsg:"Loading..."
 		};
 
 		this.formRef = React.createRef();
@@ -1255,6 +1258,7 @@ class CreatePurchaseOrder extends React.Component {
 		
 			formData.append('currencyCode', this.state.supplier_currency);
 		
+			this.setState({ loading:true, loadingMsg:"Creating Purchase Order..."});
 		this.props.purchaseOrderCreateAction
 			.createPO(formData)
 			.then((res) => {
@@ -1305,6 +1309,7 @@ class CreatePurchaseOrder extends React.Component {
 					);
 				} else {
 					this.props.history.push('/admin/expense/purchase-order');
+					this.setState({ loading:false,});
 				}
 			})
 			.catch((err) => {
@@ -1429,7 +1434,7 @@ class CreatePurchaseOrder extends React.Component {
 							unitTypeId:res.data[0].unitTypeId,
 							discount:0,
 							vatAmount:res.data[0].vatAmount ?res.data[0].vatAmount:0,
-							discountType: res.data[0].discountType,							
+							discountType: res.data[0].discountType,
 						}),
 						idCount: this.state.idCount + 1,
 				},
@@ -1602,7 +1607,7 @@ getrfqDetails = (e, row, props,form,field) => {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { data, discountOptions, initValue, prefix } = this.state;
+		const { data, discountOptions, initValue, prefix ,loading,loadingMsg} = this.state;
 
 		const {
 			currency_list,
@@ -1623,6 +1628,8 @@ getrfqDetails = (e, row, props,form,field) => {
 
 
 		return (
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
+			<div>
 			<div className="create-supplier-invoice-screen">
 				<div className=" fadeIn">
 					<Row>
@@ -1643,6 +1650,13 @@ getrfqDetails = (e, row, props,form,field) => {
 									</Row>
 								</CardHeader>
 								<CardBody>
+								{loading ? (
+										<Row>
+											<Col lg={12}>
+												<Loader />
+											</Col>
+										</Row>
+									) : (
 									<Row>
 										<Col lg={12}>
 											<Formik
@@ -2685,6 +2699,7 @@ getrfqDetails = (e, row, props,form,field) => {
 											</Formik>
 										</Col>
 									</Row>
+									)}
 								</CardBody>
 							</Card>
 						</Col>
@@ -2696,7 +2711,7 @@ getrfqDetails = (e, row, props,form,field) => {
 						this.closeSupplierModal(e);
 					}}
 					getCurrentUser={(e) =>
-						{		
+						{
 							this.props.purchaseOrderAction.getSupplierList(this.state.contactType);
 							this.getCurrentUser(e);
 						}
@@ -2711,7 +2726,7 @@ getrfqDetails = (e, row, props,form,field) => {
 					closeProductModal={(e) => {
 						this.closeProductModal(e);
 					}}
-					getCurrentProduct={(e) =>{ 
+					getCurrentProduct={(e) =>{
 						this.props.purchaseOrderAction.getProductList();
 						this.getCurrentProduct(e);
 					}}
@@ -2731,6 +2746,7 @@ getrfqDetails = (e, row, props,form,field) => {
 					updatePrefix={this.props.customerInvoiceActions.updateInvoicePrefix}
 					
 				/> */}
+			</div>
 			</div>
 		);
 	}

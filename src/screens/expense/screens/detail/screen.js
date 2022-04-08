@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Loader} from 'components';
 import { bindActionCreators } from 'redux';
 import {
 	Card,
@@ -23,7 +24,7 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 
-import { Loader, ConfirmDeleteModal } from 'components';
+import {  ConfirmDeleteModal } from 'components';
 import { ViewExpenseDetails } from './sections';
 
 import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
@@ -104,7 +105,9 @@ class DetailExpense extends React.Component {
 				{ label: 'Umm Al Quwain', value: '5' },
 				{ label: 'Ras Al-Khaimah', value: '6' },
 				{ label: 'Fujairah', value: '7' },
+				
 			],
+			loadingMsg:"Loading..."
 		};
 		this.placelist = [
 			{ label: 'Abu Dhabi', value: '1' },
@@ -328,7 +331,7 @@ class DetailExpense extends React.Component {
 			formData.append('taxTreatmentId', taxTreatmentId.value);
 		}
 		formData.append("isReverseChargeEnabled",this.state.isReverseChargeEnabled)
-
+		this.setState({ loading:true, loadingMsg:"Updating Expense..."});
 		this.props.expenseDetailActions
 			.updateExpense(formData)
 			.then((res) => {
@@ -340,6 +343,7 @@ class DetailExpense extends React.Component {
 						res.data ? res.data.message : 'Expense Updated Successfully'
 					);
 					this.props.history.push('/admin/expense/expense');
+					this.setState({ loading:false,});
 				}
 			})
 			.catch((err) => {
@@ -391,6 +395,7 @@ class DetailExpense extends React.Component {
 	removeExpense = () => {
 		this.setState({ disabled1: true });
 		const { current_expense_id } = this.state;
+		this.setState({ loading:true, loadingMsg:"Deleting Expense..."});
 		this.props.expenseDetailActions
 			.deleteExpense(current_expense_id)
 			.then((res) => {
@@ -401,6 +406,7 @@ class DetailExpense extends React.Component {
 						res.data ? res.data.message : 'Expense Deleted Successfully'
 					);
 					this.props.history.push('/admin/expense/expense');
+					this.setState({ loading:false,});
 				}
 			})
 			.catch((err) => {
@@ -711,10 +717,10 @@ class DetailExpense extends React.Component {
 			pay_to_list,
 			currency_convert_list,
 		} = this.props;
-		const { initValue, loading, dialog ,taxTreatmentList,placelist} = this.state;
+		const { initValue, dialog ,taxTreatmentList,placelist,loadingMsg,loading} = this.state;
 
 		return (
-			loading ==true? <Loader/> :
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 <div>
 			<div className="detail-expense-screen">
 				<div className="animated fadeIn">
@@ -743,6 +749,10 @@ class DetailExpense extends React.Component {
 										</Row>
 									</CardHeader>
 									<CardBody>
+									{dialog}
+									{loading ? (
+										<Loader />
+									) : (
 										<Row>
 											<Col lg={12}>
 												<Formik
@@ -1819,6 +1829,7 @@ class DetailExpense extends React.Component {
 												</Formik>
 											</Col>
 										</Row>
+									)}
 									</CardBody>
 								</Card>
 							</Col>

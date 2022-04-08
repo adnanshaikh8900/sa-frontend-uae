@@ -9,6 +9,7 @@ import { textAlign } from '@material-ui/system';
 import {data}  from '../../../../Language/index'
 import LocalizedStrings from 'react-localization';
 const { ToWords } = require('to-words');
+const ZERO=0.00
 const toWords = new ToWords({
 	localeCode: 'en-IN',
 	converterOptions: {
@@ -388,7 +389,8 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-												{POData.totalExciseAmount? POData.currencyIsoCode + " " +POData.totalExciseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0 } 
+												{/* {POData.totalExciseAmount? POData.currencyIsoCode + " " +(POData.totalExciseAmount-POData.totalExciseAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0 }  */}
+												{POData.totalExciseAmount? POData.currencyIsoCode + " " +POData.totalExciseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):POData.currencyIsoCode + " " +ZERO.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}  
 												</span>
 											</td>
 										</tr>

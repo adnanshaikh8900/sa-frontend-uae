@@ -934,9 +934,9 @@ class Import extends React.Component {
 										<NavItem>
 											<NavLink
 												active={this.state.activeTab[0] === '1'}
-												onClick={() => {
-													this.toggle(0, '1');
-												}}
+												// onClick={() => {
+												// 	this.toggle(0, '1');
+												// }}
 											>
 												<h4 style={{ margin: "4px 2px 4px 2px" }}>1</h4>
 											</NavLink>
@@ -944,9 +944,9 @@ class Import extends React.Component {
 										<NavItem>
 											<NavLink
 												active={this.state.activeTab[0] === '2'}
-												onClick={() => {
-													this.toggle(0, '2');
-												}}
+												// onClick={() => {
+												// 	this.toggle(0, '2');
+												// }}
 											>
 												<h4 style={{ margin: "4px 0px 4px 0px" }}>2</h4>
 											</NavLink>
@@ -954,9 +954,9 @@ class Import extends React.Component {
 										<NavItem>
 											<NavLink
 												active={this.state.activeTab[0] === '3'}
-												onClick={() => {
-													this.toggle(0, '3');
-												}}
+												// onClick={() => {
+												// 	this.toggle(0, '3');
+												// }}
 											>
 												<h4 style={{ margin: "4px 0px 4px 0px" }}>3</h4>
 											</NavLink>
@@ -964,9 +964,9 @@ class Import extends React.Component {
 										<NavItem>
 											<NavLink
 												active={this.state.activeTab[0] === '4'}
-												onClick={() => {
-													this.toggle(0, '4');
-												}}
+												// onClick={() => {
+												// 	this.toggle(0, '4');
+												// }}
 											>
 												<h4 style={{ margin: "4px 0px 4px 0px" }}>4</h4>
 											</NavLink>
@@ -1134,6 +1134,7 @@ class Import extends React.Component {
 																								this.versionlist(option.label)
 																								
 																							);
+																							document.getElementById('file').value = "";
 																							
 																					this.setState({name:option.label})
 																						} else {
@@ -1257,22 +1258,41 @@ class Import extends React.Component {
 																								{
 																											
 																											for (const file of e.target.files) {
-																												
-																												if( file.name &&
-																													file.name=='Chart Of Accounts.csv' ||
-																													file.name=='Contacts.csv'  ||
-																													file.name=='Credit Note.csv'  ||
-																													file.name=='Invoice.csv'  ||
-																													file.name=='Opening Balances.csv'  ||
-																													file.name=='Product.csv'
-																													)
+																										debugger
+																										if(props.values.productName=="zoho" )
+																											{	
+																												if(file.name &&
+                                                                                                                   ( file.name=='Chart Of Accounts.csv' ||
+                                                                                                                    file.name=='Contacts.csv'  ||
+                                                                                                                    file.name=='Item.csv'  ||
+                                                                                                                    file.name=='Vendors.csv'  ||
+                                                                                                                    file.name=='Bill.csv'  ||
+                                                                                                                    file.name=='Credit Note.csv'  ||
+                                                                                                                    file.name=='Invoice.csv'  ||
+                                                                                                                    file.name=='Opening Balances.csv'  ||
+                                                                                                                    file.name=='Product.csv')
+                                                                                                                    )
 																													validFiles.push(file)
-																												else
-																												{ 
-																													// inValidFilesString= inValidFilesString+" "+ file.name+" , " ;
+																													else
 																													inValidFiles.push(file.name)
-																													
 																												}
+                                                                                                                else
+																												if(props.values.productName=="simpleAccounts")
+																											     {	
+																													if(file.name &&
+																														(file.name=='Chart Of Accounts.csv' ||
+																														file.name=='Contacts.csv'  ||
+																														file.name=='Credit Note.csv'  ||
+																														file.name=='Invoice.csv'  ||
+																														file.name=='Opening Balances.csv'  ||
+																														file.name=='Product.csv')
+																														)
+																														validFiles.push(file)
+																														else
+																														inValidFiles.push(file.name)
+																												}
+																																																								
+																												
 																											}
 																											
 																										this.setState({	fileName: e.target.value.split('\\').pop(),

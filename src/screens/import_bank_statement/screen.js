@@ -26,7 +26,8 @@ import './style.scss';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
 import download from 'downloadjs';
-
+import * as XLSX from 'xlsx';
+import { result } from 'lodash';
 const mapStateToProps = (state) => {
 	return {
 		// bank_transaction_list: state.bank_account.bank_transaction_list
@@ -43,9 +44,11 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 let strings = new LocalizedStrings(data);
+const Papa = require("papaparse");
 class ImportBankStatement extends React.Component {
 	constructor(props) {
 		super(props);
+		this.updateData = this.updateData.bind(this);
 		this.state = {
 			language: window['localStorage'].getItem('language'),
 			templateList: [],
@@ -219,8 +222,9 @@ class ImportBankStatement extends React.Component {
 			this.props.history.push(
 				'/admin/banking/upload-statement/transaction',
 				{
-					bankAccountId: this.props.location
-						.state.bankAccountId,
+					bankAccountId: this.props.location.state.bankAccountId,
+					dataString:this.state.dataString,
+					selectedTemplate: this.state.selectedTemplate,
 				},
 			)
 	}
@@ -240,6 +244,19 @@ class ImportBankStatement extends React.Component {
 				);
 			});
 	};
+	handleFileUpload = e => {
+		debugger
+		const file = this.uploadFile.files[0];
+		const reader = new FileReader();
+		reader.onload = (evt) => {
+		  const bstr = evt.target.result;
+		  this.setState({dataString: bstr},()=> this.CreateNewTemplate())
+
+		};
+		reader.readAsBinaryString(file);
+		
+		
+		};
 	render() {
 		strings.setLanguage(this.state.language);
 		const { templateList, initValue,showMessage } = this.state;
@@ -343,14 +360,14 @@ class ImportBankStatement extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
-																<Col lg={2} className='text-center m-4'>
+																{/* <Col lg={2} className='text-center m-4'>
 																<h6><a className='myClickableThingy' style={{fontWeight:'400',color:'#20a8d8'}}
 																	onClick={() => {
 																		this.CreateNewTemplate();
 																		}}>	<i className="fas fa-plus mr-1" />{strings.CreateNewTemplate}</a></h6>
 																	
 																		 
-																</Col>
+																</Col> */}
 																<Col lg={4}></Col>
 															</Row>
 															<Row>
@@ -383,8 +400,12 @@ class ImportBankStatement extends React.Component {
 																					fileName: e.target.value
 																						.split('\\')
 																						.pop(),
+																					error: {
+																						...this.state.error,
+																						...{ file: '' },
+																					},
 																				});
-																				props.handleSubmit();
+																				this.handleFileUpload()
 																			}}
 																		/>
 																		</div>

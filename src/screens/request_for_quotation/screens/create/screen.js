@@ -24,14 +24,14 @@ import * as RequestForQuotationAction from '../../actions';
 import * as ProductActions from '../../../product/actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 
-import { SupplierModal } from '../../sections';
+import { SupplierModal } from '../../../supplier_invoice/sections/index';
 import { ProductModal } from '../../../customer_invoice/sections';
 
 
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
-import { selectCurrencyFactory,selectOptionsFactory } from 'utils';
+import { optionFactory,selectCurrencyFactory,selectOptionsFactory } from 'utils';
 
 import './style.scss';
 import Switch from "react-switch";
@@ -463,6 +463,8 @@ class CreateRequestForQuotation extends React.Component {
 	};
 
 	componentDidMount = () => {
+		if(this.props.location.state &&this.props.location.state.contactData)
+		this.getCurrentUser(this.props.location.state.contactData);
 		this.getInitialData();
 	};
 
@@ -741,7 +743,7 @@ class CreateRequestForQuotation extends React.Component {
 						styles={customStyles}
 						options={
 							product_list
-								? selectOptionsFactory.renderOptions(
+								? optionFactory.renderOptions(
 										'name',
 										'id',
 										product_list,
@@ -755,6 +757,8 @@ class CreateRequestForQuotation extends React.Component {
 							if (e && e.label !== 'Select Product') {
 								this.selectItem(e.value, row, 'productId', form, field, props);
 								this.prductValue(e.value, row, 'productId', form, field, props);
+								if(this.checkedRow()==false)
+								this.addRow();
 								// this.formRef.current.props.handleChange(field.name)(e.value)
 							} else {
 								form.setFieldValue(
@@ -1140,7 +1144,7 @@ class CreateRequestForQuotation extends React.Component {
 
 
 	getCurrentUser = (data) => {
-		
+
 		let option;
 		if (data.label || data.value) {
 			option = data;
@@ -1150,25 +1154,29 @@ class CreateRequestForQuotation extends React.Component {
 				value: data.id,
 			};
 		}
-		
+
 		let result = this.props.currency_convert_list.filter((obj) => {
 			return obj.currencyCode === data.currencyCode;
 		});
 		
-	    this.formRef.current.setFieldValue('currency', result[0].currencyCode, true);
-		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
-
 		this.setState({
 			supplier_currency: data.currencyCode,
-			supplier_currency_des: result[0].currencyName,
-		})
+			supplier_currency_des: result[0]  && result[0].currencyName ? result[0].currencyName:"AED",
+			supplier_currency_symbol:data.currencyIso ?data.currencyIso:"AED",
+			customer_taxTreatment_des:data.taxTreatment?data.taxTreatment:""
+		});
 
-		// this.setState({
-		//   selectedContact: option
-		// })
+		this.formRef.current.setFieldValue('contactId', option, true);
 		this.formRef.current.setFieldValue('supplierId', option, true);
-	};
 
+		if(result[0] && result[0].currencyCode)
+		this.formRef.current.setFieldValue('currency',result[0].currencyCode, true);
+
+		this.formRef.current.setFieldValue('taxTreatmentid', data.taxTreatmentId, true);
+
+		if( result[0] &&  result[0].exchangeRate)
+		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
+	};
 	closeSupplierModal = (res) => {
 		if (res) {
 			this.props.requestForQuotationAction.getSupplierList(this.state.contactType);
@@ -1202,11 +1210,15 @@ class CreateRequestForQuotation extends React.Component {
 	};	
 	getCurrentProduct = () => {
 		this.props.requestForQuotationAction.getProductList().then((res) => {
+			let newData=[]
+				const data = this.state.data;
+				newData = data.filter((obj) => obj.productId !== "");
+				// props.setFieldValue('lineItemsString', newData, true);
+				// this.updateAmount(newData, props);
 			this.setState(
 				{
-					data: [
-						{
-							id: 0,
+					data: newData.concat({
+						id: this.state.idCount + 1,
 							description: res.data[0].description,
 							quantity: 1,
 							unitPrice: res.data[0].unitPrice,
@@ -1214,10 +1226,11 @@ class CreateRequestForQuotation extends React.Component {
 							exciseTaxId: res.data[0].exciseTaxId,
 							subTotal: res.data[0].unitPrice,
 							productId: res.data[0].id,
-							transactionCategoryId: res.data[0].transactionCategoryId,
-							transactionCategoryLabel: res.data[0].transactionCategoryLabel,
-						},
-					],
+							discount:0,
+							vatAmount:res.data[0].vatAmount ?res.data[0].vatAmount:0,
+							discountType: res.data[0].discountType,
+						}),
+					idCount: this.state.idCount + 1,
 				},
 				() => {
 					const values = {
@@ -1552,7 +1565,20 @@ class CreateRequestForQuotation extends React.Component {
 																				  )
 																				: []
 																		}
-																		value={props.values.supplierId}
+																		value={this.state.quotationId ?
+
+																			tmpSupplier_list &&
+																		   selectOptionsFactory.renderOptions(
+																			   'label',
+																			   'value',
+																			   tmpSupplier_list,
+																			   strings.CustomerName,
+																		 ).find((option) => option.value == this.state.contactId)
+																		   
+																		 :
+																		 
+																		 props.values.contactId
+																		   }
 																		// onChange={(option) => {
 																		// 	if (option && option.value) {
 																		// 		props.handleChange('supplierId')(option);
@@ -1601,7 +1627,8 @@ class CreateRequestForQuotation extends React.Component {
                                                                 // style={{ marginBottom: '40px' }}
                                                                 onClick={() =>
 																	//  this.props.history.push(`/admin/payroll/employee/create`,{goto:"Expense"})
-																this.props.history.push(`/admin/master/contact/create`,{gotoParentURL:"/admin/expense/request-for-quotation/create"})
+																// this.props.history.push(`/admin/master/contact/create`,{gotoParentURL:"/admin/expense/request-for-quotation/create"})
+																this.openSupplierModal()
 																	}
 
                                                             >
@@ -1840,7 +1867,8 @@ class CreateRequestForQuotation extends React.Component {
 																	color="primary"
 																	className= "btn-square mr-3"
 																	onClick={(e, props) => {
-																		this.props.history.push(`/admin/master/product/create`,{gotoParentURL:"/admin/expense/request-for-quotation/create"})
+																		// this.props.history.push(`/admin/master/product/create`,{gotoParentURL:"/admin/expense/request-for-quotation/create"})
+																		this.openProductModal()
 																		}}
 																>
 																	<i className="fa fa-plus"></i> {strings.Addproduct} 
@@ -2182,6 +2210,17 @@ class CreateRequestForQuotation extends React.Component {
 																		className="btn-square mr-3"
 																		disabled={this.state.disabled}
 																		onClick={() => {
+																			if(this.state.data.length === 1)
+																			{
+																			console.log(props.errors,"ERRORs")
+																			}
+																			else
+																			{ let newData=[]
+																			const data = this.state.data;
+																			newData = data.filter((obj) => obj.productId !== "");
+																			props.setFieldValue('lineItemsString', newData, true);
+																			this.updateAmount(newData, props);
+																			}
 																			this.setState(
 																				{ createMore: false },
 																				() => {
@@ -2201,6 +2240,17 @@ class CreateRequestForQuotation extends React.Component {
 																		className="btn-square mr-3"
 																		disabled={this.state.disabled}
 																		onClick={() => {
+																			if(this.state.data.length === 1)
+																			{
+																			console.log(props.errors,"ERRORs")
+																			}
+																			else
+																			{ let newData=[]
+																			const data = this.state.data;
+																			newData = data.filter((obj) => obj.productId !== "");
+																			props.setFieldValue('lineItemsString', newData, true);
+																			this.updateAmount(newData, props);
+																			}
 																			this.setState(
 																				{ createMore: true },
 																				() => {
@@ -2244,7 +2294,12 @@ class CreateRequestForQuotation extends React.Component {
 					closeSupplierModal={(e) => {
 						this.closeSupplierModal(e);
 					}}
-					getCurrentUser={(e) => this.getCurrentUser(e)}
+					getCurrentUser={(e) =>
+						{		
+							this.props.requestForQuotationAction.getSupplierList(this.state.contactType);
+							this.getCurrentUser(e);
+						}
+						}
 					createSupplier={this.props.requestForQuotationAction.createSupplier}
 					getStateList={this.props.requestForQuotationAction.getStateList}
 					currency_list={this.props.currency_convert_list}
@@ -2255,7 +2310,10 @@ class CreateRequestForQuotation extends React.Component {
 					closeProductModal={(e) => {
 						this.closeProductModal(e);
 					}}
-					getCurrentProduct={(e) => this.getCurrentProduct(e)}
+					getCurrentProduct={(e) =>{ 
+						this.props.requestForQuotationAction.getProductList();
+						this.getCurrentProduct(e);
+					}}
 					createProduct={this.props.ProductActions.createAndSaveProduct}
 					vat_list={this.props.vat_list}
 					product_category_list={this.props.product_category_list}

@@ -59,6 +59,7 @@
     "react-codemirror2": "^6.0.0",
     "react-csv": "^2.0.1",
     "react-datepicker": "^2.9.6",
+    "papaparse": "^5.3.2",
     "react-dates": "^20.2.3",
     "react-dom": "^16.8.6",
     "react-draft-wysiwyg": "^1.13.2",

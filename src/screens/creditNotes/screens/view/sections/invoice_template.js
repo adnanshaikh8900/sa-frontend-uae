@@ -247,6 +247,9 @@ class InvoiceTemplate extends Component {
 									<th className="center" style={{ padding: '0.5rem' }}>
 										{strings.Quantity }
 									</th>
+									<th className="center" style={{ padding: '0.5rem' }}>
+										{strings.UnitType}
+									</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
 										{strings.UnitCost }
 									</th>
@@ -273,6 +276,7 @@ class InvoiceTemplate extends Component {
 												<td>{item.productName}</td>
 												<td>{item.description}</td>
 												<td>{item.quantity}</td>
+												<td>{item.unitType}</td>
 												<td style={{ textAlign: 'right', width: '20%' }}>
 													<Currency
 														value={item.unitPrice}

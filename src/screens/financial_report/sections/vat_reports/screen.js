@@ -30,6 +30,7 @@ import { AgGridReact, AgGridColumn } from 'ag-grid-react/lib/agGridReact';
 import { ConfirmDeleteModal, Currency,Loader } from 'components';
 import { selectOptionsFactory } from 'utils';
 import Select from 'react-select';
+import { toast } from 'react-toastify';
 const mapStateToProps = (state) => {
 	return {
 		version: state.common.version,
@@ -130,6 +131,7 @@ class VatReports extends React.Component {
 		this.getInitialData();
 	};
 
+	
 	markItUnfiled=(row)=>{
 		const postingRequestModel = {
 			postingRefId: row.id,
@@ -172,6 +174,7 @@ class VatReports extends React.Component {
 				);
 			});
 	};
+
 
 	export = (filename) => {
 		this.props.vatreport
@@ -527,6 +530,9 @@ class VatReports extends React.Component {
 
 		return (<>{dateArr[0].replaceAll("/","-")}</>);
 	};
+
+
+
 	render() {
 		const { vatReportDataList, csvFileNamesData, dialog ,options,loading,loadingMsg,} = this.state;
 
@@ -614,12 +620,19 @@ class VatReports extends React.Component {
 											</Button>
 
 											<Button name="button" color="primary" className="btn-square pull-right "
-											disabled={!this.state.enbaleReportGeneration}
-											title={!this.state.enbaleReportGeneration?"Select VAT Reporting Period":""}
+											// disabled={!this.state.enbaleReportGeneration}
+											// title={!this.state.enbaleReportGeneration?"Select VAT Reporting Period":""}
 												onClick={() => {
-													this.setState({ openModal: true })
+													if(!this.state.enbaleReportGeneration)
+													toast.error(" First Select VAT Reporting Period ");
+													else
+												{	this.setState({ openModal: true })
+													}
 												}}>
+												
 												<i class="fas fa-plus"></i> Generate Vat Report
+
+												
 											</Button>
 										<Col lg={3} className=" pull-right ">
 												<Select 
@@ -782,6 +795,7 @@ class VatReports extends React.Component {
 					closeModal={(e) => {
 						this.closeModal(e);
 						this.getInitialData();
+						this.GenerateVatReportModal();
 					}}
 				/>
 				<VatSettingModal

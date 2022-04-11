@@ -477,7 +477,6 @@ class Product extends React.Component {
 	  };
 	
 	  autoSizeAll = (skipHeader) => {
-		  debugger
 		const allColumnIds = [];
 		this.gridColumnApi.getAllColumns().forEach((column) => {
 		  allColumnIds.push(column.getId());
@@ -697,7 +696,7 @@ class Product extends React.Component {
 											</BootstrapTable>
 										</div> */}
 
-										<div className="ag-theme-alpine mb-3" style={{ height: 590,width:"100%" }}>
+										<div className="ag-theme-alpine mb-3 col-lg-12" style={{ height: 590 }}>
 			<AgGridReact
 				rowData={product_list && product_list.data
 					? product_list.data

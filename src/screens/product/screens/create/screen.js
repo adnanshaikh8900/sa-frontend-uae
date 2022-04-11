@@ -528,20 +528,20 @@ try {
 														// }														
 														if(values.inventoryPurchasePrice ==='')
 														errors.inventoryPurchasePrice = 
-														'Inventory Purchase Price is Requied';
+														'Inventory Purchase Price is Required';
 
 														// if(values.inventoryReorderLevel ==='')
 														// errors.inventoryReorderLevel = 
-														// 'Inventory Reorder Level is Requied';
+														// 'Inventory Reorder Level is Required';
 
 														if(values.inventoryQty ==='')
 														errors.inventoryQty = 
-														'Inventory Quantity is Requied';
+														'Inventory Quantity is Required';
 														
 													}
 
 													if(this.state.exciseTaxCheck===true && values.exciseTaxId=='' ){
-														errors.exciseTaxId = 'Excise Tax is Requied';
+														errors.exciseTaxId = 'Excise Tax is Required';
 													}
 													return errors;
 												}}

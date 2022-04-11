@@ -921,7 +921,7 @@ renderName=(cell,row)=>{
 														// 	'Purchase price cannot be greater than Sales price';
 														// }
 														if(this.state.exciseTaxCheck===true && values.exciseTaxId=='' ){
-															errors.exciseTaxId = 'Excise Tax is Requied';
+															errors.exciseTaxId = 'Excise Tax is Required';
 														}
 														if (this.state.ProductExist === true) {
 															errors.productCode =

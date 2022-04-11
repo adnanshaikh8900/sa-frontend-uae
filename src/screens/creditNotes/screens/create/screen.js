@@ -111,6 +111,8 @@ class CreateCreditNote extends React.Component {
 					isExciseTaxExclusive:'',
 					discountType: 'FIXED',
 					discount: 0,
+					unitType:'',
+					unitTypeId:''
 				},
 			],
 			idCount: 0,
@@ -736,6 +738,8 @@ discountType = (row) =>
 					discountType:'FIXED',
 					discount: 0,
 					exciseTaxId:'',
+					unitType:'',
+					unitTypeId:''
 				}),
 				idCount: this.state.idCount + 1,
 			},
@@ -863,7 +867,9 @@ discountType = (row) =>
 				obj['description'] = result.description;
 				obj['exciseTaxId'] = result.exciseTaxId;
 				obj['discountType'] = result.discountType;
-				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive
+				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive;
+				obj['unitType']=result.unitType;
+				obj['unitTypeId']=result.unitTypeId;
 				idx = index;
 			}
 			return obj;
@@ -1443,6 +1449,8 @@ if (invoiceNumber && invoiceNumber.value) {
 							productId: res.data[0].id,
 							discountType: res.data[0].discountType,
 							exciseTaxId: res.data[0].exciseTaxId,
+							unitType:res.data[0].unitType,
+							unitTypeId:res.data[0].unitTypeId,
 						},
 					],
 				},
@@ -1456,6 +1464,11 @@ if (invoiceNumber && invoiceNumber.value) {
 			this.formRef.current.setFieldValue(
 				`lineItemsString.${0}.unitPrice`,
 				res.data[0].unitPrice,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.unitType`,
+				res.data[0].unitType,
 				true,
 			);
 			this.formRef.current.setFieldValue(
@@ -2565,6 +2578,19 @@ min="0"
 																	>
 																		{strings.QUANTITY}
 																	</TableHeaderColumn>
+																	<TableHeaderColumn
+																			width="3%"
+																			dataField="unitType"
+																     	>
+																			 	<i
+																		 id="unitTooltip"
+																		 className="fa fa-question-circle"
+																	 /> <UncontrolledTooltip
+																		 placement="right"
+																		 target="unitTooltip"
+																	 >
+																		Units / Measurements</UncontrolledTooltip>
+																		</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="unitPrice"
 																		dataFormat={(cell, rows) =>

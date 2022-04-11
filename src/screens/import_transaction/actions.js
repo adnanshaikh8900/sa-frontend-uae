@@ -112,3 +112,23 @@ export const createConfiguration = (obj) => {
       })
   }
 }
+
+
+export const parseCsvFile = (obj) => {
+	return (dispatch) => {
+		let data = {
+			method: 'POST',
+			url: `/rest/transactionimport/parseFile`,
+     data: obj
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};

@@ -420,7 +420,7 @@ class DetailSupplierInvoice extends React.Component {
 				render={({ field, form }) => (
 					<Select
 						styles={customStyles}
-						isDisabled={row.exciseTaxId === 0 || row.isExciseTaxExclusive  === false}
+						isDisabled={row.exciseTaxId === 0 }
 						
 						options={
 							excise_list
@@ -1131,14 +1131,13 @@ class DetailSupplierInvoice extends React.Component {
 	};
 
 	updateAmount = (data, props) => {
-		const {  excise_list} = this.props;
-		const { discountPercentage, discountAmount ,vat_list} = this.state;
+		const { vat_list } = this.props;
 		let total_net = 0;
 		let total_excise = 0;
 		let total = 0;
 		let total_vat = 0;
-		let net_value = 0;
-		let discount = 0;
+		let net_value = 0; 
+		let discount_total = 0;
 		data.map((obj) => {
 			const index =
 				obj.vatCategoryId !== ''
@@ -1146,116 +1145,133 @@ class DetailSupplierInvoice extends React.Component {
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
 
-			//Excise calculation
-			debugger
-			if(obj.exciseTaxId !=  0){
-				if(obj.isExciseTaxExclusive === true){
+			//Exclusive case
+			if(this.state.taxType === false){
+				if (obj.discountType === 'PERCENTAGE') {	
+					 net_value =
+						((+obj.unitPrice -
+							(+((obj.unitPrice * obj.discount)) / 100)) * obj.quantity);
+					var discount =  obj.unitPrice - net_value
+				if(obj.exciseTaxId !=  0){
 					if(obj.exciseTaxId === 1){
-					const value = +(obj.unitPrice) / 2 ;
-						net_value = parseFloat(obj.unitPrice) + parseFloat(value) ;
-						obj.exciseAmount = parseFloat(value) * obj.quantity;
-					}else if (obj.exciseTaxId === 2){
-						const value = obj.unitPrice;
-						net_value = parseFloat(obj.unitPrice) +  parseFloat(value) ;
-						obj.exciseAmount = parseFloat(value) * obj.quantity;
-					}
-					else{
-						net_value = obj.unitPrice
-					}
-				}	else{
-					if(obj.exciseTaxId === 1){
-						const value = obj.unitPrice / 3
-						obj.exciseAmount = parseFloat(value) * obj.quantity;
-					net_value = obj.unitPrice}
-					else if (obj.exciseTaxId === 2){
-						const value = obj.unitPrice / 2
-						obj.exciseAmount = parseFloat(value) * obj.quantity;
-					net_value = obj.unitPrice}
-					else{
-						net_value = obj.unitPrice
-					}
-				}
-			}else{
-				net_value = obj.unitPrice;
-				obj.exciseAmount = 0
-			}
-			//vat calculation
-			if (obj.discountType === 'PERCENTAGE') {
-	
-				if (this.state.taxType === false) {
-					
-					var val =
-						((+net_value - (+((net_value * obj.discount)) / 100)) * vat * obj.quantity) / 100;
-
-					var val1 =
-						((+net_value -
-							(+((net_value * obj.discount)) / 100)) * obj.quantity);
-				} else {
-					var val =
-						((+net_value - (+((net_value * obj.discount)) / 100)) * (vat/ (100 + vat)*100) * obj.quantity) / 100; 
-
-					var val1 =
-						((+net_value -
-							(+((net_value * obj.discount)) / 100)) * obj.quantity);
-				}
-			} else if (obj.discountType === 'FIXED') {
-				if (this.state.taxType === false) {
-
-					var val =
-						(net_value * obj.quantity - obj.discount) *
-						(vat / 100);
-					var val1 =
-						((net_value * obj.quantity) - obj.discount)
-				}
-				else {
-					var val =
-						((net_value * vat / (100 + vat)) * obj.quantity - obj.discount)
-					var val1 =
-						((net_value * obj.quantity) - obj.discount) - val
-				}
-
-			} else {
-				var val = (+net_value * vat * obj.quantity) / 100;
-				var val1 = net_value * obj.quantity
-			}
-			if(obj.exciseTaxId !=  0){
-				debugger
-				if(this.state.taxType === true){
-					if(obj.isExciseTaxExclusive === false){
-					if(obj.exciseTaxId === 1){
-						const value = (net_value - val) / 3
-						obj.exciseAmount = parseFloat(value) * obj.quantity;
-					}
-					else if (obj.exciseTaxId === 2){
-						const value = (net_value - val) / 2
-						obj.exciseAmount = parseFloat(value) * obj.quantity;
-					}
-				}else{
-					if(obj.exciseTaxId === 1){
-						const value = +(net_value - val) / 3 ;
-							// net_value = parseFloat(obj.unitPrice) + parseFloat(value) ;
+						const value = +(net_value) / 2 ;
+							net_value = parseFloat(net_value) + parseFloat(value) ;
 							obj.exciseAmount = parseFloat(value) * obj.quantity;
 						}else if (obj.exciseTaxId === 2){
-							const value = (net_value - val) / 2;
-							// net_value = parseFloat(obj.unitPrice) +  parseFloat(value) ;
+							const value = net_value;
+							net_value = parseFloat(net_value) +  parseFloat(value) ;
 							obj.exciseAmount = parseFloat(value) * obj.quantity;
 						}
 						else{
 							net_value = obj.unitPrice
 						}
 				}
+					var vat_amount =
+					((+net_value  * vat * obj.quantity) / 100);
+				}else{
+					 net_value =
+						((obj.unitPrice * obj.quantity) - obj.discount)
+					var discount =  obj.unitPrice - net_value
+						if(obj.exciseTaxId !=  0){
+							if(obj.exciseTaxId === 1){
+								const value = +(net_value) / 2 ;
+									net_value = parseFloat(net_value) + parseFloat(value) ;
+									obj.exciseAmount = parseFloat(value) * obj.quantity;
+								}else if (obj.exciseTaxId === 2){
+									const value = net_value;
+									net_value = parseFloat(net_value) +  parseFloat(value) ;
+									obj.exciseAmount = parseFloat(value) * obj.quantity;
+								}
+								else{
+									net_value = obj.unitPrice
+								}
+						}
+						var vat_amount =
+						((+net_value  * vat * obj.quantity) / 100);
 			}
 
 			}
-			debugger
-			//discount calculation
-			obj.vatAmount = val
+			//Inclusive case
+			else
+			{			
+				if (obj.discountType === 'PERCENTAGE') {	
+
+					//net value after removing discount
+					 net_value =
+					((+obj.unitPrice -
+						(+((obj.unitPrice * obj.discount)) / 100)) * obj.quantity);
+
+				//discount amount
+				var discount =  (obj.unitPrice* obj.quantity) - net_value
+
+				//vat amount
+				var vat_amount =
+				(+net_value  * (vat/ (100 + vat)*100)) / 100; 
+
+				//net value after removing vat for inclusive
+				net_value = net_value - vat_amount
+
+				//excise calculation
+				if(obj.exciseTaxId !=  0){
+				if(obj.exciseTaxId === 1){
+					const value = net_value / 3
+					net_value = net_value 
+					obj.exciseAmount = parseFloat(value);
+					}
+				else if (obj.exciseTaxId === 2){
+					const value = net_value / 2
+					obj.exciseAmount = parseFloat(value);
+				net_value = net_value}
+				else{
+					net_value = obj.unitPrice
+					}
+						}
+					}
+
+				else // fixed discount
+						{
+				//net value after removing discount
+				 net_value =
+				((obj.unitPrice * obj.quantity) - obj.discount)
+
+
+				//discount amount
+				var discount =  (obj.unitPrice * obj.quantity) - net_value
+						
+				//vat amount
+				var vat_amount =
+				(+net_value  * (vat/ (100 + vat)*100)) / 100; ;
+
+				//net value after removing vat for inclusive
+				net_value = net_value - vat_amount
+
+				//excise calculation
+				if(obj.exciseTaxId !=  0){
+					if(obj.exciseTaxId === 1){
+						const value = net_value / 3
+						net_value = net_value 
+						obj.exciseAmount = parseFloat(value);
+						}
+					else if (obj.exciseTaxId === 2){
+						const value = net_value / 2
+						obj.exciseAmount = parseFloat(value);
+					net_value = net_value}
+					else{
+						net_value = obj.unitPrice
+						}
+							}
+					}
+
+			}
+			
+			
+			obj.vatAmount = vat_amount
 			obj.subTotal =
-			net_value && obj.vatCategoryId ? parseFloat(val1) + parseFloat(val) : 0;
+			net_value && obj.vatCategoryId ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
 
-			discount = +(discount +(parseFloat(val1) * obj.quantity)) - parseFloat(val1)
-			total_net = +(total_net + parseFloat(val1) * obj.quantity);
-			total_vat = +(total_vat + val);
+			discount_total = +discount_total +discount
+			total_net = +(total_net + parseFloat(net_value));
+			total_vat = +(total_vat + vat_amount);
 			
 			total_excise = +(total_excise + obj.exciseAmount)
 			total = total_vat + total_net;
@@ -1272,10 +1288,10 @@ class DetailSupplierInvoice extends React.Component {
 				initValue: {
 					...this.state.initValue,
 					...{
-						total_net: discount ? total_net - discount : total_net,
+						total_net:  total_net,
 						invoiceVATAmount: total_vat,
-						discount:  discount ? discount : 0,
-						totalAmount: total_net > discount ? total - discount : total - discount,
+						discount:  discount_total ? discount_total : 0,
+						totalAmount:  total ,
 						total_excise: total_excise
 					},
 
@@ -2256,7 +2272,7 @@ class DetailSupplierInvoice extends React.Component {
 																	</Button>
 																</Col>
 																<Col  >
-																<label className='mr-4'><b>Tax Type</b></label>
+																
 																{this.state.taxType === false ?
 																	<span style={{ color: "#0069d9" }} className='mr-4'><b>Exclusive</b></span> :
 																	<span className='mr-4'>Exclusive</span>}

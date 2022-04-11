@@ -439,7 +439,7 @@ class RequestForQuotation extends React.Component {
 								<i className="fas fa-edit" /> {strings.Edit}
 							</DropdownItem>
 					)}
-					{(row.status === 'Sent' || row.status === "Approved" )&& (
+				{row.status != 'Draft' && row.status != 'Sent' && row.status != 'Rejected' && row.status != 'Closed' && row.status != 'Invoiced' &&(
 							<DropdownItem
 							onClick={() =>
 								this.props.history.push(

@@ -261,7 +261,7 @@ class DetailProduct extends React.Component {
 								unitTypeId:res.data.unitTypeId?res.data.unitTypeId:"",
 							},
 							exciseTaxCheck:res.data.exciseTaxId ?true :false,
-							exciseType:res.data.exciseType ?true :false,
+							// exciseType:res.data.exciseType ?true :false,
 							count:initCount,
 							isInventoryEnabled: res.data.isInventoryEnabled ? res.data.isInventoryEnabled : '',
 							selectedStatus: res.data.isActive ? true : false,
@@ -418,7 +418,7 @@ renderName=(cell,row)=>{
 		const transactionCategoryId = this.state.inventoryAccount ? this.state.inventoryAccount[0].value : '';
 		const inventoryId = this.state.inventoryId;
 		const isActive = this.state.selectedStatus;
-		const exciseType = this.state.exciseType;
+		// const exciseType = this.state.exciseType;
 		const unitTypeId=data["unitTypeId"];
 		let productPriceType;
 		if (data && data['productPriceType'] && data['productPriceType'].includes('SALES')) {
@@ -449,7 +449,7 @@ renderName=(cell,row)=>{
 			transactionCategoryId,
 			inventoryId,
 			isActive,
-			exciseType,
+			// exciseType,
 			unitTypeId,
 			...(salesUnitPrice.length !== 0 &&
 				data['productPriceType'].includes('SALES') && {
@@ -1495,7 +1495,7 @@ renderName=(cell,row)=>{
 
 															)}
 																</Row>
-																{this.state.exciseTaxCheck===true&&(	<Row style={{display: props.values.productType !='SERVICE'   ?'' : 'none'}}>
+																{/* {this.state.exciseTaxCheck===true&&(	<Row style={{display: props.values.productType !='SERVICE'   ?'' : 'none'}}>
 															<Col >
 																<label className='mr-4'><b>Excise Type</b></label>
 																	{this.state.exciseType === false ?
@@ -1523,7 +1523,7 @@ renderName=(cell,row)=>{
 																	 : <span className='ml-4'>Exclusive</span>
 																	}	
 																</Col>
-															</Row>)}
+															</Row>)} */}
 															<Row className="secondary-info">
 																<Col lg={8}>
 																	<FormGroup check inline className="mb-3">

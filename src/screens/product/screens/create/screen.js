@@ -75,7 +75,7 @@ class CreateProduct extends React.Component {
 				productDescription: '',
 				productCode: '',
 				vatCategoryId:'',
-				exciseTaxId:'',
+
 				unitTypeId:'',
 				productCategoryId: '',
 				productWarehouseId: '',
@@ -275,7 +275,7 @@ try {
 		const transactionCategoryId = data['transactionCategoryId'];
 		const productCategoryId = data['productCategoryId'];
 		const isActive = this.state.productActive;
-		const exciseType = this.state.exciseType;
+		// const exciseType = this.state.exciseType;
 		const exciseAmount=this.state.exciseAmount;
 		const unitTypeId=data['unitTypeId'];
 		let productPriceType;
@@ -306,7 +306,7 @@ try {
 			transactionCategoryId,
 			productCategoryId,
 			isActive,
-			exciseType,
+			// exciseType,
 			unitTypeId,
 			...(salesUnitPrice.length !== 0 && {
 				salesUnitPrice,
@@ -1067,7 +1067,7 @@ try {
 															)}
 																
 																</Row>
-																{this.state.exciseTaxCheck===true&&(	<Row>
+																{/* {this.state.exciseTaxCheck===true&&(	<Row>
 															<Col  style={{display: props.values.productType !='SERVICE'   ?'' : 'none'}}>
 																<label className='mr-4'><b>Excise Type</b></label>
 																	{this.state.exciseType === false ?
@@ -1095,7 +1095,7 @@ try {
 																	 : <span className='ml-4'>Exclusive</span>
 																	}	
 																</Col>
-															</Row>)}
+															</Row>)} */}
 															<hr></hr>
 															{/* <Row>
 															<Col lg={12}>

@@ -589,7 +589,7 @@ IndustryTypeCode:"رمز نوع الصناعة",
 CompanyBusinessType:"نوع الشركة / العمل",
 
 Website:"موقع الشركة",	
-EmailAddress:"عنوان البريد الإلكتروني",	
+EmailAddress:"عنوان البريد الإلكتروني للشركة",	
 CompanyCost:"تكلفة الشركة",	
 ExpenseBudget:"موازنة المصروفات",	
 RevenueBudget:"ميزانية الإيرادات",	

@@ -1452,7 +1452,7 @@ class Profile extends React.Component {
 																		},
 																	),
 																emailAddress: Yup.string()
-																	.required('Email is Required')
+																	// .required('Email is Required')
 																	.email('Invalid Email'),
 																companyTypeCode: Yup.string().required(
 																	'Company/Business Type is Required',
@@ -1683,7 +1683,8 @@ class Profile extends React.Component {
 																					<Col lg={4}>
 																						<FormGroup className="mb-3">
 																							<Label htmlFor="product_code">
-																							<span className="text-danger">*</span> {strings.EmailAddress}
+																							{/* <span className="text-danger">*</span>  */}
+																							{strings.EmailAddress}
 																						</Label>
 																							<Input
 																								maxLength={80}

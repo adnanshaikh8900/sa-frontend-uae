@@ -612,7 +612,7 @@ IndustryTypeCode:"Industry Type Code",
 CompanyBusinessType:"Company / Business Type",
 
 Website:"Company Website",
-EmailAddress:"Email Address",
+EmailAddress:"Company Email Address",
 CompanyCost:"Company Cost",
 ExpenseBudget:"Expense Budget",
 RevenueBudget:"Revenue Budget",

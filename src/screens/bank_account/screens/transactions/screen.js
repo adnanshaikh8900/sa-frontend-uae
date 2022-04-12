@@ -761,11 +761,17 @@ class BankTransactions extends React.Component {
 					<Card className={this.state.sidebarOpen ? `main-table-panel` : ''}>
 						<CardHeader>
 							<Row>
-								<Col lg={12}>
+								<Col >
 									<div className="h4 mb-0 d-flex align-items-center">
 										<i className="icon-doc" />
 										<span className="ml-2">{strings.BankTransactions}</span>
 									</div>
+								</Col>
+								<Col>
+								<Button title='Back'
+									 onClick={()=>{this.props.history.push('/admin/banking/bank-account')}} 
+									className=' pull-right'>X
+									</Button>
 								</Col>
 							</Row>
 						</CardHeader>

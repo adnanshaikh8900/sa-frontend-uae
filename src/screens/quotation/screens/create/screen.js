@@ -2225,7 +2225,7 @@ discountType = (row) =>
 																								}
 																							/>
 																						)} */}
-																						{this.state.customer_currency_symbol} &nbsp;
+																						{this.state.supplier_currency_symbol} &nbsp;
 																						{initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																					</label>
 																				</Col>

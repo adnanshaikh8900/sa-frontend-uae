@@ -795,7 +795,7 @@ class VatReports extends React.Component {
 					closeModal={(e) => {
 						this.closeModal(e);
 						this.getInitialData();
-						this.GenerateVatReportModal();
+						
 					}}
 				/>
 				<VatSettingModal

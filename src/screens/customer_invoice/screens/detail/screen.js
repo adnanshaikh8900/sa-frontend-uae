@@ -1045,7 +1045,7 @@ class DetailCustomerInvoice extends React.Component {
 		}
 	};
 	updateAmount = (data, props) => {
-		const { vat_list } = this.props;
+		const { vat_list } = this.state;
 		let total_net = 0;
 		let total_excise = 0;
 		let total = 0;
@@ -1080,6 +1080,9 @@ class DetailCustomerInvoice extends React.Component {
 							net_value = obj.unitPrice
 						}
 				}
+				else{
+					obj.exciseAmount = 0
+				}
 					var vat_amount =
 					((+net_value  * vat * obj.quantity) / 100);
 				}else{
@@ -1099,6 +1102,9 @@ class DetailCustomerInvoice extends React.Component {
 								else{
 									net_value = obj.unitPrice
 								}
+						}
+						else{
+							obj.exciseAmount = 0
 						}
 						var vat_amount =
 						((+net_value  * vat * obj.quantity) / 100);
@@ -1140,6 +1146,9 @@ class DetailCustomerInvoice extends React.Component {
 					net_value = obj.unitPrice
 					}
 						}
+						else{
+							obj.exciseAmount = 0
+						}
 					}
 
 				else // fixed discount
@@ -1173,6 +1182,9 @@ class DetailCustomerInvoice extends React.Component {
 					else{
 						net_value = obj.unitPrice
 						}
+							}
+							else{
+								obj.exciseAmount = 0
 							}
 					}
 

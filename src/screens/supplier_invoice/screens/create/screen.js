@@ -1163,6 +1163,9 @@ class CreateSupplierInvoice extends React.Component {
 							net_value = obj.unitPrice
 						}
 				}
+				else{
+					obj.exciseAmount = 0
+				}
 					var vat_amount =
 					((+net_value  * vat * obj.quantity) / 100);
 				}else{
@@ -1182,6 +1185,9 @@ class CreateSupplierInvoice extends React.Component {
 								else{
 									net_value = obj.unitPrice
 								}
+						}
+						else{
+							obj.exciseAmount = 0
 						}
 						var vat_amount =
 						((+net_value  * vat * obj.quantity) / 100);
@@ -1223,6 +1229,9 @@ class CreateSupplierInvoice extends React.Component {
 					net_value = obj.unitPrice
 					}
 						}
+						else{
+							obj.exciseAmount = 0
+						}
 					}
 
 				else // fixed discount
@@ -1256,6 +1265,9 @@ class CreateSupplierInvoice extends React.Component {
 					else{
 						net_value = obj.unitPrice
 						}
+							}
+							else{
+								obj.exciseAmount = 0
 							}
 					}
 

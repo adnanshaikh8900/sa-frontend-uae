@@ -134,6 +134,12 @@ class CreateJournal extends React.Component {
 	};
 
 	initializeData = () => {
+	this.getjournalReferenceNo();
+	this.props.journalActions.getInvoicePrefix().then((response) => {
+		this.setState({prefixData:response.data
+		
+		});
+	});
 		this.props.journalActions.getContactList();
 		this.props.journalActions.getCurrencyList().then((response) => {
 			this.setState({
@@ -155,6 +161,48 @@ class CreateJournal extends React.Component {
 		this.props.journalActions.getTransactionCategoryList();
 	};
 
+	getjournalReferenceNo = () => {
+		debugger
+		this.props.journalActions.getInvoiceNo().then((res) => {
+			if (res.status === 200) {
+				this.setState({
+					initValue: {
+						...this.state.initValue,
+						...{ journalReferenceNo: res.data },
+					},
+				});
+				if( res &&  res.data)
+				console.log(res.data)
+				this.formRef.current.setFieldValue('journalReferenceNo', res.data, true,
+				// this.validationCheck(res.data.invoiceNo)
+				);
+			}
+		});
+	};
+	validationCheck = (value) => {
+		const data = {
+			moduleType: 20,
+			name: value,
+		};
+		this.props.journalActions
+			.checkValidation(data)
+			.then((response) => {
+				if (response.data === 'Journal Reference Number Already Exists') {
+					this.setState(
+						{
+							exist: true,
+						},
+						
+						() => {},
+					);
+				
+				} else {
+					this.setState({
+						exist: false,
+					});
+				}
+			});
+	};
 	renderActions = (cell, rows, props) => {
 		return (
 			<Button

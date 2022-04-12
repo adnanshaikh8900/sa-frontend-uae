@@ -108,7 +108,7 @@ class CreateCustomerInvoice extends React.Component {
 					vatCategoryId: '',
 					exciseTaxId:'',
 					discountType: 'FIXED',
-					exciseAmount:'',
+					exciseAmount:0,
 					discount: 0,
 					subTotal: 0,
 					vatAmount:0,
@@ -1241,6 +1241,9 @@ discountType = (row) =>
 							net_value = obj.unitPrice
 						}
 				}
+				else{
+					obj.exciseAmount = 0
+				}
 					var vat_amount =
 					((+net_value  * vat * obj.quantity) / 100);
 				}else{
@@ -1260,6 +1263,9 @@ discountType = (row) =>
 								else{
 									net_value = obj.unitPrice
 								}
+						}
+						else{
+							obj.exciseAmount = 0
 						}
 						var vat_amount =
 						((+net_value  * vat * obj.quantity) / 100);
@@ -1301,6 +1307,9 @@ discountType = (row) =>
 					net_value = obj.unitPrice
 					}
 						}
+						else{
+							obj.exciseAmount = 0
+						}
 					}
 
 				else // fixed discount
@@ -1334,6 +1343,9 @@ discountType = (row) =>
 					else{
 						net_value = obj.unitPrice
 						}
+							}
+							else{
+								obj.exciseAmount = 0
 							}
 					}
 

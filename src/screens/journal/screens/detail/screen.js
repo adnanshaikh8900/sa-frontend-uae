@@ -960,12 +960,7 @@ min="0"
 																			type="text"
 																			id="journalReferenceNo"
 																			name="journalReferenceNo"
-																			disabled={
-																				props.values.postingReferenceType ===
-																				'MANUAL'
-																					? false
-																					: true
-																			}
+																			disabled
 																			placeholder={strings.ReferenceNumber}
 																			value={props.values.journalReferenceNo}
 																			onChange={(option) => {

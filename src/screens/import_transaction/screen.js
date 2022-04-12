@@ -758,6 +758,17 @@ setConfigurations=(configurationList)=>{
 												<span className="ml-2">{strings.ImportTransaction}</span>
 											</div>
 										</Col>
+										<Col>
+								<Button title='Back'
+										onClick={() => {
+											this.props.history.push(
+												'/admin/banking/upload-statement',
+												{ bankAccountId: this.props.location.state.bankAccountId },
+											);
+										}}
+									className=' pull-right'>X
+									</Button>
+								</Col>
 									</Row>
 								</CardHeader>
 								<CardBody>

@@ -226,7 +226,7 @@ class CustomerInvoice extends React.Component {
 		this.initializeData();
 	};
 
-	postInvoice = (row) => {
+	postInvoice = (row,markAsSent) => {
 		this.setState({
 			loading: true,
 		});
@@ -235,7 +235,8 @@ class CustomerInvoice extends React.Component {
 			postingRefId: row.id,
 			postingRefType: 'INVOICE',
 			amountInWords:upperCase(row.currencyName + " " +(toWords.convert(row.invoiceAmount))+" ONLY" ).replace("POINT","AND"),
-			vatInWords:row.vatAmount ?upperCase(row.currencyName + " " +(toWords.convert(row.vatAmount))+" ONLY" ).replace("POINT","AND") :"-"
+			vatInWords:row.vatAmount ?upperCase(row.currencyName + " " +(toWords.convert(row.vatAmount))+" ONLY" ).replace("POINT","AND") :"-",
+			markAsSent:markAsSent
 		};
 		this.setState({ loading:true, loadingMsg:"Customer Invoice Posting..."});
 		this.props.customerInvoiceActions
@@ -446,7 +447,16 @@ class CustomerInvoice extends React.Component {
 						{row.statusEnum !== 'Sent' && row.statusEnum !== 'Paid' && row.statusEnum !== 'Partially Paid' && (
 							<DropdownItem
 								onClick={() => {
-									this.postInvoice(row);
+									this.postInvoice(row,true);
+								}}
+							>
+							<i class="fas fa-check-circle"></i>Mark As Sent
+							</DropdownItem>
+						)}
+						{row.statusEnum !== 'Sent' && row.statusEnum !== 'Paid' && row.statusEnum !== 'Partially Paid' && (
+							<DropdownItem
+								onClick={() => {
+									this.postInvoice(row,false);
 								}}
 							>
 								<i className="fas fa-send" /> {strings.Post}

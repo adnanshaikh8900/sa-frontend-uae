@@ -335,6 +335,14 @@ class BankAccount extends React.Component {
 						)}
 					</DropdownToggle>
 					<DropdownMenu right>
+					{row.name !== 'PettyCash' &&(
+						<DropdownItem
+						onClick={() =>this.props.history.push('/admin/banking/bank-account/transaction/create',{bankAccountId: row.bankAccountId,})	}
+					>
+				<i className="fas fa-plus" />{strings.AddnewTransaction}
+					</DropdownItem>
+					)		}				
+					
 					{row.name !== 'PettyCash' && row.transactionCount === 0 && (
 						<DropdownItem
 							onClick={() =>

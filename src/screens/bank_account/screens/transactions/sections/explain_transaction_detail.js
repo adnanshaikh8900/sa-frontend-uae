@@ -28,7 +28,9 @@ import { selectOptionsFactory, selectCurrencyFactory } from 'utils';
 import {data}  from '../../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import Switch from "react-switch";
-
+import IconButton from '@material-ui/core/IconButton';
+import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
+import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 const mapStateToProps = (state) => {
 	return {
 		expense_list: state.bank_account.expense_list,
@@ -88,6 +90,7 @@ class ExplainTrasactionDetail extends React.Component {
 			count:0,
 			payrollListIds:'',
 			expenseType:true,
+			showMore:false,
 		};
 
 		this.file_size = 1024000;
@@ -599,7 +602,7 @@ class ExplainTrasactionDetail extends React.Component {
 			);
 		}
 		formData.append('reference', reference ? reference : '');
-		if (this.uploadFile.files[0]) {
+		if (this.uploadFile && this.uploadFile.files && this.uploadFile.files[0]) {
 			formData.append('attachment', this.uploadFile.files[0]);
 		}
 		if (
@@ -1101,6 +1104,51 @@ class ExplainTrasactionDetail extends React.Component {
 																				)}
 																		</FormGroup>
 																	</Col>
+																	<Col lg={3}>
+																				<FormGroup className="mb-3">
+																					<Label htmlFor="date">
+																						<span className="text-danger">*</span>
+																					{strings.TransactionDate}
+																				</Label>
+																					<DatePicker
+																						id="date"
+																						name="date"
+																						readOnly={
+																							this.state.creationMode === 'MANUAL'
+																								? false
+																								: true
+																						}
+																						placeholderText={strings.TransactionDate}
+																						showMonthDropdown
+																						showYearDropdown
+																						dateFormat="dd-MM-yyyy"
+																						dropdownMode="select"
+																						value={
+																							props.values.date
+																								? moment(
+																									props.values.date,
+																									'DD-MM-YYYY',
+																								).format('DD-MM-YYYY')
+																								: ''
+																						}
+																						//selected={props.values.date}
+																						onChange={(value) =>
+																							props.handleChange('date')(value)
+																						}
+																						className={`form-control ${props.errors.date &&
+																								props.touched.date
+																								? 'is-invalid'
+																								: ''
+																							}`}
+																					/>
+																					{props.errors.date &&
+																						props.touched.date && (
+																							<div className="invalid-feedback">
+																								{props.errors.date}
+																							</div>
+																						)}
+																				</FormGroup>
+																			</Col>
 																	<Col lg={3}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="amount">
@@ -2213,6 +2261,81 @@ class ExplainTrasactionDetail extends React.Component {
 																			</Col>
 																		</Row>
 																	)}
+																	<Row>
+																		{props.values.coaCategoryId === 12 ||
+																			(props.values.coaCategoryId === 6 && (
+																				<Col lg={4}>
+																					<FormGroup className="mb-3">
+																						<Label htmlFor="employeeId">
+																							{strings.User}
+																					</Label>
+																						<Select
+																							styles={customStyles}
+																							options={
+																								transactionCategoryList.dataList
+																									? transactionCategoryList
+																										.dataList[0].options
+																									: []
+																							}
+																							value={
+																								transactionCategoryList.dataList &&
+																								transactionCategoryList.dataList[0].options.find(
+																									(option) =>
+																										option.value ===
+																										+props.values.employeeId,
+																								)
+																							}
+																							onChange={(option) => {
+																								if (option && option.value) {
+																									props.handleChange(
+																										'employeeId',
+																									)(option);
+																								} else {
+																									props.handleChange(
+																										'employeeId',
+																									)('');
+																								}
+																							}}
+																							placeholder={strings.Select+strings.Contact}
+																							id="employeeId"
+																							name="employeeId"
+																							className={
+																								props.errors.employeeId &&
+																									props.touched.employeeId
+																									? 'is-invalid'
+																									: ''
+																							}
+																						/>
+																					</FormGroup>
+																				</Col>
+																			))}
+																	</Row>
+																	<Row className='mt-2 mb-2'>
+																		<Col>
+																		{/* <Button onClick={()=>{
+																			this.setState({showMore:!this.state.showMore})
+																		}} >
+																		{this.state.showMore==true ?
+																		 (<><i class="fas fa-angle-double-up mr-1"/> Show Less</>)
+																		 :
+																		(<><i class="fas fa-angle-double-down mr-1"/> Show More</>)}
+																		</Button> */}
+																	<IconButton 
+																	style={{    fontSize: "14.1px",color: "#2064d8"}}
+																			aria-label="delete"
+																			size="medium" 
+																			onClick={()=>this.setState({showMore:!this.state.showMore})}
+																	>
+																		{this.state.showMore==true ?
+																		 (<><ArrowUpwardIcon fontSize="inherit" /> Show Less</>)
+																		 :
+																		(<><ArrowDownwardIcon fontSize="inherit" /> Show More</>)}
+																	</IconButton>
+																	
+																		</Col>
+																	</Row>
+														{this.state.showMore==true&&(
+															<>
 																<Row>
 																	<Col lg={8}>
 																		<FormGroup className="mb-3">
@@ -2299,51 +2422,7 @@ class ExplainTrasactionDetail extends React.Component {
 																			</Col>
 																		</Row>
 																		<Row>
-																			<Col lg={12}>
-																				<FormGroup className="mb-3">
-																					<Label htmlFor="date">
-																						<span className="text-danger">*</span>
-																					{strings.TransactionDate}
-																				</Label>
-																					<DatePicker
-																						id="date"
-																						name="date"
-																						readOnly={
-																							this.state.creationMode === 'MANUAL'
-																								? false
-																								: true
-																						}
-																						placeholderText={strings.TransactionDate}
-																						showMonthDropdown
-																						showYearDropdown
-																						dateFormat="dd-MM-yyyy"
-																						dropdownMode="select"
-																						value={
-																							props.values.date
-																								? moment(
-																									props.values.date,
-																									'DD-MM-YYYY',
-																								).format('DD-MM-YYYY')
-																								: ''
-																						}
-																						//selected={props.values.date}
-																						onChange={(value) =>
-																							props.handleChange('date')(value)
-																						}
-																						className={`form-control ${props.errors.date &&
-																								props.touched.date
-																								? 'is-invalid'
-																								: ''
-																							}`}
-																					/>
-																					{props.errors.date &&
-																						props.touched.date && (
-																							<div className="invalid-feedback">
-																								{props.errors.date}
-																							</div>
-																						)}
-																				</FormGroup>
-																			</Col>
+																			
 																		</Row>
 																	</Col>
 																</Row>
@@ -2380,56 +2459,8 @@ class ExplainTrasactionDetail extends React.Component {
 																	</Col>
 																</Row>
 																
-																	<Row>
-																		{props.values.coaCategoryId === 12 ||
-																			(props.values.coaCategoryId === 6 && (
-																				<Col lg={4}>
-																					<FormGroup className="mb-3">
-																						<Label htmlFor="employeeId">
-																							{strings.User}
-																					</Label>
-																						<Select
-																							styles={customStyles}
-																							options={
-																								transactionCategoryList.dataList
-																									? transactionCategoryList
-																										.dataList[0].options
-																									: []
-																							}
-																							value={
-																								transactionCategoryList.dataList &&
-																								transactionCategoryList.dataList[0].options.find(
-																									(option) =>
-																										option.value ===
-																										+props.values.employeeId,
-																								)
-																							}
-																							onChange={(option) => {
-																								if (option && option.value) {
-																									props.handleChange(
-																										'employeeId',
-																									)(option);
-																								} else {
-																									props.handleChange(
-																										'employeeId',
-																									)('');
-																								}
-																							}}
-																							placeholder={strings.Select+strings.Contact}
-																							id="employeeId"
-																							name="employeeId"
-																							className={
-																								props.errors.employeeId &&
-																									props.touched.employeeId
-																									? 'is-invalid'
-																									: ''
-																							}
-																						/>
-																					</FormGroup>
-																				</Col>
-																			))}
-																	</Row>
-														
+																</>)
+																	}	
 
 																<Row>
 																	{props.values.explinationStatusEnum !==

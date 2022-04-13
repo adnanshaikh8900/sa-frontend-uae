@@ -450,7 +450,7 @@ class CustomerInvoice extends React.Component {
 									this.postInvoice(row,true);
 								}}
 							>
-							<i class="fas fa-check-circle"></i>Mark As Sent
+							<i class="far fa-arrow-alt-circle-right"></i>Mark As Sent
 							</DropdownItem>
 						)}
 						{row.statusEnum !== 'Sent' && row.statusEnum !== 'Paid' && row.statusEnum !== 'Partially Paid' && (

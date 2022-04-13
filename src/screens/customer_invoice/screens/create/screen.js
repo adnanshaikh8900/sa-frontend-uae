@@ -3042,9 +3042,9 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		{strings.QUANTITY}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
-																			width="3%"
+																			width="5%"
 																			dataField="unitType"
-																     	>
+																     	>{strings.Unit}
 																			 	<i
 																		 id="unitTooltip"
 																		 className="fa fa-question-circle"

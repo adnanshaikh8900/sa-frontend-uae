@@ -2315,9 +2315,9 @@ getrfqDetails = (e, row, props,form,field) => {
 																		{strings.QUANTITY}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
-																	width="3%"
+																	width="6%"
 																	dataField="unitType"
-																 >	<i
+																 >{strings.Unit}	<i
 																 id="unitTooltip"
 																 className="fa fa-question-circle"
 															 /> <UncontrolledTooltip

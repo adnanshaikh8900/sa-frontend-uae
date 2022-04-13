@@ -1791,9 +1791,9 @@ debugger
 																			{strings.RECEIVEDQUANTITY}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
-																			width="3%"
+																			width="5%"
 																			dataField="unitType"
-																     	>	<i
+																     	>{strings.Unit}	<i
 																		 id="unitTooltip"
 																		 className="fa fa-question-circle ml-1"
 																	 ></i>

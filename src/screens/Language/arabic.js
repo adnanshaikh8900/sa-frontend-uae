@@ -389,6 +389,7 @@ ShippingDetails:"تفاصيل الشحن",
 ShippingAddress:"عنوان الشحن",
 page_size:"حجم الصفحة:",
 active:"نشط",
+Emirates:"الامارات",
 inactive:"كسلان",
 
 //Product

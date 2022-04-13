@@ -426,6 +426,7 @@ ShippingAddress:"Adresse de livraison",
 page_size:"Taille de la page :",
 active:"Actif",
 inactive:"Inactif",
+Emirates:"Emirates",
 
 
 //Product

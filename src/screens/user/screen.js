@@ -563,7 +563,7 @@ class User extends React.Component {
 													className="table-header-bg"
 													dataFormat={this.renderDate}
 												>
-													DOB
+													{strings.DOB}
 												</TableHeaderColumn>
 												<TableHeaderColumn
 												    className="table-header-bg"

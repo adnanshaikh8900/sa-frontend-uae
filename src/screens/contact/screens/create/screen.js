@@ -1211,8 +1211,8 @@ class CreateContact extends React.Component {
 															<Col md="4">
 																<FormGroup>
 																	<Label htmlFor="stateId"><span className="text-danger">* </span>
-																		{/* {strings.StateRegion} */}
-																		{props.values.billingcountryId.value === 229 ? "Emirates" : "State / Provinces"}
+																		{strings.StateRegion}
+																		{props.values.billingcountryId.value === 229 ? "Emirates" : ""}
 																	</Label>
 																	<Select
 																		options={
@@ -1234,7 +1234,8 @@ class CreateContact extends React.Component {
 																				props.handleChange('stateId')('');
 																			}
 																		}}
-																		placeholder={strings.Select + props.values.billingcountryId === 229 || props.values.billingcountryId.value === 229 ? "Emirates" : "State / Provinces"}
+																		placeholder={strings.Select + strings.StateRegion}
+																		// placeholder={strings.Select + props.values.billingcountryId === 229 || props.values.billingcountryId.value === 229 ? "Emirates" : "State / Provinces"}
 																		id="stateId"
 																		name="stateId"
 																		className={
@@ -1605,8 +1606,8 @@ class CreateContact extends React.Component {
 															<Col md="4">
 																<FormGroup>
 																	<Label htmlFor="shippingStateId"><span className="text-danger">* </span>
-																		{/* {strings.StateRegion} */}
-																		{props.values.shippingCountryId.value === 229 ? "Emirates" : "State / Provinces"}
+																		{strings.StateRegion}
+																		{props.values.shippingCountryId.value === 229 ? "Emirates" : ""}
 																	</Label>
 																	<Select
 																		options={
@@ -1634,7 +1635,8 @@ class CreateContact extends React.Component {
 																				props.handleChange('shippingStateId')('');
 																			}
 																		}}
-																			placeholder={ props.values.shippingCountryId.value === 229 ? "Emirates" : "State / Provinces"}
+																		placeholder={strings.Select + strings.StateRegion}
+																			// placeholder={ props.values.shippingCountryId.value === 229 ? "Emirates" : "State / Provinces"}
 																		id="shippingStateId"
 																		name="shippingStateId"
 																		className={

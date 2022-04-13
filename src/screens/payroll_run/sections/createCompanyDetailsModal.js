@@ -161,7 +161,7 @@ class CreateCompanyDetails extends React.Component {
 							<Col lg={12}>
 								<div className="h4 mb-0 d-flex align-items-center">
 									<i className="nav-icon fas fa-user-tie" />
-									<span className="ml-2">Create Company Details</span>
+									<span className="ml-2">{strings.company_details}</span>
 								</div>
 							</Col>
 						</Row>
@@ -207,7 +207,7 @@ class CreateCompanyDetails extends React.Component {
 										<Row>
 										<Col lg={4}>
 															<FormGroup className="mb-3"><span className="text-danger">* </span>
-																<Label htmlFor="companyNumber">Company Number 
+																<Label htmlFor="companyNumber">{strings.company_num}
 																<i
 																			id="cnoTooltip"
 																			className="fa fa-question-circle ml-1"
@@ -258,7 +258,7 @@ class CreateCompanyDetails extends React.Component {
 														</Col>
 														<Col lg={4}>
 															<FormGroup className="mb-3"><span className="text-danger">* </span>
-																<Label htmlFor="companyBankCode">Company Bank Code
+																<Label htmlFor="companyBankCode">{strings.com_code}
 																<i
 																			id="cbcodeTooltip"
 																			className="fa fa-question-circle ml-1"

@@ -722,7 +722,7 @@ showTotal=()=>{
 										<Col lg={12}>
 											<div className="h4 mb-0 d-flex align-items-center">
 												<i className="nav-icon fas fa-user-tie" />
-												<span className="ml-2">Create Payroll</span>
+												<span className="ml-2">{strings.create_payroll}</span>
 											</div>
 										</Col>
 									</Row>
@@ -797,7 +797,7 @@ showTotal=()=>{
 																<Row>
 																	<Col >
 																		<FormGroup>
-																			<Label htmlFor="payrollSubject">	<span className="text-danger">* </span> Payroll Subject</Label>
+																			<Label htmlFor="payrollSubject">	<span className="text-danger">* </span> {strings.payroll_subject}</Label>
 																			<Input
 																				type="text"
 																				id="payrollSubject"
@@ -822,7 +822,7 @@ showTotal=()=>{
 																		<FormGroup>
 																			<Label htmlFor="date">
 																				<span className="text-danger">* </span>
-																				Payroll Date
+																				{strings.payroll_date}
 																			</Label>
 																			<DatePicker
 																				id="payrollDate"
@@ -857,7 +857,7 @@ showTotal=()=>{
 																	<Col  >
 																	<Label htmlFor="date">
 																				<span className="text-danger">* </span>
-																				Pay-period (Start date - End Date)
+																				{strings.pay_period}
 																			</Label>
 
 																			<FormGroup >
@@ -890,7 +890,7 @@ showTotal=()=>{
 																	
 																	<Col >	<Label htmlFor="due_date">
 																				{/* <span className="text-danger">*</span> */}
-																				Payroll Approver
+																			{strings.payroll_approver}
 																			</Label>
 																		<FormGroup>
 																			
@@ -899,7 +899,7 @@ showTotal=()=>{
 																				styles={customStyles}
 																				id="userId"
 																				name="userId"
-																				placeholder={"Select Approver"}
+																				placeholder={strings.select_approver}
 																				options={
 																					approver_dropdown_list.data
 																						? selectOptionsFactory.renderOptions(
@@ -1032,7 +1032,7 @@ showTotal=()=>{
 																						
 																			>
 
-																		<i class="fas fa-check-double  mr-1"></i> Create and Submit
+																		<i class="fas fa-check-double  mr-1"></i> {strings.create_submit}
 																	</Button>
 																	<Button type="button" color="primary" className="btn-square pull-right "														
 																    	onClick={
@@ -1053,7 +1053,7 @@ showTotal=()=>{
 																					: `Please select at least one employee for payroll creation !`
 																				}
 																	>
-																		<i className="fa fa-dot-circle-o  mr-1"></i> Create
+																		<i className="fa fa-dot-circle-o  mr-1"></i> {strings.create}
 																	</Button>
 
 																</Col>

@@ -770,9 +770,10 @@ class Product extends React.Component {
 				enablePivot={true} 
 				filter={ true }
 				cellRendererFramework={(params) => params.value==true ?
-					<label className="badge label-success"> Enabled</label>
+					<label className="badge label-success"> {strings.enabled}</label>
 					:
-					<label className="badge label-due"> Disabled</label>
+					<label className="badge label-due"> {strings.disabled
+					}</label>
 		}
 				></AgGridColumn>  
 				
@@ -785,7 +786,7 @@ class Product extends React.Component {
 				></AgGridColumn>  
 
 <AgGridColumn field="exciseTax" 
-				headerName= 'EXCISE SLAB'
+				headerName= {strings.excise_slab}
 				sortable={ true }
 				filter={ true }
 				enablePivot={true}
@@ -812,14 +813,14 @@ class Product extends React.Component {
 				filter={ true }
 				enablePivot={true} 
 				cellRendererFramework={(params) => params.value==true ?
-													<label className="badge label-success"> Active</label>
+													<label className="badge label-success"> {strings.active}</label>
 													:
-													<label className="badge label-due"> InActive</label>
+													<label className="badge label-due"> {strings.inactive}</label>
 										}
 				></AgGridColumn>  
 				<AgGridColumn field="action"
 										// className="Ag-gridActionButtons"
-										headerName="ACTIONS"
+										headerName={strings.action}
 										cellRendererFramework={(params) =>
 											<div
 											 className="Ag-gridActionButtons"
@@ -831,7 +832,7 @@ class Product extends React.Component {
 									></AgGridColumn>
 			</AgGridReact>  
 			<div className="example-header mt-1">
-					Page Size:
+					{strings.page_size}
 					<select onChange={() => this.onPageSizeChanged()} id="page-size">
 					<option value="10" selected={true}>10</option>
 					<option value="100">100</option>

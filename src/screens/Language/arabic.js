@@ -363,6 +363,9 @@ CODE:"رمز",
 Code:"رمز",	
 NAME:"اسم",		
 
+export_csv:"	تصدير إلى CSV",
+print_csv:"طبع",
+
 AddnewAccount:"إضافة حساب جديد",		
 
 //Add Chart of Accounts
@@ -373,7 +376,20 @@ Type:"نوع",
 //Contact
 Contact:"الاتصال",			
 EMAIL:"البريد الإلكتروني",		
-Addnewcontact:"إضافة جهة اتصال جديدة",	
+Addnewcontact:"إضافة جهة اتصال جديدة",
+TaxTreatment:"المعاملة الضريبية",	
+STATUS:"حالة",
+Currency:"درهم إماراتي - AED",
+BillingAddress:"عنوان إرسال الفواتير",
+ContactAddressDetails:"تفاصيل عنوان الاتصال",	
+BillingDetails:"تفاصيل الفوترة",
+StateRegion:"الولاية / المقاطعات",
+ShippingAddressIsSameAsBillingAddress:"عنوان الشحن هو نفسه عنوان إرسال الفواتير",
+ShippingDetails:"تفاصيل الشحن",
+ShippingAddress:"عنوان الشحن",
+page_size:"حجم الصفحة:",
+active:"نشط",
+inactive:"كسلان",
 
 //Product
 Products:"منتجات",		 		
@@ -383,6 +399,9 @@ AddnewProduct:"إضافة منتج جديد",
 ProductType:"نوع المنتج",
 INVENTORY:"المخزون",
 VATTYPE:"نوع ضريبة القيمة المضافة",
+excise_slab:"لوح المكوس",
+enabled:"تمكين",
+disabled:"ذوي الاحتياجات الخاصه",
 
 //Add product
 CreateProduct:"إنشاء منتج",		
@@ -396,12 +415,19 @@ SellingPrice:"سعر البيع",
 Account:"حساب",	
 PurchaseInformation:"معلومات الشراء",	
 PurchasePrice:"سعر الشراء",	
-
+unit_type:"		نوع الوحدة",
 EnableInventory:"تمكين المخزون",
 InventoryAccount:"حساب المخزون",
 OpeningBalanceQuantity:"كمية الرصيد الافتتاحي",
 ReOrderLevel:"مستوى إعادة الطلب",
-	
+excise_tax_type:"نوع الضريبة الانتقائية",
+excise_product:"المكوس المنتج؟",
+excise_tax_slab:"لوح الضريبة الانتقائية",
+sales:"مبيعات",
+inventory_note:"* ملاحظة: سيتم النظر في سعر شراء المخزون ",
+	//quotation
+  excise:"المكوس",
+
 //Product Category										
 PRODUCTCATEGORYNAME:"اسم فئة المنتج",			
 AddNewProductCategory:"إضافة فئة منتج جديد",
@@ -616,6 +642,8 @@ GeneralSettings:"الإعدادات العامة",
 User:"المستعمل",	
 Help:"مساعدة",	
 LogOut:"تسجيل خروج",
+MailTheams:"بريد ثيمز",
+Import:"استورد",
 
 //Role
 UpdateNewRole:"تحديث دور جديد",
@@ -625,12 +653,50 @@ UserDetail:"بيانات المستخدم", 
 InviteUser:"قم بدعوة المستخدم",	
 Position:"موضع",	
 No:"لا",
+note:"ملاحظة: يرجى اختيار 1 وحدة على الأقل",
 
 NewUsers:"مستخدمون جدد",	
 UserName:"اسم االمستخدم",	
+DOB:"تاريخ الميلاد",
 RoleName:"اسم الدور",
 
 //general settings
+TestMail:" اختبار البريد ",
+//Mail Theams
+Theame1:"ثيامي1",
+Theame2:"ثيامي2",
+//Import
+Migration:"هجرة",
+import:"استورد",
+down:"	تنزيل قوالب CSV",
+heading:"اختيار تاريخ بدء الترحيل",
+date:"تاريخ",
+selectdate:"اختر التاريخ",
+not:"ملاحظه:",
+not1:"يرجى تحديد التاريخ الذي تحتاج إلى الترحيل منه إلى SimpleAccounts.",
+not2:"يرجى ملاحظة أنه سيتم تجاهل جميع البيانات قبل التاريخ أعلاه.",
+nex:"مقبل",
+up:"تحميل الملفات",
+appName:"اسم الطلب",
+ver:"الإصدار",
+selpro:"اختر المنتج",
+selver:"حدد الإصدار",
+back:"ظهر",
+drag:"اسحب الملف لتحميله، أو",
+invalid:"الملفات غير الصالحة هي:",
+fn :"اسم الملف",
+rup:"	سجل تم تحميله",
+d:"حذف",
+pf:"معاينة الملفات",
+ca:"دليل الحسابات",
+datadd:"	لا توجد بيانات لعرضها",
+sa:"حسابات بسيطة",
+accCode:"رمز الحساب",
+accName:"اسم الحساب",
+zb:"كتب زوهو",
+setbal:"تعيين الأرصدة الافتتاحية",
+mig:"ترحيل	",
+
 
 
 GeneralDetails:"تفاصيل عامة",	
@@ -643,7 +709,7 @@ MailingPassword:"كلمة المرور البريدية",
 MailingSMTPAuthorization:"تفويض SMTP بالبريد",	
 MailingSMTPStartTLSEnable:"تفعيل SMTP StartTLS للبريد",	
 Yes:"نعم",
-
+TestMail:"اختبار البريد",
 APIKey:"مفتاح API",
 CreateCN:"CN قم بإنشاء",
 
@@ -892,5 +958,33 @@ By:"بواسطة",
 Number:"عدد",										
 
 SalesReturn:"عائد المبيعات",
-  }
+
+//payroll run
+payrolls:"الرواتب",
+create_pay_roll:"إنشاء كشوف مرتبات جديدة",
+create_company_details:"إنشاء تفاصيل الشركة",
+pay_date:"تاريخ كشوف المرتبات",
+pay_subject:"موضوع كشوف المرتبات",
+pay_period:"فترة الدفع",
+emp_count:"عدد الموظفين",
+generated_by:"تم إنشاؤها بواسطة",
+approver:"الموافق",
+run_date:"تاريخ التشغيل",
+am:"مبلغ",
+reason:"سبب",
+company_details:"إنشاء تفاصيل الشركة",
+company_num:"رقم الشركة",
+com_digit:"	رقم الشركة مكون من 13 رقما رقميا",
+com_code:"رمز بنك الشركة",
+
+create_payroll:"إنشاء كشوف المرتبات", 
+payroll_subject:"موضوع كشوف المرتبات",
+payroll_date:"تاريخ كشوف المرتبات",
+pay_period:"فترة الدفع (تاريخ البدء - تاريخ الانتهاء)",
+payroll_approver:"موافق على كشوف المرتبات",
+create_submit:"إنشاء وإرسال",
+create:"خلق",
+select_approver:"اختر المعتمد",
+action:"الاجراءات",
+}
   export {ar};

@@ -577,7 +577,7 @@ class InventorySummary extends React.Component {
 											
 												<AgGridColumn field="action"
 																		// className="Ag-gridActionButtons"
-																		headerName="Actions"
+																		headerName={strings.action}
 																		cellRendererFramework={(params) =>
 																			<div
 																			 className="Ag-gridActionButtons"

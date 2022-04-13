@@ -464,7 +464,7 @@ class ChartAccount extends React.Component {
 													onClick={() => this.getCsvData()}
 												>
 													<i className="fa glyphicon glyphicon-export fa-download mr-1" />
-													Export To CSV
+												{strings.export_csv}
 												</Button>
 												{view && (
 													<CSVLink
@@ -486,7 +486,7 @@ class ChartAccount extends React.Component {
 													style={{
 														cursor: 'pointer',
 														}}>
-											 		<i className="fa fa-print"> {strings.Print} </i>
+											 		<i className="fa fa-print"> {strings.print_csv} </i>
 											</Button>
 												{/* <Button
 													color="primary"
@@ -754,7 +754,7 @@ class ChartAccount extends React.Component {
 				></AgGridColumn>
 			<AgGridColumn field="action"
 										// className="Ag-gridActionButtons"
-										headerName="ACTIONS"
+										headerName={strings.action}
 										cellRendererFramework={(params) =>
 											<div
 											 className="Ag-gridActionButtons"

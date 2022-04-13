@@ -303,7 +303,7 @@ class CreateQuotation extends React.Component {
 								.find((option) => option.value === +row.exciseTaxId)
 						}
 						id="exciseTaxId"
-						placeholder={strings.Select+strings.Vat}
+						placeholder={strings.Select+strings.excise}
 						onChange={(e) => {
 							 
 							this.selectItem(

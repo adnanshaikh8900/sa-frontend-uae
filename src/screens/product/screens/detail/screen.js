@@ -1318,7 +1318,7 @@ renderName=(cell,row)=>{
 															<Col  lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="unitTypeId">
-																			Unit Type
+																			{strings.unit_type}
 																		</Label>
 																		<Select
 																			options={
@@ -1423,7 +1423,7 @@ renderName=(cell,row)=>{
 																				checked={this.state.exciseTaxCheck}
 																				
 																			/>
-																			Excise Product ?
+																			{strings.excise_product}
 																		</Label>
 																	</FormGroup>
 																</Col>)}
@@ -1434,7 +1434,7 @@ renderName=(cell,row)=>{
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="exciseTaxId">
 																			<span className="text-danger">* </span>
-																			Excise Tax Type
+																			{strings.excise_tax_type}
 																		</Label>
 																		<Select
 																		// isDisabled={props.values.exciseTaxId!='' ?true:false}
@@ -1450,7 +1450,7 @@ renderName=(cell,row)=>{
 																			}
 																			id="exciseTaxId"
 																			name="exciseTaxId"
-																			placeholder={strings.Select+ "Excise Tax Slab"}
+																			placeholder={strings.Select+ strings.excise_tax_slab}
 																			value={
 																				exciseTaxList
 																				&& selectOptionsFactory.renderOptions(

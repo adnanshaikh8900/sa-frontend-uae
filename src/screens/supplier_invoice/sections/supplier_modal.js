@@ -157,7 +157,8 @@ class SupplierModal extends React.Component {
 					closeModal={(e) => {
 						closeSupplierModal(e);
 					}}
-				isParentComponentPresent={true}
+					contactType={{value: 1, label: "Supplier"}}
+				    isParentComponentPresent={true}
 				/>
 				</Modal>
 			</div>

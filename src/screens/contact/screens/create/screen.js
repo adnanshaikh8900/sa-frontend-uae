@@ -67,7 +67,7 @@ class CreateContact extends React.Component {
 			initValue: {
 				billingEmail: '',
 				city: '',
-				contactType: '',
+				contactType: this.props.contactType ?this.props.contactType:'',
 				
 				countryId: '',
 				currencyCode:{label: "UAE Dirham - AED", value: 150},
@@ -702,6 +702,7 @@ class CreateContact extends React.Component {
 																				)
 																				: []
 																		}
+																		isDisabled={this.props.contactType? true :false}
 																		value={props.values.contactType}
 																		onChange={(option) => {
 																			if (option && option.value) {

@@ -159,6 +159,7 @@ class CustomerModal extends React.Component {
 					closeModal={(e) => {
 						closeCustomerModal(e);
 					}}
+				contactType={{label: "Customer",value: 2}} 	
 				isParentComponentPresent={true}
 				/>
 				</Modal>

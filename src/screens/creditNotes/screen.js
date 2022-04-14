@@ -1115,14 +1115,15 @@ class CreditNotes extends React.Component {
 											>
 												{strings.CUSTOMERNAME}
 											</TableHeaderColumn>
+											
 											<TableHeaderColumn
-												//width="9%"
-												dataField="status"
-												dataFormat={this.renderInvoiceStatus}
+												dataField="invoiceNumber"
+												// dataFormat={this.renderInvoiceNumber}
 												dataSort
+											//	width="7%"
 												className="table-header-bg"
-											>
-												 {strings.STATUS}
+											>		
+												{strings.INVOICENUMBER}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="invoiceDate"
@@ -1132,6 +1133,16 @@ class CreditNotes extends React.Component {
 												className="table-header-bg"
 											>
 											 {strings.DATE}
+											</TableHeaderColumn>
+
+											<TableHeaderColumn
+												//width="9%"
+												dataField="status"
+												dataFormat={this.renderInvoiceStatus}
+												dataSort
+												className="table-header-bg"
+											>
+												 {strings.STATUS}
 											</TableHeaderColumn>
 											{/* <TableHeaderColumn
 												dataField="regferenceNumber"

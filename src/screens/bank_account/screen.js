@@ -826,7 +826,7 @@ class BankAccount extends React.Component {
 													width="8%"
 													className="table-header-bg"
 												>
-													{strings.BANK}
+													{strings.BANKNAME}
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="accounName"

@@ -163,6 +163,7 @@ class CreateQuotation extends React.Component {
 				notes: '',
 			
 			},
+			taxType: false,
 			currentData: {},
 			contactType: 2,
 			openCustomerModal: false,
@@ -681,7 +682,6 @@ class CreateQuotation extends React.Component {
 							   ? 'is-invalid'
 							   : ''
 					   }`}
-   type="text"
    />
 	<div class="dropdown open input-group-append">
 
@@ -1044,7 +1044,7 @@ discountType = (row) =>
 		let total = 0;
 		let total_vat = 0;
 		let net_value = 0;
-		let discount = 0;
+		let discount_total = 0;
 		data.map((obj) => {
 			const index =
 				obj.vatCategoryId !== ''
@@ -1053,69 +1053,145 @@ discountType = (row) =>
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
 
 			//Excise calculation
-			if(obj.exciseTaxId !=  0){
-			if(obj.isExciseTaxExclusive === true){
-				if(obj.exciseTaxId === 1){
-				const value = +(obj.unitPrice) / 2 ;
-					net_value = parseFloat(obj.unitPrice) + parseFloat(value) ;
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
-				}else if (obj.exciseTaxId === 2){
-					const value = obj.unitPrice;
-					net_value = parseFloat(obj.unitPrice) +  parseFloat(value) ;
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
+			if(this.state.taxType === false){
+				if (obj.discountType === 'PERCENTAGE') {	
+					 net_value =
+						((+obj.unitPrice -
+							(+((obj.unitPrice * obj.discount)) / 100)) * obj.quantity);
+					var discount =  obj.unitPrice - net_value
+				if(obj.exciseTaxId !=  0){
+					if(obj.exciseTaxId === 1){
+						const value = +(net_value) / 2 ;
+							net_value = parseFloat(net_value) + parseFloat(value) ;
+							obj.exciseAmount = parseFloat(value) * obj.quantity;
+						}else if (obj.exciseTaxId === 2){
+							const value = net_value;
+							net_value = parseFloat(net_value) +  parseFloat(value) ;
+							obj.exciseAmount = parseFloat(value) * obj.quantity;
+						}
+						else{
+							net_value = obj.unitPrice
+						}
 				}
 				else{
-					net_value = obj.unitPrice
+					obj.exciseAmount = 0
 				}
-			}	else{
+					var vat_amount =
+					((+net_value  * vat * obj.quantity) / 100);
+				}else{
+					 net_value =
+						((obj.unitPrice * obj.quantity) - obj.discount)
+					var discount =  obj.unitPrice - net_value
+						if(obj.exciseTaxId !=  0){
+							if(obj.exciseTaxId === 1){
+								const value = +(net_value) / 2 ;
+									net_value = parseFloat(net_value) + parseFloat(value) ;
+									obj.exciseAmount = parseFloat(value) * obj.quantity;
+								}else if (obj.exciseTaxId === 2){
+									const value = net_value;
+									net_value = parseFloat(net_value) +  parseFloat(value) ;
+									obj.exciseAmount = parseFloat(value) * obj.quantity;
+								}
+								else{
+									net_value = obj.unitPrice
+								}
+						}
+						else{
+							obj.exciseAmount = 0
+						}
+						var vat_amount =
+						((+net_value  * vat * obj.quantity) / 100);
+			}
+
+			}
+			//Inclusive case
+			else
+			{			
+				if (obj.discountType === 'PERCENTAGE') {	
+
+					//net value after removing discount
+					 net_value =
+					((+obj.unitPrice -
+						(+((obj.unitPrice * obj.discount)) / 100)) * obj.quantity);
+
+				//discount amount
+				var discount =  (obj.unitPrice* obj.quantity) - net_value
+
+				//vat amount
+				var vat_amount =
+				(+net_value  * (vat/ (100 + vat)*100)) / 100; 
+
+				//net value after removing vat for inclusive
+				net_value = net_value - vat_amount
+
+				//excise calculation
+				if(obj.exciseTaxId !=  0){
 				if(obj.exciseTaxId === 1){
-					const value = obj.unitPrice / 3
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
-				net_value = obj.unitPrice}
+					const value = net_value / 3
+					net_value = net_value 
+					obj.exciseAmount = parseFloat(value);
+					}
 				else if (obj.exciseTaxId === 2){
-					const value = obj.unitPrice / 2
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
-				net_value = obj.unitPrice}
+					const value = net_value / 2
+					obj.exciseAmount = parseFloat(value);
+				net_value = net_value}
 				else{
 					net_value = obj.unitPrice
-				}
+					}
+						}
+						else{
+							obj.exciseAmount = 0
+						}
+					}
+
+				else // fixed discount
+						{
+				//net value after removing discount
+				 net_value =
+				((obj.unitPrice * obj.quantity) - obj.discount)
+
+
+				//discount amount
+				var discount =  (obj.unitPrice * obj.quantity) - net_value
+						
+				//vat amount
+				var vat_amount =
+				(+net_value  * (vat/ (100 + vat)*100)) / 100; ;
+
+				//net value after removing vat for inclusive
+				net_value = net_value - vat_amount
+
+				//excise calculation
+				if(obj.exciseTaxId !=  0){
+					if(obj.exciseTaxId === 1){
+						const value = net_value / 3
+						net_value = net_value 
+						obj.exciseAmount = parseFloat(value);
+						}
+					else if (obj.exciseTaxId === 2){
+						const value = net_value / 2
+						obj.exciseAmount = parseFloat(value);
+					net_value = net_value}
+					else{
+						net_value = obj.unitPrice
+						}
+							}
+							else{
+								obj.exciseAmount = 0
+							}
+					}
+
 			}
-		}else{
-			net_value = obj.unitPrice;
-			obj.exciseAmount = 0
-		}
-			//vat calculation
-			if (obj.discountType === 'PERCENTAGE') {
-				var val =
-				((+net_value -
-				 (+((net_value * obj.discount)) / 100)) *
-					vat *
-					obj.quantity) /
-				100;
-
-				var val1 =
-				((+net_value -
-				 (+((net_value * obj.discount)) / 100)) * obj.quantity ) ;
-			} else if (obj.discountType === 'FIXED') {
-				var val =
-						 (net_value * obj.quantity - obj.discount ) *
-					(vat / 100);
-
-					var val1 =
-					((net_value * obj.quantity )- obj.discount )
-
-			} else {
-				var val = (+net_value * vat * obj.quantity) / 100;
-				var val1 = net_value * obj.quantity
-			}
-
-			//discount calculation
-			discount = +(discount +(net_value * obj.quantity)) - parseFloat(val1)
-			total_net = +(total_net + net_value * obj.quantity);
-			total_vat = +(total_vat + val);
-			obj.vatAmount = val
+			
+			
+			obj.vatAmount = vat_amount
 			obj.subTotal =
-			net_value && obj.vatCategoryId ? parseFloat(val1) + parseFloat(val) : 0;
+			net_value && obj.vatCategoryId ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
+
+			discount_total = +discount_total +discount
+			total_net = +(total_net + parseFloat(net_value));
+			total_vat = +(total_vat + vat_amount);
+			
 			total_excise = +(total_excise + obj.exciseAmount)
 			total = total_vat + total_net;
 			return obj;
@@ -1131,10 +1207,10 @@ discountType = (row) =>
 				initValue: {
 					...this.state.initValue,
 					...{
-						total_net: discount ? total_net - discount : total_net,
+						total_net:  total_net,
 						invoiceVATAmount: total_vat,
-						discount:  discount ? discount : 0,
-						totalAmount: total_net > discount ? total - discount : total - discount,
+						discount:  discount_total ? discount_total : 0,
+						totalAmount:  total ,
 						total_excise: total_excise
 					},
 
@@ -1143,6 +1219,7 @@ discountType = (row) =>
 
 		);
 	};
+
 
 	handleSubmit = (data, resetForm) => {
 		this.setState({ disabled: true });
@@ -1160,6 +1237,7 @@ discountType = (row) =>
 		const { term } = this.state;
 
 		let formData = new FormData();
+		formData.append('taxType', this.state.taxType)
 		formData.append(
 			'quotationNumber',
 			quotation_Number !== null ? this.state.prefix + quotation_Number : '',
@@ -1976,9 +2054,9 @@ discountType = (row) =>
 																</FormGroup>
 															</Col>
 														</Row>
-													
+														<hr style={{display: props.values.exchangeRate === 1 ? 'none' : ''}} />
 														<Row>
-															<Col lg={12} className="mb-3">
+															<Col lg={8} className="mb-3">
 																<Button
 																	color="primary"
 																	className={`btn-square mr-3 ${
@@ -2006,7 +2084,42 @@ discountType = (row) =>
 																</Button>
 																</Col>
 
-															
+																<Col  >
+																{this.state.taxType === false ?
+																	<span style={{ color: "#0069d9" }} className='mr-4'><b>Exclusive</b></span> :
+																	<span className='mr-4'>Exclusive</span>}
+																<Switch
+																	value={props.values.taxType}
+																	checked={this.state.taxType}
+																	onChange={(taxType) => {
+
+																		props.handleChange('taxType')(taxType);
+																		this.setState({ taxType }, () => {
+																			this.updateAmount(
+																				this.state.data,
+																				props
+																			)
+																		});
+
+
+																	}}
+
+																	onColor="#2064d8"
+																	onHandleColor="#2693e6"
+																	handleDiameter={25}
+																	uncheckedIcon={false}
+																	checkedIcon={false}
+																	boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+																	activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+																	height={20}
+																	width={48}
+																	className="react-switch "
+																/>
+																{this.state.taxType === true ?
+																	<span style={{ color: "#0069d9" }} className='ml-4'><b>Inclusive</b></span>
+																	: <span className='ml-4'>Inclusive</span>
+																}
+															</Col>
 														</Row>
 														<Row>
 															<Col lg={12}>

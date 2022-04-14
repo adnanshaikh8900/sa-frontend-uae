@@ -2191,7 +2191,9 @@ existForAccountNumber = (value) => {
                                                                                                         id="emergencyContactName2"
                                                                                                         name="emergencyContactName2"
                                                                                                         placeholder={strings.Enter+strings.ContactName2}
-                                                                                                        onChange={(value) => { props.handleChange("emergencyContactName2")(value) }}
+                                                                                                        onChange={(option) => {
+                                                                                                            if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('emergencyContactName2')(option) }
+                                                                                                        }}
                                                                                                         value={props.values.emergencyContactName2}
                                                                                                         className={
                                                                                                             props.errors.emergencyContactName2 && props.touched.emergencyContactName2

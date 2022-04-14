@@ -72,7 +72,7 @@ class PayrollEmployee extends React.Component {
         }
 
         this.options = {
-           // onRowClick: this.goToDetail,
+           onRowClick: this.goToDetail,
             paginationPosition: 'bottom',
             // page: 1,
             // sizePerPage: 10,
@@ -629,8 +629,8 @@ class PayrollEmployee extends React.Component {
                                                         className="table-header-bg"
                                                         dataField="isActive"
                                                         dataSort
-                                                    dataFormat={this.renderStatus}
-                                                         width="10%"
+                                                        dataFormat={this.renderStatus}
+                                                        width="10%"
                                                     >
                                                         {strings.Status}
                                                     </TableHeaderColumn>

@@ -324,9 +324,7 @@ class CustomerInvoice extends React.Component {
 			classname = 'label-PartiallyPaid';
 		} else if (row.status === 'Due Today') {
 			classname = 'label-due';
-		} else if (row.status === 'Create a duplicate') {
-			classname = 'label-due';
-		}else {
+		} else {
 			classname = 'label-overdue';
 		}
 		return (<>

@@ -142,14 +142,14 @@ class Header extends Component {
                                     this.props.history.push('/admin/settings/template')
                                 }
                             >
-                             <i class="fas fa-palette"></i> Mail Themes
+                             <i class="fas fa-palette"></i> {strings.MailTheams}
                             </DropdownItem>
 							<DropdownItem
                                 onClick={() =>
                                     this.props.history.push('/admin/settings/import')
                                 }
                             >
-                             <i class="fas fa-palette"></i>Import
+                             <i class="fas fa-palette"></i>{strings.Import}
                             </DropdownItem>
 							{/* <DropdownItem
 								onClick={() =>

@@ -57,6 +57,7 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
+const ZERO=0.00;
 let strings = new LocalizedStrings(data);
 class BankTransactions extends React.Component {
 	constructor(props) {
@@ -797,18 +798,19 @@ class BankTransactions extends React.Component {
 													<h3>
 														{this.state.bankAccountCurrencyIsoCode} &nbsp;
 														{this.state.currentBalance ? (				
-															this.state.currentBalance.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-															):(0)}	
+															this.state.currentBalance.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })):" " +ZERO.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}	
+																
 																						
 													</h3>
 												</Col>
 												<Col lg={3}>
 													<h5>{strings.LedgerBalance}</h5>
-													<h3>
+													
+												<h3>
 													{this.state.bankAccountCurrencyIsoCode} &nbsp;
 
-													{this.state.closingBalance ? (
-														this.state.closingBalance.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })): ( 0)}
+													{this.state.closingBalance ? (				
+															this.state.closingBalance.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })): " " +ZERO.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}	
 													</h3>
 												</Col>
 												<Col lg={3}>
@@ -817,7 +819,7 @@ class BankTransactions extends React.Component {
 													{this.state.bankAccountCurrencyIsoCode} &nbsp;
 
 													{this.state.openingBalance ? (
-														this.state.openingBalance.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })): ( 0)}
+														this.state.openingBalance.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })): " " +ZERO.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 													</h3>
 												</Col>
 											</Row>

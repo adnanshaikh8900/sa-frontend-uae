@@ -948,7 +948,7 @@ try {
 															<Col  lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="unitTypeId">
-																			Unit Type
+																		{strings.unit_type}
 																		</Label>
 																		<Select
 																			options={
@@ -963,7 +963,7 @@ try {
 																			}
 																			id="unitTypeId"
 																			name="unitTypeId"
-																			placeholder={strings.Select+ "Unit Type"}
+																			placeholder={strings.Select+ strings.unit_type}
 																			value={props.values.unitTypeId}
 																			onChange={(option) => {
 																				
@@ -1009,7 +1009,7 @@ try {
 																				checked={this.state.exciseTaxCheck}
 																				
 																			/>
-																			Excise Product ?
+																		{strings.excise_product}
 																		</Label>										
 																	</FormGroup>
 																</Col>)}
@@ -1019,7 +1019,7 @@ try {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="exciseTaxId">
 																			<span className="text-danger">* </span>
-																			Excise Tax Type
+																			{strings.excise_tax_type}
 																		</Label>
 																		<Select
 																			options={
@@ -1034,7 +1034,7 @@ try {
 																			}
 																			id="exciseTaxId"
 																			name="exciseTaxId"
-																			placeholder={strings.Select+ "excise Tax Slab"}
+																			placeholder={strings.Select + strings.excise_tax_slab }
 																			value={props.values.exciseTaxId}
 																			onChange={(option) => {
 																				
@@ -1816,7 +1816,7 @@ try {
 																					{props.errors.inventoryPurchasePrice}
 																				</div>
 																			)}
-																	<i>*Note :Inventory Purchase price will be considered </i>
+																	<i>{strings.inventory_note}</i>
 																		 
 																		
 																	</FormGroup>

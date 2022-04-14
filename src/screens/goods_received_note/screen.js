@@ -39,7 +39,6 @@ import './style.scss';
 import { Create } from '@material-ui/icons';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const mapStateToProps = (state) => {
 	return {

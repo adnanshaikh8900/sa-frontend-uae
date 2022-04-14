@@ -1302,7 +1302,7 @@ existForAccountNumber = (value) => {
                                                                                         <FormGroup className="mb-3 text-center">
                                                                                             <ImageUploader
                                                                                                 // withIcon={true}
-                                                                                                buttonText="Choose image"
+                                                                                                buttonText={strings.chooseimage}
                                                                                                 onChange={this.uploadImage}
                                                                                                 imgExtension={['jpg', 'png', 'jpeg']}
                                                                                                 maxFileSize={11048576}
@@ -1315,7 +1315,7 @@ existForAccountNumber = (value) => {
                                                                                                         ? { height: 'inherit' }
                                                                                                         : {}
                                                                                                 }
-                                                                                                label="'Max file size: 1mb"
+                                                                                                label= {strings.filesize}
                                                                                                 labelClass={
                                                                                                     this.state.userPhoto.length > 0
                                                                                                         ? 'hideLabel'
@@ -1948,7 +1948,7 @@ existForAccountNumber = (value) => {
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
                                                                                                     <Label htmlFor="stateId"><span className="text-danger">* </span>
-                                                                                                    {props.values.countryId.value === 229 ? "Emirates" : "State / Provinces"}
+                                                                                                    {props.values.countryId.value === 229 ? strings.Emirates: strings.StateRegion}
 
                                                                                                     </Label>
                                                                                                     <Select
@@ -1971,7 +1971,7 @@ existForAccountNumber = (value) => {
                                                                                                                 props.handleChange('stateId')('');
                                                                                                             }
                                                                                                         }}
-                                                                                                        placeholder={strings.Select + props.values.countryId === 229 || props.values.countryId.value === 229 ? "Emirates" : "State / Provinces"}
+                                                                                                        placeholder={strings.Select + props.values.countryId === 229 || props.values.countryId.value === 229 ? strings.Emirates: strings.StateRegion}
                                                                                                         id="stateId"
                                                                                                         name="stateId"
                                                                                                         className={
@@ -2355,7 +2355,7 @@ existForAccountNumber = (value) => {
                                                                                         <Row>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="select"><span className="text-danger">* </span>Employee Unique ID </Label>
+                                                                                                    <Label htmlFor="select"><span className="text-danger">* </span>{strings.employee_unique_id}</Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         maxLength="14"
@@ -2383,7 +2383,7 @@ existForAccountNumber = (value) => {
                                                                                             </Col>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="select"><span className="text-danger">* </span>Agent ID </Label>
+                                                                                                    <Label htmlFor="select"><span className="text-danger">* </span>{strings.agent_id} </Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         maxLength="9"
@@ -2391,7 +2391,7 @@ existForAccountNumber = (value) => {
                                                                                                         id="agentId"
                                                                                                         name="agentId"
                                                                                                         value={props.values.agentId}
-                                                                                                        placeholder={strings.Enter+" Agent Id"}
+                                                                                                        placeholder={strings.Enter+ strings.agent_id}
                                                                                                        
 
                                                                                                         onChange={(option) => {
@@ -2659,7 +2659,7 @@ existForAccountNumber = (value) => {
                                                                                                 }}
                                                                                                
                                                                                             >
-                                                                                                <i class="far fa-arrow-alt-circle-left mr-1"></i> Back
+                                                                                                <i class="far fa-arrow-alt-circle-left mr-1"></i> {strings.back}
                                                                                               </Button>
                                                                                             <Button name="button" color="primary" className="btn-square pull-right"
                                                                                                 // onClick={() => {
@@ -2949,7 +2949,7 @@ existForAccountNumber = (value) => {
                                                                                                 }}
                                                                                               
                                                                                             >
-                                                                                                <i class="far fa-arrow-alt-circle-left mr-1"></i> Back
+                                                                                                <i class="far fa-arrow-alt-circle-left mr-1"></i> {strings.back}
                                                                                               </Button>
                                                                                             <Button name="button" color="primary" className="btn-square pull-right "
                                                                                                 onClick={() => {
@@ -3028,7 +3028,7 @@ existForAccountNumber = (value) => {
                                              
                                                 <div style={{textAlign:"center"}}>
                                                         <FormGroup className="mt-3"   style={{textAlign:"center",display: "inline-grid"}} >
-                                                         <Label><span className="text-danger">* </span>  CTC : </Label>
+                                                         <Label><span className="text-danger">* </span>  {strings.ctc} : </Label>
                                                             <Input
                                                                 type="text"
                                                                 id="CTC"
@@ -3037,7 +3037,7 @@ existForAccountNumber = (value) => {
                                                                 maxLength='10'
                                                                 style={{textAlign:"center"}}
                                                                 value={props.values.CTC}
-                                                                placeholder={strings.Enter+"CTC"}
+                                                                placeholder={strings.Enter+ strings.ctc}
                                                                 onChange={(option) => {
                                                                     if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('CTC')(option) }
                                                                     this.updateSalary(option.target.value);
@@ -3350,7 +3350,7 @@ existForAccountNumber = (value) => {
                                                                                                
     
                                                                                             }}        
-                                                                                        />{' '}% of Basic
+                                                                                        />{' '}{strings.basic_percent}
                                                                                     </td >
                                                                                 ) : (
                                                                                     <td style={{border:"3px solid #c8ced3"}}>{strings.FixedAmount}</td>)
@@ -3480,7 +3480,7 @@ existForAccountNumber = (value) => {
                                                                                                 }}
                                                                                              
                                                                                             >
-                                                                                                <i class="far fa-arrow-alt-circle-left mr-1"></i> Back
+                                                                                                <i class="far fa-arrow-alt-circle-left mr-1"></i> {strings.back}
                                                                                               </Button>
                                                    
                                                    <Button type="button" color="primary" className="btn-square mr-5 pull-right" onClick={() => {

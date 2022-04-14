@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+
 import { bindActionCreators } from 'redux';
 import {
 	Button,
@@ -27,6 +28,8 @@ import moment from 'moment';
 import download from 'downloadjs';
 import { AgGridReact, AgGridColumn } from 'ag-grid-react/lib/agGridReact';
 import { ConfirmDeleteModal, Currency } from 'components';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 const mapStateToProps = (state) => {
 	return {
 		version: state.common.version,
@@ -41,11 +44,12 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
-
+let strings = new LocalizedStrings(data);
 class FtaAuditReport extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			initValue: {},
 			loading: false,
 			fileName: '',
@@ -351,6 +355,7 @@ class FtaAuditReport extends React.Component {
 		return (<>{dateArr[0].replaceAll("/","-")}</>);
 	};
 	render() {
+		strings.setLanguage(this.state.language);
 		var { ftaAuditReporttDataList, csvFileNamesData, dialog } = this.state;
 
 
@@ -377,7 +382,7 @@ class FtaAuditReport extends React.Component {
 												}}
 												
 											>
-												<i className="fa fa-cog mr-2"></i>FTA Audit Report
+												<i className="fa fa-cog mr-2"></i>{strings.FTA_Audit_Report}
 											</p>
 										</div>
 										<div>
@@ -441,7 +446,7 @@ class FtaAuditReport extends React.Component {
 									
 								>
 								<AgGridColumn field="taxReturns"
-										headerName="Audit Start Date"
+										headerName={strings.Audit_Start_Date}
 										sortable={true}
 										filter={true}
 										// checkboxSelection={true}
@@ -454,7 +459,7 @@ class FtaAuditReport extends React.Component {
 										}
 									></AgGridColumn>
 									<AgGridColumn field="taxReturns"
-										headerName="Audit End Date"
+										headerName={strings.Audit_End_Date}
 										sortable={true}
 										filter={true}
 										// checkboxSelection={true}
@@ -467,7 +472,7 @@ class FtaAuditReport extends React.Component {
 										}
 									></AgGridColumn>
 									<AgGridColumn field="createdDate"
-										headerName="Created Date"
+										headerName={strings.Created_Date}
 										sortable={true}
 										enablePivot={true}
 										filter={true}
@@ -479,7 +484,7 @@ class FtaAuditReport extends React.Component {
 									></AgGridColumn>
 
 									<AgGridColumn
-										headerName="Created By"
+										headerName={strings.Created_By}
 										field="createdBy"
 										sortable={true}
 										enablePivot={true}
@@ -488,7 +493,7 @@ class FtaAuditReport extends React.Component {
 
 									<AgGridColumn field="action"
 										// className="Ag-gridActionButtons"
-										headerName="Actions"
+										headerName={strings.action}
 										cellRendererFramework={(params) =>
 											<div
 											 className="Ag-gridActionButtons"
@@ -500,7 +505,7 @@ class FtaAuditReport extends React.Component {
 									></AgGridColumn>
 								</AgGridReact>
 								<div className="example-header mt-1">
-									Page Size:
+									{strings.page_size}
 									<select onChange={() => this.onPageSizeChanged()} id="page-size">
 										<option value="10" selected={true}>
 											10

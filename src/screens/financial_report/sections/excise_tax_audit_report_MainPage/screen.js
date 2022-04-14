@@ -27,6 +27,8 @@ import moment from 'moment';
 import download from 'downloadjs';
 import { AgGridReact, AgGridColumn } from 'ag-grid-react/lib/agGridReact';
 import { ConfirmDeleteModal, Currency } from 'components';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 const mapStateToProps = (state) => {
 	return {
 		version: state.common.version,
@@ -41,11 +43,12 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
-
+let strings = new LocalizedStrings(data);
 class ExciseTaxAuditReport extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			initValue: {},
 			loading: false,
 			fileName: '',
@@ -350,6 +353,7 @@ class ExciseTaxAuditReport extends React.Component {
 		return (<>{dateArr[0].replaceAll("/","-")}</>);
 	};
 	render() {
+		strings.setLanguage(this.state.language);
 		var { ftaAuditReporttDataList, csvFileNamesData, dialog } = this.state;
 
 
@@ -376,7 +380,7 @@ class ExciseTaxAuditReport extends React.Component {
 												}}
 												
 											>
-												<i className="fa fa-cog mr-2"></i>Excise Tax Audit Report
+												<i className="fa fa-cog mr-2"></i>{strings.Excise_Tax_Audit_Report}
 											</p>
 										</div>
 										<div>

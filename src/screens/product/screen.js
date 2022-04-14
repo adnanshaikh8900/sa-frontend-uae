@@ -33,9 +33,9 @@ import { CSVLink } from 'react-csv';
 import './style.scss';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
-import { AgGridReact,AgGridColumn } from 'ag-grid-react/lib/agGridReact';
-import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+// import { AgGridReact,AgGridColumn } from 'ag-grid-react/lib/agGridReact';
+// import 'ag-grid-community/dist/styles/ag-grid.css';
+// import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 
 const mapStateToProps = (state) => {
 	return {
@@ -409,11 +409,11 @@ class Product extends React.Component {
 	}
 	renderType  = (cell, row) => {
         let type='';
-		if(row.data.exciseTaxId !=null  && row.data.exciseTaxId !=""){
-			type="EXCISE "+row.data.productType
+		if(row.exciseTaxId !=null  && row.exciseTaxId !=""){
+			type="EXCISE "+row.productType
 		}
 		else{
-			type=row.data.productType
+			type=row.productType
 		}
         return type;
     };
@@ -579,7 +579,7 @@ class Product extends React.Component {
 										
 										
 										
-										{/* <div>
+										<div>
 											<BootstrapTable
 												selectRow={this.selectRowProp}
 												search={false}
@@ -616,19 +616,19 @@ class Product extends React.Component {
 													{strings.PRODUCTCODE}
 												</TableHeaderColumn>
 												<TableHeaderColumn 
-													width="20%"
+													width="15%"
 													isKey dataField="name" 
 													dataSort className="table-header-bg">
-													{strings.NAME}
+													{strings.PRODUCTNAME}
 												</TableHeaderColumn >
 												<TableHeaderColumn
-													width="8%"
+													width="10%"
                                                     className="table-header-bg"
                                                     dataField="productType"
                                                     dataSort
                                                     dataFormat={this.renderType}
                                                     >
-                                                        {strings.ProductType}
+                                                    {strings.ProductType}
 
                           						</TableHeaderColumn>
 												<TableHeaderColumn
@@ -642,9 +642,20 @@ class Product extends React.Component {
                                                         {strings.Inventory}
 
                           						</TableHeaderColumn>
-												{/* <TableHeaderColumn dataField="description" dataSort>
+												  <TableHeaderColumn
+													width="8%"
+													dataAlign="right"
+													dataField="unitPrice"
+													dataSort
+													dataFormat={this.unitPrice}
+													formatExtraData={universal_currency_list}
+													className="table-header-bg"
+												>
+													 {strings.UNITPRICE}
+												</TableHeaderColumn>
+												{/* <TableHeaderColumn dataField="description" dataSort> 
 													Description
-												</TableHeaderColumn> 
+												</TableHeaderColumn>  */}
 												<TableHeaderColumn
 													width="18%"
 													// dataAlign="right"
@@ -664,17 +675,7 @@ class Product extends React.Component {
 												>
 													 Excise Slab
 												</TableHeaderColumn>
-												<TableHeaderColumn
-													width="8%"
-													dataAlign="right"
-													dataField="unitPrice"
-													dataSort
-													dataFormat={this.unitPrice}
-													formatExtraData={universal_currency_list}
-													className="table-header-bg"
-												>
-													 {strings.UNITPRICE}
-												</TableHeaderColumn>
+												
 												<TableHeaderColumn
 													width="10%"
 													dataAlign="center"
@@ -694,9 +695,9 @@ class Product extends React.Component {
 											className="table-header-bg"
 										></TableHeaderColumn>
 											</BootstrapTable>
-										</div> */}
+										</div>
 
-										<div className="ag-theme-alpine mb-3 col-lg-12" style={{ height: 590 }}>
+										{/* <div className="ag-theme-alpine mb-3 col-lg-12" style={{ height: 590 }}>
 			<AgGridReact
 				rowData={product_list && product_list.data
 					? product_list.data
@@ -830,8 +831,8 @@ class Product extends React.Component {
 
 										}
 									></AgGridColumn>
-			</AgGridReact>  
-			<div className="example-header mt-1">
+			</AgGridReact>   */}
+			{/* <div className="example-header mt-1">
 					{strings.page_size}
 					<select onChange={() => this.onPageSizeChanged()} id="page-size">
 					<option value="10" selected={true}>10</option>
@@ -839,8 +840,8 @@ class Product extends React.Component {
 					<option value="500">500</option>
 					<option value="1000">1000</option>
 					</select>
-				</div>   																	
-		</div>	
+				</div>   																	 */}
+		{/* </div>	 */}
 									</Col>
 								</Row>
 							)}

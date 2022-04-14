@@ -1342,15 +1342,6 @@ class CustomerInvoice extends React.Component {
 											{strings.CUSTOMERNAME}
 										</TableHeaderColumn>
 										<TableHeaderColumn
-											//width="9%"
-											dataField="status"
-											dataFormat={this.renderInvoiceStatus}
-											dataSort
-											className="table-header-bg"
-										>
-											{strings.STATUS}
-										</TableHeaderColumn>
-										<TableHeaderColumn
 											dataField="invoiceDate"
 											dataSort
 											//width="6%"
@@ -1367,6 +1358,15 @@ class CustomerInvoice extends React.Component {
 											className="table-header-bg"
 										>
 											{strings.DUEDATE}
+										</TableHeaderColumn>
+										<TableHeaderColumn
+											//width="9%"
+											dataField="status"
+											dataFormat={this.renderInvoiceStatus}
+											dataSort
+											className="table-header-bg"
+										>
+											{strings.STATUS}
 										</TableHeaderColumn>
 										
 										{/* <TableHeaderColumn

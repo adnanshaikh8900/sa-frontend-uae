@@ -625,7 +625,25 @@ console.log(journal_list_data,"journal_list_data")
 													this.table = node;
 												}}
 											>
+												<TableHeaderColumn
+													dataField="journalReferenceNo"
+													dataSort={true}
+													width="18%"
+													className="table-header-bg"
+												>
+													{strings.JOURNALREFERENCENO}  
+												</TableHeaderColumn>
 												
+												<TableHeaderColumn
+													dataField="postingReferenceTypeDisplayName"
+													dataSort
+													width="13%"
+													tdStyle={{ whiteSpace: 'unset' }}
+													className="table-header-bg"
+												>
+													{strings.TRANSACTIONTYPE}  
+												</TableHeaderColumn>
+
 												<TableHeaderColumn
 													dataField="journalDate"
 													dataSort
@@ -635,23 +653,7 @@ console.log(journal_list_data,"journal_list_data")
 												>
 													{strings.POSTDATE}
 												</TableHeaderColumn>
-												<TableHeaderColumn
-													dataField="journalReferenceNo"
-													dataSort={true}
-													width="18%"
-													className="table-header-bg"
-												>
-													{strings.JOURNALREFERENCENO}  
-												</TableHeaderColumn>
-												<TableHeaderColumn
-													dataField="postingReferenceTypeDisplayName"
-													dataSort
-													width="13%"
-													tdStyle={{ whiteSpace: 'unset' }}
-													className="table-header-bg"
-												>
-													{strings.TYPE}  
-												</TableHeaderColumn>
+												
 												<TableHeaderColumn
 													dataField="description"
 													dataSort

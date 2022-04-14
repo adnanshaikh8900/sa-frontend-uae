@@ -544,7 +544,114 @@ class PayrollEmployee extends React.Component {
                                                     </Row>
                                                 </form>
                                             </div> */}
-                                            								<div className="mobileNumberCSS ag-theme-alpine mb-3" style={{ height: 590,width:"100%" }}>
+                                             <div>
+                                                <BootstrapTable
+                                                    selectRow={this.selectRowProp}
+                                                    search={false}
+                                                    options={this.options}
+                                                    data={payroll_employee_list &&
+                                                         payroll_employee_list.data ? payroll_employee_list.data : []}
+                                                    version="4"
+                                                    hover
+                                                    pagination={payroll_employee_list && payroll_employee_list.data 
+                                                        && payroll_employee_list.data.length > 0 ? true : false}
+                                                    keyField="id"
+                                                    remote
+                                                    fetchInfo={{ dataTotalSize: payroll_employee_list.count ? payroll_employee_list.count : 0 }}
+                                                    className="employee-table"
+                                                    trClassName="cursor-pointer"
+                                                    csvFileName="payroll_employee_list.csv"
+                                                    ref={(node) => this.table = node}
+                                                >
+                                                    <TableHeaderColumn
+                                                        className="table-header-bg"
+                                                        dataField="employeeCode"
+                                                        dataSort
+                                                        width="12%"
+                                                        // dataFormat={this.fullname}
+                                                    >
+                                                         {strings.EmployeeCode}
+                                               </TableHeaderColumn>
+                                                    <TableHeaderColumn
+                                                        className="table-header-bg"
+                                                        dataField="fullName"
+                                                        dataSort
+                                                        width="20%"
+                                                        dataFormat={this.fullname}
+                                                    >
+                                                         {strings.FullName}
+                                                    </TableHeaderColumn>
+                                                    <TableHeaderColumn
+                                                        className="table-header-bg"
+                                                        dataField="email"
+                                                        dataSort
+                                                        width="20%"
+                                                    >
+                                                         {strings.Email}
+                                                    </TableHeaderColumn>
+                                                    <TableHeaderColumn
+                                                        className="table-header-bg"
+                                                        dataField="mobileNumber"
+                                                        dataSort
+                                                    // dataFormat={this.vatCategoryFormatter}
+                                                    width="12%"
+                                                    >
+                                                         {strings.MobileNumber}
+                                                    </TableHeaderColumn>
+                                                    <TableHeaderColumn
+                                                        className="table-header-bg"
+                                                        dataField="dob"
+                                                        dataSort
+                                                        dataFormat={this.renderDOB}
+                                                        width="12%"
+                                                    >
+                                                         {strings.DateOfBirth}
+                                                    </TableHeaderColumn>
+                                                    {/* <TableHeaderColumn
+                                                        className="table-header-bg"
+                                                        dataField="gender"
+                                                        dataSort
+                                                        width="12%"
+                                                    >
+                                                         {strings.Gender}
+                                                    </TableHeaderColumn> */}
+                                                  
+                                                    {/* <TableHeaderColumn
+                                                        className="table-header-bg"
+                                                        dataField="city"
+                                                        dataSort
+                                                    // dataFormat={this.vatCategoryFormatter}
+                                                    width="10%"
+                                                    >
+                                                        {strings.City}
+                                                    </TableHeaderColumn> */}
+                                                    <TableHeaderColumn
+                                                        className="table-header-bg"
+                                                        dataField="isActive"
+                                                        dataSort
+                                                    dataFormat={this.renderStatus}
+                                                         width="10%"
+                                                    >
+                                                        {strings.Status}
+                                                    </TableHeaderColumn>
+                                                    <TableHeaderColumn
+                                                        className="table-header-bg"
+                                                        dataField="action"
+                                                        dataSort
+                                                        width="12%"
+                                                    >
+                                                         {strings.action}
+                                                    </TableHeaderColumn>
+                                                        {/* <TableHeaderColumn
+                                                            className="text-right"
+                                                            columnClassName="text-right"
+                                                            //width="5%"
+                                                            dataFormat={this.renderActions}
+                                                            className="table-header-bg"
+                                                        ></TableHeaderColumn> */}
+                                                </BootstrapTable>
+                                            </div>
+                                            								{/* <div className="mobileNumberCSS ag-theme-alpine mb-3" style={{ height: 590,width:"100%" }}>
                                                                             
                                                                                     <AgGridReact
                                                                                         rowData={payroll_employee_list &&
@@ -651,8 +758,8 @@ class PayrollEmployee extends React.Component {
 
 										                                                }
 									                                                ></AgGridColumn>
-                                                                                    </AgGridReact>  
-                                                                                    <div className="example-header mt-1">
+                                                                                    </AgGridReact>   */}
+                                                                                    {/* <div className="example-header mt-1">
                                                                                             Page Size:
                                                                                             <select onChange={() => this.onPageSizeChanged()} id="page-size">
                                                                                             <option value="10" selected={true}>10</option>
@@ -660,9 +767,9 @@ class PayrollEmployee extends React.Component {
                                                                                             <option value="500">500</option>
                                                                                             <option value="1000">1000</option>
                                                                                             </select>
-                                                                                        </div>     
+                                                                                        </div>      */}
                                                                                                                                                               
-                                                                                </div>										
+                                                                                {/* </div>										 */}
                                         </Col>
                                     </Row>
                             }

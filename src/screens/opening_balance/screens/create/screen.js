@@ -327,8 +327,9 @@ class CreateOpeningBalance extends React.Component {
 															</Col>
 															</Row>
 														<Row>
+														{/* <Col lg={12} className="mt-5"> */}
 																<FormGroup className="text-right ml-3 mt-5">
-																<Button
+																<Button 
 																	type="submit"
 																	name="submit"
 																	color="primary"
@@ -353,6 +354,7 @@ class CreateOpeningBalance extends React.Component {
 																	<i className="fa fa-ban"></i>  {strings.Cancel}
 																</Button>
 																</FormGroup>
+																{/* </Col> */}
 																</Row></form>
 													);
 												}}

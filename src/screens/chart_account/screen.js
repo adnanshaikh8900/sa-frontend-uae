@@ -758,7 +758,7 @@ class ChartAccount extends React.Component {
 										}
 									></AgGridColumn>
 			</AgGridReact>   */}
-			<div className="example-header mt-1">
+			{/* <div className="example-header mt-1">
 					Page Size:
 					<select  value={this.state.pageSize} onChange={() => this.onPageSizeChanged()} id="page-size">
 					<option value="10" selected={true}>10</option>
@@ -766,7 +766,7 @@ class ChartAccount extends React.Component {
 					<option value="500">500</option>
 					<option value="1000">1000</option>
 					</select>
-				</div>     
+				</div>      */}
 																						
 		{/* </div>	 */}
 									</Col>

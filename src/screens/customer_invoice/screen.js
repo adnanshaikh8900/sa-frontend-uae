@@ -324,7 +324,9 @@ class CustomerInvoice extends React.Component {
 			classname = 'label-PartiallyPaid';
 		} else if (row.status === 'Due Today') {
 			classname = 'label-due';
-		} else {
+		} else if (row.status === 'Create a duplicate') {
+			classname = 'label-due';
+		}else {
 			classname = 'label-overdue';
 		}
 		return (<>
@@ -487,6 +489,14 @@ class CustomerInvoice extends React.Component {
 								<i className="fas fa-university" /> {strings.RecordPayment}
 							</DropdownItem>
 						)}
+						<DropdownItem
+					
+					onClick={() =>
+						this.props.history.push('/admin/income/customer-invoice/create', {parentInvoiceId: row.id})
+					}
+				>
+					<i className="fas fa-copy" /> {strings.CreateADuplicate}
+				</DropdownItem>
 						{/* {row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && (
 							<DropdownItem
 								onClick={() => {

@@ -529,9 +529,9 @@ CreatePO:"إنشاء أمر شراء",
 
 CreateGRN:"إنشاء ملاحظة استلام السلع",	
 Edit:" تعديل",	
-
 Draft:"مسودة",
 Post:"بريد",
+CreateADuplicate:"إنشاء نسخة مكررة",
 Last12Months:"آخر 12 شهرا",	
 Last6Months:"آخر 6 أشهر",	
 Last3Months:"آخر 3 أشهر",	

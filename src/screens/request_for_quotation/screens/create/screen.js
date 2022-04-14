@@ -1160,6 +1160,7 @@ class CreateRequestForQuotation extends React.Component {
 			.createRFQ(formData)
 			.then((res) => {
 				this.setState({ disabled: false });
+				this.setState({ loading:false});
 				this.props.commonActions.tostifyAlert(
 					'success',
 					res.data ? res.data.message : 'Request For Quotation Created Successfully.',
@@ -1208,6 +1209,7 @@ class CreateRequestForQuotation extends React.Component {
 				} else {
 					this.props.history.push('/admin/expense/request-for-quotation');
 					this.setState({ loading:false,});
+				
 				}
 			})
 			.catch((err) => {

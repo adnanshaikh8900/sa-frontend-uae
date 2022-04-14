@@ -671,6 +671,7 @@ class CreateJournal extends React.Component {
 				.createJournal(postData)
 				.then((res) => {
 					this.setState({ disabled: false });
+					this.setState({ loading:false});
 					if (res.status === 200) {
 						this.props.commonActions.tostifyAlert(
 							'success',
@@ -734,6 +735,7 @@ class CreateJournal extends React.Component {
 						} else {
 							this.props.history.push('/admin/accountant/journal');
 							this.setState({ loading:false,});
+							
 						}
 					}
 				})

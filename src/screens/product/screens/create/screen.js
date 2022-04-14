@@ -342,6 +342,7 @@ try {
 			.createAndSaveProduct(postData)
 			.then((res) => {
 				this.setState({ disabled: false });
+				this.setState({ loading:false});
 				if (res.status === 200) {
 					// this.setState({ disabled: false });
 					this.props.commonActions.tostifyAlert(

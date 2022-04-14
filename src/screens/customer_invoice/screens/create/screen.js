@@ -1741,6 +1741,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 			.createInvoice(formData)
 			.then((res) => {
 				this.setState({ disabled: false });
+				this.setState({ loading:false});
 				this.props.commonActions.tostifyAlert(
 					'success',
 					res.data ? res.data.message : 'Invoice Created Successfully.',
@@ -1789,6 +1790,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 				} else {
 					this.props.history.push('/admin/income/customer-invoice');
 					this.setState({ loading:false,});
+					
 				}
 			})
 			.catch((err) => {

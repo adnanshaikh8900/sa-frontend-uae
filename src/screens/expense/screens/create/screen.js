@@ -427,6 +427,7 @@ debugger
 			
 				this.setState({ disabled: false });
 				if (res.status === 200) {
+					this.setState({ loading:false});
 					resetForm(this.state.initValue);
 					this.props.commonActions.tostifyAlert(
 						'success',

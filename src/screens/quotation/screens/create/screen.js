@@ -1418,6 +1418,7 @@ discountType = (row) =>
 			.createQuotation(formData)
 			.then((res) => {
 				this.setState({ disabled: false });
+				this.setState({ loading:false});
 				this.props.commonActions.tostifyAlert(
 					'success',
 					res.data ? res.data.message :'New Quotation Created Successfully.',
@@ -1465,6 +1466,7 @@ discountType = (row) =>
 				} else {
 					this.props.history.push('/admin/income/quotation');
 					this.setState({ loading:false,});
+				
 				}
 			})
 			.catch((err) => {

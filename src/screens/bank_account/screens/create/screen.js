@@ -242,6 +242,7 @@ class CreateBankAccount extends React.Component {
 			.createBankAccount(obj)
 			.then((res) => {
 				this.setState({ disabled: false });
+				this.setState({ loading:false});
 				this.props.commonActions.tostifyAlert(
 					'success',
 					res.data ? res.data.message : 'New Bank Account Created Successfully.',
@@ -255,6 +256,7 @@ class CreateBankAccount extends React.Component {
 				} else {
 					this.props.history.push('/admin/banking/bank-account');
 					this.setState({ loading:false,});
+					
 				}
 			})
 			.catch((err) => {

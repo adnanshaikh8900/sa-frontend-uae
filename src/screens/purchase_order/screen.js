@@ -263,13 +263,13 @@ class PurchaseOrder extends React.Component {
 		return(
 			<div>
 								<div>
-						<label className="font-weight-bold mr-2" dataAlign="right">{strings.PurchaseOrder+" "+strings.Amount}: </label>
+						<label className="font-weight-bold mr-2" dataAlign="right">{strings.PurchaseOrder+" "+strings.Amount} : </label>
 						<label dataAlign="right">
 							{row.totalAmount  === 0 ? row.currencyCode +" "+ row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyCode +" "+ row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 						</label>
 					</div>
 					<div style={{display: row.totalVatAmount === 0 ? 'none' : ''}}>
-					<label className="font-weight-bold mr-2" dataAlign="right">{strings.VatAmount}: </label>
+					<label className="font-weight-bold mr-2" dataAlign="right">{strings.VatAmount} : </label>
 					<label dataAlign="right">{row.totalVatAmount === 0  ? row.currencyCode +" "+ row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyCode +" "+ row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
 					</div>
 					

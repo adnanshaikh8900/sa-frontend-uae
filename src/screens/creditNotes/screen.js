@@ -334,13 +334,13 @@ class CreditNotes extends React.Component {
 	return(
 		<div>
 		<div>
-					<label className="font-weight-bold mr-2 ">{strings.Amount}: </label>
+					<label className="font-weight-bold mr-2 ">{strings.Amount} : </label>
 					<label>
 					{row.invoiceAmount === 0  ? row.currencyName +" "+ row.invoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyName+" "+ row.invoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 					</label>
 				</div>
 				<div>
-					<label className="font-weight-bold mr-2 ">{strings.RemainingCredits}: </label>
+					<label className="font-weight-bold mr-2 ">{strings.RemainingCredits} : </label>
 					<label>
 					{row.dueAmount === 0  ? row.currencyName+" " + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyName+" "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 					</label>

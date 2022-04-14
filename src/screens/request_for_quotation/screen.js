@@ -343,7 +343,7 @@ class RequestForQuotation extends React.Component {
 		return(
 			<div>
 								<div>
-						<label className="font-weight-bold mr-2 ">{strings.RFQAmount}: </label>
+						<label className="font-weight-bold mr-2 ">{strings.RFQAmount} : </label>
 						<label>
 							{row.totalAmount  === 0 ? row.currencyCode +" "+ row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) :  row.currencyCode +" "+ row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 						</label>

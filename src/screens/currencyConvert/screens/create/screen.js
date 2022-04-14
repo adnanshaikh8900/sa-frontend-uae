@@ -146,6 +146,7 @@ class CreateCurrencyConvert extends React.Component {
 			.then((res) => {
 				if (res.status === 200) {
 					this.setState({ createDisabled: false });
+					this.setState({ loading:false});
 					this.props.commonActions.tostifyAlert(
 						'success',
 						res.data ? res.data.message : 'Currency Convert Created Successfully'

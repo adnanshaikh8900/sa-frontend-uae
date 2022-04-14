@@ -107,6 +107,7 @@ class CreateProductCategory extends React.Component {
 			.then((res) => {
 				if (res.status === 200) {
 					this.setState({ disabled: false });
+					this.setState({ loading:false});
 					this.props.commonActions.tostifyAlert(
 						'success',
 						res.data ? res.data.message : 'Product Category Created Successfully'

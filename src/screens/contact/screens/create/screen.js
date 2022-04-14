@@ -230,7 +230,7 @@ class CreateContact extends React.Component {
 			.then((res) => {
 				if (res.status === 200) {
 				this.setState({ disabled: false });
-			
+				this.setState({ loading:false});
 					this.props.commonActions.tostifyAlert(
 						'success',
 						"Contact Created Successfully"

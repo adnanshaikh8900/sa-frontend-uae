@@ -1335,11 +1335,12 @@ class CreatePurchaseOrder extends React.Component {
 		
 			formData.append('currencyCode', this.state.supplier_currency);
 		
-			this.setState({ loading:true, loadingMsg:"Creating Purchase Order..."});
+			this.setState({ loading:true, loadingMsg:"Creating Purchase Order..."});	
 		this.props.purchaseOrderCreateAction
 			.createPO(formData)
 			.then((res) => {
 				this.setState({ disabled: false });
+				this.setState({ loading:false});
 				this.props.commonActions.tostifyAlert(
 					'success',
 					res.data ? res.data.message : 'Purchase Order Created Successfully'
@@ -1387,6 +1388,7 @@ class CreatePurchaseOrder extends React.Component {
 				} else {
 					this.props.history.push('/admin/expense/purchase-order');
 					this.setState({ loading:false,});
+					
 				}
 			})
 			.catch((err) => {

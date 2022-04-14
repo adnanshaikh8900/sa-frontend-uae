@@ -1308,6 +1308,7 @@ if (invoiceNumber && invoiceNumber.value) {
 			.createCreditNote(formData)
 			.then((res) => {
 				this.setState({ disabled: false });
+				this.setState({ loading:false});
 				this.props.commonActions.tostifyAlert(
 					'success',
 					res.data ? res.data.message :'New Tax Credit Note Created Successfully.'
@@ -1355,6 +1356,7 @@ if (invoiceNumber && invoiceNumber.value) {
 				} else {
 					this.props.history.push('/admin/income/credit-notes');
 					this.setState({ loading:false,});
+					
 				}
 			})
 			.catch((err) => {

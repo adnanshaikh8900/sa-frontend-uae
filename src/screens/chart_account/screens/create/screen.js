@@ -138,19 +138,26 @@ class CreateChartAccount extends React.Component {
 			.then((res) => {
 				if (res.status === 200) {
 					this.setState({ disabled: false });
+					this.setState({ loading:false});
 					this.props.commonActions.tostifyAlert
 						(
 						'success', 
 						res.data ? res.data.message :'New Chart Of Account Created Successfully',
 						);
+						
 					if (this.state.createMore) {
 						this.setState({
 							createMore: false,
 						});
 						resetForm();
+						
 					} else {
 						this.props.history.push('/admin/master/chart-account');
 						this.setState({ loading:false,});
+					
+						
+						
+						
 					}
 				}
 			})

@@ -1565,11 +1565,13 @@ class CreateSupplierInvoice extends React.Component {
 		if (this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
+
 		this.setState({ loading:true, loadingMsg:"Creating New Invoice..."});
 		this.props.supplierInvoiceCreateActions
 			.createInvoice(formData)
 			.then((res) => {
 				this.setState({ disabled: false });
+				this.setState({ loading:false});
 				this.props.commonActions.tostifyAlert(
 					'success',
 					res.data ? res.data.message : 'New Invoice Created Successfully.',
@@ -1618,6 +1620,7 @@ class CreateSupplierInvoice extends React.Component {
 				} else {
 					this.props.history.push('/admin/expense/supplier-invoice');
 					this.setState({ loading:false,});
+					
 				}
 			})
 			.catch((err) => {

@@ -1149,6 +1149,7 @@ this.state.data.map((obj, index) => {
 			.createGNR(formData)
 			.then((res) => {
 				this.setState({ disabled: false });
+				this.setState({ loading:false});
 				this.props.commonActions.tostifyAlert(
 					'success',
 					res.data ? res.data.message : 'Goods Received Note Created Successfully'
@@ -1197,6 +1198,7 @@ this.state.data.map((obj, index) => {
 				} else {
 					this.props.history.push('/admin/expense/goods-received-note');
 					this.setState({ loading:false,});
+				
 				}
 			})
 			.catch((err) => {

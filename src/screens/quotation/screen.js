@@ -187,8 +187,7 @@ class Quatation extends React.Component {
 			classname = 'label-success'
 		} else if(row.status === 'Rejected'){
 			classname = 'label-due'
-		}
-		else {
+		}else {
 			classname = 'label-overdue';
 		}
 		return (
@@ -362,6 +361,14 @@ class Quatation extends React.Component {
 								<i className="far fa-times-circle" />  {strings.Close}
 							</DropdownItem>
 							)}
+							<DropdownItem
+					
+							onClick={() =>
+								this.props.history.push('/admin/income/quotation/create', {parentId: row.id})
+							}
+						>
+							<i className="fas fa-copy" /> {strings.CreateADuplicate}
+						</DropdownItem>
 						<DropdownItem
 							onClick={() =>
 								this.props.history.push(

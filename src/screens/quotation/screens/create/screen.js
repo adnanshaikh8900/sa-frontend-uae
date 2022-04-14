@@ -178,7 +178,34 @@ class CreateQuotation extends React.Component {
 			purchaseCategory: [],	
 			exist: false,
 			param:false,
-			loadingMsg:"Loading"
+			loadingMsg:"Loading...",
+			vat_list:[
+				{
+					"id": 1,
+					"vat": 5,
+					"name": "STANDARD RATED TAX (5%) "
+				},
+				{
+					"id": 2,
+					"vat": 0,
+					"name": "ZERO RATED TAX (0%)"
+				},
+				{
+					"id": 3,
+					"vat": 0,
+					"name": "EXEMPT"
+				},
+				{
+					"id": 4,
+					"vat": 0,
+					"name": "OUT OF SCOPE"
+				},
+				{
+					"id": 10,
+					"vat": 0,
+					"name": "N/A"
+				}
+			]
 		};
 
 		this.formRef = React.createRef();
@@ -479,15 +506,132 @@ class CreateQuotation extends React.Component {
 		return value === 0 ? this.state.supplier_currency_symbol +" "+ value.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ value.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 });
 	};
 
+	getParentInvoiceDetails=(parentId)=>{
+		this.props.quotationCreateAction
+				.getQuotationById(parentId)
+				.then((res) => {
+					if (res.status === 200) {
+						this.getCompanyCurrency();
+
+
+						this.purchaseCategory();
+						this.setState(
+							{
+								parentId:parentId,
+								initValue: {
+									quotaionExpiration: res.data.quotaionExpiration
+										? moment(res.data.quotaionExpiration).format('DD-MM-YYYY')
+										: '',
+										quotaionExpiration1: res.data.quotaionExpiration
+										? res.data.quotaionExpiration
+										: '',
+										customerId: res.data.customerId ? res.data.customerId : '',
+										quotationNumber: res.data.quotationNumber
+										? res.data.quotationNumber
+										: '',
+										totalVatAmount: res.data.totalVatAmount
+										? res.data.totalVatAmount
+										: 0,
+										totalAmount: res.data.totalAmount ? res.data.totalAmount : 0,
+										total_net: 0,
+									notes: res.data.notes ? res.data.notes : '',
+									invoiceVATAmount:res.data.totalVatAmount
+									? res.data.totalVatAmount
+									: 0,
+									lineItemsString: res.data.poQuatationLineItemRequestModelList
+										? res.data.poQuatationLineItemRequestModelList
+										: [],
+										placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+										total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
+										discount: res.data.discount ? res.data.discount : 0,
+										discountPercentage: res.data.discountPercentage
+											? res.data.discountPercentage
+											: 0,
+										discountType: res.data.discountType
+											? res.data.discountType
+											: '',
+
+								},
+								quotaionExpirationNotChanged: res.data.quotaionExpiration
+										? moment(res.data.quotaionExpiration)
+										: '',
+										quotaionExpiration: res.data.quotaionExpiration
+										? res.data.quotaionExpiration
+										: '',
+								customer_taxTreatment_des : res.data.taxtreatment ? res.data.taxtreatment : '',
+								placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+								total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
+								data: res.data.poQuatationLineItemRequestModelList
+									? res.data.poQuatationLineItemRequestModelList
+									: [],
+								selectedContact: res.data.customerId ? res.data.customerId : '',
+								customerId: res.data.customerId ? res.data.customerId : '',
+								discountAmount: res.data.discount ? res.data.discount : 0,
+								discountPercentage: res.data.discountPercentage
+									? res.data.discountPercentage
+									: 0,
+								loading: false,
+							},
+							() => {
+								if (this.state.data.length > 0) {
+									this.updateAmount(this.state.data);
+									let tmpSupplier_list = []
+
+									this.props.supplier_list.map(item => {
+										let obj = {label: item.label.contactName, value: item.value}
+										tmpSupplier_list.push(obj)
+									})
+							
+										let customer =selectOptionsFactory.renderOptions(
+											'label',
+											'value',
+											tmpSupplier_list,
+											'Customer Name',
+									  ).find((option)=>option.value==res.data.customerId)
+debugger
+									this.formRef.current.setFieldValue('customerId', customer, true);
+									this.formRef.current.setFieldValue('placeOfSupplyId', res.data.placeOfSupplyId, true);
+									const { data } = this.state;
+									const idCount =
+										data.length > 0
+											? Math.max.apply(
+													Math,
+													data.map((item) => {
+														return item.id;
+													}),
+											  )
+											: 0;
+									this.setState({
+										idCount,
+									});
+								} else {
+									this.setState({
+										idCount: 0,
+									});
+								}
+							},
+						);
+						this.getCurrency(res.data.customerId)
+					}
+				});
+	}
+
 	componentDidMount = () => {
+		this.props.requestForQuotationAction.getVatList();
 		this.getInitialData();
 
 		if(this.props.location.state &&this.props.location.state.contactData)
 				this.getCurrentUser(this.props.location.state.contactData);
+		if(this.props.location.state && this.props.location.state.parentId )
+				this.getParentInvoiceDetails(this.props.location.state.parentId);
 	};
 
 	getInitialData = () => {
 		this.getInvoiceNo();
+		this.props.requestForQuotationAction.getVatList().then((res)=>{
+			if(res.status==200 && res.data)
+			 this.setState({vat_list:res.data})
+		});
 		this.props.requestForQuotationAction.getSupplierList(this.state.contactType);
 		this.props.currencyConvertActions.getCurrencyConversionList().then((response) => {
 			this.setState({
@@ -511,7 +655,7 @@ class CreateQuotation extends React.Component {
 		});
 		});
 		this.props.requestForQuotationAction.getExciseList();
-		this.props.requestForQuotationAction.getVatList();
+		// this.props.requestForQuotationAction.getVatList();
 		this.props.requestForQuotationAction.getCountryList();
 		this.props.requestForQuotationAction.getProductList();
 		this.props.ProductActions.getProductCategoryList();
@@ -682,6 +826,7 @@ class CreateQuotation extends React.Component {
 							   ? 'is-invalid'
 							   : ''
 					   }`}
+
    />
 	<div class="dropdown open input-group-append">
 
@@ -1024,7 +1169,7 @@ discountType = (row) =>
 		let result = this.props.currency_convert_list.filter((obj) => {
 			return obj.currencyCode === value;
 		});
-
+		if(result &&result[0]&&  result[0].exchangeRate)
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
 		};
 
@@ -1037,7 +1182,7 @@ discountType = (row) =>
 	};
 
 	updateAmount = (data, props) => {
-		const { vat_list , excise_list} = this.props;
+		const { vat_list , excise_list} = this.state;
 		const { discountPercentage, discountAmount } = this.state;
 		let total_net = 0;
 		let total_excise = 0;
@@ -1054,7 +1199,7 @@ discountType = (row) =>
 
 			//Excise calculation
 			if(this.state.taxType === false){
-				if (obj.discountType === 'PERCENTAGE') {	
+				if (obj.discountType === 'PERCENTAGE') {
 					 net_value =
 						((+obj.unitPrice -
 							(+((obj.unitPrice * obj.discount)) / 100)) * obj.quantity);
@@ -1106,8 +1251,8 @@ discountType = (row) =>
 			}
 			//Inclusive case
 			else
-			{			
-				if (obj.discountType === 'PERCENTAGE') {	
+			{
+				if (obj.discountType === 'PERCENTAGE') {
 
 					//net value after removing discount
 					 net_value =
@@ -1119,7 +1264,7 @@ discountType = (row) =>
 
 				//vat amount
 				var vat_amount =
-				(+net_value  * (vat/ (100 + vat)*100)) / 100; 
+				(+net_value  * (vat/ (100 + vat)*100)) / 100;
 
 				//net value after removing vat for inclusive
 				net_value = net_value - vat_amount
@@ -1128,7 +1273,7 @@ discountType = (row) =>
 				if(obj.exciseTaxId !=  0){
 				if(obj.exciseTaxId === 1){
 					const value = net_value / 3
-					net_value = net_value 
+					net_value = net_value
 					obj.exciseAmount = parseFloat(value);
 					}
 				else if (obj.exciseTaxId === 2){
@@ -1153,7 +1298,7 @@ discountType = (row) =>
 
 				//discount amount
 				var discount =  (obj.unitPrice * obj.quantity) - net_value
-						
+
 				//vat amount
 				var vat_amount =
 				(+net_value  * (vat/ (100 + vat)*100)) / 100; ;
@@ -1165,7 +1310,7 @@ discountType = (row) =>
 				if(obj.exciseTaxId !=  0){
 					if(obj.exciseTaxId === 1){
 						const value = net_value / 3
-						net_value = net_value 
+						net_value = net_value
 						obj.exciseAmount = parseFloat(value);
 						}
 					else if (obj.exciseTaxId === 2){
@@ -1182,8 +1327,8 @@ discountType = (row) =>
 					}
 
 			}
-			
-			
+
+
 			obj.vatAmount = vat_amount
 			obj.subTotal =
 			net_value && obj.vatCategoryId ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
@@ -1191,7 +1336,7 @@ discountType = (row) =>
 			discount_total = +discount_total +discount
 			total_net = +(total_net + parseFloat(net_value));
 			total_vat = +(total_vat + vat_amount);
-			
+
 			total_excise = +(total_excise + obj.exciseAmount)
 			total = total_vat + total_net;
 			return obj;
@@ -1260,9 +1405,14 @@ discountType = (row) =>
 		if (customerId && customerId.value) {
 			formData.append('customerId', customerId.value);
 		}
-		if (currency !== null && currency) {
-			formData.append('currencyCode', this.state.supplier_currency);
+			formData.append('currencyCode', this.state.supplier_currency);	
+		if(this.state.quotationId != null || this.state.parentId != null){
+			formData.append('customerId', this.state.customerId );
 		}
+		if (placeOfSupplyId ) {
+			formData.append('placeOfSupplyId', placeOfSupplyId.value ?placeOfSupplyId.value:placeOfSupplyId);
+		}
+		debugger
 		this.setState({ loading:true, loadingMsg:"Creating Quotation..."});
 		this.props.quotationCreateAction
 			.createQuotation(formData)
@@ -1525,6 +1675,7 @@ discountType = (row) =>
 						},
 					},
 				});
+				if( res &&  res.data &&this.formRef.current)
 				this.formRef.current.setFieldValue('quotation_Number', res.data, true,this.validationCheck(res.data));
 			}
 		});
@@ -1685,19 +1836,19 @@ discountType = (row) =>
 																			}
 																		},
 																	),
-																unitPrice: Yup.string()
-																	.required('Value is Required')
-																	.test(
-																		'Unit Price',
-																		'Unit Price Should be Greater than 1',
-																		(value) => {
-																			if (value > 0) {
-																				return true;
-																			} else {
-																				return false;
-																			}
-																		},
-																	),
+																// unitPrice: Yup.string()
+																// 	.required('Value is Required')
+																// 	.test(
+																// 		'Unit Price',
+																// 		'Unit Price Should be Greater than 1',
+																// 		(value) => {
+																// 			if (value > 0) {
+																// 				return true;
+																// 			} else {
+																// 				return false;
+																// 			}
+																// 		},
+																// 	),
 																vatCategoryId: Yup.string().required(
 																	'Value is Required',
 																),
@@ -1713,6 +1864,7 @@ discountType = (row) =>
 												{(props) => (
 													<Form onSubmit={props.handleSubmit}>
 														<Row>
+															{console.log(props.error,"props.error")}
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="quotation_Number">
@@ -1770,21 +1922,7 @@ discountType = (row) =>
 																				  )
 																				: []
 																		}
-																		value={
-																			this.state.quotationId ?
-
-																			tmpSupplier_list &&
-																			selectOptionsFactory.renderOptions(
-																				'label',
-																				'value',
-																				tmpSupplier_list,
-																				strings.CustomerName,
-																		  ).find((option) => option.value == this.state.contactId)
-																			
-																		  :
-																		  
-																		  props.values.contactId
-																			}
+																		value={props.values.customerId																			}
 																		// onChange={(option) => {
 																		// 	if (option && option.value) {
 																		// 		props.handleChange('customerId')(option);
@@ -1898,7 +2036,19 @@ discountType = (row) =>
 																				: []
 																		}
 																		value={
-																			this.state.placelist
+																			this.placelist &&
+																			selectOptionsFactory.renderOptions(
+																				'label',
+																				'value',
+																				this.placelist,
+																				'Place of Supply',
+																		  ).find(
+																									(option) =>
+																										option.value ==
+																										((this.state.quotationId||this.state.parentId) ? this.state.placeOfSupplyId:props.values
+																											.placeOfSupplyId.toString())
+
+																								)
 																						}
 																		className={
 																			props.errors.placeOfSupplyId &&
@@ -1976,7 +2126,7 @@ discountType = (row) =>
 																				: ''
 																		}`}
 																		placeholderText={strings.OrderDueDate}
-																		selected={props.values.quotaionExpiration}
+																		selected={props.values.quotaionExpiration ?new Date(props.values.quotaionExpiration):props.values.quotaionExpiration}
 																		showMonthDropdown
 																		showYearDropdown
 																		dropdownMode="select"
@@ -2447,6 +2597,7 @@ discountType = (row) =>
 																		className="btn-square mr-3"
 																		disabled={this.state.disabled}
 																		onClick={() => {
+																			debugger
 																			if(this.state.data.length === 1)
 																				{
 																				console.log(props.errors,"ERRORs")

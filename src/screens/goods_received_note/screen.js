@@ -39,6 +39,7 @@ import './style.scss';
 import { Create } from '@material-ui/icons';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const mapStateToProps = (state) => {
 	return {
@@ -174,11 +175,20 @@ class GoodsReceivedNote extends React.Component {
 
 	renderRFQStatus = (cell, row) => {
 		let classname = '';
-		if (row.status === 'Posted') {
-			classname = 'label-posted';
+		if (row.status === 'Approved') {
+			classname = 'label-success';
 		} else if (row.status === 'Draft') {
 			classname = 'label-draft';
-		} else {
+		} else if (row.status === 'Closed') {
+			classname = 'label-closed';
+		}else if (row.status === 'Sent') {
+			classname = 'label-sent';
+		}else if(row.status === 'Rejected'){
+			classname = 'label-due'
+		}else if(row.status === 'Posted'){
+			classname = 'label-posted'
+		}
+		 else {
 			classname = 'label-overdue';
 		}
 		return (
@@ -292,6 +302,14 @@ class GoodsReceivedNote extends React.Component {
 								<i className="fas fa-send" />{strings.Send}
 							</DropdownItem>
 							)}
+							{row.status === 'Draft' && (
+                            <DropdownItem
+								onClick={() => {
+									this.changeStatus(row.id,"Sent");
+								}}
+							>
+			<i class="far fa-arrow-alt-circle-right"></i>Mark As Sent
+							</DropdownItem>)}
 							{/* {row.status === 'Sent' && (
 							<DropdownItem
 							onClick={() => {
@@ -356,17 +374,8 @@ class GoodsReceivedNote extends React.Component {
 	};
 
 	changeStatus = (id,status) => {
-		this.props.goodsReceivedNoteAction
-		.saveInvoice(id,status)
-		.then((res) => {
-			if (res.status === 200) {
-				this.props.commonActions.tostifyAlert(
-					'success',
-					res.data.message
-					// 'Purchase Order Created Successfull',
-				);
 				this.props.goodsReceivedNoteAction
-				.changeStatus(id)
+				.changeStatus(id,status)
 				.then((res) => {
 					if (res.status === 200) {
 						this.props.commonActions.tostifyAlert(
@@ -382,16 +391,7 @@ class GoodsReceivedNote extends React.Component {
 				});
 				this.initializeData();
 				
-			}
-		})
-		.catch((err) => {
-			this.props.commonActions.tostifyAlert(
-				'error',
-				err.data.message
-			);
-		});
-	
-	}
+			}	
 
 	sendMail = (id) => {
 		this.props.goodsReceivedNoteAction

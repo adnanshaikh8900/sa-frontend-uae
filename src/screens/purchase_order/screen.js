@@ -367,6 +367,14 @@ class PurchaseOrder extends React.Component {
 							>
 								<i className="fas fa-send" /> {strings.Send}
 							</DropdownItem>)}
+							{row.status === 'Draft' && (
+                            <DropdownItem
+								onClick={() => {
+									this.changeStatus(row.id,"Sent");
+								}}
+							>
+							<i class="far fa-arrow-alt-circle-right"></i>Mark As Sent
+							</DropdownItem>)}
 					
 						
 							{/* {row.status !== 'Approved' && (

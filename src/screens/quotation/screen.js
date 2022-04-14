@@ -315,7 +315,14 @@ class Quatation extends React.Component {
 								<i className="fas fa-plus" />{strings.CreateCustomerInvoice}
 							</DropdownItem>
 							)}
-
+							{row.status === 'Draft' && (
+                            <DropdownItem
+								onClick={() => {
+									this.changeStatus(row.id,"Sent");
+								}}
+							>
+							<i class="far fa-arrow-alt-circle-right"></i>Mark As Sent
+							</DropdownItem>)}
 							{row.status === 'Sent' && (
 							<DropdownItem
 							onClick={() => {

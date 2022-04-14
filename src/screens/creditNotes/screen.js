@@ -208,7 +208,7 @@ class CreditNotes extends React.Component {
 		this.initializeData();
 	};
 
-	creditNoteposting = (row) => {
+	creditNoteposting = (row,markAsSent) => {
 		this.setState({
 			loading: true,
 		});
@@ -219,7 +219,8 @@ class CreditNotes extends React.Component {
 			postingRefType: 'CREDIT_NOTE',
 			isCNWithoutProduct :row.isCNWithoutProduct==true?true:false ,
 			amountInWords:upperCase(row.currencyName + " " +(toWords.convert(row.invoiceAmount))+" ONLY" ).replace("POINT","AND"),
-			vatInWords:row.totalVatAmount ? upperCase(row.currencyName + " " +(toWords.convert(row.totalVatAmount))+" ONLY" ).replace("POINT","AND") :"-"
+			vatInWords:row.totalVatAmount ? upperCase(row.currencyName + " " +(toWords.convert(row.totalVatAmount))+" ONLY" ).replace("POINT","AND") :"-",
+			markAsSent:markAsSent
 		};
 		this.setState({ loading:true, loadingMsg:"Posting Credit Note..."});
 		this.props.creditNotesActions
@@ -433,7 +434,15 @@ class CreditNotes extends React.Component {
 								</div>
 							</DropdownItem>
 						)}
-							
+						{row.statusEnum == 'Draft'&& (
+							<DropdownItem
+								onClick={() => {
+									this.creditNoteposting(row,true);
+								}}
+							>
+							<i class="far fa-arrow-alt-circle-right"></i>Mark As Sent
+							</DropdownItem>
+						)}	
 						{row.statusEnum !== 'Closed' && row.statusEnum !== 'Open' && row.statusEnum !== 'Partially Paid' &&(
 							<DropdownItem
 								onClick={() => {

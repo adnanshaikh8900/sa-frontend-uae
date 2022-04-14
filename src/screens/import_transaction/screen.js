@@ -759,7 +759,7 @@ setConfigurations=(configurationList)=>{
 											</div>
 										</Col>
 										<Col>
-								<Button title='Back'
+								{/* <Button title='Back'
 										onClick={() => {
 											this.props.history.push(
 												'/admin/banking/upload-statement',
@@ -767,7 +767,7 @@ setConfigurations=(configurationList)=>{
 											);
 										}}
 									className=' pull-right'>X
-									</Button>
+									</Button> */}
 								</Col>
 									</Row>
 								</CardHeader>

@@ -1427,7 +1427,8 @@ renderName=(cell,row)=>{
 																		</Label>
 																	</FormGroup>
 																</Col>)}
-																
+																</Row>
+																<Row>
 																{this.state.exciseTaxCheck===true&&(	
 															
 																<Col  style={{display: props.values.productType !='SERVICE'   ?'' : 'none'}} lg={4}>

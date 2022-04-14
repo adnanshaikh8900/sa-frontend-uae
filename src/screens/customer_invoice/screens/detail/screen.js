@@ -2040,8 +2040,38 @@ class DetailCustomerInvoice extends React.Component {
 																		<Label htmlFor="term">
 																			<span className="text-danger">* </span>
 																			{strings.Terms}{' '}
-																			<i className="fa fa-question-circle"></i>
-																		</Label>
+																			<i
+																			id="UncontrolledTooltipExample"
+																			className="fa fa-question-circle ml-1"
+																		></i>
+																		<UncontrolledTooltip
+																			placement="right"
+																			target="UncontrolledTooltipExample"
+																		>
+																			<p>
+																				{' '}
+																				Terms- The duration given to a buyer for
+																				payment.
+																			</p>
+
+																			<p>
+																				Net 7 – payment due in 7 days from
+																				invoice date{' '}
+																			</p>
+
+																			<p>
+																				{' '}
+																				Net 10 – payment due in 10 days from
+																				invoice date{' '}
+																			</p>
+
+																			<p>
+																				{' '}
+																				Net 30 – payment due in 30 days from
+																				invoice date{' '}
+																			</p>
+																		</UncontrolledTooltip>
+																	</Label>
 																		<Select
 																			options={
 																				this.termList

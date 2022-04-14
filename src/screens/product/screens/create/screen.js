@@ -1013,8 +1013,10 @@ try {
 																		</Label>										
 																	</FormGroup>
 																</Col>)}
+																</Row>
+																<Row>
 																{this.state.exciseTaxCheck===true&&(	
-													
+												
 																<Col  style={{display: props.values.productType !='SERVICE'   ?'' : 'none'}}	 lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="exciseTaxId">

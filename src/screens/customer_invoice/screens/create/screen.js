@@ -183,7 +183,34 @@ class CreateCustomerInvoice extends React.Component {
 			date:'',
 			contactId:'',
 			isQuotationSelected:false,
-			loadingMsg:"Loading..."
+			loadingMsg:"Loading...",
+			vat_list:[
+				{
+					"id": 1,
+					"vat": 5,
+					"name": "STANDARD RATED TAX (5%) "
+				},
+				{
+					"id": 2,
+					"vat": 0,
+					"name": "ZERO RATED TAX (0%)"
+				},
+				{
+					"id": 3,
+					"vat": 0,
+					"name": "EXEMPT"
+				},
+				{
+					"id": 4,
+					"vat": 0,
+					"name": "OUT OF SCOPE"
+				},
+				{
+					"id": 10,
+					"vat": 0,
+					"name": "N/A"
+				}
+			]
 		};
 
 		this.formRef = React.createRef();
@@ -418,7 +445,7 @@ renderVatAmount = (cell, row,extraData) => {
 		const { term } = this.state;
 		const val = term ? term.value.split('_') : '';
 		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
-		 
+
 		const values = value
 			? value
 			: moment(props.values.invoiceDate, 'DD-MM-YYYY').toDate();
@@ -438,6 +465,7 @@ renderVatAmount = (cell, row,extraData) => {
 		return obj.currencyCode === value;
 		});
 		console.log('currency result', result)
+		if(result &&result[0]&&  result[0].exchangeRate)
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
 		};
 
@@ -578,22 +606,197 @@ this.props.customerInvoiceCreateActions.getQuotationById(quotationId)
 											}
 										})
 	}
+
+	getParentInvoiceDetails=(parentInvoiceId)=>{
+		this.props.customerInvoiceCreateActions
+		.getInvoiceById(parentInvoiceId)
+		.then((res) => {
+			if (res.status === 200) {
+				this.getCompanyCurrency();
+			let term=	this.termList.find((option) =>option.value == res.data.term)
+				this.setState(
+					{
+						parentInvoiceId:parentInvoiceId,
+						initValue: {
+							receiptAttachmentDescription: res.data
+								.receiptAttachmentDescription
+								? res.data.receiptAttachmentDescription
+								: '',
+							receiptNumber: res.data.receiptNumber
+								? res.data.receiptNumber
+								: '',
+							contact_po_number: res.data.contactPoNumber
+								? res.data.contactPoNumber
+								: '',
+								currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
+							exchangeRate:res.data.exchangeRate ? res.data.exchangeRate : '',
+							currencyName:res.data.currencyName ? res.data.currencyName : '',
+							invoiceDueDate: res.data.invoiceDueDate
+								? moment(res.data.invoiceDueDate).format('DD-MM-YYYY')
+								: '',
+							invoiceDate: res.data.invoiceDate
+								? moment(res.data.invoiceDate).format('DD-MM-YYYY')
+								: '',
+								invoiceDate1: res.data.invoiceDate
+								? res.data.invoiceDate
+								: '',
+							contactId: res.data.contactId ? res.data.contactId : '',
+							project: res.data.projectId ? res.data.projectId : '',
+							invoice_number: res.data.referenceNumber
+								? res.data.referenceNumber
+								: '',
+							total_net: 0,
+							invoiceVATAmount: res.data.totalVatAmount
+								? res.data.totalVatAmount
+								: 0,
+							totalAmount: res.data.totalAmount ? res.data.totalAmount : 0,
+							notes: res.data.notes ? res.data.notes : '',
+							changeShippingAddress: res.data.changeShippingAddress ? res.data.changeShippingAddress : '',
+							shippingAddress: res.data.shippingAddress ? res.data.shippingAddress : '',
+							shippingCountryId: res.data.shippingCountry ? res.data.shippingCountry : '',
+							shippingStateId: res.data.shippingState ? res.data.shippingState : '',
+							shippingCity: res.data.shippingCity ? res.data.shippingCity : '',
+							shippingPostZipCode: res.data.shippingPostZipCode ? res.data.shippingPostZipCode : '',
+							shippingTelephone: res.data.shippingTelephone ? res.data.shippingTelephone : '',
+							shippingFax: res.data.shippingFax ? res.data.shippingFax : '',
+							lineItemsString: res.data.invoiceLineItems
+								? res.data.invoiceLineItems
+								: [],
+							discount: res.data.discount ? res.data.discount : 0,
+							
+						
+							term: term,
+							placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+							fileName: res.data.fileName ? res.data.fileName : '',
+							filePath: res.data.filePath ? res.data.filePath : '',
+							total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : 0,
+							taxType : res.data.taxType ? true : false,
+						 },
+						customer_taxTreatment_des : res.data.taxTreatment ? res.data.taxTreatment : '',
+						invoiceDateNoChange :res.data.invoiceDate
+						? moment(res.data.invoiceDate)
+						: '',
+						taxType : res.data.taxType ? true : false,
+						invoiceDueDateNoChange : res.data.invoiceDueDate ?
+						moment(res.data.invoiceDueDate) : '',
+						invoiceDate: res.data.invoiceDate
+								? res.data.invoiceDate
+								: '',
+						invoiceDueDate: res.data.invoiceDueDate
+							? res.data.invoiceDueDate
+							: '',
+						discountAmount: res.data.discount ? res.data.discount : 0,
+						discountPercentage: res.data.discountPercentage
+							? res.data.discountPercentage
+							: '',
+						data: res.data.invoiceLineItems
+							? res.data.invoiceLineItems
+							: [],
+						selectedContact: res.data.contactId ? res.data.contactId : '',
+						contactId: res.data.contactId ? res.data.contactId : '',
+						term: term,
+						placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+						loading: false,
+					},
+					() => {
+						if(this.state.initValue && this.state.initValue.changeShippingAddress && this.state.initValue.shippingCountryId)
+						{
+							let state_list_for_shipping=[]
+							let state=""
+						this.props.customerInvoiceActions.getStateListForShippingAddress(this.state.initValue.shippingCountryId).then((res)=>{
+							if(res.length>0)
+							{	this.setState({state_list_for_shipping:res})
+								state_list_for_shipping=res;
+								state=   state_list_for_shipping.find((option) =>	option.value ==this.state.initValue.shippingStateId)
+														
+								this.formRef.current.setFieldValue('shippingStateId',state, true);	
+								if(this.props.country_list &&this.props.country_list.length>0){
+									let country=  selectOptionsFactory.renderOptions(
+																					'countryName',
+																					'countryCode',
+																					this.props.country_list,
+																					'Country',
+																				) .find((option)=>option.value == this.state.initValue.shippingCountryId)
+									this.formRef.current.setFieldValue('shippingCountryId',country, true);	
+								   }
+							}});
+
+							this.formRef.current.setFieldValue('changeShippingAddress', this.state.initValue.changeShippingAddress , true);	
+							this.formRef.current.setFieldValue('shippingAddress', this.state.initValue.shippingAddress , true);	
+							this.formRef.current.setFieldValue('shippingCity', this.state.initValue.shippingCity , true);	
+							this.formRef.current.setFieldValue('shippingPostZipCode', this.state.initValue.shippingPostZipCode , true);	
+							this.formRef.current.setFieldValue('shippingFax', this.state.initValue.shippingFax , true);	
+							this.formRef.current.setFieldValue('shippingTelephone', this.state.initValue.shippingTelephone , true);
+				            this.formRef.current.setFieldValue('shippingFax', this.state.initValue.shippingFax , true);	
+
+
+						}
+						if (this.state.data.length > 0) {
+							this.updateAmount(this.state.data);
+							const { data } = this.state;
+							const idCount =
+								data.length > 0
+									? Math.max.apply(
+											Math,
+											data.map((item) => {
+												return item.id;
+											}),
+									  )
+									: 0;
+							this.setState({
+								idCount,
+							});
+							this.formRef.current.setFieldValue('contactId', res.data.contactId, true);
+							this.formRef.current.setFieldValue('placeOfSupplyId', res.data.placeOfSupplyId, true);
+							this.formRef.current.setFieldValue('currency', this.getCurrency(res.data.contactId), true);
+							this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(res.data.contactId), true);
+							this.formRef.current.setFieldValue('term', term, true);
+							this.formRef.current.setFieldValue('notes',  res.data.notes, true);
+							this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
+							this.formRef.current.setFieldValue('receiptAttachmentDescription',  res.data.receiptAttachmentDescription, true);
+							// this.setDate(undefined, '');
+							const val = term ? term.value.split('_') : '';
+							const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
+							const values = moment( moment( res.data.invoiceDate).format('DD-MM-YYYY'), 'DD-MM-YYYY').toDate();							
+								this.setState({
+									date: moment(values).add(temp, 'days'),
+									invoiceDate: moment(values),
+								});
+								const date1 = moment(values).add(temp, 'days').format('DD-MM-YYYY')
+								this.formRef.current.setFieldValue('invoiceDueDate',date1, true);
+							this.setExchange( this.getCurrency(res.data.contactId) );
+						} else {
+							this.setState({
+								idCount: 0,
+							});
+						}
+					},
+				);
+				this.getCurrency(res.data.contactId)	
+			}
+		});
+	}
 	componentDidMount = () => {
+		this.props.customerInvoiceActions.getVatList();
 		if(this.props.location.state && this.props.location.state.quotationId)
 		this.getQuotationDetails(this.props.location.state.quotationId);
 		this.getInitialData();
 		if(this.props.location.state &&this.props.location.state.contactData){
 		this.getCurrentUser(this.props.location.state.contactData);
 	  }
+	  if(this.props.location.state && this.props.location.state.parentInvoiceId )
+	  this.getParentInvoiceDetails(this.props.location.state.parentInvoiceId);
 	};
 
 	getInitialData = () => {
 		this.getInvoiceNo();
-
+		this.props.customerInvoiceActions.getVatList().then((res)=>{
+			if(res.status==200 && res.data)
+			 this.setState({vat_list:res.data})
+		});
 		this.props.customerInvoiceActions.getCustomerList(this.state.contactType);
 		this.props.customerInvoiceActions.getCountryList();
 		this.props.customerInvoiceActions.getExciseList();
-		this.props.customerInvoiceActions.getVatList();
 		this.props.customerInvoiceActions.getProductList();
 		this.props.productActions.getProductCategoryList();
 		this.props.currencyConvertActions.getCurrencyConversionList().then((response) => {
@@ -1206,7 +1409,7 @@ discountType = (row) =>
 	};
 
 	updateAmount = (data, props) => {
-		const { vat_list } = this.props;
+		const { vat_list } = this.state;
 		let total_net = 0;
 		let total_excise = 0;
 		let total = 0;
@@ -1513,15 +1716,15 @@ if(changeShippingAddress && changeShippingAddress==true)
 			formData.append('term', term.value);
 		}
 
-		if(this.state.quotationId != null){
-			formData.append('contactId', this.state.contactId);
+		if(this.state.quotationId != null || this.state.parentInvoiceId != null){
+			formData.append('contactId', this.state.contactId );
 		}else{
 		if (contactId && contactId.value) {
 			formData.append('contactId', contactId.value);
 		}}
 
-		if (placeOfSupplyId && placeOfSupplyId.value) {
-			formData.append('placeOfSupplyId', placeOfSupplyId.value);
+		if (placeOfSupplyId ) {
+			formData.append('placeOfSupplyId', placeOfSupplyId.value ?placeOfSupplyId.value:placeOfSupplyId);
 		}
 		if (currency !== null && currency) {
 			formData.append('currencyCode', this.state.customer_currency);
@@ -1683,7 +1886,6 @@ if(changeShippingAddress && changeShippingAddress==true)
 
 	getCurrentProduct = () => {
 		this.props.customerInvoiceActions.getProductList().then((res) => {
-			debugger
 			let newData=[]
 																			const data = this.state.data;
 																			newData = data.filter((obj) => obj.productId !== "");
@@ -1782,7 +1984,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 						...{ invoice_number: res.data },
 					},
 				});
-				if( res &&  res.data)
+				if( res &&  res.data &&this.formRef.current)
 				this.formRef.current.setFieldValue('invoice_number', res.data, true,this.validationCheck(res.data));
 			}
 		});
@@ -2124,7 +2326,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																				: []
 																		}
 																		value={
-																			this.state.quotationId ?
+																			(this.state.quotationId || this.state.parentInvoiceId) ?
 
 																			 tmpCustomer_list &&
 																			selectOptionsFactory.renderOptions(
@@ -2250,7 +2452,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		  ).find(
 																									(option) =>
 																										option.value ==
-																										(this.state.quotationId ? this.state.placeOfSupplyId:props.values
+																										((this.state.quotationId||this.state.parentInvoiceId) ? this.state.placeOfSupplyId:props.values
 																											.placeOfSupplyId.toString())
 
 																								)
@@ -2379,7 +2581,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		minDate={new Date()}
 																		dropdownMode="select"
 																		value={props.values.invoiceDate}
-																		selected={props.values.invoiceDate}
+																		selected={props.values.invoiceDate1 ?new Date(props.values.invoiceDate1):props.values.invoiceDate} 
 																		onChange={(value) => {
 																			
 																			props.handleChange('invoiceDate')(value);
@@ -2640,8 +2842,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		}
 																		value={ state_list_for_shipping.find(
 																					(option) =>
-																						option.value ===
-																						+props.values.shippingStateId.value,
+																						option.value ==props.values.shippingStateId.value,
 																				)
 																		}
 																		onChange={(option) => {

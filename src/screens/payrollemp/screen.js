@@ -373,7 +373,19 @@ class PayrollEmployee extends React.Component {
             this.initializeData()
         }
     }
-
+	renderName = (cell, row) => {
+		return (
+			<label
+				className="mb-0 label-bank"
+				style={{
+					cursor: 'pointer',
+					}}
+				
+			>
+				{cell}
+			</label>
+		);
+	};
     getCsvData = () => {
         if (this.state.csvData.length === 0) {
             let obj = {
@@ -571,13 +583,13 @@ class PayrollEmployee extends React.Component {
                                                         // dataFormat={this.fullname}
                                                     >
                                                          {strings.EmployeeCode}
-                                               </TableHeaderColumn>
+                                                    </TableHeaderColumn>
                                                     <TableHeaderColumn
                                                         className="table-header-bg"
                                                         dataField="fullName"
                                                         dataSort
                                                         width="20%"
-                                                        dataFormat={this.fullname}
+                                                        dataFormat={this.renderName}
                                                     >
                                                          {strings.FullName}
                                                     </TableHeaderColumn>

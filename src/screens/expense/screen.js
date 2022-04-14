@@ -874,6 +874,17 @@ class Expense extends React.Component {
 											>
 												{strings.Expense+" "+strings.No +"."}
 											</TableHeaderColumn>
+											
+											<TableHeaderColumn
+												thStyle={{ whiteSpace: 'normal' }}
+												dataField="payee"
+												dataSort
+												width="15%"
+												className='table-header-bg'
+											>
+												{strings.PAYEE}
+											</TableHeaderColumn>
+
 											<TableHeaderColumn
 												thStyle={{ whiteSpace: 'normal' }}
 												dataField="expenseDate"
@@ -884,25 +895,7 @@ class Expense extends React.Component {
 											>
 												{strings.EXPENSEDATE}
 											</TableHeaderColumn>
-											<TableHeaderColumn
-												thStyle={{ whiteSpace: 'normal' }}
-												dataField="payee"
-												dataSort
-												width="15%"
-												className='table-header-bg'
-											>
-												{strings.PAYEE}
-											</TableHeaderColumn>
-											<TableHeaderColumn
-												thStyle={{ whiteSpace: 'normal' }}
-												width="10%"
-												dataField="expenseStatus"
-												dataFormat={this.renderExpenseStatus}
-												dataSort
-												className='table-header-bg'
-											>
-												{strings.STATUS}
-											</TableHeaderColumn>
+																						
 											<TableHeaderColumn
 												thStyle={{ whiteSpace: 'normal' }}
 												dataField="transactionCategoryName"
@@ -923,6 +916,17 @@ class Expense extends React.Component {
                                                         {strings.ExpenseType}
 
                           					</TableHeaderColumn>
+
+											<TableHeaderColumn
+												thStyle={{ whiteSpace: 'normal' }}
+												width="10%"
+												dataField="expenseStatus"
+												dataFormat={this.renderExpenseStatus}
+												dataSort
+												className='table-header-bg'
+											>
+												{strings.STATUS}
+											</TableHeaderColumn>
 											
 											<TableHeaderColumn
 												dataAlign="right"

@@ -26,9 +26,9 @@ import { CSVLink } from 'react-csv';
 import { stubArray } from 'lodash';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
-import { AgGridReact,AgGridColumn } from 'ag-grid-react/lib/agGridReact';
-import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+// import { AgGridReact,AgGridColumn } from 'ag-grid-react/lib/agGridReact';
+// import 'ag-grid-community/dist/styles/ag-grid.css';
+// import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 
 const mapStateToProps = (state) => {
 	return {
@@ -543,7 +543,7 @@ class CurrencyConvert extends React.Component {
 											</form>
 										</div> */}
 										
-										{/* <BootstrapTable
+										<BootstrapTable
 											data={currency_converstion_list}
 											hover
 											pagination
@@ -584,9 +584,9 @@ class CurrencyConvert extends React.Component {
 											dataSort>
 												 {strings.Status}
 											</TableHeaderColumn>
-										</BootstrapTable> */}
+										</BootstrapTable>
 
-<div className="ag-theme-alpine mb-3" style={{ height: 590,width:"100%" }}>
+{/* <div className="ag-theme-alpine mb-3" style={{ height: 590,width:"100%" }}>
 			<AgGridReact
 				rowData={currency_converstion_list &&
 					currency_converstion_list 
@@ -669,8 +669,8 @@ class CurrencyConvert extends React.Component {
 										}
 									></AgGridColumn> 	
 			
-			</AgGridReact>  
-			<div className="example-header mt-1">
+			</AgGridReact>   */}
+			{/* <div className="example-header mt-1">
 					Page Size:
 					<select onChange={() => this.onPageSizeChanged()} id="page-size">
 					<option value="10" selected={true}>10</option>
@@ -678,8 +678,7 @@ class CurrencyConvert extends React.Component {
 					<option value="500">500</option>
 					<option value="1000">1000</option>
 					</select>
-				</div>   																	
-		</div>										
+		</div>										 */}
 
 									</Col>
 								</Row>

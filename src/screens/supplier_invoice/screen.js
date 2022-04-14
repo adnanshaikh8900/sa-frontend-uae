@@ -1152,15 +1152,7 @@ console.log(supplier_invoice_list)
 											>
 												{strings.SUPPLIERNAME}
 											</TableHeaderColumn>
-											<TableHeaderColumn
-											//	width="10%"
-												dataField="status"
-												dataFormat={this.renderInvoiceStatus}
-												dataSort
-												className="table-header-bg"
-											>
-												{strings.STATUS}
-											</TableHeaderColumn>
+											
 											<TableHeaderColumn
 												dataField="invoiceDate"
 												dataSort
@@ -1189,6 +1181,17 @@ console.log(supplier_invoice_list)
 											>
 												VAT Amount
 											</TableHeaderColumn> */}
+
+											<TableHeaderColumn
+											//	width="10%"
+												dataField="status"
+												dataFormat={this.renderInvoiceStatus}
+												dataSort
+												className="table-header-bg"
+											>
+												{strings.STATUS}
+											</TableHeaderColumn>
+											
 											<TableHeaderColumn
 												dataAlign="right"
 												dataField="totalAmount"

@@ -1370,15 +1370,7 @@ class RequestForQuotation extends React.Component {
 											>
 												{strings.SUPPLIERNAME}
 											</TableHeaderColumn>
-											<TableHeaderColumn
-											//	width="10%"
-												dataField="status"
-												dataFormat={this.renderRFQStatus}
-												dataSort
-												className="table-header-bg"
-											>
-												{strings.STATUS}
-											</TableHeaderColumn>
+											
 											<TableHeaderColumn
 												dataField="rfqReceiveDate"
 												dataSort
@@ -1397,7 +1389,15 @@ class RequestForQuotation extends React.Component {
 											>
 												{strings.RFQDUEDATE}
 											</TableHeaderColumn>
-											
+											<TableHeaderColumn
+											//	width="10%"
+												dataField="status"
+												dataFormat={this.renderRFQStatus}
+												dataSort
+												className="table-header-bg"
+											>
+												{strings.STATUS}
+											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataAlign="right"
 												dataField="totalAmount"

@@ -1053,15 +1053,7 @@ class GoodsReceivedNote extends React.Component {
 											>
 												{strings.SUPPLIERNAME}
 											</TableHeaderColumn>
-											<TableHeaderColumn
-											//	width="10%"
-												dataField="status"
-												dataFormat={this.renderRFQStatus}
-												dataSort
-												className="table-header-bg"
-											>
-												{strings.STATUS}
-											</TableHeaderColumn>
+											
 											<TableHeaderColumn
 												dataField="grnReceiveDate"
 												dataSort
@@ -1079,6 +1071,15 @@ class GoodsReceivedNote extends React.Component {
 												className="table-header-bg"
 											>
 												{strings.GRNREMARKS}
+											</TableHeaderColumn>
+											<TableHeaderColumn
+											//	width="10%"
+												dataField="status"
+												dataFormat={this.renderRFQStatus}
+												dataSort
+												className="table-header-bg"
+											>
+												{strings.STATUS}
 											</TableHeaderColumn>
 											{/* <TableHeaderColumn
 												dataField="grnReceiveDate"

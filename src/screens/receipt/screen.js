@@ -558,6 +558,31 @@ class Receipt extends React.Component {
 												csvFileName="Receipt.csv"
 												ref={(node) => (this.table = node)}
 											>
+												<TableHeaderColumn 
+												dataField="receiptId" 
+												dataSort
+												className="table-header-bg"
+												>
+													{strings.RECEIPTNUMBER}
+												</TableHeaderColumn>
+
+												<TableHeaderColumn 
+													dataField="customerName" 
+													dataSort
+													className="table-header-bg"
+												>
+													{strings.CustomerName}
+												</TableHeaderColumn>
+												
+												<TableHeaderColumn
+													dataField="invoiceNumber"
+													dataSort
+												    className="table-header-bg"
+													
+												>
+													{strings.InvoiceNumber}
+												</TableHeaderColumn>
+
 												<TableHeaderColumn
 													dataField="receiptDate"
 													dataSort
@@ -567,32 +592,10 @@ class Receipt extends React.Component {
 												>
 													{strings.ReceivedDate}
 												</TableHeaderColumn>
-
-												<TableHeaderColumn
-													dataField="invoiceNumber"
-													dataSort
-												    className="table-header-bg"
-													
-												>
-													{strings.InvoiceNumber}
-												</TableHeaderColumn>
 												{/* <TableHeaderColumn dataField="referenceCode" dataSort>
 													Reference Number
 												</TableHeaderColumn> */}
-												<TableHeaderColumn 
-													dataField="customerName" 
-													dataSort
-													className="table-header-bg"
-												>
-													{strings.CustomerName}
-												</TableHeaderColumn>
-												<TableHeaderColumn 
-												dataField="receiptId" 
-												dataSort
-												className="table-header-bg"
-												>
-													{strings.RECEIPTNUMBER}
-												</TableHeaderColumn>
+																								
 												  {/* <TableHeaderColumn
 												  width="10%" 
 											  dataField="currencyIsoCode" 

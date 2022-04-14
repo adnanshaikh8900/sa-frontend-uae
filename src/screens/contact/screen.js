@@ -717,7 +717,7 @@ class Contact extends React.Component {
 										}
 									></AgGridColumn>
 			</AgGridReact>   */}
-			<div className="example-header mt-1">
+			{/* <div className="example-header mt-1">
 					{strings.page_size}
 					<select onChange={() => this.onPageSizeChanged()} id="page-size">
 					<option value="10" selected={true}>10</option>
@@ -725,7 +725,7 @@ class Contact extends React.Component {
 					<option value="500">500</option>
 					<option value="1000">1000</option>
 					</select>
-				</div>   																	
+				</div>   																	 */}
 		{/* </div>	 */}
 												</Col>
 												{/* <Col xs="12" lg="4">

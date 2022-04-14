@@ -1133,15 +1133,7 @@ class PurchaseOrder extends React.Component {
 											>
 												{strings.SUPPLIERNAME} 
 											</TableHeaderColumn>
-											<TableHeaderColumn
-												width="10%"
-												dataField="status"
-												dataFormat={this.renderRFQStatus}
-												dataSort
-												className="table-header-bg"
-											>
-												{strings.STATUS} 
-											</TableHeaderColumn>
+											
 											<TableHeaderColumn
 												dataField="poApproveDate"
 												dataSort
@@ -1160,7 +1152,15 @@ class PurchaseOrder extends React.Component {
 											>
 												{strings.POEXPIRYDATE}
 											</TableHeaderColumn>
-											
+											<TableHeaderColumn
+												width="10%"
+												dataField="status"
+												dataFormat={this.renderRFQStatus}
+												dataSort
+												className="table-header-bg"
+											>
+												{strings.STATUS} 
+											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataAlign="right"
 												dataField="totalAmount"

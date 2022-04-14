@@ -516,6 +516,27 @@ min="0"
 												}}
 											>
 												<TableHeaderColumn
+													dataField="paymentId"
+													dataSort
+													className="table-header-bg"
+												>
+													{strings.RECEIPTNUMBER}
+												</TableHeaderColumn>
+												<TableHeaderColumn 
+												dataField="supplierName" 
+												dataSort 
+												className="table-header-bg"
+												>
+												{strings.SUPPLIERNAME}
+												</TableHeaderColumn>	
+												<TableHeaderColumn
+													dataField="invoiceNumber"
+													dataSort
+												    className="table-header-bg"
+												>
+													{strings.INVOICENUMBER}
+												</TableHeaderColumn>
+												<TableHeaderColumn
 													dataField="receiptDate"
 													dataSort
 													dataFormat={this.renderDate}
@@ -523,21 +544,7 @@ min="0"
 												>
 													{strings.PAYMENTDATE}
 												</TableHeaderColumn>
-												<TableHeaderColumn
-													dataField="invoiceNumber"
-													dataSort
-												    className="table-header-bg"
-													
-												>
-													{strings.INVOICENUMBER}
-												</TableHeaderColumn>
-												<TableHeaderColumn dataField="supplierName" dataSort className="table-header-bg">
-												{strings.SUPPLIERNAME}
-												</TableHeaderColumn>
-
-												<TableHeaderColumn dataField="paymentId" dataSort className="table-header-bg">
-												{strings.PAYMENTNUMBER}
-												</TableHeaderColumn>
+												
 												{/* <TableHeaderColumn 
 												width="10%"
 												dataField="currencyIsoCode" 

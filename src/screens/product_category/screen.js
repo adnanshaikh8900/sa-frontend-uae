@@ -22,9 +22,9 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
-import { AgGridReact,AgGridColumn } from 'ag-grid-react/lib/agGridReact';
-import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+// import { AgGridReact,AgGridColumn } from 'ag-grid-react/lib/agGridReact';
+// import 'ag-grid-community/dist/styles/ag-grid.css';
+// import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 
 
 import * as ProductCategoryActions from './actions';
@@ -480,7 +480,7 @@ class ProductCategory extends React.Component {
 											</form>
 										</div> */}
 										
-										{/* <BootstrapTable
+										<BootstrapTable
 											selectRow={this.selectRowProp}
 											search={false}
 											options={this.options}
@@ -515,7 +515,7 @@ class ProductCategory extends React.Component {
 												dataSort
 												className="table-header-bg"
 											>
-												{strings.CODE}
+												{strings.ProductCategoryCode}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="productCategoryName"
@@ -524,9 +524,9 @@ class ProductCategory extends React.Component {
 											>
 												 {strings.ProductCategoryName}
 											</TableHeaderColumn>
-										</BootstrapTable> */}
+										</BootstrapTable>
 
-<div className="ag-theme-alpine mb-3" style={{ height: 590,width:"100%" }}>
+{/* <div className="ag-theme-alpine mb-3" style={{ height: 590,width:"100%" }}>
 	     
 			<AgGridReact
 				rowData={product_category_list &&
@@ -575,29 +575,27 @@ class ProductCategory extends React.Component {
 				enablePivot={true}
 				></AgGridColumn> 
 				<AgGridColumn field="action"
-										// className="Ag-gridActionButtons"
-										headerName="ACTIONS"
-										cellRendererFramework={(params) =>
-											<div
-											 className="Ag-gridActionButtons"
-											 >
-												{this.getActionButtons(params)}
-											</div>
-
-										}
-									></AgGridColumn> 			
-			</AgGridReact>  
-			<div className="example-header mt-1">
+				// className="Ag-gridActionButtons"
+				headerName="ACTIONS"
+				cellRendererFramework={(params) =>
+					<div
+						 className="Ag-gridActionButtons"
+						 >
+						{this.getActionButtons(params)}
+					</div>}
+				></AgGridColumn> 			
+			</AgGridReact>   */}
+			{/* <div className="example-header mt-1">
 					Page Size:
 					<select onChange={() => this.onPageSizeChanged()} id="page-size">
 					<option value="10" selected={true}>10</option>
 					<option value="100">100</option>
 					<option value="500">500</option>
 					<option value="1000">1000</option>
-					</select>
-				</div>
+					</select> */}
+				{/* </div> */}
 																						
-		</div>	
+		{/* </div>	 */}
 									</Col>
 								</Row>
 							)}

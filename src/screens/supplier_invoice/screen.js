@@ -349,6 +349,13 @@ class SupplierInvoice extends React.Component {
 						{/* <DropdownItem  onClick={() => {this.openInvoicePreviewModal(row.id)}}>
               <i className="fas fa-eye" /> View
             </DropdownItem> */}
+			   			<DropdownItem
+						   onClick={() =>
+						this.props.history.push('/admin/expense/supplier-invoice/create', {parentInvoiceId: row.id})
+					}
+				>
+					<i className="fas fa-copy" /> {strings.CreateADuplicate}
+				</DropdownItem>
 
 						{row.statusEnum === 'Sent'  && row.editFlag==true&& (
 							<DropdownItem

@@ -179,7 +179,34 @@ class CreateSupplierInvoice extends React.Component {
 			language: window['localStorage'].getItem('language'),
 			param: false,
 			date: '',
-			loadingMsg:"Loading..."
+			loadingMsg:"Loading...",
+			vat_list:[
+				{
+					"id": 1,
+					"vat": 5,
+					"name": "STANDARD RATED TAX (5%) "
+				},
+				{
+					"id": 2,
+					"vat": 0,
+					"name": "ZERO RATED TAX (0%)"
+				},
+				{
+					"id": 3,
+					"vat": 0,
+					"name": "EXEMPT"
+				},
+				{
+					"id": 4,
+					"vat": 0,
+					"name": "OUT OF SCOPE"
+				},
+				{
+					"id": 10,
+					"vat": 0,
+					"name": "N/A"
+				}
+			]
 		};
 
 		this.formRef = React.createRef();
@@ -411,14 +438,160 @@ class CreateSupplierInvoice extends React.Component {
 		return value === 0 ? this.state.supplier_currency_symbol + " " + value.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : this.state.supplier_currency_symbol + " " + value.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 	};
 
+	getParentInvoiceDetails=(parentInvoiceId)=>{
+		this.props.supplierInvoiceCreateActions
+		.getInvoiceById(parentInvoiceId)
+		.then((res) => {
+			if (res.status === 200) {
+				this.getCompanyCurrency();
+			let term=	this.termList.find((option) =>option.value == res.data.term)
+				this.setState(
+					{
+						parentInvoiceId:parentInvoiceId,
+						initValue: {
+							receiptAttachmentDescription: res.data
+								.receiptAttachmentDescription
+								? res.data.receiptAttachmentDescription
+								: '',
+							receiptNumber: res.data.receiptNumber
+								? res.data.receiptNumber
+								: '',
+							contact_po_number: res.data.contactPoNumber
+								? res.data.contactPoNumber
+								: '',
+							currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
+							exchangeRate:res.data.exchangeRate ? res.data.exchangeRate : '',
+							currencyName:res.data.currencyName ? res.data.currencyName : '',
+							invoiceDueDate: res.data.invoiceDueDate
+								? moment(res.data.invoiceDueDate).format('DD-MM-YYYY')
+								: '',
+							invoiceDate: res.data.invoiceDate
+							? moment(res.data.invoiceDate).format('DD-MM-YYYY')
+							: '',
+							invoiceDate1: res.data.invoiceDate
+							? res.data.invoiceDate
+							: '',
+							contactId: res.data.contactId ? res.data.contactId : '',
+							project: res.data.projectId ? res.data.projectId : '',
+							invoice_number: res.data.referenceNumber
+								? res.data.referenceNumber
+								: '',
+							total_net: 0,
+							invoiceVATAmount: res.data.totalVatAmount
+								? res.data.totalVatAmount
+								: 0,
+							totalAmount: res.data.totalAmount ? res.data.totalAmount : 0,
+							notes: res.data.notes ? res.data.notes : '',
+							lineItemsString: res.data.invoiceLineItems
+								? res.data.invoiceLineItems
+								: [],
+							discount: res.data.discount ? res.data.discount : 0,
+							discountPercentage: res.data.discountPercentage
+								? res.data.discountPercentage
+								: 0,
+							discountType: res.data.discountType
+								? res.data.discountType
+								: '',
+							
+							term: res.data.term ? res.data.term : '',
+							placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+							fileName: res.data.fileName ? res.data.fileName : '',
+							filePath: res.data.filePath ? res.data.filePath : '',
+							isReverseChargeEnabled: res.data.isReverseChargeEnabled ? true : false,
+							checked: res.data.exciseType ? res.data.exciseType : '',
+							total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : 0,
+							taxType : res.data.taxType ? true : false,
+						},
+						customer_taxTreatment_des: res.data.taxTreatment ? res.data.taxTreatment : '',
+						checked: res.data.exciseType ? res.data.exciseType : res.data.exciseType,
+						invoiceDateNoChange :res.data.invoiceDate
+						? moment(res.data.invoiceDate)
+						: '',
+						invoiceDueDateNoChange : res.data.invoiceDueDate ?
+						moment(res.data.invoiceDueDate) : '',
+						invoiceDate: res.data.invoiceDate
+								? res.data.invoiceDate
+								: '',
+						invoiceDueDate: res.data.invoiceDueDate
+							? res.data.invoiceDueDate
+							: '',
+						discountAmount: res.data.discount ? res.data.discount : 0,
+						discountPercentage: res.data.discountPercentage
+							? res.data.discountPercentage
+							: 0,
+						data: res.data.invoiceLineItems
+							? res.data.invoiceLineItems
+							: [],
+							taxType : res.data.taxType ? true : false,
+						selectedContact: res.data.contactId ? res.data.contactId : '',
+						contactId: res.data.contactId ? res.data.contactId : '',
+						term: term ? term : '',
+						placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+						isReverseChargeEnabled: res.data.isReverseChargeEnabled ? true : false,
+						loading: false,
+					},
+					() => {
+					
+						if (this.state.data.length > 0) {
+							this.updateAmount(this.state.data);
+							const { data } = this.state;
+							const idCount =
+								data.length > 0
+									? Math.max.apply(
+											Math,
+											data.map((item) => {
+												return item.id;
+											}),
+									  )
+									: 0;
+							this.setState({
+								idCount,
+							});
+							this.formRef.current.setFieldValue('contactId', res.data.contactId, true);
+							this.formRef.current.setFieldValue('placeOfSupplyId', res.data.placeOfSupplyId, true);
+							this.formRef.current.setFieldValue('currency', this.getCurrency(res.data.contactId), true);
+							this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(res.data.contactId), true);
+							this.formRef.current.setFieldValue('term', term, true);
+							this.formRef.current.setFieldValue('notes',  res.data.notes, true);
+							this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
+							this.formRef.current.setFieldValue('receiptAttachmentDescription',  res.data.receiptAttachmentDescription, true);
+						debugger
+							const val = term ? term.value.split('_') : '';
+							const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
+							const values = moment( moment( res.data.invoiceDate).format('DD-MM-YYYY'), 'DD-MM-YYYY').toDate();							
+								this.setState({
+									date: moment(values).add(temp, 'days'),
+									invoiceDate: moment(values),
+								});
+								const date1 = moment(values).add(temp, 'days').format('DD-MM-YYYY')
+								this.formRef.current.setFieldValue('invoiceDueDate',date1, true);
+							this.setExchange( this.getCurrency(res.data.contactId) );
+						} else {
+							this.setState({
+								idCount: 0,
+							});
+						}
+					},
+				);
+				this.getCurrency(res.data.contactId)	
+			}
+		});
+	}
 	componentDidMount = () => {
+		this.props.supplierInvoiceActions.getVatList();
 		this.getInitialData();
 		if(this.props.location.state &&this.props.location.state.contactData)
 				this.getCurrentUser(this.props.location.state.contactData);
+	if(this.props.location.state && this.props.location.state.parentInvoiceId )
+				this.getParentInvoiceDetails(this.props.location.state.parentInvoiceId);
 	};
 
 	getInitialData = () => {
 		this.getInvoiceNo();
+		this.props.customerInvoiceActions.getVatList().then((res)=>{
+			if(res.status==200 && res.data)
+			 this.setState({vat_list:res.data})
+		});
 		this.props.supplierInvoiceActions.getSupplierList(this.state.contactType);
 		this.props.currencyConvertActions.getCurrencyConversionList().then((response) => {
 			this.setState({
@@ -1115,7 +1288,7 @@ class CreateSupplierInvoice extends React.Component {
 		let result = this.props.currency_convert_list.filter((obj) => {
 			return obj.currencyCode === value;
 		});
-
+		if(result &&result[0]&&  result[0].exchangeRate)
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
 	};
 
@@ -1377,11 +1550,11 @@ class CreateSupplierInvoice extends React.Component {
 		}
 
 
-		if (placeOfSupplyId && placeOfSupplyId.value) {
-			formData.append('placeOfSupplyId', placeOfSupplyId.value);
+		if (placeOfSupplyId ) {
+			formData.append('placeOfSupplyId', placeOfSupplyId.value ?placeOfSupplyId.value:placeOfSupplyId);
 		}
-		if (contactId && contactId.value) {
-			formData.append('contactId', contactId.value);
+		if (contactId ) {
+			formData.append('contactId', contactId.value?contactId.value:contactId);
 		}
 		if (currency !== null && currency) {
 			formData.append('currencyCode', this.state.supplier_currency);
@@ -1629,6 +1802,7 @@ class CreateSupplierInvoice extends React.Component {
 						},
 					},
 				});
+				if( res &&  res.data &&this.formRef.current)
 				this.formRef.current.setFieldValue('invoice_number', res.data, true, this.validationCheck(res.data));
 			}
 		});
@@ -1707,7 +1881,7 @@ class CreateSupplierInvoice extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { data, discountOptions, initValue, prefix, param,loading,loadingMsg } = this.state;
+		const { data, discountOptions, initValue, prefix,tax_treatment_list, param,loading,loadingMsg } = this.state;
 
 		const {
 			currency_list,
@@ -1946,7 +2120,7 @@ class CreateSupplierInvoice extends React.Component {
 																				)
 																				: []
 																		}
-																		value={this.state.quotationId ?
+																		value={(this.state.parentInvoiceId) ?
 
 																			tmpSupplier_list &&
 																		   selectOptionsFactory.renderOptions(
@@ -2088,7 +2262,22 @@ class CreateSupplierInvoice extends React.Component {
 																				)
 																				: []
 																		}
-																		value={this.state.placelist}
+																		value={
+																			this.placelist &&
+																			selectOptionsFactory.renderOptions(
+																				'label',
+																				'value',
+																				this.placelist,
+																				'Place of Supply',
+																		  ).find(
+																									(option) =>
+																										option.value ==
+																										((this.state.quotationId||this.state.parentInvoiceId) ? this.state.placeOfSupplyId:props.values
+																											.placeOfSupplyId.toString())
+
+																								)
+																						}
+						
 																		className={
 																			props.errors.placeOfSupplyId &&
 																				props.touched.placeOfSupplyId
@@ -2210,7 +2399,7 @@ class CreateSupplierInvoice extends React.Component {
 																		minDate={new Date()}
 																		dropdownMode="select"
 																		value={props.values.invoiceDate}
-																		selected={props.values.invoiceDate}
+																		selected={props.values.invoiceDate1 ?new Date(props.values.invoiceDate1):props.values.invoiceDate} 
 																		onChange={(value) => {
 																			props.handleChange('invoiceDate')(value);
 																			this.setDate(props, value);

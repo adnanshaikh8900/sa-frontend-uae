@@ -711,7 +711,7 @@ class CreateBankTransaction extends React.Component {
 														date1 < new Date(this.state.reconciledDate)
 													) {
 														errors.transactionDate =
-															'Transaction Date Cannot be less than Bank Account Opening Date or greater than Current Date';
+															'Transaction Date cannot be before Bank Account Opening Date or after Current Date.';
 													}
 													// if (
 													// 	values.coaCategoryId.value !== 10 &&

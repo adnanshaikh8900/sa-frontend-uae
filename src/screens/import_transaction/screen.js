@@ -1207,6 +1207,7 @@ setConfigurations=(configurationList)=>{
 																					{strings.Apply}
 																				</Button>
 																			</FormGroup>
+																			{this.state.templateId ? 
 																			<FormGroup>
 																				<Button
 																					type="button"
@@ -1222,9 +1223,9 @@ setConfigurations=(configurationList)=>{
 																					}
 																				>
 																					<i className="fa fa-dot-circle-o"></i>{' '}
-																					validate
+																					Validate
 																				</Button>
-																			</FormGroup>
+																			</FormGroup> : ''}
 																		</Col>
 																	</Row>
 																	<Row>
@@ -1399,7 +1400,7 @@ setConfigurations=(configurationList)=>{
 																		<TableHeaderColumn
 																			dataField={name}
 																			dataAlign="center"
-																			key={index}
+																			iskey={index}
 																			columnClassName={this.columnClassNameFormat}
 																		>
 																			{name}

@@ -560,9 +560,9 @@ class CreateRequestForQuotation extends React.Component {
 					subTotal: 0,
 					exciseTaxId:'',
 					exciseAmount:'',
-					 discountType:'FIXED',
+					discountType:'FIXED',
 					vatAmount:0,
-					// discount: 0,
+					 discount: 0,
 					productId: '',
 					unitType:'',
 					unitTypeId:''
@@ -930,7 +930,7 @@ class CreateRequestForQuotation extends React.Component {
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
-			
+
 			//Exclusive case
 			if(this.state.taxType === false){
 				if (obj.discountType === 'PERCENTAGE') {	

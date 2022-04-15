@@ -646,14 +646,14 @@ class PayrollEmployee extends React.Component {
                                                     >
                                                         {strings.Status}
                                                     </TableHeaderColumn>
-                                                    <TableHeaderColumn
+                                                    {/* <TableHeaderColumn
                                                         className="table-header-bg"
                                                         dataField="action"
                                                         dataSort
                                                         width="12%"
                                                     >
                                                          {strings.action}
-                                                    </TableHeaderColumn>
+                                                    </TableHeaderColumn> */}
                                                         {/* <TableHeaderColumn
                                                             className="text-right"
                                                             columnClassName="text-right"

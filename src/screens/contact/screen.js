@@ -609,14 +609,6 @@ class Contact extends React.Component {
 														>
 														    {strings.STATUS}
 														</TableHeaderColumn>
-														<TableHeaderColumn
-															className="text-right"
-															columnClassName="text-right"
-															width="5%"
-															dataFormat={this.renderActions}
-															className="table-header-bg"
-														></TableHeaderColumn>
-														
 														{/* <TableHeaderColumn
 															dataField="openingBalance"
 															dataSort
@@ -625,6 +617,15 @@ class Contact extends React.Component {
 														>
 														    {strings.OPENINGBALANCE}
 														</TableHeaderColumn> */}
+														<TableHeaderColumn
+															className="text-right"
+															columnClassName="text-right"
+															width="5%"
+															dataFormat={this.renderActions}
+															className="table-header-bg"
+														></TableHeaderColumn>
+														
+														
 											</BootstrapTable>
 										</div>
 										

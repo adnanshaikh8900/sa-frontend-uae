@@ -427,7 +427,7 @@ class RequestForQuotation extends React.Component {
 						)}
 					</DropdownToggle>
 					<DropdownMenu right>
-					{row.status !== 'Sent' && row.status !== "Closed"&& row.status !== "Approved"&&row.status !== "Rejected"    && (
+					{row.status !== 'Sent' && row.status !== "Closed"&& row.status !== "Approved"&&row.status !== "Rejected" && row.status !== "Invoiced"    && (
 							<DropdownItem
 								onClick={() =>
 									this.props.history.push(
@@ -462,7 +462,7 @@ class RequestForQuotation extends React.Component {
 								<i className="fas fa-plus" />{strings.CreateSupplierInvoice}
 							</DropdownItem>
 							)}
-							{ row.status !== "Closed" && row.status !== "Approved" &&row.status !== "Rejected"   && (
+							{ row.status !== "Closed" && row.status !== "Approved" &&row.status !== "Rejected"  && row.status !== "Invoiced"   && (
 							<DropdownItem
 								onClick={() => {
 									this.sendMail(row);
@@ -503,7 +503,7 @@ class RequestForQuotation extends React.Component {
 							</DropdownItem>
 							)}
 							
-							{(row.status === 'Sent'|| row.status === "Approved"|| row.status === "Rejected"  ) && (
+							{(row.status === 'Sent'|| row.status === "Approved"|| row.status === "Rejected" ||  row.status === "Invoiced"  ) && (
 							<DropdownItem
 							onClick={() => {
 							this.changeStatus(row.id,row.statusEnum);

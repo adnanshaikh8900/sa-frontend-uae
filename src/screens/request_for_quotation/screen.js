@@ -451,6 +451,17 @@ class RequestForQuotation extends React.Component {
 								<i className="fas fa-plus" /> {strings.CreatePO}
 							</DropdownItem>
 							)}
+								{row.status === 'Approved' && (
+							<DropdownItem
+							onClick={() =>
+								this.props.history.push(
+									'/admin/expense/supplier-invoice/create',
+									{ rfqId: row.id },
+								)
+							}>
+								<i className="fas fa-plus" />{strings.CreateSupplierInvoice}
+							</DropdownItem>
+							)}
 							{ row.status !== "Closed" && row.status !== "Approved" &&row.status !== "Rejected"   && (
 							<DropdownItem
 								onClick={() => {

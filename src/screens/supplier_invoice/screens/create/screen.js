@@ -180,6 +180,7 @@ class CreateSupplierInvoice extends React.Component {
 			param: false,
 			date: '',
 			loadingMsg:"Loading...",
+			isSelected:false,
 			vat_list:[
 				{
 					"id": 1,
@@ -577,11 +578,229 @@ class CreateSupplierInvoice extends React.Component {
 			}
 		});
 	}
+	getRFQDetails=(rfqId)=>{
+		this.props.supplierInvoiceCreateActions.getRFQeById(rfqId)
+												.then((res)=>{
+													if (res.status === 200) {
+														this.getCompanyCurrency();
+														// this.purchaseCategory();
+														this.setState(
+															{
+																isSelected:true,
+																contactId: res.data.supplierId,
+																rfqId: rfqId,
+																initValue: {
+																	rfqExpiryDate: res.data.rfqExpiryDate
+																		? moment(res.data.rfqExpiryDate).format('DD-MM-YYYY')
+																		: '',
+																		rfqExpiryDate: res.data.rfqExpiryDate
+																		? res.data.rfqExpiryDate
+																		: '',
+																		contactId: res.data.supplierId ? res.data.supplierId : '',
+																		quotationNumber: res.data.quotationNumber
+																		? res.data.quotationNumber
+																		: '',
+																		invoiceVATAmount: res.data.totalVatAmount
+																		? res.data.totalVatAmount
+																		: 0,
+																		totalAmount: res.data.totalAmount ? res.data.totalAmount : 0,
+																		total_net: 0,
+																		notes: res.data.notes ? res.data.notes : '',
+																		lineItemsString: res.data.poQuatationLineItemRequestModelList
+																		? res.data.poQuatationLineItemRequestModelList
+																		: [],
+																		placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+																		total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
+																		discount: res.data.discount ? res.data.discount : 0,
+																		discountPercentage: res.data.discountPercentage
+																			? res.data.discountPercentage
+																			: 0,
+																		discountType: res.data.discountType
+																			? res.data.discountType
+																			: '',
+		
+																},
+																invoiceDateNoChange: res.data.rfqExpiryDate
+																		? moment(res.data.rfqExpiryDate)
+																		: '',
+																invoiceDueDateNoChange: res.data.rfqExpiryDate
+																		? res.data.rfqExpiryDate
+																		: '',
+																customer_taxTreatment_des : res.data.taxtreatment ? res.data.taxtreatment : '',
+																// placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+																total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
+																data: res.data.poQuatationLineItemRequestModelList
+																	? res.data.poQuatationLineItemRequestModelList
+																	: [],
+		
+		
+																//
+		
+																discountAmount: res.data.discount ? res.data.discount : 0,
+																discountPercentage: res.data.discountPercentage
+																	? res.data.discountPercentage
+																	: '',
+		
+																selectedContact: res.data.supplierId ? res.data.supplierId : '',
+																// term: res.data.term ? res.data.term : '',
+																placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+																loading: false,
+		
+															},
+															() => {
+																if (this.state.data.length > 0) {
+																	this.updateAmount(this.state.data);
+																	const { data } = this.state;
+																	const idCount =
+																		data.length > 0
+																			? Math.max.apply(
+																					Math,
+																					data.map((item) => {
+																						return item.id;
+																					}),
+																			  )
+																			: 0;
+																	this.setState({
+																		idCount,
+																	});
+																		this.formRef.current.setFieldValue(
+																			'lineItemsString',
+																			this.state.data,
+																			true,
+																		);
+																this.formRef.current.setFieldValue('contactId', res.data.supplierId, true);
+																this.formRef.current.setFieldValue('placeOfSupplyId', res.data.placeOfSupplyId, true);
+																this.formRef.current.setFieldValue('currency', this.getCurrency(res.data.supplierId), true);
+																this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(res.data.supplierId), true);
+															   this.setExchange( this.getCurrency(res.data.supplierId) );
+																} else {
+																	this.setState({
+																		idCount: 0,
+																	});
+																}
+															}
+														);
+														this.getCurrency(res.data.supplierId)
+													}
+												})
+			}
+			getpoDetails=(poId)=>{
+				this.props.supplierInvoiceCreateActions.getPOById(poId)
+														.then((res)=>{
+															if (res.status === 200) {
+																this.getCompanyCurrency();
+																// this.purchaseCategory();
+																this.setState(
+																	{
+																		isSelected:true,
+																		contactId: res.data.supplierId,
+																		poId: poId,
+																		initValue: {
+																			rfqExpiryDate: res.data.rfqExpiryDate
+																				? moment(res.data.rfqExpiryDate).format('DD-MM-YYYY')
+																				: '',
+																				rfqExpiryDate: res.data.rfqExpiryDate
+																				? res.data.rfqExpiryDate
+																				: '',
+																				contactId: res.data.supplierId ? res.data.supplierId : '',
+																				quotationNumber: res.data.quotationNumber
+																				? res.data.quotationNumber
+																				: '',
+																				invoiceVATAmount: res.data.totalVatAmount
+																				? res.data.totalVatAmount
+																				: 0,
+																				totalAmount: res.data.totalAmount ? res.data.totalAmount : 0,
+																				total_net: 0,
+																				notes: res.data.notes ? res.data.notes : '',
+																				lineItemsString: res.data.poQuatationLineItemRequestModelList
+																				? res.data.poQuatationLineItemRequestModelList
+																				: [],
+																				placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+																				total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
+																				discount: res.data.discount ? res.data.discount : 0,
+																				discountPercentage: res.data.discountPercentage
+																					? res.data.discountPercentage
+																					: 0,
+																				discountType: res.data.discountType
+																					? res.data.discountType
+																					: '',
+				
+																		},
+																		invoiceDateNoChange: res.data.rfqExpiryDate
+																				? moment(res.data.rfqExpiryDate)
+																				: '',
+																		invoiceDueDateNoChange: res.data.rfqExpiryDate
+																				? res.data.rfqExpiryDate
+																				: '',
+																		customer_taxTreatment_des : res.data.taxtreatment ? res.data.taxtreatment : '',
+																		// placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+																		total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
+																		data: res.data.poQuatationLineItemRequestModelList
+																			? res.data.poQuatationLineItemRequestModelList
+																			: [],
+				
+				
+																		//
+				
+																		discountAmount: res.data.discount ? res.data.discount : 0,
+																		discountPercentage: res.data.discountPercentage
+																			? res.data.discountPercentage
+																			: '',
+				
+																		selectedContact: res.data.supplierId ? res.data.supplierId : '',
+																		// term: res.data.term ? res.data.term : '',
+																		placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+																		loading: false,
+				
+																	},
+																	() => {
+																		if (this.state.data.length > 0) {
+																			this.updateAmount(this.state.data);
+																			const { data } = this.state;
+																			const idCount =
+																				data.length > 0
+																					? Math.max.apply(
+																							Math,
+																							data.map((item) => {
+																								return item.id;
+																							}),
+																					  )
+																					: 0;
+																			this.setState({
+																				idCount,
+																			});
+																				this.formRef.current.setFieldValue(
+																					'lineItemsString',
+																					this.state.data,
+																					true,
+																				);
+																		this.formRef.current.setFieldValue('contactId', res.data.supplierId, true);
+																		this.formRef.current.setFieldValue('placeOfSupplyId', res.data.placeOfSupplyId, true);
+																		this.formRef.current.setFieldValue('currency', this.getCurrency(res.data.supplierId), true);
+																		this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(res.data.supplierId), true);
+																	   this.setExchange( this.getCurrency(res.data.supplierId) );
+																		} else {
+																			this.setState({
+																				idCount: 0,
+																			});
+																		}
+																	}
+																);
+																this.getCurrency(res.data.supplierId)
+															}
+														})
+					}
 	componentDidMount = () => {
 		this.props.supplierInvoiceActions.getVatList();
 		this.getInitialData();
 		if(this.props.location.state &&this.props.location.state.contactData)
 				this.getCurrentUser(this.props.location.state.contactData);
+		if(this.props.location.state && this.props.location.state.rfqId){
+			this.getRFQDetails(this.props.location.state.rfqId)
+		}	
+		if(this.props.location.state && this.props.location.state.poId){
+			this.getpoDetails(this.props.location.state.poId)
+		}
 	if(this.props.location.state && this.props.location.state.parentInvoiceId )
 				this.getParentInvoiceDetails(this.props.location.state.parentInvoiceId);
 	};
@@ -2021,9 +2240,9 @@ class CreateSupplierInvoice extends React.Component {
 																productId: Yup.string().required(
 																	'Product is Required',
 																),
-																transactionCategoryId: Yup.string().required(
-																	'Account is Required',
-																),
+																// transactionCategoryId: Yup.string().required(
+																// 	'Account is Required',
+																// ),
 															}),
 														),
 													attachmentFile: Yup.mixed()
@@ -2110,6 +2329,7 @@ class CreateSupplierInvoice extends React.Component {
 																		{strings.Supplier} 
 																	</Label>
 																	<Select
+																		isDisabled={this.state.isSelected}
 																		id="contactId"
 																		name="contactId"
 																		placeholder={strings.Select + strings.Supplier}
@@ -2123,8 +2343,8 @@ class CreateSupplierInvoice extends React.Component {
 																				)
 																				: []
 																		}
-																		value={(this.state.parentInvoiceId) ?
-
+																		
+																		value={(this.state.rfqId || this.state.parentInvoiceId || this.state.poId) ?
 																			tmpSupplier_list &&
 																		   selectOptionsFactory.renderOptions(
 																			   'label',
@@ -2163,14 +2383,15 @@ class CreateSupplierInvoice extends React.Component {
 																		)}
 																</FormGroup>
 															</Col>
-															<Col lg={3}>
+															{this.props.location.state && this.props.location.state.rfqId ||
+															this.props.location.state && this.props.location.state.poId ?"":<Col  lg={3}>
 																<Label
 																	htmlFor="contactId"
 																	style={{ display: 'block' }}
 																>
 																	{strings.AddNewSupplier}
 																</Label>
-																<Button
+															<Button
 																	type="button"
 																	color="primary"
 																	className="btn-square"
@@ -2181,7 +2402,7 @@ class CreateSupplierInvoice extends React.Component {
 																>
 																	<i className="fa fa-plus"></i> {strings.AddASupplier}
 																</Button>
-															</Col>
+															</Col>}
 
 															{/* <Col lg={3}>
 																			<FormGroup className="mb-3">
@@ -2251,6 +2472,7 @@ class CreateSupplierInvoice extends React.Component {
 																		{strings.PlaceofSupply}
 																	</Label>
 																	<Select
+																	isDisabled={this.state.isSelected}
 																		id="placeOfSupplyId"
 																		name="placeOfSupplyId"
 																		placeholder={strings.Select + strings.PlaceofSupply}
@@ -2275,7 +2497,9 @@ class CreateSupplierInvoice extends React.Component {
 																		  ).find(
 																									(option) =>
 																										option.value ==
-																										((this.state.quotationId||this.state.parentInvoiceId) ? this.state.placeOfSupplyId:props.values
+																										((this.state.rfqId || this.state.poId || 
+																											this.state.parentInvoiceId) ? 
+																											this.state.placeOfSupplyId:props.values
 																											.placeOfSupplyId.toString())
 
 																								)

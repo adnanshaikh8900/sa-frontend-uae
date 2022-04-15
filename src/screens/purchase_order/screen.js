@@ -359,6 +359,17 @@ class PurchaseOrder extends React.Component {
 								<i className="fas fa-plus" />   {strings.CreateGRN}
 							</DropdownItem>
 							)}
+							{row.status === 'Approved' && (
+							<DropdownItem
+							onClick={() =>
+								this.props.history.push(
+									'/admin/expense/supplier-invoice/create',
+									{ poId: row.id },
+								)
+							}>
+								<i className="fas fa-plus" />{strings.CreateSupplierInvoice}
+							</DropdownItem>
+							)}
 							{row.status === "Draft" && (
 							<DropdownItem
 								onClick={() => {

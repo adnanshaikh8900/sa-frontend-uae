@@ -589,6 +589,7 @@ class CreateSupplierInvoice extends React.Component {
 																isSelected:true,
 																contactId: res.data.supplierId,
 																rfqId: rfqId,
+																poId:rfqId,
 																initValue: {
 																	rfqExpiryDate: res.data.rfqExpiryDate
 																		? moment(res.data.rfqExpiryDate).format('DD-MM-YYYY')
@@ -1727,6 +1728,7 @@ class CreateSupplierInvoice extends React.Component {
 		const { term } = this.state;
 
 		let formData = new FormData();
+		formData.append('quotationId',this.state.poId ? this.state.poId : '')
 		formData.append('taxType', this.state.taxType)
 		formData.append(
 			'referenceNumber',
@@ -3370,7 +3372,7 @@ class CreateSupplierInvoice extends React.Component {
 																			? 'Creating...'
 																			: strings.Create}
 																	</Button>
-																	<Button
+																	{this.state.poId ? "": (	<Button
 																		type="button"
 																		color="primary"
 																		className="btn-square mr-3"
@@ -3399,7 +3401,7 @@ class CreateSupplierInvoice extends React.Component {
 																		{this.state.disabled
 																			? 'Creating...'
 																			: strings.CreateandMore}
-																	</Button>
+																	</Button>)}
 																	<Button
 																		type="button"
 																		color="secondary"

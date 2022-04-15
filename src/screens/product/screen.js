@@ -73,7 +73,7 @@ class Product extends React.Component {
 		};
 
 		this.options = {
-			// onRowClick: this.goToDetail,
+			onRowClick: this.goToDetail,
 			page: 1,
 			sizePerPage: 10,
 			onSizePerPageList: this.onSizePerPageList,
@@ -691,7 +691,7 @@ class Product extends React.Component {
 											className="text-right"
 											columnClassName="text-right"
 											width="5%"
-											dataFormat={this.renderActions}
+											// dataFormat={this.renderActions}
 											className="table-header-bg"
 										></TableHeaderColumn>
 											</BootstrapTable>

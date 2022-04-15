@@ -882,9 +882,7 @@ class PayrollRun extends React.Component {
 															 dataFormat={this.renderComment}
 															
 														>
-														{strings.reson
-														
-														}
+														{strings.reason}
 														</TableHeaderColumn>
 
 

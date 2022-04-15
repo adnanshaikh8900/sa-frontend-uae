@@ -437,7 +437,7 @@ class PurchaseOrder extends React.Component {
 						>
 							<i className="fas fa-eye" />  {strings.View}
 						</DropdownItem>
-						{(row.status === 'Approved'||row.status === 'Sent'||row.status === 'Rejected')	 &&(
+						{(row.status === 'Approved'||row.status === 'Sent'||row.status === 'Rejected'|| row.status === "Invoiced" )	 &&(
 								<DropdownItem
 							onClick={() => {
 							this.close(row.id,"Closed");

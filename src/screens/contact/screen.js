@@ -79,7 +79,7 @@ class Contact extends React.Component {
 		};
 
 		this.options = {
-			// onRowClick: this.goToDetail,
+			onRowClick: this.goToDetail,
 			page: 1,
 			sizePerPage: 10,
 			onSizePerPageList: this.onSizePerPageList,
@@ -197,10 +197,10 @@ class Contact extends React.Component {
 		});
 	};
 
-	// goToDetail = (contactId) => {
+	goToDetail = (row) => {
 		 
-	// 	this.props.history.push('/admin/master/contact/detail', { id: contactId });
-	// };
+		this.props.history.push('/admin/master/contact/detail', { id: row.id });
+	};
 	renderStatus = (cell, row) => {
 
         let classname = '';
@@ -621,7 +621,7 @@ class Contact extends React.Component {
 															className="text-right"
 															columnClassName="text-right"
 															width="5%"
-															dataFormat={this.renderActions}
+															// dataFormat={this.renderActions}
 															className="table-header-bg"
 														></TableHeaderColumn>
 														

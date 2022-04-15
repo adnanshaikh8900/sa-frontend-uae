@@ -729,7 +729,7 @@ class CreateJournal extends React.Component {
 								},
 								() => {
 									resetForm(this.state.initValue);
-								},
+									this.getjournalReferenceNo()								},
 							);
 						} else {
 							this.props.history.push('/admin/accountant/journal');

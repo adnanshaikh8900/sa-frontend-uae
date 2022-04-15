@@ -1779,6 +1779,19 @@ if(changeShippingAddress && changeShippingAddress==true)
 						},
 						() => {
 							resetForm(this.state.initValue);
+							this.setState({
+								initValue: {
+								...this.state.initValue,
+								...{
+									total_net: 0,
+									invoiceVATAmount: 0,
+									totalAmount: 0,
+									discountType: '',
+									discount: 0,
+									discountPercentage: '',
+									changeShippingAddress:false
+								},}
+							})
 							this.getInvoiceNo();
 							this.formRef.current.setFieldValue(
 								'lineItemsString',
@@ -2780,7 +2793,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																				)
 																				: []
 																		}
-																		value={ country_list &&
+																		value={  country_list  &&
 																				selectOptionsFactory
 																					.renderOptions(
 																						'countryName',
@@ -2791,7 +2804,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																					.find(
 																						(option) =>
 																							option.value ===
-																							+props.values.shippingCountryId.value,
+																							+(props.values.shippingCountryId && props.values.shippingCountryId.value ?props.values.shippingCountryId.value :""),
 																					)
 																		}
 																		onChange={(option) => {
@@ -2829,7 +2842,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																<FormGroup>
 																	<Label htmlFor="shippingStateId"><span className="text-danger">* </span>
 																		{/* {strings.StateRegion} */}
-																		{props.values.shippingCountryId.value === 229 ? "Emirites" : "State / Provinces"}
+																		{props.values.shippingCountryId &&props.values.shippingCountryId.value && props.values.shippingCountryId.value === 229 ? "Emirites" : "State / Provinces"}
 																	</Label>
 																	<Select
 																		options={
@@ -2838,13 +2851,13 @@ if(changeShippingAddress && changeShippingAddress==true)
 																					'label',
 																					'value',
 																					state_list_for_shipping,
-																					props.values.shippingCountryId.value === 229 ? "Emirites" : "State / Provinces",
+																					props.values.shippingCountryId &&props.values.shippingCountryId.value && props.values.shippingCountryId.value === 229 ? "Emirites" : "State / Provinces",
 																				)
 																				: []
 																		}
 																		value={ state_list_for_shipping.find(
 																					(option) =>
-																						option.value ==props.values.shippingStateId.value,
+																						option.value == (props.values.shippingStateId && props.values.shippingStateId.value? props.values.shippingStateId.value :''),
 																				)
 																		}
 																		onChange={(option) => {
@@ -2854,7 +2867,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																				props.handleChange('shippingStateId')('');
 																			}
 																		}}
-																		placeholder={props.values.shippingCountryId.value == 229 ? "Emirites" : "State / Provinces"}
+																		placeholder={props.values.shippingCountryId &&props.values.shippingCountryId.value && props.values.shippingCountryId.value === 229 ? "Emirites" : "State / Provinces"}
 																		id="shippingStateId"
 																		name="shippingStateId"
 																		className={
@@ -3652,7 +3665,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																			? 'Creating...'
 																			: strings.Create }
 																	</Button>
-																	<Button
+																	{this.state.quotationId ? "": (<Button
 																		type="button"
 																		color="primary"
 																		className="btn-square mr-3"
@@ -3683,7 +3696,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		{this.state.disabled
 																			? 'Creating...'
 																			: strings.CreateandMore }
-																	</Button>
+																	</Button>)}
 																	<Button
 																		color="secondary"
 																		className="btn-square"

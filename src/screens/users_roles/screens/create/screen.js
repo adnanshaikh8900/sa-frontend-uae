@@ -65,7 +65,8 @@ class CreateRole extends React.Component {
 			isActive: true,
 			isChecked: true,
 			expanded: ["SelectAll"],
-			validationForSelect:0
+			validationForSelect:0,
+			loadingMsg:"Loading..."
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regExDecimal = /^[0-9]*(\.[0-9]{0,2})?$/;
@@ -148,7 +149,7 @@ class CreateRole extends React.Component {
 			moduleListIds: this.state.checked,
 			isActive:this.state.isActive
 		};
-		
+		{this.setState({ loading:true, loadingMsg:"Creating Users Role"})}
 		this.props.RoleActions.createRole(obj)
 			.then((res) => {
 				if (res.status === 200) {
@@ -164,6 +165,7 @@ class CreateRole extends React.Component {
 						});
 					} else {
 						this.props.history.push('/admin/settings/user-role');
+						{this.setState({ loading:false,})}
 					}
 				}
 			})
@@ -217,7 +219,7 @@ getvalidation=()=>{
 }
 	render() {
 		strings.setLanguage(this.state.language);
-		const { loading, vat_list } = this.state;
+		const { loading, vat_list ,loadingMsg} = this.state;
 
 		if (vat_list) {
 			var VatList = vat_list.map((item) => {
@@ -253,6 +255,8 @@ getvalidation=()=>{
 			},
 		  ];
 		return (
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
+			<div>
 			<div className="role-create-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -265,6 +269,10 @@ getvalidation=()=>{
 									</div>
 								</CardHeader>
 								<CardBody>
+							
+									{loading ? (
+										<Loader />
+									) : (
 									<Row>
 										<Col lg={6}>
 											<Formik
@@ -548,12 +556,14 @@ getvalidation=()=>{
 											</Formik>
 										</Col>
 									</Row>
+									)}
 								</CardBody>
 							</Card>
 						</Col>
 					</Row>
 					{loading ? <Loader></Loader> : ''}
 				</div>
+			</div>
 			</div>
 		);
 	}

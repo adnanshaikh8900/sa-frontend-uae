@@ -32,7 +32,7 @@ import './style.scss';
 import {data}  from '../../../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { selectOptionsFactory, selectCurrencyFactory } from 'utils';
-//import Switch from "react-switch";
+import Switch from "react-switch";
 
 const mapStateToProps = (state) => {
 	return {
@@ -312,7 +312,7 @@ class CreateBankTransaction extends React.Component {
 			console.log(result1);
 		 }
 		let formData = new FormData();
-//		formData.append('expenseType',  this.state.expenseType);
+		formData.append('expenseType',  this.state.expenseType);
 		formData.append('bankId ', bankAccountId ? bankAccountId : '');
 		formData.append(
 			'date',
@@ -362,7 +362,7 @@ class CreateBankTransaction extends React.Component {
 		if (vendorId && coaCategoryId.value && coaCategoryId.label === 'Expenses') {
 			formData.append('vendorId', vendorId ? vendorId.value : '');
 		}
-		
+		debugger
 		if (vendorId && coaCategoryId.label === 'Supplier Invoice') {
 			formData.append('vendorId', vendorId.value ? vendorId.value : vendorId);
 		}
@@ -711,7 +711,7 @@ class CreateBankTransaction extends React.Component {
 														date1 < new Date(this.state.reconciledDate)
 													) {
 														errors.transactionDate =
-															'Transaction Date Cannot be less than Bank Account Opening Date or greater than Current Date';
+															'Transaction Date cannot be before Bank Account Opening Date or after Current Date.';
 													}
 													// if (
 													// 	values.coaCategoryId.value !== 10 &&
@@ -1027,7 +1027,7 @@ class CreateBankTransaction extends React.Component {
 																				</FormGroup>
 																			</Col>
 																		)}
-																		{/* <Col className='mb-3' lg={3}>
+																		<Col className='mb-3' lg={3}>
 																<Label htmlFor="inline-radio3"><span className="text-danger">* </span>{strings.ExpenseType}</Label>
 																<div>
 																	{this.state.expenseType === false ?
@@ -1039,7 +1039,9 @@ class CreateBankTransaction extends React.Component {
 																		onChange={(expenseType) => {
 																			props.handleChange('expenseType')(expenseType);
 																			this.setState({ expenseType, }, () => { },);
-																	}}
+																			// if (this.state.expenseType == true)
+																			// 	this.setState({ expenseType: true })
+																		}}
 																		onColor="#2064d8"
 																		onHandleColor="#2693e6"
 																		handleDiameter={25}
@@ -1058,7 +1060,7 @@ class CreateBankTransaction extends React.Component {
 																	}
 																</div>
 
-															</Col> */}
+															</Col>
 																</Row>
 															)}
 															

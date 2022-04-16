@@ -117,6 +117,7 @@ class CustomerInvoice extends React.Component {
 			},
 			rowId: '',
 			language: window['localStorage'].getItem('language'),
+			loadingMsg:"Loading..."
 		};
 
 		this.options = {
@@ -225,7 +226,7 @@ class CustomerInvoice extends React.Component {
 		this.initializeData();
 	};
 
-	postInvoice = (row) => {
+	postInvoice = (row,markAsSent) => {
 		this.setState({
 			loading: true,
 		});
@@ -234,8 +235,10 @@ class CustomerInvoice extends React.Component {
 			postingRefId: row.id,
 			postingRefType: 'INVOICE',
 			amountInWords:upperCase(row.currencyName + " " +(toWords.convert(row.invoiceAmount))+" ONLY" ).replace("POINT","AND"),
-			vatInWords:row.vatAmount ?upperCase(row.currencyName + " " +(toWords.convert(row.vatAmount))+" ONLY" ).replace("POINT","AND") :"-"
+			vatInWords:row.vatAmount ?upperCase(row.currencyName + " " +(toWords.convert(row.vatAmount))+" ONLY" ).replace("POINT","AND") :"-",
+			markAsSent:markAsSent
 		};
+		this.setState({ loading:true, loadingMsg:"Customer Invoice Posting..."});
 		this.props.customerInvoiceActions
 			.postInvoice(postingRequestModel)
 			.then((res) => {
@@ -249,6 +252,7 @@ class CustomerInvoice extends React.Component {
 					});
 					this.getOverdue();
 					this.initializeData();
+					this.setState({ loading:false,});
 				}
 			})
 			.catch((err) => {
@@ -443,7 +447,16 @@ class CustomerInvoice extends React.Component {
 						{row.statusEnum !== 'Sent' && row.statusEnum !== 'Paid' && row.statusEnum !== 'Partially Paid' && (
 							<DropdownItem
 								onClick={() => {
-									this.postInvoice(row);
+									this.postInvoice(row,true);
+								}}
+							>
+							<i class="far fa-arrow-alt-circle-right"></i>Mark As Sent
+							</DropdownItem>
+						)}
+						{row.statusEnum !== 'Sent' && row.statusEnum !== 'Paid' && row.statusEnum !== 'Partially Paid' && (
+							<DropdownItem
+								onClick={() => {
+									this.postInvoice(row,false);
 								}}
 							>
 								<i className="fas fa-send" /> {strings.Post}
@@ -474,6 +487,14 @@ class CustomerInvoice extends React.Component {
 								<i className="fas fa-university" /> {strings.RecordPayment}
 							</DropdownItem>
 						)}
+						<DropdownItem
+					
+					onClick={() =>
+						this.props.history.push('/admin/income/customer-invoice/create', {parentInvoiceId: row.id})
+					}
+				>
+					<i className="fas fa-copy" /> {strings.CreateADuplicate}
+				</DropdownItem>
 						{/* {row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && (
 							<DropdownItem
 								onClick={() => {
@@ -913,7 +934,7 @@ class CustomerInvoice extends React.Component {
 	render() {
 		strings.setLanguage(this.state.language);
 		const {
-			loading,
+			loading,loadingMsg,
 			filterData,
 			dialog,
 			selectedRows,
@@ -957,7 +978,7 @@ class CustomerInvoice extends React.Component {
 		})
 
 		return (
-			loading ==true? <Loader/> :
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 <div> <div className="customer-invoice-screen">
 				<div className="animated fadeIn">
 					{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
@@ -1319,15 +1340,6 @@ class CustomerInvoice extends React.Component {
 											{strings.CUSTOMERNAME}
 										</TableHeaderColumn>
 										<TableHeaderColumn
-											//width="9%"
-											dataField="status"
-											dataFormat={this.renderInvoiceStatus}
-											dataSort
-											className="table-header-bg"
-										>
-											{strings.STATUS}
-										</TableHeaderColumn>
-										<TableHeaderColumn
 											dataField="invoiceDate"
 											dataSort
 											//width="6%"
@@ -1344,6 +1356,15 @@ class CustomerInvoice extends React.Component {
 											className="table-header-bg"
 										>
 											{strings.DUEDATE}
+										</TableHeaderColumn>
+										<TableHeaderColumn
+											//width="9%"
+											dataField="status"
+											dataFormat={this.renderInvoiceStatus}
+											dataSort
+											className="table-header-bg"
+										>
+											{strings.STATUS}
 										</TableHeaderColumn>
 										
 										{/* <TableHeaderColumn

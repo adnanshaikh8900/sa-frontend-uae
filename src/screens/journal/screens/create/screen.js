@@ -21,7 +21,7 @@ import DatePicker from 'react-datepicker';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 
-import { Currency } from 'components';
+import { Currency , Loader} from 'components';
 import { CommonActions } from 'services/global';
 import { selectCurrencyFactory } from 'utils';
 import * as JournalActions from '../../actions';
@@ -70,6 +70,7 @@ class CreateJournal extends React.Component {
 			loading: false,
 			createMore: false,
 			disabled: false,
+			exist:false,
 			data: [
 				{
 					id: 0,
@@ -119,6 +120,7 @@ class CreateJournal extends React.Component {
 				],
 			},
 			submitJournal: false,
+			loadingMsg:"Loading..."
 			
 		};
 
@@ -133,6 +135,8 @@ class CreateJournal extends React.Component {
 	};
 
 	initializeData = () => {
+	this.getjournalReferenceNo();
+
 		this.props.journalActions.getContactList();
 		this.props.journalActions.getCurrencyList().then((response) => {
 			this.setState({
@@ -154,6 +158,50 @@ class CreateJournal extends React.Component {
 		this.props.journalActions.getTransactionCategoryList();
 	};
 
+	getjournalReferenceNo = () => {
+		debugger
+		this.props.journalActions.getInvoiceNo().then((res) => {
+			if (res.status === 200) {
+				this.setState({
+					initValue: {
+						...this.state.initValue,
+						...{ journalReferenceNo: res.data },
+					},
+				});
+				if( res &&  res.data)
+				console.log(res.data)
+				this.formRef.current.setFieldValue('journalReferenceNo', res.data, true,
+				 this.validationCheck(res.data)
+				);
+			}
+		});
+	};
+	validationCheck = (value) => {
+		debugger
+		const data = {
+			moduleType: 20,
+			name: value,
+		};
+		this.props.journalActions
+			.checkValidation(data)
+			.then((response) => {
+				
+				if (response.data === 'Journal Reference Number Already Exists') {
+					this.setState(
+						{
+							exist: true,
+						},
+						
+						() => {},
+					);
+				
+				} else {
+					this.setState({
+						exist: false,
+					});
+				}
+			});
+	};
 	renderActions = (cell, rows, props) => {
 		return (
 			<Button
@@ -617,10 +665,12 @@ class CreateJournal extends React.Component {
 				totalDebitAmount: initValue.totalDebitAmount,
 				journalLineItems: data,
 			};
+			this.setState({ loading:true, loadingMsg:"Creating New Journal..."});
 			this.props.journalCreateActions
 				.createJournal(postData)
 				.then((res) => {
 					this.setState({ disabled: false });
+					this.setState({ loading:false});
 					if (res.status === 200) {
 						this.props.commonActions.tostifyAlert(
 							'success',
@@ -679,10 +729,12 @@ class CreateJournal extends React.Component {
 								},
 								() => {
 									resetForm(this.state.initValue);
-								},
+									this.getjournalReferenceNo()								},
 							);
 						} else {
 							this.props.history.push('/admin/accountant/journal');
+							this.setState({ loading:false,});
+							
 						}
 					}
 				})
@@ -698,10 +750,12 @@ class CreateJournal extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { data, initValue } = this.state;
+		const { data, initValue ,loading,loadingMsg,exist} = this.state;
 		const { currency_list,universal_currency_list } = this.props;
 
 		return (
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
+			<div>
 			<div className="create-journal-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -718,6 +772,13 @@ class CreateJournal extends React.Component {
 									</Row>
 								</CardHeader>
 								<CardBody>
+								{loading ? (
+										<Row>
+											<Col lg={12}>
+												<Loader />
+											</Col>
+										</Row>
+									) : (
 									<Row>
 										<Col lg={12}>
 											<Formik
@@ -726,6 +787,17 @@ class CreateJournal extends React.Component {
 												onSubmit={(values, { resetForm }) => {
 													this.handleSubmit(values, resetForm);
 												}}
+												
+												validate={(values) => {
+													debugger
+													let errors = {};
+													if (exist === true) {
+														errors.journalReferenceNo =
+															'Journal Reference Number Already Exists';
+													}
+													return errors;
+												}
+											}
 												validationSchema={Yup.object().shape({
 													journalDate: Yup.date().required(
 														'Journal Date is Required',
@@ -763,6 +835,7 @@ class CreateJournal extends React.Component {
 																		showMonthDropdown
 																		showYearDropdown
 																		dateFormat="dd-MM-yyyy"
+																		minDate={new Date()}
 																		dropdownMode="select"
 																		onChange={(value) => {
 																			props.handleChange('journalDate')(value);
@@ -792,24 +865,33 @@ class CreateJournal extends React.Component {
 																	</Label>
 																	<Input
 																		type="text"
-																		maxLength="20"
+																		maxLength='50'
 																		id="journalReferenceNo"
 																		name="journalReferenceNo"
-																		placeholder={strings.ReferenceNumber}
-																		value={
-																			props.values.journalReferenceNo || ''
-																		}
+																		placeholder={strings.journalReferenceNo}
+																		value={props.values.journalReferenceNo}
+																		 onBlur={props.handleBlur('journalReferenceNo')}
 																		onChange={(option) => {
-																			if (
-																				option.target.value === '' ||
-																				this.regExBoth.test(option.target.value)
-																			) {
 																				props.handleChange(
 																					'journalReferenceNo',
 																				)(option);
-																			}
+																			
+																			this.validationCheck(option.target.value);
 																		}}
+																		className={
+																			
+																			props.errors.journalReferenceNo &&
+																			props.touched.journalReferenceNo
+																				? 'is-invalid'
+																				: ''
+																		}
 																	/>
+																	{props.errors.journalReferenceNo &&
+																		props.touched.journalReferenceNo && (
+																			<div className="invalid-feedback">
+																				{props.errors.journalReferenceNo}
+																			</div>
+																		)}
 																</FormGroup>
 															</Col>
 														</Row>
@@ -1171,11 +1253,13 @@ class CreateJournal extends React.Component {
 											</Formik>
 										</Col>
 									</Row>
+									)}
 								</CardBody>
 							</Card>
 						</Col>
 					</Row>
 				</div>
+			</div>
 			</div>
 		);
 	}

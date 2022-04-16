@@ -179,7 +179,6 @@ class AdminLayout extends React.Component {
 		user_role_list.forEach((p) => {
 			filterPaths(finalArray, p.moduleName);
 		});
-
 		var correctSequence = navigation.items.map(item => item.name)
 		finalArray.items = correctSequence.reduce((arr, name) => {
 			let ele = finalArray.items.find(item => item.name == name)

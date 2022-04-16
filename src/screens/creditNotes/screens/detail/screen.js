@@ -111,6 +111,7 @@ class DetailCreditNote extends React.Component {
 			fileName: '',
 			basecurrency:[],
 			customer_currency: '',
+			loadingMsg:"Loading...",
 			showInvoiceNumber:false
 		};
 
@@ -598,6 +599,8 @@ class DetailCreditNote extends React.Component {
 					exciseTaxId:'',
 					vatAmount:0,
 					discount: 0,
+					unitType:'',
+					unitTypeId:'',
 				}),
 				idCount: this.state.idCount + 1,
 			},
@@ -828,6 +831,8 @@ class DetailCreditNote extends React.Component {
 				obj['description'] = result.description;
 				obj['exciseTaxId'] = result.exciseTaxId;
 				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive;
+				obj['unitType']=result.unitType;
+				obj['unitTypeId']=result.unitTypeId;
 				idx = index;
 			}
 			return obj;
@@ -840,6 +845,11 @@ class DetailCreditNote extends React.Component {
 		form.setFieldValue(
 			`lineItemsString.${idx}.unitPrice`,
 			result.unitPrice,
+			true,
+		);
+		form.setFieldValue(
+			`lineItemsString.${idx}.unitType`,
+			result.unitType,
 			true,
 		);
 		form.setFieldValue(
@@ -1194,6 +1204,8 @@ class DetailCreditNote extends React.Component {
 		// if (this.uploadFile.files[0]) {
 		// 	formData.append('attachmentFile', this.uploadFile.files[0]);
 		// }
+
+		this.setState({ loading:true, loadingMsg:"Updating Credit Note..."});
 		this.props.creditNotesDetailActions
 			.UpdateCreditNotes(formData)
 			.then((res) => {
@@ -1203,6 +1215,7 @@ class DetailCreditNote extends React.Component {
 					res.data ? res.data.message : 'Credit Note Updated Successfully'
 				);
 				this.props.history.push('/admin/income/credit-notes');
+				this.setState({ loading:false,});
 			})
 			.catch((err) => {
 				this.setState({ disabled: false });
@@ -1263,6 +1276,8 @@ class DetailCreditNote extends React.Component {
 							discountType: res.data[0].discountType,
 							subTotal: res.data[0].unitPrice,
 							productId: res.data[0].id,
+							unitType: res.data[0].unitType,
+							unitTypeId: res.data[0].unitTypeId,
 						},
 					],
 				},
@@ -1281,6 +1296,11 @@ class DetailCreditNote extends React.Component {
 			this.formRef.current.setFieldValue(
 				`lineItemsString.${0}.quantity`,
 				1,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.unitType`,
+				res.data[0].unitType,
 				true,
 			);
 			this.formRef.current.setFieldValue(
@@ -1348,7 +1368,9 @@ class DetailCreditNote extends React.Component {
 		this.setState({ disabled1: true });
 		const { current_customer_id } = this.state;
 		if(this.props.location.state.isCNWithoutProduct!=true)
-		{this.props.creditNotesDetailActions
+		
+		{this.setState({ loading:true, loadingMsg:"Deleting Credit Note..."});
+			this.props.creditNotesDetailActions
 			.deleteInvoice(current_customer_id)
 			.then((res) => {
 				if (res.status === 200) {
@@ -1357,6 +1379,7 @@ class DetailCreditNote extends React.Component {
 						res.data ? res.data.message : 'Credit Note Deleted Successfully'
 					);
 					this.props.history.push('/admin/income/credit-notes');
+					this.setState({ loading:false,});
 				}
 			})
 			.catch((err) => {
@@ -1451,7 +1474,7 @@ class DetailCreditNote extends React.Component {
 		const { data, discountOptions, initValue, loading, dialog } = this.state;
 
 		const { project_list, currency_list,currency_convert_list, customer_list,universal_currency_list,vat_list } = this.props;
-
+		const {  loadingMsg } = this.state
 		let tmpCustomer_list = []
 
 		customer_list.map(item => {
@@ -1460,7 +1483,7 @@ class DetailCreditNote extends React.Component {
 		})
 
 		return (
-			loading ==true? <Loader/> :
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 <div>
 			<div className="detail-customer-invoice-screen">
 				<div className="animated fadeIn">
@@ -1874,6 +1897,7 @@ class DetailCreditNote extends React.Component {
 																			showMonthDropdown
 																			showYearDropdown
 																			dateFormat="dd-MM-yyyy"
+																			minDate={new Date()}
 																			dropdownMode="select"
 																			value={props.values.invoiceDate}
 																			onChange={(value) => {
@@ -2192,6 +2216,21 @@ min="0"
 																		>
 																			 {strings.QUANTITY}
 																		</TableHeaderColumn>
+																		<TableHeaderColumn
+																			width="5%"
+																			dataField="unitType"
+																     	>{strings.Unit}	<i
+																		 id="unitTooltip"
+																		 className="fa fa-question-circle ml-1"
+																	 ></i>
+																	 
+																	 <UncontrolledTooltip
+																		 placement="right"
+																		 target="unitTooltip"
+																	 >
+																		Units / Measurements
+																	 </UncontrolledTooltip>
+																 </TableHeaderColumn> 
 																		<TableHeaderColumn
 																			dataField="unitPrice"
 																			dataFormat={(cell, rows) =>

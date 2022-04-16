@@ -13,6 +13,7 @@ import {
 	Input,
 	Label,
 	NavLink,
+	UncontrolledTooltip,
 } from 'reactstrap';
 import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
@@ -33,7 +34,7 @@ import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
-import { optionFactory,selectCurrencyFactory, selectOptionsFactory } from 'utils';
+import { optionFactory, selectCurrencyFactory, selectOptionsFactory } from 'utils';
 
 import './style.scss';
 import moment from 'moment';
@@ -121,6 +122,7 @@ class DetailGoodsReceivedNote extends React.Component {
 			supplier_currency: '',
 			disabled1:false,
 			dateChanged: false,
+			loadingMsg:"Loading..."
 		};
 
 		// this.options = {
@@ -206,6 +208,7 @@ class DetailGoodsReceivedNote extends React.Component {
 									totalVatAmount: res.data.totalVatAmount
 										? res.data.totalVatAmount
 										: 0,
+										total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : 0,
 										totalAmount: res.data.totalAmount ? res.data.totalAmount : 0,
 										total_net: 0,
 									grnRemarks: res.data.grnRemarks ? res.data.grnRemarks : '',
@@ -217,6 +220,7 @@ class DetailGoodsReceivedNote extends React.Component {
 										poNumber: res.data.poNumber ? res.data.poNumber : '',
 								
 								},
+								poNumber : res.data.poNumber ? res.data.poNumber : '',
 								grnReceiveDateNotChanged: res.data.grnReceiveDate
 										? moment(res.data.grnReceiveDate)
 										: '',
@@ -327,6 +331,11 @@ class DetailGoodsReceivedNote extends React.Component {
 			this.formRef.current.setFieldValue(
 				`lineItemsString.${0}.unitPrice`,
 				res.data[0].unitPrice,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.unitType`,
+				res.data[0].unitType,
 				true,
 			);
 			this.formRef.current.setFieldValue(
@@ -754,6 +763,10 @@ min="0"
 				obj['unitPrice'] = parseInt(result.unitPrice);
 				obj['vatCategoryId'] = parseInt(result.vatCategoryId);
 				obj['description'] = result.description;
+				obj['exciseTaxId'] = result.exciseTaxId;
+				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive;
+				obj['unitType']=result.unitType;
+				obj['unitTypeId']=result.unitTypeId;
 			
 				idx = index;
 			}
@@ -767,6 +780,11 @@ min="0"
 		form.setFieldValue(
 			`lineItemsString.${idx}.unitPrice`,
 			parseInt(result.unitPrice),
+			true,
+		);
+		form.setFieldValue(
+			`lineItemsString.${idx}.exciseTaxId`,
+			result.exciseTaxId,
 			true,
 		);
 		form.setFieldValue(
@@ -893,44 +911,94 @@ min="0"
 	};
 
 	updateAmount = (data, props) => {
-		const { vat_list } = this.props;
-		let total_net = 0;
-		let total = 0; 
-		let total_vat = 0;
+		debugger
+		const { vat_list , excise_list} = this.props;
 		const { discountPercentage, discountAmount } = this.state;
-
+		let total_net = 0;
+		let total_excise = 0;
+		let total = 0;
+		let total_vat = 0;
+		let net_value = 0;
+		let discount = 0;
 		data.map((obj) => {
 			const index =
 				obj.vatCategoryId !== ''
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
-			// let val = (((+obj.unitPrice) * vat) / 100)
-			if (props.values.discountType === 'PERCENTAGE') {
-				var val =
-					((+obj.unitPrice -
-						+((obj.unitPrice * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })) *
-						vat *
-						obj.grnReceivedQuantity) /
-					100;
-			} else if (props.values.discountType === 'FIXED') {
-				var val =
-					(obj.unitPrice * obj.grnReceivedQuantity - discountAmount / data.length) *
-					(vat / 100);
-			} else {
-				var val = (+obj.unitPrice * vat * obj.grnReceivedQuantity) / 100;
+
+			//Excise calculation
+			if(obj.exciseTaxId !=  0){
+			if(obj.isExciseTaxExclusive === true){
+				if(obj.exciseTaxId === 1){
+				const value = +(obj.unitPrice) / 2 ;
+					net_value = parseFloat(obj.unitPrice) + parseFloat(value) ;
+					obj.exciseAmount = parseFloat(value) * obj.grnReceivedQuantity;
+				}else if (obj.exciseTaxId === 2){
+					const value = obj.unitPrice;
+					net_value = parseFloat(obj.unitPrice) +  parseFloat(value) ;
+					obj.exciseAmount = parseFloat(value) * obj.grnReceivedQuantity;
+				}
+				else{
+					net_value = obj.unitPrice
+				}
+			}	else{
+				if(obj.exciseTaxId === 1){
+					const value = obj.unitPrice / 3
+					obj.exciseAmount = parseFloat(value) * obj.grnReceivedQuantity;
+				net_value = obj.unitPrice}
+				else if (obj.exciseTaxId === 2){
+					const value = obj.unitPrice / 2
+					obj.exciseAmount = parseFloat(value) * obj.grnReceivedQuantity;
+				net_value = obj.unitPrice}
+				else{
+					net_value = obj.unitPrice
+				}
 			}
-			total_net = +(total_net + +obj.unitPrice * obj.quantity);
+		}else{
+			net_value = obj.unitPrice;
+			obj.exciseAmount = 0
+		}
+			//vat calculation
+			if (obj.discountType === 'PERCENTAGE') {
+				var val =
+				((+net_value -
+				 (+((net_value * obj.discount)) / 100)) *
+					vat *
+					obj.grnReceivedQuantity) /
+				100;
+				var val1 =
+				((+net_value -
+				 (+((net_value * obj.discount)) / 100)) * obj.grnReceivedQuantity ) ;
+			} else if (obj.discountType === 'FIXED') {
+				var val =
+						 (net_value * obj.grnReceivedQuantity - obj.discount ) *
+					(vat / 100);
+
+					var val1 =
+					((net_value * obj.grnReceivedQuantity )- obj.discount )
+
+			} else {
+				var val = (+net_value * vat * obj.grnReceivedQuantity) / 100;
+				var val1 = net_value * obj.grnReceivedQuantity
+			}
+			console.log('value '+val)
+			//discount calculation
+			discount = +(discount +(net_value * obj.grnReceivedQuantity)) - parseFloat(val1)
+			total_net = +(total_net + net_value * obj.grnReceivedQuantity);
 			total_vat = +(total_vat + val);
+			obj.vatAmount = val
 			obj.subTotal =
-				obj.unitPrice && obj.vatCategoryId ? (+obj.unitPrice * obj.quantity)+total_vat : 0;
+			net_value && obj.vatCategoryId ? parseFloat(val1) + parseFloat(val) : 0;
+			total_excise = +(total_excise + obj.exciseAmount)
 			total = total_vat + total_net;
 			return obj;
 		});
-		const discount =
-			props.values.discountType === 'PERCENTAGE'
-				? +((total_net * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })
-				: discountAmount;
+
+		// const discount =
+		// 	props.values.discountType.value === 'PERCENTAGE'
+		// 		? +((total_net * discountPercentage) / 100)
+		// 		: discountAmount;
 		this.setState(
 			{
 				data,
@@ -939,16 +1007,14 @@ min="0"
 					...{
 						total_net: discount ? total_net - discount : total_net,
 						totalVatAmount: total_vat,
-						discount: total_net > discount ? discount : 0,
-						totalAmount: total_net > discount ? total - discount : total,
+						discount:  discount ? discount : 0,
+						totalAmount: total_net > discount ? total - discount : total - discount,
+						total_excise: total_excise
 					},
+
 				},
 			},
-			() => {
-				if (props.values.discountType === 'PERCENTAGE') {
-					this.formRef.current.setFieldValue('discount', discount);
-				}
-			},
+
 		);
 	};
 
@@ -998,6 +1064,7 @@ debugger
 		if (currency !== null && currency) {
 			formData.append('currencyCode', this.state.supplier_currency);
 		}
+		this.setState({ loading:true, loadingMsg:"Updating Goods Received Note..."});
 		this.props.goodsReceivedNoteDetailsAction
 			.updateGRN(formData)
 			.then((res) => {
@@ -1006,6 +1073,7 @@ debugger
 					res.data ? res.data.message : 'Goods Received Note Updated Successfully'
 				);
 				this.props.history.push('/admin/expense/goods-received-note');
+				this.setState({ loading:false,});
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
@@ -1037,6 +1105,7 @@ debugger
 	removerfq = () => {
 		this.setState({ disabled1: true });
 		const { current_grn_id } = this.state;
+		this.setState({ loading:true, loadingMsg:"Deleting Goods Received Note..."});
 		this.props.goodsReceivedNoteDetailsAction
 			.deletegrn(current_grn_id)
 			.then((res) => {
@@ -1046,6 +1115,7 @@ debugger
 						res.data ? res.data.message : 'Goods Received Note Deleted Successfully'
 					);
 					this.props.history.push('/admin/expense/goods-received-note');
+					this.setState({ loading:false,});
 				}
 			})
 			.catch((err) => {
@@ -1194,7 +1264,7 @@ debugger
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { data, discountOptions, initValue, loading, dialog } = this.state;
+		const { data, discountOptions, initValue, loading, dialog,loadingMsg } = this.state;
 
 		const { project_list, currency_list,currency_convert_list, supplier_list,universal_currency_list } = this.props;
 
@@ -1206,7 +1276,7 @@ debugger
 		})
 
 		return (
-			loading ==true? <Loader/> :
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 <div>
 			<div className="detail-supplier-invoice-screen">
 				<div className="animated fadeIn">
@@ -1362,7 +1432,7 @@ debugger
 													{(props) => (
 														<Form onSubmit={props.handleSubmit}>
 															<Row>
-															<Col lg={3}>
+														{this.state.poNumber === ""	? '' :<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="poNumber">
 																	 {strings.PONumber}
@@ -1394,7 +1464,7 @@ debugger
 																			)}
 																
 																</FormGroup>
-															</Col>
+															</Col>}
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="grnNumber">
@@ -1537,6 +1607,7 @@ debugger
 																			showMonthDropdown
 																			showYearDropdown
 																			dateFormat="dd-MM-yyyy"
+																			minDate={new Date()}
 																			dropdownMode="select"
 																			value={props.values.grnReceiveDate}
 																			selected={new Date(props.values.grnReceiveDate1)} 
@@ -1719,6 +1790,21 @@ debugger
 																		>
 																			{strings.RECEIVEDQUANTITY}
 																		</TableHeaderColumn>
+																		<TableHeaderColumn
+																			width="5%"
+																			dataField="unitType"
+																     	>{strings.Unit}	<i
+																		 id="unitTooltip"
+																		 className="fa fa-question-circle ml-1"
+																	 ></i>
+																	 
+																	 <UncontrolledTooltip
+																		 placement="right"
+																		 target="unitTooltip"
+																	 >
+																		Units / Measurements
+																	 </UncontrolledTooltip>
+																 </TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="quantity"
 																			width="10%"

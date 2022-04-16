@@ -207,9 +207,9 @@ class PurchaseOrder extends React.Component {
 		);
 	};
 
-	close = (id) => {
+	close = (id,status) => {
 		this.props.purchaseOrderAction
-			.changeStatus(id)
+			.changeStatus(id,status)
 			.then((res) => {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
@@ -233,14 +233,17 @@ class PurchaseOrder extends React.Component {
 	renderRFQStatus = (cell, row) => {
 		let classname = '';
 		if (row.status === 'Approved') {
-			classname = 'label-approved';
+			classname = 'label-success';
 		} else if (row.status === 'Draft') {
 			classname = 'label-draft';
 		} else if (row.status === 'Closed') {
 			classname = 'label-closed';
-		}else if (row.status === 'Send') {
-			classname = 'label-due';
-		} else {
+		}else if (row.status === 'Sent') {
+			classname = 'label-sent';
+		}else if(row.status === 'Rejected'){
+			classname = 'label-due'
+		}
+		 else {
 			classname = 'label-overdue';
 		}
 		return (
@@ -260,13 +263,13 @@ class PurchaseOrder extends React.Component {
 		return(
 			<div>
 								<div>
-						<label className="font-weight-bold mr-2" dataAlign="right">{strings.PurchaseOrder+" "+strings.Amount}: </label>
+						<label className="font-weight-bold mr-2" dataAlign="right">{strings.PurchaseOrder+" "+strings.Amount} : </label>
 						<label dataAlign="right">
 							{row.totalAmount  === 0 ? row.currencyCode +" "+ row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyCode +" "+ row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 						</label>
 					</div>
 					<div style={{display: row.totalVatAmount === 0 ? 'none' : ''}}>
-					<label className="font-weight-bold mr-2" dataAlign="right">{strings.VatAmount}: </label>
+					<label className="font-weight-bold mr-2" dataAlign="right">{strings.VatAmount} : </label>
 					<label dataAlign="right">{row.totalVatAmount === 0  ? row.currencyCode +" "+ row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyCode +" "+ row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
 					</div>
 					
@@ -346,14 +349,28 @@ class PurchaseOrder extends React.Component {
 					)}
 					{row.status === "Approved" && (
 							<DropdownItem
-							onClick={() => {
-								this.renderActionForState(row.id);
-							}}
-							>
+							onClick={() =>
+								this.props.history.push(
+									'/admin/expense/goods-received-note/create',
+									{ poId: row.id ,poNumber:row.poNumber},
+								)
+							}
+						>
 								<i className="fas fa-plus" />   {strings.CreateGRN}
 							</DropdownItem>
 							)}
-							{row.status === "Approved" && (
+							{row.status === 'Approved' && (
+							<DropdownItem
+							onClick={() =>
+								this.props.history.push(
+									'/admin/expense/supplier-invoice/create',
+									{ poId: row.id },
+								)
+							}>
+								<i className="fas fa-plus" />{strings.CreateSupplierInvoice}
+							</DropdownItem>
+							)}
+							{row.status === "Draft" && (
 							<DropdownItem
 								onClick={() => {
 									this.sendMail(row);
@@ -361,24 +378,53 @@ class PurchaseOrder extends React.Component {
 							>
 								<i className="fas fa-send" /> {strings.Send}
 							</DropdownItem>)}
+							{row.status === 'Draft' && (
+                            <DropdownItem
+								onClick={() => {
+									this.changeStatus(row.id,"Sent");
+								}}
+							>
+							<i class="far fa-arrow-alt-circle-right"></i>Mark As Sent
+							</DropdownItem>)}
 					
 						
-							{row.status === 'Draft' && (
+							{/* {row.status !== 'Approved' && (
 								<DropdownItem
 							onClick={() => {
-							this.changeStatus(row.id);
+							this.changeStatus(row.id,"Approved");
 							}}
 							>
 								<i className="fas fa-send" />  {strings.Approve}
 							</DropdownItem>
-							)}
-							{row.status === 'Approved' &&(
-								<DropdownItem
+							)} */}
+							
+							{row.status === 'Sent' && (
+							<DropdownItem
 							onClick={() => {
-							this.close(row.id);
+								this.sendMail(row);
 							}}
 							>
-							<i className="far fa-times-circle" />  {strings.Close}
+								<i className="fas fa-send" />{strings.SendAgain}
+							</DropdownItem>
+							)}
+
+							{row.status != 'Draft' && row.status != 'Approved' && row.status != 'Closed' && row.status != "Invoiced" && (
+							<DropdownItem
+							onClick={() => {
+								this.changeStatus(row.id,"Approved");
+							}}
+							>
+								<i className="fa fa-check-circle-o" />{strings.MarkAsApproved}
+							</DropdownItem>
+							)}
+
+							{row.status != 'Draft' && row.status != 'Rejected' && row.status != 'Closed' && row.status != 'Invoiced' &&(
+							<DropdownItem
+							onClick={() => {
+								this.changeStatus(row.id,"Rejected");
+							}}
+							>
+								<i className="fa fa-ban" />{strings.MarkAsRejected}
 							</DropdownItem>
 							)}
 					<DropdownItem
@@ -391,6 +437,15 @@ class PurchaseOrder extends React.Component {
 						>
 							<i className="fas fa-eye" />  {strings.View}
 						</DropdownItem>
+						{(row.status === 'Approved'||row.status === 'Sent'||row.status === 'Rejected'|| row.status === "Invoiced" )	 &&(
+								<DropdownItem
+							onClick={() => {
+							this.close(row.id,"Closed");
+							}}
+							>
+							<i className="far fa-times-circle" />  {strings.Close}
+							</DropdownItem>
+							)}
 						{/* {row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && (
 							<DropdownItem
 								onClick={() => {
@@ -415,9 +470,9 @@ class PurchaseOrder extends React.Component {
 		);
 	};
 
-	changeStatus = (id) => {
+	changeStatus = (id,status) => {
 				this.props.purchaseOrderAction
-				.changeStatus(id)
+				.changeStatus(id,status)
 				.then((res) => {
 					 
 					if (res.status === 200) {
@@ -842,6 +897,7 @@ class PurchaseOrder extends React.Component {
 						totalVatAmount: supplier.totalVatAmount,
 						currencyCode: supplier.currencyCode,
 						currencyName:supplier.currencyName,
+						statusEnum:supplier.statusEnum
 				  }))
 				: '';
 
@@ -1088,15 +1144,7 @@ class PurchaseOrder extends React.Component {
 											>
 												{strings.SUPPLIERNAME} 
 											</TableHeaderColumn>
-											<TableHeaderColumn
-												width="10%"
-												dataField="status"
-												dataFormat={this.renderRFQStatus}
-												dataSort
-												className="table-header-bg"
-											>
-												{strings.STATUS} 
-											</TableHeaderColumn>
+											
 											<TableHeaderColumn
 												dataField="poApproveDate"
 												dataSort
@@ -1115,7 +1163,15 @@ class PurchaseOrder extends React.Component {
 											>
 												{strings.POEXPIRYDATE}
 											</TableHeaderColumn>
-											
+											<TableHeaderColumn
+												width="10%"
+												dataField="status"
+												dataFormat={this.renderRFQStatus}
+												dataSort
+												className="table-header-bg"
+											>
+												{strings.STATUS} 
+											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataAlign="right"
 												dataField="totalAmount"

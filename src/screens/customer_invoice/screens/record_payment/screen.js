@@ -104,6 +104,7 @@ class RecordCustomerPayment extends React.Component {
 			discountAmount: 0,
 			fileName: '',
 			disabled: false,
+			loadingMsg:"Loading..."
 		};
 
 		// this.options = {
@@ -117,8 +118,8 @@ class RecordCustomerPayment extends React.Component {
 			{ label: 'Due on Receipt', value: 'DUE_ON_RECEIPT' },
 		];
 		this.regEx = /^[0-9\b]+$/;
-		this.regExBoth = /[a-zA-Z0-9]+$/;
-		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
+		this.regExBoth = /^[a-zA-Z0-9\s\D,'-/]+$/;
+		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/; 
 
 		this.file_size = 1024000;
 		this.supported_format = [
@@ -280,6 +281,7 @@ class RecordCustomerPayment extends React.Component {
 		if (this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
+		this.setState({ loading:true, loadingMsg:"Payment Recording..."});
 		this.props.CustomerRecordPaymentActions.recordPayment(formData)
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
@@ -287,6 +289,7 @@ class RecordCustomerPayment extends React.Component {
 					res.data ? res.data.message : 'Payment Recorded Successfully',
 				);
 				this.props.history.push('/admin/income/customer-invoice');
+				this.setState({ loading:false,});
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
@@ -372,7 +375,7 @@ class RecordCustomerPayment extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { initValue, loading, dialog } = this.state;
+		const { initValue, loading, dialog ,loadingMsg} = this.state;
 		const { pay_mode, customer_list, deposit_list } = this.props;
 
 		let tmpcustomer_list = []
@@ -383,6 +386,8 @@ class RecordCustomerPayment extends React.Component {
 		})
 
 		return (
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
+			<div>
 			<div className="detail-customer-invoice-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -415,9 +420,8 @@ class RecordCustomerPayment extends React.Component {
 													}}
 													validate={(values) => {
                                                     let errors = {};
-													 if (values.amount == 0) {
-                                                      errors.amount =
-                                                    'Amount Cannot be recorded zero';
+													 if (values.amount < 0) {
+                                                      errors.amount ='Amount Cannot be Less Than 0';
 												 }
                                                  return errors
 												 }}
@@ -561,6 +565,7 @@ class RecordCustomerPayment extends React.Component {
 																		</Label>
 																		<Input
 																			type="number"
+																			// min="1"
 																			maxLength="14,2"
 																			id="amount"
 																			name="amount"
@@ -638,7 +643,6 @@ class RecordCustomerPayment extends React.Component {
 																			 {strings.PaymentMode}
 																		</Label>
 																		<Select
-																			styles={customStyles}
 																			options={
 																				pay_mode
 																					? selectOptionsFactory.renderOptions(
@@ -682,7 +686,6 @@ class RecordCustomerPayment extends React.Component {
 																			{strings.ReceivedThrough}
 																		</Label>
 																		<Select
-																			styles={customStyles}
 																			options={deposit_list}
 																			value={props.values.depositeTo}
 																			onChange={(option) => {
@@ -904,6 +907,7 @@ class RecordCustomerPayment extends React.Component {
 					country_list={this.props.country_list}
 					getStateList={this.props.customerInvoiceActions.getStateList}
 				/>
+			</div>
 			</div>
 		);
 	}

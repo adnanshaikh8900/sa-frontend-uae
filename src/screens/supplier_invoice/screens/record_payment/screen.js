@@ -105,6 +105,7 @@ class RecordSupplierPayment extends React.Component {
 			discountAmount: 0,
 			fileName: '',
 			disabled: false,
+			loadingMsg:"Loading..."
 		};
 
 		// this.options = {
@@ -118,7 +119,7 @@ class RecordSupplierPayment extends React.Component {
 			{ label: 'Due on Receipt', value: 'DUE_ON_RECEIPT' },
 		];
 		this.regEx = /^[0-9\b]+$/;
-		this.regExBoth = /[a-zA-Z0-9]+$/;
+		this.regExBoth =  /^[a-zA-Z0-9\s\D,'-/]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 
 		this.file_size = 1024000;
@@ -280,6 +281,8 @@ class RecordSupplierPayment extends React.Component {
 			'invoiceAmount',
 			this.props.location.state.id.invoiceAmount ?this.props.location.state.id.invoiceAmount :"00000",
 		);
+
+		this.setState({ loading:true, loadingMsg:"Payment Recording..."});
 		this.props.SupplierRecordPaymentActions.recordPayment(formData)
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
@@ -287,6 +290,7 @@ class RecordSupplierPayment extends React.Component {
 					res.data ? res.data.message : 'Payment Recorded Successfully.',
 				);
 				this.props.history.push('/admin/expense/supplier-invoice');
+				this.setState({ loading:false,});
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
@@ -372,7 +376,7 @@ class RecordSupplierPayment extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { initValue, loading, dialog } = this.state;
+		const { initValue, loading, dialog ,loadingMsg} = this.state;
 		const { pay_mode, supplier_list, deposit_list } = this.props;
 		let tmpSupplier_list = []
 
@@ -382,7 +386,7 @@ class RecordSupplierPayment extends React.Component {
 		})
 
 		return (
-			loading ==true? <Loader/> :
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 <div>
 			<div className="detail-customer-invoice-screen">
 				<div className="animated fadeIn">
@@ -416,9 +420,8 @@ class RecordSupplierPayment extends React.Component {
 													}}
 													validate={(values) => {
 														let errors = {};
-														 if (values.amount == 0) {
-														  errors.amount =
-														'Amount Cannot be recorded zero';
+														 if (values.amount < 0) {
+														  errors.amount ='Amount Cannot be Less Than 0';
 													 }
 													 return errors
 													 }}
@@ -561,9 +564,10 @@ class RecordSupplierPayment extends React.Component {
 																			{strings.AmountPaid}
 																		</Label>
 																		<Input
-																		type="number"
-																		maxLength="14,2"
-																		id="amount"
+																			type="number"
+																			min="0"
+																			maxLength="14,2"
+																			id="amount"
 																			name="amount"
 																			value={props.values.amount}
 																			onChange={(option) => {
@@ -638,7 +642,6 @@ class RecordSupplierPayment extends React.Component {
 																			 {strings.PaymentMode}
 																		</Label>
 																		<Select
-																			styles={customStyles}
 																			options={
 																				pay_mode
 																					? selectOptionsFactory.renderOptions(
@@ -682,7 +685,6 @@ class RecordSupplierPayment extends React.Component {
 																			{strings.PaidThrough}
 																		</Label>
 																		<Select
-																			styles={customStyles}
 																			options={deposit_list}
 																			value={props.values.depositeTo}
 																			onChange={(option) => {

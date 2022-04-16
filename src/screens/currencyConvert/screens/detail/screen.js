@@ -67,6 +67,7 @@ class DetailCurrencyConvert extends React.Component {
       disabled1:false,
       selectedStatus: false,
 			isActive: false,
+			loadingMsg:"Loading..."
     }
     this.regExAlpha = /^[a-zA-Z ]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
@@ -149,6 +150,7 @@ class DetailCurrencyConvert extends React.Component {
 		let postData = this.getData(obj);
 
 		postData = { ...postData, ...{ id: current_currency_convert_id } };
+		this.setState({ loading:true, loadingMsg:"Updating Currency Conversion..."});
       this.props.detailCurrencyConvertAction.updateCurrencyConvert(postData).then((res) => {
       if (res.status === 200) {
         this.setState({ disabled: false });
@@ -157,6 +159,7 @@ class DetailCurrencyConvert extends React.Component {
 			'success', 
 			res.data ? res.data.message : 'Currency Conversion Updated Successfully')
         this.props.history.push('/admin/master/CurrencyConvert')
+		this.setState({ loading:false,});
       }
     }).catch((err) => {
       this.props.commonActions.tostifyAlert(
@@ -202,6 +205,7 @@ class DetailCurrencyConvert extends React.Component {
   removeCurrencyConvert = () => {
     this.setState({ disabled1: true });
     const {current_currency_convert_id} = this.state
+	this.setState({ loading:true, loadingMsg:"Deleting Currency Conversion..."});
     this.props.detailCurrencyConvertAction.deleteCurrencyConvert(current_currency_convert_id).then((res) => {
       if (res.status === 200) {
         // this.success('Chart Account Deleted Successfully');
@@ -209,6 +213,7 @@ class DetailCurrencyConvert extends React.Component {
 			res.data ? res.data.message : 'Currency Conversion Deleted Successfully'
 			)
         this.props.history.push('/admin/master/CurrencyConvert')
+		this.setState({ loading:false,});
       }
     }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', 
@@ -225,11 +230,11 @@ class DetailCurrencyConvert extends React.Component {
 
   render() {
     strings.setLanguage(this.state.language);
-    const { loading, initValue,dialog,currency_list} = this.state
+    const { loading, loadingMsg, initValue,dialog,currency_list} = this.state
 
     const{currencyList} =this.props;
     return (
-		loading ==true? <Loader/> :
+		loading ==true? <Loader loadingMsg={loadingMsg}/> :
 <div>
       <div className="detail-vat-code-screen">
         <div className="animated fadeIn">

@@ -27,6 +27,10 @@ import moment from 'moment';
 import { selectOptionsFactory, selectCurrencyFactory } from 'utils';
 import {data}  from '../../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import Switch from "react-switch";
+import IconButton from '@material-ui/core/IconButton';
+import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
+import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 const mapStateToProps = (state) => {
 	return {
 		expense_list: state.bank_account.expense_list,
@@ -85,6 +89,8 @@ class ExplainTrasactionDetail extends React.Component {
 			moneyCategoryList:[],
 			count:0,
 			payrollListIds:'',
+			expenseType:true,
+			showMore:false,
 		};
 
 		this.file_size = 1024000;
@@ -169,6 +175,7 @@ class ExplainTrasactionDetail extends React.Component {
 							expenseCategory: res.data.expenseCategory,
 							currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
 							payrollListIds:res.data.payrollDropdownList?res.data.payrollDropdownList:[],
+							expenseType: res.data.expenseType ? true : false,
 						},
 						unexplainValue: {
 							bankId: bankId,
@@ -201,6 +208,7 @@ class ExplainTrasactionDetail extends React.Component {
 								: '',
 							currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
 						},
+						expenseType: res.data.expenseType ? true : false,
 						transactionCategoryLabel:res.data.transactionCategoryLabel,
 						transactionCategoryId:res.data.transactionCategoryId
 					},
@@ -471,6 +479,7 @@ class ExplainTrasactionDetail extends React.Component {
 			payrollListIds,
 		} = data;
 
+		const expenseType = this.state.selectedStatus;
 
 		if (
 			(invoiceIdList && coaCategoryId.label === 'Sales') ||
@@ -500,6 +509,7 @@ class ExplainTrasactionDetail extends React.Component {
 			id = coaCategoryId.value;
 		}
 		let formData = new FormData();
+		formData.append('expenseType',  this.state.expenseType);
 		formData.append('transactionId', transactionId ? transactionId : '');
 		formData.append('bankId ', bankId ? bankId : '');
 		formData.append(
@@ -592,7 +602,7 @@ class ExplainTrasactionDetail extends React.Component {
 			);
 		}
 		formData.append('reference', reference ? reference : '');
-		if (this.uploadFile.files[0]) {
+		if (this.uploadFile && this.uploadFile.files && this.uploadFile.files[0]) {
 			formData.append('attachment', this.uploadFile.files[0]);
 		}
 		if (
@@ -1022,7 +1032,7 @@ class ExplainTrasactionDetail extends React.Component {
 														{(props) => (
 															<Form onSubmit={props.handleSubmit}>
 																<Row>
-																	<Col lg={4}>
+																	<Col lg={3}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="chartOfAccountId">
 																				<span className="text-danger">*</span>
@@ -1094,7 +1104,52 @@ class ExplainTrasactionDetail extends React.Component {
 																				)}
 																		</FormGroup>
 																	</Col>
-																	<Col lg={4}>
+																	<Col lg={3}>
+																				<FormGroup className="mb-3">
+																					<Label htmlFor="date">
+																						<span className="text-danger">*</span>
+																					{strings.TransactionDate}
+																				</Label>
+																					<DatePicker
+																						id="date"
+																						name="date"
+																						readOnly={
+																							this.state.creationMode === 'MANUAL'
+																								? false
+																								: true
+																						}
+																						placeholderText={strings.TransactionDate}
+																						showMonthDropdown
+																						showYearDropdown
+																						dateFormat="dd-MM-yyyy"
+																						dropdownMode="select"
+																						value={
+																							props.values.date
+																								? moment(
+																									props.values.date,
+																									'DD-MM-YYYY',
+																								).format('DD-MM-YYYY')
+																								: ''
+																						}
+																						//selected={props.values.date}
+																						onChange={(value) =>
+																							props.handleChange('date')(value)
+																						}
+																						className={`form-control ${props.errors.date &&
+																								props.touched.date
+																								? 'is-invalid'
+																								: ''
+																							}`}
+																					/>
+																					{props.errors.date &&
+																						props.touched.date && (
+																							<div className="invalid-feedback">
+																								{props.errors.date}
+																							</div>
+																						)}
+																				</FormGroup>
+																			</Col>
+																	<Col lg={3}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="amount">
 																				<span className="text-danger">*</span>
@@ -1102,7 +1157,7 @@ class ExplainTrasactionDetail extends React.Component {
 																		</Label>
 																			<Input
 																				type="number"
-min="0"
+																				min="0"
 																				id="amount"
 																				name="amount"
 																				placeholder={strings.Amount}
@@ -1327,6 +1382,39 @@ min="0"
 																						</FormGroup>
 																					</Col>
 																				)}
+																				<Col className='mb-3' lg={3}>
+															<Label htmlFor="inline-radio3"><span className="text-danger">* </span>{strings.ExpenseType}</Label>
+															<div>
+																{this.state.expenseType === false ?
+																	<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Claimable}</b></span> :
+																	<span className='mr-4'>{strings.Claimable}</span>}
+
+																<Switch
+																	checked={this.state.expenseType}
+																	onChange={(expenseType) => {
+																		props.handleChange('expenseType')(expenseType);
+																		this.setState({ expenseType, }, () => { },);
+																	}}
+																	onColor="#2064d8"
+																	onHandleColor="#2693e6"
+																	handleDiameter={25}
+																	uncheckedIcon={false}
+																	checkedIcon={false}
+																	boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+																	activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+																	height={20}
+																	width={48}
+																	className="react-switch "
+																/>
+
+																{this.state.expenseType === true ?
+																	<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.NonClaimable}</b></span>
+																	: <span className='ml-4'>{strings.NonClaimable}</span>
+																}
+																</div>
+
+															</Col>
+
 																		</Row>
 																	)}
 																{props.values.coaCategoryId &&
@@ -2173,6 +2261,81 @@ min="0"
 																			</Col>
 																		</Row>
 																	)}
+																	<Row>
+																		{props.values.coaCategoryId === 12 ||
+																			(props.values.coaCategoryId === 6 && (
+																				<Col lg={4}>
+																					<FormGroup className="mb-3">
+																						<Label htmlFor="employeeId">
+																							{strings.User}
+																					</Label>
+																						<Select
+																							styles={customStyles}
+																							options={
+																								transactionCategoryList.dataList
+																									? transactionCategoryList
+																										.dataList[0].options
+																									: []
+																							}
+																							value={
+																								transactionCategoryList.dataList &&
+																								transactionCategoryList.dataList[0].options.find(
+																									(option) =>
+																										option.value ===
+																										+props.values.employeeId,
+																								)
+																							}
+																							onChange={(option) => {
+																								if (option && option.value) {
+																									props.handleChange(
+																										'employeeId',
+																									)(option);
+																								} else {
+																									props.handleChange(
+																										'employeeId',
+																									)('');
+																								}
+																							}}
+																							placeholder={strings.Select+strings.Contact}
+																							id="employeeId"
+																							name="employeeId"
+																							className={
+																								props.errors.employeeId &&
+																									props.touched.employeeId
+																									? 'is-invalid'
+																									: ''
+																							}
+																						/>
+																					</FormGroup>
+																				</Col>
+																			))}
+																	</Row>
+																	<Row className='mt-2 mb-2'>
+																		<Col>
+																		{/* <Button onClick={()=>{
+																			this.setState({showMore:!this.state.showMore})
+																		}} >
+																		{this.state.showMore==true ?
+																		 (<><i class="fas fa-angle-double-up mr-1"/> Show Less</>)
+																		 :
+																		(<><i class="fas fa-angle-double-down mr-1"/> Show More</>)}
+																		</Button> */}
+																	<IconButton 
+																	style={{    fontSize: "14.1px",color: "#2064d8"}}
+																			aria-label="delete"
+																			size="medium" 
+																			onClick={()=>this.setState({showMore:!this.state.showMore})}
+																	>
+																		{this.state.showMore==true ?
+																		 (<><ArrowUpwardIcon fontSize="inherit" /> Show Less</>)
+																		 :
+																		(<><ArrowDownwardIcon fontSize="inherit" /> Show More</>)}
+																	</IconButton>
+																	
+																		</Col>
+																	</Row>
+														{this.state.showMore==true&&(
+															<>
 																<Row>
 																	<Col lg={8}>
 																		<FormGroup className="mb-3">
@@ -2259,51 +2422,7 @@ min="0"
 																			</Col>
 																		</Row>
 																		<Row>
-																			<Col lg={12}>
-																				<FormGroup className="mb-3">
-																					<Label htmlFor="date">
-																						<span className="text-danger">*</span>
-																					{strings.TransactionDate}
-																				</Label>
-																					<DatePicker
-																						id="date"
-																						name="date"
-																						readOnly={
-																							this.state.creationMode === 'MANUAL'
-																								? false
-																								: true
-																						}
-																						placeholderText={strings.TransactionDate}
-																						showMonthDropdown
-																						showYearDropdown
-																						dateFormat="dd-MM-yyyy"
-																						dropdownMode="select"
-																						value={
-																							props.values.date
-																								? moment(
-																									props.values.date,
-																									'DD-MM-YYYY',
-																								).format('DD-MM-YYYY')
-																								: ''
-																						}
-																						//selected={props.values.date}
-																						onChange={(value) =>
-																							props.handleChange('date')(value)
-																						}
-																						className={`form-control ${props.errors.date &&
-																								props.touched.date
-																								? 'is-invalid'
-																								: ''
-																							}`}
-																					/>
-																					{props.errors.date &&
-																						props.touched.date && (
-																							<div className="invalid-feedback">
-																								{props.errors.date}
-																							</div>
-																						)}
-																				</FormGroup>
-																			</Col>
+																			
 																		</Row>
 																	</Col>
 																</Row>
@@ -2340,56 +2459,8 @@ min="0"
 																	</Col>
 																</Row>
 																
-																	<Row>
-																		{props.values.coaCategoryId === 12 ||
-																			(props.values.coaCategoryId === 6 && (
-																				<Col lg={4}>
-																					<FormGroup className="mb-3">
-																						<Label htmlFor="employeeId">
-																							{strings.User}
-																					</Label>
-																						<Select
-																							styles={customStyles}
-																							options={
-																								transactionCategoryList.dataList
-																									? transactionCategoryList
-																										.dataList[0].options
-																									: []
-																							}
-																							value={
-																								transactionCategoryList.dataList &&
-																								transactionCategoryList.dataList[0].options.find(
-																									(option) =>
-																										option.value ===
-																										+props.values.employeeId,
-																								)
-																							}
-																							onChange={(option) => {
-																								if (option && option.value) {
-																									props.handleChange(
-																										'employeeId',
-																									)(option);
-																								} else {
-																									props.handleChange(
-																										'employeeId',
-																									)('');
-																								}
-																							}}
-																							placeholder={strings.Select+strings.Contact}
-																							id="employeeId"
-																							name="employeeId"
-																							className={
-																								props.errors.employeeId &&
-																									props.touched.employeeId
-																									? 'is-invalid'
-																									: ''
-																							}
-																						/>
-																					</FormGroup>
-																				</Col>
-																			))}
-																	</Row>
-														
+																</>)
+																	}	
 
 																<Row>
 																	{props.values.explinationStatusEnum !==

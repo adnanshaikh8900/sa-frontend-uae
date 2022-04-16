@@ -49,36 +49,20 @@ stages:
           - script: npm ci
             displayName: npm ci
 
-          - task: CmdLine@2
+          - task: SonarCloudPrepare@1
             inputs:
-              script: |
-                npm run build
-            displayName: 'npm build'
+              SonarCloud: 'Sonar-Cloud'
+              organization: 'datainn'
+              scannerMode: 'CLI'
+              configMode: 'manual'
+              cliProjectKey: 'simplevat-frontend-reactjs'
+              cliProjectName: 'simplevat-frontend-reactjs'
+              cliSources: '.'
+              
 
-          - task: Cache@2
-            displayName: Cache task
+          - task: Npm@1
             inputs:
-              key: 'docker | "$(Agent.OS)" | cache'
-              path: $(Pipeline.Workspace)/$(docker_cashe_path)
-              cacheHitVar: CACHE_RESTORED                #Variable to set to 'true' when the cache is restored
+              command: 'custom'
+              customCommand: 'run build'
 
-          # - script: |
-          #     docker load -i $(Pipeline.Workspace)/$(docker_cashe_path)/docker-cache.tar
-          #   displayName: Docker restore
-          #   condition: and(not(canceled()), eq(variables.CACHE_RESTORED, 'true'))
-
-          - task: Docker@2
-            displayName: Docker Build & Push
-            inputs:
-              containerRegistry: $(containerRegistryConnection)
-              repository: 'simpleaccounts-frontend'
-              command: 'buildAndPush'
-              Dockerfile: '**/Dockerfile'
-              tags: |
-                $(tag)
-
-          - script: |
-              mkdir -p $(Pipeline.Workspace)/$(docker_cashe_path)
-              docker save -o $(Pipeline.Workspace)/$(docker_cashe_path)/docker-cache.tar $(containerRegistryName).azurecr.io/simpleaccounts-frontend:$(tag)
-            displayName: Docker save
-            condition: and(not(canceled()), or(failed(), ne(variables.CACHE_RESTORED, 'true')))
+          - task: SonarCloudAnalyze@1

@@ -10,6 +10,10 @@ import {
 	Col,
 	ButtonGroup,
 	Input,
+	ButtonDropdown,
+	DropdownToggle,
+	DropdownMenu,
+	DropdownItem,
 } from 'reactstrap';
 import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
@@ -26,9 +30,9 @@ import { CSVLink } from 'react-csv';
 import './style.scss';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
-import { AgGridReact,AgGridColumn } from 'ag-grid-react/lib/agGridReact';
-import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+// import { AgGridReact,AgGridColumn } from 'ag-grid-react/lib/agGridReact';
+// import 'ag-grid-community/dist/styles/ag-grid.css';
+// import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 
 const mapStateToProps = (state) => {
 	return {
@@ -71,6 +75,7 @@ class Contact extends React.Component {
 			paginationPageSize:10,
 			csvData: [],
 			view: false,
+			actionButtons:{}
 		};
 
 		this.options = {
@@ -192,9 +197,9 @@ class Contact extends React.Component {
 		});
 	};
 
-	goToDetail = (contactId) => {
+	goToDetail = (row) => {
 		 
-		this.props.history.push('/admin/master/contact/detail', { id: contactId });
+		this.props.history.push('/admin/master/contact/detail', { id: row.id });
 	};
 	renderStatus = (cell, row) => {
 
@@ -215,6 +220,51 @@ class Contact extends React.Component {
         );
 
     };
+	toggleActionButton = (index) => {
+		let temp = Object.assign({}, this.state.actionButtons);
+		if (temp[parseInt(index, 10)]) {
+			temp[parseInt(index, 10)] = false;
+		} else {
+			temp[parseInt(index, 10)] = true;
+		}
+		this.setState({
+			actionButtons: temp,
+		});
+	};
+
+	renderActions = (cell, row) => {
+		return (
+			<div>
+				<ButtonDropdown
+					isOpen={this.state.actionButtons[row.id]}
+					toggle={() => this.toggleActionButton(row.id)}
+				>
+					<DropdownToggle size="sm" color="primary" className="btn-brand icon">
+						{this.state.actionButtons[row.id] === true ? (
+							<i className="fas fa-chevron-up" />
+						) : (
+							<i className="fas fa-chevron-down" />
+						)}
+					</DropdownToggle>
+					<DropdownMenu right>
+							<DropdownItem>
+								<div
+									onClick={() => {
+										this.props.history.push(
+											'/admin/master/contact/detail',
+											{ id: row.id },
+										);
+									}}
+								>
+									<i className="fas fa-edit" /> {strings.Edit}
+								</div>
+							</DropdownItem>
+					</DropdownMenu>
+				</ButtonDropdown>
+			</div>
+		);
+	};
+
 	getActionButtons = (params) => {
 		return (
 	<>
@@ -463,11 +513,125 @@ class Contact extends React.Component {
 											{strings.Addnewcontact}
 										</Button>
 										</div>
-										
+										<div>
+											<BootstrapTable
+												selectRow={this.selectRowProp}
+												search={false}
+												options={this.options}
+											
+											data={contact_list && contact_list.data
+												? contact_list.data
+												: []}
+												//  suppressDragLeaveHidesColumns={true}
+											// pivotMode={true}
+											// suppressPaginationPanel={false}
+											pagination={
+												contact_list &&
+												contact_list.data &&
+												contact_list.data.length
+													? true
+													: false
+											}
+											remote
+											fetchInfo={{
+												dataTotalSize: contact_list.count
+													? contact_list.count
+													: 0,
+											}}
+											rowSelection="multiple"
+											// paginationPageSize={10}
+											// paginationAutoPageSize={true}
+											paginationPageSize={this.state.paginationPageSize}
+												floatingFilter={true}
+												defaultColDef={{ 
+															resizable: true,
+															flex: 1,
+															sortable: true
+														}}
+											sideBar="columns"
+											onGridReady={this.onGridReady}
+												>
+														<TableHeaderColumn
+															isKey
+															dataField="fullName"
+															dataSort
+														    columnTitle={this.customName}
+															className="table-header-bg"
+														>
+															{strings.CONTACTORGANIZATIONTNAME}
+														</TableHeaderColumn>							
+														<TableHeaderColumn
+															dataField="contactTypeString"
+															dataSort
+															// dataFormat={this.typeFormatter}
+															className="table-header-bg"
+														>
+														    {strings.CONTACTTYPE}
+														</TableHeaderColumn>
+														{/* <TableHeaderColumn
+															dataField="vatType"
+															dataSort
+															// dataFormat={this.typeFormatter}
+															className="table-header-bg"
+														>
+														    {strings.VATTYPE}
+														</TableHeaderColumn>
+
+														<TableHeaderColumn
+															dataField="TRN"
+															dataSort
+															// dataFormat={this.typeFormatter}
+															className="table-header-bg"
+														>
+														    {strings.TRN}
+														</TableHeaderColumn> */}
+														<TableHeaderColumn
+															dataField="email"
+															columnTitle={this.customEmail}
+															dataSort
+															className="table-header-bg"
+														>
+															{strings.Email}
+														</TableHeaderColumn>
+														<TableHeaderColumn
+															dataField="mobileNumber"
+															// columnTitle={this.customEmail}
+															dataSort
+															className="table-header-bg"
+														>
+															{strings.MOBILENUMBER}
+														</TableHeaderColumn>
+														<TableHeaderColumn
+															dataField="isActive"
+															dataSort
+															dataFormat={this.renderStatus}
+															className="table-header-bg"
+														>
+														    {strings.STATUS}
+														</TableHeaderColumn>
+														{/* <TableHeaderColumn
+															dataField="openingBalance"
+															dataSort
+															// dataFormat={this.typeFormatter}
+															className="table-header-bg"
+														>
+														    {strings.OPENINGBALANCE}
+														</TableHeaderColumn> */}
+														<TableHeaderColumn
+															className="text-right"
+															columnClassName="text-right"
+															width="5%"
+															// dataFormat={this.renderActions}
+															className="table-header-bg"
+														></TableHeaderColumn>
+														
+														
+											</BootstrapTable>
+										</div>
 										
 											
 
-													<div className="ag-theme-alpine mb-3" style={{ height: 590,width:"100%" }}>
+													{/* <div className="ag-theme-alpine mb-3" style={{ height: 590,width:"100%" }}>
 			<AgGridReact
 				rowData={contact_list && contact_list.data
 					? contact_list.data
@@ -536,14 +700,14 @@ class Contact extends React.Component {
 				filter={ true }
 				enablePivot={true} 
 				cellRendererFramework={(params) => params.value==true ?
-													<label className="badge label-success"> Active</label>
+													<label className="badge label-success"> {strings.active}</label>
 													:
-													<label className="badge label-due"> InActive</label>
+													<label className="badge label-due"> {strings.inactive}</label>
 										}
 				></AgGridColumn>  
 				<AgGridColumn field="action"
 										// className="Ag-gridActionButtons"
-										headerName="ACTIONS"
+										headerName={strings.action}
 										cellRendererFramework={(params) =>
 											<div
 											 className="Ag-gridActionButtons"
@@ -553,17 +717,17 @@ class Contact extends React.Component {
 
 										}
 									></AgGridColumn>
-			</AgGridReact>  
-			<div className="example-header mt-1">
-					Page Size:
+			</AgGridReact>   */}
+			{/* <div className="example-header mt-1">
+					{strings.page_size}
 					<select onChange={() => this.onPageSizeChanged()} id="page-size">
 					<option value="10" selected={true}>10</option>
 					<option value="100">100</option>
 					<option value="500">500</option>
 					<option value="1000">1000</option>
 					</select>
-				</div>   																	
-		</div>	
+				</div>   																	 */}
+		{/* </div>	 */}
 												</Col>
 												{/* <Col xs="12" lg="4">
                             <div className="contact-info p-4">

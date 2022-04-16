@@ -153,7 +153,7 @@ class ViewEmployee extends React.Component {
 										employeename:res.data.employeename,
 										selectedData:res.data,
 										Fixed:res.data.salarySlipResult.Fixed,
-										FixedAllowance:res.data.salarySlipResult.Fixed_Allowance ?res.data.salarySlipResult.Fixed_Allowance:res.data.salarySlipResult["Fixed Allowance"]  ,
+										FixedAllowance:res.data.salarySlipResult.Fixed_Allowance ?res.data.salarySlipResult.Fixed_Allowance:res.data.salarySlipResult["Fixed Allowance"] ,
 										Variable: res.data.salarySlipResult.Variable,
 										Deduction:res.data.salarySlipResult.Deduction,
 									});

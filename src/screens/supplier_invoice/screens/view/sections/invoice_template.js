@@ -168,14 +168,17 @@ class InvoiceTemplate extends Component {
 									</h6> */}
 								</div>
 							</div>
-							<div style={{ width: '200%',justifyContent:'center', marginTop:'5rem' }}>
+							<div style={{ width: '200%',justifyContent:'center', marginTop:'2rem' }}>
 								<table>
 									<tbody>
 									<tr style={{
 										width: '100%',
 										margin:'0.5rem',
 										marginTop:'2.5rem',
-										marginLeft:'6rem'
+										marginLeft:'6rem',
+										display:'flex',
+										textAlign:'center',
+										justifyContent:'center'
 									}}>
 												<td
 													style={{
@@ -373,6 +376,9 @@ class InvoiceTemplate extends Component {
 									<th className="center" style={{ padding: '0.5rem' }}>
 										{strings.Quantity }
 									</th>
+									<th className="center" style={{ padding: '0.5rem' }}>
+										{strings.UnitType}
+									</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
 										{strings.UnitCost }
 									</th>
@@ -399,6 +405,7 @@ class InvoiceTemplate extends Component {
 												<td>{item.productName}</td>
 												<td>{item.description}</td>
 												<td>{item.quantity}</td>
+												<td>{item.unitType}</td>
 												<td style={{ textAlign: 'right', width: '20%' }}>
 													<Currency
 														value={item.unitPrice}
@@ -409,7 +416,17 @@ class InvoiceTemplate extends Component {
 														}
 													/>
 												</td>
-												<td style={{ textAlign: 'right' }}>{item.discount}</td>
+												<td style={{ textAlign: 'right' }}>
+												<Currency
+														value={item.discount}
+														currencySymbol={
+															currencyData[0]
+																? currencyData[0].currencyIsoCode
+																: 'USD'
+														}
+													/>
+												</td>
+
 												<td style={{ textAlign: 'right' }}>{item.discountType}</td>
 												<td>{item.exciseTaxId ? this.renderExcise(item):"-"}</td>
 												<td style={{ textAlign: 'right' }}>

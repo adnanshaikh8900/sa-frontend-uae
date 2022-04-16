@@ -26,7 +26,7 @@ import * as ProductActions from '../../../product/actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 import { CustomerModal, ProductModal,InvoiceNumberModel} from '../../sections';
 import { MultiSupplierProductModal } from '../../sections';
-
+import {  ImageUploader, Loader } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
@@ -108,12 +108,14 @@ class CreateCustomerInvoice extends React.Component {
 					vatCategoryId: '',
 					exciseTaxId:'',
 					discountType: 'FIXED',
-					exciseAmount:'',
+					exciseAmount:0,
 					discount: 0,
 					subTotal: 0,
 					vatAmount:0,
 					productId: '',
-					isExciseTaxExclusive: ''
+					isExciseTaxExclusive: '',
+					unitType:'',
+					unitTypeId:''
 
 				},
 			],
@@ -155,6 +157,7 @@ class CreateCustomerInvoice extends React.Component {
 				discountType: "FIXED",
 				total_excise: 0,
 			},
+			taxType: false,
 			// excisetype: { value: 'Inclusive', label: 'Inclusive' },
 			currentData: {},
 			contactType: 2,
@@ -178,6 +181,36 @@ class CreateCustomerInvoice extends React.Component {
 			state_list_for_shipping:[],
 			param:false,
 			date:'',
+			contactId:'',
+			isQuotationSelected:false,
+			loadingMsg:"Loading...",
+			vat_list:[
+				{
+					"id": 1,
+					"vat": 5,
+					"name": "STANDARD RATED TAX (5%) "
+				},
+				{
+					"id": 2,
+					"vat": 0,
+					"name": "ZERO RATED TAX (0%)"
+				},
+				{
+					"id": 3,
+					"vat": 0,
+					"name": "EXEMPT"
+				},
+				{
+					"id": 4,
+					"vat": 0,
+					"name": "OUT OF SCOPE"
+				},
+				{
+					"id": 10,
+					"vat": 0,
+					"name": "N/A"
+				}
+			]
 		};
 
 		this.formRef = React.createRef();
@@ -306,7 +339,7 @@ class CreateCustomerInvoice extends React.Component {
 									if(parseInt(e.target.value) >product_list[0].stockOnHand && product_list[0].isInventoryEnabled==true)
 									this.props.commonActions.tostifyAlert(
 										'error',
-										 `Quantity (${e.target.value}) must not be greater than stock on Hand  (${product_list[0].stockOnHand})`,
+										 `Quantity (${e.target.value}) Must Not Be Greater Than Stock On Hand  (${product_list[0].stockOnHand})`,
 									);
 									else
 									this.selectItem(
@@ -412,7 +445,7 @@ renderVatAmount = (cell, row,extraData) => {
 		const { term } = this.state;
 		const val = term ? term.value.split('_') : '';
 		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
-		 
+
 		const values = value
 			? value
 			: moment(props.values.invoiceDate, 'DD-MM-YYYY').toDate();
@@ -432,6 +465,7 @@ renderVatAmount = (cell, row,extraData) => {
 		return obj.currencyCode === value;
 		});
 		console.log('currency result', result)
+		if(result &&result[0]&&  result[0].exchangeRate)
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
 		};
 
@@ -466,20 +500,303 @@ renderVatAmount = (cell, row,extraData) => {
 				}
 			});
 	};
+	getQuotationDetails=(quotationId)=>{
+this.props.customerInvoiceCreateActions.getQuotationById(quotationId)
+										.then((res)=>{
+											if (res.status === 200) {
+												this.getCompanyCurrency();
+												// this.purchaseCategory();
+												this.setState(
+													{
+														isQuotationSelected:true,
+														contactId: res.data.customerId,
+														quotationId: quotationId,
+														initValue: {
+															quotaionExpiration: res.data.quotaionExpiration
+																? moment(res.data.quotaionExpiration).format('DD-MM-YYYY')
+																: '',
+																quotaionExpiration1: res.data.quotaionExpiration
+																? res.data.quotaionExpiration
+																: '',
+																contactId: res.data.customerId ? res.data.customerId : '',
+																quotationNumber: res.data.quotationNumber
+																? res.data.quotationNumber
+																: '',
+																invoiceVATAmount: res.data.totalVatAmount
+																? res.data.totalVatAmount
+																: 0,
+																totalAmount: res.data.totalAmount ? res.data.totalAmount : 0,
+																total_net: 0,
+																notes: res.data.notes ? res.data.notes : '',
+																lineItemsString: res.data.poQuatationLineItemRequestModelList
+																? res.data.poQuatationLineItemRequestModelList
+																: [],
+																placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+																total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
+																discount: res.data.discount ? res.data.discount : 0,
+																discountPercentage: res.data.discountPercentage
+																	? res.data.discountPercentage
+																	: 0,
+																discountType: res.data.discountType
+																	? res.data.discountType
+																	: '',
 
+														},
+														invoiceDateNoChange: res.data.quotaionExpiration
+																? moment(res.data.quotaionExpiration)
+																: '',
+														invoiceDueDateNoChange: res.data.quotaionExpiration
+																? res.data.quotaionExpiration
+																: '',
+														customer_taxTreatment_des : res.data.taxtreatment ? res.data.taxtreatment : '',
+														// placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+														total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
+														data: res.data.poQuatationLineItemRequestModelList
+															? res.data.poQuatationLineItemRequestModelList
+															: [],
+
+
+														//
+
+														discountAmount: res.data.discount ? res.data.discount : 0,
+														discountPercentage: res.data.discountPercentage
+															? res.data.discountPercentage
+															: '',
+
+														selectedContact: res.data.customerId ? res.data.customerId : '',
+														// term: res.data.term ? res.data.term : '',
+														placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+														loading: false,
+
+													},
+													() => {
+														if (this.state.data.length > 0) {
+															this.updateAmount(this.state.data);
+															const { data } = this.state;
+															const idCount =
+																data.length > 0
+																	? Math.max.apply(
+																			Math,
+																			data.map((item) => {
+																				return item.id;
+																			}),
+																	  )
+																	: 0;
+															this.setState({
+																idCount,
+															});
+																this.formRef.current.setFieldValue(
+																	'lineItemsString',
+																	this.state.data,
+																	true,
+																);
+														this.formRef.current.setFieldValue('contactId', res.data.customerId, true);
+														this.formRef.current.setFieldValue('placeOfSupplyId', res.data.placeOfSupplyId, true);
+														this.formRef.current.setFieldValue('currency', this.getCurrency(res.data.customerId), true);
+														this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(res.data.customerId), true);
+													   this.setExchange( this.getCurrency(res.data.customerId) );
+														} else {
+															this.setState({
+																idCount: 0,
+															});
+														}
+													}
+												);
+												this.getCurrency(res.data.customerId)
+											}
+										})
+	}
+
+	getParentInvoiceDetails=(parentInvoiceId)=>{
+		this.props.customerInvoiceCreateActions
+		.getInvoiceById(parentInvoiceId)
+		.then((res) => {
+			if (res.status === 200) {
+				this.getCompanyCurrency();
+			let term=	this.termList.find((option) =>option.value == res.data.term)
+				this.setState(
+					{
+						parentInvoiceId:parentInvoiceId,
+						initValue: {
+							receiptAttachmentDescription: res.data
+								.receiptAttachmentDescription
+								? res.data.receiptAttachmentDescription
+								: '',
+							receiptNumber: res.data.receiptNumber
+								? res.data.receiptNumber
+								: '',
+							contact_po_number: res.data.contactPoNumber
+								? res.data.contactPoNumber
+								: '',
+								currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
+							exchangeRate:res.data.exchangeRate ? res.data.exchangeRate : '',
+							currencyName:res.data.currencyName ? res.data.currencyName : '',
+							invoiceDueDate: res.data.invoiceDueDate
+								? moment(res.data.invoiceDueDate).format('DD-MM-YYYY')
+								: '',
+							invoiceDate: res.data.invoiceDate
+								? moment(res.data.invoiceDate).format('DD-MM-YYYY')
+								: '',
+								invoiceDate1: res.data.invoiceDate
+								? res.data.invoiceDate
+								: '',
+							contactId: res.data.contactId ? res.data.contactId : '',
+							project: res.data.projectId ? res.data.projectId : '',
+							invoice_number: res.data.referenceNumber
+								? res.data.referenceNumber
+								: '',
+							total_net: 0,
+							invoiceVATAmount: res.data.totalVatAmount
+								? res.data.totalVatAmount
+								: 0,
+							totalAmount: res.data.totalAmount ? res.data.totalAmount : 0,
+							notes: res.data.notes ? res.data.notes : '',
+							changeShippingAddress: res.data.changeShippingAddress ? res.data.changeShippingAddress : '',
+							shippingAddress: res.data.shippingAddress ? res.data.shippingAddress : '',
+							shippingCountryId: res.data.shippingCountry ? res.data.shippingCountry : '',
+							shippingStateId: res.data.shippingState ? res.data.shippingState : '',
+							shippingCity: res.data.shippingCity ? res.data.shippingCity : '',
+							shippingPostZipCode: res.data.shippingPostZipCode ? res.data.shippingPostZipCode : '',
+							shippingTelephone: res.data.shippingTelephone ? res.data.shippingTelephone : '',
+							shippingFax: res.data.shippingFax ? res.data.shippingFax : '',
+							lineItemsString: res.data.invoiceLineItems
+								? res.data.invoiceLineItems
+								: [],
+							discount: res.data.discount ? res.data.discount : 0,
+							
+						
+							term: term,
+							placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+							fileName: res.data.fileName ? res.data.fileName : '',
+							filePath: res.data.filePath ? res.data.filePath : '',
+							total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : 0,
+							taxType : res.data.taxType ? true : false,
+						 },
+						customer_taxTreatment_des : res.data.taxTreatment ? res.data.taxTreatment : '',
+						invoiceDateNoChange :res.data.invoiceDate
+						? moment(res.data.invoiceDate)
+						: '',
+						taxType : res.data.taxType ? true : false,
+						invoiceDueDateNoChange : res.data.invoiceDueDate ?
+						moment(res.data.invoiceDueDate) : '',
+						invoiceDate: res.data.invoiceDate
+								? res.data.invoiceDate
+								: '',
+						invoiceDueDate: res.data.invoiceDueDate
+							? res.data.invoiceDueDate
+							: '',
+						discountAmount: res.data.discount ? res.data.discount : 0,
+						discountPercentage: res.data.discountPercentage
+							? res.data.discountPercentage
+							: '',
+						data: res.data.invoiceLineItems
+							? res.data.invoiceLineItems
+							: [],
+						selectedContact: res.data.contactId ? res.data.contactId : '',
+						contactId: res.data.contactId ? res.data.contactId : '',
+						term: term,
+						placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+						loading: false,
+					},
+					() => {
+						if(this.state.initValue && this.state.initValue.changeShippingAddress && this.state.initValue.shippingCountryId)
+						{
+							let state_list_for_shipping=[]
+							let state=""
+						this.props.customerInvoiceActions.getStateListForShippingAddress(this.state.initValue.shippingCountryId).then((res)=>{
+							if(res.length>0)
+							{	this.setState({state_list_for_shipping:res})
+								state_list_for_shipping=res;
+								state=   state_list_for_shipping.find((option) =>	option.value ==this.state.initValue.shippingStateId)
+														
+								this.formRef.current.setFieldValue('shippingStateId',state, true);	
+								if(this.props.country_list &&this.props.country_list.length>0){
+									let country=  selectOptionsFactory.renderOptions(
+																					'countryName',
+																					'countryCode',
+																					this.props.country_list,
+																					'Country',
+																				) .find((option)=>option.value == this.state.initValue.shippingCountryId)
+									this.formRef.current.setFieldValue('shippingCountryId',country, true);	
+								   }
+							}});
+
+							this.formRef.current.setFieldValue('changeShippingAddress', this.state.initValue.changeShippingAddress , true);	
+							this.formRef.current.setFieldValue('shippingAddress', this.state.initValue.shippingAddress , true);	
+							this.formRef.current.setFieldValue('shippingCity', this.state.initValue.shippingCity , true);	
+							this.formRef.current.setFieldValue('shippingPostZipCode', this.state.initValue.shippingPostZipCode , true);	
+							this.formRef.current.setFieldValue('shippingFax', this.state.initValue.shippingFax , true);	
+							this.formRef.current.setFieldValue('shippingTelephone', this.state.initValue.shippingTelephone , true);
+				            this.formRef.current.setFieldValue('shippingFax', this.state.initValue.shippingFax , true);	
+
+
+						}
+						if (this.state.data.length > 0) {
+							this.updateAmount(this.state.data);
+							const { data } = this.state;
+							const idCount =
+								data.length > 0
+									? Math.max.apply(
+											Math,
+											data.map((item) => {
+												return item.id;
+											}),
+									  )
+									: 0;
+							this.setState({
+								idCount,
+							});
+							this.formRef.current.setFieldValue('contactId', res.data.contactId, true);
+							this.formRef.current.setFieldValue('placeOfSupplyId', res.data.placeOfSupplyId, true);
+							this.formRef.current.setFieldValue('currency', this.getCurrency(res.data.contactId), true);
+							this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(res.data.contactId), true);
+							this.formRef.current.setFieldValue('term', term, true);
+							this.formRef.current.setFieldValue('notes',  res.data.notes, true);
+							this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
+							this.formRef.current.setFieldValue('receiptAttachmentDescription',  res.data.receiptAttachmentDescription, true);
+							// this.setDate(undefined, '');
+							const val = term ? term.value.split('_') : '';
+							const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
+							const values = moment( moment( res.data.invoiceDate).format('DD-MM-YYYY'), 'DD-MM-YYYY').toDate();							
+								this.setState({
+									date: moment(values).add(temp, 'days'),
+									invoiceDate: moment(values),
+								});
+								const date1 = moment(values).add(temp, 'days').format('DD-MM-YYYY')
+								this.formRef.current.setFieldValue('invoiceDueDate',date1, true);
+							this.setExchange( this.getCurrency(res.data.contactId) );
+						} else {
+							this.setState({
+								idCount: 0,
+							});
+						}
+					},
+				);
+				this.getCurrency(res.data.contactId)	
+			}
+		});
+	}
 	componentDidMount = () => {
-		if(this.props.location.state &&this.props.location.state.contactData)
-		this.getCurrentUser(this.props.location.state.contactData);
+		this.props.customerInvoiceActions.getVatList();
+		if(this.props.location.state && this.props.location.state.quotationId)
+		this.getQuotationDetails(this.props.location.state.quotationId);
 		this.getInitialData();
+		if(this.props.location.state &&this.props.location.state.contactData){
+		this.getCurrentUser(this.props.location.state.contactData);
+	  }
+	  if(this.props.location.state && this.props.location.state.parentInvoiceId )
+	  this.getParentInvoiceDetails(this.props.location.state.parentInvoiceId);
 	};
 
 	getInitialData = () => {
 		this.getInvoiceNo();
-
+		this.props.customerInvoiceActions.getVatList().then((res)=>{
+			if(res.status==200 && res.data)
+			 this.setState({vat_list:res.data})
+		});
 		this.props.customerInvoiceActions.getCustomerList(this.state.contactType);
 		this.props.customerInvoiceActions.getCountryList();
 		this.props.customerInvoiceActions.getExciseList();
-		this.props.customerInvoiceActions.getVatList();
 		this.props.customerInvoiceActions.getProductList();
 		this.props.productActions.getProductCategoryList();
 		this.props.currencyConvertActions.getCurrencyConversionList().then((response) => {
@@ -580,6 +897,8 @@ renderVatAmount = (cell, row,extraData) => {
 					vatAmount:0,
 					discount: 0,
 					productId: '',
+					unitType:'',
+					unitTypeId:''
 				}),
 				idCount: this.state.idCount + 1,
 			},
@@ -684,7 +1003,6 @@ renderVatAmount = (cell, row,extraData) => {
 							   ? 'is-invalid'
 							   : ''
 					   }`}
-   type="text"
    />
 	<div class="dropdown open input-group-append">
 
@@ -814,7 +1132,7 @@ discountType = (row) =>
 				render={({ field, form }) => (
 					<Select
 						styles={customStyles}
-						 isDisabled={row.exciseTaxId === 0 || row.isExciseTaxExclusive=== false}
+						 isDisabled={row.exciseTaxId === 0}
 						options={
 							excise_list
 								? selectOptionsFactory.renderOptions(
@@ -878,7 +1196,9 @@ discountType = (row) =>
 				obj['description'] = result.description;
 				obj['exciseTaxId'] = result.exciseTaxId;
 				obj['discountType'] = result.discountType;
-				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive
+				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive;
+				obj['unitType']=result.unitType;
+				obj['unitTypeId']=result.unitTypeId;
 				idx = index;
 			}
 			return obj;
@@ -965,14 +1285,15 @@ discountType = (row) =>
 										field,
 										props,
 									);
-									if(this.checkedRow()==false)
-									this.addRow();
 									this.props.customerInvoiceActions.getInventoryByProductId(e.value).then((response) => {
 										this.setState({inventoryList:response.data						
 										});
 										// if(response.data.length !== 0 && response.data.length !== 1){
 										// this.openMultiSupplierProductModal(response);}
 									});
+									if(this.checkedRow()==false)
+									   this.addRow();
+									   console.log(this.state.data,"prodlist")
 								} else {
 									form.setFieldValue(
 										`lineItemsString.${idx}.productId`,
@@ -1088,84 +1409,160 @@ discountType = (row) =>
 	};
 
 	updateAmount = (data, props) => {
-		const { vat_list , excise_list} = this.props;
-		const { discountPercentage, discountAmount } = this.state;
+		const { vat_list } = this.state;
 		let total_net = 0;
 		let total_excise = 0;
 		let total = 0;
 		let total_vat = 0;
-		let net_value = 0;
-		let discount = 0;
+		let net_value = 0; 
+		let discount_total = 0;
 		data.map((obj) => {
 			const index =
 				obj.vatCategoryId !== ''
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
-			//Excise calculation
-			if(obj.exciseTaxId !=  0){
-			if(obj.isExciseTaxExclusive === true){
-				if(obj.exciseTaxId === 1){
-				const value = +(obj.unitPrice) / 2 ;
-					net_value = parseFloat(obj.unitPrice) + parseFloat(value) ;
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
-				}else if (obj.exciseTaxId === 2){
-					const value = obj.unitPrice;
-					net_value = parseFloat(obj.unitPrice) +  parseFloat(value) ;
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
+
+			//Exclusive case
+			if(this.state.taxType === false){
+				if (obj.discountType === 'PERCENTAGE') {	
+					 net_value =
+						((+obj.unitPrice -
+							(+((obj.unitPrice * obj.discount)) / 100)) * obj.quantity);
+					var discount =  obj.unitPrice - net_value
+				if(obj.exciseTaxId !=  0){
+					if(obj.exciseTaxId === 1){
+						const value = +(net_value) / 2 ;
+							net_value = parseFloat(net_value) + parseFloat(value) ;
+							obj.exciseAmount = parseFloat(value) * obj.quantity;
+						}else if (obj.exciseTaxId === 2){
+							const value = net_value;
+							net_value = parseFloat(net_value) +  parseFloat(value) ;
+							obj.exciseAmount = parseFloat(value) * obj.quantity;
+						}
+						else{
+							net_value = obj.unitPrice
+						}
 				}
 				else{
-					net_value = obj.unitPrice
+					obj.exciseAmount = 0
 				}
-			}	else{
+					var vat_amount =
+					((+net_value  * vat * obj.quantity) / 100);
+				}else{
+					 net_value =
+						((obj.unitPrice * obj.quantity) - obj.discount)
+					var discount =  obj.unitPrice - net_value
+						if(obj.exciseTaxId !=  0){
+							if(obj.exciseTaxId === 1){
+								const value = +(net_value) / 2 ;
+									net_value = parseFloat(net_value) + parseFloat(value) ;
+									obj.exciseAmount = parseFloat(value) * obj.quantity;
+								}else if (obj.exciseTaxId === 2){
+									const value = net_value;
+									net_value = parseFloat(net_value) +  parseFloat(value) ;
+									obj.exciseAmount = parseFloat(value) * obj.quantity;
+								}
+								else{
+									net_value = obj.unitPrice
+								}
+						}
+						else{
+							obj.exciseAmount = 0
+						}
+						var vat_amount =
+						((+net_value  * vat * obj.quantity) / 100);
+			}
+
+			}
+			//Inclusive case
+			else
+			{			
+				if (obj.discountType === 'PERCENTAGE') {	
+
+					//net value after removing discount
+					 net_value =
+					((+obj.unitPrice -
+						(+((obj.unitPrice * obj.discount)) / 100)) * obj.quantity);
+
+				//discount amount
+				var discount =  (obj.unitPrice* obj.quantity) - net_value
+
+				//vat amount
+				var vat_amount =
+				(+net_value  * (vat/ (100 + vat)*100)) / 100; 
+
+				//net value after removing vat for inclusive
+				net_value = net_value - vat_amount
+
+				//excise calculation
+				if(obj.exciseTaxId !=  0){
 				if(obj.exciseTaxId === 1){
-					const value = obj.unitPrice / 3
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
-				net_value = obj.unitPrice}
+					const value = net_value / 3
+					net_value = net_value 
+					obj.exciseAmount = parseFloat(value);
+					}
 				else if (obj.exciseTaxId === 2){
-					const value = obj.unitPrice / 2
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
-				net_value = obj.unitPrice}
+					const value = net_value / 2
+					obj.exciseAmount = parseFloat(value);
+				net_value = net_value}
 				else{
 					net_value = obj.unitPrice
-				}
+					}
+						}
+						else{
+							obj.exciseAmount = 0
+						}
+					}
+
+				else // fixed discount
+						{
+				//net value after removing discount
+				 net_value =
+				((obj.unitPrice * obj.quantity) - obj.discount)
+
+
+				//discount amount
+				var discount =  (obj.unitPrice * obj.quantity) - net_value
+						
+				//vat amount
+				var vat_amount =
+				(+net_value  * (vat/ (100 + vat)*100)) / 100; ;
+
+				//net value after removing vat for inclusive
+				net_value = net_value - vat_amount
+
+				//excise calculation
+				if(obj.exciseTaxId !=  0){
+					if(obj.exciseTaxId === 1){
+						const value = net_value / 3
+						net_value = net_value 
+						obj.exciseAmount = parseFloat(value);
+						}
+					else if (obj.exciseTaxId === 2){
+						const value = net_value / 2
+						obj.exciseAmount = parseFloat(value);
+					net_value = net_value}
+					else{
+						net_value = obj.unitPrice
+						}
+							}
+							else{
+								obj.exciseAmount = 0
+							}
+					}
+
 			}
-		}else{
-			net_value = obj.unitPrice;
-			obj.exciseAmount = 0
-		}
-			//vat calculation
-			if (obj.discountType === 'PERCENTAGE') {
-				var val =
-				((+net_value -
-				 (+((net_value * obj.discount)) / 100)) *
-					vat *
-					obj.quantity) /
-				100;
-
-				var val1 =
-				((+net_value -
-				 (+((net_value * obj.discount)) / 100)) * obj.quantity ) ;
-			} else if (obj.discountType === 'FIXED') {
-				var val =
-						 (net_value * obj.quantity - obj.discount ) *
-					(vat / 100);
-
-					var val1 =
-					((net_value * obj.quantity )- obj.discount )
-
-			} else {
-				var val = (+net_value * vat * obj.quantity) / 100;
-				var val1 = net_value * obj.quantity
-			}
-
-			//discount calculation
-			discount = +(discount +(net_value * obj.quantity)) - parseFloat(val1)
-			total_net = +(total_net + net_value * obj.quantity);
-			total_vat = +(total_vat + val);
-			obj.vatAmount = val
+			
+			
+			obj.vatAmount = vat_amount
 			obj.subTotal =
-			net_value && obj.vatCategoryId ? parseFloat(val1) + parseFloat(val) : 0;
+			net_value && obj.vatCategoryId ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
+
+			discount_total = +discount_total +discount
+			total_net = +(total_net + parseFloat(net_value));
+			total_vat = +(total_vat + vat_amount);
+			
 			total_excise = +(total_excise + obj.exciseAmount)
 			total = total_vat + total_net;
 			return obj;
@@ -1181,10 +1578,10 @@ discountType = (row) =>
 				initValue: {
 					...this.state.initValue,
 					...{
-						total_net: discount ? total_net - discount : total_net,
+						total_net:  total_net,
 						invoiceVATAmount: total_vat,
-						discount:  discount ? discount : 0,
-						totalAmount: total_net > discount ? total - discount : total - discount,
+						discount:  discount_total ? discount_total : 0,
+						totalAmount:  total ,
 						total_excise: total_excise
 					},
 
@@ -1230,10 +1627,15 @@ discountType = (row) =>
 			discountType,
 			discountPercentage,
 			notes,
-			changeShippingAddress
+			changeShippingAddress,
+			quotationId
 		} = data;
 		const { term } = this.state;
 		const formData = new FormData();
+		formData.append('taxType', this.state.taxType)
+		formData.append(
+			'quotationId',this.state.quotationId ? this.state.quotationId : ''
+		)
 		formData.append(
 			'referenceNumber',
 			invoice_number !== null ? this.state.prefix + invoice_number : '',
@@ -1314,11 +1716,15 @@ if(changeShippingAddress && changeShippingAddress==true)
 			formData.append('term', term.value);
 		}
 
+		if(this.state.quotationId != null || this.state.parentInvoiceId != null){
+			formData.append('contactId', this.state.contactId );
+		}else{
 		if (contactId && contactId.value) {
 			formData.append('contactId', contactId.value);
-		}
-		if (placeOfSupplyId && placeOfSupplyId.value) {
-			formData.append('placeOfSupplyId', placeOfSupplyId.value);
+		}}
+
+		if (placeOfSupplyId ) {
+			formData.append('placeOfSupplyId', placeOfSupplyId.value ?placeOfSupplyId.value:placeOfSupplyId);
 		}
 		if (currency !== null && currency) {
 			formData.append('currencyCode', this.state.customer_currency);
@@ -1330,10 +1736,12 @@ if(changeShippingAddress && changeShippingAddress==true)
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
 
+		this.setState({ loading:true, loadingMsg:"Creating Invoice..."});
 		this.props.customerInvoiceCreateActions
 			.createInvoice(formData)
 			.then((res) => {
 				this.setState({ disabled: false });
+				this.setState({ loading:false});
 				this.props.commonActions.tostifyAlert(
 					'success',
 					res.data ? res.data.message : 'Invoice Created Successfully.',
@@ -1371,6 +1779,19 @@ if(changeShippingAddress && changeShippingAddress==true)
 						},
 						() => {
 							resetForm(this.state.initValue);
+							this.setState({
+								initValue: {
+								...this.state.initValue,
+								...{
+									total_net: 0,
+									invoiceVATAmount: 0,
+									totalAmount: 0,
+									discountType: '',
+									discount: 0,
+									discountPercentage: '',
+									changeShippingAddress:false
+								},}
+							})
 							this.getInvoiceNo();
 							this.formRef.current.setFieldValue(
 								'lineItemsString',
@@ -1381,10 +1802,13 @@ if(changeShippingAddress && changeShippingAddress==true)
 					);
 				} else {
 					this.props.history.push('/admin/income/customer-invoice');
+					this.setState({ loading:false,});
+					
 				}
 			})
 			.catch((err) => {
 				this.setState({ disabled: false });
+
 				this.props.commonActions.tostifyAlert(
 					'error',
 					err && err.data ? err.data.message : 'Invoice Created Unsuccessfully',
@@ -1437,6 +1861,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 	// 	}
 	// 	this.formRef.current.setFieldValue('contactId', option, true);
 	// };
+	
 	getCurrentUser = (data) => {
 
 		let option;
@@ -1470,7 +1895,6 @@ if(changeShippingAddress && changeShippingAddress==true)
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
 	};
 
-
 	getCurrentNumber = (data) => {
 		this.getInvoiceNo();
 	};
@@ -1478,26 +1902,29 @@ if(changeShippingAddress && changeShippingAddress==true)
 	getCurrentProduct = () => {
 		this.props.customerInvoiceActions.getProductList().then((res) => {
 			let newData=[]
-				const data = this.state.data;
-				newData = data.filter((obj) => obj.productId !== "");
-				// props.setFieldValue('lineItemsString', newData, true);
-				// this.updateAmount(newData, props);
+																			const data = this.state.data;
+																			newData = data.filter((obj) => obj.productId !== "");
+																			// props.setFieldValue('lineItemsString', newData, true);
+																			// this.updateAmount(newData, props);
 			this.setState(
 				{
 					data: newData.concat({
 						id: this.state.idCount + 1,
-							description: res.data[0].description,
-							quantity: 1,
-							discount:0,
-							unitPrice: res.data[0].unitPrice,
-							vatCategoryId: res.data[0].vatCategoryId,
-							exciseTaxId: res.data[0].exciseTaxId,
-							vatAmount:res.data[0].vatAmount ?res.data[0].vatAmount:0,
-							subTotal: res.data[0].unitPrice,
-							productId: res.data[0].id,
-							discountType: res.data[0].discountType,
-						}),
-						idCount: this.state.idCount + 1,
+						description: res.data[0].description,
+						quantity: 1,
+						discount:0,
+						unitPrice: res.data[0].unitPrice,
+						vatCategoryId: res.data[0].vatCategoryId,
+						exciseTaxId: res.data[0].exciseTaxId,
+						vatAmount:res.data[0].vatAmount ?res.data[0].vatAmount:0,
+						subTotal: res.data[0].unitPrice,
+						productId: res.data[0].id,
+						discountType: res.data[0].discountType,
+						unitType:res.data[0].unitType,
+						unitTypeId:res.data[0].unitTypeId,
+					}),
+					idCount: this.state.idCount + 1,
+					
 				},
 				() => {
 					const values = {
@@ -1509,6 +1936,11 @@ if(changeShippingAddress && changeShippingAddress==true)
 			this.formRef.current.setFieldValue(
 				`lineItemsString.${0}.unitPrice`,
 				res.data[0].unitPrice,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.unitType`,
+				res.data[0].unitType,
 				true,
 			);
 			this.formRef.current.setFieldValue(
@@ -1567,6 +1999,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 						...{ invoice_number: res.data },
 					},
 				});
+				if( res &&  res.data &&this.formRef.current)
 				this.formRef.current.setFieldValue('invoice_number', res.data, true,this.validationCheck(res.data));
 			}
 		});
@@ -1631,6 +2064,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 	};
 	render() {
 		strings.setLanguage(this.state.language);
+		const { loading, loadingMsg } = this.state
 		const { data, discountOptions, initValue, exist, param,prefix ,tax_treatment_list,state_list_for_shipping} = this.state;
 		const {
 			customer_list,
@@ -1647,6 +2081,8 @@ if(changeShippingAddress && changeShippingAddress==true)
 		})
 
 		return (
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
+			<div>
 			<div className="create-customer-invoice-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -1667,6 +2103,13 @@ if(changeShippingAddress && changeShippingAddress==true)
 									</Row>
 								</CardHeader>
 								<CardBody>
+								{loading ? (
+										<Row>
+											<Col lg={12}>
+												<Loader />
+											</Col>
+										</Row>
+									) : (
 									<Row>
 										<Col lg={12}>
 											<Formik
@@ -1755,19 +2198,19 @@ if(changeShippingAddress && changeShippingAddress==true)
 																			}
 																		},
 																	),
-																unitPrice: Yup.string()
-																	.required('Value is Required')
-																	.test(
-																		'Unit Price',
-																		'Unit Price Should be Greater than 1',
-																		(value) => {
-																			if (value > 0) {
-																				return true;
-																			} else {
-																				return false;
-																			}
-																		},
-																	),
+																// unitPrice: Yup.string()
+																// 	.required('Value is Required')
+																// 	.test(
+																// 		'Unit Price',
+																// 		'Unit Price Should be Greater than 1',
+																// 		(value) => {
+																// 			if (value > 0) {
+																// 				return true;
+																// 			} else {
+																// 				return false;
+																// 			}
+																// 		},
+																// 	),
 																vatCategoryId: Yup.string().required(
 																	'Value is Required',
 																),
@@ -1852,6 +2295,27 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		)}
 																</FormGroup>
 															</Col>
+															{/* {this.state.isQuotationSelected==true &&(
+																<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="quotationNumber">
+																		<span className="text-danger">* </span>
+																		{strings.QuotationNumber}
+																	</Label>
+																	<Input
+																		type="text"
+																		maxLength='50'
+																		id="quotationNumber"
+																		name="quotationNumber"
+																		placeholder={strings.QuotationNumber}
+																		value={props.values.quotationNumber}
+
+																	/>
+
+																</FormGroup>
+															</Col>
+
+															)} */}
 															</Row>
 														<hr />
 														<Row>
@@ -1862,34 +2326,36 @@ if(changeShippingAddress && changeShippingAddress==true)
 																	{strings.Customer}
 																	</Label>
 																	<Select
+																	isDisabled={this.state.isQuotationSelected}
 																		id="contactId"
 																		name="contactId"
-																		placeholder={strings.Select+strings.Customer} 
+																		placeholder={strings.Select + strings.Customer} 
 																		options={
 																			tmpCustomer_list
 																				? selectOptionsFactory.renderOptions(
 																						'label',
 																						'value',
 																						tmpCustomer_list,
-																						'Customer',
+																						strings.Customer,
 																				  )
 																				: []
 																		}
-																		value={this.state.quotationId ?
+																		value={
+																			(this.state.quotationId || this.state.parentInvoiceId) ?
 
-																			tmpCustomer_list &&
-																		   selectOptionsFactory.renderOptions(
-																			  'label',
-																			  'value',
-																			  tmpCustomer_list,
-																			  strings.CustomerName,
+																			 tmpCustomer_list &&
+																			selectOptionsFactory.renderOptions(
+																				'label',
+																				'value',
+																				tmpCustomer_list,
+																				strings.Customer,
 																		  ).find((option) => option.value == this.state.contactId)
-																		   
+																			
 																		  :
 																		  
 																		  props.values.contactId
-																		   }
-
+																			}
+															
 																		onChange={(option) => {
 																			if (option && option.value) {
 																				this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
@@ -1915,7 +2381,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		)}
 																</FormGroup>
 															</Col>
-															<Col  lg={3}>
+															{this.props.location.state &&	this.props.location.state.quotationId ?"":<Col  lg={3}>
 																<Label
 																	htmlFor="contactId"
 																	style={{ display: 'block' }}
@@ -1933,7 +2399,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																>
 																	<i className="fa fa-plus"></i> {strings.AddACustomer}
 																</Button>
-															</Col>
+															</Col>}
 															{this.state.customer_taxTreatment_des ?
 															<Col lg={3}>
 																<FormGroup className="mb-3">
@@ -1976,6 +2442,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		{strings.PlaceofSupply}
 																	</Label>
 																	<Select
+																		isDisabled={this.state.isQuotationSelected}
 																		id="placeOfSupplyId"
 																		name="placeOfSupplyId"
 																		placeholder={strings.Select+strings.PlaceofSupply}
@@ -1990,7 +2457,21 @@ if(changeShippingAddress && changeShippingAddress==true)
 																				  )
 																				: []
 																		}
-																		value={this.state.placelist}
+																		value={
+																			this.placelist &&
+																			selectOptionsFactory.renderOptions(
+																				'label',
+																				'value',
+																				this.placelist,
+																				'Place of Supply',
+																		  ).find(
+																									(option) =>
+																										option.value ==
+																										((this.state.quotationId||this.state.parentInvoiceId) ? this.state.placeOfSupplyId:props.values
+																											.placeOfSupplyId.toString())
+
+																								)
+																						}
 																		className={
 																			props.errors.placeOfSupplyId &&
 																			props.touched.placeOfSupplyId
@@ -2112,9 +2593,10 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		showMonthDropdown
 																		showYearDropdown
 																		dateFormat="dd-MM-yyyy"
+																		minDate={new Date()}
 																		dropdownMode="select"
 																		value={props.values.invoiceDate}
-																		selected={props.values.invoiceDate}
+																		selected={props.values.invoiceDate1 ?new Date(props.values.invoiceDate1):props.values.invoiceDate} 
 																		onChange={(value) => {
 																			
 																			props.handleChange('invoiceDate')(value);
@@ -2311,7 +2793,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																				)
 																				: []
 																		}
-																		value={ country_list &&
+																		value={  country_list  &&
 																				selectOptionsFactory
 																					.renderOptions(
 																						'countryName',
@@ -2322,7 +2804,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																					.find(
 																						(option) =>
 																							option.value ===
-																							+props.values.shippingCountryId.value,
+																							+(props.values.shippingCountryId && props.values.shippingCountryId.value ?props.values.shippingCountryId.value :""),
 																					)
 																		}
 																		onChange={(option) => {
@@ -2360,7 +2842,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																<FormGroup>
 																	<Label htmlFor="shippingStateId"><span className="text-danger">* </span>
 																		{/* {strings.StateRegion} */}
-																		{props.values.shippingCountryId.value === 229 ? "Emirites" : "State / Provinces"}
+																		{props.values.shippingCountryId &&props.values.shippingCountryId.value && props.values.shippingCountryId.value === 229 ? "Emirites" : "State / Provinces"}
 																	</Label>
 																	<Select
 																		options={
@@ -2369,14 +2851,13 @@ if(changeShippingAddress && changeShippingAddress==true)
 																					'label',
 																					'value',
 																					state_list_for_shipping,
-																					props.values.shippingCountryId.value === 229 ? "Emirites" : "State / Provinces",
+																					props.values.shippingCountryId &&props.values.shippingCountryId.value && props.values.shippingCountryId.value === 229 ? "Emirites" : "State / Provinces",
 																				)
 																				: []
 																		}
 																		value={ state_list_for_shipping.find(
 																					(option) =>
-																						option.value ===
-																						+props.values.shippingStateId.value,
+																						option.value == (props.values.shippingStateId && props.values.shippingStateId.value? props.values.shippingStateId.value :''),
 																				)
 																		}
 																		onChange={(option) => {
@@ -2386,7 +2867,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																				props.handleChange('shippingStateId')('');
 																			}
 																		}}
-																		placeholder={props.values.shippingCountryId.value == 229 ? "Emirites" : "State / Provinces"}
+																		placeholder={props.values.shippingCountryId &&props.values.shippingCountryId.value && props.values.shippingCountryId.value === 229 ? "Emirites" : "State / Provinces"}
 																		id="shippingStateId"
 																		name="shippingStateId"
 																		className={
@@ -2631,14 +3112,14 @@ if(changeShippingAddress && changeShippingAddress==true)
 																</FormGroup>
 															</Col>
 															<Col  lg={2}>
-															<Input
-																type="text"
-															min="0"	
+																	<Input
+																		type="text"
+																		min="0"	
 																		disabled
-																				id="currencyName"
-																				name="currencyName"
-																				value=	{
-																					this.state.basecurrency.currencyName }
+																		id="currencyName"
+																		name="currencyName"
+																		value=	{
+																		this.state.basecurrency.currencyName }
 																				
 																			/>
 														</Col>
@@ -2661,7 +3142,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 															>
 																<i className="fa fa-plus"></i> {strings.Addmore}
 															</Button>
-															<Button
+															{this.props.location.state &&	this.props.location.state.quotationId ?"":<Button
 																color="primary"
 																className= "btn-square mr-3"
 																onClick={(e, props) => {
@@ -2670,8 +3151,45 @@ if(changeShippingAddress && changeShippingAddress==true)
 																	}}
 																>
 																<i className="fa fa-plus"></i> {strings.Addproduct}
-															</Button>
+															</Button>}
 														</Col>
+
+														<Col  >
+																{this.state.taxType === false ?
+																	<span style={{ color: "#0069d9" }} className='mr-4'><b>Exclusive</b></span> :
+																	<span className='mr-4'>Exclusive</span>}
+																<Switch
+																	value={props.values.taxType}
+																	checked={this.state.taxType}
+																	onChange={(taxType) => {
+
+																		props.handleChange('taxType')(taxType);
+																		this.setState({ taxType }, () => {
+																			this.updateAmount(
+																				this.state.data,
+																				props
+																			)
+																		});
+
+
+																	}}
+
+																	onColor="#2064d8"
+																	onHandleColor="#2693e6"
+																	handleDiameter={25}
+																	uncheckedIcon={false}
+																	checkedIcon={false}
+																	boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+																	activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+																	height={20}
+																	width={48}
+																	className="react-switch "
+																/>
+																{this.state.taxType === true ?
+																	<span style={{ color: "#0069d9" }} className='ml-4'><b>Inclusive</b></span>
+																	: <span className='ml-4'>Inclusive</span>
+																}
+															</Col>
                                                        </Row>
 														<Row>
 															{props.errors.lineItemsString &&
@@ -2699,7 +3217,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																	className="invoice-create-table"
 																>
 																	<TableHeaderColumn
-																	width="5%"
+																		width="5%"
 																		dataAlign="center"
 																		dataFormat={(cell, rows) =>
 																			this.renderActions(cell, rows, props)
@@ -2740,6 +3258,19 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		{strings.QUANTITY}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
+																			width="5%"
+																			dataField="unitType"
+																     	>{strings.Unit}
+																			 	<i
+																		 id="unitTooltip"
+																		 className="fa fa-question-circle"
+																	 /> <UncontrolledTooltip
+																		 placement="right"
+																		 target="unitTooltip"
+																	 >
+																		Units / Measurements</UncontrolledTooltip>
+																		</TableHeaderColumn>
+																		<TableHeaderColumn
 																		width="10%"
 																		dataField="unitPrice"
 																		dataFormat={(cell, rows) =>
@@ -2760,7 +3291,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
-																	width="10%"
+																		width="10%"
 																		dataField="exciseTaxId"
 																		dataFormat={(cell, rows) =>
 																			this.renderExcise(cell, rows, props)
@@ -3134,23 +3665,23 @@ if(changeShippingAddress && changeShippingAddress==true)
 																			? 'Creating...'
 																			: strings.Create }
 																	</Button>
-																	<Button
+																	{this.state.quotationId ? "": (<Button
 																		type="button"
 																		color="primary"
 																		className="btn-square mr-3"
 																		disabled={this.state.disabled}
 																		onClick={() => {
 																			if(this.state.data.length === 1)
-																				{
-																				console.log(props.errors,"ERRORs")
-																				}
-																				else
-																				{ let newData=[]
-																				const data = this.state.data;
-																				newData = data.filter((obj) => obj.productId !== "");
-																				props.setFieldValue('lineItemsString', newData, true);
-																				this.updateAmount(newData, props);
-																				}
+																			{
+																			console.log(props.errors,"ERRORs")
+																			}
+																			else
+																			{ let newData=[]
+																			const data = this.state.data;
+																			newData = data.filter((obj) => obj.productId !== "");
+																			props.setFieldValue('lineItemsString', newData, true);
+																			this.updateAmount(newData, props);
+																			}
 																			this.setState(
 																				{
 																					createMore: true,
@@ -3165,7 +3696,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		{this.state.disabled
 																			? 'Creating...'
 																			: strings.CreateandMore }
-																	</Button>
+																	</Button>)}
 																	<Button
 																		color="secondary"
 																		className="btn-square"
@@ -3185,6 +3716,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 											</Formik>
 										</Col>
 									</Row>
+									)}
 								</CardBody>
 							</Card>
 						</Col>
@@ -3228,17 +3760,8 @@ if(changeShippingAddress && changeShippingAddress==true)
 						this.closeMultiSupplierProductModal(e);
 					}}
 					inventory_list={this.state.inventoryList}
-				/>}
-				{/* <InvoiceNumberModel
-					openInvoiceNumberModel={this.state.openInvoiceNumberModel}
-					closeInvoiceNumberModel={(e) => {
-						this.closeInvoiceNumberModel(e);
-					}}
-					getCurrentNumber={(e) => this.getCurrentNumber(e)}
-						prefix ={this.state.prefixData}
-						updatePrefix={this.props.customerInvoiceActions.updateInvoicePrefix}
-					
-				/> */}
+				/>}			
+			</div>
 			</div>
 		);
 	}

@@ -274,7 +274,17 @@ class ImportBankStatement extends React.Component {
 												<span className="ml-2">{strings.ImportStatement}</span>
 											</div>
 										</Col>
-									
+										<Col>
+								<Button title='Back'
+										onClick={() => {
+											this.props.history.push(
+												'/admin/banking/bank-account/transaction',
+												{ bankAccountId: this.props.location.state.bankAccountId },
+											);
+										}}
+									className=' pull-right'>X
+									</Button>
+								</Col>
 									</Row>
 								</CardHeader>
 								<CardBody>

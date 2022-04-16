@@ -227,7 +227,7 @@ class PurchaseByVendor extends React.Component {
     															padding: 0,
 																backgroundColor:"white !important"
 															}}
-														 >CSV (Comma Separated Value)</span>
+														  	>CSV (Comma Separated Value)</span>
 														</DropdownItem>
 														<DropdownItem onClick={()=>{this.exportExcelFile()}}>
 															<span
@@ -236,7 +236,7 @@ class PurchaseByVendor extends React.Component {
     															padding: 0,
 																backgroundColor:"white !important"
 															}}
-														  >Excel</span>
+														     >Excel</span>
 														</DropdownItem>
 															<DropdownItem onClick={this.exportPDFWithComponent}>
 															Pdf

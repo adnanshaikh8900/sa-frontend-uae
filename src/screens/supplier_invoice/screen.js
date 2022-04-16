@@ -114,6 +114,7 @@ class SupplierInvoice extends React.Component {
 				overDueAmountMonthly: '',
 			},
 			language: window['localStorage'].getItem('language'),
+			loadingMsg:"Loading..."
 		};
 
 		this.options = {
@@ -327,10 +328,19 @@ class SupplierInvoice extends React.Component {
 								<i className="fas fa-edit" />  {strings.Edit}
 							</DropdownItem>
 						)}
+							{row.statusEnum !== 'Sent' && row.statusEnum !== 'Paid' && row.statusEnum !== 'Partially Paid' && (
+							<DropdownItem
+								onClick={() => {
+									this.postInvoice(row,true);
+								}}
+							>
+								<i class="far fa-arrow-alt-circle-right"></i>Mark As Sent
+							</DropdownItem>
+						)}
 						{row.statusEnum !== 'Sent' && row.statusEnum !== 'Paid' && row.statusEnum !== 'Partially Paid' && (
 							<DropdownItem
 								onClick={() => {
-									this.postInvoice(row);
+									this.postInvoice(row,false);
 								}}
 							>
 								<i className="fas fa-send" />  {strings.Post}
@@ -339,6 +349,13 @@ class SupplierInvoice extends React.Component {
 						{/* <DropdownItem  onClick={() => {this.openInvoicePreviewModal(row.id)}}>
               <i className="fas fa-eye" /> View
             </DropdownItem> */}
+			   			<DropdownItem
+						   onClick={() =>
+						this.props.history.push('/admin/expense/supplier-invoice/create', {parentInvoiceId: row.id})
+					}
+				>
+					<i className="fas fa-copy" /> {strings.CreateADuplicate}
+				</DropdownItem>
 
 						{row.statusEnum === 'Sent'  && row.editFlag==true&& (
 							<DropdownItem
@@ -534,7 +551,7 @@ class SupplierInvoice extends React.Component {
 		this.initializeData();
 	};
 
-	postInvoice = (row) => {
+	postInvoice = (row,markAsSent) => {
 		this.setState({
 			loading: true,
 		});
@@ -543,8 +560,10 @@ class SupplierInvoice extends React.Component {
 			postingRefId: row.id,
 			postingRefType: 'INVOICE',
 			amountInWords:upperCase(row.currencyName + " " +(toWords.convert(row.invoiceAmount))+" ONLY" ).replace("POINT","AND"),
-			vatInWords:row.vatAmount ?upperCase(row.currencyName + " " +(toWords.convert(row.vatAmount))+" ONLY" ).replace("POINT","AND") :"-"
+			vatInWords:row.vatAmount ?upperCase(row.currencyName + " " +(toWords.convert(row.vatAmount))+" ONLY" ).replace("POINT","AND") :"-",
+			markAsSent:markAsSent
 		};
+		this.setState({ loading:true, loadingMsg:"Supplier Invoice Posting..."});
 		this.props.supplierInvoiceActions
 			.postInvoice(postingRequestModel)
 			.then((res) => {
@@ -558,6 +577,7 @@ class SupplierInvoice extends React.Component {
 					});
 					this.getOverdue();
 					this.initializeData();
+					this.setState({ loading:false,});
 				}
 			})
 			.catch((err) => {
@@ -729,7 +749,7 @@ class SupplierInvoice extends React.Component {
 	render() {
 		strings.setLanguage(this.state.language);
 		const {
-			loading,
+			loading,loadingMsg,
 			filterData,
 			dialog,
 			selectedRows,
@@ -777,7 +797,7 @@ console.log(supplier_invoice_list)
 		})		
 
 		return (
-			loading ==true? <Loader/> :
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 <div>
 			<div className="supplier-invoice-screen">
 				<div className="animated fadeIn">
@@ -1139,15 +1159,7 @@ console.log(supplier_invoice_list)
 											>
 												{strings.SUPPLIERNAME}
 											</TableHeaderColumn>
-											<TableHeaderColumn
-											//	width="10%"
-												dataField="status"
-												dataFormat={this.renderInvoiceStatus}
-												dataSort
-												className="table-header-bg"
-											>
-												{strings.STATUS}
-											</TableHeaderColumn>
+											
 											<TableHeaderColumn
 												dataField="invoiceDate"
 												dataSort
@@ -1176,6 +1188,17 @@ console.log(supplier_invoice_list)
 											>
 												VAT Amount
 											</TableHeaderColumn> */}
+
+											<TableHeaderColumn
+											//	width="10%"
+												dataField="status"
+												dataFormat={this.renderInvoiceStatus}
+												dataSort
+												className="table-header-bg"
+											>
+												{strings.STATUS}
+											</TableHeaderColumn>
+											
 											<TableHeaderColumn
 												dataAlign="right"
 												dataField="totalAmount"

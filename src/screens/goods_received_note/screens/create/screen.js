@@ -18,7 +18,7 @@ import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import DatePicker from 'react-datepicker';
 import { Formik, Field } from 'formik';
-import { Currency } from 'components';
+import { Currency,Loader } from 'components';
 import * as Yup from 'yup';
 import * as SupplierInvoiceCreateActions from './actions';
 import * as GoodsReceivedNoteCreateAction from './actions'
@@ -37,7 +37,7 @@ import * as PurchaseOrderAction from '../../../purchase_order/actions'
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
-import { optionFactory,selectCurrencyFactory, selectOptionsFactory } from 'utils';
+import { optionFactory, selectCurrencyFactory, selectOptionsFactory } from 'utils';
 
 import './style.scss';
 import moment from 'moment';
@@ -118,16 +118,22 @@ class CreateGoodsReceivedNote extends React.Component {
 			disabled: false,
 			data: [
 				{
-					id: 0,
-					description: '',
-					grnReceivedQuantity: 0,
-					quantity: 1,
-					unitPrice: '',
-					vatCategoryId: '',
-					subTotal: 0,
-					productId: '',
-
-
+						id: 0,
+						description: '',
+						quantity: 1,
+						unitPrice: '',
+						grnReceivedQuantity: 0,
+						vatCategoryId: '',
+						exciseTaxId:'',
+						exciseAmount:'',
+						// discountType:'FIXED',
+						// discount:0,
+						subTotal: 0,
+						vatAmount:0,
+						productId: '',
+						isExciseTaxExclusive:'',
+						unitType:'',
+						unitTypeId:''
 				},
 			],
 			idCount: 0,
@@ -140,6 +146,7 @@ class CreateGoodsReceivedNote extends React.Component {
 				placeOfSupplyId: '',
 				project: '',
 				exchangeRate:'',
+				poNumber:'',
 				lineItemsString: [
 					{
 						id: 0,
@@ -180,6 +187,7 @@ class CreateGoodsReceivedNote extends React.Component {
 			exist: false,
 			language: window['localStorage'].getItem('language'),
 			grnReceivedQuantityError:"Please Enter Quantity",
+			loadingMsg:"Loading..."
 		};
 
 		this.formRef = React.createRef();
@@ -509,9 +517,13 @@ this.state.data.map((obj, index) => {
 	};
 
 	componentDidMount = () => {
-		if(this.props.location.state &&this.props.location.state.contactData)
-		this.getCurrentUser(this.props.location.state.contactData);
+		if(this.props.location.state && this.props.location.state.poId){
+			this.props.goodsReceivedNoteAction.getPurchaseOrderListForDropdown();
+			let option={value:this.props.location.state.poId,label:this.props.location.state.poNumber}
+			this.getPoDetails(option, option.value, undefined)}
 		this.getInitialData();
+		if(this.props.location.state &&this.props.location.state.contactData)
+				this.getCurrentUser(this.props.location.state.contactData);
 	};
 
 	getInitialData = () => {
@@ -602,6 +614,8 @@ this.state.data.map((obj, index) => {
 					vatCategoryId: '',
 					subTotal: 0,
 					productId: '',
+					unitType:'',
+					unitTypeId:''
 				}),
 				idCount: this.state.idCount + 1,
 			},
@@ -749,6 +763,10 @@ this.state.data.map((obj, index) => {
 				obj['unitPrice'] = result.unitPrice;
 				obj['vatCategoryId'] = result.vatCategoryId;
 				obj['description'] = result.description;
+				obj['exciseTaxId'] = result.exciseTaxId;
+				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive;
+				obj['unitType']=result.unitType;
+				obj['unitTypeId']=result.unitTypeId;
 				
 				idx = index;
 			}
@@ -762,6 +780,11 @@ this.state.data.map((obj, index) => {
 		form.setFieldValue(
 			`lineItemsString.${idx}.unitPrice`,
 			result.unitPrice,
+			true,
+		);
+		form.setFieldValue(
+			`lineItemsString.${idx}.exciseTaxId`,
+			result.exciseTaxId,
 			true,
 		);
 		form.setFieldValue(
@@ -971,45 +994,93 @@ this.state.data.map((obj, index) => {
 	};
 
 	updateAmount = (data, props) => {
-		const { vat_list } = this.props;
+		const { vat_list , excise_list} = this.props;
 		const { discountPercentage, discountAmount } = this.state;
-		console.log(discountAmount);
 		let total_net = 0;
+		let total_excise = 0;
 		let total = 0;
 		let total_vat = 0;
+		let net_value = 0;
+		let discount = 0;
 		data.map((obj) => {
 			const index =
 				obj.vatCategoryId !== ''
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
-
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
-			if (props.values.discountType.value === 'PERCENTAGE') {
-				var val =
-					((+obj.unitPrice -
-						+((obj.unitPrice * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })) *
-						vat *
-						obj.grnReceivedQuantity) /
-					100;
-			} else if (props.values.discountType.value === 'FIXED') {
-				var val =
-					(obj.unitPrice * obj.grnReceivedQuantity - discountAmount / data.length) *
-					(vat / 100);
-			} else {
-				var val = (+obj.unitPrice * vat * obj.grnReceivedQuantity) / 100;
+
+			//Excise calculation
+			if(obj.exciseTaxId !=  0){
+			if(obj.isExciseTaxExclusive === true){
+				if(obj.exciseTaxId === 1){
+				const value = +(obj.unitPrice) / 2 ;
+					net_value = parseFloat(obj.unitPrice) + parseFloat(value) ;
+					obj.exciseAmount = parseFloat(value) * obj.grnReceivedQuantity;
+				}else if (obj.exciseTaxId === 2){
+					const value = obj.unitPrice;
+					net_value = parseFloat(obj.unitPrice) +  parseFloat(value) ;
+					obj.exciseAmount = parseFloat(value) * obj.grnReceivedQuantity;
+				}
+				else{
+					net_value = obj.unitPrice
+				}
+			}	else{
+				if(obj.exciseTaxId === 1){
+					const value = obj.unitPrice / 3
+					obj.exciseAmount = parseFloat(value) * obj.grnReceivedQuantity;
+				net_value = obj.unitPrice}
+				else if (obj.exciseTaxId === 2){
+					const value = obj.unitPrice / 2
+					obj.exciseAmount = parseFloat(value) * obj.grnReceivedQuantity;
+				net_value = obj.unitPrice}
+				else{
+					net_value = obj.unitPrice
+				}
 			}
-			total_net = +(total_net + +obj.unitPrice * obj.quantity);
+		}else{
+			net_value = obj.unitPrice;
+			obj.exciseAmount = 0
+		}
+			//vat calculation
+			if (obj.discountType === 'PERCENTAGE') {
+				var val =
+				((+net_value -
+				 (+((net_value * obj.discount)) / 100)) *
+					vat *
+					obj.grnReceivedQuantity) /
+				100;
+				var val1 =
+				((+net_value -
+				 (+((net_value * obj.discount)) / 100)) * obj.grnReceivedQuantity ) ;
+			} else if (obj.discountType === 'FIXED') {
+				var val =
+						 (net_value * obj.grnReceivedQuantity - obj.discount ) *
+					(vat / 100);
+
+					var val1 =
+					((net_value * obj.grnReceivedQuantity )- obj.discount )
+
+			} else {
+				var val = (+net_value * vat * obj.grnReceivedQuantity) / 100;
+				var val1 = net_value * obj.grnReceivedQuantity
+			}
+			console.log('value '+val)
+			//discount calculation
+			discount = +(discount +(net_value * obj.grnReceivedQuantity)) - parseFloat(val1)
+			total_net = +(total_net + net_value * obj.grnReceivedQuantity);
 			total_vat = +(total_vat + val);
+			obj.vatAmount = val
 			obj.subTotal =
-				obj.unitPrice && obj.vatCategoryId ? (+obj.unitPrice * obj.quantity)+total_vat : 0;
+			net_value && obj.vatCategoryId ? parseFloat(val1) + parseFloat(val) : 0;
+			total_excise = +(total_excise + obj.exciseAmount)
 			total = total_vat + total_net;
 			return obj;
 		});
 
-		const discount =
-			props.values.discountType.value === 'PERCENTAGE'
-				? +((total_net * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })
-				: discountAmount;
+		// const discount =
+		// 	props.values.discountType.value === 'PERCENTAGE'
+		// 		? +((total_net * discountPercentage) / 100)
+		// 		: discountAmount;
 		this.setState(
 			{
 				data,
@@ -1017,17 +1088,15 @@ this.state.data.map((obj, index) => {
 					...this.state.initValue,
 					...{
 						total_net: discount ? total_net - discount : total_net,
-						invoiceVATAmount: total_vat,
-						discount: total_net > discount ? discount : 0,
-						totalAmount: total_net > discount ? total - discount : total,
+						totalVatAmount: total_vat,
+						discount:  discount ? discount : 0,
+						totalAmount: total_net > discount ? total - discount : total - discount,
+						total_excise: total_excise
 					},
+
 				},
 			},
-			() => {
-				if (props.values.discountType.value === 'PERCENTAGE') {
-					this.formRef.current.setFieldValue('discount', discount);
-				}
-			},
+
 		);
 	};
 
@@ -1059,7 +1128,8 @@ this.state.data.map((obj, index) => {
 		formData.append('grnRemarks', grnRemarks ? grnRemarks : '');
         formData.append('type', 5);
         formData.append('lineItemsString', JSON.stringify(this.state.data));
-        formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
+		formData.append('totalExciseAmount', this.state.initValue.total_excise);
+        formData.append('totalVatAmount', this.state.initValue.totalVatAmount);
 		formData.append('totalAmount', this.state.initValue.totalAmount);
 		if (supplierId && supplierId.value) {
 			formData.append('supplierId', supplierId.value);
@@ -1074,10 +1144,12 @@ this.state.data.map((obj, index) => {
 			formData.append('currencyCode', this.state.supplier_currency);
 
 		formData.append('supplierReferenceNumber', supplierReferenceNumber ? supplierReferenceNumber : '');
+		this.setState({ loading:true, loadingMsg:"Creating Goods Received Note..."});
 		this.props.goodsReceivedNoteCreateAction
 			.createGNR(formData)
 			.then((res) => {
 				this.setState({ disabled: false });
+				this.setState({ loading:false});
 				this.props.commonActions.tostifyAlert(
 					'success',
 					res.data ? res.data.message : 'Goods Received Note Created Successfully'
@@ -1125,6 +1197,8 @@ this.state.data.map((obj, index) => {
 					);
 				} else {
 					this.props.history.push('/admin/expense/goods-received-note');
+					this.setState({ loading:false,});
+				
 				}
 			})
 			.catch((err) => {
@@ -1226,10 +1300,10 @@ this.state.data.map((obj, index) => {
 	getCurrentProduct = () => {
 		this.props.goodsReceivedNoteAction.getProductList().then((res) => {
 			let newData=[]
-			const data = this.state.data;
-			newData = data.filter((obj) => obj.productId !== "");
-			// props.setFieldValue('lineItemsString', newData, true);
-			// this.updateAmount(newData, props);
+				const data = this.state.data;
+				newData = data.filter((obj) => obj.productId !== "");
+				// props.setFieldValue('lineItemsString', newData, true);
+				// this.updateAmount(newData, props);
 			this.setState(
 				{
 					data: newData.concat({
@@ -1240,7 +1314,7 @@ this.state.data.map((obj, index) => {
                             poQuantity:1,
 							unitPrice: res.data[0].unitPrice,
 							vatCategoryId: res.data[0].vatCategoryId,
-							exciseTaxId: res.data[0].exciseTaxId,
+						    exciseTaxId: res.data[0].exciseTaxId,
 							subTotal: res.data[0].unitPrice,
 							productId: res.data[0].id,
 							discount:0,
@@ -1249,7 +1323,7 @@ this.state.data.map((obj, index) => {
 							unitType:res.data[0].unitType,
 							unitTypeId:res.data[0].unitTypeId,
 						}),
-						idCount: this.state.idCount + 1,
+						idCount: this.state.idCount + 1,	
 				},
 				() => {
 					const values = {
@@ -1261,6 +1335,11 @@ this.state.data.map((obj, index) => {
 			this.formRef.current.setFieldValue(
 				`lineItemsString.${0}.unitPrice`,
 				res.data[0].unitPrice,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.unitType`,
+				res.data[0].unitType,
 				true,
 			);
 			this.formRef.current.setFieldValue(
@@ -1346,6 +1425,7 @@ this.state.data.map((obj, index) => {
 				obj['unitPrice'] = result.unitPrice;
 				obj['vatCategoryId'] = result.vatCategoryId;
 				obj['description'] = result.description;
+				obj['exciseTaxId'] = result.exciseTaxId;
 				idx = index;
 			}
 			return obj;
@@ -1431,7 +1511,7 @@ this.state.data.map((obj, index) => {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { data, discountOptions, initValue, prefix } = this.state;
+		const { data, discountOptions, initValue, prefix ,loading,loadingMsg} = this.state;
 
 		const {
 			currency_list,
@@ -1448,6 +1528,8 @@ console.log(this.state.data)
 			tmpSupplier_list.push(obj)
 		})
 		return (
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
+			<div>
 			<div className="create-supplier-invoice-screen">
 				<div className=" fadeIn">
 					<Row>
@@ -1468,6 +1550,13 @@ console.log(this.state.data)
 									</Row>
 								</CardHeader>
 								<CardBody>
+								{loading ? (
+										<Row>
+											<Col lg={12}>
+												<Loader />
+											</Col>
+										</Row>
+									) : (
 									<Row>
 										<Col lg={12}>
 											<Formik
@@ -1595,6 +1684,7 @@ console.log(this.state.data)
 																	{strings.PONumber}
 																	</Label>
 																	<Select
+																	    isDisabled={this.props.location.state && this.props.location.state.poId ?true:false}
 																		styles={customStyles}
 																		id="poNumber"
 																		name="poNumber"
@@ -1609,7 +1699,17 @@ console.log(this.state.data)
 																				  )
 																				: []
 																		}
-																		value={props.values.poNumber}
+																		value={
+																			po_list &&this.props.location.state &&	this.props.location.state.poId ?
+																			selectOptionsFactory.renderOptions(
+																				'label',
+																				'value',
+																				po_list,
+																				'PO Number',
+																		  )
+																			.find((option) => option.value == this.props.location.state.poId):
+																			props.values.poNumber
+																		}
 
 																		onChange={(option) => {
 																			if (option && option.value) {
@@ -1706,22 +1806,21 @@ console.log(this.state.data)
 																		}
 
 																		value={
-																			this.state.quotationId ?
+																		// 	this.state.quotationId ?
 
-																			tmpSupplier_list &&
-																		   selectOptionsFactory.renderOptions(
-																			   'label',
-																			   'value',
-																			   tmpSupplier_list,
-																			   strings.CustomerName,
-																		 ).find((option) => option.value == this.state.contactId)
+																		// 	tmpSupplier_list &&
+																		//    selectOptionsFactory.renderOptions(
+																		// 	   'label',
+																		// 	   'value',
+																		// 	   tmpSupplier_list,
+																		// 	   strings.CustomerName,
+																		//  ).find((option) => option.value == this.state.contactId)
 																		   
-																		 :
+																		//  :
 																		 
-																		 props.values.contactId
+																		 props.values.supplierId
 																		   }
-																		//	this.state.supplierList
-																		
+																		   isDisabled={this.props.location.state &&	this.props.location.state.poId ?true:false}
 																		onChange={(option) => {
 																			if (option && option.value) {
 																				this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
@@ -1748,7 +1847,7 @@ console.log(this.state.data)
 																</FormGroup>
 															</Col>
 													
-														 						<Col lg={3}>
+															{this.props.location.state &&	this.props.location.state.poId ?"":<Col lg={3}>
 															<Label
 																	htmlFor="contactId"
 																	style={{ display: 'block' }}
@@ -1760,15 +1859,15 @@ console.log(this.state.data)
                                                                 className="btn-square"
                                                                 // style={{ marginBottom: '40px' }}
                                                                 onClick={() =>
+																	this.openSupplierModal()
 																	//  this.props.history.push(`/admin/payroll/employee/create`,{goto:"Expense"})
 																	// this.props.history.push(`/admin/master/contact/create`,{gotoParentURL:"/admin/expense/goods-received-note/create"})
-																	this.openSupplierModal()
 																	}
 
                                                             >
                                                                 <i className="fas fa-plus mr-1" />
                                          {strings.AddASupplier}
-									</Button></Col>
+									</Button></Col>}
 															
 														
 														</Row>
@@ -1853,6 +1952,7 @@ console.log(this.state.data)
 																		showYearDropdown
 																		dropdownMode="select"
 																		dateFormat="dd-MM-yyyy"
+																		minDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('grnReceiveDate')(value);
 																		}}
@@ -1959,17 +2059,17 @@ console.log(this.state.data)
 																>
 																	<i className="fa fa-plus"></i>&nbsp;{strings.Addmore}
 																</Button>
-																<Button
+																{this.props.location.state &&	this.props.location.state.poId ?"":<Button
 																	color="primary"
 																	className="btn-square mr-3"
 																	onClick={(e, props) => {
-																		// this.props.history.push(`/admin/master/product/create`,{gotoParentURL:"/admin/expense/goods-received-note/create"})
 																		this.openProductModal()
+																		// this.props.history.push(`/admin/master/product/create`,{gotoParentURL:"/admin/expense/goods-received-note/create"})
 																		}}
 																	disabled={props.values.poNumber ? true : false}	
 																	>
 																	<i className="fa fa-plus"></i>&nbsp;{strings.Addproduct}
-																</Button>
+																</Button>}
 															</Col>
 														</Row>
 														<Row>
@@ -2038,6 +2138,18 @@ console.log(this.state.data)
 																	>
 																		{strings.RECEIVEDQUANTITY}
 																	</TableHeaderColumn>
+																	<TableHeaderColumn
+																	width="5%"
+																	dataField="unitType"
+																 >{strings.Unit}	<i
+																 id="unitTooltip"
+																 className="fa fa-question-circle"
+															 /> <UncontrolledTooltip
+																 placement="right"
+																 target="unitTooltip"
+															 >
+																Units / Measurements</UncontrolledTooltip>
+																</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="quantity"
 																		width="10%"
@@ -2259,6 +2371,7 @@ console.log(this.state.data)
 											</Formik>
 										</Col>
 									</Row>
+									)}
 								</CardBody>
 							</Card>
 						</Col>
@@ -2305,6 +2418,7 @@ console.log(this.state.data)
 					updatePrefix={this.props.customerInvoiceActions.updateInvoicePrefix}
 					
 				/> */}
+			</div>
 			</div>
 		);
 	}

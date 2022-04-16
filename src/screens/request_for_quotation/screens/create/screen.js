@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import {   Loader } from 'components';
 import { bindActionCreators } from 'redux';
 import {
 	Card,
@@ -31,7 +32,7 @@ import { ProductModal } from '../../../customer_invoice/sections';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
-import { optionFactory,selectCurrencyFactory,selectOptionsFactory } from 'utils';
+import { optionFactory, selectCurrencyFactory,selectOptionsFactory } from 'utils';
 
 import './style.scss';
 import Switch from "react-switch";
@@ -127,8 +128,10 @@ class CreateRequestForQuotation extends React.Component {
 						vatCategoryId: '',
 						subTotal: 0,
 						productId: '',
-						isExciseTaxExclusive:''
-					
+						isExciseTaxExclusive: '',
+						unitType:'',
+						unitTypeId:''	,				
+						discountType: 'FIXED',
 					},
 				],
 				rfq_number: '',
@@ -140,8 +143,9 @@ class CreateRequestForQuotation extends React.Component {
 				notes: '',
 				discount: 0,
 				discountPercentage: 0,
-				discountType: { value: 'FIXED', label: 'Fixed' },
+				// discountType: { value: 'FIXED', label: 'Fixed' },
 			},
+			taxType: false,
 			currentData: {},
 			contactType: 1,
 			openSupplierModal: false,
@@ -157,6 +161,7 @@ class CreateRequestForQuotation extends React.Component {
 			purchaseCategory: [],
 			exist: false,
 			language: window['localStorage'].getItem('language'),	
+			loadingMsg:"Loading..."
 	
 		};
 
@@ -218,7 +223,7 @@ class CreateRequestForQuotation extends React.Component {
 				render={({ field, form }) => (
 					<Select
 						styles={customStyles}
-						isDisabled={row.exciseTaxId === 0 || row.isExciseTaxExclusive === false}
+						isDisabled={row.exciseTaxId === 0 }
 						
 						options={
 							excise_list
@@ -330,38 +335,36 @@ class CreateRequestForQuotation extends React.Component {
 			<Field
 				name={`lineItemsString.${idx}.quantity`}
 				render={({ field, form }) => (
-					<div>
+				<div>
+						
 						<Input
 							type="text"
 							min="0"
 							maxLength="10"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
-								if (e.target.value === '' || this.regEx.test(e.target.value)) {
+								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
 									this.selectItem(
 										e.target.value,
 										row,
 										'quantity',
 										form,
 										field,
-										props,
+										props
 									);
 								}
-							}}
+							} }
 							placeholder={strings.Quantity}
 							className={`form-control 
-            ${
-							props.errors.lineItemsString &&
-							props.errors.lineItemsString[parseInt(idx, 10)] &&
-							props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
-							Object.keys(props.touched).length > 0 &&
-							props.touched.lineItemsString &&
-							props.touched.lineItemsString[parseInt(idx, 10)] &&
-							props.touched.lineItemsString[parseInt(idx, 10)].quantity
-								? 'is-invalid'
-								: ''
-						}`}
-						/>
+            ${props.errors.lineItemsString &&
+									props.errors.lineItemsString[parseInt(idx, 10)] &&
+									props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
+									Object.keys(props.touched).length > 0 &&
+									props.touched.lineItemsString &&
+									props.touched.lineItemsString[parseInt(idx, 10)] &&
+									props.touched.lineItemsString[parseInt(idx, 10)].quantity
+									? 'is-invalid'
+									: ''}`} />
 						{props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
@@ -373,9 +376,10 @@ class CreateRequestForQuotation extends React.Component {
 									{props.errors.lineItemsString[parseInt(idx, 10)].quantity}
 								</div>
 							)}
+
 					</div>
-				)}
-			/>
+
+				)} />
 		);
 	};
 
@@ -463,9 +467,10 @@ class CreateRequestForQuotation extends React.Component {
 	};
 
 	componentDidMount = () => {
-		if(this.props.location.state &&this.props.location.state.contactData)
-		this.getCurrentUser(this.props.location.state.contactData);
 		this.getInitialData();
+		if(this.props.location.state &&this.props.location.state.contactData)
+				this.getCurrentUser(this.props.location.state.contactData);
+		
 	};
 
 	getInitialData = () => {
@@ -555,10 +560,12 @@ class CreateRequestForQuotation extends React.Component {
 					subTotal: 0,
 					exciseTaxId:'',
 					exciseAmount:'',
-					// discountType:'FIXED',
+					discountType:'FIXED',
 					vatAmount:0,
-					// discount: 0,
+					 discount: 0,
 					productId: '',
+					unitType:'',
+					unitTypeId:''
 				}),
 				idCount: this.state.idCount + 1,
 			},
@@ -683,8 +690,10 @@ class CreateRequestForQuotation extends React.Component {
 				obj['vatCategoryId'] = result.vatCategoryId;
 				obj['exciseTaxId'] = result.exciseTaxId;
 				obj['description'] = result.description;
+				obj['discountType'] = result.discountType;
 				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive;
-				
+				obj['unitType']=result.unitType;
+				obj['unitTypeId']=result.unitTypeId;				
 				idx = index;
 			}
 			return obj;
@@ -913,8 +922,8 @@ class CreateRequestForQuotation extends React.Component {
 		let total_excise = 0;
 		let total = 0;
 		let total_vat = 0;
-		let net_value = 0;
-		let discount = 0;
+		let net_value = 0; 
+		let discount_total = 0;
 		data.map((obj) => {
 			const index =
 				obj.vatCategoryId !== ''
@@ -922,70 +931,146 @@ class CreateRequestForQuotation extends React.Component {
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
 
-			//Excise calculation
-			if(obj.exciseTaxId !=  0){
-			if(obj.isExciseTaxExclusive === true){
-				if(obj.exciseTaxId === 1){
-				const value = +(obj.unitPrice) / 2 ;
-					net_value = parseFloat(obj.unitPrice) + parseFloat(value) ;
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
-				}else if (obj.exciseTaxId === 2){
-					const value = obj.unitPrice;
-					net_value = parseFloat(obj.unitPrice) +  parseFloat(value) ;
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
+			//Exclusive case
+			if(this.state.taxType === false){
+				if (obj.discountType === 'PERCENTAGE') {	
+					 net_value =
+						((+obj.unitPrice -
+							(+((obj.unitPrice * obj.discount)) / 100)) * obj.quantity);
+					var discount =  obj.unitPrice - net_value
+				if(obj.exciseTaxId !=  0){
+					if(obj.exciseTaxId === 1){
+						const value = +(net_value) / 2 ;
+							net_value = parseFloat(net_value) + parseFloat(value) ;
+							obj.exciseAmount = parseFloat(value) * obj.quantity;
+						}else if (obj.exciseTaxId === 2){
+							const value = net_value;
+							net_value = parseFloat(net_value) +  parseFloat(value) ;
+							obj.exciseAmount = parseFloat(value) * obj.quantity;
+						}
+						else{
+							net_value = obj.unitPrice
+						}
 				}
 				else{
-					net_value = obj.unitPrice
+					obj.exciseAmount = 0
 				}
-			}	else{
+					var vat_amount =
+					((+net_value  * vat * obj.quantity) / 100);
+				}else{
+					 net_value =
+						((obj.unitPrice * obj.quantity) )
+					var discount =  obj.unitPrice - net_value
+						if(obj.exciseTaxId !=  0){
+							if(obj.exciseTaxId === 1){
+								const value = +(net_value) / 2 ;
+									net_value = parseFloat(net_value) + parseFloat(value) ;
+									obj.exciseAmount = parseFloat(value) * obj.quantity;
+								}else if (obj.exciseTaxId === 2){
+									const value = net_value;
+									net_value = parseFloat(net_value) +  parseFloat(value) ;
+									obj.exciseAmount = parseFloat(value) * obj.quantity;
+								}
+								else{
+									net_value = obj.unitPrice
+								}
+						}
+						else{
+							obj.exciseAmount = 0
+						}
+						var vat_amount =
+						((+net_value  * vat * obj.quantity) / 100);
+			}
+
+			}
+			//Inclusive case
+			else
+			{			
+				if (obj.discountType === 'PERCENTAGE') {	
+
+					//net value after removing discount
+					 net_value =
+					((+obj.unitPrice -
+						(+((obj.unitPrice * obj.discount)) / 100)) * obj.quantity);
+
+				//discount amount
+				var discount =  (obj.unitPrice* obj.quantity) - net_value
+
+				//vat amount
+				var vat_amount =
+				(+net_value  * (vat/ (100 + vat)*100)) / 100; 
+
+				//net value after removing vat for inclusive
+				net_value = net_value - vat_amount
+
+				//excise calculation
+				if(obj.exciseTaxId !=  0){
 				if(obj.exciseTaxId === 1){
-					const value = obj.unitPrice / 3
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
-				net_value = obj.unitPrice}
+					const value = net_value / 3
+					net_value = net_value 
+					obj.exciseAmount = parseFloat(value);
+					}
 				else if (obj.exciseTaxId === 2){
-					const value = obj.unitPrice / 2
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
-				net_value = obj.unitPrice}
+					const value = net_value / 2
+					obj.exciseAmount = parseFloat(value);
+				net_value = net_value}
 				else{
 					net_value = obj.unitPrice
-				}
+					}
+						}
+						else{
+							obj.exciseAmount = 0
+						}
+					}
+
+				else // fixed discount
+						{
+				//net value after removing discount
+				 net_value =
+				((obj.unitPrice * obj.quantity))
+
+
+				//discount amount
+				var discount =  (obj.unitPrice * obj.quantity) - net_value
+						
+				//vat amount
+				var vat_amount =
+				(+net_value  * (vat/ (100 + vat)*100)) / 100; ;
+
+				//net value after removing vat for inclusive
+				net_value = net_value - vat_amount
+
+				//excise calculation
+				if(obj.exciseTaxId !=  0){
+					if(obj.exciseTaxId === 1){
+						const value = net_value / 3
+						net_value = net_value 
+						obj.exciseAmount = parseFloat(value);
+						}
+					else if (obj.exciseTaxId === 2){
+						const value = net_value / 2
+						obj.exciseAmount = parseFloat(value);
+					net_value = net_value}
+					else{
+						net_value = obj.unitPrice
+						}
+							}
+							else{
+								obj.exciseAmount = 0
+							}
+					}
+
 			}
-		}else{
-			net_value = obj.unitPrice;
-			obj.exciseAmount = 0
-		}
-			//vat calculation
-			if (obj.discountType === 'PERCENTAGE') {
-				var val =
-				((+net_value -
-				 (+((net_value * obj.discount)) / 100)) *
-					vat *
-					obj.quantity) /
-				100;
-
-				var val1 =
-				((+net_value -
-				 (+((net_value * obj.discount)) / 100)) * obj.quantity ) ;
-			} else if (obj.discountType === 'FIXED') {
-				var val =
-						 (net_value * obj.quantity - obj.discount ) *
-					(vat / 100);
-
-					var val1 =
-					((net_value * obj.quantity )- obj.discount )
-
-			} else {
-				var val = (+net_value * vat * obj.quantity) / 100;
-				var val1 = net_value * obj.quantity
-			}
-			console.log('value '+val)
-			//discount calculation
-			discount = +(discount +(net_value * obj.quantity)) - parseFloat(val1)
-			total_net = +(total_net + net_value * obj.quantity);
-			total_vat = +(total_vat + val);
-			obj.vatAmount = val
+			
+			
+			obj.vatAmount = vat_amount
 			obj.subTotal =
-			net_value && obj.vatCategoryId ? parseFloat(val1) + parseFloat(val) : 0;
+			net_value && obj.vatCategoryId ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
+
+			discount_total = +discount_total +discount
+			total_net = +(total_net + parseFloat(net_value));
+			total_vat = +(total_vat + vat_amount);
+			
 			total_excise = +(total_excise + obj.exciseAmount)
 			total = total_vat + total_net;
 			return obj;
@@ -1001,10 +1086,10 @@ class CreateRequestForQuotation extends React.Component {
 				initValue: {
 					...this.state.initValue,
 					...{
-						total_net: discount ? total_net - discount : total_net,
-						totalVatAmount: total_vat,
-						discount:  discount ? discount : 0,
-						totalAmount: total_net > discount ? total - discount : total - discount,
+						total_net:  total_net,
+						invoiceVATAmount: total_vat,
+						discount:  discount_total ? discount_total : 0,
+						totalAmount:  total ,
 						total_excise: total_excise
 					},
 
@@ -1040,6 +1125,7 @@ class CreateRequestForQuotation extends React.Component {
 		const { term } = this.state;
 
 		let formData = new FormData();
+		formData.append('taxType', this.state.taxType)
 		formData.append(
 			'rfqNumber',
 			rfq_number !== null ? this.state.prefix + rfq_number : '',
@@ -1069,10 +1155,12 @@ class CreateRequestForQuotation extends React.Component {
 		if (currency !== null && currency) {
 			formData.append('currencyCode', this.state.supplier_currency);
 		}
+		this.setState({ loading:true, loadingMsg:"Creating Request For Quotation..."});
 		this.props.requestForQuotationCreateAction
 			.createRFQ(formData)
 			.then((res) => {
 				this.setState({ disabled: false });
+				this.setState({ loading:false});
 				this.props.commonActions.tostifyAlert(
 					'success',
 					res.data ? res.data.message : 'Request For Quotation Created Successfully.',
@@ -1120,6 +1208,8 @@ class CreateRequestForQuotation extends React.Component {
 					);
 				} else {
 					this.props.history.push('/admin/expense/request-for-quotation');
+					this.setState({ loading:false,});
+				
 				}
 			})
 			.catch((err) => {
@@ -1144,7 +1234,7 @@ class CreateRequestForQuotation extends React.Component {
 
 
 	getCurrentUser = (data) => {
-
+		
 		let option;
 		if (data.label || data.value) {
 			option = data;
@@ -1177,6 +1267,7 @@ class CreateRequestForQuotation extends React.Component {
 		if( result[0] &&  result[0].exchangeRate)
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
 	};
+
 	closeSupplierModal = (res) => {
 		if (res) {
 			this.props.requestForQuotationAction.getSupplierList(this.state.contactType);
@@ -1226,11 +1317,14 @@ class CreateRequestForQuotation extends React.Component {
 							exciseTaxId: res.data[0].exciseTaxId,
 							subTotal: res.data[0].unitPrice,
 							productId: res.data[0].id,
+							unitType:res.data[0].unitType,
+							unitTypeId:res.data[0].unitTypeId,
 							discount:0,
 							vatAmount:res.data[0].vatAmount ?res.data[0].vatAmount:0,
 							discountType: res.data[0].discountType,
 						}),
 					idCount: this.state.idCount + 1,
+					
 				},
 				() => {
 					const values = {
@@ -1242,6 +1336,11 @@ class CreateRequestForQuotation extends React.Component {
 			this.formRef.current.setFieldValue(
 				`lineItemsString.${0}.unitPrice`,
 				res.data[0].unitPrice,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.unitType`,
+				res.data[0].unitType,
 				true,
 			);
 			this.formRef.current.setFieldValue(
@@ -1349,7 +1448,7 @@ class CreateRequestForQuotation extends React.Component {
 	}
 	render() {
 		strings.setLanguage(this.state.language);
-		const { data, discountOptions, initValue, prefix,data1 } = this.state;
+		const { data, discountOptions, initValue, prefix,data1,loading,loadingMsg } = this.state;
 
 		const {
 			currency_list,
@@ -1366,6 +1465,8 @@ class CreateRequestForQuotation extends React.Component {
 		})
 		console.log("date1",new Date(this.state.date1))
 		return (
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
+			<div>
 			<div className="create-supplier-invoice-screen">
 				<div className=" fadeIn">
 					<Row>
@@ -1386,6 +1487,13 @@ class CreateRequestForQuotation extends React.Component {
 									</Row>
 								</CardHeader>
 								<CardBody>
+								{loading ? (
+										<Row>
+											<Col lg={12}>
+												<Loader />
+											</Col>
+										</Row>
+									) : (
 									<Row>
 										<Col lg={12}>
 											<Formik
@@ -1626,9 +1734,9 @@ class CreateRequestForQuotation extends React.Component {
                                                                 className="btn-square"
                                                                 // style={{ marginBottom: '40px' }}
                                                                 onClick={() =>
+																	this.openSupplierModal()
 																	//  this.props.history.push(`/admin/payroll/employee/create`,{goto:"Expense"})
 																// this.props.history.push(`/admin/master/contact/create`,{gotoParentURL:"/admin/expense/request-for-quotation/create"})
-																this.openSupplierModal()
 																	}
 
                                                             >
@@ -1739,6 +1847,7 @@ class CreateRequestForQuotation extends React.Component {
 																		showYearDropdown
 																		dropdownMode="select"
 																		dateFormat="dd-MM-yyyy"
+																		minDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('rfqReceiveDate')(value);
 																		
@@ -1774,6 +1883,7 @@ class CreateRequestForQuotation extends React.Component {
 																		showYearDropdown
 																		dropdownMode="select"
 																		dateFormat="dd-MM-yyyy"
+																		minDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('rfqExpiryDate')(value);
 																		}}
@@ -1847,7 +1957,7 @@ class CreateRequestForQuotation extends React.Component {
 														</Row>
 														<hr />
 														<Row>
-															<Col lg={12} className="mb-3">
+															<Col lg={8} className="mb-3">
 																<Button
 																	color="primary"
 																	className={`btn-square mr-3 ${
@@ -1867,14 +1977,49 @@ class CreateRequestForQuotation extends React.Component {
 																	color="primary"
 																	className= "btn-square mr-3"
 																	onClick={(e, props) => {
-																		// this.props.history.push(`/admin/master/product/create`,{gotoParentURL:"/admin/expense/request-for-quotation/create"})
 																		this.openProductModal()
+																		// this.props.history.push(`/admin/master/product/create`,{gotoParentURL:"/admin/expense/request-for-quotation/create"})
 																		}}
 																>
 																	<i className="fa fa-plus"></i> {strings.Addproduct} 
 																</Button>
 													           </Col>
-														
+															   <Col  >
+																{this.state.taxType === false ?
+																	<span style={{ color: "#0069d9" }} className='mr-4'><b>Exclusive</b></span> :
+																	<span className='mr-4'>Exclusive</span>}
+																<Switch
+																	value={props.values.taxType}
+																	checked={this.state.taxType}
+																	onChange={(taxType) => {
+
+																		props.handleChange('taxType')(taxType);
+																		this.setState({ taxType }, () => {
+																			this.updateAmount(
+																				this.state.data,
+																				props
+																			)
+																		});
+
+
+																	}}
+
+																	onColor="#2064d8"
+																	onHandleColor="#2693e6"
+																	handleDiameter={25}
+																	uncheckedIcon={false}
+																	checkedIcon={false}
+																	boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+																	activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+																	height={20}
+																	width={48}
+																	className="react-switch "
+																/>
+																{this.state.taxType === true ?
+																	<span style={{ color: "#0069d9" }} className='ml-4'><b>Inclusive</b></span>
+																	: <span className='ml-4'>Inclusive</span>
+																}
+															</Col>
 																				</Row>
 														<Row>
 															<Col lg={12}>
@@ -1941,6 +2086,18 @@ class CreateRequestForQuotation extends React.Component {
 																		{strings.QUANTITY}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
+																	width="5%"
+																	dataField="unitType"
+																 >{strings.Unit}	<i
+																 id="unitTooltip"
+																 className="fa fa-question-circle"
+															 /> <UncontrolledTooltip
+																 placement="right"
+																 target="unitTooltip"
+															 >
+																Units / Measurements</UncontrolledTooltip>
+																</TableHeaderColumn>
+																<TableHeaderColumn
 																		dataField="unitPrice"
 																		dataFormat={(cell, rows) =>
 																			this.renderUnitPrice(cell, rows, props)
@@ -2284,6 +2441,7 @@ class CreateRequestForQuotation extends React.Component {
 											</Formik>
 										</Col>
 									</Row>
+									)}
 								</CardBody>
 							</Card>
 						</Col>
@@ -2330,6 +2488,7 @@ class CreateRequestForQuotation extends React.Component {
 					updatePrefix={this.props.customerInvoiceActions.updateInvoicePrefix}
 					
 				/> */}
+			</div>
 			</div>
 		);
 	}

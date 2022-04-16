@@ -23,6 +23,7 @@ import * as CreditNotesCreateActions from './actions';
 import * as CreditNotesActions from '../../actions';
 import * as ProductActions from '../../../product/actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
+import {  ImageUploader, Loader } from 'components';
 import { CustomerModal, ProductModal,InvoiceNumberModel} from '../../sections';
 import { MultiSupplierProductModal } from '../../sections';
 
@@ -110,6 +111,8 @@ class CreateCreditNote extends React.Component {
 					isExciseTaxExclusive:'',
 					discountType: 'FIXED',
 					discount: 0,
+					unitType:'',
+					unitTypeId:''
 				},
 			],
 			idCount: 0,
@@ -176,7 +179,8 @@ class CreateCreditNote extends React.Component {
 			invoiceSelected:false,
 			isCreatedWIWP:false,
 			quantityExceeded:'',
-			isCreatedWithoutInvoice:false
+			isCreatedWithoutInvoice:false,
+			loadingMsg:"Loading"
 		};
 
 		this.formRef = React.createRef();
@@ -686,7 +690,7 @@ discountType = (row) =>
 								.find((option) => option.value === +row.exciseTaxId)
 						}
 						id="exciseTaxId"
-						placeholder={strings.Select+strings.Vat}
+						placeholder={strings.Select+strings.excise}
 						onChange={(e) => {
 							
 							this.selectItem(
@@ -734,6 +738,8 @@ discountType = (row) =>
 					discountType:'FIXED',
 					discount: 0,
 					exciseTaxId:'',
+					unitType:'',
+					unitTypeId:''
 				}),
 				idCount: this.state.idCount + 1,
 			},
@@ -861,7 +867,9 @@ discountType = (row) =>
 				obj['description'] = result.description;
 				obj['exciseTaxId'] = result.exciseTaxId;
 				obj['discountType'] = result.discountType;
-				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive
+				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive;
+				obj['unitType']=result.unitType;
+				obj['unitTypeId']=result.unitTypeId;
 				idx = index;
 			}
 			return obj;
@@ -1294,11 +1302,13 @@ if (invoiceNumber && invoiceNumber.value) {
 		if (this.uploadFile && this.uploadFile.files && this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
-	
+
+		this.setState({ loading:true, loadingMsg:"Creating Credit Note..."});
 		this.props.creditNotesCreateActions
 			.createCreditNote(formData)
 			.then((res) => {
 				this.setState({ disabled: false });
+				this.setState({ loading:false});
 				this.props.commonActions.tostifyAlert(
 					'success',
 					res.data ? res.data.message :'New Tax Credit Note Created Successfully.'
@@ -1345,6 +1355,8 @@ if (invoiceNumber && invoiceNumber.value) {
 					);
 				} else {
 					this.props.history.push('/admin/income/credit-notes');
+					this.setState({ loading:false,});
+					
 				}
 			})
 			.catch((err) => {
@@ -1439,6 +1451,8 @@ if (invoiceNumber && invoiceNumber.value) {
 							productId: res.data[0].id,
 							discountType: res.data[0].discountType,
 							exciseTaxId: res.data[0].exciseTaxId,
+							unitType:res.data[0].unitType,
+							unitTypeId:res.data[0].unitTypeId,
 						},
 					],
 				},
@@ -1452,6 +1466,11 @@ if (invoiceNumber && invoiceNumber.value) {
 			this.formRef.current.setFieldValue(
 				`lineItemsString.${0}.unitPrice`,
 				res.data[0].unitPrice,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.unitType`,
+				res.data[0].unitType,
 				true,
 			);
 			this.formRef.current.setFieldValue(
@@ -1653,6 +1672,7 @@ if (invoiceNumber && invoiceNumber.value) {
 	
 	render() {
 		strings.setLanguage(this.state.language);
+		const { loading, loadingMsg } = this.state
 		const { data, discountOptions, initValue, exist, prefix } = this.state;
 		const {
 			customer_list,
@@ -1671,6 +1691,8 @@ if (invoiceNumber && invoiceNumber.value) {
 		})
 
 		return (
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
+			<div>
 			<div className="create-customer-invoice-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -1691,6 +1713,13 @@ if (invoiceNumber && invoiceNumber.value) {
 									</Row>
 								</CardHeader>
 								<CardBody>
+								{loading ? (
+										<Row>
+											<Col lg={12}>
+												<Loader />
+											</Col>
+										</Row>
+									) : (
 									<Row>
 										<Col lg={12}>
 											<Formik
@@ -1704,7 +1733,7 @@ if (invoiceNumber && invoiceNumber.value) {
 													 
 													if (exist === true) 
 													{
-														errors.creditNoteNumber ='Tax Credit Note Number cannot be same';
+														errors.creditNoteNumber ='Tax Credit Note Number Cannot be Same';
 													}	
 													
 													if(this.state.isCreatedWIWP==false && !values.invoiceNumber)
@@ -2189,6 +2218,7 @@ if (invoiceNumber && invoiceNumber.value) {
 																		showMonthDropdown
 																		showYearDropdown
 																		dateFormat="dd-MM-yyyy"
+																		minDate={new Date()}
 																		dropdownMode="select"
 																		value={props.values.creditNoteDate}
 																		selected={props.values.creditNoteDate}
@@ -2550,6 +2580,19 @@ min="0"
 																	>
 																		{strings.QUANTITY}
 																	</TableHeaderColumn>
+																	<TableHeaderColumn
+																			width="5%"
+																			dataField="unitType"
+																     	>{strings.Unit}
+																			 	<i
+																		 id="unitTooltip"
+																		 className="fa fa-question-circle"
+																	 /> <UncontrolledTooltip
+																		 placement="right"
+																		 target="unitTooltip"
+																	 >
+																		Units / Measurements</UncontrolledTooltip>
+																		</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="unitPrice"
 																		dataFormat={(cell, rows) =>
@@ -3080,6 +3123,7 @@ min="0"
 											</Formik>
 										</Col>
 									</Row>
+									)}
 								</CardBody>
 							</Card>
 						</Col>
@@ -3127,6 +3171,7 @@ min="0"
 						updatePrefix={this.props.creditNotesActions.updateInvoicePrefix}
 					
 				/> */}
+			</div>
 			</div>
 		);
 	}

@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Loader } from 'components';
 import { bindActionCreators } from 'redux';
 import {
 	Card,
@@ -35,7 +36,7 @@ import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { Checkbox } from '@material-ui/core';
 import Switch from "react-switch";
-
+import moment from 'moment';
 const mapStateToProps = (state) => {
 	return {
 		currency_list: state.expense.currency_list,
@@ -88,7 +89,9 @@ class CreateExpense extends React.Component {
 				exclusiveVat:false,
 				exist:false,
 				taxTreatmentId:'',
+				expenseType:false,
 			},
+			expenseType:false,
 			isReverseChargeEnabled:false,
 			currentData: {},
 			fileName: '',
@@ -109,6 +112,7 @@ class CreateExpense extends React.Component {
 			],
 			showPlacelist:false,
 			lockPlacelist:false,
+			loadingMsg:"Loading...",
 			userStateName:''
 		};
 		this.formRef = React.createRef();
@@ -120,7 +124,6 @@ class CreateExpense extends React.Component {
 		this.regExAlpha = /^[a-zA-Z0-9!@#$&()-\\`.+,/\"]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
-
 		this.file_size = 1024000;
 		this.supported_format = [
 			'image/png',
@@ -137,10 +140,137 @@ class CreateExpense extends React.Component {
 			{ label: 'BANK', value: 'BANK' },
 		];
 	}
+	getParentExpenseDetails=(parentId)=>{
+		this.props.expenseCreateActions
+				.getExpenseDetail(parentId)
+				.then((res) => {
+					if (res.status === 200) {
+						this.getCompanyCurrency();					
+						const {vat_list}=this.props
+					let vatCategoryId=
+						vat_list ?
+							selectOptionsFactory
+								.renderOptions(
+									'name',
+									'id',
+									vat_list,
+									'Tax',
+								)
+								.find(
+									(option) =>
+										option.value ===
+										+res.data.vatCategoryId,
+								)	:""
+						this.setState(
+							{
+								loading: false,
+								current_expense_id: this.props.location.state.expenseId,
+								initValue: {
+									expenseNumber:res.data.expenseNumber,
+									payee: res.data.payee,
+									expenseDate: res.data.expenseDate ? res.data.expenseDate : '',
+									currency: res.data.currencyCode ? res.data.currencyCode : '',
+									currencyName:res.data.currencyName ? res.data.currencyName : '',
+									expenseCategory: res.data.expenseCategory
+										? res.data.expenseCategory
+										: '',
+									expenseAmount: res.data.expenseAmount,
+									vatCategoryId: vatCategoryId,
+									payMode: res.data.payMode ? res.data.payMode : '',
+									bankAccountId: res.data.bankAccountId
+										? res.data.bankAccountId
+										: '',
+									exclusiveVat:res.data.exclusiveVat && res.data.exclusiveVat != null ? res.data.exclusiveVat :'',
+									exchangeRate:res.data.exchangeRate ? res.data.exchangeRate : '',
+									expenseDescription: res.data.expenseDescription,
+									receiptNumber: res.data.receiptNumber,
+									attachmentFile: res.data.attachmentFile,
+									receiptAttachmentDescription:
+										res.data.receiptAttachmentDescription,
+									fileName: res.data.fileName ? res.data.fileName : '',
+									filePath: res.data.receiptAttachmentPath
+										? res.data.receiptAttachmentPath
+										: '',
+									isReverseChargeEnabled:res.data.isReverseChargeEnabled ?res.data.isReverseChargeEnabled:false,
+									placeOfSupplyId:res.data.placeOfSupplyId ?res.data.placeOfSupplyId:'',
+									taxTreatmentId:res.data.taxTreatmentId ?res.data.taxTreatmentId:'',
+									
+								},
+								expenseType: res.data.expenseType ? true : false,
+								showPlacelist:res.data.taxTreatmentId !=8?true:false,
+								lockPlacelist:res.data.taxTreatmentId ==7?true:false,
+								isReverseChargeEnabled:res.data.isReverseChargeEnabled ?res.data.isReverseChargeEnabled:false,
+								exclusiveVat: res.data.exclusiveVat==true ? true : false,
+								view:
+									this.props.location.state && this.props.location.state.view
+										? true
+										: false,
+							},
+							() => {
+								
+								if (
+									this.props.location.state &&
+									this.props.location.state.view
+								) {
+									this.setState({ loading: false });
+								} else {
+									this.setState({ loading: false });
+								}
 
+						     	let tax=	selectOptionsFactory.renderOptions('name','id',this.state.taxTreatmentList,	'Tax Treatment',).find((option)=> option.value==res.data.taxTreatmentId)
+								this.formRef.current.setFieldValue('taxTreatmentId',tax, true);
+debugger
+							   let placeofSupply=this.state.placelist.find(	(option) =>option.value == res.data.placeOfSupplyId,	)	
+								this.formRef.current.setFieldValue('placeOfSupplyId', placeofSupply, true);
+
+								let expenseCategory= selectOptionsFactory.renderOptions('transactionCategoryName','transactionCategoryId',	this.props.expense_categories_list,	'Expense Category', )
+								                                         .find((option)=>option.value==res.data.expenseCategory);
+								this.formRef.current.setFieldValue('expenseCategory',expenseCategory, true);
+
+								this.formRef.current.setFieldValue('expenseDate', new Date(res.data.expenseDate), true);
+								let payee=	selectOptionsFactory.renderOptions(	'label','value',	this.props.pay_to_list,	'Payee',)
+																.find((option) =>	option.label ==res.data.payee)
+								this.formRef.current.setFieldValue('payee',payee, true);
+
+								let currency=	selectCurrencyFactory.renderOptions(	'currencyName','currencyCode',this.props.currency_convert_list,'Currency',)
+																	.find(
+																		(option) =>
+																			option.value ==res.data.currencyCode,
+																	)
+								this.formRef.current.setFieldValue('currency',currency , true);
+								this.formRef.current.setFieldValue('currencyCode',currency , true);
+								this.setExchange(currency.value);
+								this.setCurrency(currency.value);
+							let payMode=	selectOptionsFactory.renderOptions('label',	'value',this.props.pay_mode_list,	'',)
+																.find((option)=>option.value==res.data.payMode)
+								this.formRef.current.setFieldValue('payMode',payMode , true);
+								
+								this.formRef.current.setFieldValue('expenseAmount', res.data.expenseAmount, true);
+							let vat=	selectOptionsFactory.renderOptions(
+									'name',
+									'id',
+									this.props.vat_list,
+									'Vat',
+							  ).find((option)=>option.value==res.data.vatCategoryId)
+								this.formRef.current.setFieldValue('vatCategoryId',  vat, true);
+								this.formRef.current.setFieldValue('expenseDescription',  res.data.expenseDescription, true);
+								this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
+								this.formRef.current.setFieldValue('receiptAttachmentDescription', res.data.receiptAttachmentDescription, true);
+							},
+						);
+						this.ReverseChargeSetting(res.data.taxTreatmentId,"")
+					}
+
+				})
+				.catch((err) => {
+					this.setState({ loading: false });
+				});					
+	}
 	componentDidMount = () => {
 		this.initializeData();
 		this.getExpenseNumber();
+		if(this.props.location.state && this.props.location.state.parentId )
+		this.getParentExpenseDetails(this.props.location.state.parentId);
 	};
 
 	initializeData = () => {
@@ -158,6 +288,7 @@ class CreateExpense extends React.Component {
 					},
 				},
 			});
+			if(response.data && response.data[0]&& response.data[0].currencyCode && this.formRef.current)
 			this.formRef.current.setFieldValue(
 				'currency',
 				response.data[0].currencyCode,
@@ -233,12 +364,15 @@ class CreateExpense extends React.Component {
 			payMode,
 			bankAccountId,
 			exclusiveVat,
-			taxTreatmentId
+			taxTreatmentId,
+			expenseType,
 		} = data;
 		let formData = new FormData();
 		
+		formData.append('expenseType',  this.state.expenseType );
 		formData.append('expenseNumber', expenseNumber ? expenseNumber : '');
-		formData.append('payee', payee ? payee : '');
+		if(payee)
+		formData.append('payee', payee.value ? payee.value : payee);
 		formData.append('expenseDate', expenseDate !== null ? expenseDate : '');
 		formData.append('expenseDescription', expenseDescription);
 		formData.append('receiptNumber', receiptNumber);
@@ -286,12 +420,14 @@ class CreateExpense extends React.Component {
 		if (this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
+		this.setState({ loading:true, loadingMsg:"Creating Expense..."});
 		this.props.expenseCreateActions
 			.createExpense(formData)
 			.then((res) => {
 			
 				this.setState({ disabled: false });
 				if (res.status === 200) {
+					this.setState({ loading:false});
 					resetForm(this.state.initValue);
 					this.props.commonActions.tostifyAlert(
 						'success',
@@ -303,6 +439,7 @@ class CreateExpense extends React.Component {
 						});
 					} else {
 						this.props.history.push('/admin/expense/expense');
+						this.setState({ loading:false,});
 					}
 				}
 			})
@@ -369,6 +506,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 						...{ expenseNumber: res.data },
 					},
 				});
+				if( res.data && res.data!=null)
 				this.formRef.current.setFieldValue('expenseNumber', res.data, true,true
 				// this.validationCheck(res.data)
 				);
@@ -522,7 +660,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 	renderVat=(props)=>{
 		let vat_list=[]
 		let vatIds=[]
-		if(this.state.isDesignatedZone==true)
+		if(this.state.isDesignatedZone && this.state.isDesignatedZone !=null&&this.state.isDesignatedZone==true)
 			switch(props.values.taxTreatmentId.value ?props.values.taxTreatmentId.value:''){
 
 				case 1: 
@@ -599,7 +737,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 					<Label htmlFor="vatCategoryId"><span className="text-danger">* </span>{strings.Vat}</Label>
 					<Select
 						// styles={customStyles}
-						className="select-default-width"
+						// className="select-default-width"
 					
 						options={
 							vat_list
@@ -660,7 +798,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 	}
 	render() {
 		strings.setLanguage(this.state.language);
-		const { initValue, payMode ,exist,taxTreatmentList,placelist,vat_list} = this.state;
+		const { initValue, payMode ,exist,taxTreatmentList,placelist,vat_list,loading,loadingMsg} = this.state;
 		const {
 			// currency_list,
 			expense_categories_list,
@@ -683,6 +821,8 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 			}),
 		};
 		return (
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
+			<div>
 			<div className="create-expense-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -699,6 +839,13 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 									</Row>
 								</CardHeader>
 								<CardBody>
+								{loading ? (
+										<Row>
+											<Col lg={12}>
+												<Loader />
+											</Col>
+										</Row>
+									) : (
 									<Row>
 										<Col lg={12}>
 											<Formik
@@ -760,7 +907,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 													expenseAmount: Yup.string()
 														.required('Amount is Required')
 														.matches(
-															/^[0-9][0-9]*[.]?[0-9]{0,2}$$/,
+															 /^[0-9][0-9]*[.]?[0-9]{0,2}$$/,
 															'Enter a Valid Amount',
 														)
 														.test(
@@ -984,6 +1131,40 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		)}
 																</FormGroup>
 															</Col>)}
+															<Col className='mb-3' lg={3}>
+																<Label htmlFor="inline-radio3"><span className="text-danger">* </span>{strings.ExpenseType}</Label>
+																<div>
+																	{this.state.expenseType === false ?
+																		<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Claimable}</b></span> :
+																		<span className='mr-4'>{strings.Claimable}</span>}
+
+																	<Switch
+																		checked={this.state.expenseType}
+																		onChange={(expenseType) => {
+																			props.handleChange('expenseType')(expenseType);
+																			this.setState({ expenseType, }, () => { },);
+																			// if (this.state.expenseType == true)
+																			// 	this.setState({ expenseType: true })
+																		}}
+																		onColor="#2064d8"
+																		onHandleColor="#2693e6"
+																		handleDiameter={25}
+																		uncheckedIcon={false}
+																		checkedIcon={false}
+																		boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+																		activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+																		height={20}
+																		width={48}
+																		className="react-switch"
+																	/>
+
+																	{this.state.expenseType === true ?
+																		<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.NonClaimable}</b></span>
+																		: <span className='ml-4'>{strings.NonClaimable}</span>
+																	}
+																</div>
+
+															</Col>
 															
 														</Row>
 														<Row>
@@ -1059,6 +1240,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		showYearDropdown
 																		dropdownMode="select"
 																		dateFormat="dd-MM-yyyy"
+																		minDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('expenseDate')(value);
 																		}}
@@ -1088,25 +1270,11 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																				  )
 																				: []
 																		}
-																		value={
-																			pay_to_list &&
-																			selectOptionsFactory
-																				.renderOptions(
-																					'label',
-																					'value',
-																					pay_to_list,
-																					'Payee',
-																				)
-																				.find(
-																					(option) =>
-																						option.value ===
-																						+props.values.payee,
-																				)
-																		}
+																		value={props.values.payee}
 																		onChange={(option) => {
 																			if (option && option.value) {
 																				props.handleChange('payee')(
-																					option.value,
+																					option,
 																				);
 																			} else {
 																				props.handleChange('payee')('');
@@ -1255,21 +1423,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																				: []
 																		}
 																		placeholder={strings.Select+strings.Currency}
-																		value={
-																			currency_convert_list &&
-																			selectCurrencyFactory
-																				.renderOptions(
-																					'currencyName',
-																					'currencyCode',
-																					currency_convert_list,
-																					'Currency',
-																				)
-																				.find(
-																					(option) =>
-																						option.value ===
-																						+props.values.currencyCode,
-																				)
-																		}
+																		value={props.values.currencyCode}
 																		onChange={(option) => {
 																			if(option.label!=="Select currency")
 																			{
@@ -1694,11 +1848,13 @@ min="0"
 											</Formik>
 										</Col>
 									</Row>
+									)}
 								</CardBody>
 							</Card>
 						</Col>
 					</Row>
 				</div>
+			</div>
 			</div>
 		);
 	}

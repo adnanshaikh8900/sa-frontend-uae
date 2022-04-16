@@ -28,6 +28,7 @@ import DatePicker from 'react-datepicker'
 import { Formik } from 'formik';
 import './style.scss';
 import * as MigrationAction from './actions';
+import {data}  from '../Language/index'
 import { selectOptionsFactory } from 'utils';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { isDate, upperFirst } from 'lodash-es';
@@ -40,6 +41,8 @@ import { Date } from 'core-js';
 import download from 'downloadjs';
 import { align } from '@progress/kendo-drawing';
 import { toast } from 'react-toastify';
+import { StringStream } from 'codemirror';
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -71,14 +74,15 @@ const Tab = styled.li`
   line-height: 48px;
   flex: 0.008 0 auto;
   height: inherit;
-
 `;
 
+let strings = new LocalizedStrings(data);
 class Import extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			initValue: {},
+			language: window['localStorage'].getItem('language'),
 			loading: false,
 			fileName: '',
 			disabled: false,
@@ -562,7 +566,7 @@ class Import extends React.Component {
 								) : (
 									<tr style={{ borderBottom: '2px solid lightgray' }}>
 										<td style={{ textAlign: 'center' }} colSpan="9">
-											There is no data to display
+										{strings.datadd}
 										</td>
 									</tr>
 								)
@@ -573,7 +577,7 @@ class Import extends React.Component {
 				) : (
 					<tr style={{ borderBottom: '2px solid lightgray' }}>
 						<td style={{ textAlign: 'center' }} colSpan="9">
-							There is no data to display
+						{strings.datadd}
 						</td>
 					</tr>
 				)
@@ -602,7 +606,7 @@ class Import extends React.Component {
 			return (
 				<Row className="text-center">
 					<Col><Row>
-						<div style={{ width: "100%" }}><b>Simple-Accounts</b></div>
+						<div style={{ width: "100%" }}><b>{strings.sa}</b></div>
 						<div>
 							<BootstrapTable
 								data={this.state && this.state.listOfExist ? this.state.listOfExist : []}
@@ -619,14 +623,14 @@ class Import extends React.Component {
 									dataFormat={this.renderCode}
 									className="table-header-bg text-center"
 								>
-									Account Code
+									{strings.accCode}
 								</TableHeaderColumn>
 								<TableHeaderColumn
 									dataField="transactionName"
 									dateFormat={this.renderAccountName}
 									className="table-header-bg text-center"
 								>
-									Account Name
+									{strings.accName}
 								</TableHeaderColumn>
 
 							</BootstrapTable>
@@ -657,7 +661,7 @@ class Import extends React.Component {
 						</BootstrapTable>
 					</div>
 					<Col><Row>
-						<div style={{ width: "100%" }}><b>Zoho-Books</b></div>
+						<div style={{ width: "100%" }}><b>{strings.zb}</b></div>
 						<div>
 							{/* {this.showNotExistList()} */}
 
@@ -677,14 +681,14 @@ class Import extends React.Component {
 									dataFormat={this.renderCode1}
 									className="table-header-bg text-center"
 								>
-									Account Code
+									{strings.accCode}
 								</TableHeaderColumn>
 								<TableHeaderColumn
 									dataField="transactionName"
 									dateFormat={this.renderAccountName1}
 									className="table-header-bg text-center"
 								>
-									Account Name
+								{strings.accName}
 								</TableHeaderColumn>
 							</BootstrapTable>
 						</div>
@@ -874,6 +878,7 @@ class Import extends React.Component {
 
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { isPasswordShown, product_list, version_list, tabs, file_data_list,listOfExist4,csvFileNamesData } = this.state;
 		const { initValue, migration_list } = this.state;
 		console.log(listOfExist4)
@@ -898,7 +903,7 @@ class Import extends React.Component {
 										<Col lg={12}>
 											<div className="h4 mb-0 d-flex align-items-center">
 												<i className="fa glyphicon glyphicon-export fa-upload" />
-												<span className="ml-2">Migration</span>
+												<span className="ml-2">{strings.Migration}</span>
 											</div>
 										</Col>
 									</Row>
@@ -911,7 +916,7 @@ class Import extends React.Component {
 											this.toggleParent(0, '1');
 										}}
 									>
-									Import
+									{strings.import}
 									</NavLink>
 								</NavItem>
 								<NavItem>
@@ -921,7 +926,7 @@ class Import extends React.Component {
 											this.toggleParent(0, '2');
 										}}
 									>
-									Download CSV-Templates
+								{strings.down}
 									</NavLink>
 								</NavItem>
 							</Nav>
@@ -934,9 +939,9 @@ class Import extends React.Component {
 										<NavItem>
 											<NavLink
 												active={this.state.activeTab[0] === '1'}
-												onClick={() => {
-													this.toggle(0, '1');
-												}}
+												// onClick={() => {
+												// 	this.toggle(0, '1');
+												// }}
 											>
 												<h4 style={{ margin: "4px 2px 4px 2px" }}>1</h4>
 											</NavLink>
@@ -944,9 +949,9 @@ class Import extends React.Component {
 										<NavItem>
 											<NavLink
 												active={this.state.activeTab[0] === '2'}
-												onClick={() => {
-													this.toggle(0, '2');
-												}}
+												// onClick={() => {
+												// 	this.toggle(0, '2');
+												// }}
 											>
 												<h4 style={{ margin: "4px 0px 4px 0px" }}>2</h4>
 											</NavLink>
@@ -954,9 +959,9 @@ class Import extends React.Component {
 										<NavItem>
 											<NavLink
 												active={this.state.activeTab[0] === '3'}
-												onClick={() => {
-													this.toggle(0, '3');
-												}}
+												// onClick={() => {
+												// 	this.toggle(0, '3');
+												// }}
 											>
 												<h4 style={{ margin: "4px 0px 4px 0px" }}>3</h4>
 											</NavLink>
@@ -964,9 +969,9 @@ class Import extends React.Component {
 										<NavItem>
 											<NavLink
 												active={this.state.activeTab[0] === '4'}
-												onClick={() => {
-													this.toggle(0, '4');
-												}}
+												// onClick={() => {
+												// 	this.toggle(0, '4');
+												// }}
 											>
 												<h4 style={{ margin: "4px 0px 4px 0px" }}>4</h4>
 											</NavLink>
@@ -978,7 +983,7 @@ class Import extends React.Component {
 
 											<div className="create-employee-screen">
 												<div className="animated fadeIn">
-													<div className="text-center mb-5"><h3>Pick Migration Beginning Date</h3></div>
+													<div className="text-center mb-5"><h3>{strings.heading}</h3></div>
 													<Formik
 														initialValues={this.state}
 														onSubmit={(values, { resetForm }) => {
@@ -1008,12 +1013,12 @@ class Import extends React.Component {
 
 															<Form className="mt-3" onSubmit={props.handleSubmit}>
 																<div className="text-center dateWidth" style={{ display: "flex", marginLeft: "40%" }}>
-																	<div className="mt-2" style={{ width: "10%" }}>	<span className="text-danger">*</span>Date	</div>
+																	<div className="mt-2" style={{ width: "10%" }}>	<span className="text-danger">*</span>{strings.date}	</div>
 																	<DatePicker
 																		className={`form-control ${props.errors.date && props.touched.date ? "is-invalid" : ""}`}
 																		id="date"
 																		name="date"
-																		placeholderText={"Select Date"}
+																		placeholderText={strings.selectdate}
 																		showMonthDropdown
 																		showYearDropdown
 																		dateFormat="dd-MM-yyyy"
@@ -1034,7 +1039,7 @@ class Import extends React.Component {
 																	{props.errors.date && props.touched.date && (
 																		<div className="text-danger">{props.errors.date}</div>
 																	)}<br></br>
-																	<b>Note : </b><i> Please select date from which you need to migrate into SimpleAccounts.<br /> Please note all data prior to above date will be ignored.</i>
+																	<b>{strings.not} </b><i> {strings.not1}<br /> {strings.not2}</i>
 
 
 
@@ -1053,7 +1058,7 @@ class Import extends React.Component {
 																						})
 																						this.productList();
 																					}}>
-																					Next	<i class="far fa-arrow-alt-circle-right mr-1"></i>
+																					{strings.nex}	<i class="far fa-arrow-alt-circle-right mr-1"></i>
 																				</Button>
 
 																			</FormGroup>
@@ -1073,7 +1078,7 @@ class Import extends React.Component {
 											<Row>
 												<Col lg={12}>
 													<div>
-														<div className="text-center mb-5"><h3>Upload Files</h3></div>
+														<div className="text-center mb-5"><h3>{strings.up}</h3></div>
 														<Formik
 															initialValues={initValue}
 															ref={this.formRef}
@@ -1089,13 +1094,13 @@ class Import extends React.Component {
 																		<Col lg={3}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="productName">
-																					{/* {strings.PlaceofSupply} */}Application Name
+																					{/* {strings.PlaceofSupply} */}{strings.appName}
 																				</Label>
 																				<Select
 																					styles={customStyles}
 																					id="productName"
 																					name="productName"
-																					placeholder="Select Product"
+																					placeholder={strings.selpro}
 																					options={
 																						product_list
 																							? selectOptionsFactory.renderOptions(
@@ -1134,6 +1139,7 @@ class Import extends React.Component {
 																								this.versionlist(option.label)
 																								
 																							);
+																							document.getElementById('file').value = "";
 																							
 																					this.setState({name:option.label})
 																						} else {
@@ -1159,13 +1165,13 @@ class Import extends React.Component {
 																		<Col lg={3}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="version">
-																					{/* {strings.PlaceofSupply} */}Version
+																					{/* {strings.PlaceofSupply} */}{strings.ver}
 																				</Label>
 																				<Select
 
 																					id="version"
 																					name="version"
-																					placeholder="Select Version"
+																					placeholder={strings.selver}
 																					options={
 																						version_list
 																							? selectOptionsFactory.renderOptions(
@@ -1234,7 +1240,7 @@ class Import extends React.Component {
 																					<div className="text-center mb-3" style={{
 																						fontSize: '22px',
 																					}}>
-																						Drag file to upload ,or
+																						{strings.drag}
 																					</div>
 																					<div className="text-center mb-3">
 																						<input
@@ -1257,22 +1263,41 @@ class Import extends React.Component {
 																								{
 																											
 																											for (const file of e.target.files) {
-																												
-																												if( file.name &&
-																													file.name=='Chart Of Accounts.csv' ||
-																													file.name=='Contacts.csv'  ||
-																													file.name=='Credit Note.csv'  ||
-																													file.name=='Invoice.csv'  ||
-																													file.name=='Opening Balances.csv'  ||
-																													file.name=='Product.csv'
-																													)
+																										debugger
+																										if(props.values.productName=="zoho" )
+																											{	
+																												if(file.name &&
+                                                                                                                   ( file.name=='Chart Of Accounts.csv' ||
+                                                                                                                    file.name=='Contacts.csv'  ||
+                                                                                                                    file.name=='Item.csv'  ||
+                                                                                                                    file.name=='Vendors.csv'  ||
+                                                                                                                    file.name=='Bill.csv'  ||
+                                                                                                                    file.name=='Credit Note.csv'  ||
+                                                                                                                    file.name=='Invoice.csv'  ||
+                                                                                                                    file.name=='Opening Balances.csv'  ||
+                                                                                                                    file.name=='Product.csv')
+                                                                                                                    )
 																													validFiles.push(file)
-																												else
-																												{ 
-																													// inValidFilesString= inValidFilesString+" "+ file.name+" , " ;
+																													else
 																													inValidFiles.push(file.name)
-																													
 																												}
+                                                                                                                else
+																												if(props.values.productName=="simpleAccounts")
+																											     {	
+																													if(file.name &&
+																														(file.name=='Chart Of Accounts.csv' ||
+																														file.name=='Contacts.csv'  ||
+																														file.name=='Credit Note.csv'  ||
+																														file.name=='Invoice.csv'  ||
+																														file.name=='Opening Balances.csv'  ||
+																														file.name=='Product.csv')
+																														)
+																														validFiles.push(file)
+																														else
+																														inValidFiles.push(file.name)
+																												}
+																																																								
+																												
 																											}
 																											
 																										this.setState({	fileName: e.target.value.split('\\').pop(),
@@ -1297,7 +1322,7 @@ class Import extends React.Component {
 																			{this.state.inValidFiles && this.state.inValidFiles.length!=0 &&
 																			(
 																				<div className='m-1' style={{ border:"1px solid red" }}>
-																						<>&nbsp;&nbsp; Invalid Files are :</>
+																						<>&nbsp;&nbsp; {strings.invalid}</>
 																						{this.state.inValidFiles.map((name,index)=>{
 																							return(
 																								<>
@@ -1339,10 +1364,10 @@ class Import extends React.Component {
 																				ref={(node) => (this.table = node)}
 																			>
 																				<TableHeaderColumn isKey dataField="fileName" dataSort className="table-header-bg">
-																					File name
+																				{strings.fn}
 																				</TableHeaderColumn >
 																				<TableHeaderColumn dataField="recordCount" dataSort className="table-header-bg">
-																					Record Uploaded
+																				{strings.rup}
 																				</TableHeaderColumn>
 																			</BootstrapTable>
 																		</div>
@@ -1351,7 +1376,7 @@ class Import extends React.Component {
 																	<Row><Col>
 																	{this.state.selectedRows.length > 0 ? (	<Button color="primary" className="btn-square pull-left"
 																			onClick={() => { this.DeleteFile() }}>
-																		<i className="fa fa-trash"></i> Delete
+																		<i className="fa fa-trash"></i> {strings.d}
 																		</Button>) : ''}
 																		</Col>
 																	</Row>
@@ -1368,7 +1393,7 @@ class Import extends React.Component {
 														<FormGroup className="text-center">
 															<Button color="secondary" className="btn-square pull-left"
 																onClick={() => { this.toggle(0, '1') }}>
-																<i className="far fa-arrow-alt-circle-left"></i> Back
+																<i className="far fa-arrow-alt-circle-left"></i> {strings.back}
 															</Button>
 
 															<Button name="button" color="primary" className="btn-square pull-right mr-3"
@@ -1378,7 +1403,7 @@ class Import extends React.Component {
 																	this.listOfTransactionCategory()
 
 																}}>
-																Next	<i class="far fa-arrow-alt-circle-right mr-1"></i>
+																{strings.nex}	<i class="far fa-arrow-alt-circle-right mr-1"></i>
 															</Button>
 														</FormGroup>
 													</div>
@@ -1390,7 +1415,7 @@ class Import extends React.Component {
 										<TabPane tabId="3">
 											<div className="create-employee-screen">
 												<div className="animated fadeIn">
-													<div className="text-center mb-5"><h3>Preview Files</h3></div>
+													<div className="text-center mb-5"><h3>{strings.pf}</h3></div>
 
 													<Formik
 														initialValues={this.state.initValue}
@@ -1413,7 +1438,7 @@ class Import extends React.Component {
 																			}}
 																	
 																		>
-																			<Button className="rounded-left" >Chart Of Accounts</Button>
+																			<Button className="rounded-left" >{strings.ca}</Button>
 																		</Tab>
 																		{tabs.map((tab, idx) => (
 
@@ -1458,7 +1483,7 @@ class Import extends React.Component {
 																			<FormGroup className="text-center">
 																				<Button color="secondary" className="btn-square pull-left"
 																					onClick={() => { this.toggle(0, '2') }}>
-																					<i className="far fa-arrow-alt-circle-left"></i> Back
+																					<i className="far fa-arrow-alt-circle-left"></i> {strings.back}
 																				</Button>
 
 																				<Button name="button" color="primary" className="btn-square pull-right mr-3"
@@ -1466,7 +1491,7 @@ class Import extends React.Component {
 																						this.toggle(0, '4')
 																						this.listOfTransactionCategory()
 																					}}>
-																					Next	<i class="far fa-arrow-alt-circle-right mr-1"></i>
+																					{strings.nex}	<i class="far fa-arrow-alt-circle-right mr-1"></i>
 																				</Button>
 																			</FormGroup>
 																		</div>
@@ -1482,7 +1507,7 @@ class Import extends React.Component {
 											</div>
 										</TabPane>
 										<TabPane tabId="4">
-											<div className="text-center mb-5"><h3>Set Opening Balances</h3></div>
+											<div className="text-center mb-5"><h3>{strings.setbal}</h3></div>
 											<Formik
 												initialValues={this.state.initValue}
 												onSubmit={(values, { resetForm }) => {
@@ -1507,14 +1532,14 @@ class Import extends React.Component {
 																	<FormGroup className="text-center">
 																		<Button color="secondary" className="btn-square pull-left"
 																			onClick={() => { this.toggle(0, '3') }}>
-																			<i className="far fa-arrow-alt-circle-left"></i> Back
+																			<i className="far fa-arrow-alt-circle-left"></i> {strings.back}
 																		</Button>
 
 																		<Button name="button" color="primary" className="btn-square pull-right mr-3"
 																			onClick={() => {
 																				this.handleSubmitForOpeningBalances();
 																			}}>
-																			Migrate	<i class="far fa-arrow-alt-circle-right mr-1"></i>
+																			{strings.mig}<i class="far fa-arrow-alt-circle-right mr-1"></i>
 																		</Button>
 																	</FormGroup>
 																</div>

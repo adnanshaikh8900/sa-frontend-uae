@@ -869,7 +869,7 @@ min="0"
         formData.append('totalVatAmount',this.state.totalVatAmount );
 	    formData.append('supplierId', this.state.selectedData.supplierId);
 		formData.append('supplierReferenceNumber',supplierReferenceNumber ? supplierReferenceNumber : '');
-		formData.append('totalExciseAmount', this.state.initValue.total_excise);
+		formData.append('totalExciseAmount',this.state.selectedData.totalExciseAmount);
 		formData.append('currencyCode', this.state.selectedData.currencyCode);
         if (rfqNumber && rfqNumber.value) {
 			formData.append('rfqNumber', rfqNumber.value);
@@ -1353,6 +1353,7 @@ min="0"
 																		showYearDropdown
 																		dropdownMode="select"
 																		dateFormat="dd-MM-yyyy"
+																		minDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('poApproveDate')(value);
 																		}}
@@ -1386,6 +1387,7 @@ min="0"
 																		showYearDropdown
 																		dropdownMode="select"
 																		dateFormat="dd-MM-yyyy"
+																		minDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('poReceiveDate')(value);
 																		}}

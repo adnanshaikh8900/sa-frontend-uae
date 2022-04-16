@@ -19,7 +19,7 @@ const toWords = new ToWords({
 	}
   });
 let strings = new LocalizedStrings(data);
-
+const ZERO=0.00
 class RFQTemplate extends Component {
 	constructor(props) {
 		super(props);
@@ -229,6 +229,9 @@ class RFQTemplate extends Component {
 									<th className="center" style={{ padding: '0.5rem' }}>
 										{strings.Quantity }
 									</th>
+									<th className="center" style={{ padding: '0.5rem' }}>
+										{strings.UnitType}
+									</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
 										{strings.UnitCost }
 									</th>
@@ -251,6 +254,7 @@ class RFQTemplate extends Component {
 												<td>{item.productName}</td>
 												<td>{item.description}</td>
 											    <td>{item.quantity}</td>
+												<td>{item.unitType}</td>
 												<td style={{ textAlign: 'right', width: '20%' }}>
 													{/* <Currency
 														value={item.unitPrice}
@@ -344,7 +348,7 @@ class RFQTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-												{RFQData.totalExciseAmount? RFQData.currencyIsoCode + " " +RFQData.totalExciseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0 } 
+												{RFQData.totalExciseAmount? RFQData.currencyIsoCode + " " +RFQData.totalExciseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):RFQData.currencyIsoCode + " " +ZERO.toLocaleString(navigator.language, { minimumFractionDigits: 2 })} 
 												</span>
 											</td>
 										</tr>

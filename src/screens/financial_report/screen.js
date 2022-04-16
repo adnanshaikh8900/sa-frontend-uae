@@ -162,11 +162,11 @@ class FinancialReport extends React.Component {
 											></img>	<h5  className="mb-3 mt-2">{strings.VatReports}</h5></div>
 										<div className="mt-2 ml-4">
 										<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
-									this.props.history.push('/admin/report/vatreports')}>Vat Report</a></h6>
+									this.props.history.push('/admin/report/vatreports')}>{strings.VatReports}</a></h6>
 										<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
-									this.props.history.push('/admin/report/ftaAuditReports')}>FTA Audit Report</a></h6>
+									this.props.history.push('/admin/report/ftaAuditReports')}>{strings.FTA_Audit_Report}</a></h6>
 									<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
-									this.props.history.push('/admin/report/exciseTaxAuditReports')}>Excise Tax Report</a></h6>
+									this.props.history.push('/admin/report/exciseTaxAuditReports')}>{strings.Excise_Tax_Report}</a></h6>
 									
 									</div>
 										</Col>

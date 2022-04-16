@@ -57,6 +57,7 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
+const ZERO=0.00;
 let strings = new LocalizedStrings(data);
 class BankTransactions extends React.Component {
 	constructor(props) {
@@ -219,7 +220,7 @@ class BankTransactions extends React.Component {
 					bankAccountCurrencyIsoCode: res.bankAccountCurrencyIsoCode,
 					currentBalance: res.currentBalance,
 					closingBalance: res.closingBalance,
-					openingBalance: res.openingBalance,
+					openingBalance:res.openingBalance,
 					accounName: res.bankAccountName,
 					transactionCount: res.transactionCount
 				});
@@ -761,11 +762,17 @@ class BankTransactions extends React.Component {
 					<Card className={this.state.sidebarOpen ? `main-table-panel` : ''}>
 						<CardHeader>
 							<Row>
-								<Col lg={12}>
+								<Col >
 									<div className="h4 mb-0 d-flex align-items-center">
 										<i className="icon-doc" />
 										<span className="ml-2">{strings.BankTransactions}</span>
 									</div>
+								</Col>
+								<Col>
+								<Button title='Back'
+									 onClick={()=>{this.props.history.push('/admin/banking/bank-account')}} 
+									className=' pull-right'>X
+									</Button>
 								</Col>
 							</Row>
 						</CardHeader>
@@ -791,18 +798,19 @@ class BankTransactions extends React.Component {
 													<h3>
 														{this.state.bankAccountCurrencyIsoCode} &nbsp;
 														{this.state.currentBalance ? (				
-															this.state.currentBalance.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-															):(0)}	
+															this.state.currentBalance.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })):" " +ZERO.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}	
+																
 																						
 													</h3>
 												</Col>
 												<Col lg={3}>
 													<h5>{strings.LedgerBalance}</h5>
-													<h3>
+													
+												<h3>
 													{this.state.bankAccountCurrencyIsoCode} &nbsp;
 
-													{this.state.closingBalance ? (
-														this.state.closingBalance.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })): ( 0)}
+													{this.state.closingBalance ? (				
+															this.state.closingBalance.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })): " " +ZERO.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}	
 													</h3>
 												</Col>
 												<Col lg={3}>
@@ -811,7 +819,7 @@ class BankTransactions extends React.Component {
 													{this.state.bankAccountCurrencyIsoCode} &nbsp;
 
 													{this.state.openingBalance ? (
-														this.state.openingBalance.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })): ( 0)}
+														this.state.openingBalance.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })): " " +ZERO.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 													</h3>
 												</Col>
 											</Row>

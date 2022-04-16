@@ -161,7 +161,7 @@ class CreateCompanyDetails extends React.Component {
 							<Col lg={12}>
 								<div className="h4 mb-0 d-flex align-items-center">
 									<i className="nav-icon fas fa-user-tie" />
-									<span className="ml-2">Create Company Details</span>
+									<span className="ml-2">{strings.company_details}</span>
 								</div>
 							</Col>
 						</Row>
@@ -175,7 +175,18 @@ class CreateCompanyDetails extends React.Component {
 						}}
 						validate={(values) => {
 							let errors = {};
-																		
+							if(values.companyBankCode.length <9 && values.companyBankCode.length !=0)
+							errors.companyBankCode="Company Bank Code Should Be 9 Digits Numeric ";	
+							
+							if(values.companyNumber.length <13 && values.companyNumber.length !=0)
+							errors.companyNumber="Company Number Should Be 13 Digits Numeric ";	
+							
+							if(this.state.invalidCompanyBankCode && this.state.invalidCompanyBankCode==true)
+							errors.companyBankCode="Company Bank Code Should Be Numeric ";	
+
+							if(this.state.invalidCompanyNumber && this.state.invalidCompanyNumber==true)
+							errors.companyNumber="Company Number Should Be Numeric ";	
+
 							return errors;
 						}}
 						validationSchema={Yup.object().shape({
@@ -196,7 +207,18 @@ class CreateCompanyDetails extends React.Component {
 										<Row>
 										<Col lg={4}>
 															<FormGroup className="mb-3"><span className="text-danger">* </span>
-																<Label htmlFor="companyNumber">Company Number</Label>
+																<Label htmlFor="companyNumber">{strings.company_num}
+																<i
+																			id="cnoTooltip"
+																			className="fa fa-question-circle ml-1"
+																		></i>
+																		<UncontrolledTooltip
+																			placement="right"
+																			target="cnoTooltip"
+																		>
+																			Company Number is 13 digit Numeric
+																		</UncontrolledTooltip>
+																</Label>
 																<Input
 																	type="text"
 																	name="companyNumber"
@@ -206,12 +228,15 @@ class CreateCompanyDetails extends React.Component {
 																	
 																	placeholder={"Enter Company Number"}
 																	onChange={(option) =>
-																		{
-																			debugger
+																		{																			
 																			if (option.target.value === '' ||this.regEx.test(option.target.value,))
 																			 {
 																			     props.handleChange('companyNumber',)(option.target.value);
-																		    }
+																				 this.setState({invalidCompanyNumber:false})
+																		    }else{
+																			props.handleChange('companyNumber',)("");
+																			this.setState({invalidCompanyNumber:true})
+																		}
 																			
 																	}
 																	}
@@ -233,7 +258,18 @@ class CreateCompanyDetails extends React.Component {
 														</Col>
 														<Col lg={4}>
 															<FormGroup className="mb-3"><span className="text-danger">* </span>
-																<Label htmlFor="companyBankCode">Company Bank Code</Label>
+																<Label htmlFor="companyBankCode">{strings.com_code}
+																<i
+																			id="cbcodeTooltip"
+																			className="fa fa-question-circle ml-1"
+																		></i>
+																		<UncontrolledTooltip
+																			placement="right"
+																			target="cbcodeTooltip"
+																		>
+																			Company Bank Code is 9 digit Numeric
+																		</UncontrolledTooltip>
+																</Label>
 																<Input
 																	type="text"
 																	name="companyBankCode"
@@ -245,7 +281,12 @@ class CreateCompanyDetails extends React.Component {
 																		if (option.target.value === '' ||this.regEx.test(option.target.value))
 																		 {
 																			 props.handleChange('companyBankCode')(option.target.value);
+																			 this.setState({invalidCompanyBankCode:false})
 																		 }
+																		 else{
+																		 props.handleChange('companyBankCode')("");
+																		 this.setState({invalidCompanyBankCode:true})
+																		}
 																	  }
 																	}
 																	className={

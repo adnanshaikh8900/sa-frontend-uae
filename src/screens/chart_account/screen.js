@@ -30,9 +30,9 @@ import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
 import { string } from 'prop-types';
 import { toLower, upperCase, upperFirst } from 'lodash-es';
-import { AgGridReact,AgGridColumn } from 'ag-grid-react/lib/agGridReact';
-import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+// import { AgGridReact,AgGridColumn } from 'ag-grid-react/lib/agGridReact';
+// import 'ag-grid-community/dist/styles/ag-grid.css';
+// import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import { CallToActionSharp } from '@material-ui/icons';
 import ReactToPrint from 'react-to-print';
 const mapStateToProps = (state) => {
@@ -464,7 +464,7 @@ class ChartAccount extends React.Component {
 													onClick={() => this.getCsvData()}
 												>
 													<i className="fa glyphicon glyphicon-export fa-download mr-1" />
-													Export To CSV
+												{strings.export_csv}
 												</Button>
 												{view && (
 													<CSVLink
@@ -486,7 +486,7 @@ class ChartAccount extends React.Component {
 													style={{
 														cursor: 'pointer',
 														}}>
-											 		<i className="fa fa-print"> {strings.Print} </i>
+											 		<i className="fa fa-print"> {strings.print_csv} </i>
 											</Button>
 												{/* <Button
 													color="primary"
@@ -503,7 +503,7 @@ class ChartAccount extends React.Component {
 											{/* <h5>{strings.Filter}: </h5> */}
 											<form>
 												<Row>
-													{/* <Col lg={3} className="mb-1">
+													<Col lg={3} className="mb-1">
 														<Input
 														maxLength="25"
 															type="text"
@@ -530,8 +530,8 @@ class ChartAccount extends React.Component {
 																);
 															}}
 														/>
-													</Col> */}
-													{/* <Col lg={3} className="mb-1">
+													</Col>
+													<Col lg={3} className="mb-1">
 														<FormGroup className="mb-3">
 															<Select
 																styles={customStyles}
@@ -563,9 +563,9 @@ class ChartAccount extends React.Component {
 																value={filterData.chartOfAccountId}
 															/>
 														</FormGroup>
-													</Col> */}
+													</Col>
 													<Col lg={3} className="pl-0 pr-0">
-														{/* <Button
+														<Button
 															type="button"
 															color="primary"
 															className="btn-square mr-1"
@@ -580,7 +580,7 @@ class ChartAccount extends React.Component {
 															onClick={this.clearAll}
 														>
 															<i className="fa fa-refresh"></i>
-														</Button> */}
+														</Button>
 														
 													</Col>
 												</Row>
@@ -588,7 +588,7 @@ class ChartAccount extends React.Component {
 											
 										</div>
 										
-									{/* 	<div>
+										<div>
 											<BootstrapTable
 												selectRow={this.selectRowProp}
 												search={false}
@@ -625,7 +625,7 @@ class ChartAccount extends React.Component {
 													dataSort
 													className="table-header-bg"
 												>
-													 {strings.CODE}
+													 {strings.ACCOUNTCODE}
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="transactionCategoryName"
@@ -633,7 +633,7 @@ class ChartAccount extends React.Component {
 													columnTitle={this.customName}
 													className="table-header-bg"
 												>
-													{strings.NAME}
+													{strings.ACCOUNTNAME}
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="chartOfAccountId"
@@ -641,19 +641,19 @@ class ChartAccount extends React.Component {
 													dataFormat={this.typeFormatter}
 													className="table-header-bg"
 												>
-												    {strings.TYPE}
+												    {strings.ACCOUNTTYPE}
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="isEditable"
 													dataFormat={this.editFormatter}
 													className="table-header-bg"
 												>
-													{strings.STATUS}
+													{strings.ACCOUNT}
 												</TableHeaderColumn>
 											</BootstrapTable> 
-										</div>*/}
+										</div>
 										
-<div id="section-to-print" className="ag-theme-alpine mb-3" style={{ height: 590,width:"100%" }}>
+{/* <div id="section-to-print" className="ag-theme-alpine mb-3" style={{ height: 590,width:"100%" }}>
 	
 			<AgGridReact
 				rowData={transaction_category_list &&
@@ -679,7 +679,7 @@ class ChartAccount extends React.Component {
 					>
 
 				<AgGridColumn field="transactionCategoryCode" 
-				headerName=   {strings.CODE}
+				headerName=   {strings.ACCOUNTCODE}
 				sortable={ true } 
 				filter={ true } 
 				enablePivot={true}
@@ -696,7 +696,7 @@ class ChartAccount extends React.Component {
 				></AgGridColumn>
 
 				<AgGridColumn field="transactionCategoryName" 
-				headerName= {strings.NAME}
+				headerName= {strings.ACCOUNTNAME}
 				sortable={ true } 
 				filter={ true } 
 				enablePivot={true}
@@ -704,14 +704,12 @@ class ChartAccount extends React.Component {
 
 
 				<AgGridColumn field="transactionTypeName" 
-				headerName=  {strings.TYPE}
+				headerName=  {strings.ACCOUNTTYPE}
 				sortable={ true } 
 				filter={ true } 
 				enablePivot={true}
-				></AgGridColumn>  
+				></AgGridColumn>   */}
 
-			
-				
 				{/* <AgGridColumn
 				headerName={strings.STATUS}
 				field="editableFlag" 
@@ -733,7 +731,7 @@ class ChartAccount extends React.Component {
 										}
 				></AgGridColumn>   */}
 
-					<AgGridColumn
+					{/* <AgGridColumn
 				headerName={strings.ACCOUNT}
 				sortable={ true } 
 				filter={ true } 
@@ -745,16 +743,11 @@ class ChartAccount extends React.Component {
 					<i className="fas fa-lock"></i>
 				
 					
-					
-					// params.value==true ?
-					// 								<label className="badge label-success"> Active</label>
-					// 								:
-					// 								<label className="badge label-due"> InActive</label>
-										}
-				></AgGridColumn>
-			<AgGridColumn field="action"
+				}
+				></AgGridColumn> */}
+			{/* <AgGridColumn field="action"
 										// className="Ag-gridActionButtons"
-										headerName="ACTIONS"
+										headerName={strings.action}
 										cellRendererFramework={(params) =>
 											<div
 											 className="Ag-gridActionButtons"
@@ -764,8 +757,8 @@ class ChartAccount extends React.Component {
 
 										}
 									></AgGridColumn>
-			</AgGridReact>  
-			<div className="example-header mt-1">
+			</AgGridReact>   */}
+			{/* <div className="example-header mt-1">
 					Page Size:
 					<select  value={this.state.pageSize} onChange={() => this.onPageSizeChanged()} id="page-size">
 					<option value="10" selected={true}>10</option>
@@ -773,9 +766,9 @@ class ChartAccount extends React.Component {
 					<option value="500">500</option>
 					<option value="1000">1000</option>
 					</select>
-				</div>     
+				</div>      */}
 																						
-		</div>	
+		{/* </div>	 */}
 									</Col>
 								</Row>
 							)}

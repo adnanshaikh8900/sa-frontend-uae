@@ -85,6 +85,7 @@ class Expense extends React.Component {
 			csvData: [],
 			view: false,
 			language: window['localStorage'].getItem('language'),
+			loadingMsg:"Loading..."
 		};
 
 		this.options = {
@@ -232,6 +233,13 @@ class Expense extends React.Component {
 								</div>
 							</DropdownItem>
 						)}
+							<DropdownItem					
+								onClick={() =>
+									this.props.history.push(`/admin/expense/expense/create`,{parentId: row.expenseId})
+								}
+							>
+								<i className="fas fa-copy" /> {strings.CreateADuplicate}
+							</DropdownItem>
 						{row.expenseStatus !== 'Posted' && (
 							<DropdownItem
 								onClick={() => {
@@ -416,6 +424,7 @@ class Expense extends React.Component {
 			postingRefType: 'EXPENSE',
 			postingChartOfAccountId: row.chartOfAccountId,
 		};
+		this.setState({ loading:true, loadingMsg:"Expense Posting..."});
 		this.props.expenseActions
 			.postExpense(postingRequestModel)
 			.then((res) => {
@@ -428,6 +437,7 @@ class Expense extends React.Component {
 						loading: false,
 					});
 					this.initializeData();
+					this.setState({ loading:false,});
 				}
 			})
 			.catch((err) => {
@@ -635,7 +645,7 @@ class Expense extends React.Component {
 	render() {
 		strings.setLanguage(this.state.language);
 		const {
-			loading,
+			loading,loadingMsg,
 			dialog,
 			filterData,
 			selectedRows,
@@ -653,7 +663,7 @@ class Expense extends React.Component {
 		// }
 
 		return (
-			loading ==true? <Loader/> :
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 <div>
 			<div className="expense-screen">
 				<div className="animated fadeIn">
@@ -871,6 +881,17 @@ class Expense extends React.Component {
 											>
 												{strings.Expense+" "+strings.No +"."}
 											</TableHeaderColumn>
+											
+											<TableHeaderColumn
+												thStyle={{ whiteSpace: 'normal' }}
+												dataField="payee"
+												dataSort
+												width="15%"
+												className='table-header-bg'
+											>
+												{strings.PAYEE}
+											</TableHeaderColumn>
+
 											<TableHeaderColumn
 												thStyle={{ whiteSpace: 'normal' }}
 												dataField="expenseDate"
@@ -881,25 +902,7 @@ class Expense extends React.Component {
 											>
 												{strings.EXPENSEDATE}
 											</TableHeaderColumn>
-											<TableHeaderColumn
-												thStyle={{ whiteSpace: 'normal' }}
-												dataField="payee"
-												dataSort
-												width="15%"
-												className='table-header-bg'
-											>
-												{strings.PAYEE}
-											</TableHeaderColumn>
-											<TableHeaderColumn
-												thStyle={{ whiteSpace: 'normal' }}
-												width="10%"
-												dataField="expenseStatus"
-												dataFormat={this.renderExpenseStatus}
-												dataSort
-												className='table-header-bg'
-											>
-												{strings.STATUS}
-											</TableHeaderColumn>
+																						
 											<TableHeaderColumn
 												thStyle={{ whiteSpace: 'normal' }}
 												dataField="transactionCategoryName"
@@ -920,6 +923,17 @@ class Expense extends React.Component {
                                                         {strings.ExpenseType}
 
                           					</TableHeaderColumn>
+
+											<TableHeaderColumn
+												thStyle={{ whiteSpace: 'normal' }}
+												width="10%"
+												dataField="expenseStatus"
+												dataFormat={this.renderExpenseStatus}
+												dataSort
+												className='table-header-bg'
+											>
+												{strings.STATUS}
+											</TableHeaderColumn>
 											
 											<TableHeaderColumn
 												dataAlign="right"

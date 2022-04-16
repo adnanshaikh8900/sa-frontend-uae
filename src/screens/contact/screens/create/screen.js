@@ -14,6 +14,7 @@ import {
 	Label,
 } from 'reactstrap';
 import Select from 'react-select';
+import { ImageUploader, Loader } from 'components';
 import { upperFirst } from 'lodash-es';
 import { selectOptionsFactory, selectCurrencyFactory } from 'utils';
 
@@ -61,11 +62,12 @@ class CreateContact extends React.Component {
 		super(props);
 		this.state = {
 			language: window['localStorage'].getItem('language'),
-			loading: true,
+			loading: false,
+			
 			initValue: {
 				billingEmail: '',
 				city: '',
-				contactType: '',
+				contactType: this.props.contactType ?this.props.contactType:'',
 				
 				countryId: '',
 				currencyCode:{label: "UAE Dirham - AED", value: 150},
@@ -99,6 +101,7 @@ class CreateContact extends React.Component {
 				shippingCity:'',
 				shippingFax:'',
 				taxTreatmentId:'',
+			
 
 
 			},
@@ -109,6 +112,7 @@ class CreateContact extends React.Component {
 			isActive: true,
 			isRegisteredForVat: false,
 			isSame: false,
+			//loadingMsg:"Loading...",
 			// billingAddress: {
 			// 	billingcountryId: '',
 			// 	billingStateProvince: '',
@@ -170,6 +174,8 @@ class CreateContact extends React.Component {
 							: '',
 					},
 				},
+				
+				
 			});
 			// this.formRef.current.setFieldValue(
 			// 	'currencyCode',
@@ -215,14 +221,16 @@ class CreateContact extends React.Component {
 		return temp;
 	};
 	handleSubmit = (data, resetForm) => {
+		this.setState({ loading:true, loadingMsg:"Creating Contact..."});
 		this.setState({ disabled: true });
 		const postData = this.getData(data);
-
+	
 		this.props.createContactActions
 			.createContact(postData)
 			.then((res) => {
 				if (res.status === 200) {
-					this.setState({ disabled: false });
+				this.setState({ disabled: false });
+				this.setState({ loading:false});
 					this.props.commonActions.tostifyAlert(
 						'success',
 						"Contact Created Successfully"
@@ -245,6 +253,7 @@ class CreateContact extends React.Component {
 						 }
 						else
 						    this.props.history.push('/admin/master/contact');
+							this.setState({ loading:false,});
 
 					}
 				}
@@ -276,8 +285,12 @@ class CreateContact extends React.Component {
 			contact_type_list,
 			state_list,
 		} = this.props;
-		const { initValue, checkmobileNumberParam, taxTreatmentList, isSame ,state_list_for_shipping} = this.state;
+		const { initValue, checkmobileNumberParam, taxTreatmentList, isSame ,state_list_for_shipping } = this.state;
+		const {loading, loadingMsg}=this.state;
+
 		return (
+			 loading ==true? <Loader loadingMsg={loadingMsg}/> :
+			<div>
 			<div className="create-contact-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -294,6 +307,13 @@ class CreateContact extends React.Component {
 									</Row>
 								</CardHeader>
 								<CardBody>
+								{loading ? (
+										<Row>
+											<Col lg={12}>
+												<Loader />
+											</Col>
+										</Row>
+									) : (
 									<Row>
 										<Col lg={12}>
 											<Formik
@@ -682,6 +702,7 @@ class CreateContact extends React.Component {
 																				)
 																				: []
 																		}
+																		isDisabled={this.props.contactType? true :false}
 																		value={props.values.contactType}
 																		onChange={(option) => {
 																			if (option && option.value) {
@@ -1190,8 +1211,8 @@ class CreateContact extends React.Component {
 															<Col md="4">
 																<FormGroup>
 																	<Label htmlFor="stateId"><span className="text-danger">* </span>
-																		{/* {strings.StateRegion} */}
-																		{props.values.billingcountryId.value === 229 ? "Emirates" : "State / Provinces"}
+																			{/* {strings.StateRegion} */}
+																			{props.values.billingcountryId.value === 229 ? strings.Emirates: strings.StateRegion}
 																	</Label>
 																	<Select
 																		options={
@@ -1200,7 +1221,7 @@ class CreateContact extends React.Component {
 																					'label',
 																					'value',
 																					state_list,
-																					props.values.billingcountryId.value === 229 ? "Emirates" : "State / Provinces",
+																					props.values.billingcountryId.value === 229 ? strings.Emirates: strings.StateRegion,
 																				)
 																				: []
 																		}
@@ -1213,7 +1234,7 @@ class CreateContact extends React.Component {
 																				props.handleChange('stateId')('');
 																			}
 																		}}
-																		placeholder={strings.Select + props.values.billingcountryId === 229 || props.values.billingcountryId.value === 229 ? "Emirates" : "State / Provinces"}
+																		placeholder={strings.Select + props.values.billingcountryId === 229 || props.values.billingcountryId.value === 229 ? strings.Emirates: strings.StateRegion}
 																		id="stateId"
 																		name="stateId"
 																		className={
@@ -1269,10 +1290,10 @@ class CreateContact extends React.Component {
 																	<Input
 																		id="billingCity"
 																		name="billingCity"
-																		autoComplete="Off"
 																		type="text"
 																		maxLength="100"
 																		value={props.values.billingCity}
+																		autoComplete="Off"
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||
@@ -1434,6 +1455,7 @@ class CreateContact extends React.Component {
 																			
 																				if (this.state.isSame==false) {
 																					this.setState({isSame: !this.state.isSame,});
+																					if(props.values.billingcountryId)
 																					this.getStateListForShippingAddress(props.values.billingcountryId.value ?props.values.billingcountryId.value :props.values.billingcountryId);
 																					props.handleChange('shippingAddress')(props.values.billingAddress);
 																					props.handleChange('shippingCity')(props.values.billingCity);
@@ -1584,7 +1606,7 @@ class CreateContact extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="shippingStateId"><span className="text-danger">* </span>
 																		{/* {strings.StateRegion} */}
-																		{props.values.shippingCountryId.value === 229 ? "Emirates" : "State / Provinces"}
+																	{	props.values.shippingCountryId.value === 229 ? strings.Emirates: strings.StateRegion}
 																	</Label>
 																	<Select
 																		options={
@@ -1593,7 +1615,7 @@ class CreateContact extends React.Component {
 																					'label',
 																					'value',
 																					state_list_for_shipping,
-																					props.values.shippingCountryId.value === 229 ? "Emirates" : "State / Provinces",
+																					props.values.shippingCountryId.value === 229 ? strings.Emirates: strings.StateRegion,
 																				)
 																				: []
 																		}
@@ -1612,7 +1634,7 @@ class CreateContact extends React.Component {
 																				props.handleChange('shippingStateId')('');
 																			}
 																		}}
-																			placeholder={ props.values.shippingCountryId.value === 229 ? "Emirates" : "State / Provinces"}
+																		placeholder={ props.values.shippingCountryId.value === 229 ? strings.Emirates: strings.StateRegion}
 																		id="shippingStateId"
 																		name="shippingStateId"
 																		className={
@@ -1634,7 +1656,7 @@ class CreateContact extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="shippingCity"><span className="text-danger">* </span>{strings.City}</Label>
 																	<Input
-																		autoComplete="Off"
+																	autoComplete="Off"
 																		// options={city ? selectOptionsFactory.renderOptions('cityName', 'cityCode', cityRegion) : ''}
 																		value={props.values.shippingCity}
 																		onChange={(option) => {
@@ -1813,7 +1835,7 @@ class CreateContact extends React.Component {
 																			? 'Creating...'
 																			: strings.Create}
 																	</Button>
-																	{this.props.isParentComponentPresent &&this.props.isParentComponentPresent ==true ?"":(	<Button
+																{this.props.isParentComponentPresent &&this.props.isParentComponentPresent ==true ?"":(	<Button
 																		name="button"
 																		color="primary"
 																		className="btn-square mr-3"
@@ -1858,11 +1880,13 @@ class CreateContact extends React.Component {
 											</Formik>
 										</Col>
 									</Row>
+									)}
 								</CardBody>
 							</Card>
 						</Col>
 					</Row>
 				</div>
+			</div>
 			</div>
 		);
 	}

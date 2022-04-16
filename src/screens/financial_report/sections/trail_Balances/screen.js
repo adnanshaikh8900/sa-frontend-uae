@@ -279,7 +279,7 @@ class TrailBalances extends React.Component {
     															padding: 0,
 																backgroundColor:"white !important"
 															}}
-														   >Excel</span>
+														     	>Excel</span>
 														</DropdownItem>
 															<DropdownItem onClick={this.exportPDFWithComponent}>
 															Pdf

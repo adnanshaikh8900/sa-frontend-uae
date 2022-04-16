@@ -64,7 +64,7 @@ class PaidInvoices extends Component {
 					datalabels: {
 						display: false,
 					},
-					label: data.paidCustomerData.label,
+					label: data.paidCustomerData.label+" ",
 				},
 				{
 					backgroundColor: 'rgba(255, 255, 255, 0)',
@@ -86,7 +86,7 @@ class PaidInvoices extends Component {
 					datalabels: {
 						display: false,
 					},
-					label: data.paidSupplierData.label,
+					label: data.paidSupplierData.label+" ",
 				},
 			],
 		};

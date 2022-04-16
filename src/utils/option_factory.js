@@ -17,7 +17,6 @@ export const renderOptions = (
       });
       return item;
     });
-
   } else {
     data.map((item) => {
       return result.push({
@@ -25,11 +24,7 @@ export const renderOptions = (
         value: item[`${value_key}`],
         ...a,
       });
-
     });
-
   }
-
   return result;
-
 };

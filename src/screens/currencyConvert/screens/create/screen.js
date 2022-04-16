@@ -54,6 +54,7 @@ class CreateCurrencyConvert extends React.Component {
 		super(props);
 		this.state = {
 			language: window['localStorage'].getItem('language'),
+			loading:false,
 			initValue: {
 				currencyCode: '',
 				exchangeRate:'',
@@ -67,6 +68,7 @@ class CreateCurrencyConvert extends React.Component {
 			currency_list : [],
 			selectedStatus: true,
 			isActive: true,
+			loadingMsg:"Loading..."
 			
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
@@ -138,11 +140,13 @@ class CreateCurrencyConvert extends React.Component {
 			exchangeRate: data.exchangeRate,
 			isActive:this.state.isActive
 		};
+		this.setState({ loading:true, loadingMsg:"Creating Currency Conversion..."});
 		this.props.createCurrencyConvertActions
 			.createCurrencyConvert(obj)
 			.then((res) => {
 				if (res.status === 200) {
 					this.setState({ createDisabled: false });
+					this.setState({ loading:false});
 					this.props.commonActions.tostifyAlert(
 						'success',
 						res.data ? res.data.message : 'Currency Convert Created Successfully'
@@ -155,6 +159,7 @@ class CreateCurrencyConvert extends React.Component {
 						});
 					} else {
 						this.props.history.push('/admin/master/CurrencyConvert');
+						this.setState({ loading:false,});
 					}
 				}
 			})
@@ -194,10 +199,12 @@ class CreateCurrencyConvert extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { loading, initValue,currency_list} = this.state;
+		const { loading, loadingMsg,initValue,currency_list} = this.state;
 		
 		const{currencyList} =this.props;
 		return (
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
+			<div>
 			<div className="vat-code-create-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -210,6 +217,13 @@ class CreateCurrencyConvert extends React.Component {
 									</div>
 								</CardHeader>
 								<CardBody>
+								{loading ? (
+										<Row>
+											<Col lg={12}>
+												<Loader />
+											</Col>
+										</Row>
+									) : (
 									<Row>
 										<Col lg={10}>
 											<Formik
@@ -515,12 +529,14 @@ class CreateCurrencyConvert extends React.Component {
 											</Formik>
 										</Col>
 									</Row>
+									)}
 								</CardBody>
 							</Card>
 						</Col>
 					</Row>
 					{loading ? <Loader></Loader> : ''}
 				</div>
+			</div>
 			</div>
 		);
 	}

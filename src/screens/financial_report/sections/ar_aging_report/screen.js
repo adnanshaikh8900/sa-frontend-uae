@@ -235,14 +235,14 @@ class ArAgingReport extends React.Component {
 													<DropdownToggle caret>Export As</DropdownToggle>
 													<DropdownMenu>
 													
-													<DropdownItem onClick={()=>{this.exportFile()}}>
+													<DropdownItem  onClick={()=>{this.exportFile()}}>
 															<span
 															style={{
 																border: 0,
     															padding: 0,
 																backgroundColor:"white !important"
 															}}
-														   >CSV (Comma Separated Value)</span>
+														    >CSV (Comma Separated Value)</span>
 														</DropdownItem>
 														<DropdownItem onClick={()=>{this.exportExcelFile()}}>
 															<span
@@ -251,7 +251,7 @@ class ArAgingReport extends React.Component {
     															padding: 0,
 																backgroundColor:"white !important"
 															}}
-														  >Excel</span>
+														>Excel</span>
 														</DropdownItem>
 														<DropdownItem onClick={this.exportPDFWithComponent}>
 															Pdf

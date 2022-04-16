@@ -152,17 +152,16 @@ class CustomerModal extends React.Component {
 					isOpen={openCustomerModal}
 					className="modal-success contact-modal"
 				>
-					<CreateContact
+				<CreateContact
 					getCurrentContactData={(contactData) =>{
 						this.props.getCurrentUser(contactData);
 					}}
 					closeModal={(e) => {
 						closeCustomerModal(e);
- 		 			}}
-
- 					 isParentComponentPresent={true}
-													/>
-													
+					}}
+				contactType={{label: "Customer",value: 2}} 	
+				isParentComponentPresent={true}
+				/>
 				</Modal>
 			</div>
 		);

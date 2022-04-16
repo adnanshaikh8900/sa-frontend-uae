@@ -36,6 +36,7 @@ import LocalizedStrings from 'react-localization';
 import { AddEmployeesModal } from './sections';
 import moment from 'moment';
 import download from 'downloadjs';
+import { toast } from 'react-toastify';
 
 
 const mapStateToProps = (state) => {
@@ -1052,7 +1053,7 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 																<Col>
 																
 																	<FormGroup>
-																	{this.state.status && (this.state.status==="Approved" || this.state.status==="Rejected" ||this.state.status==="Partially Paid"  ||this.state.status==="Paid" ) ? 
+																	{this.state.status && (this.state.status==="Approved" || this.state.status==="Rejected" ||this.state.status==="Partially Paid"  ||this.state.status==="Paid"||this.state.status==="Draft" ) ? 
 																''	: (
 																		<div>
 
@@ -1085,19 +1086,23 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 																				{props.errors.comment}
 																			</div>
 																		)}
-																		{this.state.status && (this.state.status==="Approved" || this.state.status==="Rejected" ||this.state.status==="Partially Paid"  ||this.state.status==="Paid" ) ? 
+																		{this.state.status && (this.state.status==="Approved" || this.state.status==="Rejected" ||this.state.status==="Partially Paid"  ||this.state.status==="Paid"||this.state.status==="Draft" ) ? 
 																''	:
 																		(
 																			<Button
 																			color="primary"
 																			className="btn-square mt-4 "
 																			// onClick={}
-																			onClick={() =>
+																			onClick={() =>{
+																				if(this.state.comment=="")
+																				   toast.error("Please Enter Reason")
+																				else
 																				this.rejectPayroll()
 																			}
-																		disabled={this.state.comment==""?true:false}
+																			}
+																		// disabled={this.state.comment==""?true:false}
 																		title={
-																			this.state.comment==""?"Please Enter Comment":""
+																			this.state.comment==""?"Please Enter Reason":""
 																		}
 																		>
 																			<i class="fas fa-user-times mr-1"></i>
@@ -1116,7 +1121,7 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 
 																<Col>
 																<ButtonGroup className="mt-5 pull-right ">
-																{this.state.status && (this.state.status==="Approved"  ||this.state.status==="Partially Paid"  ||this.state.status==="Paid" ||this.state.status==="Rejected" ) ? 
+																{this.state.status && (this.state.status==="Approved"  ||this.state.status==="Partially Paid"  ||this.state.status==="Paid" ||this.state.status==="Rejected" ||this.state.status==="Draft") ? 
 																""	:
 																	(
 																		<Button

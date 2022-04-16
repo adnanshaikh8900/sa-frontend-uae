@@ -59,6 +59,7 @@ class DetailOpeningBalance extends React.Component {
       loading: true,
       dialog: null,
       current_opening_balance_id: null,
+      loadingMsg:"Loading..."
     }
     this.regExAlpha = /^[a-zA-Z ]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
@@ -113,6 +114,7 @@ class DetailOpeningBalance extends React.Component {
 		let postData = this.getData(data);
 
 		postData = { ...postData, ...{ id: current_opening_balance_id } };
+    this.setState({ loading:true, loadingMsg:"Updating Opening Balance..."});
       this.props.detailOpeningBalancesAction.updateOpeningBalance(postData).then((res) => {
       if (res.status === 200) {
         resetForm();
@@ -120,6 +122,7 @@ class DetailOpeningBalance extends React.Component {
           'success',
           res.data ? res.data.message : 'Opening Balance Updated Successfully!')
         this.props.history.push('/admin/accountant/opening-balance')
+        this.setState({ loading:false,});
       }
     }).catch((err) => {
       this.props.commonActions.tostifyAlert(
@@ -143,7 +146,7 @@ class DetailOpeningBalance extends React.Component {
 
   render() {
     strings.setLanguage(this.state.language);
-    const { loading, initValue,dialog} = this.state
+    const { loading, initValue,dialog,loadingMsg} = this.state
 
     const{transaction_category_list} =this.props;
 
@@ -158,7 +161,7 @@ class DetailOpeningBalance extends React.Component {
 			}),
 		};
     return (
-      loading ==true? <Loader/> :
+    	loading ==true? <Loader loadingMsg={loadingMsg}/> :
 <div>
       <div className="detail-vat-code-screen">
         <div className="animated fadeIn">

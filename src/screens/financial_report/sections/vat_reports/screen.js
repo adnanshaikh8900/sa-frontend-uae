@@ -27,9 +27,10 @@ import moment from 'moment';
 import download from 'downloadjs';
 import { DeleteModal, FileTaxReturnModal, GenerateVatReportModal, VatSettingModal } from './sections';
 import { AgGridReact, AgGridColumn } from 'ag-grid-react/lib/agGridReact';
-import { ConfirmDeleteModal, Currency } from 'components';
+import { ConfirmDeleteModal, Currency,Loader } from 'components';
 import { selectOptionsFactory } from 'utils';
 import Select from 'react-select';
+import { toast } from 'react-toastify';
 const mapStateToProps = (state) => {
 	return {
 		version: state.common.version,
@@ -107,6 +108,7 @@ class VatReports extends React.Component {
 			dialog: false,
 			current_report_id: '',
 			deleteModal:false,
+			loadingMsg:"Loading..."
 		};
 	}
 	onPageSizeChanged = (newPageSize) => {
@@ -129,11 +131,13 @@ class VatReports extends React.Component {
 		this.getInitialData();
 	};
 
+	
 	markItUnfiled=(row)=>{
 		const postingRequestModel = {
 			postingRefId: row.id,
 			postingRefType: 'PUBLISH',
 		};
+		this.setState({ loading:true, loadingMsg:"Vat UnFiling..."});
 		this.props.vatreport
 			.markItUnfiled(postingRequestModel)
 			.then((res) => {
@@ -144,6 +148,7 @@ class VatReports extends React.Component {
 						' Vat UnFiled Successfully'
 					);
 					this.getInitialData()
+					this.setState({ loading:false,});
 				}
 			})
 			.catch((err) => {
@@ -169,6 +174,7 @@ class VatReports extends React.Component {
 				);
 			});
 	};
+
 
 	export = (filename) => {
 		this.props.vatreport
@@ -524,15 +530,29 @@ class VatReports extends React.Component {
 
 		return (<>{dateArr[0].replaceAll("/","-")}</>);
 	};
+
+
+
 	render() {
-		const { vatReportDataList, csvFileNamesData, dialog ,options} = this.state;
+		const { vatReportDataList, csvFileNamesData, dialog ,options,loading,loadingMsg,} = this.state;
 
 
 		return (
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 			<div className="import-bank-statement-screen">
 				<div className="animated fadeIn">
 					<Card>
 						<CardHeader>
+						{dialog}
+							{loading && (
+								<Row>
+									<Col lg={12} className="rounded-loader">
+										<div>
+											<Loader />
+										</div>
+									</Col>
+								</Row>
+							)}
 							<Row>
 								<Col lg={12}>
 
@@ -600,12 +620,19 @@ class VatReports extends React.Component {
 											</Button>
 
 											<Button name="button" color="primary" className="btn-square pull-right "
-											disabled={!this.state.enbaleReportGeneration}
-											title={!this.state.enbaleReportGeneration?"Select VAT Reporting Period":""}
+											// disabled={!this.state.enbaleReportGeneration}
+											// title={!this.state.enbaleReportGeneration?"Select VAT Reporting Period":""}
 												onClick={() => {
-													this.setState({ openModal: true })
+													if(!this.state.enbaleReportGeneration)
+													toast.error(" First Select VAT Reporting Period ");
+													else
+												{	this.setState({ openModal: true })
+													}
 												}}>
+												
 												<i class="fas fa-plus"></i> Generate Vat Report
+
+												
 											</Button>
 										<Col lg={3} className=" pull-right ">
 												<Select 
@@ -768,6 +795,7 @@ class VatReports extends React.Component {
 					closeModal={(e) => {
 						this.closeModal(e);
 						this.getInitialData();
+						
 					}}
 				/>
 				<VatSettingModal

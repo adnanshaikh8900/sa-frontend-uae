@@ -101,6 +101,7 @@ class CreditNotes extends React.Component {
 				overDueAmountMonthly: '',
 			},
 			rowId: '',
+			loadingMsg:"Loading..."
 		};
 
 		this.options = {
@@ -207,7 +208,7 @@ class CreditNotes extends React.Component {
 		this.initializeData();
 	};
 
-	creditNoteposting = (row) => {
+	creditNoteposting = (row,markAsSent) => {
 		this.setState({
 			loading: true,
 		});
@@ -218,9 +219,10 @@ class CreditNotes extends React.Component {
 			postingRefType: 'CREDIT_NOTE',
 			isCNWithoutProduct :row.isCNWithoutProduct==true?true:false ,
 			amountInWords:upperCase(row.currencyName + " " +(toWords.convert(row.invoiceAmount))+" ONLY" ).replace("POINT","AND"),
-			vatInWords:row.totalVatAmount ? upperCase(row.currencyName + " " +(toWords.convert(row.totalVatAmount))+" ONLY" ).replace("POINT","AND") :"-"
+			vatInWords:row.totalVatAmount ? upperCase(row.currencyName + " " +(toWords.convert(row.totalVatAmount))+" ONLY" ).replace("POINT","AND") :"-",
+			markAsSent:markAsSent
 		};
-		 
+		this.setState({ loading:true, loadingMsg:"Posting Credit Note..."});
 		this.props.creditNotesActions
 			.creditNoteposting(postingRequestModel)
 			.then((res) => {
@@ -233,6 +235,7 @@ class CreditNotes extends React.Component {
 						loading: false,
 					});
 					this.initializeData();
+					this.setState({ loading:false,});
 				}
 			})
 			.catch((err) => {
@@ -331,13 +334,13 @@ class CreditNotes extends React.Component {
 	return(
 		<div>
 		<div>
-					<label className="font-weight-bold mr-2 ">{strings.Amount}: </label>
+					<label className="font-weight-bold mr-2 ">{strings.Amount} : </label>
 					<label>
 					{row.invoiceAmount === 0  ? row.currencyName +" "+ row.invoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyName+" "+ row.invoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 					</label>
 				</div>
 				<div>
-					<label className="font-weight-bold mr-2 ">{strings.RemainingCredits}: </label>
+					<label className="font-weight-bold mr-2 ">{strings.RemainingCredits} : </label>
 					<label>
 					{row.dueAmount === 0  ? row.currencyName+" " + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyName+" "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 					</label>
@@ -431,7 +434,15 @@ class CreditNotes extends React.Component {
 								</div>
 							</DropdownItem>
 						)}
-							
+						{row.statusEnum == 'Draft'&& (
+							<DropdownItem
+								onClick={() => {
+									this.creditNoteposting(row,true);
+								}}
+							>
+							<i class="far fa-arrow-alt-circle-right"></i>Mark As Sent
+							</DropdownItem>
+						)}	
 						{row.statusEnum !== 'Closed' && row.statusEnum !== 'Open' && row.statusEnum !== 'Partially Paid' &&(
 							<DropdownItem
 								onClick={() => {
@@ -713,7 +724,7 @@ class CreditNotes extends React.Component {
 	render() {
 		strings.setLanguage(this.state.language);
 		const {
-			loading,
+			loading,loadingMsg,
 			filterData,
 			dialog,
 			selectedRows,
@@ -757,7 +768,7 @@ class CreditNotes extends React.Component {
 		})
 
 		return (
-			loading ==true? <Loader/> :
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 <div>
 			<div className="customer-invoice-screen">
 				<div className="animated fadeIn">
@@ -1104,14 +1115,15 @@ class CreditNotes extends React.Component {
 											>
 												{strings.CUSTOMERNAME}
 											</TableHeaderColumn>
+											
 											<TableHeaderColumn
-												//width="9%"
-												dataField="status"
-												dataFormat={this.renderInvoiceStatus}
+												dataField="invoiceNumber"
+												// dataFormat={this.renderInvoiceNumber}
 												dataSort
+											//	width="7%"
 												className="table-header-bg"
-											>
-												 {strings.STATUS}
+											>		
+												{strings.INVOICENUMBER}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="invoiceDate"
@@ -1121,6 +1133,16 @@ class CreditNotes extends React.Component {
 												className="table-header-bg"
 											>
 											 {strings.DATE}
+											</TableHeaderColumn>
+
+											<TableHeaderColumn
+												//width="9%"
+												dataField="status"
+												dataFormat={this.renderInvoiceStatus}
+												dataSort
+												className="table-header-bg"
+											>
+												 {strings.STATUS}
 											</TableHeaderColumn>
 											{/* <TableHeaderColumn
 												dataField="regferenceNumber"

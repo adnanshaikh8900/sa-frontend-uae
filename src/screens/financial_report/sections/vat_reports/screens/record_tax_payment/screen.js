@@ -99,6 +99,7 @@ class RecordVatPayment extends React.Component {
 			discountAmount: 0,
 			fileName: '',
 			disabled: false,
+			loadingMsg:"Loading..."
 		};
 
 		this.formRef = React.createRef();
@@ -178,6 +179,7 @@ class RecordVatPayment extends React.Component {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
 		formData.append('isVatReclaimed', false);
+		this.setState({ loading:true, loadingMsg:"Tax Claim Recording..."});
 		this.props.vatreportActions.recordVatPayment(formData)
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
@@ -185,6 +187,7 @@ class RecordVatPayment extends React.Component {
 					res.data ? res.data.message : 'Tax Claim Recorded Successfully',
 				);
 				this.props.history.push('/admin/report/vatreports');
+				this.setState({ loading:false,});
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
@@ -196,7 +199,7 @@ class RecordVatPayment extends React.Component {
 	
 	render() {
 		strings.setLanguage(this.state.language);
-		const { initValue, loading, dialog,headerValue,deposit_list } = this.state;
+		const { initValue, loading, dialog,headerValue,deposit_list,loadingMsg } = this.state;
 		const { pay_mode, customer_list } = this.props;
 
 		let tmpcustomer_list = []
@@ -207,6 +210,8 @@ class RecordVatPayment extends React.Component {
 		})
 
 		return (
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
+			<div>
 			<div className="detail-customer-invoice-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -236,6 +241,13 @@ class RecordVatPayment extends React.Component {
 													ref={this.formRef}
 													onSubmit={(values, { resetForm }) => {
 														this.handleSubmit(values);
+													}}
+													validate={(values) => {
+														let errors = {};
+														 if (values.amount < 1) {
+														  errors.amount ='Amount Cannot be Less Than 1';
+													 }
+													 return errors
 													}}
 													validationSchema={Yup.object().shape({
 														paidThrough: Yup.string().required(
@@ -382,6 +394,7 @@ class RecordVatPayment extends React.Component {
 																		</Label>
 																		<Input
 																			type="number"
+																			min="0"
 																			placeholder='Enter Amount Paid'
 																			id="amount"
 																			name="amount"
@@ -669,6 +682,7 @@ class RecordVatPayment extends React.Component {
 					</Row>
 				</div>
 
+			</div>
 			</div>
 		);
 	}

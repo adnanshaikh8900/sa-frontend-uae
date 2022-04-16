@@ -263,16 +263,15 @@ class ProductModal extends React.Component {
 					isOpen={openProductModal}
 					className="modal-success contact-modal"
 				>
-					<CreateProduct
+				<CreateProduct
 					getCurrentProductData={(Data) =>{
 						this.props.getCurrentProduct(Data);
-						}}
-						closeModal={(e) => {
-							closeProductModal(e);
-						}}
-						isParentComponentPresent={true}
-													/>
-													
+					}}
+					closeModal={(e) => {
+						closeProductModal(e);
+					}}
+				isParentComponentPresent={true}
+				/>
 				</Modal>
 			</div>
 		);

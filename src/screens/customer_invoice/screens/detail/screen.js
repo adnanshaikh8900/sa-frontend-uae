@@ -31,7 +31,7 @@ import { Loader, ConfirmDeleteModal,Currency } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
-import { optionFactory,selectCurrencyFactory, selectOptionsFactory } from 'utils';
+import { optionFactory, selectCurrencyFactory, selectOptionsFactory } from 'utils';
 
 import './style.scss';
 import moment from 'moment';
@@ -128,6 +128,7 @@ class DetailCustomerInvoice extends React.Component {
 			shippingPostZipCode:'',
 			shippingTelephone:'',
 			shippingFax:'',
+			loadingMsg:"Loading",
 		datesChanged : false	};
 
 		// this.options = {
@@ -273,11 +274,13 @@ class DetailCustomerInvoice extends React.Component {
 									fileName: res.data.fileName ? res.data.fileName : '',
 									filePath: res.data.filePath ? res.data.filePath : '',
 									total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : 0,
+									taxType : res.data.taxType ? true : false,
                                  },
 								customer_taxTreatment_des : res.data.taxTreatment ? res.data.taxTreatment : '',
 								invoiceDateNoChange :res.data.invoiceDate
 								? moment(res.data.invoiceDate)
 								: '',
+								taxType : res.data.taxType ? true : false,
 								invoiceDueDateNoChange : res.data.invoiceDueDate ?
 								moment(res.data.invoiceDueDate) : '',
 								invoiceDate: res.data.invoiceDate
@@ -479,7 +482,6 @@ class DetailCustomerInvoice extends React.Component {
                                ? 'is-invalid'
                                : ''
                        }`}
-   type="text"
    />
     <div class="dropdown open input-group-append">
 
@@ -622,7 +624,7 @@ class DetailCustomerInvoice extends React.Component {
 									if(parseInt(e.target.value) >product_list[0].stockOnHand && product_list[0].isInventoryEnabled==true)
 									this.props.commonActions.tostifyAlert(
 										'error',
-										 `Quantity (${e.target.value}) must not be greater than stock on Hand  (${product_list[0].stockOnHand})`,
+										 `Quantity (${e.target.value}) Must Not Be Greater Than Stock On Hand  (${product_list[0].stockOnHand})`,
 									);
 									else
 									this.selectItem(
@@ -885,6 +887,8 @@ class DetailCustomerInvoice extends React.Component {
 				obj['description'] = result.description;
 				obj['exciseTaxId'] = result.exciseTaxId;
 				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive;
+				obj['unitType']=result.unitType;
+				obj['unitTypeId']=result.unitTypeId;
 				idx = index;
 			}
 			return obj;
@@ -1040,18 +1044,14 @@ class DetailCustomerInvoice extends React.Component {
 			return false;
 		}
 	};
-
 	updateAmount = (data, props) => {
-		// const { vat_list , excise_list} = this.props;
-		const { vat_list , excise_list} = this.state;
-
-		const { discountPercentage, discountAmount } = this.state;
+		const { vat_list } = this.state;
 		let total_net = 0;
 		let total_excise = 0;
 		let total = 0;
 		let total_vat = 0;
-		let net_value = 0;
-		let discount = 0;
+		let net_value = 0; 
+		let discount_total = 0;
 		data.map((obj) => {
 			const index =
 				obj.vatCategoryId !== ''
@@ -1059,70 +1059,146 @@ class DetailCustomerInvoice extends React.Component {
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
 
-			//Excise calculation
-			if(obj.exciseTaxId !=  0){
-			if(obj.isExciseTaxExclusive === true){
-				if(obj.exciseTaxId === 1){
-				const value = +(obj.unitPrice) / 2 ;
-					net_value = parseFloat(obj.unitPrice) + parseFloat(value);
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
-				}else if (obj.exciseTaxId === 2){
-					const value = obj.unitPrice;
-					net_value = parseFloat(obj.unitPrice) +  parseFloat(value) ;
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
+			//Exclusive case
+			if(this.state.taxType === false){
+				if (obj.discountType === 'PERCENTAGE') {	
+					 net_value =
+						((+obj.unitPrice -
+							(+((obj.unitPrice * obj.discount)) / 100)) * obj.quantity);
+					var discount =  obj.unitPrice - net_value
+				if(obj.exciseTaxId !=  0){
+					if(obj.exciseTaxId === 1){
+						const value = +(net_value) / 2 ;
+							net_value = parseFloat(net_value) + parseFloat(value) ;
+							obj.exciseAmount = parseFloat(value) * obj.quantity;
+						}else if (obj.exciseTaxId === 2){
+							const value = net_value;
+							net_value = parseFloat(net_value) +  parseFloat(value) ;
+							obj.exciseAmount = parseFloat(value) * obj.quantity;
+						}
+						else{
+							net_value = obj.unitPrice
+						}
 				}
 				else{
-					net_value = obj.unitPrice
+					obj.exciseAmount = 0
 				}
-			}	else{
+					var vat_amount =
+					((+net_value  * vat * obj.quantity) / 100);
+				}else{
+					 net_value =
+						((obj.unitPrice * obj.quantity) - obj.discount)
+					var discount =  obj.unitPrice - net_value
+						if(obj.exciseTaxId !=  0){
+							if(obj.exciseTaxId === 1){
+								const value = +(net_value) / 2 ;
+									net_value = parseFloat(net_value) + parseFloat(value) ;
+									obj.exciseAmount = parseFloat(value) * obj.quantity;
+								}else if (obj.exciseTaxId === 2){
+									const value = net_value;
+									net_value = parseFloat(net_value) +  parseFloat(value) ;
+									obj.exciseAmount = parseFloat(value) * obj.quantity;
+								}
+								else{
+									net_value = obj.unitPrice
+								}
+						}
+						else{
+							obj.exciseAmount = 0
+						}
+						var vat_amount =
+						((+net_value  * vat * obj.quantity) / 100);
+			}
+
+			}
+			//Inclusive case
+			else
+			{			
+				if (obj.discountType === 'PERCENTAGE') {	
+
+					//net value after removing discount
+					 net_value =
+					((+obj.unitPrice -
+						(+((obj.unitPrice * obj.discount)) / 100)) * obj.quantity);
+
+				//discount amount
+				var discount =  (obj.unitPrice* obj.quantity) - net_value
+
+				//vat amount
+				var vat_amount =
+				(+net_value  * (vat/ (100 + vat)*100)) / 100; 
+
+				//net value after removing vat for inclusive
+				net_value = net_value - vat_amount
+
+				//excise calculation
+				if(obj.exciseTaxId !=  0){
 				if(obj.exciseTaxId === 1){
-					const value = obj.unitPrice / 3
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
-				net_value = obj.unitPrice}
+					const value = net_value / 3
+					net_value = net_value 
+					obj.exciseAmount = parseFloat(value);
+					}
 				else if (obj.exciseTaxId === 2){
-					const value = obj.unitPrice / 2
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
-				net_value = obj.unitPrice}
+					const value = net_value / 2
+					obj.exciseAmount = parseFloat(value);
+				net_value = net_value}
 				else{
 					net_value = obj.unitPrice
-				}
+					}
+						}
+						else{
+							obj.exciseAmount = 0
+						}
+					}
+
+				else // fixed discount
+						{
+				//net value after removing discount
+				 net_value =
+				((obj.unitPrice * obj.quantity) - obj.discount)
+
+
+				//discount amount
+				var discount =  (obj.unitPrice * obj.quantity) - net_value
+						
+				//vat amount
+				var vat_amount =
+				(+net_value  * (vat/ (100 + vat)*100)) / 100; ;
+
+				//net value after removing vat for inclusive
+				net_value = net_value - vat_amount
+
+				//excise calculation
+				if(obj.exciseTaxId !=  0){
+					if(obj.exciseTaxId === 1){
+						const value = net_value / 3
+						net_value = net_value 
+						obj.exciseAmount = parseFloat(value);
+						}
+					else if (obj.exciseTaxId === 2){
+						const value = net_value / 2
+						obj.exciseAmount = parseFloat(value);
+					net_value = net_value}
+					else{
+						net_value = obj.unitPrice
+						}
+							}
+							else{
+								obj.exciseAmount = 0
+							}
+					}
+
 			}
-		}else{
-			net_value = obj.unitPrice;
-			obj.exciseAmount = 0
-		}
-			//vat calculation
-			if (obj.discountType === 'PERCENTAGE') {
-				var val =
-				((+net_value -
-				 (+((net_value * obj.discount)) / 100)) *
-					vat *
-					obj.quantity) /
-				100;
-
-				var val1 =
-				((+net_value -
-				 (+((net_value * obj.discount)) / 100)) * obj.quantity ) ;
-			} else if (obj.discountType === 'FIXED') {
-				var val =
-						 (net_value * obj.quantity - obj.discount ) *
-					(vat / 100);
-
-					var val1 =
-					((net_value * obj.quantity )- obj.discount )
-
-			} else {
-				var val = (+net_value * vat * obj.quantity) / 100;
-				var val1 = net_value * obj.quantity
-			}
-
-			//discount calculation
-			discount = +(discount +(net_value * obj.quantity)) - parseFloat(val1)
-			total_net = +(total_net + net_value * obj.quantity);
-			total_vat = +(total_vat + val);
-			obj.vatAmount = val
+			
+			
+			obj.vatAmount = vat_amount
 			obj.subTotal =
-			net_value && obj.vatCategoryId ? parseFloat(val1) + parseFloat(val) : 0;
+			net_value && obj.vatCategoryId ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
+
+			discount_total = +discount_total +discount
+			total_net = +(total_net + parseFloat(net_value));
+			total_vat = +(total_vat + vat_amount);
+			
 			total_excise = +(total_excise + obj.exciseAmount)
 			total = total_vat + total_net;
 			return obj;
@@ -1138,10 +1214,10 @@ class DetailCustomerInvoice extends React.Component {
 				initValue: {
 					...this.state.initValue,
 					...{
-						total_net: discount ? total_net - discount : total_net,
+						total_net:  total_net,
 						invoiceVATAmount: total_vat,
-						discount:  discount ? discount : 0,
-						totalAmount: total_net > discount ? total - discount : total - discount,
+						discount:  discount_total ? discount_total : 0,
+						totalAmount:  total ,
 						total_excise: total_excise
 					},
 
@@ -1217,6 +1293,7 @@ class DetailCustomerInvoice extends React.Component {
 
 		let formData = new FormData();
 		formData.append('type', 2);
+		formData.append('taxType', this.state.taxType)
 		formData.append('invoiceId', current_customer_id);
 		formData.append(
 			'referenceNumber',
@@ -1329,6 +1406,7 @@ class DetailCustomerInvoice extends React.Component {
 		if (this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
+		this.setState({ loading:true, loadingMsg:"Updating Invoice..."});
 		this.props.customerInvoiceDetailActions
 			.updateInvoice(formData)
 			.then((res) => {
@@ -1338,6 +1416,7 @@ class DetailCustomerInvoice extends React.Component {
 					res.data ? res.data.message : 'Invoice Updated Successfully'
 				);
 				this.props.history.push('/admin/income/customer-invoice');
+				this.setState({ loading:false,});
 			})
 			.catch((err) => {
 				this.setState({ disabled: false });
@@ -1412,6 +1491,11 @@ class DetailCustomerInvoice extends React.Component {
 				true,
 			);
 			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.unitType`,
+				res.data[0].unitType,
+				true,
+			);
+			this.formRef.current.setFieldValue(
 				`lineItemsString.${0}.quantity`,
 				1,
 				true,
@@ -1475,6 +1559,7 @@ class DetailCustomerInvoice extends React.Component {
 	removeInvoice = () => {
 		this.setState({ disabled1: true });
 		const { current_customer_id } = this.state;
+		this.setState({ loading:true, loadingMsg:"Deleting Invoice..."});
 		this.props.customerInvoiceDetailActions
 			.deleteInvoice(current_customer_id)
 			.then((res) => {
@@ -1484,6 +1569,7 @@ class DetailCustomerInvoice extends React.Component {
 						res.data ? res.data.message : 'Invoice Deleted Successfully'
 					);
 					this.props.history.push('/admin/income/customer-invoice');
+					this.setState({ loading:false,});
 				}
 			})
 			.catch((err) => {
@@ -1564,15 +1650,16 @@ class DetailCustomerInvoice extends React.Component {
 		const { project_list, currency_list,currency_convert_list, customer_list,universal_currency_list,country_list,} = this.props;
 
 		let tmpCustomer_list = []
-
+		const {  loadingMsg } = this.state
 		customer_list.map(item => {
 			let obj = {label: item.label.contactName, value: item.value}
 			tmpCustomer_list.push(obj)
 		})
 
 		return (
-			loading ==true? <Loader/> :
-<div><div className="detail-customer-invoice-screen">
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
+<div>
+	<div className="detail-customer-invoice-screen">
 				<div className="animated fadeIn">
 					<Row>
 						<Col lg={12} className="mx-auto">
@@ -1588,6 +1675,7 @@ class DetailCustomerInvoice extends React.Component {
 									</Row>
 								</CardHeader>
 								<CardBody>
+									
 									{dialog}
 									{loading ? (
 										<Loader />
@@ -1781,7 +1869,7 @@ class DetailCustomerInvoice extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="contactId">
 																			<span className="text-danger">* </span>
-																			{strings.CustomerName}
+																			{strings.Customer}
 																		</Label>
 																		<Select
 																			id="contactId"
@@ -1796,6 +1884,7 @@ class DetailCustomerInvoice extends React.Component {
 																					  )
 																					: []
 																			}
+																			
 																			value={
 																				tmpCustomer_list &&
 																				tmpCustomer_list.find(
@@ -1951,8 +2040,38 @@ class DetailCustomerInvoice extends React.Component {
 																		<Label htmlFor="term">
 																			<span className="text-danger">* </span>
 																			{strings.Terms}{' '}
-																			<i className="fa fa-question-circle"></i>
-																		</Label>
+																			<i
+																			id="UncontrolledTooltipExample"
+																			className="fa fa-question-circle ml-1"
+																		></i>
+																		<UncontrolledTooltip
+																			placement="right"
+																			target="UncontrolledTooltipExample"
+																		>
+																			<p>
+																				{' '}
+																				Terms- The duration given to a buyer for
+																				payment.
+																			</p>
+
+																			<p>
+																				Net 7 – payment due in 7 days from
+																				invoice date{' '}
+																			</p>
+
+																			<p>
+																				{' '}
+																				Net 10 – payment due in 10 days from
+																				invoice date{' '}
+																			</p>
+
+																			<p>
+																				{' '}
+																				Net 30 – payment due in 30 days from
+																				invoice date{' '}
+																			</p>
+																		</UncontrolledTooltip>
+																	</Label>
 																		<Select
 																			options={
 																				this.termList
@@ -2023,6 +2142,7 @@ class DetailCustomerInvoice extends React.Component {
 																			showMonthDropdown
 																			showYearDropdown
 																			dateFormat="dd-MM-yyyy"
+																			minDate={new Date()}
 																			dropdownMode="select"
 																			 value={props.values.invoiceDate}
 																			 selected={new Date(props.values.invoiceDate1)} 
@@ -2525,7 +2645,6 @@ class DetailCustomerInvoice extends React.Component {
 																			className="form-control"
 																			id="currencyName"
 																			name="currencyName"
-																			disabled
 																			value={this.state.customer_currency_des ? this.state.customer_currency_des : props.values.currencyName}
 																			onChange={(value) => {
 																				props.handleChange('currencyName')(
@@ -2594,7 +2713,43 @@ class DetailCustomerInvoice extends React.Component {
 																		<i className="fa fa-plus"></i> {strings.Addmore}
 																	</Button>
 																</Col>
-																
+																<Col  >
+																<label className='mr-4'><b>Tax Type</b></label>
+																{this.state.taxType === false ?
+																	<span style={{ color: "#0069d9" }} className='mr-4'><b>Exclusive</b></span> :
+																	<span className='mr-4'>Exclusive</span>}
+																<Switch
+																	value={props.values.taxType}
+																	checked={this.state.taxType}
+																	onChange={(taxType) => {
+
+																		props.handleChange('taxType')(taxType);
+																		this.setState({ taxType }, () => {
+																			this.updateAmount(
+																				this.state.data,
+																				props
+																			)
+																		});
+
+
+																	}}
+
+																	onColor="#2064d8"
+																	onHandleColor="#2693e6"
+																	handleDiameter={25}
+																	uncheckedIcon={false}
+																	checkedIcon={false}
+																	boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+																	activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+																	height={20}
+																	width={48}
+																	className="react-switch "
+																/>
+																{this.state.taxType === true ?
+																	<span style={{ color: "#0069d9" }} className='ml-4'><b>Inclusive</b></span>
+																	: <span className='ml-4'>Inclusive</span>
+																}
+															</Col>
 															</Row>
 															
 													
@@ -2660,13 +2815,28 @@ class DetailCustomerInvoice extends React.Component {
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="quantity"
-																			width="5%"
+																			width="10%"
 																			dataFormat={(cell, rows) =>
 																				this.renderQuantity(cell, rows, props)
 																			}
 																		>
 																			{strings.QUANTITY}
 																		</TableHeaderColumn>
+																		<TableHeaderColumn
+																			width="5%"
+																			dataField="unitType"
+																     	>{strings.Unit}	<i
+																		 id="unitTooltip"
+																		 className="fa fa-question-circle ml-1"
+																	 ></i>
+																	 
+																	 <UncontrolledTooltip
+																		 placement="right"
+																		 target="unitTooltip"
+																	 >
+																		Units / Measurements
+																	 </UncontrolledTooltip>
+																 </TableHeaderColumn> 
 																		<TableHeaderColumn
 																			dataField="unitPrice"
 																			dataFormat={(cell, rows) =>
@@ -2902,7 +3072,7 @@ class DetailCustomerInvoice extends React.Component {
 																							/>
 																							)} */}
 																							{this.state.customer_currency_symbol} &nbsp;
-																							{initValue.discount ? '-'+initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : initValue.discount.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2 })}
+																							{initValue.discount ? initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : initValue.discount.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>
@@ -3013,18 +3183,16 @@ class DetailCustomerInvoice extends React.Component {
 																			disabled={this.state.disabled}
 																			onClick={() => {
 																				if(this.state.data.length === 1)
-																				{
-																				console.log(props.errors,"ERRORs")
-																				}
-																				else
-																				{ let newData=[]
-																				const data = this.state.data;
-																				newData = data.filter((obj) => obj.productId !== "");
-																				props.setFieldValue('lineItemsString', newData, true);
-																				this.updateAmount(newData, props);
-																				}
-																				
-																			}}
+																					{
+																					console.log(props.errors,"ERRORs")
+																					}
+																					else
+																					{ let newData=[]
+																					const data = this.state.data;
+																					newData = data.filter((obj) => obj.productId !== "");
+																					props.setFieldValue('lineItemsString', newData, true);
+																					this.updateAmount(newData, props);
+																					}}}
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
 																			{this.state.disabled

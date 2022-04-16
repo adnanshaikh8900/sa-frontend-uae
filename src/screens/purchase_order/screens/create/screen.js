@@ -28,12 +28,14 @@ import * as ProductActions from '../../../product/actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 
 import { SupplierModal } from '../../../supplier_invoice/sections/index';
+import {   Loader } from 'components';
+//import { SupplierModal } from '../../sections';
 import { ProductModal } from '../../../customer_invoice/sections';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
-import {optionFactory,selectCurrencyFactory, selectOptionsFactory } from 'utils';
+import { optionFactory, selectCurrencyFactory, selectOptionsFactory } from 'utils';
 
 import './style.scss';
 import Switch from "react-switch";
@@ -111,13 +113,14 @@ class CreatePurchaseOrder extends React.Component {
 					vatCategoryId: '',
 					exciseTaxId:'',
 					exciseAmount:'',
-					// discountType:'FIXED',
-					// discount:0,
+					 discountType:'FIXED',
+					 discount:0,
 					subTotal: 0,
 					vatAmount:0,
 					productId: '',
-					isExciseTaxExclusive:''
-				},
+					isExciseTaxExclusive: '',
+					unitType:'',
+					unitTypeId:''				},
 			],
 			idCount: 0,
 			checked:false,
@@ -156,6 +159,7 @@ class CreatePurchaseOrder extends React.Component {
 				discountPercentage: 0,
 				// discountType: 'FIXED',
 			},
+			taxType: false,
 			currentData: {},
 			contactType: 1,
 			openSupplierModal: false,
@@ -171,6 +175,7 @@ class CreatePurchaseOrder extends React.Component {
 			purchaseCategory: [],
 			exist: false,
 			language: window['localStorage'].getItem('language'),	
+			loadingMsg:"Loading..."
 		};
 
 		this.formRef = React.createRef();
@@ -296,7 +301,7 @@ class CreatePurchaseOrder extends React.Component {
 								.find((option) => option.value === +row.exciseTaxId)
 						}
 						id="exciseTaxId"
-						placeholder={strings.Select+strings.Vat}
+						placeholder={strings.Select+strings.excise}
 						onChange={(e) => {
 							 
 							this.selectItem(
@@ -564,13 +569,18 @@ class CreatePurchaseOrder extends React.Component {
 		// 	/>
 		// );
 		let value =  row.vatAmount && row.vatAmount != 0 ?  row.vatAmount:0
-		return value === 0 ? this.state.supplier_currency_symbol +" "+ value.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ value.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return value === 0 ? this.state.supplier_currency_symbol +" "+ value.toLocaleString(navigator.language, { minimumFractionDigits: 2 ,maximumFractionDigits:2}) : this.state.supplier_currency_symbol +" "+ value.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
 	};
 
 	componentDidMount = () => {
-		if(this.props.location.state &&this.props.location.state.contactData)
-		this.getCurrentUser(this.props.location.state.contactData);
+		if(this.props.location.state && this.props.location.state.rfqId){
+			this.props.purchaseOrderAction.getRFQList();
+			let option={value:this.props.location.state.rfqId,label:this.props.location.state.rfqNumber}
+			this.getrfqDetails(option, option.value, undefined)
+	}
         this.getInitialData();
+		if(this.props.location.state &&this.props.location.state.contactData)
+				this.getCurrentUser(this.props.location.state.contactData);
 	};
 
     
@@ -697,10 +707,12 @@ class CreatePurchaseOrder extends React.Component {
 					vatCategoryId: '',
 					subTotal: 0,
 					exciseTaxId:'',
-					// discountType:'FIXED',
+					discountType:'FIXED',
 					vatAmount:0,
-					// discount: 0,
+					discount: 0,
 					productId: '',
+					unitType:'',
+					unitTypeId:''
 				}),
 				idCount: this.state.idCount + 1,
 			},
@@ -864,7 +876,8 @@ class CreatePurchaseOrder extends React.Component {
 				obj['exciseTaxId'] = result.exciseTaxId;
 				obj['description'] = result.description;
 				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive;
-				
+				obj['unitType']=result.unitType;
+				obj['unitTypeId']=result.unitTypeId;				
 				idx = index;
 			}
 			return obj;
@@ -1095,79 +1108,155 @@ class CreatePurchaseOrder extends React.Component {
 		let total_excise = 0;
 		let total = 0;
 		let total_vat = 0;
-		let net_value = 0;
-		let discount = 0;
+		let net_value = 0; 
+		let discount_total = 0;
 		data.map((obj) => {
 			const index =
 				obj.vatCategoryId !== ''
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
-
-			//Excise calculation
-			if(obj.exciseTaxId !=  0){
-			if(obj.isExciseTaxExclusive === true){
-				if(obj.exciseTaxId === 1){
-				const value = +(obj.unitPrice) / 2 ;
-					net_value = parseFloat(obj.unitPrice) + parseFloat(value) ;
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
-				}else if (obj.exciseTaxId === 2){
-					const value = obj.unitPrice;
-					net_value = parseFloat(obj.unitPrice) +  parseFloat(value) ;
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
+			
+			//Exclusive case
+			if(this.state.taxType === false){
+				if (obj.discountType === 'PERCENTAGE') {	
+					 net_value =
+						((+obj.unitPrice -
+							(+((obj.unitPrice * obj.discount)) / 100)) * obj.quantity);
+					var discount =  obj.unitPrice - net_value
+				if(obj.exciseTaxId !=  0){
+					if(obj.exciseTaxId === 1){
+						const value = +(net_value) / 2 ;
+							net_value = parseFloat(net_value) + parseFloat(value) ;
+							obj.exciseAmount = parseFloat(value) * obj.quantity;
+						}else if (obj.exciseTaxId === 2){
+							const value = net_value;
+							net_value = parseFloat(net_value) +  parseFloat(value) ;
+							obj.exciseAmount = parseFloat(value) * obj.quantity;
+						}
+						else{
+							net_value = obj.unitPrice
+						}
 				}
 				else{
-					net_value = obj.unitPrice
+					obj.exciseAmount = 0
 				}
-			}	else{
+					var vat_amount =
+					((+net_value  * vat * obj.quantity) / 100);
+				}else{
+					 net_value =
+						((obj.unitPrice * obj.quantity) )
+					var discount =  obj.unitPrice - net_value
+						if(obj.exciseTaxId !=  0){
+							if(obj.exciseTaxId === 1){
+								const value = +(net_value) / 2 ;
+									net_value = parseFloat(net_value) + parseFloat(value) ;
+									obj.exciseAmount = parseFloat(value) * obj.quantity;
+								}else if (obj.exciseTaxId === 2){
+									const value = net_value;
+									net_value = parseFloat(net_value) +  parseFloat(value) ;
+									obj.exciseAmount = parseFloat(value) * obj.quantity;
+								}
+								else{
+									net_value = obj.unitPrice
+								}
+						}
+						else{
+							obj.exciseAmount = 0
+						}
+						var vat_amount =
+						((+net_value  * vat * obj.quantity) / 100);
+			}
+
+			}
+			//Inclusive case
+			else
+			{			
+				if (obj.discountType === 'PERCENTAGE') {	
+
+					//net value after removing discount
+					 net_value =
+					((+obj.unitPrice -
+						(+((obj.unitPrice * obj.discount)) / 100)) * obj.quantity);
+
+				//discount amount
+				var discount =  (obj.unitPrice* obj.quantity) - net_value
+
+				//vat amount
+				var vat_amount =
+				(+net_value  * (vat/ (100 + vat)*100)) / 100; 
+
+				//net value after removing vat for inclusive
+				net_value = net_value - vat_amount
+
+				//excise calculation
+				if(obj.exciseTaxId !=  0){
 				if(obj.exciseTaxId === 1){
-					const value = obj.unitPrice / 3
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
-				net_value = obj.unitPrice}
+					const value = net_value / 3
+					net_value = net_value 
+					obj.exciseAmount = parseFloat(value);
+					}
 				else if (obj.exciseTaxId === 2){
-					const value = obj.unitPrice / 2
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
-				net_value = obj.unitPrice}
+					const value = net_value / 2
+					obj.exciseAmount = parseFloat(value);
+				net_value = net_value}
 				else{
 					net_value = obj.unitPrice
-				}
+					}
+						}
+						else{
+							obj.exciseAmount = 0
+						}
+					}
+
+				else // fixed discount
+						{
+				//net value after removing discount
+				 net_value =
+				((obj.unitPrice * obj.quantity))
+
+
+				//discount amount
+				var discount =  (obj.unitPrice * obj.quantity) - net_value
+						
+				//vat amount
+				var vat_amount =
+				(+net_value  * (vat/ (100 + vat)*100)) / 100; ;
+
+				//net value after removing vat for inclusive
+				net_value = net_value - vat_amount
+
+				//excise calculation
+				if(obj.exciseTaxId !=  0){
+					if(obj.exciseTaxId === 1){
+						const value = net_value / 3
+						net_value = net_value 
+						obj.exciseAmount = parseFloat(value);
+						}
+					else if (obj.exciseTaxId === 2){
+						const value = net_value / 2
+						obj.exciseAmount = parseFloat(value);
+					net_value = net_value}
+					else{
+						net_value = obj.unitPrice
+						}
+							}
+							else{
+								obj.exciseAmount = 0
+							}
+					}
+
 			}
-		}else{
-			net_value = obj.unitPrice;
-			obj.exciseAmount = 0
-		}
-			//vat calculation
-			if (obj.discountType === 'PERCENTAGE') {
-				var val =
-				((+net_value -
-				 (+((net_value * obj.discount)) / 100)) *
-					vat *
-					obj.quantity) /
-				100;
-
-				var val1 =
-				((+net_value -
-				 (+((net_value * obj.discount)) / 100)) * obj.quantity ) ;
-			} else if (obj.discountType === 'FIXED') {
-				var val =
-						 (net_value * obj.quantity - obj.discount ) *
-					(vat / 100);
-
-					var val1 =
-					((net_value * obj.quantity )- obj.discount )
-
-			} else {
-				var val = (+net_value * vat * obj.quantity) / 100;
-				var val1 = net_value * obj.quantity
-			}
-			console.log('value '+val)
-			//discount calculation
-			discount = +(discount +(net_value * obj.quantity)) - parseFloat(val1)
-			total_net = +(total_net + net_value * obj.quantity);
-			total_vat = +(total_vat + val);
-			obj.vatAmount = val
+			
+			
+			obj.vatAmount = vat_amount
 			obj.subTotal =
-			net_value && obj.vatCategoryId ? parseFloat(val1) + parseFloat(val) : 0;
+			net_value && obj.vatCategoryId ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
+
+			discount_total = +discount_total +discount
+			total_net = +(total_net + parseFloat(net_value));
+			total_vat = +(total_vat + vat_amount);
+			
 			total_excise = +(total_excise + obj.exciseAmount)
 			total = total_vat + total_net;
 			return obj;
@@ -1183,10 +1272,10 @@ class CreatePurchaseOrder extends React.Component {
 				initValue: {
 					...this.state.initValue,
 					...{
-						total_net: discount ? total_net - discount : total_net,
-						totalVatAmount: total_vat,
-						discount:  discount ? discount : 0,
-						totalAmount: total_net > discount ? total - discount : total - discount,
+						total_net:  total_net,
+						invoiceVATAmount: total_vat,
+						discount:  discount_total ? discount_total : 0,
+						totalAmount:  total ,
 						total_excise: total_excise
 					},
 
@@ -1195,7 +1284,6 @@ class CreatePurchaseOrder extends React.Component {
 
 		);
 	};
-
 	handleSubmit = (data, resetForm) => {
 		this.setState({ disabled: true });
 		const {
@@ -1214,6 +1302,7 @@ class CreatePurchaseOrder extends React.Component {
 		const { term } = this.state;
 
 		let formData = new FormData();
+		formData.append('taxType', this.state.taxType)
 		formData.append(
 			'poNumber',
 			po_number !== null ? this.state.prefix + po_number : '',
@@ -1246,10 +1335,12 @@ class CreatePurchaseOrder extends React.Component {
 		
 			formData.append('currencyCode', this.state.supplier_currency);
 		
+			this.setState({ loading:true, loadingMsg:"Creating Purchase Order..."});	
 		this.props.purchaseOrderCreateAction
 			.createPO(formData)
 			.then((res) => {
 				this.setState({ disabled: false });
+				this.setState({ loading:false});
 				this.props.commonActions.tostifyAlert(
 					'success',
 					res.data ? res.data.message : 'Purchase Order Created Successfully'
@@ -1296,6 +1387,8 @@ class CreatePurchaseOrder extends React.Component {
 					);
 				} else {
 					this.props.history.push('/admin/expense/purchase-order');
+					this.setState({ loading:false,});
+					
 				}
 			})
 			.catch((err) => {
@@ -1353,7 +1446,8 @@ class CreatePurchaseOrder extends React.Component {
 		});
 
 		this.formRef.current.setFieldValue('contactId', option, true);
-        this.formRef.current.setFieldValue('supplierId', option, true);
+		this.formRef.current.setFieldValue('supplierId', option, true);
+
 		if(result[0] && result[0].currencyCode)
 		this.formRef.current.setFieldValue('currency',result[0].currencyCode, true);
 
@@ -1362,6 +1456,7 @@ class CreatePurchaseOrder extends React.Component {
 		if( result[0] &&  result[0].exchangeRate)
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
 	};
+
 
 	closeSupplierModal = (res) => {
 		if (res) {
@@ -1397,10 +1492,10 @@ class CreatePurchaseOrder extends React.Component {
 	getCurrentProduct = () => {
 		this.props.purchaseOrderAction.getProductList().then((res) => {
 			let newData=[]
-			const data = this.state.data;
-			newData = data.filter((obj) => obj.productId !== "");
-			// props.setFieldValue('lineItemsString', newData, true);
-			// this.updateAmount(newData, props);
+				const data = this.state.data;
+				newData = data.filter((obj) => obj.productId !== "");
+				// props.setFieldValue('lineItemsString', newData, true);
+				// this.updateAmount(newData, props);
 			this.setState(
 				{
 					data: newData.concat({
@@ -1414,9 +1509,11 @@ class CreatePurchaseOrder extends React.Component {
 							productId: res.data[0].id,
 							// transactionCategoryId: res.data[0].transactionCategoryId,
 							// transactionCategoryLabel: res.data[0].transactionCategoryLabel,
+							unitType:res.data[0].unitType,
+							unitTypeId:res.data[0].unitTypeId,
 							discount:0,
 							vatAmount:res.data[0].vatAmount ?res.data[0].vatAmount:0,
-							discountType: res.data[0].discountType,							
+							discountType: res.data[0].discountType,
 						}),
 						idCount: this.state.idCount + 1,
 				},
@@ -1430,6 +1527,11 @@ class CreatePurchaseOrder extends React.Component {
 			this.formRef.current.setFieldValue(
 				`lineItemsString.${0}.unitPrice`,
 				res.data[0].unitPrice,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.unitType`,
+				res.data[0].unitType,
 				true,
 			);
 			this.formRef.current.setFieldValue(
@@ -1570,6 +1672,7 @@ getrfqDetails = (e, row, props,form,field) => {
 			// },
 
             );
+			
 			this.formRef.current.setFieldValue('supplierId', this.state.option, true);
 			this.formRef.current.setFieldValue('currencyCode', this.state.supplier_currency, true);
 			this.formRef.current.setFieldValue('placeOfSupplyId', this.state.placelist, true);
@@ -1583,7 +1686,7 @@ getrfqDetails = (e, row, props,form,field) => {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { data, discountOptions, initValue, prefix } = this.state;
+		const { data, discountOptions, initValue, prefix ,loading,loadingMsg} = this.state;
 
 		const {
 			currency_list,
@@ -1604,6 +1707,8 @@ getrfqDetails = (e, row, props,form,field) => {
 
 
 		return (
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
+			<div>
 			<div className="create-supplier-invoice-screen">
 				<div className=" fadeIn">
 					<Row>
@@ -1624,6 +1729,13 @@ getrfqDetails = (e, row, props,form,field) => {
 									</Row>
 								</CardHeader>
 								<CardBody>
+								{loading ? (
+										<Row>
+											<Col lg={12}>
+												<Loader />
+											</Col>
+										</Row>
+									) : (
 									<Row>
 										<Col lg={12}>
 											<Formik
@@ -1751,6 +1863,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																	{strings.RFQNumber}
 																	</Label>
 																	<Select
+																  isDisabled={this.props.location.state && this.props.location.state.rfqId ?true:false}
 																		styles={customStyles}
 																		id="rfqNumber"
 																		name="rfqNumber"
@@ -1765,7 +1878,17 @@ getrfqDetails = (e, row, props,form,field) => {
 																				  )
 																				: []
 																		}
-																		value={props.values.rfqNumber}
+																		value={
+																			rfq_list.data &&this.props.location.state &&	this.props.location.state.rfqId ?
+																			selectOptionsFactory.renderOptions(
+																				'label',
+																				'value',
+																				rfq_list.data,
+																				'RFQ Number',
+																		  )
+																			.find((option) => option.value == this.props.location.state.rfqId):
+																			props.values.rfqNumber
+																		}
 
 																		onChange={(option) => {
 																			if (option && option.value) {
@@ -1866,22 +1989,21 @@ getrfqDetails = (e, row, props,form,field) => {
 																		}
 
 																		value={
-																			this.state.quotationId ?
+																		// 	this.state.quotationId ?
 
-																			tmpSupplier_list &&
-																		   selectOptionsFactory.renderOptions(
-																			   'label',
-																			   'value',
-																			   tmpSupplier_list,
-																			   strings.CustomerName,
-																		 ).find((option) => option.value == this.state.contactId)
+																		// 	tmpSupplier_list &&
+																		//    selectOptionsFactory.renderOptions(
+																		// 	   'label',
+																		// 	   'value',
+																		// 	   tmpSupplier_list,
+																		// 	   strings.CustomerName,
+																		//  ).find((option) => option.value == this.state.contactId)
 																		   
-																		 :
+																		//  :
 																		 
-																		 props.values.contactId
+																		 props.values.supplierId
 																		   }
-																		//	this.state.supplierList
-																		
+																		  isDisabled={this.props.location.state &&	this.props.location.state.rfqId ?true:false}
 																		onChange={(option) => {
 																			if (option && option.value) {
 																				this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
@@ -1908,8 +2030,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																		)}
 																</FormGroup>
 															</Col>
-														
-																		<Col lg={3}>
+															{this.props.location.state &&	this.props.location.state.rfqId ?"":<Col lg={3}>
 															<Label
 																	htmlFor="contactId"
 																	style={{ display: 'block' }}
@@ -1921,15 +2042,16 @@ getrfqDetails = (e, row, props,form,field) => {
                                                                 className="btn-square"
                                                                 // style={{ marginBottom: '40px' }}
                                                                 onClick={() =>
+																	this.openSupplierModal()
 																	//  this.props.history.push(`/admin/payroll/employee/create`,{goto:"Expense"})
 																	// this.props.history.push(`/admin/master/contact/create`,{gotoParentURL:"/admin/expense/purchase-order/create"})
-																	this.openSupplierModal()
 																	}
 
                                                             >
                                                                 <i className="fas fa-plus mr-1" />
                                          {strings.AddASupplier}
-									</Button></Col>
+									</Button></Col>}
+																		
 									{this.state.customer_taxTreatment_des ? 
 															<Col lg={3}>
 																<FormGroup className="mb-3">
@@ -2001,6 +2123,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																				option,
 																			)
 																		}
+																		isDisabled={this.props.location.state &&	this.props.location.state.rfqId ?true:false}
 																	/>
 																	{props.errors.placeOfSupplyId &&
 																		props.touched.placeOfSupplyId && (
@@ -2037,6 +2160,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																		showYearDropdown
 																		dropdownMode="select"
 																		dateFormat="dd-MM-yyyy"
+																		minDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('poApproveDate')(value);
 																		}}
@@ -2070,6 +2194,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																		showYearDropdown
 																		dropdownMode="select"
 																		dateFormat="dd-MM-yyyy"
+																		minDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('poReceiveDate')(value);
 																		}}
@@ -2173,9 +2298,9 @@ getrfqDetails = (e, row, props,form,field) => {
 																</FormGroup>
 															</Col>
 														</Row>
-													
+														<hr />
 														<Row>
-															<Col lg={12} className="mb-3">
+															<Col lg={8} className="mb-3">
 																<Button
 																	color="primary"
 																	className={`btn-square mr-3 ${
@@ -2191,17 +2316,53 @@ getrfqDetails = (e, row, props,form,field) => {
 																>
 																	<i className="fa fa-plus"></i> {strings.Addmore}
 																</Button>
-																<Button
+																{this.props.location.state &&	this.props.location.state.rfqId ?"":<Button
 																	color="primary"
 																	className= "btn-square mr-3"
 																	onClick={(e, props) => {
-																		// this.props.history.push(`/admin/master/product/create`,{gotoParentURL:"/admin/expense/purchase-order/create"})
 																		this.openProductModal()
+																		// this.props.history.push(`/admin/master/product/create`,{gotoParentURL:"/admin/expense/purchase-order/create"})
 																		}}
 																>
 																	<i className="fa fa-plus"></i> {strings.Addproduct}
-																</Button>
+																</Button>}                                                                                                             
 								                                </Col>
+																<Col  >
+																{this.state.taxType === false ?
+																	<span style={{ color: "#0069d9" }} className='mr-4'><b>Exclusive</b></span> :
+																	<span className='mr-4'>Exclusive</span>}
+																<Switch
+																	value={props.values.taxType}
+																	checked={this.state.taxType}
+																	onChange={(taxType) => {
+
+																		props.handleChange('taxType')(taxType);
+																		this.setState({ taxType }, () => {
+																			this.updateAmount(
+																				this.state.data,
+																				props
+																			)
+																		});
+
+
+																	}}
+
+																	onColor="#2064d8"
+																	onHandleColor="#2693e6"
+																	handleDiameter={25}
+																	uncheckedIcon={false}
+																	checkedIcon={false}
+																	boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+																	activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+																	height={20}
+																	width={48}
+																	className="react-switch "
+																/>
+																{this.state.taxType === true ?
+																	<span style={{ color: "#0069d9" }} className='ml-4'><b>Inclusive</b></span>
+																	: <span className='ml-4'>Inclusive</span>
+																}
+															</Col>
 																</Row>
 													
 														<Row>
@@ -2269,6 +2430,18 @@ getrfqDetails = (e, row, props,form,field) => {
 																		{strings.QUANTITY}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
+																	width="6%"
+																	dataField="unitType"
+																 >{strings.Unit}	<i
+																 id="unitTooltip"
+																 className="fa fa-question-circle"
+															 /> <UncontrolledTooltip
+																 placement="right"
+																 target="unitTooltip"
+															 >
+																Units / Measurements</UncontrolledTooltip>
+																</TableHeaderColumn>
+																<TableHeaderColumn
 																		dataField="unitPrice"
 																		dataFormat={(cell, rows) =>
 																			this.renderUnitPrice(cell, rows, props)
@@ -2641,6 +2814,7 @@ getrfqDetails = (e, row, props,form,field) => {
 											</Formik>
 										</Col>
 									</Row>
+									)}
 								</CardBody>
 							</Card>
 						</Col>
@@ -2652,7 +2826,7 @@ getrfqDetails = (e, row, props,form,field) => {
 						this.closeSupplierModal(e);
 					}}
 					getCurrentUser={(e) =>
-						{		
+						{
 							this.props.purchaseOrderAction.getSupplierList(this.state.contactType);
 							this.getCurrentUser(e);
 						}
@@ -2667,7 +2841,7 @@ getrfqDetails = (e, row, props,form,field) => {
 					closeProductModal={(e) => {
 						this.closeProductModal(e);
 					}}
-					getCurrentProduct={(e) =>{ 
+					getCurrentProduct={(e) =>{
 						this.props.purchaseOrderAction.getProductList();
 						this.getCurrentProduct(e);
 					}}
@@ -2687,6 +2861,7 @@ getrfqDetails = (e, row, props,form,field) => {
 					updatePrefix={this.props.customerInvoiceActions.updateInvoicePrefix}
 					
 				/> */}
+			</div>
 			</div>
 		);
 	}

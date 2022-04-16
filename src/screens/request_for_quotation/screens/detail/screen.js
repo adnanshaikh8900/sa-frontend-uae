@@ -34,7 +34,7 @@ import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
-import { optionFactory,selectCurrencyFactory, selectOptionsFactory } from 'utils';
+import { optionFactory, selectCurrencyFactory, selectOptionsFactory } from 'utils';
 
 import './style.scss';
 import moment from 'moment';
@@ -122,7 +122,8 @@ class DetailRequestForQuotation extends React.Component {
 			disabled1:false,
 			vat_list:[],
 			dateChanged: false,
-			dateChanged1: false
+			dateChanged1: false,
+			loadingMsg:"Loading..."
 		};
 
 		// this.options = {
@@ -245,6 +246,7 @@ class DetailRequestForQuotation extends React.Component {
 										
 										placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 										total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : 0,
+										taxType : res.data.taxType ? true : false,
 								},
 										rfqExpiryDateNoChange: res.data.rfqExpiryDate
 										?  moment(res.data.rfqExpiryDate)
@@ -258,6 +260,7 @@ class DetailRequestForQuotation extends React.Component {
 										rfqExpiryDate: res.data.rfqExpiryDate
 										? res.data.rfqExpiryDate
 										: '',
+										taxType : res.data.taxType ? true : false,
 								customer_taxTreatment_des : res.data.taxtreatment ? res.data.taxtreatment : '',
 								placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 								total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
@@ -413,7 +416,7 @@ class DetailRequestForQuotation extends React.Component {
 				render={({ field, form }) => (
 					<Select
 						styles={customStyles}
-						isDisabled={row.exciseTaxId === 0 || row.isExciseTaxExclusive === false}
+						isDisabled={row.exciseTaxId === 0}
 						
 						options={
 							excise_list
@@ -794,7 +797,10 @@ class DetailRequestForQuotation extends React.Component {
 				obj['vatCategoryId'] = parseInt(result.vatCategoryId);
 				obj['exciseTaxId'] = result.exciseTaxId;
 				obj['description'] = result.description;
+				obj['discountType'] = result.discountType;
 				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive;
+				obj['unitType']=result.unitType;
+				obj['unitTypeId']=result.unitTypeId;
 				idx = index;
 			}
 			return obj;
@@ -938,14 +944,13 @@ class DetailRequestForQuotation extends React.Component {
 	};
 
 	updateAmount = (data, props) => {
-		const { vat_list , excise_list} = this.state;
-		const { discountPercentage, discountAmount } = this.state;
+		const { vat_list } = this.state;
 		let total_net = 0;
 		let total_excise = 0;
 		let total = 0;
 		let total_vat = 0;
-		let net_value = 0;
-		let discount = 0;
+		let net_value = 0; 
+		let discount_total = 0;
 		data.map((obj) => {
 			const index =
 				obj.vatCategoryId !== ''
@@ -953,70 +958,146 @@ class DetailRequestForQuotation extends React.Component {
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
 
-			//Excise calculation
-			if(obj.exciseTaxId !=  0){
-			if(obj.isExciseTaxExclusive === true){
-				if(obj.exciseTaxId === 1){
-				const value = +(obj.unitPrice) / 2 ;
-					net_value = parseFloat(obj.unitPrice) + parseFloat(value) ;
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
-				}else if (obj.exciseTaxId === 2){
-					const value = obj.unitPrice;
-					net_value = parseFloat(obj.unitPrice) +  parseFloat(value) ;
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
+			//Exclusive case
+			if(this.state.taxType === false){
+				if (obj.discountType === 'PERCENTAGE') {	
+					 net_value =
+						((+obj.unitPrice -
+							(+((obj.unitPrice * obj.discount)) / 100)) * obj.quantity);
+					var discount =  obj.unitPrice - net_value
+				if(obj.exciseTaxId !=  0){
+					if(obj.exciseTaxId === 1){
+						const value = +(net_value) / 2 ;
+							net_value = parseFloat(net_value) + parseFloat(value) ;
+							obj.exciseAmount = parseFloat(value) * obj.quantity;
+						}else if (obj.exciseTaxId === 2){
+							const value = net_value;
+							net_value = parseFloat(net_value) +  parseFloat(value) ;
+							obj.exciseAmount = parseFloat(value) * obj.quantity;
+						}
+						else{
+							net_value = obj.unitPrice
+						}
 				}
 				else{
-					net_value = obj.unitPrice
+					obj.exciseAmount = 0
 				}
-			}	else{
+					var vat_amount =
+					((+net_value  * vat * obj.quantity) / 100);
+				}else{
+					 net_value =
+						((obj.unitPrice * obj.quantity) - obj.discount)
+					var discount =  obj.unitPrice - net_value
+						if(obj.exciseTaxId !=  0){
+							if(obj.exciseTaxId === 1){
+								const value = +(net_value) / 2 ;
+									net_value = parseFloat(net_value) + parseFloat(value) ;
+									obj.exciseAmount = parseFloat(value) * obj.quantity;
+								}else if (obj.exciseTaxId === 2){
+									const value = net_value;
+									net_value = parseFloat(net_value) +  parseFloat(value) ;
+									obj.exciseAmount = parseFloat(value) * obj.quantity;
+								}
+								else{
+									net_value = obj.unitPrice
+								}
+						}
+						else{
+							obj.exciseAmount = 0
+						}
+						var vat_amount =
+						((+net_value  * vat * obj.quantity) / 100);
+			}
+
+			}
+			//Inclusive case
+			else
+			{			
+				if (obj.discountType === 'PERCENTAGE') {	
+
+					//net value after removing discount
+					 net_value =
+					((+obj.unitPrice -
+						(+((obj.unitPrice * obj.discount)) / 100)) * obj.quantity);
+
+				//discount amount
+				var discount =  (obj.unitPrice* obj.quantity) - net_value
+
+				//vat amount
+				var vat_amount =
+				(+net_value  * (vat/ (100 + vat)*100)) / 100; 
+
+				//net value after removing vat for inclusive
+				net_value = net_value - vat_amount
+
+				//excise calculation
+				if(obj.exciseTaxId !=  0){
 				if(obj.exciseTaxId === 1){
-					const value = obj.unitPrice / 3
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
-				net_value = obj.unitPrice}
+					const value = net_value / 3
+					net_value = net_value 
+					obj.exciseAmount = parseFloat(value);
+					}
 				else if (obj.exciseTaxId === 2){
-					const value = obj.unitPrice / 2
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
-				net_value = obj.unitPrice}
+					const value = net_value / 2
+					obj.exciseAmount = parseFloat(value);
+				net_value = net_value}
 				else{
 					net_value = obj.unitPrice
-				}
+					}
+						}
+						else{
+							obj.exciseAmount = 0
+						}
+					}
+
+				else // fixed discount
+						{
+				//net value after removing discount
+				 net_value =
+				((obj.unitPrice * obj.quantity) - obj.discount)
+
+
+				//discount amount
+				var discount =  (obj.unitPrice * obj.quantity) - net_value
+						
+				//vat amount
+				var vat_amount =
+				(+net_value  * (vat/ (100 + vat)*100)) / 100; ;
+
+				//net value after removing vat for inclusive
+				net_value = net_value - vat_amount
+
+				//excise calculation
+				if(obj.exciseTaxId !=  0){
+					if(obj.exciseTaxId === 1){
+						const value = net_value / 3
+						net_value = net_value 
+						obj.exciseAmount = parseFloat(value);
+						}
+					else if (obj.exciseTaxId === 2){
+						const value = net_value / 2
+						obj.exciseAmount = parseFloat(value);
+					net_value = net_value}
+					else{
+						net_value = obj.unitPrice
+						}
+							}
+							else{
+								obj.exciseAmount = 0
+							}
+					}
+
 			}
-		}else{
-			net_value = obj.unitPrice;
-			obj.exciseAmount = 0
-		}
-			//vat calculation
-			if (obj.discountType === 'PERCENTAGE') {
-				var val =
-				((+net_value -
-				 (+((net_value * obj.discount)) / 100)) *
-					vat *
-					obj.quantity) /
-				100;
-
-				var val1 =
-				((+net_value -
-				 (+((net_value * obj.discount)) / 100)) * obj.quantity ) ;
-			} else if (obj.discountType === 'FIXED') {
-				var val =
-						 (net_value * obj.quantity - obj.discount ) *
-					(vat / 100);
-
-					var val1 =
-					((net_value * obj.quantity )- obj.discount )
-
-			} else {
-				var val = (+net_value * vat * obj.quantity) / 100;
-				var val1 = net_value * obj.quantity
-			}
-
-			//discount calculation
-			discount = +(discount +(net_value * obj.quantity)) - parseFloat(val1)
-			total_net = +(total_net + net_value * obj.quantity);
-			total_vat = +(total_vat + val);
-			obj.vatAmount = val
+			
+			
+			obj.vatAmount = vat_amount
 			obj.subTotal =
-			net_value && obj.vatCategoryId ? parseFloat(val1) + parseFloat(val) : 0;
+			net_value && obj.vatCategoryId ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
+
+			discount_total = +discount_total +discount
+			total_net = +(total_net + parseFloat(net_value));
+			total_vat = +(total_vat + vat_amount);
+			
 			total_excise = +(total_excise + obj.exciseAmount)
 			total = total_vat + total_net;
 			return obj;
@@ -1032,10 +1113,10 @@ class DetailRequestForQuotation extends React.Component {
 				initValue: {
 					...this.state.initValue,
 					...{
-						total_net: discount ? total_net - discount : total_net,
-						totalVatAmount: total_vat,
-						discount:  discount ? discount : 0,
-						totalAmount: total_net > discount ? total - discount : total - discount,
+						total_net:  total_net,
+						invoiceVATAmount: total_vat,
+						discount:  discount_total ? discount_total : 0,
+						totalAmount:  total ,
 						total_excise: total_excise
 					},
 
@@ -1060,6 +1141,7 @@ class DetailRequestForQuotation extends React.Component {
 		} = data;
 debugger
 		let formData = new FormData();
+		formData.append('taxType', this.state.taxType)
 		formData.append('type', 3);
 		formData.append('id', current_rfq_id);
 		formData.append('rfqNumber', rfqNumber ? rfqNumber : '');
@@ -1113,6 +1195,7 @@ debugger
 		if (currency !== null && currency) {
 			formData.append('currencyCode', this.state.supplier_currency);
 		}
+		this.setState({ loading:true, loadingMsg:"Updating Request For Quotation..."});
 		this.props.requestForQuotationDetailsAction
 			.updateRFQ(formData)
 			.then((res) => {
@@ -1121,6 +1204,8 @@ debugger
 					res.data ? res.data.message : 'Request For Quotation Updated Successfully'
 				);
 				this.props.history.push('/admin/expense/request-for-quotation');
+				this.setState({ loading:false,});
+
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
@@ -1152,6 +1237,7 @@ debugger
 	removerfq = () => {
 		this.setState({ disabled1: true });
 		const { current_rfq_id } = this.state;
+		this.setState({ loading:true, loadingMsg:"Deleting Request For Quotation..."});
 		this.props.requestForQuotationDetailsAction
 			.deleterfq(current_rfq_id)
 			.then((res) => {
@@ -1161,6 +1247,7 @@ debugger
 						res.data ? res.data.message : 'Request For Quotation Deleted Successfully'
 					);
 					this.props.history.push('/admin/expense/request-for-quotation');
+					this.setState({ loading:false,});
 				}
 			})
 			.catch((err) => {
@@ -1241,6 +1328,11 @@ setDate1= (props, value) => {
 			this.formRef.current.setFieldValue(
 				`lineItemsString.${0}.unitPrice`,
 				res.data[0].unitPrice,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.unitType`,
+				res.data[0].unitType,
 				true,
 			);
 			this.formRef.current.setFieldValue(
@@ -1353,7 +1445,7 @@ setDate1= (props, value) => {
 	}
 	render() {
 		strings.setLanguage(this.state.language);
-		const { data, discountOptions, initValue, loading, dialog } = this.state;
+		const { data, discountOptions, initValue, loading, dialog,loadingMsg } = this.state;
 
 		const { project_list, currency_list,currency_convert_list, supplier_list,universal_currency_list } = this.props;
 
@@ -1365,7 +1457,7 @@ setDate1= (props, value) => {
 		})
 
 		return (
-			loading ==true? <Loader/> :
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 <div>
 			<div className="detail-supplier-invoice-screen">
 				<div className="animated fadeIn">
@@ -1694,6 +1786,7 @@ setDate1= (props, value) => {
 																			showMonthDropdown
 																			showYearDropdown
 																			dateFormat="dd-MM-yyyy"
+																			minDate={new Date()}
 																			dropdownMode="select"
 																			value={props.values.rfqReceiveDate}
 																			selected={new Date(props.values.rfqReceiveDate1)} 
@@ -1732,6 +1825,7 @@ setDate1= (props, value) => {
 																				showMonthDropdown
 																				showYearDropdown
 																				dateFormat="dd-MM-yyyy"
+																				minDate={new Date()}
 																				dropdownMode="select"
 																				selected={new Date(props.values.rfqExpiryDate1)}
 																				onChange={(value) => {
@@ -1813,7 +1907,7 @@ setDate1= (props, value) => {
 																</Row>
 																<hr />
 															<Row>
-																<Col lg={12} className="mb-3">
+																<Col lg={8} className="mb-3">
 																	<Button
 																		color="primary"
 																		className={`btn-square mr-3 ${
@@ -1830,8 +1924,44 @@ setDate1= (props, value) => {
 																		<i className="fa fa-plus"></i> {strings.Addmore}
 																	</Button>
 																</Col>
-																
-																				</Row>
+
+																<Col>
+																{this.state.taxType === false ?
+																	<span style={{ color: "#0069d9" }} className='mr-4'><b>Exclusive</b></span> :
+																	<span className='mr-4'>Exclusive</span>}
+																<Switch
+																	value={props.values.taxType}
+																	checked={this.state.taxType}
+																	onChange={(taxType) => {
+
+																		props.handleChange('taxType')(taxType);
+																		this.setState({ taxType }, () => {
+																			this.updateAmount(
+																				this.state.data,
+																				props
+																			)
+																		});
+
+
+																	}}
+
+																	onColor="#2064d8"
+																	onHandleColor="#2693e6"
+																	handleDiameter={25}
+																	uncheckedIcon={false}
+																	checkedIcon={false}
+																	boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+																	activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+																	height={20}
+																	width={48}
+																	className="react-switch "
+																/>
+																{this.state.taxType === true ?
+																	<span style={{ color: "#0069d9" }} className='ml-4'><b>Inclusive</b></span>
+																	: <span className='ml-4'>Inclusive</span>
+																}
+															</Col>
+															</Row>
 													
 															<Row>
 																<Col lg={12}>
@@ -1913,6 +2043,21 @@ setDate1= (props, value) => {
 																			{strings.QUANTITY}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
+																		width="5%"
+																		dataField="unitType"
+																	 >{strings.Unit}	<i
+																	 id="unitTooltip"
+																	 className="fa fa-question-circle ml-1"
+																 ></i>
+																 
+																 <UncontrolledTooltip
+																	 placement="right"
+																	 target="unitTooltip"
+																 >
+																	Units / Measurements
+																 </UncontrolledTooltip>
+															 </TableHeaderColumn> 
+																	<TableHeaderColumn
 																			dataField="unitPrice"
 																			dataFormat={(cell, rows) =>
 																				this.renderUnitPrice(cell, rows, props)

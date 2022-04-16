@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Loader} from 'components';
 import { bindActionCreators } from 'redux';
 import {
 	Card,
@@ -23,7 +24,7 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 
-import { Loader, ConfirmDeleteModal } from 'components';
+import {  ConfirmDeleteModal } from 'components';
 import { ViewExpenseDetails } from './sections';
 
 import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
@@ -90,6 +91,7 @@ class DetailExpense extends React.Component {
 			disabled: false,
 			disabled1:false,
 			exclusiveVat:true,
+			expenseType:true,
 			isReverseChargeEnabled:false,
 			showReverseCharge:false,
 			lockPlacelist:false,
@@ -103,7 +105,9 @@ class DetailExpense extends React.Component {
 				{ label: 'Umm Al Quwain', value: '5' },
 				{ label: 'Ras Al-Khaimah', value: '6' },
 				{ label: 'Fujairah', value: '7' },
+				
 			],
+			loadingMsg:"Loading..."
 		};
 		this.placelist = [
 			{ label: 'Abu Dhabi', value: '1' },
@@ -221,6 +225,7 @@ class DetailExpense extends React.Component {
 									taxTreatmentId:res.data.taxTreatmentId ?res.data.taxTreatmentId:'',
 									
 								},
+								expenseType: res.data.expenseType ? true : false,
 								showPlacelist:res.data.taxTreatmentId !=8?true:false,
 								lockPlacelist:res.data.taxTreatmentId ==7?true:false,
 								isReverseChargeEnabled:res.data.isReverseChargeEnabled ?res.data.isReverseChargeEnabled:false,
@@ -275,8 +280,9 @@ class DetailExpense extends React.Component {
 			taxTreatmentId,
 		} = data;
 		const exclusiveVat = this.state.selectedStatus;
-
+		const expenseType = this.state.selectedStatus;
 		let formData = new FormData();
+		formData.append('expenseType',  this.state.expenseType);
 		formData.append('expenseNumber', expenseNumber);
 		formData.append('expenseId', current_expense_id);
 		formData.append('payee', payee ? payee.value : '');
@@ -325,7 +331,7 @@ class DetailExpense extends React.Component {
 			formData.append('taxTreatmentId', taxTreatmentId.value);
 		}
 		formData.append("isReverseChargeEnabled",this.state.isReverseChargeEnabled)
-
+		this.setState({ loading:true, loadingMsg:"Updating Expense..."});
 		this.props.expenseDetailActions
 			.updateExpense(formData)
 			.then((res) => {
@@ -337,6 +343,7 @@ class DetailExpense extends React.Component {
 						res.data ? res.data.message : 'Expense Updated Successfully'
 					);
 					this.props.history.push('/admin/expense/expense');
+					this.setState({ loading:false,});
 				}
 			})
 			.catch((err) => {
@@ -388,6 +395,7 @@ class DetailExpense extends React.Component {
 	removeExpense = () => {
 		this.setState({ disabled1: true });
 		const { current_expense_id } = this.state;
+		this.setState({ loading:true, loadingMsg:"Deleting Expense..."});
 		this.props.expenseDetailActions
 			.deleteExpense(current_expense_id)
 			.then((res) => {
@@ -398,6 +406,7 @@ class DetailExpense extends React.Component {
 						res.data ? res.data.message : 'Expense Deleted Successfully'
 					);
 					this.props.history.push('/admin/expense/expense');
+					this.setState({ loading:false,});
 				}
 			})
 			.catch((err) => {
@@ -708,10 +717,10 @@ class DetailExpense extends React.Component {
 			pay_to_list,
 			currency_convert_list,
 		} = this.props;
-		const { initValue, loading, dialog ,taxTreatmentList,placelist} = this.state;
+		const { initValue, dialog ,taxTreatmentList,placelist,loadingMsg,loading} = this.state;
 
 		return (
-			loading ==true? <Loader/> :
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 <div>
 			<div className="detail-expense-screen">
 				<div className="animated fadeIn">
@@ -740,6 +749,10 @@ class DetailExpense extends React.Component {
 										</Row>
 									</CardHeader>
 									<CardBody>
+									{dialog}
+									{loading ? (
+										<Loader />
+									) : (
 										<Row>
 											<Col lg={12}>
 												<Formik
@@ -1023,6 +1036,41 @@ class DetailExpense extends React.Component {
 																		)}
 																</FormGroup>
 															</Col>)}
+
+															<Col className='mb-3' lg={3}>
+															<Label htmlFor="inline-radio3"><span className="text-danger">* </span>{strings.ExpenseType}</Label>
+															<div>
+																{this.state.expenseType === false ?
+																	<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Claimable}</b></span> :
+																	<span className='mr-4'>{strings.Claimable}</span>}
+
+																<Switch
+																	checked={this.state.expenseType}
+																	onChange={(expenseType) => {
+																		props.handleChange('expenseType')(expenseType);
+																		this.setState({ expenseType, }, () => { },);
+																		// if (this.state.expenseType == true)
+																		// 	this.setState({ expenseType: true })
+																	}}
+																	onColor="#2064d8"
+																	onHandleColor="#2693e6"
+																	handleDiameter={25}
+																	uncheckedIcon={false}
+																	checkedIcon={false}
+																	boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+																	activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+																	height={20}
+																	width={48}
+																	className="react-switch"
+																/>
+
+																{this.state.expenseType === true ?
+																	<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.NonClaimable}</b></span>
+																	: <span className='ml-4'>{strings.NonClaimable}</span>
+																}
+																</div>
+
+															</Col>
 															
 														</Row>
 															<Row>
@@ -1152,6 +1200,7 @@ class DetailExpense extends React.Component {
 																			showYearDropdown
 																			dropdownMode="select"
 																			dateFormat="dd-MM-yyyy"
+																			minDate={new Date()}
 																			onChange={(value) => {
 																				props.handleChange('expenseDate')(
 																					value,
@@ -1780,6 +1829,7 @@ class DetailExpense extends React.Component {
 												</Formik>
 											</Col>
 										</Row>
+									)}
 									</CardBody>
 								</Card>
 							</Col>

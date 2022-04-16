@@ -17,6 +17,7 @@ import {
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import { Message } from 'components';
+import {  ImageUploader, Loader } from 'components';
 import { selectCurrencyFactory,selectOptionsFactory } from 'utils';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -107,6 +108,7 @@ class Register extends React.Component {
 			togglePassword: '***********',
 			loading: false,
 			checkphoneNumberParam: false,
+			loadingMsg:"Loading..."
 			// timeZone: "Asia/Dubai",
 			// timezone: {	label: "Asia/Dubai",value: "Asia/Dubai"	},
 		};
@@ -226,9 +228,10 @@ class Register extends React.Component {
         formData.append('companyAddressLine2',companyAddress2 ? companyAddress2 : '')
 		formData.append('loginUrl', window.location.origin);
 
-		toast.success('Please check you email to set your password', {
+		toast.success('Please check your email to set your password', {
 			position: toast.POSITION.TOP_RIGHT,
 			autoClose:15000,});
+		{this.setState({ loading:true, loadingMsg:"Registering Company...Please check your email to set your password"})} 
 		this.props.authActions
 			.register(formData)
 			.then((res) => {
@@ -242,6 +245,7 @@ class Register extends React.Component {
 				// setTimeout(() => {
 				// 	this.props.history.push('/login');
 				// }, 3000);
+				{this.setState({ loading:false,})}
 			})
 			.catch((err) => {
 				this.setState({ loading: true });
@@ -270,10 +274,13 @@ class Register extends React.Component {
 			}),
 		};
 	
-		const { initValue, currencyList, userDetail, timezone,country_list } = this.state;
+		const { initValue, currencyList, userDetail, timezone,country_list ,loading,loadingMsg} = this.state;
 		const {universal_currency_list,state_list,company_type_list} = this.props;
 		console.log(company_type_list)
+
 		return (
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
+			<div>
 			<div className="log-in-screen">
 				<ToastContainer
 				 autoClose={1700}
@@ -282,13 +289,22 @@ class Register extends React.Component {
 				/>
 				<div className="animated fadeIn">
 					<div className="app flex-row align-items-center">
-						<Container>
+						<Container >
 							{userDetail === false && (
 								<Row className="justify-content-center">
 									<Col lg={10} className="mx-auto">
 										<CardGroup>
-											<Card className="p-4">
+										
+											<Card m className="p-4">
+											{loading ? (
+														<Row>
+															<Col lg={12}>
+																<Loader />
+															</Col>
+														</Row>
+													) : (
 												<CardBody>
+												
 													<div className="logo-container">
 														<img
 															src={logo}
@@ -296,6 +312,7 @@ class Register extends React.Component {
 															style={{ width: '300px' }}
 														/>
 													</div>
+													
 													<Formik
 														initialValues={initValue}
 														onSubmit={(values, { resetForm }) => {
@@ -395,6 +412,7 @@ class Register extends React.Component {
 																	<Row className="mt-2">
 																		<Col lg={4}>
 																			<FormGroup className="mb-3">
+																				
 																			<Label htmlFor="select"><span className="text-danger">* </span>Company Name</Label>
 																				<Input
 																					type="text"
@@ -1078,6 +1096,7 @@ class Register extends React.Component {
 																				name="submit"
 																				color="primary"
 																				disabled={this.state.loading}
+																		
 																				className="btn-square mr-3 mt-3 "
 																				style={{ width: '200px' }}
 																			>
@@ -1092,8 +1111,12 @@ class Register extends React.Component {
 															);
 														}}
 													</Formik>
+												
 												</CardBody>
+												)}
+												
 											</Card>
+												
 										</CardGroup>
 									</Col>
 								</Row>
@@ -1102,6 +1125,7 @@ class Register extends React.Component {
 								this.props.history.push('/login')}
 						</Container>
 					</div>
+				</div>
 				</div>
 			</div>
 		);

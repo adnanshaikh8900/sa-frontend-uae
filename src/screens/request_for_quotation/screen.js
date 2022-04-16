@@ -1,7 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-
+// import { AgGridReact, AgGridColumn } from 'ag-grid-react/lib/agGridReact';
+// import 'ag-grid-community/dist/styles/ag-grid.css';
+// import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import {
 	Card,
 	CardHeader,
@@ -116,12 +118,13 @@ class RequestForQuotation extends React.Component {
 				amount: '',
 				status: '',
 				contactType: 1,
+				// paginationPageSize:10,
 			},
 			rfqReceiveDate:'',
 						rfqExpiryDate:'',
 						supplierId:'',
 						rfqNumber:'',
-					totalVatAmount:'',
+						totalVatAmount:'',
 						totalAmount:'',
 						total_net:'',
 					notes:'',
@@ -134,6 +137,7 @@ class RequestForQuotation extends React.Component {
 			view: false,
 			rowId: '',
 			language: window['localStorage'].getItem('language'),
+			loadingMsg:"Loading..."
 		};
 
 		this.options = {
@@ -155,6 +159,39 @@ class RequestForQuotation extends React.Component {
 		};
 		this.csvLink = React.createRef();
 	}
+
+	// onPageSizeChanged = (newPageSize) => {
+
+    //     var value = document.getElementById('page-size').value;
+
+    //     this.gridApi.paginationSetPageSize(Number(value));
+
+    // };
+
+    // onGridReady = (params) => {
+
+    //     this.gridApi = params.api;
+
+    //     this.gridColumnApi = params.columnApi;
+
+	// 	this.gridApi.resetRowHeights();
+    // };
+
+
+
+    // onBtnExport = () => {
+
+    //     this.gridApi.exportDataAsCsv();
+
+    // };
+
+
+
+    // onBtnExportexcel = () => {
+
+    //     this.gridApi.exportDataAsExcel();
+
+    // };
 
 	componentDidMount = () => {
 		let { filterData } = this.state;
@@ -228,7 +265,12 @@ class RequestForQuotation extends React.Component {
 			classname = 'label-draft';
 		} else if (row.status === 'Sent') {
 			classname = 'label-sent';
-		} else {
+		} else if(row.status === 'Approved'){
+			classname = 'label-success'
+		} else if(row.status === 'Rejected'){
+			classname = 'label-due'
+		}
+		else {
 			classname = 'label-overdue';
 		}
 		return (
@@ -237,6 +279,59 @@ class RequestForQuotation extends React.Component {
 			</span>
 		);
 	};
+	// getActionButtons = (row) => {
+	// 	return (
+	// <>
+	// {/* BUTTON ACTIONS */}
+	// 		{/* View */}
+	// 		<Button
+	// 			className="Ag-gridActionButtons btn-sm"
+	// 			title='view'
+	// 			color="secondary"
+	// 			onClick={() =>
+	// 			{
+	// 				this.props.history.push(
+	// 					'/admin/expense/request-for-quotation/view',
+	// 					{ id: row.id },
+	// 				)}
+	// 			}
+			
+	// 		>	<i className="fas fa-eye" /> </Button>&nbsp;&nbsp;
+	// 		{row.status !== 'Sent' && row.status !== "Closed" && (
+	// 		<Button
+	// 			className="Ag-gridActionButtons btn-sm"
+	// 			title='Edit'
+	// 			color="secondary"
+	// 			onClick={() =>
+	// 			{
+	// 				this.props.history.push(
+	// 					'/admin/expense/request-for-quotation/detail',
+	// 					{ id: row.id },
+	// 				)}
+	// 			}
+
+	// 		>		<i className="fas fa-edit"/> </Button>)}
+	// 			{row.status !== 'Sent' && row.status !== "Closed"  ? (<>&nbsp;&nbsp;</>) : ''}
+	// 			{ row.status !== "Closed"  && (
+	// 		<Button
+	// 			className="Ag-gridActionButtons btn-sm"
+	// 			title='send'
+	// 			color="secondary"
+	// 			onClick={() => {this.sendMail(row);}}
+			
+	// 		>		<i className="fas fa-send"/> </Button>)}&nbsp;&nbsp;
+	// 			{row.status === 'Sent' && (
+	// 		<Button
+	// 			className="Ag-gridActionButtons btn-sm"
+	// 			title='creat purchase order'
+	// 			color="secondary"
+	// 			onClick={() => {this.renderActionForState(row.id);}}
+			
+	// 		>		<i className="fas fa-plus"/> </Button>)}
+
+	// </>
+	// 	)
+	// }
 
 	sortColumn = (sortName, sortOrder) => {
 		this.options.sortName = sortName;
@@ -248,7 +343,7 @@ class RequestForQuotation extends React.Component {
 		return(
 			<div>
 								<div>
-						<label className="font-weight-bold mr-2 ">{strings.RFQAmount}: </label>
+						<label className="font-weight-bold mr-2 ">{strings.RFQAmount} : </label>
 						<label>
 							{row.totalAmount  === 0 ? row.currencyCode +" "+ row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) :  row.currencyCode +" "+ row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 						</label>
@@ -302,6 +397,20 @@ class RequestForQuotation extends React.Component {
 			actionButtons: temp,
 		});
 	};
+	// renderAmount =  (amount, params) => {
+	// 	let {universal_currency_list}=this.props;
+	// 	if (amount != null && amount != 0)
+	// 		return (
+	// 			<>
+	// 				<Currency
+	// 					value={amount}
+	// 					currencySymbol={universal_currency_list[0] ? universal_currency_list[0].currencyIsoCode : 'AED'}					/>
+	// 			</>
+
+	// 		)
+	// 	else
+	// 		return ("---")
+	// };			
 
 	renderActions = (cell, row) => {
 		return (
@@ -318,7 +427,7 @@ class RequestForQuotation extends React.Component {
 						)}
 					</DropdownToggle>
 					<DropdownMenu right>
-					{row.status !== 'Sent' && row.status !== "Closed" && (
+					{row.status !== 'Sent' && row.status !== "Closed"&& row.status !== "Approved"&&row.status !== "Rejected" && row.status !== "Invoiced"    && (
 							<DropdownItem
 								onClick={() =>
 									this.props.history.push(
@@ -327,20 +436,33 @@ class RequestForQuotation extends React.Component {
 									)
 								}
 							>
-								
 								<i className="fas fa-edit" /> {strings.Edit}
 							</DropdownItem>
-								)}
-								{row.status === 'Sent' && (
+					)}
+				{row.status != 'Draft' && row.status != 'Sent' && row.status != 'Rejected' && row.status != 'Closed' && row.status != 'Invoiced' &&(
 							<DropdownItem
-							onClick={() => {
-							this.renderActionForState(row.id);
-							}}
-							>
+							onClick={() =>
+								this.props.history.push(
+									'/admin/expense/purchase-order/create',
+									{ rfqId: row.id,rfqNumber:row.rfqNumber},
+								)
+							}
+						>
 								<i className="fas fa-plus" /> {strings.CreatePO}
 							</DropdownItem>
 							)}
-							{ row.status !== "Closed"  && (
+								{row.status === 'Approved' && (
+							<DropdownItem
+							onClick={() =>
+								this.props.history.push(
+									'/admin/expense/supplier-invoice/create',
+									{ rfqId: row.id },
+								)
+							}>
+								<i className="fas fa-plus" />{strings.CreateSupplierInvoice}
+							</DropdownItem>
+							)}
+							{ row.status !== "Closed" && row.status !== "Approved" &&row.status !== "Rejected"  && row.status !== "Invoiced"   && (
 							<DropdownItem
 								onClick={() => {
 									this.sendMail(row);
@@ -349,11 +471,42 @@ class RequestForQuotation extends React.Component {
 								<i className="fas fa-send" /> {strings.Send}
 							</DropdownItem>
 							)}
-							
-							{row.status === 'Sent' && (
+						{row.status === 'Draft' && (
+                            <DropdownItem
+								onClick={() => {
+									this.changeStatus(row.id,"Sent");
+								}}
+							>
+							<i class="far fa-arrow-alt-circle-right"></i>Mark As Sent
+							</DropdownItem>)}
+                          {row.status != 'Draft' && 
+							row.status != 'Approved' && 
+							row.status != 'Closed' && 
+							row.status != "Invoiced" && 
+							(
 							<DropdownItem
 							onClick={() => {
-							this.changeStatus(row.id);
+								this.changeStatus(row.id,"Approved");
+							}}
+							>
+								<i className="fa fa-check-circle-o" />{strings.MarkAsApproved}
+							</DropdownItem>
+							)}
+
+							{row.status != 'Draft' && row.status != 'Rejected' && row.status != 'Closed' && row.status != 'Invoiced' &&(
+							<DropdownItem
+							onClick={() => {
+								this.changeStatus(row.id,"Rejected");
+							}}
+							>
+								<i className="fa fa-ban" />{strings.MarkAsRejected}
+							</DropdownItem>
+							)}
+							
+							{(row.status === 'Sent'|| row.status === "Approved"|| row.status === "Rejected" ||  row.status === "Invoiced"  ) && (
+							<DropdownItem
+							onClick={() => {
+							this.changeStatus(row.id,row.statusEnum);
 							}}
 							>
 								<i className="far fa-times-circle" /> {strings. Close}
@@ -403,9 +556,9 @@ class RequestForQuotation extends React.Component {
 		);
 	};
 
-	changeStatus = (id) => {
+	changeStatus = (id,status) => {
 				this.props.requestForQuotationAction
-				.changeStatus(id)
+				.changeStatus(id,status)
 				.then((res) => {
 					if (res.status === 200) {
 						this.props.commonActions.tostifyAlert(
@@ -635,6 +788,7 @@ class RequestForQuotation extends React.Component {
 			amountInWords:upperCase(row.currencyName + " " +(toWords.convert(row.totalAmount)) ).replace("POINT","AND"),
 			vatInWords:row.totalVatAmount ? upperCase(row.currencyName + " " +(toWords.convert(row.totalVatAmount)) ).replace("POINT","AND") :"-"
 		};
+		this.setState({ loading:true, loadingMsg:"Sent Request For Quotation..."});
 		this.props.requestForQuotationAction
 			.sendMail(postingRequestModel)
 			.then((res) => {
@@ -647,6 +801,7 @@ class RequestForQuotation extends React.Component {
 						loading: false,
 					});
 					this.initializeData();
+					this.setState({ loading:false,});
 				}
 			})
 			.catch((err) => {
@@ -712,10 +867,6 @@ class RequestForQuotation extends React.Component {
 	closeInvoicePreviewModal = (res) => {
 		this.setState({ openInvoicePreviewModal: false });
 	};
-
-
-
-
 
 	closeInvoice = (id, status) => {
 		if (status === 'Paid') {
@@ -809,7 +960,7 @@ class RequestForQuotation extends React.Component {
 	render() {
 		strings.setLanguage(this.state.language);
 		const {
-			loading,
+			loading,loadingMsg,
 			filterData,
 			dialog,
 			selectedRows,
@@ -840,6 +991,7 @@ class RequestForQuotation extends React.Component {
 						totalVatAmount: supplier.totalVatAmount,
 						currencyCode: supplier.currencyCode,
 						currencyName:supplier.currencyName,
+						statusEnum:supplier.statusEnum
 					
 				  }))
 				: '';
@@ -853,7 +1005,7 @@ class RequestForQuotation extends React.Component {
 		})		
 
 		return (
-			loading ==true? <Loader/> :
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 <div>
 			<div className="supplier-invoice-screen">
 				<div className="animated fadeIn">
@@ -1046,7 +1198,150 @@ class RequestForQuotation extends React.Component {
 									</Button>
 									</div>
 									</Row> 
+{/* 								
+						<div className="ag-theme-alpine mb-3" style={{ height: 550, width: "100%" }}>
+
+							<AgGridReact
+
+									rowData={
+										request_for_quotation_data
+											? request_for_quotation_data
+											: []}
+									pagination={true}
+									rowSelection="multiple"
+									paginationPageSize={this.state.paginationPageSize}
+									floatingFilter={true}
+									defaultColDef={{
+										resizable: true,
+										flex: 1,
+										sortable: true
+									}}
+									sideBar="columns"
+									onGridReady={this.onGridReady}
 									
+								>	
+									<AgGridColumn 
+												field="rfqNumber" 
+												headerName=	{strings.RFQNUMBER}
+												sortable={ true } 
+												filter={ true } 
+												enablePivot={ true } 
+												// cellRendererFramework={(params) => params.data.request_for_quotation_list === "" || params.data.request_for_quotation_list === null ?
+												// 	params.data.request_for_quotation_list
+												// 	:
+												// 	params.data.grnNumber}
+												cellRendererFramework={(params) => <label
+													className="mb-0 label-bank"
+													style={{
+														cursor: 'pointer',
+														}}               
+										>
+										{params.value}
+										</label>
+								}
+											></AgGridColumn>
+
+									<AgGridColumn 
+										field="supplierName"
+										headerName={strings.SUPPLIERNAME}
+										sortable={true}
+										filter={true}
+										enablePivot={true}
+
+										// cellRendererFramework={(params) =>
+										// 	<>
+										// 		{this.renderTaxReturns(params.value, params)}
+										// 	</>
+										// }
+									></AgGridColumn>
+
+									<AgGridColumn 
+										field="renderRFQStatus"
+										headerName={strings.STATUS}
+										sortable={true}
+										filter={true}
+										enablePivot={true}
+
+										cellRendererFramework={(params) => <label
+											className="mb-0 label-bank"
+											style={{
+												cursor: 'pointer',
+												}}               
+												>
+												{this.renderRFQStatus(params.value, params.data,request_for_quotation_list)}
+												</label>
+												}
+									></AgGridColumn>
+
+									<AgGridColumn 
+										field="rfqReceiveDate"
+										headerName={strings.RFQDATE}
+										sortable={true}
+										filter={true}
+										enablePivot={true}
+
+										// cellRendererFramework={(params) =>
+										// 	<>
+										// 		{this.renderTaxReturns(params.value, params)}
+										// 	</>
+										// }
+									></AgGridColumn>
+									
+									<AgGridColumn 
+										field="rfqExpiryDate"
+										headerName={strings.RFQDUEDATE}
+										sortable={true}
+										filter={true}
+										enablePivot={true}
+
+										// cellRendererFramework={(params) =>
+										// 	<>
+										// 		{this.renderTaxReturns(params.value, params)}
+										// 	</>
+										// }
+									></AgGridColumn>
+
+									<AgGridColumn 
+										field="totalAmount"
+										headerName={strings.AMOUNT}
+										sortable={true}
+										filter={true}
+										enablePivot={true}
+
+										cellRendererFramework={(params) =>
+											<>
+												{this.renderAmount(params.value, params.data,request_for_quotation_list)}
+											</>
+										}
+									></AgGridColumn>
+
+									<AgGridColumn 
+										field="action"
+										// className="Ag-gridActionButtons"
+										headerName="ACTIONS"
+										cellRendererFramework={(params) =>
+											<div
+											 className="Ag-gridActionButtons"
+											 >
+												{this.getActionButtons(params.data)}
+											</div>
+
+										}
+									></AgGridColumn>
+
+							</AgGridReact>
+								
+							<div className="example-header mt-1">
+												Page Size:
+												<select onChange={() => this.onPageSizeChanged()} id="page-size">
+												<option value="10" selected={true}>10</option>
+												<option value="100">100</option>
+												<option value="500">500</option>
+												<option value="1000">1000</option>
+												</select>
+											</div>
+						</div> */}
+
 										<BootstrapTable
 											selectRow={this.selectRowProp}
 											search={false}
@@ -1077,15 +1372,7 @@ class RequestForQuotation extends React.Component {
 											>
 											{strings.RFQNUMBER}
 											</TableHeaderColumn>
-											{/* <TableHeaderColumn
-												dataField="poList"
-												dataFormat={this.renderpoList}
-												dataSort
-											//	width="10%"
-												className="table-header-bg"
-											>
-												PO's
-											</TableHeaderColumn> */}
+											
 											<TableHeaderColumn
 												dataField="supplierName"
 												dataSort
@@ -1094,15 +1381,7 @@ class RequestForQuotation extends React.Component {
 											>
 												{strings.SUPPLIERNAME}
 											</TableHeaderColumn>
-											<TableHeaderColumn
-											//	width="10%"
-												dataField="status"
-												dataFormat={this.renderRFQStatus}
-												dataSort
-												className="table-header-bg"
-											>
-												{strings.STATUS}
-											</TableHeaderColumn>
+											
 											<TableHeaderColumn
 												dataField="rfqReceiveDate"
 												dataSort
@@ -1121,7 +1400,15 @@ class RequestForQuotation extends React.Component {
 											>
 												{strings.RFQDUEDATE}
 											</TableHeaderColumn>
-											
+											<TableHeaderColumn
+											//	width="10%"
+												dataField="status"
+												dataFormat={this.renderRFQStatus}
+												dataSort
+												className="table-header-bg"
+											>
+												{strings.STATUS}
+											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataAlign="right"
 												dataField="totalAmount"
@@ -1133,15 +1420,7 @@ class RequestForQuotation extends React.Component {
 											>
 												 {strings.AMOUNT}
 											</TableHeaderColumn>
-											{/* <TableHeaderColumn
-												dataField="dueAmount"
-												dataSort
-												width="5%"
-												dataFormat={this.renderDueAmount}
-												className="table-header-bg"
-											>
-												Due Amount
-											</TableHeaderColumn> */}
+											
 											<TableHeaderColumn
 												className="text-right"
 												columnClassName="text-right"

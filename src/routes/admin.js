@@ -227,12 +227,12 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/accountant/journal',
-		name: 'ViewJournal',
+		name: 'Journals',
 		component: Journal.screen,
 	},
 	{
 		path: '/admin/accountant/opening-balance',
-		name: 'ViewOpeningBalance',
+		name: 'OpeningBalances',
 		component: OpeningBalance.screen,
 	},
 	{
@@ -331,7 +331,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/income/quotation',
-		name: 'ViewQuotation',
+		name: 'Quotation',
 		component: Quotation.screen,
 	},
 
@@ -358,7 +358,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/income/customer-invoice',
-		name: 'ViewCustomerInvoice',
+		name: 'CustomerInvoices',
 		component: CustomerInvoice.screen,
 	},
 	{
@@ -373,18 +373,18 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/income/receipt',
-		name: 'ViewCustomerReceipt',
+		name: 'CustomerReceipts',
 		component: Receipt.screen,
 	},
 	//
 	{
 		path: '/admin/income/credit-notes',
-		name: 'ViewCreditNotes',
+		name: 'CreditNotes',
 		component: CreditNotes.screen,
 	},
 	{
 		path: '/admin/income/credit-notes/create',
-		name: 'AddCreditNotes',
+		name: 'CreditNotes',
 		component: CreateCreditNote.screen,
 	},
 	{
@@ -433,7 +433,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/expense/request-for-quotation',
-		name: 'ViewRequestForQuotation',
+		name: 'Quotation',
 		component: RequestForQuotation.screen,
 	},
 	{
@@ -453,7 +453,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/expense/purchase-order',
-		name: 'ViewPurchaseOrder',
+		name: 'PurchaseOrder',
 		component: PurchaseOrder.screen,
 	},
 	{
@@ -473,7 +473,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/expense/goods-received-note',
-		name: 'ViewGoodsReceiveNotes',
+		name: 'GoodsReceiveNotes',
 		component: GoodsReceivedNote.screen,
 	},
 	{
@@ -498,7 +498,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/expense/supplier-invoice',
-		name: 'ViewSupplierInvoice',
+		name: 'SupplierInvoices',
 		component: SupplierInvoice.screen,
 	},
 	{
@@ -513,7 +513,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/expense/expense',
-		name: 'ViewExpense',
+		name: 'Expenses',
 		component: Expense.screen,
 	},
 	{
@@ -533,7 +533,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/expense/purchase',
-		name: 'ViewSupplierReceipt',
+		name: 'SupplierReceipts',
 		component: Payment.screen,
 	},
 	{
@@ -542,41 +542,21 @@ const adminRoutes = [
 		pathTo: '/admin/expense/expense',
 		name: 'Expense',
 	},
-	// {
-	// 	path: '/admin/payroll/employee/viewEmployee',
-	// 	name: 'OverviewEmployee',
-	// 	component: ViewEmployee.screen,
-	// },
 	{
 		path: '/admin/master/employee/viewEmployee',
 		name: 'OverviewEmployee',
 		component: ViewEmployee.screen,
 	},
-	// {
-	// 	path: '/admin/payroll/employee/updateEmployeePersonal',
-	// 	name: 'UpdateEmployee',
-	// 	component: UpdateEmployeePersonal.screen,
-	// },
 	{
 		path: '/admin/master/employee/updateEmployeePersonal',
 		name: 'UpdateEmployee',
 		component: UpdateEmployeePersonal.screen,
 	},
-	// {
-	// 	path: '/admin/payroll/employee/updateEmployeeBank',
-	// 	name: 'UpdateEmployee',
-	// 	component: UpdateEmployeeBank.screen,
-	// },
 	{
 		path: '/admin/master/employee/updateEmployeeBank',
 		name: 'UpdateEmployee',
 		component: UpdateEmployeeBank.screen,
 	},
-	// {
-	// 	path: '/admin/payroll/employee/updateEmployeeEmployement',
-	// 	name: 'UpdateEmployee',
-	// 	component: UpdateEmployeeEmployment.screen,
-	// },
 	{
 		path: '/admin/master/employee/updateEmployeeEmployement',
 		name: 'UpdateEmployee',
@@ -587,33 +567,21 @@ const adminRoutes = [
 		name: 'UpdateEmployee',
 		component: UpdateSalaryComponent.screen,
 	},
-	// {
-	// 	path: '/admin/payroll/employee/create',
-	// 	name: 'AddEmployee',
-	// 	component: CreatePayrollEmployee.screen,
-	// },
 	{
 		path: '/admin/master/employee/create',
 		name: 'AddEmployee',
 		component: CreatePayrollEmployee.screen,
 	},
-	// {
-	// 	path: '/admin/payroll/employee',
-	// 	name: 'ViewEmployee',
-	// 	component: PayrollEmployee.screen,
-	// },
 	{
 		path: '/admin/master/employee',
-		name: 'ViewEmployee',
+		name: 'Employee',
 		component: PayrollEmployee.screen,
 	},
 	{
 		path: '/admin/payroll/payrollrun',
-		name: 'ViewPayroll',
+		name: 'PayrollRun',
 		component: PayrollRun.screen,
 	},
-
-
 	{
 		path: '/admin/payroll/payrollrun/updatePayroll',
 		name: 'GeneratePayroll',
@@ -629,27 +597,6 @@ const adminRoutes = [
 		name: 'ApprovePayroll',
 		component: PayrollApproverScreen.screen,
 	},
-	// {
-	// 	path: '/admin/payroll/employment/create',
-	// 	name: 'CreateEmployment',
-	// 	component: CreateEmployment.screen,
-	// },
-	// {
-	// 	path: '/admin/payroll/employment',
-	// 	name: 'ViewEmployment',
-	// 	component: Employment.screen,
-	// },
-	// {
-	// 	path: '/admin/payroll/financial/create',
-	// 	name: 'CreateEmployeeFinancialDetails',
-	// 	component: CreateEmployeeFinancial.screen,
-	// },
-	// {
-	// 	path: '/admin/payroll/financial',
-	// 	name: 'ViewEmployeeFinancialDetails',
-	// 	component: EmployeeFinancial.screen,
-	// },
-
 	{
 		path: '/admin/payroll/config/createSalaryRoles',
 		name: 'CreateSalaryRole',
@@ -670,11 +617,6 @@ const adminRoutes = [
 		name: 'UpdateSalaryTemplate',
 		component: DetailSalaryTemplate.screen,
 	},
-	// {
-	// 	path: '/admin/payroll/salaryRoles',
-	// 	name: 'ViewSalaryRole',
-	// 	component: SalaryRoles.screen,
-	// },
 	{
 		path: '/admin/payroll/config',
 		name: 'ViewSalaryRole',
@@ -716,14 +658,12 @@ const adminRoutes = [
 		name: 'ViewEmployeeDesignation',
 		component: Designation.screen,
 	},
-    {
-
-        redirect: true,
-        path: '/admin/payroll',
-        pathTo: '/admin/payroll/payrollrun',
-        name: 'Payroll',
-
-    },
+	{
+		redirect: true,
+		path: '/admin/payroll',
+		pathTo: '/admin/payroll/payrollrun',
+		name: 'Payroll',
+	},
 
 	
 	{
@@ -749,7 +689,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/report/reports-page',
-		name: 'ViewReports',
+		name: 'Financial',
 		component: FinancialReport.screen,
 	},
 	{
@@ -927,7 +867,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/master/chart-account',
-		name: 'ViewChartOfAccounts',
+		name: 'ChartOfAccounts',
 		component: ChartAccount.screen,
 	},
 	{
@@ -942,7 +882,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/master/contact',
-		name: 'ViewContact',
+		name: 'Contact',
 		component: Contact.screen,
 	},
 	// {
@@ -982,7 +922,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/master/product',
-		name: 'ViewProduct',
+		name: 'Product',
 		component: Product.screen,
 	},
 	{
@@ -1012,7 +952,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/master/currencyConvert',
-		name: 'ViewCurrencyConversion',
+		name: 'CurrencyConversion',
 		component: CurrencyConvert.screen,
 	},
 	{
@@ -1027,7 +967,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/master/vat-category',
-		name: 'ViewVatCategory',
+		name: 'VatCategory',
 		component: VatCode.screen,
 	},
 	{
@@ -1042,7 +982,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/master/product-category',
-		name: 'ViewProductCategory',
+		name: 'ProductCategory',
 		component: ProductCategory.screen,
 	},
 	{

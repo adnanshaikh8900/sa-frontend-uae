@@ -241,43 +241,21 @@ setConfigurations=(configurationList)=>{
 	};
 
 	validateForm = () => {
-		
 		const { initValue, fileName } = this.state;
 		let temp = {};
-		// var d = new Date(this.state.tableData[0].TRANSACTION_DATE); 
-		// d.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
-
-		// const date = d
-		// const date1 = new Date(date);
-		// const date2 = this.state.date
-	
-			 
-				if (!initValue['name']) {
+		for (let val in initValue) {
+			if (initValue.hasOwnProperty(val)) {
+				if (val === 'name' && !initValue['name']) {
 					temp['name'] = '*Template Name is Required';
 				}
-				if (!initValue['dateFormatId']) {
+				if (val === 'dateFormatId' && !initValue['dateFormatId']) {
 					temp['dateFormatId'] = '*Date Format is Required';
 				}
-				// if (
-				// 	date < date2 ||
-				// 	date < this.state.reconciledDate
-				// ) {
-				// 	this.props.commonActions.tostifyAlert(
-				// 		'error',
-				// 		'Transaction Date Cannot be less than Bank opening date or Last Reconciled Date',
-				// 	);
-						
-				// }
-			
-		
-	
-							
-								
-								let errors = {};
-								
-		// if (!fileName) {
-		// 	temp['file'] = '*Please Provide a Sample';
-		// }
+			}
+		}
+		if (!fileName) {
+			temp['file'] = '*Please Provide a Sample';
+		}
 		this.setState({
 			error: temp,
 		});
@@ -289,7 +267,6 @@ setConfigurations=(configurationList)=>{
 	};
 
 	handleApply = (value, resetForm) => {
-		
 		if (this.validateForm()) {
 			const { initValue } = this.state;
 			initValue['delimiter'] = this.state.selectedDelimiter;
@@ -297,7 +274,7 @@ setConfigurations=(configurationList)=>{
 			let formData = new FormData();
 			formData.append(
 				'delimiter',
-				initValue.delimiter ? initValue.delimiter : ',',
+				initValue.delimiter ? initValue.delimiter : '',
 			);
 			formData.append(
 				'headerRowNo ',
@@ -675,19 +652,6 @@ setConfigurations=(configurationList)=>{
 								d = d.substring(d.length - 2, 1);
 						}
 						
-						// if (j == 0) {
-						// 	console.log(d,"before")
-						// 	// d =moment(d).format('DD/MM/YYYY')
-						// 	console.log(d,"after")
-						// }
-						// 	{new Intl.DateTimeFormat("en-IN", {
-						// 		year: "numeric",
-						// 		month: "long",
-						// 		day: "2-digit"
-						// 	  }).format(d)}
-						// 	console.log(d,"after")
-						// }
-
 
 						if (headers[j]) {
 							obj[headers[j]] = d;
@@ -701,8 +665,6 @@ setConfigurations=(configurationList)=>{
 				}
 			}
 		}
-		 
-	
 
 		headers = skipColumns && skipColumns.length > 0 ?
 			header.filter((row, id) => !newString.includes(id)) : header
@@ -717,7 +679,6 @@ setConfigurations=(configurationList)=>{
 				tableDataKey: headers,
 				parse: parse,
 				csv: csv,
-				// initValue:{...this.state.initValue,...{otherDilimiterStr:parse.meta.delimiter}}
 			},
 
 			() => {
@@ -783,7 +744,6 @@ setConfigurations=(configurationList)=>{
 
 		const { date_format_list } = this.props;
 		const bankAccountId = this.props.location.state.bankAccountId;
-
 		return (
 			<div className="import-transaction-screen">
 				<div className="animated fadeIn">
@@ -798,6 +758,17 @@ setConfigurations=(configurationList)=>{
 												<span className="ml-2">{strings.ImportTransaction}</span>
 											</div>
 										</Col>
+										<Col>
+								{/* <Button title='Back'
+										onClick={() => {
+											this.props.history.push(
+												'/admin/banking/upload-statement',
+												{ bankAccountId: this.props.location.state.bankAccountId },
+											);
+										}}
+									className=' pull-right'>X
+									</Button> */}
+								</Col>
 									</Row>
 								</CardHeader>
 								<CardBody>
@@ -807,29 +778,12 @@ setConfigurations=(configurationList)=>{
 										<Row>
 											<Col lg={12}>
 												<div>
-											
 													{/* <Formik
                             // initialValues={initValue}
                             ref={this.formRef}
                             onSubmit={(values, { resetForm }) => {
                               this.handleSave(values, resetForm)
                             }}
-							validate={() => {
-								 
-								const date = this.state.tableData.transactionDate;
-							
-								const date1 = new Date(date);
-								const date2 = new Date(this.state.date);
-								let errors = {};
-								if (
-									date1 < date2 ||
-									date1 < new Date(this.state.reconciledDate)
-								) {
-									errors.transactionDate =
-										'Transaction Date Cannot be less than Bank opening date or Last Reconciled Date';
-								}
-								return errors;
-							}}
                           >
                             {
                               (props) => ( */}
@@ -1253,6 +1207,7 @@ setConfigurations=(configurationList)=>{
 																					{strings.Apply}
 																				</Button>
 																			</FormGroup>
+																			{this.state.templateId ? 
 																			<FormGroup>
 																				<Button
 																					type="button"
@@ -1268,9 +1223,9 @@ setConfigurations=(configurationList)=>{
 																					}
 																				>
 																					<i className="fa fa-dot-circle-o"></i>{' '}
-																					validate
+																					Validate
 																				</Button>
-																			</FormGroup>
+																			</FormGroup> : ''}
 																		</Col>
 																	</Row>
 																	<Row>
@@ -1445,7 +1400,7 @@ setConfigurations=(configurationList)=>{
 																		<TableHeaderColumn
 																			dataField={name}
 																			dataAlign="center"
-																			key={index}
+																			iskey={index}
 																			columnClassName={this.columnClassNameFormat}
 																		>
 																			{name}

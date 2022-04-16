@@ -98,7 +98,9 @@ class DetailProduct extends React.Component {
 			isActive:false,
 			exciseTaxId:'',
 			exciseTaxList:[],
+			unitTypeList:[],
 			exciseTaxCheck:false,
+			loadingMsg:"Loading",
 //			disableEditing:true,
 			inventoryTableData:[]
 		};
@@ -130,6 +132,13 @@ class DetailProduct extends React.Component {
 
 	componentDidMount = () => {
 		this.initializeData();
+		this.props.productActions.getUnitTypeList().then((res) => {
+			if (res.status === 200) {
+				this.setState({
+					unitTypeList:res.data
+				});
+			}
+		});
 		this.props.productActions.getExciseTaxList().then((res) => {
 			if (res.status === 200) {
 				this.setState({
@@ -249,9 +258,10 @@ class DetailProduct extends React.Component {
 								transactionCategoryId: res.data.transactionCategoryId ? res.data.transactionCategoryId : '',
 								inventoryId: res.data.inventoryId ? res.data.inventoryId : '',
 								exciseTaxId:res.data.exciseTaxId ?res.data.exciseTaxId :'',
+								unitTypeId:res.data.unitTypeId?res.data.unitTypeId:"",
 							},
 							exciseTaxCheck:res.data.exciseTaxId ?true :false,
-							exciseType:res.data.exciseType ?true :false,
+							// exciseType:res.data.exciseType ?true :false,
 							count:initCount,
 							isInventoryEnabled: res.data.isInventoryEnabled ? res.data.isInventoryEnabled : '',
 							selectedStatus: res.data.isActive ? true : false,
@@ -408,7 +418,8 @@ renderName=(cell,row)=>{
 		const transactionCategoryId = this.state.inventoryAccount ? this.state.inventoryAccount[0].value : '';
 		const inventoryId = this.state.inventoryId;
 		const isActive = this.state.selectedStatus;
-		const exciseType = this.state.exciseType;
+		// const exciseType = this.state.exciseType;
+		const unitTypeId=data["unitTypeId"];
 		let productPriceType;
 		if (data && data['productPriceType'] && data['productPriceType'].includes('SALES')) {
 			productPriceType = 'SALES';
@@ -438,7 +449,8 @@ renderName=(cell,row)=>{
 			transactionCategoryId,
 			inventoryId,
 			isActive,
-			exciseType,
+			// exciseType,
+			unitTypeId,
 			...(salesUnitPrice.length !== 0 &&
 				data['productPriceType'].includes('SALES') && {
 					salesUnitPrice,
@@ -476,6 +488,7 @@ renderName=(cell,row)=>{
 				
 		};
 		const postData = this.getData(dataNew);
+		this.setState({ loading:true, loadingMsg:"Updating Product..."});
 		this.props.detailProductActions
 			.updateProduct(postData)
 			.then((res) => {
@@ -486,6 +499,7 @@ renderName=(cell,row)=>{
 						res.data ? res.data.message : 'Product Updated Successfully'
 					);
 					this.props.history.push('/admin/master/product');
+					this.setState({ loading:false,});
 				}
 			})
 			.catch((err) => {
@@ -590,6 +604,7 @@ renderName=(cell,row)=>{
 	removeProduct = () => {
 		this.setState({ disabled1: true });
 		const { current_product_id } = this.state;
+		this.setState({ loading:true, loadingMsg:"Deleting Product..."});
 		this.props.detailProductActions
 			.deleteProduct(current_product_id)
 			.then((res) => {
@@ -599,6 +614,7 @@ renderName=(cell,row)=>{
 						 res.data ? res.data.message : 'Product Deleted Successfully' ,
 						 )
 					this.props.history.push('/admin/master/product');
+					this.setState({ loading:false,});
 				}
 			})
 			.catch((err) => {
@@ -829,7 +845,7 @@ renderName=(cell,row)=>{
 	render() {
 		strings.setLanguage(this.state.language);
 		const { vat_list, product_category_list,supplier_list,inventory_list } = this.props;
-		const { loading, dialog, purchaseCategory, salesCategory, inventoryAccount ,exciseTaxList,inventoryTableData} = this.state;
+		const { loading, dialog, purchaseCategory, loadingMsg , salesCategory, inventoryAccount ,exciseTaxList,inventoryTableData,unitTypeList} = this.state;
 		let tmpSupplier_list = []
 
 		var vat_list_data =[];
@@ -850,7 +866,7 @@ renderName=(cell,row)=>{
 			beforeSaveCell: this.beforeSaveCell,
 		  };
 		return (
-			loading ==true? <Loader/> :
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 <div>
 			<div className="detail-product-screen">
 				<div className="animated fadeIn">
@@ -872,6 +888,9 @@ renderName=(cell,row)=>{
 										</Row>
 									</CardHeader>
 									<CardBody>
+									{loading ? (
+										<Loader />
+									) : (
 										<Row>
 											<Col lg={12}>
 												<Formik
@@ -902,7 +921,7 @@ renderName=(cell,row)=>{
 														// 	'Purchase price cannot be greater than Sales price';
 														// }
 														if(this.state.exciseTaxCheck===true && values.exciseTaxId=='' ){
-															errors.exciseTaxId = 'Excise Tax is Requied';
+															errors.exciseTaxId = 'Excise Tax is Required';
 														}
 														if (this.state.ProductExist === true) {
 															errors.productCode =
@@ -1295,6 +1314,55 @@ renderName=(cell,row)=>{
 																	</FormGroup>
 																</Col>
 															</Row>
+															<Row>
+															<Col  lg={4}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="unitTypeId">
+																			{strings.unit_type}
+																		</Label>
+																		<Select
+																			options={
+																				unitTypeList
+																					? selectOptionsFactory.renderOptions(
+																							'unitType',
+																							'unitTypeId',
+																							unitTypeList,
+																							'Unit Type',
+																					  )
+																					: []
+																			}
+																			id="unitTypeId"
+																			name="unitTypeId"
+																			placeholder={strings.Select+ "Unit Type"}
+																			value={
+																				unitTypeList
+																				&& selectOptionsFactory.renderOptions(
+																					'unitType',
+																					'unitTypeId',
+																					unitTypeList,
+																					'Unit Type',
+																			  )
+																					.find(
+																						(option) =>
+																							option.value ==props.values.unitTypeId,
+																					)
+																			}
+																			onChange={(option) => {
+																				
+																				if (option && option.value) {
+																					props.handleChange('unitTypeId')(
+																						option,
+																					);
+																				} else {
+																					props.handleChange('unitTypeId')(
+																						'',
+																					);
+																				}
+																			}}																			
+																		/>																	
+																	</FormGroup>
+																</Col>
+															</Row>
 															{/* <Row>
 																<Col lg={12}>
 																	<FormGroup check inline className="mb-3">
@@ -1355,18 +1423,19 @@ renderName=(cell,row)=>{
 																				checked={this.state.exciseTaxCheck}
 																				
 																			/>
-																			Excise Product ?
+																			{strings.excise_product}
 																		</Label>
 																	</FormGroup>
 																</Col>)}
-																
+																</Row>
+																<Row>
 																{this.state.exciseTaxCheck===true&&(	
 															
 																<Col  style={{display: props.values.productType !='SERVICE'   ?'' : 'none'}} lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="exciseTaxId">
 																			<span className="text-danger">* </span>
-																			Excise Tax Type
+																			{strings.excise_tax_type}
 																		</Label>
 																		<Select
 																		// isDisabled={props.values.exciseTaxId!='' ?true:false}
@@ -1382,7 +1451,7 @@ renderName=(cell,row)=>{
 																			}
 																			id="exciseTaxId"
 																			name="exciseTaxId"
-																			placeholder={strings.Select+ "Excise Tax Slab"}
+																			placeholder={strings.Select+ strings.excise_tax_slab}
 																			value={
 																				exciseTaxList
 																				&& selectOptionsFactory.renderOptions(
@@ -1427,7 +1496,7 @@ renderName=(cell,row)=>{
 
 															)}
 																</Row>
-																{this.state.exciseTaxCheck===true&&(	<Row style={{display: props.values.productType !='SERVICE'   ?'' : 'none'}}>
+																{/* {this.state.exciseTaxCheck===true&&(	<Row style={{display: props.values.productType !='SERVICE'   ?'' : 'none'}}>
 															<Col >
 																<label className='mr-4'><b>Excise Type</b></label>
 																	{this.state.exciseType === false ?
@@ -1455,7 +1524,7 @@ renderName=(cell,row)=>{
 																	 : <span className='ml-4'>Exclusive</span>
 																	}	
 																</Col>
-															</Row>)}
+															</Row>)} */}
 															<Row className="secondary-info">
 																<Col lg={8}>
 																	<FormGroup check inline className="mb-3">
@@ -2293,6 +2362,7 @@ min="0"
 												</Formik>
 											</Col>
 										</Row>
+									)}
 									</CardBody>
 								</Card>
 							</Col>

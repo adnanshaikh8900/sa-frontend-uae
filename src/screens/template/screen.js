@@ -1,4 +1,5 @@
 import React from 'react';
+import LocalizedStrings from 'react-localization';
 import { connect } from 'react-redux';
 import {
 	Card,
@@ -19,7 +20,8 @@ import { bindActionCreators } from 'redux';
 
 // import 'react-select/dist/react-select.css'
 import './style.scss';
-
+import { StringStream } from 'codemirror';
+import {data}  from '../Language/index'
 
 const mapStateToProps = (state) => {
 	return {};
@@ -30,10 +32,12 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
+let strings = new LocalizedStrings(data);
 class Template extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			enable1:false,
 			enable2:false,
 			selectedData:[]
@@ -79,6 +83,7 @@ class Template extends React.Component {
 	
 	render() {
 		const {selectedData}=this.state;
+		strings.setLanguage(this.state.language);
 		console.log(selectedData,"suraj")
 		return (
 			<div className="financial-report-screen">
@@ -89,15 +94,15 @@ class Template extends React.Component {
 								<Col lg={12}>
 									<div className="h4 mb-0 d-flex align-items-center">
 										<i className="nav-icon fas fa-palette" />
-										<span className="ml-2 " >Mail Themes</span>
+										<span className="ml-2 " >{strings.MailTheams}</span>
 									</div>
 								</Col>
 							</Row>
 						</CardHeader>
 					
 						<CardBody>
-							<InvoiceTemplate templateId="1" enable={this.state.enable1}  templateTitle="Theme1" templateImg={Theme1}></InvoiceTemplate>
-							<InvoiceTemplate templateId="2" enable={this.state.enable2} templateTitle="Theme2" templateImg={Theme2}></InvoiceTemplate>
+							<InvoiceTemplate templateId="1" enable={this.state.enable1}  templateTitle={strings.Theame1} templateImg={Theme1}></InvoiceTemplate>
+							<InvoiceTemplate templateId="2" enable={this.state.enable2} templateTitle={strings.Theame2} templateImg={Theme2}></InvoiceTemplate>
 						{/* <InvoiceTemplate templateId="3" templateTitle="Horizon" templateImg={horizon}></InvoiceTemplate>
 							<InvoiceTemplate templateId="4" templateTitle="Elliot Jay stocks" templateImg={ejs}></InvoiceTemplate>
 							<InvoiceTemplate templateId="5" templateTitle="Union" templateImg={union}></InvoiceTemplate>

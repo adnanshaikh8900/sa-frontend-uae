@@ -335,13 +335,13 @@ class ExpenseDetailsReport extends React.Component {
 													<DropdownMenu>
 														
 													<DropdownItem onClick={()=>{this.exportFile()}}>
-															<span
+																<span
 															style={{
 																border: 0,
     															padding: 0,
 																backgroundColor:"white !important"
 															}}
-														>CSV (Comma Separated Value)</span>
+														     >CSV (Comma Separated Value)</span>
 														</DropdownItem>
 														<DropdownItem onClick={()=>{this.exportExcelFile()}}>
 															<span
@@ -350,7 +350,7 @@ class ExpenseDetailsReport extends React.Component {
     															padding: 0,
 																backgroundColor:"white !important"
 															}}
-														  >Excel</span>
+														     	>Excel</span>
 														</DropdownItem>
 														<DropdownItem onClick={this.exportPDFWithComponent}>
 															Pdf

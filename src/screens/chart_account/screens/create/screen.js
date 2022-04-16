@@ -70,8 +70,9 @@ class CreateChartAccount extends React.Component {
 			exist: false,
 			chartOfAccountCategory: [],
 			disabled: false,
+			loadingMsg:"Loading..."
 		};
-		this.regExAlpha = /^[A-Za-z0-9 !@#$%^&*)(+=._-]+$/;
+        this.regExAlpha = /^[a-zA-Z ]+$/;
 	}
 
 	componentDidMount = () => {
@@ -131,23 +132,32 @@ class CreateChartAccount extends React.Component {
 			transactionCategoryName: data.transactionCategoryName,
 			chartOfAccount: data.chartOfAccount.value,
 		};
+		this.setState({ loading:true, loadingMsg:"Creating  Chart Of Account ..."});
 		this.props.createChartOfAccontActions
 			.createTransactionCategory(postData)
 			.then((res) => {
 				if (res.status === 200) {
 					this.setState({ disabled: false });
+					this.setState({ loading:false});
 					this.props.commonActions.tostifyAlert
 						(
 						'success', 
 						res.data ? res.data.message :'New Chart Of Account Created Successfully',
 						);
+						
 					if (this.state.createMore) {
 						this.setState({
 							createMore: false,
 						});
 						resetForm();
+						
 					} else {
 						this.props.history.push('/admin/master/chart-account');
+						this.setState({ loading:false,});
+					
+						
+						
+						
 					}
 				}
 			})
@@ -172,9 +182,11 @@ class CreateChartAccount extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { loading } = this.state;
+		const { loading ,loadingMsg} = this.state;
 		// const { sub_transaction_type_list } = this.props
 		return (
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
+			<div>
 			<div className="chart-account-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -187,6 +199,13 @@ class CreateChartAccount extends React.Component {
 									</div>
 								</CardHeader>
 								<CardBody>
+								{loading ? (
+										<Row>
+											<Col lg={12}>
+												<Loader />
+											</Col>
+										</Row>
+									) : (
 									<Row>
 										<Col lg={6}>
 											<Formik
@@ -207,8 +226,8 @@ class CreateChartAccount extends React.Component {
 													//   .required("Code Name is Required"),
 													transactionCategoryName: Yup.string()
 														.required('Name is Required')
-														.min(2, 'Name Is Too Short!')
-														.max(50, 'Name Is Too Long!'),
+														.min(2, 'Name is Too Short!')
+														.max(50, 'Name is Too Long!'),
 													chartOfAccount: Yup.string().required(
 														'Type is Required',
 													),
@@ -370,12 +389,14 @@ class CreateChartAccount extends React.Component {
 											</Formik>
 										</Col>
 									</Row>
+									)}
 								</CardBody>
 							</Card>
 						</Col>
 					</Row>
 					{loading ? <Loader></Loader> : ''}
 				</div>
+			</div>
 			</div>
 		);
 	}

@@ -38,6 +38,7 @@ import moment from 'moment';
 import "react-dates/initialize";
 import { DateRangePicker ,isInclusivelyAfterDay,isInclusivelyBeforeDay} from 'react-dates';
 import "react-dates/lib/css/_datepicker.css";
+import { toast } from 'react-toastify';
 
 const mapStateToProps = (state) => {
 
@@ -106,7 +107,8 @@ class CreatePayrollList extends React.Component {
 			paidDays:30,
 			countForTableApiCall:0,
 			focusedInput:null,
-			currencyIsoCode:"AED"
+			currencyIsoCode:"AED",
+			loadingMsg:"Loading..."
 		}
 
 		this.regEx = /^[0-9\d]+$/;
@@ -262,6 +264,7 @@ calculatePayperioad=(startDate,endDate)=>{
 		formData.append('totalAmountPayroll', totalAmountPayroll);
 
 		if(this.state.apiSelector ==="createPayroll"){
+			this.setState({ loading:true, loadingMsg:"Creating Payroll..."});
 		this.props.createPayrollActions
 			 .createPayroll(formData)
 						.then((res) => {
@@ -269,14 +272,14 @@ calculatePayperioad=(startDate,endDate)=>{
 					this.props.commonActions.tostifyAlert('success', 'Payroll created Successfully')				
 					this.tableApiCallsOnStatus()
 					this.props.history.push(`/admin/payroll/payrollrun`);
-			
+					this.setState({ loading:false,});
 				}
 			}).catch((err) => {
 				this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
 			})
 	}else {
 		if(this.state.apiSelector==="createAndSubmitPayroll"){
-
+			this.setState({ loading:true,loadingMsg:"Submitting Payroll..."});
 			this.props.createPayrollActions
 			 .createAndSubmitPayroll(formData)
 					.then((res) => {
@@ -284,7 +287,7 @@ calculatePayperioad=(startDate,endDate)=>{
 					this.props.commonActions.tostifyAlert('success', 'Payroll created And Submitted Successfully')				
 					this.tableApiCallsOnStatus()
 					this.props.history.push(`/admin/payroll/payrollrun`);
-				
+					this.setState({ loading:false,});
 				}
 			}).catch((err) => {
 				this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
@@ -703,11 +706,11 @@ showTotal=()=>{
 		strings.setLanguage(this.state.language);
 
 		const { employee_list, approver_dropdown_list } = this.props
-		const { loading, initValue } = this.state
+		const { loading, initValue,loadingMsg } = this.state
 		console.log(employee_list.data, "employee_list.data")
 		var today = new Date();
 		return (
-			loading ==true? <Loader/> :
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 <div>
 			<div className="create-employee-screen">
 				<div className="animated fadeIn">
@@ -719,7 +722,7 @@ showTotal=()=>{
 										<Col lg={12}>
 											<div className="h4 mb-0 d-flex align-items-center">
 												<i className="nav-icon fas fa-user-tie" />
-												<span className="ml-2">Create Payroll</span>
+												<span className="ml-2">{strings.create_payroll}</span>
 											</div>
 										</Col>
 									</Row>
@@ -794,7 +797,7 @@ showTotal=()=>{
 																<Row>
 																	<Col >
 																		<FormGroup>
-																			<Label htmlFor="payrollSubject">	<span className="text-danger">* </span> Payroll Subject</Label>
+																			<Label htmlFor="payrollSubject">	<span className="text-danger">* </span> {strings.payroll_subject}</Label>
 																			<Input
 																				type="text"
 																				id="payrollSubject"
@@ -819,7 +822,7 @@ showTotal=()=>{
 																		<FormGroup>
 																			<Label htmlFor="date">
 																				<span className="text-danger">* </span>
-																				Payroll Date
+																				{strings.payroll_date}
 																			</Label>
 																			<DatePicker
 																				id="payrollDate"
@@ -854,7 +857,7 @@ showTotal=()=>{
 																	<Col  >
 																	<Label htmlFor="date">
 																				<span className="text-danger">* </span>
-																				Pay-period (Start date - End Date)
+																				{strings.pay_period}
 																			</Label>
 
 																			<FormGroup >
@@ -887,7 +890,7 @@ showTotal=()=>{
 																	
 																	<Col >	<Label htmlFor="due_date">
 																				{/* <span className="text-danger">*</span> */}
-																				Payroll Approver
+																			{strings.payroll_approver}
 																			</Label>
 																		<FormGroup>
 																			
@@ -896,14 +899,14 @@ showTotal=()=>{
 																				styles={customStyles}
 																				id="userId"
 																				name="userId"
-																				placeholder={"Select Approver"}
+																				placeholder={strings.select_approver}
 																				options={
 																					approver_dropdown_list.data
 																						? selectOptionsFactory.renderOptions(
 																							'name',
 																							'userId',
 																							approver_dropdown_list.data,
-																							'User',
+																							'Approver',
 																						)
 																						: []
 																				}
@@ -914,8 +917,14 @@ showTotal=()=>{
 																						this.setState({
 																							 userId: option.value ,
 																							 submitButton:false
+																						})	
+																					}
+																					else{
+																						props.handleChange('payrollApprover')('');
+																						this.setState({
+																							 userId: '' ,
+																							 submitButton:true
 																						})
-																						
 																					}
 																				}}
 																			/>
@@ -1002,42 +1011,49 @@ showTotal=()=>{
 																	<Button
 																		color="primary"
 																		className="btn-square pull-right"
-																		// onClick={}
 																		onClick={() => {
-																			this.setState({apiSelector:"createAndSubmitPayroll"})
-																				props.handleSubmit()
-																								}}																		
-																	        disabled={!this.state.submitButton && this.state.selectedRows && this.state.selectedRows.length !=0 ? false :true}
+
+																			if(this.state.submitButton)
+																				toast.error(` Please select approver for payroll submission !`)
+																			else
+																			if(!this.state.submitButton && this.state.selectedRows && this.state.selectedRows.length !=0)
+																			{this.setState({apiSelector:"createAndSubmitPayroll"})
+																				props.handleSubmit()}
+																			else	
+																				toast.error(` Please select at least one employee for payroll creation !`)		
+																				}}
+																																				
+																	        // disabled={!this.state.submitButton && this.state.selectedRows && this.state.selectedRows.length !=0 ? false :true}
 																			title={
 																			this.state.submitButton
 																				? ` Please select approver for payroll submission !`
 																				: ''
 																		}
 																						
-
-																	// 	title={
-																	// 		this.state.selectedRows && this.state.selectedRows.length !=0
-																	// 		? ''
-																	// 		: `Please Select Employees Before creating  Payroll !`
-																	// }
 																			>
 
-																		<i class="fas fa-check-double  mr-1"></i> Create and Submit
+																		<i class="fas fa-check-double  mr-1"></i> {strings.create_submit}
 																	</Button>
 																	<Button type="button" color="primary" className="btn-square pull-right "														
-																    	onClick={() => {
-																		this.setState({apiSelector:"createPayroll"})
-																			props.handleSubmit()
-																							}}
+																    	onClick={
+																			() => {
+																				if(this.state.selectedRows && this.state.selectedRows.length !=0)
+																			{	this.setState({apiSelector:"createPayroll"})
+																				props.handleSubmit()}
+																				else
+																				toast.error(` Please select at least one employee for payroll creation !`)		
+																			
+																				}
+																			}
 																							
-																							disabled={this.state.selectedRows && this.state.selectedRows.length !=0 ? false :true}
-																							title={
-																								this.state.selectedRows && this.state.selectedRows.length !=0
-																								? ''
-																								: `Please select at least one employee for payroll creation !`
-																						}
+																		// disabled={this.state.selectedRows && this.state.selectedRows.length !=0 ? false :true}
+																		title={
+																				this.state.selectedRows && this.state.selectedRows.length !=0
+																					? ''
+																					: `Please select at least one employee for payroll creation !`
+																				}
 																	>
-																		<i className="fa fa-dot-circle-o  mr-1"></i> Create
+																		<i className="fa fa-dot-circle-o  mr-1"></i> {strings.create}
 																	</Button>
 
 																</Col>

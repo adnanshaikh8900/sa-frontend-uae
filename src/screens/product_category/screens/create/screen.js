@@ -63,6 +63,7 @@ class CreateProductCategory extends React.Component {
 			loading: false,
 			createMore: false,
 			disabled: false,
+			loadingMsg:"Loading"
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regExBoth = /^[a-zA-Z0-9\s,'-/()]+$/;
@@ -100,11 +101,13 @@ class CreateProductCategory extends React.Component {
 	// Create or Edit Vat
 	handleSubmit = (data, resetForm) => {
 		this.setState({ disabled: true });
+		this.setState({ loading:true, loadingMsg:"Creating Product Category..."});
 		this.props.createProductCategoryActions
 			.createProductCategory(data)
 			.then((res) => {
 				if (res.status === 200) {
 					this.setState({ disabled: false });
+					this.setState({ loading:false});
 					this.props.commonActions.tostifyAlert(
 						'success',
 						res.data ? res.data.message : 'Product Category Created Successfully'
@@ -118,6 +121,7 @@ class CreateProductCategory extends React.Component {
 						});
 					} else {
 						this.props.history.push('/admin/master/product-category');
+						this.setState({ loading:false,});
 					}
 				}
 			})
@@ -133,12 +137,15 @@ class CreateProductCategory extends React.Component {
 	render() {
 		strings.setLanguage(this.state.language);
 		const { loading, initValue, product_category_list } = this.state;
+		const {  loadingMsg } = this.state
 		if (product_category_list) {
 			var ProductCategoryList = product_category_list.map((item) => {
 				return item.productCategoryCode;
 			});
 		}
 		return (
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
+			<div>
 			<div className="vat-code-create-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -151,6 +158,13 @@ class CreateProductCategory extends React.Component {
 									</div>
 								</CardHeader>
 								<CardBody>
+								{loading ? (
+										<Row>
+											<Col lg={12}>
+												<Loader />
+											</Col>
+										</Row>
+									) : (
 									<Row>
 										<Col lg={6}>
 											<Formik
@@ -213,7 +227,7 @@ class CreateProductCategory extends React.Component {
 																	maxLength='20'
 																	id="productCategoryCode"
 																	name="productCategoryCode"
-																	placeholder={strings.Enter+strings.ProductCategoryCode}
+																	placeholder={strings.ENTER+strings.ProductCategoryCode}
 																	onChange={(option) => {
 																		if (
 																			option.target.value === '' ||
@@ -250,7 +264,7 @@ class CreateProductCategory extends React.Component {
 																	maxLength='50'
 																	id="productCategoryName"
 																	name="productCategoryName"
-																	placeholder={strings.Enter+strings.ProductCategoryName}
+																	placeholder={strings.ENTER+strings.ProductCategoryName}
 																	onChange={(option) => {
 																		if (
 																			option.target.value === '' ||
@@ -326,12 +340,14 @@ class CreateProductCategory extends React.Component {
 											</Formik>
 										</Col>
 									</Row>
+									)}
 								</CardBody>
 							</Card>
 						</Col>
 					</Row>
 					{loading ? <Loader></Loader> : ''}
 				</div>
+			</div>
 			</div>
 		);
 	}

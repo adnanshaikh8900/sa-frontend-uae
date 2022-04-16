@@ -3,6 +3,7 @@ import LogInTwo from './log_in/screen-two';
 import Register from './register';
 import ResetPassword from './reset_password';
 import NewPassword from './new_password';
+
 import Dashboard from './dashboard';
 import DashboardTwo from './dashboard/screen-two';
 
@@ -95,7 +96,7 @@ import CreditNoteDetailsReport from './financial_report/sections/credit_note_det
 import ExpenseDetailsReport from './financial_report/sections/expense_details';
 import ExpenseByCategory from './financial_report/sections/expense_by_catogery';
 import InvoiceDetails from './financial_report/sections/invoice_details';
-
+import PayrollSummaryReport from './financial_report/sections/payroll_summary';
 import ChartAccount from './chart_account';
 import CreateChartAccount from './chart_account/screens/create';
 import DetailChartAccount from './chart_account/screens/detail';
@@ -184,12 +185,23 @@ import Migrate from './import/sections/migrate';
 import MigrateHistory from './import/sections/migrate_history';
 import PayrollApproverScreen from './payroll_run/screens/approver';
 import UpdatePayroll from './payroll_run/screens/updatePayroll';
+import SOAReport from './financial_report/sections/soa_statementsOfAccounts'
+import VatReports from './financial_report/sections/vat_reports'
+import VatPaymentRecord from './financial_report/sections/vat_reports/screens/vatPaymentRecord'
+import RecordTaxClaim from './financial_report/sections/vat_reports/screens/record_claim_tax'
+import RecordVatPayment from './financial_report/sections/vat_reports/screens/record_tax_payment'
+import FtaAuditReport from './financial_report/sections/fta_audit_report_MainPage'
+import GenerateAuditFile from './financial_report/sections/fta_audit_report_MainPage/screens/generate_Fta_audit_report'
+import ViewFtaAuditReport from './financial_report/sections/Fta_Audit_Report';
+import ExciseTaxAuditReport from './financial_report/sections/excise_tax_audit_report_MainPage'
+import ViewFtaExciseAuditReport from './financial_report/sections/Excise_Audit_Report'
+import ARAgingReport from './financial_report/sections/ar_aging_report'
 export {
 	LogIn,
 	LogInTwo,
 	Register,
-	NewPassword,
 	ResetPassword,
+	NewPassword,
 	Dashboard,
 	DashboardTwo,
 	ViewExpense,
@@ -350,5 +362,17 @@ export {
 	PayrollApproverScreen,
 	UpdatePayroll,
 	MigrateHistory,
-	Migrate
+	Migrate,
+	PayrollSummaryReport,
+	SOAReport,
+	VatReports,
+	VatPaymentRecord,
+	RecordTaxClaim,
+	RecordVatPayment,
+	FtaAuditReport,
+	GenerateAuditFile,
+	ViewFtaAuditReport,
+	ExciseTaxAuditReport,
+	ViewFtaExciseAuditReport,
+	ARAgingReport
 };

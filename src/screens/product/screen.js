@@ -33,6 +33,9 @@ import { CSVLink } from 'react-csv';
 import './style.scss';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
+import { AgGridReact,AgGridColumn } from 'ag-grid-react/lib/agGridReact';
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 
 const mapStateToProps = (state) => {
 	return {
@@ -66,6 +69,7 @@ class Product extends React.Component {
 			csvData: [],
 			view: false,
 			actionButtons: {},
+			paginationPageSize:10,
 		};
 
 		this.options = {
@@ -217,7 +221,7 @@ class Product extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Product Deleted Successfully',
+						res.data ? res.data.message : 'Product Deleted Successfully',
 					);
 					this.initializeData();
 					if (
@@ -234,7 +238,7 @@ class Product extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'Product Deleted Unsuccessfully',
 				);
 			});
 	};
@@ -262,7 +266,21 @@ class Product extends React.Component {
 		// this.setState({})
 	};
 
-	onSizePerPageList = (sizePerPage) => {
+	onPageSizeChanged = (newPageSize) => {
+		var value = document.getElementById('page-size').value;
+		this.gridApi.paginationSetPageSize(Number(value));
+	};
+	onGridReady = (params) => {
+		this.gridApi = params.api;
+		this.gridColumnApi = params.columnApi;
+	};
+
+	onFirstDataRendered = (params) => {
+		params.api.sizeColumnsToFit();
+		this.autoSizeAll(true);
+	   };
+    
+   onSizePerPageList = (sizePerPage) => {
 		if (this.options.sizePerPage !== sizePerPage) {
 			this.options.sizePerPage = sizePerPage;
 			this.initializeData();
@@ -369,7 +387,34 @@ class Product extends React.Component {
             </span>
         );
     };
+	exciseSlabFormatter  = (cell, row) => {
+        let exciseTax='';
+		if(row.exciseTaxId !=null){
+			exciseTax=row.exciseTax
+		}
+		else{
+			exciseTax="-"
+		}
+        return exciseTax;
+    };
 
+	goToProductDetail = (productId) => {
+		
+				this.props.history.push('/admin/master/product/detail', {
+			id: productId,
+		})
+		
+	}
+	renderType  = (cell, row) => {
+        let type='';
+		if(row.data.exciseTaxId !=null  && row.data.exciseTaxId !=""){
+			type="EXCISE "+row.data.productType
+		}
+		else{
+			type=row.data.productType
+		}
+        return type;
+    };
 	productType = (cell, row) => {
 		return row['producttype'] !== null ? row['producttype']['type'] : '';
 	};
@@ -407,6 +452,37 @@ class Product extends React.Component {
 		);
 	};
 
+	getActionButtons = (params) => {
+		return (
+	<>
+	{/* BUTTON ACTIONS */}
+			{/* View */}
+			
+			<Button
+				className="Ag-gridActionButtons btn-sm"
+				title='Edit'
+				color="secondary"
+					onClick={()=>
+						this.goToProductDetail(params.data.id)  }
+			
+			>		<i className="fas fa-edit"/> </Button> 
+	</>
+		)
+	}
+
+	sizeToFit = () => {
+		this.gridApi.sizeColumnsToFit();
+	   };
+	 
+	   autoSizeAll = (skipHeader) => {
+		  debugger
+		const allColumnIds = [];
+		this.gridColumnApi.getAllColumns().forEach((column) => {
+		  allColumnIds.push(column.getId());
+		});
+		this.gridColumnApi.autoSizeColumns(allColumnIds, skipHeader);
+	   };
+
 	render() {
 		strings.setLanguage(this.state.language);
 		const {
@@ -420,8 +496,19 @@ class Product extends React.Component {
 		const { product_list, vat_list, universal_currency_list } = this.props;
 
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="product-screen">
 				<div className="animated fadeIn">
+				<div className="button-bar">
+      {/* <button onClick={() => this.sizeToFit()}>Size to Fit</button>
+      <button onClick={() => this.autoSizeAll(false)}>
+        Auto-Size All
+      </button>
+      <button onClick={() => this.autoSizeAll(true)}>
+        Auto-Size All (Skip Header)
+      </button> */}
+    </div>
 					{dialog}
 					{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
 					<Card>
@@ -445,6 +532,7 @@ class Product extends React.Component {
 							) : (
 								<Row>
 									<Col lg={12}>
+								
 										<div className="d-flex justify-content-end">
 											<ButtonGroup size="sm">
 												{/* <Button
@@ -474,84 +562,7 @@ class Product extends React.Component {
 													Bulk Delete
 												</Button> */}
 											</ButtonGroup>
-										</div>
-										<div className="py-3">
-											<h5>{strings.Filter}: </h5>
-											<form>
-												<Row>
-												<Col lg={3} className="mb-2">
-														<Input
-														maxLength="25"
-															type="text"
-															placeholder={strings.ProductCode}
-															value={filterData.productCode}
-															onChange={(e) => {
-																this.handleChange(
-																	e.target.value,
-																	'productCode',
-																);
-															}}
-														/>
-													</Col>
-													<Col lg={3} className="mb-1">
-														<Input
-														maxLength="30"
-															type="text"
-															placeholder={strings.Name}
-															value={filterData.name}
-															onChange={(e) => {
-																this.handleChange(e.target.value, 'name');
-															}}
-														/>
-													</Col>
-													<Col lg={3} className="mb-1">
-														<FormGroup className="mb-3">
-															<Select
-																options={
-																	vat_list
-																		? selectOptionsFactory.renderOptions(
-																				'name',
-																				'id',
-																				vat_list,
-																				'Vat',
-																		  )
-																		: []
-																}
-																className="select-default-width"
-																placeholder={strings.VatPercentage}
-																value={filterData.vatPercentage}
-																onChange={(option) => {
-																	if (option && option.value) {
-																		this.handleChange(option, 'vatPercentage');
-																	} else {
-																		this.handleChange('', 'vatPercentage');
-																	}
-																}}
-															/>
-														</FormGroup>
-													</Col>
-													<Col lg={2} className="pl-0 pr-0">
-														<Button
-															type="button"
-															color="primary"
-															className="btn-square mr-1"
-															onClick={this.handleSearch}
-														>
-															<i className="fa fa-search"></i>
-														</Button>
-														<Button
-															type="button"
-															color="primary"
-															className="btn-square"
-															onClick={this.clearAll}
-														>
-															<i className="fa fa-refresh"></i>
-														</Button>
-													</Col>
-												</Row>
-											</form>
-										</div>
-										<Button
+											<Button
 											color="primary"
 											className="btn-square pull-right"
 											style={{ marginBottom: '10px' }}
@@ -562,7 +573,12 @@ class Product extends React.Component {
 											<i className="fas fa-plus mr-1" />
 											{strings.AddnewProduct}
 										</Button>
-										<div>
+										
+										</div>
+										
+										
+										
+										{/* <div>
 											<BootstrapTable
 												selectRow={this.selectRowProp}
 												search={false}
@@ -627,16 +643,25 @@ class Product extends React.Component {
                           						</TableHeaderColumn>
 												{/* <TableHeaderColumn dataField="description" dataSort>
 													Description
-												</TableHeaderColumn> */}
+												</TableHeaderColumn> 
 												<TableHeaderColumn
-													width="8%"
+													width="18%"
 													// dataAlign="right"
 													dataField="vatPercentage"
 													dataSort
 													// dataFormat={this.vatCategoryFormatter}
 													className="table-header-bg"
 												>
-													 {strings.VatPercentage}
+													 {strings.Vat+" "+strings.Type}
+												</TableHeaderColumn>
+												<TableHeaderColumn
+													 dataAlign="center"
+													dataField="exciseTax"
+													dataSort
+												    dataFormat={this.exciseSlabFormatter}
+													className="table-header-bg"
+												>
+													 Excise Slab
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													width="8%"
@@ -668,13 +693,157 @@ class Product extends React.Component {
 											className="table-header-bg"
 										></TableHeaderColumn>
 											</BootstrapTable>
-										</div>
+										</div> */}
+
+										<div className="ag-theme-alpine mb-3" style={{ height: 590,width:"100%" }}>
+			<AgGridReact
+				rowData={product_list && product_list.data
+					? product_list.data
+					: []}
+					//  suppressDragLeaveHidesColumns={true}
+				// pivotMode={true}
+				// suppressPaginationPanel={false}
+				pagination={true}
+				rowSelection="multiple"
+				// paginationPageSize={10}
+				// paginationAutoPageSize={true}
+				paginationPageSize={this.state.paginationPageSize}
+					floatingFilter={true}
+					defaultColDef={{ 
+								resizable: true,
+								flex: 1,
+								sortable: true
+							}}
+				sideBar="columns"
+				onGridReady={this.onGridReady}
+                onFirstDataRendered={this.onFirstDataRendered.bind(this)}
+ 					>
+				<AgGridColumn field="productCode" 
+				headerName= {strings.PRODUCTCODE}
+				sortable={ true } 
+				filter={ true } 
+				enablePivot={true} 
+// 				cellRendererFramework={(params) => <label
+// 					className="mb-0 label-bank"
+// 					style={{
+// 						cursor: 'pointer',
+// 						}}
+// 					onClick={()=>this.goToCurrencyDetail(params.data.currencyConversionId) }                                                             
+// 		>
+// 		{params.value}
+// 		</label>
+// }
+				></AgGridColumn>
+
+				<AgGridColumn field="name" 
+				headerName={strings.NAME}
+				sortable={ true }
+				filter={ true }
+				enablePivot={true}
+				cellRendererFramework={(params) => <label
+					className="mb-0 label-bank"
+					style={{
+						cursor: 'pointer',
+						}}                                 
+		>
+		{params.value}
+		</label>
+}
+				></AgGridColumn>  
+
+
+				<AgGridColumn field="productType" 
+				headerName=  {strings.ProductType}
+				sortable={ true }
+				enablePivot={true} 
+				filter={ true }
+				cellRendererFramework={(params)=><>{this.renderType(params.value,params)}</>}
+				></AgGridColumn>  
+
+			
+<AgGridColumn field="isInventoryEnabled" 
+				headerName=  {strings.INVENTORY}
+				sortable={ true }
+				enablePivot={true} 
+				filter={ true }
+				cellRendererFramework={(params) => params.value==true ?
+					<label className="badge label-success"> Enabled</label>
+					:
+					<label className="badge label-due"> Disabled</label>
+		}
+				></AgGridColumn>  
+				
+				<AgGridColumn field="vatPercentage" 
+				headerName=  {strings.VATTYPE}
+				sortable={ true }
+				enablePivot={true} 
+				filter={ true }
+				
+				></AgGridColumn>  
+
+<AgGridColumn field="exciseTax" 
+				headerName= 'EXCISE SLAB'
+				sortable={ true }
+				filter={ true }
+				enablePivot={true}
+				cellRendererFramework={(params) => params.value != null ?
+					params.value
+					:
+					"-"
+		}	
+				></AgGridColumn>  
+				<AgGridColumn field="unitPrice" 
+				headerName=  {strings.UNITPRICE}
+				sortable={ true }
+				filter={ true }
+				enablePivot={true}
+				formatExtraData={universal_currency_list}
+				
+					
+				></AgGridColumn>  
+
+				<AgGridColumn
+				headerName={strings.STATUS}
+				field="isActive" 
+				sortable={ true }
+				filter={ true }
+				enablePivot={true} 
+				cellRendererFramework={(params) => params.value==true ?
+													<label className="badge label-success"> Active</label>
+													:
+													<label className="badge label-due"> InActive</label>
+										}
+				></AgGridColumn>  
+				<AgGridColumn field="action"
+										// className="Ag-gridActionButtons"
+										headerName="ACTIONS"
+										cellRendererFramework={(params) =>
+											<div
+											 className="Ag-gridActionButtons"
+											 >
+												{this.getActionButtons(params)}
+											</div>
+
+										}
+									></AgGridColumn>
+			</AgGridReact>  
+			<div className="example-header mt-1">
+					Page Size:
+					<select onChange={() => this.onPageSizeChanged()} id="page-size">
+					<option value="10" selected={true}>10</option>
+					<option value="100">100</option>
+					<option value="500">500</option>
+					<option value="1000">1000</option>
+					</select>
+				</div>   																	
+		</div>	
 									</Col>
 								</Row>
 							)}
 						</CardBody>
 					</Card>
 				</div>
+			</div>
 			</div>
 		);
 	}

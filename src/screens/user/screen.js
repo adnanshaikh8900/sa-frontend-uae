@@ -278,7 +278,7 @@ class User extends React.Component {
 
 	renderDate = (cell, row) => {
 		return row['dob'] !== null
-			? moment(row['dob'], 'DD-MM-YYYY').format('DD/MM/YYYY')
+			? moment(row['dob'], 'DD-MM-YYYY').format('DD-MM-YYYY')
 			: '';
 	};
 
@@ -358,6 +358,8 @@ class User extends React.Component {
 		const { user_list, role_list } = this.props;
 
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="user-screen">
 				<div className="animated fadeIn">
 					{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
@@ -433,7 +435,7 @@ class User extends React.Component {
 														showMonthDropdown
 														showYearDropdown
 														autoComplete="off"
-														dateFormat="dd/MM/yyyy"
+														dateFormat="dd-MM-yyyy"
 														dropdownMode="select"
 														selected={filterData.dob}
 														value={filterData.dob}
@@ -594,6 +596,7 @@ class User extends React.Component {
 						</CardBody>
 					</Card>
 				</div>
+			</div>
 			</div>
 		);
 	}

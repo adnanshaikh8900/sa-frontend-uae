@@ -219,6 +219,7 @@ class BankTransactions extends React.Component {
 					bankAccountCurrencyIsoCode: res.bankAccountCurrencyIsoCode,
 					currentBalance: res.currentBalance,
 					closingBalance: res.closingBalance,
+					openingBalance: res.openingBalance,
 					accounName: res.bankAccountName,
 					transactionCount: res.transactionCount
 				});
@@ -358,7 +359,7 @@ class BankTransactions extends React.Component {
 		// ) : (
 		// 	''
 		// );
-		return row.depositeAmount >= 0 ? row.currencyIsoCode +" "+ row.depositeAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '';
+		return row.depositeAmount >= 0 ? row.currencyIsoCode +" "+ row.depositeAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 }) : '';
 	};
 	renderWithdrawalAmount = (cell, row, rowIndex, extraData) => {
 		// return row.withdrawalAmount >= 0 ? (
@@ -369,10 +370,10 @@ class BankTransactions extends React.Component {
 		// ) : (
 		// 	''
 		// );
-		return row.withdrawalAmount >= 0 ? row.currencyIsoCode +" "+ row.withdrawalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '';
+		return row.withdrawalAmount >= 0 ? row.currencyIsoCode +" "+ row.withdrawalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '';
 	};
 	renderRunningAmount = (cell, row) => {
-		return row.runningAmount >= 0 ? row.currencyIsoCode +" "+ row.runningAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '';
+		return row.runningAmount >= 0 ? row.currencyIsoCode +" "+ row.runningAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '';
 	};
 
 	renderDueAmount = (cell, row, rowIndex, extraData) => {
@@ -384,7 +385,7 @@ class BankTransactions extends React.Component {
 		// ) : (
 		// 	''
 		// );
-		return row.dueAmount >= 0 ? row.currencyIsoCode +" "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '';
+		return row.dueAmount >= 0 ? row.currencyIsoCode +" "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '';
 	};
 
 	test(row) {
@@ -790,7 +791,7 @@ class BankTransactions extends React.Component {
 													<h3>
 														{this.state.bankAccountCurrencyIsoCode} &nbsp;
 														{this.state.currentBalance ? (				
-															this.state.currentBalance.toLocaleString(navigator.language, { minimumFractionDigits: 2 })
+															this.state.currentBalance.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 															):(0)}	
 																						
 													</h3>
@@ -801,7 +802,16 @@ class BankTransactions extends React.Component {
 													{this.state.bankAccountCurrencyIsoCode} &nbsp;
 
 													{this.state.closingBalance ? (
-														this.state.closingBalance.toLocaleString(navigator.language, { minimumFractionDigits: 2 })): ( 0)}
+														this.state.closingBalance.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })): ( 0)}
+													</h3>
+												</Col>
+												<Col lg={3}>
+													<h5>{strings.OpeningBalance}</h5>
+													<h3>
+													{this.state.bankAccountCurrencyIsoCode} &nbsp;
+
+													{this.state.openingBalance ? (
+														this.state.openingBalance.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })): ( 0)}
 													</h3>
 												</Col>
 											</Row>

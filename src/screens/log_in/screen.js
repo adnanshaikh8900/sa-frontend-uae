@@ -218,11 +218,20 @@ class LogIn extends React.Component {
 																			</Label>
 																		
 																			<Input
+																			 onPaste={(e)=>{
+																				e.preventDefault()
+																				return false;
+																				}} onCopy={(e)=>{
+																				e.preventDefault()
+																				return false;
+																				}}
 																				type={
 																					this.state.isPasswordShown
 																						? 'text'
 																						: 'password'
 																				}
+																				minLength={8}
+																				maxLength={16}
 																				id="password"
 																				name="password"
 																				placeholder="Enter password"
@@ -239,7 +248,7 @@ class LogIn extends React.Component {
 																						: ''
 																				}
 																			/>
-																		<i   className={`fa ${ isPasswordShown ? "fa-eye-slash" : "fa-eye" } password-icon fa-lg`}
+																		<i   className={`fa ${ isPasswordShown ? "fa-eye" : "fa-eye-slash" } password-icon fa-lg`}
 																		onClick={this.togglePasswordVisiblity}
 																	>
 																		{/* <img 

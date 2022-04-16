@@ -243,7 +243,7 @@ class InventoryEdit extends React.Component {
 					this.setState({ disabled: false });
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Product Updated Successfully',
+						res.data ? res.data.message : 'Product Updated Successfully',
 					);
 					this.props.history.push('/admin/master/product');
 				}
@@ -251,7 +251,7 @@ class InventoryEdit extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'Product Updated Unsuccessfully',
 				);
 			});
 	};
@@ -325,14 +325,16 @@ class InventoryEdit extends React.Component {
 			.deleteProduct(current_product_id)
 			.then((res) => {
 				if (res.status === 200) {
-					this.props.commonActions.tostifyAlert('success', 'Product Deleted Successfully')
+					this.props.commonActions.tostifyAlert(
+						'success',
+						res.data ? res.data.message :  'Product Deleted Successfully')
 					this.props.history.push('/admin/master/product');
 				}
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'Product Deleted Unsuccessfully',
 				);
 			});
 	};
@@ -372,6 +374,8 @@ class InventoryEdit extends React.Component {
 		})
 	console.log(current_inventory_id)
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="detail-product-screen">
 				<div className="animated fadeIn">
 					{dialog}
@@ -650,17 +654,27 @@ min="0"
 																			// 		? false
 																			// 		: true
 																			// }
-																			type="number"
-min="0"
-																			maxLength="200"
+																			type="text"
+																			min="0"
+																			max="2000"
+																			maxLength='10'
 																			name="inventoryReorderLevel"
 																			id="inventoryReorderLevel"
 																			rows="3"
 																			placeholder={strings.InventoryReorderLevel}
 																			onChange={(value) => {
-																				props.handleChange(
-																					'inventoryReorderLevel',
-																				)(value);
+																
+																				if (
+																					value.target.value === '' ||
+																					this.regDecimal.test(
+																						value.target.value,
+																					)
+																				) {
+																					props.handleChange(
+																						'inventoryReorderLevel',
+																					)(value);
+																				}
+
 																			}}
 																			value={props.values.inventoryReorderLevel}
 																		/>
@@ -718,6 +732,7 @@ min="0"
 					openModal={this.state.openWarehouseModal}
 					closeWarehouseModal={this.closeWarehouseModal}
 				/>
+			</div>
 			</div>
 		);
 	}

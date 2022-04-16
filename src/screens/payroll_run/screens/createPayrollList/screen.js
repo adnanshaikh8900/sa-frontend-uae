@@ -36,7 +36,7 @@ import LocalizedStrings from 'react-localization';
 import { AddEmployeesModal } from './sections';
 import moment from 'moment';
 import "react-dates/initialize";
-import { DateRangePicker ,isInclusivelyBeforeDay} from 'react-dates';
+import { DateRangePicker ,isInclusivelyAfterDay,isInclusivelyBeforeDay} from 'react-dates';
 import "react-dates/lib/css/_datepicker.css";
 
 const mapStateToProps = (state) => {
@@ -81,7 +81,6 @@ class CreatePayrollList extends React.Component {
 			language: window['localStorage'].getItem('language'),
 			loading: false,
 			createMore: false,
-			loading: false,
 			initValue: {},
 			employeeListIds: [],
 			openModal: false,
@@ -104,7 +103,7 @@ class CreatePayrollList extends React.Component {
 			 payPeriod : '',
 			 apiSelector:'',
 			 submitButton:true,
-			paidDays:0,
+			paidDays:30,
 			countForTableApiCall:0,
 			focusedInput:null,
 			currencyIsoCode:"AED"
@@ -147,7 +146,7 @@ calculatePayperioad=(startDate,endDate)=>{
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))+1; 
 	
     this.setState({paidDays:diffDays});
-	this.getAllPayrollEmployee()
+	this.getAllPayrollEmployee(endDate)
 	console.log(diffTime + " milliseconds");
     console.log(diffDays + " days");
 	console.log(this.state.paidDays,"paid-Days",diffDays)
@@ -257,8 +256,11 @@ calculatePayperioad=(startDate,endDate)=>{
 
 		formData.append('generatePayrollString', JSON.stringify(this.state.selectedRows1));
 		formData.append('salaryDate',payrollDate)
-		console.log(this.state.payPeriod,"JSON.stringify(this.state.allPayrollEmployee)",JSON.stringify(this.state.allPayrollEmployee))
-		
+		//Payroll total  amount
+		let totalAmountPayroll=0;
+		this.state.selectedRows1.map((row)=>{totalAmountPayroll +=parseFloat(row.netPay)})
+		formData.append('totalAmountPayroll', totalAmountPayroll);
+
 		if(this.state.apiSelector ==="createPayroll"){
 		this.props.createPayrollActions
 			 .createPayroll(formData)
@@ -297,7 +299,7 @@ calculatePayperioad=(startDate,endDate)=>{
 		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 		const values = value
 			? value
-			: moment(props.values.payrollDate, 'DD/MM/YYYY').toDate();
+			: moment(props.values.payrollDate, 'DD-MM-YYYY').toDate();
 
 	};
 
@@ -313,9 +315,11 @@ calculatePayperioad=(startDate,endDate)=>{
 	}
 
 
-	getAllPayrollEmployee = () => {
+	getAllPayrollEmployee = (endDate) => {
 		//maintaining new state
-		this.props.createPayrollActions.getAllPayrollEmployee().then((res) => {
+		let date=endDate ?endDate :this.state.endDate;
+		let month =moment(date).format("MMMM"); 
+		this.props.createPayrollActions.getAllPayrollEmployee(moment(date).format("DD/MM/YYYY")).then((res) => {
 			if (res.status === 200) {
 
 				this.setState({
@@ -323,10 +327,23 @@ calculatePayperioad=(startDate,endDate)=>{
 				})
 
 				let newData = [...this.state.allPayrollEmployee]
-				newData = newData.map((data) => {					
-						data.noOfDays =this.state.paidDays	
-						data.originalGrossPay=data.grossPay		
-					    data.perDaySal=data.originalGrossPay / data.noOfDays		
+				newData = newData.map((data) => {			
+					 	/** if month is of 31 days and 28days so its will be treated as 30 days only , 
+						  * need to handle this in future release */
+						//for  month wise case handling ,need to add switch in future 
+						 let tmpPaidDay=this.state.paidDays > 30 ?30	:
+										( this.state.paidDays==28 && month=="February" ? 30 :this.state.paidDays	)			
+						data.noOfDays =tmpPaidDay
+						data.originalNoOfDays =tmpPaidDay
+						data.originalGrossPay=data.grossPay
+						data.originalDeduction=data.deduction
+						data.deduction=	((data.originalDeduction/30) * data.noOfDays).toFixed(2)
+					    data.perDaySal=data.originalGrossPay / 30	
+
+						data.lopDay = 30-tmpPaidDay;
+						data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2)
+						data.netPay   = Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (data.deduction || 0)
+						
 					return data
 				})
 				console.log(newData)
@@ -422,16 +439,17 @@ calculatePayperioad=(startDate,endDate)=>{
 										return (
 											
 											<Input
+												className="spinboxDisable"
 												type="number"
-												min="0"
-												max={30}
+												min={0}
+												max={this.state.paidDays}
 												id="lopDay"
 												name="lopDay"
 												value={cell || 0}
 												
 												onChange={(evt) => {
 													
-													let value = parseInt(evt.target.value) ;
+													let value = parseInt(evt.target.value ==="" ? "0":evt.target.value) ;
 
 													if (value > 30 || value < 0) {
 														return;
@@ -443,8 +461,8 @@ calculatePayperioad=(startDate,endDate)=>{
 										);
 
 									}else if(col.key === 'grossPay'){
-										
-										return  (<div>{this.state.currencyIsoCode ? this.state.currencyIsoCode : "AED"}{" "+cell.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</div>)
+										let grossPay=parseFloat(cell)
+										return  (<div>{this.state.currencyIsoCode ? this.state.currencyIsoCode : "AED"}{" "+grossPay.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</div>)
 									}
 									 else
 									 if(col.key === 'netPay'){
@@ -508,35 +526,20 @@ else
 		let newData = [...this.state.allPayrollEmployee]
 			newData = newData.map((data) => {
 											if (row.id === data.id) {
+												data.lopDay = value;
+												data.noOfDays = 30 - value
+												data.deduction=	((data.originalDeduction/30) * data.noOfDays).toFixed(2)
+												let deduction=data.noOfDays==0 ? 0:data.deduction;
 
-														if(data.lopDay<value)
-														{		
-																													
-															data.lopDay = value;
-															data.noOfDays = data.noOfDays - 1
-														    data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2)
-															data.netPay =   Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (data.deduction || 0)
-																												
-														}
-														else if(data.lopDay>value)
-															{	
-																data.lopDay = value;
-																data.noOfDays = data.noOfDays + 1
-																data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2)
-																data.netPay   = Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (data.deduction || 0)
-													         }
-														}
-														data.payrollId = this.state.payroll_id
-														data.salaryDate = this.state.payrollDate
-														return data
+												data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2)
+												data.netPay   = Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (deduction || 0)
+											}
+											data.payrollId = this.state.payroll_id
+											data.salaryDate = this.state.payrollDate
+								    return  data
 
-													})
-													console.log(newData)
-
-													this.setState({
-														allPayrollEmployee: newData
-
-													})
+									})
+								this.setState({	allPayrollEmployee: newData})
 	}
 	generate = () => {
 		const formData = new FormData();
@@ -638,9 +641,9 @@ else
 			tempList.push(row.empId);
 			tempList1.push(row);
 		} else {
-			this.state.selectedRows.map((item) => {
-				if (item !== row.empId) {
-					tempList.push(item);
+			this.state.selectedRows1.map((item) => {
+				if (item.empId !== row.empId) {
+					tempList.push(item.empId);
 					tempList1.push(item);
 				}
 				return item;
@@ -675,13 +678,37 @@ else
  handleDateChange = ({ startDate, endDate }) =>   { this.setState({ startDate, endDate })
  this.calculatePayperioad(startDate, endDate)};
 handleFocusChange = focusedInput => this.setState({ focusedInput });
+showTotal=()=>{
+	let totalAmountPayroll=0;
+	this.state.selectedRows1.map((row)=>{totalAmountPayroll +=parseFloat(row.grossPay)})
+	return(
+		<div className="p-2" style={{    borderBottom: "1px solid #c8ced3", width: "25%"}}>
+								<Row>
+								<Col >
+									<h5 className="mb-0">
+										{strings.Total+" "+strings.Amount}
+									</h5>
+								</Col>
+								<Col  className="text-right">
+									<label className="mb-0">
+									AED &nbsp;
+									{totalAmountPayroll.toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}				
+									</label>
+								</Col>
+								</Row>
+								</div>
+	)
+}	
 	render() {
 		strings.setLanguage(this.state.language);
 
 		const { employee_list, approver_dropdown_list } = this.props
 		const { loading, initValue } = this.state
 		console.log(employee_list.data, "employee_list.data")
+		var today = new Date();
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="create-employee-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -767,13 +794,13 @@ handleFocusChange = focusedInput => this.setState({ focusedInput });
 																<Row>
 																	<Col >
 																		<FormGroup>
-																			<Label htmlFor="payrollSubject">	<span className="text-danger">*</span> Payroll Subject</Label>
+																			<Label htmlFor="payrollSubject">	<span className="text-danger">* </span> Payroll Subject</Label>
 																			<Input
 																				type="text"
 																				id="payrollSubject"
 																				name="payrollSubject"
 																				value={props.values.payrollSubject}
-																			
+																			    maxLength="100"
 																				placeholder={strings.Enter + " Payroll Subject"}
 																				onChange={(value) => {
 																					props.handleChange('payrollSubject')(value);
@@ -791,7 +818,7 @@ handleFocusChange = focusedInput => this.setState({ focusedInput });
 																	<Col >
 																		<FormGroup>
 																			<Label htmlFor="date">
-																				<span className="text-danger">*</span>
+																				<span className="text-danger">* </span>
 																				Payroll Date
 																			</Label>
 																			<DatePicker
@@ -800,7 +827,7 @@ handleFocusChange = focusedInput => this.setState({ focusedInput });
 																				placeholderText={strings.payrollDate}
 																				showMonthDropdown
 																				showYearDropdown
-																				dateFormat="dd/MM/yyyy"
+																				dateFormat="dd-MM-yyyy"
 																				dropdownMode="select"
 																				selected={props.values.payrollDate}
 																			
@@ -826,33 +853,25 @@ handleFocusChange = focusedInput => this.setState({ focusedInput });
 
 																	<Col  >
 																	<Label htmlFor="date">
-																				<span className="text-danger">*</span>
+																				<span className="text-danger">* </span>
 																				Pay-period (Start date - End Date)
 																			</Label>
 
 																			<FormGroup >
 																			<DateRangePicker
+																			displayFormat="DD-MM-YYYY"
 																				endDate={this.state.endDate}
 																				endDateId="endDate"
 																				focusedInput={this.state.focusedInput}
-																				isOutsideRange={() => null}
+																				isOutsideRange={
+																					 () => null
+																					// day => isInclusivelyBeforeDay(day, moment(new Date(today.getFullYear(), today.getMonth(),0)))
+																				}
 																				onDatesChange={this.handleDateChange}
 																				onFocusChange={this.handleFocusChange}
 																				startDate={this.state.startDate}
 																				startDateId="startDate"
-																				/>
-																{/* <DateRangePicker
-																				startDate={this.state.startDate}
-																				startDateId="tata-start-date"
-																				endDate={this.state.endDate}
-																				endDateId="tata-end-date"
-																				onDatesChange={this.handleDatesChange}
-																				focusedInput={this.state.focusedInput}
-																				onFocusChange={(option)=>{this.setState({focusedInput:option})}}
-																				isOutsideRange={day => !isInclusivelyBeforeDay(day, moment())}
-																				initialVisibleMonth={() => moment().subtract(1, "month")}
-																				/>																							 */}
-																			
+																				/>																			
 																			{props.errors.startDate &&
 																				props.touched.startDate && (
 																					<div className="text-danger">
@@ -956,6 +975,17 @@ handleFocusChange = focusedInput => this.setState({ focusedInput });
 																					</div>
 																				)}
 												</Col></Row>
+
+												
+																			<Row>
+																			<Col ></Col>
+																			<Col ></Col>
+												{
+												// this.showTotal()
+												}
+																				
+																			</Row>
+																		
 															<Row className="mt-4 ">
 
 
@@ -980,7 +1010,7 @@ handleFocusChange = focusedInput => this.setState({ focusedInput });
 																	        disabled={!this.state.submitButton && this.state.selectedRows && this.state.selectedRows.length !=0 ? false :true}
 																			title={
 																			this.state.submitButton
-																				? `Please Select Approver Before Submitting  Payroll !`
+																				? ` Please select approver for payroll submission !`
 																				: ''
 																		}
 																						
@@ -1004,7 +1034,7 @@ handleFocusChange = focusedInput => this.setState({ focusedInput });
 																							title={
 																								this.state.selectedRows && this.state.selectedRows.length !=0
 																								? ''
-																								: `Please Select Employees Before creating  Payroll !`
+																								: `Please select at least one employee for payroll creation !`
 																						}
 																	>
 																		<i className="fa fa-dot-circle-o  mr-1"></i> Create
@@ -1035,6 +1065,7 @@ handleFocusChange = focusedInput => this.setState({ focusedInput });
 
 				// employee_list={employee_list.data}				
 				/> */}
+			</div>
 			</div>
 		)
 	}

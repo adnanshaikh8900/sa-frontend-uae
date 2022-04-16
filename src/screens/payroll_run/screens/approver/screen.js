@@ -35,6 +35,7 @@ import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { AddEmployeesModal } from './sections';
 import moment from 'moment';
+import download from 'downloadjs';
 
 
 const mapStateToProps = (state) => {
@@ -135,7 +136,10 @@ class PayrollApproverScreen extends React.Component {
 	proceed = (payroll_id) => {
 		this.props.createPayrollActions.getPayrollById(payroll_id).then((res) => {
 			if (res.status === 200) {
-				//	 
+			//pay period date format 
+let dateArr=res.data.payPeriod.split("-");
+let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr[1]).format('DD-MM-YYYY')
+
 				this.setState({
 					loading: false,
 					id: res.data.id ? res.data.id : '',
@@ -146,15 +150,16 @@ class PayrollApproverScreen extends React.Component {
 					generatedBy: res.data.generatedBy ? res.data.generatedBy : '',
 
 					isActive: res.data.isActive ? res.data.isActive : '',
-					payPeriod: res.data.payPeriod ? res.data.payPeriod : '',
+					payPeriod: payPeriodString,
 					payrollApprover: res.data.payrollApprover ? res.data.payrollApprover : '',
 					payrollDate: res.data.payrollDate
-						? moment(res.data.payrollDate).format('DD/MM/YYYY')
+						? moment(res.data.payrollDate).format('DD-MM-YYYY')
 						: '',
 					payrollSubject: res.data.payrollSubject ? res.data.payrollSubject : '',
 					runDate: res.data.runDate ? res.data.runDate : '',
 					status: res.data.status ? res.data.status : '',
-					currencyIsoCode : res.data.currencyIsoCode ? res.data.currencyIsoCode : "AED"
+					currencyIsoCode : res.data.currencyIsoCode ? res.data.currencyIsoCode : "AED",
+					existEmpList:res.data.existEmpList ? res.data.existEmpList:[]
 				}
 				)
 
@@ -253,6 +258,50 @@ class PayrollApproverScreen extends React.Component {
 			})
 
 	}
+	renderStatus = (status) => {
+		let classname = '';
+		
+		if (status === 'Approved') {
+			classname = 'label-success';
+		}if (status === 'Paid') {
+			classname = 'label-sent';
+		 } else
+		 if (status === 'UnPaid') {
+			classname = 'label-closed';
+		 } else  if (status === 'Draft') {
+			classname = 'label-currency';
+		} else if (status === 'Paid') {
+			classname = 'label-approved';
+		}else if (status === 'Rejected') {
+			classname = 'label-due';
+		}  if (status === 'Submitted') {
+			classname = 'label-sent';
+		}else if (status === 'Partially Paid') {
+			classname = 'label-PartiallyPaid';
+		}
+		// else {
+		// 	classname = 'label-overdue';
+		// }
+		return (
+			<span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>
+				{status}
+			</span>
+		);
+	};
+	generateSifFile= () => {
+		this.props.createPayrollActions
+			.generateSifFile(this.state.payroll_id,this.state.existEmpList)
+			.then((res) => {
+				if (res.status === 200) {
+					const blob = new Blob([res.data[1]],{type:'application/sif'});
+					download(blob,res.data[0] ?res.data[0]+'.SIF':"payroll.SIF")
+					this.props.commonActions.tostifyAlert('success', 'SIF File Downloaded Successfully')
+				}
+			}).catch((err) => {
+				this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'File Already Opened please close file')
+			})
+	}
+
 	handleSubmit = (data, resetForm) => {
 		this.setState({ disabled: true });
 		const {
@@ -296,11 +345,11 @@ class PayrollApproverScreen extends React.Component {
 		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 		const values = value
 			? value
-			: moment(props.values.payrollDate, 'DD/MM/YYYY').toDate();
+			: moment(props.values.payrollDate, 'DD-MM-YYYY').toDate();
 		// if (temp && values) {
 		// 	const date = moment(values)
 		// 		.add(temp - 1, 'days')
-		// 		.format('DD/MM/YYYY');
+		// 		.format('DD-MM-YYYY');
 		// 	props.setFieldValue('invoiceDueDate', date, true);
 		// }
 	};
@@ -463,6 +512,29 @@ class PayrollApproverScreen extends React.Component {
 					Remove Employees
 				</Button>
 			</Col> */}
+			<Col>		
+			<Label> Status : <span style={{fontSize: "larger"}}>  {this.renderStatus(this.state.status)}</span></Label>					
+			</Col>
+			<Col>
+			{this.state.status && (this.state.status==="Approved" || this.state.status==="Paid" ||this.state.status==="Partially Paid") ? 
+																(
+																	<Button
+																	type="button"
+																	color="primary"
+																	className="btn-square mb-3 pull-right "
+																	onClick={() =>
+																	{	
+																		// this.exportExcelFile()
+																		this.generateSifFile()}
+																	}
+																>
+																	<i class="fas fa-file-invoice-dollar"></i>
+																	{"  "}Download SIF file
+																</Button>
+																)	:
+																	""	
+																	}
+																	</Col>
 
 				</Row>
 				<div >
@@ -743,6 +815,8 @@ class PayrollApproverScreen extends React.Component {
 		const { loading, initValue,dialog } = this.state
 		console.log(approver_dropdown_list, "approver_dropdown_list")
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="create-employee-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -803,12 +877,12 @@ class PayrollApproverScreen extends React.Component {
 																				placeholderText={strings.payrollDate}
 																				showMonthDropdown
 																				showYearDropdown
-																				dateFormat="dd/MM/yyyy"
+																				dateFormat="dd-MM-yyyy"
 																				dropdownMode="select"
 																				value={this.state.payrollDate}
 																				onChange={(value) => {
 																					props.handleChange('payrollDate')(
-																						moment(value).format('DD/MM/YYYY'),
+																						moment(value).format('DD-MM-YYYY'),
 																					);
 																					this.setDate(props, value);
 																				}}
@@ -978,19 +1052,20 @@ class PayrollApproverScreen extends React.Component {
 																<Col>
 																
 																	<FormGroup>
-																	{this.state.status && (this.state.status==="Approved" || this.state.status==="Rejected") ? 
+																	{this.state.status && (this.state.status==="Approved" || this.state.status==="Rejected" ||this.state.status==="Partially Paid"  ||this.state.status==="Paid" ) ? 
 																''	: (
 																		<div>
 
-																		<Label htmlFor="payrollSubject">Comment </Label>
+																		<Label htmlFor="payrollSubject">Reason  </Label>
 																		<Input
 																			// className="mt-4 pull-right"
 																			type="text"
+																			maxLength="250"
 																			id="comment"
 																			name="comment"
 																			value={this.state.comment}
 																			disabled={this.state.status==="Approved" ?true :false }
-																			placeholder={strings.Enter + " Reason"}
+																			placeholder={strings.Enter + " reason for rejecting the payroll"}
 																			onChange={(event) => {
 																				this.setState({
 																					comment: event.target.value
@@ -1010,7 +1085,7 @@ class PayrollApproverScreen extends React.Component {
 																				{props.errors.comment}
 																			</div>
 																		)}
-																		{this.state.status && (this.state.status==="Approved" || this.state.status==="Rejected") ? 
+																		{this.state.status && (this.state.status==="Approved" || this.state.status==="Rejected" ||this.state.status==="Partially Paid"  ||this.state.status==="Paid" ) ? 
 																''	:
 																		(
 																			<Button
@@ -1020,7 +1095,10 @@ class PayrollApproverScreen extends React.Component {
 																			onClick={() =>
 																				this.rejectPayroll()
 																			}
-																		// disabled={selectedRows.length === 0}
+																		disabled={this.state.comment==""?true:false}
+																		title={
+																			this.state.comment==""?"Please Enter Comment":""
+																		}
 																		>
 																			<i class="fas fa-user-times mr-1"></i>
 
@@ -1038,8 +1116,8 @@ class PayrollApproverScreen extends React.Component {
 
 																<Col>
 																<ButtonGroup className="mt-5 pull-right ">
-																{this.state.status && (this.state.status==="Approved" || this.state.status==="Rejected") ? 
-																''	:
+																{this.state.status && (this.state.status==="Approved"  ||this.state.status==="Partially Paid"  ||this.state.status==="Paid" ||this.state.status==="Rejected" ) ? 
+																""	:
 																	(
 																		<Button
 																		type="button"
@@ -1092,6 +1170,7 @@ class PayrollApproverScreen extends React.Component {
 
 				// employee_list={employee_list.data}				
 				/>
+			</div>
 			</div>
 		)
 	}

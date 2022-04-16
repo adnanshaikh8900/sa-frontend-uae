@@ -56,9 +56,42 @@ class RFQTemplate extends Component {
 		);
 	};
 
+	companyMobileNumber=(number)=>{
+
+		let	number1=	number.split(",")
+
+		if(number1.length!=0)
+			number1=number1[0];
+			return number1
+		}
+
+		renderExcise=(item)=>{
+            if(item.exciseTaxId && item.exciseTaxId==1)
+				{
+				  return '50 %'
+				}
+				else
+				if(item.exciseTaxId && item.exciseTaxId==2)
+				{
+				  return '100 %'
+				}
+			}
+
+renderVat=(POData)=>{
+let TotalVatAmount=0
+if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLineItemRequestModelList.length &&POData.poQuatationLineItemRequestModelList.length!=0)
+	{
+		POData.poQuatationLineItemRequestModelList.map((row)=>{
+			TotalVatAmount=TotalVatAmount+row.vatAmount
+		})
+	}
+	return TotalVatAmount;
+}
+
 	render() {
 		strings.setLanguage(this.state.language);
-		const { POData, currencyData, totalNet, companyData,status } = this.props;
+		const { POData, currencyData, totalNet, companyData,status,contactData } = this.props;
+		console.log(contactData,"contactData")
 		return (
 			<div>
 				<Card id="singlePage" className="box">
@@ -99,15 +132,19 @@ class RFQTemplate extends Component {
 									}
 										className=""
 										alt=""
-										style={{ width: ' 100px' }}
+										style={{ width: ' 240px' }}
 									/>
-									<div className="mb-1 ml-2"><b>{strings.CompanyName}:</b> {companyData.companyName}</div>
-									<div className="mb-1 ml-2"><b>{strings.CompanyRegistrationNo}:</b> {companyData.companyRegistrationNumber}</div>
-									<div className="mb-1 ml-2"><b>{strings.VATRegistrationNo}:</b> {companyData.vatRegistrationNumber}</div>
-									<div className="mb-1 ml-2"><b>{strings.MobileNumber}:</b> {companyData.phoneNumber}</div>
+									</div><div style={{ marginTop: '4rem' }}> 
+									<div className="mb-1 ml-2"><b>{strings.CompanyName} : </b> {companyData.companyName}</div>
+									<div className="mb-1 ml-2"><b>{strings.CompanyAddress} : </b> {companyData.companyAddressLine1+","+companyData.companyAddressLine2}</div>
+									<div className="mb-1 ml-2"><b>{strings.PinCode} : </b> {companyData.companyPostZipCode}</div>
+									<div className="mb-1 ml-2"><b>{strings.StateRegion} : </b> {companyData.companyStateName}</div>
+									<div className="mb-1 ml-2"><b>{strings.Country} : </b> {companyData.companyCountryName}</div>
+									<div className="mb-1 ml-2"><b>{strings.VATRegistrationNo} : </b> {companyData.vatRegistrationNumber}</div>
+									<div className="mb-1 ml-2"><b>{strings.MobileNumber} : </b> {this.companyMobileNumber(companyData.phoneNumber?"+"+companyData.phoneNumber:'')}</div>
 								</div>
 							</div>
-							<div style={{ width: '130%',justifyContent:'center' }}>
+							<div style={{ width: '130%',justifyContent:'center',marginTop:'5rem' }}>
 
 									<div
 										style={{
@@ -118,10 +155,7 @@ class RFQTemplate extends Component {
 											color: 'black',
 										}}
 									>
-									{strings.PurchaseOrder
-									+" "+
-									strings.Details
-									}
+									{strings.PurchaseOrder}
 									</div>
 
 							</div>
@@ -137,16 +171,22 @@ class RFQTemplate extends Component {
 									width: '62%',
 									margin:'1.5rem 9.0rem 0.5rem 4rem',
 									// // border:'1px solid',
-									// marginTop:'2.5rem',
-									// marginLeft:'6rem'
+									 marginTop:'6.5rem',
+									 marginLeft:'6.5rem'
 								}}>
 								<h4 className="mb-1 ml-2"><b>{companyData && companyData.company
 											? companyData.company.companyName
 											: ''}</b></h4>
-								<h6 className="mb-1 ml-2">{POData.poNumber} </h6>
-								<h6 className="mb-1 ml-2">{POData.organisationName ? POData.organisationName : POData.supplierName}</h6>
-								<h6 className="mb-1 ml-2">TRN: {POData.vatRegistrationNumber}</h6>
-													<span className="mb-1 ml-2">{strings.Status}:  {this.renderRFQStatus(status)}</span>
+								<h4 className="mb-1 ml-2">{POData.poNumber} </h4><br/>
+								<h6 className="mb-1 ml-2"><b>Purchase From,</b></h6>
+								<h6 className="mb-1 ml-2"><b>Name : </b>{POData.organisationName ? POData.organisationName : POData.supplierName}</h6>
+								{contactData && contactData.addressLine1 &&(<div className="mb-1 ml-2"><b>{strings.BillingAddress} : </b> {contactData.addressLine1}</div>)}
+								{contactData && contactData.postZipCode &&(	<div className="mb-1 ml-2"><b>{strings.PinCode} : </b> {contactData.postZipCode}</div>)}
+								{contactData&&contactData.billingStateName&&(<div className="mb-1 ml-2"><b>{strings.StateRegion} : </b> {contactData.billingStateName}</div>)}
+								{contactData && contactData.billingCountryName &&(<div className="mb-1 ml-2"><b>{strings.Country} : </b> {contactData.billingCountryName}</div>)}
+								<h6 className="mb-1 ml-2"><b>TRN : </b>{POData.vatRegistrationNumber}</h6>
+								{contactData&&contactData.mobileNumber&&(<div className="mb-1 ml-2"><b>{strings.MobileNumber} : </b>+{contactData.mobileNumber}</div>)}
+													<span className="mb-1 ml-2"><b>{strings.Status} :  </b>{this.renderRFQStatus(status)}</span>
 
 													{/* <div
 														className={`ribbon ${this.getRibbonColor(
@@ -193,7 +233,7 @@ class RFQTemplate extends Component {
 								<h6
 								style={{textAlign: 'center',marginLeft:'220px'}}
 								className={'mt-3 mb-2'}
-								>	{strings.Approve+" "+strings.Date }:{' '}
+								><b>{strings.Approve+" "+strings.Date } : </b>{' '}
 								{moment(POData.poApproveDate).format(
 									'DD MMM YYYY',
 								)}
@@ -209,7 +249,7 @@ class RFQTemplate extends Component {
 								<h6
 								style={{textAlign: 'center',marginLeft:'220px'}}
 								className={'mt-3 mb-2'}
-								>	{strings.ReceiveDate }:{' '}
+								><b>{strings.ReceiveDate } : </b>{' '}
 								{moment(POData.poReceiveDate).format(
 									'DD MMM YYYY',
 								)}
@@ -229,10 +269,13 @@ class RFQTemplate extends Component {
 									<th className="center" style={{ padding: '0.5rem' }}>
 										{strings.Quantity }
 									</th>
-									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
+					                <th style={{ padding: '0.5rem', textAlign: 'right' }}>
 										{strings.UnitCost }
 									</th>
+									<th style={{ padding: '0.5rem' }}>{strings.Excise}</th>
+									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.ExciseAmount}</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.Vat}</th>
+									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.VatAmount}</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
 									{strings.Total}
 									</th>
@@ -257,11 +300,18 @@ class RFQTemplate extends Component {
 																: 'USD'
 														}
 													/> */}
-												{POData.currencyIsoCode + " " +item.unitPrice}
+												{POData.currencyIsoCode + " " +item.unitPrice.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
+												</td>
+												<td>{item.exciseTaxId ? this.renderExcise(item):"-"}</td>
+												<td style={{ textAlign: 'right' }}>
+												{POData.currencyIsoCode + " " +item.exciseAmount.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
 												</td>
 												<td
 													style={{ textAlign: 'right' }}
 												>{`${item.vatPercentage}%`}</td>
+												<td style={{ textAlign: 'right' }}>
+												{POData.currencyIsoCode + " " +item.vatAmount.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
+												</td>
 												<td style={{ textAlign: 'right' }}>
 													{/* <Currency
 														value={item.subTotal}
@@ -271,7 +321,7 @@ class RFQTemplate extends Component {
 																: 'USD'
 														}
 													/> */}
-													{POData.currencyIsoCode + " " +item.subTotal}
+													{POData.currencyIsoCode + " " +item.subTotal.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
 												</td>
 											</tr>
 										);
@@ -314,7 +364,7 @@ class RFQTemplate extends Component {
 							</div>
 							<div
 								style={{
-									width: '150%',
+									width: '120%',
 									display: 'flex',
 									justifyContent: 'space-between',
 								}}
@@ -322,9 +372,9 @@ class RFQTemplate extends Component {
 								<div style={{ width: '100%' }}>
 								<Table className="table-clear cal-table">
 									<tbody>
-										<tr >
-											<td style={{ width: '60%' }}>
-												<strong>{strings.SubTotal }</strong>
+									<tr >
+											<td style={{ width: '40%' }}>
+												<strong>{strings.TotalExcise}</strong>
 											</td>
 											<td
 												style={{
@@ -334,31 +384,29 @@ class RFQTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													{POData.currencyIsoCode + " " +totalNet.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-													 {/* ? (
-														<Currency
-															value={totalNet.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													) : (
-														<Currency
-															value={0}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													)} */}
+												{POData.totalExciseAmount? POData.currencyIsoCode + " " +POData.totalExciseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0 } 
 												</span>
 											</td>
 										</tr>
+										<tr>
+											<td style={{ width: '40%' }}>
+												<strong>Total Net</strong>
+											</td>
+											<td
+												style={{
+													display: 'flex',
+													justifyContent: 'space-between',
+												}}
+											>
+												<span style={{ marginLeft: '2rem' }}></span>
+												<span>
+												{POData.totalAmount? POData.currencyIsoCode + " " +(POData.totalAmount-POData.totalVatAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0 } 
+												</span>
+											</td>
+										</tr>
+										
 										<tr >
-											<td style={{ width: '60%' }}>
+											<td style={{ width: '40%' }}>
 												<strong>{strings.Vat }</strong>
 											</td>
 											<td
@@ -369,7 +417,8 @@ class RFQTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													{POData.totalVatAmount?POData.currencyIsoCode+ " " +POData.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0 }
+													{POData ?POData.currencyIsoCode+ " " +this.renderVat(POData).toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0 }
+										
 													{/* ? (
 														<Currency
 															value={POData.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
@@ -393,7 +442,7 @@ class RFQTemplate extends Component {
 											</td>
 										</tr>
 										<tr >
-											<td style={{ width: '60%' }}>
+											<td style={{ width: '40%' }}>
 												<strong>{strings.Total }</strong>
 											</td>
 											<td

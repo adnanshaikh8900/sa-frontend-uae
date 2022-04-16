@@ -109,7 +109,7 @@ class CreateOpeningBalance extends React.Component {
 						resetForm(this.state.initValue);
 						this.props.commonActions.tostifyAlert(
 							'success',
-							'New Opening balance Created Successfully.',
+							res.data ? res.data.message : 'New Opening Balance Created Successfully.',
 						);
 						if (this.state.createMore) {
 							this.setState({
@@ -124,7 +124,7 @@ class CreateOpeningBalance extends React.Component {
 					this.setState({ disabled: false });
 					this.props.commonActions.tostifyAlert(
 						'error',
-						err && err.data ? err.data.message : 'Something Went Wrong',
+						err.data ? err.data.message : 'New Opening Balance Created Unsuccessfully',
 					);
 				});
 		
@@ -180,6 +180,10 @@ class CreateOpeningBalance extends React.Component {
 														errors.openingBalance =
 															'Amount is  required';
 													}
+													if (values.transactionCategoryId && values.transactionCategoryId.label && values.transactionCategoryId.label === "Select Transaction Category") {
+														errors.transactionCategoryId =
+														'Transaction Category is Required';
+													}
 													return errors;
 												}}
 											>
@@ -198,11 +202,10 @@ class CreateOpeningBalance extends React.Component {
 																<Col lg={4}>
 																<FormGroup className="mb-3">
 																<Label htmlFor="transactionCategoryBalanceId">
-																<span className="text-danger">*</span>
+																<span className="text-danger">* </span>
 																{strings.TransactionCategory}
 																</Label>
 																		<Select
-																		styles={customStyles}
 																		id="transactionCategoryId"
 																		name="transactionCategoryId"
 																		placeholder={strings.Select+strings.TransactionCategory}
@@ -241,7 +244,7 @@ class CreateOpeningBalance extends React.Component {
 																<Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="effectiveDate">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.OpeningDate}
 																	</Label>
 																	<DatePicker
@@ -258,7 +261,7 @@ class CreateOpeningBalance extends React.Component {
 																		showMonthDropdown
 																		showYearDropdown
 																		dropdownMode="select"
-																		dateFormat="dd/MM/yyyy"
+																		dateFormat="dd-MM-yyyy"
 																		maxDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('effectiveDate')(value);
@@ -267,7 +270,8 @@ class CreateOpeningBalance extends React.Component {
 																	{props.errors.effectiveDate &&
 																		props.touched.effectiveDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.effectiveDate}
+																				{props.errors.effectiveDate.includes("nullable()") ? "Opening Date is Required" :props.errors.effectiveDate}
+
 																			</div>
 																		)}
 																</FormGroup>
@@ -279,11 +283,11 @@ class CreateOpeningBalance extends React.Component {
 															<Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="openingBalance">
-																		<span className="text-danger">*</span>{strings.Amount}
+																		<span className="text-danger">* </span>{strings.Amount}
 																	</Label>
 																	<Input
 																		type="number"
-																		maxLength="10"
+																		maxLength="14,2"
 																		name="openingBalance"
 																		id="openingBalance"
 																		rows="5"

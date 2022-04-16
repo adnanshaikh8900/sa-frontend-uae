@@ -15,22 +15,29 @@ import {
 	Label,
 } from 'reactstrap';
 import Select from 'react-select';
+import DatePicker from 'react-datepicker';
 import { Message } from 'components';
-import { selectCurrencyFactory } from 'utils';
+import { selectCurrencyFactory,selectOptionsFactory } from 'utils';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { AuthActions, CommonActions } from 'services/global';
 import { ToastContainer, toast } from 'react-toastify';
+import 'react-datepicker/dist/react-datepicker.css';
 import 'react-toastify/dist/ReactToastify.css';
 import PasswordChecklist from "react-password-checklist"
-
+import PhoneInput  from "react-phone-input-2";
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';
+import {data}  from '../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
+		country_list: state.common.country_list,
+		state_list: state.common.state_list,
 		version: state.common.version,
 		universal_currency_list :state.common.universal_currency_list,
+		company_type_list : state.common.company_type_list
 	};
 };
 const eye = require('assets/images/settings/eye.png');
@@ -45,6 +52,8 @@ const options = [
 	{ value: 'strawberry', label: 'Strawberry' },
 	{ value: 'vanilla', label: 'Vanilla' },
 ];
+
+let strings = new LocalizedStrings(data);
 class Register extends React.Component {
 	constructor(props) {
 		super(props);
@@ -52,6 +61,24 @@ class Register extends React.Component {
 			isPasswordShown: false,
 			alert: null,
 			currencyList: [
+			],
+			country_list:[
+				{
+					countryCode: 229,
+					countryDescription: '',
+					countryFullName: "United Arab Emirates - (null)",
+					countryName: "United Arab Emirates",
+					createdBy: '',
+					createdDate: '',
+					currencyCode: '',
+					defaltFlag: "Y",
+					deleteFlag: false,
+					isoAlpha3Code: '',
+					lastUpdateBy: '',
+					lastUpdateDate: '',
+					orderSequence: '',
+					versionNumber: 1,
+				}
 			],
 			success: false,
 			initValue: {
@@ -63,21 +90,36 @@ class Register extends React.Component {
 				lastName: '',
 				email: '',
 				password: '',
-				confirmPassword: '',
-				timeZone: '',
+				confirmPassword: '',  
+				timeZone: {	label: "Asia/Dubai",value: "Asia/Dubai"	},
+				countryId: 229,
+				stateId: '',
+				IsDesignatedZone:'',
+				IsRegistered:'',
+				TaxRegistrationNumber:'',
+				vatRegistrationDate:'',
+				companyAddress1:'',
+				phoneNumber: '',
+
 			},
 			userDetail: false,
 			show: false,
 			togglePassword: '***********',
 			loading: false,
-			timezone: [],
+			checkphoneNumberParam: false,
+			// timeZone: "Asia/Dubai",
+			// timezone: {	label: "Asia/Dubai",value: "Asia/Dubai"	},
 		};
+
+		this.regEx = /^[0-9\d]+$/;
 	}
 
 	componentDidMount = () => {
 		this.getInitialData();
 	};
-
+	getStateList = (countryCode) => {
+		this.props.commonActions.getStateList(229);
+	};
 	getInitialData = () => {
 		this.props.authActions.getTimeZoneList().then((response) => {
 			let output = response.data.map(function (value) {
@@ -85,6 +127,11 @@ class Register extends React.Component {
 			});
 			this.setState({ timezone: output });
 		});
+		
+		this.props.commonActions.getStateList();
+		// this.props.commonActions.getCountryList();
+		this.props.commonActions.getCompanyTypeListRegister();
+
 		this.props.authActions.getCurrencyList();
 		this.props.authActions.getCompanyCount().then((response) => {
 			if (response.data > 0) {
@@ -98,10 +145,10 @@ class Register extends React.Component {
 	// 		passwordShown: !this.state.passwordShown,
 	// 	});
 	// };
-	togglePasswordVisiblity = () => {
-		const { isPasswordShown } = this.state;
-		this.setState({ isPasswordShown: !isPasswordShown });
-	  };
+	// togglePasswordVisiblity = () => {
+	// 	const { isPasswordShown } = this.state;
+	// 	this.setState({ isPasswordShown: !isPasswordShown });
+	//   };
 	handleChange = (key, val) => {
 		this.setState({
 			[key]: val,
@@ -109,6 +156,7 @@ class Register extends React.Component {
 	};
 
 	handleSubmit = (data, resetForm) => {
+
 		this.setState({ loading: true });
 		const {
 			companyName,
@@ -119,8 +167,19 @@ class Register extends React.Component {
 			lastName,
 			email,
 			password,
-			timezone,
+			timeZone,
+			countryId,
+				stateId,
+				IsDesignatedZone,
+				IsRegistered,
+				TaxRegistrationNumber,
+				phoneNumber,
+				vatRegistrationDate,
+				companyAddress1,
+                companyAddress2
+
 		} = data;
+		
 		let obj = {
 			companyName: companyName,
 			currencyCode: currencyCode ? currencyCode : '',
@@ -129,23 +188,52 @@ class Register extends React.Component {
 			firstName: firstName,
 			lastName: lastName,
 			email: email,
-			password: password,
-			timeZone: timezone,
+		
+			countryId:countryId.value,
+			stateId:stateId.value,
+			IsDesignatedZone:IsDesignatedZone,
+			IsRegisteredVat:IsRegistered,
+			TaxRegistrationNumber:TaxRegistrationNumber,
+			vatRegistrationDate:vatRegistrationDate,
 		};
 		let formData = new FormData();
-		for (var key in this.state.initValue) {
-			formData.append(key, data[key]);
+		// for (var key in this.state.initValue) {
+		// 	formData.append(key, data[key]);
+		// }
+		formData.append('companyName', companyName ? companyName : '')
+		formData.append('currencyCode', currencyCode ? currencyCode :'')
+		formData.append('firstName', firstName ? firstName :'')
+		formData.append('lastName', lastName ? lastName :'')
+		formData.append('email', email ? email : '')
+		formData.append('timeZone', 'Asia/Dubai')
+		formData.append('countryId', countryId ? countryId : '229')
+		formData.append('stateId', stateId ? stateId.value : '')
+		formData.append('phoneNumber', phoneNumber ? phoneNumber :'')
+		if (IsDesignatedZone) {
+			formData.append('IsDesignatedZone', IsDesignatedZone);
 		}
-
+		if (IsRegistered) {
+			formData.append('IsRegisteredVat', IsRegistered);
+		}
+		if (TaxRegistrationNumber) {
+			formData.append('TaxRegistrationNumber', TaxRegistrationNumber);
+		}
+		if (vatRegistrationDate) {
+			formData.append('vatRegistrationDate', vatRegistrationDate);
+		}
+		formData.append('companyTypeCode', companyTypeCode ? companyTypeCode : '');
+		formData.append('companyAddressLine1',companyAddress1 ? companyAddress1 : '')
+        formData.append('companyAddressLine2',companyAddress2 ? companyAddress2 : '')
 		formData.append('loginUrl', window.location.origin);
+
+		toast.success('Please check you email to set your password', {
+			position: toast.POSITION.TOP_RIGHT,
+			autoClose:15000,});
 		this.props.authActions
 			.register(formData)
 			.then((res) => {
 				this.setState({ loading: true });
-				toast.success('Register Successfully please log in to continue', {
-					position: toast.POSITION.TOP_RIGHT,
-				});
-				console.log(this.state.initValue.email);
+			
 				this.setState({
 					userDetail: true,
 					userName: email,
@@ -159,7 +247,7 @@ class Register extends React.Component {
 				this.setState({ loading: true });
 				toast.error(
 					err && err.data
-						? 'Log in failed. Please try again'
+						? 'Login Failed. Please Try Again'
 						: 'Something Went Wrong',
 					{
 						position: toast.POSITION.TOP_RIGHT,
@@ -169,7 +257,7 @@ class Register extends React.Component {
 	};
 
 	render() {
-		const { isPasswordShown } = this.state;
+		const { isPasswordShown, companyTypeList,checkphoneNumberParam } = this.state;
 		const customStyles = {
 			control: (base, state) => ({
 				...base,
@@ -181,8 +269,10 @@ class Register extends React.Component {
 				},
 			}),
 		};
-		const { initValue, currencyList, userDetail, timezone } = this.state;
-		const {universal_currency_list} = this.props;
+	
+		const { initValue, currencyList, userDetail, timezone,country_list } = this.state;
+		const {universal_currency_list,state_list,company_type_list} = this.props;
+		console.log(company_type_list)
 		return (
 			<div className="log-in-screen">
 				<ToastContainer
@@ -195,7 +285,7 @@ class Register extends React.Component {
 						<Container>
 							{userDetail === false && (
 								<Row className="justify-content-center">
-									<Col md="8">
+									<Col lg={10} className="mx-auto">
 										<CardGroup>
 											<Card className="p-4">
 												<CardBody>
@@ -203,7 +293,7 @@ class Register extends React.Component {
 														<img
 															src={logo}
 															alt="logo"
-															style={{ width: '226px' }}
+															style={{ width: '300px' }}
 														/>
 													</div>
 													<Formik
@@ -211,18 +301,41 @@ class Register extends React.Component {
 														onSubmit={(values, { resetForm }) => {
 															this.handleSubmit(values, resetForm);
 														}}
+														validate={(values) => {
+															let errors = {};
+		
+															if (checkphoneNumberParam == true) {
+																errors.phoneNumber =
+																	'Invalid mobile number';
+															}
+															return errors;
+														}}
+		
+							
 														validationSchema={Yup.object().shape({
 															companyName: Yup.string().required(
-																'Company name is required',
+																'Company Name is Required',
 															),
 															currencyCode: Yup.string().required(
-																'Currency is required',
+																'Currency is Required',
+															),
+															companyTypeCode: Yup.string().required(
+																'Company / Business Type is Required',
+															),
+															companyAddress1: Yup.string().required(
+																'Company Address is Required',
+															),
+															countryId: Yup.string().required(
+																'Country is Required',
+															),
+															stateId: Yup.string().required(
+																'State is Required',
 															),
 															firstName: Yup.string().required(
-																'First Name is required',
+																'First Name is Required',
 															),
 															lastName: Yup.string().required(
-																'Last Name is required',
+																'Last Name is Required',
 															),
 															email: Yup.string()
 																.required('Email is Required')
@@ -230,39 +343,62 @@ class Register extends React.Component {
 															timeZone: Yup.string().required(
 																'Time Zone is Required',
 															),
-															password: Yup.string()
-																.required('Please Enter your password')
-															// .matches(
-															// 	/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
-															// 	'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character',
-															// ),
-															,
-															confirmPassword: Yup.string()
-																.required('Please Confirm Password')
-																.oneOf(
-																	[Yup.ref('password'), null],
-																	'Passwords must match',
-																),
+															phoneNumber: Yup.string().required(
+																'Mobile Number is Required',
+															),
+															TaxRegistrationNumber: Yup.string().when(
+																'IsRegistered',
+																{
+																	is: (value) => value === true,
+																	then: Yup.string().required(
+																		'Tax Registration Number is Required',
+																	)
+																	.test(
+																		'TaxRegistrationNumber',
+																		'Invalid TRN',
+																		(value) => {
+																			if (value > 15) {
+																				return true;
+																			} else {
+																				return false;
+																			}
+																		},
+																	),
+																	otherwise: Yup.string(),
+																},
+															),							
+															vatRegistrationDate: Yup.string().when(
+																'IsRegistered',
+																{
+																	is: (value) => value === true,
+																	then: Yup.string().required(
+																		'Vat Registration Date is Required',
+																	),
+																	otherwise: Yup.string(),
+																},
+															)
+																								
 														})}
 													>
 														{(props) => {
+															
 															return (
 																<Form onSubmit={props.handleSubmit}>
 																	{/* <h1>Log In</h1> */}
 																	<div className="registerScreen">
 																		<h2 className="">Register</h2>
-																		<p>Enter your details below to register</p>
+																		<p>Enter Your Details Below To Register</p>
 																	</div>
-																	<Row>
-																		<Col lg={6}>
+																	<div>
+																	<h4 className="">Company Details</h4>
+																	</div>
+																	<Row className="mt-2">
+																		<Col lg={4}>
 																			<FormGroup className="mb-3">
-																				<Label htmlFor="companyName">
-																					<span className="text-danger">*</span>
-																					Company Name
-																				</Label>
+																			<Label htmlFor="select"><span className="text-danger">* </span>Company Name</Label>
 																				<Input
 																					type="text"
-																					maxLength="50"
+																					maxLength="100"
 																					id="companyName"
 																					name="companyName"
 																					placeholder="Enter Company Name"
@@ -287,13 +423,14 @@ class Register extends React.Component {
 																					)}
 																			</FormGroup>
 																		</Col>
-																		<Col lg={6}>
+																		<Col lg={4}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="currencyCode">
-																					<span className="text-danger">*</span>
+																				
 																					Currency
 																				</Label>
 																				<Select
+																				isDisabled
 																					styles={customStyles}
 																					id="currencyCode"
 																					name="currencyCode"
@@ -348,116 +485,140 @@ class Register extends React.Component {
 																					)}
 																			</FormGroup>
 																		</Col>
-																		<Col lg={6}>
+																		<Col lg={4}>
+																						<FormGroup>
+																							<Label htmlFor="companyId">
+																							<span className="text-danger">* </span>
+																								 Company / Business Type
+																						</Label>
+																							<Select
+																								options={
+																									company_type_list
+																										? selectOptionsFactory.renderOptions(
+																											'label',
+																											'value',
+																											company_type_list,
+																											'Company Type Code',
+																										)
+																										: []
+																								}
+																								value={
+																									company_type_list &&
+																									company_type_list.find(
+																										(option) =>
+																											option.value ===
+																											+props.values
+																												.companyTypeCode,
+																									)
+																								}
+																								onChange={(option) => {
+																									if (option && option.value) {
+																										props.handleChange(
+																											'companyTypeCode',
+																										)(option.value);
+																									} else {
+																										props.handleChange(
+																											'companyTypeCode',
+																										)('');
+																									}
+																								}}
+																								placeholder={strings.Enter+strings.CompanyName}
+																								id="companyTypeCode"
+																								name="companyTypeCode"
+																								placeholder="Enter Buisness Type"
+																								className={
+																									props.errors.companyTypeCode &&
+																										props.touched.companyTypeCode
+																										? 'is-invalid'
+																										: ''
+																								}
+																							/>
+																							{props.errors.companyTypeCode &&
+																								props.touched.companyTypeCode && (
+																									<div className="invalid-feedback">
+																										{props.errors.companyTypeCode}
+																									</div>
+																								)}
+																						</FormGroup>
+																					</Col>
+															
+																		</Row>
+																	<Row className="row-wrapper">
+																		<Col lg={4}>
 																			<FormGroup className="mb-3">
-																				<Label htmlFor="firstName">
-																					<span className="text-danger">*</span>
-																					First Name
-																				</Label>
+																			<Label htmlFor="select"><span className="text-danger">* </span>Company Address Line 1</Label>
 																				<Input
 																					type="text"
-																					maxLength="50"
-																					id="firstName"
-																					name="firstName"
-																					placeholder="Enter First Name"
-																					value={props.values.firstName}
+																					maxLength="100"
+																					id="companyAddress1"
+																					name="companyAddress1"
+																					placeholder="Enter Company Address"
+																					value={props.values.account_name}
 																					onChange={(option) => {
-																						props.handleChange('firstName')(
+																						props.handleChange('companyAddress1')(
 																							option,
 																						);
 																					}}
 																					className={
-																						props.errors.firstName &&
-																						props.touched.firstName
+																						props.errors.companyAddress1 &&
+																						props.touched.companyAddress1
 																							? 'is-invalid'
 																							: ''
 																					}
 																				/>
-																				{props.errors.firstName &&
-																					props.touched.firstName && (
+																				{props.errors.companyAddress1 &&
+																					props.touched.companyAddress1 && (
 																						<div className="invalid-feedback">
-																							{props.errors.firstName}
+																							{props.errors.companyAddress1}
 																						</div>
 																					)}
 																			</FormGroup>
 																		</Col>
-																		<Col lg={6}>
+																		<Col lg={4}>
 																			<FormGroup className="mb-3">
-																				<Label htmlFor="lastName">
-																					<span className="text-danger">*</span>
-																					Last Name
-																				</Label>
+																				<Label htmlFor="companyAddress2">Company Address Line 2</Label>
 																				<Input
 																					type="text"
-																					maxLength="50"
-																					id="lastName"
-																					name="lastName"
-																					placeholder="Enter Last Name"
-																					value={props.values.lastName}
+																				 	maxLength="100"
+																					id="companyAddress2"
+																					name="companyAddress2"
+																					placeholder="Enter Company Address"
+																					value={props.values.account_name}
 																					onChange={(option) => {
-																						props.handleChange('lastName')(
+																						props.handleChange('companyAddress2')(
 																							option,
 																						);
 																					}}
 																					className={
-																						props.errors.lastName &&
-																						props.touched.lastName
+																						props.errors.companyAddress2 &&
+																						props.touched.companyAddress2
 																							? 'is-invalid'
 																							: ''
 																					}
 																				/>
-																				{props.errors.lastName &&
-																					props.touched.lastName && (
+																				{props.errors.companyAddress2 &&
+																					props.touched.companyAddress2 && (
 																						<div className="invalid-feedback">
-																							{props.errors.lastName}
+																							{props.errors.companyAddress2}
 																						</div>
 																					)}
 																			</FormGroup>
 																		</Col>
-																		<Col lg={6}>
-																			<FormGroup className="mb-3">
-																				<Label htmlFor="email">
-																					<span className="text-danger">*</span>
-																					Email Address
-																				</Label>
-																				<Input
-																					type="text"
-																					id="email"
-																					name="email"
-																					placeholder="Enter Email Address"
-																					value={props.values.email}
-																					onChange={(option) => {
-																						props.handleChange('email')(option);
-																					}}
-																					className={
-																						props.errors.email &&
-																						props.touched.email
-																							? 'is-invalid'
-																							: ''
-																					}
-																				/>
-																				{props.errors.email &&
-																					props.touched.email && (
-																						<div className="invalid-feedback">
-																							{props.errors.email}
-																						</div>
-																					)}
-																			</FormGroup>
-																		</Col>
-																		<Col lg={6}>
+																		<Col lg={4}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="timeZone">
-																					<span className="text-danger">*</span>
 																					Time Zone Preference
 																				</Label>
 																				<Select
+																					isDisabled
 																					styles={customStyles}
 																					id="timeZone"
 																					name="timeZone"
 																					options={timezone ? timezone : []}
-																					value={props.values.timezone}
+																					value={props.values.timeZone}
 																					onChange={(option) => {
 																						if (option && option.value) {
+																							 
 																							props.handleChange('timeZone')(
 																								option.value,
 																							);
@@ -482,98 +643,434 @@ class Register extends React.Component {
 																					)}
 																			</FormGroup>
 																		</Col>
-																		<Col lg={6}>
-																			<FormGroup className="mb-3">
-																				<Label htmlFor="email">
-																					<span className="text-danger">*</span>
-																					Password
-																				</Label>
-																				<div>
+																		
+																			</Row>
+																		<Row className="row-wrapper">
+															<Col lg={4}>
+																<FormGroup>
+																	<Label htmlFor="countryId">Country</Label>
+																	<Select
+																		isDisabled
+																		styles={customStyles}
+																		options={
+																			
+																			country_list
+																				? selectOptionsFactory.renderOptions(
+																						'countryName',
+																						'countryCode',
+																						country_list,
+																						'Country',
+																				  )
+																				: []
+																		}
+																		// value={props.values.countryId}
+																		value={
+																			country_list &&
+																			selectOptionsFactory.renderOptions(
+																				'countryName',
+																				'countryCode',
+																				country_list,
+																				'Country',
+																				)
+																				.find(
+																					(option) =>
+																						option.value ===
+																						+props.values.countryId,
+																				)
+																		}
+																		onChange={(option) => {
+																			 
+																			if (option && option.value) {
+																				props.handleChange('countryId')(option);
+																				this.getStateList(option.value);
+																			} else {
+																				props.handleChange('countryId')('');
+																				this.getStateList('');
+																			}
+																			props.handleChange('stateId')({
+																				label: 'Select State',
+																				value: '',
+																			});
+																		}}
+																		// placeholder={strings.Select+strings.Country}
+																		id="countryId"
+																		name="countryId"
+																		className={
+																			props.errors.countryId &&
+																			props.touched.countryId
+																				? 'is-invalid'
+																				: ''
+																		}
+																	/>
+																	{props.errors.countryId &&
+																		props.touched.countryId && (
+																			<div className="invalid-feedback">
+																				{props.errors.countryId}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
+															<Col lg={4}>
+																<FormGroup>
+																	{/* <Label htmlFor="stateId"> {props.values.countryId.value === 229 ? "Emirates" : "State/Provinces"}</Label> */}
+																	<Label htmlFor="select"><span className="text-danger">* </span>Emirates</Label>
+																	<Select
+																		styles={customStyles}
+																		options={
+																			state_list
+																				? selectOptionsFactory.renderOptions(
+																						'label',
+																						'value',
+																						state_list,
+																						'Emirates',
+																				  )
+																				: []
+																		}
+																		// value={props.values.stateId}
+																		value={
+																			state_list &&
+																			state_list.find(
+																				(option) =>
+																					option.value ===
+																					+props.values
+																						.stateId,
+																			)
+																		}
+																		onChange={(option) => {
+																			if (option && option.value) {
+																				props.handleChange('stateId')(option);
+																			} else {
+																				props.handleChange('stateId')('');
+																			}
+																		}}
+																		// placeholder={strings.Select+strings.StateRegion}
+																		id="stateId"
+																		name="stateId"
+																		placeholder="Select Emirates"
+																		className={
+																			props.errors.stateId &&
+																			props.touched.stateId
+																				? 'is-invalid'
+																				: ''
+																		}
+																	/>
+																	{props.errors.stateId &&
+																		props.touched.stateId && (
+																			<div className="invalid-feedback">
+																				{props.errors.stateId}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
+															<Col lg={4}>
+																						<FormGroup className="mb-3 phoneNumber">
+																							<Label htmlFor="phoneNumber">
+																							<span className="text-danger">*</span> {strings.MobileNumber}
+																						</Label>
+																							<PhoneInput
+																								country={"ae"}
+																								enableSearch={true}
+																								international
+																								style={{width:"260px !important"}}
+																								value={props.values.phoneNumber}
+																								placeholder={strings.Enter+strings.MobileNumber}
+																								onChange={(option) => {
+																									props.handleChange(
+																										'phoneNumber',
+																									)(option);
+																									
+																									option.length !== 12 ? this.setState({ checkphoneNumberParam: true }) : this.setState({ checkphoneNumberParam: false });
+																								}}
+																								isValid
+																								className="phoneNumber"
+																								className={
+																									props.errors.phoneNumber &&
+																										props.touched.phoneNumber
+																										? ' invalid-feedback is-invalid '
+																										: ''
+																								}
+																							/>
+																							{props.errors.phoneNumber &&
+																								props.touched.phoneNumber && (
+																									<div className="invalid-feedback">
+																										{props.errors.phoneNumber}
+																									</div>
+																								)}
+																						</FormGroup>
+																					</Col>
+																		
+															</Row>
+															{/* style={{display:props.values.countryId.value === 229 ? '' : 'none'}} */}
+															<Row >
+															<Col lg={5} >
+																<FormGroup check inline className="mt-1">
+																		<Label
+																			className="form-check-label mt-3"
+																			check
+																			htmlFor="Zone"
+																		>
 																			<Input
-																				type={
-																					this.state.isPasswordShown
-																						? 'text'
-																						: 'password'
-																				}
-																				id="password"
-																				name="password"
-																				placeholder="Enter password"
-																				value={props.values.password}
-																				onChange={(option) => {
-																					props.handleChange('password')(
-																						option,
+																				type="checkbox"
+																				id="IsDesignatedZone"
+																				name="IsDesignatedZone"
+																				checked={props.values.IsDesignatedZone}
+																				onChange={(value) => {
+																					if(value != null){
+																					props.handleChange('IsDesignatedZone')(
+																						value,
 																					);
+																					}else{
+																						props.handleChange('IsDesignatedZone')(
+																							'',
+																						);
+																					}
 																				}}
 																				className={
-																					props.errors.password &&
-																					props.touched.password
+																					props.errors.IsDesignatedZone &&
+																					props.touched.IsDesignatedZone
 																						? 'is-invalid'
 																						: ''
 																				}
 																			/>
-																		<i   className={`fa ${ isPasswordShown ? "fa-eye-slash" : "fa-eye" } password-icon fa-lg`}
-																		onClick={this.togglePasswordVisiblity}
-																	>
-																		{/* <img
-																			src={eye}
-																			style={{ width: '20px' }}
-																		/> */}
-																					</i>
-																				</div>
-																				{props.errors.password &&
-																					props.touched.password && (
-																						<div className="invalid-feedback">
-																							{props.errors.password}
-																						</div>
-																					)}
-																			</FormGroup>
-																			<PasswordChecklist
-																			rules={["length", "specialChar", "number", "capital"]}
-																			minLength={5}
-																			value={props.values.password}
-																			valueAgain={props.values.confirmPassword}
-																		/>
-																		</Col>
-																		
-																		<Col lg={6}>
+																			Company located in Designated Zone?
+																			{props.errors.IsDesignatedZone &&
+																				props.touched.IsDesignatedZone && (
+																					<div className="invalid-feedback">
+																						{props.errors.IsDesignatedZone}
+																					</div>
+																				)}
+																		</Label>
+																	</FormGroup>
+																	</Col>
+															</Row>
+															{/* style={{display:props.values.countryId.value === 229 ? '' : 'none'}} */}
+															<Row className="mb-4" >
+															<Col lg={5}>
+																<FormGroup check inline className="mt-1">
+																		<Label
+																			className="form-check-label mt-3"
+																			check
+																			htmlFor="vat"
+																		>
+																			<Input
+																				type="checkbox"
+																				id="IsRegistered"
+																				name="IsRegistered"
+																				checked={props.values.IsRegistered}
+																				value={true}
+																				onChange={(value) => {
+																					if(value != null){
+																						props.handleChange('IsRegistered')(
+																							value,
+																						);
+																					}else{
+																						props.handleChange('IsRegistered')(
+																							'',
+																						);
+																					}
+																				
+																				}}
+																				className={
+																					props.errors.IsRegistered &&
+																					props.touched.IsRegistered
+																						? 'is-invalid'
+																						: ''
+																				}
+																			/>
+																			Is Vat Registered?
+																			{props.errors.IsRegistered &&
+																				props.touched.IsRegistered && (
+																					<div className="invalid-feedback">
+																						{props.errors.IsRegistered}
+																					</div>
+																				)}
+																		</Label>
+																	</FormGroup>
+																	</Col>
+															</Row>
+														<Row className="row-wrapper" style={{display:props.values.IsRegistered === true ? '': 'none'}}>
+																<Col lg={4}>
+																<FormGroup >
+																	<Label htmlFor="TaxRegistrationNumber">
+																	Tax Registration Number
+																	</Label>
+																	<Input
+																		type="text"
+																		minLength="15"
+																		maxLength="15"
+																		placeholder="Enter Tax Registration Number"
+																		id="TaxRegistrationNumber"
+																		name="TaxRegistrationNumber"
+																		// placeholder={strings.Enter+strings.TaxRegistrationNumber}
+																		onChange={(option) => {
+																			if (
+																				option.target.value === '' ||
+																				this.regEx.test(option.target.value)
+																			) {
+																				props.handleChange(
+																					'TaxRegistrationNumber',
+																				)(option);
+																			}
+																		}}
+																		value={props.values.TaxRegistrationNumber}
+																		className={
+																			props.errors.TaxRegistrationNumber &&
+																			props.touched.TaxRegistrationNumber
+																				? 'is-invalid'
+																				: ''
+																		}
+																	/>
+																	{props.errors.TaxRegistrationNumber &&
+																		props.touched.TaxRegistrationNumber && (
+																			<div className="invalid-feedback">
+																				{props.errors.TaxRegistrationNumber}
+																			</div>
+																		)}
+																			<div className="VerifyTRN">
+																		<br/>
+																		<b>	<a target="_blank" rel="noopener noreferrer"  href="https://eservices.tax.gov.ae/en-us/trn-verify" style={{ color: '#2266d8' }}  >Verify TRN</a></b>
+																	</div>
+																</FormGroup>
+															</Col>
+															<Col lg={4}>
+																<FormGroup>
+																	<Label htmlFor="date">
+																	Vat Registered On
+																	</Label>
+																	<DatePicker
+																		autoComplete="off"
+																		id="vatRegistrationDate"
+																		minDate={new Date("01/01/2018")}
+																		name="vatRegistrationDate"
+																		placeholderText="Select Vat Registered Date"
+																		maxDate={new Date()}
+																		showMonthDropdown
+																		showYearDropdown
+																		dateFormat="dd-MM-yyyy"
+																		dropdownMode="select"
+																		value={props.values.vatRegistrationDate}
+																		selected={props.values.vatRegistrationDate}
+																		onBlur={props.handleBlur('vatRegistrationDate')}
+																		onChange={(value) => {
+																			props.handleChange('vatRegistrationDate')(
+																				value,
+																			);
+																		}}
+																		className={`form-control ${
+																			props.errors.vatRegistrationDate &&
+																			props.touched.vatRegistrationDate
+																				? 'is-invalid'
+																				: ''
+																		}`}
+																	/>
+																		{props.errors.vatRegistrationDate &&
+																		props.touched.vatRegistrationDate && (
+																			<div className="invalid-feedback">
+																				{props.errors.vatRegistrationDate}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
+															</Row>
+															<hr />
+																<div>
+																	<h4>Super Admin</h4>
+																	</div>
+														
+																		<Row>
+																		<Col lg={4}>
 																			<FormGroup className="mb-3">
-																				<Label htmlFor="email">
-																					<span className="text-danger">*</span>
-																					Confirm Password
-																				</Label>
+																				<Label htmlFor="firstName">
+																				<span className="text-danger">* </span>First Name</Label>
 																				<Input
-																					type="password"
-																					id="confirmPassword"
-																					name="confirmPassword"
-																					placeholder="Confirm Password"
+																					type="text"
+																					maxLength="100"
+																					id="firstName"
+																					name="firstName"
+																					placeholder="Enter First Name"
+																					value={props.values.firstName}
 																					onChange={(option) => {
-																						props.handleChange(
-																							'confirmPassword',
-																						)(option);
+																						props.handleChange('firstName')(
+																							option,
+																						);
 																					}}
-																					value={props.values.confirmPassword}
 																					className={
-																						props.errors.confirmPassword &&
-																						props.touched.confirmPassword
+																						props.errors.firstName &&
+																						props.touched.firstName
 																							? 'is-invalid'
 																							: ''
 																					}
 																				/>
-																				{props.errors.confirmPassword &&
-																					props.touched.confirmPassword && (
+																				{props.errors.firstName &&
+																					props.touched.firstName && (
 																						<div className="invalid-feedback">
-																							{props.errors.confirmPassword}
+																							{props.errors.firstName}
 																						</div>
 																					)}
-																			<PasswordChecklist
-																				rules={[ "match"]}
-																				minLength={5}
-																				value={props.values.password}
-																				valueAgain={props.values.confirmPassword}
-																			/>
 																			</FormGroup>
 																		</Col>
-																	</Row>
+																		<Col lg={4}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="lastName">
+																				<span className="text-danger">* </span>Last Name</Label>
+																				<Input
+																					type="text"
+																					maxLength="100"
+																					id="lastName"
+																					name="lastName"
+																					placeholder="Enter Last Name"
+																					value={props.values.lastName}
+																					onChange={(option) => {
+																						props.handleChange('lastName')(
+																							option,
+																						);
+																					}}
+																					className={
+																						props.errors.lastName &&
+																						props.touched.lastName
+																							? 'is-invalid'
+																							: ''
+																					}
+																				/>
+																				{props.errors.lastName &&
+																					props.touched.lastName && (
+																						<div className="invalid-feedback">
+																							{props.errors.lastName}
+																						</div>
+																					)}
+																			</FormGroup>
+																		</Col>
+																		<Col lg={4}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="email">
+																				<span className="text-danger">* </span>Email Address</Label>
+																				<Input
+																					type="text"
+																					maxLength="80"
+																					id="email"
+																					name="email"
+																					placeholder="Enter Email Address"
+																					value={props.values.email}
+																					onChange={(option) => {
+																						props.handleChange('email')(option);
+																					}}
+																					className={
+																						props.errors.email &&
+																						props.touched.email
+																							? 'is-invalid'
+																							: ''
+																					}
+																				/>
+																				{props.errors.email &&
+																					props.touched.email && (
+																						<div className="invalid-feedback">
+																							{props.errors.email}
+																						</div>
+																					)}
+																			</FormGroup>
+																		</Col>
+																		</Row>
+																		<>Note:<b> Super Admin</b> Details Cannot Be Altered After Registration</>
 																	<Row>
 																		<Col className="text-center">
 																			<Button
@@ -591,21 +1088,6 @@ class Register extends React.Component {
 																			</Button>
 																		</Col>
 																	</Row>
-																	{/* <Row>
-																		<Col>
-																			<Button
-																				type="button"
-																				color="link"
-																				className="px-0"
-																				onClick={() => {
-																					this.props.history.push('/login');
-																				}}
-																				style={{ marginTop: '-10px' }}
-																			>
-																				Back
-																			</Button>
-																		</Col>
-																	</Row> */}
 																</Form>
 															);
 														}}
@@ -617,78 +1099,6 @@ class Register extends React.Component {
 								</Row>
 							)}
 							{userDetail === true &&
-								// <Row className="justify-content-center">
-								// 	<Col md="8">
-								// 		<CardGroup>
-								// 			<Card className="p-4">
-								// 				<CardBody>
-								// 					<div className="logo-container">
-								// 						<img
-								// 							src={logo}
-								// 							alt="logo"
-								// 							style={{ width: '226px' }}
-								// 						/>
-								// 					</div>
-								// 					<div className="registerScreen">
-								// 						<h2 className="">Login Details</h2>
-								// 						<p>Please save Username and Password to login</p>
-								// 					</div>
-								// 					<Row>
-								// 						<Col md="12">
-								// 							<FormGroup className="mb-3">
-								// 								<Label htmlFor="lastName">User Name</Label>
-								// 								<div style={{ fontWeight: 'bold' }}>
-								// 									{this.state.userName}
-								// 								</div>
-								// 							</FormGroup>
-								// 						</Col>
-								// 						<Col md="12">
-								// 							<FormGroup className="mb-3">
-								// 								<Label htmlFor="lastName">Password</Label>
-								// 								<div
-								// 									style={{ fontWeight: 'bold' }}
-								// 									className="d-flex align-items-center"
-								// 								>
-								// 									{this.state.show
-								// 										? this.state.password
-								// 										: this.state.togglePassword}
-								// 									<span
-								// 										className="ml-1"
-								// 										style={{ cursor: 'pointer' }}
-								// 									>
-								// 										<i
-								// 											className="fa fa-eye"
-								// 											onClick={() => {
-								// 												this.setState({
-								// 													show: !this.state.show,
-								// 												});
-								// 											}}
-								// 											aria-hidden="true"
-								// 										></i>
-								// 									</span>
-								// 								</div>
-								// 							</FormGroup>
-								// 						</Col>
-								// 					</Row>
-								// 					<Row>
-								// 						<Col className="mt-3">
-								// 							<p className="r-btn">
-								// 								Saved Credentials? Now{' '}
-								// 								<span
-								// 									onClick={() => {
-								// 										this.props.history.push('/login');
-								// 									}}
-								// 								>
-								// 									Login
-								// 								</span>
-								// 							</p>
-								// 						</Col>
-								// 					</Row>
-								// 				</CardBody>
-								// 			</Card>
-								// 		</CardGroup>
-								// 	</Col>
-								// </Row>
 								this.props.history.push('/login')}
 						</Container>
 					</div>

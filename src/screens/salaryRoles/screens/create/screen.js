@@ -163,7 +163,7 @@ class CreateSalaryRoles extends React.Component {
                          }}
                         validationSchema={Yup.object().shape({
                           salaryRoleName: Yup.string()
-                            .required("salary Role Name is Required"),
+                            .required("Salary Role Name is Required"),
                          
                         })}
                       >
@@ -178,7 +178,7 @@ class CreateSalaryRoles extends React.Component {
                               
                               <Col lg={4}>
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span>{strings.SalaryRoleName}</Label>
+                                  <Label htmlFor="select"><span className="text-danger">* </span>{strings.SalaryRoleName}</Label>
                                   <Input
                                     type="text"
                                     id="salaryRoleName"

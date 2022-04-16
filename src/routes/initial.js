@@ -1,4 +1,4 @@
-import { LogIn, ResetPassword, Register, LogInTwo ,NewPassword} from 'screens';
+import { LogIn, ResetPassword, Register, LogInTwo,NewPassword } from 'screens';
 
 const initialRoutes = [
 	{

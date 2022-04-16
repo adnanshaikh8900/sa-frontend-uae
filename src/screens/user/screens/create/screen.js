@@ -178,8 +178,8 @@ class CreateUser extends React.Component {
 		// 	'dob',
 		// 	dob
 		// 		? moment(
-		// 				moment(dob).format('DD/MM/YYYY'),
-		// 				'DD/MM/YYYY',
+		// 				moment(dob).format('DD-MM-YYYY'),
+		// 				'DD-MM-YYYY',
 		// 		  ).toDate()
 		// 		: null,
 		// );
@@ -198,6 +198,7 @@ class CreateUser extends React.Component {
 		formData.append('salaryRoleId',salaryRoleId ? salaryRoleId.value : '');
 		formData.append('employeeId',employeeId ? employeeId.value : '');
 		formData.append('url',window.location.origin);
+
 		this.props.userCreateActions
 			.createUser(formData)
 			.then((res) => {
@@ -233,7 +234,7 @@ class CreateUser extends React.Component {
 			name: value,
 		};
 		this.props.userCreateActions.checkValidation(data).then((response) => {
-			if (response.data === 'User already exists') {
+			if (response.data === 'User Already Exists') {
 				this.setState({
 					exist: true,
 					createDisabled: false,
@@ -319,7 +320,7 @@ class CreateUser extends React.Component {
 													let errors = {};
 													if (this.state.exist === true) {
 														errors.email =
-															'User already exists';
+															'User Already Exists';
 													}
 
 													if (errors.length) {
@@ -406,7 +407,7 @@ class CreateUser extends React.Component {
 																	<Col lg={6}>
 																		<FormGroup>
 																			<Label htmlFor="select">
-																				<span className="text-danger">*</span>
+																				<span className="text-danger">* </span>
 																				 {strings.FirstName}
 																			</Label>
 																			<Input
@@ -446,7 +447,7 @@ class CreateUser extends React.Component {
 																	<Col lg={6}>
 																		<FormGroup>
 																			<Label htmlFor="select">
-																				<span className="text-danger">*</span>
+																				<span className="text-danger">* </span>
 																				 {strings.LastName}
 																			</Label>
 																			<Input
@@ -488,7 +489,7 @@ class CreateUser extends React.Component {
 																	<Col lg={6}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="email">
-																				<span className="text-danger">*</span>
+																				<span className="text-danger">* </span>
 																				 {strings.EmailID}
 																			</Label>
 																			<Input
@@ -529,7 +530,7 @@ class CreateUser extends React.Component {
 																				name="dob"
 																				showMonthDropdown
 																				showYearDropdown
-																				dateFormat="dd/MM/yyyy"
+																				dateFormat="dd-MM-yyyy"
 																				dropdownMode="select"
 																				placeholderText={strings.Enter+strings.DateOfBirth}
 																				maxDate={new Date()}
@@ -624,7 +625,7 @@ class CreateUser extends React.Component {
 																	<Col lg={6}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="contactId">
-																				{/* <span className="text-danger">*</span> */}
+																				{/* <span className="text-danger">* </span> */}
 																				{strings.Employee}
 																			</Label>
 																			<Select
@@ -670,7 +671,7 @@ class CreateUser extends React.Component {
 																	<Col lg={6}>
 																		<FormGroup>
 																			<Label htmlFor="roleId">
-																				<span className="text-danger">*</span>
+																				<span className="text-danger">* </span>
 																				 {strings.Role}
 																			</Label>
 																			<Select
@@ -716,11 +717,10 @@ class CreateUser extends React.Component {
 																	<Col lg={6}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="timezone">
-																				<span className="text-danger">*</span>
+																				<span className="text-danger">* </span>
 																				 {strings.TimeZonePreference}
 																			</Label>
 																			<Select
-																				styles={customStyles}
 																				id="timezone"
 																				name="timezone"
 																				placeholder={strings.Select + strings.TimeZonePreference}
@@ -832,10 +832,10 @@ class CreateUser extends React.Component {
                                   </Col> */}
 																</Row>
 																<Row></Row>
-														
+																
 															{/* <Row>
 																<Col>
-																<Label>	<span className="text-danger">*</span>{strings.SelectLinkOrCreateEmployee} </Label>
+																<Label>	<span className="text-danger">* </span>{strings.SelectLinkOrCreateEmployee} </Label>
 																</Col>
 															</Row> */}
 																<Row>
@@ -956,7 +956,7 @@ class CreateUser extends React.Component {
 																	<Col lg={3}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="contactId">
-																				<span className="text-danger">*</span>
+																				<span className="text-danger">* </span>
 																		 {strings.Designation}
 																	</Label>
 																			<Select

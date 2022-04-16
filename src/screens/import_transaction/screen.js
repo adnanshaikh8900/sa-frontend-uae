@@ -16,30 +16,46 @@ import {
 import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import * as ImportTransactionActions from './actions';
+import * as ImportBankStatementActions from '../import_bank_statement/actions';
 import { selectOptionsFactory } from 'utils';
 import { CommonActions } from 'services/global';
 
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
-import {data}  from '../Language/index'
+import { data } from '../Language/index'
 import LocalizedStrings from 'react-localization';
-
+import * as DetailBankAccountActions from '../bank_account/screens/detail/actions'
+import moment from 'moment';
 import { Loader } from 'components';
+import { Formik } from 'formik';
 
 const mapStateToProps = (state) => {
 	return {
 		date_format_list: state.import_transaction.date_format_list,
 	};
 };
+
+
+const reader = require('xlsx')
+
 const mapDispatchToProps = (dispatch) => {
 	return {
 		importTransactionActions: bindActionCreators(
 			ImportTransactionActions,
 			dispatch,
 		),
+		importBankStatementActions: bindActionCreators(
+			ImportBankStatementActions,
+			dispatch,
+		),
 		commonActions: bindActionCreators(CommonActions, dispatch),
+		detailBankAccountActions : bindActionCreators(DetailBankAccountActions,dispatch)
 	};
 };
+const Papa = require("papaparse")
+const { convertArrayToCSV } = require('convert-array-to-csv')
+const converter = require('convert-array-to-csv')
+const fs = require('fs');
 
 let strings = new LocalizedStrings(data);
 class ImportTransaction extends React.Component {
@@ -55,9 +71,15 @@ class ImportTransaction extends React.Component {
 				headerRowNo: '',
 				textQualifier: '',
 				dateFormatId: '',
-				delimiter: '',
+				delimiter: 'OTHER',
 				otherDilimiterStr: '',
+				endRows: '',
+				skipColumns: [],
 			},
+			dateFormat: "",
+			// DateErrorMessage:"-",
+			isDateFormatAndFileDateFormatSame: true,
+			showMessage: false,
 			delimiterList: [],
 			fileName: '',
 			tableHeader: [],
@@ -66,13 +88,40 @@ class ImportTransaction extends React.Component {
 			selectedValueDropdown: [],
 			tableDataKey: [],
 			tableData: [],
+
 			columnStatus: [],
 			selectedDelimiter: '',
 			selectedDateFormat: '',
 			configurationList: [],
-			selectedConfiguration: '',
+			selectedConfiguration: this.props.location.state.selectedTemplate ?this.props.location.state.selectedTemplate:'',
 			selectError: [],
+			errorIndexList: [],
 			error: {},
+			config: {
+				delimiter: "",	// auto-detect
+				newline: "",	// auto-detect
+				quoteChar: '"',
+				escapeChar: '"',
+
+				preview: "",
+				encoding: "",
+				worker: false,
+				comments: false,
+				step: undefined,
+				complete: undefined,
+				error: undefined,
+				download: false,
+				downloadRequestHeaders: undefined,
+				downloadRequestBody: undefined,
+				skipEmptyLines: true,
+				chunk: undefined,
+				chunkSize: undefined,
+				fastMode: undefined,
+				beforeFirstChunk: undefined,
+				withCredentials: undefined,
+				transform: undefined,
+				// delimitersToGuess: [',','#', '\t', '|', ';', Papa.RECORD_SEP, Papa.UNIT_SEP]
+			},
 		};
 
 		this.formRef = React.createRef();
@@ -82,20 +131,97 @@ class ImportTransaction extends React.Component {
 		};
 	}
 
-	componentDidMount = () => {
-		this.initializeData();
+	componentDidMount = () => {		
+		this.initializeData();	
 	};
+setConfigurations=(configurationList)=>{
+	
+	let data = configurationList.filter(
+		(item) => item.id == this.state.selectedConfiguration,
+	);
+	if (data.length > 0) {
+		this.setState({
+			initValue: {
+				name: this.state.initValue.name,
+				skipRows: data[0].skipRows,
+				headerRowNo: data[0].headerRowNo,
+				textQualifier:
+					data[0].textQualifier,
+				// dateFormatId: data[0].dateFormatId,
+				otherDilimiterStr:
+					data[0].otherDilimiterStr,
+					endRows:data[0].endRows,
+					skipColumns:data[0].skipColumns
+			},
+			name: this.state.initValue.name,
+				skipRows: data[0].skipRows,
+				headerRowNo: data[0].headerRowNo,
+				textQualifier:
+					data[0].textQualifier,
+				// dateFormatId: data[0].dateFormatId,
+				otherDilimiterStr:
+					data[0].otherDilimiterStr,
+					endRows:data[0].endRows,
+					skipColumns:data[0].skipColumns,
+			selectedConfiguration: this.state.selectedConfiguration,
+			selectedDateFormat:
+				data[0].dateFormatId,
+			selectedDelimiter: data[0].delimiter,
+			error: {
+				...this.state.error,
+				...{ dateFormatId: '' },
+			},
+		});
 
+		this.processData(this.props.location.state.dataString)
+
+}}
 	initializeData = () => {
 		console.log('transaction');
-		if (this.props.location.state && this.props.location.state.bankAccountId) {
-			this.props.importTransactionActions.getDateFormatList();
-			this.props.importTransactionActions.getConfigurationList().then((res) => {
-				this.setState({
-					configurationList: res.data,
-				});
+		
+		this.props.importTransactionActions.getDateFormatList();
+			
+		this.props.importTransactionActions.getConfigurationList().then((res) => {
+			this.setState({
+				configurationList: res.data,
 			});
+			 
+			this.setConfigurations(res.data)
+		});
+		if (this.props.location.state && this.props.location.state.bankAccountId) {
+			 this.processData(this.props.location.state.dataString)
 
+			this.props.importTransactionActions
+				.getTableHeaderList()
+				.then((res) => {
+					let temp = [...res.data];
+					// temp.unshift({ label: 'Select', value: '' })
+					this.setState({
+						tableHeader: this.state.tableHeader.concat(res.data),
+						selectedValue: this.state.tableHeader.concat(temp),
+					});
+				});
+				this.props.detailBankAccountActions
+				.getBankAccountByID(this.props.location.state.bankAccountId)
+				.then((res) => {
+					this.setState(
+						{
+							date: res.openingDate
+								? res.openingDate
+								: '',
+							reconciledDate: res.lastReconcileDate
+								? res.lastReconcileDate
+								: '',
+						},
+						() => {},
+					);
+				})
+				.catch((err) => {
+					this.props.commonActions.tostifyAlert(
+						'error',
+						err && err.data ? err.data.message : 'Something Went Wrong',
+					);
+				});
 			this.props.importTransactionActions.getDelimiterList().then((res) => {
 				this.setState(
 					{
@@ -115,21 +241,43 @@ class ImportTransaction extends React.Component {
 	};
 
 	validateForm = () => {
+		
 		const { initValue, fileName } = this.state;
 		let temp = {};
-		for (let val in initValue) {
-			if (initValue.hasOwnProperty(val)) {
-				if (val === 'name' && !initValue['name']) {
+		// var d = new Date(this.state.tableData[0].TRANSACTION_DATE); 
+		// d.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+
+		// const date = d
+		// const date1 = new Date(date);
+		// const date2 = this.state.date
+	
+			 
+				if (!initValue['name']) {
 					temp['name'] = '*Template Name is Required';
 				}
-				if (val === 'dateFormatId' && !initValue['dateFormatId']) {
+				if (!initValue['dateFormatId']) {
 					temp['dateFormatId'] = '*Date Format is Required';
 				}
-			}
-		}
-		if (!fileName) {
-			temp['file'] = '*Please Provide a Sample';
-		}
+				// if (
+				// 	date < date2 ||
+				// 	date < this.state.reconciledDate
+				// ) {
+				// 	this.props.commonActions.tostifyAlert(
+				// 		'error',
+				// 		'Transaction Date Cannot be less than Bank opening date or Last Reconciled Date',
+				// 	);
+						
+				// }
+			
+		
+	
+							
+								
+								let errors = {};
+								
+		// if (!fileName) {
+		// 	temp['file'] = '*Please Provide a Sample';
+		// }
 		this.setState({
 			error: temp,
 		});
@@ -141,6 +289,7 @@ class ImportTransaction extends React.Component {
 	};
 
 	handleApply = (value, resetForm) => {
+		
 		if (this.validateForm()) {
 			const { initValue } = this.state;
 			initValue['delimiter'] = this.state.selectedDelimiter;
@@ -148,7 +297,7 @@ class ImportTransaction extends React.Component {
 			let formData = new FormData();
 			formData.append(
 				'delimiter',
-				initValue.delimiter ? initValue.delimiter : '',
+				initValue.delimiter ? initValue.delimiter : ',',
 			);
 			formData.append(
 				'headerRowNo ',
@@ -158,7 +307,9 @@ class ImportTransaction extends React.Component {
 				'dateFormatId',
 				initValue.dateFormatId ? initValue.dateFormatId : '',
 			);
-			formData.append('skipRows', initValue.skipRows ? initValue.skipRows : '');
+			formData.append('skipRows', initValue.skipRows ? initValue.skipRows : '-');
+			formData.append('endRows', initValue.endRows ? initValue.endRows : '-');
+			formData.append('skipColumns', initValue.skipColumns ? initValue.skipColumns : []);
 			formData.append(
 				'textQualifier',
 				initValue.textQualifier ? initValue.textQualifier : '',
@@ -167,9 +318,9 @@ class ImportTransaction extends React.Component {
 				'otherDilimiterStr',
 				initValue.otherDilimiterStr ? initValue.otherDilimiterStr : '',
 			);
-			if (this.uploadFile.files[0]) {
-				formData.append('file', this.uploadFile.files[0]);
-			}
+			// if (this.uploadFile.files[0]) {
+			// 	formData.append('file', this.uploadFile.files[0]);
+			// }
 			this.props.importTransactionActions
 				.parseFile(formData)
 				.then((res) => {
@@ -304,23 +455,46 @@ class ImportTransaction extends React.Component {
 		});
 	};
 
+
+	// setDateMessage=()=>{
+	// 		//date,file tabledata ,date column 
+
+	// 		let dateFormat=this.state.dateFormat  ?this.state.dateFormat:"";
+	// 		let tableDataDate=this.state.tableData && this.state.tableData[0] && this.state.tableData[0].Date?this.state.tableData[0].Date :"";
+
+	// 		if(tableDataDate !=""){
+	// 			if(tableDataDate.includes("-")!=dateFormat.includes("-")){
+	// 				this.setState({DateErrorMessage:"date formats must be same.",isDateFormatAndFileDateFormatSame:false});
+	// 				return false
+	// 				}
+	// 	            // tableDataDate=tableDataDate.replaceAll("-","/");
+	// 				// let tableDateFormat=moment(tableDataDate).creationData();
+	// 				// if(tableDateFormat=="Invalid Date")
+	// 				//    tableDateFormat=new Date(tableDataDate).format("DD/MM/YYYY");
+	// 				 
+	// 		}
+	// 		this.setState({isDateFormatAndFileDateFormatSame:true});
+	// 		return true
+	// }
 	handleSave = () => {
+		if (this.validateForm()) {
 		let optionErr = [...this.state.selectError];
-		let item = this.state.selectedValueDropdown
-			.map((item, index) => {
-				if (item.value === '') {
-					optionErr[`${index}`] = true;
-				}
-				return item.value;
-			})
-			.indexOf('');
+		let item = -1;
+		//this.state.selectedValueDropdown
+		// 	.map((item, index) => {
+		// 		if (item.value === '') {
+		// 			optionErr[`${index}`] = true;
+		// 		}
+		// 		return item.value;
+		// 	})
+		// 	.indexOf('');
 
 		if (item === -1) {
 			let a = {};
 			let val;
 			let obj = {};
 			this.state.selectedValueDropdown.map((item, index) => {
-				if (item.value) {
+				if (item.value != '') {
 					val = item.value;
 					obj[val] = index;
 					a = { ...a, ...obj };
@@ -332,14 +506,21 @@ class ImportTransaction extends React.Component {
 			this.props.importTransactionActions
 				.createConfiguration(postData)
 				.then((res) => {
+
 					this.props.commonActions.tostifyAlert(
 						'success',
 						'New Template Created Successfully',
 					);
-					this.props.history.push('/admin/banking/bank-account/transaction', {
-						id: res.data.id,
-						bankAccountId: this.props.location.state.bankAccountId,
-					});
+
+					// this.props.history.push('/admin/banking/bank-account/transaction', {
+					// 	id: res.data.id,
+					// 	bankAccountId: this.props.location.state.bankAccountId,
+					// });
+					
+					this.setState({ templateId: res.data.id });
+					this.processData(this.props.location.state.dataString)
+
+
 				})
 				.catch((err) => {
 					this.props.commonActions.tostifyAlert(
@@ -352,7 +533,243 @@ class ImportTransaction extends React.Component {
 				selectError: optionErr,
 			});
 		}
+	};}
+	columnClassNameFormat = (fieldValue, row, rowIdx, colIdx) => {
+		 
+		const index = `${rowIdx.toString()},${colIdx.toString()}`;
+		return this.state.errorIndexList.indexOf(index) > -1 ? 'invalid' : '';
 	};
+
+	Import = () => {
+		const { templateId, tableData, id } = this.state;
+		const postData = {
+			bankId: this.props.location.state.bankAccountId
+				? this.props.location.state.bankAccountId
+				: '',
+			templateId: templateId ? +templateId : '',
+			importDataMap: tableData,
+		};
+		this.props.importBankStatementActions
+			.importTransaction(postData)
+			.then((res) => {
+				if (res.data.includes('Transactions Imported 0')) {
+					this.props.commonActions.tostifyAlert(
+						'error',
+						'Transaction Date Cannot be less than Bank opening date or Last Reconciled Date',
+						this.props.history.push('/admin/banking/bank-account/transaction',
+						 {
+							bankAccountId: postData.bankId
+						})
+					);
+					this.setState({ selectedTemplate: [], tableData: [], showMessage: true });
+				} else {
+					this.props.commonActions.tostifyAlert('success', res.data);
+					this.props.history.push('/admin/banking/bank-account/transaction', {
+						bankAccountId: postData.bankId
+					});
+				}
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+			});
+	};
+
+	validate = () => {
+		
+		// const data ={
+		// 	data : this.state.csv,
+		// 	id : this.state.templateId
+		// }
+
+		let formData = new FormData();
+
+		formData.append('data', this.state.csv);
+
+		formData.append('id', this.state.templateId ? this.state.templateId : '');
+
+		this.props.importTransactionActions
+			.parseCsvFile(formData)
+			.then((res) => {
+				console.log(res);
+				this.setState({
+					tableData: res.data['data'],
+					tableDataKey: res.data.data[0] ? Object.keys(res.data.data[0]) : [],
+					errorIndexList: res.data.error ? res.data.error : [],
+				});
+				console.log('tableDataKey', this.state.tableDataKey);
+				// })
+			})
+			.catch((err) => {
+				// this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
+				// this.setState({ loading: false })
+			});
+	}
+	handleSubmit = (data) => {
+		
+		const { selectedTemplate } = this.state;
+		let formData = new FormData();
+
+		formData.append('file', this.state.file);
+
+		formData.append('id', this.state.templateId ? this.state.templateId : '');
+		formData.append(
+			'bankId',
+			this.props.location.state.bankAccountId
+				? this.props.location.state.bankAccountId
+				: '',
+		);
+		this.props.importBankStatementActions
+			.parseFile(formData)
+			.then((res) => {
+				console.log(res);
+				this.setState({
+					tableData: res.data['data'],
+					tableDataKey: res.data.data[0] ? Object.keys(res.data.data[0]) : [],
+					errorIndexList: res.data.error ? res.data.error : [],
+				});
+				console.log('tableDataKey', this.state.tableDataKey);
+				// })
+			})
+			.catch((err) => {
+				// this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
+				// this.setState({ loading: false })
+			});
+	};
+
+	processData = dataString => {
+	 
+		 let parse = Papa.parse(dataString, this.state.config)
+		// let parse = dataString
+		const skipColumns = this.state.initValue.skipColumns
+		let newString=''
+		if(skipColumns && skipColumns.length > 0 )
+		{let skipColumnsList=skipColumns.split(',')
+		skipColumnsList.map((row)=>{
+			newString+=(parseInt(row)-1)+","
+		})
+	}
+	 
+		const dataStringLines = parse.data.slice(this.state.skipRows, this.state.endRows);
+		const header = parse.data[this.state.headerRowNo === undefined ? 0 : this.state.headerRowNo - 1]
+		console.log(parse,"parse")
+		let headers = header
+
+		const list = [];
+
+		for (let i = 1; i < dataStringLines.length; i++) {
+
+			let row = dataStringLines[i];
+			if (headers && row.length == headers.length) {
+				const obj = {};
+				for (let j = 0; j < headers.length; j++) {
+					if (!newString.includes(j)) {
+						
+						let d = row[j];
+						if (d.length > 0) {
+							if (d[0] == '"')
+								d = d.substring(1, d.length - 1);
+							if (d[d.length - 1] == '"')
+								d = d.substring(d.length - 2, 1);
+						}
+						
+						// if (j == 0) {
+						// 	console.log(d,"before")
+						// 	// d =moment(d).format('DD/MM/YYYY')
+						// 	console.log(d,"after")
+						// }
+						// 	{new Intl.DateTimeFormat("en-IN", {
+						// 		year: "numeric",
+						// 		month: "long",
+						// 		day: "2-digit"
+						// 	  }).format(d)}
+						// 	console.log(d,"after")
+						// }
+
+
+						if (headers[j]) {
+							obj[headers[j]] = d;
+						}
+					}
+				}
+
+				// remove the blank rows
+				if (Object.values(obj).filter(x => x).length > 0) {
+					list.push(obj);
+				}
+			}
+		}
+		 
+	
+
+		headers = skipColumns && skipColumns.length > 0 ?
+			header.filter((row, id) => !newString.includes(id)) : header
+
+		const csv = convertArrayToCSV(list)
+	
+		console.log(csv)
+
+		this.setState(
+			{
+				tableData: list,
+				tableDataKey: headers,
+				parse: parse,
+				csv: csv,
+				// initValue:{...this.state.initValue,...{otherDilimiterStr:parse.meta.delimiter}}
+			},
+
+			() => {
+				
+				let obj = { label: 'Select', value: '' };
+				let tempObj = { label: '', status: false };
+				let tempStatus = [...this.state.columnStatus];
+				let tempDropDown = [...this.state.selectedValueDropdown];
+				let tempError = [...this.state.selectError];
+				this.state.tableDataKey && this.state.tableDataKey.map((name, index) => {
+					tempStatus.push(tempObj);
+					tempDropDown.push(obj);
+					tempError.push(false);
+
+					return name;
+				});
+				this.setState({
+					loading: false,
+					selectedValueDropdown: tempDropDown,
+					columnStatus: tempStatus,
+					selectError: tempError,
+				});
+			},
+		);
+
+	}
+
+
+	handleFileUpload = e => {
+
+		// const file = this.uploadFile.files[0];
+		// const reader = new FileReader();
+		// reader.onload = (evt) => {
+		// 	/* Parse data */
+		// 	const bstr = evt.target.result;
+		// 	const wb = XLSX.read(bstr, { type: 'binary' });
+		// 	/* Get first worksheet */
+		// 	const wsname = wb.SheetNames[0];
+		// 	const ws = wb.Sheets[wsname];
+		// 	/* Convert array of arrays */
+		// 	const data = XLSX.utils.sheet_to_csv(ws, { header: 1 });
+
+
+		// 	this.processData(data);
+
+		// 	this.setState({ dataString: data })
+		// };
+		// reader.readAsBinaryString(file);
+ 
+
+	
+	}
 
 	render() {
 		strings.setLanguage(this.state.language);
@@ -361,9 +778,12 @@ class ImportTransaction extends React.Component {
 			tableData,
 			initialloading,
 			configurationList,
+			showMessage,
 		} = this.state;
+
 		const { date_format_list } = this.props;
 		const bankAccountId = this.props.location.state.bankAccountId;
+
 		return (
 			<div className="import-transaction-screen">
 				<div className="animated fadeIn">
@@ -387,60 +807,41 @@ class ImportTransaction extends React.Component {
 										<Row>
 											<Col lg={12}>
 												<div>
+											
 													{/* <Formik
-                            initialValues={initValue}
+                            // initialValues={initValue}
                             ref={this.formRef}
                             onSubmit={(values, { resetForm }) => {
-                              this.handleApply(values, resetForm)
+                              this.handleSave(values, resetForm)
                             }}
+							validate={() => {
+								 
+								const date = this.state.tableData.transactionDate;
+							
+								const date1 = new Date(date);
+								const date2 = new Date(this.state.date);
+								let errors = {};
+								if (
+									date1 < date2 ||
+									date1 < new Date(this.state.reconciledDate)
+								) {
+									errors.transactionDate =
+										'Transaction Date Cannot be less than Bank opening date or Last Reconciled Date';
+								}
+								return errors;
+							}}
                           >
                             {
                               (props) => ( */}
 													<Form>
-														<Row>
-															<Col lg={3}>
-																<Label>
-																	<span className="text-danger">*</span>{strings.Name}
-																</Label>
+														<Row lg={8}>
+															<Col lg={2}>
+																<Label>Parsing Template </Label>
 															</Col>
 															<Col lg={3}>
-																<FormGroup>
-																	<Input
-																		type="text"
-																		id="name"
-																		name="name"
-																		placeholder={strings.Enter+" "+strings.Name}
-																		value={this.state.initValue.name}
-																		onChange={(e) => {
-																			this.handleInputChange(
-																				'name',
-																				e.target.value,
-																			);
-																			this.setState({
-																				error: {
-																					...this.state.error,
-																					...{ name: '' },
-																				},
-																			});
-																		}}
-																	/>
-																	{this.state.error &&
-																		this.state.error.name && (
-																			<div className="is-invalid">
-																				{this.state.error.name}
-																			</div>
-																		)}
-																</FormGroup>
-															</Col>
-														</Row>
-														<Row>
-															<Col lg={3} md={5}>
-																<Label>{strings.CopySavedConfiguration} </Label>
-															</Col>
-															<Col lg={3} md={7}>
 																<FormGroup>
 																	<Select
-																	placeholder={strings.Select +" "+strings.Configuration}
+																		placeholder="New Template"
 																		value={
 																			configurationList &&
 																			selectOptionsFactory
@@ -459,17 +860,18 @@ class ImportTransaction extends React.Component {
 																		options={
 																			configurationList
 																				? selectOptionsFactory.renderOptions(
-																						'name',
-																						'id',
-																						configurationList,
-																						'Configuration',
-																				  )
+																					'name',
+																					'id',
+																					configurationList,
+																					'Configuration',
+																				)
 																				: []
 																		}
 																		onChange={(e) => {
 																			let data = configurationList.filter(
 																				(item) => item.id === e.value,
 																			);
+																			
 																			if (data.length > 0) {
 																				this.setState({
 																					initValue: {
@@ -478,9 +880,10 @@ class ImportTransaction extends React.Component {
 																						headerRowNo: data[0].headerRowNo,
 																						textQualifier:
 																							data[0].textQualifier,
-																						dateFormatId: data[0].dateFormatId,
+																						// dateFormatId: data[0].dateFormatId,
 																						otherDilimiterStr:
 																							data[0].otherDilimiterStr,
+																						
 																					},
 																					selectedConfiguration: e.value,
 																					selectedDateFormat:
@@ -500,6 +903,58 @@ class ImportTransaction extends React.Component {
 																	/>
 																</FormGroup>
 															</Col>
+															<Col lg={1}>
+																<Label>
+																	<span className="text-danger">*</span>{strings.Name}
+																</Label>
+															</Col>
+															<Col lg={3}>
+																<FormGroup>
+																	<Input
+																		type="text"
+																		id="name"
+																		name="name"
+																		placeholder={strings.Enter + " " + strings.Name}
+																		value={this.state.initValue.name}
+																		onChange={(e) => {
+																			this.handleInputChange(
+																				'name',
+																				e.target.value,
+																			);
+																			this.setState({
+																				error: {
+																					...this.state.error,
+																					...{ name: '' },
+																				},
+																			});
+																		}}
+																		className={
+																			this.state.error &&
+																				this.state.error.name
+																				? 'is-invalid'
+																				: ''
+																		}
+																	/>
+																	{this.state.error &&
+																		this.state.error.name && (
+																			<div className="is-invalid">
+																				{this.state.error.name}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
+
+															<Col>
+																<Button
+																	type="button"
+																	color="primary"
+																	className="btn-square mr-4"
+																	onClick={this.handleSave}
+																>
+																	<i className="fa fa-dot-circle-o"></i>{' '}
+																	Save Template
+																</Button>
+															</Col>
 														</Row>
 
 														<Row>
@@ -507,18 +962,9 @@ class ImportTransaction extends React.Component {
 																<fieldset>
 																	<legend> {strings.Parameters}</legend>
 																	<Row>
-																		<Col lg={3}>
-																			{this.state.delimiterList &&
-																				this.state.delimiterList.map(
-																					(option, index, array) => {
-																						return (
-																							<div key={index}>
-																								<FormGroup
-																									check
-																									inline
-																									className="mb-3"
-																								>
-																									<Input
+																		<Col>
+																			<FormGroup>
+																				{/* <Input
 																										className="form-check-input"
 																										type="radio"
 																										id={option.value}
@@ -537,50 +983,300 @@ class ImportTransaction extends React.Component {
 																											this.setState({
 																												selectedDelimiter:
 																													e.target.value,
-																											});
+																													config: {delimiter :e.target.value}	}
+																													, () => {
+																														this.processData(this.state.dataString)
+																													});
 																											this.handleInputChange(
 																												'otherDilimiterStr',
 																												'',
 																											);
 																										}}
-																									/>
-																									<Label
-																										className="form-check-label"
-																										check
-																										htmlFor="vatIncluded"
-																									>
-																										{option.label}
-																									</Label>
-																									{index ===
-																									array.length - 1 ? (
-																										<Input
-																											className="ml-3"
-																											type="text"
-																											placeholder={strings.Other}
-																											value={
-																												this.state.initValue
-																													.otherDilimiterStr ||
-																												''
-																											}
-																											disabled={
-																												this.state
-																													.selectedDelimiter !==
-																												'OTHER'
-																											}
-																											onChange={(e) => {
-																												this.handleInputChange(
-																													'otherDilimiterStr',
-																													e.target.value,
-																												);
-																											}}
-																										/>
-																									) : null}
-																								</FormGroup>
-																							</div>
+																									/> */}
+																				<Label
+																					className="ml-3"
+																					htmlFor="vatIncluded"
+																				>
+																					Delimiter
+																				</Label>
+
+																				<Input
+																					className="ml-3"
+																					type="text"
+																					placeholder='Delimiter'
+																					value={
+																						this.state.initValue.otherDilimiterStr ||''
+																					}
+																					// disabled={
+																					// 	this.state
+																					// 		.selectedDelimiter !==
+																					// 	'OTHER'
+																					// }
+																					onChange={(e) => {
+																					
+																						this.handleInputChange(
+																							'otherDilimiterStr',
+																							e.target.value,
 																						);
-																					},
-																				)}
+																						this.setState({
+
+																							initValue: { ...this.state.initValue,...{otherDilimiterStr: e.target.value} }
+																						}
+																							, () => {
+																								this.processData(this.props.location.state.dataString)
+																							});
+																					}}
+																				/>
+
+																			</FormGroup>
 																		</Col>
+																		<Col >
+																			<FormGroup>
+																				<Label
+																					className="ml-3"
+																					htmlFor="skip_rows">
+																					Include Rows From
+																				</Label>
+																				<Input
+																					className="ml-3"
+																					type="text"
+																					name=""
+																					id=""
+																					rows="6"
+																					placeholder="Enter Number of Row"
+																					value={
+																						this.state.initValue.skipRows ||
+																						''
+																					}
+																					onChange={(e) => {
+																						this.handleInputChange(
+																							'skipRows',
+																							e.target.value,
+																						);
+																						this.setState({
+																							skipRows: e.target.value
+																						})
+
+																					}}
+																				/>
+																			</FormGroup>
+																		</Col>
+
+																		<Col >
+																			<FormGroup>
+
+																				<Label htmlFor="skip_rows">
+																					To
+																				</Label>
+																				<Input
+																					type="text"
+																					name=""
+																					id=""
+																					rows="6"
+																					placeholder="Enter Number of Row"
+																					value={
+																						this.state.initValue.endRows ||
+																						''
+																					}
+																					onChange={(e) => {
+																						this.handleInputChange(
+																							'endRows',
+																							e.target.value,
+																						);
+																						this.setState({
+																							endRows: e.target.value
+																						})
+
+																					}}
+																				/>
+																			</FormGroup>
+																		</Col>
+
+
+																		<Col>
+																			<FormGroup>
+
+																				<Label htmlFor="description">
+																					{strings.HeaderRowsNumber}
+																				</Label>
+
+
+																				<Input
+																					type="text"
+																					name=""
+																					id=""
+																					rows="6"
+																					value={
+																						this.state.initValue
+																							.headerRowNo || ''
+																					}
+																					placeholder="Enter Header Row Number"
+																					onChange={(e) => {
+																						this.handleInputChange(
+																							'headerRowNo',
+																							e.target.value,
+																						);
+																						this.setState({
+																							headerRowNo: e.target.value
+																						})
+
+																					}}
+																				/>
+																			</FormGroup>
+																		</Col>
+
+																		<Col>
+																			<FormGroup>
+																				<Label htmlFor="description">
+																					Skip Columns
+																				</Label>
+																				<Input
+																					type="text"
+																					name=""
+																					id=""
+																					rows="6"
+																					placeholder="Enter Number of Columns"
+																					value={
+																						this.state.initValue
+																							.skipColumns || ''
+																					}
+																					onChange={(e) => {
+																						this.handleInputChange(
+																							'skipColumns',
+																							e.target.value,
+																						);
+																						this.setState({
+																							skipColumns: e.target.value
+																						})
+
+																					}}
+
+																				/>
+																			</FormGroup>
+																		</Col>
+
+																		<Col>
+																			<FormGroup>
+																				<Label htmlFor="description">
+																					<span className="text-danger">
+																						*
+																					</span>
+																					{strings.DateFormat}
+																				</Label>
+																				<Select
+																					type=""
+																					options={
+																						date_format_list
+																							? selectOptionsFactory.renderOptions(
+																								'format',
+																								'id',
+																								date_format_list,
+																								'Date Format',
+																							)
+																							: []
+																					}
+																					value={
+																						date_format_list &&
+																						selectOptionsFactory
+																							.renderOptions(
+																								'format',
+																								'id',
+																								date_format_list,
+																								'Date Format',
+																							)
+																							.find(
+																								(option) =>
+																									option.value ===
+																									+this.state
+																										.selectedDateFormat,
+																							)
+																					}
+																					onChange={(option) => {
+																						if (option && option.value) {
+																							this.handleInputChange(
+																								'dateFormatId',
+																								option.value,
+																							);
+																							this.setState({
+																								selectedDateFormat:
+																									option.value,
+																								error: {
+																									...this.state.error,
+																									...{ dateFormatId: '' },
+																								},
+																								dateFormat: option.label
+
+																							}, () => {
+																								this.processData(this.props.location.state.dataString)
+																							});
+																						} else {
+																							this.handleInputChange(
+																								'dateFormatId',
+																								'',
+																							);
+																							this.setState({
+																								selectedDateFormat: '',
+																							});
+																						}
+																					}}
+																					id=""
+																					rows="6"
+																					placeholder={strings.DateFormat}
+																				/>
+																				{this.state.error &&
+																					this.state.error.dateFormatId && (
+																						<div className="is-invalid">
+																							{
+																								this.state.error
+																									.dateFormatId
+																							}
+																						</div>
+																					)}
+																			</FormGroup>
+																		</Col>
+																		<Col>
+																			<FormGroup>
+																				<Button
+																					type="button"
+																					color="primary"
+																					className="btn-square mt-4"
+																					// disabled={this.state.fileName ? false : true}
+																					onClick={() => {
+
+																						// if(this.setDateMessage())
+
+																						this.processData(this.props.location.state.dataString)
+																					}
+																					}
+																				>
+																					<i className="fa fa-dot-circle-o"></i>{' '}
+																					{strings.Apply}
+																				</Button>
+																			</FormGroup>
+																			<FormGroup>
+																				<Button
+																					type="button"
+																					color="primary"
+																					className="btn-square mt-4"
+																					// disabled={this.state.fileName ? false : true}
+																					onClick={() => {
+
+																						// if(this.setDateMessage())
+
+																						this.validate()
+																					}
+																					}
+																				>
+																					<i className="fa fa-dot-circle-o"></i>{' '}
+																					validate
+																				</Button>
+																			</FormGroup>
+																		</Col>
+																	</Row>
+																	<Row>
+
+
+
 																		<Col lg={6} className="table_option">
 																			<Row>
 																				<Col md="5">
@@ -588,10 +1284,10 @@ class ImportTransaction extends React.Component {
 																						<span className="text-danger">
 																							*
 																						</span>
-																						 {strings.ProvideSample}
+																						{strings.ProvideSample}
 																					</label>
 																				</Col>
-																				<Col md="7">
+																				{/* <Col md="7">
 																					<FormGroup className="mb-0">
 																						<Button
 																							color="primary"
@@ -622,21 +1318,23 @@ class ImportTransaction extends React.Component {
 																										...{ file: '' },
 																									},
 																								});
+																								this.handleFileUpload()
 																							}}
+																						// onChange={this.handleFileUpload}
 																						/>
-																							{this.state.fileName && (
-																								<div>
-																									<i
-																										className="fa fa-close"
-																										onClick={() =>
-																											this.setState({
-																												fileName: '',
-																											})
-																										}
-																									></i>{' '}
-																									{this.state.fileName}
-																								</div>
-																							)}
+																						{this.state.fileName && (
+																							<div>
+																								<i
+																									className="fa fa-close"
+																									onClick={() =>
+																										this.setState({
+																											fileName: '',
+																										})
+																									}
+																								></i>{' '}
+																								{this.state.fileName}
+																							</div>
+																						)}
 																					</FormGroup>
 																					{this.state.error &&
 																						this.state.error.file && (
@@ -644,195 +1342,9 @@ class ImportTransaction extends React.Component {
 																								{this.state.error.file}
 																							</div>
 																						)}
-																				</Col>
+																				</Col> */}
 																			</Row>
-																			{/* <Row className="mt-3">
-																				<Col md={5}>
-																					<Label htmlFor="skip_rows">
-																						{strings.SkipRows}
-																					</Label>
-																				</Col>
-																				<Col md={7}>
-																					<FormGroup className="">
-																						<Input
-																							type="text"
-																							name=""
-																							id=""
-																							rows="6"
-																							placeholder="Enter No of Rows"
-																							value={
-																								this.state.initValue.skipRows ||
-																								''
-																							}
-																							onChange={(e) => {
-																								this.handleInputChange(
-																									'skipRows',
-																									e.target.value,
-																								);
-																							}}
-																						/>
-																					</FormGroup>
-																				</Col>
-																			</Row>
-																			<Row>
-																				<Col md={5}>
-																					{' '}
-																					<Label htmlFor="description">
-																						 {strings.HeaderRowsNumber}
-																					</Label>
-																				</Col>
-																				<Col md={7}>
-																					<FormGroup className="">
-																						<Input
-																							type="text"
-																							name=""
-																							id=""
-																							rows="6"
-																							value={
-																								this.state.initValue
-																									.headerRowNo || ''
-																							}
-																							placeholder="Enter Header Row Number"
-																							onChange={(e) => {
-																								this.handleInputChange(
-																									'headerRowNo',
-																									e.target.value,
-																								);
-																							}}
-																						/>
-																					</FormGroup>
-																				</Col>
-																			</Row>
-																			<Row>
-																				<Col md={5}>
-																					<Label htmlFor="description">
-																						 {strings.TextQualifier}
-																					</Label>
-																				</Col>
-																				<Col md={7}>
-																					<FormGroup className="">
-																						<Input
-																							type="text"
-																							name=""
-																							id=""
-																							rows="6"
-																							placeholder="Text Qualifier"
-																							value={
-																								this.state.initValue
-																									.textQualifier || ''
-																							}
-																							onChange={(e) => {
-																								this.handleInputChange(
-																									'textQualifier',
-																									e.target.value,
-																								);
-																							}}
-																						/>
-																					</FormGroup>
-																				</Col>
-																			</Row> */}
-																			<Row className="mt-3">
-																				<Col md={5}>
-																					<Label htmlFor="description">
-																						<span className="text-danger">
-																							*
-																						</span>
-																						 {strings.DateFormat}
-																					</Label>
-																				</Col>
-																				<Col md={7}>
-																					<FormGroup
-																						className=""
-																						style={{ flexDirection: 'column' }}
-																					>
-																						<Select
-																							type=""
-																							options={
-																								date_format_list
-																									? selectOptionsFactory.renderOptions(
-																											'format',
-																											'id',
-																											date_format_list,
-																											'Date Format',
-																									  )
-																									: []
-																							}
-																							value={
-																								date_format_list &&
-																								selectOptionsFactory
-																									.renderOptions(
-																										'format',
-																										'id',
-																										date_format_list,
-																										'Date Format',
-																									)
-																									.find(
-																										(option) =>
-																											option.value ===
-																											+this.state
-																												.selectedDateFormat,
-																									)
-																							}
-																							onChange={(option) => {
-																								if (option && option.value) {
-																									this.handleInputChange(
-																										'dateFormatId',
-																										option.value,
-																									);
-																									this.setState({
-																										selectedDateFormat:
-																											option.value,
-																										error: {
-																											...this.state.error,
-																											...{ dateFormatId: '' },
-																										},
-																									});
-																								} else {
-																									this.handleInputChange(
-																										'dateFormatId',
-																										'',
-																									);
-																									this.setState({
-																										selectedDateFormat: '',
-																									});
-																								}
-																							}}
-																							id=""
-																							rows="6"
-																							placeholder={strings.DateFormat}
-																						/>
-																						{this.state.error &&
-																							this.state.error.dateFormatId && (
-																								<div className="is-invalid">
-																									{
-																										this.state.error
-																											.dateFormatId
-																									}
-																								</div>
-																							)}
-																					</FormGroup>
-																				</Col>
-																			</Row>
-																		</Col>
 
-																		<Col
-																			lg={3}
-																			className="mt-2 align-apply text-right"
-																		>
-																			<FormGroup>
-																				<Button
-																					type="button"
-																					color="primary"
-																					className="btn-square"
-																					// disabled={this.state.fileName ? false : true}
-																					onClick={() => {
-																						this.handleApply();
-																					}}
-																				>
-																					<i className="fa fa-dot-circle-o"></i>{' '}
-																					{strings.Apply}
-																				</Button>
-																			</FormGroup>
 																		</Col>
 																	</Row>
 																</fieldset>
@@ -840,6 +1352,17 @@ class ImportTransaction extends React.Component {
 														</Row>
 														{/* <Row className="mt-5"> */}
 														{/* </Row> */}
+														<div
+															//  style={{display: this.state.showMessage === true ? '': 'none'}}
+															className="mt-4"
+														>
+															<Label
+																className="text-center">
+																{/* Message */}
+															</Label>
+															{/* {this.setDateMessage()} */}
+															{this.state.DateErrorMessage}
+														</div>
 													</Form>
 													{/* )
                             }
@@ -847,7 +1370,7 @@ class ImportTransaction extends React.Component {
 													<Row>
 														{loading ? (
 															<Loader />
-														) : this.state.tableDataKey.length > 0 ? (
+														) : this.state.tableDataKey && this.state.tableDataKey.length > 0 && this.state.isDateFormatAndFileDateFormatSame == true ? (
 															this.state.tableDataKey.map((header, index) => {
 																return (
 																	<Col
@@ -857,27 +1380,27 @@ class ImportTransaction extends React.Component {
 																		}}
 																	>
 																		<FormGroup
-																			className={`mb-0 ${
-																				this.state.columnStatus[`${index}`]
-																					.status
-																					? 'is-invalid'
-																					: ''
-																			} ${
-																				this.state.selectError[`${index}`]
-																					? 'invalid-select'
-																					: ''
-																			}`}
+																		// className={`mb-0 ${
+																		// 	this.state.columnStatus[`${index}`]
+																		// 		.status
+																		// 		? 'is-invalid'
+																		// 		: ''
+																		// } ${
+																		// 	this.state.selectError[`${index}`]
+																		// 		? 'invalid-select'
+																		// 		: ''
+																		// }`}
 																		>
 																			<Select
 																				type=""
 																				options={
 																					this.state.tableHeader
 																						? selectOptionsFactory.renderOptions(
-																								'label',
-																								'value',
-																								this.state.tableHeader,
-																								'',
-																						  )
+																							'label',
+																							'value',
+																							this.state.tableHeader,
+																							'',
+																						)
 																						: []
 																				}
 																				name={index}
@@ -885,16 +1408,16 @@ class ImportTransaction extends React.Component {
 																				rows="6"
 																				value={
 																					this.state.selectedValueDropdown[
-																						`${index}`
+																					`${index}`
 																					]
 																				}
 																				onChange={(e) => {
 																					this.handleChange(e, index);
 																				}}
-																				// className={}
+																			// className={}
 																			/>
 																		</FormGroup>
-																		<p
+																		{/* <p
 																			className={
 																				this.state.columnStatus[`${index}`]
 																					.status
@@ -903,38 +1426,49 @@ class ImportTransaction extends React.Component {
 																			}
 																		>
 																			*Already Selected
-																		</p>
+																		</p> */}
 																	</Col>
 																);
 															})
 														) : null}
 														{/* <div> */}
-														{this.state.tableDataKey.length > 0 ? (
-															<BootstrapTable
-																data={tableData}
-																keyField={this.state.tableDataKey[0]}
-															>
-																{this.state.tableDataKey.map((name) => (
-																	<TableHeaderColumn
-																		dataField={name}
-																		dataAlign="center"
-																	>
-																		{name}
-																	</TableHeaderColumn>
-																))}
-															</BootstrapTable>
-														) : null}
+
+														<div id="list_xls">
+															{this.state.tableDataKey && this.state.tableDataKey.length > 0 && this.state.isDateFormatAndFileDateFormatSame == true ? (
+
+																<BootstrapTable
+																	data={tableData}
+																	keyField={this.state.tableDataKey[0]}
+
+																>
+																	{this.state.tableDataKey.map((name,index) => (
+																		<TableHeaderColumn
+																			dataField={name}
+																			dataAlign="center"
+																			key={index}
+																			columnClassName={this.columnClassNameFormat}
+																		>
+																			{name}
+																		</TableHeaderColumn>
+																	))}
+																</BootstrapTable>
+																// <TableWrapper data={tableData} keyField={this.state.tableDataKey}/>
+															) : null}
+														</div>
 														{/* </div> */}
+
+
 														<Row style={{ width: '100%' }}>
 															<Col lg={12} className="mt-2">
 																<FormGroup className="text-right">
-																	{this.state.tableDataKey.length > 0 ? (
+																	{this.state.tableDataKey && this.state.tableDataKey.length > 0 ? (
+
 																		<>
 																			<Button
 																				type="button"
 																				color="primary"
 																				className="btn-square mr-4"
-																				onClick={this.handleSave}
+																				onClick={this.Import}
 																			>
 																				<i className="fa fa-dot-circle-o"></i>{' '}
 																				Save

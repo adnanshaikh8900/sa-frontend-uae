@@ -113,7 +113,7 @@ class Designation extends React.Component {
   }
 
   goToDetail = (row) => {
-    this.props.history.push('/admin/payroll/employeeDesignation/detail', { id: row.id })
+    this.props.history.push('/admin/payroll/config/detailEmployeeDesignation', { id: row.id })
   }
 
   sortColumn = (sortName, sortOrder) => {
@@ -266,6 +266,8 @@ class Designation extends React.Component {
 console.log("designation_list",designation_list)
 
     return (
+      loading ==true? <Loader/> :
+<div>
       <div className="employee-screen">
         <div className="animated fadeIn">
           {dialog}
@@ -314,7 +316,7 @@ console.log("designation_list",designation_list)
                                                                 color="primary"
                                                                 className="btn-square pull-right mb-2 mr-2"
                                                                 style={{ marginBottom: '10px' }}
-                                                                onClick={() => this.props.history.push(`/admin/payroll/employeeDesignation/create`)}
+                                                                onClick={() => this.props.history.push(`/admin/payroll/config/createEmployeeDesignation`)}
 
                                                             >
                                                                 <i className="fas fa-plus mr-1" />
@@ -374,6 +376,7 @@ console.log("designation_list",designation_list)
             </CardBody>
           </Card>
         </div>
+      </div>
       </div>
     )
   }

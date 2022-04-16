@@ -115,23 +115,31 @@ class ReceivableInvoiceSummary extends React.Component {
 			});
 	};
      
-
 	exportFile = () => {
-		return (this.state && this.state.data && this.state.data.receivableInvoiceSummaryModelList ? this.state.data.receivableInvoiceSummaryModelList :'');
-			};
-	// exportFile = (csvData, fileName, type) => {
-	// 	const fileType =
-	// 		type === 'xls'
-	// 			? 'application/vnd.ms-excel'
-	// 			: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-	// 	const fileExtension = `.${type}`;
-	// 	const ws = XLSX.utils.json_to_sheet(csvData);
-	// 	const wb = { Sheets: { data: ws }, SheetNames: ['data'] };
-	// 	const excelBuffer = XLSX.write(wb, { bookType: type, type: 'array' });
-	// 	const data = new Blob([excelBuffer], { type: fileType });
-	// 	FileSaver.saveAs(data, fileName + fileExtension);
-	// };
 
+	
+		let dl =""
+		let fn =""
+		let type="csv"
+		var elt = document.getElementById('tbl_exporttable_to_xls');												
+		var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
+		return dl ?
+		  XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
+		  XLSX.writeFile(wb, fn || ('Receivable Invoice Summary Report.'+ (type || 'csv')));
+
+	   }
+
+	   exportExcelFile  = () => 
+	   {   let dl =""
+		   let fn =""
+		   let type="xlsx"
+		   var elt = document.getElementById('tbl_exporttable_to_xls');												
+		   var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
+		   return dl ?
+			 XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
+			 XLSX.writeFile(wb, fn || ('Receivable Invoice Summary Report.'+ (type || 'xlsx')));
+   
+	   }
 	toggle = () =>
 		this.setState((prevState) => {
 			return { dropdownOpen: !prevState.dropdownOpen };
@@ -146,10 +154,10 @@ class ReceivableInvoiceSummary extends React.Component {
 		this.pdfExportComponent.save();
 	};
 	renderinvoiceDate = (cell, rows) => {
-		return moment(rows.invoiceDate).format('DD/MM/YYYY');
+		return moment(rows.invoiceDate).format('DD-MM-YYYY');
 	};
 	renderinvoiceDueDate = (cell, rows) => {
-		return moment(rows.invoiceDueDate).format('DD/MM/YYYY');
+		return moment(rows.invoiceDueDate).format('DD-MM-YYYY');
 	};
 	renderbalance = (cell, row, extraData) => {
 		return row.balance === 0 ? (
@@ -200,14 +208,23 @@ class ReceivableInvoiceSummary extends React.Component {
 													<DropdownToggle caret>Export As</DropdownToggle>
 													<DropdownMenu>
 													
-														<DropdownItem>
-															<CSVLink
-																data={this.exportFile()}
-																className="csv-btn"
-																filename={'Receivable Invoice Summary Report.csv'}
-															>
-																CSV (Comma Separated Value)
-															</CSVLink>
+													<DropdownItem onClick={()=>{this.exportFile()}}>
+															<span
+															style={{
+																border: 0,
+    															padding: 0,
+																backgroundColor:"white !important"
+															}}
+														 	>CSV (Comma Separated Value)</span>
+														</DropdownItem>
+														<DropdownItem onClick={()=>{this.exportExcelFile()}}>
+															<span
+															style={{
+																border: 0,
+    															padding: 0,
+																backgroundColor:"white !important"
+															}}
+														  >Excel</span>
 														</DropdownItem>
 															<DropdownItem onClick={this.exportPDFWithComponent}>
 															Pdf
@@ -311,7 +328,7 @@ class ReceivableInvoiceSummary extends React.Component {
 											
 											<b style ={{ fontSize: '18px'}}>{strings.ReceivableInvoiceSummary}</b>
 											<br style={{ marginBottom: '5px' }} />
-											{strings.From} {initValue.startDate} {strings.To} {initValue.endDate}
+											{strings.From} {(initValue.startDate).replaceAll("/","-")} {strings.To} {initValue.endDate.replaceAll("/","-")} 
 											
 									</div>
 									<div>
@@ -320,20 +337,20 @@ class ReceivableInvoiceSummary extends React.Component {
 									{loading ? (
 										<Loader />
 									) : (
-										<div className="table-wrapper">
-											<Table >
-												<thead className="header-row" >
+										<div id="tbl_exporttable_to_xls" className="table-wrapper">
+											<Table className="table-bordered">
+												<thead className="table-header-bg">
 													<tr>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.InvoiceNumber}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.CustomerName}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.InvoiceDate}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.InvoiceDueDate}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.Status}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.InvoiceNumber}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.CustomerName}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.InvoiceDate}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.InvoiceDueDate}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.Status}</th>
 
-														<th style={{ padding: '0.5rem', textAlign: 'right' }}>
+														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>
 														{strings.InvoiceAmount}
 														</th>
-														<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.Balance}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>{strings.Balance}</th>
 
 													</tr>
 												</thead>
@@ -347,11 +364,11 @@ class ReceivableInvoiceSummary extends React.Component {
 																	<td style={{ textAlign: 'center'}}>{item.invoiceNumber}</td>
 																	<td style={{ textAlign: 'center'}}>{item.customerName}</td>
 																	<td style={{ textAlign: 'center'}}>{item.invoiceDate ? (
-																		moment(item.invoiceDate).format('DD/MM/YYYY')
+																		moment(item.invoiceDate).format('DD-MM-YYYY')
 																	) : (" ")}</td>
 																	<td style={{ textAlign: 'center'}}>
 																	{item.invoiceDueDate ? (
-																		moment(item.invoiceDueDate).format('DD/MM/YYYY')
+																		moment(item.invoiceDueDate).format('DD-MM-YYYY')
 																	) : ("-")}</td>
 																	<td style={{ textAlign: 'center' }}>{item.status}</td>
 																	<td style={{ textAlign: 'right' }}>

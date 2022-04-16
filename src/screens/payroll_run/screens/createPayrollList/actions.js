@@ -98,11 +98,11 @@ export const getApproversForDropdown = () => {
 // 	  })
 // 	}
 // }
-export const getAllPayrollEmployee = () => {
+export const getAllPayrollEmployee = (payrollDate) => {
 	return (dispatch) => {
 	  let data = {
 		method: 'GET',
-		url: `/rest/employee/getAllActiveCompleteEmployee`
+		url: `/rest/employee/getAllActiveCompleteEmployee?payrollDate=${payrollDate}`
 	  }
   
 	  return authApi(data).then((res) => {

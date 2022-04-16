@@ -181,7 +181,7 @@ class CreateDesignation extends React.Component {
                             <Row  className="row-wrapper">
                             <Col lg={4}>
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span>{strings.DESIGNATIONID}</Label>
+                                  <Label htmlFor="select"><span className="text-danger">* </span>{strings.DESIGNATIONID}</Label>
                                   <Input
                                     type="text"
                                     id="designationId"
@@ -190,7 +190,7 @@ class CreateDesignation extends React.Component {
                                     value={props.values.designationId}
                                     placeholder={strings.Enter+strings.DESIGNATIONID}
                                     onChange={(option) => {
-                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('designationId')(option) }
+                                      if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('designationId')(option) }
                                     }}
                                     className={props.errors.designationId && props.touched.designationId ? "is-invalid" : ""}
                                   />
@@ -201,7 +201,7 @@ class CreateDesignation extends React.Component {
                               </Col>
                               <Col lg={4}>
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span>{strings.EmployeeDesignationName}</Label>
+                                  <Label htmlFor="select"><span className="text-danger">* </span>{strings.EmployeeDesignationName}</Label>
                                   <Input
                                     type="text"
                                     id="designationName"

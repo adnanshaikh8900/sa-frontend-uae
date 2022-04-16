@@ -17,6 +17,7 @@ const initState = {
 	vendor_list: [],
 	vat_list: [],
 	reconcile_list: [],
+	UnPaidPayrolls_List:[],
 };
 
 const BankAccountReducer = (state = initState, action) => {
@@ -116,6 +117,12 @@ const BankAccountReducer = (state = initState, action) => {
 			return {
 				...state,
 				vat_list: Object.assign([], payload.data),
+			};
+
+		case BANK_ACCOUNT.UNPAID_PAYROLLS:
+			return {
+				...state,
+				UnPaidPayrolls_List: Object.assign([], payload.data),
 			};
 
 		default:

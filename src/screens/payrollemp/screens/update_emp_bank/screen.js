@@ -77,7 +77,8 @@ class UpdateEmployeeBank extends React.Component {
     componentDidMount = () => {
         this.props.createPayrollEmployeeActions.getBankListForEmployees()
         .then((response) => {
-            this.setState({bankList:response.data });
+            this.setState({bankList:response.data
+        });
         });
         if (this.props.location.state && this.props.location.state.id) {
             this.props.detailEmployeeBankAction.getEmployeeById(this.props.location.state.id).then((res) => {
@@ -115,8 +116,9 @@ class UpdateEmployeeBank extends React.Component {
                                     ? res.data.branch
                                     : '',
                             bankId: res.data.bankId && res.data.bankId !== null
-                                    ? res.data.bankId
-                                    : '',
+                            ? res.data.bankId
+                            : '',
+
 
                         },
                     }
@@ -134,7 +136,6 @@ class UpdateEmployeeBank extends React.Component {
         }
     }
 
-
     existForAccountNumber = (value) => {
         const data = {
             moduleType: 19,
@@ -143,7 +144,7 @@ class UpdateEmployeeBank extends React.Component {
         this.props.createPayrollEmployeeActions
             .checkValidation(data)
             .then((response) => {
-                if (response.data === 'accountNumber already exists') {
+                if (response.data === 'Account Number Already Exists') {
                     this.setState(
                         {
                             existForAccountNumber: true,
@@ -159,7 +160,7 @@ class UpdateEmployeeBank extends React.Component {
                 }
             });
     };
-
+  
     // Create or Edit Vat
     handleSubmit = (data) => {
 
@@ -173,6 +174,7 @@ class UpdateEmployeeBank extends React.Component {
             branch,
             swiftCode,
             bankId,
+
         } = data;
 
         let formData = new FormData();
@@ -210,23 +212,31 @@ class UpdateEmployeeBank extends React.Component {
         );
         this.props.detailEmployeeBankAction.updateEmployeeBank(formData).then((res) => {
             if (res.status === 200) {
-                this.props.commonActions.tostifyAlert('success', 'Employee Updated Successfully!')
+                this.props.commonActions.tostifyAlert(
+                    'success',
+                     res.data ? res.data.message : 'Employee Bank Updated Successfully'
+                     )
                 // this.props.history.push('/admin/payroll/employee')
                   this.props.history.push('/admin/master/employee')
             }
         }).catch((err) => {
-            this.props.commonActions.tostifyAlert('error', err.data.message)
+            this.props.commonActions.tostifyAlert(
+                'error',
+                  err.data.message ? err.data.message :'Employee Bank Updated Unsuccessfully'
+                  )
         })
     }
     render() {
         strings.setLanguage(this.state.language);
-        const { loading, initValue, dialog ,bankList, existForAccountNumber} = this.state
+        const { loading, initValue, dialog ,bankList ,existForAccountNumber } = this.state
         const { designation_dropdown, country_list, state_list, employee_list_dropdown } = this.props
         console.log(this.state.gender, "gender")
         console.log(this.state.bloodGroup, "blood")
         console.log(this.state.selectedStatus)
 
         return (
+            loading ==true? <Loader/> :
+<div>
             <div className="detail-vat-code-screen">
                 <div className="animated fadeIn">
                     {dialog}
@@ -255,7 +265,7 @@ class UpdateEmployeeBank extends React.Component {
                                                         let errors = {};
                                                         if (existForAccountNumber === true) {
                                                             errors.accountNumber =
-                                                                'Account Number already exists';
+                                                                'Account Number Already Exists';
                                                         }
                                                         return errors;
                                                     }}
@@ -264,8 +274,8 @@ class UpdateEmployeeBank extends React.Component {
                                                             .required("Account Holder Name is Required"),
                                                         accountNumber: Yup.string()
                                                         .required("Account Number is Required"),
-                                                        // bankName: Yup.string()
-                                                        // .required("Bank Name is Required"),
+                                                        bankName: Yup.string()
+                                                        .required("Bank Name is Required"),
                                                         bankId: Yup.string()
                                                         .required('Bank is Required') ,
                                                         swiftCode: Yup.string()
@@ -290,9 +300,10 @@ class UpdateEmployeeBank extends React.Component {
                                                                     <Row  >
                                                                         <Col md="4">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="select"><span className="text-danger">*</span>{strings.AccountHolderName} </Label>
+                                                                                <Label htmlFor="select"><span className="text-danger">* </span>{strings.AccountHolderName} </Label>
                                                                                 <Input
                                                                                     type="text"
+                                                                                    maxLength="100"
                                                                                     id="accountHolderName"
                                                                                     name="accountHolderName"
                                                                                     value={props.values.accountHolderName}
@@ -310,9 +321,10 @@ class UpdateEmployeeBank extends React.Component {
                                                                         </Col>
                                                                         <Col md="4">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="select"><span className="text-danger">*</span> {strings.AccountNumber}</Label>
+                                                                                <Label htmlFor="select"><span className="text-danger">* </span> {strings.AccountNumber}</Label>
                                                                                 <Input
                                                                                     type="text"
+                                                                                    maxLength="25"
                                                                                     id="accountNumber"
                                                                                     name="accountNumber"
                                                                                     value={props.values.accountNumber}
@@ -326,7 +338,8 @@ class UpdateEmployeeBank extends React.Component {
                                                                                                 option,
                                                                                             );
                                                                                             this.existForAccountNumber(option.target.value);
-                                                                                        }}}
+                                                                                        }
+                                                                                    }}
                                                                                     className={props.errors.accountNumber && props.touched.accountNumber ? "is-invalid" : ""}
                                                                                 />
                                                                                 {props.errors.accountNumber && props.touched.accountNumber && (
@@ -335,37 +348,36 @@ class UpdateEmployeeBank extends React.Component {
                                                                             </FormGroup>
                                                                         </Col>
                                                                         <Col md="4">
-                                                                                                <FormGroup>
-                                                                                                <Label htmlFor="select"><span className="text-danger">*</span> {strings.BankName} </Label>
-                                                                                                    <Select
-
-                                                                                                        options={
-                                                                                                            bankList
-                                                                                                                ? selectOptionsFactory.renderOptions(
-                                                                                                                    'bankName',
-                                                                                                                    'bankId',
-                                                                                                                    bankList,
-                                                                                                                    'Bank',
-                                                                                                                )
-                                                                                                                : []
-                                                                                                        }
-                                                                                                        value={props.values.bankId}
-                                                                                                        value={bankList &&
-                                                                                                            selectOptionsFactory
-                                                                                                                .renderOptions(
-                                                                                                                    'bankName',
-                                                                                                                    'bankId',
-                                                                                                                    bankList,
-                                                                                                                    'Bank',
-                                                                                                                )
-                                                                                                                .find(
-                                                                                                                    (option) =>
-                                                                                                                        option.value ===
-                                                                                                                        props.values.bankId,
-                                                                                                                )}
-                                                                                                        onChange={(option) => {
-                                                                                                            if (option && option.value) {
-                                                                                                                props.handleChange('bankId')(option);
+                                                                            <FormGroup>
+                                                                                <Label htmlFor="select"><span className="text-danger">* </span> {strings.BankName} </Label>
+                                                                                    <Select
+                                                                                        options={
+                                                                                        bankList
+                                                                                        ? selectOptionsFactory.renderOptions(
+                                                                                        'bankName',
+                                                                                        'bankId',
+                                                                                        bankList,
+                                                                                        'Bank',
+                                                                                        )
+                                                                                        : []
+                                                                                        }
+                                                                                        value={props.values.bankId}
+                                                                                        value={bankList &&
+                                                                                        selectOptionsFactory
+                                                                                        .renderOptions(
+                                                                                        'bankName',
+                                                                                        'bankId',
+                                                                                        bankList,
+                                                                                        'Bank',
+                                                                                        )
+                                                                                        .find(
+                                                                                            (option) =>
+                                                                                            option.value ===
+                                                                                            props.values.bankId,
+                                                                                                )}
+                                                                                                onChange={(option) => {
+                                                                                                if (option && option.value) {
+                                                                                                props.handleChange('bankId')(option);
                                                                                                             } else {
                                                                                                                 props.handleChange('bankId')('');
                                                                                                             }
@@ -419,9 +431,10 @@ class UpdateEmployeeBank extends React.Component {
                                                                     <Row className="row-wrapper">
                                                                         <Col lg={4}>
                                                                             <FormGroup>
-                                                                                <Label htmlFor="select"><span className="text-danger">*</span>{strings.Branch}</Label>
+                                                                                <Label htmlFor="select"><span className="text-danger">* </span>{strings.Branch}</Label>
                                                                                 <Input
                                                                                     type="text"
+                                                                                    maxLength="100"
                                                                                     id="branch"
                                                                                     name="branch"
                                                                                     value={props.values.branch}
@@ -439,12 +452,12 @@ class UpdateEmployeeBank extends React.Component {
                                                                         </Col>
                                                                         <Col md="4">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="select"> <span className="text-danger">*</span>{strings.IBANNumber}</Label>
+                                                                                <Label htmlFor="select"> <span className="text-danger">* </span>{strings.IBANNumber}</Label>
                                                                                 <Input
                                                                                     type="text"
                                                                                     id="iban"
                                                                                     name="iban"
-                                                                                    max="34"
+                                                                                    maxLength="23"
                                                                                     value={props.values.iban}
                                                                                     placeholder={strings.Enter+strings.IBANNumber}
                                                                                     onChange={(value) => {
@@ -461,20 +474,19 @@ class UpdateEmployeeBank extends React.Component {
 
                                                                         <Col lg={4}>
                                                                             <FormGroup>
-                                                                                <Label htmlFor="select"><span className="text-danger">*</span>{strings.SwiftCode}</Label>
+                                                                                <Label htmlFor="select"><span className="text-danger">* </span>{strings.SwiftCode}</Label>
                                                                                 <Input
                                                                                     type="text"
+                                                                                    maxLength="11"
                                                                                     id="swiftCode"
                                                                                     name="swiftCode"
                                                                                     value={props.values.swiftCode}
                                                                                     placeholder={strings.Enter+strings.SwiftCode}
-                                                                                    onChange={(value) => {
-                                                                                        props.handleChange('swiftCode')(value);
-
+                                                                                    onChange={(option) => {
+                                                                                        if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('swiftCode')(option) }
                                                                                     }}
                                                                                     className={props.errors.swiftCode && props.touched.swiftCode ? "is-invalid" : ""}
-                                                                                />
-                                                                                {props.errors.swiftCode && props.touched.swiftCode && (
+                                                                                />                                                     {props.errors.swiftCode && props.touched.swiftCode && (
                                                                                     <div className="invalid-feedback">{props.errors.swiftCode}</div>
                                                                                 )}
                                                                             </FormGroup>
@@ -525,6 +537,7 @@ class UpdateEmployeeBank extends React.Component {
                         </Col>
                     </Row>
                 </div>
+            </div>
             </div>
         )
     }

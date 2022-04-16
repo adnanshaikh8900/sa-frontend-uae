@@ -164,18 +164,39 @@ class HorizontalBalanceSheet extends React.Component {
 
 	exportFile = () => {
 
-		let exportData
+		// let exportData
 	 
-			 let singleResultArray=this.state && this.state.data 
-	         ?
+		// 	 let singleResultArray=this.state && this.state.data 
+	    //      ?
 	 
-			 Object.entries(this.state.data)     :[];
+		// 	 Object.entries(this.state.data)     :[];
 	 
-		 const { Parser, transforms: { unwind, flatten } } = require('json2csv');
-		 const json2csvParser = new Parser({ transforms: [unwind({ blankOut: true }), flatten('__')] });
-		  exportData = json2csvParser.parse(singleResultArray);
-	      return (exportData);
+		//  const { Parser, transforms: { unwind, flatten } } = require('json2csv');
+		//  const json2csvParser = new Parser({ transforms: [unwind({ blankOut: true }), flatten('__')] });
+		//   exportData = json2csvParser.parse(singleResultArray);
+	    //   return (exportData);
+		let dl =""
+		let fn =""
+		let type="csv"
+		var elt = document.getElementById('tbl_exporttable_to_xls');												
+		var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
+		return dl ?
+		  XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
+		  XLSX.writeFile(wb, fn || ('Horizontal Balance Sheet Report.'+ (type || 'csv')));
+
 	   }
+
+	   exportExcelFile  = () => 
+	{   let dl =""
+		let fn =""
+		let type="xlsx"
+		var elt = document.getElementById('tbl_exporttable_to_xls');												
+		var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
+		return dl ?
+		  XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
+		  XLSX.writeFile(wb, fn || ('Horizontal Balance Sheet Report.'+ (type || 'xlsx')));
+
+	}
 
 	
 	toggle = () =>
@@ -227,18 +248,28 @@ class HorizontalBalanceSheet extends React.Component {
 													<DropdownToggle caret>Export As</DropdownToggle>
 													<DropdownMenu>
 														
-														<DropdownItem>
-															<CSVLink
-																data={this.exportFile()}
-																className="csv-btn"
-																filename={'Horizontal Balance sheet Report.csv'}
-															>
-																CSV (Comma Separated Value)
-															</CSVLink>
+														<DropdownItem onClick={()=>{this.exportFile()}}>
+															<span
+															style={{
+																border: 0,
+    															padding: 0,
+																backgroundColor:"white !important"
+															}}
+														 >CSV (Comma Separated Value)</span>
+														</DropdownItem>
+														<DropdownItem onClick={()=>{this.exportExcelFile()}}>
+															<span
+															style={{
+																border: 0,
+    															padding: 0,
+																backgroundColor:"white !important"
+															}}
+														  >Excel</span>
 														</DropdownItem>
 														<DropdownItem onClick={this.exportPDFWithComponent}>
 															Pdf
 														</DropdownItem>
+														
 														{/* <DropdownItem
 															onClick={() => {
 																this.exportFile(csvData, 'balancesheet', 'xls');
@@ -343,7 +374,7 @@ class HorizontalBalanceSheet extends React.Component {
 										
 											<b style ={{ fontSize: '18px'}}>{strings.HorizontalBalanceSheet}</b>
 											<br/>
-										{strings.Ason } {initValue.endDate}
+										{strings.Ason }  {initValue.endDate.replaceAll("/","-")} 
 											
 									</div>
 									<div>
@@ -354,19 +385,19 @@ class HorizontalBalanceSheet extends React.Component {
 									{loading ? (
 										<Loader />
 									) : (
-										<div className="table-wrapper mt-4">
+										<div id="tbl_exporttable_to_xls" className="table-wrapper mt-4">
 											<Row>
 											<Col>
-											<Table responsive className="table-bordered">
-												<thead className="thead-dark ">
+											<Table  responsive className="table-bordered">
+												<thead>
 													<tr className="header-row">
 														{this.columnHeader.map((column, index) => {
 															return (
 																<th
 																	key={index}
-																	style={{ fontWeight: '600' }}
+																	style={{ fontWeight: '600', color:'black' }}
 																	className={column.align ? 'text-right' : ''}
-																	className="table-header-color"
+																	className="table-header-bg"
 																>
 																	{column.label}
 																</th>
@@ -612,15 +643,15 @@ class HorizontalBalanceSheet extends React.Component {
 											</Col>
 											<Col>
 											<Table responsive className="table-bordered">
-												<thead className="thead-dark ">
+												<thead>
 													<tr className="header-row">
 														{this.columnHeader.map((column, index) => {
 															return (
 																<th
 																	key={index}
-																	style={{ fontWeight: '600' }}
+																	style={{ fontWeight: '600', color:'black' }}
 																	className={column.align ? 'text-right' : ''}
-																	className="table-header-color"
+																	className="table-header-bg"
 																>
 																	{column.label}
 																</th>

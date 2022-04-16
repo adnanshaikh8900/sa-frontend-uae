@@ -25,6 +25,7 @@ import LocalizedStrings from 'react-localization';
 import '../style.scss';
 import { PDFExport } from '@progress/kendo-react-pdf';
 import moment from 'moment';
+import { Currency } from 'components';
 
 
 const mapStateToProps = (state) => {
@@ -59,7 +60,7 @@ const { ToWords } = require('to-words');
 const toWords = new ToWords({
 	localeCode: 'en-IN',
 	converterOptions: {
-  currency: true,
+	//   currency: true,
 	  ignoreDecimal: false,
 	  ignoreZeroCurrency: false,
 	  doNotAddOnly: false,
@@ -129,7 +130,7 @@ class PaySlipModal extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { openModal, closeModal, id, companyData ,bankDetails,salaryDate} = this.props;
+		const { openModal, closeModal, id, companyData ,bankDetails,salaryDate,currencyData} = this.props;
 		const { initValue, contentState, data, supplierId } = this.state;
 
 		let tmpSupplier_list = []
@@ -318,7 +319,16 @@ console.log(this.state.Variable,"Variable")
 																		<tr key={index}>
 																			{/* <td className="center">{index + 1}</td> */}
 																			<td>{item.componentName}</td>
-																			<td>{item.componentValue}</td>
+																			<td style={{ textAlign:'right' }}>
+																				
+																				{/* {item.componentValue} */}
+																				<Currency
+																				value={item.componentValue}
+																				currencySymbol={
+																					'AED'
+																			   }
+																				/>
+																				</td>
 																			
 																		</tr>
 																	);
@@ -330,7 +340,15 @@ console.log(this.state.Variable,"Variable")
 																		<tr key={index}>
 																			{/* <td className="center">{index + 1}</td> */}
 																			<td>{item.componentName}</td>
-																			<td>{item.componentValue}</td>
+																			<td style={{ textAlign:'right' }}>
+																				{/* {item.componentValue} */}
+																				<Currency
+																				value={item.componentValue}
+																				currencySymbol={
+																					 'AED'
+																				}
+																				/>
+																				</td>
 																			
 																		</tr>
 																	);
@@ -343,7 +361,13 @@ console.log(this.state.Variable,"Variable")
 																		<tr key={index}>
 																			{/* <td className="center">{index + 1}</td> */}
 																			<td>{item.componentName}</td>
-																			<td>{item.componentValue}</td>
+																			<td style={{ textAlign:'right' }}>
+																			<Currency
+																				value={item.componentValue}
+																				currencySymbol={
+																					'AED'
+																			   }
+																				/></td>
 																			
 																		</tr>
 																	);
@@ -353,7 +377,14 @@ console.log(this.state.Variable,"Variable")
 															<tr>
 																{/* <td></td> */}
 																<td><b>{strings.Gross+" "+strings.Earnings}</b></td>
-																<td>{this.state.selectedData.earnings}</td>
+																<td style={{ textAlign:'right' }}>
+																<Currency
+																				value={this.state.selectedData.earnings}
+																				currencySymbol={
+																					'AED'
+																			   }
+																				/>
+																</td>
 															</tr>
 														</tfoot>
 															</Table>
@@ -379,7 +410,14 @@ console.log(this.state.Variable,"Variable")
 																		<tr key={index}>
 																			{/* <td className="center">{index + 1}</td> */}
 																			<td>{item.componentName}</td>
-																			<td>{item.componentValue}</td>
+																			<td style={{ textAlign:'right' }}>
+																			<Currency
+																				value={item.componentValue}
+																				currencySymbol={
+																					'AED'
+																			   }
+																				/>
+																				</td>
 																			
 																		</tr>
 																	);
@@ -389,7 +427,14 @@ console.log(this.state.Variable,"Variable")
 															<tr>
 																{/* <td></td> */}
 																<td><b>{strings.Total+" "+strings.Deductions}</b></td>
-																<td>{this.state.selectedData.deductions ? this.state.selectedData.deductions : 0}</td>
+																<td style={{textAlign:'right' }}>
+																<Currency
+																				value={this.state.selectedData.deductions ? this.state.selectedData.deductions : 0}
+																				currencySymbol={
+																					'AED'
+																			   }
+																				/>
+																	</td>
 															</tr>
 														</tfoot>
 															</Table>
@@ -407,11 +452,18 @@ console.log(this.state.Variable,"Variable")
 															backgroundColor: "#e4f8ff"
 														}}
 													>
-														<h5> {strings.TotalNet+" "+strings.Payable} <b>{this.state.selectedData.netPay}</b>
+														<h5> {strings.TotalNet+" "+strings.Payable} <b>
+														<Currency
+																				value={this.state.selectedData.netPay}
+																				currencySymbol={
+																					'AED'
+																			   }
+																				/>
+															</b>
 														</h5>
 														<h5>	
 															 {/* (	{	upperFirst(converter.toWords(toInteger(this.state.selectedData.netPay)))} ) */}
-														 {this.state.selectedData.netPay ? (upperCase((toWords.convert(this.state.selectedData.netPay)))) : " -" }
+														 {this.state.selectedData.netPay ? (upperCase((toWords.convert(this.state.selectedData.netPay))).replace("POINT","AND")) : " -" }
 														</h5>
 													</div>
 												</CardBody>

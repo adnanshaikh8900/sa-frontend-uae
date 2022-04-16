@@ -95,8 +95,8 @@ class AccountBalances extends React.Component {
 				endDate: '',
 			},
 			initValue: {
-				startDate: moment().startOf('month').format('DD/MM/YYYY'),
-				endDate: moment().endOf('month').format('DD/MM/YYYY'),
+				startDate: moment().startOf('month').format('DD-MM-YYYY'),
+				endDate: moment().endOf('month').format('DD-MM-YYYY'),
 			},
 		};
 	}
@@ -138,11 +138,11 @@ class AccountBalances extends React.Component {
 					: '',
 			startDate:
 				this.state.filterData.startDate !== ''
-					? moment(this.state.filterData.startDate).format('DD/MM/YYYY')
+					? moment(this.state.filterData.startDate).format('DD-MM-YYYY')
 					: '',
 			endDate:
 				this.state.filterData.endDate !== ''
-					? moment(this.state.filterData.endDate).format('DD/MM/YYYY')
+					? moment(this.state.filterData.endDate).format('DD-MM-YYYY')
 					: '',
 		};
 		this.props.accountBalanceData.getAccountBalanceReport(postObj);
@@ -173,7 +173,7 @@ class AccountBalances extends React.Component {
 					transactionDescription: account.transactionDescription,
 					transactionCategory: account.transactionCategory,
 					transactionAmount: account.transactionAmount,
-					transactionDate: moment(account.transactionDate).format('DD/MM/YYYY'),
+					transactionDate: moment(account.transactionDate).format('DD-MM-YYYY'),
 					transactionId: account.transactionId,
 			  }))
 			: '';
@@ -228,7 +228,7 @@ class AccountBalances extends React.Component {
 											showYearDropdown
 											autoComplete="off"
 											dropdownMode="select"
-											dateFormat="dd/MM/yyyy"
+											dateFormat="dd-MM-yyyy"
 											selected={filterData.startDate}
 											onChange={(value) => {
 												this.handleChange(value, 'startDate');
@@ -244,7 +244,7 @@ class AccountBalances extends React.Component {
 											showMonthDropdown
 											showYearDropdown
 											dropdownMode="select"
-											dateFormat="dd/MM/yyyy"
+											dateFormat="dd-MM-yyyy"
 											selected={filterData.endDate}
 											onChange={(value) => {
 												this.handleChange(value, 'endDate');

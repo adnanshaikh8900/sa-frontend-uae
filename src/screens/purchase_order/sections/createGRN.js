@@ -94,7 +94,7 @@ class CreateGoodsReceivedNote extends React.Component {
 					vatCategoryId: '',
 					subTotal: 0,
 					productId: '',
-					
+					grnReceivedQuantity: 0,
 					
 				},
 			],
@@ -107,7 +107,7 @@ class CreateGoodsReceivedNote extends React.Component {
 						id: 0,
 						description: '',
 						quantity: 1,
-						unitPrice: '',
+						unitPrice: 1,
 						vatCategoryId: '',
 						subTotal: 0,
 						productId: '',
@@ -119,7 +119,7 @@ class CreateGoodsReceivedNote extends React.Component {
 				term: '',
 				totalAmount: 0,
 				totalVatAmount: 0,
-				grnRemarks: '',
+				notes: '',
 				type: 4,
 				supplierReferenceNumber: '',
 				// grnReceivedQuantityError:'Please Enter Quantity'
@@ -132,7 +132,6 @@ class CreateGoodsReceivedNote extends React.Component {
 			viewEditor: false,
 			message: '',
 			productId:'',
-			prefixData:'',
 			grnReceivedQuantity:0,
 			grnReceivedQuantityError:"Please Enter Quantity"
 		};
@@ -289,10 +288,10 @@ class CreateGoodsReceivedNote extends React.Component {
 						<Input
 						disabled
 							type="number"
-min="0"
+							min="0"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
-								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+								if (e.target.value === '' || this.regEx.test(e.target.value)) {
 									this.selectItem(
 										e.target.value,
 										row,
@@ -556,12 +555,12 @@ min="0"
 				render={({ field, form }) => (
 					<div>
 						<Input
-							type="number"
+							type="text"
 							min="0"
 							maxLength="10"
 							value={row['grnReceivedQuantity'] !== 0 ? row['grnReceivedQuantity'] : 0}
 							onChange={(e) => {
-								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+								if (e.target.value === '' || this.regEx.test(e.target.value)) {
 									this.selectItem(
 										e.target.value,
 										row,
@@ -597,10 +596,15 @@ min="0"
 			// 			}`}
 						/>
 				
-								<div  className="text-danger">
+								{/* <div  className="text-danger">
 									{this.state.grnReceivedQuantityError}
-								</div>
-							
+								</div> */}
+							{row['grnReceivedQuantity'] <=0 && (
+							<div  className="text-danger">
+								Please Enter Quantity
+							</div>
+							)
+						}
 					</div>
 				)}
 			/>
@@ -802,7 +806,7 @@ min="0"
 			supplierId,
             poNumber,
 			grn_number,
-			grnRemarks,
+			notes,
 			supplierReferenceNumber,
 		} = data;
 		const postData = this.getData(data);
@@ -829,7 +833,7 @@ min="0"
 		);
 		formData.append('grnReceiveDate', grnReceiveDate ? grnReceiveDate : '');
 	
-		formData.append('grnRemarks', grnRemarks ? grnRemarks : '');
+		formData.append('notes', notes ? notes : '');
 		formData.append('type', 5);
 		formData.append('lineItemsString', JSON.stringify(this.state.selectedData.poQuatationLineItemRequestModelList));
 		formData.append('totalAmount', this.state.initValue.totalAmount);
@@ -848,7 +852,7 @@ min="0"
 
 					resetForm();
 					this.props.closeGoodsReceivedNotes(true);
-
+					this.props.getNextGrnNo();
 					
 				}
 			})
@@ -915,12 +919,41 @@ min="0"
 						ref={this.formikRef}
 						initialValues={initValue}
 						onSubmit={(values, { resetForm ,setSubmitting}) => {
-							debugger
+							 
 							if(this.state.grnReceivedQuantityError!="Please Enter Quantity"){
 								this.handleSubmit(values, resetForm);
 							}
 							
 						}}
+
+						validationSchema={Yup.object().shape(
+							{
+								poQuatationLineItemRequestModelList: Yup.array()
+								.required(
+									'Atleast one invoice sub detail is mandatory',
+								)
+								.of(
+									Yup.object().shape({
+										unitPrice: Yup.string()
+											.required('Value is Required')
+											.test(
+												'Unit Price',
+												'Unit Price Should be Greater than 1',
+												(value) => {
+													if (value > 0) {
+														return true;
+													} else {
+														return false;
+													}
+												},
+											),
+								
+									
+									}),
+								),
+						}
+						)
+					}
 					
 					>
 						{(props) => {
@@ -991,6 +1024,7 @@ min="0"
 																		 {strings.GRNNumber}
 																	</Label>
 																	<Input
+																		disabled={true}
 																		type="text"
 																		id="grn_number"
 																		name="grn_number"
@@ -1191,7 +1225,7 @@ min="0"
 																		showMonthDropdown
 																		showYearDropdown
 																		dropdownMode="select"
-																		dateFormat="dd/MM/yyyy"
+																		dateFormat="dd-MM-yyyy"
 																		maxDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('grnReceiveDate')(value);
@@ -1226,7 +1260,7 @@ min="0"
 															</Col>
 														</Row>
 														<Row>
-															<Col lg={12}>
+															<Col lg={9}>
 																{props.errors.poQuatationLineItemRequestModelList &&
 																	props.errors.poQuatationLineItemRequestModelList === 'string' && (
 																		<div
@@ -1266,17 +1300,17 @@ min="0"
 																		 {strings.PRODUCT}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
-																	width='10%'
 																		dataField="description"
 																		dataFormat={(cell, rows) =>
 																			this.renderDescription(cell, rows, props)
 																		}
+																		width='10%'
 																	>
 																		 {strings.DESCRIPTION}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="poQuantity"
-																		width="20%"
+																		width="10%"
 																		dataFormat={(cell, rows) =>
 																			this.renderGRNQuantity(cell, rows, props)
 																		}
@@ -1293,7 +1327,42 @@ min="0"
 																	>
 																	 {strings.POQUANTITY}
 																	</TableHeaderColumn>
+																	{/* <TableHeaderColumn
+																		dataField="unitPrice"
+																		dataFormat={(cell, rows) =>
+																			this.renderUnitPrice(cell, rows, props)
+																		}
+																	>
+																		{strings.UNITPRICE}
+																		<i
+																			id="UnitPriceToolTip"
+																			className="fa fa-question-circle ml-1"
+																		></i>
+																		<UncontrolledTooltip
+																			placement="right"
+																			target="UnitPriceToolTip"
+																		>
+																			Unit Price – Price of a single product or
+																			service
+																		</UncontrolledTooltip>
+																	</TableHeaderColumn>
+																	<TableHeaderColumn
+																		dataField="vat"
+																		dataFormat={(cell, rows) =>
+																			this.renderVat(cell, rows, props)
+																		}
+																	>
+																		{strings.VAT}
+																	</TableHeaderColumn>
+																	<TableHeaderColumn
+																		dataField="sub_total"
+																		dataFormat={this.renderSubTotal}
+																		className="text-right"
+																		columnClassName="text-right"
 																	
+																	>
+																		{strings.SUBTOTAL}
+																	</TableHeaderColumn> */}
 																</BootstrapTable>
 															</Col>
 														</Row>
@@ -1301,20 +1370,20 @@ min="0"
 													
 														{this.state.selectedData.poQuatationLineItemRequestModelList.length > 0 && (
 																<Row>
-																		<Col lg={8}>
+																		<Col lg={9}>
 																	<FormGroup className="py-2">
 																		<Label htmlFor="notes">{strings.Notes}</Label>
 																		<Input
 																			type="textarea"
 																			maxLength="255"
-																			name="grnRemarks"
-																			id="grnRemarks"
+																			name="notes"
+																			id="notes"
 																			rows="6"
 																			placeholder={strings.Notes}
 																			onChange={(option) =>
-																				props.handleChange('grnRemarks')(option)
+																				props.handleChange('notes')(option)
 																			}
-																			value={props.values.grnRemarks}
+																			value={props.values.notes}
 																		/>
 																	</FormGroup>
 																
@@ -1322,7 +1391,7 @@ min="0"
 																	<Col lg={4}>
 																		<div className="">
 																		
-																			<div className="total-item p-2">
+																			{/* <div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>
 																						<h5 className="mb-0 text-right">
@@ -1330,7 +1399,7 @@ min="0"
 																						</h5>
 																					</Col>
 																					<Col lg={6} className="text-right">
-																						<label className="mb-0">
+																						<label className="mb-0"> */}
 																						{/* {universal_currency_list[0] && (
 																						<Currency
 																						value=	{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
@@ -1342,13 +1411,13 @@ min="0"
 																							/>
 																							)} */}
 																							{/* {this.getTotalNet()} */}
-																							{this.state.selectedData.currencyIsoCode}  &nbsp;
+																							{/* {this.state.selectedData.currencyIsoCode}  &nbsp;
 																								{this.getTotalNet().toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>
-																			</div>
-																			<div className="total-item p-2">
+																			</div> */}
+																			{/* <div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>
 																						<h5 className="mb-0 text-right">
@@ -1356,7 +1425,7 @@ min="0"
 																						</h5>
 																					</Col>
 																					<Col lg={6} className="text-right">
-																						<label className="mb-0">
+																						<label className="mb-0"> */}
 																						{/* {universal_currency_list[0] && (
 																						<Currency
 																						value=	{initValue.invoiceVATAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
@@ -1368,13 +1437,13 @@ min="0"
 																							/>
 																							)} */}
 																							{/* {this.state.initValue.totalVatAmount	} */}
-																							{this.state.selectedData.currencyIsoCode} &nbsp;
+																							{/* {this.state.selectedData.currencyIsoCode} &nbsp;
 																							{this.state.initValue.totalVatAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>
-																			</div>
-																			<div className="total-item p-2">
+																			</div> */}
+																			{/* <div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>
 																						<h5 className="mb-0 text-right">
@@ -1382,7 +1451,7 @@ min="0"
 																						</h5>
 																					</Col>
 																					<Col lg={6} className="text-right">
-																						<label className="mb-0">
+																						<label className="mb-0"> */}
 																						{/* {universal_currency_list[0] && (
 																						<Currency
 																						value=	{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
@@ -1394,12 +1463,12 @@ min="0"
 																							/>
 																							)} */}
 																							{/* {this.state.initValue.totalAmount} */}
-																							{this.state.selectedData.currencyIsoCode} &nbsp;
+																							{/* {this.state.selectedData.currencyIsoCode} &nbsp;
 																							{this.state.initValue.totalAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>
-																			</div>
+																			</div> */}
 																		</div>
 																	</Col>
 																</Row>
@@ -1411,7 +1480,15 @@ min="0"
 											type="submit"
 											className="btn-square"
 											disabled={this.state.isSubmitting}
-											
+											onClick={() => {
+												this.setState(
+													{ createMore: false },
+													() => {
+														props.handleSubmit();
+													},
+												);
+												
+											}}
 										>
 											<i className="fa fa-dot-circle-o"></i> {strings.Create}
 										</Button>

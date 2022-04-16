@@ -770,7 +770,7 @@ min="0"
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Journal Deleted Successfully',
+						res.data ? res.data.message :'Journal Deleted Successfully',
 					);
 					this.props.history.push('/admin/accountant/journal');
 				}
@@ -778,7 +778,7 @@ min="0"
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'Journal Deleted Unsuccessfully',
 				);
 			});
 	};
@@ -835,7 +835,7 @@ min="0"
 							this.setState({ disabled2: false });
 						this.props.commonActions.tostifyAlert(
 							'success',
-							'Journal Updated Successfully',
+							res.data ? res.data.message :'Journal Updated Successfully',
 						);
 						this.props.history.push('/admin/accountant/journal');
 					}
@@ -843,7 +843,7 @@ min="0"
 				.catch((err) => {
 					this.props.commonActions.tostifyAlert(
 						'error',
-						err && err.data ? err.data.message : 'Something Went Wrong',
+						err.data ? err.data.message : 'Journal Updated Unsuccessfully'
 					);
 				});
 		}
@@ -855,6 +855,8 @@ min="0"
 		const { currency_list,universal_currency_list } = this.props;
 
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="detail-journal-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -891,7 +893,7 @@ min="0"
 															.of(
 																Yup.object().shape({
 																	transactionCategoryId: Yup.string().required(
-																		'Account is required',
+																		'Account is Required',
 																	),
 																	debitAmount: Yup.number().required(),
 																	creditAmount: Yup.number().required(),
@@ -909,7 +911,7 @@ min="0"
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="date">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			{strings.JournalDate}
 																		</Label>
 																		<DatePicker
@@ -925,7 +927,7 @@ min="0"
 																			}
 																			showMonthDropdown
 																			showYearDropdown
-																			dateFormat="dd/MM/yyyy"
+																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
 																			autoComplete="off"
 																			value={
@@ -1389,6 +1391,7 @@ min="0"
 						</Col>
 					</Row>
 				</div>
+			</div>
 			</div>
 		);
 	}

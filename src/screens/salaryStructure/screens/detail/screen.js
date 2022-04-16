@@ -114,8 +114,8 @@ class DetailSalaryStructure extends React.Component {
 
 		let formData = new FormData();
 		formData.append('id', current_salary_structure_id);
-    formData.append('salaryStructureType', salaryStructureType ? salaryStructureType : '');
-		formData.append('salaryStructureName', salaryStructureName ? salaryStructureName : '');
+    formData.append('type', salaryStructureType ? salaryStructureType : '');
+		formData.append('name', salaryStructureName ? salaryStructureName : '');
 		this.props.salarayStructureDetailActions
 			.updateSalaryStructure(formData)
 			.then((res) => {
@@ -173,6 +173,8 @@ class DetailSalaryStructure extends React.Component {
     const { currency_list } = this.props
     const { dialog, loading, initValue } = this.state
     return (
+      loading ==true? <Loader/> :
+<div>
       <div className="detail-employee-screen">
         <div className="animated fadeIn">
           <Row>
@@ -208,7 +210,7 @@ class DetailSalaryStructure extends React.Component {
                               salaryStructureType: Yup.string()
                               .required("Salary Structure Type is Required"),
                               salaryStructureName: Yup.string()
-                                .required("salary Structure Name is Required"),
+                                .required("Salary Structure Name is Required"),
                             
                             })}
                           >
@@ -226,7 +228,7 @@ class DetailSalaryStructure extends React.Component {
                             
                             <Col lg={4}>
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span>{strings.SalaryStructureType}</Label>
+                                  <Label htmlFor="select"><span className="text-danger">* </span>{strings.SalaryStructureType}</Label>
                                   <Input
                                     type="text"
                                     maxLength="30"
@@ -235,7 +237,7 @@ class DetailSalaryStructure extends React.Component {
                                     value={props.values.salaryStructureType}
                                     placeholder="Enter Salary Structure Type"
                                     onChange={(option) => {
-                                      if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('salaryStructureType')(option) }
+                                      if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('salaryStructureType')(option) }
                                     }}
                                     className={props.errors.salaryStructureType && props.touched.salaryStructureType ? "is-invalid" : ""}
                                   />
@@ -246,7 +248,7 @@ class DetailSalaryStructure extends React.Component {
                               </Col>
                               <Col lg={4}>
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span>{strings.SalaryStructureName}</Label>
+                                  <Label htmlFor="select"><span className="text-danger">* </span>{strings.SalaryStructureName}</Label>
                                   <Input
                                     type="text"
                                     maxLength="30"
@@ -259,7 +261,7 @@ class DetailSalaryStructure extends React.Component {
                                     }}
                                     className={props.errors.salaryStructureName && props.touched.salaryStructureName ? "is-invalid" : ""}
                                   />
-                                  {props.errors.firstName && props.touched.firstName && (
+                                  {props.errors.salaryStructureName && props.touched.salaryStructureName && (
                                     <div className="invalid-feedback">{props.errors.salaryStructureName}</div>
                                   )}
                                 </FormGroup>
@@ -307,6 +309,7 @@ class DetailSalaryStructure extends React.Component {
             </Col>
           </Row>
         </div>
+      </div>
       </div>
     )
   }

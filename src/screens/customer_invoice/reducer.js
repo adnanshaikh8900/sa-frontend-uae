@@ -12,6 +12,7 @@ const initState = {
 	place_of_supply:[],
 	status_list: [],
 	pay_mode: [],
+	excise_list: [],
 };
 
 const CustomerInvoiceReducer = (state = initState, action) => {
@@ -71,7 +72,11 @@ const CustomerInvoiceReducer = (state = initState, action) => {
 				...state,
 				pay_mode: Object.assign([], payload.data),
 			};
-
+			case CUSTOMER_INVOICE.EXCISE_LIST:
+				return{
+					...state,
+					excise_list: Object.assign([],payload.data)
+				};
 		case CUSTOMER_INVOICE.COUNTRY_LIST:
 			return {
 				...state,

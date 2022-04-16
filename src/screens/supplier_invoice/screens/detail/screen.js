@@ -13,6 +13,7 @@ import {
 	Input,
 	Label,
 	NavLink,
+	UncontrolledTooltip
 } from 'reactstrap';
 import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
@@ -30,19 +31,20 @@ import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
-import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
+import { optionFactory,selectCurrencyFactory, selectOptionsFactory } from 'utils';
 
 import './style.scss';
 import moment from 'moment';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import Switch from "react-switch";
 
 const mapStateToProps = (state) => {
 	return {
 		project_list: state.supplier_invoice.project_list,
 		contact_list: state.supplier_invoice.contact_list,
 		currency_list: state.supplier_invoice.currency_list,
-		vat_list: state.supplier_invoice.vat_list,
+		excise_list: state.supplier_invoice.excise_list,
 		product_list: state.customer_invoice.product_list,
 		supplier_list: state.supplier_invoice.supplier_list,
 		country_list: state.supplier_invoice.country_list,
@@ -85,8 +87,12 @@ class DetailSupplierInvoice extends React.Component {
 			loading: true,
 			dialog: false,
 			discountOptions: [
-				{ value: 'FIXED', label: 'Fixed' },
-				{ value: 'PERCENTAGE', label: 'Percentage' },
+				{ value: 'FIXED', label: 'FIXED' },
+				{ value: 'PERCENTAGE', label: '%' },
+			],
+			exciseTypeOption:[
+				{ value: 'Inclusive', label: 'Inclusive' },
+				{ value: 'Exclusive', label: 'Exclusive' },
 			],
 			discount_option: '',
 			data: [],
@@ -126,7 +132,7 @@ class DetailSupplierInvoice extends React.Component {
 			{ label: 'Net 60 Days', value: 'NET_60' },
 			{ label: 'Due on Receipt', value: 'DUE_ON_RECEIPT' },
 		];
-		this.placelist = [
+			this.placelist = [
 			{ label: 'Abu Dhabi', value: '1' },
 			{ label: 'Dubai', value: '2' },
 			{ label: 'Sharjah', value: '3' },
@@ -149,7 +155,6 @@ class DetailSupplierInvoice extends React.Component {
 		this.regEx = /^[0-9\b]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
-		this.regExAlpha = /^[a-zA-Z0-9!@#$&()-\\`.+,/\"]+$/;
 	}
 
 	// renderActions  = (cell, row) => {
@@ -165,6 +170,11 @@ class DetailSupplierInvoice extends React.Component {
 	// }
 
 	componentDidMount = () => {
+		this.props.supplierInvoiceActions.getVatList().then((res)=>{
+			if(res.status===200)
+			this.setState({vat_list:res.data})
+			
+		});
 		this.initializeData();
 	};
 
@@ -175,13 +185,13 @@ class DetailSupplierInvoice extends React.Component {
 				.then((res) => {
 					if (res.status === 200) {
 						this.getCompanyCurrency();
-						this.props.supplierInvoiceActions.getVatList();
 						this.props.supplierInvoiceActions.getSupplierList(
 							this.state.contactType,
 						);
 						this.props.currencyConvertActions.getCurrencyConversionList();
 						this.props.supplierInvoiceActions.getCountryList();
 						this.props.supplierInvoiceActions.getProductList();
+						this.props.supplierInvoiceActions.getExciseList();
 						this.purchaseCategory();
 						this.setState(
 							{
@@ -201,10 +211,10 @@ class DetailSupplierInvoice extends React.Component {
 									exchangeRate:res.data.exchangeRate ? res.data.exchangeRate : '',
 									currencyName:res.data.currencyName ? res.data.currencyName : '',
 									invoiceDueDate: res.data.invoiceDueDate
-										? moment(res.data.invoiceDueDate).format('DD/MM/YYYY')
+										? moment(res.data.invoiceDueDate).format('DD-MM-YYYY')
 										: '',
 									invoiceDate: res.data.invoiceDate
-									? moment(res.data.invoiceDate).format('DD/MM/YYYY')
+									? moment(res.data.invoiceDate).format('DD-MM-YYYY')
 									: '',
 									invoiceDate1: res.data.invoiceDate
 									? res.data.invoiceDate
@@ -230,11 +240,17 @@ class DetailSupplierInvoice extends React.Component {
 									discountType: res.data.discountType
 										? res.data.discountType
 										: '',
+                                    
 									term: res.data.term ? res.data.term : '',
 									placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 									fileName: res.data.fileName ? res.data.fileName : '',
 									filePath: res.data.filePath ? res.data.filePath : '',
+                                    isReverseChargeEnabled: res.data.isReverseChargeEnabled ? true : false,
+									checked: res.data.exciseType ? res.data.exciseType : '',
+									total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : 0,
 								},
+								customer_taxTreatment_des: res.data.taxTreatment ? res.data.taxTreatment : '',
+								checked: res.data.exciseType ? res.data.exciseType : res.data.exciseType,
 								invoiceDateNoChange :res.data.invoiceDate
 								? moment(res.data.invoiceDate)
 								: '',
@@ -256,12 +272,12 @@ class DetailSupplierInvoice extends React.Component {
 								selectedContact: res.data.contactId ? res.data.contactId : '',
 								term: res.data.term ? res.data.term : '',
 								placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
-
+                                isReverseChargeEnabled: res.data.isReverseChargeEnabled ? true : false,
 								loading: false,
 							},
 							() => {
 								if (this.state.data.length > 0) {
-									this.calTotalNet(this.state.data);
+									this.updateAmount(this.state.data);
 									const { data } = this.state;
 									const idCount =
 										data.length > 0
@@ -315,9 +331,19 @@ class DetailSupplierInvoice extends React.Component {
 	calTotalNet = (data) => {
 		let total_net = 0;
 		data.map((obj) => {
-			total_net = +(total_net + +obj.unitPrice * obj.quantity);
-			return obj;
-		});
+			if(obj.isExciseTaxExclusive === false){
+
+                total_net = +(total_net + +obj.unitPrice  * obj.quantity);
+
+            }else{
+
+                total_net = +(total_net + +(obj.unitPrice + obj.exciseAmount) * obj.quantity);
+
+            }
+         return obj;
+
+        });
+		total_net=total_net-this.state.discountAmount
 		this.setState({
 			initValue: Object.assign(this.state.initValue, { total_net }),
 		});
@@ -375,6 +401,74 @@ class DetailSupplierInvoice extends React.Component {
 		});
 	};
 
+    renderExcise = (cell, row, props) => {
+		const { excise_list } = this.props;
+		let idx;
+		this.state.data.map((obj, index) => {
+			if (obj.id === row.id) {
+				idx = index;
+			}
+			return obj;
+		});
+
+		return (
+			<Field
+				name={`lineItemsString.${idx}.exciseTaxId`}
+				render={({ field, form }) => (
+					<Select
+						styles={customStyles}
+						isDisabled={row.exciseTaxId === 0 || row.isExciseTaxExclusive  === false}
+						
+						options={
+							excise_list
+								? selectOptionsFactory.renderOptions(
+										'name',
+										'id',
+										excise_list,
+										'Excise',
+								  )
+								: []
+						}
+						value={
+
+							excise_list &&
+							selectOptionsFactory
+								.renderOptions('name', 'id', excise_list, 'Excise')
+								.find((option) => option.value === +row.exciseTaxId)
+						}
+						id="exciseTaxId"
+						placeholder={strings.Select+strings.Vat}
+						onChange={(e) => {
+							this.selectItem(
+								e.value,
+								row,
+								'exciseTaxId',
+								form,
+								field,
+								props,
+							);
+
+							this.updateAmount(
+								this.state.data,
+								props,
+							);
+						}}
+						className={`${
+							props.errors.lineItemsString &&
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)].exciseTaxId &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)].exciseTaxId
+								? 'is-invalid'
+								: ''
+						}`}
+					/>
+				)}
+			/>
+		);
+	};
 	renderDescription = (cell, row, props) => {
 		let idx;
 		this.state.data.map((obj, index) => {
@@ -390,6 +484,7 @@ class DetailSupplierInvoice extends React.Component {
 				render={({ field, form }) => (
 					<Input
 					type="text"
+					maxLength="250"
 						value={row['description'] !== '' ? row['description'] : ''}
 						onChange={(e) => {
 							this.selectItem(
@@ -436,9 +531,11 @@ class DetailSupplierInvoice extends React.Component {
 					<div>
 						<Input
 							type="text"
+							maxLength="10"
+							min="0"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
-								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+								if (e.target.value === '' || this.regEx.test(e.target.value)) {
 									this.selectItem(
 										e.target.value,
 										row,
@@ -497,6 +594,7 @@ class DetailSupplierInvoice extends React.Component {
 				render={({ field, form }) => (
 					<Input
 					type="text"
+					maxLength="14,2"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (
@@ -533,6 +631,126 @@ class DetailSupplierInvoice extends React.Component {
 			/>
 		);
 	};
+
+	renderDiscount = (cell, row, props) => {
+        const { discountOptions } = this.state;
+       let idx;
+       this.state.data.map((obj, index) => {
+           if (obj.id === row.id) {
+               idx = index;
+           }
+           return obj;
+       });
+
+       return (
+           <Field
+               // name={`lineItemsString.${idx}.vatCategoryId`}
+               render={({ field, form }) => (
+               <div>
+               <div  class="input-group">
+                   <Input
+                   type="text"
+                   min="0"
+                       maxLength="14,2"
+                       value={row['discount'] !== 0 ? row['discount'] : 0}
+                       onChange={(e) => {
+                           if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+                               this.selectItem(
+                                   e.target.value,
+                                   row,
+                                   'discount',
+                                   form,
+                                   field,
+                                   props,
+                               );
+                           }
+
+                               this.updateAmount(
+                                   this.state.data,
+                                   props,
+                               );
+
+                       }}
+                       placeholder={strings.discount}
+                       className={`form-control
+           ${
+                           props.errors.lineItemsString &&
+                           props.errors.lineItemsString[parseInt(idx, 10)] &&
+                           props.errors.lineItemsString[parseInt(idx, 10)].discount &&
+                           Object.keys(props.touched).length > 0 &&
+                           props.touched.lineItemsString &&
+                           props.touched.lineItemsString[parseInt(idx, 10)] &&
+                           props.touched.lineItemsString[parseInt(idx, 10)].discount
+                               ? 'is-invalid'
+                               : ''
+                       }`}
+   type="text"
+   />
+    <div class="dropdown open input-group-append">
+
+        <div 	style={{width:'100px'}}>
+        <Select
+
+
+                                                                                           options={discountOptions}
+                                                                                           id="discountType"
+                                                                                           name="discountType"
+                                                                                           value={
+                                                                                               discountOptions &&
+                                                                                               selectOptionsFactory
+                                                                                                   .renderOptions('label', 'value', discountOptions, 'discount')
+                                                                                                   .find((option) => option.value == row.discountType)
+                                                                                           }
+                                                                                           // onChange={(item) => {
+                                                                                           // 	props.handleChange(
+                                                                                           // 		'discountType',
+                                                                                           // 	)(item);
+                                                                                           // 	props.handleChange(
+                                                                                           // 		'discountPercentage',
+                                                                                           // 	)('');
+                                                                                           // 	props.setFieldValue(
+                                                                                           // 		'discount',
+                                                                                           // 		0,
+                                                                                           // 	);
+                                                                                           // 	this.setState(
+                                                                                           // 		{
+                                                                                           // 			discountPercentage: '',
+                                                                                           // 			discountAmount: 0,
+                                                                                           // 		},
+                                                                                           // 		() => {
+                                                                                           // 			this.updateAmount(
+                                                                                           // 				this.state.data,
+                                                                                           // 				props,
+                                                                                           // 			);
+                                                                                           // 		},
+                                                                                           // 	);
+                                                                                           // }}
+                                                                                           onChange={(e) => {
+                                                                                               this.selectItem(
+                                                                                                   e.value,
+                                                                                                   row,
+                                                                                                   'discountType',
+                                                                                                   form,
+                                                                                                   field,
+                                                                                                   props,
+                                                                                               );
+                                                                                               this.updateAmount(
+                                                                                                   this.state.data,
+                                                                                                   props,
+                                                                                               );
+                                                                                           }}
+                                                                                       />
+             </div>
+              </div>
+              </div>
+               </div>
+
+                   )}
+
+           />
+       );
+   }
+
 	renderSubTotal = (cell, row,extraData) => {
 		// return row.subTotal ? (
 		// 	<Currency
@@ -542,7 +760,21 @@ class DetailSupplierInvoice extends React.Component {
 		// ) : (
 		// 	''
 		// );
-		return row.subTotal ? this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.subTotal ? this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 });
+	};
+	renderVatAmount = (cell, row, extraData) => {
+		// return row.subTotal === 0 ? (
+		// 	<Currency
+		// 		value={row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// ) : (
+		// 	<Currency
+		// 		value={row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// );
+		return row.vatAmount === 0 ? this.state.supplier_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 });
 	};
 	addRow = () => {
 		const data = [...this.state.data];
@@ -555,6 +787,10 @@ class DetailSupplierInvoice extends React.Component {
 					unitPrice: '',
 					vatCategoryId: '',
 					subTotal: 0,
+					exciseTaxId:'',
+					discountType :'FIXED',
+					vatAmount:0,
+					discount: 0,
 					productId: '',
 				}),
 				idCount: this.state.idCount + 1,
@@ -583,7 +819,8 @@ class DetailSupplierInvoice extends React.Component {
 		if (
 			name === 'unitPrice' ||
 			name === 'vatCategoryId' ||
-			name === 'quantity'
+			name === 'quantity' ||
+			name === 'exciseTaxId'
 		) {
 			form.setFieldValue(
 				field.name,
@@ -603,7 +840,7 @@ class DetailSupplierInvoice extends React.Component {
 	};
 
 	renderVat = (cell, row, props) => {
-		const { vat_list } = this.props;
+		const { vat_list } = this.state;
 		let vatList = vat_list.length
 			? [{ id: '', vat: 'Select Vat' }, ...vat_list]
 			: vat_list;
@@ -676,8 +913,10 @@ class DetailSupplierInvoice extends React.Component {
 				obj['unitPrice'] = parseInt(result.unitPrice);
 				obj['vatCategoryId'] = parseInt(result.vatCategoryId);
 				obj['description'] = result.description;
+				obj['exciseTaxId'] = result.exciseTaxId;
 				obj['transactionCategoryId'] = result.transactionCategoryId;
 				obj['transactionCategoryLabel'] = result.transactionCategoryLabel;
+				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive;
 				idx = index;
 			}
 			return obj;
@@ -690,6 +929,11 @@ class DetailSupplierInvoice extends React.Component {
 		form.setFieldValue(
 			`lineItemsString.${idx}.unitPrice`,
 			parseInt(result.unitPrice),
+			true,
+		);
+		form.setFieldValue(
+			`lineItemsString.${idx}.exciseTaxId`,
+			parseInt(result.exciseTaxId),
 			true,
 		);
 		form.setFieldValue(
@@ -744,7 +988,7 @@ class DetailSupplierInvoice extends React.Component {
 						styles={customStyles}
 						options={
 							product_list
-								? selectOptionsFactory.renderOptions(
+								? optionFactory.renderOptions(
 										'name',
 										'id',
 										product_list,
@@ -763,6 +1007,8 @@ class DetailSupplierInvoice extends React.Component {
 							if (e && e.label !== 'Select Product') {
 								this.selectItem(e.value, row, 'productId', form, field, props);
 								this.prductValue(e.value, row, 'productId', form, field, props);
+								if(this.checkedRow()==false)
+								this.addRow();
 							}
 						}}
 						className={`${
@@ -881,44 +1127,94 @@ class DetailSupplierInvoice extends React.Component {
 	};
 
 	updateAmount = (data, props) => {
-		const { vat_list } = this.props;
+		const {excise_list} = this.props;
+		const { discountPercentage, discountAmount, vat_list } = this.state;
 		let total_net = 0;
+		let total_excise = 0;
 		let total = 0;
 		let total_vat = 0;
-		const { discountPercentage, discountAmount } = this.state;
-
+		let net_value = 0;
+		let discount = 0;
 		data.map((obj) => {
 			const index =
 				obj.vatCategoryId !== ''
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
-			// let val = (((+obj.unitPrice) * vat) / 100)
-			if (props.values.discountType === 'PERCENTAGE') {
-				var val =	((+obj.unitPrice -
-					(+((obj.unitPrice * discountPercentage)) / 100)) *
-						vat *
-						obj.quantity) /
-					100;
-			} else if (props.values.discountType === 'FIXED') {
-				var val =
-					(obj.unitPrice * obj.quantity - discountAmount / data.length) * 
-						// (obj.unitPrice * obj.quantity) *
-					(vat / 100);
-			} else {
-				var val = (+obj.unitPrice * vat * obj.quantity) / 100;
+
+			//Excise calculation
+			if(obj.exciseTaxId !=  0){
+			if(obj.isExciseTaxExclusive === true){
+				if(obj.exciseTaxId === 1){
+				const value = +(obj.unitPrice) / 2 ;
+					net_value = parseFloat(obj.unitPrice) + parseFloat(value) ;
+					obj.exciseAmount = parseFloat(value) * obj.quantity;
+				}else if (obj.exciseTaxId === 2){
+					const value = obj.unitPrice;
+					net_value = parseFloat(obj.unitPrice) +  parseFloat(value) ;
+					obj.exciseAmount = parseFloat(value) * obj.quantity;
+				}
+				else{
+					net_value = obj.unitPrice
+				}
+			}	else{
+				if(obj.exciseTaxId === 1){
+					const value = obj.unitPrice / 3
+					obj.exciseAmount = parseFloat(value) * obj.quantity;
+				net_value = obj.unitPrice}
+				else if (obj.exciseTaxId === 2){
+					const value = obj.unitPrice / 2
+					obj.exciseAmount = parseFloat(value) * obj.quantity;
+				net_value = obj.unitPrice}
+				else{
+					net_value = obj.unitPrice
+				}
 			}
-			total_net = +(total_net + +obj.unitPrice * obj.quantity);
+		}else{
+			net_value = obj.unitPrice;
+			obj.exciseAmount = 0
+		}
+			//vat calculation
+			if (obj.discountType === 'PERCENTAGE') {
+				var val =
+				((+net_value -
+				 (+((net_value * obj.discount)) / 100)) *
+					vat *
+					obj.quantity) /
+				100;
+
+				var val1 =
+				((+net_value -
+				 (+((net_value * obj.discount)) / 100)) * obj.quantity ) ;
+			} else if (obj.discountType === 'FIXED') {
+				var val =
+						 (net_value * obj.quantity - obj.discount ) *
+					(vat / 100);
+
+					var val1 =
+					((net_value * obj.quantity )- obj.discount )
+
+			} else {
+				var val = (+net_value * vat * obj.quantity) / 100;
+				var val1 = net_value * obj.quantity
+			}
+
+			//discount calculation
+			discount = +(discount +(net_value * obj.quantity)) - parseFloat(val1)
+			total_net = +(total_net + net_value * obj.quantity);
 			total_vat = +(total_vat + val);
+			obj.vatAmount = val
 			obj.subTotal =
-			obj.unitPrice && obj.vatCategoryId ? +obj.unitPrice * obj.quantity + val: 0;
+			net_value && obj.vatCategoryId ? parseFloat(val1) + parseFloat(val) : 0;
+			total_excise = +(total_excise + obj.exciseAmount)
 			total = total_vat + total_net;
 			return obj;
 		});
-		const discount =
-			props.values.discountType === 'PERCENTAGE'
-				? +((total_net * discountPercentage) / 100)
-				: discountAmount;
+
+		// const discount =
+		// 	props.values.discountType.value === 'PERCENTAGE'
+		// 		? +((total_net * discountPercentage) / 100)
+		// 		: discountAmount;
 		this.setState(
 			{
 				data,
@@ -928,17 +1224,16 @@ class DetailSupplierInvoice extends React.Component {
 						total_net: discount ? total_net - discount : total_net,
 						invoiceVATAmount: total_vat,
 						discount:  discount ? discount : 0,
-						totalAmount: total_net > discount ? total - discount : total - discount, 
+						totalAmount: total_net > discount ? total - discount : total - discount,
+						total_excise: total_excise
 					},
+
 				},
 			},
-			() => {
-				if (props.values.discountType === 'PERCENTAGE') {
-					this.formRef.current.setFieldValue('discount', discount);
-				}
-			},
+
 		);
 	};
+
 
 	handleSubmit = (data) => {
 		this.setState({ disabled: true });
@@ -959,6 +1254,8 @@ class DetailSupplierInvoice extends React.Component {
 			discount,
 			discountType,
 			discountPercentage,
+            isReverseChargeEnabled,
+            exciseType,
 		} = data;
 
 		let formData = new FormData();
@@ -1006,16 +1303,16 @@ class DetailSupplierInvoice extends React.Component {
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
 		formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
 		formData.append('totalAmount', this.state.initValue.totalAmount);
-		formData.append('discount', discount);
-		formData.append('discountType', discountType);
+        formData.append('totalExciseAmount', this.state.initValue.total_excise);
+		formData.append('exciseType', this.state.checked);
+		formData.append('isReverseChargeEnabled',this.state.isReverseChargeEnabled);
+        formData.append('discount',this.state.initValue.discount);
 		formData.append('term', term);
 		formData.append('exchangeRate',  exchangeRate ? exchangeRate : '');
 		if (placeOfSupplyId) {
-			formData.append('placeOfSupplyId', placeOfSupplyId.value ?placeOfSupplyId.value :placeOfSupplyId);
-		}
-		if (discountType === 'PERCENTAGE') {
-			formData.append('discountPercentage', discountPercentage);
-		}
+            formData.append('placeOfSupplyId', placeOfSupplyId.value ?placeOfSupplyId.value :placeOfSupplyId);
+        }	
+
 		if (contactId) {
 			formData.append('contactId', contactId);
 		}
@@ -1034,7 +1331,7 @@ class DetailSupplierInvoice extends React.Component {
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Invoice Updated Successfully.',
+					res.data ? res.data.message : 'Invoice Updated Successfully.',
 				);
 				this.props.history.push('/admin/expense/supplier-invoice');
 			})
@@ -1042,7 +1339,7 @@ class DetailSupplierInvoice extends React.Component {
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'Invoice Updated Unsuccessfully',
 				);
 			});
 	};
@@ -1075,7 +1372,7 @@ class DetailSupplierInvoice extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Invoice Deleted Successfully',
+						res.data ? res.data.message : 'Invoice Deleted Successfully',
 					);
 					this.props.history.push('/admin/expense/supplier-invoice');
 				}
@@ -1083,7 +1380,7 @@ class DetailSupplierInvoice extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'Invoice Deleted Unsuccessfully',
 				);
 			});
 	};
@@ -1108,7 +1405,7 @@ class DetailSupplierInvoice extends React.Component {
 		const { term } = this.state;
 		const val = term.split('_');
 		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
-		debugger
+
 		const values = value
 			? value
 			: props.values.invoiceDate1
@@ -1119,7 +1416,7 @@ class DetailSupplierInvoice extends React.Component {
 			});
 			const date = moment(values)
 				.add(temp, 'days')
-				.format('DD/MM/YYYY');
+				.format('DD-MM-YYYY');
 			props.setFieldValue('invoiceDueDate', date, true);
 			props.setFieldValue('invoiceDate1', values, true);
 		}
@@ -1242,6 +1539,34 @@ class DetailSupplierInvoice extends React.Component {
 
 		return supplier_currencyCode;
 	}
+	getTaxTreatment= (opt) => {
+		
+		let customer_taxTreatmentId = 0;
+		let customer_item_taxTreatment = ''
+		this.props.supplier_list.map(item => {
+			if(item.label.contactId == opt) {
+				this.setState({
+					customer_taxTreatment: item.label.taxTreatment.id,
+					customer_taxTreatment_des: item.label.taxTreatment.taxTreatment,
+					// customer_currency_symbol: item.label.currency.currencyIsoCode,
+				});
+
+				customer_taxTreatmentId = item.label.taxTreatment.id;
+				customer_item_taxTreatment = item.label.currency
+			}
+		})
+	
+		return customer_taxTreatmentId;
+	}
+
+	rendertotalexcise=()=>{
+		const {initValue}= this.state
+
+		let val=initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })
+
+		return parseFloat(val).toFixed(2)
+	}
+
 	checkAmount=(discount)=>{
 		const { initValue } = this.state;
 		   if(discount >= initValue.totalAmount){
@@ -1270,6 +1595,8 @@ class DetailSupplierInvoice extends React.Component {
 		})
 
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="detail-supplier-invoice-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -1314,7 +1641,7 @@ class DetailSupplierInvoice extends React.Component {
 															'Supplier is Required',
 														),
 														term: Yup.string().required('Term is Required'),
-														placeOfSupplyId: Yup.string().required('Place of supply is Required'),
+														placeOfSupplyId: Yup.string().required('Place of Supply is Required'),
 														invoiceDate: Yup.string().required(
 															'Invoice Date is Required',
 														),
@@ -1333,11 +1660,11 @@ class DetailSupplierInvoice extends React.Component {
 																	// description: Yup.string().required(
 																	// 	'Value is Required',
 																	// ),
-																	quantity: Yup.number()
+																	quantity: Yup.string()
 																		.required('Value is Required')
 																		.test(
 																			'quantity',
-																			'Quantity Should be Greater than 1',
+																			'Quantity should be greater than 0',
 																			(value) => value > 0,
 																		),
 																	unitPrice: Yup.number().required(
@@ -1392,10 +1719,10 @@ class DetailSupplierInvoice extends React.Component {
 													{(props) => (
 														<Form onSubmit={props.handleSubmit}>
 															<Row>
-																<Col lg={4}>
+																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="invoice_number">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			 {strings.InvoiceNumber}
 																		</Label>
 																		<Input
@@ -1425,14 +1752,15 @@ class DetailSupplierInvoice extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
-																<Col lg={4}>
+																</Row>
+																<Row>
+																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="contactId">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																		{strings.SupplierName}
 																		</Label>
 																		<Select
-																			styles={customStyles}
 																			id="contactId"
 																			name="contactId"
 																			onBlur={props.handlerBlur}
@@ -1457,6 +1785,7 @@ class DetailSupplierInvoice extends React.Component {
 																			onChange={(option) => {
 																				if (option && option.value) {
 																					this.formRef.current.setFieldValue('currencyCode', this.getCurrency(option.value), true);
+																					this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(option.value), true);
 																					this.setExchange( this.getCurrency(option.value) );
 																					props.handleChange('contactId')(
 																						option.value,
@@ -1481,13 +1810,46 @@ class DetailSupplierInvoice extends React.Component {
 																	</FormGroup>
 																</Col>
 																<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="taxTreatmentid">
+																		Tax Treatment
+																	</Label>
+																	<Input
+																	disabled
+																		styles={customStyles}
+																		id="taxTreatmentid"
+																		name="taxTreatmentid"
+																		value={
+																		this.state.customer_taxTreatment_des
+																	 	
+																		}
+																		className={
+																			props.errors.taxTreatmentid &&
+																			props.touched.taxTreatmentid
+																				? 'is-invalid'
+																				: ''
+																		}
+																		onChange={(option) => {
+																		props.handleChange('taxTreatmentid')(option);
+																		
+																	    }}
+
+																	/>
+																	{props.errors.taxTreatmentid &&
+																		props.touched.taxTreatmentid && (
+																			<div className="invalid-feedback">
+																				{props.errors.taxTreatmentid}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
+																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="placeOfSupplyId">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			 {strings.PlaceofSupply}
 																		</Label>
 																		<Select
-																			styles={customStyles}
 																			options={
 																				this.placelist
 																					? selectOptionsFactory.renderOptions(
@@ -1546,12 +1908,11 @@ class DetailSupplierInvoice extends React.Component {
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="term">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			Terms{' '}
 																			<i className="fa fa-question-circle"></i>
 																		</Label>
 																		<Select
-																			styles={customStyles}
 																			options={
 																				this.termList
 																					? selectOptionsFactory.renderOptions(
@@ -1611,7 +1972,7 @@ class DetailSupplierInvoice extends React.Component {
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="date">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			 {strings.InvoiceDate}
 																		</Label>
 																		<DatePicker
@@ -1620,7 +1981,7 @@ class DetailSupplierInvoice extends React.Component {
 																			placeholderText={strings.InvoiceDate}
 																			showMonthDropdown
 																			showYearDropdown
-																			dateFormat="dd/MM/yyyy"
+																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
 																			value={props.values.invoiceDate}
 																			selected={new Date(props.values.invoiceDate1)} 
@@ -1640,7 +2001,7 @@ class DetailSupplierInvoice extends React.Component {
 																		{props.errors.invoiceDate &&
 																			props.touched.invoiceDate && (
 																				<div className="invalid-feedback">
-																					{props.errors.invoiceDate}
+																				{props.errors.invoiceDate.includes("nullable()") ? "Invoice Date is Required" :props.errors.invoiceDate}
 																				</div>
 																			)}
 																	</FormGroup>
@@ -1659,7 +2020,7 @@ class DetailSupplierInvoice extends React.Component {
 																				showMonthDropdown
 																				showYearDropdown
 																				disabled
-																				dateFormat="dd/MM/yyyy"
+																				dateFormat="dd-MM-yyyy"
 																				dropdownMode="select"
 																				onChange={(value) => {
 																					props.handleChange('invoiceDueDate')(
@@ -1685,7 +2046,7 @@ class DetailSupplierInvoice extends React.Component {
 																<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currency">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		 {strings.Currency}
 																	</Label>
 																	<Select
@@ -1816,7 +2177,7 @@ class DetailSupplierInvoice extends React.Component {
 														</Row>
 															<hr style={{display: props.values.exchangeRate === 1 ? 'none' : ''}} />
 															<Row>
-																<Col lg={12} className="mb-3">
+																<Col lg={8} className="mb-3">
 																	<Button
 																		color="primary"
 																		className={`btn-square mr-3 ${
@@ -1834,6 +2195,7 @@ class DetailSupplierInvoice extends React.Component {
 																	</Button>
 																</Col>
 															</Row>
+
 															<Row>
 																<Col lg={12}>
 																	{props.errors.lineItemsString &&
@@ -1860,87 +2222,141 @@ class DetailSupplierInvoice extends React.Component {
 																		keyField="id"
 																		className="invoice-create-table"
 																	>
-																		<TableHeaderColumn
-																	width="5%"
-																			dataAlign="center"
-																			dataFormat={(cell, rows) =>
-																				this.renderActions(cell, rows, props)
-																			}
-																		></TableHeaderColumn>
-																		<TableHeaderColumn
-																			width="12%"
-																			dataField="product"
-																			dataFormat={(cell, rows) =>
-																				this.renderProduct(cell, rows, props)
-																			}
-																		>
-																			 {strings.Product}
-																		</TableHeaderColumn>
-																		{/* <TableHeaderColumn
+																			<TableHeaderColumn
+																		width="5%"
+																		dataAlign="center"
+																		dataFormat={(cell, rows) =>
+																			this.renderActions(cell, rows, props)
+																		}
+																	></TableHeaderColumn>
+																	<TableHeaderColumn
+																	width="16%"
+																		dataField="product"
+																		dataFormat={(cell, rows) =>
+																			this.renderProduct(cell, rows, props)
+																		}
+																	>
+																		{strings.Products}
+																	</TableHeaderColumn>
+																	{/* <TableHeaderColumn
 																		width="55"
 																		dataAlign="center"
 																		dataFormat={(cell, rows) =>
 																			this.renderAddProduct(cell, rows, props)
 																		}
-																		></TableHeaderColumn> */}
-																		<TableHeaderColumn
-																			dataField="account"
-																			width="15%"
-																			dataFormat={(cell, rows) =>
-																				this.renderAccount(cell, rows, props)
-																			}
+																	></TableHeaderColumn> */}
+																	<TableHeaderColumn
+																		width="15%"
+																		dataField="account"
+																		dataFormat={(cell, rows) =>
+																			this.renderAccount(cell, rows, props)
+																		}
+																	>
+																		{strings.Account}
+																	</TableHeaderColumn>
+																	<TableHeaderColumn
+																		dataField="description"
+																		dataFormat={(cell, rows) =>
+																			this.renderDescription(cell, rows, props)
+																		}
+																	>
+																		{strings.DESCRIPTION}
+																	</TableHeaderColumn>
+																	<TableHeaderColumn
+																		dataField="quantity"
+																		width="100"
+																		dataFormat={(cell, rows) =>
+																			this.renderQuantity(cell, rows, props)
+																		}
+																	>
+																		{strings.QUANTITY}
+																	</TableHeaderColumn>
+																	<TableHeaderColumn
+																	width="10%"
+																		dataField="unitPrice"
+																		dataFormat={(cell, rows) =>
+																			this.renderUnitPrice(cell, rows, props)
+																		}
+																	>
+																		Unit Price
+																	</TableHeaderColumn>
+
+																	<TableHeaderColumn
+																	width="10%"
+																		dataField="exciseTaxId"
+																		dataFormat={(cell, rows) =>
+																			this.renderExcise(cell, rows, props)
+																		}
+																	>
+																	Excise
+																	<i
+																			id="ExiseTooltip"
+																			className="fa fa-question-circle ml-1"
+																		></i>
+																		<UncontrolledTooltip
+																			placement="right"
+																			target="ExiseTooltip"
 																		>
-																		  {strings.ACCOUNT}
-																		</TableHeaderColumn>
-																		<TableHeaderColumn
-																			dataField="description"
-																			dataFormat={(cell, rows) =>
-																				this.renderDescription(
-																					cell,
-																					rows,
-																					props,
-																				)
-																			}
-																		>
-																			 {strings.DESCRIPTION}
-																		</TableHeaderColumn>
-																		<TableHeaderColumn
-																			dataField="quantity"
-																			width="100"
-																			dataFormat={(cell, rows) =>
-																				this.renderQuantity(cell, rows, props)
-																			}
-																		>
-																			 {strings.QUANTITY}
-																		</TableHeaderColumn>
-																		<TableHeaderColumn
-																			dataField="unitPrice"
-																			dataFormat={(cell, rows) =>
-																				this.renderUnitPrice(cell, rows, props)
-																			}
-																		>
-																			 {strings.UNITPRICE}
-																		</TableHeaderColumn>
-																		<TableHeaderColumn
-																			dataField="vat"
-																			dataFormat={(cell, rows) =>
-																				this.renderVat(cell, rows, props)
-																			}
-																		>
-																			 {strings.VAT}
-																		</TableHeaderColumn>
-																		<TableHeaderColumn
-																			dataField="sub_total"
-																			dataFormat={this.renderSubTotal}
-																			className="text-right"
-																			columnClassName="text-right"
-																			formatExtraData={universal_currency_list}
-																		>
-																			{strings.SUBTOTAL}
-																		</TableHeaderColumn>
+																			If Exise Type for a product is Inclusive
+																			then the Excise dropdown will be Disabled
+																		</UncontrolledTooltip>
+																	</TableHeaderColumn>
+																	<TableHeaderColumn
+																	width="12%"
+																		dataField="discount"
+																		dataFormat={(cell, rows) =>
+																			this.renderDiscount(cell, rows, props)
+																		}
+																	>
+																	Discount Type
+																	</TableHeaderColumn>
+
+																	<TableHeaderColumn
+																		width="10%"
+																		dataField="vat"
+																		dataFormat={(cell, rows) =>
+																			this.renderVat(cell, rows, props)
+																		}
+																	>
+																		{strings.VAT}
+																	</TableHeaderColumn>
+																	<TableHeaderColumn
+																	width="10%"
+																	dataField="sub_total"
+																	dataFormat={this.renderVatAmount}
+																	className="text-right"
+																	columnClassName="text-right"
+																	formatExtraData={universal_currency_list}
+																	>
+																	Vat amount
+																	</TableHeaderColumn>
+																	<TableHeaderColumn
+																		width="10%"
+																		dataField="sub_total"
+																		dataFormat={this.renderSubTotal}
+																		className="text-right"
+																		columnClassName="text-right"
+																		formatExtraData={universal_currency_list}
+																	>
+																		{strings.SUBTOTAL}
+																	</TableHeaderColumn>
 																	</BootstrapTable>
 																</Col>
 															</Row>
+                                                            <Row className="ml-4">
+														<Col className="ml-4">
+                                                            <Input
+																type="checkbox"
+                                                                id="isReverseChargeEnabled"
+                                                                checked={this.state.isReverseChargeEnabled}
+                                                                onChange={(option)=>{
+                                                                        this.setState({isReverseChargeEnabled:!this.state.isReverseChargeEnabled})
+                                                                }}
+                                                            />
+                                                            <Label>Is Reverse Charge</Label>
+                                                            </Col>
+															</Row>
+														<hr />
 															{data.length > 0 && (
 																<Row>
 																		<Col lg={8}>
@@ -1948,7 +2364,7 @@ class DetailSupplierInvoice extends React.Component {
 																		<Label htmlFor="notes"> {strings.Notes}</Label>
 																		<Input
 																			type="textarea"
-																			maxLength="255"
+																			maxLength="250"
 																			name="notes"
 																			id="notes"
 																			rows="6"
@@ -1968,14 +2384,14 @@ class DetailSupplierInvoice extends React.Component {
 																				</Label>
 																				<Input
 																					type="text"
-																					maxLength="50"
+																					maxLength="100"
 																					id="receiptNumber"
 																					name="receiptNumber"
 																					placeholder={strings.ReceiptNumber}
 																					onChange={(option) => {
 																						if (
 																							option.target.value === '' ||
-																							this.regExAlpha.test(
+																							this.regExBoth.test(
 																								option.target.value,
 																							)
 																						) {
@@ -2053,7 +2469,7 @@ class DetailSupplierInvoice extends React.Component {
 																		</Label>
 																		<Input
 																			type="textarea"
-																			maxLength="255"
+																			maxLength="250"
 																			name="receiptAttachmentDescription"
 																			id="receiptAttachmentDescription"
 																			rows="5"
@@ -2072,151 +2488,37 @@ class DetailSupplierInvoice extends React.Component {
 																</Col>
 																	<Col lg={4}>
 																		<div className="">
-																			<div className="total-item p-2">
+																		<div className="total-item p-2">
+																			<Row>
+																				<Col lg={6}>
+																					<h5 className="mb-0 text-right">
+																					Total Excise
+																					</h5>
+																				</Col>
+																				<Col lg={6} className="text-right">
+																					<label className="mb-0">
+
+																						{this.state.supplier_currency_symbol} &nbsp;
+																						{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
+																					</label>
+																				</Col>
+																			</Row>
+																		</div>
+																		<div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>
-																						<FormGroup>
-																							<Label htmlFor="discountType">
-																								 {strings.DiscountType}
-																							</Label>
-																							<Select
-																								styles={customStyles}
-																								className="select-default-width"
-																								options={discountOptions}
-																								id="discountType"
-																								name="discountType"
-																								value={
-																									discountOptions &&
-																									discountOptions.find(
-																										(option) =>
-																											option.value ===
-																											props.values.discountType,
-																									)
-																								}
-																								onChange={(item) => {
-																									props.handleChange(
-																										'discountPercentage',
-																									)('');
-																									props.handleChange(
-																										'discountType',
-																									)(item.value);
-																									props.setFieldValue(
-																										'discount',
-																										0,
-																									);
-
-																									this.setState(
-																										{
-																											discountPercentage: 0,
-																											discountAmount: 0,
-																										},
-																										() => {
-																											this.updateAmount(
-																												this.state.data,
-																												props,
-																											);
-																										},
-																									);
-																								}}
-																							/>
-																						</FormGroup>
+																						<h5 className="mb-0 text-right">
+																							{strings.Discount}
+																						</h5>
 																					</Col>
-																					{props.values.discountType ===
-																						'PERCENTAGE' && (
-																						<Col lg={6}>
-																							<FormGroup>
-																								<Label htmlFor="discountPercentage">
-																								 {strings.Percentage}
-																								</Label>
-																								<Input
-																								id="discountPercentage"
-																								name="discountPercentage"
-																								min="0"
-																								max="99.99"
-																								 step="0.01"
-																								placeholder={strings.DiscountPercentage}
-																								type="number"
-																								maxLength="5"
-																								value={
-																									props.values
-																										.discountPercentage
-																								}
-																								onChange={(e) => {
-																									if (
-																										e.target.value === '' ||
-																										this.regDecimal.test(
-																											e.target.value,
-																										)
-																									) {
-																										props.handleChange(
-																											'discountPercentage',
-																										)(e);
-																										this.setState(
-																											{
-																												discountPercentage:
-																													e.target.value,
-																											},
-																											() => {
-																												this.updateAmount(
-																													this.state.data,
-																													props,
-																												);
-																											},
-																										);
-																									}
-																								}}
-																							/>
-																							</FormGroup>
-																						</Col>
-																					)}
-																				</Row>
-																				<Row>
-																					<Col lg={6} className="mt-4">
-																						<FormGroup>
-																							<Label htmlFor="discount">
-																								 {strings.DiscountAmount}
-																							</Label>
-																							<Input
-																								id="discount"
-																								name="discount"
-																								type="number"
-																								disabled={
-																									props.values.discountType &&
-																									props.values.discountType ===
-																										'Percentage'
-																										? true
-																										: false
-																								}
-																								placeholder={strings.DiscountAmount}
-																								value={props.values.discount}
-																								onChange={(option) => {
-																									if (
-																										option.target.value ===
-																											'' ||
-																										this.regDecimal.test(
-																											option.target.value,
-																										)
-																									) {
-																										props.handleChange(
-																											'discount',
-																										)(option);
-																										this.setState(
-																											{
-																												discountAmount: +option
-																													.target.value,
-																											},
-																											() => {
-																												this.updateAmount(
-																													this.state.data,
-																													props,
-																												);
-																											},
-																										);
-																									}
-																									this.checkAmount(option.target.value)
-																								}}
-																							/>
-																						</FormGroup>
+																					<Col lg={6} className="text-right">
+																						<label className="mb-0">
+																						{this.state.supplier_currency_symbol} &nbsp;
+																							{this.state.initValue.discount  ? '-'+initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })
+																							
+																						}
+																						
+																						</label>
 																					</Col>
 																				</Row>
 																			</div>
@@ -2240,29 +2542,12 @@ class DetailSupplierInvoice extends React.Component {
 																							/>
 																							)} */}
 																							{this.state.supplier_currency_symbol} &nbsp;
-																							{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																							{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>
 																			</div>
-																			<div className="total-item p-2">
-																				<Row>
-																					<Col lg={6}>
-																						<h5 className="mb-0 text-right">
-																							{strings.Discount}
-																						</h5>
-																					</Col>
-																					<Col lg={6} className="text-right">
-																						<label className="mb-0">
-																						{this.state.supplier_currency_symbol} &nbsp;
-																							{this.state.initValue.discount  ? '-'+initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })
-																							
-																						}
-																						
-																						</label>
-																					</Col>
-																				</Row>
-																			</div>
+																	
 																			<div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>
@@ -2283,7 +2568,7 @@ class DetailSupplierInvoice extends React.Component {
 																							/>
 																							)} */}
 																							{this.state.supplier_currency_symbol} &nbsp;
-																							{initValue.invoiceVATAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																							{initValue.invoiceVATAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>
@@ -2309,7 +2594,7 @@ class DetailSupplierInvoice extends React.Component {
 																							/>
 																							)} */}
 																							{this.state.supplier_currency_symbol} &nbsp;
-																							{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																							{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>
@@ -2342,6 +2627,20 @@ class DetailSupplierInvoice extends React.Component {
 																			color="primary"
 																			className="btn-square mr-3"
 																			disabled={this.state.disabled}
+																			onClick={() => {
+																				if(this.state.data.length === 1)
+																				{
+																				console.log(props.errors,"ERRORs")
+																				}
+																				else
+																				{ let newData=[]
+																				const data = this.state.data;
+																				newData = data.filter((obj) => obj.productId !== "");
+																				props.setFieldValue('lineItemsString', newData, true);
+																				this.updateAmount(newData, props);
+																				}
+																				
+																			}}
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
 																			{this.state.disabled
@@ -2393,11 +2692,12 @@ class DetailSupplierInvoice extends React.Component {
 					}}
 					getCurrentProduct={(e) => this.getCurrentProduct(e)}
 					createProduct={this.props.ProductActions.createAndSaveProduct}
-					vat_list={this.props.vat_list}
+					vat_list={this.state.vat_list}
 					product_category_list={this.props.product_category_list}
 					salesCategory={this.state.salesCategory}
 					purchaseCategory={this.state.purchaseCategory}
 				/>
+			</div>
 			</div>
 		);
 	}

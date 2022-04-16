@@ -147,20 +147,41 @@ class ProfitAndLossReport extends React.Component {
 	
 	exportFile = () => {
 
-		let exportData
+		// let exportData
 	 
-			 let singleResultArray=this.state && this.state.data 
+		// 	 let singleResultArray=this.state && this.state.data 
 	 
-			 ?
+		// 	 ?
 	 
-			 Object.entries(this.state.data)     :[];
-	     const { Parser, transforms: { unwind, flatten } } = require('json2csv');
-		 const json2csvParser = new Parser({ transforms: [unwind({ blankOut: true }), flatten('__')] });
-		  exportData = json2csvParser.parse(singleResultArray);
+		// 	 Object.entries(this.state.data)     :[];
+	    //  const { Parser, transforms: { unwind, flatten } } = require('json2csv');
+		//  const json2csvParser = new Parser({ transforms: [unwind({ blankOut: true }), flatten('__')] });
+		//   exportData = json2csvParser.parse(singleResultArray);
 	 
 	 
-		   return (exportData);
+		//    return (exportData);
+		let dl =""
+		let fn =""
+		let type="csv"
+		var elt = document.getElementById('tbl_exporttable_to_xls');												
+		var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
+		return dl ?
+		  XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
+		  XLSX.writeFile(wb, fn || ('Profit & Loss Report.'+ (type || 'csv')));
 	}
+
+	exportExcelFile  = () => 
+	{   let dl =""
+		let fn =""
+		let type="xlsx"
+		var elt = document.getElementById('tbl_exporttable_to_xls');												
+		var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
+		return dl ?
+		  XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
+		  XLSX.writeFile(wb, fn || ('Profit & Loss Report.'+ (type || 'xlsx')));
+
+	}
+
 	toggle = () =>
 		this.setState((prevState) => {
 			return { dropdownOpen: !prevState.dropdownOpen };
@@ -209,14 +230,30 @@ class ProfitAndLossReport extends React.Component {
 													<DropdownToggle caret>Export As</DropdownToggle>
 													<DropdownMenu>
 													
-														<DropdownItem>
-															<CSVLink
+														<DropdownItem onClick={()=>{this.exportFile()}}>
+															{/* <CSVLink
 																data={this.exportFile()}
 																className="csv-btn"
 																filename={'Profit & Loss Report.csv'}
 															>
 																CSV (Comma Separated Value)
-															</CSVLink>
+															</CSVLink> */}
+															<span
+															style={{
+																border: 0,
+    															padding: 0,
+																backgroundColor:"white !important"
+															}}
+															>CSV (Comma Separated Value)</span>
+														</DropdownItem>
+														<DropdownItem onClick={()=>{this.exportExcelFile()}}>
+															<span
+															style={{
+																border: 0,
+    															padding: 0,
+																backgroundColor:"white !important"
+															}}
+														    >Excel</span>
 														</DropdownItem>
 															<DropdownItem onClick={this.exportPDFWithComponent}>
 															Pdf
@@ -321,7 +358,7 @@ class ProfitAndLossReport extends React.Component {
 											<br style={{ marginBottom: '5px' }} />
 											<b style ={{ fontSize: '18px'}}>{strings.ProfitandLoss}</b>
 											<br style={{ marginBottom: '5px' }} />
-											{strings.From} {initValue.startDate} {strings.To} {initValue.endDate}
+											{strings.From} {(initValue.startDate).replaceAll("/","-")} {strings.To} {initValue.endDate.replaceAll("/","-")} 
 											
 									</div>
 									<div>
@@ -331,16 +368,16 @@ class ProfitAndLossReport extends React.Component {
 										<Loader />
 									) : (
 										<div className="table-wrapper">
-											<Table responsive className="table-bordered">
-												<thead className="thead-dark ">
+											<Table id="tbl_exporttable_to_xls" responsive className="table-bordered">
+												<thead>
 													<tr className="header-row">
 														{this.columnHeader.map((column, index) => {
 															return (
 																<th
 																	key={index}
-																	style={{ fontWeight: '600' }}
+																	style={{ fontWeight: '600', color:'black' }}
 																	className={column.align ? 'text-right' : '' }
-																	className="table-header-color"
+																	className="table-header-bg"
 																>
 																	{column.label}
 																</th>

@@ -229,7 +229,7 @@ class CreatePayment extends React.Component {
 		formData.append(
 			'paymentDate',
 			typeof paymentDate === 'string'
-				? moment(paymentDate, 'DD/MM/YYYY').toDate()
+				? moment(paymentDate, 'DD-MM-YYYY').toDate()
 				: paymentDate,
 		);
 		formData.append('amount', amount !== null ? amount : '');
@@ -332,7 +332,7 @@ min="0" value="0.00" />;
 	};
 
 	date = (cell, rows, props) => {
-		return <div>{moment.utc(rows.date).format('DD/MM/YYYY')}</div>;
+		return <div>{moment.utc(rows.date).format('DD-MM-YYYY')}</div>;
 	};
 
 	renderAmount = (cell, rows, props) => {
@@ -400,19 +400,19 @@ min="0"
 											}}
 											validationSchema={Yup.object().shape({
 												contactId: Yup.string().required(
-													'Supplier is required',
+													'Supplier is Required',
 												),
 												paymentDate: Yup.date().required(
 													'Payment Date is Required',
 												),
 												depositeTo: Yup.string().required(
-													'Deposit to is required',
+													'Deposit to is Required',
 												),
 												paidInvoiceListStr: Yup.string().required(
 													'Please select atleast one invoice',
 												),
 												amount: Yup.string()
-													.required('Amount is required')
+													.required('Amount is Required')
 													.matches(/^[0-9]+([,.][0-9]+)?$/, {
 														message: 'Please enter valid Amount.',
 														excludeEmptyString: false,
@@ -425,7 +425,7 @@ min="0"
 														<Col lg={4}>
 															<FormGroup className="mb-3">
 																<Label htmlFor="contactId">
-																	<span className="text-danger">*</span>
+																	<span className="text-danger">* </span>
 																	 {strings.SupplierName} 
 																</Label>
 																<Select
@@ -469,7 +469,7 @@ min="0"
 														{/* <Col lg={4}>
 															<FormGroup className="mb-3">
 																<Label htmlFor="project">
-																	<span className="text-danger">*</span> Payment
+																	<span className="text-danger">* </span> Payment
 																</Label>
 																<Input
 																	type="text"
@@ -506,7 +506,7 @@ min="0"
 																		<Col lg={4}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="amount">
-																					<span className="text-danger">*</span>
+																					<span className="text-danger">* </span>
 																				 {strings.AmountPaid}
 																				</Label>
 																				<Input
@@ -550,7 +550,7 @@ min="0"
 																		<Col lg={4}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="date">
-																					<span className="text-danger">*</span>
+																					<span className="text-danger">* </span>
 																					{strings.PaymentDate} 
 																				</Label>
 																				<DatePicker
@@ -559,14 +559,14 @@ min="0"
 																					placeholderText={strings.PaymentDate}
 																					showMonthDropdown
 																					showYearDropdown
-																					dateFormat="dd/MM/yyyy"
+																					dateFormat="dd-MM-yyyy"
 																					dropdownMode="select"
 																					value={props.values.paymentDate}
 																					selected={props.values.paymentDate}
 																					onChange={(value) => {
 																						props.handleChange('paymentDate')(
 																							moment(value).format(
-																								'DD/MM/YYYY',
+																								'DD-MM-YYYY',
 																							),
 																						);
 																					}}
@@ -635,7 +635,7 @@ min="0"
 																		<Col lg={4}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="depositeTo">
-																					<span className="text-danger">*</span>{' '}
+																					<span className="text-danger">* </span>{' '}
 																					 {strings.DepositTo} 
 																				</Label>
 																				<Select

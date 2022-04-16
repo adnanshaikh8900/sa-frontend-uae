@@ -160,6 +160,29 @@ export const getVatList = () => {
 							data: res.data,
 						},
 					});
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+export const getExciseList = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: '/rest/datalist/exciseTax',
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					dispatch({
+						type: SUPPLIER_INVOICE.EXCISE_LIST,
+						payload: {
+							data: res.data,
+						},
+					});
 				}
 			})
 			.catch((err) => {

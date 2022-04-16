@@ -22,6 +22,10 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
+import { AgGridReact,AgGridColumn } from 'ag-grid-react/lib/agGridReact';
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+
 
 import * as ProductCategoryActions from './actions';
 import { CSVLink } from 'react-csv';
@@ -55,6 +59,7 @@ class ProductCategory extends React.Component {
 				productCategoryCode: '',
 				productCategoryName: '',
 			},
+			paginationPageSize:10,
 			csvData: [],
 			view: false,
 		};
@@ -109,9 +114,15 @@ class ProductCategory extends React.Component {
 		});
 	};
 
+	goToCategoryDetail = (categoryId) => {
+		this.props.history.push(`/admin/master/product-category/detail`, {
+			id: categoryId,
+		});
+	};
+
 	// Show Success Toast
 	success = () => {
-		return toast.success('Product Category Deleted Successfully... ', {
+		return toast.success('Product Category Deleted Successfully.', {
 			position: toast.POSITION.TOP_RIGHT,
 		});
 	};
@@ -142,7 +153,7 @@ class ProductCategory extends React.Component {
 				this.setState({ loading: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : '',
+					err && err.data ? err.data.message : 'Product Category Deleted Unsuccessfully.',
 				);
 			});
 	};
@@ -152,6 +163,15 @@ class ProductCategory extends React.Component {
 			this.options.sizePerPage = sizePerPage;
 			this.initializeData();
 		}
+	};
+
+	onPageSizeChanged = (newPageSize) => {
+		var value = document.getElementById('page-size').value;
+		this.gridApi.paginationSetPageSize(Number(value));
+	};
+	onGridReady = (params) => {
+		this.gridApi = params.api;
+		this.gridColumnApi = params.columnApi;
 	};
 
 	onPageChange = (page, sizePerPage) => {
@@ -212,7 +232,7 @@ class ProductCategory extends React.Component {
 				this.initializeData();
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data.message
+					res.data ? res.data.message : 'Product Category Deleted Successfully'
 				);
 				if (
 					product_category_list &&
@@ -227,7 +247,7 @@ class ProductCategory extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					 err.data.message
+					err.data ? err.data.message : 'Product Category Deleted Unsuccessfully'
 				);
 			});
 	};
@@ -308,6 +328,24 @@ class ProductCategory extends React.Component {
 		);
 	};
 
+	
+	getActionButtons = (params) => {
+		return (
+	<>
+	{/* BUTTON ACTIONS */}
+			{/* View */}
+			
+			<Button
+				className="Ag-gridActionButtons btn-sm"
+				title='Edit'
+				color="secondary"
+					onClick={()=>
+						this.goToCategoryDetail(params.data.id)  }
+			
+			>		<i className="fas fa-edit"/> </Button> 
+	</>
+		)
+	}
 	render() {
 		strings.setLanguage(this.state.language);
 		const {
@@ -323,6 +361,8 @@ class ProductCategory extends React.Component {
 		// let display_data = this.filterVatList(vatList)
 
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="vat-code-screen">
 				<div className="animated fadeIn">
 					<Card>
@@ -368,8 +408,21 @@ class ProductCategory extends React.Component {
 													Bulk Delete
 												</Button> */}
 											</ButtonGroup>
+											<Button
+											color="primary"
+											className="btn-square pull-right"
+											style={{ marginBottom: '10px' }}
+											onClick={() =>
+												this.props.history.push(
+													`/admin/master/product-category/create`,
+												)
+											}
+										>
+											<i className="fas fa-plus mr-1" />
+											 {strings.AddNewProductCategory}
+										</Button>
 										</div>
-										<div className="py-3">
+										{/* <div className="py-3">
 											<h5>{strings.Filter} : </h5>
 											<form onSubmit={this.handleSubmit}>
 												<Row>
@@ -425,21 +478,9 @@ class ProductCategory extends React.Component {
 													</Col>
 												</Row>
 											</form>
-										</div>
-										<Button
-											color="primary"
-											className="btn-square pull-right"
-											style={{ marginBottom: '10px' }}
-											onClick={() =>
-												this.props.history.push(
-													`/admin/master/product-category/create`,
-												)
-											}
-										>
-											<i className="fas fa-plus mr-1" />
-											 {strings.AddNewProductCategory}
-										</Button>
-										<BootstrapTable
+										</div> */}
+										
+										{/* <BootstrapTable
 											selectRow={this.selectRowProp}
 											search={false}
 											options={this.options}
@@ -483,7 +524,80 @@ class ProductCategory extends React.Component {
 											>
 												 {strings.ProductCategoryName}
 											</TableHeaderColumn>
-										</BootstrapTable>
+										</BootstrapTable> */}
+
+<div className="ag-theme-alpine mb-3" style={{ height: 590,width:"100%" }}>
+	     
+			<AgGridReact
+				rowData={product_category_list &&
+					product_category_list.data 
+					? product_category_list.data
+						: []}
+					//  suppressDragLeaveHidesColumns={true}
+				// pivotMode={true}
+				// suppressPaginationPanel={false}
+				pagination={true}
+				rowSelection="multiple"
+				// paginationPageSize={10}
+				// paginationAutoPageSize={true}
+				paginationPageSize={this.state.paginationPageSize}
+					floatingFilter={true}
+					defaultColDef={{ 
+								resizable: true,
+								flex: 1,
+								sortable: true
+							}}
+				sideBar="columns"
+				onGridReady={this.onGridReady}
+					>
+
+				<AgGridColumn field="productCategoryCode" 
+				headerName=   {strings.ProductCategoryCode}
+				sortable={ true } 
+				filter={ true } 
+				enablePivot={true} 
+				cellRendererFramework={(params) => <label
+					className="mb-0 label-bank"
+					style={{
+						cursor: 'pointer',
+						}}
+					                                                  
+		>
+		{params.value}
+		</label>
+}
+				></AgGridColumn>
+
+				<AgGridColumn field="productCategoryName" 
+				headerName= {strings.ProductCategoryName}
+				sortable={ true }
+				filter={ true }
+				enablePivot={true}
+				></AgGridColumn> 
+				<AgGridColumn field="action"
+										// className="Ag-gridActionButtons"
+										headerName="ACTIONS"
+										cellRendererFramework={(params) =>
+											<div
+											 className="Ag-gridActionButtons"
+											 >
+												{this.getActionButtons(params)}
+											</div>
+
+										}
+									></AgGridColumn> 			
+			</AgGridReact>  
+			<div className="example-header mt-1">
+					Page Size:
+					<select onChange={() => this.onPageSizeChanged()} id="page-size">
+					<option value="10" selected={true}>10</option>
+					<option value="100">100</option>
+					<option value="500">500</option>
+					<option value="1000">1000</option>
+					</select>
+				</div>
+																						
+		</div>	
 									</Col>
 								</Row>
 							)}
@@ -501,6 +615,7 @@ class ProductCategory extends React.Component {
             </ModalFooter>
           </Modal> */}
 				</div>
+			</div>
 			</div>
 		);
 	}

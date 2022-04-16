@@ -70,10 +70,10 @@ class FilterComponent extends Component {
 													maxDate={new Date()}
 													showYearDropdown
 													value={moment(props.values.endDate).format(
-														'DD/MM/YYYY',
+														'DD-MM-YYYY',
 													)}
 													dropdownMode="select"
-													dateFormat="dd/MM/yyyy"
+													dateFormat="dd-MM-yyyy"
 													onChange={(value) => {
 														props.handleChange('endDate')(value);
 														if (moment(value).isBefore(props.values.endDate)) {

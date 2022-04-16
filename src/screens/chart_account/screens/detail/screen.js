@@ -70,7 +70,9 @@ class DetailChartAccount extends React.Component {
 			disabled: false,
 			disabled1:false,
 		};
-		this.regExAlpha = /^[a-zA-Z]+$/;
+		// this.regExAlpha = /^[a-zA-Z]+$/;
+		this.regExAlpha = /^[A-Za-z0-9 !@#$%^&*)(+=._-]+$/;
+
 	}
 
 	componentDidMount = () => {
@@ -189,7 +191,7 @@ class DetailChartAccount extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data.message
+						res.data ? res.data.message : 'Chart Of Account Deleted Successfully'
 					);
 					this.props.history.push('/admin/master/chart-account');
 				}
@@ -197,7 +199,7 @@ class DetailChartAccount extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Chart Of Account Deleted Unsuccessfully'
 				);
 			});
 	};
@@ -225,7 +227,8 @@ class DetailChartAccount extends React.Component {
 					resetForm();
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data.message
+						res.data ? res.data.message : 'Chart Of Account Updated Successfully'
+
 					);
 					this.props.history.push('/admin/master/chart-account');
 				}
@@ -233,7 +236,7 @@ class DetailChartAccount extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Chart Of Account Updated Unsuccessfully'
 				);
 			});
 	};
@@ -254,6 +257,8 @@ class DetailChartAccount extends React.Component {
 		// const { sub_transaction_type_list } = this.props
 
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="chart-account-screen">
 				<div className="animated fadeIn">
 					{dialog}
@@ -314,10 +319,11 @@ class DetailChartAccount extends React.Component {
                                 </FormGroup> */}
 															<FormGroup>
 																<Label htmlFor="transactionCategoryName">
-																	<span className="text-danger">*</span> {strings.Name}
+																	<span className="text-danger">* </span> {strings.Name}
 																</Label>
 																<Input
 																	type="text"
+																	maxLength='50'
 																	id="transactionCategoryName"
 																	name="transactionCategoryName"
 																	placeholder={strings.Enter+strings.Name}
@@ -348,7 +354,7 @@ class DetailChartAccount extends React.Component {
 															</FormGroup>
 															<FormGroup>
 																<Label htmlFor="chartOfAccount">
-																	<span className="text-danger">*</span>{strings.Type}
+																	<span className="text-danger">* </span>{strings.Type}
 																</Label>
 																{/* <Select
                                     className="select-default-width"
@@ -457,6 +463,7 @@ class DetailChartAccount extends React.Component {
 						</Row>
 					)}
 				</div>
+			</div>
 			</div>
 		);
 	}

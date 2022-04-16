@@ -357,8 +357,8 @@ class OpeningBalance extends React.Component {
 					typeof row.effectiveDate === 'string'
 						? row.effectiveDate
 						: moment(
-								moment(row.effectiveDate).format('DD/MM/YYYY'),
-								'DD/MM/YYYY',
+								moment(row.effectiveDate).format('DD-MM-YYYY'),
+								'DD-MM-YYYY',
 						  ).toDate(),
 			};
 			console.log(postData);
@@ -374,7 +374,7 @@ class OpeningBalance extends React.Component {
 						let text = save ? 'added' : 'updated';
 						this.props.commonActions.tostifyAlert(
 							'success',
-							`Opening Balance ${text} Successfully.`,
+							res.data? res.data.message: `Opening Balance ${text} Successfully.`,
 						);
 						this.initializeData();
 						this.setState({
@@ -421,8 +421,8 @@ class OpeningBalance extends React.Component {
 	};
 	renderDate = (cell, row) => {
 		return typeof row['effectiveDate'] === 'string'
-		? moment(row['effectiveDate'], 'DD/MM/YYYY').format('DD/MM/YYYY')
-		: moment(row['effectiveDate']).format('DD/MM/YYYY');
+		? moment(row['effectiveDate'], 'DD-MM-YYYY').format('DD-MM-YYYY')
+		: moment(row['effectiveDate']).format('DD-MM-YYYY');
 	};
 	// renderDate = (cell, row) => {
 	// 	return (
@@ -437,11 +437,11 @@ class OpeningBalance extends React.Component {
 	// 			showYearDropdown
 	// 			value={
 	// 				typeof row['effectiveDate'] === 'string'
-	// 					? moment(row['effectiveDate'], 'DD/MM/YYYY').format('DD/MM/YYYY')
-	// 					: moment(row['effectiveDate']).format('DD/MM/YYYY')
+	// 					? moment(row['effectiveDate'], 'DD-MM-YYYY').format('DD-MM-YYYY')
+	// 					: moment(row['effectiveDate']).format('DD-MM-YYYY')
 	// 			}
 	// 			dropdownMode="select"
-	// 			dateFormat="dd/MM/yyyy"
+	// 			dateFormat="dd-MM-yyyy"
 	// 			onChange={(val) => {
 	// 				this.selectItem(val, row, 'effectiveDate');
 	// 			}}
@@ -479,6 +479,8 @@ class OpeningBalance extends React.Component {
 		let opening_balance_list1=	Object.assign({},opening_balance_list)
 	
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="expense-screen">
 				<div className="animated fadeIn">
 					{dialog}
@@ -625,6 +627,7 @@ class OpeningBalance extends React.Component {
 						</CardBody>
 					</Card>
 				</div>
+			</div>
 			</div>
 		);
 	}

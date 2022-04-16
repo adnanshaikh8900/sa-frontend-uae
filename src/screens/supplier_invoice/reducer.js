@@ -7,6 +7,7 @@ const initState = {
 	status_list: [],
 	currency_list: [],
 	vat_list: [],
+	excise_list:[],
 	product_list: [],
 	supplier_list: [],
 	country_list: [],
@@ -59,7 +60,11 @@ const SupplierInvoiceReducer = (state = initState, action) => {
 				...state,
 				vat_list: Object.assign([], payload.data),
 			};
-
+		case SUPPLIER_INVOICE.EXCISE_LIST:
+			return{
+				...state,
+				excise_list: Object.assign([],payload.data)
+			};
 		case SUPPLIER_INVOICE.PAY_MODE:
 			return {
 				...state,

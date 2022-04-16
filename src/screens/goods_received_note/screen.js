@@ -200,12 +200,12 @@ class GoodsReceivedNote extends React.Component {
 								<div>
 						<label className="font-weight-bold mr-2 ">RFQ Amount : </label>
 						<label>
-							{row.totalAmount  === 0 ? row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+							{row.totalAmount  === 0 ? row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 						</label>
 					</div>
 					<div style={{display: row.totalVatAmount === 0 ? 'none' : ''}}>
 					<label className="font-weight-bold mr-2">Vat Amount : </label>
-					<label>{row.totalVatAmount === 0  ?  row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) :  row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
+					<label>{row.totalVatAmount === 0  ?  row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) :  row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}</label>
 					</div>
 					
 					
@@ -213,7 +213,7 @@ class GoodsReceivedNote extends React.Component {
 		};
 
 	renderDueAmount =(cell,row,extraData) => {
-		return row.dueAmount === 0  ? row.currencySymbol+row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencySymbol+row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.dueAmount === 0  ? row.currencySymbol+row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : row.currencySymbol+row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 });
 	}
 
 	renderVatAmount = (cell, row, extraData) => {
@@ -362,6 +362,7 @@ class GoodsReceivedNote extends React.Component {
 			if (res.status === 200) {
 				this.props.commonActions.tostifyAlert(
 					'success',
+					res.data.message
 					// 'Purchase Order Created Successfull',
 				);
 				this.props.goodsReceivedNoteAction
@@ -370,6 +371,7 @@ class GoodsReceivedNote extends React.Component {
 					if (res.status === 200) {
 						this.props.commonActions.tostifyAlert(
 							'success',
+							res.data.message
 
 						);
 						this.setState({
@@ -385,6 +387,7 @@ class GoodsReceivedNote extends React.Component {
 		.catch((err) => {
 			this.props.commonActions.tostifyAlert(
 				'error',
+				err.data.message
 			);
 		});
 	
@@ -397,7 +400,7 @@ class GoodsReceivedNote extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Goods Received Note Sent Successfully',
+						res.data ? res.data.message : 'Send Successfully'
 					);
 					this.setState({
 						loading: false,
@@ -408,7 +411,8 @@ class GoodsReceivedNote extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					'Please First fill The Mail Configuration Detail',
+					err.data ? err.data.message : 'Send Unsuccessfully'
+
 				);
 			});
 	};
@@ -419,7 +423,7 @@ class GoodsReceivedNote extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Goods Received Note Posted Successfully',
+						res.data ? res.data.message : 'Send Successfully'
 					);
 					this.setState({
 						loading: false,
@@ -430,7 +434,7 @@ class GoodsReceivedNote extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					'Something Went Wrong',
+					err.data ? err.data.message : 'Send Unsuccessfully'
 				);
 			});
 	};
@@ -441,7 +445,7 @@ class GoodsReceivedNote extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Goods Received Note Closed Successfully',
+						res.data ? res.data.message : 'Status Changed Successfully'
 					);
 					this.setState({
 						loading: false,
@@ -452,7 +456,7 @@ class GoodsReceivedNote extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					'Something Went Wrong',
+					err.data ? err.data.message : 'Status Changed Unsuccessfully'
 				);
 			});
 	};
@@ -543,7 +547,7 @@ class GoodsReceivedNote extends React.Component {
 				this.initializeData(filterData);
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Supplier Invoice Deleted Successfully',
+					res.data.message
 				);
 				if (supplier_invoice_list && supplier_invoice_list.length > 0) {
 					this.setState({
@@ -554,7 +558,7 @@ class GoodsReceivedNote extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data.message
 				);
 			});
 	};
@@ -592,7 +596,7 @@ class GoodsReceivedNote extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Invoice Posted Successfully',
+						res.data ? res.data.message : 'Goods Received Note Posted Successfully'
 					);
 					this.setState({
 						loading: false,
@@ -604,7 +608,7 @@ class GoodsReceivedNote extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data ? err.data.message : 'Goods Received Note Posted Unsuccessfully'
 				);
 				this.setState({
 					loading: false,
@@ -627,7 +631,7 @@ class GoodsReceivedNote extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Invoice Moved To Draft Successfully',
+						res.data ? res.data.message : 'Goods Received Note Unposted Successfully'
 					);
 					this.setState({
 						loading: false,
@@ -639,7 +643,7 @@ class GoodsReceivedNote extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data ? err.data.message : 'Goods Received Note Posted Unsuccessfully'
 				);
 				this.setState({
 					loading: false,
@@ -713,14 +717,14 @@ class GoodsReceivedNote extends React.Component {
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Invoice Deleted Successfully',
+					res.data ? res.data.message : 'Goods Received Note Deleted Successfully'
 				);
 				this.initializeData();
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data ? err.data.message : 'Goods Received Note Deleted Unsuccessfully'
 				);
 			});
 	};
@@ -814,6 +818,8 @@ class GoodsReceivedNote extends React.Component {
 		console.log(request_for_quotation_data);
 		console.log(goods_received_note_list);
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="supplier-invoice-screen">
 				<div className="animated fadeIn">
 					{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
@@ -914,7 +920,7 @@ class GoodsReceivedNote extends React.Component {
 													showYearDropdown
 													autoComplete="off"
 													dropdownMode="select"
-													dateFormat="dd/MM/yyyy"
+													dateFormat="dd-MM-yyyy"
 													selected={filterData.invoiceDate}
 													// value={filterData.invoiceDate}
 													onChange={(value) => {
@@ -932,7 +938,7 @@ class GoodsReceivedNote extends React.Component {
 													showYearDropdown
 													autoComplete="off"
 													dropdownMode="select"
-													dateFormat="dd/MM/yyyy"
+													dateFormat="dd-MM-yyyy"
 													selected={filterData.invoiceDueDate}
 													onChange={(value) => {
 														this.handleChange(value, 'invoiceDueDate');
@@ -1131,6 +1137,7 @@ class GoodsReceivedNote extends React.Component {
 						this.closeEmailModal(e);
 					}}
 				/>
+			</div>
 			</div>
 		);
 	}

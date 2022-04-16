@@ -173,6 +173,8 @@ class DetailSalaryRole extends React.Component {
     const { currency_list } = this.props
     const { dialog, loading, initValue } = this.state
     return (
+      loading ==true? <Loader/> :
+<div>
       <div className="detail-employee-screen">
         <div className="animated fadeIn">
           <Row>
@@ -206,7 +208,7 @@ class DetailSalaryRole extends React.Component {
                             }}
                             validationSchema={Yup.object().shape({
                               salaryRoleName: Yup.string()
-                                .required("salary Role Name is Required"),
+                                .required("Salary Role Name is Required"),
                             
                             })}
                           >
@@ -224,7 +226,7 @@ class DetailSalaryRole extends React.Component {
                               
                               <Col lg={4}>
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span>{strings.SalaryRoleName}</Label>
+                                  <Label htmlFor="select"><span className="text-danger">* </span>{strings.SalaryRoleName}</Label>
                                   <Input
                                     type="text"
                                     id="salaryRoleName"
@@ -285,6 +287,7 @@ class DetailSalaryRole extends React.Component {
               </Card>
             </Col>
           </Row>
+        </div>
         </div>
       </div>
     )

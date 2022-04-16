@@ -28,7 +28,7 @@ import * as ProductActions from '../../../product/actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 import * as CustomerInvoiceActions from '../../../customer_invoice/actions';
 import * as PurchaseOrderDetailsAction from '../../../purchase_order/screens/detail/actions'
-import { SupplierModal } from '../../sections';
+import { SupplierModal } from '../../../supplier_invoice/sections/index';
 import { ProductModal } from '../../../customer_invoice/sections';
 import { InvoiceNumberModel } from '../../../customer_invoice/sections';
 
@@ -37,7 +37,7 @@ import * as PurchaseOrderAction from '../../../purchase_order/actions'
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
-import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
+import { optionFactory,selectCurrencyFactory, selectOptionsFactory } from 'utils';
 
 import './style.scss';
 import moment from 'moment';
@@ -202,7 +202,7 @@ class CreateGoodsReceivedNote extends React.Component {
 			{ label: 'Net 30 Days', value: 'NET_30' },
 			{ label: 'Due on Receipt', value: 'DUE_ON_RECEIPT' },
 		];
-		this.placelist = [
+			this.placelist = [
 			{ label: 'Abu Dhabi', value: '1' },
 			{ label: 'Dubai', value: '2' },
 			{ label: 'Sharjah', value: '3' },
@@ -239,6 +239,7 @@ class CreateGoodsReceivedNote extends React.Component {
 				render={({ field, form }) => (
 					<Input
 						type="text"
+						maxLength="250"
 						value={row['description'] !== '' ? row['description'] : ''}
 						onChange={(e) => {
 							this.selectItem(
@@ -319,11 +320,11 @@ class CreateGoodsReceivedNote extends React.Component {
 						<Input
 						disabled
 							type="number"
-min="0"
-							maxLength="10"
+							min="0"
+							maxLength="100"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
-								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+								if (e.target.value === '' || this.regEx.test(e.target.value)) {
 									this.selectItem(
 										e.target.value,
 										row,
@@ -379,13 +380,13 @@ min="0"
 				render={({ field, form }) => (
 					<div>
 							<Input
-					type="text"
+							type="text"
 							min="0"
-							//type="number"
+							// type="number"
 							maxLength="10"
 							value={row['grnReceivedQuantity'] !== 0 ? row['grnReceivedQuantity'] : 0}
 							onChange={(e) => {
-								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+								if (e.target.value === '' || this.regEx.test(e.target.value)) {
 									this.selectItem(
 										e.target.value,
 										row,
@@ -430,9 +431,15 @@ min="0"
 									{props.errors.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity}
 								</div>
 							)} */}
-								<div  className="text-danger">
+								{/* <div  className="text-danger">
 									{this.state.grnReceivedQuantityError}
+								</div> */}
+								{row['grnReceivedQuantity'] <= 0 && (
+								<div  className="invalid-feedback">
+									Please Enter Quantity
 								</div>
+								)
+							}
 					</div>
 				)}
 			/>
@@ -453,7 +460,7 @@ this.state.data.map((obj, index) => {
 				render={({ field, form }) => (
 					<Input
 					type="number"
-						maxLength="10"
+						maxLength="14,2"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -498,10 +505,12 @@ this.state.data.map((obj, index) => {
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// );
-		return row.subTotal === 0 ? this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+  row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.subTotal === 0 ? this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+  row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 });
 	};
 
 	componentDidMount = () => {
+		if(this.props.location.state &&this.props.location.state.contactData)
+		this.getCurrentUser(this.props.location.state.contactData);
 		this.getInitialData();
 	};
 
@@ -794,7 +803,7 @@ this.state.data.map((obj, index) => {
 						styles={customStyles}
 						options={
 							product_list
-								? selectOptionsFactory.renderOptions(
+								? optionFactory.renderOptions(
 										'name',
 										'id',
 										product_list,
@@ -808,6 +817,8 @@ this.state.data.map((obj, index) => {
 							if (e && e.label !== 'Select Product') {
 								this.selectItem(e.value, row, 'productId', form, field, props);
 								this.prductValue(e.value, row, 'productId', form, field, props);
+								if(this.checkedRow()==false)
+								this.addRow();
 								// this.formRef.current.props.handleChange(field.name)(e.value)
 							} else {
 								form.setFieldValue(
@@ -934,11 +945,11 @@ this.state.data.map((obj, index) => {
 	// 	const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 	// 	const values = value
 	// 		? value
-	// 		: moment(props.values.invoiceDate, 'DD/MM/YYYY').toDate();
+	// 		: moment(props.values.invoiceDate, 'DD-MM-YYYY').toDate();
 	// 	if (temp && values) {
 	// 		const date = moment(values)
 	// 			.add(temp - 1, 'days')
-	// 			.format('DD/MM/YYYY');
+	// 			.format('DD-MM-YYYY');
 	// 		props.setFieldValue('invoiceDueDate', date, true);
 	// 	}
 	// };
@@ -976,7 +987,7 @@ this.state.data.map((obj, index) => {
 			if (props.values.discountType.value === 'PERCENTAGE') {
 				var val =
 					((+obj.unitPrice -
-						+((obj.unitPrice * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2 })) *
+						+((obj.unitPrice * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })) *
 						vat *
 						obj.grnReceivedQuantity) /
 					100;
@@ -997,7 +1008,7 @@ this.state.data.map((obj, index) => {
 
 		const discount =
 			props.values.discountType.value === 'PERCENTAGE'
-				? +((total_net * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2 })
+				? +((total_net * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })
 				: discountAmount;
 		this.setState(
 			{
@@ -1069,7 +1080,7 @@ this.state.data.map((obj, index) => {
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data.message?res.data.message:"Good Received Note Created Successfully"
+					res.data ? res.data.message : 'Goods Received Note Created Successfully'
 				);
 				if (this.state.createMore) {
 					this.setState(
@@ -1120,7 +1131,7 @@ this.state.data.map((obj, index) => {
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'Goods Received Note Created Unsuccessfully',
 				);
 			});
 	};
@@ -1148,7 +1159,7 @@ this.state.data.map((obj, index) => {
 	};
 
 	getCurrentUser = (data) => {
-		
+
 		let option;
 		if (data.label || data.value) {
 			option = data;
@@ -1158,25 +1169,29 @@ this.state.data.map((obj, index) => {
 				value: data.id,
 			};
 		}
-		
+
 		let result = this.props.currency_convert_list.filter((obj) => {
 			return obj.currencyCode === data.currencyCode;
 		});
 		
-	    this.formRef.current.setFieldValue('currency', result[0].currencyCode, true);
-		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
-
 		this.setState({
 			supplier_currency: data.currencyCode,
-			supplier_currency_des: result[0].currencyName,
-		})
+			supplier_currency_des: result[0]  && result[0].currencyName ? result[0].currencyName:"AED",
+			supplier_currency_symbol:data.currencyIso ?data.currencyIso:"AED",
+			customer_taxTreatment_des:data.taxTreatment?data.taxTreatment:""
+		});
 
-		// this.setState({
-		//   selectedContact: option
-		// })
-		this.formRef.current.setFieldValue('supplierId', option, true);
+		this.formRef.current.setFieldValue('contactId', option, true);
+		this.formRef.current.setFieldValue('supplierId', option, true);		
+
+		if(result[0] && result[0].currencyCode)
+		this.formRef.current.setFieldValue('currency',result[0].currencyCode, true);
+
+		this.formRef.current.setFieldValue('taxTreatmentid', data.taxTreatmentId, true);
+
+		if( result[0] &&  result[0].exchangeRate)
+		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
 	};
-
 	closeSupplierModal = (res) => {
 		if (res) {
 			this.props.goodsReceivedNoteAction.getSupplierList(this.state.contactType);
@@ -1210,21 +1225,31 @@ this.state.data.map((obj, index) => {
 	};	
 	getCurrentProduct = () => {
 		this.props.goodsReceivedNoteAction.getProductList().then((res) => {
+			let newData=[]
+			const data = this.state.data;
+			newData = data.filter((obj) => obj.productId !== "");
+			// props.setFieldValue('lineItemsString', newData, true);
+			// this.updateAmount(newData, props);
 			this.setState(
 				{
-					data: [
-						{
-							id: 0,
+					data: newData.concat({
+						id: this.state.idCount + 1,
 							description: res.data[0].description,
-							quantity: '',
-                            grnReceivedQuantity: 1,
-                            poQuantity:'',
+							quantity: 1,
+                            grnReceivedQuantity: 0,
+                            poQuantity:1,
 							unitPrice: res.data[0].unitPrice,
 							vatCategoryId: res.data[0].vatCategoryId,
+							exciseTaxId: res.data[0].exciseTaxId,
 							subTotal: res.data[0].unitPrice,
 							productId: res.data[0].id,
-						},
-					],
+							discount:0,
+							vatAmount:res.data[0].vatAmount ?res.data[0].vatAmount:0,
+							discountType: res.data[0].discountType,
+							unitType:res.data[0].unitType,
+							unitTypeId:res.data[0].unitTypeId,
+						}),
+						idCount: this.state.idCount + 1,
 				},
 				() => {
 					const values = {
@@ -1293,7 +1318,7 @@ this.state.data.map((obj, index) => {
 		this.props.goodsReceivedNoteCreateAction
 			.checkValidation(data)
 			.then((response) => {
-				if (response.data === 'grnNumber already exists') {
+				if (response.data === 'GRN Number Already Exists') {
 					this.setState(
 						{
 							exist: true,
@@ -1459,7 +1484,10 @@ console.log(this.state.data)
 													let errors = {};
 													if (this.state.exist === true) {
 														errors.grn_Number =
-															'GRN Number already exists';
+															'GRN Number Already Exists';
+													}
+													if (values.grn_Number==='') {
+														errors.grn_Number = 'GRN Number is Required';
 													}
 													return errors;
 												}}
@@ -1523,7 +1551,7 @@ console.log(this.state.data)
 																	.required('Value is Required')
 																	.test(
 																		'grnReceivedQuantity',
-																		'Quantity Should be Greater than 1',
+																		'Quantity should be greater than 0',
 																		(value) => {
 																			if (value > 0) {
 																				return true;
@@ -1621,11 +1649,12 @@ console.log(this.state.data)
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="grn_Number">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.GRNNUMBER}
 																	</Label>
 																	<Input
 																		type="text"
+																		maxLength="50"
 																		id="grn_Number"
 																		name="grn_Number"
 																		placeholder={strings.InvoiceNumber}
@@ -1658,11 +1687,10 @@ console.log(this.state.data)
 														<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="supplierId">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.SupplierName}
 																	</Label>
 																	<Select
-																		styles={customStyles}
 																		id="supplierId"
 																		name="supplierId"
 																		placeholder={strings.Select+strings.SupplierName}
@@ -1678,9 +1706,22 @@ console.log(this.state.data)
 																		}
 
 																		value={
-																	props.values.supplierId
+																			this.state.quotationId ?
+
+																			tmpSupplier_list &&
+																		   selectOptionsFactory.renderOptions(
+																			   'label',
+																			   'value',
+																			   tmpSupplier_list,
+																			   strings.CustomerName,
+																		 ).find((option) => option.value == this.state.contactId)
+																		   
+																		 :
+																		 
+																		 props.values.contactId
+																		   }
 																		//	this.state.supplierList
-																		}
+																		
 																		onChange={(option) => {
 																			if (option && option.value) {
 																				this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
@@ -1706,30 +1747,35 @@ console.log(this.state.data)
 																		)}
 																</FormGroup>
 															</Col>
-															<Col lg={3}>
-																<Label
-																	htmlFor="supplierId"
+													
+														 						<Col lg={3}>
+															<Label
+																	htmlFor="contactId"
 																	style={{ display: 'block' }}
 																>
-																	{strings.AddNewSupplier}
+																	{strings.AddNewSupplier} 
 																</Label>
-																<Button
-																	type="button"
-																	color="primary"
-																	className="btn-square"
-																	onClick={this.openSupplierModal}
-																>
-																	<i className="fa fa-plus"></i> {strings.AddASupplier}
-																</Button>
-															</Col>
-														
+															<Button
+                                                                color="primary"
+                                                                className="btn-square"
+                                                                // style={{ marginBottom: '40px' }}
+                                                                onClick={() =>
+																	//  this.props.history.push(`/admin/payroll/employee/create`,{goto:"Expense"})
+																	// this.props.history.push(`/admin/master/contact/create`,{gotoParentURL:"/admin/expense/goods-received-note/create"})
+																	this.openSupplierModal()
+																	}
+
+                                                            >
+                                                                <i className="fas fa-plus mr-1" />
+                                         {strings.AddASupplier}
+									</Button></Col>
 															
 														
 														</Row>
 														<Row>	<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currency">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.Currency}
 																	</Label>
 																	<Select
@@ -1789,7 +1835,7 @@ console.log(this.state.data)
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="date">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.ReceivedDate}
 																	</Label>
 																	<DatePicker
@@ -1806,8 +1852,7 @@ console.log(this.state.data)
 																		showMonthDropdown
 																		showYearDropdown
 																		dropdownMode="select"
-																		dateFormat="dd/MM/yyyy"
-																		maxDate={new Date()}
+																		dateFormat="dd-MM-yyyy"
 																		onChange={(value) => {
 																			props.handleChange('grnReceiveDate')(value);
 																		}}
@@ -1815,7 +1860,8 @@ console.log(this.state.data)
 																	{props.errors.grnReceiveDate &&
 																		props.touched.grnReceiveDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.grnReceiveDate}
+																				{props.errors.grnReceiveDate.includes("nullable()") ? "Order Date is Required" :props.errors.grnReceiveDate}
+
 																			</div>
 																		)}
 																</FormGroup>
@@ -1823,7 +1869,7 @@ console.log(this.state.data)
 															{/* <Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="due_date">
-																	<span className="text-danger">*</span>
+																	<span className="text-danger">* </span>
 																		Expiry Date
 																	</Label>
 																	<DatePicker
@@ -1840,7 +1886,7 @@ console.log(this.state.data)
 																		showMonthDropdown
 																		showYearDropdown
 																		dropdownMode="select"
-																		dateFormat="dd/MM/yyyy"
+																		dateFormat="dd-MM-yyyy"
 																		maxDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('rfqExpiryDate')(value);
@@ -1908,7 +1954,8 @@ console.log(this.state.data)
 																			? `Please add detail to add more`
 																			: ''
 																	}
-																	disabled={this.checkedRow() ? true : false}
+																	disabled={this.checkedRow() ? true : false ||
+																		props.values.poNumber ? true : false}
 																>
 																	<i className="fa fa-plus"></i>&nbsp;{strings.Addmore}
 																</Button>
@@ -1916,11 +1963,11 @@ console.log(this.state.data)
 																	color="primary"
 																	className="btn-square mr-3"
 																	onClick={(e, props) => {
-																		this.openProductModal(props);
+																		// this.props.history.push(`/admin/master/product/create`,{gotoParentURL:"/admin/expense/goods-received-note/create"})
+																		this.openProductModal()
 																		}}
-																	
-																
-																>
+																	disabled={props.values.poNumber ? true : false}	
+																	>
 																	<i className="fa fa-plus"></i>&nbsp;{strings.Addproduct}
 																</Button>
 															</Col>
@@ -2058,7 +2105,7 @@ console.log(this.state.data)
 																		<Label htmlFor="grnRemarks">{strings.GRNREMARKS}</Label>
 																		<Input
 																			type="textarea"
-																			maxLength="255"
+																			maxLength="250"
 																			name="grnRemarks"
 																			id="grnRemarks"
 																			rows="6"
@@ -2138,6 +2185,17 @@ console.log(this.state.data)
 																		className="btn-square mr-3"
 																		disabled={this.state.disabled}
 																		onClick={() => {
+																			if(this.state.data.length === 1)
+																			{
+																			console.log(props.errors,"ERRORs")
+																			}
+																			else
+																			{ let newData=[]
+																			const data = this.state.data;
+																			newData = data.filter((obj) => obj.productId !== "");
+																			props.setFieldValue('lineItemsString', newData, true);
+																			this.updateAmount(newData, props);
+																			}
 																			this.setState(
 																				{ createMore: false },
 																				() => {
@@ -2157,6 +2215,17 @@ console.log(this.state.data)
 																		className="btn-square mr-3"
 																		disabled={this.state.disabled}
 																		onClick={() => {
+																			if(this.state.data.length === 1)
+																			{
+																			console.log(props.errors,"ERRORs")
+																			}
+																			else
+																			{ let newData=[]
+																			const data = this.state.data;
+																			newData = data.filter((obj) => obj.productId !== "");
+																			props.setFieldValue('lineItemsString', newData, true);
+																			this.updateAmount(newData, props);
+																			}
 																			this.setState(
 																				{ createMore: true },
 																				() => {
@@ -2200,7 +2269,12 @@ console.log(this.state.data)
 					closeSupplierModal={(e) => {
 						this.closeSupplierModal(e);
 					}}
-					getCurrentUser={(e) => this.getCurrentUser(e)}
+					getCurrentUser={(e) =>
+						{		
+							this.props.goodsReceivedNoteAction.getSupplierList(this.state.contactType);
+							this.getCurrentUser(e);
+						}
+						}
 					createSupplier={this.props.goodsReceivedNoteAction.createSupplier}
 					getStateList={this.props.goodsReceivedNoteAction.getStateList}
 					currency_list={this.props.currency_convert_list}
@@ -2211,7 +2285,10 @@ console.log(this.state.data)
 					closeProductModal={(e) => {
 						this.closeProductModal(e);
 					}}
-					getCurrentProduct={(e) => this.getCurrentProduct(e)}
+					getCurrentProduct={(e) =>{ 
+						this.props.supplierInvoiceActions.getProductList();
+						this.getCurrentProduct(e);
+					}}
 					createProduct={this.props.ProductActions.createAndSaveProduct}
 					vat_list={this.props.vat_list}
 					product_category_list={this.props.product_category_list}

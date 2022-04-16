@@ -363,7 +363,7 @@ class DetailBankTransaction extends React.Component {
                                 <Col lg={4}>
                                   <FormGroup className="mb-3">
                                     <Label htmlFor="chartOfAccountId">
-                                      <span className="text-danger">*</span>
+                                      <span className="text-danger">* </span>
                                      {strings.TransactionType}
                                     </Label>
                                     <Select
@@ -425,7 +425,7 @@ class DetailBankTransaction extends React.Component {
                                 <Col lg={4}>
                                   <FormGroup className="mb-3">
                                     <Label htmlFor="date">
-                                      <span className="text-danger">*</span>
+                                      <span className="text-danger">* </span>
                                       {strings.TransactionDate}
                                     </Label>
                                     <DatePicker
@@ -434,13 +434,13 @@ class DetailBankTransaction extends React.Component {
                                       placeholderText={strings.TransactionDate}
                                       showMonthDropdown
                                       showYearDropdown
-                                      dateFormat="dd/MM/yyyy"
+                                      dateFormat="dd-MM-yyyy"
                                       dropdownMode="select"
                                       value={
                                         props.values.transactionDate
                                           ? moment(
                                               props.values.transactionDate,
-                                            ).format('DD/MM/YYYY')
+                                            ).format('DD-MM-YYYY')
                                           : ''
                                       }
                                       // selected={props.values.transactionDate}
@@ -467,7 +467,7 @@ class DetailBankTransaction extends React.Component {
                                 <Col lg={4}>
                                   <FormGroup className="mb-3">
                                     <Label htmlFor="transactionAmount">
-                                      <span className="text-danger">*</span>
+                                      <span className="text-danger">* </span>
                                      {strings.Total+" "+strings.Amount }
                                     </Label>
                                     <Input
@@ -568,10 +568,11 @@ min="0"
                                       id="description"
                                       rows="6"
                                       placeholder={strings.Description}
-                                      onChange={(option) =>
+                                      onChange={(option) =>{
+                                        if(!option.target.value.includes("="))
                                         props.handleChange(
                                           'transactionDescription',
-                                        )(option)
+                                        )(option)}
                                       }
                                       value={
                                         props.values.transactionDescription

@@ -770,15 +770,15 @@ min="0"
 												placeholderText="Transaction Date"
 												showMonthDropdown
 												showYearDropdown
-												dateFormat="dd/MM/yyyy"
+												dateFormat="dd-MM-yyyy"
 												dropdownMode="select"
 												selected={this.state.startDate}
 												value={
 													selectedData.transactionDate
 														? moment(
 																selectedData.transactionDate,
-																'DD/MM/YYYY',
-														  ).format('DD/MM/YYYY')
+																'DD-MM-YYYY',
+														  ).format('DD-MM-YYYY')
 														: ''
 												}
 											/>

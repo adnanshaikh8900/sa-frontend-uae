@@ -42,7 +42,18 @@ import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
 import { Create } from '@material-ui/icons';
 import moment from 'moment';
+import { upperCase } from 'lodash';
 
+const { ToWords } = require('to-words');
+const toWords = new ToWords({
+	localeCode: 'en-IN',
+	converterOptions: {
+	//   currency: true,
+	  ignoreDecimal: false,
+	  ignoreZeroCurrency: false,
+	  doNotAddOnly: false,
+	}
+  });
 const mapStateToProps = (state) => {
 	return {
 		supplier_list: state.request_for_quotation.supplier_list,
@@ -332,7 +343,7 @@ class RequestForQuotation extends React.Component {
 							{ row.status !== "Closed"  && (
 							<DropdownItem
 								onClick={() => {
-									this.sendMail(row.id);
+									this.sendMail(row);
 								}}
 							>
 								<i className="fas fa-send" /> {strings.Send}
@@ -399,7 +410,7 @@ class RequestForQuotation extends React.Component {
 					if (res.status === 200) {
 						this.props.commonActions.tostifyAlert(
 							'success',
-							'Request For Quotation Closed Successfully',
+							res.data ? res.data.message : 'Status Changed Successfully'
 						);
 
 
@@ -413,6 +424,7 @@ class RequestForQuotation extends React.Component {
 		.catch((err) => {
 			this.props.commonActions.tostifyAlert(
 				'error',
+				err.data ? err.data.message : 'Status Changed Unsuccessfully'
 			);
 		});
 
@@ -427,10 +439,10 @@ class RequestForQuotation extends React.Component {
 				openPurchaseOrder : true, rowId : id,
 				    selectedData:res.data,
 					rfqReceiveDate: res.data.rfqReceiveDate
-						? moment(res.data.rfqReceiveDate).format('DD/MM/YYYY')
+						? moment(res.data.rfqReceiveDate).format('DD-MM-YYYY')
 						: '',
 						rfqExpiryDate: res.data.rfqExpiryDate
-						? moment(res.data.rfqExpiryDate).format('DD/MM/YYYY')
+						? moment(res.data.rfqExpiryDate).format('DD-MM-YYYY')
 						: '',
 						supplierId: res.data.supplierId ? res.data.supplierId : '',
 						rfqNumber: res.data.rfqNumber
@@ -469,28 +481,28 @@ class RequestForQuotation extends React.Component {
 		console.log(totalVatAmount,"00000000")
 	};
 		
-	sendMail = (id) => {
-		this.props.requestForQuotationAction
-			.sendMail(id)
-			.then((res) => {
-				if (res.status === 200) {
-					this.props.commonActions.tostifyAlert(
-						'success',
-						'Request For Quotation Send Successfully',
-					);
-					this.setState({
-						loading: false,
-					});
-					this.initializeData();
-				}
-			})
-			.catch((err) => {
-				this.props.commonActions.tostifyAlert(
-					'error',
-					'Please First fill The Mail Configuration Detail',
-				);
-			});
-	};
+	// sendMail = (id) => {
+	// 	this.props.requestForQuotationAction
+	// 		.sendMail(id)
+	// 		.then((res) => {
+	// 			if (res.status === 200) {
+	// 				this.props.commonActions.tostifyAlert(
+	// 					'success',
+	// 					res.data ? res.data.message : 'Email Send Successfully'
+	// 				);
+	// 				this.setState({
+	// 					loading: false,
+	// 				});
+	// 				this.initializeData();
+	// 			}
+	// 		})
+	// 		.catch((err) => {
+	// 			this.props.commonActions.tostifyAlert(
+	// 				'error',
+	// 				err.data ? err.data.message : 'Email Send Unsuccessfully'
+	// 			);
+	// 		});
+	// };
 
 
 	onSizePerPageList = (sizePerPage) => {
@@ -579,7 +591,7 @@ class RequestForQuotation extends React.Component {
 				this.initializeData(filterData);
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Supplier Invoice Deleted Successfully',
+					res.data ? res.data.message : 'Request For Quotation Deleted Successfully'
 				);
 				if (supplier_invoice_list && supplier_invoice_list.length > 0) {
 					this.setState({
@@ -590,7 +602,7 @@ class RequestForQuotation extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data ? err.data.message : 'Request For Quotation Deleted Unsuccessfully'
 				);
 			});
 	};
@@ -613,38 +625,39 @@ class RequestForQuotation extends React.Component {
 		this.initializeData();
 	};
 
-	postInvoice = (row) => {
+	sendMail = (row) => {
 		this.setState({
 			loading: true,
 		});
+		 
 		const postingRequestModel = {
-			amount: row.invoiceAmount,
 			postingRefId: row.id,
-			postingRefType: 'INVOICE',
+			amountInWords:upperCase(row.currencyName + " " +(toWords.convert(row.totalAmount)) ).replace("POINT","AND"),
+			vatInWords:row.totalVatAmount ? upperCase(row.currencyName + " " +(toWords.convert(row.totalVatAmount)) ).replace("POINT","AND") :"-"
 		};
 		this.props.requestForQuotationAction
-			.postInvoice(postingRequestModel)
+			.sendMail(postingRequestModel)
 			.then((res) => {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Invoice Posted Successfully',
+						res.data ? res.data.message : 'Request For Quotation Posted Successfully'
 					);
 					this.setState({
 						loading: false,
 					});
-					this.getOverdue();
 					this.initializeData();
 				}
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data ? err.data.message : 'Request For Quotation Posted Unsuccessfully'
 				);
 				this.setState({
 					loading: false,
 				});
+				this.initializeData();
 			});
 	};
 
@@ -663,7 +676,7 @@ class RequestForQuotation extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Invoice Moved To Draft Successfully',
+						res.data ? res.data.message : 'Request For Quotation Unposted Successfully'
 					);
 					this.setState({
 						loading: false,
@@ -675,7 +688,7 @@ class RequestForQuotation extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data ? err.data.message : 'Request For Quotation Unosted Unsuccessfully'
 				);
 				this.setState({
 					loading: false,
@@ -739,14 +752,14 @@ class RequestForQuotation extends React.Component {
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Invoice Deleted Successfully',
+					res.data ? res.data.message : 'Request For Quotation Deleted Successfully'
 				);
 				this.initializeData();
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data ? err.data.message : 'Request For Quotation Deleted Unsuccessfully'
 				);
 			});
 	};
@@ -826,6 +839,7 @@ class RequestForQuotation extends React.Component {
 						totalAmount: supplier.totalAmount,
 						totalVatAmount: supplier.totalVatAmount,
 						currencyCode: supplier.currencyCode,
+						currencyName:supplier.currencyName,
 					
 				  }))
 				: '';
@@ -839,6 +853,8 @@ class RequestForQuotation extends React.Component {
 		})		
 
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="supplier-invoice-screen">
 				<div className="animated fadeIn">
 					{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
@@ -939,7 +955,7 @@ class RequestForQuotation extends React.Component {
 													showYearDropdown
 													autoComplete="off"
 													dropdownMode="select"
-													dateFormat="dd/MM/yyyy"
+													dateFormat="dd-MM-yyyy"
 													selected={filterData.invoiceDate}
 													// value={filterData.invoiceDate}
 													onChange={(value) => {
@@ -957,7 +973,7 @@ class RequestForQuotation extends React.Component {
 													showYearDropdown
 													autoComplete="off"
 													dropdownMode="select"
-													dateFormat="dd/MM/yyyy"
+													dateFormat="dd-MM-yyyy"
 													selected={filterData.invoiceDueDate}
 													onChange={(value) => {
 														this.handleChange(value, 'invoiceDueDate');
@@ -1168,8 +1184,13 @@ class RequestForQuotation extends React.Component {
 				//	getProductList={this.props.purchaseOrderAction.getProductList()}
 					createPO={this.props.purchaseOrderCreateAction.createPO}
                     totalAmount={this.state.totalAmount}
+					getNextTemplateNo={()=>{
+						this.props.purchaseOrderCreateAction.getPoNo().then((response) => {
+							this.setState({prefixData:response.data	});
+							});}}
 					totalVatAmount={this.state.totalVatAmount}
 				/>
+			</div>
 			</div>
 		); 
 	}

@@ -240,7 +240,7 @@ class Journal extends React.Component {
 
 	renderDate = (cell, rows) => {
 		return rows.journalDate
-			? moment(rows.journalDate).format('DD/MM/YYYY')
+			? moment(rows.journalDate).format('DD-MM-YYYY')
 			: '';
 	};
 
@@ -350,7 +350,7 @@ class Journal extends React.Component {
 					this.initializeData();
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Journal Deleted Successfully',
+						res.data ? res.data.message :'Journal Deleted Successfully',
 					);
 					if (journal_list && journal_list.length > 0) {
 						this.setState({
@@ -362,7 +362,7 @@ class Journal extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'Journal Deleted Unsuccessfully',
 				);
 			});
 	};
@@ -459,6 +459,8 @@ class Journal extends React.Component {
 		
 console.log(journal_list_data,"journal_list_data")
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="journal-screen">
 				<div className="animated fadeIn">
 					{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
@@ -527,7 +529,7 @@ console.log(journal_list_data,"journal_list_data")
 														showMonthDropdown
 														showYearDropdown
 														dropdownMode="select"
-														dateFormat="dd/MM/yyyy"
+														dateFormat="dd-MM-yyyy"
 														autoComplete="off"
 														selected={filterData.journalDate}
 														onChange={(value) => {
@@ -702,6 +704,7 @@ console.log(journal_list_data,"journal_list_data")
 						</CardBody>
 					</Card>
 				</div>
+			</div>
 			</div>
 		);
 	}

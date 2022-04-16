@@ -36,7 +36,8 @@ class ResetNewPassword extends React.Component {
         confirmPassword: ''
       },
       isPasswordShown: false,
-      alert: null
+      alert: null,
+      displayRules:false
     };
     this.formikRef = React.createRef();
   }
@@ -117,7 +118,7 @@ class ResetNewPassword extends React.Component {
                             // .min(8, "Password Too Short")
                             .matches(
                               /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
-                              "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character"
+                              "Must Contain 8 Characters, Must contain max 16 Characters, One Uppercase, One Lowercase, One Number and one special case Character"
                             ),
                           confirmPassword: Yup.string()
                             .required('Confirm Password is Required')
@@ -131,24 +132,42 @@ class ResetNewPassword extends React.Component {
                                 <Col lg={12}>
                                   <FormGroup>
 																			<Label htmlFor="select">
-																				<span className="text-danger">*</span>
-																				 Password
+																				<span className="text-danger">*</span> Password
 																			</Label>
 																			<div>
 																				<Input
+                                        onPaste={(e)=>{
+                                          e.preventDefault()
+                                          return false;
+                                          }} onCopy={(e)=>{
+                                          e.preventDefault()
+                                          return false;
+                                          }}
 																					type={
 																						this.state.isPasswordShown
 																							? 'text'
 																							: 'password'
 																					}
+                                          minLength={8}
+                                          maxLength={16}
+                                          autoComplete="off"
 																					id="password"
 																					name="password"
-																					placeholder=" Enter Password"
+																					placeholder=" Enter New Password"
 																					value={props.values.password}
 																					onChange={(option) => {
-																						props.handleChange('password')(
+                                            if(option.target.value!="")
+																				  {		
+                                            props.handleChange('password')(
 																							option,
 																						);
+                                            this.setState({displayRules:true})}
+                                            else{
+                                              props.handleChange('password')(
+                                                option,
+                                              );
+                                              this.setState({displayRules:false})
+                                            }
 																					}}
 																					className={
 																						props.errors.password &&
@@ -157,7 +176,7 @@ class ResetNewPassword extends React.Component {
 																							: ''
 																					}
 																				/>
-																				<i className={`fa ${isPasswordShown ? "fa-eye-slash" : "fa-eye"} password-icon fa-lg`}
+																				<i className={`fa ${isPasswordShown ? "fa-eye" : "fa-eye-slash"} password-icon fa-lg`}
 																					onClick={this.togglePasswordVisiblity}
 																				>
 																					{/* <img 
@@ -168,30 +187,40 @@ class ResetNewPassword extends React.Component {
 																			</div>
 																			{props.errors.password &&
 																				props.touched.password && (
-																					<div className="invalid-feedback">
+																					<div style={{ color: "red" }}>
 																						{props.errors.password}
 																					</div>
 																				)}
-																			<PasswordChecklist
-																				rules={["length", "specialChar", "number", "capital"]}
-																				minLength={5}
+																			{this.state.displayRules==true&&( <PasswordChecklist
+																				rules={["maxLength", "minLength", "specialChar", "number", "capital"]}
+																				minLength={8}
+                                        maxLength={16}
 																				value={props.values.password}
 																				valueAgain={props.values.confirmPassword}
-																			/>
+																			/>)}
 																		</FormGroup>
                                 </Col>
                                 <Col lg={12}>
                                   <FormGroup>
 																			<Label htmlFor="select">
-																				<span className="text-danger">*</span>
-																			Confirm Password
+																				<span className="text-danger">*</span> Confirm Password
 																			</Label>
 																			<Input
+                                      onPaste={(e)=>{
+                                        e.preventDefault()
+                                        return false;
+                                        }} onCopy={(e)=>{
+                                        e.preventDefault()
+                                        return false;
+                                        }}
+                                        minLength={8}
+                                        maxLength={16}
+                                        autoComplete="off"
 																				type="password"
 																				id="confirmPassword"
 																				name="confirmPassword"
 																				value={props.values.confirmPassword}
-																				placeholder="Confrim Password"
+																				placeholder="Confirm Password"
 																				onChange={(value) => {
 																					props.handleChange('confirmPassword')(
 																						value,
@@ -210,12 +239,13 @@ class ResetNewPassword extends React.Component {
 																						{props.errors.confirmPassword}
 																					</div>
 																				)}
-																				<PasswordChecklist
+																				{this.state.displayRules==true&&( <PasswordChecklist
 																				rules={[ "match"]}
-																				minLength={5}
+																				minLength={8}
+                                        maxLength={16}
 																				value={props.values.password}
 																				valueAgain={props.values.confirmPassword}
-																			/>
+																			/>)}
 																		</FormGroup>
                                 </Col>
                               </Row>

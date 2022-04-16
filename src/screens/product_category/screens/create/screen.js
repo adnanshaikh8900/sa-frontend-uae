@@ -107,7 +107,7 @@ class CreateProductCategory extends React.Component {
 					this.setState({ disabled: false });
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data.message
+						res.data ? res.data.message : 'Product Category Created Successfully'
 					);
 
 					if (this.state.createMore) {
@@ -125,7 +125,7 @@ class CreateProductCategory extends React.Component {
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'Product Category Created Unsuccessfully',
 				);
 			});
 	};
@@ -162,7 +162,7 @@ class CreateProductCategory extends React.Component {
 													let errors = {};
 													if (!values.productCategoryName) {
 														errors.productCategoryName =
-															'Product Category Name is  required';
+															'Product Category Name is Required';
 													}
 
 													if (
@@ -172,7 +172,7 @@ class CreateProductCategory extends React.Component {
 														)
 													) {
 														errors.productCategoryCode =
-															'Product Category Code already Exists';
+															'Product Category Code Already Exists';
 													}
 
 													if (!values.productCategoryCode) {
@@ -195,7 +195,7 @@ class CreateProductCategory extends React.Component {
 														<form onSubmit={handleSubmit}>
 															<FormGroup>
 																<Label htmlFor="productCategoryCode">
-																	<span className="text-danger">*</span>
+																	<span className="text-danger">* </span>
 																	 {strings.ProductCategoryCode}
 																	<i
 																		id="ProductcatcodeTooltip"
@@ -209,7 +209,8 @@ class CreateProductCategory extends React.Component {
 																	</UncontrolledTooltip>
 																</Label>
 																<Input
-																	type="text" maxLength='20'
+																	type="text" 
+																	maxLength='20'
 																	id="productCategoryCode"
 																	name="productCategoryCode"
 																	placeholder={strings.Enter+strings.ProductCategoryCode}
@@ -241,11 +242,12 @@ class CreateProductCategory extends React.Component {
 															</FormGroup>
 															<FormGroup>
 																<Label htmlFor="name">
-																	<span className="text-danger">*</span>
+																	<span className="text-danger">* </span>
 																	{strings.ProductCategoryName}
 																</Label>
 																<Input
-																	type="text" maxLength='50'
+																	type="text"
+																	maxLength='50'
 																	id="productCategoryName"
 																	name="productCategoryName"
 																	placeholder={strings.Enter+strings.ProductCategoryName}

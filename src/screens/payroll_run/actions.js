@@ -1,7 +1,7 @@
 import { EMPLOYEEPAYROLL} from 'constants/types'
 
 import {
-    authApi
+    authApi, authFileUploadApi
   } from 'utils'
 
 
@@ -164,4 +164,34 @@ import {
                 });
         };
     };
-    
+    export const getCompanyDetails = () => {
+        return (dispatch) => {
+            let data = {
+                method: 'get',
+                url: '/rest/company/getCompanyDetails',
+            };
+            return authApi(data)
+                .then((res) => {
+                    if (res.status === 200) {				
+                        return res;
+                    }
+                })
+                .catch((err) => {
+                    throw err;
+                });
+        };
+    };
+    export const updateCompany = (obj) => {
+        return (dispatch) => {
+          let data = {
+            method: 'post',
+            url: '/rest/company/updateCompanyDetailsForPayrollRun',
+            data: obj
+          }
+          return authFileUploadApi(data).then((res) => {
+            return res
+          }).catch((err) => {
+            throw err
+          })
+        }
+      }

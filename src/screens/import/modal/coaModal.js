@@ -219,7 +219,7 @@ class AddEmployeesModal extends React.Component {
 		this.props.createChartOfAccontActions
 			.checkValidation(data)
 			.then((response) => {
-				if (response.data === 'transactionCategoryName already exists') {
+				if (response.data === 'Transaction Category Name Already Exists') {
 					this.setState({
 						exist: true,
 					});
@@ -381,7 +381,7 @@ class AddEmployeesModal extends React.Component {
 		Object.keys(this.state.selectedRows).forEach(key => {
 		 employeeList.push(this.state.selectedRows[key]) 
 		});}
-	debugger
+	 
 
 		this.props.createPayrollActions
 			.addMultipleEmployees( this.state.payroll_id,employeeList)

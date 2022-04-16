@@ -390,3 +390,17 @@ export const getPaytoList = () => {
 			});
 	};
 };
+
+export const getTaxTreatment = () => {
+	return (dispatch) => {
+	  let data = {
+		method: 'GET',
+		url: `/rest/datalist/getTaxTreatment`
+	  }
+	  return authApi(data).then((res) => {
+		return res
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  };

@@ -166,11 +166,17 @@ class DetailReceipt extends React.Component {
     const {current_receipt_id} = this.state;
     this.props.receiptDetailActions.deleteReceipt(current_receipt_id).then((res) => {
       if (res.status === 200) {
-        this.props.commonActions.tostifyAlert('success', res.data.message);
+        this.props.commonActions.tostifyAlert(
+          'success', 
+          res.data ? res.data.message : 'Deleted Successfully'
+        );
         this.props.history.push('/admin/revenue/receipt')
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err.data.message )
+      this.props.commonActions.tostifyAlert(
+        'error', 
+        err.data ? err.data.message : 'Deleted Unsuccessfully'
+        )
     })
   }
 
@@ -186,6 +192,8 @@ class DetailReceipt extends React.Component {
     const { loading, dialog, initValue } = this.state
 
     return (
+      loading ==true? <Loader/> :
+<div>
       <div className="detail-receipt-screen">
         <div className="animated fadeIn">
           <Row>
@@ -224,9 +232,9 @@ class DetailReceipt extends React.Component {
                                 referenceCode: Yup.string()
                                   .required("Reference Number is Required"),
                                 contactId: Yup.string()
-                                  .required('Customer is required'),
+                                  .required('Customer is Required'),
                                 amount: Yup.string()
-                                  .required('Amount is required')
+                                  .required('Amount is Required')
                                   .matches(/^[0-9]+$/, { message: "Please enter valid Amount.", excludeEmptyString: false })
 
                               })}
@@ -251,13 +259,13 @@ class DetailReceipt extends React.Component {
                                   </Col>
                                   <Col lg={4}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="receipt_date"><span className="text-danger">*</span>{strings.ReceiptDate} </Label>
+                                      <Label htmlFor="receipt_date"><span className="text-danger">* </span>{strings.ReceiptDate} </Label>
                                       <DatePicker
                                         id="date"
                                         name="receiptDate"
                                         showMonthDropdown
                                         showYearDropdown
-                                        dateFormat="dd/MM/yyyy"
+                                        dateFormat="dd-MM-yyyy"
                                         dropdownMode="select"
                                         placeholderText={strings.ReceiptDate}
                                         value={props.values.receiptDate ? moment(props.values.receiptDate).format('DD-MM-YYYY') : ''}
@@ -275,7 +283,7 @@ class DetailReceipt extends React.Component {
                                 <Row>
                                   <Col lg={4}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="referenceCode"><span className="text-danger">*</span>{strings.ReferenceNumber} </Label>
+                                      <Label htmlFor="referenceCode"><span className="text-danger">* </span>{strings.ReferenceNumber} </Label>
                                       <Input
                                         type="text"
                                         id="referenceCode"
@@ -294,7 +302,7 @@ class DetailReceipt extends React.Component {
                                   </Col>
                                   <Col lg={4}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="customer_name"><span className="text-danger">*</span>{strings.CustomerName} </Label>
+                                      <Label htmlFor="customer_name"><span className="text-danger">* </span>{strings.CustomerName} </Label>
                                       <Select
                                         options={contact_list ? selectOptionsFactory.renderOptions('label', 'value', contact_list, 'Customer Name') : []}
                                         placeholder={strings.CustomerName}
@@ -354,7 +362,7 @@ class DetailReceipt extends React.Component {
                                 <Row>
                                   <Col lg={4}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="amount"><span className="text-danger">*</span>{strings.Amount} </Label>
+                                      <Label htmlFor="amount"><span className="text-danger">* </span>{strings.Amount} </Label>
                                       <Input
                                       type="number"
 min="0"
@@ -422,6 +430,7 @@ min="0"
             </Col>
           </Row>
         </div>
+      </div>
       </div>
     )
   }

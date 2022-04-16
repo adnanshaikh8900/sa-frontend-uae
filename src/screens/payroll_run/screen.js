@@ -34,7 +34,7 @@ import LocalizedStrings from 'react-localization';
 
 import { toast } from 'react-toastify';
 import { Table } from '@material-ui/core';
-
+import {CreateCompanyDetails  } from './sections';
 const mapStateToProps = (state) => {
 
 	return {
@@ -72,7 +72,7 @@ class PayrollRun extends React.Component {
 			loading: true,
 			selectedRows: [],
 			dialog: false,
-			salaryDate: moment().startOf('month').format('DD/MM/YYYY'),
+			salaryDate: moment().startOf('month').format('DD-MM-YYYY'),
 			filterData: {
 				contactId: '',
 				invoiceId: '',
@@ -81,15 +81,17 @@ class PayrollRun extends React.Component {
 				contactType: 2,
 			},
 			initValue: {
-				presentdate: moment().local().format('DD/MM/YYYY'),
+				presentdate: moment().local().format('DD-MM-YYYY'),
 			},
 			activeTab: new Array(4).fill('1'),
 			csvData: [],
 			view: false,
-			openPayrollModal: false,
+			openModal: false,
 			selectedData: '',
 			current_employee: '',
 			lop: '',
+			disableCreating:true,
+			disableCreatePayroll:false
 		};
 
 		this.options = {
@@ -124,6 +126,7 @@ class PayrollRun extends React.Component {
 
 		this.props.payRollActions.getUserAndRole();
 		this.initializeData();
+		this.disableCreatePayroll()
 	};
 	toggle = (tabPane, tab) => {
 		const newArray = this.state.activeTab.slice();
@@ -179,7 +182,7 @@ class PayrollRun extends React.Component {
 		var userLabel = user_approver_generater_dropdown_list.length ? user_approver_generater_dropdown_list[0].label : '';
 
 		if (userValue.toString() === row.generatedBy && userLabel === "Payroll Generator") {
-			this.props.history.push('/admin/payroll/updatePayroll', { id: row.id })
+			this.props.history.push('/admin/payroll/payrollrun/updatePayroll', { id: row.id })
 		}
 		else
 			if (userValue === row.payrollApprover && userLabel === "Payroll Approver") {
@@ -187,7 +190,7 @@ class PayrollRun extends React.Component {
 			}
 			else
 			if ( userLabel === "Admin" && row.status==="Draft") {
-				this.props.history.push('/admin/payroll/updatePayroll', { id: row.id })
+				this.props.history.push('/admin/payroll/payrollrun/updatePayroll', { id: row.id })
 			}
 			else
 			
@@ -198,8 +201,16 @@ class PayrollRun extends React.Component {
 					this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
 				}
 				else
+				if ( userLabel === "Admin" && row.status==="Paid") {
+					this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
+				}
+				else
+				if ( userLabel === "Admin" && row.status==="Partially Paid") {
+					this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
+				}
+				else
 				if ( userLabel === "Admin" && row.status==="Rejected") {
-					this.props.history.push('/admin/payroll/updatePayroll', { id: row.id })
+					this.props.history.push('/admin/payroll/payrollrun/updatePayroll', { id: row.id })
 				}
 		        else{
 				let list = [...this.state.payroll_employee_list1];
@@ -222,7 +233,7 @@ class PayrollRun extends React.Component {
 	};
 
 	renderDate = (cell, rows) => {
-		return rows.payrollDate ? moment(rows.payrollDate).format('DD/MM/YYYY') : '-';
+		return rows.payrollDate ? moment(rows.payrollDate).format('DD-MM-YYYY') : '-';
 	};
 
 	renderAmount = (cell, row, extraData) => {
@@ -295,7 +306,25 @@ class PayrollRun extends React.Component {
 		});
 	};
 	renderRunDate = (cell, row) => {
-		return row.runDate ? moment(row.runDate).format('DD/MM/YYYY') : '-';
+		return row.runDate ? moment(row.runDate).format('DD-MM-YYYY') : '-';
+	};
+	renderPayrolltotalAmount= (cell, row) => {
+		return (
+			<div style={{fontSize:"11px"}}>
+			{row.totalAmountPayroll !=null && 	(<div>
+					<label className="font-weight-bold mr-2 ">{strings.Payroll +" "+strings.Amount}: </label>
+					<label>
+						{ row.totalAmountPayroll === 0 ?  "AED "+ row.totalAmountPayroll.toLocaleString(navigator.language, { minimumFractionDigits: 2 }): "AED "+ row.totalAmountPayroll.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+					
+					</label>
+				</div>)}
+				
+			{	row.dueAmountPayroll!=null && (<div style={{ display: row.dueAmountPayroll === 0 ? 'none' : '' }}>
+					<label className="font-weight-bold mr-2">{strings.DueAmount} : </label>
+					<label>{row.dueAmountPayroll === 0 ? row.dueAmountPayroll +" "+ row.dueAmountPayroll.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : "AED "+ row.dueAmountPayroll.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
+				</div>)}
+
+			</div>);
 	};
 	renderEmployeeCount = (cell, row) => {
 		let employeeCount= row.employeeCount ? row.employeeCount : '-'
@@ -304,10 +333,12 @@ class PayrollRun extends React.Component {
 	renderPayperiod = (cell, row) => {
 		let dateArr=row.payPeriod ? row.payPeriod.split("-"):[];
 
+				let  startDate= moment(dateArr[0]).format('DD-MM-YYYY')
+				let	 endDate=moment(dateArr[1]).format('DD-MM-YYYY')
 		
 		return(<Table>
-			<Row><Col className="pull-right"><b>Start-Date</b></Col><Col>: {dateArr[0]}</Col></Row>
-			<Row><Col className="pull-right"><b>End-Date</b></Col><Col>: {dateArr[1]}</Col></Row>
+			<Row><Col className="pull-right"><b>Start-Date</b></Col><Col>: {startDate}</Col></Row>
+			<Row><Col className="pull-right"><b>End-Date</b></Col><Col>: {endDate}</Col></Row>
 			 </Table>  
 			) ;
 	};
@@ -369,7 +400,12 @@ class PayrollRun extends React.Component {
 		
 		if (row.status === 'Approved') {
 			classname = 'label-success';
-		} else if (row.status === 'Draft') {
+		}if (row.status === 'Paid') {
+			classname = 'label-sent';
+		 } else
+		 if (row.status === 'UnPaid') {
+			classname = 'label-closed';
+		 } else  if (row.status === 'Draft') {
 			classname = 'label-currency';
 		} else if (row.status === 'Paid') {
 			classname = 'label-approved';
@@ -377,6 +413,8 @@ class PayrollRun extends React.Component {
 			classname = 'label-due';
 		}  if (row.status === 'Submitted') {
 			classname = 'label-sent';
+		}else if (row.status === 'Partially Paid') {
+			classname = 'label-PartiallyPaid';
 		}
 		// else {
 		// 	classname = 'label-overdue';
@@ -500,7 +538,7 @@ class PayrollRun extends React.Component {
 		this.props.payRollActions.getSalaryDetailByEmployeeIdNoOfDays(employeeId).then((res) => {
 			this.setState({
 				current_employee: employeeId,
-				openPayrollModal: true, rowId: employeeId,
+				openModal: true, rowId: employeeId,
 				selectedData: res.data,
 				employeename: res.data.employeeName,
 				netPay: res.data.netPay,
@@ -603,12 +641,13 @@ class PayrollRun extends React.Component {
 		);
 	};
 
-	openPayrollModal = (props) => {
-		this.setState({ openPayrollModal: true });
+	openModal = (props) => {
+		this.setState({ openModal: true });
 	};
-	closePayrollModal = (res) => {
-		this.setState({ openPayrollModal: false });
+	closeModal  = (res) => {
+		this.setState({ openModal: false });
 		this.initializeData();
+		this.disableCreatePayroll();
 	};
 
 	grossSalary = (cell, row, extraData) => {
@@ -621,6 +660,24 @@ class PayrollRun extends React.Component {
 
 	earnings = (cell, row, extraData) => {
 		return row.earnings ? row.earnings.toLocaleString() : row.earnings.toLocaleString();
+	}
+
+	disableCreatePayroll=()=>{
+		
+			this.props.payRollActions.getCompanyDetails().then((res)=>{			
+			if(res.status==200){
+				
+					let	companyNumber=res.data.companyNumber?res.data.companyNumber:"";
+					let	companyBankCode=res.data.companyBankCode?res.data.companyBankCode:"";
+	
+					if(companyNumber=="" || companyBankCode=="")
+					this.setState({disableCreatePayroll:true}) ;
+					else 
+					this.setState({disableCreatePayroll:false}) ;
+			}
+		});
+	
+		
 	}
 
 	render() {
@@ -646,6 +703,8 @@ class PayrollRun extends React.Component {
 
 		console.log(user_approver_generater_dropdown_list, "user_approver_generater_dropdown_list")
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="receipt-screen">
 				<div className="animated fadeIn">
 					{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
@@ -684,20 +743,37 @@ class PayrollRun extends React.Component {
 													</ButtonGroup>
 												</div>
 												<Row className="mb-4 ">
+											
 													{userForCheckApprover === "Payroll Approver" ? ""
 														: <Col>
+														
+															<Button
+																color="primary"
+																disabled={this.state.disableCreatePayroll==true?true:false}
+																title={this.state.disableCreatePayroll==true?"Please Create Company Details":""}
+																className="btn-square mt-2 pull-right"
+																onClick={() =>
+																	this.props.history.push('/admin/payroll/payrollrun/createPayrollList')
+																}
+															>
+																<i className="fas fa-plus mr-1" />
+
+																Create New Payroll
+															</Button>
 															<Button
 																color="primary"
 																className="btn-square mt-2 pull-right"
 																// onClick={}
 																onClick={() =>
-																	this.props.history.push('/admin/payroll/createPayrollList')
+																	{
+																		this.setState({openModal:true,disableCreating:false})
+																	}
 																}
-															// disabled={selectedRows.length === 0}
+															
 															>
 																<i className="fas fa-plus mr-1" />
 
-																Create New Payroll
+																Create Company Details
 															</Button>
 														</Col>
 													}
@@ -705,6 +781,7 @@ class PayrollRun extends React.Component {
 												</Row>
 												<div >
 													<BootstrapTable
+													
 														//  selectRow={this.selectRowProp}
 														search={false}
 														options={this.options}
@@ -788,6 +865,16 @@ class PayrollRun extends React.Component {
 															Run Date
 														</TableHeaderColumn>
 														<TableHeaderColumn
+													    	dataAlign="right"
+															className="table-header-bg"
+															dataField="totalAmountPayroll"
+															dataSort
+															width="15%"
+															dataFormat={this.renderPayrolltotalAmount}
+														>
+															Amount
+														</TableHeaderColumn>
+														<TableHeaderColumn
 															className="table-header-bg"
 															dataField="comment"
 															dataSort
@@ -795,7 +882,7 @@ class PayrollRun extends React.Component {
 															 dataFormat={this.renderComment}
 															
 														>
-															comment
+															Reason 
 														</TableHeaderColumn>
 
 
@@ -831,6 +918,13 @@ class PayrollRun extends React.Component {
 
 
 				/> */}
+				<CreateCompanyDetails
+				openModal={this.state.openModal}
+				closeModal ={(e) => {
+					this.closeModal (e);
+				}}
+				/>
+			</div>
 			</div>
 		);
 	}

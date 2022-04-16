@@ -35,7 +35,11 @@ import './style.scss'
 import moment from 'moment';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
+import { AgGridReact,AgGridColumn } from 'ag-grid-react/lib/agGridReact';
 
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+import PhoneInput from 'react-phone-input-2';
 const mapStateToProps = (state) => {
     return ({
         payroll_employee_list: state.payrollEmployee.payroll_employee_list,
@@ -62,6 +66,7 @@ class PayrollEmployee extends React.Component {
                 name: '',
                 email: ''
             },
+            paginationPageSize:10,
             csvData: [],
             view: false
         }
@@ -69,8 +74,8 @@ class PayrollEmployee extends React.Component {
         this.options = {
            // onRowClick: this.goToDetail,
             paginationPosition: 'bottom',
-            page: 1,
-            sizePerPage: 10,
+            // page: 1,
+            // sizePerPage: 10,
             onSizePerPageList: this.onSizePerPageList,
             onPageChange: this.onPageChange,
             sortName: '',
@@ -101,8 +106,8 @@ class PayrollEmployee extends React.Component {
     initializeData = (search) => {
         const { filterData } = this.state
         const paginationData = {
-            pageNo: this.options.page ? this.options.page - 1 : 0,
-            pageSize: this.options.sizePerPage
+            // pageNo: this.options.page ? this.options.page - 1 : 0,
+            // pageSize: this.options.sizePerPage
         }
         const sortingData = {
             order: this.options.sortOrder ? this.options.sortOrder : '',
@@ -174,7 +179,8 @@ class PayrollEmployee extends React.Component {
         );
     };
 
-    fullname = (cell, row) => {
+    fullname1 = (cell, row) => {
+        
 		return (
 			<label
 				className="mb-0 label-bank"
@@ -186,17 +192,33 @@ class PayrollEmployee extends React.Component {
 					// this.props.history.push('/admin/payroll/employee/viewEmployee',
                     // { id: row.id })
                 	this.props.history.push('/admin/master/employee/viewEmployee',
-                    { id: row.id })
+                    { id: cell.data.id })
                 }
                     
 				}
                 
 
 			>
-				{row.fullName}
+				{cell.data.fullName}
 			</label>
 		);
 	};
+    onPageSizeChanged = (newPageSize) => {
+        var value = document.getElementById('page-size').value;
+        this.gridApi.paginationSetPageSize(Number(value));
+      };
+    onGridReady = (params) => {
+        this.gridApi = params.api;
+        this.gridColumnApi = params.columnApi;
+      };
+      
+    onBtnExport = () => {
+        this.gridApi.exportDataAsCsv();
+      };
+
+    onBtnExportexcel= () => {
+        this.gridApi.exportDataAsExcel();
+      };
 
     goToDetail = (row) => {
         // this.props.history.push('/admin/payroll/employee/viewEmployee',
@@ -265,7 +287,7 @@ class PayrollEmployee extends React.Component {
         }
     }
     renderDOB = (cell, rows) => {
-        return moment(rows.dob).format('DD/MM/YYYY');
+        return moment(rows.dob).format('DD-MM-YYYY');
     };
 
     renderStatus = (cell, row) => {
@@ -300,7 +322,10 @@ class PayrollEmployee extends React.Component {
         }
         this.props.employeeActions.removeBulkEmployee(obj).then((res) => {
             if (res.status === 200) {
-                this.props.commonActions.tostifyAlert('success', 'Employees Deleted Successfully')
+                this.props.commonActions.tostifyAlert(
+                    'success',
+                     'Employees Deleted Successfully'
+                     )
                 this.initializeData();
                 if (payroll_employee_list && payroll_employee_list.data && payroll_employee_list.data.length > 0) {
                     this.setState({
@@ -309,7 +334,10 @@ class PayrollEmployee extends React.Component {
                 }
             }
         }).catch((err) => {
-            this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
+            this.props.commonActions.tostifyAlert(
+                'error',
+                 err && err.data ? err.data.message : 'Something Went Wrong'
+                 )
         })
     }
 
@@ -364,6 +392,27 @@ class PayrollEmployee extends React.Component {
             this.csvLink.current.link.click()
         }
     }
+    getActionButtons = (params) => {
+		return (
+	<>
+	{/* BUTTON ACTIONS */}
+			{/* View */}
+			<Button
+				className="Ag-gridActionButtons btn-sm"
+				title='Edit'
+				color="secondary"
+
+                onClick={
+                    () =>{ 
+                                                          
+                    this.props.history.push('/admin/master/employee/viewEmployee',{ id: params.data.id })
+                        }                                                                                               
+}                                            
+			
+			>		<i className="fas fa-edit"/> </Button>
+	</>
+		)
+	}
 
     clearAll = () => {
         this.setState({
@@ -373,13 +422,18 @@ class PayrollEmployee extends React.Component {
             },
         }, () => { this.initializeData() })
     }
-
+    renderDate=(data)=>{
+        
+            return moment(data.value).format("DD-MM-YYYY")
+    }
     render() {
         strings.setLanguage(this.state.language);
         const { loading, dialog, selectedRows, csvData, view, filterData } = this.state
         const { payroll_employee_list } = this.props
 
         return (
+            loading ==true? <Loader/> :
+<div>
             <div className="employee-screen">
                 <div className="animated fadeIn">
                     {dialog}
@@ -423,7 +477,21 @@ class PayrollEmployee extends React.Component {
                             target="_blank"
                           />} */}
                                                     <Row>
+                                          
                                                         <div style={{ width: "1650px" }}>
+                                                        <Button
+                                                                color="primary"
+                                                                className="btn-square pull-right mb-2 mr-4"
+                                                                style={{ marginBottom: '10px' }}
+                                                                // onClick={() =>
+                                                                //     //  this.props.history.push(`/admin/payroll/employee/create`)
+                                                                //      this.props.history.push(`/admin/master/employee/create`)  
+                                                                //     }
+                                                                onClick={() => this.onBtnExport()}
+
+                                                            >             
+                                                            CSV
+                                                        </Button>
                                                             <Button
                                                                 color="primary"
                                                                 className="btn-square pull-right mb-2 mr-4"
@@ -432,12 +500,15 @@ class PayrollEmployee extends React.Component {
                                                                     //  this.props.history.push(`/admin/payroll/employee/create`)
                                                                      this.props.history.push(`/admin/master/employee/create`)  
                                                                     }
+                                                                // onClick={() => this.onBtnExport()}
 
                                                             >
                                                                 <i className="fas fa-plus mr-1" />
                                          {strings.NewEmployee}
 									</Button>
+                                  
                                     </div>
+
                                     </Row>
                                                     {/* <Button
                                                         color="primary"
@@ -473,111 +544,132 @@ class PayrollEmployee extends React.Component {
                                                     </Row>
                                                 </form>
                                             </div> */}
-                                            <div>
-                                                <BootstrapTable
-                                                    selectRow={this.selectRowProp}
-                                                    search={false}
-                                                    options={this.options}
-                                                    data={payroll_employee_list &&
-                                                         payroll_employee_list.data ? payroll_employee_list.data : []}
-                                                    version="4"
-                                                    hover
-                                                    pagination={payroll_employee_list && payroll_employee_list.data 
-                                                        && payroll_employee_list.data.length > 0 ? true : false}
-                                                    keyField="id"
-                                                    remote
-                                                    fetchInfo={{ dataTotalSize: payroll_employee_list.count ? payroll_employee_list.count : 0 }}
-                                                    className="employee-table"
-                                                    trClassName="cursor-pointer"
-                                                    csvFileName="payroll_employee_list.csv"
-                                                    ref={(node) => this.table = node}
-                                                >
-                                                    <TableHeaderColumn
-                                                        className="table-header-bg"
-                                                        dataField="employeeCode"
-                                                        dataSort
-                                                        width="12%"
-                                                        // dataFormat={this.fullname}
-                                                    >
-                                                         {strings.EmployeeCode}
-                                               </TableHeaderColumn>
-                                                    <TableHeaderColumn
-                                                        className="table-header-bg"
-                                                        dataField="fullName"
-                                                        dataSort
-                                                        width="20%"
-                                                        dataFormat={this.fullname}
-                                                    >
-                                                         {strings.FullName}
-                          </TableHeaderColumn>
-                          <TableHeaderColumn
-                                                        className="table-header-bg"
-                                                        dataField="email"
-                                                        dataSort
-                                                        width="20%"
-                                                    >
-                                                         {strings.Email}
-                          </TableHeaderColumn>
-                                                    <TableHeaderColumn
-                                                        className="table-header-bg"
-                                                        dataField="mobileNumber"
-                                                        dataSort
-                                                    // dataFormat={this.vatCategoryFormatter}
-                                                    width="12%"
-                                                    >
-                                                         {strings.MobileNumber}
-                          </TableHeaderColumn>
-                                                    <TableHeaderColumn
-                                                        className="table-header-bg"
-                                                        dataField="dob"
-                                                        dataSort
-                                                        dataFormat={this.renderDOB}
-                                                        width="12%"
-                                                    >
-                                                         {strings.DateOfBirth}
-                          </TableHeaderColumn>
-                                                    <TableHeaderColumn
-                                                        className="table-header-bg"
-                                                        dataField="gender"
-                                                        dataSort
-                                                        width="12%"
-                                                    >
-                                                         {strings.Gender}
-                          </TableHeaderColumn>
-                                                  
-                                                    {/* <TableHeaderColumn
-                                                        className="table-header-bg"
-                                                        dataField="city"
-                                                        dataSort
-                                                    // dataFormat={this.vatCategoryFormatter}
-                                                    width="10%"
-                                                    >
-                                                        {strings.City}
-                          </TableHeaderColumn> */}
-                                                    <TableHeaderColumn
-                                                        className="table-header-bg"
-                                                        dataField="isActive"
-                                                        dataSort
-                                                    dataFormat={this.renderStatus}
-                                                         width="10%"
-                                                    >
-                                                        {strings.Status}
-                          </TableHeaderColumn>
-                                                    {/* <TableHeaderColumn
-                                                        className="text-right"
-                                                        columnClassName="text-right"
-                                                        //width="5%"
-                                                        dataFormat={this.renderActions}
-                                                        className="table-header-bg"
-                                                    ></TableHeaderColumn> */}
-                                                </BootstrapTable>
-                                            </div>
+                                            								<div className="mobileNumberCSS ag-theme-alpine mb-3" style={{ height: 590,width:"100%" }}>
+                                                                            
+                                                                                    <AgGridReact
+                                                                                        rowData={payroll_employee_list &&
+                                                                                            payroll_employee_list.data 
+                                                                                            ? payroll_employee_list.data
+                                                                                             : []}
+                                                                                            //  suppressDragLeaveHidesColumns={true}
+                                                                                        // pivotMode={true}
+                                                                                       // suppressPaginationPanel={false}
+                                                                                        pagination={true}
+                                                                                        rowSelection="multiple"
+                                                                                        // paginationPageSize={10}
+                                                                                        // paginationAutoPageSize={true}
+                                                                                        paginationPageSize={this.state.paginationPageSize}
+                                                                                         floatingFilter={true}
+                                                                                         defaultColDef={{ 
+                                                                                                        resizable: true,
+                                                                                                        flex: 1,
+                                                                                                        sortable: true
+                                                                                                    }}
+                                                                                        sideBar="columns"
+                                                                                        onGridReady={this.onGridReady}
+                                                                                            >
+
+                                                                                        <AgGridColumn field="employeeCode" 
+                                                                                        headerName=   {strings.EMPLOYEECODE}
+                                                                                        sortable={ true } 
+                                                                                        filter={ true } 
+                                                                                        // checkboxSelection={true}
+                                                                                        enablePivot={true} 
+                                                                                       ></AgGridColumn>
+
+                                                                                        <AgGridColumn field="fullName" 
+                                                                                        headerName=       {strings.FULLNAME}
+                                                                                        sortable={ true }
+                                                                                        filter={ true }
+                                                                                        enablePivot={true}
+                                                                                        cellRendererFramework={(params) => <label
+                                                                                                                            className="mb-0 label-bank"
+                                                                                                                            style={{
+                                                                                                                                cursor: 'pointer',
+                                                                                                                                }}
+                                                                                                                                                                          
+                                                                                                                >
+                                                                                                                    {params.data.fullName}
+                                                                                                                </label>
+                                                                                                    }
+                                                                                        ></AgGridColumn>  
+
+                                                                                        <AgGridColumn field="email" 
+                                                                                        headerName=  {strings.EMAIL}
+                                                                                        sortable={ true } 
+                                                                                        filter={ true }
+                                                                                        enablePivot={true}  
+                                                                                        ></AgGridColumn>
+
+                                                                                        <AgGridColumn field="mobileNumber" 
+
+                                                                                        headerName={strings.MOBILENUMBER}
+                                                                                        sortable={true}
+                                                                                        enablePivot={true} 
+                                                                                        filter={true}
+                                                                                        cellRendererFramework={(params)=>
+                                                                                            <PhoneInput     
+                                                                                            className="mobileNumberCSS"                                                                     
+                                                                                            value={params.value}
+                                                                                            disabled={true}
+                                                                                            autoFocus={false}
+                                                                                        />
+
+                                                                                        }
+                                                                                        ></AgGridColumn>  
+
+                                                                                    
+                                                                                        <AgGridColumn field="dob" 
+                                                                                        headerName=  {strings.DATEOFBIRTH}
+                                                                                        sortable={ true } 
+                                                                                        enablePivot={true} 
+                                                                                        filter={ true } 
+                                                                                        valueFormatter={this.renderDate}
+                                                                                      ></AgGridColumn>
+
+                                                                                        <AgGridColumn
+                                                                                        headerName={strings.STATUS}
+                                                                                        field="isActive" 
+                                                                                        sortable={ true }
+                                                                                        filter={ true }
+                                                                                        enablePivot={true} 
+                                                                                        cellRendererFramework={(params) => params.value==true ?
+                                                                                                                            <label className="badge label-success"> Active</label>
+                                                                                                                            :
+                                                                                                                            <label className="badge label-due"> InActive</label>
+                                                                                                             }
+                                                                                        ></AgGridColumn>  
+                                                                                  	<AgGridColumn field="action"
+										                                            // className="Ag-gridActionButtons"
+										                                                headerName="ACTIONS"
+										                                                cellRendererFramework={(params) =>
+											                                            <div
+											                                                className="Ag-gridActionButtons"
+											                                                                                >
+												                                            {this.getActionButtons(params)}
+											                                            </div>
+
+										                                                }
+									                                                ></AgGridColumn>
+                                                                                    </AgGridReact>  
+                                                                                    <div className="example-header mt-1">
+                                                                                            Page Size:
+                                                                                            <select onChange={() => this.onPageSizeChanged()} id="page-size">
+                                                                                            <option value="10" selected={true}>10</option>
+                                                                                            <option value="100">100</option>
+                                                                                            <option value="500">500</option>
+                                                                                            <option value="1000">1000</option>
+                                                                                            </select>
+                                                                                        </div>     
+                                                                                                                                                              
+                                                                                </div>										
                                         </Col>
                                     </Row>
                             }
                         </CardBody>
                     </Card>
                 </div>
+            </div>
             </div>
         )
     }

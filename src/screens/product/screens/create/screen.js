@@ -29,7 +29,7 @@ import { CommonActions } from 'services/global';
 
 import { WareHouseModal } from '../../sections';
 import { selectOptionsFactory } from 'utils';
-
+import Switch from "react-switch";
 const mapStateToProps = (state) => {
 	return {
 		vat_list: state.product.vat_list,
@@ -74,7 +74,8 @@ class CreateProduct extends React.Component {
 				productName: '',
 				productDescription: '',
 				productCode: '',
-				vatCategoryId: '',
+				vatCategoryId:'',
+				exciseTaxId:'',
 				productCategoryId: '',
 				productWarehouseId: '',
 				vatIncluded: false,
@@ -98,6 +99,7 @@ class CreateProduct extends React.Component {
 				disabled: false,
 				isInventoryEnabled: false,
 				transactionCategoryId:{value: 150, label: 'Inventory Asset'},
+				exciseTaxId:''
 			},
 			purchaseCategory: [],
 			salesCategory: [],
@@ -108,24 +110,58 @@ class CreateProduct extends React.Component {
 			productActive: true,
 			isActive:true,
 			selectedStatus:true,
+			exciseTaxList:[],
+			exciseTaxCheck:false,
+			exciseType:false,
+			exciseAmount:0			
 		};
 		this.formRef = React.createRef();       
 		this.regEx = /^[0-9\d]+$/;
-		this.regExBoth = /[ +a-zA-Z0-9-./\\|]+$/;
+		this.regExBoth = /[ +a-zA-Z0-9-./\\|!@#$%^&*()_<>,]+$/;
 		this.regExAlpha = /^[0-9!@#$&()-\\`.+,/\"]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
-		this.regDecimal5 =/^\d{1,5}$/;
+		this.regDecimal5 =/^\d{1,10}$/;
+		this.regExAlpha2 = /^[a-zA-Z ]+$/;
 	}
 
+	getcompanyDetails=()=>{
+		this.props.productActions.getCompanyDetails().then((res) => {
+			if (res.status === 200)
+			 {
+				 this.setState({
+				 companyDetails: res.data,				
+				//  initValue: {
+				// 			...this.state.initValue,
+				// 			...{ vatCategoryId:{label: "ZERO RATED TAX (0%)", value: 2} },
+				// 			}, 
+				});
+				if(res.data && res.data.isRegisteredVat==false)
+					{
+						this.formRef.current.setFieldValue('vatCategoryId', {label: "N/A", value: 10}, true,true);
+					}
+		}
+		})
+		.catch((err) => {		
+			this.props.commonActions.tostifyAlert(	'error',	err && err.data ? err.data.message : 'Something Went Wrong',	);
+		});
+	}
 	componentDidMount = () => {
 		this.initializeData();
 		this.salesCategory();
 		this.purchaseCategory();
 		this.inventoryAccount();
 		this.getProductCode();
+		this.getcompanyDetails();
 	};
 	initializeData = () => {
 		this.props.productActions.getProductVatCategoryList();
+		this.props.productActions.getExciseTaxList().then((res) => {
+			if (res.status === 200) {
+				this.setState({
+					exciseTaxList:res.data
+				});
+			}
+		});
 	//	this.props.productActions.getTransactionCategoryListForInventory();
 		this.props.productActions.getProductCategoryList();
 		this.props.supplierInvoiceActions.getSupplierList(this.state.contactType);
@@ -219,6 +255,7 @@ try {
 		const purchaseTransactionCategoryId = data['purchaseTransactionCategoryId'];
 		const purchaseUnitPrice = data['purchaseUnitPrice'];
 		const vatCategoryId = data['vatCategoryId'];
+		const exciseTaxId = data['exciseTaxId'];
 		const vatIncluded = data['vatIncluded'];
 		const inventoryPurchasePrice = data['inventoryPurchasePrice'];
 		const inventoryQty = data['inventoryQty'];
@@ -228,7 +265,8 @@ try {
 		const transactionCategoryId = data['transactionCategoryId'];
 		const productCategoryId = data['productCategoryId'];
 		const isActive = this.state.productActive;
-
+		const exciseType = this.state.exciseType;
+		const exciseAmount=this.state.exciseAmount;
 		let productPriceType;
 		if (data['productPriceType'].includes('SALES')) {
 			productPriceType = 'SALES';
@@ -250,12 +288,14 @@ try {
 			productType,
 			productPriceType,
 			vatCategoryId,
+			exciseTaxId,
 			vatIncluded,
 			isInventoryEnabled,
 			contactId,
 			transactionCategoryId,
 			productCategoryId,
 			isActive,
+			exciseType,
 			...(salesUnitPrice.length !== 0 && {
 				salesUnitPrice,
 			}),
@@ -290,9 +330,10 @@ try {
 			.then((res) => {
 				this.setState({ disabled: false });
 				if (res.status === 200) {
+					// this.setState({ disabled: false });
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data.message
+						res.data ? res.data.message : 'Product Created Successfully'
 					);
 					if (this.state.createMore) {
 						this.setState({
@@ -301,6 +342,12 @@ try {
 						resetForm(this.state.initValue);
 						// this.props.history.push('/admin/master/product/create')
 					} else {
+						if(this.props.isParentComponentPresent &&this.props.isParentComponentPresent ==true)
+						{
+							this.props.getCurrentProductData(res.data);
+							this.props.closeModal(true);
+						 }
+						else
 						this.props.history.push('/admin/master/product');
 					}
 				}
@@ -309,7 +356,7 @@ try {
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Product Created Unsuccessfully'
 				);
 			});
 	};
@@ -320,7 +367,7 @@ try {
 			name: value,
 		};
 		this.props.productActions.checkValidation(data).then((response) => {
-			if (response.data === 'Product name already exists') {
+			if (response.data === 'Product Name Already Exists') {
 				this.setState({
 					exist: true,
 				});
@@ -340,7 +387,7 @@ try {
 		this.props.productActions
 			.checkProductNameValidation(data)
 			.then((response) => {
-				if (response.data === 'Product code already exists') {
+				if (response.data === 'Product Code Already Exists') {
 					this.setState({
 						ProductExist: true,
 					});
@@ -372,7 +419,7 @@ try {
 	render() {
 		strings.setLanguage(this.state.language);
 		const { vat_list, product_category_list,supplier_list,inventory_account_list} = this.props;
-		const { initValue, purchaseCategory, salesCategory,inventoryAccount } = this.state;
+		const { initValue, purchaseCategory, salesCategory,inventoryAccount,exciseTaxList } = this.state;
 
 		let tmpSupplier_list = []
 
@@ -411,15 +458,21 @@ try {
 												validate={(values) => {
 													let errors = {};
 													if (!values.productName) {
-														errors.productName = 'Product  Name is  required';
+														errors.productName = 'Product Name Required';
 													}
 													if (this.state.exist === true) {
 														errors.productName =
-															'Product  Name is already exist';
+															'Product Name Already Exist';
 													}
 													if (this.state.ProductExist === true) {
 														errors.productCode =
-															'Product Code is already exist';
+															'Product Code Already Exist';
+													}
+													if (values.productName==='') {
+														errors.productName = 'Product Name is Required';
+													}
+													if (values.productCode==='') {
+														errors.productCode = 'Product Code is Required';
 													}
 													// if (values.inventoryReorderLevel > values.inventoryQty)
 													// {
@@ -452,16 +505,20 @@ try {
 														// }														
 														if(values.inventoryPurchasePrice ==='')
 														errors.inventoryPurchasePrice = 
-														'Inventory Purchase Price is requied';
+														'Inventory Purchase Price is Requied';
 
 														// if(values.inventoryReorderLevel ==='')
 														// errors.inventoryReorderLevel = 
-														// 'Inventory Reorder Level is requied';
+														// 'Inventory Reorder Level is Requied';
 
 														if(values.inventoryQty ==='')
 														errors.inventoryQty = 
-														'Inventory Quantity is requied';
+														'Inventory Quantity is Requied';
 														
+													}
+
+													if(this.state.exciseTaxCheck===true && values.exciseTaxId=='' ){
+														errors.exciseTaxId = 'Excise Tax is Requied';
 													}
 													return errors;
 												}}
@@ -511,10 +568,10 @@ try {
 														},
 													),
 													productPriceType: Yup.string().required(
-														'At least one Selling type is required',
+														'At least one Selling type is Required',
 													),
 													productCode: Yup.string().required(
-														'Product code is required',
+														'Product code is Required',
 													),
 													vatCategoryId: Yup.string()
 														.required('Vat Category is Required')
@@ -567,6 +624,8 @@ try {
 																						props.handleChange('productType')(
 																							value,
 																						);
+																						this.setState({exciseTaxCheck:false,exciseType:false})
+																						props.handleChange('exciseTaxId')('',);
 																					}}
 																					checked={
 																						props.values.productType ===
@@ -581,7 +640,7 @@ try {
 
 																<Col lg={4}>
 																<FormGroup check inline className="mb-3">
-																	<Label className="productlabel"><span className="text-danger">*</span>{strings.Status}</Label>
+																	<Label className="productlabel"><span className="text-danger">* </span>{strings.Status}</Label>
 																	<div className="wrapper">
 																	<Label
 																		className="form-check-label"
@@ -646,13 +705,14 @@ try {
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="productName">
-																			<span className="text-danger">*</span>{strings.Name}
+																			<span className="text-danger">* </span>{strings.Name}
 																		</Label>
 																		<Input
 																			type="text"
-																			maxLength="70"
+																			maxLength="100"
 																			id="productName"
 																			name="productName"
+																			autoComplete="Off"
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
@@ -690,7 +750,7 @@ try {
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="productCode">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			{strings.ProductCode}
 																			<i
 																				id="ProductCodeTooltip"
@@ -706,9 +766,12 @@ try {
 																		</Label>
 																		<Input
 																			type="text"
-																			maxLength="70"
+																			maxLength="50"
 																			id="productCode"
 																			name="productCode"
+	                         /**Added as per discussion with sajid sir ,disabled product code for sanity*/
+
+																			disabled
 																			placeholder={strings.Enter+strings.ProductCode}
 																			onChange={(option) => {
 																				if (
@@ -809,10 +872,10 @@ try {
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="vatCategoryId">
-																			<span className="text-danger">*</span>{strings.VatPercentage}
+																			<span className="text-danger">* </span>{strings.VAT+" "+strings.Type}
 																		</Label>
 																		<Select
-																			styles={customStyles}
+																	    	 isDisabled={this.state.companyDetails && !this.state.companyDetails.isRegisteredVat}
 																			options={
 																				vat_list
 																					? selectOptionsFactory.renderOptions(
@@ -823,6 +886,7 @@ try {
 																					  )
 																					: []
 																			}
+																			
 																			id="vatCategoryId"
 																			name="vatCategoryId"
 																			placeholder={strings.Select+strings.VATCategory}
@@ -857,6 +921,121 @@ try {
 																	</FormGroup>
 																</Col>
 															</Row>
+															<Row style={{display: props.values.productType !='SERVICE'   ?'' : 'none'}}		>
+																{this.state.companyDetails && this.state.companyDetails.isRegisteredVat===true &&(<Col lg={4}>
+																<FormGroup check inline className="mb-3">
+																		<Label
+																			className="form-check-label"
+																			check
+																			htmlFor="exciseTaxCheck"
+																		>
+																			<Input
+																				type="checkbox"
+																				id="exciseTaxCheck"
+																				name="exciseTaxCheck"
+																				onChange={(event) => {
+																					if (
+																						this.state.exciseTaxCheck===true
+																						)
+																					 {
+																						this.setState({exciseTaxCheck:false,exciseType:false})
+																						props.handleChange('exciseTaxId')(
+																							'',
+																						);
+																					} else {
+																						this.setState({exciseTaxCheck:true})
+																					}
+																				}}
+																				checked={this.state.exciseTaxCheck}
+																				
+																			/>
+																			Excise Product ?
+																		</Label>										
+																	</FormGroup>
+																</Col>)}
+																{this.state.exciseTaxCheck===true&&(	
+													
+																<Col  style={{display: props.values.productType !='SERVICE'   ?'' : 'none'}}	 lg={4}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="exciseTaxId">
+																			<span className="text-danger">* </span>
+																			Excise Tax Type
+																		</Label>
+																		<Select
+																			options={
+																				exciseTaxList
+																					? selectOptionsFactory.renderOptions(
+																							'name',
+																							'id',
+																							exciseTaxList,
+																							'Excise Tax Slab',
+																					  )
+																					: []
+																			}
+																			id="exciseTaxId"
+																			name="exciseTaxId"
+																			placeholder={strings.Select+ "excise Tax Slab"}
+																			value={props.values.exciseTaxId}
+																			onChange={(option) => {
+																				
+																				if (option && option.value) {
+																					props.handleChange('exciseTaxId')(
+																						option,
+																					);
+																				} else {
+																					props.handleChange('exciseTaxId')(
+																						'',
+																					);
+																				}
+																			}}
+																			className={
+																				props.errors.exciseTaxId &&
+																				props.touched.exciseTaxId
+																					? 'is-invalid'
+																					: ''
+																			}
+																		/>
+																		{props.errors.exciseTaxId &&
+																			props.touched.exciseTaxId && (
+																				<div className="invalid-feedback">
+																					{props.errors.exciseTaxId}
+																				</div>
+																			)}
+																	</FormGroup>
+																</Col>
+
+															)}
+																
+																</Row>
+																{this.state.exciseTaxCheck===true&&(	<Row>
+															<Col  style={{display: props.values.productType !='SERVICE'   ?'' : 'none'}}>
+																<label className='mr-4'><b>Excise Type</b></label>
+																	{this.state.exciseType === false ?
+																	 <span style={{color : "#0069d9"}} className='mr-4'><b>Inclusive</b></span> :
+																	 <span className='mr-4'>Inclusive</span>}
+																	<Switch
+																		checked={this.state.exciseType}
+																		onChange={(exciseType) => {
+																			props.handleChange('exciseType')(exciseType);
+																			this.setState({exciseType,},	() => {},);
+																		}}
+																		onColor="#2064d8"
+																		onHandleColor="#2693e6"
+																		handleDiameter={25}
+																		uncheckedIcon={false}
+																		checkedIcon={false}
+																		boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+																		activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+																		height={20}
+																		width={48}
+																	className="react-switch "
+																	/>
+																	{this.state.exciseType === true ? 
+																	<span style={{color : "#0069d9"}} className='ml-4'><b>Exclusive</b></span>
+																	 : <span className='ml-4'>Exclusive</span>
+																	}	
+																</Col>
+															</Row>)}
 															<hr></hr>
 															{/* <Row>
 															<Col lg={12}>
@@ -968,6 +1147,7 @@ try {
 																		>
 																			<Input
 																				type="checkbox"
+																				max="14,2"
 																				id="productPriceTypeOne"
 																				name="productPriceTypeOne"
 																				onChange={(event) => {
@@ -1017,7 +1197,7 @@ try {
 																	<Col>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="salesUnitPrice">
-																			<span className="text-danger">*</span>{' '}
+																			<span className="text-danger">* </span>{' '}
 																			{strings.SellingPrice}
 																			<i
 																				id="SalesTooltip"
@@ -1033,9 +1213,10 @@ try {
 																		</Label>
 																		<Input
 																			type="text"
-																			maxLength="10"
+																			maxLength="14,2"
 																			id="salesUnitPrice"
 																			name="salesUnitPrice"
+																			autoComplete="Off"
 																			placeholder={strings.Enter+strings.SellingPrice}
 																			readOnly={
 																				props.values.productPriceType.includes(
@@ -1074,7 +1255,7 @@ try {
 																	<Col>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="transactionCategoryId">
-																			<span className="text-danger">*</span>{' '}
+																			<span className="text-danger">* </span>{' '}
 																			{strings.Account}
 																		</Label>
 																		<Select
@@ -1141,7 +1322,7 @@ try {
 																					: true
 																			}
 																			type="textarea"
-																			maxLength="50"
+																			maxLength="250"
 																			name="salesDescription"
 																			id="salesDescription"
 																			rows="3"
@@ -1169,6 +1350,7 @@ try {
 																			<Input
 																				type="checkbox"
 																				id="productPriceTypetwo"
+																				maxLength="14,2"
 																				name="productPriceTypetwo"
 																				onChange={(event) => {
 																					if (
@@ -1218,7 +1400,7 @@ try {
 																	<Col>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="salesUnitPrice">
-																			<span className="text-danger">*</span>{' '}
+																			<span className="text-danger">* </span>{' '}
 																			{strings.PurchasePrice}
 																			<i
 																				id="PurchaseTooltip"
@@ -1234,10 +1416,10 @@ try {
 																		</Label>
 																		<Input
 																		type="text"
-																			maxLength="10"
+																			maxLength="14,2"
 																			id="purchaseUnitPrice"
 																			name="purchaseUnitPrice"
-																			
+																			autoComplete="Off"
 																			placeholder={strings.Enter+strings.PurchasePrice}
 																			disabled={props.values.isInventoryEnabled===true }
 																			onChange={(option) => {
@@ -1279,7 +1461,7 @@ try {
 																	<Col>	
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="salesUnitPrice">
-																			<span className="text-danger">*</span>{' '}
+																			<span className="text-danger">* </span>{' '}
 																			{strings.Account}
 																		</Label>
 																		<Select
@@ -1346,7 +1528,8 @@ try {
 																					: true
 																			}
 																			type="textarea"
-																			maxLength="50"
+																			maxLength="250"
+																			autoComplete="Off"
 																			name="purchaseDescription"
 																			id="purchaseDescription"
 																			rows="3"
@@ -1416,8 +1599,8 @@ try {
 																	<Col>	
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="salesUnitPrice">
-																			{/* <span className="text-danger">*</span>{' '} */}
-																			<span className="text-danger">*</span> {strings.InventoryAccount}
+																			{/* <span className="text-danger">* </span>{' '} */}
+																			<span className="text-danger">* </span> {strings.InventoryAccount}
 																		</Label>
 																		<Select
 																			styles={customStyles}
@@ -1473,16 +1656,17 @@ try {
 																	<Col>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="inventoryQty">
-																			{/* <span className="text-danger">*</span>{' '} */}
-																			<span className="text-danger">*</span>	 {strings.OpeningBalanceQuantity}
+																			{/* <span className="text-danger">* </span>{' '} */}
+																			<span className="text-danger">* </span>	 {strings.OpeningBalanceQuantity}
 																			
 																		</Label>
 																		<Input
-																		type="text"
-min="0"
+																			type="text"
+																			min="0"
 																			maxLength="10"
 																			id="inventoryQty"
 																			name="inventoryQty"
+																			autoComplete="Off"
 																			placeholder={strings.Enter+strings.OpeningBalanceQuantity}
 																			onChange={(option) => {
 																				if (
@@ -1524,15 +1708,16 @@ min="0"
 																<Col>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="inventoryPurchasePrice">
-																			{/* <span className="text-danger">*</span>{' '} */}
-																			<span className="text-danger">*</span>	{strings.PurchasePrice}
+																			{/* <span className="text-danger">* </span>{' '} */}
+																			<span className="text-danger">* </span>	{strings.PurchasePrice}
 																		</Label>
 																		<Input
-																		type="text"
-min="0"
-																			maxLength="10"
+																			type="text"
+																			min="0"
+																			maxLength="14,2"
 																			id="inventoryPurchasePrice"
 																			name="inventoryPurchasePrice"
+																			autoComplete="Off"
 																			placeholder={strings.Enter+strings.PurchasePrice}
 																			onChange={(option) => {
 																				if (
@@ -1575,7 +1760,7 @@ min="0"
 																	<Col>
 																	<FormGroup className="mb-3">
 																	<Label htmlFor="contactId">
-																		{/* <span className="text-danger">*</span> */}
+																		{/* <span className="text-danger">* </span> */}
 																		  {strings.SupplierName}
 																	</Label>
 																	<Select
@@ -1644,9 +1829,10 @@ min="0"
 																			type="text"
 																			min="0"
 																			max="1000"
-																			maxLength="5"
+																			maxLength="10"
 																			name="inventoryReorderLevel"
 																			id="inventoryReorderLevel"
+																			autoComplete="Off"
 																			rows="3"
 																			placeholder={strings.Enter+strings.InventoryReorderLevel}
 																			// onChange={(value) => {
@@ -1710,7 +1896,7 @@ min="0"
 																			? 'Creating...'
 																			: strings.Create }
 																		</Button>
-																		<Button
+																		{this.props.isParentComponentPresent &&this.props.isParentComponentPresent ==true ?"":(<Button
 																			name="button"
 																			color="primary"
 																			className="btn-square mr-3"
@@ -1727,18 +1913,26 @@ min="0"
 																			<i className="fa fa-refresh"></i> 	{this.state.disabled
 																			? 'Creating...'
 																			: strings.CreateandMore }
-																		</Button>
+																		</Button>)}
 																		<Button
-																			color="secondary"
-																			className="btn-square"
-																			onClick={() => {
-																				this.props.history.push(
-																					'/admin/master/product',
-																				);
-																			}}
-																		>
-																			<i className="fa fa-ban"></i> {strings.Cancel}
-																		</Button>
+																		color="secondary"
+																		className="btn-square"
+																		onClick={() => {
+																			// if(this.props.location
+																			// 	&& this.props.location.state
+																			// 	&& this.props.location.state.gotoParentURL
+																			// )
+																			// 	this.props.history.push(this.props.location.state.gotoParentURL)
+																			if(this.props.isParentComponentPresent &&this.props.isParentComponentPresent ==true)
+																	        	this.props.closeModal(true);
+																			else
+																				this.props.history.push('/admin/master/product');
+													
+																			
+																		}}
+																	>
+																		<i className="fa fa-ban mr-1"></i>{strings.Cancel}
+																	</Button>
 																	</FormGroup>
 																</Col>
 															</Row>

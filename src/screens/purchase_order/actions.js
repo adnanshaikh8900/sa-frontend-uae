@@ -52,6 +52,28 @@ export const getpoList = (postObj) => {
 	};
 };
 
+export const getExciseList = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: '/rest/datalist/exciseTax',
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					dispatch({
+						type: PURCHASE_ORDER.EXCISE_LIST,
+						payload: {
+							data: res.data,
+						},
+					});
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
 export const getProjectList = () => {
 	return (dispatch) => {
 		let data = {
@@ -137,6 +159,7 @@ export const getVatList = () => {
 							data: res.data,
 						},
 					});
+					return res;
 				}
 			})
 			.catch((err) => {
@@ -406,11 +429,12 @@ export const getStateList = (countryCode) => {
 	};
 };
 
-export const sendMail = (id) => {
+export const sendMail = (obj) => {
 	return (dispatch) => {
 		let data = {
 			method: 'post',
-			url: `/rest/poquatation/sendPO?id=${id}`,
+			url: `/rest/poquatation/sendPO`,
+			data:obj
 		};
 		return authApi(data)
 			.then((res) => {

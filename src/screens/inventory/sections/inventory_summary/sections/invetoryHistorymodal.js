@@ -120,7 +120,7 @@ class InventoryHistoryModal extends React.Component {
 		});
 	}
 	renderDate = (cell, rows) => {
-		return moment(rows.date).format('DD/MM/YYYY');
+		return moment(rows.date).format('DD-MM-YYYY');
 	};
 	exportPDFWithComponent = () => {
 		this.pdfExportComponent.save();

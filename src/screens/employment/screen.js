@@ -184,7 +184,10 @@ class Employment extends React.Component {
     }
     this.props.employeeActions.removeBulkEmployee(obj).then((res) => {
       if (res.status === 200) {
-        this.props.commonActions.tostifyAlert('success', 'Employees Deleted Successfully')
+        this.props.commonActions.tostifyAlert(
+          'success',
+           res.data ? res.data.message : 'Employees Deleted Successfully'
+           )
         this.initializeData();
         if (employee_list && employee_list.data && employee_list.data.length > 0) {
           this.setState({
@@ -193,7 +196,10 @@ class Employment extends React.Component {
         }
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
+      this.props.commonActions.tostifyAlert(
+        'error',
+         err && err.data ? err.data.message : 'Employees Deleted Unsuccessfully'
+         )
     })
   }
 
@@ -265,6 +271,8 @@ class Employment extends React.Component {
 
 
     return (
+      loading ==true? <Loader/> :
+<div>
       <div className="employee-screen">
         <div className="animated fadeIn">
           {dialog}
@@ -421,6 +429,7 @@ class Employment extends React.Component {
             </CardBody>
           </Card>
         </div>
+      </div>
       </div>
     )
   }

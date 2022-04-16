@@ -32,6 +32,7 @@ import * as CurrencyConvertActions from '../../currencyConvert/actions';
 import { toast } from 'react-toastify';
 import {data}  from '../../Language/index'
 import LocalizedStrings from 'react-localization';
+import Switch from "react-switch";
 
 
 const mapStateToProps = (state) => {
@@ -47,7 +48,8 @@ const mapStateToProps = (state) => {
 		product_category_list: state.product.product_category_list,
 		universal_currency_list: state.common.universal_currency_list,
 		currency_convert_list: state.currencyConvert.currency_convert_list,
-		rfqReceiveDate: state.rfqReceiveDate
+		rfqReceiveDate: state.rfqReceiveDate,
+		excise_list: state.customer_invoice.excise_list,
 	};
 	
 };
@@ -215,11 +217,11 @@ class CreateCreditNoteModal extends React.Component {
 		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 		const values = value
 			? value
-			: moment(props.values.creditNoteDate, 'DD/MM/YYYY').toDate();
+			: moment(props.values.creditNoteDate, 'DD-MM-YYYY').toDate();
 		// if (temp && values) {
 		// 	const date = moment(values)
 		// 		.add(temp - 1, 'days')
-		// 		.format('DD/MM/YYYY');
+		// 		.format('DD-MM-YYYY');
 		// 	props.setFieldValue('invoiceDueDate', date, true);
 		// }
 	};
@@ -238,6 +240,7 @@ class CreateCreditNoteModal extends React.Component {
 				name={`invoiceLineItems.${idx}.description`}
 				render={({ field, form }) => (
 					<Input
+					disabled
 					type="text"
 						value={row['description'] !== '' ? row['description'] : ''}
 						onChange={(e) => {
@@ -319,7 +322,7 @@ class CreateCreditNoteModal extends React.Component {
 					<div>
 						<Input
 							type="number"
-							
+							// disabled
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
 								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -380,7 +383,8 @@ class CreateCreditNoteModal extends React.Component {
 				name={`invoiceLineItems.${idx}.unitPrice`}
 				render={({ field, form }) => (
 					<Input
-					type="number"
+					    type="number"
+						disabled
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (
@@ -418,6 +422,19 @@ class CreateCreditNoteModal extends React.Component {
 		);
 	}
 
+	renderVatAmount = (cell, row,extraData) => {
+		return row.vatAmount === 0 ? this.state.selectedData.currencyIsoCode +" "+  row.vatAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2,maximumFractionDigits: 2 }): this.state.selectedData.currencyIsoCode +" "+ row.vatAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2,maximumFractionDigits: 2 });
+	
+	}
+
+	rendertotalexcise=()=>{
+		const {initValue}= this.state
+		
+		let val=initValue.total_excise.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})
+		
+		return parseFloat(val).toFixed(2)
+	}
+
 	renderVat = (cell, row, props) => {
 		const { vat_list } = this.props;
 		let vatList = vat_list.length
@@ -436,6 +453,7 @@ class CreateCreditNoteModal extends React.Component {
 				name={`invoiceLineItems.${idx}.vatCategoryId`}
 				render={({ field, form }) => (
 					<Select
+					isDisabled={true}
 						styles={customStyles}
 						options={
 							vat_list
@@ -482,6 +500,69 @@ class CreateCreditNoteModal extends React.Component {
 		);
 	}
 
+	renderExcise = (cell, row, props) => {
+		const { excise_list } = this.props;
+
+		let idx;
+		this.state.selectedData.invoiceLineItems.map((obj, index) => {
+			if (obj.id === row.id) {
+				idx = index;
+			}
+			return obj;
+		});
+
+		return (
+			<Field
+				name={`invoiceLineItems.${idx}.exciseTaxId`}
+				render={({ field, form }) => (
+					<Select
+					isDisabled={true}
+						styles={customStyles}
+						options={
+							excise_list
+								? selectOptionsFactory.renderOptions(
+										'name',
+										'id',
+										excise_list,
+										'Excise Tax',
+								  )
+								: []
+						}
+						value={
+							excise_list &&
+							selectOptionsFactory
+								.renderOptions('name', 'id', excise_list, 'Excise Tax')
+								.find((option) => option.value === +row.exciseTaxId)
+						}
+						id="exciseTaxId"
+						placeholder={strings.Select+strings.Vat}
+						onChange={(e) => {
+							this.selectItem(
+								e.value,
+								row,
+								'exciseTaxId',
+								form,
+								field,
+								props,
+							);
+						}}
+						className={`${
+							props.errors.invoiceLineItems &&
+							props.errors.invoiceLineItems[parseInt(idx, 10)] &&
+							props.errors.invoiceLineItems[parseInt(idx, 10)].exciseTaxId &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.invoiceLineItems &&
+							props.touched.invoiceLineItems[parseInt(idx, 10)] &&
+							props.touched.invoiceLineItems[parseInt(idx, 10)].exciseTaxId
+								? 'is-invalid'
+								: ''
+						}`}
+					/>
+				)}
+			/>
+		);
+	}
+
 	renderSubTotal = (cell, row,extraData) => {
 		// return row.subTotal ? (
 		// 	<Currency
@@ -512,6 +593,7 @@ class CreateCreditNoteModal extends React.Component {
 				name={`invoiceLineItems.${idx}.productId`}
 				render={({ field, form }) => (
 					<Select
+						isDisabled={true}
 						styles={customStyles}
 						options={
 							product_list
@@ -629,6 +711,12 @@ class CreateCreditNoteModal extends React.Component {
 		e.preventDefault();
 		const data = this.state.selectedData.invoiceLineItems;
 		newData = data.filter((obj) => obj.id !== id);
+		let selectedData = {...this.state.selectedData}
+												selectedData.invoiceLineItems = newData;
+												this.setState({
+													selectedData:selectedData
+												})
+		this.props.updateParentSelelectedData(selectedData);
 		props.setFieldValue('invoiceLineItems', newData, true);
 		this.updateAmount(newData, props);
 	};
@@ -817,13 +905,13 @@ class CreateCreditNoteModal extends React.Component {
 		formData.append('cnCreatedOnPaidInvoice','1');
 		// formData.append(
 		// 	'invoiceDueDate',
-		// 	invoiceDueDate ? moment(invoiceDueDate, 'DD/MM/YYYY').toDate() : null,
+		// 	invoiceDueDate ? moment(invoiceDueDate, 'DD-MM-YYYY').toDate() : null,
 		// );
 		formData.append(
 			'creditNoteDate',
 			creditNoteDate
 				?
-						moment(creditNoteDate,'DD/MM/YYYY')
+						moment(creditNoteDate,'DD-MM-YYYY')
 						.toDate()
 				: '',
 		);
@@ -848,6 +936,7 @@ class CreateCreditNoteModal extends React.Component {
 		formData.append('type', 7);
 		formData.append('lineItemsString', JSON.stringify(this.state.selectedData.invoiceLineItems));
 		formData.append('totalAmount', this.state.totalAmount );
+		formData.append('discount', this.state.selectedData.discount ?this.state.selectedData.discount:0 );
         formData.append('totalVatAmount',this.state.totalVatAmount );
 	   	// formData.append('discount', discount);
 		// if (discountType && discountType.value) {
@@ -967,7 +1056,23 @@ class CreateCreditNoteModal extends React.Component {
 						ref={this.formikRef}
 						initialValues={initValue}
 						onSubmit={(values, { resetForm }) => {
-							this.handleSubmit(values, resetForm);
+							
+							if(this.state.selectedData && this.state.totalAmount<=this.state.selectedData.remainingInvoiceAmount){
+								this.handleSubmit(values, resetForm);
+							}
+							
+						}}
+						validate={(values)=>{
+							let errors = {};
+							
+							if(this.state.selectedData && this.state.totalAmount>this.state.selectedData.remainingInvoiceAmount)
+							{
+								errors.remainingInvoiceAmount =	'Invoice Total Amount Cannot be greater than  Remaining Invoice Amount';
+							}
+						
+												
+													return errors;
+									
 						}}
 						validationSchema={Yup.object().shape(
 							{
@@ -1124,6 +1229,40 @@ class CreateCreditNoteModal extends React.Component {
 																		)}
 																</FormGroup>
 															</Col>
+															<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="taxTreatmentid">
+																		Tax Treatment
+																	</Label>
+																	<Input
+																	disabled
+																		styles={customStyles}
+																		id="taxTreatmentid"
+																		name="taxTreatmentid"
+																		value={
+																		this.state.selectedData.taxTreatment
+																	 	
+																		}
+																		className={
+																			props.errors.taxTreatmentid &&
+																			props.touched.taxTreatmentid
+																				? 'is-invalid'
+																				: ''
+																		}
+																		onChange={(option) => {
+																		props.handleChange('taxTreatmentid')(option);
+																		
+																	    }}
+
+																	/>
+																	{props.errors.taxTreatmentid &&
+																		props.touched.taxTreatmentid && (
+																			<div className="invalid-feedback">
+																				{props.errors.taxTreatmentid}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
 														
                                                              <Col lg={3}>
 																<FormGroup className="mb-3">
@@ -1174,7 +1313,7 @@ class CreateCreditNoteModal extends React.Component {
 																		placeholderText={strings.CreditNoteDate}
 																		showMonthDropdown
 																		showYearDropdown
-																		dateFormat="dd/MM/yyyy"
+																		dateFormat="dd-MM-yyyy"
 																		dropdownMode="select"
 																		value={props.values.creditNoteDate}
 																		selected={props.values.creditNoteDate}
@@ -1196,6 +1335,40 @@ class CreateCreditNoteModal extends React.Component {
 																		)}
 																</FormGroup>
 															</Col>
+															<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="remainingInvoiceAmount">
+																
+																	Remaining Invoice Amount
+																	</Label>
+																	<Input
+																		type="text"
+																		id="remainingInvoiceAmount"
+																		name="remainingInvoiceAmount"
+																		disabled={true}
+																		value={this.state.selectedData.remainingInvoiceAmount}
+																		// onBlur={props.handleBlur('currencyCode')}
+																		// onChange={(value) => {
+																		// 	props.handleChange('currencyCode')(
+																		// 		value,
+																		// 	);
+																		// }}
+																		// className={
+																		// 	props.errors.remainingInvoiceAmount &&
+																		// 	props.touched.remainingInvoiceAmount
+																		// 		? 'is-invalid'
+																		// 		: ''
+																		// }
+																	/>
+																	{props.errors.remainingInvoiceAmount &&
+																	 (
+																			<div className="text-danger">
+																				{props.errors.remainingInvoiceAmount}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
+
 															{/* <Col lg={3}>
 												<FormGroup>
 													<Label htmlFor="email">
@@ -1321,6 +1494,27 @@ class CreateCreditNoteModal extends React.Component {
 																			service
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn>
+
+																	<TableHeaderColumn
+																		dataField="vat"
+																		dataFormat={(cell, rows) =>
+																			this.renderExcise(cell, rows, props)
+																		}
+																	>
+																	{strings.Excise}
+																	<i
+																			id="ExiseTooltip"
+																			className="fa fa-question-circle ml-1"
+																		></i>
+																		<UncontrolledTooltip
+																			placement="right"
+																			target="ExiseTooltip"
+																		>
+																			If Exise Type for a product is Inclusive
+																			then the Excise dropdown will be Disabled
+																		</UncontrolledTooltip>
+																	</TableHeaderColumn>
+																	
 																	<TableHeaderColumn
 																		dataField="vat"
 																		dataFormat={(cell, rows) =>
@@ -1329,6 +1523,17 @@ class CreateCreditNoteModal extends React.Component {
 																	>
 																		{strings.VAT}
 																	</TableHeaderColumn>
+
+																	<TableHeaderColumn
+																		dataField="vat_amount"
+																		dataFormat={this.renderVatAmount}
+																		className="text-right"
+																		columnClassName="text-right"
+																	
+																	>
+																		{strings.VatAmount}
+																	</TableHeaderColumn>
+																	
 																	<TableHeaderColumn
 																		dataField="sub_total"
 																		dataFormat={this.renderSubTotal}
@@ -1343,7 +1548,7 @@ class CreateCreditNoteModal extends React.Component {
 														</Row>
 														<hr />
 													
-														{this.state.selectedData.invoiceLineItems.length > 0 && (
+														{this.state.selectedData.invoiceLineItems &&this.state.selectedData.invoiceLineItems.length > 0 && (
 																<Row>
 																		<Col lg={8}>
 																	<FormGroup className="py-2">
@@ -1365,7 +1570,41 @@ class CreateCreditNoteModal extends React.Component {
 																</Col>
 																	<Col lg={4}>
 																		<div className="">
-																		
+
+																		<div className="total-item p-2">
+																				<Row>
+																					<Col lg={6}>
+																						<h5 className="mb-0 text-right">
+																							 {strings.TotalExcise}
+																						</h5>
+																					</Col>
+																					<Col lg={6} className="text-right">
+																						<label className="mb-0">
+																					            {this.state.selectedData.currencyIsoCode}  &nbsp;
+																								{this.state.selectedData.totalExciseAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
+																						
+																						</label>
+																					</Col>
+																				</Row>
+																			</div>
+
+																		<div className="total-item p-2">
+																				<Row>
+																					<Col lg={6}>
+																						<h5 className="mb-0 text-right">
+																						Discount
+																						</h5>
+																					</Col>
+																					<Col lg={6} className="text-right">
+																						<label className="mb-0">
+																					
+																								{this.state.selectedData.currencyIsoCode}  &nbsp;
+																								{this.state.selectedData.discount ? this.state.selectedData.discount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 }):"0"}
+																							
+																						</label>
+																					</Col>
+																				</Row>
+																			</div>
 																			<div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>
@@ -1386,7 +1625,7 @@ class CreateCreditNoteModal extends React.Component {
 																							/>
 																							)} */}
 																								{this.state.selectedData.currencyIsoCode}  &nbsp;
-																								{this.getTotalNet().toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
+																								{(this.state.selectedData.totalAmount-this.state.selectedData.totalVatAmount).toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
 																							{/* {this.getTotalNet()} */}
 																						</label>
 																					</Col>

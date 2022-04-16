@@ -120,18 +120,30 @@ class ExpenseByCategory extends React.Component {
 	};
 
 	exportFile = () => {
-		
-		// let object = Object.assign([],this.state.data.expenseByCategoryList)
-		// let data=[];
-		// for(let i=0;i<object.length;i++){
-		// 		let o=object[i];
-		// 		o=Object.assign([],o);
-		// 		data.push(o);
-		// }
-		// const blob = new Blob(data,{type:'application/csv'});
-		// 			download(blob,'Sample Transaction.csv')
-		return (this.state && this.state.data && this.state.data.expenseByCategoryList ? this.state.data.expenseByCategoryList :'');
-	};
+
+	
+		let dl =""
+		let fn =""
+		let type="csv"
+		var elt = document.getElementById('tbl_exporttable_to_xls');												
+		var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
+		return dl ?
+		  XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
+		  XLSX.writeFile(wb, fn || ('Expense By Category Report.'+ (type || 'csv')));
+
+	   }
+
+	   exportExcelFile  = () => 
+	   {   let dl =""
+		   let fn =""
+		   let type="xlsx"
+		   var elt = document.getElementById('tbl_exporttable_to_xls');												
+		   var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
+		   return dl ?
+			 XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
+			 XLSX.writeFile(wb, fn || ('Expense By Category Report.'+ (type || 'xlsx')));
+   
+	   }
 
 	toggle = () =>
 		this.setState((prevState) => {
@@ -209,15 +221,25 @@ class ExpenseByCategory extends React.Component {
 													<DropdownToggle caret>Export As</DropdownToggle>
 													<DropdownMenu>
 														
-														<DropdownItem>
-															<CSVLink
-																data={this.exportFile()}
-																className="csv-btn"
-																filename={'Expense By Category Report.csv'}
-															>
-																CSV (Comma Separated Value)
-															</CSVLink>
+													<DropdownItem onClick={()=>{this.exportFile()}}>
+															<span
+															style={{
+																border: 0,
+    															padding: 0,
+																backgroundColor:"white !important"
+															}}
+														 	>CSV (Comma Separated Value)</span>
 														</DropdownItem>
+														<DropdownItem onClick={()=>{this.exportExcelFile()}}>
+																<span
+															style={{
+																border: 0,
+    															padding: 0,
+																backgroundColor:"white !important"
+															}}
+														    >Excel</span>
+														</DropdownItem>
+
 														<DropdownItem onClick={this.exportPDFWithComponent}>
 															Pdf
 														</DropdownItem>
@@ -321,7 +343,7 @@ class ExpenseByCategory extends React.Component {
 											<br style={{ marginBottom: '5px' }} />
 											<b style={{ fontSize: '18px' }}>Expense By Category details</b>
 											<br style={{ marginBottom: '5px' }} />
-											{strings.From} {initValue.startDate} {strings.To} {initValue.endDate}
+											{strings.From} {(initValue.startDate).replaceAll("/","-")} {strings.To} {initValue.endDate.replaceAll("/","-")} 
 
 										</div>
 										<div>
@@ -330,16 +352,16 @@ class ExpenseByCategory extends React.Component {
 									{loading ? (
 										<Loader />
 									) : (
-										<div className="table-wrapper">
-											<Table  >
-												<thead className="header-row" >
+										<div  id="tbl_exporttable_to_xls" className="table-wrapper">
+											<Table className="table-bordered">
+												<thead className="table-header-bg">
 													<tr>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.TransactionCategory+" "+strings.Name}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.TransactionCategory+" "+strings.Name}</th>
 													
-														<th style={{ padding: '0.5rem', textAlign: 'right' }}>
+														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>
 														{strings.Amount}
 														</th>
-														<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.Amount+" "+strings.WithTax}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>{strings.Amount+" "+strings.WithTax}</th>
 
 													</tr>
 												</thead>

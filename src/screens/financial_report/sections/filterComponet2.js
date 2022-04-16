@@ -72,10 +72,10 @@ class FilterComponent2 extends Component {
 													autoComplete="off"
 													maxDate={new Date()}
 													value={moment(props.values.startDate).format(
-														'DD/MM/YYYY',
+														'DD-MM-YYYY',
 													)}
 													dropdownMode="select"
-													dateFormat="dd/MM/yyyy"
+													dateFormat="dd-MM-yyyy"
 													// onChange={(value) => {
 													// 	props.handleChange('startDate')(value);
 													// 	if (moment(value).isBefore(props.values.startDate)) {
@@ -105,12 +105,12 @@ class FilterComponent2 extends Component {
 													showMonthDropdown
 													showYearDropdown
 													value={moment(props.values.endDate).format(
-														'DD/MM/YYYY',
+														'DD-MM-YYYY',
 													)}
 													dropdownMode="select"
-													dateFormat="dd/MM/yyyy"
+													dateFormat="dd-MM-yyyy"
 													// onChange={(value) => {
-													// 	debugger
+													// 	 
 													// 	props.handleChange('endDate')(value);
 													// 	if (moment(value).isBefore(props.values.endDate)) {
 													// 		props.setFieldValue(

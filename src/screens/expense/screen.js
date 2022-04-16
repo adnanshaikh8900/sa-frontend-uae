@@ -197,7 +197,7 @@ class Expense extends React.Component {
 	};
 
 	renderDate = (cell, rows) => {
-		return moment(rows.expenseDate).format('DD/MM/YYYY');
+		return moment(rows.expenseDate).format('DD-MM-YYYY');
 	};
 
 	expenseType = (cell, row) => {
@@ -241,7 +241,7 @@ class Expense extends React.Component {
 								<i className="fas fa-send" /> {strings.Post}
 							</DropdownItem>
 						)}
-						{row.expenseStatus === 'Posted' && row.payee !== 'Company Expense' && (
+						{row.expenseStatus === 'Posted' && row.payee !== 'Company Expense' && row.editFlag==true && (
 							<DropdownItem
 								onClick={() => {
 									this.unPostExpense(row);
@@ -325,6 +325,7 @@ class Expense extends React.Component {
 	};
 
 	renderAmount = (cell, row, extraData) => {
+		
 		// return row.expenseAmount ? (
 		// 	<Currency
 		// 		value={row.expenseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
@@ -339,18 +340,23 @@ class Expense extends React.Component {
 			<div>
 					<label className="font-weight-bold mr-2 ">{strings.ActualExpenseAmount} : </label>
 					<label>
-						{/* {row.expenseAmount === 0 ? row.currencyName +" "+ row.expenseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }): row.currencyName +" "+ row.expenseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })} */}
-						{row.exclusiveVat != true ? row.currencyName +" "+ (row.expenseAmount-row.expenseVatAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2 }): row.currencyName +" "+ (row.expenseAmount+row.expenseVatAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+						
+						{row.exclusiveVat != true ? row.currencyName +" "+ (row.expenseAmount-row.expenseVatAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2}): row.currencyName +" "+ (row.expenseAmount+row.expenseVatAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+					
 					</label>
 			</div>
+		{row.expenseVatAmount !=null &&(
 			<div style={{ display: row.expenseVatAmount === 0 ? 'none' : '' }}>
-					<label className="font-weight-bold mr-2">{strings.VatAmount} : </label>
-					<label>{row.expenseVatAmount &&row.expenseVatAmount === 0 ? row.currencyName  +" "+ row.expenseVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyName  +" "+ row.expenseVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
+			    <label className="font-weight-bold mr-2">{strings.VatAmount} : </label>
+				<label>{row.expenseVatAmount === 0 ?
+				 row.currencyName  +" "+ row.expenseVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2}) 
+				 :
+				 row.currencyName  +" "+ row.expenseVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2})}</label>
 			</div>
+		)}
 			<div style={{ display: row.expenseAmount === 0 ? 'none' : '' }}>
 					<label className="font-weight-bold mr-2">{strings.ExpenseAmount} : </label>
-					{/* <label>{row.expenseAmount === 0 ? row.currencyName  +" "+(row.expenseAmount-row.expenseVatAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2 }): row.currencyName  +" "+(row.expenseAmount-row.expenseVatAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label> */}
-					<label>{row.expenseAmount === 0 ? row.currencyName  +" "+row.expenseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }): row.currencyName  +" "+row.expenseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
+					<label>{row.expenseAmount === 0 ? row.currencyName  +" "+row.expenseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2}): row.currencyName  +" "+row.expenseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2})}</label>
 			</div>
 		</div>
 		
@@ -369,7 +375,7 @@ class Expense extends React.Component {
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// );
-		return row.vatAmount === 0 ? row.currencySymbol + row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencySymbol + row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.vatAmount === 0 ? row.currencySymbol + row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2}) : row.currencySymbol + row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2});
 	};
 
 	renderCurrency = (cell, row) => {
@@ -416,7 +422,7 @@ class Expense extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Expense Posted Successfully',
+						"Expense Posted Successfully"
 					);
 					this.setState({
 						loading: false,
@@ -427,7 +433,7 @@ class Expense extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					'Expense Posted Unsuccessfully'
 				);
 				this.setState({
 					loading: false,
@@ -451,7 +457,7 @@ class Expense extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Expense Moved To Draft Successfully',
+						"Expense Moved To Draft Successfully"
 					);
 					this.setState({
 						loading: false,
@@ -462,7 +468,7 @@ class Expense extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					'Expense Moved To Draft Unsuccessfully'
 				);
 				this.setState({
 					loading: false,
@@ -506,11 +512,11 @@ class Expense extends React.Component {
 		};
 		this.props.expenseActions
 			.removeBulkExpenses(obj)
-			.then(() => {
+			.then((res) => {
 				this.initializeData();
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Expense Deleted Successfully',
+					res.data ? res.data.message : 'Expense Deleted Successfully',
 				);
 				if (expense_list && expense_list.data && expense_list.data.length > 0) {
 					this.setState({
@@ -521,7 +527,7 @@ class Expense extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data ? err.data.message : 'Expense Deleted Unsuccessfully',
 				);
 			});
 	};
@@ -567,14 +573,16 @@ class Expense extends React.Component {
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Expense Deleted Successfully',
+					res.data ? res.data.message : 'Expense Deleted Successfully'
+
 				);
 				this.initializeData();
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data ? err.data.message : 'Expense Deleted Unsuccessfully'
+
 				);
 			});
 	};
@@ -585,7 +593,7 @@ class Expense extends React.Component {
 		});
 	};
 	renderNumber=(cell,row)=>{		
-		return(<div className="text-center">{row && row.expenseNumber ?row.expenseNumber :"-"}</div>);
+		return(<div className="text-left">{row && row.expenseNumber ?row.expenseNumber :"-"}</div>);
 	}
 	getCsvData = () => {
 		if (this.state.csvData.length === 0) {
@@ -607,7 +615,7 @@ class Expense extends React.Component {
 	};
 	renderType=(cell,row)=>{		
 		let type =row && row.exclusiveVat ===true?"Exclusive Vat" :"Inclusive Vat";
-		return(<div className="text-center">{type}</div>);
+		return(<div className="text-left">{type}</div>);
 	}
 	clearAll = () => {
 		this.setState(
@@ -645,6 +653,8 @@ class Expense extends React.Component {
 		// }
 
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="expense-screen">
 				<div className="animated fadeIn">
 					{dialog}
@@ -744,7 +754,7 @@ class Expense extends React.Component {
 													selected={filterData.expenseDate}
 													showMonthDropdown
 													showYearDropdown
-													dateFormat="dd/MM/yyyy"
+													dateFormat="dd-MM-yyyy"
 													dropdownMode="select"
 													value={filterData.expenseDate}
 													onChange={(value) => {
@@ -900,6 +910,7 @@ class Expense extends React.Component {
 												{strings.EXPENSECATEGORY}
 											</TableHeaderColumn>
 											<TableHeaderColumn
+													thStyle={{ whiteSpace: 'normal' }}
 													width="15%"
                                                     className="table-header-bg"
                                                     dataField="exclusiveVat"
@@ -909,7 +920,7 @@ class Expense extends React.Component {
                                                         {strings.ExpenseType}
 
                           					</TableHeaderColumn>
-										
+											
 											<TableHeaderColumn
 												dataAlign="right"
 												thStyle={{ whiteSpace: 'normal' }}
@@ -937,6 +948,7 @@ class Expense extends React.Component {
 						</CardBody>
 					</Card>
 				</div>
+			</div>
 			</div>
 		);
 	}

@@ -130,13 +130,30 @@ class PayablesInvoiceDetailsReport extends React.Component {
 	};
 
 	exportFile = () => {
-		let data=this.state  && this.state.payableInvoiceDetailsList.resultObject?
-		 this.state.payableInvoiceDetailsList.resultObject 
-		 :[];
-		let	singleResultArray=data.flat()
-		return (singleResultArray);
-	};
 
+	
+		let dl =""
+		let fn =""
+		let type="csv"
+		var elt = document.getElementById('tbl_exporttable_to_xls');												
+		var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
+		return dl ?
+		  XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
+		  XLSX.writeFile(wb, fn || ('Payables Invoice Details Report.'+ (type || 'csv')));
+
+	   }
+
+	   exportExcelFile  = () => 
+	   {   let dl =""
+		   let fn =""
+		   let type="xlsx"
+		   var elt = document.getElementById('tbl_exporttable_to_xls');												
+		   var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
+		   return dl ?
+			 XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
+			 XLSX.writeFile(wb, fn || ('Payables Invoice Details Report.'+ (type || 'xlsx')));
+   
+	   }
 
 	// exportFile = (csvData, fileName, type) => {
 	// 	const fileType =
@@ -197,10 +214,10 @@ class PayablesInvoiceDetailsReport extends React.Component {
 					nameB = b[`${column}`] ? b[`${column}`].toUpperCase() : '';
 				} else {
 					nameA = a[`${column}`]
-						? moment(a[`${column}`], 'DD/MM/YYYY').toDate()
+						? moment(a[`${column}`], 'DD-MM-YYYY').toDate()
 						: '';
 					nameB = b[`${column}`]
-						? moment(b[`${column}`], 'DD/MM/YYYY').toDate()
+						? moment(b[`${column}`], 'DD-MM-YYYY').toDate()
 						: '';
 				}
 				if (nameA < nameB) {
@@ -332,14 +349,23 @@ class PayablesInvoiceDetailsReport extends React.Component {
 													<DropdownToggle caret>Export As</DropdownToggle>
 													<DropdownMenu>
 														
-														<DropdownItem>
-															<CSVLink
-																data={this.exportFile()}
-																className="csv-btn"
-																filename={'Payable Invoice Details Report.csv'}
-															>
-																CSV (Comma Separated Value)
-															</CSVLink>
+													<DropdownItem onClick={()=>{this.exportFile()}}>
+															<span
+															style={{
+																border: 0,
+    															padding: 0,
+																backgroundColor:"white !important"
+															}}
+														    >CSV (Comma Separated Value)</span>
+														</DropdownItem>
+														<DropdownItem onClick={()=>{this.exportExcelFile()}}>
+															<span
+															style={{
+																border: 0,
+    															padding: 0,
+																backgroundColor:"white !important"
+															}}
+														  >Excel</span>
 														</DropdownItem>
 														<DropdownItem onClick={this.exportPDFWithComponent}>
 															Pdf
@@ -456,7 +482,7 @@ class PayablesInvoiceDetailsReport extends React.Component {
 												<b style={{ fontSize: '18px' }}>{strings.PayableInvoiceDetails}</b>
 												<br />
 
-												{strings.From} {initValue.startDate} {strings.To} {initValue.endDate}
+												{strings.From} {(initValue.startDate).replaceAll("/","-")} {strings.To} {initValue.endDate.replaceAll("/","-")} 
 											</div>
 										</div>
 										<div className='mr-3'>
@@ -486,7 +512,7 @@ class PayablesInvoiceDetailsReport extends React.Component {
 									{loading ? (
 										<Loader />
 									) : (
-										<div className="table-wrapper">
+										<div id="tbl_exporttable_to_xls" className="table-wrapper">
 											<Table responsive>
 												<thead>
 													<tr className="header-row">
@@ -494,9 +520,9 @@ class PayablesInvoiceDetailsReport extends React.Component {
 															return (
 																<th
 																	key={index}
-																	style={{ fontWeight: '600' ,textAlign:'center'}}
+																	style={{ fontWeight: '600' ,textAlign:'center', color:'black'}}
 																	className={column.align ? 'text-center' : ''}
-																	className="table-header-color"
+																	className="table-header-bg"
 																>
 																	<span>{column.label}</span>
 																	{/* // onClick={() => { column.sort && this.onSort(column.value) }} */}
@@ -537,7 +563,7 @@ class PayablesInvoiceDetailsReport extends React.Component {
 																				<tr key={index}>
 																					<td style={{ width: '12%', textAlign:'center' }}>
 																						{row.invoiceDate ? (
-																							moment(row.invoiceDate).format('DD/MM/YYYY')
+																							moment(row.invoiceDate).format('DD-MM-YYYY')
 																						) : (" ")}
 																					</td>
 																					<td style={{ width: '12%', textAlign:'center' }}>

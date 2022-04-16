@@ -7,7 +7,13 @@ Table, td, th {
     border-collapse: collapse;
   }
 }
-
+.invalid-feedback {
+  display: block;
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.71rem;
+  color:#f86c6b;
+  }
 .nav-pills .nav-link.active {
   color: #fff !important;
   background-color: #2064d8  !important;

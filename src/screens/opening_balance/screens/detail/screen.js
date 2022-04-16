@@ -116,11 +116,16 @@ class DetailOpeningBalance extends React.Component {
       this.props.detailOpeningBalancesAction.updateOpeningBalance(postData).then((res) => {
       if (res.status === 200) {
         resetForm();
-        this.props.commonActions.tostifyAlert('success', 'Opening Balance Updated Successfully!')
+        this.props.commonActions.tostifyAlert(
+          'success',
+          res.data ? res.data.message : 'Opening Balance Updated Successfully!')
         this.props.history.push('/admin/accountant/opening-balance')
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err.data.message)
+      this.props.commonActions.tostifyAlert(
+        'error',
+        err.data ? err.data.message : 'Opening Balance Updated Unsuccessfully'
+        )
     })
   }
 
@@ -153,6 +158,8 @@ class DetailOpeningBalance extends React.Component {
 			}),
 		};
     return (
+      loading ==true? <Loader/> :
+<div>
       <div className="detail-vat-code-screen">
         <div className="animated fadeIn">
           {dialog}
@@ -230,7 +237,7 @@ class DetailOpeningBalance extends React.Component {
                                         <Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="effectiveDate">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																  {strings.EffectiveDate}
 																	</Label>
                                   <DatePicker
@@ -247,7 +254,7 @@ class DetailOpeningBalance extends React.Component {
 																		showMonthDropdown
 																		showYearDropdown
 																		dropdownMode="select"
-																		dateFormat="dd/MM/yyyy"
+																		dateFormat="dd-MM-yyyy"
 																		maxDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('effectiveDate')(value);
@@ -266,12 +273,12 @@ class DetailOpeningBalance extends React.Component {
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="openingBalance">
-																		<span className="text-danger">*</span>{strings.Amount}
+																		<span className="text-danger">* </span>{strings.Amount}
 																	</Label>
 																	<Input
 																		type="number"
-min="0"
-																		maxLength="10"
+                                    min="0"
+																		maxLength="14,2"
 																		name="openingBalance"
 																		id="openingBalance"
 																		rows="5"
@@ -329,6 +336,7 @@ min="0"
             </Col>
           </Row>
         </div>
+      </div>
       </div>
     )
   }

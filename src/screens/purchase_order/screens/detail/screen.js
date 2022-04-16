@@ -13,6 +13,7 @@ import {
 	Input,
 	Label,
 	NavLink,
+	UncontrolledTooltip,
 } from 'reactstrap';
 import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
@@ -32,11 +33,11 @@ import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
-import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
+import { optionFactory,selectCurrencyFactory, selectOptionsFactory } from 'utils';
 
 import './style.scss';
 import moment from 'moment';
-import API_ROOT_URL from '../../../../constants/config';
+import Switch from "react-switch";
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 
@@ -45,8 +46,8 @@ const mapStateToProps = (state) => {
 		project_list: state.request_for_quotation.project_list,
 		contact_list: state.request_for_quotation.contact_list,
 		currency_list: state.request_for_quotation.currency_list,
-		vat_list: state.request_for_quotation.vat_list,
 		product_list: state.customer_invoice.product_list,
+		excise_list: state.request_for_quotation.excise_list,
 		supplier_list: state.request_for_quotation.supplier_list,
 		country_list: state.request_for_quotation.country_list,
 		product_category_list: state.product.product_category_list,
@@ -111,7 +112,7 @@ class DetailPurchaseOrder extends React.Component {
 			current_supplier_id: null,
 			term: '',
 			placeOfSupply: '',
-			selectedType: '',
+
 			discountPercentage: '',
 			discountAmount: 0,
 			fileName: '',
@@ -119,6 +120,9 @@ class DetailPurchaseOrder extends React.Component {
 			basecurrency:[],
 			supplier_currency: '',
 			disabled1:false,
+			selectedType: 'FIXED',
+			dateChanged: false,
+			dateChanged1: false
 		};
 
 		// this.options = {
@@ -131,7 +135,7 @@ class DetailPurchaseOrder extends React.Component {
 			{ label: 'Net 30 Days', value: 'NET_30' },
 			{ label: 'Due on Receipt', value: 'DUE_ON_RECEIPT' },
 		];
-		this.placelist = [
+			this.placelist = [
 			{ label: 'Abu Dhabi', value: '1' },
 			{ label: 'Dubai', value: '2' },
 			{ label: 'Sharjah', value: '3' },
@@ -169,6 +173,12 @@ class DetailPurchaseOrder extends React.Component {
 	// }
 
 	componentDidMount = () => {
+		this.props.requestForQuotationAction.getVatList().then((res)=>{
+			debugger
+			if(res.status===200)
+			this.setState({vat_list:res.data})
+			
+		});
 		this.initializeData();
 	};
 
@@ -179,10 +189,10 @@ class DetailPurchaseOrder extends React.Component {
 				.then((res) => {
 					if (res.status === 200) {
 						this.getCompanyCurrency();
-						this.props.requestForQuotationAction.getVatList();
 						this.props.requestForQuotationAction.getSupplierList(
 							this.state.contactType,
 						);
+						this.props.requestForQuotationAction.getExciseList();
 						this.props.currencyConvertActions.getCurrencyConversionList();
 						this.props.requestForQuotationAction.getCountryList();
 						this.props.requestForQuotationAction.getProductList();
@@ -192,10 +202,16 @@ class DetailPurchaseOrder extends React.Component {
 								current_po_id: this.props.location.state.id,
 								initValue: {
 									poApproveDate: res.data.poApproveDate
-										? moment(res.data.poApproveDate).format('DD/MM/YYYY')
+										? moment(res.data.poApproveDate).format('DD-MM-YYYY')
+										: '',
+										poApproveDate1: res.data.poApproveDate
+										? res.data.poApproveDate
 										: '',
 										poReceiveDate: res.data.poReceiveDate
-										? moment(res.data.poReceiveDate).format('DD/MM/YYYY')
+										? moment(res.data.poReceiveDate).format('DD-MM-YYYY')
+										: '',
+										poReceiveDate1: res.data.poReceiveDate
+										? res.data.poReceiveDate
 										: '',
 										supplierId: res.data.supplierId ? res.data.supplierId : '',
 										poNumber: res.data.poNumber
@@ -213,10 +229,26 @@ class DetailPurchaseOrder extends React.Component {
 										supplierReferenceNumber: res.data.supplierReferenceNumber ? 
 										res.data.supplierReferenceNumber : '',
 										rfqNumber: res.data.rfqNumber ? res.data.rfqNumber : '',
-								
+										placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+										total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : 0,
+										// discount: res.data.discount ? res.data.discount : 0,
 								
 								},
-								
+								poApproveDateNotChanged : res.data.poApproveDate
+								? moment(res.data.poApproveDate)
+								: '',
+								poReceiveDateNotChanged: res.data.poReceiveDate
+								? moment(res.data.poReceiveDate)
+								: '',
+								poApproveDate: res.data.poApproveDate
+								? res.data.poApproveDate
+								: '',
+								poReceiveDate: res.data.poReceiveDate
+										? res.data.poReceiveDate
+										: '',
+								customer_taxTreatment_des : res.data.taxtreatment ? res.data.taxtreatment : '',
+								placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+								total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
 								data: res.data.poQuatationLineItemRequestModelList
 									? res.data.poQuatationLineItemRequestModelList
 									: [],
@@ -226,7 +258,7 @@ class DetailPurchaseOrder extends React.Component {
 							},
 							() => {
 								if (this.state.data.length > 0) {
-									this.calTotalNet(this.state.data);
+									this.updateAmount(this.state.data);
 									const { data } = this.state;
 									const idCount =
 										data.length > 0
@@ -279,9 +311,18 @@ class DetailPurchaseOrder extends React.Component {
 	calTotalNet = (data) => {
 		let total_net = 0;
 		data.map((obj) => {
-			total_net = +(total_net + +obj.unitPrice * obj.quantity);
-			return obj;
-		});
+			if(obj.isExciseTaxExclusive === false){
+
+                total_net = +(total_net + +obj.unitPrice  * obj.quantity);
+
+            }else{
+
+                total_net = +(total_net + +(obj.unitPrice + obj.exciseAmount) * obj.quantity);
+
+            }
+        return obj;
+
+        });
 		this.setState({
 			initValue: Object.assign(this.state.initValue, { total_net }),
 		});
@@ -303,6 +344,7 @@ class DetailPurchaseOrder extends React.Component {
 							description: res.data[0].description,
 							quantity: 1,
 							unitPrice: res.data[0].unitPrice,
+							// discountType: res.data[0].discountType,
 							vatCategoryId: res.data[0].vatCategoryId,
 							subTotal: res.data[0].unitPrice,
 							productId: res.data[0].id,
@@ -339,6 +381,74 @@ class DetailPurchaseOrder extends React.Component {
 		});
 	};
 
+	renderExcise = (cell, row, props) => {
+		const { excise_list } = this.props;
+		let idx;
+		this.state.data.map((obj, index) => {
+			if (obj.id === row.id) {
+				idx = index;
+			}
+			return obj;
+		});
+
+		return (
+			<Field
+				name={`lineItemsString.${idx}.exciseTaxId`}
+				render={({ field, form }) => (
+					<Select
+						styles={customStyles}
+						isDisabled={row.exciseTaxId === 0 || row.isExciseTaxExclusive === false}
+						options={
+							excise_list
+								? selectOptionsFactory.renderOptions(
+										'name',
+										'id',
+										excise_list,
+										'Excise',
+								  )
+								: []
+						}
+						value={
+				
+							excise_list &&
+							selectOptionsFactory
+								.renderOptions('name', 'id', excise_list, 'Excise')
+								.find((option) => option.value === +row.exciseTaxId)
+						}
+						id="exciseTaxId"
+						placeholder={"Select Excise"}
+						onChange={(e) => {
+							 
+							this.selectItem(
+								e.value,
+								row,
+								'exciseTaxId',
+								form,
+								field,
+								props,
+							);
+							
+							this.updateAmount(
+								this.state.data,
+								props,
+							);
+						}}
+						className={`${
+							props.errors.lineItemsString &&
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)].exciseTaxId &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)].exciseTaxId
+								? 'is-invalid'
+								: ''
+						}`}
+					/>
+				)}
+			/>
+		);
+	};
 	renderDescription = (cell, row, props) => {
 		let idx;
 		this.state.data.map((obj, index) => {
@@ -354,6 +464,7 @@ class DetailPurchaseOrder extends React.Component {
 				render={({ field, form }) => (
 					<Input
 					type="text"
+					maxLength="250"
 						value={row['description'] !== '' ? row['description'] : ''}
 						onChange={(e) => {
 							this.selectItem(
@@ -400,10 +511,11 @@ class DetailPurchaseOrder extends React.Component {
 					<div>
 						<Input
 							type="text"
-min="0"
+							min="0"
+							maxLength="10"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
-								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+								if (e.target.value === '' || this.regEx.test(e.target.value)) {
 									this.selectItem(
 										e.target.value,
 										row,
@@ -462,7 +574,7 @@ min="0"
 				render={({ field, form }) => (
 					<Input
 					type="text"
-
+					maxLength="14,2"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (
@@ -499,6 +611,101 @@ min="0"
 			/>
 		);
 	};
+
+// 	renderDiscount = (cell, row, props) => {
+// 		const { discountOptions } = this.state;
+// 	   let idx;
+// 	   this.state.data.map((obj, index) => {
+// 		   if (obj.id === row.id) {
+// 			   idx = index;
+// 		   }
+// 		   return obj;
+// 	   });
+// 	   return (
+// 		   <Field
+// 			    name={`lineItemsString.${idx}.discountType`}
+// 			   render={({ field, form }) => (
+// 			   <div>
+// 			   <div  class="input-group">
+// 				   <Input
+// 	 					type="text"
+// 				   	    min="0"
+// 					    maxLength="14,2"
+// 					    value={row['discount'] !== 0 ? row['discount'] : 0}
+// 					    onChange={(e) => {
+// 						   if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+// 							   this.selectItem(
+// 								   e.target.value,
+// 								   row,
+// 								   'discount',
+// 								   form,
+// 								   field,
+// 								   props,
+// 							   );
+// 						   }
+					   
+// 							   this.updateAmount(
+// 								   this.state.data,
+// 								   props,
+// 							   );
+					   
+// 					   }}
+// 					   placeholder={strings.discount}
+// 					   className={`form-control 
+// 		   ${
+// 						   props.errors.lineItemsString &&
+// 						   props.errors.lineItemsString[parseInt(idx, 10)] &&
+// 						   props.errors.lineItemsString[parseInt(idx, 10)].discount &&
+// 						   Object.keys(props.touched).length > 0 &&
+// 						   props.touched.lineItemsString &&
+// 						   props.touched.lineItemsString[parseInt(idx, 10)] &&
+// 						   props.touched.lineItemsString[parseInt(idx, 10)].discount
+// 							   ? 'is-invalid'
+// 							   : ''
+// 					   }`}
+//    type="text"
+//    />
+// 	<div class="dropdown open input-group-append">
+
+// 		<div 	style={{width:'100px'}}>
+// 		<Select
+
+
+// 		options={discountOptions}
+// 		id="discountType"
+// 		name="discountType"
+// 		value={
+// 			discountOptions &&
+// 			selectOptionsFactory
+// 			.renderOptions('label', 'value', discountOptions, 'discount')
+// 			.find((option) => option.value == row.discountType)
+// 		}
+// 		onChange={(e) => {
+// 			this.selectItem(
+// 				e.value,
+// 				row,
+// 				'discountType',
+// 				form,
+// 				field,
+// 				props,
+// 			);
+// 			this.updateAmount(
+// 				this.state.data,
+// 				props,
+// 			);
+// 			}}
+// 		/>
+// 			 </div>
+// 			  </div>
+// 			  </div>
+// 			   </div>
+
+// 				   )}
+
+// 		   />
+// 	   );
+//    }
+
 	renderSubTotal = (cell, row,extraData) => {
 		// return row.subTotal ? (
 		// 	<Currency
@@ -511,6 +718,22 @@ min="0"
 		return row.subTotal === 0 ? this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
 		// return row.subTotal ? row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '';
 	};
+
+	renderVatAmount = (cell, row, extraData) => {
+		// return row.subTotal === 0 ? (
+		// 	<Currency
+		// 		value={row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// ) : (
+		// 	<Currency
+		// 		value={row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// );
+		return row.vatAmount === 0 ? this.state.supplier_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+	};
+
 	addRow = () => {
 		const data = [...this.state.data];
 		this.setState(
@@ -522,6 +745,10 @@ min="0"
 					unitPrice: '',
 					vatCategoryId: '',
 					subTotal: 0,
+					exciseTaxId:'',
+					// discountType:'FIXED',
+					vatAmount:0,
+					// discount: 0,
 					productId: '',
 				}),
 				idCount: this.state.idCount + 1,
@@ -550,7 +777,8 @@ min="0"
 		if (
 			name === 'unitPrice' ||
 			name === 'vatCategoryId' ||
-			name === 'quantity'
+			name === 'quantity'||
+			name === 'exciseTaxId'
 		) {
 			form.setFieldValue(
 				field.name,
@@ -570,7 +798,7 @@ min="0"
 	};
 
 	renderVat = (cell, row, props) => {
-		const { vat_list } = this.props;
+		const { vat_list } = this.state;
 		let vatList = vat_list.length
 			? [{ id: '', vat: 'Select Vat' }, ...vat_list]
 			: vat_list;
@@ -642,7 +870,9 @@ min="0"
 			if (obj.id === row.id) {
 				obj['unitPrice'] = parseInt(result.unitPrice);
 				obj['vatCategoryId'] = parseInt(result.vatCategoryId);
+				obj['exciseTaxId'] = result.exciseTaxId;
 				obj['description'] = result.description;
+				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive;
 				idx = index;
 			}
 			return obj;
@@ -660,6 +890,11 @@ min="0"
 		form.setFieldValue(
 			`lineItemsString.${idx}.description`,
 			result.description,
+			true,
+		);
+		form.setFieldValue(
+			`lineItemsString.${idx}.exciseTaxId`,
+			result.exciseTaxId,
 			true,
 		);
 	
@@ -700,7 +935,7 @@ min="0"
 						styles={customStyles}
 						options={
 							product_list
-								? selectOptionsFactory.renderOptions(
+								? optionFactory.renderOptions(
 										'name',
 										'id',
 										product_list,
@@ -719,6 +954,8 @@ min="0"
 							if (e && e.label !== 'Select Product') {
 								this.selectItem(e.value, row, 'productId', form, field, props);
 								this.prductValue(e.value, row, 'productId', form, field, props);
+								if(this.checkedRow()==false)
+								this.addRow();
 							}
 						}}
 						className={`${
@@ -780,44 +1017,94 @@ min="0"
 	};
 
 	updateAmount = (data, props) => {
-		const { vat_list } = this.props;
+		const {excise_list} = this.props;
+		const { discountPercentage, discountAmount, vat_list} = this.state;
 		let total_net = 0;
+		let total_excise = 0;
 		let total = 0;
 		let total_vat = 0;
-		const { discountPercentage, discountAmount } = this.state;
-
+		let net_value = 0;
+		let discount = 0;
 		data.map((obj) => {
 			const index =
 				obj.vatCategoryId !== ''
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
-			// let val = (((+obj.unitPrice) * vat) / 100)
-			if (props.values.discountType === 'PERCENTAGE') {
-				var val =
-					((+obj.unitPrice -
-						+((obj.unitPrice * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2 })) *
-						vat *
-						obj.quantity) /
-					100;
-			} else if (props.values.discountType === 'FIXED') {
-				var val =
-					(obj.unitPrice * obj.quantity - discountAmount / data.length) *
-					(vat / 100);
-			} else {
-				var val = (+obj.unitPrice * vat * obj.quantity) / 100;
+
+			//Excise calculation
+			if(obj.exciseTaxId !=  0){
+			if(obj.isExciseTaxExclusive === true){
+				if(obj.exciseTaxId === 1){
+				const value = +(obj.unitPrice) / 2 ;
+					net_value = parseFloat(obj.unitPrice) + parseFloat(value) ;
+					obj.exciseAmount = parseFloat(value) * obj.quantity;
+				}else if (obj.exciseTaxId === 2){
+					const value = obj.unitPrice;
+					net_value = parseFloat(obj.unitPrice) +  parseFloat(value) ;
+					obj.exciseAmount = parseFloat(value) * obj.quantity;
+				}
+				else{
+					net_value = obj.unitPrice
+				}
+			}	else{
+				if(obj.exciseTaxId === 1){
+					const value = obj.unitPrice / 3
+					obj.exciseAmount = parseFloat(value) * obj.quantity;
+				net_value = obj.unitPrice}
+				else if (obj.exciseTaxId === 2){
+					const value = obj.unitPrice / 2
+					obj.exciseAmount = parseFloat(value) * obj.quantity;
+				net_value = obj.unitPrice}
+				else{
+					net_value = obj.unitPrice
+				}
 			}
-			total_net = +(total_net + +obj.unitPrice * obj.quantity);
+		}else{
+			net_value = obj.unitPrice;
+			obj.exciseAmount = 0
+		}
+			//vat calculation
+			if (obj.discountType === 'PERCENTAGE') {
+				var val =
+				((+net_value -
+				 (+((net_value * obj.discount)) / 100)) *
+					vat *
+					obj.quantity) /
+				100;
+
+				var val1 =
+				((+net_value -
+				 (+((net_value * obj.discount)) / 100)) * obj.quantity ) ;
+			} else if (obj.discountType === 'FIXED') {
+				var val =
+						 (net_value * obj.quantity - obj.discount ) *
+					(vat / 100);
+
+					var val1 =
+					((net_value * obj.quantity )- obj.discount )
+
+			} else {
+				var val = (+net_value * vat * obj.quantity) / 100;
+				var val1 = net_value * obj.quantity
+			}
+
+			//discount calculation
+			discount = +(discount +(net_value * obj.quantity)) - parseFloat(val1)
+			total_net = +(total_net + net_value * obj.quantity);
 			total_vat = +(total_vat + val);
+			obj.vatAmount = val
 			obj.subTotal =
-				obj.unitPrice && obj.vatCategoryId ? (+obj.unitPrice * obj.quantity)+total_vat : 0;
+			net_value && obj.vatCategoryId ? parseFloat(val1) + parseFloat(val) : 0;
+			total_excise = +(total_excise + obj.exciseAmount)
 			total = total_vat + total_net;
 			return obj;
 		});
-		const discount =
-			props.values.discountType === 'PERCENTAGE'
-				? +((total_net * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2 })
-				: discountAmount;
+
+		// const discount =
+		// 	props.values.discountType.value === 'PERCENTAGE'
+		// 		? +((total_net * discountPercentage) / 100)
+		// 		: discountAmount;
 		this.setState(
 			{
 				data,
@@ -826,19 +1113,16 @@ min="0"
 					...{
 						total_net: discount ? total_net - discount : total_net,
 						totalVatAmount: total_vat,
-						discount: total_net > discount ? discount : 0,
-						totalAmount: total_net > discount ? total - discount : total,
+						discount:  discount ? discount : 0,
+						totalAmount: total_net > discount ? total - discount : total - discount,
+						total_excise: total_excise
 					},
+
 				},
 			},
-			() => {
-				if (props.values.discountType === 'PERCENTAGE') {
-					this.formRef.current.setFieldValue('discount', discount);
-				}
-			},
+
 		);
 	};
-
 	handleSubmit = (data) => {
 		this.setState({ disabled: true });
 		const { current_po_id, term } = this.state;
@@ -853,31 +1137,57 @@ min="0"
 			totalAmount,
 			rfqNumber,
 			currency,
+			placeOfSupplyId
 		} = data;
-
+debugger
 		let formData = new FormData();
 		formData.append('type', 4);
 		formData.append('id', current_po_id);
 		formData.append('poNumber', poNumber ? poNumber : '');
-		formData.append(
-			'poReceiveDate',
-			typeof poReceiveDate === 'string'
-				? moment(poReceiveDate, 'DD/MM/YYYY').toDate()
-				: poReceiveDate,
-		);
-		formData.append(
-			'poApproveDate',
-			typeof poApproveDate === 'string'
-				? moment(poApproveDate, 'DD/MM/YYYY').toDate()
-				: poApproveDate,
-		);
-	
+		if(this.state.dateChanged1 === true)
+		{
+			formData.append(
+				'poReceiveDate',
+				typeof poReceiveDate === 'string'
+					? this.state.poReceiveDate
+					: poReceiveDate,
+			);
+		}else{
+			formData.append(
+				'poReceiveDate',
+				typeof poReceiveDate === 'string'
+					? this.state.poReceiveDateNotChanged
+					: '',
+			);
+		
+		}
+		if(this.state.dateChanged === true){
+			formData.append(
+				'poApproveDate',
+				typeof poApproveDate === 'string'
+					? this.state.poApproveDate
+					: poApproveDate,
+			);
+		}else{
+			formData.append(
+				'poApproveDate',
+				typeof poApproveDate === 'string'
+					? this.state.poApproveDateNotChanged
+					: '',
+			);
+		}
+		
 		formData.append('notes', notes ? notes : '');
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
 		formData.append('totalVatAmount', this.state.initValue.totalVatAmount);
 		formData.append('totalAmount', this.state.initValue.totalAmount);
 		formData.append('supplierReferenceNumber', supplierReferenceNumber ? supplierReferenceNumber : '');
 		formData.append('rfqNumber',rfqNumber ? rfqNumber : '');
+		formData.append('totalExciseAmount', this.state.initValue.total_excise);
+		// formData.append('discount',this.state.initValue.discount);
+        if(placeOfSupplyId){
+		formData.append('placeOfSupplyId' , placeOfSupplyId.value ? placeOfSupplyId.value : placeOfSupplyId);}
+		// formData.append('exciseType', this.state.checked);
 		if (supplierId) {
 			formData.append('supplierId', supplierId);
 		}
@@ -889,14 +1199,14 @@ min="0"
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'purchase Order Updated Successfully.',
+					res.data ? res.data.message : 'Purchase Order Updated Successfully'
 				);
 				this.props.history.push('/admin/expense/purchase-order');
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data ? err.data.message : 'Purchase Order Updated Unsuccessfully'
 				);
 			});
 	};
@@ -929,7 +1239,7 @@ min="0"
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Purchase Order Deleted Successfully',
+						res.data ? res.data.message : 'Purchase Order Deleted Successfully'
 					);
 					this.props.history.push('/admin/expense/purchase-order');
 				}
@@ -937,7 +1247,7 @@ min="0"
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data ? err.data.message : 'Purchase Order Deleted Unsuccessfully'
 				);
 			});
 	};
@@ -956,20 +1266,36 @@ min="0"
 		this.setState({ openProductModal: false });
 	};
 	setDate = (props, value) => {
-		const { term } = this.state;
-		const val = term.split('_');
-		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
-		const values = value
+		debugger
+		this.setState({
+			dateChanged: true,
+		});
+		const values1 = value
 			? value
-			: moment(props.values.invoiceDate, 'DD/MM/YYYY').toDate();
-		if (temp && values) {
-			const date = moment(values)
-				.add(temp - 1, 'days')
-				.format('DD/MM/YYYY');
-			props.setFieldValue('invoiceDueDate', date, true);
+			: props.values.poApproveDate1
+		if (values1 ) {
+			this.setState({
+				poApproveDate: moment(values1),
+			});
+			props.setFieldValue('poApproveDate1', values1, true);
 		}
 	};
-
+	setDate1= (props, value) => {
+		debugger
+		this.setState({
+			dateChanged1: true,
+		});
+		
+		const values2 = value ? value
+		: props.values.poReceiveDate1	
+		if ( values2) {
+			this.setState({
+				poReceiveDate: moment(values2),
+			});
+			props.setFieldValue('poReceiveDate1', values2, true);
+		
+		}
+	};
 	getCurrentProduct = () => {
 		this.props.customerInvoiceActions.getProductList().then((res) => {
 			this.setState(
@@ -1088,6 +1414,25 @@ min="0"
 		return supplier_currencyCode;
 	}
 
+	getTaxTreatment= (opt) => {
+		
+		let customer_taxTreatmentId = 0;
+		let customer_item_taxTreatment = ''
+		this.props.supplier_list.map(item => {
+			if(item.label.contactId == opt) {
+				this.setState({
+					customer_taxTreatment: item.label.taxTreatment.id,
+					customer_taxTreatment_des: item.label.taxTreatment.taxTreatment,
+					// customer_currency_symbol: item.label.currency.currencyIsoCode,
+				});
+
+				customer_taxTreatmentId = item.label.taxTreatment.id;
+				customer_item_taxTreatment = item.label.currency
+			}
+		})
+	
+		return customer_taxTreatmentId;
+	}
 	render() {
 		strings.setLanguage(this.state.language);
 		const { data, discountOptions, initValue, loading, dialog } = this.state;
@@ -1102,6 +1447,8 @@ min="0"
 		})
 
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="detail-supplier-invoice-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -1141,8 +1488,9 @@ min="0"
 														// rfqNumber: Yup.string().required(
 														// 	'Rfq Number is Required',
 														// ),
-														// placeOfSupplyId: Yup.string().required('Place of supply is Required'),
-														
+														// placeOfSupplyId: Yup.string().required(
+														// 	'Place of Supply is Required'
+														// ),
 														poApproveDate: Yup.string().required(
 															'Order Date is Required',
 														),
@@ -1193,7 +1541,7 @@ min="0"
 																		.required('Value is Required')
 																		.test(
 																			'quantity',
-																			'Quantity Should be Greater than 1',
+																			'Quantity should be greater than 0',
 																			(value) => {
 																				if (value > 0) {
 																					return true;
@@ -1263,14 +1611,15 @@ min="0"
 																
 																</FormGroup>
 															</Col>
-																<Col lg={4}>
+																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="poNumber">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			 {strings.PONumber}
 																		</Label>
 																		<Input
 																			type="text"
+																			maxLength="100"
 																			id="poNumber"
 																			name="poNumber"
 																			placeholder=""
@@ -1302,7 +1651,7 @@ min="0"
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="supplierId">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			{strings.SupplierName}
 																		</Label>
 																		<Select
@@ -1331,6 +1680,7 @@ min="0"
 																			}
 																			onChange={(option) => {
 																				if (option && option.value) {
+																					this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(option.value), true);
 																					props.handleChange('supplierId')(
 																						option.value,
 																					);
@@ -1351,6 +1701,183 @@ min="0"
 																					{props.errors.supplierId}
 																				</div>
 																			)}
+																	</FormGroup>
+																</Col>
+																<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="taxTreatmentid">
+																		Tax Treatment
+																	</Label>
+																	<Input
+																	disabled
+																		styles={customStyles}
+																		id="taxTreatmentid"
+																		name="taxTreatmentid"
+																		value={
+																		this.state.customer_taxTreatment_des
+																	 	
+																		}
+																		className={
+																			props.errors.taxTreatmentid &&
+																			props.touched.taxTreatmentid
+																				? 'is-invalid'
+																				: ''
+																		}
+																		onChange={(option) => {
+																		props.handleChange('taxTreatmentid')(option);
+																		
+																	    }}
+
+																	/>
+																	{props.errors.taxTreatmentid &&
+																		props.touched.taxTreatmentid && (
+																			<div className="invalid-feedback">
+																				{props.errors.taxTreatmentid}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
+																<Col lg={3}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="placeOfSupplyId">
+																			<span className="text-danger">* </span>
+																			{strings.PlaceofSupply}
+																		</Label>
+																		<Select
+																			options={
+																				this.placelist
+																					? selectOptionsFactory.renderOptions(
+																							'label',
+																							'value',
+																							this.placelist,
+																							'Place of Supply',
+																					  )
+																					: []
+																			}
+																			id="placeOfSupplyId"
+																			name="placeOfSupplyId"
+																			value={
+																				this.placelist &&
+																				selectOptionsFactory.renderOptions(
+																					'label',
+																					'value',
+																					this.placelist,
+																					'Place of Supply',
+																			  ).find(
+																										(option) =>
+																											option.value ===
+																											props.values
+																												.placeOfSupplyId.toString(),
+																									)
+																							}
+																							onChange={(options) => {
+																								if (options && options.value) {
+																									props.handleChange(
+																										'placeOfSupplyId',
+																									)(options.value);
+																								} else {
+																									props.handleChange(
+																										'placeOfSupplyId',
+																									)('');
+																								}
+																							}}
+																			className={`${
+																				props.errors.placeOfSupplyId &&
+																				props.touched.placeOfSupplyId
+																					? 'is-invalid'
+																					: ''
+																			}`}
+																		/>
+																		{props.errors.placeOfSupplyId &&
+																			props.touched.placeOfSupplyId && (
+																				<div className="invalid-feedback">
+																					{props.errors.placeOfSupplyId}
+																				</div>
+																			)}
+																	</FormGroup>
+																</Col>
+															
+																
+																
+															
+															</Row>
+															<hr />
+															<Row>
+																
+																<Col lg={3}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="date">
+																			<span className="text-danger">* </span>
+																			 {strings.PODate}
+																		</Label>
+																		<DatePicker
+																			id="poApproveDate"
+																			name="poApproveDate"
+																			placeholderText={strings.PODate}
+																			showMonthDropdown
+																			showYearDropdown
+																			dateFormat="dd-MM-yyyy"
+																			dropdownMode="select"
+																			value={props.values.poApproveDate}
+																			selected={new Date(props.values.poApproveDate1)} 
+																			onChange={(value) => {
+																				props.handleChange('poApproveDate')(
+																				value
+																				);
+																				this.setDate(props, value);
+																			}}
+																			className={`form-control ${
+																				props.errors.poApproveDate &&
+																				props.touched.poApproveDate
+																					? 'is-invalid'
+																					: ''
+																			}`}
+																		/>
+																		{props.errors.poApproveDate &&
+																			props.touched.poApproveDate && (
+																				<div className="invalid-feedback">
+																					{props.errors.poApproveDate}
+																				</div>
+																			)}
+																	</FormGroup>
+																</Col>
+																<Col lg={3}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="due_date">
+																		<span className="text-danger">* </span>
+																		 {strings.PODueDate}
+																		</Label>
+																		<div>
+																			<DatePicker
+																				id="poReceiveDate"
+																				name="poReceiveDate"
+																				placeholderText={strings.DueDate}
+																				value={props.values.poReceiveDate}
+																				selected={new Date(props.values.poReceiveDate1)}
+																				showMonthDropdown
+																				showYearDropdown
+																				dateFormat="dd-MM-yyyy"
+																				dropdownMode="select"
+																				onChange={(value) => {
+																					props.handleChange('poReceiveDate')(
+																						value
+																					);
+																					this.setDate1(props, value);
+																				}}
+																				className={`form-control ${
+																					props.errors.poReceiveDate &&
+																					props.touched.poReceiveDate
+																						? 'is-invalid'
+																						: ''
+																				}`}
+																			/>
+																			{props.errors.poReceiveDate &&
+																				props.touched.poReceiveDate && (
+																					<div className="invalid-feedback">
+																						{props.errors.poReceiveDate}
+																					</div>
+																				)}
+																		</div>
 																	</FormGroup>
 																</Col>
 																<Col lg={3}>
@@ -1386,10 +1913,10 @@ min="0"
 																		)}
 																</FormGroup>
 															</Col>		
-															<Col lg={3}>
+																<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currency">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																	{strings.Currency}
 																	</Label>
 																	<Select
@@ -1448,85 +1975,6 @@ min="0"
 																		)}
 																</FormGroup>
 															</Col>
-															</Row>
-															<hr />
-															<Row>
-																
-																<Col lg={3}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="date">
-																			<span className="text-danger">*</span>
-																			 {strings.PODate}
-																		</Label>
-																		<DatePicker
-																			id="poApproveDate"
-																			name="poApproveDate"
-																			placeholderText={strings.InvoiceDate}
-																			showMonthDropdown
-																			showYearDropdown
-																			dateFormat="dd/MM/yyyy"
-																			dropdownMode="select"
-																			value={props.values.poApproveDate}
-																			onChange={(value) => {
-																				props.handleChange('poApproveDate')(
-																					moment(value).format('DD/MM/YYYY'),
-																				);
-																				this.setDate(props, value);
-																			}}
-																			className={`form-control ${
-																				props.errors.poApproveDate &&
-																				props.touched.poApproveDate
-																					? 'is-invalid'
-																					: ''
-																			}`}
-																		/>
-																		{props.errors.poApproveDate &&
-																			props.touched.poApproveDate && (
-																				<div className="invalid-feedback">
-																					{props.errors.poApproveDate}
-																				</div>
-																			)}
-																	</FormGroup>
-																</Col>
-																<Col lg={3}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="due_date">
-																		<span className="text-danger">*</span>
-																		 {strings.PODueDate}
-																		</Label>
-																		<div>
-																			<DatePicker
-																				id="poReceiveDate"
-																				name="poReceiveDate"
-																				placeholderText={strings.DueDate}
-																				value={props.values.poReceiveDate}
-																				showMonthDropdown
-																				showYearDropdown
-																				dateFormat="dd/MM/yyyy"
-																				dropdownMode="select"
-																				onChange={(value) => {
-																					props.handleChange('poReceiveDate')(
-																						moment(value).format('DD/MM/YYYY'),
-																					);
-																					this.setDate(props, value);
-																				}}
-																				className={`form-control ${
-																					props.errors.poReceiveDate &&
-																					props.touched.poReceiveDate
-																						? 'is-invalid'
-																						: ''
-																				}`}
-																			/>
-																			{props.errors.poReceiveDate &&
-																				props.touched.poReceiveDate && (
-																					<div className="invalid-feedback">
-																						{props.errors.poReceiveDate}
-																					</div>
-																				)}
-																		</div>
-																	</FormGroup>
-																</Col>
-																
 																</Row>
 																
 															<Row>
@@ -1547,7 +1995,8 @@ min="0"
 																		<i className="fa fa-plus"></i>  {strings.Addmore}
 																	</Button>
 																</Col>
-															</Row>
+															
+																				</Row>
 															<Row>
 																<Col lg={12}>
 																	{props.errors.lineItemsString &&
@@ -1636,12 +2085,51 @@ min="0"
 																			 {strings.UNITPRICE}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
+																	width="10%"
+																		dataField="exciseTaxId"
+																		dataFormat={(cell, rows) =>
+																			this.renderExcise(cell, rows, props)
+																		}
+																	>
+																	Excise
+																	<i
+																			id="ExiseTooltip"
+																			className="fa fa-question-circle ml-1"
+																		></i>
+																		<UncontrolledTooltip
+																			placement="right"
+																			target="ExiseTooltip"
+																		>
+																			If Exise Type for a product is Inclusive
+																			then the Excise dropdown will be Disabled
+																		</UncontrolledTooltip>
+																	</TableHeaderColumn> 
+																	{/* <TableHeaderColumn
+																		width="12%"
+																		dataField="discount"
+																		dataFormat={(cell, rows) =>
+																			this.renderDiscount(cell, rows, props)
+																		}
+																	>
+																	DisCount
+																	</TableHeaderColumn> */}
+																		<TableHeaderColumn
 																			dataField="vat"
 																			dataFormat={(cell, rows) =>
 																				this.renderVat(cell, rows, props)
 																			}
 																		>
 																			 {strings.VAT}
+																		</TableHeaderColumn>
+																		<TableHeaderColumn
+																			width="10%"
+																			dataField="sub_total"
+																			dataFormat={this.renderVatAmount}
+																			className="text-right"
+																			columnClassName="text-right"
+																			formatExtraData={universal_currency_list}
+																			>
+																			Vat amount
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="sub_total"
@@ -1662,7 +2150,7 @@ min="0"
 																		<Label htmlFor="notes"> {strings.Notes}</Label>
 																		<Input
 																			type="textarea"
-																			maxLength="255"
+																			maxLength="250"
 																			name="notes"
 																			id="notes"
 																			rows="6"
@@ -1677,7 +2165,23 @@ min="0"
 																</Col>
 																	<Col lg={4}>
 																		<div className="">
-																		
+																		<div className="total-item p-2" >
+																		{/* style={{display:this.state.checked === true ? '':'none'}} */}
+																			<Row>
+																				<Col lg={6}>
+																					<h5 className="mb-0 text-right">
+																					Total Excise
+																					</h5>
+																				</Col>
+																				<Col lg={6} className="text-right">
+																				<label className="mb-0">
+
+																						{this.state.supplier_currency_symbol} &nbsp;
+																						{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																					</label>
+																				</Col>
+																			</Row>
+																		</div>
 																			<div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>
@@ -1781,6 +2285,20 @@ min="0"
 																			color="primary"
 																			className="btn-square mr-3"
 																			disabled={this.state.disabled}
+																			onClick={() => {
+																				if(this.state.data.length === 1)
+																					{
+																					console.log(props.errors,"ERRORs")
+																					}
+																					else
+																					{ let newData=[]
+																					const data = this.state.data;
+																					newData = data.filter((obj) => obj.productId !== "");
+																					props.setFieldValue('lineItemsString', newData, true);
+																					this.updateAmount(newData, props);
+																					}
+																				
+																			}}
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
 																			{this.state.disabled
@@ -1832,11 +2350,12 @@ min="0"
 					}}
 					getCurrentProduct={(e) => this.getCurrentProduct(e)}
 					createProduct={this.props.ProductActions.createAndSaveProduct}
-					vat_list={this.props.vat_list}
+					vat_list={this.state.vat_list}
 					product_category_list={this.props.product_category_list}
 					salesCategory={this.state.salesCategory}
 					purchaseCategory={this.state.purchaseCategory}
 				/>
+			</div>
 			</div>
 		);
 	}

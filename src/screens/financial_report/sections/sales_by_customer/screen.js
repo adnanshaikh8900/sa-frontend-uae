@@ -117,22 +117,30 @@ class SalesByCustomer extends React.Component {
 	};
 
 	exportFile = () => {
-		return (this.state && this.state.data && this.state.data.sbcustomerList ? this.state.data.sbcustomerList :'');
-			};
-		
 
-	// exportFile = (csvData, fileName, type) => {
-	// 	const fileType =
-	// 		type === 'xls'
-	// 			? 'application/vnd.ms-excel'
-	// 			: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-	// 	const fileExtension = `.${type}`;
-	// 	const ws = XLSX.utils.json_to_sheet(csvData);
-	// 	const wb = { Sheets: { data: ws }, SheetNames: ['data'] };
-	// 	const excelBuffer = XLSX.write(wb, { bookType: type, type: 'array' });
-	// 	const data = new Blob([excelBuffer], { type: fileType });
-	// 	FileSaver.saveAs(data, fileName + fileExtension);
-	// };
+	
+		let dl =""
+		let fn =""
+		let type="csv"
+		var elt = document.getElementById('tbl_exporttable_to_xls');												
+		var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
+		return dl ?
+		  XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
+		  XLSX.writeFile(wb, fn || ('Sales By Customer Report.'+ (type || 'csv')));
+
+	   }
+
+	   exportExcelFile  = () => 
+	   {   let dl =""
+		   let fn =""
+		   let type="xlsx"
+		   var elt = document.getElementById('tbl_exporttable_to_xls');												
+		   var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
+		   return dl ?
+			 XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
+			 XLSX.writeFile(wb, fn || ('Sales By Customer Report.'+ (type || 'xlsx')));
+   
+	   }
 
 	toggle = () =>
 		this.setState((prevState) => {
@@ -210,14 +218,23 @@ class SalesByCustomer extends React.Component {
 													<DropdownToggle caret>Export As</DropdownToggle>
 													<DropdownMenu>
 													
-														<DropdownItem>
-															<CSVLink
-																data={this.exportFile()}
-																className="csv-btn"
-																filename={'Sales By Customer Report.csv'}
-															>
-																CSV (Comma Separated Value)
-															</CSVLink>
+													<DropdownItem onClick={()=>{this.exportFile()}}>
+															<span
+															style={{
+																border: 0,
+    															padding: 0,
+																backgroundColor:"white !important"
+															}}
+														     >CSV (Comma Separated Value)</span>
+														</DropdownItem>
+														<DropdownItem onClick={()=>{this.exportExcelFile()}}>
+															<span
+															style={{
+																border: 0,
+    															padding: 0,
+																backgroundColor:"white !important"
+															}}
+														>Excel</span>
 														</DropdownItem>
 														<DropdownItem onClick={this.exportPDFWithComponent}>
 															Pdf
@@ -322,7 +339,7 @@ class SalesByCustomer extends React.Component {
 											<br style={{ marginBottom: '5px' }} />
 											<b style={{ fontSize: '18px' }}>{strings.SalesByCustomer}</b>
 											<br style={{ marginBottom: '5px' }} />
-											{strings.From} {initValue.startDate} {strings.To} {initValue.endDate}
+											{strings.From} {(initValue.startDate).replaceAll("/","-")} {strings.To} {initValue.endDate.replaceAll("/","-")} 
 
 										</div>
 										<div>
@@ -331,18 +348,14 @@ class SalesByCustomer extends React.Component {
 									{loading ? (
 										<Loader />
 									) : (
-										<div className="table-wrapper">
-											<Table  >
-												<thead className="header-row" >
+										<div id="tbl_exporttable_to_xls" className="table-wrapper">
+											<Table className="table-bordered">
+												<thead  className="table-header-bg">
 													<tr>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.CustomerName}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.InvoiceCount}</th>
-
-														<th style={{ padding: '0.5rem', textAlign: 'right' }}>
-															{strings.SalesExcludingTax} 
-														</th>
-														<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.SalesWithTax}</th>
-
+														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.CustomerName}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.InvoiceCount}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>{strings.SalesExcludingTax}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>{strings.SalesWithTax}</th>
 													</tr>
 												</thead>
 												<tbody className=" table-bordered table-hover">

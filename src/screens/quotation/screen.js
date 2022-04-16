@@ -203,13 +203,13 @@ class Quatation extends React.Component {
 								<div>
 						<label className="font-weight-bold mr-2 ">{strings.QuotationAmount}: </label>
 						<label>
-							{row.totalAmount  === 0 ? row.currencyIsoCode +" "+ row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) :  row.currencyIsoCode +" "+ row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+							{row.totalAmount  === 0 ? row.currencyIsoCode +" "+ row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) :  row.currencyIsoCode +" "+ row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 						</label>
 					</div>
 				
 					<div style={{display: row.totalVatAmount === 0 ? 'none' : ''}}>
 					<label className="font-weight-bold mr-2">{strings.VatAmount}: </label>
-					<label>{row.totalVatAmount === 0  ?  row.currencyIsoCode +" "+ row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) :   row.currencyIsoCode +" "+ row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
+					<label>{row.totalVatAmount === 0  ?  row.currencyIsoCode +" "+ row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) :   row.currencyIsoCode +" "+ row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}</label>
 				
 					</div>
 					
@@ -218,11 +218,11 @@ class Quatation extends React.Component {
 		};
 
 	renderDueAmount =(cell,row,extraData) => {
-		return row.dueAmount === 0  ? row.currencyIsoCode+" "+row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyIsoCode+" "+row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.dueAmount === 0  ? row.currencyIsoCode+" "+row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : row.currencyIsoCode+" "+row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 });
 	}
 
 	renderVatAmount = (cell, row, extraData) => {
-		return row.vatAmount === 0 ? row.currencyIsoCode+" "+row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyIsoCode+" "+row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.vatAmount === 0 ? row.currencyIsoCode+" "+row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : row.currencyIsoCode+" "+row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 });
 	};
 	renderCurrency = (cell, row) => {
 		if (row.currencyName) {
@@ -355,7 +355,7 @@ class Quatation extends React.Component {
 			if (res.status === 200) {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Quotation Closed Successfully',
+					res.data ? res.data.message : 'Status Changed Successfully'
 				);
 
 
@@ -369,6 +369,7 @@ class Quatation extends React.Component {
 .catch((err) => {
 	this.props.commonActions.tostifyAlert(
 		'error',
+		err.data ? err.data.message : 'Status Changed Unsuccessfully'
 	);
 });
 
@@ -381,7 +382,7 @@ class Quatation extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Quotation Send Successfully',
+						res.data ? res.data.message : 'Email Send Successfully'
 					);
 					this.setState({
 						loading: false,
@@ -392,7 +393,7 @@ class Quatation extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					'Something When Wrong',
+					err.data ? err.data.message : 'Email Send Unsuccessfully'
 				);
 			});
 	};
@@ -483,7 +484,7 @@ class Quatation extends React.Component {
 				this.initializeData(filterData);
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Supplier Invoice Deleted Successfully',
+					res.data ? res.data.message : 'Quotation Deleted Successfully'
 				);
 				if (supplier_invoice_list && supplier_invoice_list.length > 0) {
 					this.setState({
@@ -494,7 +495,7 @@ class Quatation extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data ? err.data.message : 'Quotation Deleted Unsuccessfully'
 				);
 			});
 	};
@@ -529,10 +530,11 @@ class Quatation extends React.Component {
 		this.props.purchaseOrderAction
 			.postInvoice(postingRequestModel)
 			.then((res) => {
+				 
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Invoice Posted Successfully',
+						res.data ? res.data.message : 'Quotation Posted Successfully'
 					);
 					this.setState({
 						loading: false,
@@ -544,7 +546,7 @@ class Quatation extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data ? err.data.message : 'Quotation Posted Unsuccessfully'
 				);
 				this.setState({
 					loading: false,
@@ -567,7 +569,7 @@ class Quatation extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Invoice Moved To Draft Successfully',
+						res.data ? res.data.message : 'Quotation Unposted Successfully'
 					);
 					this.setState({
 						loading: false,
@@ -579,7 +581,7 @@ class Quatation extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data ? err.data.message : 'Quotation Unposted Unsuccessfully'
 				);
 				this.setState({
 					loading: false,
@@ -653,14 +655,14 @@ class Quatation extends React.Component {
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Invoice Deleted Successfully',
+					res.data ? res.data.message : 'Quotation Deleted Successfully'
 				);
 				this.initializeData();
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data ? err.data.message : 'Quotation Deleted Unsuccessfully'
 				);
 			});
 	};
@@ -750,6 +752,8 @@ class Quatation extends React.Component {
 				})
 		
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="supplier-invoice-screen">
 				<div className="animated fadeIn">
 					{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
@@ -850,7 +854,7 @@ class Quatation extends React.Component {
 													showYearDropdown
 													autoComplete="off"
 													dropdownMode="select"
-													dateFormat="dd/MM/yyyy"
+													dateFormat="dd-MM-yyyy"
 													selected={filterData.invoiceDate}
 													// value={filterData.invoiceDate}
 													onChange={(value) => {
@@ -868,7 +872,7 @@ class Quatation extends React.Component {
 													showYearDropdown
 													autoComplete="off"
 													dropdownMode="select"
-													dateFormat="dd/MM/yyyy"
+													dateFormat="dd-MM-yyyy"
 													selected={filterData.invoiceDueDate}
 													onChange={(value) => {
 														this.handleChange(value, 'invoiceDueDate');
@@ -1056,6 +1060,7 @@ class Quatation extends React.Component {
 						this.closeEmailModal(e);
 					}}
 				/>
+			</div>
 			</div>
 		);
 	}

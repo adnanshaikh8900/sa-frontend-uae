@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  simpleaccounts-frontend:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2022-02-23T11:56:09.777069+04:00"
+    description: A Helm chart for Kubernetes
+    digest: 1062d160f6e252591abb0da98b94cdb99c161893e685ed046f44d994f08168f8
+    name: simpleaccounts-frontend
+    type: application
+    urls:
+    - simpleaccounts-frontend-0.1.0.tgz
+    version: 0.1.0
+generated: "2022-02-23T11:56:09.775366+04:00"

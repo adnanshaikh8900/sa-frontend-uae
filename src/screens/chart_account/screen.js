@@ -30,7 +30,11 @@ import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
 import { string } from 'prop-types';
 import { toLower, upperCase, upperFirst } from 'lodash-es';
-
+import { AgGridReact,AgGridColumn } from 'ag-grid-react/lib/agGridReact';
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+import { CallToActionSharp } from '@material-ui/icons';
+import ReactToPrint from 'react-to-print';
 const mapStateToProps = (state) => {
 	return {
 		transaction_category_list: state.chart_account.transaction_category_list,
@@ -59,9 +63,11 @@ class ChartAccount extends React.Component {
 				chartOfAccountId: '',
 			},
 			selectedTransactionType: '',
+			paginationPageSize:10,
 			csvData: [],
 			view: false,
 			unselectable: [],
+			pageSize:10,
 		};
 
 		this.options = {
@@ -93,7 +99,11 @@ class ChartAccount extends React.Component {
 			}
 		});
 	}
-
+	onGridReady = (params) => {
+		this.gridApi = params.api;
+		this.columnApi = params.columnApi;
+		// this.gridApi.sizeColumnsToFit();
+	  };
 	componentDidMount = () => {
 		this.props.chartOfAccountActions.getTransactionTypes();
 		this.initializeData();
@@ -108,8 +118,8 @@ class ChartAccount extends React.Component {
 	initializeData = (search) => {
 		let { filterData } = this.state;
 		const paginationData = {
-			pageNo: this.options.page ? this.options.page - 1 : 0,
-			pageSize: this.options.sizePerPage,
+			// pageNo: this.options.page ? this.options.page - 1 : 0,
+			// pageSize: this.options.sizePerPage,
 		};
 		const sortingData = {
 			order: this.options.sortOrder ? this.options.sortOrder : '',
@@ -145,6 +155,14 @@ class ChartAccount extends React.Component {
 		if (row.editableFlag) {
 			this.props.history.push(`/admin/master/chart-account/detail`, {
 				id: row.transactionCategoryId,
+			});
+		}
+	};
+
+	goToTransactionCategoryDetail = (categoryId) => {
+		if (categoryId) {
+			this.props.history.push(`/admin/master/chart-account/detail`, {
+				id: categoryId,
 			});
 		}
 	};
@@ -224,6 +242,25 @@ class ChartAccount extends React.Component {
 		}
 	};
 
+	getActionButtons = (params) => {
+		return (
+	<>
+	{/* BUTTON ACTIONS */}
+			{/* View */}
+			{params.data.editableFlag === true ?(
+			<Button
+				className="Ag-gridActionButtons btn-sm"
+				title='Edit'
+				color="secondary"
+					onClick={()=>
+						
+						this.goToTransactionCategoryDetail(params.data.transactionCategoryId)  }
+			
+			>		<i className="fas fa-edit"/> </Button>):''} 
+	</>
+		)
+	}
+
 	removeBulk = () => {
 		this.removeDialog();
 		let { selectedRows } = this.state;
@@ -237,7 +274,7 @@ class ChartAccount extends React.Component {
 				this.initializeData();
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data.message
+					res.data ? res.data.message :'Chart Of Account Deleted successfully'
 				);
 				if (
 					transaction_category_list &&
@@ -252,7 +289,7 @@ class ChartAccount extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message :'Chart Of Account Deleted Unsuccessfully'
 				);
 			});
 	};
@@ -329,6 +366,38 @@ class ChartAccount extends React.Component {
 		}
 	}
 
+	componentDidUpdate = (prevProps, prevState) => {
+		if (prevState.domLayout !== this.state.domLayout) {
+		  if (this.state.domLayout === "print") {
+			this.setState({ style: { height: "", width: "" } });
+		  } else if (this.state.domLayout === null) {
+			this.setState({ style: { height: "600px", width: "600px" } });
+		  }
+		  this.gridApi.setDomLayout(this.state.domLayout);
+		}
+	  };
+
+	  setNormal = () => {
+		this.setState({ domLayout: null });
+	  };
+	  onBtPrinterFriendly = () => {
+		var eGridDiv = document.querySelector('#section-to-print');
+		eGridDiv.style.width = '';
+		eGridDiv.style.height = '';
+		this.gridApi.setDomLayout('print');
+	  };
+	
+	  onPageSizeChanged = (newPageSize) => {
+		var value = document.getElementById('page-size').value;
+		this.setState({pageSize:value})
+		this.gridApi.paginationSetPageSize(Number(value));
+	};
+	  onBtNormal = () => {
+		var eGridDiv = document.querySelector('#section-to-print');
+		eGridDiv.style.width = '100%';
+		eGridDiv.style.height = '590px';
+		this.gridApi.setDomLayout(null);
+	  };	  
 	render() {
 		strings.setLanguage(this.state.language);
 		const {
@@ -351,6 +420,8 @@ class ChartAccount extends React.Component {
 			}),
 		};
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="chart-account-screen">
 				<div className="animated fadeIn">
 					{dialog}
@@ -377,6 +448,16 @@ class ChartAccount extends React.Component {
 									<Col lg={12}>
 										<div className="d-flex justify-content-end">
 											<ButtonGroup size="sm">
+											
+											<Button
+											color="primary"
+											className="btn-square pull-right mr-1"
+											onClick={this.goToCreatePage}
+											
+										>
+											<i className="fas fa-plus mr-1" />
+										{strings.AddNewAccount}
+										</Button>
 												<Button
 													color="primary"
 													className="btn-square mr-1"
@@ -394,6 +475,19 @@ class ChartAccount extends React.Component {
 														target="_blank"
 													/>
 												)}
+												<Button 	color="primary"	className="mr-2 btn-square"
+													onClick={() => {
+														this.onBtPrinterFriendly();
+														this.setState({pageSize:10000})
+														this.gridApi.paginationSetPageSize(Number(10000));														
+														window.print()		
+														// this.onBtNormal()										
+													}}
+													style={{
+														cursor: 'pointer',
+														}}>
+											 		<i className="fa fa-print"> {strings.Print} </i>
+											</Button>
 												{/* <Button
 													color="primary"
 													className="btn-square mr-1"
@@ -406,10 +500,10 @@ class ChartAccount extends React.Component {
 											</ButtonGroup>
 										</div>
 										<div className="py-3">
-											<h5>{strings.Filter}: </h5>
+											{/* <h5>{strings.Filter}: </h5> */}
 											<form>
 												<Row>
-													<Col lg={3} className="mb-1">
+													{/* <Col lg={3} className="mb-1">
 														<Input
 														maxLength="25"
 															type="text"
@@ -436,7 +530,7 @@ class ChartAccount extends React.Component {
 																);
 															}}
 														/>
-													</Col>
+													</Col> */}
 													{/* <Col lg={3} className="mb-1">
 														<FormGroup className="mb-3">
 															<Select
@@ -471,7 +565,7 @@ class ChartAccount extends React.Component {
 														</FormGroup>
 													</Col> */}
 													<Col lg={3} className="pl-0 pr-0">
-														<Button
+														{/* <Button
 															type="button"
 															color="primary"
 															className="btn-square mr-1"
@@ -486,21 +580,15 @@ class ChartAccount extends React.Component {
 															onClick={this.clearAll}
 														>
 															<i className="fa fa-refresh"></i>
-														</Button>
+														</Button> */}
+														
 													</Col>
 												</Row>
 											</form>
+											
 										</div>
-										<Button
-											color="primary"
-											className="btn-square pull-right"
-											onClick={this.goToCreatePage}
-											style={{ marginBottom: '10px' }}
-										>
-											<i className="fas fa-plus mr-1" />
-										{strings.AddNewAccount}
-										</Button>
-										<div>
+										
+									{/* 	<div>
 											<BootstrapTable
 												selectRow={this.selectRowProp}
 												search={false}
@@ -562,15 +650,139 @@ class ChartAccount extends React.Component {
 												>
 													{strings.STATUS}
 												</TableHeaderColumn>
-											</BootstrapTable>
-										</div>
+											</BootstrapTable> 
+										</div>*/}
+										
+<div id="section-to-print" className="ag-theme-alpine mb-3" style={{ height: 590,width:"100%" }}>
+	
+			<AgGridReact
+				rowData={transaction_category_list &&
+					transaction_category_list.data 
+					? transaction_category_list.data
+						: []}
+					//  suppressDragLeaveHidesColumns={true}
+				// pivotMode={true}
+				// suppressPaginationPanel={false}
+				pagination={true}
+				rowSelection="multiple"
+				// paginationPageSize={10}
+				// paginationAutoPageSize={true}
+				paginationPageSize={this.state.paginationPageSize}
+					floatingFilter={true}
+					defaultColDef={{ 
+								resizable: true,
+								flex: 1,
+								sortable: true
+							}}
+				sideBar="columns"
+				onGridReady={this.onGridReady}
+					>
+
+				<AgGridColumn field="transactionCategoryCode" 
+				headerName=   {strings.CODE}
+				sortable={ true } 
+				filter={ true } 
+				enablePivot={true}
+				cellRendererFramework={(params) => <div
+					className="mb-0 label-bank"
+					style={{
+						cursor: 'pointer',
+						}}
+				                                                          
+		>
+		{params.value}
+		</div>
+}
+				></AgGridColumn>
+
+				<AgGridColumn field="transactionCategoryName" 
+				headerName= {strings.NAME}
+				sortable={ true } 
+				filter={ true } 
+				enablePivot={true}
+				></AgGridColumn>  
+
+
+				<AgGridColumn field="transactionTypeName" 
+				headerName=  {strings.TYPE}
+				sortable={ true } 
+				filter={ true } 
+				enablePivot={true}
+				></AgGridColumn>  
+
+			
+				
+				{/* <AgGridColumn
+				headerName={strings.STATUS}
+				field="editableFlag" 
+				sortable={ true }
+				filter={ false }
+				enablePivot={true} 
+				cellRendererFramework={
+					(params) => params.data.editableFlag == true ? 
+					<i className="fas fa-lock-open"></i>
+				 : 
+					<i className="fas fa-lock"></i>
+				
+					
+					
+					// params.value==true ?
+					// 								<label className="badge label-success"> Active</label>
+					// 								:
+					// 								<label className="badge label-due"> InActive</label>
+										}
+				></AgGridColumn>   */}
+
+					<AgGridColumn
+				headerName={strings.ACCOUNT}
+				sortable={ true } 
+				filter={ true } 
+				enablePivot={true}
+				cellRendererFramework={
+					(params) => params.data.editableFlag == true ? 
+					<i className="fas fa-lock-open"></i>
+				 : 
+					<i className="fas fa-lock"></i>
+				
+					
+					
+					// params.value==true ?
+					// 								<label className="badge label-success"> Active</label>
+					// 								:
+					// 								<label className="badge label-due"> InActive</label>
+										}
+				></AgGridColumn>
+			<AgGridColumn field="action"
+										// className="Ag-gridActionButtons"
+										headerName="ACTIONS"
+										cellRendererFramework={(params) =>
+											<div
+											 className="Ag-gridActionButtons"
+											 >
+												{this.getActionButtons(params)}
+											</div>
+
+										}
+									></AgGridColumn>
+			</AgGridReact>  
+			<div className="example-header mt-1">
+					Page Size:
+					<select  value={this.state.pageSize} onChange={() => this.onPageSizeChanged()} id="page-size">
+					<option value="10" selected={true}>10</option>
+					<option value="100">100</option>
+					<option value="500">500</option>
+					<option value="1000">1000</option>
+					</select>
+				</div>     
+																						
+		</div>	
 									</Col>
 								</Row>
 							)}
 						</CardBody>
 					</Card>
 				</div>
-			</div>
+			</div></div>
 		);
 	}
 }

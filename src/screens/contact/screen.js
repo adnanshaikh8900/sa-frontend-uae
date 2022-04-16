@@ -26,6 +26,9 @@ import { CSVLink } from 'react-csv';
 import './style.scss';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
+import { AgGridReact,AgGridColumn } from 'ag-grid-react/lib/agGridReact';
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 
 const mapStateToProps = (state) => {
 	return {
@@ -65,6 +68,7 @@ class Contact extends React.Component {
 				contactType: '',
 			},
 			selectedContactType: '',
+			paginationPageSize:10,
 			csvData: [],
 			view: false,
 		};
@@ -100,6 +104,7 @@ class Contact extends React.Component {
 			selectedRows: [],
 		});
 	};
+    
 
 	initializeData = (search) => {
 		let { filterData } = this.state;
@@ -128,6 +133,15 @@ class Contact extends React.Component {
 				);
 				this.setState({ loading: false });
 			});
+	};
+      
+	onPageSizeChanged = (newPageSize) => {
+		var value = document.getElementById('page-size').value;
+		this.gridApi.paginationSetPageSize(Number(value));
+	};
+	onGridReady = (params) => {
+		this.gridApi = params.api;
+		this.gridColumnApi = params.columnApi;
 	};
 
 	onSizePerPageList = (sizePerPage) => {
@@ -178,8 +192,9 @@ class Contact extends React.Component {
 		});
 	};
 
-	goToDetail = (row) => {
-		this.props.history.push('/admin/master/contact/detail', { id: row.id });
+	goToDetail = (contactId) => {
+		 
+		this.props.history.push('/admin/master/contact/detail', { id: contactId });
 	};
 	renderStatus = (cell, row) => {
 
@@ -200,6 +215,25 @@ class Contact extends React.Component {
         );
 
     };
+	getActionButtons = (params) => {
+		return (
+	<>
+	{/* BUTTON ACTIONS */}
+			{/* View */}
+			<Button
+				className="Ag-gridActionButtons btn-sm"
+				title='Edit'
+				color="secondary"
+
+					onClick={()=>
+						
+						this.goToDetail(params.data.id)  }
+			
+			>		<i className="fas fa-edit"/> </Button>
+	</>
+		)
+	}
+
 	bulkDelete = () => {
 		const { selectedRows } = this.state;
 		this.props.contactActions
@@ -251,7 +285,7 @@ class Contact extends React.Component {
 				this.initializeData();
 				this.props.commonActions.tostifyAlert(
 					'success',
-					 res.data.message
+					res.data ? res.data.message : 'Contact Deleted Successfully',
 				);
 				if (contact_list && contact_list.data && contact_list.data.length > 0) {
 					this.setState({
@@ -262,7 +296,7 @@ class Contact extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Contact Deleted Unsuccessfully',
 				);
 				this.setState({ isLoading: false });
 			});
@@ -360,6 +394,8 @@ class Contact extends React.Component {
 		const { contact_list, contact_type_list } = this.props;
 
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="contact-screen">
 				<div className="animated fadeIn">
 					{dialog}
@@ -415,86 +451,7 @@ class Contact extends React.Component {
 													Bulk Delete
 												</Button> */}
 											</ButtonGroup>
-										</div>
-										<div className="py-3">
-											<h5>{strings.Filter}: </h5>
-											<form>
-												<Row>
-													<Col lg={3} className="mb-1">
-														<Input
-													     	maxLength="25"
-															type="text"
-															placeholder={strings.Name}
-															value={filterData.name}
-															onChange={(e) => {
-																this.handleChange(e.target.value, 'name');
-															}}
-														/>
-													</Col>
-
-													<Col lg={3} className="mb-1">
-														<Input
-															maxLength="30"
-															type="text"
-															placeholder={strings.Email}
-															value={filterData.email}
-															onChange={(e) => {
-																this.handleChange(e.target.value, 'email');
-															}}
-														/>
-													</Col>
-
-													<Col lg={3} className="mb-1">
-														<Select
-														// maxLength="20"
-															styles={customStyles}
-															options={
-																contact_type_list
-																	? selectOptionsFactory.renderOptions(
-																			'label',
-																			'value',
-																			contact_type_list,
-																			'Contact Type',
-																	  )
-																	: []
-															}
-															onChange={(val) => {
-																if (val && val.value) {
-																	this.handleChange(val, 'contactType');
-																	this.setState({ selectedContactType: val });
-																} else {
-																	this.handleChange('', 'contactType');
-																	this.setState({ selectedContactType: '' });
-																}
-															}}
-															className="select-default-width"
-															placeholder={strings.ContactType}
-															value={filterData.contactType}
-														/>
-													</Col>
-
-													<Col lg={2} className="pl-0 pr-0">
-														<Button
-															type="button"
-															color="primary"
-															className="btn-square mr-1"
-															onClick={this.handleSearch}
-														>
-															<i className="fa fa-search"></i>
-														</Button>
-														<Button
-															type="button"
-															color="primary"
-															className="btn-square"
-															onClick={this.clearAll}
-														>
-															<i className="fa fa-refresh"></i>
-														</Button>
-													</Col>
-												</Row>
-											</form>
-										</div>
-										<Button
+											<Button
 											color="primary"
 											className="btn-square pull-right"
 											style={{ marginBottom: '10px' }}
@@ -505,72 +462,108 @@ class Contact extends React.Component {
 											<i className="fas fa-plus mr-1" />
 											{strings.Addnewcontact}
 										</Button>
+										</div>
 										
-													<BootstrapTable
-														selectRow={this.selectRowProp}
-														search={false}
-														options={this.options}
-														data={
-															contact_list && contact_list.data
-																? contact_list.data
-																: []
-														}
-														version="4"
-														hover
-														pagination={
-															contact_list &&
-															contact_list.data &&
-															contact_list.data.length > 0
-																? true
-																: false
-														}
-														remote
-														fetchInfo={{
-															dataTotalSize: contact_list.count
-																? contact_list.count
-																: 0,
-														}}
-														className="product-table"
-														trClassName="cursor-pointer"
-														csvFileName="Contact.csv"
-														ref={(node) => {
-															this.table = node;
-														}}
-													>
-														<TableHeaderColumn
-															isKey
-															dataField="fullName"
-															dataSort
-															columnTitle={this.customName}
-															dataFormat={this.contactName}
-															className="table-header-bg"
-														>
-															{strings.NAME}
-														</TableHeaderColumn>
-														<TableHeaderColumn
-															dataField="email"
-															columnTitle={this.customEmail}
-															dataSort
-															className="table-header-bg"
-														>
-															{strings.Email}
-														</TableHeaderColumn>
-														<TableHeaderColumn
-															dataField="contactTypeString"
-															dataSort
-															// dataFormat={this.typeFormatter}
-															className="table-header-bg"
-														>
-														    {strings.TYPE}
-														</TableHeaderColumn>
-														<TableHeaderColumn 
-											dataField="isActive"
-											dataFormat={this.renderStatus}
-											className="table-header-bg"
-											dataSort>
-												 {strings.Status}
-											</TableHeaderColumn>
-													</BootstrapTable>
+										
+											
+
+													<div className="ag-theme-alpine mb-3" style={{ height: 590,width:"100%" }}>
+			<AgGridReact
+				rowData={contact_list && contact_list.data
+					? contact_list.data
+					: []}
+					//  suppressDragLeaveHidesColumns={true}
+				// pivotMode={true}
+				// suppressPaginationPanel={false}
+				pagination={true}
+				rowSelection="multiple"
+				// paginationPageSize={10}
+				// paginationAutoPageSize={true}
+				paginationPageSize={this.state.paginationPageSize}
+					floatingFilter={true}
+					defaultColDef={{ 
+								resizable: true,
+								flex: 1,
+								sortable: true
+							}}
+				sideBar="columns"
+				onGridReady={this.onGridReady}
+					>
+
+				<AgGridColumn field="fullName" 
+				headerName=	{strings.NAME}
+				sortable={ true } 
+				filter={ true } 
+				enablePivot={true} 
+				cellRendererFramework={(params) => params.data.organization === "" || params.data.organization === null ?
+					params.data.fullName
+					:
+					params.data.organization
+					}
+					cellRendererFramework={(params) => <label
+						className="mb-0 label-bank"
+						style={{
+							cursor: 'pointer',
+							}}
+						
+						                                                
+			>
+			{params.value}
+			</label>
+	}
+				></AgGridColumn>
+
+				<AgGridColumn field="email" 
+				headerName=	{strings.EMAIL}
+				sortable={ true }
+				filter={ true }
+				enablePivot={true}
+				></AgGridColumn>  
+
+<AgGridColumn field="contactTypeString" 
+				headerName=	 {strings.TYPE}
+				sortable={ true }
+				filter={ true }
+				enablePivot={true}
+				></AgGridColumn>  
+			
+
+
+				<AgGridColumn
+				headerName={strings.STATUS}
+				field="isActive" 
+				sortable={ true }
+				filter={ true }
+				enablePivot={true} 
+				cellRendererFramework={(params) => params.value==true ?
+													<label className="badge label-success"> Active</label>
+													:
+													<label className="badge label-due"> InActive</label>
+										}
+				></AgGridColumn>  
+				<AgGridColumn field="action"
+										// className="Ag-gridActionButtons"
+										headerName="ACTIONS"
+										cellRendererFramework={(params) =>
+											<div
+											 className="Ag-gridActionButtons"
+											 >
+												{this.getActionButtons(params)}
+											</div>
+
+										}
+									></AgGridColumn>
+			</AgGridReact>  
+			<div className="example-header mt-1">
+					Page Size:
+					<select onChange={() => this.onPageSizeChanged()} id="page-size">
+					<option value="10" selected={true}>10</option>
+					<option value="100">100</option>
+					<option value="500">500</option>
+					<option value="1000">1000</option>
+					</select>
+				</div>   																	
+		</div>	
 												</Col>
 												{/* <Col xs="12" lg="4">
                             <div className="contact-info p-4">
@@ -606,6 +599,7 @@ class Contact extends React.Component {
 						</CardBody>
 					</Card>
 				</div>
+			</div>
 			</div>
 		);
 	}

@@ -260,14 +260,47 @@ class CreateContact extends React.Component {
 			})
 			.catch((err) => {
 				console.log(err);
-				this.setState({ disabled: false });
+				this.setState({ disabled: false ,loading:false});
 				this.props.commonActions.tostifyAlert(
 					'error',
 					err.data ? err.data.message : 'Contact Created Unsuccessfully',
 				);
 			});
 	};
-
+	validationCheck = (value) => {
+		const data = {
+			moduleType: 21,
+			name: value,
+		};
+		this.props.contactActions.checkValidation(data).then((response) => {
+			if (response.data === 'Tax Registration Number Already Exists') {
+				this.setState({
+					trnExist: true,
+				});
+			} else {
+				this.setState({
+					trnExist: false,
+				});
+			}
+		});
+	};
+	emailvalidationCheck = (value) => {
+		const data = {
+			moduleType: 22,
+			name: value,
+		};
+		this.props.contactActions.checkValidation(data).then((response) => {
+			if (response.data === 'Email Already Exists') {
+				this.setState({
+					emailExist: true,
+				});
+			} else {
+				this.setState({
+					emailExist: false,
+				});
+			}
+		});
+	};
 	getStateList = (countryCode) => {
 		this.props.contactActions.getStateList(countryCode);
 	};
@@ -329,7 +362,7 @@ class CreateContact extends React.Component {
 														errors.mobileNumber =
 															'Invalid mobile number';
 													}
-
+												
 													if (values.stateId === '') {
 														errors.stateId ='State is Required';
 													}
@@ -343,8 +376,15 @@ class CreateContact extends React.Component {
 													
 														if(values.vatRegistrationNumber.length!=15){
 															errors.vatRegistrationNumber="Please enter 15 digit Tax Registration Number"
-														}}
-												
+														}
+														if(this.state.trnExist==true){
+															errors.vatRegistrationNumber =	'Tax Registration Number Already Exists';
+														}
+													}
+													
+													if(this.state.emailExist==true){
+														errors.email =	'Email Already Exists';
+													}
 													// if (param === true) {
 													// 	errors.discount =
 													// 		'Discount amount Cannot be greater than Invoice Total Amount';
@@ -786,6 +826,7 @@ class CreateContact extends React.Component {
 																		placeholder={strings.Enter + strings.EmailAddress}
 																		onChange={(option) => {
 																			props.handleChange('email')(option);
+																			this.emailvalidationCheck(option.target.value)
 																		}}
 																		value={props.values.email}
 																		className={
@@ -1096,6 +1137,7 @@ class CreateContact extends React.Component {
 																				props.handleChange(
 																					'vatRegistrationNumber',
 																				)(option);
+																				this.validationCheck(option.target.value)
 																			}
 																		}}
 																		value={props.values.vatRegistrationNumber}

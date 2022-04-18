@@ -305,6 +305,14 @@ class DetailContact extends React.Component {
 										? res.data.fax
 										: '' ,
 							},
+							existingEmail:	res.data.email && res.data.email !== null
+								? res.data.email
+								: '',	
+							existingTrn	:
+										res.data.vatRegistrationNumber &&
+										res.data.vatRegistrationNumber !== null
+											? res.data.vatRegistrationNumber
+											: '',	
 							showTaxTreatment: res.data.isRegisteredForVat? res.data.isRegisteredForVat:false,
 							taxTreatmentId: res.data.taxTreatmentId?res.data.taxTreatmentId:'',
 							isSame:res.data.isBillingAndShippingAddressSame
@@ -514,6 +522,40 @@ class DetailContact extends React.Component {
 						this.setState({state_list_for_shipping:res})
 		});
 	};
+	validationCheck = (value) => {
+		const data = {
+			moduleType: 21,
+			name: value,
+		};
+		this.props.contactActions.checkValidation(data).then((response) => {
+			if (response.data === 'Tax Registration Number Already Exists') {
+				this.setState({
+					trnExist: true,
+				});
+			} else {
+				this.setState({
+					trnExist: false,
+				});
+			}
+		});
+	};
+	emailvalidationCheck = (value) => {
+		const data = {
+			moduleType: 22,
+			name: value,
+		};
+		this.props.contactActions.checkValidation(data).then((response) => {
+			if (response.data === 'Email Already Exists') {
+				this.setState({
+					emailExist: true,
+				});
+			} else {
+				this.setState({
+					emailExist: false,
+				});
+			}
+		});
+	};
 	render() {
 		strings.setLanguage(this.state.language);
 		const {
@@ -575,7 +617,17 @@ class DetailContact extends React.Component {
 														
 															if(values.vatRegistrationNumber.length!=15){
 																errors.vatRegistrationNumber="Please Enter 15 Digit Tax Registration Number"
-															}}
+															}
+															if(this.state.existingTrn!=values.vatRegistrationNumber 
+																&&this.state.trnExist==true){
+																errors.vatRegistrationNumber =	'Tax Registration Number Already Exists';
+															}
+														}
+														
+															if(this.state.existingEmail!=values.email 
+																 && this.state.emailExist==true){
+																errors.email =	'Email Already Exists';
+															}	
 														// if( values.stateId ===''){
 														// 	errors.stateId =
 														// 	'State is Required';
@@ -951,8 +1003,9 @@ class DetailContact extends React.Component {
 																			id="email"
 																			name="email"
 																			placeholder={strings.Enter+strings.EmailAddress}
-																			onChange={(value) => {
-																				props.handleChange('email')(value);
+																			onChange={(option) => {
+																				props.handleChange('email')(option);
+																				this.emailvalidationCheck(option.target.value)
 																			}}
 																			value={props.values.email}
 																			className={
@@ -1270,6 +1323,9 @@ class DetailContact extends React.Component {
 																				props.handleChange(
 																					'vatRegistrationNumber',
 																				)(option);
+
+																				if(this.state.existingTrn!=option.target.value)
+																				this.validationCheck(option.target.value)
 																			}
 																		}}
 																		value={props.values.vatRegistrationNumber}

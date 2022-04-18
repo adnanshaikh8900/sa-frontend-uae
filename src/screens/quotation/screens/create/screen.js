@@ -1418,7 +1418,7 @@ discountType = (row) =>
 			.createQuotation(formData)
 			.then((res) => {
 				this.setState({ disabled: false });
-				this.setState({ loading:false});
+				// this.setState({ loading:false});
 				this.props.commonActions.tostifyAlert(
 					'success',
 					res.data ? res.data.message :'New Quotation Created Successfully.',
@@ -2128,7 +2128,7 @@ discountType = (row) =>
 																				: ''
 																		}`}
 																		placeholderText={strings.OrderDueDate}
-																		// selected={props.values.quotaionExpiration ?new Date(props.values.quotaionExpiration):props.values.quotaionExpiration}
+																		 selected={props.values.quotaionExpiration ?new Date(props.values.quotaionExpiration):props.values.quotaionExpiration}
 																		showMonthDropdown
 																		showYearDropdown
 																		dropdownMode="select"

@@ -54,9 +54,6 @@ const mapDispatchToProps = (dispatch) => {
 };
 const Papa = require("papaparse")
 const { convertArrayToCSV } = require('convert-array-to-csv')
-const converter = require('convert-array-to-csv')
-const fs = require('fs');
-
 let strings = new LocalizedStrings(data);
 class ImportTransaction extends React.Component {
 	constructor(props) {

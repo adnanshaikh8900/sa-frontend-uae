@@ -26,8 +26,7 @@ import './style.scss';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
 import download from 'downloadjs';
-import * as XLSX from 'xlsx';
-import { result } from 'lodash';
+
 const mapStateToProps = (state) => {
 	return {
 		// bank_transaction_list: state.bank_account.bank_transaction_list

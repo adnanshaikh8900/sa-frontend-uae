@@ -48,7 +48,6 @@ const Papa = require("papaparse");
 class ImportBankStatement extends React.Component {
 	constructor(props) {
 		super(props);
-		this.updateData = this.updateData.bind(this);
 		this.state = {
 			language: window['localStorage'].getItem('language'),
 			templateList: [],
@@ -325,7 +324,6 @@ class ImportBankStatement extends React.Component {
 																<Col lg={4}></Col>
 																<Col lg={2}>
 																	<label>
-																		<span className="text-danger">*</span>
 																		 {strings.ParsingTemplate}
 																	</label>
 																	<FormGroup>

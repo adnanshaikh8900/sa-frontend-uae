@@ -253,9 +253,6 @@ setConfigurations=(configurationList)=>{
 				}
 			}
 		}
-		if (!fileName) {
-			temp['file'] = '*Please Provide a Sample';
-		}
 		this.setState({
 			error: temp,
 		});
@@ -457,14 +454,14 @@ setConfigurations=(configurationList)=>{
 		if (this.validateForm()) {
 		let optionErr = [...this.state.selectError];
 		let item = -1;
-		//this.state.selectedValueDropdown
-		// 	.map((item, index) => {
-		// 		if (item.value === '') {
-		// 			optionErr[`${index}`] = true;
-		// 		}
-		// 		return item.value;
-		// 	})
-		// 	.indexOf('');
+		this.state.selectedValueDropdown
+			.map((item, index) => {
+				if (item.value === '') {
+					optionErr[`${index}`] = true;
+				}
+				return item.value;
+			})
+			.indexOf('');
 
 		if (item === -1) {
 			let a = {};
@@ -1228,7 +1225,7 @@ setConfigurations=(configurationList)=>{
 																			</FormGroup> : ''}
 																		</Col>
 																	</Row>
-																	<Row>
+																	{/* <Row>
 
 
 
@@ -1242,7 +1239,7 @@ setConfigurations=(configurationList)=>{
 																						{strings.ProvideSample}
 																					</label>
 																				</Col>
-																				{/* <Col md="7">
+																				<Col md="7">
 																					<FormGroup className="mb-0">
 																						<Button
 																							color="primary"
@@ -1297,11 +1294,11 @@ setConfigurations=(configurationList)=>{
 																								{this.state.error.file}
 																							</div>
 																						)}
-																				</Col> */}
+																				</Col>
 																			</Row>
 
 																		</Col>
-																	</Row>
+																	</Row> */}
 																</fieldset>
 															</Col>
 														</Row>

@@ -683,10 +683,10 @@ class Profile extends React.Component {
 			'isRegisteredVat',
 			isRegisteredVat ? isRegisteredVat : 0,
 		);
-		formData.append(
-			'vatRegistrationDate',
-			vatRegistrationDate !== null ? moment(vatRegistrationDate) : '',
-		);
+
+		if(vatRegistrationDate && vatRegistrationDate!="Invalid date")
+		formData.append('vatRegistrationDate',vatRegistrationDate !== null ? moment(vatRegistrationDate) : '',);
+
 		formData.append(
 			'fax',
 			fax ? fax : '',
@@ -1438,19 +1438,27 @@ class Profile extends React.Component {
 																companyRegistrationNumber: Yup.string().required(
 																	'Company Registration Number is Required',
 																),
-																vatRegistrationNumber: Yup.string().required(
-																	'Tax Registration Number is Required')
-																	.test(
-																		'vatRegistrationNumber',
-																		'Invalid TRN',
-																		(value) => {
-																			if (value > 15) {
-																				return true;
-																			} else {
-																				return false;
-																			}
-																		},
-																	),
+																vatRegistrationNumber:Yup.string().when(
+																	'isRegisteredVat',
+																	{
+																		is: (value) => value === true,
+																		then: Yup.string().required(
+																			'Tax Registration Number is Required',
+																		)
+																		.test(
+																			'vatRegistrationNumber',
+																			'Invalid TRN',
+																			(value) => {
+																				if (value > 15) {
+																					return true;
+																				} else {
+																					return false;
+																				}
+																			},
+																		),
+																		otherwise: Yup.string(),
+																	},
+																),	
 																emailAddress: Yup.string()
 																	// .required('Email is Required')
 																	.email('Invalid Email'),
@@ -1485,6 +1493,17 @@ class Profile extends React.Component {
 																companyPostZipCode: Yup.string().required(
 																	'Post Zip Code is Required',
 																),
+																							
+														    	vatRegistrationDate: Yup.string().when(
+																'isRegisteredVat',
+																{
+																	is: (value) => value === true,
+																	then: Yup.string().required(
+																		'Vat Registration Date is Required',
+																	),
+																	otherwise: Yup.string(),
+																},
+															)
 															})}
 															>
 																{(props) => (
@@ -2481,9 +2500,9 @@ class Profile extends React.Component {
 																					: ''
 																			}`}
 																			
-																			value={moment(
+																			value={props.values.vatRegistrationDate ?moment(
 																				props.values.vatRegistrationDate,
-																			).format('DD-MM-YYYY')}
+																			).format('DD-MM-YYYY'):""}
 																			showMonthDropdown
 																			showYearDropdown
 																			dropdownMode="select"

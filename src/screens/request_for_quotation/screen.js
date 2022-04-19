@@ -261,6 +261,8 @@ class RequestForQuotation extends React.Component {
 		let classname = '';
 		if (row.status === 'Closed') {
 			classname = 'label-closed';
+		}else if (row.status === 'Approved') {
+			classname = 'label-success';
 		} else if (row.status === 'Draft') {
 			classname = 'label-draft';
 		} else if (row.status === 'Sent') {
@@ -269,8 +271,9 @@ class RequestForQuotation extends React.Component {
 			classname = 'label-success'
 		} else if(row.status === 'Rejected'){
 			classname = 'label-due'
-		}
-		else {
+		}else if(row.status === 'Invoiced'){
+			classname = 'label-primary'
+		}else {
 			classname = 'label-overdue';
 		}
 		return (

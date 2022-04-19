@@ -1772,6 +1772,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 			.createInvoice(formData)
 			.then((res) => {
 				this.setState({ disabled: false });
+				this.setState({ loading:false});
 				this.props.commonActions.tostifyAlert(
 					'success',
 					res.data ? res.data.message : 'Invoice Created Successfully.',
@@ -1809,6 +1810,19 @@ if(changeShippingAddress && changeShippingAddress==true)
 						},
 						() => {
 							resetForm(this.state.initValue);
+							this.setState({
+								initValue: {
+								...this.state.initValue,
+								...{
+									total_net: 0,
+									invoiceVATAmount: 0,
+									totalAmount: 0,
+									discountType: '',
+									discount: 0,
+									discountPercentage: '',
+									changeShippingAddress:false
+								},}
+							});
 							this.getInvoiceNo();
 							this.formRef.current.setFieldValue(
 								'lineItemsString',

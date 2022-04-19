@@ -1163,16 +1163,16 @@ class CreatePurchaseOrder extends React.Component {
 					 net_value =
 						((+obj.unitPrice -
 							(+((obj.unitPrice * obj.discount)) / 100)) * obj.quantity);
-					var discount =  obj.unitPrice - net_value
+					var discount =  (obj.unitPrice* obj.quantity) - net_value
 				if(obj.exciseTaxId !=  0){
 					if(obj.exciseTaxId === 1){
 						const value = +(net_value) / 2 ;
 							net_value = parseFloat(net_value) + parseFloat(value) ;
-							obj.exciseAmount = parseFloat(value) * obj.quantity;
+							obj.exciseAmount = parseFloat(value);
 						}else if (obj.exciseTaxId === 2){
 							const value = net_value;
 							net_value = parseFloat(net_value) +  parseFloat(value) ;
-							obj.exciseAmount = parseFloat(value) * obj.quantity;
+							obj.exciseAmount = parseFloat(value) ;
 						}
 						else{
 							net_value = obj.unitPrice
@@ -1186,16 +1186,16 @@ class CreatePurchaseOrder extends React.Component {
 				}else{
 					 net_value =
 						((obj.unitPrice * obj.quantity) )
-					var discount =  obj.unitPrice - net_value
+					var discount = (obj.unitPrice* obj.quantity) - net_value
 						if(obj.exciseTaxId !=  0){
 							if(obj.exciseTaxId === 1){
 								const value = +(net_value) / 2 ;
 									net_value = parseFloat(net_value) + parseFloat(value) ;
-									obj.exciseAmount = parseFloat(value) * obj.quantity;
+									obj.exciseAmount = parseFloat(value) ;
 								}else if (obj.exciseTaxId === 2){
 									const value = net_value;
 									net_value = parseFloat(net_value) +  parseFloat(value) ;
-									obj.exciseAmount = parseFloat(value) * obj.quantity;
+									obj.exciseAmount = parseFloat(value) ;
 								}
 								else{
 									net_value = obj.unitPrice
@@ -1312,7 +1312,7 @@ class CreatePurchaseOrder extends React.Component {
 				initValue: {
 					...this.state.initValue,
 					...{
-						total_net:  total_net,
+						total_net:  total_net - total_excise,
 						invoiceVATAmount: total_vat,
 						discount:  discount_total ? discount_total : 0,
 						totalAmount:  total ,

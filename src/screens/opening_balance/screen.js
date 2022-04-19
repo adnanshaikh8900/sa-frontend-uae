@@ -585,7 +585,7 @@ class OpeningBalance extends React.Component {
 												width="30%"
 												className="table-header-bg"
 											>
-												Chart of Account
+												{strings.Chart_of_Account}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="effectiveDate"

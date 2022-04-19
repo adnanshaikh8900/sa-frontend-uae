@@ -54,6 +54,18 @@ RecieptNumber:"عدد إيصال",
         ContactNumber2:"رقم الاتصال 2",
         Relationship1:"العلاقة 1",
         Relationship2:"2 العلاقة ",
+
+        //Income
+        noteforchangeaddress:"هل تريد تغيير عنوان الشحن لهذه الفاتورة؟",
+        Exclusive:"خاص",
+        Inclusive:"شامله",
+        Excises: " المكوس ",
+        DisCount:"خصم",
+        VATAMOUNT:"مبلغ ضريبة القيمة المضافة",
+        Total_Excise:"إجمالي المكوس",
+        Select_Excise:"اختر المكوس",
+
+
       //Opening Balance
       OpeningBalance: "الرصيد الافتتاحي",
       TRANSACTIONCATEGORYNAME : "اسم فئة المعاملة",
@@ -374,6 +386,7 @@ AddnewAccount:"إضافة حساب جديد",
 NewChartAccount:"حساب مخطط جديد",		
 Name:"اسم",		
 Type:"نوع",		
+Chart_of_Account:"دليل الحساب",
 
 //Contact
 CONTACTORGANIZATIONTNAME:"اسم منظمة الاتصال",

@@ -55,6 +55,16 @@ ContactNumber2:"Contact Number 2",
 Relationship1:"Relationship 1",
 Relationship2:"Relationship 2",
 
+      //Income
+      noteforchangeaddress:"Do you want to change the Shipping Address for this invoice ?",
+      Exclusive:"Exclusive",
+      Inclusive:"Inclusive",
+      Excises:"EXCISE",
+      DisCount:"DISCOUNT",
+      VATAMOUNT:"VAT AMOUNT",
+      Total_Excise:"Total Excise",
+      Select_Excise:"Select Excise",
+
       //Opening Balances
 
       OpeningBalance: "Opening Balance",
@@ -393,6 +403,7 @@ AddnewAccount:"Add new Account",
 NewChartAccount:"New Chart Account",		
 Name:"Name",		
 Type:"Type",		
+Chart_of_Account:"Chart of Account",
 
 //Contact
 CONTACTORGANIZATIONTNAME:"CONTACT/ORGANIZATION NAME",

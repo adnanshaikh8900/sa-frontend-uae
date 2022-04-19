@@ -1151,7 +1151,7 @@ discountType = (row) =>
 								.find((option) => option.value === +row.exciseTaxId)
 						}
 						id="exciseTaxId"
-						placeholder={"Select Excise"}
+						placeholder={strings.Select_Excise}
 						onChange={(e) => {
 							this.selectItem(
 								e.value,
@@ -2730,7 +2730,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																							}}
 																						/>
 																						<label htmlFor="inline-radio1">
-																						Do you want to change the Shipping Address for this invoice ?
+																					{strings.noteforchangeaddress}
 																					</label>
 																					</div>
 																				</FormGroup>
@@ -2842,7 +2842,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																<FormGroup>
 																	<Label htmlFor="shippingStateId"><span className="text-danger">* </span>
 																		{/* {strings.StateRegion} */}
-																		{props.values.shippingCountryId &&props.values.shippingCountryId.value && props.values.shippingCountryId.value === 229 ? "Emirites" : "State / Provinces"}
+																		{props.values.shippingCountryId &&props.values.shippingCountryId.value && props.values.shippingCountryId.value === 229 ? strings.Emirates: strings.StateRegion}
 																	</Label>
 																	<Select
 																		options={
@@ -2851,7 +2851,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																					'label',
 																					'value',
 																					state_list_for_shipping,
-																					props.values.shippingCountryId &&props.values.shippingCountryId.value && props.values.shippingCountryId.value === 229 ? "Emirites" : "State / Provinces",
+																					props.values.shippingCountryId &&props.values.shippingCountryId.value && props.values.shippingCountryId.value === 229 ?strings.Emirates: strings.StateRegion,
 																				)
 																				: []
 																		}
@@ -2867,7 +2867,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																				props.handleChange('shippingStateId')('');
 																			}
 																		}}
-																		placeholder={props.values.shippingCountryId &&props.values.shippingCountryId.value && props.values.shippingCountryId.value === 229 ? "Emirites" : "State / Provinces"}
+																		placeholder={props.values.shippingCountryId &&props.values.shippingCountryId.value && props.values.shippingCountryId.value === 229 ? strings.Emirates: strings.StateRegion}
 																		id="shippingStateId"
 																		name="shippingStateId"
 																		className={
@@ -3156,8 +3156,8 @@ if(changeShippingAddress && changeShippingAddress==true)
 
 														<Col  >
 																{this.state.taxType === false ?
-																	<span style={{ color: "#0069d9" }} className='mr-4'><b>Exclusive</b></span> :
-																	<span className='mr-4'>Exclusive</span>}
+																	<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Exclusive}</b></span> :
+																	<span className='mr-4'>{strings.Exclusive}</span>}
 																<Switch
 																	value={props.values.taxType}
 																	checked={this.state.taxType}
@@ -3186,8 +3186,8 @@ if(changeShippingAddress && changeShippingAddress==true)
 																	className="react-switch "
 																/>
 																{this.state.taxType === true ?
-																	<span style={{ color: "#0069d9" }} className='ml-4'><b>Inclusive</b></span>
-																	: <span className='ml-4'>Inclusive</span>
+																	<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.Inclusive}</b></span>
+																	: <span className='ml-4'>{strings.Inclusive}</span>
 																}
 															</Col>
                                                        </Row>
@@ -3297,7 +3297,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																			this.renderExcise(cell, rows, props)
 																		}
 																	>
-																	Excise
+																	{strings.Excises}
 																	<i
 																			id="ExiseTooltip"
 																			className="fa fa-question-circle ml-1"
@@ -3316,8 +3316,8 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		dataFormat={(cell, rows) =>
 																			this.renderDiscount(cell, rows, props)
 																		}
-																	>
-																	DisCount
+																		>
+																	{strings.DisCount}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		width="10%"
@@ -3336,7 +3336,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		columnClassName="text-right"
 																		formatExtraData={universal_currency_list}
 																	>
-																		Vat amount
+																	{strings.VATAMOUNT}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="sub_total"
@@ -3482,7 +3482,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
-																					Total Excise
+																				{strings.Total_Excise}
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-right">

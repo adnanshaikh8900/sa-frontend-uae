@@ -98,6 +98,20 @@ zb:"Zoho-Livres",
 setbal:"Définir les soldes d’ouverture",
 mig:"Émigrer",
 
+//income
+noteforchangeaddress:"Voulez-vous modifier l’adresse de livraison pour cette facture ?",
+Exclusive:"Exclusif",
+Inclusive:"Inclusif",
+Excises:"ACCISE",
+DisCount:"RABAIS",
+VATAMOUNT:"MONTANT DE LA TVA",
+Total_Excise:"Accise totale",
+Select_Excise:"Sélectionnez Accise",
+
+
+
+
+
       OpeningBalance: "Solde d'ouverture",
       TRANSACTIONCATEGORYNAME : "NOM DE LA CATÉGORIE DE TRANSACTION",
       EFFECTIVEDATE:"DATE D'ENTRÉE EN VIGUEUR",
@@ -412,7 +426,8 @@ print_csv:"Imprimer",
 //Add Chart of Accounts
 NewChartAccount:"Nouveau compte graphique",		
 Name:"Nom",		
-Type:"Type",		
+Type:"Type",
+Chart_of_Account:"Plan comptable",		
 
 //Contact
 CONTACTORGANIZATIONTNAME:"NOM DE L'ORGANISME DE CONTACT",

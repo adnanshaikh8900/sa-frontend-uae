@@ -681,7 +681,7 @@ GeneralSettings:"General Settings",
 User:"User",
 Help:"Help",
 LogOut:"Log Out",
-MailTheams:"Mail Theams",
+MailThemes:"Mail Themes",
 Import:"Import",
 
 //Role
@@ -702,8 +702,8 @@ RoleName:"Role Name",
 //general settings
 TestMail:"Test Mail",
 //Mail Theams
-Theame1:"Theame1",
-Theame2:"Theame2",
+Theme1:"Theme1",
+Theme2:"Theme2",
 //Import
 Migration:"Migration",
 import:"Import",

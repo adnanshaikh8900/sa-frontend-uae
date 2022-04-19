@@ -64,8 +64,8 @@ RecieptNumber:"Numéro de reçu",
          //Opening Balance
 
          //Mail Theams
-        Theame1:"Théame2",
-        Theame2:"Théame2",
+        Theme1:"Thème1",
+        Theme2:"Thème2",
         //Import
 Migration:"Migration",
 import:"Importation",
@@ -696,7 +696,7 @@ GeneralSettings:"Réglages généraux",
 User:"Utilisatrice",	
 Help:"Aider",	
 LogOut:"Se déconnecter",
-MailTheams:"Mail Theams",
+MailThemes:"Thèmes de messagerie",
 Import:"Importation",
 
 //Role

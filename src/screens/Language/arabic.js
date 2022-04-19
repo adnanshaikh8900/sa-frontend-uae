@@ -663,7 +663,7 @@ GeneralSettings:"الإعدادات العامة",
 User:"المستعمل",	
 Help:"مساعدة",	
 LogOut:"تسجيل خروج",
-MailTheams:"بريد ثيمز",
+MailThemes:"نسق البريد",
 Import:"استورد",
 
 //Role
@@ -684,8 +684,8 @@ RoleName:"اسم الدور",
 //general settings
 TestMail:" اختبار البريد ",
 //Mail Theams
-Theame1:"ثيامي1",
-Theame2:"ثيامي2",
+Theme1:"الموضوع1",
+Theme2:"الموضوع2",
 //Import
 Migration:"هجرة",
 import:"استورد",

@@ -822,8 +822,8 @@ this.state.data.map((obj, index) => {
 			<Field
 				name={`lineItemsString.${idx}.productId`}
 				render={({ field, form }) => (
+					<>
 					<Select
-						styles={customStyles}
 						options={
 							product_list
 								? optionFactory.renderOptions(
@@ -885,6 +885,19 @@ this.state.data.map((obj, index) => {
 								: ''
 						}`}
 					/>
+						{props.errors.lineItemsString &&
+                    props.errors.lineItemsString[parseInt(idx, 10)] &&
+                    props.errors.lineItemsString[parseInt(idx, 10)].productId &&
+                    Object.keys(props.touched).length > 0 &&
+					props.touched.lineItemsString &&
+					props.touched.lineItemsString[parseInt(idx, 10)] &&
+					props.touched.lineItemsString[parseInt(idx, 10)].productId && 
+                    (
+                   <div className='invalid-feedback'>
+                   {props.errors.lineItemsString[parseInt(idx, 10)].productId}
+                   </div>
+                     )}
+                   </>
 				)}
 			/>
 		);

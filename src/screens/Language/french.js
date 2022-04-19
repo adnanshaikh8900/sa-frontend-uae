@@ -220,6 +220,7 @@ Select_Excise:"Sélectionnez Accise",
       Country:"Pays",
       StateRegion:"Région de l’État ",
       Emirates:"Émirats",
+      Emirate:"Émirat",
       City:"Ville",
       PostZipCode:"Code postal / Zip",
       InvoicingDetails:"Détails de facturation ",
@@ -449,6 +450,8 @@ page_size:"Taille de la page :",
 active:"Actif",
 inactive:"Inactif",
 Emirates:"Emirates",
+Emirate:"Émirat",
+
 
 
 //Product

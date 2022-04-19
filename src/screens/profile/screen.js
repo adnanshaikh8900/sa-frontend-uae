@@ -1487,12 +1487,12 @@ class Profile extends React.Component {
 																companyCity: Yup.string().required(
 																	'City is Required',
 																),
-																// companyPoBoxNumber: Yup.string().required(
-																// 	'PO Box Number is Required',
-																// ),
-																companyPostZipCode: Yup.string().required(
-																	'Post Zip Code is Required',
+																companyPoBoxNumber: Yup.string().required(
+																	'PO Box Number is Required',
 																),
+																// companyPostZipCode: Yup.string().required(
+																// 	'Post Zip Code is Required',
+																// ),
 																							
 														    	vatRegistrationDate: Yup.string().when(
 																'isRegisteredVat',
@@ -2054,7 +2054,7 @@ class Profile extends React.Component {
 																								)}
 																				</FormGroup>
 																			</Col>
-																			<Col lg={4}>
+																			{/* <Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="companyPostZipCode">
 																					<span className="text-danger">*</span> {strings.PostZipCode}
@@ -2098,7 +2098,7 @@ class Profile extends React.Component {
 																						</div>
 																					)}
 																				</FormGroup>
-																			</Col>
+																			</Col> */}
 
 																			<Col lg={4}>
 																				<FormGroup>
@@ -2193,7 +2193,7 @@ class Profile extends React.Component {
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="product_code">
-																					<span className="text-danger">*</span> {props.values.companyCountryCode === 229 ? strings.Emirates : strings.StateRegion}
+																					<span className="text-danger">*</span> {props.values.companyCountryCode === 229 ? strings.Emirate : strings.StateRegion}
 																				</Label>
 																					<Select
 																						options={selectOptionsFactory.renderOptions(
@@ -2202,7 +2202,7 @@ class Profile extends React.Component {
 																							isSame
 																								? invoicing_state_list
 																								: company_state_list,
-																							'Emirates',
+																							'Emirate',
 																						)}
 																						value={
 																							isSame
@@ -2230,7 +2230,7 @@ class Profile extends React.Component {
 																								)('');
 																							}
 																						}}
-																						placeholder={strings.Select+strings.Emirates}
+																						placeholder={strings.Select+strings.Emirate}
 																						id="companyStateCode"
 																						name="companyStateCode"
 																						className={
@@ -2300,11 +2300,12 @@ class Profile extends React.Component {
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="companyPoBoxNumber">
-																					{/* <span className="text-danger">*</span> */}
+																					<span className="text-danger">* </span>
 																						 {strings.POBoxNumber}
 																				</Label>
 																					<Input
-																						maxLength={6}
+																						maxLength="6"
+																						minLength="3"
 																						type="text"
 																						id="companyPoBoxNumber"
 																						name="companyPoBoxNumber"
@@ -3379,7 +3380,7 @@ class Profile extends React.Component {
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="product_code">
 																					<span className="text-danger">*</span>
-																						{props.values.companyCountryCode === 229 ? strings.Emirates : strings.StateRegion}
+																						{props.values.companyCountryCode === 229 ? strings.Emirate : strings.StateRegion}
 																				</Label>
 																					<Select
 																						options={selectOptionsFactory.renderOptions(

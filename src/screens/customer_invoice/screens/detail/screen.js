@@ -1070,11 +1070,11 @@ class DetailCustomerInvoice extends React.Component {
 					if(obj.exciseTaxId === 1){
 						const value = +(net_value) / 2 ;
 							net_value = parseFloat(net_value) + parseFloat(value) ;
-							obj.exciseAmount = parseFloat(value) * obj.quantity;
+							obj.exciseAmount = parseFloat(value) ;
 						}else if (obj.exciseTaxId === 2){
 							const value = net_value;
 							net_value = parseFloat(net_value) +  parseFloat(value) ;
-							obj.exciseAmount = parseFloat(value) * obj.quantity;
+							obj.exciseAmount = parseFloat(value);
 						}
 						else{
 							net_value = obj.unitPrice
@@ -1093,11 +1093,11 @@ class DetailCustomerInvoice extends React.Component {
 							if(obj.exciseTaxId === 1){
 								const value = +(net_value) / 2 ;
 									net_value = parseFloat(net_value) + parseFloat(value) ;
-									obj.exciseAmount = parseFloat(value) * obj.quantity;
+									obj.exciseAmount = parseFloat(value) ;
 								}else if (obj.exciseTaxId === 2){
 									const value = net_value;
 									net_value = parseFloat(net_value) +  parseFloat(value) ;
-									obj.exciseAmount = parseFloat(value) * obj.quantity;
+									obj.exciseAmount = parseFloat(value) ;
 								}
 								else{
 									net_value = obj.unitPrice

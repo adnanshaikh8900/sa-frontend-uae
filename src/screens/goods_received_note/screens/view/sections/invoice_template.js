@@ -32,6 +32,8 @@ class RFQTemplate extends Component {
 			classname = 'label-posted';
 		} else if (status === 'Draft') {
 			classname = 'label-draft';
+		} else if (status === 'Sent') {
+			classname = 'label-sent';
 		} else {
 			classname = 'label-overdue';
 		}

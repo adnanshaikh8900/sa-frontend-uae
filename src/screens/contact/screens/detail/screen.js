@@ -658,8 +658,8 @@ class DetailContact extends React.Component {
 														),
 														//       organization: Yup.string()
 														//       .required("Organization Name is Required"),
-														//     poBoxNumber: Yup.number()
-														//       .required("PO Box Number is Required"),
+														    poBoxNumber: Yup.number()
+														      .required("PO Box Number is Required"),
 														email: Yup.string()
 															.required('Email is Required')
 															.email('Invalid Email'),
@@ -1166,22 +1166,25 @@ class DetailContact extends React.Component {
 																
 																<Col md="4">
 																	<FormGroup>
-																		<Label htmlFor="select">
-																			{strings.POBoxNumber}
-																		</Label>
+																	<Label htmlFor="POBoxNumber">
+																		<span className="text-danger">* </span>{strings.POBoxNumber}
+																	</Label>
 																		<Input
 																			type="text"
 																			id="poBoxNumber"
 																			name="poBoxNumber"
-																			maxLength='8'
+																			minLength="3"
+																			maxLength="6"
 																			placeholder={strings.Enter+strings.POBoxNumber}
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
-																					this.regEx.test(
-																						option.target.value,
-																					)
+																					this.regEx.test(option.target.value)
 																				) {
+																					if(option.target.value.length<3)
+																					this.setState({showpoBoxNumberErrorMsg:true})
+																					else
+																					this.setState({showpoBoxNumberErrorMsg:false})
 																					props.handleChange('poBoxNumber')(
 																						option,
 																					);
@@ -1464,7 +1467,7 @@ class DetailContact extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="stateId"><span className="text-danger">* </span>
 																		{/* {strings.StateRegion} */}
-																		{props.values.billingcountryId.value === 229 ? strings.Emirates: strings.StateRegion}
+																		{props.values.billingcountryId.value === 229 ? strings.Emirate: strings.StateRegion}
 																	</Label>
 																	<Select
 																		options={
@@ -1473,7 +1476,7 @@ class DetailContact extends React.Component {
 																					'label',
 																					'value',
 																					state_list,
-																					props.values.billingcountryId.value === 229 ? strings.Emirates: strings.StateRegion,
+																					props.values.billingcountryId.value === 229 ? strings.Emirate: strings.StateRegion,
 																				)
 																				: []
 																		}
@@ -1483,7 +1486,7 @@ class DetailContact extends React.Component {
 																				'label',
 																				'value',
 																				state_list,
-																				props.values.billingcountryId.value === 229 ? strings.Emirates: strings.StateRegion,
+																				props.values.billingcountryId.value === 229 ? strings.Emirate: strings.StateRegion,
 																			).find(
 																			(option) =>
 																				option.value ===
@@ -1498,7 +1501,7 @@ class DetailContact extends React.Component {
 																				props.handleChange('stateId')('');
 																			}
 																		}}
-																		placeholder={strings.Select + props.values.billingcountryId === 229 || props.values.billingcountryId.value === 229 ? strings.Emirates: strings.StateRegion}
+																		placeholder={strings.Select + props.values.billingcountryId === 229 || props.values.billingcountryId.value === 229 ? strings.Emirate: strings.StateRegion}
 																		id="stateId"
 																		name="stateId"
 																		className={
@@ -1584,7 +1587,7 @@ class DetailContact extends React.Component {
 																	)}
 																</FormGroup>
 															</Col>
-															<Col md="4">
+															<Col md="4"style={{display:props.values.billingcountryId == 229 || props.values.billingcountryId.value == 229 ? 'none':''}}>
 																<FormGroup>
 																	<Label htmlFor="postZipCode"><span className="text-danger">* </span>
 																		{strings.PostZipCode}
@@ -1859,7 +1862,7 @@ class DetailContact extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="shippingStateId"><span className="text-danger">* </span>
 																		{/* {strings.StateRegion} */}
-																		{props.values.shippingCountryId === 229 || props.values.shippingCountryId.value === 229? strings.Emirates: strings.StateRegion}
+																		{props.values.shippingCountryId === 229 || props.values.shippingCountryId.value === 229? strings.Emirate: strings.StateRegion}
 																	</Label>
 																	<Select
 																		options={
@@ -1868,7 +1871,7 @@ class DetailContact extends React.Component {
 																					'label',
 																					'value',
 																					state_list_for_shipping,
-																					props.values.shippingCountryId === 229 || props.values.shippingCountryId.value === 229? strings.Emirates: strings.StateRegion,
+																					props.values.shippingCountryId === 229 || props.values.shippingCountryId.value === 229? strings.Emirate: strings.StateRegion,
 																				)
 																				: []
 																		}
@@ -1887,7 +1890,7 @@ class DetailContact extends React.Component {
 																				props.handleChange('shippingStateId')('');
 																			}
 																		}}
-																		placeholder={strings.Select + props.values.shippingCountryId === 229 || props.values.shippingCountryId.value === 229 ? strings.Emirates: strings.StateRegion}
+																		placeholder={strings.Select + props.values.shippingCountryId === 229 || props.values.shippingCountryId.value === 229 ? strings.Emirate: strings.StateRegion}
 																		id="shippingStateId"
 																		name="shippingStateId"
 																		className={
@@ -1941,7 +1944,7 @@ class DetailContact extends React.Component {
 																</FormGroup>
 															</Col>
 
-															<Col md="4">
+															<Col md="4"style={{display:props.values.shippingCountryId == 229 || props.values.shippingCountryId.value == 229 ? 'none':''}}>
 																<FormGroup>
 																	<Label htmlFor="shippingPostZipCode"><span className="text-danger">* </span>
 																		{strings.PostZipCode}

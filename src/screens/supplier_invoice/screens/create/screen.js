@@ -1731,7 +1731,7 @@ class CreateSupplierInvoice extends React.Component {
 				initValue: {
 					...this.state.initValue,
 					...{
-						total_net:  total_net,
+						total_net:  total_net-total_excise,
 						invoiceVATAmount: total_vat,
 						discount:  discount_total ? discount_total : 0,
 						totalAmount:  total ,

@@ -1,5 +1,6 @@
 import { COMMON, USERS_ROLES } from 'constants/types';
-import { api,authApi } from 'utils';
+import { toast } from 'react-toastify';
+import { api, authApi } from 'utils';
 
 export const startRequest = () => {
 	return (dispatch) => {
@@ -39,7 +40,37 @@ export const tostifyAlert = (status, message) => {
 		});
 	};
 };
+export const getNoteSettingsInfo = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: '/rest/datalist/getNoteSettingsInfo',
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					return res;
+				}
+				return res;
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
 
+export const fillManDatoryDetails = (status, message) => {
+	return (dispatch) => {
+		toast.error(
+			"Please Fill All Mandatory Details",
+			{
+				position: "top-center",
+				draggable: true, autoClose: 1000,
+				progress: undefined,
+				hideProgressBar: true,
+			})
+	};
+};
 export const getSimpleVATVersion = () => {
 	return (dispatch) => {
 		let data = {
@@ -130,7 +161,7 @@ export const getCountryList = () => {
 	};
 };
 export const getCompanyTypeListRegister = () => {
-	 
+
 	return (dispatch) => {
 	  let data = {
 		method: 'get',

@@ -38,6 +38,7 @@ import moment from 'moment';
 
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import { TextareaAutosize } from '@material-ui/core';
 
 
 const mapStateToProps = (state) => {
@@ -797,8 +798,18 @@ this.props.customerInvoiceCreateActions.getQuotationById(quotationId)
 	  }
 	  if(this.props.location.state && this.props.location.state.parentInvoiceId )
 	  this.getParentInvoiceDetails(this.props.location.state.parentInvoiceId);
+
+	  this.getDefaultNotes()
 	};
 
+	getDefaultNotes=()=>{
+		this.props.commonActions.getNoteSettingsInfo().then((res)=>{
+			if(res.status===200){
+				this.formRef.current.setFieldValue('notes',res.data.defaultNotes, true);
+				this.formRef.current.setFieldValue('footNote',  res.data.defaultFootNotes, true);
+			}
+		})
+	}
 	getInitialData = () => {
 		this.getInvoiceNo();
 		this.props.customerInvoiceActions.getVatList().then((res)=>{
@@ -1659,7 +1670,8 @@ discountType = (row) =>
 			discountPercentage,
 			notes,
 			changeShippingAddress,
-			quotationId
+			quotationId,
+			footNote
 		} = data;
 		const { term } = this.state;
 		const formData = new FormData();
@@ -1736,6 +1748,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 		);
 	}//
 		formData.append('notes', notes !== null ? notes : '');
+		formData.append('footNote',footNote? footNote : '')
 		formData.append('type', 2);
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
 		formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
@@ -3384,14 +3397,16 @@ if(changeShippingAddress && changeShippingAddress==true)
 															<Row>
 																<Col lg={8}>
 																	<FormGroup className="py-2">
-																		<Label htmlFor="notes">{strings.Notes}</Label>
-																		<Input
+																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
+																		<TextareaAutosize
 																			type="textarea"
-																			maxLength="250"
+																			style={{width: "1000px"}}
+																			className="textarea"
+																			maxLength="255"
 																			name="notes"
 																			id="notes"
 																			rows="6"
-																			placeholder={strings.Notes}
+																			placeholder="e.g. Business Terms & Conditions"
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
 																			}
@@ -3410,7 +3425,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																					id="receiptNumber"
 																					name="receiptNumber"
 																					value={props.values.receiptNumber}
-																					placeholder={strings.ReceiptNumber}
+																					placeholder="e.g. Receipt Number"
 																					onChange={(value) => {
 																						props.handleChange('receiptNumber')(value);
 
@@ -3484,10 +3499,12 @@ if(changeShippingAddress && changeShippingAddress==true)
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="receiptAttachmentDescription">
 																			{strings.AttachmentDescription}
-																		</Label>
-																		<Input
+																		</Label><br/>
+																		<TextareaAutosize
 																			type="textarea"
+																			className="textarea"
 																			maxLength="250"
+																			style={{width: "1000px"}}
 																			name="receiptAttachmentDescription"
 																			id="receiptAttachmentDescription"
 																			rows="5"
@@ -3500,6 +3517,31 @@ if(changeShippingAddress && changeShippingAddress==true)
 																			value={
 																				props.values
 																					.receiptAttachmentDescription
+																			}
+																		/>
+																	</FormGroup>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="footNote">
+																			Footnotes
+																		</Label>
+																		<br/>
+																		<TextareaAutosize
+																			type="textarea"
+																			className="textarea"
+																			maxLength="255"
+																			style={{width: "1000px"}}
+																			name="footNote"
+																			id="footNote"
+																			rows="5"
+																			placeholder="e.g. Thank You Note"
+																			onChange={(option) =>
+																				props.handleChange(
+																					'footNote',
+																				)(option)
+																			}
+																			value={
+																				props.values
+																					.footNote
 																			}
 																		/>
 																	</FormGroup>

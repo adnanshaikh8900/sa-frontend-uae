@@ -38,6 +38,7 @@ import moment from 'moment';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import Switch from "react-switch";
+import { TextareaAutosize } from '@material-ui/core';
 
 const mapStateToProps = (state) => {
 	return {
@@ -275,6 +276,7 @@ class DetailCustomerInvoice extends React.Component {
 									filePath: res.data.filePath ? res.data.filePath : '',
 									total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : 0,
 									taxType : res.data.taxType ? true : false,
+									footNote:res.data.footNote?res.data.footNote:''
                                  },
 								customer_taxTreatment_des : res.data.taxTreatment ? res.data.taxTreatment : '',
 								invoiceDateNoChange :res.data.invoiceDate
@@ -1289,6 +1291,7 @@ class DetailCustomerInvoice extends React.Component {
 			discount,
 			discountType,
 			discountPercentage,
+			footNote
 		} = data;
 
 		let formData = new FormData();
@@ -1380,6 +1383,7 @@ class DetailCustomerInvoice extends React.Component {
 			receiptAttachmentDescription !== null ? receiptAttachmentDescription : '',
 		);
 		formData.append('notes', notes !== null ? notes : '');
+		formData.append('footNote',footNote? footNote : '')
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
 		formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
 		formData.append('totalAmount', this.state.initValue.totalAmount);
@@ -2908,14 +2912,16 @@ class DetailCustomerInvoice extends React.Component {
 																<Row>
 																	<Col lg={8}>
 																	<FormGroup className="py-2">
-																		<Label htmlFor="notes">{strings.Notes}</Label>
-																		<Input
+																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
+																		<TextareaAutosize
 																			type="textarea"
+																			className="textarea"
 																			maxLength="250"
+																			style={{width: "1000px"}}
 																			name="notes"
 																			id="notes"
 																			rows="6"
-																			placeholder={strings.Notes}
+																			placeholder="e.g. Business Terms & Conditions"
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
 																			}
@@ -2926,7 +2932,7 @@ class DetailCustomerInvoice extends React.Component {
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="receiptNumber">
-																				{strings.RecieptNumber}
+																				{strings.ReceiptNumber}
 																				</Label>
 																				<Input
 																					type="text"
@@ -2934,7 +2940,7 @@ class DetailCustomerInvoice extends React.Component {
 																					id="receiptNumber"
 																					name="receiptNumber"
 																					value={props.values.receiptNumber}
-																					placeholder={strings.ReceiptNumber}
+																					placeholder="e.g. Receipt Number"
 																					onChange={(value) => {
 																						props.handleChange('receiptNumber')(value);
 
@@ -3013,9 +3019,12 @@ class DetailCustomerInvoice extends React.Component {
 																		<Label htmlFor="receiptAttachmentDescription">
 																			{strings.AttachmentDescription}
 																		</Label>
-																		<Input
+																		<br/>
+																		<TextareaAutosize
 																			type="textarea"
+																			className="textarea"
 																			maxLength="250"
+																			style={{width: "1000px"}}
 																			name="receiptAttachmentDescription"
 																			id="receiptAttachmentDescription"
 																			rows="5"
@@ -3028,6 +3037,30 @@ class DetailCustomerInvoice extends React.Component {
 																			value={
 																				props.values
 																					.receiptAttachmentDescription
+																			}
+																		/>
+																	</FormGroup>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="footNote">
+																			Footnotes
+																		</Label>
+																		<br/>
+																		<TextareaAutosize
+																			type="textarea"
+																			className="textarea"
+																			maxLength="255"
+																			style={{width: "1000px"}}
+																			name="footNote"
+																			id="footNote"
+																			rows="5"
+																			placeholder="e.g. Thank You Note"
+																			onChange={(option) =>
+																				props.handleChange(
+																					'footNote',
+																				)(option)
+																			}
+																			value={
+																				props.values.footNote
 																			}
 																		/>
 																	</FormGroup>

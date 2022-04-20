@@ -904,7 +904,8 @@ class VatReturnsReport extends React.Component {
 																				this.props.history.push('/admin/report/vatreports/vatreturnsubreports',{
 																					description:"Box 3 - Supplies subject to the reverse charge provisions",
 																					startDate:this.props.location.state.startDate,
-																					endDate:this.props.location.state.endDate
+																					endDate:this.props.location.state.endDate,
+																					placeOfSupplyId:8
 																				});
 																			}}>
 																		<Currency
@@ -962,7 +963,7 @@ class VatReturnsReport extends React.Component {
 																						description:"Box 4 - Zero rated supplies",
 																						startDate:this.props.location.state.startDate,
 																						endDate:this.props.location.state.endDate,
-																						id:9
+																						placeOfSupplyId:9
 																					});
 																				}}>
 																		<Currency
@@ -1005,7 +1006,7 @@ class VatReturnsReport extends React.Component {
 																						description:"Box 5 - Exempt supplies",
 																						startDate:this.props.location.state.startDate,
 																						endDate:this.props.location.state.endDate,
-																						id:10
+																						placeOfSupplyId:10
 																					});
 																				}}>
 																		<Currency
@@ -1150,7 +1151,7 @@ class VatReturnsReport extends React.Component {
 																						description:"Box 9 - Standard rated expenses",
 																						startDate:this.props.location.state.startDate,
 																						endDate:this.props.location.state.endDate,
-																						id:11
+																						placeOfSupplyId:11
 																					});
 																				}}>
 																		<Currency
@@ -1208,8 +1209,8 @@ class VatReturnsReport extends React.Component {
 																						description:"Box 10 - Supplies subject to the reverse charge provisions",
 																						startDate:this.props.location.state.startDate,
 																						endDate:this.props.location.state.endDate,
-																						id:8
-																					});
+																						placeOfSupplyId:8
+																																										});
 																				}}>
 																		<Currency
 																			value={this.state.data[

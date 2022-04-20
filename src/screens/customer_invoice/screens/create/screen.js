@@ -2918,7 +2918,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																				props.handleChange('shippingStateId')('');
 																			}
 																		}}
-																		placeholder={props.values.shippingCountryId &&props.values.shippingCountryId.value && props.values.shippingCountryId.value === 229 ? strings.Emirates: strings.StateRegion}
+																		placeholder={props.values.shippingCountryId &&props.values.shippingCountryId.value && props.values.shippingCountryId.value === 229 ? strings.Emirate: strings.StateRegion}
 																		id="shippingStateId"
 																		name="shippingStateId"
 																		className={

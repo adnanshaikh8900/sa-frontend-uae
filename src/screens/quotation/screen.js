@@ -323,7 +323,7 @@ class Quatation extends React.Component {
 									this.changeStatus(row.id,"Sent");
 								}}
 							>
-							<i class="far fa-arrow-alt-circle-right"></i>Mark As Sent
+							<i class="far fa-arrow-alt-circle-right"></i>{strings.Mark_As_Sent}
 							</DropdownItem>)}
 							{row.status === 'Sent' && (
 							<DropdownItem
@@ -1108,7 +1108,7 @@ class Quatation extends React.Component {
 											 dataFormat={this.quotationCreatedDate}
 												className="table-header-bg"
 											>
-											Created Date
+											{strings.CREATED_DATE}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="poApproveDate"

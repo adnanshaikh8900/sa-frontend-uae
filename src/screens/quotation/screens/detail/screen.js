@@ -1797,7 +1797,7 @@ console.log(this.state.supplier_currency)
 																<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="taxTreatmentid">
-																		Tax Treatment
+																		{strings.TaxTreatment}
 																	</Label>
 																	<Input
 																	disabled
@@ -2011,10 +2011,10 @@ console.log(this.state.supplier_currency)
 																	</Button>
 																</Col>
 																<Col  >
-																<label className='mr-4'><b>Tax Type</b></label>
+																<label className='mr-4'><b>{strings.tax_type}</b></label>
 																{this.state.taxType === false ?
-																	<span style={{ color: "#0069d9" }} className='mr-4'><b>Exclusive</b></span> :
-																	<span className='mr-4'>Exclusive</span>}
+																	<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Exclusive}</b></span> :
+																	<span className='mr-4'>{strings.Exclusive}</span>}
 																<Switch
 																	value={props.values.taxType}
 																	checked={this.state.taxType}
@@ -2043,8 +2043,8 @@ console.log(this.state.supplier_currency)
 																	className="react-switch "
 																/>
 																{this.state.taxType === true ?
-																	<span style={{ color: "#0069d9" }} className='ml-4'><b>Inclusive</b></span>
-																	: <span className='ml-4'>Inclusive</span>
+																	<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.Inclusive}</b></span>
+																	: <span className='ml-4'>{strings.Inclusive}</span>
 																}
 															</Col>
 															</Row>
@@ -2157,7 +2157,7 @@ console.log(this.state.supplier_currency)
 																			this.renderExcise(cell, rows, props)
 																		}
 																	>
-																	Excise
+																{strings.Excises}
 																	<i
 																			id="ExiseTooltip"
 																			className="fa fa-question-circle ml-1"
@@ -2177,7 +2177,7 @@ console.log(this.state.supplier_currency)
 																			this.renderDiscount(cell, rows, props)
 																		}
 																	>
-																	Discount Type
+																		{strings.DISCOUNT_TYPE}
 																	</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="vat"
@@ -2195,7 +2195,7 @@ console.log(this.state.supplier_currency)
 																			columnClassName="text-right"
 																			formatExtraData={universal_currency_list}
 																			>
-																			Vat amount
+																			{strings.VATAMOUNT}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="sub_total"
@@ -2236,7 +2236,7 @@ console.log(this.state.supplier_currency)
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
-																					Total Excise
+																					{strings.Total_Excise}
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-right">

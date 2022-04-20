@@ -65,6 +65,10 @@ Relationship2:"Relationship 2",
       Total_Excise:"Total Excise",
       Select_Excise:"Select Excise",
 
+      Mark_As_Sent:" Mark As Sent",
+      DISCOUNT_TYPE:"DISCOUNT TYPE",
+      Quotation_For:"Quotation For,",
+
       //Opening Balances
 
       OpeningBalance: "Opening Balance",
@@ -210,6 +214,7 @@ Relationship2:"Relationship 2",
       QUOTATIONNUMBER:"QUOTATION NUMBER",						
       EXPIRATIONDATE:"EXPIRY DATE",				
       AddNewRequest:"Add New Quotation",
+      CREATED_DATE:"CREATED DATE",
 
       //Create Quotation
       CreateQuotation:"Create Quotation",		
@@ -461,6 +466,7 @@ InventoryAccount:"Inventory Account",
 OpeningBalanceQuantity:"Opening Balance Quantity",
 ReOrderLevel:"Re-Order Level",
 excise_tax_type:"Excise Tax Type",
+tax_type:"Tax Type",
 excise_product:"Excise Product ?",
 excise_tax_slab:"Excise Tax Slab",
 Enabled:"Enabled",

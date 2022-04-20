@@ -1969,7 +1969,7 @@ class DetailCustomerInvoice extends React.Component {
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="taxTreatmentid">
-																		Tax Treatment
+																		{strings.TaxTreatment}
 																	</Label>
 																	<Input
 																	disabled
@@ -2336,7 +2336,7 @@ class DetailCustomerInvoice extends React.Component {
 																							}}
 																						/>
 																						<label htmlFor="inline-radio1">
-																						Do you want to change the Shipping Address for this invoice ?
+																						{strings.noteforchangeaddress}
 																					</label>
 																					</div>
 																				</FormGroup>
@@ -2758,10 +2758,10 @@ class DetailCustomerInvoice extends React.Component {
 																	</Button>
 																</Col>
 																<Col  >
-																<label className='mr-4'><b>Tax Type</b></label>
+																<label className='mr-4'><b>{strings.tax_type}</b></label>
 																{this.state.taxType === false ?
-																	<span style={{ color: "#0069d9" }} className='mr-4'><b>Exclusive</b></span> :
-																	<span className='mr-4'>Exclusive</span>}
+																	<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Exclusive}</b></span> :
+																	<span className='mr-4'>{strings.Exclusive}</span>}
 																<Switch
 																	value={props.values.taxType}
 																	checked={this.state.taxType}
@@ -2790,8 +2790,8 @@ class DetailCustomerInvoice extends React.Component {
 																	className="react-switch "
 																/>
 																{this.state.taxType === true ?
-																	<span style={{ color: "#0069d9" }} className='ml-4'><b>Inclusive</b></span>
-																	: <span className='ml-4'>Inclusive</span>
+																	<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.Inclusive}</b></span>
+																	: <span className='ml-4'>{strings.Inclusive}</span>
 																}
 															</Col>
 															</Row>
@@ -2896,7 +2896,7 @@ class DetailCustomerInvoice extends React.Component {
 																			this.renderExcise(cell, rows, props)
 																		}
 																	>
-																	Excise
+																	{strings.Excises}
 																	<i
 																			id="ExiseTooltip"
 																			className="fa fa-question-circle ml-1"
@@ -2916,7 +2916,7 @@ class DetailCustomerInvoice extends React.Component {
 																			this.renderDiscount(cell, rows, props)
 																		}
 																	>
-																	Discount Type
+																		{strings.DISCOUNT_TYPE}
 																	</TableHeaderColumn>
 
 																		<TableHeaderColumn
@@ -2934,7 +2934,7 @@ class DetailCustomerInvoice extends React.Component {
 																		columnClassName="text-right"
 																		formatExtraData={universal_currency_list}
 																	>
-																		Vat amount
+																		{strings.VATAMOUNT}
 																	</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="sub_total"
@@ -3111,7 +3111,7 @@ class DetailCustomerInvoice extends React.Component {
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
-																					Total Excise
+																					{strings.Total_Excise}
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-right">

@@ -2278,8 +2278,8 @@ discountType = (row) =>
 
 																<Col  >
 																{this.state.taxType === false ?
-																	<span style={{ color: "#0069d9" }} className='mr-4'><b>Exclusive</b></span> :
-																	<span className='mr-4'>Exclusive</span>}
+																	<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Exclusive}</b></span> :
+																	<span className='mr-4'>{strings.Exclusive}</span>}
 																<Switch
 																	value={props.values.taxType}
 																	checked={this.state.taxType}
@@ -2308,8 +2308,8 @@ discountType = (row) =>
 																	className="react-switch "
 																/>
 																{this.state.taxType === true ?
-																	<span style={{ color: "#0069d9" }} className='ml-4'><b>Inclusive</b></span>
-																	: <span className='ml-4'>Inclusive</span>
+																	<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.Inclusive}</b></span>
+																	: <span className='ml-4'>{strings.Inclusive}</span>
 																}
 															</Col>
 														</Row>
@@ -2415,7 +2415,7 @@ discountType = (row) =>
 																			this.renderExcise(cell, rows, props)
 																		}
 																	>
-																	Excise
+																{strings.Excises}
 																	<i
 																			id="ExiseTooltip"
 																			className="fa fa-question-circle ml-1"
@@ -2435,7 +2435,7 @@ discountType = (row) =>
 																			this.renderDiscount(cell, rows, props)
 																		}
 																	>
-																	DisCount
+																	{strings.DisCount}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="vat"
@@ -2453,7 +2453,7 @@ discountType = (row) =>
 																	columnClassName="text-right"
 																	formatExtraData={universal_currency_list}
 																	>
-																	Vat amount
+																{strings.VATAMOUNT}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="sub_total"
@@ -2496,7 +2496,7 @@ discountType = (row) =>
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
-																					Total Excise
+																					{strings.Total_Excise}
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-right">

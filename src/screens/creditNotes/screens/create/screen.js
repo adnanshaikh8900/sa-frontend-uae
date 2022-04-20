@@ -2682,7 +2682,7 @@ min="0"
 																			name="notes"
 																			id="notes"
 																			rows="6"
-																			placeholder={strings.Notes}
+																			placeholder={strings.DeliveryNotes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
 																			}
@@ -2693,7 +2693,7 @@ min="0"
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="receiptNumber">
-																					 {strings.ReceiptNumber}
+																					 {strings.ReferenceNumber}
 																				</Label>
 																				<Input
 																					type="text"

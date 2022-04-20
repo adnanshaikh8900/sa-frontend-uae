@@ -787,7 +787,7 @@ class Refund extends React.Component {
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="referenceCode">
-																					 {strings.ReceiptNumber}
+																					 {strings.ReferenceNumber}
 																				</Label>
 																				<Input
 																					type="text"
@@ -820,7 +820,7 @@ class Refund extends React.Component {
 																					name="notes"
 																					id="notes"
 																					rows="5"
-																					placeholder={strings.Notes}
+																					placeholder={strings.DeliveryNotes}
 																					onChange={(option) =>
 																						props.handleChange('notes')(option)
 																					}

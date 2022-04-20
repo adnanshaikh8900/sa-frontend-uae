@@ -2220,7 +2220,7 @@ console.log(this.state.supplier_currency)
 																			name="notes"
 																			id="notes"
 																			rows="6"
-																			placeholder={strings.Notes}
+																			placeholder={strings.DeliveryNotes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
 																			}

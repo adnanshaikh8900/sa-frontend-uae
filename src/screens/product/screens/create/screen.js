@@ -651,7 +651,7 @@ try {
 																							value,
 																						);
 																						this.setState({exciseTaxCheck:false,exciseType:false})
-																						props.handleChange('exciseTaxId')('',);
+																						props.handleChange('exciseTaxCheck')('',);
 																					}}
 																					checked={
 																						props.values.productType ===

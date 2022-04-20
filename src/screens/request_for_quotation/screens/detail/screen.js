@@ -2126,7 +2126,7 @@ setDate1= (props, value) => {
 																			name="notes"
 																			id="notes"
 																			rows="6"
-																			placeholder={strings.Notes}
+																			placeholder={strings.DeliveryNotes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
 																			}

@@ -496,7 +496,7 @@ class RecordTaxClaim extends React.Component {
 																					name="notes"
 																					id="notes"
 																					rows="5"
-																					placeholder={strings.Notes}
+																					placeholder={strings.DeliveryNotes}
 																					onChange={(option) =>
 																						props.handleChange('notes')(option)
 																					}

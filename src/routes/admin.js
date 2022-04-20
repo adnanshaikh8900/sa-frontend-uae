@@ -200,7 +200,8 @@ import {
 	GenerateAuditFile,
 	ViewFtaAuditReport,
 	ExciseTaxAuditReport,
-	ViewFtaExciseAuditReport
+	ViewFtaExciseAuditReport,
+	NotesSettings
 } from 'screens';
 
 const adminRoutes = [
@@ -1023,9 +1024,9 @@ const adminRoutes = [
 		component: User.screen,
 	},
 	{
-		path: '/admin/settings/import',
-		name: 'Migration',
-		component: Import.screen,
+		path: '/admin/settings/notesSettings',
+		name: 'SaveNoteSettings',		
+		component: NotesSettings.screen,
 	},
 	{
 		path: '/admin/settings/migrate',

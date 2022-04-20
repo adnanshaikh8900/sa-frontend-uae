@@ -81,7 +81,7 @@ const customStyles = {
 };
 
 const invoiceimage = require('assets/images/invoice/invoice.png');
-
+const ZERO=0.00;
 let strings = new LocalizedStrings(data);
 class CreateCreditNote extends React.Component {
 	constructor(props) {
@@ -395,7 +395,7 @@ class CreateCreditNote extends React.Component {
 }
 
 renderVatAmount = (cell, row,extraData) => {
-	return row.vatAmount === 0 ? this.state.customer_currency_symbol +" "+  row.vatAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 }): this.state.customer_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 });
+	return row.vatAmount  ? this.state.customer_currency_symbol +" "+  row.vatAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 }): this.state.customer_currency_symbol +" "+ ZERO.toLocaleString(navigator.language,{ minimumFractionDigits: 2 });
 
 }
 
@@ -452,7 +452,7 @@ renderDiscount = (cell, row, props) => {
 						   ? 'is-invalid'
 						   : ''
 				   }`}
-type="text"
+
 />
 <div class="dropdown open input-group-append">
 

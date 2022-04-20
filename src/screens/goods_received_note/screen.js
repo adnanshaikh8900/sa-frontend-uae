@@ -357,6 +357,14 @@ class GoodsReceivedNote extends React.Component {
 							</DropdownItem>
 						)} */}
 						<DropdownItem
+					
+					onClick={() =>
+						this.props.history.push('/admin/expense/goods-received-note/create', {parentId: row.id})
+					}
+				>
+					<i className="fas fa-copy" /> {strings.CreateADuplicate}
+				</DropdownItem>
+						<DropdownItem
 							onClick={() =>
 								this.props.history.push(
 									'/admin/expense/goods-received-note/view',

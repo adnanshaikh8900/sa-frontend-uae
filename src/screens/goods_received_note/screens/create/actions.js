@@ -54,3 +54,18 @@ export const checkValidation = (obj) => {
 			});
 	};
 };
+
+export const getGRNById = (_id) => {
+	return (dispatch) => {
+	  let data = {
+		method: 'GET',
+		url: `/rest/poquatation/getGRNById?id=${_id}`
+	  }
+  
+	  return authApi(data).then((res) => {
+		return res
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }

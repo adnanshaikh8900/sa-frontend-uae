@@ -778,6 +778,7 @@ this.props.customerInvoiceCreateActions.getQuotationById(quotationId)
 								const date1 = moment(values).add(temp, 'days').format('DD-MM-YYYY')
 								this.formRef.current.setFieldValue('invoiceDueDate',date1, true);
 							this.setExchange( this.getCurrency(res.data.contactId) );
+							this.addRow();
 						} else {
 							this.setState({
 								idCount: 0,
@@ -2201,13 +2202,16 @@ if(changeShippingAddress && changeShippingAddress==true)
 														if(values.shippingCity =="")  errors.shippingCity ='City is Required';
 													}
 
-													if(this.state.showpoBoxNumberErrorMsg==true)
-													errors.poBoxNumber="Please Enter 3 To 6 Digit PO Box Number";
+													
 
-													if (values.poBoxNumber === '') {
-														errors.poBoxNumber ='PO Box Number is Required';
+													if (values.changeShippingAddress=== true) {
+														if(values.poBoxNumber =="")
+														 errors.poBoxNumber ='PO Box Number is Required';
+														if(this.state.showpoBoxNumberErrorMsg==true)
+													      errors.poBoxNumber="Please Enter 3 To 6 Digit PO Box Number";
 													}
 														return errors;
+													
 												}}
 												validationSchema={Yup.object().shape({
 													invoice_number: Yup.string().required(
@@ -3410,7 +3414,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
 																		<TextareaAutosize
 																			type="textarea"
-																			style={{width: "1000px"}}
+																			style={{width: "800px"}}
 																			className="textarea"
 																			maxLength="255"
 																			name="notes"
@@ -3514,7 +3518,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																			type="textarea"
 																			className="textarea"
 																			maxLength="250"
-																			style={{width: "1000px"}}
+																			style={{width: "800px"}}
 																			name="receiptAttachmentDescription"
 																			id="receiptAttachmentDescription"
 																			rows="5"
@@ -3539,7 +3543,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																			type="textarea"
 																			className="textarea"
 																			maxLength="255"
-																			style={{width: "1000px"}}
+																			style={{width: "800px"}}
 																			name="footNote"
 																			id="footNote"
 																			rows="5"
@@ -3747,7 +3751,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																			? 'Creating...'
 																			: strings.Create }
 																	</Button>
-																	{this.state.quotationId ? "": (<Button
+																	{this.state.quotationId || this.props.location.state &&	this.props.location.state.parentInvoiceId ?"":<Button
 																		type="button"
 																		color="primary"
 																		className="btn-square mr-3"
@@ -3778,7 +3782,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		{this.state.disabled
 																			? 'Creating...'
 																			: strings.CreateandMore }
-																	</Button>)}
+																	</Button>}
 																	<Button
 																		color="secondary"
 																		className="btn-square"

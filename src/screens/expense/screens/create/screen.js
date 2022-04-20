@@ -427,7 +427,7 @@ debugger
 			
 				this.setState({ disabled: false });
 				if (res.status === 200) {
-					this.setState({ loading:false});
+					// this.setState({ loading:false});
 					resetForm(this.state.initValue);
 					this.props.commonActions.tostifyAlert(
 						'success',
@@ -469,22 +469,26 @@ debugger
 			});
 	};	
 	setExchange = (value) => {
+		if(this.props.currency_convert_list){
 		let result = this.props.currency_convert_list.filter((obj) => {
 		return obj.currencyCode === value;
 		});
 		console.log( this.props.currency_convert_list)
 		console.log(result)
 this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
+			}
 		};
 
 		setCurrency = (value) => {
+			if(this.props.currency_convert_list){
 			let result = this.props.currency_convert_list.filter((obj) => {
 			return obj.currencyCode === value;
 			});
 			console.log( this.props.currency_convert_list)
 			console.log(result)
 			this.formRef.current.setFieldValue('curreancyname', result[0].currencyName, true);
-			};
+			}
+		};
 
 	handleFileChange = (e, props) => {
 		e.preventDefault();
@@ -875,7 +879,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 														errors.expenseNumber =
 															'Expense Number Already Exists';
 													}
-													if(values.currency ==='' || values.currency === 150){
+													if(values.currency ==='' ){
 														errors.currency="Currency is Required "
 													}
 													if(this.state.showPlacelist===true && values.placeOfSupplyId ===''){
@@ -1811,7 +1815,7 @@ min="0"
 																			? 'Creating...'
 																			: strings.Create }
 																	</Button>
-																	<Button
+																	{this.props.location.state && this.props.location.state.parentId ? "" : <Button
 																		name="button"
 																		color="primary"
 																		className="btn-square mr-3"
@@ -1828,7 +1832,7 @@ min="0"
 																		<i className="fa fa-refresh"></i> 	{this.state.disabled
 																			? 'Creating...'
 																			: strings.CreateandMore }
-																	</Button>
+																	</Button>}
 																	<Button
 																		color="secondary"
 																		className="btn-square"

@@ -961,7 +961,7 @@ min="0"
 																			id="journalReferenceNo"
 																			name="journalReferenceNo"
 																			disabled
-																			placeholder={strings.ReferenceNumber}
+																			placeholder={strings.ReceiptNumber}
 																			value={props.values.journalReferenceNo}
 																			onChange={(option) => {
 																				if (
@@ -994,7 +994,7 @@ min="0"
 																					? false
 																					: true
 																			}
-																			placeholder={strings.Description}
+																			placeholder={strings.DeliveryNotes}
 																			value={props.values.description}
 																			onChange={(value) => {
 																				props.handleChange('description')(

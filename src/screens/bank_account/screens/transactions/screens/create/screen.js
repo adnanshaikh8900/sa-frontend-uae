@@ -1597,7 +1597,7 @@ class CreateBankTransaction extends React.Component {
 																				type="text"
 																				id="reference"
 																				name="reference"
-																				placeholder={strings.ReferenceNumber}
+																				placeholder={strings.ReceiptNumber}
 																				onChange={(option) => {
 																					if (
 																						option.target.value === '' ||

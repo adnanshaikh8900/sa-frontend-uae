@@ -277,6 +277,7 @@ try {
 		const isActive = this.state.productActive;
 		// const exciseType = this.state.exciseType;
 		const exciseAmount=this.state.exciseAmount;
+		const exciseTaxCheck = this.state.exciseTaxCheck;
 		const unitTypeId=data['unitTypeId'];
 		let productPriceType;
 		if (data['productPriceType'].includes('SALES')) {
@@ -306,6 +307,7 @@ try {
 			transactionCategoryId,
 			productCategoryId,
 			isActive,
+			exciseTaxCheck,
 			// exciseType,
 			unitTypeId,
 			...(salesUnitPrice.length !== 0 && {
@@ -649,7 +651,7 @@ try {
 																							value,
 																						);
 																						this.setState({exciseTaxCheck:false,exciseType:false})
-																						props.handleChange('exciseTaxId')('',);
+																						props.handleChange('exciseTaxCheck')('',);
 																					}}
 																					checked={
 																						props.values.productType ===
@@ -1000,7 +1002,7 @@ try {
 																						)
 																					 {
 																						this.setState({exciseTaxCheck:false,exciseType:false})
-																						props.handleChange('exciseTaxId')(
+																						props.handleChange('exciseTaxCheck')(
 																							'',
 																						);
 																					} else {
@@ -1641,12 +1643,7 @@ try {
 																			checked={props.values.isInventoryEnabled}
 																				
 																			
-																				className={
-																					props.errors.productPriceType &&
-																					props.touched.productPriceType
-																						? 'is-invalid'
-																						: ''
-																				}
+																			
 																			/>
 																		 {strings.EnableInventory}
 																			{props.errors.productPriceType &&

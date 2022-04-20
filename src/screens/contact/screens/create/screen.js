@@ -989,52 +989,6 @@ class CreateContact extends React.Component {
 
 															<Col md="4">
 																<FormGroup>
-																	{/* <Label htmlFor="select">{strings.POBoxNumber}</Label> */}
-																	<Label htmlFor="POBoxNumber">
-																		<span className="text-danger">* </span>{strings.POBoxNumber}
-																	</Label>
-																	<Input
-																		type="text"
-																		minLength="3"
-																		maxLength="6"
-																		id="poBoxNumber"
-																		name="poBoxNumber"
-																		autoComplete="Off"
-																		placeholder={strings.Enter + strings.POBoxNumber}
-																		onChange={(option) => {
-																			if (
-																				option.target.value === '' ||
-																				this.regEx.test(option.target.value)
-																			) {
-																				if(option.target.value.length<3)
-																				this.setState({showpoBoxNumberErrorMsg:true})
-																				else
-																				this.setState({showpoBoxNumberErrorMsg:false})
-																				props.handleChange('poBoxNumber')(
-																					option,
-																				);
-																			}
-																		}}
-																		value={props.values.poBoxNumber}
-																		className={
-																			props.errors.poBoxNumber &&
-																				props.touched.poBoxNumber
-																				? 'is-invalid'
-																				: ''
-																		}
-																	/>
-																	{props.errors.poBoxNumber &&
-																		props.touched.poBoxNumber && (
-																			<div className="invalid-feedback">
-																				{props.errors.poBoxNumber}
-																			</div>
-																		)}
-																</FormGroup>
-															</Col>
-
-
-															<Col md="4">
-																<FormGroup>
 																	<Label htmlFor="select">
 																		{strings.Website}
 																	</Label>
@@ -1370,9 +1324,54 @@ class CreateContact extends React.Component {
 																	)}
 																</FormGroup>
 															</Col>
-														
-															<Col md="4" style={{display:props.values.billingcountryId == 229 || props.values.billingcountryId.value == 229 ? 'none':''}}>
-																<FormGroup>
+														{props.values.billingcountryId == 229 || props.values.billingcountryId.value == 229 ? 
+														 	<Col md="4" >
+																 <FormGroup>
+															 {/* <Label htmlFor="select">{strings.POBoxNumber}</Label> */}
+															 <Label htmlFor="POBoxNumber">
+																 <span className="text-danger">* </span>{strings.POBoxNumber}
+															 </Label>
+															 <Input
+																 type="text"
+																 minLength="3"
+																 maxLength="6"
+																 id="poBoxNumber"
+																 name="poBoxNumber"
+																 autoComplete="Off"
+																 placeholder={strings.Enter + strings.POBoxNumber}
+																 onChange={(option) => {
+																	 if (
+																		 option.target.value === '' ||
+																		 this.regEx.test(option.target.value)
+																	 ) {
+																		 if(option.target.value.length<3)
+																		 this.setState({showpoBoxNumberErrorMsg:true})
+																		 else
+																		 this.setState({showpoBoxNumberErrorMsg:false})
+																		 props.handleChange('poBoxNumber')(
+																			 option,
+																		 );
+																	 }
+																 }}
+																 value={props.values.poBoxNumber}
+																 className={
+																	 props.errors.poBoxNumber &&
+																		 props.touched.poBoxNumber
+																		 ? 'is-invalid'
+																		 : ''
+																 }
+															 />
+															 {props.errors.poBoxNumber &&
+																 props.touched.poBoxNumber && (
+																	 <div className="invalid-feedback">
+																		 {props.errors.poBoxNumber}
+																	 </div>
+																 )}
+														 </FormGroup>
+														 </Col>
+
+														: 
+															<Col md="4" ><FormGroup>
 																	<Label htmlFor="postZipCode"><span className="text-danger"> </span>
 																		{strings.PostZipCode}
 																	</Label>
@@ -1409,7 +1408,9 @@ class CreateContact extends React.Component {
 																			</div>
 																		)}
 																</FormGroup>
-															</Col>
+																</Col>}
+														
+
 															<Col md="4">
 																<FormGroup>
 																	<Label htmlFor="billingPhoneNumber">{strings.Telephone}</Label>
@@ -1739,13 +1740,58 @@ class CreateContact extends React.Component {
 																</FormGroup>
 															</Col>
 
-															<Col md="4"style={{display:props.values.shippingCountryId == 229 || props.values.shippingCountryId.value == 229 ? 'none':''}}>
-																<FormGroup>
-																	<Label htmlFor="shippingPostZipCode"><span className="text-danger"> </span>
+															{props.values.shippingCountryId == 229 || props.values.shippingCountryId.value == 229 ? 
+														 	<Col md="4" >
+																 <FormGroup>
+															 {/* <Label htmlFor="select">{strings.POBoxNumber}</Label> */}
+															 <Label htmlFor="POBoxNumber">
+																 <span className="text-danger">* </span>{strings.POBoxNumber}
+															 </Label>
+															 <Input
+																 type="text"
+																 minLength="3"
+																 maxLength="6"
+																 id="poBoxNumber"
+																 name="poBoxNumber"
+																 autoComplete="Off"
+																 placeholder={strings.Enter + strings.POBoxNumber}
+																 onChange={(option) => {
+																	 if (
+																		 option.target.value === '' ||
+																		 this.regEx.test(option.target.value)
+																	 ) {
+																		 if(option.target.value.length<3)
+																		 this.setState({showpoBoxNumberErrorMsg:true})
+																		 else
+																		 this.setState({showpoBoxNumberErrorMsg:false})
+																		 props.handleChange('poBoxNumber')(
+																			 option,
+																		 );
+																	 }
+																 }}
+																 value={props.values.poBoxNumber}
+																 className={
+																	 props.errors.poBoxNumber &&
+																		 props.touched.poBoxNumber
+																		 ? 'is-invalid'
+																		 : ''
+																 }
+															 />
+															 {props.errors.poBoxNumber &&
+																 props.touched.poBoxNumber && (
+																	 <div className="invalid-feedback">
+																		 {props.errors.poBoxNumber}
+																	 </div>
+																 )}
+														 </FormGroup>
+														 </Col>
+
+														: 
+															<Col md="4" ><FormGroup>
+																	<Label htmlFor="postZipCode"><span className="text-danger"> </span>
 																		{strings.PostZipCode}
 																	</Label>
 																	<Input
-																	
 																		type="text"
 																		maxLength="6"
 																		id="shippingPostZipCode"
@@ -1758,10 +1804,10 @@ class CreateContact extends React.Component {
 																				this.regEx.test(option.target.value)
 																			) {
 																				props.handleChange('shippingPostZipCode')(
-																					option.target.value,
+																					option,
 																				);
-																				this.setState({isSame: false,});
 																			}
+																
 																		}}
 																		value={props.values.shippingPostZipCode}
 																		className={
@@ -1778,10 +1824,7 @@ class CreateContact extends React.Component {
 																			</div>
 																		)}
 																</FormGroup>
-															</Col>
-
-
-
+																</Col>}
 															<Col md="4">
 																<FormGroup>
 																	<Label htmlFor="shippingTelephone">{strings.Telephone}</Label>

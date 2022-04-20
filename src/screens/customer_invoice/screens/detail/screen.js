@@ -2965,7 +2965,7 @@ class DetailCustomerInvoice extends React.Component {
 																			type="textarea"
 																			className="textarea"
 																			maxLength="250"
-																			style={{width: "1000px"}}
+																			style={{width: "800px"}}
 																			name="notes"
 																			id="notes"
 																			rows="6"
@@ -3072,7 +3072,7 @@ class DetailCustomerInvoice extends React.Component {
 																			type="textarea"
 																			className="textarea"
 																			maxLength="250"
-																			style={{width: "1000px"}}
+																			style={{width: "800px"}}
 																			name="receiptAttachmentDescription"
 																			id="receiptAttachmentDescription"
 																			rows="5"
@@ -3097,7 +3097,7 @@ class DetailCustomerInvoice extends React.Component {
 																			type="textarea"
 																			className="textarea"
 																			maxLength="255"
-																			style={{width: "1000px"}}
+																			style={{width: "800px"}}
 																			name="footNote"
 																			id="footNote"
 																			rows="5"

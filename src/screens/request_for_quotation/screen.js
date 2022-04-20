@@ -515,6 +515,13 @@ class RequestForQuotation extends React.Component {
 								<i className="far fa-times-circle" /> {strings. Close}
 							</DropdownItem>
 							)}
+							<DropdownItem					
+								onClick={() =>
+									this.props.history.push(`/admin/expense/request-for-quotation/create`,{parentId: row.id})
+								}
+							>
+								<i className="fas fa-copy" /> {strings.CreateADuplicate}
+							</DropdownItem>
 						<DropdownItem
 							onClick={() =>
 								this.props.history.push(

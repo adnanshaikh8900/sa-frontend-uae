@@ -42,6 +42,8 @@ import Switch from "react-switch";
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 
+import moment from 'moment';
+
 const mapStateToProps = (state) => {
 	return {
 		contact_list: state.purchase_order.contact_list,
@@ -130,7 +132,7 @@ class CreatePurchaseOrder extends React.Component {
 				contact_po_number: '',
 				currencyCode: '',
 				poApproveDate: new Date(),
-				poReceiveDate: new Date(new Date().setMonth(new Date().getMonth() + 1)),
+				poReceiveDate: new Date(),
 				supplierId: '',
                 rfqNumber:'',
 				supplierReferenceNumber: '',
@@ -175,7 +177,34 @@ class CreatePurchaseOrder extends React.Component {
 			purchaseCategory: [],
 			exist: false,
 			language: window['localStorage'].getItem('language'),	
-			loadingMsg:"Loading..."
+			loadingMsg:"Loading...",
+			vat_list:[
+				{
+					"id": 1,
+					"vat": 5,
+					"name": "STANDARD RATED TAX (5%) "
+				},
+				{
+					"id": 2,
+					"vat": 0,
+					"name": "ZERO RATED TAX (0%)"
+				},
+				{
+					"id": 3,
+					"vat": 0,
+					"name": "EXEMPT"
+				},
+				{
+					"id": 4,
+					"vat": 0,
+					"name": "OUT OF SCOPE"
+				},
+				{
+					"id": 10,
+					"vat": 0,
+					"name": "N/A"
+				}
+			]
 		};
 
 		this.formRef = React.createRef();
@@ -586,7 +615,122 @@ class CreatePurchaseOrder extends React.Component {
 		return value === 0 ? this.state.supplier_currency_symbol +" "+ value.toLocaleString(navigator.language, { minimumFractionDigits: 2 ,maximumFractionDigits:2}) : this.state.supplier_currency_symbol +" "+ value.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
 	};
 
+	getParentPoDetails=(parentId)=>{
+		this.props.purchaseOrderCreateAction
+				.getPOById(parentId)
+				.then((res) => {
+					if (res.status === 200) {
+						this.getCompanyCurrency();
+						this.purchaseCategory();
+						this.setState(
+							{
+								current_po_id: this.props.location.state.id,
+								initValue: {
+									poApproveDate: res.data.poApproveDate
+										? moment(res.data.poApproveDate).format('DD-MM-YYYY')
+										: '',
+										poApproveDate1: res.data.poApproveDate
+										? res.data.poApproveDate
+										: '',
+										poReceiveDate: res.data.poReceiveDate
+										? moment(res.data.poReceiveDate).format('DD-MM-YYYY')
+										: '',
+										poReceiveDate1: res.data.poReceiveDate
+										? res.data.poReceiveDate
+										: '',
+										supplierId: res.data.supplierId ? res.data.supplierId : '',
+										poNumber: res.data.poNumber
+										? res.data.poNumber
+										: '',
+									totalVatAmount: res.data.totalVatAmount
+										? res.data.totalVatAmount
+										: 0,
+										totalAmount: res.data.totalAmount ? res.data.totalAmount : 0,
+										total_net: 0,
+									notes: res.data.notes ? res.data.notes : '',
+									lineItemsString: res.data.poQuatationLineItemRequestModelList
+										? res.data.poQuatationLineItemRequestModelList
+										: [],
+										supplierReferenceNumber: res.data.supplierReferenceNumber ? 
+										res.data.supplierReferenceNumber : '',
+										rfqNumber: res.data.rfqNumber ? res.data.rfqNumber : '',
+										placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+										total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : 0,
+										// discount: res.data.discount ? res.data.discount : 0,
+										taxType : res.data.taxType ? true : false,
+								
+								},
+								poApproveDateNotChanged : res.data.poApproveDate
+								? moment(res.data.poApproveDate)
+								: '',
+								poReceiveDateNotChanged: res.data.poReceiveDate
+								? moment(res.data.poReceiveDate)
+								: '',
+								poApproveDate: res.data.poApproveDate
+								? res.data.poApproveDate
+								: '',
+								poReceiveDate: res.data.poReceiveDate
+										? res.data.poReceiveDate
+										: '',
+										taxType : res.data.taxType ? true : false,
+								customer_taxTreatment_des : res.data.taxtreatment ? res.data.taxtreatment : '',
+								placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+								total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
+								data: res.data.poQuatationLineItemRequestModelList
+									? res.data.poQuatationLineItemRequestModelList
+									: [],
+								selectedContact: res.data.supplierId ? res.data.supplierId : '',
+							
+								loading: false,
+							},
+							() => {
+								if (this.state.data.length > 0) {
+									this.updateAmount(this.state.data);
+									const { data } = this.state;
+									const idCount =
+										data.length > 0
+											? Math.max.apply(
+													Math,
+													data.map((item) => {
+														return item.id;
+													}),
+											  )
+											: 0;
+									this.setState({
+										idCount,
+									});
+									let tmpSupplier_list = []
+							           this.props.supplier_list.map(item => {
+										let obj = {label: item.label.contactName, value: item.value}
+										tmpSupplier_list.push(obj)
+									})
+								let supplier=	tmpSupplier_list && selectOptionsFactory.renderOptions('label','value',tmpSupplier_list,strings.CustomerName,).find((option) => option.value ==res.data.supplierId)
+									this.formRef.current.setFieldValue('supplierId', supplier, true);
+									this.formRef.current.setFieldValue('placeOfSupplyId', res.data.placeOfSupplyId, true);
+									this.formRef.current.setFieldValue('currency', this.getCurrency(res.data.supplierId), true);
+									this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(res.data.supplierId), true);
+									this.formRef.current.setFieldValue('notes',  res.data.notes, true);
+								let rfq=selectOptionsFactory.renderOptions('label','value',this.props.rfq_list.data,'RFQ Number',)
+									        .find((option) => option.label == res.data.rfqNumber)
+											debugger
+									this.formRef.current.setFieldValue('rfqNumber',rfq, true);
+									this.formRef.current.setFieldValue('supplierReferenceNumber',  res.data.supplierReferenceNumber, true);
+									this.addRow();
+								} else {
+									this.setState({
+										idCount: 0,
+									});
+								}
+							},
+						);
+						 
+						this.getCurrency(res.data.supplierId)	
+			}
+		});
+	}
+
 	componentDidMount = () => {
+		this.props.purchaseOrderAction.getVatList();
 		if(this.props.location.state && this.props.location.state.rfqId){
 			this.props.purchaseOrderAction.getRFQList();
 			let option={value:this.props.location.state.rfqId,label:this.props.location.state.rfqNumber}
@@ -595,11 +739,16 @@ class CreatePurchaseOrder extends React.Component {
         this.getInitialData();
 		if(this.props.location.state &&this.props.location.state.contactData)
 				this.getCurrentUser(this.props.location.state.contactData);
+		if(this.props.location.state && this.props.location.state.parentId )
+				this.getParentPoDetails(this.props.location.state.parentId);
 	};
 
     
 	getInitialData = () => {
-
+		this.props.purchaseOrderAction.getVatList().then((res)=>{
+			if(res.status==200 && res.data)
+			 this.setState({vat_list:res.data})
+		});
 		this.getInvoiceNo();
 		this.props.purchaseOrderAction.getSupplierList(this.state.contactType);
 		this.props.purchaseOrderAction.getRFQList();
@@ -1129,7 +1278,7 @@ class CreatePurchaseOrder extends React.Component {
 		let result = this.props.currency_convert_list.filter((obj) => {
 			return obj.currencyCode === value;
 		});
-
+		if(result &&result[0]&&  result[0].exchangeRate)
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
 		};
 
@@ -1356,9 +1505,9 @@ class CreatePurchaseOrder extends React.Component {
 		formData.append('notes', notes ? notes : '');
 		formData.append('type', 4);
 		formData.append('totalExciseAmount', this.state.initValue.total_excise);
-		if (placeOfSupplyId) {
-			formData.append('placeOfSupplyId', placeOfSupplyId.value ? placeOfSupplyId.value : placeOfSupplyId);
-		};
+		if (placeOfSupplyId ) {
+			formData.append('placeOfSupplyId', placeOfSupplyId.value ?placeOfSupplyId.value:placeOfSupplyId);
+		}
 		formData.append('exciseType', this.state.checked);
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
 		formData.append('totalVatAmount', this.state.initValue.totalVatAmount);
@@ -1380,7 +1529,7 @@ class CreatePurchaseOrder extends React.Component {
 			.createPO(formData)
 			.then((res) => {
 				this.setState({ disabled: false });
-				this.setState({ loading:false});
+				// this.setState({ loading:false});
 				this.props.commonActions.tostifyAlert(
 					'success',
 					res.data ? res.data.message : 'Purchase Order Created Successfully'
@@ -1391,6 +1540,7 @@ class CreatePurchaseOrder extends React.Component {
 							createMore: false,
 							selectedContact: '',
 							term: '',
+							exchangeRate:'',
 							data: [
 								{
 									id: 0,
@@ -1398,10 +1548,16 @@ class CreatePurchaseOrder extends React.Component {
 									quantity: 1,
 									unitPrice: '',
 									vatCategoryId: '',
+									exciseTaxId:'',
+									exciseAmount:'',
+									 discountType:'FIXED',
+									 discount:0,
 									subTotal: 0,
+									vatAmount:0,
 									productId: '',
-								
-								},
+									isExciseTaxExclusive: '',
+									unitType:'',
+									unitTypeId:''				},
 							],
 							initValue: {
 								...this.state.initValue,
@@ -1417,7 +1573,29 @@ class CreatePurchaseOrder extends React.Component {
 						},
 						() => {
 							resetForm(this.state.initValue);
+							this.setState({
+								data : [{
+									id: 0,
+									description: '',
+									quantity: 1,
+									unitPrice: '',
+									vatCategoryId: '',
+									exciseTaxId:'',
+									discountType: 'FIXED',
+									exciseAmount:'',
+									discount: 0,
+									subTotal: 0,
+									vatAmount:0,
+									productId: '',
+									isExciseTaxExclusive: '',
+									unitType:'',
+									unitTypeId:'',
+								},
+							],
+							loading: false
+						})
 							this.getInvoiceNo();
+							if(	this.formRef.current && this.state.data)
 							this.formRef.current.setFieldValue(
 								'lineItemsString',
 								this.state.data,
@@ -1611,6 +1789,7 @@ class CreatePurchaseOrder extends React.Component {
 						},
 					},
 				});
+				if( res &&  res.data &&this.formRef.current)
 				this.formRef.current.setFieldValue('po_number', res.data, true,this.validationCheck(res.data));
 			}
 		});
@@ -1726,8 +1905,7 @@ getrfqDetails = (e, row, props,form,field) => {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { data, discountOptions, initValue, prefix ,loading,loadingMsg} = this.state;
-
+		const { data, discountOptions, initValue, prefix,tax_treatment_list, param,loading,loadingMsg } = this.state;
 		const {
 			currency_list,
 			supplier_list,
@@ -2150,8 +2328,19 @@ getrfqDetails = (e, row, props,form,field) => {
 																				: []
 																		}
 																		value={
-																			this.state.placelist
-																						}
+																			this.placelist &&
+																			selectOptionsFactory.renderOptions(
+																				'label',
+																				'value',
+																				this.placelist,
+																				'Place of Supply',
+																		  ).find(
+																					(option) =>
+																					option.value ==
+																					((this.state.quotationId||this.state.parentId) ? this.state.placeOfSupplyId:props.values
+																					.placeOfSupplyId.toString())
+																				)
+																			}
 																		className={
 																			props.errors.placeOfSupplyId &&
 																			props.touched.placeOfSupplyId
@@ -2195,7 +2384,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																				: ''
 																		}`}
 																		placeholderText={strings.OrderDate}
-																		selected={props.values.poApproveDate}
+																		selected={props.values.poApproveDate ?new Date(props.values.poApproveDate):props.values.poApproveDate} 
 																		showMonthDropdown
 																		showYearDropdown
 																		dropdownMode="select"
@@ -2229,7 +2418,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																				: ''
 																		}`}
 																		placeholderText={strings.OrderDueDate}
-																		selected={props.values.poReceiveDate}
+																		selected={props.values.poReceiveDate ?new Date(props.values.poReceiveDate):props.values.poReceiveDate} 
 																		showMonthDropdown
 																		showYearDropdown
 																		dropdownMode="select"
@@ -2804,7 +2993,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																			? 'Creating...'
 																			: strings.Create}
 																	</Button>
-																	<Button
+																	{this.props.location.state &&	this.props.location.state.parentId ?"": <Button
 																		type="button"
 																		color="primary"
 																		className="btn-square mr-3"
@@ -2833,7 +3022,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																		{this.state.disabled
 																			? 'Creating...'
 																			: strings.CreateandMore}
-																	</Button>
+																	</Button>}
 																	<Button
 																		type="button"
 																		color="secondary"

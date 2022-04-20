@@ -581,6 +581,7 @@ class CreateSupplierInvoice extends React.Component {
 								const date1 = moment(values).add(temp, 'days').format('DD-MM-YYYY')
 								this.formRef.current.setFieldValue('invoiceDueDate',date1, true);
 							this.setExchange( this.getCurrency(res.data.contactId) );
+							this.addRow();
 						} else {
 							this.setState({
 								idCount: 0,
@@ -3413,7 +3414,7 @@ class CreateSupplierInvoice extends React.Component {
 																			? 'Creating...'
 																			: strings.Create}
 																	</Button>
-																	{this.state.poId ? "": (	<Button
+																	{this.state.poId || this.props.location.state &&	this.props.location.state.parentInvoiceId ?"":	<Button
 																		type="button"
 																		color="primary"
 																		className="btn-square mr-3"
@@ -3442,7 +3443,7 @@ class CreateSupplierInvoice extends React.Component {
 																		{this.state.disabled
 																			? 'Creating...'
 																			: strings.CreateandMore}
-																	</Button>)}
+																	</Button>}
 																	<Button
 																		type="button"
 																		color="secondary"

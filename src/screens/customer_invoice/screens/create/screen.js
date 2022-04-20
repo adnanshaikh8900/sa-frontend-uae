@@ -2971,45 +2971,6 @@ if(changeShippingAddress && changeShippingAddress==true)
 																</FormGroup>
 															</Col>
 
-															{/* <Col md="4">
-																<FormGroup>
-																	<Label htmlFor="shippingPostZipCode"><span className="text-danger">* </span>
-																		{strings.PostZipCode}
-																	</Label>
-																	<Input
-																	
-																		type="text"
-																		maxLength="6"
-																		id="shippingPostZipCode"
-																		name="shippingPostZipCode"
-																		placeholder={strings.Enter + strings.PostZipCode}
-																		onChange={(option) => {
-																			if (
-																				option.target.value === '' ||
-																				this.regEx.test(option.target.value)
-																			) {
-																				props.handleChange('shippingPostZipCode')(
-																					option.target.value,
-																				);
-																			}
-																		}}
-																		value={props.values.shippingPostZipCode}
-																		className={
-																			props.errors.shippingPostZipCode &&
-																				props.touched.shippingPostZipCode
-																				? 'is-invalid'
-																				: ''
-																		}
-																	/>
-																	{props.errors.shippingPostZipCode &&
-																		props.touched.shippingPostZipCode && (
-																			<div className="invalid-feedback">
-																				{props.errors.shippingPostZipCode}
-																			</div>
-																		)}
-																</FormGroup>
-															</Col> */}
-
 															<Col md="4">
 																<FormGroup>
 																	{/* <Label htmlFor="select">{strings.POBoxNumber}</Label> */}

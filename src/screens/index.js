@@ -196,6 +196,7 @@ import ViewFtaAuditReport from './financial_report/sections/Fta_Audit_Report';
 import ExciseTaxAuditReport from './financial_report/sections/excise_tax_audit_report_MainPage'
 import ViewFtaExciseAuditReport from './financial_report/sections/Excise_Audit_Report'
 import ARAgingReport from './financial_report/sections/ar_aging_report'
+import SubReports from './financial_report/sections/vat_return/screens/subReports'
 import NotesSettings from './notesSetting'
 export {
 	LogIn,
@@ -376,5 +377,6 @@ export {
 	ExciseTaxAuditReport,
 	ViewFtaExciseAuditReport,
 	ARAgingReport,
+	SubReports,
 	NotesSettings
 };

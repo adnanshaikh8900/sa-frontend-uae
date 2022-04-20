@@ -98,7 +98,7 @@ zb:"Zoho-Livres",
 setbal:"Définir les soldes d’ouverture",
 mig:"Émigrer",
 
-//income
+//Income
 noteforchangeaddress:"Voulez-vous modifier l’adresse de livraison pour cette facture ?",
 Exclusive:"Exclusif",
 Inclusive:"Inclusif",
@@ -107,6 +107,12 @@ DisCount:"RABAIS",
 VATAMOUNT:"MONTANT DE LA TVA",
 Total_Excise:"Accise totale",
 Select_Excise:"Sélectionnez Accise",
+
+Mark_As_Sent:"Marquer comme envoyé",
+tax_type:"Type de taxe",
+DISCOUNT_TYPE:"TYPE DE REMISE",
+Quotation_For:"Devis pour,",
+
 
 
 
@@ -241,6 +247,7 @@ Select_Excise:"Sélectionnez Accise",
       QUOTATIONNUMBER:"NUMÉRO DE DEVIS",						
       EXPIRATIONDATE:"DATE D'EXPIRATION",				
       AddNewRequest:"Ajouter un nouveau devis",
+      CREATED_DATE:" DATE DE CRÉATION",
 
       //Create Quotation
       CreateQuotation:"Créer une citation",		
@@ -439,7 +446,7 @@ Contact:"Contact",
 EMAIL:"Messagerie électronique",		
 MOBILENUMBER:"NUMÉRO DE PORTABLE",
 Addnewcontact:"Ajouter un nouveau contact",
-TRN:"TRN",
+TRN:"Le",
 TaxTreatment:"Traitement fiscal",
 STATUS:"STATUT",
 BillingAddress:"Adresse de facturation",

@@ -65,6 +65,10 @@ RecieptNumber:"عدد إيصال",
         Total_Excise:"إجمالي المكوس",
         Select_Excise:"اختر المكوس",
 
+        Mark_As_Sent:" وضع علامة كمرسل",
+        tax_type:"نوع الضريبة",
+        DISCOUNT_TYPE:"نوع الخصم",
+        Quotation_For:"اقتباس ل،",
 
       //Opening Balance
       OpeningBalance: "الرصيد الافتتاحي",
@@ -197,6 +201,7 @@ RecieptNumber:"عدد إيصال",
       QUOTATIONNUMBER:"رقم عرض الأسعار",						
       EXPIRATIONDATE:"تاريخ انتهاء الصلاحية",				
       AddNewRequest:"أضف عرض أسعار جديد",
+      CREATED_DATE:" تاريخ الإنشاء",
 
       //Create Quotation
       CreateQuotation:"إنشاء عرض أسعار",		
@@ -413,7 +418,7 @@ Emirate:"الإمارة",
 inactive:"كسلان",
 MOBILENUMBER:"رقم الهاتف المحمول",
 Addnewcontact:"إضافة جهة اتصال جديدة",
-TRN:"TRN",
+TRN:"تي آر إن",
 
 
 //Product

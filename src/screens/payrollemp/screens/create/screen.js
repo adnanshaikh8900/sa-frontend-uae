@@ -689,10 +689,10 @@ existForAccountNumber = (value) => {
             'city',
             city != null ? city : '',
         )
-        formData.append(
-            'pincode',
-            pincode != null ? pincode : '',
-        )
+        // formData.append(
+        //     'pincode',
+        //     pincode != null ? pincode : '',
+        // )
             formData.append(
                 'university',
                 university != null ? university :'',
@@ -1268,8 +1268,8 @@ existForAccountNumber = (value) => {
                                                                             .required('Gender is Required') ,
                                                                             presentAddress: Yup.string()
                                                                             .required('Present Address is Required') ,
-                                                                            pincode: Yup.string()
-                                                                            .required('Pin Code is Required') ,
+                                                                            // pincode: Yup.string()
+                                                                            // .required('Pin Code is Required') ,
                                                                             countryId: Yup.string()
                                                                             .required('Country is Required') ,
                                                                             stateId: Yup.string()

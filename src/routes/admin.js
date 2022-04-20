@@ -202,7 +202,6 @@ import {
 	ExciseTaxAuditReport,
 	ViewFtaExciseAuditReport,
 	SubReports,
-	ViewFtaExciseAuditReport,
 	NotesSettings
 } from 'screens';
 

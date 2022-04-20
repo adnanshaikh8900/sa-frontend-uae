@@ -378,6 +378,5 @@ export {
 	ViewFtaExciseAuditReport,
 	ARAgingReport,
 	SubReports,
-	ARAgingReport,
 	NotesSettings
 };

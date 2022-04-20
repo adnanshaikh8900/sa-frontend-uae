@@ -54,6 +54,18 @@ RecieptNumber:"عدد إيصال",
         ContactNumber2:"رقم الاتصال 2",
         Relationship1:"العلاقة 1",
         Relationship2:"2 العلاقة ",
+
+        //Income
+        noteforchangeaddress:"هل تريد تغيير عنوان الشحن لهذه الفاتورة؟",
+        Exclusive:"خاص",
+        Inclusive:"شامله",
+        Excises: " المكوس ",
+        DisCount:"خصم",
+        VATAMOUNT:"مبلغ ضريبة القيمة المضافة",
+        Total_Excise:"إجمالي المكوس",
+        Select_Excise:"اختر المكوس",
+
+
       //Opening Balance
       OpeningBalance: "الرصيد الافتتاحي",
       TRANSACTIONCATEGORYNAME : "اسم فئة المعاملة",
@@ -164,6 +176,7 @@ RecieptNumber:"عدد إيصال",
       Country:"بلد",
       StateRegion:"منطقة الولاية ",
       Emirates:"الإمارات",
+      Emirate:"الإمارة",
       City:"مدينة",
       PostZipCode:"الرمز البريدي",
       InvoicingDetails:"تفاصيل الفوترة ",
@@ -374,6 +387,7 @@ AddnewAccount:"إضافة حساب جديد",
 NewChartAccount:"حساب مخطط جديد",		
 Name:"اسم",		
 Type:"نوع",		
+Chart_of_Account:"دليل الحساب",
 
 //Contact
 CONTACTORGANIZATIONTNAME:"اسم منظمة الاتصال",
@@ -393,6 +407,7 @@ ShippingAddress:"عنوان الشحن",
 page_size:"حجم الصفحة:",
 active:"نشط",
 Emirates:"الامارات",
+Emirate:"الإمارة",
 inactive:"كسلان",
 MOBILENUMBER:"رقم الهاتف المحمول",
 Addnewcontact:"إضافة جهة اتصال جديدة",
@@ -650,7 +665,7 @@ GeneralSettings:"الإعدادات العامة",
 User:"المستعمل",	
 Help:"مساعدة",	
 LogOut:"تسجيل خروج",
-MailTheams:"بريد ثيمز",
+MailThemes:"نسق البريد",
 Import:"استورد",
 
 //Role
@@ -671,8 +686,8 @@ RoleName:"اسم الدور",
 //general settings
 TestMail:" اختبار البريد ",
 //Mail Theams
-Theame1:"ثيامي1",
-Theame2:"ثيامي2",
+Theme1:"الموضوع1",
+Theme2:"الموضوع2",
 //Import
 Migration:"هجرة",
 import:"استورد",

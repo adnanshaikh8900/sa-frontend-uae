@@ -366,6 +366,9 @@ class CreateContact extends React.Component {
 													if (values.stateId === '') {
 														errors.stateId ='State is Required';
 													}
+													if (values.poBoxNumber === '') {
+														errors.poBoxNumber ='PO Box Number is Required';
+													}
 													// if (values.stateId.label && values.stateId.label === 'Select State') {
 													// 	errors.stateId ='State is Required';
 													// }
@@ -389,13 +392,13 @@ class CreateContact extends React.Component {
 													// 	errors.discount =
 													// 		'Discount amount Cannot be greater than Invoice Total Amount';
 													// }
-													if(values.billingPostZipCode.length!=6){
-														errors.billingPostZipCode="Please Enter 6 Digit Postal Zip Code"
-													}
+													// if(values.billingPostZipCode.length!=6){
+													// 	errors.billingPostZipCode="Please Enter 6 Digit Postal Zip Code"
+													// }
 
-													if(values.shippingPostZipCode.length!=6){
-														errors.shippingPostZipCode="Please Enter 6 Digit Postal Zip Code"
-													}
+													// if(values.shippingPostZipCode.length!=6){
+													// 	errors.shippingPostZipCode="Please Enter 6 Digit Postal Zip Code"
+													// }
 
 													if(this.state.showbillingFaxErrorMsg==true)
 													errors.billingFax="Please Enter 8 Digit Fax"
@@ -405,7 +408,7 @@ class CreateContact extends React.Component {
 													errors.shippingFax="Please Enter 8 Digit Fax"
 
 													if(this.state.showpoBoxNumberErrorMsg==true)
-													errors.poBoxNumber="Please Enter 6 Digit PO Box Number"
+													errors.poBoxNumber="Please Enter 3 To 6 Digit PO Box Number"
 
 
 													return errors;
@@ -438,8 +441,8 @@ class CreateContact extends React.Component {
 													),
 													//       organization: Yup.string()
 													//       .required("Organization Name is Required"),
-													//     poBoxNumber: Yup.number()
-													//       .required("PO Box Number is Required"),
+													poBoxNumber: Yup.number()
+													    .required("PO Box Number is Required"),
 													email: Yup.string()
 														.required('Email is Required')
 														.email('Invalid Email')
@@ -480,18 +483,18 @@ class CreateContact extends React.Component {
 														'City is Required',
 													),
 													
-													billingPostZipCode: Yup.string().required(
-														'Postal Code is Required',
-													),
+													// billingPostZipCode: Yup.string().required(
+													// 	'Postal Code is Required',
+													// ),
 													shippingCountryId: Yup.string().required(
 														'Country is Required',
 													),
 													shippingStateId: Yup.string().required(
 														'State is Required',
 													),
-													shippingPostZipCode: Yup.string().required(
-														'Postal Code is Required',
-													),
+													// shippingPostZipCode: Yup.string().required(
+													// 	'Postal Code is Required',
+													// ),
 													shippingCity: Yup.string().required(
 														'City is Required',
 													),
@@ -986,10 +989,13 @@ class CreateContact extends React.Component {
 
 															<Col md="4">
 																<FormGroup>
-																	<Label htmlFor="select">{strings.POBoxNumber}</Label>
+																	{/* <Label htmlFor="select">{strings.POBoxNumber}</Label> */}
+																	<Label htmlFor="POBoxNumber">
+																		<span className="text-danger">* </span>{strings.POBoxNumber}
+																	</Label>
 																	<Input
 																		type="text"
-																		minLength="6"
+																		minLength="3"
 																		maxLength="6"
 																		id="poBoxNumber"
 																		name="poBoxNumber"
@@ -1000,7 +1006,7 @@ class CreateContact extends React.Component {
 																				option.target.value === '' ||
 																				this.regEx.test(option.target.value)
 																			) {
-																				if(option.target.value.length !=6 && option.target.value !="")
+																				if(option.target.value.length<3)
 																				this.setState({showpoBoxNumberErrorMsg:true})
 																				else
 																				this.setState({showpoBoxNumberErrorMsg:false})
@@ -1254,7 +1260,7 @@ class CreateContact extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="stateId"><span className="text-danger">* </span>
 																			{/* {strings.StateRegion} */}
-																			{props.values.billingcountryId.value === 229 ? strings.Emirates: strings.StateRegion}
+																			{props.values.billingcountryId.value === 229 ? strings.Emirate: strings.StateRegion}
 																	</Label>
 																	<Select
 																		options={
@@ -1263,7 +1269,7 @@ class CreateContact extends React.Component {
 																					'label',
 																					'value',
 																					state_list,
-																					props.values.billingcountryId.value === 229 ? strings.Emirates: strings.StateRegion,
+																					props.values.billingcountryId.value === 229 ? strings.Emirate: strings.StateRegion,
 																				)
 																				: []
 																		}
@@ -1276,7 +1282,7 @@ class CreateContact extends React.Component {
 																				props.handleChange('stateId')('');
 																			}
 																		}}
-																		placeholder={strings.Select + props.values.billingcountryId === 229 || props.values.billingcountryId.value === 229 ? strings.Emirates: strings.StateRegion}
+																		placeholder={strings.Select + props.values.billingcountryId === 229 || props.values.billingcountryId.value === 229 ? strings.Emirate: strings.StateRegion}
 																		id="stateId"
 																		name="stateId"
 																		className={
@@ -1364,9 +1370,10 @@ class CreateContact extends React.Component {
 																	)}
 																</FormGroup>
 															</Col>
-															<Col md="4">
+														
+															<Col md="4" style={{display:props.values.billingcountryId == 229 || props.values.billingcountryId.value == 229 ? 'none':''}}>
 																<FormGroup>
-																	<Label htmlFor="postZipCode"><span className="text-danger">* </span>
+																	<Label htmlFor="postZipCode"><span className="text-danger"> </span>
 																		{strings.PostZipCode}
 																	</Label>
 																	<Input
@@ -1648,7 +1655,7 @@ class CreateContact extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="shippingStateId"><span className="text-danger">* </span>
 																		{/* {strings.StateRegion} */}
-																	{	props.values.shippingCountryId.value === 229 ? strings.Emirates: strings.StateRegion}
+																	{	props.values.shippingCountryId.value === 229 ? strings.Emirate: strings.StateRegion}
 																	</Label>
 																	<Select
 																		options={
@@ -1657,7 +1664,7 @@ class CreateContact extends React.Component {
 																					'label',
 																					'value',
 																					state_list_for_shipping,
-																					props.values.shippingCountryId.value === 229 ? strings.Emirates: strings.StateRegion,
+																					props.values.shippingCountryId.value === 229 ? strings.Emirate: strings.StateRegion,
 																				)
 																				: []
 																		}
@@ -1676,7 +1683,7 @@ class CreateContact extends React.Component {
 																				props.handleChange('shippingStateId')('');
 																			}
 																		}}
-																		placeholder={ props.values.shippingCountryId.value === 229 ? strings.Emirates: strings.StateRegion}
+																		placeholder={ props.values.shippingCountryId.value === 229 ? strings.Emirate: strings.StateRegion}
 																		id="shippingStateId"
 																		name="shippingStateId"
 																		className={
@@ -1732,9 +1739,9 @@ class CreateContact extends React.Component {
 																</FormGroup>
 															</Col>
 
-															<Col md="4">
+															<Col md="4"style={{display:props.values.shippingCountryId == 229 || props.values.shippingCountryId.value == 229 ? 'none':''}}>
 																<FormGroup>
-																	<Label htmlFor="shippingPostZipCode"><span className="text-danger">* </span>
+																	<Label htmlFor="shippingPostZipCode"><span className="text-danger"> </span>
 																		{strings.PostZipCode}
 																	</Label>
 																	<Input

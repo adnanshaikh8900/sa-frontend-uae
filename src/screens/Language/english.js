@@ -55,6 +55,16 @@ ContactNumber2:"Contact Number 2",
 Relationship1:"Relationship 1",
 Relationship2:"Relationship 2",
 
+      //Income
+      noteforchangeaddress:"Do you want to change the Shipping Address for this invoice ?",
+      Exclusive:"Exclusive",
+      Inclusive:"Inclusive",
+      Excises:"EXCISE",
+      DisCount:"DISCOUNT",
+      VATAMOUNT:"VAT AMOUNT",
+      Total_Excise:"Total Excise",
+      Select_Excise:"Select Excise",
+
       //Opening Balances
 
       OpeningBalance: "Opening Balance",
@@ -177,6 +187,7 @@ Relationship2:"Relationship 2",
       Country:"Country",
       StateRegion:"State/Region",
       Emirates:"Emirates",
+      Emirate:"Emirate",
       City:"City",
       Fax:"Fax",
       PostZipCode:"Postal / Zip Code",
@@ -393,6 +404,7 @@ AddnewAccount:"Add new Account",
 NewChartAccount:"New Chart Account",		
 Name:"Name",		
 Type:"Type",		
+Chart_of_Account:"Chart of Account",
 
 //Contact
 CONTACTORGANIZATIONTNAME:"CONTACT/ORGANIZATION NAME",
@@ -408,6 +420,7 @@ ContactAddressDetails:"Contact Address Details",
 BillingDetails:"Billing Details",
 StateRegion:"State / Provinces",
 Emirates:"Emirates",
+Emirate:"Emirate",
 ShippingAddressIsSameAsBillingAddress:"Shipping Address Is Same As Billing Address",
 ShippingDetails:"Shipping Details",
 ShippingAddress:"Shipping Address",
@@ -670,7 +683,7 @@ GeneralSettings:"General Settings",
 User:"User",
 Help:"Help",
 LogOut:"Log Out",
-MailTheams:"Mail Theams",
+MailThemes:"Mail Themes",
 Import:"Import",
 
 //Role
@@ -691,8 +704,8 @@ RoleName:"Role Name",
 //general settings
 TestMail:"Test Mail",
 //Mail Theams
-Theame1:"Theame1",
-Theame2:"Theame2",
+Theme1:"Theme1",
+Theme2:"Theme2",
 //Import
 Migration:"Migration",
 import:"Import",

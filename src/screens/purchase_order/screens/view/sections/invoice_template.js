@@ -40,13 +40,17 @@ class RFQTemplate extends Component {
 	renderRFQStatus = (status) => {
 		let classname = '';
 		if (status === 'Approved') {
-			classname = 'label-approved';
+			classname = 'label-success';
 		} else if (status === 'Draft') {
 			classname = 'label-draft';
 		} else if (status === 'Closed') {
 			classname = 'label-closed';
 		}else if (status === 'Send') {
 			classname = 'label-due';
+		}else if (status === 'Sent') {
+			classname = 'label-sent';
+		}else if (status === 'Invoiced') {
+			classname = 'label-primary';
 		} else {
 			classname = 'label-overdue';
 		}

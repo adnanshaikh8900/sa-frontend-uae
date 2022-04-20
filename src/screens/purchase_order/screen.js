@@ -242,8 +242,9 @@ class PurchaseOrder extends React.Component {
 			classname = 'label-sent';
 		}else if(row.status === 'Rejected'){
 			classname = 'label-due'
-		}
-		 else {
+		}else if(row.status === 'Invoiced'){
+			classname = 'label-primary'
+		}else {
 			classname = 'label-overdue';
 		}
 		return (

@@ -187,6 +187,8 @@ class Quatation extends React.Component {
 			classname = 'label-success'
 		} else if(row.status === 'Rejected'){
 			classname = 'label-due'
+		}else if(row.status === 'Invoiced'){
+				classname = 'label-primary'
 		}else {
 			classname = 'label-overdue';
 		}

@@ -77,6 +77,8 @@ class ViewFtaExciseAuditReport extends React.Component {
 			},
 			chart_of_account_list: [],
 		};
+
+		// Company Information Table
 		this.columnHeaderCompany = [
 			{ label: 'Company Name', value: 'companyName', sort: true },
 			{ label: 'Taxable Person Name En', value: 'taxablePersonNameEn', sort: false },
@@ -92,20 +94,26 @@ class ViewFtaExciseAuditReport extends React.Component {
 			{ label: 'Product Version ', value: 'productVersion', sort: false },
 			{ label: 'FAF Version ', value: 'fafVersion', sort: false },
 		];
+
+		// Costumer Data Audit File
 		this.columnHeaderCustomer = [
 			{ label: 'Customer Name', value: 'customerName', sort: true },
-			{ label: 'GL/ID', value: 'glid', sort: true },
+			{ label: 'GL/ID', value: 'glId', sort: true },
 			{ label: 'Customer Country / Emirate', value: 'customerCountry', sort: false },
 			{ label: 'Customer TRN', value: 'customerTRN', sort: true },
-			// { label: 'Reverse Charge', value: 'reverseCharge', sort: true },
+			{ label: 'Reverse Charge', value: 'reverseCharge', sort: true },
 		];
+
+		// Supplier Data Audit File
 		this.columnHeaderSupplier = [
 			{ label: 'Supplier Name', value: 'supplierName', sort: true },
-			{ label: 'GL/ID', value: 'glid', sort: true },
+			{ label: 'GL/ID', value: 'glId', sort: true },
 			{ label: 'Supplier Country / Emirate', value: 'supplierCountry', sort: false },
 			{ label: 'Supplier TRN', value: 'supplierTRN', sort: true },
 			{ label: 'Reverse Charge', value: 'reverseCharge', sort: true },
 		];
+
+		// Purchase Data Information
 		this.columnHeaderPurchase = [
 			{ label: 'Supplier Name', value: 'supplierName', sort: true },
 			// { label: 'Supplier Country', value: 'supplierCountry', sort: false },
@@ -127,11 +135,15 @@ class ViewFtaExciseAuditReport extends React.Component {
 			{ label: 'Excise Tax Amount FCY', value: 'exciseTaxAmountFCY', sort: true },
 
 		];
+		
+		// Purchase Listing Total
 		this.columnHeaderCustomerTotal = [
 			{ label: 'Supply Total AED', value: 'supplyTotal', sort: false },
 			{ label: 'Excise Tax Total AED', value: 'exciseTaxTotal', sort: true },
 			{ label: 'Transaction Count Total', value: 'customerTransactionCountTotal', sort: true },
 		];
+		
+		// Supply Data Information
 		this.columnHeaderSupply = [
 			{ label: 'Customer Name', value: 'customerName', sort: true },
 			// { label: 'Customer Country', value: 'customerCountry', sort: false },
@@ -151,12 +163,15 @@ class ViewFtaExciseAuditReport extends React.Component {
 			{ label: 'Supply FCY', value: 'supplyFCY', sort: true },
 			{ label: 'Excise Amount FCY', value: 'vatfcy', sort: true },
 		];
+		
+		// Supply Listing Total
 		this.columnHeaderSupplierTotal = [
-			
 			{ label: 'Purchase Total AED', value: 'purchaseTotal', sort: false },
 			{ label: 'Excise Tax Total AED', value: 'supplierVATTotal', sort: true },
 			{ label: 'Transaction Count Total', value: 'supplierTransactionCountTotal', sort: true },
 		];
+		
+		// General Ledger Table
 		this.columnHeaderGenral = [
 			{ label: 'Transaction Date', value: 'transactionDate', sort: true },
 			{ label: 'Account ID', value: 'accountID', sort: false },
@@ -171,13 +186,16 @@ class ViewFtaExciseAuditReport extends React.Component {
 			{ label: 'Balance', value: 'balance', sort: true },
 		
 		];
+		
+		// General Ledger Table Total
 		this.columnHeaderGeneralTotal= [
-			
 			{ label: 'Total Debit', value: 'totalDebit', sort: true },
 			{ label: 'Total Credit', value: 'totalCredit', sort: false },
 			{ label: 'Transaction Count Total', value: 'transactionCountTotal', sort: true },
 			{ label: 'GLT Currency', value: 'gltcurrency', sort: true }
 		];
+		
+		// Stock File Table
 		this.columnStockFileTable= [
 			{ label: 'Ware House ID', value: 'wareHouseId', sort: true },
 			{ label: 'Product Code', value: 'productCode', sort: false },
@@ -519,10 +537,10 @@ class ViewFtaExciseAuditReport extends React.Component {
 														
 												</tbody>
 												</Table>
-<tr>
-	<> </>
-</tr>
-<tr>
+												<tr>
+													<> </>
+												</tr>
+												<tr>
 													<td><b><h5>
 													Costumer Data Audit File
 													</h5></b></td>
@@ -559,7 +577,7 @@ class ViewFtaExciseAuditReport extends React.Component {
 																						{item['customerName']}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
-																						{item['glid']}
+																						{item['glId']}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['customerCountry']}
@@ -567,9 +585,9 @@ class ViewFtaExciseAuditReport extends React.Component {
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['customerTRN']}
 																					</td>
-																					{/* <td style={{ width: '12%', textAlign: 'left'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['Reverse Charge']}
-																					</td> */}
+																					</td>
 																					
 																				
 																				</tr>
@@ -581,9 +599,9 @@ class ViewFtaExciseAuditReport extends React.Component {
 												</tbody>
 												</Table>
 												<tr>
-	<> </>
-</tr>
-<tr>
+													<> </>
+												</tr>
+												<tr>
 												<td><b><h5>
 												Supplier Data Audit File</h5></b>
 												</td>
@@ -619,7 +637,7 @@ class ViewFtaExciseAuditReport extends React.Component {
 																						{item['supplierName']}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
-																						{item['glid']}
+																						{item['glId']}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['supplierCountry']}
@@ -642,9 +660,9 @@ class ViewFtaExciseAuditReport extends React.Component {
 												</tbody>
 												</Table>
 												<tr>
-	<> </>
-</tr>
-<tr>
+													<> </>
+												</tr>
+												<tr>
 												<td><b><h5>
 												Purchase Data Information</h5></b>
 												</td>
@@ -742,9 +760,9 @@ class ViewFtaExciseAuditReport extends React.Component {
 												</tbody>
 												</Table>
 												<tr>
-	<> </>
-</tr>
-<tr>
+													<> </>
+												</tr>
+												<tr>
 													<td><b><h5>
 													Purchase Listing Total
 													</h5></b></td>
@@ -792,12 +810,12 @@ class ViewFtaExciseAuditReport extends React.Component {
 												</tbody>
 												</Table>
 												<tr>
-	<> </>
-</tr>
+													<> </>
+												</tr>
 												<tr>
-	<> </>
-</tr>
-<tr>
+														<> </>
+													</tr>
+													<tr>
 													<td><b><h5>
 													Supply Data Information
 													</h5></b></td>
@@ -891,9 +909,9 @@ class ViewFtaExciseAuditReport extends React.Component {
 												</tbody>
 												</Table>
 												<tr>
-	<> </>
-</tr>
-<tr>
+													<> </>
+												</tr>
+												<tr>
 													<td><b><h5>
 													Supply Listing Total
 													</h5></b></td>
@@ -941,9 +959,9 @@ class ViewFtaExciseAuditReport extends React.Component {
 												</tbody>
 												</Table>
 												<tr>
-	<> </>
-</tr>
-<tr>
+													<> </>
+												</tr>
+												<tr>
 													<td><b><h5>
 													General Ledger Table
 													</h5></b></td>
@@ -1018,9 +1036,9 @@ class ViewFtaExciseAuditReport extends React.Component {
 												</tbody>
 												</Table>
 												<tr>
-	<> </>
-</tr>
-<tr>
+													<> </>
+												</tr>
+												<tr>
 													<td><b><h5>
 													General Ledger Table Total
 													</h5></b></td>
@@ -1129,10 +1147,7 @@ class ViewFtaExciseAuditReport extends React.Component {
 																					<td style={{ width: '18%', textAlign: 'left'}}>
 																						{this.state.FtaExciseAuditData.goodsLocation}
 																					</td>
-																				
 																				</tr>
-																		
-														
 												</tbody>
 												</Table>
 											</Table>

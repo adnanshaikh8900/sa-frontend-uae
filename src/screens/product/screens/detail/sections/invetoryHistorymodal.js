@@ -39,6 +39,8 @@ import LocalizedStrings from 'react-localization';
 import '../style.scss';
 import { PDFExport } from '@progress/kendo-react-pdf';
 import ReactToPrint from 'react-to-print';
+import { Currency } from 'components';
+
 
 
 const mapStateToProps = (state) => {
@@ -114,11 +116,27 @@ class InventoryHistoryModal extends React.Component {
 	// Create
 
 	renderUnitCost  = (cell, row, extraData) => {
-		 return row.unitCost ? row.unitCost.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) :'';
-	};
-	renderunitSellingPrice  = (cell, row, extraData) => {
-		return row.unitSellingPrice ? row.unitSellingPrice.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) :"0.00";
-	};
+	return row.unitCost ? (  <Currency value={row.unitCost ?row.unitCost:0} 
+										currencySymbol={
+											this.props.universal_currency_list&&
+										this.props.universal_currency_list[0] && this.props.universal_currency_list[0].currencyIsoCode
+											? this.props.universal_currency_list[0].currencyIsoCode
+											: 'AED'
+										}/> )
+	                    :"";
+
+		};
+		renderunitSellingPrice  = (cell, row, extraData) => {
+	return row.unitSellingPrice ? (  <Currency value={row.unitSellingPrice ?row.unitSellingPrice:0} 
+										currencySymbol={
+											this.props.universal_currency_list&&
+										this.props.universal_currency_list[0] && this.props.universal_currency_list[0].currencyIsoCode
+											? this.props.universal_currency_list[0].currencyIsoCode
+											: 'AED'
+										}/> )
+	                    :"";
+
+		};
 	displayMsg = (err) => {
 		toast.error(`${err.data}`, {
 			position: toast.POSITION.TOP_RIGHT,

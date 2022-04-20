@@ -618,6 +618,7 @@ debugger
 									this.setState({
 										idCount,
 									});
+									this.addRow();
 								} else {
 									this.setState({
 										idCount: 0,
@@ -1476,9 +1477,16 @@ discountType = (row) =>
 									quantity: 1,
 									unitPrice: '',
 									vatCategoryId: '',
+									exciseTaxId:'',
+									discountType: 'FIXED',
+									exciseAmount:'',
+									discount: 0,
 									subTotal: 0,
+									vatAmount:0,
 									productId: '',
-								
+									isExciseTaxExclusive: '',
+									unitType:'',
+									unitTypeId:''
 								},
 							],
 							initValue: {
@@ -1491,11 +1499,34 @@ discountType = (row) =>
 									discount: 0,
 									discountPercentage: '',
 								},
+
 							},
 						},
 						() => {
 							resetForm(this.state.initValue);
+							this.setState({data: [
+								{
+									id: 0,
+									description: '',
+									quantity: 1,
+									unitPrice: '',
+									vatCategoryId: '',
+									exciseTaxId:'',
+									discountType: 'FIXED',
+									exciseAmount:'',
+									discount: 0,
+									subTotal: 0,
+									vatAmount:0,
+									productId: '',
+									isExciseTaxExclusive: '',
+									unitType:'',
+									unitTypeId:''
+								},
+							],
+						loading:false
+						})
 							this.getInvoiceNo();
+							if(	this.formRef.current && this.state.data)
 							this.formRef.current.setFieldValue(
 								'lineItemsString',
 								this.state.data,
@@ -2664,7 +2695,7 @@ discountType = (row) =>
 																			? 'Creating...'
 																			: strings.Create }
 																	</Button>
-																	<Button
+																	{this.props.location.state &&	this.props.location.state.parentId ?"":<Button
 																		type="button"
 																		color="primary"
 																		className="btn-square mr-3"
@@ -2693,7 +2724,7 @@ discountType = (row) =>
 																		{this.state.disabled
 																			? 'Creating...'
 																			: strings.CreateandMore }
-																	</Button>
+																	</Button>}
 																	<Button
 																		type="button"
 																		color="secondary"

@@ -38,6 +38,7 @@ import './style.scss';
 import Switch from "react-switch";
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import moment from 'moment';
 
 const mapStateToProps = (state) => {
 	return {
@@ -161,7 +162,34 @@ class CreateRequestForQuotation extends React.Component {
 			purchaseCategory: [],
 			exist: false,
 			language: window['localStorage'].getItem('language'),	
-			loadingMsg:"Loading..."
+			loadingMsg:"Loading...",
+			vat_list:[
+				{
+					"id": 1,
+					"vat": 5,
+					"name": "STANDARD RATED TAX (5%) "
+				},
+				{
+					"id": 2,
+					"vat": 0,
+					"name": "ZERO RATED TAX (0%)"
+				},
+				{
+					"id": 3,
+					"vat": 0,
+					"name": "EXEMPT"
+				},
+				{
+					"id": 4,
+					"vat": 0,
+					"name": "OUT OF SCOPE"
+				},
+				{
+					"id": 10,
+					"vat": 0,
+					"name": "N/A"
+				}
+			]
 	
 		};
 
@@ -480,14 +508,128 @@ class CreateRequestForQuotation extends React.Component {
 		return value === 0 ? this.state.supplier_currency_symbol +" "+ value.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ value.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 });
 	};
 
+	getParentRfqDetails=(parentId)=>{
+		this.props.requestForQuotationCreateAction
+				.getRFQeById(parentId)
+				.then((res) => {
+					if (res.status === 200) {
+						this.getCompanyCurrency();
+						this.purchaseCategory();
+						this.setState(
+							{
+								parentId: this.props.location.state.id,
+								initValue: {
+									rfqReceiveDate: res.data.rfqReceiveDate
+										? moment(res.data.rfqReceiveDate).format('DD-MM-YYYY')
+										: '',
+										rfqReceiveDate1: res.data.rfqReceiveDate
+										? res.data.rfqReceiveDate
+										: '',
+										rfqExpiryDate: res.data.rfqExpiryDate
+										? moment(res.data.rfqExpiryDate).format('DD-MM-YYYY')
+										: '',
+										rfqExpiryDate1: res.data.rfqExpiryDate
+										?  res.data.rfqExpiryDate
+										: '',
+										supplierId: res.data.supplierId ? res.data.supplierId : '',
+										rfqNumber: res.data.rfqNumber
+										? res.data.rfqNumber
+										: '',
+									totalVatAmount: res.data.totalVatAmount
+										? res.data.totalVatAmount
+										: 0,
+										totalAmount: res.data.totalAmount ? res.data.totalAmount : 0,
+										total_net: 0,
+									notes: res.data.notes ? res.data.notes : '',
+									lineItemsString: res.data.poQuatationLineItemRequestModelList
+										? res.data.poQuatationLineItemRequestModelList
+										: [],
+										fileName: res.data.fileName ? res.data.fileName : '',
+										
+										placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+										total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : 0,
+										taxType : res.data.taxType ? true : false,
+								},
+										rfqExpiryDateNoChange: res.data.rfqExpiryDate
+										?  moment(res.data.rfqExpiryDate)
+										: '',
+										rfqReceiveDateNoChange: res.data.rfqReceiveDate
+										? moment(res.data.rfqReceiveDate)
+										: '',	
+										rfqReceiveDate: res.data.rfqReceiveDate
+										? res.data.rfqReceiveDate
+										: '',	
+										rfqExpiryDate: res.data.rfqExpiryDate
+										? res.data.rfqExpiryDate
+										: '',
+										taxType : res.data.taxType ? true : false,
+								customer_taxTreatment_des : res.data.taxtreatment ? res.data.taxtreatment : '',
+								placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+								total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
+								contactId:res.data.supplierId ? res.data.supplierId : '',
+								data: res.data.poQuatationLineItemRequestModelList
+									? res.data.poQuatationLineItemRequestModelList
+									: [],
+								selectedContact: res.data.supplierId ? res.data.supplierId : '',
+							
+								loading: false,
+							},
+							() => {
+								if (this.state.data.length > 0) {
+									this.updateAmount(this.state.data);
+									const { data } = this.state;
+									const idCount =
+										data.length > 0
+											? Math.max.apply(
+													Math,
+													data.map((item) => {
+														return item.id;
+													}),
+											  )
+											: 0;
+									this.setState({
+										idCount,
+									});
+									
+									let tmpSupplier_list = []
+							           this.props.supplier_list.map(item => {
+										let obj = {label: item.label.contactName, value: item.value}
+										tmpSupplier_list.push(obj)
+									})
+								let supplier=	tmpSupplier_list && selectOptionsFactory.renderOptions('label','value',tmpSupplier_list,strings.CustomerName,).find((option) => option.value ==res.data.supplierId)
+									this.formRef.current.setFieldValue('supplierId', supplier, true);
+									this.formRef.current.setFieldValue('placeOfSupplyId', res.data.placeOfSupplyId, true);
+									this.formRef.current.setFieldValue('currency', this.getCurrency(res.data.supplierId), true);
+									this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(res.data.supplierId), true);
+									this.formRef.current.setFieldValue('notes',  res.data.notes, true);
+									this.addRow();
+								} else {
+									this.setState({
+										idCount: 0,
+									});
+								}
+							},
+						);
+						this.getCurrency(res.data.supplierId)	
+			}
+		});
+	}
+
 	componentDidMount = () => {
+		this.props.requestForQuotationAction.getVatList();
 		this.getInitialData();
-		if(this.props.location.state &&this.props.location.state.contactData)
-				this.getCurrentUser(this.props.location.state.contactData);
+		// if(this.props.location.state &&this.props.location.state.contactData)
+		// 		this.getCurrentUser(this.props.location.state.contactData);
+		if(this.props.location.state && this.props.location.state.parentId )
+				this.getParentRfqDetails(this.props.location.state.parentId);		
 		
 	};
 
 	getInitialData = () => {
+		this.props.requestForQuotationAction.getVatList().then((res)=>{
+			if(res.status==200 && res.data)
+			 this.setState({vat_list:res.data})
+		});
 		this.getInvoiceNo();
 		this.props.requestForQuotationAction.getSupplierList(this.state.contactType);
 		this.props.currencyConvertActions.getCurrencyConversionList().then((response) => {
@@ -944,7 +1086,7 @@ class CreateRequestForQuotation extends React.Component {
 		let result = this.props.currency_convert_list.filter((obj) => {
 			return obj.currencyCode === value;
 		});
-
+		if(result &&result[0]&&  result[0].exchangeRate)
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
 		};
 
@@ -1179,10 +1321,9 @@ class CreateRequestForQuotation extends React.Component {
 		formData.append('type', 3);
 		formData.append('totalExciseAmount', this.state.initValue.total_excise);
 		formData.append('exciseType', this.state.checked);
-		if (placeOfSupplyId) {
-			formData.append('placeOfSupplyId', placeOfSupplyId.value ? placeOfSupplyId.value : placeOfSupplyId);
+		if (placeOfSupplyId ) {
+			formData.append('placeOfSupplyId', placeOfSupplyId.value ?placeOfSupplyId.value:placeOfSupplyId);
 		}
-
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
 		formData.append('totalVatAmount', this.state.initValue.totalVatAmount);
 		formData.append('totalAmount', this.state.initValue.totalAmount);
@@ -1200,7 +1341,7 @@ class CreateRequestForQuotation extends React.Component {
 			.createRFQ(formData)
 			.then((res) => {
 				this.setState({ disabled: false });
-				this.setState({ loading:false});
+				// this.setState({ loading:false});
 				this.props.commonActions.tostifyAlert(
 					'success',
 					res.data ? res.data.message : 'Request For Quotation Created Successfully.',
@@ -1211,6 +1352,7 @@ class CreateRequestForQuotation extends React.Component {
 							createMore: false,
 							selectedContact: '',
 							term: '',
+							exchangeRate:'',
 							data: [
 								{
 									id: 0,
@@ -1218,9 +1360,16 @@ class CreateRequestForQuotation extends React.Component {
 									quantity: 1,
 									unitPrice: '',
 									vatCategoryId: '',
+									exciseTaxId:'',
+									discountType: 'FIXED',
+									exciseAmount:'',
+									discount: 0,
 									subTotal: 0,
+									vatAmount:0,
 									productId: '',
-								
+									isExciseTaxExclusive: '',
+									unitType:'',
+									unitTypeId:''
 								},
 							],
 							initValue: {
@@ -1238,7 +1387,29 @@ class CreateRequestForQuotation extends React.Component {
 						},
 						() => {
 							resetForm(this.state.initValue);
+							this.setState({data: [
+								{
+									id: 0,
+									description: '',
+									quantity: 1,
+									unitPrice: '',
+									vatCategoryId: '',
+									exciseTaxId:'',
+									discountType: 'FIXED',
+									exciseAmount:'',
+									discount: 0,
+									subTotal: 0,
+									vatAmount:0,
+									productId: '',
+									isExciseTaxExclusive: '',
+									unitType:'',
+									unitTypeId:''
+								},
+							],
+						loading:false
+						})
 							this.getInvoiceNo();
+							if(	this.formRef.current && this.state.data)
 							this.formRef.current.setFieldValue(
 								'lineItemsString',
 								this.state.data,
@@ -1420,6 +1591,7 @@ class CreateRequestForQuotation extends React.Component {
 						},
 					},
 				});
+				if( res &&  res.data &&this.formRef.current)
 				this.formRef.current.setFieldValue('rfq_number', res.data, true,this.validationCheck(res.data));
 			}
 		});
@@ -1488,7 +1660,7 @@ class CreateRequestForQuotation extends React.Component {
 	}
 	render() {
 		strings.setLanguage(this.state.language);
-		const { data, discountOptions, initValue, prefix,data1,loading,loadingMsg } = this.state;
+		const { data, discountOptions, initValue, prefix,tax_treatment_list, param,loading,loadingMsg,data1 } = this.state;
 
 		const {
 			currency_list,
@@ -1713,20 +1885,7 @@ class CreateRequestForQuotation extends React.Component {
 																				  )
 																				: []
 																		}
-																		value={this.state.quotationId ?
-
-																			tmpSupplier_list &&
-																		   selectOptionsFactory.renderOptions(
-																			   'label',
-																			   'value',
-																			   tmpSupplier_list,
-																			   strings.CustomerName,
-																		 ).find((option) => option.value == this.state.contactId)
-																		   
-																		 :
-																		 
-																		 props.values.contactId
-																		   }
+																		value={ props.values.supplierId }
 																		// onChange={(option) => {
 																		// 	if (option && option.value) {
 																		// 		props.handleChange('supplierId')(option);
@@ -1840,7 +1999,21 @@ class CreateRequestForQuotation extends React.Component {
 																				  )
 																				: []
 																		}
-																		value={this.state.placelist}
+																		value={
+																			this.placelist &&
+																			selectOptionsFactory.renderOptions(
+																				'label',
+																				'value',
+																				this.placelist,
+																				'Place of Supply',
+																		  ).find(
+																					(option) =>
+																					option.value ==
+																					((this.state.quotationId||this.state.parentId) ? this.state.placeOfSupplyId:props.values
+																					.placeOfSupplyId.toString())
+																				)
+																			}
+						
 																		className={
 																			props.errors.placeOfSupplyId &&
 																			props.touched.placeOfSupplyId
@@ -1882,7 +2055,7 @@ class CreateRequestForQuotation extends React.Component {
 																				: ''
 																		}`}
 																		placeholderText={strings.OrderDate}
-																		selected={props.values.rfqReceiveDate}
+																		selected={props.values.rfqReceiveDate ?new Date(props.values.rfqReceiveDate):props.values.rfqReceiveDate} 
 																		showMonthDropdown
 																		showYearDropdown
 																		dropdownMode="select"
@@ -1918,7 +2091,7 @@ class CreateRequestForQuotation extends React.Component {
 																				: ''
 																		}`}
 																		placeholderText={strings.OrderDueDate}
-																		selected={props.values.rfqExpiryDate}
+																		selected={props.values.rfqExpiryDate ?new Date(props.values.rfqExpiryDate):props.values.rfqExpiryDate} 
 																		showMonthDropdown
 																		showYearDropdown
 																		dropdownMode="select"
@@ -2431,7 +2604,7 @@ class CreateRequestForQuotation extends React.Component {
 																			? 'Creating...'
 																			: strings.Create }
 																	</Button>
-																	<Button
+																	{this.props.location.state &&	this.props.location.state.parentId ?"":<Button
 																		type="button"
 																		color="primary"
 																		className="btn-square mr-3"
@@ -2460,7 +2633,7 @@ class CreateRequestForQuotation extends React.Component {
 																		{this.state.disabled
 																			? 'Creating...'
 																			: strings.CreateandMore }
-																	</Button>
+																	</Button>}
 																	<Button
 																		type="button"
 																		color="secondary"

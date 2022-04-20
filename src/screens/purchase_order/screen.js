@@ -428,6 +428,13 @@ class PurchaseOrder extends React.Component {
 								<i className="fa fa-ban" />{strings.MarkAsRejected}
 							</DropdownItem>
 							)}
+							<DropdownItem					
+								onClick={() =>
+									this.props.history.push(`/admin/expense/purchase-order/create`,{parentId: row.id})
+								}
+							>
+								<i className="fas fa-copy" /> {strings.CreateADuplicate}
+							</DropdownItem>
 					<DropdownItem
 							onClick={() =>
 								this.props.history.push(

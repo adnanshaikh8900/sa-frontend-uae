@@ -764,7 +764,7 @@ class DetailCreditNote extends React.Component {
 							   ? 'is-invalid'
 							   : ''
 					   }`}
-	type="text"
+
 	/>
 	<div class="dropdown open input-group-append">
 	

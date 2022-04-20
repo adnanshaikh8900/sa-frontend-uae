@@ -122,7 +122,7 @@ class CreateGoodsReceivedNote extends React.Component {
 						description: '',
 						quantity: 1,
 						unitPrice: '',
-						grnReceivedQuantity: 0,
+						grnReceivedQuantity: "",
 						vatCategoryId: '',
 						exciseTaxId:'',
 						exciseAmount:'',
@@ -186,8 +186,35 @@ class CreateGoodsReceivedNote extends React.Component {
 			purchaseCategory: [],
 			exist: false,
 			language: window['localStorage'].getItem('language'),
-			grnReceivedQuantityError:"Please Enter Quantity",
-			loadingMsg:"Loading..."
+			// grnReceivedQuantityError:"Please Enter Quantity",
+			loadingMsg:"Loading...",
+			vat_list:[
+				{
+					"id": 1,
+					"vat": 5,
+					"name": "STANDARD RATED TAX (5%) "
+				},
+				{
+					"id": 2,
+					"vat": 0,
+					"name": "ZERO RATED TAX (0%)"
+				},
+				{
+					"id": 3,
+					"vat": 0,
+					"name": "EXEMPT"
+				},
+				{
+					"id": 4,
+					"vat": 0,
+					"name": "OUT OF SCOPE"
+				},
+				{
+					"id": 10,
+					"vat": 0,
+					"name": "N/A"
+				}
+			]
 		};
 
 		this.formRef = React.createRef();
@@ -300,7 +327,7 @@ class CreateGoodsReceivedNote extends React.Component {
 		let result = this.props.currency_convert_list.filter((obj) => {
 			return obj.currencyCode === value;
 		});
-
+		if(result &&result[0]&&  result[0].exchangeRate)
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
 		};
 
@@ -405,13 +432,13 @@ class CreateGoodsReceivedNote extends React.Component {
 									);
 									let val=parseInt(e.target.value);
 								
-									if( val<= 0)
-									{
-										this.setState({grnReceivedQuantityError:"Please Enter Quantity"});
-									}
-									else{
-										this.setState({grnReceivedQuantityError:""});
-									}
+									// if( val<= 0)
+									// {
+									// 	this.setState({grnReceivedQuantityError:"Please Enter Quantity"});
+									// }
+									// else{
+									// 	this.setState({grnReceivedQuantityError:""});
+									// }
 								}
 							}}
 							placeholder={strings.ReceivedQuantity}
@@ -516,17 +543,122 @@ this.state.data.map((obj, index) => {
 		return row.subTotal === 0 ? this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+  row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 });
 	};
 
+	getParentGrnDetails=(parentId)=>{
+		this.props.goodsReceivedNoteCreateAction
+				.getGRNById(parentId)
+				.then((res) => {
+					if (res.status === 200) {
+						this.getCompanyCurrency();
+						this.purchaseCategory();
+						this.setState(
+							{
+								current_grn_id: this.props.location.state.id,
+								initValue: {
+									grnReceiveDate: res.data.grnReceiveDate
+										? moment(res.data.grnReceiveDate).format('DD-MM-YYYY')
+										: '',
+										grnReceiveDate1: res.data.grnReceiveDate
+										? res.data.grnReceiveDate
+										: '',
+										supplierId: res.data.supplierId ? res.data.supplierId : '',
+										grnNumber: res.data.grnNumber
+										? res.data.grnNumber
+										: '',
+									totalVatAmount: res.data.totalVatAmount
+										? res.data.totalVatAmount
+										: 0,
+										total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : 0,
+										totalAmount: res.data.totalAmount ? res.data.totalAmount : 0,
+										total_net: 0,
+									grnRemarks: res.data.grnRemarks ? res.data.grnRemarks : '',
+									lineItemsString: res.data.poQuatationLineItemRequestModelList
+										? res.data.poQuatationLineItemRequestModelList
+										: [],
+										supplierReferenceNumber: res.data.supplierReferenceNumber ?
+										res.data.supplierReferenceNumber :'',
+										poNumber: res.data.poNumber ? res.data.poNumber : '',
+								
+								},
+								poNumber : res.data.poNumber ? res.data.poNumber : '',
+								grnReceiveDateNotChanged: res.data.grnReceiveDate
+										? moment(res.data.grnReceiveDate)
+										: '',
+								grnReceiveDate: res.data.grnReceiveDate
+										? res.data.grnReceiveDate
+										: '',
+								data: res.data.poQuatationLineItemRequestModelList
+									? res.data.poQuatationLineItemRequestModelList
+									: [],
+								selectedContact: res.data.supplierId ? res.data.supplierId : '',
+							
+								loading: false,
+							},
+							() => {
+								if (this.state.data.length > 0) {
+									
+									const { data } = this.state;
+									const idCount =
+										data.length > 0
+											? Math.max.apply(
+													Math,
+													data.map((item) => {
+														return item.id;
+													}),
+											  )
+											: 0;
+									this.setState({
+										idCount,
+									});
+									let tmpSupplier_list = []
+							           this.props.supplier_list.map(item => {
+										let obj = {label: item.label.contactName, value: item.value}
+										tmpSupplier_list.push(obj)
+									})
+								let supplier=	tmpSupplier_list && selectOptionsFactory.renderOptions('label','value',tmpSupplier_list,strings.CustomerName,).find((option) => option.value ==res.data.supplierId)
+									this.formRef.current.setFieldValue('supplierId', supplier, true);
+									this.formRef.current.setFieldValue('currency', this.getCurrency(res.data.supplierId), true);
+									this.formRef.current.setFieldValue('grnRemarks',  res.data.grnRemarks, true);
+								let po=	selectOptionsFactory.renderOptions('label','value',this.props.po_list,'PO Number', )
+								                         	.find((option) => option.label == res.data.poNumber)
+									this.formRef.current.setFieldValue('poNumber', po, true);
+									this.addRow();
+								} else {
+									this.setState({
+										idCount: 0,
+									});
+								}
+							},
+						);
+						 
+						this.getCurrency(res.data.supplierId)
+			}
+		});
+	}
+
 	componentDidMount = () => {
-		if(this.props.location.state && this.props.location.state.poId){
+		this.props.goodsReceivedNoteAction.getVatList();
+
+      // PO to GRN Shortcut
+		if(this.props.location.state && this.props.location.state.poId)
+		{
 			this.props.goodsReceivedNoteAction.getPurchaseOrderListForDropdown();
 			let option={value:this.props.location.state.poId,label:this.props.location.state.poNumber}
-			this.getPoDetails(option, option.value, undefined)}
+			this.getPoDetails(option, option.value, undefined)
+		}
 		this.getInitialData();
 		if(this.props.location.state &&this.props.location.state.contactData)
 				this.getCurrentUser(this.props.location.state.contactData);
+
+		// make a duplicate		
+		if(this.props.location.state && this.props.location.state.parentId )
+				this.getParentGrnDetails(this.props.location.state.parentId);
 	};
 
 	getInitialData = () => {
+		// this.props.goodsReceivedNoteAction.getVatList().then((res)=>{
+		// 	if(res.status==200 && res.data)
+		// 	 this.setState({vat_list:res.data})
+		// });
 		this.getInvoiceNo();
 		this.props.goodsReceivedNoteAction.getSupplierList(this.state.contactType);
 		this.props.goodsReceivedNoteAction.getPurchaseOrderListForDropdown();
@@ -608,7 +740,7 @@ this.state.data.map((obj, index) => {
 					id: this.state.idCount + 1,
 					description: '',
 					quantity: 1,
-                    grnReceivedQuantity: '',
+                    grnReceivedQuantity: "",
                     poQuantity:1,
 					unitPrice: '',
 					vatCategoryId: '',
@@ -767,7 +899,7 @@ this.state.data.map((obj, index) => {
 				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive;
 				obj['unitType']=result.unitType;
 				obj['unitTypeId']=result.unitTypeId;
-				
+				obj['grnReceivedQuantity']=1;
 				idx = index;
 			}
 			return obj;
@@ -994,7 +1126,7 @@ this.state.data.map((obj, index) => {
 		let result = this.props.currency_convert_list.filter((obj) => {
 			return obj.currencyCode === value;
 		});
-
+		if(result &&result[0]&&  result[0].exchangeRate)
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
 		};
 
@@ -1162,12 +1294,14 @@ this.state.data.map((obj, index) => {
 			.createGNR(formData)
 			.then((res) => {
 				this.setState({ disabled: false });
-				this.setState({ loading:false});
+				// this.setState({ loading:false});
 				this.props.commonActions.tostifyAlert(
 					'success',
 					res.data ? res.data.message : 'Goods Received Note Created Successfully'
 				);
 				if (this.state.createMore) {
+					
+					resetForm(this.state.initValue);
 					this.setState(
 						{
 							createMore: false,
@@ -1175,19 +1309,29 @@ this.state.data.map((obj, index) => {
 							term: '',
 							data: [
 								{
-									id: 0,
-									description: '',
-									quantity: '',
-                                    grnReceivedQuantity: 1,
-                                    poQuantity:'',
-                                    productId: '',
-                                    subTotal: 0,
-								
+										id: 0,
+										description: '',
+										quantity: 1,
+										unitPrice: '',
+										grnReceivedQuantity: 1,
+										vatCategoryId: '',
+										exciseTaxId:'',
+										exciseAmount:'',
+										// discountType:'FIXED',
+										// discount:0,
+										subTotal: 0,
+										vatAmount:0,
+										productId: '',
+										isExciseTaxExclusive:'',
+										unitType:'',
+										unitTypeId:''
 								},
 							],
 							initValue: {
 								...this.state.initValue,
 								...{
+									grnReceiveDate: new Date(),
+			                    	rfqExpiryDate: new Date(),
 									total_net: 0,
 									invoiceVATAmount: 0,
 									totalAmount: 0,
@@ -1199,8 +1343,30 @@ this.state.data.map((obj, index) => {
 							},
 						},
 						() => {
-							resetForm(this.state.initValue);
+							this.setState({data: [
+								{
+										id: 0,
+										description: '',
+										quantity: 1,
+										unitPrice: '',
+										grnReceivedQuantity: 1,
+										vatCategoryId: '',
+										exciseTaxId:'',
+										exciseAmount:'',
+										// discountType:'FIXED',
+										// discount:0,
+										subTotal: 0,
+										vatAmount:0,
+										productId: '',
+										isExciseTaxExclusive:'',
+										unitType:'',
+										unitTypeId:''
+								},
+							],
+							loading:false
+						})
 							this.getInvoiceNo();
+							if(	this.formRef.current && this.state.data)
 							this.formRef.current.setFieldValue(
 								'lineItemsString',
 								this.state.data,
@@ -1323,7 +1489,7 @@ this.state.data.map((obj, index) => {
 						id: this.state.idCount + 1,
 							description: res.data[0].description,
 							quantity: 1,
-                            grnReceivedQuantity: 0,
+                            grnReceivedQuantity: 1,
                             poQuantity:1,
 							unitPrice: res.data[0].unitPrice,
 							vatCategoryId: res.data[0].vatCategoryId,
@@ -1397,6 +1563,7 @@ this.state.data.map((obj, index) => {
 						},
 					},
 				});
+				if( res &&  res.data &&this.formRef.current)
 			this.formRef.current.setFieldValue('grn_Number', res.data, true,this.validationCheck(res.data));
 			}
 		});
@@ -1524,7 +1691,7 @@ this.state.data.map((obj, index) => {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { data, discountOptions, initValue, prefix ,loading,loadingMsg} = this.state;
+		const { data, discountOptions, initValue, prefix,tax_treatment_list, param,loading,loadingMsg } = this.state;
 
 		const {
 			currency_list,
@@ -1960,7 +2127,7 @@ console.log(this.state.data)
 																				: ''
 																		}`}
 																		placeholderText={strings.OrderDate}
-																		selected={props.values.grnReceiveDate}
+																		selected={props.values.grnReceiveDate ?props.values.grnReceiveDate :new Date()} 
 																		showMonthDropdown
 																		showYearDropdown
 																		dropdownMode="select"
@@ -2310,6 +2477,7 @@ console.log(this.state.data)
 																		className="btn-square mr-3"
 																		disabled={this.state.disabled}
 																		onClick={() => {
+																			console.log(props.errors,"ERRORs")
 																			if(this.state.data.length === 1)
 																			{
 																			console.log(props.errors,"ERRORs")
@@ -2334,12 +2502,13 @@ console.log(this.state.data)
 																			? 'Creating...'
 																			: strings.Create}
 																	</Button>
-																	<Button
+																	{this.props.location.state &&	this.props.location.state.parentId ?"":<Button
 																		type="button"
 																		color="primary"
 																		className="btn-square mr-3"
 																		disabled={this.state.disabled}
 																		onClick={() => {
+																			console.log(props.errors,"ERRORs")
 																			if(this.state.data.length === 1)
 																			{
 																			console.log(props.errors,"ERRORs")
@@ -2363,7 +2532,7 @@ console.log(this.state.data)
 																		{this.state.disabled
 																			? 'Creating...'
 																			: strings.CreateandMore}
-																	</Button>
+																	</Button>}
 																	<Button
 																		type="button"
 																		color="secondary"

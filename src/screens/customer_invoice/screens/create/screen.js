@@ -138,6 +138,7 @@ class CreateCustomerInvoice extends React.Component {
 				shippingStateId:'',
 				shippingCity:'',
                 shippingPostZipCode:'',
+				poBoxNumber: '',
 				lineItemsString: [
 					{
 						id: 0,
@@ -2200,8 +2201,11 @@ if(changeShippingAddress && changeShippingAddress==true)
 														if(values.shippingCity =="")  errors.shippingCity ='City is Required';
 													}
 
-													if(values.changeShippingAddress==true){
-														if(values.shippingPostZipCode =="")  errors.shippingPostZipCode ='City is Required';
+													if(this.state.showpoBoxNumberErrorMsg==true)
+													errors.poBoxNumber="Please Enter 3 To 6 Digit PO Box Number";
+
+													if (values.poBoxNumber === '') {
+														errors.poBoxNumber ='PO Box Number is Required';
 													}
 														return errors;
 												}}
@@ -2885,7 +2889,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																<FormGroup>
 																	<Label htmlFor="shippingStateId"><span className="text-danger">* </span>
 																		{/* {strings.StateRegion} */}
-																		{props.values.shippingCountryId &&props.values.shippingCountryId.value && props.values.shippingCountryId.value === 229 ? strings.Emirates: strings.StateRegion}
+																		{props.values.shippingCountryId &&props.values.shippingCountryId.value && props.values.shippingCountryId.value === 229 ? strings.Emirate: strings.StateRegion}
 																	</Label>
 																	<Select
 																		options={
@@ -2894,7 +2898,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																					'label',
 																					'value',
 																					state_list_for_shipping,
-																					props.values.shippingCountryId &&props.values.shippingCountryId.value && props.values.shippingCountryId.value === 229 ?strings.Emirates: strings.StateRegion,
+																					props.values.shippingCountryId &&props.values.shippingCountryId.value && props.values.shippingCountryId.value === 229 ?strings.Emirate: strings.StateRegion,
 																				)
 																				: []
 																		}
@@ -2969,38 +2973,44 @@ if(changeShippingAddress && changeShippingAddress==true)
 
 															<Col md="4">
 																<FormGroup>
-																	<Label htmlFor="shippingPostZipCode"><span className="text-danger">* </span>
-																		{strings.PostZipCode}
+																	{/* <Label htmlFor="select">{strings.POBoxNumber}</Label> */}
+																	<Label htmlFor="POBoxNumber">
+																		<span className="text-danger">* </span>{strings.POBoxNumber}
 																	</Label>
 																	<Input
-																	
 																		type="text"
+																		minLength="3"
 																		maxLength="6"
-																		id="shippingPostZipCode"
-																		name="shippingPostZipCode"
-																		placeholder={strings.Enter + strings.PostZipCode}
+																		id="poBoxNumber"
+																		name="poBoxNumber"
+																		autoComplete="Off"
+																		placeholder={strings.Enter + strings.POBoxNumber}
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||
 																				this.regEx.test(option.target.value)
 																			) {
-																				props.handleChange('shippingPostZipCode')(
-																					option.target.value,
+																				if(option.target.value.length<3)
+																				this.setState({showpoBoxNumberErrorMsg:true})
+																				else
+																				this.setState({showpoBoxNumberErrorMsg:false})
+																				props.handleChange('poBoxNumber')(
+																					option,
 																				);
 																			}
 																		}}
-																		value={props.values.shippingPostZipCode}
+																		value={props.values.poBoxNumber}
 																		className={
-																			props.errors.shippingPostZipCode &&
-																				props.touched.shippingPostZipCode
+																			props.errors.poBoxNumber &&
+																				props.touched.poBoxNumber
 																				? 'is-invalid'
 																				: ''
 																		}
 																	/>
-																	{props.errors.shippingPostZipCode &&
-																		props.touched.shippingPostZipCode && (
+																	{props.errors.poBoxNumber &&
+																		props.touched.poBoxNumber && (
 																			<div className="invalid-feedback">
-																				{props.errors.shippingPostZipCode}
+																				{props.errors.poBoxNumber}
 																			</div>
 																		)}
 																</FormGroup>
@@ -3406,7 +3416,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																			name="notes"
 																			id="notes"
 																			rows="6"
-																			placeholder="e.g. Business Terms & Conditions"
+																			placeholder={strings.DeliveryNotes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
 																			}
@@ -3417,7 +3427,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="receiptNumber">
-																					{strings.ReceiptNumber}
+																					{strings.ReferenceNumber}
 																				</Label>
 																				<Input
 																					type="text"
@@ -3425,7 +3435,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																					id="receiptNumber"
 																					name="receiptNumber"
 																					value={props.values.receiptNumber}
-																					placeholder="e.g. Receipt Number"
+																					placeholder={strings.ReceiptNumber}
 																					onChange={(value) => {
 																						props.handleChange('receiptNumber')(value);
 

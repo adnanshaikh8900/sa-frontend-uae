@@ -1646,14 +1646,14 @@ class DetailExpense extends React.Component {
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="receiptNumber">
-																					 {strings.ReceiptNumber}
+																					 {strings.ReferenceNumber}
 																				</Label>
 																				<Input
 																					type="text"
 																					id="receiptNumber"
 																					name="receiptNumber"
 																					maxLength="100"
-																					placeholder={strings.Enter+strings.ReceiptNumber}
+																					placeholder={strings.ReceiptNumber}
 																					onChange={(option) =>
 																						props.handleChange('receiptNumber')(
 																							option,

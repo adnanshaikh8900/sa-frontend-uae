@@ -1560,7 +1560,7 @@ min="0"
 																			name="notes"
 																			id="notes"
 																			rows="6"
-																			placeholder={strings.Notes}
+																			placeholder={strings.DeliveryNotes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
 																			}

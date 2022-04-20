@@ -1164,7 +1164,7 @@ class CreateSupplierInvoice extends React.Component {
                     Object.keys(props.touched).length > 0 &&
 					props.touched.lineItemsString &&
                     props.touched.lineItemsString[parseInt(idx, 10)] &&
-                    props.touched.lineItemsString[parseInt(idx, 10)].unitPrice &&
+                    props.touched.lineItemsString[parseInt(idx, 10)].vatCategoryId &&
                     (
                    <div className='invalid-feedback'>
                    {props.errors.lineItemsString[parseInt(idx, 10)].vatCategoryId}
@@ -2279,7 +2279,7 @@ class CreateSupplierInvoice extends React.Component {
 																		},
 																	),
 																vatCategoryId: Yup.string().required(
-																	'Value is Required',
+																	'Vat is Required',
 																),
 																productId: Yup.string().required(
 																	'Product is Required',

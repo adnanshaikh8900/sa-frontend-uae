@@ -689,10 +689,10 @@ existForAccountNumber = (value) => {
             'city',
             city != null ? city : '',
         )
-        // formData.append(
-        //     'pincode',
-        //     pincode != null ? pincode : '',
-        // )
+        formData.append(
+            'pincode',
+            pincode != null ? pincode : '',
+        )
             formData.append(
                 'university',
                 university != null ? university :'',
@@ -1872,76 +1872,92 @@ existForAccountNumber = (value) => {
                                                                                                 </FormGroup>
                   
                                                                                             </Col>
-                                                                                            <Col md="4"style={{display:props.values.countryId == 229 || props.values.countryId.value == 229 ? 'none':''}}>
-                                                                                                <FormGroup>
-                                                                                                    <Label htmlFor="city"><span className="text-danger">* </span>{strings.PinCode} </Label>
-                                                                                                    <Input
-                                                                                                        type="text"
-                                                                                                        maxLength="8"
-                                                                                                        id="pincode"
-                                                                                                        name="pincode"
-                                                                                                        value={props.values.pincode}
-                                                                                                        placeholder={strings.Enter+strings.PinCode}
+                                                            {props.values.countryId == 229 || props.values.countryId.value == 229 ? 
+														 	<Col md="4" >
+																 <FormGroup>
+															 {/* <Label htmlFor="select">{strings.POBoxNumber}</Label> */}
+															 <Label htmlFor="POBoxNumber">
+																 <span className="text-danger">* </span>{strings.POBoxNumber}
+															 </Label>
+															 <Input
+																 type="text"
+																 minLength="3"
+																 maxLength="6"
+																 id="poBoxNumber"
+																 name="poBoxNumber"
+																 autoComplete="Off"
+																 placeholder={strings.Enter + strings.POBoxNumber}
+																 onChange={(option) => {
+																	 if (
+																		 option.target.value === '' ||
+																		 this.regEx.test(option.target.value)
+																	 ) {
+																		 if(option.target.value.length<3)
+																		 this.setState({showpoBoxNumberErrorMsg:true})
+																		 else
+																		 this.setState({showpoBoxNumberErrorMsg:false})
+																		 props.handleChange('poBoxNumber')(
+																			 option,
+																		 );
+																	 }
+																 }}
+																 value={props.values.poBoxNumber}
+																 className={
+																	 props.errors.poBoxNumber &&
+																		 props.touched.poBoxNumber
+																		 ? 'is-invalid'
+																		 : ''
+																 }
+															 />
+															 {props.errors.poBoxNumber &&
+																 props.touched.poBoxNumber && (
+																	 <div className="invalid-feedback">
+																		 {props.errors.poBoxNumber}
+																	 </div>
+																 )}
+														 </FormGroup>
+														 </Col>
 
-                                                                                                        onChange={(option) => {
-                                                                                                            if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('pincode')(option) }
-                                                                                                        }}
-                                                                                                        className={props.errors.pincode && props.touched.pincode ? "is-invalid" : ""}
-                                                                                                    />
-                                                                                                    {props.errors.pincode && props.touched.pincode && (
-                                                                                                        <div className="invalid-feedback">{props.errors.pincode}</div>
-                                                                                                    )}
-                                                                                                </FormGroup>
-                                                                                                   
-                                                                                            </Col>
-
-                                                                                            <Col md="4">
-																<FormGroup>
-																	{/* <Label htmlFor="select">{strings.POBoxNumber}</Label> */}
-																	<Label htmlFor="POBoxNumber">
-																		<span className="text-danger"> </span>{strings.POBoxNumber}
+														: 
+															<Col md="4" ><FormGroup>
+																	<Label htmlFor="postZipCode"><span className="text-danger"> </span>
+																		{strings.PostZipCode}
 																	</Label>
 																	<Input
 																		type="text"
-																		minLength="3"
 																		maxLength="6"
-																		id="poBoxNumber"
-																		name="poBoxNumber"
+																		id="PostZipCode"
+																		name="PostZipCode"
 																		autoComplete="Off"
-																		placeholder={strings.Enter + strings.POBoxNumber}
+																		placeholder={strings.Enter + strings.PostZipCode}
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||
 																				this.regEx.test(option.target.value)
 																			) {
-																				if(option.target.value !="")
-																				this.setState({showpoBoxNumberErrorMsg:true})
-																				else
-																				this.setState({showpoBoxNumberErrorMsg:false})
-																				props.handleChange('poBoxNumber')(
+																				props.handleChange('PostZipCode')(
 																					option,
 																				);
 																			}
+																
 																		}}
-																		value={props.values.poBoxNumber}
+																		value={props.values.PostZipCode}
 																		className={
-																			props.errors.poBoxNumber &&
-																				props.touched.poBoxNumber
+																			props.errors.PostZipCode &&
+																				props.touched.PostZipCode
 																				? 'is-invalid'
 																				: ''
 																		}
 																	/>
-																	{props.errors.poBoxNumber &&
-																		props.touched.poBoxNumber && (
+																	{props.errors.PostZipCode &&
+																		props.touched.PostZipCode && (
 																			<div className="invalid-feedback">
-																				{props.errors.poBoxNumber}
+																				{props.errors.PostZipCode}
 																			</div>
 																		)}
 																</FormGroup>
-															</Col>
-
-                                                                                        </Row>
-
+																</Col>}
+                                                                    </Row>
                                                                                         <Row className="row-wrapper">
                                                                                             <Col md="4">
                                                                                                 <FormGroup>

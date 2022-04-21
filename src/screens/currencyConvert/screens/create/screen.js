@@ -488,6 +488,12 @@ class CreateCurrencyConvert extends React.Component {
 																	color="primary"
 																	className="btn-square mr-3"
 																	disabled={this.state.createDisabled}
+																	onClick={() => {
+																		//  added validation popup  msg                                                                
+																		props.handleBlur();
+																		if(props.errors &&  Object.keys(props.errors).length != 0)
+																		this.props.commonActions.fillManDatoryDetails();
+																		}}
 																>
 																	<i className="fa fa-dot-circle-o"></i>{this.state.createDisabled
 																			? 'Creating...'
@@ -500,6 +506,10 @@ class CreateCurrencyConvert extends React.Component {
 																	className="btn-square mr-3"
 																	createDisabled={this.state.createDisabled}
 																	onClick={() => {
+																		//  added validation popup  msg                                                                
+																		props.handleBlur();
+																		if(props.errors &&  Object.keys(props.errors).length != 0)
+																		this.props.commonActions.fillManDatoryDetails();
 																		this.setState({ createMore: true }, () => {
 																			props.handleSubmit();
 																		});

@@ -3390,9 +3390,14 @@ class CreateSupplierInvoice extends React.Component {
 																		className="btn-square mr-3"
 																		disabled={this.state.disabled}
 																		onClick={() => {
+																			
 																			if(this.state.data.length === 1)
 																			{
 																			console.log(props.errors,"ERRORs")
+																				//	added validation popup	msg
+																				props.handleBlur();
+																				if(props.errors &&  Object.keys(props.errors).length != 0)
+																				this.props.commonActions.fillManDatoryDetails();
 																			}
 																			else
 																			{ let newData=[]
@@ -3401,6 +3406,7 @@ class CreateSupplierInvoice extends React.Component {
 																			props.setFieldValue('lineItemsString', newData, true);
 																			this.updateAmount(newData, props);
 																			}
+																			
 																			this.setState(
 																				{ createMore: false },
 																				() => {
@@ -3420,9 +3426,14 @@ class CreateSupplierInvoice extends React.Component {
 																		className="btn-square mr-3"
 																		disabled={this.state.disabled}
 																		onClick={() => {
+																				
 																			if(this.state.data.length === 1)
 																			{
 																			console.log(props.errors,"ERRORs")
+																				//	added validation popup	msg
+																				props.handleBlur();
+																				if(props.errors &&  Object.keys(props.errors).length != 0)
+																				this.props.commonActions.fillManDatoryDetails();
 																			}
 																			else
 																			{ let newData=[]
@@ -3431,6 +3442,7 @@ class CreateSupplierInvoice extends React.Component {
 																			props.setFieldValue('lineItemsString', newData, true);
 																			this.updateAmount(newData, props);
 																			}
+																		
 																			this.setState(
 																				{ createMore: true },
 																				() => {

@@ -173,7 +173,19 @@ class ViewCustomerInvoice extends React.Component {
 											className="close-btn mb-1 btn-lg print-btn-cont"
 											
 											onClick={() => {
+												
+												if(this.props.location.state && this.props.location.state.crossLinked&&
+													this.props.location.state.crossLinked==true)
+												this.props.history.push('/admin/report/vatreports/vatreturnsubreports',{
+													boxNo:this.props.location.state.description,
+													description:this.props.location.state.description,
+													startDate:this.props.location.state.startDate,
+													endDate:this.props.location.state.endDate,
+													placeOfSupplyId:this.props.location.state.placeOfSupplyId
+												});
+												else
 												this.props.history.push('/admin/income/customer-invoice');
+
 											}}
 										>
 									<i class="fas fa-times"></i>

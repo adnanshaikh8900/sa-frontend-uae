@@ -165,10 +165,22 @@ class SubReports extends React.Component {
 			if (type === 1) {
 					this.props.history.push('/admin/expense/supplier-invoice/view', {
 						id,
+						boxNo:this.props.location.state.boxNo,
+						description:this.props.location.state.description,
+						startDate:this.props.location.state.startDate,
+						endDate:this.props.location.state.endDate,
+						placeOfSupplyId:this.props.location.state.placeOfSupplyId,
+						crossLinked:true
 					});
 				} else {
 					this.props.history.push('/admin/income/customer-invoice/view', {
 						id,
+						boxNo:this.props.location.state.boxNo,
+						description:this.props.location.state.description,
+						startDate:this.props.location.state.startDate,
+						endDate:this.props.location.state.endDate,
+						placeOfSupplyId:this.props.location.state.placeOfSupplyId,
+						crossLinked:true
 					});
 				}
 				break;

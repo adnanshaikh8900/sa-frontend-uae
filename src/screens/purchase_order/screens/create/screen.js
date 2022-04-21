@@ -1462,7 +1462,7 @@ class CreatePurchaseOrder extends React.Component {
 					...this.state.initValue,
 					...{
 						total_net:  total_net - total_excise,
-						invoiceVATAmount: total_vat,
+						totalVatAmount: total_vat,
 						discount:  discount_total ? discount_total : 0,
 						totalAmount:  total ,
 						total_excise: total_excise
@@ -1563,7 +1563,7 @@ class CreatePurchaseOrder extends React.Component {
 								...this.state.initValue,
 								...{
 									total_net: 0,
-									invoiceVATAmount: 0,
+									totalVatAmount: 0,
 									totalAmount: 0,
 									// discountType: 'FIXED', 
 									discount: 0,

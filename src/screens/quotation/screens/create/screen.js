@@ -602,7 +602,6 @@ class CreateQuotation extends React.Component {
 											tmpSupplier_list,
 											'Customer Name',
 									  ).find((option)=>option.value==res.data.customerId)
-debugger
 									this.formRef.current.setFieldValue('customerId', customer, true);
 									this.formRef.current.setFieldValue('placeOfSupplyId', res.data.placeOfSupplyId, true);
 									const { data } = this.state;
@@ -1263,7 +1262,7 @@ discountType = (row) =>
 					obj.exciseAmount = 0
 				}
 					var vat_amount =
-					((+net_value  * vat * obj.quantity) / 100);
+					((+net_value  * vat ) / 100);
 				}else{
 					 net_value =
 						((obj.unitPrice * obj.quantity) - obj.discount)
@@ -1286,7 +1285,7 @@ discountType = (row) =>
 							obj.exciseAmount = 0
 						}
 						var vat_amount =
-						((+net_value  * vat * obj.quantity) / 100);
+						((+net_value  * vat ) / 100);
 			}
 
 			}

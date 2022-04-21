@@ -2343,6 +2343,10 @@ existForAccountNumber = (value) => {
                                                                                                 //     this.toggle(0, '2')
                                                                                                 // }}
                                                                                                 onClick={() => {
+                                                                                                    //  added validation popup  msg                                                                
+																                                	props.handleBlur();
+																                                	if(props.errors &&  Object.keys(props.errors).length != 0)
+																	                                this.props.commonActions.fillManDatoryDetails();
                                                                                                     this.setState({ createMore: false }, () => {
                                                                                                         props.handleSubmit()
                                                                                                     })
@@ -2729,6 +2733,10 @@ existForAccountNumber = (value) => {
                                                                                                 //     this.toggle(0, '3')
                                                                                                 // }}
                                                                                                 onClick={() => {
+                                                                                                    //  added validation popup  msg                                                                
+																	                            props.handleBlur();
+																	                            if(props.errors &&  Object.keys(props.errors).length != 0)
+																	                            this.props.commonActions.fillManDatoryDetails();
                                                                                                     this.setState({ createMore: false }, () => {
                                                                                                         props.handleSubmit()
                                                                                                     })
@@ -3016,6 +3024,10 @@ existForAccountNumber = (value) => {
                                                                                               </Button>
                                                                                             <Button name="button" color="primary" className="btn-square pull-right "
                                                                                                 onClick={() => {
+                                                                                                    //  added validation popup  msg                                                                
+                                                                                                    props.handleBlur();
+                                                                                                    if(props.errors &&  Object.keys(props.errors).length != 0)
+                                                                                                    this.props.commonActions.fillManDatoryDetails();
                                                                                                     this.setState({ createMore: false }, () => {
                                                                                                         props.handleSubmit()
                                                                                                     })
@@ -3547,6 +3559,10 @@ existForAccountNumber = (value) => {
                                                                                               </Button>
                                                    
                                                    <Button type="button" color="primary" className="btn-square mr-5 pull-right" onClick={() => {
+                                                                        //  added validation popup  msg                                                                
+																		props.handleBlur();
+																		if(props.errors &&  Object.keys(props.errors).length != 0)
+																		this.props.commonActions.fillManDatoryDetails();
                                                        this.setState({ createMore: false }, () => {
                                                            props.handleSubmit()
                                                        })

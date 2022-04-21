@@ -368,11 +368,12 @@ class BankAccount extends React.Component {
 						>
 							<i className="fas fa-eye" />  {strings.ViewTransactions}
 						</DropdownItem>
-						{/* <DropdownItem
+						{row.bankAccountId != 1001 ? 
+						<DropdownItem
 							onClick={() => this.closeBankAccount(row.bankAccountId)}
 						>
 							<i className="fa fa-trash" /> Delete
-						</DropdownItem> */}
+						</DropdownItem> : ''}
 					</DropdownMenu>
 				</ButtonDropdown>
 			</div>
@@ -879,13 +880,13 @@ class BankAccount extends React.Component {
 													{strings.LASTRECONCILED}
 												</TableHeaderColumn>
 												<TableHeaderColumn
-													className="text-right"
+													
 													columnClassName="text-right"
 													width="3%"
 													dataSort={false}
 													export={false}
 													dataFormat={this.renderActions}
-													className="table-header-bg"
+													className="table-header-bg text-right"
 												>
 												</TableHeaderColumn>
 											</BootstrapTable>

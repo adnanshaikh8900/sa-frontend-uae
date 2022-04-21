@@ -498,9 +498,7 @@ class DetailCustomerInvoice extends React.Component {
 																						name="discountType"
 																						value={
 																					 discountOptions &&
-																						 selectOptionsFactory
-																							 .renderOptions('label', 'value', discountOptions, 'discount')
-																							 .find((option) => option.value == row.discountType)
+																					 discountOptions .find((option) => option.value == row.discountType)
 																						}
 																						onChange={(e) => {
 																							this.selectItem(

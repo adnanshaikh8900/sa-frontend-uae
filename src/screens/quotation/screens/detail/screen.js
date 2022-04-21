@@ -1116,7 +1116,7 @@ min="0"
 					obj.exciseAmount = 0
 				}
 					var vat_amount =
-					((+net_value  * vat * obj.quantity) / 100);
+					((+net_value  * vat ) / 100);
 				}else{
 					 net_value =
 						((obj.unitPrice * obj.quantity) - obj.discount)
@@ -1139,7 +1139,7 @@ min="0"
 							obj.exciseAmount = 0
 						}
 						var vat_amount =
-						((+net_value  * vat * obj.quantity) / 100);
+						((+net_value  * vat ) / 100);
 			}
 
 			}

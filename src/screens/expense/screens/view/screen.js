@@ -60,6 +60,21 @@ class ViewExpense extends React.Component {
 	};
 
 	initializeData = () => {
+		
+		this.props.expenseActions
+				.getCompanyDetails()
+				.then((res) => {
+					
+					if (res.status === 200) {
+						
+						this.setState(
+							{
+								companyData: res.data,							
+							},
+						
+						);
+					}
+				});
 		if (this.props.location.state && this.props.location.state.expenseId) {
 			console.log(this.props.location.state.expenseId)
 			this.props.expenseDetailsAction
@@ -133,7 +148,7 @@ class ViewExpense extends React.Component {
 								>
 									<ExpenseTemplate
 										expenseData={expenseData}
-										companyData={profile}
+										companyData={this.state && this.state.companyData ?this.state.companyData:''}
 										ref={(el) => (this.componentRef = el)}								
 									/>
 								</PDFExport>

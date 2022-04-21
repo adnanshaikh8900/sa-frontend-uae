@@ -392,13 +392,13 @@ class CreateContact extends React.Component {
 													// 	errors.discount =
 													// 		'Discount amount Cannot be greater than Invoice Total Amount';
 													// }
-													// if(values.billingPostZipCode.length!=6){
-													// 	errors.billingPostZipCode="Please Enter 6 Digit Postal Zip Code"
-													// }
+													if(values.billingPostZipCode.length!=6){
+														errors.billingPostZipCode="Please Enter 6 Digit Postal Zip Code"
+													}
 
-													// if(values.shippingPostZipCode.length!=6){
-													// 	errors.shippingPostZipCode="Please Enter 6 Digit Postal Zip Code"
-													// }
+													if(values.shippingPostZipCode.length!=6){
+														errors.shippingPostZipCode="Please Enter 6 Digit Postal Zip Code"
+													}
 
 													if(this.state.showbillingFaxErrorMsg==true)
 													errors.billingFax="Please Enter 8 Digit Fax"
@@ -1372,7 +1372,7 @@ class CreateContact extends React.Component {
 
 														: 
 															<Col md="4" ><FormGroup>
-																	<Label htmlFor="postZipCode"><span className="text-danger"> </span>
+																	<Label htmlFor="postZipCode"><span className="text-danger">* </span>
 																		{strings.PostZipCode}
 																	</Label>
 																	<Input
@@ -1788,9 +1788,7 @@ class CreateContact extends React.Component {
 
 														: 
 															<Col md="4" ><FormGroup>
-																	<Label htmlFor="postZipCode"><span className="text-danger"> </span>
-																		{strings.PostZipCode}
-																	</Label>
+																	<Label htmlFor="PostZipCode"><span className="text-danger">* </span>{strings.PostZipCode}</Label>
 																	<Input
 																		type="text"
 																		maxLength="6"

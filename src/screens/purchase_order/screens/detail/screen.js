@@ -580,6 +580,7 @@ class DetailPurchaseOrder extends React.Component {
 			<Field
 				name={`lineItemsString.${idx}.unitPrice`}
 				render={({ field, form }) => (
+					<>
 					<Input
 					type="text"
 					maxLength="14,2"
@@ -615,6 +616,19 @@ class DetailPurchaseOrder extends React.Component {
 														: ''
 												}`}
 					/>
+					{props.errors.lineItemsString &&
+                    props.errors.lineItemsString[parseInt(idx, 10)] &&
+                    props.errors.lineItemsString[parseInt(idx, 10)].unitPrice &&
+                    Object.keys(props.touched).length > 0 &&
+					props.touched.lineItemsString &&
+                    props.touched.lineItemsString[parseInt(idx, 10)] &&
+                    props.touched.lineItemsString[parseInt(idx, 10)].unitPrice &&
+                    (
+                   <div className='invalid-feedback'>
+                   {props.errors.lineItemsString[parseInt(idx, 10)].unitPrice}
+                   </div>
+                     )}
+                   </>
 				)}
 			/>
 		);
@@ -822,8 +836,8 @@ class DetailPurchaseOrder extends React.Component {
 			<Field
 				name={`lineItemsString.${idx}.vatCategoryId`}
 				render={({ field, form }) => (
+					<>
 					<Select
-						styles={customStyles}
 						options={
 							vat_list
 								? selectOptionsFactory.renderOptions(
@@ -864,6 +878,19 @@ class DetailPurchaseOrder extends React.Component {
 								: ''
 						}`}
 					/>
+					{props.errors.lineItemsString &&
+                    props.errors.lineItemsString[parseInt(idx, 10)] &&
+                    props.errors.lineItemsString[parseInt(idx, 10)].vatCategoryId &&
+                    Object.keys(props.touched).length > 0 &&
+					props.touched.lineItemsString &&
+                    props.touched.lineItemsString[parseInt(idx, 10)] &&
+                    props.touched.lineItemsString[parseInt(idx, 10)].vatCategoryId &&
+                    (
+                   <div className='invalid-feedback'>
+                   {props.errors.lineItemsString[parseInt(idx, 10)].vatCategoryId}
+                   </div>
+                     )}
+                   </>
 				)}
 			/>
 		);
@@ -942,8 +969,8 @@ class DetailPurchaseOrder extends React.Component {
 			<Field
 				name={`lineItemsString.${idx}.productId`}
 				render={({ field, form }) => (
+					<>
 					<Select
-						styles={customStyles}
 						options={
 							product_list
 								? optionFactory.renderOptions(
@@ -981,6 +1008,19 @@ class DetailPurchaseOrder extends React.Component {
 								: ''
 						}`}
 					/>
+					{props.errors.lineItemsString &&
+                    props.errors.lineItemsString[parseInt(idx, 10)] &&
+                    props.errors.lineItemsString[parseInt(idx, 10)].productId &&
+                    Object.keys(props.touched).length > 0 &&
+					props.touched.lineItemsString &&
+                    props.touched.lineItemsString[parseInt(idx, 10)] &&
+                    props.touched.lineItemsString[parseInt(idx, 10)].productId &&
+                    (
+                   <div className='invalid-feedback'>
+                   {props.errors.lineItemsString[parseInt(idx, 10)].productId}
+                   </div>
+                     )}
+                   </>
 				)}
 			/>
 		);
@@ -1655,7 +1695,7 @@ debugger
 																			},
 																		),
 																	vatCategoryId: Yup.string().required(
-																		'Value is Required',
+																		'Vat is Required',
 																	),
 																	productId: Yup.string().required(
 																		'Product is Required',

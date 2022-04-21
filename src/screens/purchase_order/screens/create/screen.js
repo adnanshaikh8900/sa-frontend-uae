@@ -2061,7 +2061,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																		},
 																	),
 																vatCategoryId: Yup.string().required(
-																	'Value is Required',
+																	'Vat is Required',
 																),
 																productId: Yup.string().required(
 																	'Product is Required',

@@ -206,6 +206,10 @@ class CreateSalaryRoles extends React.Component {
                               <Col lg={12} className="mt-5">
                                 <FormGroup className="text-right">
                                   <Button type="button" color="primary" className="btn-square mr-3" 		disabled={this.state.disabled} onClick={() => {
+                                    	//  added validation popup  msg                                                                
+																				props.handleBlur();
+																				if(props.errors &&  Object.keys(props.errors).length != 0)
+																				this.props.commonActions.fillManDatoryDetails();
                                     this.setState({ createMore: false }, () => {
                                       props.handleSubmit()
                                     })
@@ -216,6 +220,10 @@ class CreateSalaryRoles extends React.Component {
                                       </Button>
                                   <Button name="button" color="primary" className="btn-square mr-3" 		disabled={this.state.disabled}
                                     onClick={() => {
+                                        	//  added validation popup  msg                                                                
+																				props.handleBlur();
+																				if(props.errors &&  Object.keys(props.errors).length != 0)
+																				this.props.commonActions.fillManDatoryDetails();
                                       this.setState({ createMore: true }, () => {
                                         props.handleSubmit()
                                       })

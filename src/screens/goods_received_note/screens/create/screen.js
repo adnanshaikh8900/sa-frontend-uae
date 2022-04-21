@@ -2481,6 +2481,10 @@ console.log(this.state.data)
 																			if(this.state.data.length === 1)
 																			{
 																			console.log(props.errors,"ERRORs")
+																			//	added validation popup	msg
+																			props.handleBlur();
+																			if(props.errors &&  Object.keys(props.errors).length != 0)
+																			this.props.commonActions.fillManDatoryDetails();
 																			}
 																			else
 																			{ let newData=[]
@@ -2512,6 +2516,10 @@ console.log(this.state.data)
 																			if(this.state.data.length === 1)
 																			{
 																			console.log(props.errors,"ERRORs")
+																			//	added validation popup	msg
+																			props.handleBlur();
+																			if(props.errors &&  Object.keys(props.errors).length != 0)
+																			this.props.commonActions.fillManDatoryDetails();
 																			}
 																			else
 																			{ let newData=[]

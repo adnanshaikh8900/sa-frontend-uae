@@ -120,6 +120,7 @@ class CreateCustomerInvoice extends React.Component {
 
 				},
 			],
+			discountEnabled: false,
 			idCount: 0,
 			initValue: {
 				receiptAttachmentDescription: '',
@@ -328,6 +329,7 @@ class CreateCustomerInvoice extends React.Component {
 				name={`lineItemsString.${idx}.quantity`}
 				render={({ field, form }) => (
 					<div>
+						<div class="input-group">
 						<Input
 							type="text"
 							maxLength="10"
@@ -354,8 +356,9 @@ class CreateCustomerInvoice extends React.Component {
 									);
 								}
 							}}
+							
 							placeholder={strings.Quantity}
-							className={`form-control  ${
+							className={`form-control w-50${
 								props.errors.lineItemsString &&
 								props.errors.lineItemsString[parseInt(idx, 10)] &&
 								props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
@@ -366,7 +369,11 @@ class CreateCustomerInvoice extends React.Component {
 									? 'is-invalid'
 									: ''
 							}`}
+						
 						/>
+						 {row['productId'] != '' ? 
+						<Input value={row['unitType'] }  disabled/> : ''}
+						</div>
 						{props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
@@ -378,6 +385,7 @@ class CreateCustomerInvoice extends React.Component {
 									{props.errors.lineItemsString[parseInt(idx, 10)].quantity}
 								</div>
 							)}
+						
 					</div>
 				)}
 			/>
@@ -1378,7 +1386,31 @@ discountType = (row) =>
 					   {props.errors.lineItemsString[parseInt(idx, 10)].productId}
 					   </div>
 						 )}
+						 {row['productId'] != '' ? 
+						   <div className='mt-1'>
+						   <Input
+						type="text"
+						maxLength="250"
+						value={row['description'] !== '' ? row['description'] : ''}
+						onChange={(e) => {
+							this.selectItem(e.target.value, row, 'description', form, field);
+						}}
+						placeholder={strings.Description}
+						className={`form-control ${
+							props.errors.lineItemsString &&
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)].description &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)].description
+								? 'is-invalid'
+								: ''
+						}`}
+					/>
+						   </div> : ''}
 					   </>
+					 
 					)}
 				/>
 			);
@@ -1410,7 +1442,7 @@ discountType = (row) =>
 	};
 
 	renderActions = (cell, rows, props) => {
-		return (
+		return rows['productId'] != '' ? 
 			<Button
 				size="sm"
 				className="btn-twitter btn-brand icon mt-1"
@@ -1420,8 +1452,8 @@ discountType = (row) =>
 				}}
 			>
 				<i className="fas fa-trash"></i>
-			</Button>
-		);
+			</Button> : ''
+		
 	};
 
 	renderAddProduct = (cell, rows, props) => {
@@ -2201,17 +2233,14 @@ if(changeShippingAddress && changeShippingAddress==true)
 													if(values.changeShippingAddress==true){
 														if(values.shippingCity =="")  errors.shippingCity ='City is Required';
 													}
+													if(values.changeShippingAddress==true){
+													if(this.state.showpoBoxNumberErrorMsg==true)
+													errors.poBoxNumber="Please Enter 3 To 6 Digit PO Box Number";
 
-													
-
-													if (values.changeShippingAddress=== true) {
-														if(values.poBoxNumber =="")
-														 errors.poBoxNumber ='PO Box Number is Required';
-														if(this.state.showpoBoxNumberErrorMsg==true)
-													      errors.poBoxNumber="Please Enter 3 To 6 Digit PO Box Number";
-													}
+													if (values.poBoxNumber === '') {
+														errors.poBoxNumber ='PO Box Number is Required';
+													}}
 														return errors;
-													
 												}}
 												validationSchema={Yup.object().shape({
 													invoice_number: Yup.string().required(
@@ -3184,7 +3213,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 														<hr style={{display: props.values.exchangeRate === 1 ? 'none' : ''}} />
 														<Row className="mb-3">
 														<Col lg={8} className="mb-3">
-															<Button
+															{/* <Button
 																color="primary"
 																className={`btn-square mr-3 ${
 																	this.checkedRow() ? `disabled-cursor` : ``
@@ -3198,7 +3227,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																disabled={this.checkedRow() ? true : false}
 															>
 																<i className="fa fa-plus"></i> {strings.Addmore}
-															</Button>
+															</Button> */}
 															{this.props.location.state &&	this.props.location.state.quotationId ?"":<Button
 																color="primary"
 																className= "btn-square mr-3"
@@ -3274,7 +3303,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																	className="invoice-create-table"
 																>
 																	<TableHeaderColumn
-																		width="5%"
+																		width="4%"
 																		dataAlign="center"
 																		dataFormat={(cell, rows) =>
 																			this.renderActions(cell, rows, props)
@@ -3282,7 +3311,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																	></TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="product"
-																		width="15%"
+																		width="17%"
 																		dataFormat={(cell, rows) =>
 																			this.renderProduct(cell, rows, props)
 																		}
@@ -3296,7 +3325,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																			this.renderAddProduct(cell, rows, props)
 																		}
 																	></TableHeaderColumn> */}
-																	<TableHeaderColumn
+																	{/* <TableHeaderColumn
 																		width="10%"
 																		dataField="description"
 																		dataFormat={(cell, rows) =>
@@ -3304,9 +3333,9 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		}
 																	>
 																	{strings.DESCRIPTION}
-																	</TableHeaderColumn>
+																	</TableHeaderColumn> */}
 																	<TableHeaderColumn
-																		width="10%"
+																		width="13%"
 																		dataField="quantity"
 																		dataFormat={(cell, rows) =>
 																			this.renderQuantity(cell, rows, props)
@@ -3314,7 +3343,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																	>
 																		{strings.QUANTITY}
 																	</TableHeaderColumn>
-																	<TableHeaderColumn
+																	{/* <TableHeaderColumn
 																			width="5%"
 																			dataField="unitType"
 																     	>{strings.Unit}
@@ -3326,7 +3355,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		 target="unitTooltip"
 																	 >
 																		Units / Measurements</UncontrolledTooltip>
-																		</TableHeaderColumn>
+																		</TableHeaderColumn> */}
 																		<TableHeaderColumn
 																		width="10%"
 																		dataField="unitPrice"
@@ -3347,6 +3376,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																			service
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn>
+																	{initValue.total_excise != 0 &&
 																	<TableHeaderColumn
 																		width="10%"
 																		dataField="exciseTaxId"
@@ -3366,7 +3396,8 @@ if(changeShippingAddress && changeShippingAddress==true)
 																			If Exise Type for a product is Inclusive
 																			then the Excise dropdown will be Disabled
 																		</UncontrolledTooltip>
-																	</TableHeaderColumn> 
+																	</TableHeaderColumn> }
+																	{this.state.discountEnabled == true &&
 																	<TableHeaderColumn
 																		width="12%"
 																		dataField="discount"
@@ -3375,9 +3406,9 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		}
 																		>
 																	{strings.DisCount}
-																	</TableHeaderColumn>
+																	</TableHeaderColumn>}
 																	<TableHeaderColumn
-																		width="10%"
+																		width="13%"
 																		dataField="vat"
 																		dataFormat={(cell, rows) =>
 																			this.renderVat(cell, rows, props)
@@ -3407,6 +3438,25 @@ if(changeShippingAddress && changeShippingAddress==true)
 																</BootstrapTable>
 															</Col>
 														</Row>
+
+														<Row className="ml-4 ">
+															<Col className=" ml-4">
+																<FormGroup className='pull-right'>
+																<Input
+																	type="checkbox"
+																	id="discountEnabled"
+																	checked={this.state.discountEnabled}
+																	onChange={(option) => {
+																		if(initValue.discount > 0){
+																			this.setState({ discountEnabled: true })
+																		}else{
+																		this.setState({ discountEnabled: !this.state.discountEnabled })}
+																	}}
+																/>
+																<Label>Apply Discount</Label>
+																</FormGroup>
+															</Col>
+														</Row>
 														{this.state.data.length > 0 ? (
 															<Row>
 																<Col lg={8}>
@@ -3414,12 +3464,12 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
 																		<TextareaAutosize
 																			type="textarea"
-																			style={{width: "800px"}}
+																			style={{width: "700px"}}
 																			className="textarea"
 																			maxLength="255"
 																			name="notes"
 																			id="notes"
-																			rows="6"
+																			rows="2"
 																			placeholder={strings.DeliveryNotes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
@@ -3518,10 +3568,10 @@ if(changeShippingAddress && changeShippingAddress==true)
 																			type="textarea"
 																			className="textarea"
 																			maxLength="250"
-																			style={{width: "800px"}}
+																			style={{width: "700px"}}
 																			name="receiptAttachmentDescription"
 																			id="receiptAttachmentDescription"
-																			rows="5"
+																			rows="2"
 																			placeholder={strings.ReceiptAttachmentDescription}
 																			onChange={(option) =>
 																				props.handleChange(
@@ -3543,10 +3593,10 @@ if(changeShippingAddress && changeShippingAddress==true)
 																			type="textarea"
 																			className="textarea"
 																			maxLength="255"
-																			style={{width: "800px"}}
+																		 style={{width: "700px"}}
 																			name="footNote"
 																			id="footNote"
-																			rows="5"
+																			rows="2"
 																			placeholder="e.g. Thank You Note"
 																			onChange={(option) =>
 																				props.handleChange(
@@ -3563,7 +3613,8 @@ if(changeShippingAddress && changeShippingAddress==true)
 
 
 																<Col lg={4}>
-																	<div className="">																		
+																	<div className="">	
+																	{initValue.total_excise > 0 ?																
 																		<div className="total-item p-2" >
 																			<Row>
 																				<Col lg={6}>
@@ -3580,7 +3631,8 @@ if(changeShippingAddress && changeShippingAddress==true)
 																					</label>
 																				</Col>
 																			</Row>
-																		</div>
+																		</div> : ''}
+																		{this.state.discountEnabled == true ?
 																		<div className="total-item p-2">
 																			<Row>
 																				<Col lg={6}>
@@ -3608,7 +3660,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																					</label>
 																				</Col>
 																			</Row>
-																		</div>
+																		</div> : ''}
 																		<div className="total-item p-2">
 																			<Row>
 																				<Col lg={6}>
@@ -3751,7 +3803,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																			? 'Creating...'
 																			: strings.Create }
 																	</Button>
-																	{this.state.quotationId || this.props.location.state &&	this.props.location.state.parentInvoiceId ?"":<Button
+																	{this.state.quotationId ? "": (<Button
 																		type="button"
 																		color="primary"
 																		className="btn-square mr-3"
@@ -3782,7 +3834,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		{this.state.disabled
 																			? 'Creating...'
 																			: strings.CreateandMore }
-																	</Button>}
+																	</Button>)}
 																	<Button
 																		color="secondary"
 																		className="btn-square"

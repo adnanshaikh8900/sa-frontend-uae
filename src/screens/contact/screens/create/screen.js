@@ -464,7 +464,7 @@ class CreateContact extends React.Component {
 																<Form onSubmit={props.handleSubmit}>
 																	<Row>
 																		<Col >
-																			<FormGroup className="mb-3">
+																		{this.props.isParentComponentPresent && this.props.isParentComponentPresent == true ? "" : (<FormGroup className="mb-3">
 																				<Label htmlFor="active"><span className="text-danger">* </span>{strings.Status}</Label>
 																				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 																				<FormGroup check inline>
@@ -497,7 +497,7 @@ class CreateContact extends React.Component {
 																						</label>
 																					</div>
 																				</FormGroup>
-																				{this.props.isParentComponentPresent && this.props.isParentComponentPresent == true ? "" : (	<FormGroup check inline>
+																			<FormGroup check inline>
 																					<div className="custom-radio custom-control">
 																						<input
 																							className="custom-control-input"
@@ -526,9 +526,9 @@ class CreateContact extends React.Component {
 																							{strings.Inactive}
 																						</label>
 																					</div>
-																				</FormGroup>)}
+																				</FormGroup>
 
-																			</FormGroup>
+																			</FormGroup>)}
 																		</Col>
 																	</Row>
 																	<h4 className="mb-4">{strings.ContactName}</h4>

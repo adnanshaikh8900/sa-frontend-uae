@@ -799,10 +799,21 @@ class DetailSupplierInvoice extends React.Component {
 	};
 	addRow = () => {
 		const data = [...this.state.data];
+		const idCount =
+		this.state.idCount?
+				this.state.idCount:
+								data.length > 0
+									? Math.max.apply(
+											Math,
+											data.map((item) => {
+												return item.id;
+											}),
+									)
+									: 0;
 		this.setState(
 			{
 				data: data.concat({
-					id: this.state.idCount + 1,
+					id:idCount + 1,
 					description: '',
 					quantity: 1,
 					unitPrice: '',

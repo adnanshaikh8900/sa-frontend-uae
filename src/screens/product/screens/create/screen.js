@@ -695,7 +695,7 @@ try {
 																				/>
 																			  {strings.Active}
 																			</Label>
-																			<Label
+																			{this.props.isParentComponentPresent &&this.props.isParentComponentPresent ==true ?"":(	<Label
 																				className="form-check-label"
 																				check
 																			>
@@ -721,7 +721,7 @@ try {
                                                                                                      }}
 																				/>
 																				   {strings.Inactive}
-																			</Label>
+																			</Label>)}
 																		</div>   
                                                                     </FormGroup>
                                                                 </Col>

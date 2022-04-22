@@ -497,7 +497,7 @@ class CreateContact extends React.Component {
 																						</label>
 																					</div>
 																				</FormGroup>
-																				<FormGroup check inline>
+																				{this.props.isParentComponentPresent && this.props.isParentComponentPresent == true ? "" : (	<FormGroup check inline>
 																					<div className="custom-radio custom-control">
 																						<input
 																							className="custom-control-input"
@@ -526,7 +526,7 @@ class CreateContact extends React.Component {
 																							{strings.Inactive}
 																						</label>
 																					</div>
-																				</FormGroup>
+																				</FormGroup>)}
 
 																			</FormGroup>
 																		</Col>

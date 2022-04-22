@@ -493,6 +493,13 @@ dateLimit=()=>{
 											className="btn-square"
 											disabled={this.state.disabled}
 											disabled={isSubmitting}
+											onClick={() => {
+												//	added validation popup	msg
+												props.handleBlur();
+												if(props.errors &&  Object.keys(props.errors).length != 0)
+												this.props.commonActions.fillManDatoryDetails();
+
+										}}
 										>
 											<i className="fa fa-dot-circle-o"></i> 	{this.state.disabled
 																			? 'Saving...'

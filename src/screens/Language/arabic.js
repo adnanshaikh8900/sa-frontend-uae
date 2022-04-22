@@ -99,6 +99,12 @@ RecieptNumber:"عدد إيصال",
        Net: "صافي",
        ProfitLoss: "الربح والخسارة",
 
+        // Note Settings
+      Footnote: "هامش",
+      DefaultDeliveryNotes: "ملاحظات التسليم الافتراضية",
+      DefaultFootnotes: "الحواشي السفلية الافتراضية",
+      PaymentDetails: "على سبيل المثال بيانات الدفع",
+
         //Customer invoice
         Import:"يستورد",
       CustomerInvoices: "فواتير العملاء",

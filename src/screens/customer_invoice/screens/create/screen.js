@@ -3572,18 +3572,18 @@ if(changeShippingAddress && changeShippingAddress==true)
 																	</FormGroup>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="footNote">
-																			Footnotes
+																		{strings.Footnote}
 																		</Label>
 																		<br/>
 																		<TextareaAutosize
 																			type="textarea"
 																			className="textarea"
 																			maxLength="255"
-																		 style={{width: "700px"}}
+																			style={{width: "700px"}}
 																			name="footNote"
 																			id="footNote"
 																			rows="2"
-																			placeholder="e.g. Thank You Note"
+																			placeholder={strings.PaymentDetails}
 																			onChange={(option) =>
 																				props.handleChange(
 																					'footNote',

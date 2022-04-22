@@ -147,6 +147,12 @@ Quotation_For:"Devis pour,",
       Net: "Filet",
       ProfitLoss: "Bénéfice et perte",
 
+      // Note Settings
+      Footnote: "note de bas de page",
+      DefaultDeliveryNotes: "Bons de livraison par défaut",
+      DefaultFootnotes: "Notes de bas de page par défaut",
+      PaymentDetails: "par exemple. Détails de paiement",
+
       //Customer invoice
       CustomerInvoices: "Factures client",
       Overdue: "En Retard",

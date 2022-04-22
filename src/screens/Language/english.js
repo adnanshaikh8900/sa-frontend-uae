@@ -206,6 +206,12 @@ Relationship2:"Relationship 2",
       ContactAddressDetails:"Contact Address Details",
       ShippingAddressIsSameAsBillingAddress:"Shipping Address Is Same As Billing Address",
 
+      // Note Settings
+      Footnote: "Footnote",
+      DefaultDeliveryNotes: "Default Delivery Notes",
+      DefaultFootnotes: "Default Footnotes",
+      PaymentDetails: "e.g. Payment Details",
+
       //Income receipts
       Receipts:"Receipts",		
       RECEIPTDATE:"RECEIPT DATE",		

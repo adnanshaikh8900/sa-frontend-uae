@@ -110,15 +110,7 @@ class DetailContact extends React.Component {
 			selectedStatus: false,
 			isActive: false,
 			loadingMsg: "Loading",
-			// billingAddress: {
-			// 	billingcountryId: '',
-			// 	billingStateProvince: '',
-			// 	billingCity: '',
-			// 	billingAddress: '',
-			// 	billingPostZipCode: '',
-			// 	billingPhoneNumber: '',
-			// 	billingFax: '',
-			// },
+		
 
 		};
 

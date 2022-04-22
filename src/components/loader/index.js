@@ -8,7 +8,7 @@ const loaderImage = require('assets/images/brand/loader-gif.gif')
 // const loaderImage = require('assets/images/settings/thumbnail.png');
 // const newloaderImage = require('assets/images/settings/thumbnail.png');
 const oldloaderImage = require('assets/images/brand/loader-gif.gif')
-export default function Loader({loadingMsg,loadingMsg1}) {
+export default function Loader({loadingMsg,NextloadingMsg}) {
   return (
 
     //   <div className="sk-double-bounce loader">
@@ -84,7 +84,7 @@ export default function Loader({loadingMsg,loadingMsg1}) {
            style={{color:"#2064d8"}}>
    <b>
       {loadingMsg ? loadingMsg:"Loading..."}<br/>
-      {loadingMsg1 ? loadingMsg1:""}
+      {NextloadingMsg ? NextloadingMsg:""}
    </b></div>
     </div>
 

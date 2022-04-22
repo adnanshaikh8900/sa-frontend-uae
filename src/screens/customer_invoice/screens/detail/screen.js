@@ -2989,7 +2989,7 @@ class DetailCustomerInvoice extends React.Component {
 																		this.setState({ discountEnabled: !this.state.discountEnabled })}
 																	}}
 																/>
-																<Label>Apply Discount</Label>
+																<Label>Apply Line Item Discount</Label>
 																</FormGroup>
 															</Col>
 														</Row>
@@ -3046,7 +3046,7 @@ class DetailCustomerInvoice extends React.Component {
 																					name="attachmentFile"
 																					render={({ field, form }) => (
 																						<div>
-																							<Label>{strings.RecieptAttachment}</Label>{' '}
+																							<Label>{strings.ReceiptAttachment}</Label>{' '}
 																							<br />
 																							<Button
 																								color="primary"

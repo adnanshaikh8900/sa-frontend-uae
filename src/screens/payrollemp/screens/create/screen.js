@@ -2059,7 +2059,7 @@ existForAccountNumber = (value) => {
                                                                                                         id="city"
                                                                                                         name="city"
                                                                                                         value={props.values.city}
-                                                                                                        placeholder={strings.Enter+strings.City}
+                                                                                                        placeholder={strings.Location}
 
                                                                                                         onChange={(option) => {
                                                                                                             if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('city')(option) }

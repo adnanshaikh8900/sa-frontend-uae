@@ -1372,6 +1372,12 @@ class Profile extends React.Component {
 																						type="submit"
 																						color="primary"
 																						className="btn-square mr-3"
+																						onClick={() => {
+																							//	added validation popup	msg	
+																							props.handleBlur();
+																							if(props.errors &&  Object.keys(props.errors).length != 0)
+																							this.props.commonActions.fillManDatoryDetails();
+																					 }}
 																					>
 																						<i className="fa fa-dot-circle-o"></i>{' '}
 																					 {strings.Update}
@@ -3554,6 +3560,12 @@ class Profile extends React.Component {
 																						type="submit"
 																						color="primary"
 																						className="btn-square mr-3"
+																						onClick={() => {
+																							//	added validation popup	msg	
+																							props.handleBlur();
+																							if(props.errors &&  Object.keys(props.errors).length != 0)
+																							this.props.commonActions.fillManDatoryDetails();
+																					 }}
 																					>
 																						<i className="fa fa-dot-circle-o"></i>{' '}
 																					 {strings.Update}
@@ -3838,6 +3850,12 @@ class Profile extends React.Component {
 																						type="submit"
 																						color="primary"
 																						className="btn-square mr-3"
+																						onClick={() => {
+																							//	added validation popup	msg	
+																							props.handleBlur();
+																							if(props.errors &&  Object.keys(props.errors).length != 0)
+																							this.props.commonActions.fillManDatoryDetails();
+																					 }}
 																					>
 																						<i className="fa fa-dot-circle-o"></i>{' '}
 																					 {strings.Update}

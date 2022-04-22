@@ -426,6 +426,7 @@ debugger
 			.then((res) => {
 			
 				this.setState({ disabled: false });
+				this.setState({ loading:false});
 				if (res.status === 200) {
 					// this.setState({ loading:false});
 					resetForm(this.state.initValue);
@@ -1802,6 +1803,11 @@ min="0"
 																		className="btn-square mr-3"
 																		disabled={this.state.disabled}
 																		onClick={() => {
+																			//	added validation popup	msg
+																			props.handleBlur();
+																			if(props.errors &&  Object.keys(props.errors).length != 0)
+																			this.props.commonActions.fillManDatoryDetails();
+
 																			this.setState(
 																				{ createMore: false },
 																				() => {
@@ -1821,13 +1827,18 @@ min="0"
 																		className="btn-square mr-3"
 																		disabled={this.state.disabled}
 																		onClick={() => {
-																			this.setState(
-																				{ createMore: true },
-																				() => {
-																					props.handleSubmit();
-																				},
-																			);
-																		}}
+																			//	added validation popup	msg
+																			props.handleBlur();
+																			if(props.errors &&  Object.keys(props.errors).length != 0)
+																			this.props.commonActions.fillManDatoryDetails();
+
+																		this.setState(
+																			{ createMore: true },
+																			() => {
+																				props.handleSubmit();
+																			},
+																		);
+																	}}
 																	>
 																		<i className="fa fa-refresh"></i> 	{this.state.disabled
 																			? 'Creating...'

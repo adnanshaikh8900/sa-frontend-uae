@@ -279,6 +279,7 @@ class DetailCustomerInvoice extends React.Component {
 									taxType : res.data.taxType ? true : false,
 									footNote:res.data.footNote?res.data.footNote:''
                                  },
+								 discountEnabled : res.data.discount > 0 ? true : false,
 								customer_taxTreatment_des : res.data.taxTreatment ? res.data.taxTreatment : '',
 								invoiceDateNoChange :res.data.invoiceDate
 								? moment(res.data.invoiceDate)
@@ -326,6 +327,7 @@ class DetailCustomerInvoice extends React.Component {
 									this.setState({
 										idCount,
 									});
+									this.addRow()
 								} else {
 									this.setState({
 										idCount: 0,
@@ -442,113 +444,87 @@ class DetailCustomerInvoice extends React.Component {
            return obj;
        });
 	   
-       return (
-           <Field
-              name={`lineItemsString.${idx}.discountType`}
-               render={({ field, form }) => (
-               <div>
-               <div  class="input-group">
-                   <Input
-                   type="text"
-                   min="0"
-				   width={"50%"}
-                       maxLength="14,2"
-                       value={row['discount'] !== 0 ? row['discount'] : 0}
-                       onChange={(e) => {
-                           if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
-                               this.selectItem(
-                                   e.target.value,
-                                   row,
-                                   'discount',
-                                   form,
-                                   field,
-                                   props,
-                               );
-                           }
-                       
-                               this.updateAmount(
-                                   this.state.data,
-                                   props,
-                               );
-                       
-                       }}
-                       placeholder={strings.discount}
-                       className={`form-control 
-           ${
-                           props.errors.lineItemsString &&
-                           props.errors.lineItemsString[parseInt(idx, 10)] &&
-                           props.errors.lineItemsString[parseInt(idx, 10)].discount &&
-                           Object.keys(props.touched).length > 0 &&
-                           props.touched.lineItemsString &&
-                           props.touched.lineItemsString[parseInt(idx, 10)] &&
-                           props.touched.lineItemsString[parseInt(idx, 10)].discount
-                               ? 'is-invalid'
-                               : ''
-                       }`}
-   />
-    <div class="dropdown open input-group-append">
+	   return (
+		<Field
+			 name={`lineItemsString.${idx}.discountType`}
+			render={({ field, form }) => (
+			<div>
+			<div  class="input-group">
+				<Input
+					  type="text"
+						min="0"
+					 maxLength="14,2"
+					 value={row['discount'] !== 0 ? row['discount'] : 0}
+					 onChange={(e) => {
+						if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+							this.selectItem(
+								e.target.value,
+								row,
+								'discount',
+								form,
+								field,
+								props,
+							);
+						}
+					
+							this.updateAmount(
+								this.state.data,
+								props,
+							);
+					
+					}}
+					placeholder={strings.discount}
+					className={`form-control 
+		${
+						props.errors.lineItemsString &&
+						props.errors.lineItemsString[parseInt(idx, 10)] &&
+						props.errors.lineItemsString[parseInt(idx, 10)].discount &&
+						Object.keys(props.touched).length > 0 &&
+						props.touched.lineItemsString &&
+						props.touched.lineItemsString[parseInt(idx, 10)] &&
+						props.touched.lineItemsString[parseInt(idx, 10)].discount
+							? 'is-invalid'
+							: ''
+					}`}
+/>
+ <div class="dropdown open input-group-append">
 
-        <div 	style={{width:'80px'}}>
-        <Select
-   
+	 <div 	style={{width:'100px'}}>
+	 <Select
 
-                                                                                           options={discountOptions}
-                                                                                           id="discountType"
-                                                                                           name="discountType"
-                                                                                           value={
-                                                                                               discountOptions &&
-                                                                                               discountOptions
-                                                                                                   .find((option) => option.value == row.discountType)
-                                                                                           }
-                                                                                           // onChange={(item) => {
-                                                                                           // 	props.handleChange(
-                                                                                           // 		'discountType',
-                                                                                           // 	)(item);
-                                                                                           // 	props.handleChange(
-                                                                                           // 		'discountPercentage',
-                                                                                           // 	)('');
-                                                                                           // 	props.setFieldValue(
-                                                                                           // 		'discount',
-                                                                                           // 		0,
-                                                                                           // 	);
-                                                                                           // 	this.setState(
-                                                                                           // 		{
-                                                                                           // 			discountPercentage: '',
-                                                                                           // 			discountAmount: 0,
-                                                                                           // 		},
-                                                                                           // 		() => {
-                                                                                           // 			this.updateAmount(
-                                                                                           // 				this.state.data,
-                                                                                           // 				props,
-                                                                                           // 			);
-                                                                                           // 		},
-                                                                                           // 	);
-                                                                                           // }}
-                                                                                           onChange={(e) => {
-                                                                                               this.selectItem(
-                                                                                                   e.value,
-                                                                                                   row,
-                                                                                                   'discountType',
-                                                                                                   form,
-                                                                                                   field,
-                                                                                                   props,
-                                                                                               );
-                                                                                               this.updateAmount(
-                                                                                                   this.state.data,
-                                                                                                   props,
-                                                                                               );
-                                                                                           }}
-                                                                                       />
-             </div>
-              </div>
-              </div>
-               </div>
 
-                   )}
+																						options={discountOptions}
+																						id="discountType"
+																						name="discountType"
+																						value={
+																					 discountOptions &&
+																					 discountOptions .find((option) => option.value == row.discountType)
+																						}
+																						onChange={(e) => {
+																							this.selectItem(
+																								e.value,
+																								row,
+																								'discountType',
+																								form,
+																								field,
+																								props,
+																							);
+																							this.updateAmount(
+																								this.state.data,
+																								props,
+																							);
+																						}}
+																					/>
+		  </div>
+		   </div>
+		   </div>
+			</div>
 
-           />
-       );
-   }
+				)}
+
+		/>
+	);
+}
 
 	renderDescription = (cell, row, props) => {
 		let idx;
@@ -615,8 +591,10 @@ class DetailCustomerInvoice extends React.Component {
 				name={`lineItemsString.${idx}.quantity`}
 				render={({ field, form }) => (
 					<div>
+						<div class="input-group">
 						<Input
 							type="text"
+							maxLength="10"
 							min="0"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
@@ -640,22 +618,24 @@ class DetailCustomerInvoice extends React.Component {
 									);
 								}
 							}}
+							
 							placeholder={strings.Quantity}
-							className={`form-control 
-           						${
-												props.errors.lineItemsString &&
-												props.errors.lineItemsString[parseInt(idx, 10)] &&
-												props.errors.lineItemsString[parseInt(idx, 10)]
-													.quantity &&
-												Object.keys(props.touched).length > 0 &&
-												props.touched.lineItemsString &&
-												props.touched.lineItemsString[parseInt(idx, 10)] &&
-												props.touched.lineItemsString[parseInt(idx, 10)]
-													.quantity
-													? 'is-invalid'
-													: ''
-											}`}
+							className={`form-control w-50${
+								props.errors.lineItemsString &&
+								props.errors.lineItemsString[parseInt(idx, 10)] &&
+								props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
+								Object.keys(props.touched).length > 0 &&
+								props.touched.lineItemsString &&
+								props.touched.lineItemsString[parseInt(idx, 10)] &&
+								props.touched.lineItemsString[parseInt(idx, 10)].quantity
+									? 'is-invalid'
+									: ''
+							}`}
+						
 						/>
+						 {row['productId'] != '' ? 
+						<Input value={row['unitType'] }  disabled/> : ''}
+						</div>
 						{props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
@@ -667,6 +647,7 @@ class DetailCustomerInvoice extends React.Component {
 									{props.errors.lineItemsString[parseInt(idx, 10)].quantity}
 								</div>
 							)}
+						
 					</div>
 				)}
 			/>
@@ -1043,7 +1024,30 @@ class DetailCustomerInvoice extends React.Component {
                    {props.errors.lineItemsString[parseInt(idx, 10)].productId}
                    </div>
                      )}
-                   </>
+					  {row['productId'] != '' ? 
+						   <div className='mt-1'>
+						   <Input
+						type="text"
+						maxLength="250"
+						value={row['description'] !== '' ? row['description'] : ''}
+						onChange={(e) => {
+							this.selectItem(e.target.value, row, 'description', form, field);
+						}}
+						placeholder={strings.Description}
+						className={`form-control ${
+							props.errors.lineItemsString &&
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)].description &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)].description
+								? 'is-invalid'
+								: ''
+						}`}
+					/>
+						   </div> : ''}
+					   </>
 				)}
 			/>
 		);
@@ -1060,18 +1064,18 @@ class DetailCustomerInvoice extends React.Component {
 	};
 
 	renderActions = (cell, rows, props) => {
-		return (
+		return rows['productId'] != '' ? 
 			<Button
 				size="sm"
-				className="btn-twitter btn-brand icon"
+				className="btn-twitter btn-brand icon mt-1"
 				disabled={this.state.data.length === 1 ? true : false}
 				onClick={(e) => {
 					this.deleteRow(e, rows, props);
 				}}
 			>
 				<i className="fas fa-trash"></i>
-			</Button>
-		);
+			</Button> : ''
+		
 	};
 
 	checkedRow = () => {
@@ -2747,9 +2751,9 @@ class DetailCustomerInvoice extends React.Component {
 														<hr />
 														</Row>
 															<hr style={{display: props.values.exchangeRate === 1 ? 'none' : ''}} />
-															<Row>
+															<Row className="mb-3">
 																<Col lg={8} className="mb-3">
-																	<Button
+																	{/* <Button
 																		color="primary"
 																		className={`btn-square mr-3 ${
 																			this.checkedRow() ? `disabled-cursor` : ``
@@ -2763,10 +2767,10 @@ class DetailCustomerInvoice extends React.Component {
 																		disabled={this.checkedRow() ? true : false}
 																	>
 																		<i className="fa fa-plus"></i> {strings.Addmore}
-																	</Button>
+																	</Button> */}
 																</Col>
 																<Col  >
-																<label className='mr-4'><b>{strings.tax_type}</b></label>
+																
 																{this.state.taxType === false ?
 																	<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Exclusive}</b></span> :
 																	<span className='mr-4'>{strings.Exclusive}</span>}
@@ -2801,6 +2805,7 @@ class DetailCustomerInvoice extends React.Component {
 																	<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.Inclusive}</b></span>
 																	: <span className='ml-4'>{strings.Inclusive}</span>
 																}
+																
 															</Col>
 															</Row>
 															
@@ -2838,7 +2843,7 @@ class DetailCustomerInvoice extends React.Component {
 																			}
 																		></TableHeaderColumn>
 																		<TableHeaderColumn
-																		width="16%"
+																		width="17%"
 																			dataField="product"
 																			dataFormat={(cell, rows) =>
 																				this.renderProduct(cell, rows, props)
@@ -2853,7 +2858,7 @@ class DetailCustomerInvoice extends React.Component {
 																			this.renderAddProduct(cell, rows, props)
 																		}
 																	></TableHeaderColumn> */}
-																		<TableHeaderColumn
+																		{/* <TableHeaderColumn
 																			dataField="description"
 																			dataFormat={(cell, rows) =>
 																				this.renderDescription(
@@ -2864,17 +2869,17 @@ class DetailCustomerInvoice extends React.Component {
 																			}
 																		>
 																			{strings.DESCRIPTION}
-																		</TableHeaderColumn>
+																		</TableHeaderColumn> */}
 																		<TableHeaderColumn
 																			dataField="quantity"
-																			width="10%"
+																			width="13%"
 																			dataFormat={(cell, rows) =>
 																				this.renderQuantity(cell, rows, props)
 																			}
 																		>
 																			{strings.QUANTITY}
 																		</TableHeaderColumn>
-																		<TableHeaderColumn
+																		{/* <TableHeaderColumn
 																			width="5%"
 																			dataField="unitType"
 																     	>{strings.Unit}	<i
@@ -2888,7 +2893,7 @@ class DetailCustomerInvoice extends React.Component {
 																	 >
 																		Units / Measurements
 																	 </UncontrolledTooltip>
-																 </TableHeaderColumn> 
+																 </TableHeaderColumn>  */}
 																		<TableHeaderColumn
 																			dataField="unitPrice"
 																			dataFormat={(cell, rows) =>
@@ -2897,6 +2902,7 @@ class DetailCustomerInvoice extends React.Component {
 																		>
 																			{strings.UNITPRICE}
 																		</TableHeaderColumn>
+																		{initValue.total_excise != 0 &&
 																		<TableHeaderColumn
 																	width="10%"
 																		dataField="exciseTaxId"
@@ -2916,7 +2922,8 @@ class DetailCustomerInvoice extends React.Component {
 																			If Exise Type for a product is Inclusive
 																			then the Excise dropdown will be Disabled
 																		</UncontrolledTooltip>
-																	</TableHeaderColumn> 
+																	</TableHeaderColumn> }
+																	{this.state.discountEnabled == true &&
 																	<TableHeaderColumn
 																	width="12%"
 																		dataField="discount"
@@ -2925,13 +2932,14 @@ class DetailCustomerInvoice extends React.Component {
 																		}
 																	>
 																		{strings.DISCOUNT_TYPE}
-																	</TableHeaderColumn>
+																	</TableHeaderColumn>}
 
 																		<TableHeaderColumn
 																			dataField="vat"
 																			dataFormat={(cell, rows) =>
 																				this.renderVat(cell, rows, props)
 																			}
+																			width="13%"
 																		>
 																			{strings.VAT}
 																		</TableHeaderColumn>
@@ -2956,6 +2964,24 @@ class DetailCustomerInvoice extends React.Component {
 																	</BootstrapTable>
 																</Col>
 															</Row>
+															<Row className="ml-4 ">
+															<Col className=" ml-4">
+																<FormGroup className='pull-right'>
+																<Input
+																	type="checkbox"
+																	id="discountEnabled"
+																	checked={this.state.discountEnabled}
+																	onChange={(option) => {
+																		if(initValue.discount > 0){
+																			this.setState({ discountEnabled: true })
+																		}else{
+																		this.setState({ discountEnabled: !this.state.discountEnabled })}
+																	}}
+																/>
+																<Label>Apply Discount</Label>
+																</FormGroup>
+															</Col>
+														</Row>
 															{data.length > 0 && (
 																<Row>
 																	<Col lg={8}>
@@ -2965,10 +2991,10 @@ class DetailCustomerInvoice extends React.Component {
 																			type="textarea"
 																			className="textarea"
 																			maxLength="250"
-																			style={{width: "800px"}}
+																			style={{width: "700px"}}
 																			name="notes"
 																			id="notes"
-																			rows="6"
+																			rows="2"
 																			placeholder={strings.DeliveryNotes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
@@ -3072,10 +3098,10 @@ class DetailCustomerInvoice extends React.Component {
 																			type="textarea"
 																			className="textarea"
 																			maxLength="250"
-																			style={{width: "800px"}}
+																			style={{width: "700px"}}
 																			name="receiptAttachmentDescription"
 																			id="receiptAttachmentDescription"
-																			rows="5"
+																			rows="2"
 																			placeholder={strings.ReceiptAttachmentDescription}
 																			onChange={(option) =>
 																				props.handleChange(
@@ -3097,10 +3123,10 @@ class DetailCustomerInvoice extends React.Component {
 																			type="textarea"
 																			className="textarea"
 																			maxLength="255"
-																			style={{width: "800px"}}
+																			style={{width: "700px"}}
 																			name="footNote"
 																			id="footNote"
-																			rows="5"
+																			rows="2"
 																			placeholder="e.g. Thank You Note"
 																			onChange={(option) =>
 																				props.handleChange(
@@ -3115,6 +3141,7 @@ class DetailCustomerInvoice extends React.Component {
 																</Col>
 																	<Col lg={4}>
 																		<div className="">
+																		{initValue.total_excise > 0 ?
 																		<div className="total-item p-2" >
 																			<Row>
 																				<Col lg={6}>
@@ -3131,8 +3158,8 @@ class DetailCustomerInvoice extends React.Component {
 																					</label>
 																				</Col>
 																			</Row>
-																		</div>
-																			
+																		</div> : ''}
+																		{this.state.discountEnabled == true ?
 																			<div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>
@@ -3157,7 +3184,7 @@ class DetailCustomerInvoice extends React.Component {
 																						</label>
 																					</Col>
 																				</Row>
-																			</div>
+																			</div>: ''}
 																			<div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>
@@ -3266,6 +3293,10 @@ class DetailCustomerInvoice extends React.Component {
 																				if(this.state.data.length === 1)
 																					{
 																					console.log(props.errors,"ERRORs")
+																					//	added validation popup	msg
+																			props.handleBlur();
+																			if(props.errors &&  Object.keys(props.errors).length != 0)
+																			this.props.commonActions.fillManDatoryDetails();
 																					}
 																					else
 																					{ let newData=[]

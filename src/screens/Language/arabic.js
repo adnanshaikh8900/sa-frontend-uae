@@ -57,8 +57,8 @@ RecieptNumber:"عدد إيصال",
 
         //Income
         noteforchangeaddress:"هل تريد تغيير عنوان الشحن لهذه الفاتورة؟",
-        Exclusive:"خاص",
-        Inclusive:"شامله",
+        Exclusive:"شامل الضريبة",
+        Inclusive:"شامل الضريبة",
         Excises: " المكوس ",
         DisCount:"خصم",
         VATAMOUNT:"مبلغ ضريبة القيمة المضافة",

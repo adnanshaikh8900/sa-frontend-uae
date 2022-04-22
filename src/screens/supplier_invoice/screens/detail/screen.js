@@ -251,6 +251,7 @@ class DetailSupplierInvoice extends React.Component {
 									total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : 0,
 									taxType : res.data.taxType ? true : false,
 								},
+								discountEnabled : res.data.discount > 0 ? true : false,
 								customer_taxTreatment_des: res.data.taxTreatment ? res.data.taxTreatment : '',
 								checked: res.data.exciseType ? res.data.exciseType : res.data.exciseType,
 								invoiceDateNoChange :res.data.invoiceDate
@@ -294,6 +295,7 @@ class DetailSupplierInvoice extends React.Component {
 									this.setState({
 										idCount,
 									});
+									this.addRow()
 								} else {
 									this.setState({
 										idCount: 0,
@@ -532,6 +534,7 @@ class DetailSupplierInvoice extends React.Component {
 				name={`lineItemsString.${idx}.quantity`}
 				render={({ field, form }) => (
 					<div>
+						<div class="input-group">
 						<Input
 							type="text"
 							maxLength="10"
@@ -550,7 +553,7 @@ class DetailSupplierInvoice extends React.Component {
 								}
 							}}
 							placeholder={strings.Quantity}
-							className={`form-control 
+							className={`form-control w-50
            						${
 												props.errors.lineItemsString &&
 												props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -565,6 +568,9 @@ class DetailSupplierInvoice extends React.Component {
 													: ''
 											}`}
 						/>
+							 {row['productId'] != '' ? 
+						<Input value={row['unitType'] }  disabled/> : ''}
+						</div>
 						{props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
@@ -576,6 +582,7 @@ class DetailSupplierInvoice extends React.Component {
 									{props.errors.lineItemsString[parseInt(idx, 10)].quantity}
 								</div>
 							)}
+							
 					</div>
 				)}
 			/>
@@ -713,9 +720,7 @@ class DetailSupplierInvoice extends React.Component {
                                                                                            name="discountType"
                                                                                            value={
                                                                                                discountOptions &&
-                                                                                               selectOptionsFactory
-                                                                                                   .renderOptions('label', 'value', discountOptions, 'discount')
-                                                                                                   .find((option) => option.value == row.discountType)
+                                                                                               discountOptions .find((option) => option.value == row.discountType)
                                                                                            }
                                                                                            // onChange={(item) => {
                                                                                            // 	props.handleChange(
@@ -1066,6 +1071,29 @@ class DetailSupplierInvoice extends React.Component {
 					   {props.errors.lineItemsString[parseInt(idx, 10)].productId}
 					   </div>
 						 )}
+						  {row['productId'] != '' ? 
+						   <div className='mt-1'>
+						   <Input
+						type="text"
+						maxLength="250"
+						value={row['description'] !== '' ? row['description'] : ''}
+						onChange={(e) => {
+							this.selectItem(e.target.value, row, 'description', form, field);
+						}}
+						placeholder={strings.Description}
+						className={`form-control ${
+							props.errors.lineItemsString &&
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)].description &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)].description
+								? 'is-invalid'
+								: ''
+						}`}
+					/>
+						   </div> : ''}
 					   </>
 				)}
 			/>
@@ -2318,7 +2346,7 @@ class DetailSupplierInvoice extends React.Component {
 															<hr style={{display: props.values.exchangeRate === 1 ? 'none' : ''}} />
 															<Row>
 																<Col lg={8} className="mb-3">
-																	<Button
+																	{/* <Button
 																		color="primary"
 																		className={`btn-square mr-3 ${
 																			this.checkedRow() ? `disabled-cursor` : ``
@@ -2332,13 +2360,13 @@ class DetailSupplierInvoice extends React.Component {
 																		disabled={this.checkedRow() ? true : false}
 																	>
 																		<i className="fa fa-plus"></i>  {strings.Addmore}
-																	</Button>
+																	</Button> */}
 																</Col>
 																<Col  >
 																
 																{this.state.taxType === false ?
-																	<span style={{ color: "#0069d9" }} className='mr-4'><b>Exclusive</b></span> :
-																	<span className='mr-4'>Exclusive</span>}
+																	<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Exclusive}</b></span> :
+																	<span className='mr-4'>{strings.Exclusive}</span>}
 																<Switch
 																	value={props.values.taxType}
 																	checked={this.state.taxType}
@@ -2367,8 +2395,8 @@ class DetailSupplierInvoice extends React.Component {
 																	className="react-switch "
 																/>
 																{this.state.taxType === true ?
-																	<span style={{ color: "#0069d9" }} className='ml-4'><b>Inclusive</b></span>
-																	: <span className='ml-4'>Inclusive</span>
+																	<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.Inclusive}</b></span>
+																	: <span className='ml-4'>{strings.Inclusive}</span>
 																}
 															</Col>
 															</Row>
@@ -2400,14 +2428,14 @@ class DetailSupplierInvoice extends React.Component {
 																		className="invoice-create-table"
 																	>
 																			<TableHeaderColumn
-																		width="5%"
+																		width="3%"
 																		dataAlign="center"
 																		dataFormat={(cell, rows) =>
 																			this.renderActions(cell, rows, props)
 																		}
 																	></TableHeaderColumn>
 																	<TableHeaderColumn
-																	width="16%"
+																	width="15%"
 																		dataField="product"
 																		dataFormat={(cell, rows) =>
 																			this.renderProduct(cell, rows, props)
@@ -2423,7 +2451,7 @@ class DetailSupplierInvoice extends React.Component {
 																		}
 																	></TableHeaderColumn> */}
 																	<TableHeaderColumn
-																		width="15%"
+																		width="11%"
 																		dataField="account"
 																		dataFormat={(cell, rows) =>
 																			this.renderAccount(cell, rows, props)
@@ -2431,24 +2459,24 @@ class DetailSupplierInvoice extends React.Component {
 																	>
 																		{strings.Account}
 																	</TableHeaderColumn>
-																	<TableHeaderColumn
+																	{/* <TableHeaderColumn
 																		dataField="description"
 																		dataFormat={(cell, rows) =>
 																			this.renderDescription(cell, rows, props)
 																		}
 																	>
 																		{strings.DESCRIPTION}
-																	</TableHeaderColumn>
+																	</TableHeaderColumn> */}
 																	<TableHeaderColumn
 																		dataField="quantity"
-																		width="100"
+																		width="12%"
 																		dataFormat={(cell, rows) =>
 																			this.renderQuantity(cell, rows, props)
 																		}
 																	>
 																		{strings.QUANTITY}
 																	</TableHeaderColumn>
-																	<TableHeaderColumn
+																	{/* <TableHeaderColumn
 																			width="5%"
 																			dataField="unitType"
 																     	>{strings.Unit}	<i
@@ -2462,7 +2490,7 @@ class DetailSupplierInvoice extends React.Component {
 																	 >
 																		Units / Measurements
 																	 </UncontrolledTooltip>
-																 </TableHeaderColumn> 
+																 </TableHeaderColumn>  */}
 																	<TableHeaderColumn
 																	width="10%"
 																		dataField="unitPrice"
@@ -2472,7 +2500,7 @@ class DetailSupplierInvoice extends React.Component {
 																	>
 																		Unit Price
 																	</TableHeaderColumn>
-
+																	{initValue.total_excise != 0 &&
 																	<TableHeaderColumn
 																	width="10%"
 																		dataField="exciseTaxId"
@@ -2492,7 +2520,8 @@ class DetailSupplierInvoice extends React.Component {
 																			If Exise Type for a product is Inclusive
 																			then the Excise dropdown will be Disabled
 																		</UncontrolledTooltip>
-																	</TableHeaderColumn>
+																	</TableHeaderColumn>}
+																	{this.state.discountEnabled == true &&
 																	<TableHeaderColumn
 																	width="12%"
 																		dataField="discount"
@@ -2501,10 +2530,10 @@ class DetailSupplierInvoice extends React.Component {
 																		}
 																	>
 																	Discount Type
-																	</TableHeaderColumn>
+																	</TableHeaderColumn>}
 
 																	<TableHeaderColumn
-																		width="10%"
+																		width="12%"
 																		dataField="vat"
 																		dataFormat={(cell, rows) =>
 																			this.renderVat(cell, rows, props)
@@ -2547,6 +2576,22 @@ class DetailSupplierInvoice extends React.Component {
                                                             />
                                                             <Label>Is Reverse Charge</Label>
                                                             </Col>
+															<Col className=" ml-4">
+																<FormGroup className='pull-right'>
+																<Input
+																	type="checkbox"
+																	id="discountEnabled"
+																	checked={this.state.discountEnabled}
+																	onChange={(option) => {
+																		if(initValue.discount > 0){
+																			this.setState({ discountEnabled: true })
+																		}else{
+																		this.setState({ discountEnabled: !this.state.discountEnabled })}
+																	}}
+																/>
+																<Label>Apply Discount</Label>
+																</FormGroup>
+															</Col>
 															</Row>
 														<hr />
 															{data.length > 0 && (
@@ -2680,6 +2725,7 @@ class DetailSupplierInvoice extends React.Component {
 																</Col>
 																	<Col lg={4}>
 																		<div className="">
+																		{initValue.total_excise > 0 ?
 																		<div className="total-item p-2">
 																			<Row>
 																				<Col lg={6}>
@@ -2695,7 +2741,8 @@ class DetailSupplierInvoice extends React.Component {
 																					</label>
 																				</Col>
 																			</Row>
-																		</div>
+																		</div>  :  ''}
+																		{this.state.discountEnabled == true ?
 																		<div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>
@@ -2713,7 +2760,7 @@ class DetailSupplierInvoice extends React.Component {
 																						</label>
 																					</Col>
 																				</Row>
-																			</div>
+																			</div> : ''}
 																			<div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>
@@ -2820,9 +2867,14 @@ class DetailSupplierInvoice extends React.Component {
 																			className="btn-square mr-3"
 																			disabled={this.state.disabled}
 																			onClick={() => {
+																				
 																				if(this.state.data.length === 1)
 																				{
 																				console.log(props.errors,"ERRORs")
+																					//	added validation popup	msg
+																					props.handleBlur();
+																					if(props.errors &&  Object.keys(props.errors).length != 0)
+																					this.props.commonActions.fillManDatoryDetails();
 																				}
 																				else
 																				{ let newData=[]

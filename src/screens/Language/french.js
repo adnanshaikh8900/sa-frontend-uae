@@ -100,8 +100,8 @@ mig:"Émigrer",
 
 //Income
 noteforchangeaddress:"Voulez-vous modifier l’adresse de livraison pour cette facture ?",
-Exclusive:"Exclusif",
-Inclusive:"Inclusif",
+Exclusive:"Impôt Exclusif",
+Inclusive:"Impôt Inclusif",
 Excises:"ACCISE",
 DisCount:"RABAIS",
 VATAMOUNT:"MONTANT DE LA TVA",

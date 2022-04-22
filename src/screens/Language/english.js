@@ -57,8 +57,8 @@ Relationship2:"Relationship 2",
 
       //Income
       noteforchangeaddress:"Do you want to change the Shipping Address for this invoice ?",
-      Exclusive:"Exclusive",
-      Inclusive:"Inclusive",
+      Exclusive:"Tax Exclusive",
+      Inclusive:"Tax Inclusive",
       Excises:"EXCISE",
       DisCount:"DISCOUNT",
       VATAMOUNT:"VAT AMOUNT",

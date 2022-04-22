@@ -272,7 +272,7 @@ class GeneralSettings extends React.Component {
 												>
 													{(props) => (
 														<Form onSubmit={props.handleSubmit}>
-															<h4>{strings.GeneralDetails}</h4>
+															{/* <h4>{strings.GeneralDetails}</h4>
 															<Row>
 																<Col sm="6">
 																	<FormGroup>
@@ -321,17 +321,17 @@ class GeneralSettings extends React.Component {
 																	</FormGroup>
 																</Col>
 															
-																{/* <Col sm="6">
-                                                    <FormGroup >
-                                                      <Label htmlFor="select">Invoicing Templates</Label>
-                                                      <Select
-                                                        options={[]}
-                                                      />
-                                                    </FormGroup>
-                                                  </Col> */}
-															</Row>
+												// 				 <Col sm="6">
+                                                //     <FormGroup >
+                                                //       <Label htmlFor="select">Invoicing Templates</Label>
+                                                //       <Select
+                                                //         options={[]}
+                                                //       />
+                                                //     </FormGroup>
+                                                //   </Col> 
+															</Row> */}
 															<h4> {strings.MailConfigurationDetail}</h4>
-															<Row>
+															<Row className='mt-3'>
 																<Col sm="6">
 																	<FormGroup>
 																		<Label htmlFor="mailingHost">

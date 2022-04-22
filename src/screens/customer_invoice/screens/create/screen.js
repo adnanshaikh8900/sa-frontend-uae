@@ -1414,20 +1414,6 @@ discountType = (row) =>
 					)}
 				/>
 			);
-		// } else {
-		// 	return (
-		// 		<Button
-		// 			type="button"
-		// 			color="primary"
-		// 			className="btn-square mr-3 mb-3"
-		// 			onClick={(e, props) => {
-		// 				this.openProductModal(props);
-		// 			}}
-		// 		>
-		// 			<i className="fa fa-plus"></i> Add a Product
-		// 		</Button>
-		// 	);
-		// }
 	};
 
 

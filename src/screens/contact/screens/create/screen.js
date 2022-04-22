@@ -365,11 +365,6 @@ class CreateContact extends React.Component {
 																if (values.stateId === '') {
 																	errors.stateId = 'State is Required';
 																}
-
-																// if (values.stateId.label && values.stateId.label === 'Select State') {
-																// 	errors.stateId ='State is Required';
-																// }
-
 																if (this.state.isRegisteredForVat == true) {
 																	if (values.vatRegistrationNumber == "")
 																		errors.vatRegistrationNumber = 'Tax Registration Number is Required';
@@ -385,10 +380,6 @@ class CreateContact extends React.Component {
 																if (this.state.emailExist == true) {
 																	errors.email = 'Email Already Exists';
 																}
-																// if (param === true) {
-																// 	errors.discount =
-																// 		'Discount amount Cannot be greater than Invoice Total Amount';
-																// }
 																if (values.billingcountryId == 229 || values.billingcountryId.value == 229) {
 																	if (values.poBoxNumber === '')
 																		errors.poBoxNumber = 'PO Box Number is Required';
@@ -442,40 +433,13 @@ class CreateContact extends React.Component {
 																taxTreatmentId: Yup.string().required(
 																	'Tax Treatment is Required',
 																),
-																//       organization: Yup.string()
-																//       .required("Organization Name is Required"),
-																// poBoxNumber: Yup.number()
-																//     .required("PO Box Number is Required"),
 																email: Yup.string()
 																	.required('Email is Required')
 																	.email('Invalid Email')
 																,
-																// telephone: Yup.number().required(
-																//   'Telephone Number is Required',
-																// ),
 																mobileNumber: Yup.string()
 																	.required('Mobile Number is Required')
-
 																,
-																// billingEmail: Yup.string().email("Invalid Billing  Email "),
-																//     addressLine1: Yup.string()
-																//       .required("Address is required"),
-																// countryId: Yup.string()
-																// 	.required('Country is Required')
-																// 	.nullable(),
-																// stateId: Yup.string().when('countryId', {
-																// 	is: (val) => (val ? true : false),
-																// 	then: Yup.string().required('State is Required'),
-																// }),
-																// shippingAddress: Yup.string().required(
-																// 	'Shipping Address is Required',
-																// ),
-																// billingAddress: Yup.string().required(
-																// 	'Billing Address is Required',
-																// ),
-																// postZipCode: Yup.string().required(
-																// 	'Postal Code is Required',
-																// ),
 																billingcountryId: Yup.string().required(
 																	'Country is Required',
 																),
@@ -485,52 +449,15 @@ class CreateContact extends React.Component {
 																billingCity: Yup.string().required(
 																	'City is Required',
 																),
-
-																// billingPostZipCode: Yup.string().required(
-																// 	'Postal Code is Required',
-																// ),
 																shippingCountryId: Yup.string().required(
 																	'Country is Required',
 																),
 																shippingStateId: Yup.string().required(
 																	'State is Required',
 																),
-																// shippingPostZipCode: Yup.string().required(
-																// 	'Postal Code is Required',
-																// ),
 																shippingCity: Yup.string().required(
 																	'City is Required',
 																),
-
-																// addressLine1: Yup.string()
-																//   .min(2, 'Must be at least 2 characters.')
-																//   .matches(
-																//     this.regExAddress,
-																//     'May only contain hyphens, periods, commas or alphanumeric characters.',
-																//   ),
-																// addressLine2: Yup.string()
-																//   .min(2, 'Must be at least 2 characters.')
-																//   .matches(
-																//     this.regExAddress,
-																//     'May only contain hyphens, periods, commas or alphanumeric characters.',
-																//   ),
-																// addressLine3: Yup.string()
-																//   .min(2, 'Must be at least 2 characters.')
-																//   .matches(
-																//     this.regExAddress,
-																//     'May only contain hyphens, periods, commas or alphanumeric characters.',
-																//   ),
-																//     billingEmail: Yup.string()
-																//       .required("Billing Email is Required")
-																//       .email('Invalid Email'),
-																//     contractPoNumber: Yup.number()
-																//       .required("Contract PoNumber is Required"),
-																// vatRegistrationNumber: Yup.string().required(
-																//   'Tax Registration Number is Required',
-																// ),
-																//       currencyCode: Yup.string()
-																//       .required("Please Select Currency")
-																//       .nullable(),
 															})}
 														>
 															{(props) => (

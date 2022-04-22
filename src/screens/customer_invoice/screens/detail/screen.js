@@ -3127,7 +3127,7 @@ class DetailCustomerInvoice extends React.Component {
 																	</FormGroup>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="footNote">
-																			Footnotes
+																		{strings.Footnote}
 																		</Label>
 																		<br/>
 																		<TextareaAutosize
@@ -3138,7 +3138,7 @@ class DetailCustomerInvoice extends React.Component {
 																			name="footNote"
 																			id="footNote"
 																			rows="2"
-																			placeholder="e.g. Thank You Note"
+																			placeholder={strings.PaymentDetails}
 																			onChange={(option) =>
 																				props.handleChange(
 																					'footNote',

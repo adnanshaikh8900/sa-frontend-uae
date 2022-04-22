@@ -126,6 +126,7 @@ class CreateQuotation extends React.Component {
 					unitTypeId:''
 				},
 			],
+			discountEnabled: false,
 			idCount: 0,
 			checked:false,
 			initValue: {
@@ -378,6 +379,7 @@ class CreateQuotation extends React.Component {
 				name={`lineItemsString.${idx}.quantity`}
 				render={({ field, form }) => (
 					<div>
+						<div class="input-group">
 						<Input
 							type="text"
 							min="0"
@@ -396,8 +398,7 @@ class CreateQuotation extends React.Component {
 								}
 							}}
 							placeholder={strings.Quantity}
-							className={`form-control 
-            ${
+							className={`form-control w-50${ 
 							props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
@@ -409,6 +410,9 @@ class CreateQuotation extends React.Component {
 								: ''
 						}`}
 						/>
+						 {row['productId'] != '' ? 
+						<Input value={row['unitType'] }  disabled/> : ''}
+						</div>
 						{props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
@@ -1112,6 +1116,29 @@ discountType = (row) =>
                    {props.errors.lineItemsString[parseInt(idx, 10)].productId}
                    </div>
                      )}
+					  {row['productId'] != '' ? 
+						   <div className='mt-1'>
+						   <Input
+						type="text"
+						maxLength="250"
+						value={row['description'] !== '' ? row['description'] : ''}
+						onChange={(e) => {
+							this.selectItem(e.target.value, row, 'description', form, field);
+						}}
+						placeholder={strings.Description}
+						className={`form-control ${
+							props.errors.lineItemsString &&
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)].description &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)].description
+								? 'is-invalid'
+								: ''
+						}`}
+					/>
+						   </div> : ''}
                    </>
 				)}
 			/>
@@ -1162,7 +1189,7 @@ discountType = (row) =>
 	};
 
 	renderActions = (cell, rows, props) => {
-		return (
+		return rows['productId'] != '' ? 
 			<Button
 				size="sm"
 				className="btn-twitter btn-brand icon mt-1"
@@ -1172,8 +1199,7 @@ discountType = (row) =>
 				}}
 			>
 				<i className="fas fa-trash"></i>
-			</Button>
-		);
+			</Button>: ''
 	};
 
 	checkedRow = () => {
@@ -2279,7 +2305,7 @@ discountType = (row) =>
 														<hr style={{display: props.values.exchangeRate === 1 ? 'none' : ''}} />
 														<Row>
 															<Col lg={8} className="mb-3">
-																<Button
+																{/* <Button
 																	color="primary"
 																	className={`btn-square mr-3 ${
 																		this.checkedRow() ? `disabled-cursor` : ``
@@ -2293,7 +2319,7 @@ discountType = (row) =>
 																	disabled={this.checkedRow() ? true : false}
 																>
 																	<i className="fa fa-plus"></i>{' '}{strings.Addmore} 
-																</Button>
+																</Button> */}
 																<Button
 																	color="primary"
 																	className= "btn-square mr-3"
@@ -2368,14 +2394,14 @@ discountType = (row) =>
 																	className="invoice-create-table"
 																>
 																	<TableHeaderColumn
-																		width="5%"
+																		width="4%"
 																		dataAlign="center"
 																		dataFormat={(cell, rows) =>
 																			this.renderActions(cell, rows, props)
 																		}
 																	></TableHeaderColumn>
 																	<TableHeaderColumn
-																	width="20%"
+																	width="17%"
 																		dataField="product"
 																		dataFormat={(cell, rows) =>
 																			this.renderProduct(cell, rows, props)
@@ -2407,7 +2433,7 @@ discountType = (row) =>
 																	>
 																		{strings.QUANTITY}
 																	</TableHeaderColumn>
-																	<TableHeaderColumn
+																	{/* <TableHeaderColumn
 																			width="5%"
 																			dataField="unitType"
 																     	>{strings.Unit}	<i
@@ -2418,7 +2444,7 @@ discountType = (row) =>
 																		 target="unitTooltip"
 																	 >
 																		Units / Measurements</UncontrolledTooltip>
-																		</TableHeaderColumn>
+																		</TableHeaderColumn> */}
 																	<TableHeaderColumn
 																		dataField="unitPrice"
 																		dataFormat={(cell, rows) =>
@@ -2438,6 +2464,7 @@ discountType = (row) =>
 																			service
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn>
+																	{initValue.total_excise != 0 &&
 																	<TableHeaderColumn
 																	width="10%"
 																		dataField="exciseTaxId"
@@ -2457,7 +2484,8 @@ discountType = (row) =>
 																			If Exise Type for a product is Inclusive
 																			then the Excise dropdown will be Disabled
 																		</UncontrolledTooltip>
-																	</TableHeaderColumn> 
+																	</TableHeaderColumn>  }
+																	{this.state.discountEnabled == true &&
 																	<TableHeaderColumn
 																		width="12%"
 																		dataField="discount"
@@ -2466,8 +2494,9 @@ discountType = (row) =>
 																		}
 																	>
 																	{strings.DisCount}
-																	</TableHeaderColumn>
+																	</TableHeaderColumn>}
 																	<TableHeaderColumn
+																		width="13%"
 																		dataField="vat"
 																		dataFormat={(cell, rows) =>
 																			this.renderVat(cell, rows, props)
@@ -2497,6 +2526,24 @@ discountType = (row) =>
 																</BootstrapTable>
 															</Col>
 														</Row>
+														<Row className="ml-4 ">
+															<Col className=" ml-4">
+																<FormGroup className='pull-right'>
+																<Input
+																	type="checkbox"
+																	id="discountEnabled"
+																	checked={this.state.discountEnabled}
+																	onChange={(option) => {
+																		if(initValue.discount > 0){
+																			this.setState({ discountEnabled: true })
+																		}else{
+																		this.setState({ discountEnabled: !this.state.discountEnabled })}
+																	}}
+																/>
+																<Label>Apply Discount</Label>
+																</FormGroup>
+															</Col>
+														</Row>
 														<hr />
 														{this.state.data.length > 0 ? (
 															<Row>
@@ -2505,10 +2552,11 @@ discountType = (row) =>
 																		<Label htmlFor="notes">{strings.Notes}</Label>
 																		<Input
 																			type="textarea"
+																			style={{width: "700px"}}
 																			maxLength="250"
 																			name="notes"
 																			id="notes"
-																			rows="6"
+																			rows="2"
 																			placeholder={strings.DeliveryNotes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
@@ -2521,6 +2569,7 @@ discountType = (row) =>
 
 																<Col lg={4}>
 																	<div className="">
+																	{initValue.total_excise > 0 ?
 																	<div className="total-item p-2" >
 																	{/* style={{display:this.state.checked === true ? '':'none'}} */}
 																			<Row>
@@ -2537,7 +2586,8 @@ discountType = (row) =>
 																					</label>
 																				</Col>
 																			</Row>
-																		</div>
+																		</div> : ''}
+																		{this.state.discountEnabled == true ?
 																		<div className="total-item p-2">
 																			<Row>
 																				<Col lg={6}>
@@ -2565,7 +2615,7 @@ discountType = (row) =>
 																					</label>
 																				</Col>
 																			</Row>
-																		</div>
+																		</div>: ''}
 																		<div className="total-item p-2">
 																			<Row>
 																				<Col lg={6}>

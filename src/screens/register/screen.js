@@ -234,7 +234,7 @@ class Register extends React.Component {
 			
 		{this.setState({ loading:true, 
 			loadingMsg:"Registering Company," ,
-		    loadingMsg1:"Please check your email to set your password" })} 
+		    NextloadingMsg:"Please check your email to set your password" })} 
 	
 		this.props.authActions
 			.register(formData)
@@ -278,12 +278,12 @@ class Register extends React.Component {
 			}),
 		};
 	
-		const { initValue, currencyList, userDetail, timezone,country_list ,loading,loadingMsg,loadingMsg1} = this.state;
+		const { initValue, currencyList, userDetail, timezone,country_list ,loading,loadingMsg,NextloadingMsg} = this.state;
 		const {universal_currency_list,state_list,company_type_list} = this.props;
 		console.log(company_type_list)
 
 		return (
-			loading ==true? <Loader loadingMsg={loadingMsg} loadingMsg1={loadingMsg1}/> :
+			loading ==true? <Loader loadingMsg={loadingMsg} NextloadingMsg={NextloadingMsg}/> :
 			<div>
 			<div className="log-in-screen">
 				<ToastContainer

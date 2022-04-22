@@ -665,7 +665,7 @@ try {
 																</Col>
 
 																<Col lg={4}>
-																<FormGroup check inline className="mb-3">
+																{this.props.isParentComponentPresent &&this.props.isParentComponentPresent ==true ?"":(		<FormGroup check inline className="mb-3">
 																	<Label className="productlabel"><span className="text-danger">* </span>{strings.Status}</Label>
 																	<div className="wrapper">
 																	<Label
@@ -723,7 +723,7 @@ try {
 																				   {strings.Inactive}
 																			</Label>
 																		</div>   
-                                                                    </FormGroup>
+                                                                    </FormGroup>)}
                                                                 </Col>
 															</Row>
 															<hr></hr>

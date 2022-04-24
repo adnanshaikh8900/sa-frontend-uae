@@ -1181,18 +1181,18 @@ class DetailSupplierInvoice extends React.Component {
 	};
 
 	renderActions = (cell, rows, props) => {
-		return (
+		return rows['productId'] != '' ?  
 			<Button
 				size="sm"
 				className="btn-twitter btn-brand icon"
-				disabled={this.state.data.length === 1 ? true : false}
+				// disabled={this.state.data.length === 1 ? true : false}
 				onClick={(e) => {
 					this.deleteRow(e, rows, props);
 				}}
 			>
 				<i className="fas fa-trash"></i>
 			</Button>
-		);
+			: ''
 	};
 
 	checkedRow = () => {

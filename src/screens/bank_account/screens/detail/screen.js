@@ -684,19 +684,19 @@ class DetailBankAccount extends React.Component {
                                                                                                                 : []
                                                                                                         }
                                                                                                         value={props.values.bank_name}
-                                                                                                        value={bankList &&
-                                                                                                            selectOptionsFactory
-                                                                                                                .renderOptions(
-                                                                                                                    'bankName',
-                                                                                                                    'bankId',
-                                                                                                                    bankList,
-                                                                                                                    'Bank',
-                                                                                                                )
-                                                                                                                .find(
-                                                                                                                    (option) =>
-                                                                                                                        option.label ===
-                                                                                                                        props.values.bank_name,
-                                                                                                                )}
+                                                                                                        // value={bankList &&
+                                                                                                        //     selectOptionsFactory
+                                                                                                        //         .renderOptions(
+                                                                                                        //             'bankName',
+                                                                                                        //             'bankId',
+                                                                                                        //             bankList,
+                                                                                                        //             'Bank',
+                                                                                                        //         )
+                                                                                                        //         .find(
+                                                                                                        //             (option) =>
+                                                                                                        //                 option.label ===
+                                                                                                        //                 props.values.bank_name,
+                                                                                                        //         )}
                                                                                                         onChange={(option) => {
                                                                                                             if (option && option.value) {
                                                                                                                 props.handleChange('bank_name')(option);

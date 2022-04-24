@@ -496,7 +496,7 @@ class RecordTaxClaim extends React.Component {
 																					name="notes"
 																					id="notes"
 																					rows="5"
-																					placeholder={strings.Notes}
+																					placeholder={strings.DeliveryNotes}
 																					onChange={(option) =>
 																						props.handleChange('notes')(option)
 																					}
@@ -602,6 +602,13 @@ class RecordTaxClaim extends React.Component {
 																			color="primary"
 																			className="btn-square mr-3"
 																			disabled={this.state.disabled}
+																			onClick={() => {
+																				//	added validation popup	msg
+																				props.handleBlur();
+																				if(props.errors &&  Object.keys(props.errors).length != 0)
+																				this.props.commonActions.fillManDatoryDetails();
+
+																		}}
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
 																			 {/* {strings.RecordPayment} */}

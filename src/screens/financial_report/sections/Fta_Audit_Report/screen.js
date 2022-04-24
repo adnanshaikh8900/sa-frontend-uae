@@ -77,6 +77,8 @@ class ViewFtaAuditReport extends React.Component {
 			},
 			chart_of_account_list: [],
 		};
+
+		// Company Information Table
 		this.columnHeaderCompany = [
 			{ label: 'Company Name', value: 'companyName', sort: true },
 			{ label: 'Taxable Person Name En', value: 'taxablePersonNameEn', sort: false },
@@ -90,20 +92,31 @@ class ViewFtaAuditReport extends React.Component {
 			{ label: 'Period End ', value: 'endDate', sort: false },
 			{ label: 'FAF Creation Date ', value: 'creationDate', sort: false },
 			{ label: 'Product Version ', value: 'productVersion', sort: false },
+			{ label: 'FAF Version ', value: 'fafVersion', sort: false },
 		];
+
+		// Costumer Data Audit File
 		this.columnHeaderCustomer = [
 			{ label: 'Customer Name', value: 'customerName', sort: true },
+			{ label: 'GL/ID', value: 'glId', sort: true },
 			{ label: 'Customer Country', value: 'customerCountry', sort: false },
 			{ label: 'Customer TRN', value: 'customerTRN', sort: true },
+			{ label: 'Reverse Charge', value: 'reverseCharge', sort: true },
 		];
+		
+		// Supplier Data Audit File
 		this.columnHeaderSupplier = [
 			{ label: 'Supplier Name', value: 'supplierName', sort: true },
+			{ label: 'GL/ID', value: 'glId', sort: true },
 			{ label: 'Supplier Country', value: 'supplierCountry', sort: false },
 			{ label: 'Supplier TRN', value: 'supplierTRN', sort: true },
+			{ label: 'Reverse Charge', value: 'reverseCharge', sort: true },
 		];
+		
+		// Supply Data Information
 		this.columnHeaderSupply = [
 			{ label: 'Customer Name', value: 'customerName', sort: true },
-			{ label: 'Customer Country', value: 'customerCountry', sort: false },
+			// { label: 'Customer Country', value: 'customerCountry', sort: false },
 			{ label: 'Customer TRN', value: 'customerTRN', sort: true },
 			{ label: 'Invoice Date', value: 'invoiceDate', sort: true },
 			{ label: 'Invoice Number', value: 'invoiceNo', sort: false },
@@ -120,14 +133,18 @@ class ViewFtaAuditReport extends React.Component {
 			{ label: 'Supply FCY', value: 'supplyFCY', sort: true },
 			{ label: 'FCY Code', value: 'fcycode', sort: false },
 		];
+		
+		// Supply Listing Total
 		this.columnHeaderCustomerTotal = [
 			{ label: 'Transaction Count Total', value: 'customerTransactionCountTotal', sort: true },
 			{ label: 'Supply Total AED', value: 'supplyTotal', sort: false },
 			{ label: 'VAT Total AED', value: 'customerVATTotal', sort: true },
 		];
+		
+		// Supply Data Information
 		this.columnHeaderPurchase = [
 			{ label: 'Supplier Name', value: 'supplierName', sort: true },
-			{ label: 'Supplier Country', value: 'supplierCountry', sort: false },
+			// { label: 'Supplier Country', value: 'supplierCountry', sort: false },
 			{ label: 'Supplier TRN', value: 'supplierTRN', sort: true },
 			{ label: 'Invoice Date', value: 'invoiceDate', sort: true },
 			{ label: 'Invoice Number', value: 'invoiceNo', sort: false },
@@ -144,11 +161,16 @@ class ViewFtaAuditReport extends React.Component {
 			{ label: 'Purchase FCY', value: 'purchaseFCY', sort: true },
 			{ label: 'FCY Code', value: 'fcycode', sort: false },
 		];
+		
+		// Supplier Purchase Listing Total
 		this.columnHeaderSupplierTotal = [
 			{ label: 'Transaction Count Total', value: 'supplierTransactionCountTotal', sort: true },
 			{ label: 'Purchase Total AED', value: 'purchaseTotal', sort: false },
 			{ label: 'VAT Total AED', value: 'supplierVATTotal', sort: true },
+
 		];
+		
+		// General Ledger Table
 		this.columnHeaderGenral = [
 			{ label: 'Transaction Date', value: 'transactionDate', sort: true },
 			{ label: 'Account ID', value: 'accountID', sort: false },
@@ -156,12 +178,15 @@ class ViewFtaAuditReport extends React.Component {
 			{ label: 'Transaction Description', value: 'transactionDescription', sort: true },
 			{ label: 'Name', value: 'name', sort: false },
 			{ label: 'Transaction ID', value: 'transactionID', sort: true },
+			{ label: 'Source Document Id', value: 'sourceDocumentID', sort: true },
 			{ label: 'Source Type', value: 'sourceType', sort: true },
 			{ label: 'Debit', value: 'debit', sort: false },
 			{ label: 'Credit', value: 'credit', sort: true },
 			{ label: 'Balance', value: 'balance', sort: true },
 		
 		];
+		
+		// General Ledger Table Total
 		this.columnHeaderGeneralTotal= [
 			{ label: 'Transaction Count Total', value: 'transactionCountTotal', sort: true },
 			{ label: 'Total Credit', value: 'totalCredit', sort: false },
@@ -420,12 +445,11 @@ class ViewFtaAuditReport extends React.Component {
 																					<td style={{ width: '18%', textAlign: 'left'}}>
 																						{this.state.FtaAuditData.taxAgencyAgentNumber}
 																					</td>
-																					<td style={{ width: '13%', textAlign: 'left'}}>
-																						
+																					<td style={{ width: '13%', textAlign: 'left'}}>												
 																						{this.renderDate(this.state.FtaAuditData.startDate,'')}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
-																					{(this.state.FtaAuditData.endDate).replaceAll("/","-")}
+																						{(this.state.FtaAuditData.endDate).replaceAll("/","-")}
 																						{/* {this.renderDate(this.state.FtaAuditData.endDate,'').replaceAll("/","-")} */}
 																					</td>
 																					<td style={{ width: '18%', textAlign: 'left'}}>
@@ -436,10 +460,13 @@ class ViewFtaAuditReport extends React.Component {
 																						{/* {this.renderDate(this.state.FtaAuditData.productVersion).replaceAll("/","-")} */}
 																						{this.state.FtaAuditData.productVersion}
 																					</td>
+																					<td style={{ width: '13%', textAlign: 'left'}}>
+																						{/* {this.renderDate(this.state.FtaAuditData.productVersion).replaceAll("/","-")} */}
+																						{this.state.FtaAuditData.fafVersion}
+																					</td>
 																				
 																				</tr>
-																		
-														
+												
 												</tbody>
 												</Table>
 													<tr>
@@ -482,10 +509,16 @@ class ViewFtaAuditReport extends React.Component {
 																						{item['customerName']}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
+																						{item['glId']}
+																					</td>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['customerCountry']}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['customerTRN']}
+																					</td>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
+																						{item['reverseCharge']}
 																					</td>
 																					
 																				
@@ -532,14 +565,20 @@ class ViewFtaAuditReport extends React.Component {
 																		
 																		
 																				<tr key={index}>
-																				<td style={{ width: '12%', textAlign: 'left'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['supplierName']}
+																					</td>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
+																						{item['glId']}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['supplierCountry']}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['supplierTRN']}
+																					</td>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
+																						{item['reverseCharge']}
 																					</td>
 																					
 																				
@@ -557,7 +596,7 @@ class ViewFtaAuditReport extends React.Component {
 												
 												<tr>
 												<td><b><h5>
-												Supplier Data Information</h5></b>
+												Supply Data Information</h5></b>
 												</td>
 												</tr>
 												<Table>
@@ -587,12 +626,12 @@ class ViewFtaAuditReport extends React.Component {
 																		
 																		
 																				<tr key={index}>
-																				<td style={{ width: '12%', textAlign: 'left'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['customerName']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'left'}}>
+																					{/* <td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['customerCountry']}
-																					</td>
+																					</td> */}
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['customerTRN']}
 																					</td>
@@ -652,7 +691,7 @@ class ViewFtaAuditReport extends React.Component {
 												</tr>
 												<tr>
 													<td><b><h5>
-													Customer Supply Listing Total
+													Supply Listing Total
 													</h5></b></td>
 												</tr>
 												<Table>
@@ -679,14 +718,14 @@ class ViewFtaAuditReport extends React.Component {
 																		
 																		
 																				<tr >
-																				<td style={{ width: '12%', textAlign: 'left'}}>
-																				{this.state.FtaAuditData.customerTransactionCountTotal}
+																					<td style={{ width: '12%', textAlign: 'left'}}>
+																						{this.state.FtaAuditData.customerTransactionCountTotal}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
-																					{this.state.FtaAuditData.supplyTotal}
+																						{this.state.FtaAuditData.supplyTotal}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
-																					{this.state.FtaAuditData.customerVATTotal}
+																						{this.state.FtaAuditData.customerVATTotal}
 																					</td>
 																					
 																				
@@ -702,7 +741,7 @@ class ViewFtaAuditReport extends React.Component {
 												</tr>
 												<tr>
 													<td><b><h5>
-													Supply Data Information
+													Purchase Data Information
 													</h5></b></td>
 												</tr>
 												<Table>
@@ -723,6 +762,7 @@ class ViewFtaAuditReport extends React.Component {
 														})}
 													</tr>
 												</thead>
+												{/* {console.log(this.state.FtaAuditData,"this.state.FtaAuditData.supplierSupplyListingResponseModels.")} */}
 												<tbody className="data-column">
 													{this.state.FtaAuditData &&
 														this.state.FtaAuditData.supplierSupplyListingResponseModels.map(
@@ -732,17 +772,17 @@ class ViewFtaAuditReport extends React.Component {
 																		
 																		
 																				<tr key={index}>
-																				<td style={{ width: '12%', textAlign: 'left'}}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['supplierName']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'left'}}>
+																					{/* <td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['supplierCountry']}
-																					</td>
+																					</td> */}
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['supplierTRN']}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
-																					{this.renderDate(item['invoiceDate'],item)}
+																						{this.renderDate(item['invoiceDate'],item)}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['invoiceNo']}
@@ -797,7 +837,7 @@ class ViewFtaAuditReport extends React.Component {
 												</tr>
 												<tr>
 													<td><b><h5>
-													Supplier Purchase Listing Total
+													Purchase Listing Total
 													</h5></b></td>
 												</tr>
 												<Table>
@@ -824,17 +864,15 @@ class ViewFtaAuditReport extends React.Component {
 																		
 																		
 																				<tr >
-																				<td style={{ width: '12%', textAlign: 'left'}}>
-																				{this.state.FtaAuditData.supplierTransactionCountTotal}
+																					<td style={{ width: '12%', textAlign: 'left'}}>
+																						{this.state.FtaAuditData.supplierTransactionCountTotal}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
-																					{this.state.FtaAuditData.purchaseTotal}
+																						{this.state.FtaAuditData.purchaseTotal}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
-																					{this.state.FtaAuditData.supplierVATTotal}
+																						{this.state.FtaAuditData.supplierVATTotal}
 																					</td>
-																					
-																				
 																				</tr>
 																		
 																	</>
@@ -876,8 +914,7 @@ class ViewFtaAuditReport extends React.Component {
 																		
 																		
 																				<tr key={index}>
-																				<td style={{ width: '12%', textAlign: 'left'}}>
-																						
+																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{this.renderDate(item['transactionDate'],item)}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
@@ -894,6 +931,9 @@ class ViewFtaAuditReport extends React.Component {
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['transactionID']}
+																					</td>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
+																						{item['sourceDocumentID']}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['sourceType']}
@@ -948,17 +988,17 @@ class ViewFtaAuditReport extends React.Component {
 																		
 																		
 																				<tr >
-																				<td style={{ width: '12%', textAlign: 'left'}}>
-																				{this.state.FtaAuditData.transactionCountTotal}
+																					<td style={{ width: '12%', textAlign: 'left'}}>
+																						{this.state.FtaAuditData.transactionCountTotal}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
-																					{this.state.FtaAuditData.totalCredit}
+																						{this.state.FtaAuditData.totalCredit}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
-																					{this.state.FtaAuditData.totalDebit}
+																						{this.state.FtaAuditData.totalDebit}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
-																					{this.state.FtaAuditData.gltcurrency}
+																						{this.state.FtaAuditData.gltcurrency}
 																					</td>
 																				
 																				</tr>

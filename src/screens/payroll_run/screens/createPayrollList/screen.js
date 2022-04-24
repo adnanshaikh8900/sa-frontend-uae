@@ -1012,6 +1012,10 @@ showTotal=()=>{
 																		color="primary"
 																		className="btn-square pull-right"
 																		onClick={() => {
+																				//  added validation popup  msg                                                                
+																				props.handleBlur();
+																				if(props.errors &&  Object.keys(props.errors).length != 0)
+																				this.props.commonActions.fillManDatoryDetails();
 
 																			if(this.state.submitButton)
 																				toast.error(` Please select approver for payroll submission !`)
@@ -1037,6 +1041,10 @@ showTotal=()=>{
 																	<Button type="button" color="primary" className="btn-square pull-right "														
 																    	onClick={
 																			() => {
+																						//  added validation popup  msg                                                                
+																				props.handleBlur();
+																				if(props.errors &&  Object.keys(props.errors).length != 0)
+																				this.props.commonActions.fillManDatoryDetails();
 																				if(this.state.selectedRows && this.state.selectedRows.length !=0)
 																			{	this.setState({apiSelector:"createPayroll"})
 																				props.handleSubmit()}

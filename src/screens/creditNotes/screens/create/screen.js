@@ -81,7 +81,7 @@ const customStyles = {
 };
 
 const invoiceimage = require('assets/images/invoice/invoice.png');
-
+const ZERO=0.00;
 let strings = new LocalizedStrings(data);
 class CreateCreditNote extends React.Component {
 	constructor(props) {
@@ -395,7 +395,7 @@ class CreateCreditNote extends React.Component {
 }
 
 renderVatAmount = (cell, row,extraData) => {
-	return row.vatAmount === 0 ? this.state.customer_currency_symbol +" "+  row.vatAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 }): this.state.customer_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 });
+	return row.vatAmount  ? this.state.customer_currency_symbol +" "+  row.vatAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 }): this.state.customer_currency_symbol +" "+ ZERO.toLocaleString(navigator.language,{ minimumFractionDigits: 2 });
 
 }
 
@@ -452,7 +452,7 @@ renderDiscount = (cell, row, props) => {
 						   ? 'is-invalid'
 						   : ''
 				   }`}
-type="text"
+
 />
 <div class="dropdown open input-group-append">
 
@@ -2682,7 +2682,7 @@ min="0"
 																			name="notes"
 																			id="notes"
 																			rows="6"
-																			placeholder={strings.Notes}
+																			placeholder={strings.DeliveryNotes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
 																			}
@@ -2693,7 +2693,7 @@ min="0"
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="receiptNumber">
-																					 {strings.ReceiptNumber}
+																					 {strings.ReferenceNumber}
 																				</Label>
 																				<Input
 																					type="text"
@@ -3070,6 +3070,11 @@ min="0"
 																		className="btn-square mr-3"
 																		disabled={this.state.disabled}
 																		onClick={() => {
+																				//	added validation popup	msg
+																				props.handleBlur();
+																				if(props.errors &&  Object.keys(props.errors).length != 0)
+																				this.props.commonActions.fillManDatoryDetails();
+
 																			this.setState(
 																				{ createMore: false },
 																				() => {
@@ -3089,6 +3094,11 @@ min="0"
 																		className="btn-square mr-3"
 																		disabled={this.state.disabled}
 																		onClick={() => {
+																				//	added validation popup	msg
+																				props.handleBlur();
+																				if(props.errors &&  Object.keys(props.errors).length != 0)
+																				this.props.commonActions.fillManDatoryDetails();
+
 																			this.setState(
 																				{
 																					createMore: true,

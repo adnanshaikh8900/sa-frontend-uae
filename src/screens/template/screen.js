@@ -94,15 +94,15 @@ class Template extends React.Component {
 								<Col lg={12}>
 									<div className="h4 mb-0 d-flex align-items-center">
 										<i className="nav-icon fas fa-palette" />
-										<span className="ml-2 " >{strings.MailTheams}</span>
+										<span className="ml-2 " >{strings.MailThemes}</span>
 									</div>
 								</Col>
 							</Row>
 						</CardHeader>
 					
 						<CardBody>
-							<InvoiceTemplate templateId="1" enable={this.state.enable1}  templateTitle={strings.Theame1} templateImg={Theme1}></InvoiceTemplate>
-							<InvoiceTemplate templateId="2" enable={this.state.enable2} templateTitle={strings.Theame2} templateImg={Theme2}></InvoiceTemplate>
+							<InvoiceTemplate templateId="1" enable={this.state.enable1}  templateTitle={strings.Theme1} templateImg={Theme1}></InvoiceTemplate>
+							<InvoiceTemplate templateId="2" enable={this.state.enable2} templateTitle={strings.Theme2} templateImg={Theme2}></InvoiceTemplate>
 						{/* <InvoiceTemplate templateId="3" templateTitle="Horizon" templateImg={horizon}></InvoiceTemplate>
 							<InvoiceTemplate templateId="4" templateTitle="Elliot Jay stocks" templateImg={ejs}></InvoiceTemplate>
 							<InvoiceTemplate templateId="5" templateTitle="Union" templateImg={union}></InvoiceTemplate>

@@ -64,8 +64,8 @@ RecieptNumber:"Numéro de reçu",
          //Opening Balance
 
          //Mail Theams
-        Theame1:"Théame2",
-        Theame2:"Théame2",
+        Theme1:"Thème1",
+        Theme2:"Thème2",
         //Import
 Migration:"Migration",
 import:"Importation",
@@ -98,6 +98,26 @@ zb:"Zoho-Livres",
 setbal:"Définir les soldes d’ouverture",
 mig:"Émigrer",
 
+//Income
+noteforchangeaddress:"Voulez-vous modifier l’adresse de livraison pour cette facture ?",
+Exclusive:"Impôt Exclusif",
+Inclusive:"Impôt Inclusif",
+Excises:"ACCISE",
+DisCount:"RABAIS",
+VATAMOUNT:"MONTANT DE LA TVA",
+Total_Excise:"Accise totale",
+Select_Excise:"Sélectionnez Accise",
+
+Mark_As_Sent:"Marquer comme envoyé",
+tax_type:"Type de taxe",
+DISCOUNT_TYPE:"TYPE DE REMISE",
+Quotation_For:"Devis pour,",
+
+
+
+
+
+
       OpeningBalance: "Solde d'ouverture",
       TRANSACTIONCATEGORYNAME : "NOM DE LA CATÉGORIE DE TRANSACTION",
       EFFECTIVEDATE:"DATE D'ENTRÉE EN VIGUEUR",
@@ -126,6 +146,12 @@ mig:"Émigrer",
       NET: "FILET",
       Net: "Filet",
       ProfitLoss: "Bénéfice et perte",
+
+      // Note Settings
+      Footnote: "note de bas de page",
+      DefaultDeliveryNotes: "Bons de livraison par défaut",
+      DefaultFootnotes: "Notes de bas de page par défaut",
+      PaymentDetails: "par exemple. Détails de paiement",
 
       //Customer invoice
       CustomerInvoices: "Factures client",
@@ -164,11 +190,13 @@ mig:"Émigrer",
       UnitPrice: "Prix unitaire",
       VAT: "TVA (%)",
       SUBTOTAL: "SOUS-TOTAL",
-      Notes: "Notes / Bons de livraisonNotes",
+      Notes: "Bons de livraisonNotes",
+      DeliveryNotes:"par exemple. Termes et conditions d'affaires",
       DiscountType: "Type d’escompte",
       Excise:"Exciser",
       ExciseAmount:"Montant d'accise",
-      ReceiptNumber: "Numéro de reçu / Numéro de référence",
+      ReferenceNumber:"Numéro de réference",
+      ReceiptNumber: "par exemple. Numéro de reçu",
       ReceiptAttachment: "Pièce jointe reciept",
       DiscountAmount: "Montant de l’escompte",
       AttachmentDescription: "Description de la pièce jointe",
@@ -206,7 +234,9 @@ mig:"Émigrer",
       Country:"Pays",
       StateRegion:"Région de l’État ",
       Emirates:"Émirats",
+      Emirate:"Émirat",
       City:"Ville",
+      Location:"par exemple. Emplacement",
       PostZipCode:"Code postal / Zip",
       InvoicingDetails:"Détails de facturation ",
       BillingEmail:"E-mail de facturation",
@@ -224,6 +254,7 @@ mig:"Émigrer",
       QUOTATIONNUMBER:"NUMÉRO DE DEVIS",						
       EXPIRATIONDATE:"DATE D'EXPIRATION",				
       AddNewRequest:"Ajouter un nouveau devis",
+      CREATED_DATE:" DATE DE CRÉATION",
 
       //Create Quotation
       CreateQuotation:"Créer une citation",		
@@ -412,7 +443,8 @@ print_csv:"Imprimer",
 //Add Chart of Accounts
 NewChartAccount:"Nouveau compte graphique",		
 Name:"Nom",		
-Type:"Type",		
+Type:"Type",
+Chart_of_Account:"Plan comptable",		
 
 //Contact
 CONTACTORGANIZATIONTNAME:"NOM DE L'ORGANISME DE CONTACT",
@@ -421,7 +453,7 @@ Contact:"Contact",
 EMAIL:"Messagerie électronique",		
 MOBILENUMBER:"NUMÉRO DE PORTABLE",
 Addnewcontact:"Ajouter un nouveau contact",
-TRN:"TRN",
+TRN:"Le",
 TaxTreatment:"Traitement fiscal",
 STATUS:"STATUT",
 BillingAddress:"Adresse de facturation",
@@ -434,6 +466,8 @@ page_size:"Taille de la page :",
 active:"Actif",
 inactive:"Inactif",
 Emirates:"Emirates",
+Emirate:"Émirat",
+
 
 
 //Product
@@ -681,7 +715,7 @@ GeneralSettings:"Réglages généraux",
 User:"Utilisatrice",	
 Help:"Aider",	
 LogOut:"Se déconnecter",
-MailTheams:"Mail Theams",
+MailThemes:"Thèmes de messagerie",
 Import:"Importation",
 
 //Role

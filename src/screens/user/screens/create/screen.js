@@ -204,6 +204,7 @@ class CreateUser extends React.Component {
 		this.props.userCreateActions
 			.createUser(formData)
 			.then((res) => {
+				this.setState({ loading:false});
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
@@ -1023,6 +1024,10 @@ class CreateUser extends React.Component {
 																		className="btn-square mr-3"
 																		disabled={this.state.createDisabled}
 																		onClick={() => {
+																				//	added validation popup	msg	
+																				props.handleBlur();
+																				if(props.errors &&  Object.keys(props.errors).length != 0)
+																				this.props.commonActions.fillManDatoryDetails();
 																			this.setState(
 																				{
 																					createMore: false,
@@ -1044,6 +1049,10 @@ class CreateUser extends React.Component {
 																		className="btn-square mr-3"
 																		disabled={this.state.createDisabled}
 																		onClick={() => {
+																				//	added validation popup	msg	
+																				props.handleBlur();
+																				if(props.errors &&  Object.keys(props.errors).length != 0)
+																				this.props.commonActions.fillManDatoryDetails();
 																			this.setState(
 																				{ createMore: true },
 																				() => {

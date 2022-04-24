@@ -30,10 +30,14 @@ class RFQTemplate extends Component {
 		let classname = '';
 		if (status === 'Closed') {
 			classname = 'label-closed';
+		}else if (status === 'Approved') {
+				classname = 'label-success';
 		} else if (status === 'Draft') {
 			classname = 'label-draft';
 		} else if (status === 'Sent') {
 			classname = 'label-sent';
+		}else if (status === 'Invoiced') {
+				classname = 'label-primary';
 		} else {
 			classname = 'label-overdue';
 		}

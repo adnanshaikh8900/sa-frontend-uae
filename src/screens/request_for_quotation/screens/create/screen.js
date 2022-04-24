@@ -38,6 +38,7 @@ import './style.scss';
 import Switch from "react-switch";
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import moment from 'moment';
 
 const mapStateToProps = (state) => {
 	return {
@@ -106,6 +107,7 @@ class CreateRequestForQuotation extends React.Component {
 					productId: ''
 				},
 			],
+			discountEnabled: false,
 			idCount: 0,
 			date1:new Date().setMonth(new Date().getMonth() + 1),
 			checked:false,
@@ -161,7 +163,34 @@ class CreateRequestForQuotation extends React.Component {
 			purchaseCategory: [],
 			exist: false,
 			language: window['localStorage'].getItem('language'),	
-			loadingMsg:"Loading..."
+			loadingMsg:"Loading...",
+			vat_list:[
+				{
+					"id": 1,
+					"vat": 5,
+					"name": "STANDARD RATED TAX (5%) "
+				},
+				{
+					"id": 2,
+					"vat": 0,
+					"name": "ZERO RATED TAX (0%)"
+				},
+				{
+					"id": 3,
+					"vat": 0,
+					"name": "EXEMPT"
+				},
+				{
+					"id": 4,
+					"vat": 0,
+					"name": "OUT OF SCOPE"
+				},
+				{
+					"id": 10,
+					"vat": 0,
+					"name": "N/A"
+				}
+			]
 	
 		};
 
@@ -336,7 +365,7 @@ class CreateRequestForQuotation extends React.Component {
 				name={`lineItemsString.${idx}.quantity`}
 				render={({ field, form }) => (
 				<div>
-						
+						<div class="input-group">
 						<Input
 							type="text"
 							min="0"
@@ -355,8 +384,8 @@ class CreateRequestForQuotation extends React.Component {
 								}
 							} }
 							placeholder={strings.Quantity}
-							className={`form-control 
-            ${props.errors.lineItemsString &&
+							className={`form-control w-50${
+								props.errors.lineItemsString &&
 									props.errors.lineItemsString[parseInt(idx, 10)] &&
 									props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
 									Object.keys(props.touched).length > 0 &&
@@ -365,6 +394,9 @@ class CreateRequestForQuotation extends React.Component {
 									props.touched.lineItemsString[parseInt(idx, 10)].quantity
 									? 'is-invalid'
 									: ''}`} />
+									{row['productId'] != '' ? 
+									<Input value={row['unitType'] }  disabled/> : ''}
+									</div>
 						{props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
@@ -396,6 +428,7 @@ class CreateRequestForQuotation extends React.Component {
 			<Field
 				name={`lineItemsString.${idx}.unitPrice`}
 				render={({ field, form }) => (
+					<>
 					<Input
 					type="text"
 					min="0"
@@ -427,10 +460,118 @@ class CreateRequestForQuotation extends React.Component {
 								: ''
 						}`}
 					/>
+					{props.errors.lineItemsString &&
+                    props.errors.lineItemsString[parseInt(idx, 10)] &&
+                    props.errors.lineItemsString[parseInt(idx, 10)].unitPrice &&
+                    Object.keys(props.touched).length > 0 &&
+					props.touched.lineItemsString &&
+					props.touched.lineItemsString[parseInt(idx, 10)] &&
+					props.touched.lineItemsString[parseInt(idx, 10)].unitPrice && 
+                    (
+                   <div className='invalid-feedback'>
+                   {props.errors.lineItemsString[parseInt(idx, 10)].unitPrice}
+                   </div>
+                     )}
+                   </>
 				)}
 			/>
 		);
 	};
+
+	renderDiscount = (cell, row, props) => {
+		const { discountOptions } = this.state;
+	   let idx;
+	   this.state.data.map((obj, index) => {
+		   if (obj.id === row.id) {
+			   idx = index;
+		   }
+		   return obj;
+	   });
+
+	   return (
+		   <Field
+			    name={`lineItemsString.${idx}.discountType`}
+			   render={({ field, form }) => (
+			   <div>
+			   <div  class="input-group">
+				   <Input
+	 					type="text"
+				   	    min="0"
+					    maxLength="14,2"
+					    value={row['discount'] !== 0 ? row['discount'] : 0}
+					    onChange={(e) => {
+						   if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+							   this.selectItem(
+								   e.target.value,
+								   row,
+								   'discount',
+								   form,
+								   field,
+								   props,
+							   );
+						   }
+					   
+							   this.updateAmount(
+								   this.state.data,
+								   props,
+							   );
+					   
+					   }}
+					   placeholder={strings.discount}
+					   className={`form-control 
+		   ${
+						   props.errors.lineItemsString &&
+						   props.errors.lineItemsString[parseInt(idx, 10)] &&
+						   props.errors.lineItemsString[parseInt(idx, 10)].discount &&
+						   Object.keys(props.touched).length > 0 &&
+						   props.touched.lineItemsString &&
+						   props.touched.lineItemsString[parseInt(idx, 10)] &&
+						   props.touched.lineItemsString[parseInt(idx, 10)].discount
+							   ? 'is-invalid'
+							   : ''
+					   }`}
+
+   />
+	<div class="dropdown open input-group-append">
+
+		<div 	style={{width:'100px'}}>
+		<Select
+
+
+																						   options={discountOptions}
+																						   id="discountType"
+																						   name="discountType"
+																						   value={
+																						discountOptions &&
+																							selectOptionsFactory
+																								.renderOptions('label', 'value', discountOptions, 'discount')
+																								.find((option) => option.value == row.discountType)
+																						   }
+																						   onChange={(e) => {
+																							   this.selectItem(
+																								   e.value,
+																								   row,
+																								   'discountType',
+																								   form,
+																								   field,
+																								   props,
+																							   );
+																							   this.updateAmount(
+																								   this.state.data,
+																								   props,
+																							   );
+																						   }}
+																					   />
+			 </div>
+			  </div>
+			  </div>
+			   </div>
+
+				   )}
+
+		   />
+	   );
+   }
 
 	renderSubTotal = (cell, row, extraData) => {
 		// return row.subTotal === 0 ? (
@@ -466,14 +607,128 @@ class CreateRequestForQuotation extends React.Component {
 		return value === 0 ? this.state.supplier_currency_symbol +" "+ value.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ value.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 });
 	};
 
+	getParentRfqDetails=(parentId)=>{
+		this.props.requestForQuotationCreateAction
+				.getRFQeById(parentId)
+				.then((res) => {
+					if (res.status === 200) {
+						this.getCompanyCurrency();
+						this.purchaseCategory();
+						this.setState(
+							{
+								parentId: this.props.location.state.id,
+								initValue: {
+									rfqReceiveDate: res.data.rfqReceiveDate
+										? moment(res.data.rfqReceiveDate).format('DD-MM-YYYY')
+										: '',
+										rfqReceiveDate1: res.data.rfqReceiveDate
+										? res.data.rfqReceiveDate
+										: '',
+										rfqExpiryDate: res.data.rfqExpiryDate
+										? moment(res.data.rfqExpiryDate).format('DD-MM-YYYY')
+										: '',
+										rfqExpiryDate1: res.data.rfqExpiryDate
+										?  res.data.rfqExpiryDate
+										: '',
+										supplierId: res.data.supplierId ? res.data.supplierId : '',
+										rfqNumber: res.data.rfqNumber
+										? res.data.rfqNumber
+										: '',
+									totalVatAmount: res.data.totalVatAmount
+										? res.data.totalVatAmount
+										: 0,
+										totalAmount: res.data.totalAmount ? res.data.totalAmount : 0,
+										total_net: 0,
+									notes: res.data.notes ? res.data.notes : '',
+									lineItemsString: res.data.poQuatationLineItemRequestModelList
+										? res.data.poQuatationLineItemRequestModelList
+										: [],
+										fileName: res.data.fileName ? res.data.fileName : '',
+										
+										placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+										total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : 0,
+										taxType : res.data.taxType ? true : false,
+								},
+										rfqExpiryDateNoChange: res.data.rfqExpiryDate
+										?  moment(res.data.rfqExpiryDate)
+										: '',
+										rfqReceiveDateNoChange: res.data.rfqReceiveDate
+										? moment(res.data.rfqReceiveDate)
+										: '',	
+										rfqReceiveDate: res.data.rfqReceiveDate
+										? res.data.rfqReceiveDate
+										: '',	
+										rfqExpiryDate: res.data.rfqExpiryDate
+										? res.data.rfqExpiryDate
+										: '',
+										taxType : res.data.taxType ? true : false,
+								customer_taxTreatment_des : res.data.taxtreatment ? res.data.taxtreatment : '',
+								placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+								total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
+								contactId:res.data.supplierId ? res.data.supplierId : '',
+								data: res.data.poQuatationLineItemRequestModelList
+									? res.data.poQuatationLineItemRequestModelList
+									: [],
+								selectedContact: res.data.supplierId ? res.data.supplierId : '',
+							
+								loading: false,
+							},
+							() => {
+								if (this.state.data.length > 0) {
+									this.updateAmount(this.state.data);
+									const { data } = this.state;
+									const idCount =
+										data.length > 0
+											? Math.max.apply(
+													Math,
+													data.map((item) => {
+														return item.id;
+													}),
+											  )
+											: 0;
+									this.setState({
+										idCount,
+									});
+									
+									let tmpSupplier_list = []
+							           this.props.supplier_list.map(item => {
+										let obj = {label: item.label.contactName, value: item.value}
+										tmpSupplier_list.push(obj)
+									})
+								let supplier=	tmpSupplier_list && selectOptionsFactory.renderOptions('label','value',tmpSupplier_list,strings.CustomerName,).find((option) => option.value ==res.data.supplierId)
+									this.formRef.current.setFieldValue('supplierId', supplier, true);
+									this.formRef.current.setFieldValue('placeOfSupplyId', res.data.placeOfSupplyId, true);
+									this.formRef.current.setFieldValue('currency', this.getCurrency(res.data.supplierId), true);
+									this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(res.data.supplierId), true);
+									this.formRef.current.setFieldValue('notes',  res.data.notes, true);
+									this.addRow();
+								} else {
+									this.setState({
+										idCount: 0,
+									});
+								}
+							},
+						);
+						this.getCurrency(res.data.supplierId)	
+			}
+		});
+	}
+
 	componentDidMount = () => {
+		this.props.requestForQuotationAction.getVatList();
 		this.getInitialData();
-		if(this.props.location.state &&this.props.location.state.contactData)
-				this.getCurrentUser(this.props.location.state.contactData);
+		// if(this.props.location.state &&this.props.location.state.contactData)
+		// 		this.getCurrentUser(this.props.location.state.contactData);
+		if(this.props.location.state && this.props.location.state.parentId )
+				this.getParentRfqDetails(this.props.location.state.parentId);		
 		
 	};
 
 	getInitialData = () => {
+		this.props.requestForQuotationAction.getVatList().then((res)=>{
+			if(res.status==200 && res.data)
+			 this.setState({vat_list:res.data})
+		});
 		this.getInvoiceNo();
 		this.props.requestForQuotationAction.getSupplierList(this.state.contactType);
 		this.props.currencyConvertActions.getCurrencyConversionList().then((response) => {
@@ -632,8 +887,8 @@ class CreateRequestForQuotation extends React.Component {
 			<Field
 				name={`lineItemsString.${idx}.vatCategoryId`}
 				render={({ field, form }) => (
+					<>
 					<Select
-						styles={customStyles}
 						options={
 							vat_list
 								? selectOptionsFactory.renderOptions(
@@ -674,6 +929,19 @@ class CreateRequestForQuotation extends React.Component {
 								: ''
 						}`}
 					/>
+					{props.errors.lineItemsString &&
+                    props.errors.lineItemsString[parseInt(idx, 10)] &&
+                    props.errors.lineItemsString[parseInt(idx, 10)].vatCategoryId &&
+                    Object.keys(props.touched).length > 0 &&
+					props.touched.lineItemsString &&
+					props.touched.lineItemsString[parseInt(idx, 10)] &&
+					props.touched.lineItemsString[parseInt(idx, 10)].vatCategoryId && 
+                    (
+                   <div className='invalid-feedback'>
+                   {props.errors.lineItemsString[parseInt(idx, 10)].vatCategoryId}
+                   </div>
+                     )}
+                   </>
 				)}
 			/>
 		);
@@ -748,8 +1016,8 @@ class CreateRequestForQuotation extends React.Component {
 			<Field
 				name={`lineItemsString.${idx}.productId`}
 				render={({ field, form }) => (
+				<>
 					<Select
-						styles={customStyles}
 						options={
 							product_list
 								? optionFactory.renderOptions(
@@ -809,6 +1077,42 @@ class CreateRequestForQuotation extends React.Component {
 								: ''
 						}`}
 					/>
+					{props.errors.lineItemsString &&
+                    props.errors.lineItemsString[parseInt(idx, 10)] &&
+                    props.errors.lineItemsString[parseInt(idx, 10)].productId &&
+                    Object.keys(props.touched).length > 0 &&
+					props.touched.lineItemsString &&
+					props.touched.lineItemsString[parseInt(idx, 10)] &&
+					props.touched.lineItemsString[parseInt(idx, 10)].productId && 
+                    (
+                   <div className='invalid-feedback'>
+                   {props.errors.lineItemsString[parseInt(idx, 10)].productId}
+                   </div>
+                     )}
+					 {row['productId'] != '' ? 
+						   <div className='mt-1'>
+						   <Input
+						type="text"
+						maxLength="250"
+						value={row['description'] !== '' ? row['description'] : ''}
+						onChange={(e) => {
+							this.selectItem(e.target.value, row, 'description', form, field);
+						}}
+						placeholder={strings.Description}
+						className={`form-control ${
+							props.errors.lineItemsString &&
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)].description &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)].description
+								? 'is-invalid'
+								: ''
+						}`}
+					/>
+						   </div> : ''}
+                   </>
 				)}
 			/>
 		);
@@ -857,7 +1161,7 @@ class CreateRequestForQuotation extends React.Component {
 	};
 
 	renderActions = (cell, rows, props) => {
-		return (
+		return rows['productId'] != '' ? 
 			<Button
 				size="sm"
 				className="btn-twitter btn-brand icon mt-1"
@@ -867,8 +1171,7 @@ class CreateRequestForQuotation extends React.Component {
 				}}
 			>
 				<i className="fas fa-trash"></i>
-			</Button>
-		);
+			</Button>: ''
 	};
 
 	checkedRow = () => {
@@ -904,7 +1207,7 @@ class CreateRequestForQuotation extends React.Component {
 		let result = this.props.currency_convert_list.filter((obj) => {
 			return obj.currencyCode === value;
 		});
-
+		if(result &&result[0]&&  result[0].exchangeRate)
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
 		};
 
@@ -937,16 +1240,16 @@ class CreateRequestForQuotation extends React.Component {
 					 net_value =
 						((+obj.unitPrice -
 							(+((obj.unitPrice * obj.discount)) / 100)) * obj.quantity);
-					var discount =  obj.unitPrice - net_value
+					var discount =  (obj.unitPrice* obj.quantity) - net_value
 				if(obj.exciseTaxId !=  0){
 					if(obj.exciseTaxId === 1){
 						const value = +(net_value) / 2 ;
 							net_value = parseFloat(net_value) + parseFloat(value) ;
-							obj.exciseAmount = parseFloat(value) * obj.quantity;
+							obj.exciseAmount = parseFloat(value);
 						}else if (obj.exciseTaxId === 2){
 							const value = net_value;
 							net_value = parseFloat(net_value) +  parseFloat(value) ;
-							obj.exciseAmount = parseFloat(value) * obj.quantity;
+							obj.exciseAmount = parseFloat(value);
 						}
 						else{
 							net_value = obj.unitPrice
@@ -956,20 +1259,20 @@ class CreateRequestForQuotation extends React.Component {
 					obj.exciseAmount = 0
 				}
 					var vat_amount =
-					((+net_value  * vat * obj.quantity) / 100);
+					((+net_value  * vat ) / 100);
 				}else{
 					 net_value =
 						((obj.unitPrice * obj.quantity) )
-					var discount =  obj.unitPrice - net_value
+					var discount =  (obj.unitPrice* obj.quantity) - net_value
 						if(obj.exciseTaxId !=  0){
 							if(obj.exciseTaxId === 1){
 								const value = +(net_value) / 2 ;
 									net_value = parseFloat(net_value) + parseFloat(value) ;
-									obj.exciseAmount = parseFloat(value) * obj.quantity;
+									obj.exciseAmount = parseFloat(value);
 								}else if (obj.exciseTaxId === 2){
 									const value = net_value;
 									net_value = parseFloat(net_value) +  parseFloat(value) ;
-									obj.exciseAmount = parseFloat(value) * obj.quantity;
+									obj.exciseAmount = parseFloat(value);
 								}
 								else{
 									net_value = obj.unitPrice
@@ -979,7 +1282,7 @@ class CreateRequestForQuotation extends React.Component {
 							obj.exciseAmount = 0
 						}
 						var vat_amount =
-						((+net_value  * vat * obj.quantity) / 100);
+						((+net_value  * vat ) / 100);
 			}
 
 			}
@@ -1086,8 +1389,8 @@ class CreateRequestForQuotation extends React.Component {
 				initValue: {
 					...this.state.initValue,
 					...{
-						total_net:  total_net,
-						invoiceVATAmount: total_vat,
+						total_net:  total_net -total_excise,
+						totalVatAmount: total_vat,
 						discount:  discount_total ? discount_total : 0,
 						totalAmount:  total ,
 						total_excise: total_excise
@@ -1139,10 +1442,9 @@ class CreateRequestForQuotation extends React.Component {
 		formData.append('type', 3);
 		formData.append('totalExciseAmount', this.state.initValue.total_excise);
 		formData.append('exciseType', this.state.checked);
-		if (placeOfSupplyId) {
-			formData.append('placeOfSupplyId', placeOfSupplyId.value ? placeOfSupplyId.value : placeOfSupplyId);
+		if (placeOfSupplyId ) {
+			formData.append('placeOfSupplyId', placeOfSupplyId.value ?placeOfSupplyId.value:placeOfSupplyId);
 		}
-
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
 		formData.append('totalVatAmount', this.state.initValue.totalVatAmount);
 		formData.append('totalAmount', this.state.initValue.totalAmount);
@@ -1160,7 +1462,7 @@ class CreateRequestForQuotation extends React.Component {
 			.createRFQ(formData)
 			.then((res) => {
 				this.setState({ disabled: false });
-				this.setState({ loading:false});
+				// this.setState({ loading:false});
 				this.props.commonActions.tostifyAlert(
 					'success',
 					res.data ? res.data.message : 'Request For Quotation Created Successfully.',
@@ -1171,6 +1473,7 @@ class CreateRequestForQuotation extends React.Component {
 							createMore: false,
 							selectedContact: '',
 							term: '',
+							exchangeRate:'',
 							data: [
 								{
 									id: 0,
@@ -1178,9 +1481,16 @@ class CreateRequestForQuotation extends React.Component {
 									quantity: 1,
 									unitPrice: '',
 									vatCategoryId: '',
+									exciseTaxId:'',
+									discountType: 'FIXED',
+									exciseAmount:'',
+									discount: 0,
 									subTotal: 0,
+									vatAmount:0,
 									productId: '',
-								
+									isExciseTaxExclusive: '',
+									unitType:'',
+									unitTypeId:''
 								},
 							],
 							initValue: {
@@ -1198,7 +1508,29 @@ class CreateRequestForQuotation extends React.Component {
 						},
 						() => {
 							resetForm(this.state.initValue);
+							this.setState({data: [
+								{
+									id: 0,
+									description: '',
+									quantity: 1,
+									unitPrice: '',
+									vatCategoryId: '',
+									exciseTaxId:'',
+									discountType: 'FIXED',
+									exciseAmount:'',
+									discount: 0,
+									subTotal: 0,
+									vatAmount:0,
+									productId: '',
+									isExciseTaxExclusive: '',
+									unitType:'',
+									unitTypeId:''
+								},
+							],
+						loading:false
+						})
 							this.getInvoiceNo();
+							if(	this.formRef.current && this.state.data)
 							this.formRef.current.setFieldValue(
 								'lineItemsString',
 								this.state.data,
@@ -1380,6 +1712,7 @@ class CreateRequestForQuotation extends React.Component {
 						},
 					},
 				});
+				if( res &&  res.data &&this.formRef.current)
 				this.formRef.current.setFieldValue('rfq_number', res.data, true,this.validationCheck(res.data));
 			}
 		});
@@ -1448,7 +1781,7 @@ class CreateRequestForQuotation extends React.Component {
 	}
 	render() {
 		strings.setLanguage(this.state.language);
-		const { data, discountOptions, initValue, prefix,data1,loading,loadingMsg } = this.state;
+		const { data, discountOptions, initValue, prefix,tax_treatment_list, param,loading,loadingMsg,data1 } = this.state;
 
 		const {
 			currency_list,
@@ -1601,7 +1934,7 @@ class CreateRequestForQuotation extends React.Component {
 																		},
 																	),
 																vatCategoryId: Yup.string().required(
-																	'Value is Required',
+																	'Vat is Required',
 																),
 																productId: Yup.string().required(
 																	'Product is Required',
@@ -1673,20 +2006,7 @@ class CreateRequestForQuotation extends React.Component {
 																				  )
 																				: []
 																		}
-																		value={this.state.quotationId ?
-
-																			tmpSupplier_list &&
-																		   selectOptionsFactory.renderOptions(
-																			   'label',
-																			   'value',
-																			   tmpSupplier_list,
-																			   strings.CustomerName,
-																		 ).find((option) => option.value == this.state.contactId)
-																		   
-																		 :
-																		 
-																		 props.values.contactId
-																		   }
+																		value={ props.values.supplierId }
 																		// onChange={(option) => {
 																		// 	if (option && option.value) {
 																		// 		props.handleChange('supplierId')(option);
@@ -1800,7 +2120,21 @@ class CreateRequestForQuotation extends React.Component {
 																				  )
 																				: []
 																		}
-																		value={this.state.placelist}
+																		value={
+																			this.placelist &&
+																			selectOptionsFactory.renderOptions(
+																				'label',
+																				'value',
+																				this.placelist,
+																				'Place of Supply',
+																		  ).find(
+																					(option) =>
+																					option.value ==
+																					((this.state.quotationId||this.state.parentId) ? this.state.placeOfSupplyId:props.values
+																					.placeOfSupplyId.toString())
+																				)
+																			}
+						
 																		className={
 																			props.errors.placeOfSupplyId &&
 																			props.touched.placeOfSupplyId
@@ -1842,7 +2176,7 @@ class CreateRequestForQuotation extends React.Component {
 																				: ''
 																		}`}
 																		placeholderText={strings.OrderDate}
-																		selected={props.values.rfqReceiveDate}
+																		selected={props.values.rfqReceiveDate ?new Date(props.values.rfqReceiveDate):props.values.rfqReceiveDate} 
 																		showMonthDropdown
 																		showYearDropdown
 																		dropdownMode="select"
@@ -1878,7 +2212,7 @@ class CreateRequestForQuotation extends React.Component {
 																				: ''
 																		}`}
 																		placeholderText={strings.OrderDueDate}
-																		selected={props.values.rfqExpiryDate}
+																		selected={props.values.rfqExpiryDate ?new Date(props.values.rfqExpiryDate):props.values.rfqExpiryDate} 
 																		showMonthDropdown
 																		showYearDropdown
 																		dropdownMode="select"
@@ -1958,7 +2292,7 @@ class CreateRequestForQuotation extends React.Component {
 														<hr />
 														<Row>
 															<Col lg={8} className="mb-3">
-																<Button
+																{/* <Button
 																	color="primary"
 																	className={`btn-square mr-3 ${
 																		this.checkedRow() ? `disabled-cursor` : ``
@@ -1972,7 +2306,7 @@ class CreateRequestForQuotation extends React.Component {
 																	disabled={this.checkedRow() ? true : false}
 																>
 																	<i className="fa fa-plus"></i> {strings.Addmore} 
-																</Button>
+																</Button> */}
 																<Button
 																	color="primary"
 																	className= "btn-square mr-3"
@@ -2046,14 +2380,14 @@ class CreateRequestForQuotation extends React.Component {
 																	className="invoice-create-table"
 																>
 																	<TableHeaderColumn
-																		width="5%"
+																		width="4%"
 																		dataAlign="center"
 																		dataFormat={(cell, rows) =>
 																			this.renderActions(cell, rows, props)
 																		}
 																	></TableHeaderColumn>
 																	<TableHeaderColumn
-																	width="20%"
+																	width="17%"
 																		dataField="product"
 																		dataFormat={(cell, rows) =>
 																			this.renderProduct(cell, rows, props)
@@ -2068,24 +2402,24 @@ class CreateRequestForQuotation extends React.Component {
 																			this.renderAddProduct(cell, rows, props)
 																		}
 																	></TableHeaderColumn> */}
-																	<TableHeaderColumn
+																	{/* <TableHeaderColumn
 																		dataField="description"
 																		dataFormat={(cell, rows) =>
 																			this.renderDescription(cell, rows, props)
 																		}
 																	>
 																		{strings.DESCRIPTION}
-																	</TableHeaderColumn>
+																	</TableHeaderColumn> */}
 																	<TableHeaderColumn
 																		dataField="quantity"
-																		width="100"
+																		width="13%"
 																		dataFormat={(cell, rows) =>
 																			this.renderQuantity(cell, rows, props)
 																		}
 																	>
 																		{strings.QUANTITY}
 																	</TableHeaderColumn>
-																	<TableHeaderColumn
+																	{/* <TableHeaderColumn
 																	width="5%"
 																	dataField="unitType"
 																 >{strings.Unit}	<i
@@ -2096,7 +2430,7 @@ class CreateRequestForQuotation extends React.Component {
 																 target="unitTooltip"
 															 >
 																Units / Measurements</UncontrolledTooltip>
-																</TableHeaderColumn>
+																</TableHeaderColumn> */}
 																<TableHeaderColumn
 																		dataField="unitPrice"
 																		dataFormat={(cell, rows) =>
@@ -2116,6 +2450,7 @@ class CreateRequestForQuotation extends React.Component {
 																			service
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn>
+																	{initValue.total_excise != 0 &&
 																	<TableHeaderColumn
 																	width="10%"
 																		dataField="exciseTaxId"
@@ -2135,8 +2470,19 @@ class CreateRequestForQuotation extends React.Component {
 																			If Exise Type for a product is Inclusive
 																			then the Excise dropdown will be Disabled
 																		</UncontrolledTooltip>
-																	</TableHeaderColumn> 
+																	</TableHeaderColumn>}
+																	{this.state.discountEnabled == true &&
 																	<TableHeaderColumn
+																	width="12%"
+																	dataField="discount"
+																	dataFormat={(cell, rows) =>
+																		this.renderDiscount(cell, rows, props)
+																	}
+																	>
+																{strings.DisCount}
+																</TableHeaderColumn>}
+																	<TableHeaderColumn
+																	width="13%"
 																		dataField="vat"
 																		dataFormat={(cell, rows) =>
 																			this.renderVat(cell, rows, props)
@@ -2166,6 +2512,24 @@ class CreateRequestForQuotation extends React.Component {
 																</BootstrapTable>
 															</Col>
 														</Row>
+														<Row className="ml-4 ">
+														<Col className=" ml-4">
+															<FormGroup className='pull-right'>
+															<Input
+																type="checkbox"
+																id="discountEnabled"
+																checked={this.state.discountEnabled}
+																onChange={(option) => {
+																	if(initValue.discount > 0){
+																		this.setState({ discountEnabled: true })
+																	}else{
+																	this.setState({ discountEnabled: !this.state.discountEnabled })}
+																}}
+															/>
+															<Label>Apply Discount</Label>
+															</FormGroup>
+														</Col>
+													</Row>
 													
 														{this.state.data.length > 0 ? (
 															<Row>
@@ -2174,11 +2538,12 @@ class CreateRequestForQuotation extends React.Component {
 																		<Label htmlFor="notes">{strings.Notes}</Label>
 																		<Input
 																			type="textarea"
+																			style={{width: "700px"}}
 																			maxLength="250"
 																			name="notes"
 																			id="notes"
-																			rows="6"
-																			placeholder={strings.Notes}
+																			rows="2"
+																			placeholder={strings.DeliveryNotes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
 																			}
@@ -2247,6 +2612,7 @@ class CreateRequestForQuotation extends React.Component {
 																		<Col lg={4}> </Col>
 																<Col lg={4}>
 																	<div className="">
+																	{initValue.total_excise > 0 ?	
 																	<div className="total-item p-2" >
 																			<Row>
 																				<Col lg={6}>
@@ -2262,7 +2628,36 @@ class CreateRequestForQuotation extends React.Component {
 																					</label>
 																				</Col>
 																			</Row>
-																		</div>
+																		</div>: ''}
+																		{this.state.discountEnabled == true ?
+																			<div className="total-item p-2">
+																			<Row>
+																				<Col lg={6}>
+																					<h5 className="mb-0 text-right">
+																					{strings.Discount}
+																					</h5>
+																				</Col>
+																				<Col lg={6} className="text-right">
+																					<label className="mb-0">
+																						{/* {universal_currency_list[0] && (
+																							<Currency
+																								value={initValue.total_net.toFixed(
+																									2,
+																								)}
+																								currencySymbol={
+																									universal_currency_list[0]
+																										? universal_currency_list[0]
+																												.currencyIsoCode
+																										: 'USD'
+																								}
+																							/>
+																						)} */}
+																						{this.state.customer_currency_symbol} &nbsp;
+																						{initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
+																					</label>
+																				</Col>
+																			</Row>
+																		</div> : ''}
 																	
 																		<div className="total-item p-2">
 																			<Row>
@@ -2370,6 +2765,10 @@ class CreateRequestForQuotation extends React.Component {
 																			if(this.state.data.length === 1)
 																			{
 																			console.log(props.errors,"ERRORs")
+																				//	added validation popup	msg
+																				props.handleBlur();
+																				if(props.errors &&  Object.keys(props.errors).length != 0)
+																				this.props.commonActions.fillManDatoryDetails();
 																			}
 																			else
 																			{ let newData=[]
@@ -2391,7 +2790,7 @@ class CreateRequestForQuotation extends React.Component {
 																			? 'Creating...'
 																			: strings.Create }
 																	</Button>
-																	<Button
+																	{this.props.location.state &&	this.props.location.state.parentId ?"":<Button
 																		type="button"
 																		color="primary"
 																		className="btn-square mr-3"
@@ -2400,6 +2799,10 @@ class CreateRequestForQuotation extends React.Component {
 																			if(this.state.data.length === 1)
 																			{
 																			console.log(props.errors,"ERRORs")
+																				//	added validation popup	msg
+																				props.handleBlur();
+																				if(props.errors &&  Object.keys(props.errors).length != 0)
+																				this.props.commonActions.fillManDatoryDetails();
 																			}
 																			else
 																			{ let newData=[]
@@ -2420,7 +2823,7 @@ class CreateRequestForQuotation extends React.Component {
 																		{this.state.disabled
 																			? 'Creating...'
 																			: strings.CreateandMore }
-																	</Button>
+																	</Button>}
 																	<Button
 																		type="button"
 																		color="secondary"

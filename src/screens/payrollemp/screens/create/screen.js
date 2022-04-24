@@ -146,7 +146,7 @@ class CreateEmployeePayroll extends React.Component {
                 referenceCode: '',
                 title: '',
                 billingEmail: '',
-                countryId: {label: "United Arab Emirates", value: 229},
+                countryId: {label: "United Arab Emirate", value: 229},
                 permanentAddress: '',
                 presentAddress: '',
                 bloodGroup: '',
@@ -1268,8 +1268,8 @@ existForAccountNumber = (value) => {
                                                                             .required('Gender is Required') ,
                                                                             presentAddress: Yup.string()
                                                                             .required('Present Address is Required') ,
-                                                                            pincode: Yup.string()
-                                                                            .required('Pin Code is Required') ,
+                                                                            // pincode: Yup.string()
+                                                                            // .required('Pin Code is Required') ,
                                                                             countryId: Yup.string()
                                                                             .required('Country is Required') ,
                                                                             stateId: Yup.string()
@@ -1872,31 +1872,92 @@ existForAccountNumber = (value) => {
                                                                                                 </FormGroup>
                   
                                                                                             </Col>
-                                                                                            <Col md="4">
-                                                                                                <FormGroup>
-                                                                                                    <Label htmlFor="city"><span className="text-danger">* </span>{strings.PinCode} </Label>
-                                                                                                    <Input
-                                                                                                        type="text"
-                                                                                                        maxLength="8"
-                                                                                                        id="pincode"
-                                                                                                        name="pincode"
-                                                                                                        value={props.values.pincode}
-                                                                                                        placeholder={strings.Enter+strings.PinCode}
+                                                            {props.values.countryId == 229 || props.values.countryId.value == 229 ? 
+														 	<Col md="4" >
+																 <FormGroup>
+															 {/* <Label htmlFor="select">{strings.POBoxNumber}</Label> */}
+															 <Label htmlFor="POBoxNumber">
+																 <span className="text-danger">* </span>{strings.POBoxNumber}
+															 </Label>
+															 <Input
+																 type="text"
+																 minLength="3"
+																 maxLength="6"
+																 id="poBoxNumber"
+																 name="poBoxNumber"
+																 autoComplete="Off"
+																 placeholder={strings.Enter + strings.POBoxNumber}
+																 onChange={(option) => {
+																	 if (
+																		 option.target.value === '' ||
+																		 this.regEx.test(option.target.value)
+																	 ) {
+																		 if(option.target.value.length<3)
+																		 this.setState({showpoBoxNumberErrorMsg:true})
+																		 else
+																		 this.setState({showpoBoxNumberErrorMsg:false})
+																		 props.handleChange('poBoxNumber')(
+																			 option,
+																		 );
+																	 }
+																 }}
+																 value={props.values.poBoxNumber}
+																 className={
+																	 props.errors.poBoxNumber &&
+																		 props.touched.poBoxNumber
+																		 ? 'is-invalid'
+																		 : ''
+																 }
+															 />
+															 {props.errors.poBoxNumber &&
+																 props.touched.poBoxNumber && (
+																	 <div className="invalid-feedback">
+																		 {props.errors.poBoxNumber}
+																	 </div>
+																 )}
+														 </FormGroup>
+														 </Col>
 
-                                                                                                        onChange={(option) => {
-                                                                                                            if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('pincode')(option) }
-                                                                                                        }}
-                                                                                                        className={props.errors.pincode && props.touched.pincode ? "is-invalid" : ""}
-                                                                                                    />
-                                                                                                    {props.errors.pincode && props.touched.pincode && (
-                                                                                                        <div className="invalid-feedback">{props.errors.pincode}</div>
-                                                                                                    )}
-                                                                                                </FormGroup>
-                                                                                                   
-                                                                                            </Col>
-
-                                                                                        </Row>
-
+														: 
+															<Col md="4" ><FormGroup>
+																	<Label htmlFor="postZipCode"><span className="text-danger"> </span>
+																		{strings.PostZipCode}
+																	</Label>
+																	<Input
+																		type="text"
+																		maxLength="6"
+																		id="PostZipCode"
+																		name="PostZipCode"
+																		autoComplete="Off"
+																		placeholder={strings.Enter + strings.PostZipCode}
+																		onChange={(option) => {
+																			if (
+																				option.target.value === '' ||
+																				this.regEx.test(option.target.value)
+																			) {
+																				props.handleChange('PostZipCode')(
+																					option,
+																				);
+																			}
+																
+																		}}
+																		value={props.values.PostZipCode}
+																		className={
+																			props.errors.PostZipCode &&
+																				props.touched.PostZipCode
+																				? 'is-invalid'
+																				: ''
+																		}
+																	/>
+																	{props.errors.PostZipCode &&
+																		props.touched.PostZipCode && (
+																			<div className="invalid-feedback">
+																				{props.errors.PostZipCode}
+																			</div>
+																		)}
+																</FormGroup>
+																</Col>}
+                                                                    </Row>
                                                                                         <Row className="row-wrapper">
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
@@ -1948,7 +2009,7 @@ existForAccountNumber = (value) => {
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
                                                                                                     <Label htmlFor="stateId"><span className="text-danger">* </span>
-                                                                                                    {props.values.countryId.value === 229 ? strings.Emirates: strings.StateRegion}
+                                                                                                    {props.values.countryId.value === 229 ? strings.Emirate: strings.StateRegion}
 
                                                                                                     </Label>
                                                                                                     <Select
@@ -1971,7 +2032,7 @@ existForAccountNumber = (value) => {
                                                                                                                 props.handleChange('stateId')('');
                                                                                                             }
                                                                                                         }}
-                                                                                                        placeholder={strings.Select + props.values.countryId === 229 || props.values.countryId.value === 229 ? strings.Emirates: strings.StateRegion}
+                                                                                                        placeholder={strings.Select + props.values.countryId === 229 || props.values.countryId.value === 229 ? strings.Emirate: strings.StateRegion}
                                                                                                         id="stateId"
                                                                                                         name="stateId"
                                                                                                         className={
@@ -1998,7 +2059,7 @@ existForAccountNumber = (value) => {
                                                                                                         id="city"
                                                                                                         name="city"
                                                                                                         value={props.values.city}
-                                                                                                        placeholder={strings.Enter+strings.City}
+                                                                                                        placeholder={strings.Location}
 
                                                                                                         onChange={(option) => {
                                                                                                             if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('city')(option) }
@@ -2282,6 +2343,10 @@ existForAccountNumber = (value) => {
                                                                                                 //     this.toggle(0, '2')
                                                                                                 // }}
                                                                                                 onClick={() => {
+                                                                                                    //  added validation popup  msg                                                                
+																                                	props.handleBlur();
+																                                	if(props.errors &&  Object.keys(props.errors).length != 0)
+																	                                this.props.commonActions.fillManDatoryDetails();
                                                                                                     this.setState({ createMore: false }, () => {
                                                                                                         props.handleSubmit()
                                                                                                     })
@@ -2668,6 +2733,10 @@ existForAccountNumber = (value) => {
                                                                                                 //     this.toggle(0, '3')
                                                                                                 // }}
                                                                                                 onClick={() => {
+                                                                                                    //  added validation popup  msg                                                                
+																	                            props.handleBlur();
+																	                            if(props.errors &&  Object.keys(props.errors).length != 0)
+																	                            this.props.commonActions.fillManDatoryDetails();
                                                                                                     this.setState({ createMore: false }, () => {
                                                                                                         props.handleSubmit()
                                                                                                     })
@@ -2955,6 +3024,10 @@ existForAccountNumber = (value) => {
                                                                                               </Button>
                                                                                             <Button name="button" color="primary" className="btn-square pull-right "
                                                                                                 onClick={() => {
+                                                                                                    //  added validation popup  msg                                                                
+                                                                                                    props.handleBlur();
+                                                                                                    if(props.errors &&  Object.keys(props.errors).length != 0)
+                                                                                                    this.props.commonActions.fillManDatoryDetails();
                                                                                                     this.setState({ createMore: false }, () => {
                                                                                                         props.handleSubmit()
                                                                                                     })
@@ -3486,6 +3559,10 @@ existForAccountNumber = (value) => {
                                                                                               </Button>
                                                    
                                                    <Button type="button" color="primary" className="btn-square mr-5 pull-right" onClick={() => {
+                                                                        //  added validation popup  msg                                                                
+																		props.handleBlur();
+																		if(props.errors &&  Object.keys(props.errors).length != 0)
+																		this.props.commonActions.fillManDatoryDetails();
                                                        this.setState({ createMore: false }, () => {
                                                            props.handleSubmit()
                                                        })

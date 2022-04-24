@@ -126,6 +126,7 @@ class CreateQuotation extends React.Component {
 					unitTypeId:''
 				},
 			],
+			discountEnabled: false,
 			idCount: 0,
 			checked:false,
 			initValue: {
@@ -378,6 +379,7 @@ class CreateQuotation extends React.Component {
 				name={`lineItemsString.${idx}.quantity`}
 				render={({ field, form }) => (
 					<div>
+						<div class="input-group">
 						<Input
 							type="text"
 							min="0"
@@ -396,8 +398,7 @@ class CreateQuotation extends React.Component {
 								}
 							}}
 							placeholder={strings.Quantity}
-							className={`form-control 
-            ${
+							className={`form-control w-50${ 
 							props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
@@ -409,6 +410,9 @@ class CreateQuotation extends React.Component {
 								: ''
 						}`}
 						/>
+						 {row['productId'] != '' ? 
+						<Input value={row['unitType'] }  disabled/> : ''}
+						</div>
 						{props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
@@ -439,6 +443,7 @@ class CreateQuotation extends React.Component {
 			<Field
 				name={`lineItemsString.${idx}.unitPrice`}
 				render={({ field, form }) => (
+					<>
 					<Input
 					type="text"
 					min="0"
@@ -470,6 +475,19 @@ class CreateQuotation extends React.Component {
 								: ''
 						}`}
 					/>
+						{props.errors.lineItemsString &&
+                    props.errors.lineItemsString[parseInt(idx, 10)] &&
+                    props.errors.lineItemsString[parseInt(idx, 10)].unitPrice &&
+                    Object.keys(props.touched).length > 0 &&
+					props.touched.lineItemsString &&
+                    props.touched.lineItemsString[parseInt(idx, 10)] &&
+                    props.touched.lineItemsString[parseInt(idx, 10)].unitPrice &&
+                    (
+                   <div className='invalid-feedback'>
+                   {props.errors.lineItemsString[parseInt(idx, 10)].unitPrice}
+                   </div>
+                     )}
+                   </>
 				)}
 			/>
 		);
@@ -588,7 +606,6 @@ class CreateQuotation extends React.Component {
 											tmpSupplier_list,
 											'Customer Name',
 									  ).find((option)=>option.value==res.data.customerId)
-debugger
 									this.formRef.current.setFieldValue('customerId', customer, true);
 									this.formRef.current.setFieldValue('placeOfSupplyId', res.data.placeOfSupplyId, true);
 									const { data } = this.state;
@@ -604,6 +621,7 @@ debugger
 									this.setState({
 										idCount,
 									});
+									this.addRow();
 								} else {
 									this.setState({
 										idCount: 0,
@@ -891,8 +909,8 @@ discountType = (row) =>
 			<Field
 				name={`lineItemsString.${idx}.vatCategoryId`}
 				render={({ field, form }) => (
+					<>
 					<Select
-						styles={customStyles}
 						options={
 							vat_list
 								? selectOptionsFactory.renderOptions(
@@ -933,6 +951,19 @@ discountType = (row) =>
 								: ''
 						}`}
 					/>
+					{props.errors.lineItemsString &&
+                    props.errors.lineItemsString[parseInt(idx, 10)] &&
+                    props.errors.lineItemsString[parseInt(idx, 10)].vatCategoryId &&
+                    Object.keys(props.touched).length > 0 &&
+					props.touched.lineItemsString &&
+                    props.touched.lineItemsString[parseInt(idx, 10)] &&
+                    props.touched.lineItemsString[parseInt(idx, 10)].vatCategoryId &&
+                    (
+                   <div className='invalid-feedback'>
+                   {props.errors.lineItemsString[parseInt(idx, 10)].vatCategoryId}
+                   </div>
+                     )}
+                   </>
 				)}
 			/>
 		);
@@ -1012,8 +1043,8 @@ discountType = (row) =>
 			<Field
 				name={`lineItemsString.${idx}.productId`}
 				render={({ field, form }) => (
+					<>
 					<Select
-						styles={customStyles}
 						options={
 							product_list
 								? optionFactory.renderOptions(
@@ -1073,6 +1104,42 @@ discountType = (row) =>
 								: ''
 						}`}
 					/>
+					{props.errors.lineItemsString &&
+                    props.errors.lineItemsString[parseInt(idx, 10)] &&
+                    props.errors.lineItemsString[parseInt(idx, 10)].productId &&
+                    Object.keys(props.touched).length > 0 &&
+					props.touched.lineItemsString &&
+                    props.touched.lineItemsString[parseInt(idx, 10)] &&
+                    props.touched.lineItemsString[parseInt(idx, 10)].productId &&
+                    (
+                   <div className='invalid-feedback'>
+                   {props.errors.lineItemsString[parseInt(idx, 10)].productId}
+                   </div>
+                     )}
+					  {row['productId'] != '' ? 
+						   <div className='mt-1'>
+						   <Input
+						type="text"
+						maxLength="250"
+						value={row['description'] !== '' ? row['description'] : ''}
+						onChange={(e) => {
+							this.selectItem(e.target.value, row, 'description', form, field);
+						}}
+						placeholder={strings.Description}
+						className={`form-control ${
+							props.errors.lineItemsString &&
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)].description &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)].description
+								? 'is-invalid'
+								: ''
+						}`}
+					/>
+						   </div> : ''}
+                   </>
 				)}
 			/>
 		);
@@ -1122,7 +1189,7 @@ discountType = (row) =>
 	};
 
 	renderActions = (cell, rows, props) => {
-		return (
+		return rows['productId'] != '' ? 
 			<Button
 				size="sm"
 				className="btn-twitter btn-brand icon mt-1"
@@ -1132,8 +1199,7 @@ discountType = (row) =>
 				}}
 			>
 				<i className="fas fa-trash"></i>
-			</Button>
-		);
+			</Button>: ''
 	};
 
 	checkedRow = () => {
@@ -1203,16 +1269,16 @@ discountType = (row) =>
 					 net_value =
 						((+obj.unitPrice -
 							(+((obj.unitPrice * obj.discount)) / 100)) * obj.quantity);
-					var discount =  obj.unitPrice - net_value
+					var discount =  (obj.unitPrice* obj.quantity) - net_value
 				if(obj.exciseTaxId !=  0){
 					if(obj.exciseTaxId === 1){
 						const value = +(net_value) / 2 ;
 							net_value = parseFloat(net_value) + parseFloat(value) ;
-							obj.exciseAmount = parseFloat(value) * obj.quantity;
+							obj.exciseAmount = parseFloat(value);
 						}else if (obj.exciseTaxId === 2){
 							const value = net_value;
 							net_value = parseFloat(net_value) +  parseFloat(value) ;
-							obj.exciseAmount = parseFloat(value) * obj.quantity;
+							obj.exciseAmount = parseFloat(value);
 						}
 						else{
 							net_value = obj.unitPrice
@@ -1222,20 +1288,20 @@ discountType = (row) =>
 					obj.exciseAmount = 0
 				}
 					var vat_amount =
-					((+net_value  * vat * obj.quantity) / 100);
+					((+net_value  * vat ) / 100);
 				}else{
 					 net_value =
 						((obj.unitPrice * obj.quantity) - obj.discount)
-					var discount =  obj.unitPrice - net_value
+					var discount =  (obj.unitPrice* obj.quantity) - net_value
 						if(obj.exciseTaxId !=  0){
 							if(obj.exciseTaxId === 1){
 								const value = +(net_value) / 2 ;
 									net_value = parseFloat(net_value) + parseFloat(value) ;
-									obj.exciseAmount = parseFloat(value) * obj.quantity;
+									obj.exciseAmount = parseFloat(value);
 								}else if (obj.exciseTaxId === 2){
 									const value = net_value;
 									net_value = parseFloat(net_value) +  parseFloat(value) ;
-									obj.exciseAmount = parseFloat(value) * obj.quantity;
+									obj.exciseAmount = parseFloat(value);
 								}
 								else{
 									net_value = obj.unitPrice
@@ -1245,7 +1311,7 @@ discountType = (row) =>
 							obj.exciseAmount = 0
 						}
 						var vat_amount =
-						((+net_value  * vat * obj.quantity) / 100);
+						((+net_value  * vat ) / 100);
 			}
 
 			}
@@ -1352,7 +1418,7 @@ discountType = (row) =>
 				initValue: {
 					...this.state.initValue,
 					...{
-						total_net:  total_net,
+						total_net:  total_net - total_excise,
 						invoiceVATAmount: total_vat,
 						discount:  discount_total ? discount_total : 0,
 						totalAmount:  total ,
@@ -1436,9 +1502,16 @@ discountType = (row) =>
 									quantity: 1,
 									unitPrice: '',
 									vatCategoryId: '',
+									exciseTaxId:'',
+									discountType: 'FIXED',
+									exciseAmount:'',
+									discount: 0,
 									subTotal: 0,
+									vatAmount:0,
 									productId: '',
-								
+									isExciseTaxExclusive: '',
+									unitType:'',
+									unitTypeId:''
 								},
 							],
 							initValue: {
@@ -1451,11 +1524,34 @@ discountType = (row) =>
 									discount: 0,
 									discountPercentage: '',
 								},
+
 							},
 						},
 						() => {
 							resetForm(this.state.initValue);
+							this.setState({data: [
+								{
+									id: 0,
+									description: '',
+									quantity: 1,
+									unitPrice: '',
+									vatCategoryId: '',
+									exciseTaxId:'',
+									discountType: 'FIXED',
+									exciseAmount:'',
+									discount: 0,
+									subTotal: 0,
+									vatAmount:0,
+									productId: '',
+									isExciseTaxExclusive: '',
+									unitType:'',
+									unitTypeId:''
+								},
+							],
+						loading:false
+						})
 							this.getInvoiceNo();
+							if(	this.formRef.current && this.state.data)
 							this.formRef.current.setFieldValue(
 								'lineItemsString',
 								this.state.data,
@@ -1838,21 +1934,21 @@ discountType = (row) =>
 																			}
 																		},
 																	),
-																// unitPrice: Yup.string()
-																// 	.required('Value is Required')
-																// 	.test(
-																// 		'Unit Price',
-																// 		'Unit Price Should be Greater than 1',
-																// 		(value) => {
-																// 			if (value > 0) {
-																// 				return true;
-																// 			} else {
-																// 				return false;
-																// 			}
-																// 		},
-																// 	),
+																unitPrice: Yup.string()
+																	.required('Value is Required')
+																	.test(
+																		'Unit Price',
+																		'Unit Price Should be Greater than 1',
+																		(value) => {
+																			if (value > 0) {
+																				return true;
+																			} else {
+																				return false;
+																			}
+																		},
+																	),
 																vatCategoryId: Yup.string().required(
-																	'Value is Required',
+ 																	'Vat is Required',
 																),
 																productId: Yup.string().required(
 																	'Product is Required',
@@ -2209,7 +2305,7 @@ discountType = (row) =>
 														<hr style={{display: props.values.exchangeRate === 1 ? 'none' : ''}} />
 														<Row>
 															<Col lg={8} className="mb-3">
-																<Button
+																{/* <Button
 																	color="primary"
 																	className={`btn-square mr-3 ${
 																		this.checkedRow() ? `disabled-cursor` : ``
@@ -2223,7 +2319,7 @@ discountType = (row) =>
 																	disabled={this.checkedRow() ? true : false}
 																>
 																	<i className="fa fa-plus"></i>{' '}{strings.Addmore} 
-																</Button>
+																</Button> */}
 																<Button
 																	color="primary"
 																	className= "btn-square mr-3"
@@ -2238,8 +2334,8 @@ discountType = (row) =>
 
 																<Col  >
 																{this.state.taxType === false ?
-																	<span style={{ color: "#0069d9" }} className='mr-4'><b>Exclusive</b></span> :
-																	<span className='mr-4'>Exclusive</span>}
+																	<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Exclusive}</b></span> :
+																	<span className='mr-4'>{strings.Exclusive}</span>}
 																<Switch
 																	value={props.values.taxType}
 																	checked={this.state.taxType}
@@ -2268,8 +2364,8 @@ discountType = (row) =>
 																	className="react-switch "
 																/>
 																{this.state.taxType === true ?
-																	<span style={{ color: "#0069d9" }} className='ml-4'><b>Inclusive</b></span>
-																	: <span className='ml-4'>Inclusive</span>
+																	<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.Inclusive}</b></span>
+																	: <span className='ml-4'>{strings.Inclusive}</span>
 																}
 															</Col>
 														</Row>
@@ -2298,14 +2394,14 @@ discountType = (row) =>
 																	className="invoice-create-table"
 																>
 																	<TableHeaderColumn
-																		width="5%"
+																		width="4%"
 																		dataAlign="center"
 																		dataFormat={(cell, rows) =>
 																			this.renderActions(cell, rows, props)
 																		}
 																	></TableHeaderColumn>
 																	<TableHeaderColumn
-																	width="20%"
+																	width="17%"
 																		dataField="product"
 																		dataFormat={(cell, rows) =>
 																			this.renderProduct(cell, rows, props)
@@ -2337,7 +2433,7 @@ discountType = (row) =>
 																	>
 																		{strings.QUANTITY}
 																	</TableHeaderColumn>
-																	<TableHeaderColumn
+																	{/* <TableHeaderColumn
 																			width="5%"
 																			dataField="unitType"
 																     	>{strings.Unit}	<i
@@ -2348,7 +2444,7 @@ discountType = (row) =>
 																		 target="unitTooltip"
 																	 >
 																		Units / Measurements</UncontrolledTooltip>
-																		</TableHeaderColumn>
+																		</TableHeaderColumn> */}
 																	<TableHeaderColumn
 																		dataField="unitPrice"
 																		dataFormat={(cell, rows) =>
@@ -2368,6 +2464,7 @@ discountType = (row) =>
 																			service
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn>
+																	{initValue.total_excise != 0 &&
 																	<TableHeaderColumn
 																	width="10%"
 																		dataField="exciseTaxId"
@@ -2375,7 +2472,7 @@ discountType = (row) =>
 																			this.renderExcise(cell, rows, props)
 																		}
 																	>
-																	Excise
+																{strings.Excises}
 																	<i
 																			id="ExiseTooltip"
 																			className="fa fa-question-circle ml-1"
@@ -2387,7 +2484,8 @@ discountType = (row) =>
 																			If Exise Type for a product is Inclusive
 																			then the Excise dropdown will be Disabled
 																		</UncontrolledTooltip>
-																	</TableHeaderColumn> 
+																	</TableHeaderColumn>  }
+																	{this.state.discountEnabled == true &&
 																	<TableHeaderColumn
 																		width="12%"
 																		dataField="discount"
@@ -2395,9 +2493,10 @@ discountType = (row) =>
 																			this.renderDiscount(cell, rows, props)
 																		}
 																	>
-																	DisCount
-																	</TableHeaderColumn>
+																	{strings.DisCount}
+																	</TableHeaderColumn>}
 																	<TableHeaderColumn
+																		width="13%"
 																		dataField="vat"
 																		dataFormat={(cell, rows) =>
 																			this.renderVat(cell, rows, props)
@@ -2413,7 +2512,7 @@ discountType = (row) =>
 																	columnClassName="text-right"
 																	formatExtraData={universal_currency_list}
 																	>
-																	Vat amount
+																{strings.VATAMOUNT}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="sub_total"
@@ -2427,6 +2526,24 @@ discountType = (row) =>
 																</BootstrapTable>
 															</Col>
 														</Row>
+														<Row className="ml-4 ">
+															<Col className=" ml-4">
+																<FormGroup className='pull-right'>
+																<Input
+																	type="checkbox"
+																	id="discountEnabled"
+																	checked={this.state.discountEnabled}
+																	onChange={(option) => {
+																		if(initValue.discount > 0){
+																			this.setState({ discountEnabled: true })
+																		}else{
+																		this.setState({ discountEnabled: !this.state.discountEnabled })}
+																	}}
+																/>
+																<Label>Apply Discount</Label>
+																</FormGroup>
+															</Col>
+														</Row>
 														<hr />
 														{this.state.data.length > 0 ? (
 															<Row>
@@ -2435,11 +2552,12 @@ discountType = (row) =>
 																		<Label htmlFor="notes">{strings.Notes}</Label>
 																		<Input
 																			type="textarea"
+																			style={{width: "700px"}}
 																			maxLength="250"
 																			name="notes"
 																			id="notes"
-																			rows="6"
-																			placeholder={strings.Notes}
+																			rows="2"
+																			placeholder={strings.DeliveryNotes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
 																			}
@@ -2451,12 +2569,13 @@ discountType = (row) =>
 
 																<Col lg={4}>
 																	<div className="">
+																	{initValue.total_excise > 0 ?
 																	<div className="total-item p-2" >
 																	{/* style={{display:this.state.checked === true ? '':'none'}} */}
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
-																					Total Excise
+																					{strings.Total_Excise}
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-right">
@@ -2467,7 +2586,8 @@ discountType = (row) =>
 																					</label>
 																				</Col>
 																			</Row>
-																		</div>
+																		</div> : ''}
+																		{this.state.discountEnabled == true ?
 																		<div className="total-item p-2">
 																			<Row>
 																				<Col lg={6}>
@@ -2495,7 +2615,7 @@ discountType = (row) =>
 																					</label>
 																				</Col>
 																			</Row>
-																		</div>
+																		</div>: ''}
 																		<div className="total-item p-2">
 																			<Row>
 																				<Col lg={6}>
@@ -2603,6 +2723,10 @@ discountType = (row) =>
 																			if(this.state.data.length === 1)
 																				{
 																				console.log(props.errors,"ERRORs")
+																				//	added validation popup	msg
+																			props.handleBlur();
+																			if(props.errors &&  Object.keys(props.errors).length != 0)
+																			this.props.commonActions.fillManDatoryDetails();
 																				}
 																				else
 																				{ let newData=[]
@@ -2624,7 +2748,7 @@ discountType = (row) =>
 																			? 'Creating...'
 																			: strings.Create }
 																	</Button>
-																	<Button
+																	{this.props.location.state &&	this.props.location.state.parentId ?"":<Button
 																		type="button"
 																		color="primary"
 																		className="btn-square mr-3"
@@ -2633,6 +2757,10 @@ discountType = (row) =>
 																			if(this.state.data.length === 1)
 																			{
 																			console.log(props.errors,"ERRORs")
+																			//	added validation popup	msg
+																			props.handleBlur();
+																			if(props.errors &&  Object.keys(props.errors).length != 0)
+																			this.props.commonActions.fillManDatoryDetails();
 																			}
 																			else
 																			{ let newData=[]
@@ -2653,7 +2781,7 @@ discountType = (row) =>
 																		{this.state.disabled
 																			? 'Creating...'
 																			: strings.CreateandMore }
-																	</Button>
+																	</Button>}
 																	<Button
 																		type="button"
 																		color="secondary"

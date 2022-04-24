@@ -461,9 +461,37 @@ class VatReturnsReport extends React.Component {
 																			{this.state.data[
 																				'totalAmountForAbuDhabi'
 																			] ? (
+																				<p 	onClick={() => {
+																					this.props.history.push('/admin/report/vatreports/vatreturnsubreports',{
+																						boxNo:"1a",
+																						description:"Box 1a - Standard rated supplies in Abu Dhabi",
+																						startDate:this.props.location.state.startDate,
+																						endDate:this.props.location.state.endDate,
+																						placeOfSupplyId:1
+																					});
+																				}}>
 																		<Currency
 																			value={this.state.data[
 																				'totalAmountForAbuDhabi'
+																			]}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/></p>
+																	) : (
+																		'0.00'
+																	)}
+																</td>
+																<td className="pt-0 pb-0 " style={{ textAlign: 'right' }}>
+																			{this.state.data[
+																				'totalVatForAbuDhabi'
+																			] ? (
+																		<Currency
+																			value={this.state.data[
+																				'totalVatForAbuDhabi'
 																			]}
 																			currencySymbol={
 																				universal_currency_list[0]
@@ -477,13 +505,113 @@ class VatReturnsReport extends React.Component {
 																	)}
 																</td>
 																<td className="pt-0 pb-0 " style={{ textAlign: 'right' }}>
+																			{/* {this.state.data[
+																				'totalVatForDubai'
+																			]} */}
+																			0.00
+																</td>
+															</tr>
+															
+
+																{/* Dubai */}
+																<tr className="mainLable">
+																<td className="mainLable ">1b</td>
+																<td className="pt-0 pb-0">Standard rated supplies in Dubai</td>
+																<td className="pt-0 pb-0 " style={{ textAlign: 'right' }}>
 																			{this.state.data[
-																				'totalVatForAbuDhabi'
+																				'totalAmountForDubai'
+																			] ? (
+																				<p 	onClick={() => {
+																					this.props.history.push('/admin/report/vatreports/vatreturnsubreports',{
+																						description:"Box 1b - Standard rated supplies in Dubai",
+																						startDate:this.props.location.state.startDate,
+																						endDate:this.props.location.state.endDate,
+																						placeOfSupplyId:2
+																					});
+																				}}>
+																					
+																		<Currency
+																	
+																			value={this.state.data[
+																				'totalAmountForDubai'
+																			] }
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/></p>
+																	) : (
+																		'0.00'
+																	)}
+																</td>
+																<td className="pt-0 pb-0 " style={{ textAlign: 'right' }}>
+																			{this.state.data[
+																				'totalVatForDubai'
 																			] ? (
 																		<Currency
 																			value={this.state.data[
-																				'totalVatForAbuDhabi'
-																			]}
+																				'totalVatForDubai'
+																			] }
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		'0.00'
+																	)}
+																</td>
+																<td className="pt-0 pb-0 " style={{ textAlign: 'right' }}>
+																			{/* {this.state.data[
+																				'totalVatForDubai'
+																			]} */}
+																			0.00
+																</td>
+															</tr>
+
+																{/* Sharjah */}
+																<tr className="mainLable">
+																<td className="mainLable ">1c</td>
+																<td className="pt-0 pb-0">Standard rated supplies in Sharjah</td>
+																<td className="pt-0 pb-0 " style={{ textAlign: 'right' }}>
+																				{this.state.data[
+																				'totalAmountForSharjah'
+																			] ? (
+																				<p 	onClick={() => {
+																					this.props.history.push('/admin/report/vatreports/vatreturnsubreports',{
+																						description:"Box 1c - Standard rated supplies in Sharjah",
+																						startDate:this.props.location.state.startDate,
+																						endDate:this.props.location.state.endDate,
+																						placeOfSupplyId:3
+																					});
+																				}}>
+																		<Currency
+																			value={this.state.data[
+																				'totalAmountForSharjah'
+																			] }
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/></p>
+																	) : (
+																		'0.00'
+																	)}
+																</td>
+																<td className="pt-0 pb-0 " style={{ textAlign: 'right' }}>
+																				{this.state.data[
+																				'totalVatForSharjah'
+																			] ? (
+																		<Currency
+																			value={this.state.data[
+																				'totalVatForSharjah'
+																			] }
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -505,12 +633,21 @@ class VatReturnsReport extends React.Component {
 
 																{/* Ajman */}
 																<tr className="mainLable">
-																<td className="mainLable">1b</td>
+																<td className="mainLable">1d</td>
 																<td className="pt-0 pb-0">Standard rated supplies in Ajman</td>
 																<td className="pt-0 pb-0 " style={{ textAlign: 'right' }}>
 																			{this.state.data[
 																				'totalAmountForAjman'
 																			] ? (
+																				<p 	onClick={() => {
+																					this.props.history.push('/admin/report/vatreports/vatreturnsubreports',{
+																						boxNo:"1d",
+																						description:"Box 1d - Standard rated supplies in Ajman",
+																						startDate:this.props.location.state.startDate,
+																						endDate:this.props.location.state.endDate,
+																						placeOfSupplyId:4
+																					});
+																				}}>
 																		<Currency
 																			value={this.state.data[
 																				'totalAmountForAjman'
@@ -521,7 +658,7 @@ class VatReturnsReport extends React.Component {
 																							.currencyIsoCode
 																					: 'USD'
 																			}
-																		/>
+																		/></p>
 																	) : (
 																		'0.00'
 																	)}
@@ -553,17 +690,25 @@ class VatReturnsReport extends React.Component {
 																</td>
 															</tr>
 
-																{/* Dubai */}
-																<tr className="mainLable">
-																<td className="mainLable ">1c</td>
-																<td className="pt-0 pb-0">Standard rated supplies in Dubai</td>
+															{/* Abu Dhabi */}
+															<tr className="mainLable">
+																<td className="mainLable ">1e</td>
+																<td className="pt-0 pb-0">Standard rated supplies in Umm Al Quwain</td>
 																<td className="pt-0 pb-0 " style={{ textAlign: 'right' }}>
 																			{this.state.data[
-																				'totalAmountForDubai'
+																				'totalAmountForUmmAlQuwain'
 																			] ? (
+																				<p 	onClick={() => {
+																					this.props.history.push('/admin/report/vatreports/vatreturnsubreports',{
+																						description:"Box 1e - Standard rated supplies in Umm Al Quwain",
+																						startDate:this.props.location.state.startDate,
+																						endDate:this.props.location.state.endDate,
+																						placeOfSupplyId:5
+																					});
+																				}}>
 																		<Currency
 																			value={this.state.data[
-																				'totalAmountForDubai'
+																				'totalAmountForUmmAlQuwain'
 																			] }
 																			currencySymbol={
 																				universal_currency_list[0]
@@ -571,68 +716,18 @@ class VatReturnsReport extends React.Component {
 																							.currencyIsoCode
 																					: 'USD'
 																			}
-																		/>
+																		/></p>
 																	) : (
 																		'0.00'
 																	)}
 																</td>
 																<td className="pt-0 pb-0 " style={{ textAlign: 'right' }}>
 																			{this.state.data[
-																				'totalVatForDubai'
+																				'totalVatForUmmAlQuwain'
 																			] ? (
 																		<Currency
 																			value={this.state.data[
-																				'totalVatForDubai'
-																			] }
-																			currencySymbol={
-																				universal_currency_list[0]
-																					? universal_currency_list[0]
-																							.currencyIsoCode
-																					: 'USD'
-																			}
-																		/>
-																	) : (
-																		'0.00'
-																	)}
-																</td>
-																<td className="pt-0 pb-0 " style={{ textAlign: 'right' }}>
-																			{/* {this.state.data[
-																				'totalVatForDubai'
-																			]} */}
-																			0.00
-																</td>
-															</tr>
-
-																{/* Fujairah */}
-																<tr className="mainLable">
-																<td className="mainLable ">1d</td>
-																<td className="pt-0 pb-0">Standard rated supplies in Fujairah</td>
-																<td className="pt-0 pb-0 " style={{ textAlign: 'right' }}>
-																			{this.state.data[
-																				'totalAmountForFujairah'
-																			] ? (
-																		<Currency
-																			value={this.state.data[
-																				'totalAmountForFujairah'
-																			] }
-																			currencySymbol={
-																				universal_currency_list[0]
-																					? universal_currency_list[0]
-																							.currencyIsoCode
-																					: 'USD'
-																			}
-																		/>
-																	) : (
-																		'0.00'
-																	)}
-																</td>
-																<td className="pt-0 pb-0 " style={{ textAlign: 'right' }}>
-																			{this.state.data[
-																				'totalVatForFujairah'
-																			] ? (
-																		<Currency
-																			value={this.state.data[
-																				'totalVatForFujairah'
+																				'totalVatForUmmAlQuwain'
 																			] }
 																			currencySymbol={
 																				universal_currency_list[0]
@@ -655,12 +750,20 @@ class VatReturnsReport extends React.Component {
 
 																{/* RasAlKhaimah */}
 																<tr className="mainLable">
-																<td className="mainLable ">1e</td>
+																<td className="mainLable ">1f</td>
 																<td className="pt-0 pb-0">Standard rated supplies in Ras Al Khaimah</td>
 																<td className="pt-0 pb-0 " style={{ textAlign: 'right' }}>
 																				{this.state.data[
 																				'totalAmountForRasAlKhalmah'
 																			] ? (
+																				<p 	onClick={() => {
+																					this.props.history.push('/admin/report/vatreports/vatreturnsubreports',{
+																						description:"Box 1f - Standard rated supplies in Ras Al Khaimah",
+																						startDate:this.props.location.state.startDate,
+																						endDate:this.props.location.state.endDate,
+																						placeOfSupplyId:6
+																					});
+																				}}>
 																		<Currency
 																			value={this.state.data[
 																				'totalAmountForRasAlKhalmah'
@@ -671,7 +774,7 @@ class VatReturnsReport extends React.Component {
 																							.currencyIsoCode
 																					: 'USD'
 																			}
-																		/>
+																		/></p>
 																	) : (
 																		'0.00'
 																	)}
@@ -704,17 +807,26 @@ class VatReturnsReport extends React.Component {
 																</td>
 															</tr>
 
-																{/* Sharjah */}
+																{/* Fujairah */}
 																<tr className="mainLable">
-																<td className="mainLable ">1f</td>
-																<td className="pt-0 pb-0">Standard rated supplies in Sharjah</td>
+																<td className="mainLable ">1g</td>
+																<td className="pt-0 pb-0">Standard rated supplies in Fujairah</td>
 																<td className="pt-0 pb-0 " style={{ textAlign: 'right' }}>
-																				{this.state.data[
-																				'totalAmountForSharjah'
+																			{this.state.data[
+																				'totalAmountForFujairah'
 																			] ? (
+																				<p 	onClick={() => {
+																					this.props.history.push('/admin/report/vatreports/vatreturnsubreports',{
+																						description:"Box 1g - Standard rated supplies in Fujairah",
+																						startDate:this.props.location.state.startDate,
+																						endDate:this.props.location.state.endDate,
+																						placeOfSupplyId:7
+																					});
+																				}}>
 																		<Currency
+																		
 																			value={this.state.data[
-																				'totalAmountForSharjah'
+																				'totalAmountForFujairah'
 																			] }
 																			currencySymbol={
 																				universal_currency_list[0]
@@ -722,18 +834,18 @@ class VatReturnsReport extends React.Component {
 																							.currencyIsoCode
 																					: 'USD'
 																			}
-																		/>
+																		/></p>
 																	) : (
 																		'0.00'
 																	)}
 																</td>
 																<td className="pt-0 pb-0 " style={{ textAlign: 'right' }}>
-																				{this.state.data[
-																				'totalVatForSharjah'
+																			{this.state.data[
+																				'totalVatForFujairah'
 																			] ? (
 																		<Currency
 																			value={this.state.data[
-																				'totalVatForSharjah'
+																				'totalVatForFujairah'
 																			] }
 																			currencySymbol={
 																				universal_currency_list[0]
@@ -754,55 +866,11 @@ class VatReturnsReport extends React.Component {
 																</td>
 															</tr>
 
-																{/* Abu Dhabi */}
-																<tr className="mainLable">
-																<td className="mainLable ">1g</td>
-																<td className="pt-0 pb-0">Standard rated supplies in Umm Al Quwain</td>
-																<td className="pt-0 pb-0 " style={{ textAlign: 'right' }}>
-																			{this.state.data[
-																				'totalAmountForUmmAlQuwain'
-																			] ? (
-																		<Currency
-																			value={this.state.data[
-																				'totalAmountForUmmAlQuwain'
-																			] }
-																			currencySymbol={
-																				universal_currency_list[0]
-																					? universal_currency_list[0]
-																							.currencyIsoCode
-																					: 'USD'
-																			}
-																		/>
-																	) : (
-																		'0.00'
-																	)}
-																</td>
-																<td className="pt-0 pb-0 " style={{ textAlign: 'right' }}>
-																			{this.state.data[
-																				'totalVatForUmmAlQuwain'
-																			] ? (
-																		<Currency
-																			value={this.state.data[
-																				'totalVatForUmmAlQuwain'
-																			] }
-																			currencySymbol={
-																				universal_currency_list[0]
-																					? universal_currency_list[0]
-																							.currencyIsoCode
-																					: 'USD'
-																			}
-																		/>
-																	) : (
-																		'0.00'
-																	)}
-																</td>
-																<td className="pt-0 pb-0 " style={{ textAlign: 'right' }}>
-																			{/* {this.state.data[
-																				'totalVatForDubai'
-																			]} */}
-																			0.00
-																</td>
-															</tr>
+															
+
+															
+
+																
 																<tr className="mainLable">
 																<td className="mainLable ">2</td>
 																<td className="pt-0 pb-0">Tax refunds provided to tourists under the tax refunds for tourists scheme</td>
@@ -832,7 +900,14 @@ class VatReturnsReport extends React.Component {
 																<td className="pt-0 pb-0 " style={{ textAlign: 'right' }}>
 																{this.state.data[
 																				'reverseChargeProvisionsTotalAmount'
-																			] ? (
+																			] ? (<p 	onClick={() => {
+																				this.props.history.push('/admin/report/vatreports/vatreturnsubreports',{
+																					description:"Box 3 - Supplies subject to the reverse charge provisions",
+																					startDate:this.props.location.state.startDate,
+																					endDate:this.props.location.state.endDate,
+																					placeOfSupplyId:8
+																				});
+																			}}>
 																		<Currency
 																			value={this.state.data[
 																				'reverseChargeProvisionsTotalAmount'
@@ -843,7 +918,7 @@ class VatReturnsReport extends React.Component {
 																							.currencyIsoCode
 																					: 'USD'
 																			}
-																		/>
+																		/></p>
 																	) : (
 																		'0.00'
 																	)}
@@ -883,6 +958,14 @@ class VatReturnsReport extends React.Component {
 																{this.state.data[
 																				'zeroRatedSupplies'
 																			] ? (
+																				<p 	onClick={() => {
+																					this.props.history.push('/admin/report/vatreports/vatreturnsubreports',{
+																						description:"Box 4 - Zero rated supplies",
+																						startDate:this.props.location.state.startDate,
+																						endDate:this.props.location.state.endDate,
+																						placeOfSupplyId:9
+																					});
+																				}}>
 																		<Currency
 																			value={this.state.data[
 																				'zeroRatedSupplies'
@@ -893,7 +976,7 @@ class VatReturnsReport extends React.Component {
 																							.currencyIsoCode
 																					: 'USD'
 																			}
-																		/>
+																		/></p>
 																	) : (
 																		'0.00'
 																	)}
@@ -918,6 +1001,14 @@ class VatReturnsReport extends React.Component {
 																{this.state.data[
 																				'exemptSupplies'
 																			] ? (
+																				<p 	onClick={() => {
+																					this.props.history.push('/admin/report/vatreports/vatreturnsubreports',{
+																						description:"Box 5 - Exempt supplies",
+																						startDate:this.props.location.state.startDate,
+																						endDate:this.props.location.state.endDate,
+																						placeOfSupplyId:10
+																					});
+																				}}>
 																		<Currency
 																			value={this.state.data[
 																				'exemptSupplies'
@@ -928,7 +1019,7 @@ class VatReturnsReport extends React.Component {
 																							.currencyIsoCode
 																					: 'USD'
 																			}
-																		/>
+																		/></p>
 																	) : (
 																		'0.00'
 																	)}
@@ -1055,6 +1146,14 @@ class VatReturnsReport extends React.Component {
 																			{this.state.data[
 																				'standardRatedExpensesTotalAmount'
 																			] ? (
+																				<p 	onClick={() => {
+																					this.props.history.push('/admin/report/vatreports/vatreturnsubreports',{
+																						description:"Box 9 - Standard rated expenses",
+																						startDate:this.props.location.state.startDate,
+																						endDate:this.props.location.state.endDate,
+																						placeOfSupplyId:11
+																					});
+																				}}>
 																		<Currency
 																			value={this.state.data[
 																				'standardRatedExpensesTotalAmount'
@@ -1065,7 +1164,7 @@ class VatReturnsReport extends React.Component {
 																							.currencyIsoCode
 																					: 'USD'
 																			}
-																		/>
+																		/></p>
 																	) : (
 																		'0.00'
 																	)}
@@ -1105,6 +1204,14 @@ class VatReturnsReport extends React.Component {
 																			{this.state.data[
 																				'reverseChargeProvisionsTotalAmount'
 																			] ? (
+																				<p 	onClick={() => {
+																					this.props.history.push('/admin/report/vatreports/vatreturnsubreports',{
+																						description:"Box 10 - Supplies subject to the reverse charge provisions",
+																						startDate:this.props.location.state.startDate,
+																						endDate:this.props.location.state.endDate,
+																						placeOfSupplyId:8
+																																										});
+																				}}>
 																		<Currency
 																			value={this.state.data[
 																				'reverseChargeProvisionsTotalAmount'
@@ -1115,7 +1222,7 @@ class VatReturnsReport extends React.Component {
 																							.currencyIsoCode
 																					: 'USD'
 																			}
-																		/>
+																		/></p>
 																	) : (
 																		'0.00'
 																	)}

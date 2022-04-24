@@ -349,6 +349,10 @@ class CreateChartAccount extends React.Component {
 																className="btn-square mr-3"
 																disabled={this.state.disabled}
 																onClick={() => {
+																	//  added validation popup  msg                                                                
+																	props.handleBlur();
+																	if(props.errors &&  Object.keys(props.errors).length != 0)
+																	this.props.commonActions.fillManDatoryDetails();
 																	this.setState({ createMore: false });
 																	props.handleSubmit();
 																}}
@@ -363,6 +367,10 @@ class CreateChartAccount extends React.Component {
 																className="btn-square mr-3"
 																disabled={this.state.disabled}
 																onClick={() => {
+																		//  added validation popup  msg                                                                
+																		props.handleBlur();
+																		if(props.errors &&  Object.keys(props.errors).length != 0)
+																		this.props.commonActions.fillManDatoryDetails();
 																	this.setState({ createMore: true });
 																	props.handleSubmit();
 																}}

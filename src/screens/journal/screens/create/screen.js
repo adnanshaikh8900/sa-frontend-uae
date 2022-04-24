@@ -905,7 +905,7 @@ class CreateJournal extends React.Component {
 																		name="description"
 																		id="description"
 																		rows="5"
-																		placeholder={strings.Notes}
+																		placeholder={strings.DeliveryNotes}
 																		value={props.values.description || ''}
 																		onChange={(value) => {
 																			props.handleChange('description')(value);
@@ -1197,6 +1197,10 @@ class CreateJournal extends React.Component {
 																		className="btn-square mr-3"
 																		disabled={this.state.disabled}
 																		onClick={() => {
+																				//  added validation popup  msg                                                                
+																				props.handleBlur();
+																				if(props.errors &&  Object.keys(props.errors).length != 0)
+																				this.props.commonActions.fillManDatoryDetails();
 																			this.setState(
 																				{
 																					createMore: false,
@@ -1218,6 +1222,10 @@ class CreateJournal extends React.Component {
 																		color="primary"
 																		className="btn-square mr-3"
 																		onClick={() => {
+																				//  added validation popup  msg                                                                
+																				props.handleBlur();
+																				if(props.errors &&  Object.keys(props.errors).length != 0)
+																				this.props.commonActions.fillManDatoryDetails();
 																			this.setState(
 																				{
 																					createMore: true,

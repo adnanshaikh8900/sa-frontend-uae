@@ -1433,7 +1433,7 @@ class DetailExpense extends React.Component {
 																<Col></Col>
 																	<Col >
 																	<FormGroup>
-																				<span className='mr-4'>Inclusive Vat</span>
+																				<span className='mr-4'>Inclusive VAT</span>
 																				<Switch
 																					checked={ this.state.exclusiveVat}
 																					onChange={() => {
@@ -1451,7 +1451,7 @@ class DetailExpense extends React.Component {
 																					height={20}
 																					width={48}
 																					className="react-switch "																					/>
-																					<span  className='ml-4'>Exclusive Vat</span>
+																					<span  className='ml-4'>Exclusive VAT</span>
 
 																		</FormGroup>
 																		{/* <FormGroup className="mb-3">
@@ -1646,14 +1646,14 @@ class DetailExpense extends React.Component {
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="receiptNumber">
-																					 {strings.ReceiptNumber}
+																					 {strings.ReferenceNumber}
 																				</Label>
 																				<Input
 																					type="text"
 																					id="receiptNumber"
 																					name="receiptNumber"
 																					maxLength="100"
-																					placeholder={strings.Enter+strings.ReceiptNumber}
+																					placeholder={strings.ReceiptNumber}
 																					onChange={(option) =>
 																						props.handleChange('receiptNumber')(
 																							option,
@@ -1800,6 +1800,13 @@ class DetailExpense extends React.Component {
 																			color="primary"
 																			className="btn-square mr-3"
 																			disabled={this.state.disabled}
+																			onClick={() => {
+																				//	added validation popup	msg
+																				props.handleBlur();
+																				if(props.errors &&  Object.keys(props.errors).length != 0)
+																				this.props.commonActions.fillManDatoryDetails()
+																			}}
+														
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
 																			{this.state.disabled

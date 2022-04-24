@@ -722,14 +722,14 @@ class RecordSupplierPayment extends React.Component {
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="referenceCode">
-																					{strings.ReceiptNumber}
+																					{strings.ReferenceNumber}
 																				</Label>
 																				<Input
 																					type="text"
 																					maxLength="100"
 																					id="referenceCode"
 																					name="referenceCode"
-																					placeholder={strings.Enter+strings.ReceiptNumber}
+																					placeholder={strings.ReceiptNumber}
 																					onChange={(option) => {
 																						if (
 																							option.target.value === '' ||
@@ -757,7 +757,7 @@ class RecordSupplierPayment extends React.Component {
 																					name="notes"
 																					id="notes"
 																					rows="5"
-																					placeholder={strings.Notes}
+																					placeholder={strings.DeliveryNotes}
 																					onChange={(option) =>
 																						props.handleChange('notes')(option)
 																					}
@@ -863,6 +863,13 @@ class RecordSupplierPayment extends React.Component {
 																			color="primary"
 																			className="btn-square mr-3"
 																			disabled={this.state.disabled}
+																			onClick={() => {
+																				//	added validation popup	msg
+																				props.handleBlur();
+																				if(props.errors &&  Object.keys(props.errors).length != 0)
+																				this.props.commonActions.fillManDatoryDetails();
+
+																		}}
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
 																			{this.state.disabled

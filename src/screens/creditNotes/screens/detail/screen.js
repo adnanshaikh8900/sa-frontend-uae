@@ -764,7 +764,7 @@ class DetailCreditNote extends React.Component {
 							   ? 'is-invalid'
 							   : ''
 					   }`}
-	type="text"
+
 	/>
 	<div class="dropdown open input-group-append">
 	
@@ -2309,7 +2309,7 @@ min="0"
 																			name="notes"
 																			id="notes"
 																			rows="6"
-																			placeholder={strings.Notes}
+																			placeholder={strings.DeliveryNotes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
 																			}
@@ -2320,7 +2320,7 @@ min="0"
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="receiptNumber">
-																					 {strings.ReceiptNumber}
+																					 {strings.ReferenceNumber}
 																				</Label>
 																				<Input
 																					type="text"
@@ -2743,6 +2743,14 @@ min="0"
 																			color="primary"
 																			className="btn-square mr-3"
 																			disabled={this.state.disabled}
+																			onClick={() => {
+																				//	added validation popup	msg
+																				props.handleBlur();
+																				if(props.errors &&  Object.keys(props.errors).length != 0)
+																				this.props.commonActions.fillManDatoryDetails();
+
+																			
+																		}}
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{this.state.disabled
 																			? 'Updating...'

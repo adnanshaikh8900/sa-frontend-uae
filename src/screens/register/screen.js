@@ -231,7 +231,11 @@ class Register extends React.Component {
 		toast.success('Please check your email to set your password', {
 			position: toast.POSITION.TOP_RIGHT,
 			autoClose:15000,});
-		{this.setState({ loading:true, loadingMsg:"Registering Company...Please check your email to set your password"})} 
+			
+		{this.setState({ loading:true, 
+			loadingMsg:"Registering Company," ,
+		    NextloadingMsg:"Please check your email to set your password" })} 
+	
 		this.props.authActions
 			.register(formData)
 			.then((res) => {
@@ -274,12 +278,12 @@ class Register extends React.Component {
 			}),
 		};
 	
-		const { initValue, currencyList, userDetail, timezone,country_list ,loading,loadingMsg} = this.state;
+		const { initValue, currencyList, userDetail, timezone,country_list ,loading,loadingMsg,NextloadingMsg} = this.state;
 		const {universal_currency_list,state_list,company_type_list} = this.props;
 		console.log(company_type_list)
 
 		return (
-			loading ==true? <Loader loadingMsg={loadingMsg}/> :
+			loading ==true? <Loader loadingMsg={loadingMsg} NextloadingMsg={NextloadingMsg}/> :
 			<div>
 			<div className="log-in-screen">
 				<ToastContainer

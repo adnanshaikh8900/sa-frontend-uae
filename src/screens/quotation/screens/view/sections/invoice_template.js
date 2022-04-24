@@ -40,16 +40,19 @@ class RFQTemplate extends Component {
 	renderQuotationStatus = (status) => {
 		let classname = '';
 		if (status === 'Approved') {
-			classname = 'label-approved';
+			classname = 'label-success';
 		} else if (status === 'Draft') {
 			classname = 'label-draft';
 		} else if (status === 'Closed') {
 			classname = 'label-closed';
 		}else if (status === 'Sent') {
 			classname = 'label-sent';
+		}else if (status === 'Invoiced') {
+			classname = 'label-primary';
 		} else {
 			classname = 'label-overdue';
 		}
+		
 		return (
 			<span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>
 				{status}
@@ -164,13 +167,13 @@ class RFQTemplate extends Component {
 											? companyData.company.companyName
 											: ''}</b></h4>
 								<h4 className="mb-1 ml-2">{QuotationData.quotationNumber}</h4><br/>
-								<h6 className="mb-1 ml-2"><b>Quotation For,</b></h6>
-						<div className="mb-1 ml-2"><b>Name : </b>{QuotationData.organisationName ? QuotationData.organisationName : QuotationData.customerName}</div>
+								<h6 className="mb-1 ml-2"><b>{strings.Quotation_For}</b></h6>
+						<div className="mb-1 ml-2"><b>{strings.Name} : </b>{QuotationData.organisationName ? QuotationData.organisationName : QuotationData.customerName}</div>
 						{contactData && contactData.addressLine1 &&(<div className="mb-1 ml-2"><b>{strings.BillingAddress} : </b> {contactData.addressLine1}</div>)}
 								{contactData && contactData.postZipCode &&(	<div className="mb-1 ml-2"><b>{strings.PinCode} : </b> {contactData.postZipCode}</div>)}
 								{contactData&&contactData.billingStateName&&(<div className="mb-1 ml-2"><b>{strings.StateRegion} : </b> {contactData.billingStateName}</div>)}
 								{contactData && contactData.billingCountryName &&(<div className="mb-1 ml-2"><b>{strings.Country} : </b> {contactData.billingCountryName}</div>)}
-								<h6 className="mb-1 ml-2"><b>TRN : </b>{QuotationData.vatRegistrationNumber}</h6>
+								<h6 className="mb-1 ml-2"><b>{strings.TRN} : </b>{QuotationData.vatRegistrationNumber}</h6>
 								{contactData&&contactData.mobileNumber&&(<div className="mb-1 ml-2"><b>{strings.MobileNumber} : </b>+{contactData.mobileNumber}</div>)}
 													<span className="mb-1 ml-2"><b>{strings.Status} : </b> {this.renderQuotationStatus(QuotationData.status)}</span>
 
@@ -218,7 +221,7 @@ class RFQTemplate extends Component {
 								<h6
 								style={{textAlign: 'center'}}
 								className={'mt-3 mb-2'}
-								>	<b>Created Date : </b>{' '}
+								>	<b>{strings.Created_Date} : </b>{' '}
 								{moment(QuotationData.createdDate).format(
 									'DD MMM YYYY',
 								)}
@@ -406,7 +409,7 @@ class RFQTemplate extends Component {
 
 										<tr>
 											<td style={{ width: '40%' }}>
-												<strong>Total Net</strong>
+												<strong>{strings.TotalNet}</strong>
 											</td>
 											<td
 												style={{

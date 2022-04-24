@@ -200,7 +200,9 @@ import {
 	GenerateAuditFile,
 	ViewFtaAuditReport,
 	ExciseTaxAuditReport,
-	ViewFtaExciseAuditReport
+	ViewFtaExciseAuditReport,
+	SubReports,
+	NotesSettings
 } from 'screens';
 
 const adminRoutes = [
@@ -759,6 +761,11 @@ const adminRoutes = [
 		component: VatPaymentRecord.screen,
 	},	
 	{
+		path: '/admin/report/vatreports/vatreturnsubreports',
+		name: 'Vat Payment History',
+		component: SubReports.screen,
+	 },
+	{
 		path: '/admin/report/vatreports/recordclaimtax',
 		name: 'Record Tax Claim',
 		component: RecordTaxClaim.screen,
@@ -1023,10 +1030,15 @@ const adminRoutes = [
 		component: User.screen,
 	},
 	{
-		path: '/admin/settings/import',
-		name: 'Migration',
-		component: Import.screen,
+		path: '/admin/settings/notesSettings',
+		name: 'SaveNoteSettings',
+		component: NotesSettings.screen,
 	},
+	{
+    		path: '/admin/settings/import',
+    		name: 'Migration',
+    		component: Import.screen,
+    },
 	{
 		path: '/admin/settings/migrate',
 		name: 'Migration',

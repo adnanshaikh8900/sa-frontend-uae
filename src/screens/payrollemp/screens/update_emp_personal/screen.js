@@ -988,6 +988,50 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                 )}
                                                                             </FormGroup>
                                                                         </Col>
+                                                                        <Col md="4">
+                                                                        <FormGroup>
+																	{/* <Label htmlFor="select">{strings.POBoxNumber}</Label> */}
+																	<Label htmlFor="POBoxNumber">
+																		<span className="text-danger"> </span>{strings.POBoxNumber}
+																	</Label>
+																	<Input
+																		type="text"
+																		minLength="3"
+																		maxLength="6"
+																		id="poBoxNumber"
+																		name="poBoxNumber"
+																		autoComplete="Off"
+																		placeholder={strings.Enter + strings.POBoxNumber}
+																		onChange={(option) => {
+																			if (
+																				option.target.value === '' ||
+																				this.regEx.test(option.target.value)
+																			) {
+																				if(option.target.value !="")
+																				this.setState({showpoBoxNumberErrorMsg:true})
+																				else
+																				this.setState({showpoBoxNumberErrorMsg:false})
+																				props.handleChange('poBoxNumber')(
+																					option,
+																				);
+																			}
+																		}}
+																		value={props.values.poBoxNumber}
+																		className={
+																			props.errors.poBoxNumber &&
+																				props.touched.poBoxNumber
+																				? 'is-invalid'
+																				: ''
+																		}
+																	/>
+																	{props.errors.poBoxNumber &&
+																		props.touched.poBoxNumber && (
+																			<div className="invalid-feedback">
+																				{props.errors.poBoxNumber}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
                                                                         {/* <Col>
                                                                             <Label
                                                                                 htmlFor="employeeDesignationId"
@@ -1038,9 +1082,9 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                                 </FormGroup>
                                                                               
                                                                         </Col>
-                                                                        <Col md="4">
+                                                                        <Col md="4"style={{display:props.values.countryId == 229 || props.values.countryId.value == 229 ? 'none':''}}>
                                                                             <FormGroup>
-                                                                                <Label htmlFor="city"><span className="text-danger">*</span>{strings.PinCode} </Label>
+                                                                                <Label htmlFor="city"><span className="text-danger">* </span>{strings.PinCode} </Label>
                                                                                 <Input
                                                                                                         type="text"
                                                                                                         maxLength="8"
@@ -1067,7 +1111,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                     <Row className="row-wrapper">
                                                                         <Col md="4">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="countryId"><span className="text-danger">*</span>{strings.Country}</Label>
+                                                                                <Label htmlFor="countryId"><span className="text-danger">* </span>{strings.Country}</Label>
                                                                                 <Select
                                                                               //  isDisabled
                                                                                     options={
@@ -1126,7 +1170,8 @@ class UpdateEmployeePersonal extends React.Component {
                                                                         </Col>
                                                                         <Col md="4">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="stateId"><span className="text-danger">* </span>{strings.StateRegion}</Label>
+                                                                                <Label htmlFor="stateId"><span className="text-danger">* </span>
+                                                                                {props.values.countryId.value === 229 ? strings.Emirate: strings.StateRegion}</Label>
                                                                                 <Select
 
                                                                                     options={
@@ -1159,7 +1204,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                             props.handleChange('stateId')('');
                                                                                         }
                                                                                     }}
-                                                                                    placeholder={strings.Select + strings.StateRegion}
+                                                                                    placeholder={strings.Select + props.values.countryId === 229 || props.values.countryId.value === 229 ? strings.Emirate: strings.StateRegion}
                                                                                     id="stateId"
                                                                                     name="stateId"
                                                                                     className={
@@ -1190,7 +1235,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                                         id="city"
                                                                                                         name="city"
                                                                                                         value={props.values.city}
-                                                                                                        placeholder={strings.Enter+strings.City}
+                                                                                                        placeholder={strings.Location}
 
                                                                                                         onChange={(option) => {
                                                                                                             if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('city')(option) }
@@ -1483,6 +1528,12 @@ class UpdateEmployeePersonal extends React.Component {
                                                                         color="primary"
                                                                         className="btn-square mr-3"
                                                                         disabled={this.state.disabled}
+                                                                        onClick={() => {
+                                                                            //	added validation popup	msg
+                                                                            props.handleBlur();
+                                                                            if(props.errors &&  Object.keys(props.errors).length != 0)
+                                                                            this.props.commonActions.fillManDatoryDetails();
+                                                                    }}
                                                                     >
                                                                         <i className="fa fa-dot-circle-o"></i>{' '}
                                                                         {this.state.disabled

@@ -250,6 +250,7 @@ class DetailGoodsReceivedNote extends React.Component {
 									this.setState({
 										idCount,
 									});
+									this.addRow()
 								} else {
 									this.setState({
 										idCount: 0,
@@ -453,6 +454,7 @@ class DetailGoodsReceivedNote extends React.Component {
 				name={`lineItemsString.${idx}.grnReceivedQuantity`}
 				render={({ field, form }) => (
 					<div>
+							<div class="input-group">
 						<Input
 							type="text"
 							maxLength="10"
@@ -471,7 +473,7 @@ class DetailGoodsReceivedNote extends React.Component {
 								}
 							}}
 							placeholder={strings.Quantity}
-							className={`form-control 
+							className={`form-control w-50
            						${
 												props.errors.lineItemsString &&
 												props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -486,6 +488,9 @@ class DetailGoodsReceivedNote extends React.Component {
 													: ''
 											}`}
 						/>
+						 {row['productId'] != '' ? 
+						<Input value={row['unitType'] }  disabled/> : ''}
+						</div>
 						{props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity &&
@@ -516,6 +521,7 @@ class DetailGoodsReceivedNote extends React.Component {
 				name={`lineItemsString.${idx}.quantity`}
 				render={({ field, form }) => (
 					<div>
+						<div class="input-group">
 						<Input
 						disabled
 							type="number"
@@ -534,7 +540,7 @@ min="0"
 								}
 							}}
 							placeholder={strings.Quantity}
-							className={`form-control 
+							className={`form-control w-50
            						${
 												props.errors.lineItemsString &&
 												props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -549,6 +555,9 @@ min="0"
 													: ''
 											}`}
 						/>
+						 {row['productId'] != '' ? 
+						<Input value={row['unitType'] }  disabled/> : ''}
+						</div>
 						{props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
@@ -631,12 +640,23 @@ min="0"
 	};
 	addRow = () => {
 		const data = [...this.state.data];
+		const idCount =
+		this.state.idCount?
+				this.state.idCount:
+								data.length > 0
+									? Math.max.apply(
+											Math,
+											data.map((item) => {
+												return item.id;
+											}),
+									)
+									: 0;
 		this.setState(
 			{
 				data: data.concat({
-					id: this.state.idCount + 1,
+					id:idCount + 1,
 					description: '',
-					grnReceivedQuantity:1,
+					grnReceivedQuantity:'',
 					quantity: 1,
 					unitPrice: '',
 					vatCategoryId: '',
@@ -826,8 +846,8 @@ min="0"
 			<Field
 				name={`lineItemsString.${idx}.productId`}
 				render={({ field, form }) => (
+					<>
 					<Select
-						styles={customStyles}
 						options={
 							product_list
 								? optionFactory.renderOptions(
@@ -849,7 +869,7 @@ min="0"
 							if (e && e.label !== 'Select Product') {
 								this.selectItem(e.value, row, 'productId', form, field, props);
 								this.prductValue(e.value, row, 'productId', form, field, props);
-								if(this.checkedRow()==false)
+								// if(this.checkedRow()==false)
 								this.addRow();
 							}
 						}}
@@ -865,6 +885,19 @@ min="0"
 								: ''
 						}`}
 					/>
+					{props.errors.lineItemsString &&
+                    props.errors.lineItemsString[parseInt(idx, 10)] &&
+                    props.errors.lineItemsString[parseInt(idx, 10)].productId &&
+                    Object.keys(props.touched).length > 0 &&
+					props.touched.lineItemsString &&
+                    props.touched.lineItemsString[parseInt(idx, 10)] &&
+                    props.touched.lineItemsString[parseInt(idx, 10)].productId &&
+                    (
+                   <div className='invalid-feedback'>
+                   {props.errors.lineItemsString[parseInt(idx, 10)].productId}
+                   </div>
+                     )}
+                   </>
 				)}
 			/>
 		);
@@ -882,24 +915,25 @@ min="0"
 	};
 
 	renderActions = (cell, rows, props) => {
-		return (
+		return rows['productId'] != '' ? 
 			<Button
 				size="sm"
 				className="btn-twitter btn-brand icon"
-				disabled={this.state.data.length === 1 ? true : false}
+				// disabled={this.state.data.length === 1 ? true : false}
 				onClick={(e) => {
 					this.deleteRow(e, rows, props);
 				}}
 			>
 				<i className="fas fa-trash"></i>
-			</Button>
-		);
+				</Button>: ''
+		
 	};
 
 	checkedRow = () => {
 		if (this.state.data.length > 0) {
 			let length = this.state.data.length - 1;
 			let temp = Object.values(this.state.data[`${length}`]).indexOf('');
+			debugger
 			if (temp > -1) {
 				return true;
 			} else {
@@ -1790,7 +1824,7 @@ debugger
 																		>
 																			{strings.RECEIVEDQUANTITY}
 																		</TableHeaderColumn>
-																		<TableHeaderColumn
+																		{/* <TableHeaderColumn
 																			width="5%"
 																			dataField="unitType"
 																     	>{strings.Unit}	<i
@@ -1804,7 +1838,7 @@ debugger
 																	 >
 																		Units / Measurements
 																	 </UncontrolledTooltip>
-																 </TableHeaderColumn>
+																 </TableHeaderColumn> */}
 																		<TableHeaderColumn
 																			dataField="quantity"
 																			width="10%"
@@ -1893,6 +1927,10 @@ debugger
 																				if(this.state.data.length === 1)
 																				{
 																				console.log(props.errors,"ERRORs")
+																				//	added validation popup	msg
+																				props.handleBlur();
+																				if(props.errors &&  Object.keys(props.errors).length != 0)
+																				this.props.commonActions.fillManDatoryDetails();
 																				}
 																				else
 																				{ let newData=[]

@@ -277,6 +277,7 @@ try {
 		const isActive = this.state.productActive;
 		// const exciseType = this.state.exciseType;
 		const exciseAmount=this.state.exciseAmount;
+		const exciseTaxCheck = this.state.exciseTaxCheck;
 		const unitTypeId=data['unitTypeId'];
 		let productPriceType;
 		if (data['productPriceType'].includes('SALES')) {
@@ -306,6 +307,7 @@ try {
 			transactionCategoryId,
 			productCategoryId,
 			isActive,
+			exciseTaxCheck,
 			// exciseType,
 			unitTypeId,
 			...(salesUnitPrice.length !== 0 && {
@@ -649,7 +651,7 @@ try {
 																							value,
 																						);
 																						this.setState({exciseTaxCheck:false,exciseType:false})
-																						props.handleChange('exciseTaxId')('',);
+																						props.handleChange('exciseTaxCheck')('',);
 																					}}
 																					checked={
 																						props.values.productType ===
@@ -663,7 +665,7 @@ try {
 																</Col>
 
 																<Col lg={4}>
-																<FormGroup check inline className="mb-3">
+																{this.props.isParentComponentPresent &&this.props.isParentComponentPresent ==true ?"":(		<FormGroup check inline className="mb-3">
 																	<Label className="productlabel"><span className="text-danger">* </span>{strings.Status}</Label>
 																	<div className="wrapper">
 																	<Label
@@ -721,7 +723,7 @@ try {
 																				   {strings.Inactive}
 																			</Label>
 																		</div>   
-                                                                    </FormGroup>
+                                                                    </FormGroup>)}
                                                                 </Col>
 															</Row>
 															<hr></hr>
@@ -1000,7 +1002,7 @@ try {
 																						)
 																					 {
 																						this.setState({exciseTaxCheck:false,exciseType:false})
-																						props.handleChange('exciseTaxId')(
+																						props.handleChange('exciseTaxCheck')(
 																							'',
 																						);
 																					} else {
@@ -1641,12 +1643,7 @@ try {
 																			checked={props.values.isInventoryEnabled}
 																				
 																			
-																				className={
-																					props.errors.productPriceType &&
-																					props.touched.productPriceType
-																						? 'is-invalid'
-																						: ''
-																				}
+																			
 																			/>
 																		 {strings.EnableInventory}
 																			{props.errors.productPriceType &&
@@ -1947,6 +1944,11 @@ try {
 																			className="btn-square mr-3"
 																			disabled={this.state.disabled}
 																			onClick={() => {
+																				   //	added validation popup	msg	
+																				   props.handleBlur();
+																				   if(props.errors &&  Object.keys(props.errors).length != 0)
+																				   this.props.commonActions.fillManDatoryDetails();
+																				   
 																				this.setState(
 																					{ createMore: false },
 																					() => {
@@ -1966,6 +1968,11 @@ try {
 																			className="btn-square mr-3"
 																			disabled={this.state.disabled}
 																			onClick={() => {
+																					//	added validation popup	msg
+                                                                            		props.handleBlur();
+                                                                            		if(props.errors &&  Object.keys(props.errors).length != 0)
+                                                                            		this.props.commonActions.fillManDatoryDetails();
+
 																				this.setState(
 																					{ createMore: true },
 																					() => {

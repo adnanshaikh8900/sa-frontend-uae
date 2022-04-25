@@ -1782,13 +1782,18 @@ class DetailCustomerInvoice extends React.Component {
 															if(values.shippingCity =="")  errors.shippingCity ='City is Required';
 														}
 	
-														if(this.state.showpoBoxNumberErrorMsg==true)
-													errors.poBoxNumber="Please Enter 3 To 6 Digit PO Box Number";
-
-													if (values.poBoxNumber === '') {
-														errors.poBoxNumber ='PO Box Number is Required';
-													}
-														return errors;
+														if(values.changeShippingAddress==true){
+															if (values.shippingCountryId == 229 || values.shippingCountryId.value == 229) {
+																if (values.poBoxNumber === '')
+																	errors.poBoxNumber = 'PO Box Number is Required';
+															} else {
+																if (values.shippingPostZipCode == '')
+																	errors.shippingPostZipCode = 'Postal Code is Required';
+																else
+																	if (values.shippingPostZipCode.length != 6)
+																		errors.shippingPostZipCode = "Please Enter 6 Digit Postal Zip Code"
+															}}
+															return errors;
 													}}
 													validationSchema={Yup.object().shape({
 														invoice_number: Yup.string().required(
@@ -2552,50 +2557,89 @@ class DetailCustomerInvoice extends React.Component {
 																</FormGroup>
 															</Col>
 
-															<Col md="4">
-																<FormGroup>
-																	{/* <Label htmlFor="select">{strings.POBoxNumber}</Label> */}
-																	<Label htmlFor="POBoxNumber">
-																		<span className="text-danger">* </span>{strings.POBoxNumber}
-																	</Label>
-																	<Input
-																		type="text"
-																		minLength="3"
-																		maxLength="6"
-																		id="poBoxNumber"
-																		name="poBoxNumber"
-																		autoComplete="Off"
-																		placeholder={strings.Enter + strings.POBoxNumber}
-																		onChange={(option) => {
-																			if (
-																				option.target.value === '' ||
-																				this.regEx.test(option.target.value)
-																			) {
-																				if(option.target.value.length<3)
-																				this.setState({showpoBoxNumberErrorMsg:true})
-																				else
-																				this.setState({showpoBoxNumberErrorMsg:false})
-																				props.handleChange('poBoxNumber')(
-																					option,
-																				);
-																			}
-																		}}
-																		value={props.values.poBoxNumber}
-																		className={
-																			props.errors.poBoxNumber &&
-																				props.touched.poBoxNumber
-																				? 'is-invalid'
-																				: ''
-																		}
-																	/>
-																	{props.errors.poBoxNumber &&
-																		props.touched.poBoxNumber && (
-																			<div className="invalid-feedback">
-																				{props.errors.poBoxNumber}
-																			</div>
-																		)}
-																</FormGroup>
-															</Col>
+															{props.values.shippingCountryId == 229 || props.values.shippingCountryId.value == 229 ?
+																			<Col md="4" >
+																				<FormGroup>
+																					{/* <Label htmlFor="select">{strings.POBoxNumber}</Label> */}
+																					<Label htmlFor="POBoxNumber">
+																						<span className="text-danger">* </span>{strings.POBoxNumber}
+																					</Label>
+																					<Input
+																						type="text"
+																						minLength="3"
+																						maxLength="6"
+																						id="poBoxNumber"
+																						name="poBoxNumber"
+																						autoComplete="Off"
+																						placeholder={strings.Enter + strings.POBoxNumber}
+																						onChange={(option) => {
+																							if (
+																								option.target.value === '' ||
+																								this.regEx.test(option.target.value)
+																							) {
+																								if (option.target.value.length < 3)
+																									this.setState({ showpoBoxNumberErrorMsg: true })
+																								else
+																									this.setState({ showpoBoxNumberErrorMsg: false })
+																								props.handleChange('poBoxNumber')(
+																									option,
+																								);
+																							}
+																						}}
+																						value={props.values.poBoxNumber}
+																						className={
+																							props.errors.poBoxNumber &&
+																								props.touched.poBoxNumber
+																								? 'is-invalid'
+																								: ''
+																						}
+																					/>
+																					{props.errors.poBoxNumber &&
+																						props.touched.poBoxNumber && (
+																							<div className="invalid-feedback">
+																								{props.errors.poBoxNumber}
+																							</div>
+																						)}
+																				</FormGroup>
+																			</Col>
+
+																			:
+																			<Col md="4" ><FormGroup>
+																				<Label htmlFor="PostZipCode"><span className="text-danger">* </span>{strings.PostZipCode}</Label>
+																				<Input
+																					type="text"
+																					maxLength="6"
+																					id="shippingPostZipCode"
+																					name="shippingPostZipCode"
+																					autoComplete="Off"
+																					placeholder={strings.Enter + strings.PostZipCode}
+																					onChange={(option) => {
+																						if (
+																							option.target.value === '' ||
+																							this.regEx.test(option.target.value)
+																						) {
+																							props.handleChange('shippingPostZipCode')(
+																								option,
+																							);
+																						}
+
+																					}}
+																					value={props.values.shippingPostZipCode}
+																					className={
+																						props.errors.shippingPostZipCode &&
+																							props.touched.shippingPostZipCode
+																							? 'is-invalid'
+																							: ''
+																					}
+																				/>
+																				{props.errors.shippingPostZipCode &&
+																					props.touched.shippingPostZipCode && (
+																						<div className="invalid-feedback">
+																							{props.errors.shippingPostZipCode}
+																						</div>
+																					)}
+																			</FormGroup>
+																			</Col>}
 
 															<Col md="4">
 																<FormGroup>
@@ -2989,7 +3033,7 @@ class DetailCustomerInvoice extends React.Component {
 																		this.setState({ discountEnabled: !this.state.discountEnabled })}
 																	}}
 																/>
-																<Label>Apply Discount</Label>
+																<Label>Apply Line Item Discount</Label>
 																</FormGroup>
 															</Col>
 														</Row>
@@ -3046,7 +3090,7 @@ class DetailCustomerInvoice extends React.Component {
 																					name="attachmentFile"
 																					render={({ field, form }) => (
 																						<div>
-																							<Label>{strings.RecieptAttachment}</Label>{' '}
+																							<Label>{strings.ReceiptAttachment}</Label>{' '}
 																							<br />
 																							<Button
 																								color="primary"

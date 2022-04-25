@@ -1433,7 +1433,7 @@ class DetailExpense extends React.Component {
 																<Col></Col>
 																	<Col >
 																	<FormGroup>
-																				<span className='mr-4'>Inclusive Vat</span>
+																				<span className='mr-4'>Inclusive VAT</span>
 																				<Switch
 																					checked={ this.state.exclusiveVat}
 																					onChange={() => {
@@ -1451,7 +1451,7 @@ class DetailExpense extends React.Component {
 																					height={20}
 																					width={48}
 																					className="react-switch "																					/>
-																					<span  className='ml-4'>Exclusive Vat</span>
+																					<span  className='ml-4'>Exclusive VAT</span>
 
 																		</FormGroup>
 																		{/* <FormGroup className="mb-3">

@@ -1239,7 +1239,7 @@ class CreateContact extends React.Component {
 																						}
 
 																					}}
-																					placeholder={strings.Enter + strings.City}
+																					placeholder={strings.Location}
 																					className={
 																						props.errors.billingCity && props.touched.billingCity
 																							? 'is-invalid'
@@ -1651,7 +1651,7 @@ class CreateContact extends React.Component {
 																							this.setState({ isSame: false, });
 																						}
 																					}}
-																					placeholder={strings.Enter + strings.City}
+																					placeholder={strings.Location}
 																					id="shippingCity"
 																					name="shippingCity"
 																					type="text"

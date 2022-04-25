@@ -30,6 +30,7 @@ import { ProductModal } from '../../../customer_invoice/sections';
 import { Loader, ConfirmDeleteModal,Currency } from 'components';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 
+import { TextareaAutosize } from '@material-ui/core';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
@@ -2371,22 +2372,47 @@ debugger
 															{data.length > 0 && (
 																<Row>
 																		<Col lg={8}>
-																	<FormGroup className="py-2">
-																		<Label htmlFor="notes"> {strings.Notes}</Label>
-																		<Input
+																		<FormGroup className="py-2">
+																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
+																		<TextareaAutosize
 																			type="textarea"
-																			maxLength="250"
+																			style={{width: "700px"}}
+																			className="textarea"
+																			maxLength="255"
 																			name="notes"
 																			id="notes"
-																			rows="6"
-																			placeholder={strings.Notes}
+																			rows="2"
+																			placeholder={strings.DeliveryNotes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
 																			}
 																			value={props.values.notes}
 																		/>
 																	</FormGroup>
-																
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="receiptAttachmentDescription">
+																			{strings.AttachmentDescription}
+																		</Label><br/>
+																		<TextareaAutosize
+																			type="textarea"
+																			className="textarea"
+																			maxLength="250"
+																			style={{width: "700px"}}
+																			name="receiptAttachmentDescription"
+																			id="receiptAttachmentDescription"
+																			rows="2"
+																			placeholder={strings.ReceiptAttachmentDescription}
+																			onChange={(option) =>
+																				props.handleChange(
+																					'receiptAttachmentDescription',
+																				)(option)
+																			}
+																			value={
+																				props.values
+																					.receiptAttachmentDescription
+																			}
+																		/>
+																	</FormGroup>
 																</Col>
 																	<Col lg={4}>
 																		<div className="">

@@ -32,7 +32,7 @@ import { SupplierModal } from '../../../supplier_invoice/sections/index';
 import { ProductModal } from '../../../customer_invoice/sections';
 import { InvoiceNumberModel } from '../../../customer_invoice/sections';
 
-
+import { TextareaAutosize } from '@material-ui/core';
 import * as PurchaseOrderAction from '../../../purchase_order/actions'
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -2424,22 +2424,49 @@ console.log(this.state.data)
 														{this.state.data.length > 0 ? (
 															<Row>
 																<Col lg={8}>
-																	<FormGroup className="py-2">
-																		<Label htmlFor="grnRemarks">{strings.GRNREMARKS}</Label>
-																		<Input
+																<FormGroup className="py-2">
+																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
+																		<TextareaAutosize
 																			type="textarea"
-																			maxLength="250"
-																			name="grnRemarks"
-																			id="grnRemarks"
-																			rows="6"
-																			placeholder={strings.GRNREMARKS}
+																			style={{width: "700px"}}
+																			className="textarea"
+																			maxLength="255"
+																			name="notes"
+																			id="notes"
+																			rows="2"
+																			placeholder={strings.DeliveryNotes}
 																			onChange={(option) =>
-																				props.handleChange('grnRemarks')(option)
+																				props.handleChange('notes')(option)
 																			}
-																			value={props.values.grnRemarks}
+																			value={props.values.notes}
 																		/>
 																	</FormGroup>
-																	<FormGroup className="mb-3">
+																	<Row>
+																		<Col lg={6}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="grnRemarks">
+																					{strings.GRNREMARKS}
+																				</Label>
+																				<Input
+																					type="text"
+																					maxLength="100"
+																					id="grnRemarks"
+																					name="grnRemarks"
+																					value={props.values.grnRemarks}
+																					placeholder={strings.grnRemarks}
+																					onChange={(value) => {
+																						props.handleChange('grnRemarks')(value);
+
+																					}}
+																					className={props.errors.grnRemarks && props.touched.grnRemarks ? "is-invalid" : ""}
+																				/>
+																				{props.errors.grnRemarks && props.touched.grnRemarks && (
+																					<div className="invalid-feedback">{props.errors.grnRemarks}</div>
+																				)}
+																			</FormGroup>
+																		</Col>
+																		<Col lg={6}>
+																			<FormGroup className="mb-3">
 																				<Field
 																					name="attachmentFile"
 																					render={({ field, form }) => (
@@ -2495,7 +2522,33 @@ console.log(this.state.data)
 																						</div>
 																					)}
 																			</FormGroup>
-																</Col>
+																		</Col>
+																	</Row>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="receiptAttachmentDescription">
+																			{strings.AttachmentDescription}
+																		</Label><br/>
+																		<TextareaAutosize
+																			type="textarea"
+																			className="textarea"
+																			maxLength="250"
+																			style={{width: "700px"}}
+																			name="receiptAttachmentDescription"
+																			id="receiptAttachmentDescription"
+																			rows="2"
+																			placeholder={strings.ReceiptAttachmentDescription}
+																			onChange={(option) =>
+																				props.handleChange(
+																					'receiptAttachmentDescription',
+																				)(option)
+																			}
+																			value={
+																				props.values
+																					.receiptAttachmentDescription
+																			}
+																		/>
+																	</FormGroup>
+																	</Col>
 
 															</Row>
 														) : null}

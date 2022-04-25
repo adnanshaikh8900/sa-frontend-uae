@@ -22,6 +22,7 @@ import * as Yup from 'yup';
 import * as SupplierInvoiceCreateActions from './actions';
 import * as PurchaseOrderCreateAction from './actions'
 
+import { TextareaAutosize } from '@material-ui/core';
 import * as PurchaseOrderAction from '../../actions';
 import * as RequestForQuotationDetailsAction from '../../../request_for_quotation/screens/detail/actions'
 import * as ProductActions from '../../../product/actions';
@@ -2798,16 +2799,17 @@ getrfqDetails = (e, row, props,form,field) => {
 														{this.state.data.length > 0 ? (
 															<Row>
 																<Col lg={8}>
-																	<FormGroup className="py-2">
-																		<Label htmlFor="notes">{strings.Notes}</Label>
-																		<Input
+																<FormGroup className="py-2">
+																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
+																		<TextareaAutosize
 																			type="textarea"
 																			style={{width: "700px"}}
+																			className="textarea"
 																			maxLength="255"
 																			name="notes"
 																			id="notes"
 																			rows="2"
-																			placeholder={strings.Notes}
+																			placeholder={strings.DeliveryNotes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
 																			}
@@ -2815,7 +2817,32 @@ getrfqDetails = (e, row, props,form,field) => {
 																		/>
 																	</FormGroup>
 																			
-																	<FormGroup className="mb-3">
+																	<Row>
+																		<Col lg={6}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="receiptNumber">
+																					{strings.ReferenceNumber}
+																				</Label>
+																				<Input
+																					type="text"
+																					maxLength="100"
+																					id="receiptNumber"
+																					name="receiptNumber"
+																					value={props.values.receiptNumber}
+																					placeholder={strings.ReceiptNumber}
+																					onChange={(value) => {
+																						props.handleChange('receiptNumber')(value);
+
+																					}}
+																					className={props.errors.receiptNumber && props.touched.receiptNumber ? "is-invalid" : ""}
+																				/>
+																				{props.errors.receiptNumber && props.touched.receiptNumber && (
+																					<div className="invalid-feedback">{props.errors.receiptNumber}</div>
+																				)}
+																			</FormGroup>
+																		</Col>
+																		<Col lg={6}>
+																			<FormGroup className="mb-3">
 																				<Field
 																					name="attachmentFile"
 																					render={({ field, form }) => (
@@ -2871,8 +2898,33 @@ getrfqDetails = (e, row, props,form,field) => {
 																						</div>
 																					)}
 																			</FormGroup>
-																</Col>
-
+																		</Col>
+																	</Row>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="receiptAttachmentDescription">
+																			{strings.AttachmentDescription}
+																		</Label><br/>
+																		<TextareaAutosize
+																			type="textarea"
+																			className="textarea"
+																			maxLength="250"
+																			style={{width: "700px"}}
+																			name="receiptAttachmentDescription"
+																			id="receiptAttachmentDescription"
+																			rows="2"
+																			placeholder={strings.ReceiptAttachmentDescription}
+																			onChange={(option) =>
+																				props.handleChange(
+																					'receiptAttachmentDescription',
+																				)(option)
+																			}
+																			value={
+																				props.values
+																					.receiptAttachmentDescription
+																			}
+																		/>
+																	</FormGroup>
+														</Col>
 																<Col lg={4}>
 																	<div className="">
 																	{initValue.total_excise > 0 ?	

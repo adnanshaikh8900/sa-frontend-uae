@@ -1386,7 +1386,7 @@ class CustomerInvoice extends React.Component {
 											formatExtraData={universal_currency_list}
 											className="table-header-bg"
 										>
-											{strings.Amount}
+											{strings.INVOICEAMOUNT}
 										</TableHeaderColumn>
 										{/* <TableHeaderColumn
 												dataField="dueamount"

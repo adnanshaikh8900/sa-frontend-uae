@@ -194,7 +194,7 @@ class PayrollRun extends React.Component {
 			}
 			else
 			
-				if ( userLabel === "Admin" && row.status==="Submitted") {
+				if ( (userLabel === "Admin" || userLabel === "Accountant") && row.status==="Submitted") {
 					this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
 				}else
 				if ( userLabel === "Admin" && row.status==="Approved") {
@@ -744,7 +744,7 @@ class PayrollRun extends React.Component {
 												</div>
 												<Row className="mb-4 ">
 											
-													{userForCheckApprover === "Payroll Approver" ? ""
+													{userForCheckApprover === "Payroll Approver" || userForCheckApprover === "Accountant"? ""
 														: <Col>
 														
 															<Button

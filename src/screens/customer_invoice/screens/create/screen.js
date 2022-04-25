@@ -2216,9 +2216,9 @@ if(changeShippingAddress && changeShippingAddress==true)
 														if(values.shippingStateId =="")  errors.shippingStateId ='State is Required';
 											        }
 
-													if(values.changeShippingAddress==true){
-														if(values.shippingCity =="")  errors.shippingCity ='City is Required';
-													}
+													// if(values.changeShippingAddress==true){
+													// 	if(values.shippingCity =="")  errors.shippingCity ='City is Required';
+													// }
 													
 													if(values.changeShippingAddress==true){
 														if (values.shippingCountryId == 229 || values.shippingCountryId.value == 229) {
@@ -2960,7 +2960,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 														<Row style={{display: props.values.changeShippingAddress === true ? '' : 'none'}}>
 														<Col md="4">
 																<FormGroup>
-																	<Label htmlFor="shippingCity"><span className="text-danger">* </span>{strings.City}</Label>
+																	<Label htmlFor="shippingCity"><span className="text-danger"></span>{strings.City}</Label>
 																	<Input
 																
 																		// options={city ? selectOptionsFactory.renderOptions('cityName', 'cityCode', cityRegion) : ''}
@@ -2976,7 +2976,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																				props.handleChange('shippingCity')(option);
 																			}
 																		}}
-																		placeholder={strings.Enter + strings.City}
+																		placeholder={strings.Location}
 																		id="shippingCity"
 																		name="shippingCity"
 																		type="text"
@@ -3480,7 +3480,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		this.setState({ discountEnabled: !this.state.discountEnabled })}
 																	}}
 																/>
-																<Label>Apply Discount</Label>
+																<Label>Apply Line Item Discount</Label>
 																</FormGroup>
 															</Col>
 														</Row>

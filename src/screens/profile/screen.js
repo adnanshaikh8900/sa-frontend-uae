@@ -1490,9 +1490,9 @@ class Profile extends React.Component {
 																companyStateCode: Yup.string().required(
 																	'State is Required',
 																),
-																companyCity: Yup.string().required(
-																	'City is Required',
-																),
+																// companyCity: Yup.string().required(
+																// 	'City is Required',
+																// ),
 																companyPoBoxNumber: Yup.string().required(
 																	'PO Box Number is Required',
 																),
@@ -2257,14 +2257,14 @@ class Profile extends React.Component {
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="companyCity">
-																					<span className="text-danger">*</span> {strings.City}
+																					<span className="text-danger"></span> {strings.City}
 																				</Label>
 																					<Input
 																						type="text"
 																						maxLength='100'
 																						id="companyCity"
 																						name="companyCity"
-																						placeholder={strings.Enter+strings.City}
+																						placeholder={strings.Location}
 																						value={
 																							isSame
 																								? this.state.companyAddress
@@ -2935,7 +2935,7 @@ class Profile extends React.Component {
 																						type="text"
 																						id="invoicingCity"
 																						name="invoicingCity"
-																						placeholder={strings.Enter+strings.City}
+																						placeholder={strings.Location}
 																						value={
 																							props.values.invoicingCity || ''
 																						}
@@ -3454,7 +3454,7 @@ class Profile extends React.Component {
 																						type="text"
 																						id="companyCity"
 																						name="companyCity"
-																						placeholder={strings.Enter+strings.City}
+																						placeholder={strings.Location}
 																						value={
 																							isSame
 																								? this.state.companyAddress

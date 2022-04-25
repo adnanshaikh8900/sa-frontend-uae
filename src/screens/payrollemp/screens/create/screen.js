@@ -1274,8 +1274,8 @@ existForAccountNumber = (value) => {
                                                                             .required('Country is Required') ,
                                                                             stateId: Yup.string()
                                                                             .required('State is Required') ,
-                                                                            city: Yup.string()
-                                                                            .required('City is Required') ,
+                                                                            // city: Yup.string()
+                                                                            // .required('City is Required') ,
                                                                           
                                                                             active : Yup.string()
                                                                             .required('status is Required') , 
@@ -2052,7 +2052,7 @@ existForAccountNumber = (value) => {
                                                                                             </Col>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="state"><span className="text-danger">* </span>{strings.City} </Label>
+                                                                                                    <Label htmlFor="state"><span className="text-danger"></span>{strings.City} </Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         maxLength="100"

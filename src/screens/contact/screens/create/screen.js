@@ -446,18 +446,14 @@ class CreateContact extends React.Component {
 																billingStateProvince: Yup.string().required(
 																	'State is Required',
 																),
-																billingCity: Yup.string().required(
-																	'City is Required',
-																),
+																
 																shippingCountryId: Yup.string().required(
 																	'Country is Required',
 																),
 																shippingStateId: Yup.string().required(
 																	'State is Required',
 																),
-																shippingCity: Yup.string().required(
-																	'City is Required',
-																),
+																
 															})}
 														>
 															{(props) => (
@@ -1218,7 +1214,7 @@ class CreateContact extends React.Component {
 																		</Col>
 																		<Col md="4">
 																			<FormGroup>
-																				<Label htmlFor="city"><span className="text-danger">* </span>{strings.City}</Label>
+																				<Label htmlFor="city"><span className="text-danger"></span>{strings.City}</Label>
 																				<Input
 																					id="billingCity"
 																					name="billingCity"
@@ -1634,7 +1630,7 @@ class CreateContact extends React.Component {
 																		</Col>
 																		<Col md="4">
 																			<FormGroup>
-																				<Label htmlFor="shippingCity"><span className="text-danger">* </span>{strings.City}</Label>
+																				<Label htmlFor="shippingCity"><span className="text-danger"></span>{strings.City}</Label>
 																				<Input
 																					autoComplete="Off"
 																					// options={city ? selectOptionsFactory.renderOptions('cityName', 'cityCode', cityRegion) : ''}

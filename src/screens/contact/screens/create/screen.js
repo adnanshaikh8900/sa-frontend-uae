@@ -440,18 +440,24 @@ class CreateContact extends React.Component {
 																mobileNumber: Yup.string()
 																	.required('Mobile Number is Required')
 																,
+																billingAddress: Yup.string().required(
+																	'Billing Address is Required',
+																),
 																billingcountryId: Yup.string().required(
-																	'Country is Required',
+																	'Billing Country is Required',
 																),
 																billingStateProvince: Yup.string().required(
-																	'State is Required',
+																	'Billing State is Required',
 																),
 																
+																shippingAddress: Yup.string().required(
+																	'Shipping Address is Required',
+																),
 																shippingCountryId: Yup.string().required(
-																	'Country is Required',
+																	'Shipping Country is Required',
 																),
 																shippingStateId: Yup.string().required(
-																	'State is Required',
+																	'Shipping State is Required',
 																),
 																
 															})}
@@ -1166,16 +1172,16 @@ class CreateContact extends React.Component {
 																					id="stateId"
 																					name="stateId"
 																					className={
-																						props.errors.stateId &&
-																							props.touched.stateId
+																						props.errors.billingStateProvince &&
+																							props.touched.billingStateProvince
 																							? 'is-invalid'
 																							: ''
 																					}
 																				/>
-																				{props.errors.stateId &&
-																					props.touched.stateId && (
+																				{props.errors.billingStateProvince &&
+																					props.touched.billingStateProvince && (
 																						<div className="invalid-feedback">
-																							{props.errors.stateId}
+																							{props.errors.billingStateProvince}
 																						</div>
 																					)}
 																			</FormGroup>

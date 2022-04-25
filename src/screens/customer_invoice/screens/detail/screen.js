@@ -1778,9 +1778,9 @@ class DetailCustomerInvoice extends React.Component {
 															if(values.shippingStateId =="")  errors.shippingStateId ='State is Required';
 														}
 	
-														if(values.changeShippingAddress==true){
-															if(values.shippingCity =="")  errors.shippingCity ='City is Required';
-														}
+														// if(values.changeShippingAddress==true){
+														// 	if(values.shippingCity =="")  errors.shippingCity ='City is Required';
+														// }
 	
 														if(values.changeShippingAddress==true){
 															if (values.shippingCountryId == 229 || values.shippingCountryId.value == 229) {
@@ -2522,7 +2522,7 @@ class DetailCustomerInvoice extends React.Component {
 														<Row style={{display: props.values.changeShippingAddress === true ? '' : 'none'}}>
 														<Col md="4">
 																<FormGroup>
-																	<Label htmlFor="shippingCity"><span className="text-danger">* </span>{strings.City}</Label>
+																	<Label htmlFor="shippingCity"><span className="text-danger"></span>{strings.City}</Label>
 																	<Input
 																
 																		// options={city ? selectOptionsFactory.renderOptions('cityName', 'cityCode', cityRegion) : ''}
@@ -2538,7 +2538,7 @@ class DetailCustomerInvoice extends React.Component {
 																				props.handleChange('shippingCity')(option);
 																			}
 																		}}
-																		placeholder={strings.Enter + strings.City}
+																		placeholder={strings.Location}
 																		id="shippingCity"
 																		name="shippingCity"
 																		type="text"

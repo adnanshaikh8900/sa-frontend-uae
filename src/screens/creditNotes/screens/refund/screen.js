@@ -632,6 +632,7 @@ class Refund extends React.Component {
 																		<Input
 																			type="number"
 																			max={this.state.amount}
+																			min="0"
 																			id="amount"
 																			name="amount"
 																			value={props.values.amount}

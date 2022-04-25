@@ -30,7 +30,7 @@ import { MultiSupplierProductModal } from '../../sections';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
-import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
+import { optionFactory, selectCurrencyFactory, selectOptionsFactory } from 'utils';
 
 import './style.scss';
 import moment from 'moment';
@@ -115,6 +115,7 @@ class CreateCreditNote extends React.Component {
 					unitTypeId:''
 				},
 			],
+			discountEnabled: false,
 			idCount: 0,
 			initValue: {
 				invoiceNumber:'',
@@ -180,7 +181,34 @@ class CreateCreditNote extends React.Component {
 			isCreatedWIWP:false,
 			quantityExceeded:'',
 			isCreatedWithoutInvoice:false,
-			loadingMsg:"Loading"
+			loadingMsg:"Loading",
+			vat_list:[
+				{
+					"id": 1,
+					"vat": 5,
+					"name": "STANDARD RATED TAX (5%) "
+				},
+				{
+					"id": 2,
+					"vat": 0,
+					"name": "ZERO RATED TAX (0%)"
+				},
+				{
+					"id": 3,
+					"vat": 0,
+					"name": "EXEMPT"
+				},
+				{
+					"id": 4,
+					"vat": 0,
+					"name": "OUT OF SCOPE"
+				},
+				{
+					"id": 10,
+					"vat": 0,
+					"name": "N/A"
+				}
+			]	
 		};
 
 		this.formRef = React.createRef();
@@ -289,6 +317,7 @@ class CreateCreditNote extends React.Component {
 				name={`lineItemsString.${idx}.quantity`}
 				render={({ field, form }) => (
 					<div>
+						<div class="input-group">
 						<Input
 							type="text"
 							min="0"
@@ -310,7 +339,8 @@ class CreateCreditNote extends React.Component {
 
 							}}
 							placeholder={strings.Quantity}
-							className={`form-control  ${props.errors.lineItemsString &&
+							className={`form-control w-50${ 
+									props.errors.lineItemsString &&
 									props.errors.lineItemsString[parseInt(idx, 10)] &&
 									props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
 									Object.keys(props.touched).length > 0 &&
@@ -321,6 +351,9 @@ class CreateCreditNote extends React.Component {
 									: ''
 							}`}
 						/>
+						 {row['productId'] != '' ? 
+						<Input value={row['unitType'] }  disabled/> : ''}
+						</div>
 						{props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
@@ -909,8 +942,122 @@ discountType = (row) =>
 		}));
 	};
 
+	// renderProduct = (cell, row, props) => {
+	// 	const { product_list } = this.props;
+	// 	let idx;
+	// 	this.state.data.map((obj, index) => {
+	// 		if (obj.id === row.id) {
+	// 			idx = index;
+	// 		}
+	// 		return obj;
+	// 	});
+	// 	//	if (product_list.length > 0) {
+	// 	return (
+	// 		<Field
+	// 			name={`lineItemsString.${idx}.productId`}
+	// 			render={({ field, form }) => (
+	// 				<Select
+	// 				isDisabled
+	// 					styles={customStyles}
+	// 					options={
+	// 						product_list
+	// 							? selectOptionsFactory.renderOptions(
+	// 								'name',
+	// 								'id',
+	// 								product_list,
+	// 								'Product',
+	// 							)
+	// 							: []
+	// 					}
+	// 					id="productId"
+	// 					placeholder={strings.Select+strings.Product}
+	// 					onChange={(e) => {
+	// 						if (e && e.label !== 'Select Product') {
+	// 							this.selectItem(
+	// 								e.value,
+	// 								row,
+	// 								'productId',
+	// 								form,
+	// 								field,
+	// 								props,
+	// 							);
+	// 							this.prductValue(
+	// 								e.value,
+	// 								row,
+	// 								'productId',
+	// 								form,
+	// 								field,
+	// 								props,
+	// 							);
+	// 							// this.props.creditNotesActions.getInventoryByProductId(e.value).then((response) => {
+	// 							// 	this.setState({
+	// 							// 		inventoryList: response.data
+	// 							// 	});
+	// 							// 	if (response.data.length !== 0 && response.data.length !== 1) {
+	// 							// 		this.openMultiSupplierProductModal(response);
+	// 							// 	}
+	// 							// });
+	// 						} else {
+	// 							form.setFieldValue(
+	// 								`lineItemsString.${idx}.productId`,
+	// 								e.value,
+	// 								true,
+	// 							);
+	// 							this.setState({
+	// 								data: [
+	// 									{
+	// 										id: 0,
+	// 										description: '',
+	// 										quantity: 1,
+	// 										unitPrice: '',
+	// 										vatCategoryId: '',
+	// 										subTotal: 0,
+	// 										productId: '',
+	// 									},
+	// 								],
+	// 							});
+	// 						}
+	// 					}}
+	// 					value={
+	// 						product_list && row.productId
+	// 							? selectOptionsFactory
+	// 								.renderOptions('name', 'id', product_list, 'Product')
+	// 								.find((option) => option.value === +row.productId)
+	// 							: []
+	// 					}
+	// 					className={`${props.errors.lineItemsString &&
+	// 							props.errors.lineItemsString[parseInt(idx, 10)] &&
+	// 							props.errors.lineItemsString[parseInt(idx, 10)].productId &&
+	// 							Object.keys(props.touched).length > 0 &&
+	// 							props.touched.lineItemsString &&
+	// 							props.touched.lineItemsString[parseInt(idx, 10)] &&
+	// 							props.touched.lineItemsString[parseInt(idx, 10)].productId
+	// 							? 'is-invalid'
+	// 							: ''
+	// 						}`}
+	// 				/>
+	// 			)}
+	// 		/>
+	// 	);
+	// 	// } else {
+	// 	// 	return (
+	// 	// 		<Button
+	// 	// 			type="button"
+	// 	// 			color="primary"
+	// 	// 			className="btn-square mr-3 mb-3"
+	// 	// 			onClick={(e, props) => {
+	// 	// 				this.openProductModal(props);
+	// 	// 			}}
+	// 	// 		>
+	// 	// 			<i className="fa fa-plus"></i> Add a Product
+	// 	// 		</Button>
+	// 	// 	);
+	// 	// }
+	// };
+
 	renderProduct = (cell, row, props) => {
-		const { product_list } = this.props;
+		var { product_list } = this.props;
+		product_list=product_list.filter((row)=>row.stockOnHand !=0 )
 		let idx;
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -918,94 +1065,130 @@ discountType = (row) =>
 			}
 			return obj;
 		});
-		//	if (product_list.length > 0) {
-		return (
-			<Field
-				name={`lineItemsString.${idx}.productId`}
-				render={({ field, form }) => (
-					<Select
-					isDisabled
-						styles={customStyles}
-						options={
-							product_list
-								? selectOptionsFactory.renderOptions(
-									'name',
-									'id',
-									product_list,
-									'Product',
-								)
-								: []
-						}
-						id="productId"
-						placeholder={strings.Select+strings.Product}
-						onChange={(e) => {
-							if (e && e.label !== 'Select Product') {
-								this.selectItem(
-									e.value,
-									row,
-									'productId',
-									form,
-									field,
-									props,
-								);
-								this.prductValue(
-									e.value,
-									row,
-									'productId',
-									form,
-									field,
-									props,
-								);
-								// this.props.creditNotesActions.getInventoryByProductId(e.value).then((response) => {
-								// 	this.setState({
-								// 		inventoryList: response.data
-								// 	});
-								// 	if (response.data.length !== 0 && response.data.length !== 1) {
-								// 		this.openMultiSupplierProductModal(response);
-								// 	}
-								// });
-							} else {
-								form.setFieldValue(
-									`lineItemsString.${idx}.productId`,
-									e.value,
-									true,
-								);
-								this.setState({
-									data: [
-										{
-											id: 0,
-											description: '',
-											quantity: 1,
-											unitPrice: '',
-											vatCategoryId: '',
-											subTotal: 0,
-											productId: '',
-										},
-									],
-								});
+	//	if (product_list.length > 0) {
+			return (
+				<Field
+					name={`lineItemsString.${idx}.productId`}
+					render={({ field, form }) => (
+						<>
+						<Select
+							options={
+								product_list
+									? optionFactory.renderOptions(
+											'name',
+											'id',
+											product_list,
+											'Product',
+									  )
+									: []
 							}
-						}}
-						value={
-							product_list && row.productId
-								? selectOptionsFactory
-									.renderOptions('name', 'id', product_list, 'Product')
-									.find((option) => option.value === +row.productId)
-								: []
-						}
-						className={`${props.errors.lineItemsString &&
+							id="productId"
+							placeholder={strings.Select+strings.Product}
+							onChange={(e) => {
+								if (e && e.label !== 'Select Product') {
+									this.selectItem(
+										e.value,
+										row,
+										'productId',
+										form,
+										field,
+										props,
+									);
+									this.prductValue(
+										e.value,
+										row,
+										'productId',
+										form,
+										field,
+										props,
+									);
+									this.props.customerInvoiceActions.getInventoryByProductId(e.value).then((response) => {
+										this.setState({inventoryList:response.data						
+										});
+										// if(response.data.length !== 0 && response.data.length !== 1){
+										// this.openMultiSupplierProductModal(response);}
+									});
+									if(this.checkedRow()==false)
+									   this.addRow();
+									   console.log(this.state.data,"prodlist")
+								} else {
+									form.setFieldValue(
+										`lineItemsString.${idx}.productId`,
+										e.value,
+										true,
+									);
+									this.setState({
+										data: [
+											{
+												id: 0,
+												description: '',
+												quantity: 1,
+												unitPrice: '',
+												vatCategoryId: '',
+												vatAmount:0,
+												subTotal: 0,
+												productId: '',
+											},
+										],
+									});
+								}
+							}}
+							value={
+								product_list && row.productId
+									? selectOptionsFactory
+											.renderOptions('name', 'id', product_list, 'Product')
+											.find((option) => option.value === +row.productId)
+									: []
+							}
+							className={`${
+								props.errors.lineItemsString &&
 								props.errors.lineItemsString[parseInt(idx, 10)] &&
 								props.errors.lineItemsString[parseInt(idx, 10)].productId &&
 								Object.keys(props.touched).length > 0 &&
 								props.touched.lineItemsString &&
 								props.touched.lineItemsString[parseInt(idx, 10)] &&
 								props.touched.lineItemsString[parseInt(idx, 10)].productId
+									? 'is-invalid'
+									: ''
+							}`}
+						/>
+						{props.errors.lineItemsString &&
+						props.errors.lineItemsString[parseInt(idx, 10)] &&
+						props.errors.lineItemsString[parseInt(idx, 10)].productId &&
+						Object.keys(props.touched).length > 0 &&
+						(
+					   <div className='invalid-feedback'>
+					   {props.errors.lineItemsString[parseInt(idx, 10)].productId}
+					   </div>
+						 )}
+						 {row['productId'] != '' ? 
+						   <div className='mt-1'>
+						   <Input
+						type="text"
+						maxLength="250"
+						value={row['description'] !== '' ? row['description'] : ''}
+						onChange={(e) => {
+							this.selectItem(e.target.value, row, 'description', form, field);
+						}}
+						placeholder={strings.Description}
+						className={`form-control ${
+							props.errors.lineItemsString &&
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)].description &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)].description
 								? 'is-invalid'
 								: ''
-							}`}
+						}`}
 					/>
-				)}
-			/>
-		);
+						   </div> : ''}
+					   </>
+					 
+					)}
+				/>
+			);
 		// } else {
 		// 	return (
 		// 		<Button
@@ -1033,7 +1216,7 @@ discountType = (row) =>
 	};
 
 	renderActions = (cell, rows, props) => {
-		return (
+		return rows['productId'] != '' ? 
 			<Button
 				size="sm"
 				className="btn-twitter btn-brand icon mt-1"
@@ -1043,8 +1226,7 @@ discountType = (row) =>
 				}}
 			>
 				<i className="fas fa-trash"></i>
-			</Button>
-		);
+			</Button>: ''
 	};
 
 	renderAddProduct = (cell, rows, props) => {
@@ -2564,14 +2746,14 @@ min="0"
 																			this.renderAddProduct(cell, rows, props)
 																		}
 																	></TableHeaderColumn> */}
-																	<TableHeaderColumn
+																	{/* <TableHeaderColumn
 																		dataField="description"
 																		dataFormat={(cell, rows) =>
 																			this.renderDescription(cell, rows, props)
 																		}
 																	>
 																		{strings.DESCRIPTION}
-																	</TableHeaderColumn>
+																	</TableHeaderColumn> */}
 																	<TableHeaderColumn
 																		dataField="quantity"
 																		dataFormat={(cell, rows) =>
@@ -2580,7 +2762,7 @@ min="0"
 																	>
 																		{strings.QUANTITY}
 																	</TableHeaderColumn>
-																	<TableHeaderColumn
+																	{/* <TableHeaderColumn
 																			width="5%"
 																			dataField="unitType"
 																     	>{strings.Unit}
@@ -2592,7 +2774,7 @@ min="0"
 																		 target="unitTooltip"
 																	 >
 																		Units / Measurements</UncontrolledTooltip>
-																		</TableHeaderColumn>
+																		</TableHeaderColumn> */}
 																	<TableHeaderColumn
 																		dataField="unitPrice"
 																		dataFormat={(cell, rows) =>
@@ -2612,6 +2794,7 @@ min="0"
 																			service
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn>
+																	{initValue.total_excise != 0 &&
 																	<TableHeaderColumn
 																	width="10%"
 																		dataField="exciseTaxId"
@@ -2631,7 +2814,8 @@ min="0"
 																			If Exise Type for a product is Inclusive
 																			then the Excise dropdown will be Disabled
 																		</UncontrolledTooltip>
-																	</TableHeaderColumn> 
+																	</TableHeaderColumn> }
+																	{this.state.discountEnabled == true &&
 																	<TableHeaderColumn
 																		width="12%"
 																		dataField="discount"
@@ -2640,7 +2824,7 @@ min="0"
 																		}
 																	>
 																	DisCount
-																	</TableHeaderColumn>
+																	</TableHeaderColumn>}
 																	<TableHeaderColumn
 																		dataField="vat"
 																		dataFormat={(cell, rows) =>
@@ -2671,6 +2855,24 @@ min="0"
 																</BootstrapTable>
 															</Col>
 															</Row>)}
+															<Row className="ml-4 ">
+															<Col className=" ml-4">
+																<FormGroup className='pull-right'>
+																<Input
+																	type="checkbox"
+																	id="discountEnabled"
+																	checked={this.state.discountEnabled}
+																	onChange={(option) => {
+																		if(initValue.discount > 0){
+																			this.setState({ discountEnabled: true })
+																		}else{
+																		this.setState({ discountEnabled: !this.state.discountEnabled })}
+																	}}
+																/>
+																<Label>Apply Discount</Label>
+																</FormGroup>
+															</Col>
+														</Row>
 														{this.state.data.length > 0 ? (
 															<Row>
 																<Col lg={8}>
@@ -2958,6 +3160,7 @@ min="0"
 																				</Col>
 																			</Row> */}
 																		</div>
+																		{initValue.total_excise > 0 ?
 																		<div className="total-item p-2" >
 																			<Row>
 																				<Col lg={6}>
@@ -2973,7 +3176,8 @@ min="0"
 																					</label>
 																				</Col>
 																			</Row>
-																		</div>
+																		</div>: ''}
+																		{this.state.discountEnabled == true ?
 																			<div className="total-item p-2">
 																			<Row>
 																				<Col lg={6}>
@@ -2990,7 +3194,7 @@ min="0"
 																					</label>
 																				</Col>
 																			</Row>
-																		</div>
+																		</div>: ''}
 																		
 																		<div className="total-item p-2">
 																			<Row>

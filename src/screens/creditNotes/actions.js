@@ -176,12 +176,7 @@ export const getVatList = () => {
 		return authApi(data)
 			.then((res) => {
 				if (res.status === 200) {
-					dispatch({
-						type: CUSTOMER_INVOICE.VAT_LIST,
-						payload: {
-							data: res.data,
-						},
-					});
+							return res
 				}
 			})
 			.catch((err) => {

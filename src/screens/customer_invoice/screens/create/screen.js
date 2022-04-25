@@ -2209,11 +2209,11 @@ if(changeShippingAddress && changeShippingAddress==true)
 												    }
 
 													if(values.changeShippingAddress==true){
-														if(values.shippingCountryId =="")  errors.shippingCountryId ='Country is Required';
+														if(values.shippingCountryId =="")  errors.shippingCountryId ='Shipping Country is Required';
 													}
 
 													if(values.changeShippingAddress==true){
-														if(values.shippingStateId =="")  errors.shippingStateId ='State is Required';
+														if(values.shippingStateId =="")  errors.shippingStateId ='Shipping State is Required';
 											        }
 
 													// if(values.changeShippingAddress==true){
@@ -2995,55 +2995,15 @@ if(changeShippingAddress && changeShippingAddress==true)
 																</FormGroup>
 															</Col>
 
-															{props.values.shippingCountryId == 229 || props.values.shippingCountryId.value == 229 ?
+													
 																			<Col md="4" >
 																				<FormGroup>
-																					{/* <Label htmlFor="select">{strings.POBoxNumber}</Label> */}
+																					{props.values.shippingCountryId == 229 || props.values.shippingCountryId.value == 229 ?
 																					<Label htmlFor="POBoxNumber">
 																						<span className="text-danger">* </span>{strings.POBoxNumber}
-																					</Label>
-																					<Input
-																						type="text"
-																						minLength="3"
-																						maxLength="6"
-																						id="poBoxNumber"
-																						name="poBoxNumber"
-																						autoComplete="Off"
-																						placeholder={strings.Enter + strings.POBoxNumber}
-																						onChange={(option) => {
-																							if (
-																								option.target.value === '' ||
-																								this.regEx.test(option.target.value)
-																							) {
-																								if (option.target.value.length < 3)
-																									this.setState({ showpoBoxNumberErrorMsg: true })
-																								else
-																									this.setState({ showpoBoxNumberErrorMsg: false })
-																								props.handleChange('poBoxNumber')(
-																									option,
-																								);
-																							}
-																						}}
-																						value={props.values.poBoxNumber}
-																						className={
-																							props.errors.poBoxNumber &&
-																								props.touched.poBoxNumber
-																								? 'is-invalid'
-																								: ''
+																					</Label>:
+																					<Label htmlFor="PostZipCode"><span className="text-danger">* </span>{strings.PostZipCode}</Label>
 																						}
-																					/>
-																					{props.errors.poBoxNumber &&
-																						props.touched.poBoxNumber && (
-																							<div className="invalid-feedback">
-																								{props.errors.poBoxNumber}
-																							</div>
-																						)}
-																				</FormGroup>
-																			</Col>
-
-																			:
-																			<Col md="4" ><FormGroup>
-																				<Label htmlFor="PostZipCode"><span className="text-danger">* </span>{strings.PostZipCode}</Label>
 																				<Input
 																					type="text"
 																					maxLength="6"
@@ -3077,7 +3037,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																						</div>
 																					)}
 																			</FormGroup>
-																			</Col>}
+																			</Col>
 															<Col md="4">
 																<FormGroup>
 																	<Label htmlFor="shippingTelephone">{strings.Telephone}</Label>
@@ -3111,7 +3071,6 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		)}
 																</FormGroup>
 															</Col>
-
 														</Row>
 														<Row style={{display: props.values.changeShippingAddress === true ? '' : 'none'}}>
 														<Col md="4">

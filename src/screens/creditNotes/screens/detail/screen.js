@@ -46,7 +46,7 @@ const mapStateToProps = (state) => {
 		project_list: state.customer_invoice.project_list,
 		contact_list: state.customer_invoice.contact_list,
 		currency_list: state.customer_invoice.currency_list,
-		vat_list: state.customer_invoice.vat_list,
+		// vat_list: state.customer_invoice.vat_list,
 		product_list: state.customer_invoice.product_list,
 		excise_list: state.customer_invoice.excise_list,
 		customer_list: state.customer_invoice.customer_list,
@@ -112,7 +112,34 @@ class DetailCreditNote extends React.Component {
 			basecurrency:[],
 			customer_currency: '',
 			loadingMsg:"Loading...",
-			showInvoiceNumber:false
+			showInvoiceNumber:false,
+			vat_list:[
+				{
+					"id": 1,
+					"vat": 5,
+					"name": "STANDARD RATED TAX (5%) "
+				},
+				{
+					"id": 2,
+					"vat": 0,
+					"name": "ZERO RATED TAX (0%)"
+				},
+				{
+					"id": 3,
+					"vat": 0,
+					"name": "EXEMPT"
+				},
+				{
+					"id": 4,
+					"vat": 0,
+					"name": "OUT OF SCOPE"
+				},
+				{
+					"id": 10,
+					"vat": 0,
+					"name": "N/A"
+				}
+			]	
 		};
 
 		// this.options = {
@@ -151,6 +178,9 @@ class DetailCreditNote extends React.Component {
 	}
 
 	componentDidMount = () => {
+		this.props.creditNotesActions.getVatList().then((res)=>{
+			 this.setState({vat_list:res.data})
+		});
 		this.initializeData();
 	};
 	salesCategory = () => {
@@ -201,7 +231,7 @@ class DetailCreditNote extends React.Component {
 				.then((res) => {
 					if (res.status === 200) {
 						this.getCompanyCurrency();
-						this.props.creditNotesActions.getVatList();
+						// this.props.creditNotesActions.getVatList();
 						this.props.creditNotesActions.getCustomerList(
 							this.state.contactType,
 						);
@@ -648,7 +678,8 @@ class DetailCreditNote extends React.Component {
 	};
 
 	renderVat = (cell, row, props) => {
-		const { vat_list } = this.props;
+		// const { vat_list } = this.props;
+		const { vat_list } = this.state;
 		let vatList = vat_list.length
 			? [{ id: '', vat: 'Select Vat' }, ...vat_list]
 			: vat_list;
@@ -659,7 +690,6 @@ class DetailCreditNote extends React.Component {
 			}
 			return obj;
 		});
-
 		return (
 			<Field
 				name={`lineItemsString.${idx}.vatCategoryId`}
@@ -977,18 +1007,18 @@ class DetailCreditNote extends React.Component {
 	};
 
 	updateAmount = (data, props) => {
-		const { vat_list , excise_list} = this.props;
-		const { discountPercentage, discountAmount } = this.state;
+		const { vat_list , excise_list} = this.state;
 		let total_net = 0;
 		let total_excise = 0;
 		let total = 0;
 		let total_vat = 0;
 		let net_value = 0;
 		let discount = 0;
+		debugger
 		data.map((obj) => {
 			const index =
-				obj.vatCategoryId !== ''
-					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
+			obj.vatCategoryId&&obj.vatCategoryId !== ''
+					? vat_list.findIndex((item) => item.id ==obj.vatCategoryId)
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
 
@@ -2802,7 +2832,8 @@ min="0"
 					}}
 					getCurrentProduct={(e) => this.getCurrentProduct(e)}
 					createProduct={this.props.productActions.createAndSaveProduct}
-					vat_list={this.props.vat_list}
+					// vat_list={this.props.vat_list}
+					vat_list={this.state.vat_list}
 					product_category_list={this.props.product_category_list}
 					salesCategory={this.state.salesCategory}
 					purchaseCategory={this.state.purchaseCategory}

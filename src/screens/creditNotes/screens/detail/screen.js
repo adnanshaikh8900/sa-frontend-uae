@@ -39,7 +39,7 @@ import API_ROOT_URL from '../../../../constants/config';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import Switch from "react-switch";
-
+import { TextareaAutosize } from '@material-ui/core';
 
 const mapStateToProps = (state) => {
 	return {
@@ -2302,13 +2302,15 @@ min="0"
 																<Row>
 																	<Col lg={8}>
 																	<FormGroup className="py-2">
-																		<Label htmlFor="notes">{strings.Notes}</Label>
-																		<Input
+																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
+																		<TextareaAutosize
 																			type="textarea"
-																			maxLength="250"
+																			style={{width: "700px"}}
+																			className="textarea"
+																			maxLength="255"
 																			name="notes"
 																			id="notes"
-																			rows="6"
+																			rows="2"
 																			placeholder={strings.DeliveryNotes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
@@ -2318,7 +2320,7 @@ min="0"
 																	</FormGroup>
 																	<Row>
 																		<Col lg={6}>
-																			<FormGroup className="mb-3">
+																		<FormGroup className="mb-3">
 																				<Label htmlFor="receiptNumber">
 																					 {strings.ReferenceNumber}
 																				</Label>
@@ -2422,14 +2424,16 @@ min="0"
 																	</Row>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="receiptAttachmentDescription">
-																			 {strings.AttachmentDescription}
-																		</Label>
-																		<Input
+																			{strings.AttachmentDescription}
+																		</Label><br/>
+																		<TextareaAutosize
 																			type="textarea"
+																			className="textarea"
 																			maxLength="250"
+																			style={{width: "700px"}}
 																			name="receiptAttachmentDescription"
 																			id="receiptAttachmentDescription"
-																			rows="5"
+																			rows="2"
 																			placeholder={strings.ReceiptAttachmentDescription}
 																			onChange={(option) =>
 																				props.handleChange(

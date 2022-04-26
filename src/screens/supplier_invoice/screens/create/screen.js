@@ -25,7 +25,7 @@ import * as SupplierInvoiceActions from '../../actions';
 import * as ProductActions from '../../../product/actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 import * as CustomerInvoiceActions from '../../../customer_invoice/actions';
-
+import { TextareaAutosize } from '@material-ui/core';
 import { SupplierModal } from '../../sections';
 import { ProductModal } from '../../../customer_invoice/sections';
 
@@ -3145,7 +3145,7 @@ class CreateSupplierInvoice extends React.Component {
 																		this.setState({ discountEnabled: !this.state.discountEnabled })}
 																	}}
 																/>
-																<Label>Apply Discount</Label>
+																<Label>Apply Line Item Discount</Label>
 																</FormGroup>
 															</Col>
 													
@@ -3155,13 +3155,15 @@ class CreateSupplierInvoice extends React.Component {
 															<Row>
 																<Col lg={8}>
 																	<FormGroup className="py-2">
-																		<Label htmlFor="notes">{strings.Notes}</Label>
-																		<Input
+																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
+																		<TextareaAutosize
 																			type="textarea"
-																			maxLength="250"
+																			style={{width: "700px"}}
+																			className="textarea"
+																			maxLength="255"
 																			name="notes"
 																			id="notes"
-																			rows="6"
+																			rows="2"
 																			placeholder={strings.DeliveryNotes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
@@ -3172,7 +3174,7 @@ class CreateSupplierInvoice extends React.Component {
 
 																	<Row>
 																		<Col lg={6}>
-																			<FormGroup className="mb-3">
+																		<FormGroup className="mb-3">
 																				<Label htmlFor="receiptNumber">
 																					{strings.ReferenceNumber}
 																				</Label>
@@ -3256,13 +3258,15 @@ class CreateSupplierInvoice extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="receiptAttachmentDescription">
 																			{strings.AttachmentDescription}
-																		</Label>
-																		<Input
+																		</Label><br/>
+																		<TextareaAutosize
 																			type="textarea"
+																			className="textarea"
 																			maxLength="250"
+																			style={{width: "700px"}}
 																			name="receiptAttachmentDescription"
 																			id="receiptAttachmentDescription"
-																			rows="5"
+																			rows="2"
 																			placeholder={strings.ReceiptAttachmentDescription}
 																			onChange={(option) =>
 																				props.handleChange(

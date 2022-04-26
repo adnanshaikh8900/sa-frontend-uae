@@ -39,7 +39,7 @@ import { CommonActions } from 'services/global';
 import { optionFactory, selectCurrencyFactory, selectOptionsFactory } from 'utils';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-
+import { TextareaAutosize } from '@material-ui/core';
 import './style.scss';
 import moment from 'moment';
 
@@ -167,6 +167,7 @@ class CreateQuotation extends React.Component {
 			taxType: false,
 			currentData: {},
 			contactType: 2,
+			fileName: '',
 			openCustomerModal: false,
 			openProductModal: false,
 			openInvoiceNumberModel: false,
@@ -410,7 +411,7 @@ class CreateQuotation extends React.Component {
 								: ''
 						}`}
 						/>
-						 {row['productId'] != '' ? 
+						 {row['productId'] != '' ?
 						<Input value={row['unitType'] }  disabled/> : ''}
 						</div>
 						{props.errors.lineItemsString &&
@@ -578,6 +579,8 @@ class CreateQuotation extends React.Component {
 										: '',
 								customer_taxTreatment_des : res.data.taxtreatment ? res.data.taxtreatment : '',
 								placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+								fileName: res.data.fileName ? res.data.fileName : '',
+								filePath: res.data.filePath ? res.data.filePath : '',
 								total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
 								data: res.data.poQuatationLineItemRequestModelList
 									? res.data.poQuatationLineItemRequestModelList
@@ -642,7 +645,17 @@ class CreateQuotation extends React.Component {
 				this.getCurrentUser(this.props.location.state.contactData);
 		if(this.props.location.state && this.props.location.state.parentId )
 				this.getParentInvoiceDetails(this.props.location.state.parentId);
+				this.getDefaultNotes()
 	};
+
+	getDefaultNotes=()=>{
+		this.props.commonActions.getNoteSettingsInfo().then((res)=>{
+			if(res.status===200){
+				this.formRef.current.setFieldValue('notes',res.data.defaultNotes, true);
+				this.formRef.current.setFieldValue('footNote',  res.data.defaultFootNotes, true);
+			}
+		})
+	}
 
 	getInitialData = () => {
 		this.getInvoiceNo();
@@ -1116,7 +1129,7 @@ discountType = (row) =>
                    {props.errors.lineItemsString[parseInt(idx, 10)].productId}
                    </div>
                      )}
-					  {row['productId'] != '' ? 
+					  {row['productId'] != '' ?
 						   <div className='mt-1'>
 						   <Input
 						type="text"
@@ -1189,7 +1202,7 @@ discountType = (row) =>
 	};
 
 	renderActions = (cell, rows, props) => {
-		return rows['productId'] != '' ? 
+		return rows['productId'] != '' ?
 			<Button
 				size="sm"
 				className="btn-twitter btn-brand icon mt-1"
@@ -1431,6 +1444,16 @@ discountType = (row) =>
 		);
 	};
 
+	handleFileChange = (e, props) => {
+		e.preventDefault();
+		let reader = new FileReader();
+		let file = e.target.files[0];
+		if (file) {
+			reader.onloadend = () => {};
+			reader.readAsDataURL(file);
+			props.setFieldValue('attachmentFile', file, true);
+		}
+	};
 
 	handleSubmit = (data, resetForm) => {
 		this.setState({ disabled: true });
@@ -1444,6 +1467,8 @@ discountType = (row) =>
 			discount,
 			discountType,
 			discountPercentage,
+			quotationId,
+			footNote
 		} = data;
 		const { term } = this.state;
 
@@ -1477,6 +1502,9 @@ discountType = (row) =>
 		}
 		if (placeOfSupplyId ) {
 			formData.append('placeOfSupplyId', placeOfSupplyId.value ?placeOfSupplyId.value:placeOfSupplyId);
+		}
+		if (this.uploadFile && this.uploadFile.files && this.uploadFile.files[0]) {
+			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
 		debugger
 		this.setState({ loading:true, loadingMsg:"Creating Quotation..."});
@@ -1585,16 +1613,6 @@ discountType = (row) =>
 		this.setState({ openProductModal: true });
 	};
 
-	handleFileChange = (e, props) => {
-		e.preventDefault();
-		let reader = new FileReader();
-		let file = e.target.files[0];
-		if (file) {
-			reader.onloadend = () => {};
-			reader.readAsDataURL(file);
-			props.setFieldValue('attachmentFile', file, true);
-		}
-	};
 
 	checkAmount=(discount)=>{
 		const { initValue } = this.state;
@@ -1955,9 +1973,43 @@ discountType = (row) =>
 																),
 															}),
 														),
-												}
-												)
-											}
+														attachmentFile: Yup.mixed()
+														.test(
+															'fileType',
+															'*Unsupported File Format',
+															(value) => {
+																value &&
+																	this.setState({
+																		fileName: value.name,
+																	});
+																if (
+																	!value ||
+																	(value &&
+																		this.supported_format.includes(value.type))
+																) {
+																	return true;
+																} else {
+																	return false;
+																}
+															},
+														)
+														.test(
+															'fileSize',
+															'*File Size is too large',
+															(value) => {
+																if (
+																	!value ||
+																	(value && value.size <= this.file_size)
+																) {
+																	return true;
+																} else {
+																	return false;
+																}
+															},
+														),
+												})}
+												
+												
 											>
 												{(props) => (
 													<Form onSubmit={props.handleSubmit}>
@@ -2540,7 +2592,7 @@ discountType = (row) =>
 																		this.setState({ discountEnabled: !this.state.discountEnabled })}
 																	}}
 																/>
-																<Label>Apply Discount</Label>
+																<Label>Apply Line Item Discount</Label>
 																</FormGroup>
 															</Col>
 														</Row>
@@ -2549,10 +2601,12 @@ discountType = (row) =>
 															<Row>
 																<Col lg={8}>
 																	<FormGroup className="py-2">
-																		<Label htmlFor="notes">{strings.Notes}</Label>
-																		<Input
+																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
+																		<TextareaAutosize
 																			type="textarea"
 																			style={{width: "700px"}}
+																			className="textarea"
+																	
 																			maxLength="250"
 																			name="notes"
 																			id="notes"
@@ -2562,6 +2616,113 @@ discountType = (row) =>
 																				props.handleChange('notes')(option)
 																			}
 																			value={props.values.notes}
+																		/>
+																	</FormGroup>
+																	<Row>
+																		<Col lg={6}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="receiptNumber">
+																					{strings.ReferenceNumber}
+																				</Label>
+																				<Input
+																					type="text"
+																					maxLength="100"
+																					id="receiptNumber"
+																					name="receiptNumber"
+																					value={props.values.receiptNumber}
+																					placeholder={strings.ReceiptNumber}
+																					onChange={(value) => {
+																						props.handleChange('receiptNumber')(value);
+
+																					}}
+																					className={props.errors.receiptNumber && props.touched.receiptNumber ? "is-invalid" : ""}
+																				/>
+																				{props.errors.receiptNumber && props.touched.receiptNumber && (
+																					<div className="invalid-feedback">{props.errors.receiptNumber}</div>
+																				)}
+																			</FormGroup>
+																		</Col>
+																		<Col lg={6}>
+																			<FormGroup className="mb-3">
+																				<Field
+																					name="attachmentFile"
+																					render={({ field, form }) => (
+																						<div>
+																							<Label>{strings.ReceiptAttachment}</Label>{' '}
+																							<br />
+																							<Button
+																								color="primary"
+																								onClick={() => {
+																									document
+																										.getElementById('fileInput')
+																										.click();
+																								}}
+																								className="btn-square mr-3"
+																							>
+																								<i className="fa fa-upload"></i>{' '}
+																								{strings.upload}
+																							</Button>
+																							<input
+																								id="fileInput"
+																								ref={(ref) => {
+																									this.uploadFile = ref;
+																								}}
+																								type="file"
+																								style={{ display: 'none' }}
+																								onChange={(e) => {
+																									this.handleFileChange(
+																										e,
+																										props,
+																									);
+																								}}
+																							/>
+																							{this.state.fileName && (
+																								<div>
+																									<i
+																										className="fa fa-close"
+																										onClick={() =>
+																											this.setState({
+																												fileName: '',
+																											})
+																										}
+																									></i>{' '}
+																									{this.state.fileName}
+																								</div>
+																							)}
+																						</div>
+																					)}
+																				/>
+																				{props.errors.attachmentFile &&
+																					props.touched.attachmentFile && (
+																						<div className="invalid-file">
+																							{props.errors.attachmentFile}
+																						</div>
+																					)}
+																			</FormGroup>
+																		</Col>
+																	</Row>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="receiptAttachmentDescription">
+																			{strings.AttachmentDescription}
+																		</Label><br/>
+																		<TextareaAutosize
+																			type="textarea"
+																			className="textarea"
+																			maxLength="250"
+																			style={{width: "700px"}}
+																			name="receiptAttachmentDescription"
+																			id="receiptAttachmentDescription"
+																			rows="2"
+																			placeholder={strings.ReceiptAttachmentDescription}
+																			onChange={(option) =>
+																				props.handleChange(
+																					'receiptAttachmentDescription',
+																				)(option)
+																			}
+																			value={
+																				props.values
+																					.receiptAttachmentDescription
+																			}
 																		/>
 																	</FormGroup>
 

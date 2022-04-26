@@ -38,6 +38,7 @@ import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import Switch from "react-switch";
 import { Checkbox } from '@material-ui/core';
+import { TextareaAutosize } from '@material-ui/core';
 
 const mapStateToProps = (state) => {
 	return {
@@ -594,8 +595,17 @@ discountType = (row) =>
 
 	componentDidMount = () => {
 		this.getInitialData();
+		this.getDefaultNotes()
 	};
 
+	getDefaultNotes=()=>{
+		this.props.commonActions.getNoteSettingsInfo().then((res)=>{
+			if(res.status===200){
+				this.formRef.current.setFieldValue('notes',res.data.defaultNotes, true);
+				this.formRef.current.setFieldValue('footNote',  res.data.defaultFootNotes, true);
+			}
+		})
+	}
 	getInitialData = () => {
 		this.getInvoiceNo();
 		this.props.creditNotesActions.getInvoiceListForDropdown();
@@ -2876,14 +2886,16 @@ min="0"
 														{this.state.data.length > 0 ? (
 															<Row>
 																<Col lg={8}>
-																	<FormGroup className="py-2">
-																		<Label htmlFor="notes">{strings.Notes}</Label>
-																		<Input
+																<FormGroup className="py-2">
+																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
+																		<TextareaAutosize
 																			type="textarea"
-																			maxLength="250"
+																			style={{width: "700px"}}
+																			className="textarea"
+																			maxLength="255"
 																			name="notes"
 																			id="notes"
-																			rows="6"
+																			rows="2"
 																			placeholder={strings.DeliveryNotes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
@@ -2996,14 +3008,16 @@ min="0"
 																	</Row>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="receiptAttachmentDescription">
-																			 {strings.AttachmentDescription}
-																		</Label>
-																		<Input
+																			{strings.AttachmentDescription}
+																		</Label><br/>
+																		<TextareaAutosize
 																			type="textarea"
+																			className="textarea"
 																			maxLength="250"
+																			style={{width: "700px"}}
 																			name="receiptAttachmentDescription"
 																			id="receiptAttachmentDescription"
-																			rows="5"
+																			rows="2"
 																			placeholder={strings.ReceiptAttachmentDescription}
 																			onChange={(option) =>
 																				props.handleChange(
@@ -3017,6 +3031,7 @@ min="0"
 																		/>
 																	</FormGroup>
 																</Col>
+																
 																<Col lg={4}>
 																{this.state.isCreatedWIWP===false &&(	<div className="">
 																		<div className="total-item p-2">

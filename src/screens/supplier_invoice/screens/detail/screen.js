@@ -32,7 +32,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import { optionFactory, selectCurrencyFactory, selectOptionsFactory } from 'utils';
-
+import { TextareaAutosize } from '@material-ui/core';
 import './style.scss';
 import moment from 'moment';
 import {data}  from '../../../Language/index'
@@ -2600,7 +2600,7 @@ class DetailSupplierInvoice extends React.Component {
 																		this.setState({ discountEnabled: !this.state.discountEnabled })}
 																	}}
 																/>
-																<Label>Apply Discount</Label>
+																<Label>Apply Line Item Discount</Label>
 																</FormGroup>
 															</Col>
 															</Row>
@@ -2608,14 +2608,16 @@ class DetailSupplierInvoice extends React.Component {
 															{data.length > 0 && (
 																<Row>
 																		<Col lg={8}>
-																	<FormGroup className="py-2">
-																		<Label htmlFor="notes"> {strings.Notes}</Label>
-																		<Input
+																		<FormGroup className="py-2">
+																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
+																		<TextareaAutosize
 																			type="textarea"
-																			maxLength="250"
+																			style={{width: "700px"}}
+																			className="textarea"
+																			maxLength="255"
 																			name="notes"
 																			id="notes"
-																			rows="6"
+																			rows="2"
 																			placeholder={strings.DeliveryNotes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
@@ -2713,14 +2715,16 @@ class DetailSupplierInvoice extends React.Component {
 																	</Row>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="receiptAttachmentDescription">
-																			 {strings.AttachmentDescription}
-																		</Label>
-																		<Input
+																			{strings.AttachmentDescription}
+																		</Label><br/>
+																		<TextareaAutosize
 																			type="textarea"
+																			className="textarea"
 																			maxLength="250"
+																			style={{width: "700px"}}
 																			name="receiptAttachmentDescription"
 																			id="receiptAttachmentDescription"
-																			rows="5"
+																			rows="2"
 																			placeholder={strings.ReceiptAttachmentDescription}
 																			onChange={(option) =>
 																				props.handleChange(

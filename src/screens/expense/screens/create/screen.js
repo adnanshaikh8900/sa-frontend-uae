@@ -37,6 +37,7 @@ import LocalizedStrings from 'react-localization';
 import { Checkbox } from '@material-ui/core';
 import Switch from "react-switch";
 import moment from 'moment';
+import { TextareaAutosize } from '@material-ui/core';
 const mapStateToProps = (state) => {
 	return {
 		currency_list: state.expense.currency_list,
@@ -1685,115 +1686,135 @@ min="0"
 														</Row>
 														<hr />
 														<Row>
-															<Col lg={8}>
-																<Row>
-																	<Col lg={6}>
-																		<FormGroup className="mb-3">
-																			<Label htmlFor="receiptNumber">
-																			{strings.ReferenceNumber}  
-																			</Label>
-																			<Input
+																<Col lg={8}>
+																<FormGroup className="py-2">
+																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
+																		<TextareaAutosize
+																			type="textarea"
+																			style={{width: "870px"}}
+																			className="textarea"
+																			maxLength="255"
+																			name="notes"
+																			id="notes"
+																			rows="2"
+																			placeholder={strings.DeliveryNotes}
+																			onChange={(option) =>
+																				props.handleChange('notes')(option)
+																			}
+																			value={props.values.notes}
+																		/>
+																	</FormGroup>
+																	<Row>
+																		<Col lg={6}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="receiptNumber">
+																					 {strings.ReferenceNumber}
+																				</Label>
+																				<Input
 																					type="text"
+																					maxLength="100"
 																					id="receiptNumber"
 																					name="receiptNumber"
-																					maxLength="100"
-																					placeholder={strings.ReceiptNumber}
-																					onChange={(option) =>
-																						props.handleChange('receiptNumber')(
-																							option,
-																						)
-																					}
 																					value={props.values.receiptNumber}
+																					placeholder={strings.ReceiptNumber}
+																					onChange={(value) => {
+																						props.handleChange('receiptNumber')(value);
+
+																					}}
+																					className={props.errors.receiptNumber && props.touched.receiptNumber ? "is-invalid" : " "}
 																				/>
-																		</FormGroup>
-																	</Col>
-																</Row>
-																<Row>
-																	<Col lg={12}>
-																		<FormGroup className="mb-3">
-																			<Label htmlFor="receiptAttachmentDescription">
-																			{strings.AttachmentDescription}  
-																			</Label>
-																			<Input
-																				type="textarea"
-																				maxLength="250"
-																				name="receiptAttachmentDescription"
-																				id="receiptAttachmentDescription"
-																				rows="5"
-																				placeholder={strings.ReceiptAttachmentDescription}
-																				onChange={(option) =>
-																					props.handleChange(
-																						'receiptAttachmentDescription',
-																					)(option)
-																				}
-																				value={
-																					props.values
-																						.receiptAttachmentDescription
-																				}
-																			/>
-																		</FormGroup>
-																	</Col>
-																</Row>
-															</Col>
-															<Col lg={4}>
-																<Row>
-																	<Col lg={12}>
-																		<FormGroup className="mb-3">
-																			<Field
-																				name="attachment"
-																				render={({ field, form }) => (
-																					<div>
-																						<Label>{strings.Attachment}</Label> <br />
-																						<Button
-																							color="primary"
-																							onClick={() => {
-																								document
-																									.getElementById('fileInput')
-																									.click();
-																							}}
-																							className="btn-square mr-3"
-																						>
-																							<i className="fa fa-upload"></i>{' '}
-																							{strings.upload}  
-																						</Button>
-																						<input
-																							id="fileInput"
-																							ref={(ref) => {
-																								this.uploadFile = ref;
-																							}}
-																							type="file"
-																							style={{ display: 'none' }}
-																							onChange={(e) => {
-																								this.handleFileChange(e, props);
-																							}}
-																						/>
-																						{this.state.fileName && (
-																							<div>
-																								<i
-																									className="fa fa-close"
-																									onClick={() =>
-																										this.setState({
-																											fileName: '',
-																										})
-																									}
-																								></i>{' '}
-																								{this.state.fileName}
-																							</div>
-																						)}
-																					</div>
+																				{props.errors.receiptNumber && props.touched.receiptNumber && (
+																					<div className="invalid-feedback">{props.errors.receiptNumber}</div>
 																				)}
-																			/>
-																			{props.errors.attachmentFile &&
-																				props.touched.attachmentFile && (
-																					<div className="invalid-file">
-																						{props.errors.attachmentFile}
-																					</div>
-																				)}
-																		</FormGroup>
-																	</Col>
+																			
+																			</FormGroup>
+																		</Col>
+																		<Col lg={6}>
+																			<FormGroup className="mb-3">
+																				<Field
+																					name="attachmentFile"
+																					render={({ field, form }) => (
+																						<div>
+																							<Label>{strings.ReceiptAttachment}</Label>{' '}
+																							<br />
+																							<Button
+																								color="primary"
+																								onClick={() => {
+																									document
+																										.getElementById('fileInput')
+																										.click();
+																								}}
+																								className="btn-square mr-3"
+																							>
+																								<i className="fa fa-upload"></i>{' '}
+																								{strings.upload}
+																							</Button>
+																							<input
+																								id="fileInput"
+																								ref={(ref) => {
+																									this.uploadFile = ref;
+																								}}
+																								type="file"
+																								style={{ display: 'none' }}
+																								onChange={(e) => {
+																									this.handleFileChange(
+																										e,
+																										props,
+																									);
+																								}}
+																							/>
+																							{this.state.fileName && (
+																								<div>
+																									<i
+																										className="fa fa-close"
+																										onClick={() =>
+																											this.setState({
+																												fileName: '',
+																											})
+																										}
+																									></i>{' '}
+																									{this.state.fileName}
+																								</div>
+																							)}
+																						</div>
+																					)}
+																				/>
+																				{props.errors.attachmentFile &&
+																					props.touched.attachmentFile && (
+																						<div className="invalid-file">
+																							{props.errors.attachmentFile}
+																						</div>
+																					)}
+																			</FormGroup>
+																		</Col>
+																	</Row>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="receiptAttachmentDescription">
+																			{strings.AttachmentDescription}
+																		</Label><br/>
+																		<TextareaAutosize
+																			type="textarea"
+																			className="textarea"
+																			maxLength="250"
+																			style={{width: "870px"}}
+																			name="receiptAttachmentDescription"
+																			id="receiptAttachmentDescription"
+																			rows="2"
+																			placeholder={strings.ReceiptAttachmentDescription}
+																			onChange={(option) =>
+																				props.handleChange(
+																					'receiptAttachmentDescription',
+																				)(option)
+																			}
+																			value={
+																				props.values
+																					.receiptAttachmentDescription
+																			}
+																		/>
+																	</FormGroup>
+																</Col>
 																</Row>
-															</Col>
-														</Row>
+
 														<Row>
 															<Col lg={12} className="mt-5">
 																<FormGroup className="text-right">

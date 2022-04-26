@@ -80,7 +80,6 @@ class ViewFtaAuditReport extends React.Component {
 
 		// Company Information Table
 		this.columnHeaderCompany = [
-			// { label: 'Company Name', value: 'companyName', sort: true },
 			{ label: 'Taxable Person Name En', value: 'taxablePersonNameEn', sort: false },
 			{ label: 'Taxable Person Name Ar', value: 'taxablePersonNameAr', sort: true },
 			{ label: 'Tax Registration Number',value: 'taxRegistrationNumber',sort: true},
@@ -118,7 +117,6 @@ class ViewFtaAuditReport extends React.Component {
 		// Supply Data Information
 		this.columnHeaderPurchase = [
 			{ label: 'Supplier Name', value: 'supplierName', sort: true },
-			// { label: 'Supplier Country', value: 'supplierCountry', sort: false },
 			{ label: 'Supplier TRN', value: 'supplierTRN', sort: true },
 			{ label: 'Invoice Date', value: 'invoiceDate', sort: true },
 			{ label: 'Invoice Number', value: 'invoiceNo', sort: false },
@@ -148,7 +146,6 @@ class ViewFtaAuditReport extends React.Component {
 		// Supply Data Information
 		this.columnHeaderSupply = [
 			{ label: 'Customer Name', value: 'customerName', sort: true },
-			// { label: 'Customer Country', value: 'customerCountry', sort: false },
 			{ label: 'Customer TRN', value: 'customerTRN', sort: true },
 			{ label: 'Invoice Date', value: 'invoiceDate', sort: true },
 			{ label: 'Invoice Number', value: 'invoiceNo', sort: false },
@@ -777,9 +774,6 @@ class ViewFtaAuditReport extends React.Component {
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['customerName']}
 																					</td>
-																					{/* <td style={{ width: '12%', textAlign: 'left'}}>
-																						{item['customerCountry']}
-																					</td> */}
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['customerTRN']}
 																					</td>

@@ -333,7 +333,7 @@ class CustomerInvoice extends React.Component {
 			</span>
 			{
 				row.cnCreatedOnPaidInvoice==true && (row.status=="Paid" || row.status=="Partially Paid") &&(
-					<><br/>( Credit Note Created )</>
+					<><br/>{strings.Credit_Note_Created}</>
 				)
 			}
 			</>
@@ -450,7 +450,7 @@ class CustomerInvoice extends React.Component {
 									this.postInvoice(row,true);
 								}}
 							>
-							<i class="far fa-arrow-alt-circle-right"></i>Mark As Sent
+							<i class="far fa-arrow-alt-circle-right"></i>{strings.Mark_As_Sent}
 							</DropdownItem>
 						)}
 						{row.statusEnum !== 'Sent' && row.statusEnum !== 'Paid' && row.statusEnum !== 'Partially Paid' && (
@@ -745,7 +745,7 @@ class CustomerInvoice extends React.Component {
 		const { selectedRows } = this.state;
 		const message1 = (
 			<text>
-				<b>Delete Customer Invoice?</b>
+				<b>{strings.DeleteCustomerInvoice}</b>
 			</text>
 		);
 		const message =
@@ -841,7 +841,7 @@ class CustomerInvoice extends React.Component {
 		} else {
 			const message1 = (
 				<text>
-					<b>Delete Customer Invoice?</b>
+					<b>{strings.DeleteCustomerInvoice}</b>
 				</text>
 			);
 			const message =

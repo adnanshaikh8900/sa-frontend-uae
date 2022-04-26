@@ -148,12 +148,26 @@ Quotation_For:"Devis pour,",
       ProfitLoss: "Bénéfice et perte",
 
       // Note Settings
+      Notes_Settings:"Paramètres notes",
+      CustomerInvoiceNotesSettings:"Paramètres des notes de facture client",
       Footnote: "note de bas de page",
       DefaultDeliveryNotes: "Bons de livraison par défaut",
       DefaultFootnotes: "Notes de bas de page par défaut",
       PaymentDetails: "par exemple. Détails de paiement",
 
+
+        //Credit Note
+        CreateCreditNoteWithoutInvoice:"Créer une note de crédit sans facture",
+        CreateCreditNoteWithoutProduct:"Créer une note de crédit sans produit",
+        RemainingInvoiceAmount:"Montant restant de la facture",
+        CreditAmount:"Montant du crédit",
+        TaxCreditDate:"Date du crédit d’impôt",
+
       //Customer invoice
+      SelectPlaceOfSupply:"Sélectionnez le lieu de fourniture",
+      ApplyLineItemDiscount:" Appliquer une remise sur les postes",
+      DeleteCustomerInvoice:"Supprimer la facture client ?",
+      Credit_Note_Created:"( Note de crédit créée)",
       CustomerInvoices: "Factures client",
       Overdue: "En Retard",
       DueWithinThisWeek: "Dû Cette Semaine ",

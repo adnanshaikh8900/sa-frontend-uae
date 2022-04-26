@@ -106,7 +106,7 @@ class NotesSettings extends React.Component {
 												<Col lg={12}>
 													<div className="h4 mb-0 d-flex align-items-center">
 														<i className="nav-icon fas fa-id-card-alt" />
-														<span className="ml-2">Customer Invoice Notes Settings</span>
+														<span className="ml-2">{strings.CustomerInvoiceNotesSettings}</span>
 													</div>
 												</Col>
 											</Row>

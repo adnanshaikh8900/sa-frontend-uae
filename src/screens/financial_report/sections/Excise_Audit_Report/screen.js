@@ -664,7 +664,7 @@ class ViewFtaExciseAuditReport extends React.Component {
 												</tr>
 												<tr>
 												<td><b><h5>
-												Purchase Data Information</h5></b>
+												Purchase Listing Table</h5></b>
 												</td>
 												</tr>
 												<Table>
@@ -817,7 +817,7 @@ class ViewFtaExciseAuditReport extends React.Component {
 													</tr>
 													<tr>
 													<td><b><h5>
-													Supply Data Information
+													Supply Listing Table
 													</h5></b></td>
 												</tr>
 												<Table>

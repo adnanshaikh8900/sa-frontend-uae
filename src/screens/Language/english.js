@@ -103,6 +103,10 @@ Relationship2:"Relationship 2",
       ProfitLoss: "PROFIT & LOSS",
 
       //Customer invoice
+      SelectPlaceOfSupply:"Select Place of Supply",
+      ApplyLineItemDiscount:"  Apply Line Item Discount",
+      DeleteCustomerInvoice:"Delete Customer Invoice?",
+      Credit_Note_Created:"( Credit Note Created)",
       CustomerInvoices: "Customer Invoices",
       Overdue: "Overdue",
       DueWithinThisWeek: "Due Within This Week",
@@ -208,6 +212,8 @@ Relationship2:"Relationship 2",
       ShippingAddressIsSameAsBillingAddress:"Shipping Address Is Same As Billing Address",
 
       // Note Settings
+      Notes_Settings:"Notes Settings",
+      CustomerInvoiceNotesSettings:"Customer Invoice Notes Settings",
       Footnote: "Footnote",
       DefaultDeliveryNotes: "Default Delivery Notes",
       DefaultFootnotes: "Default Footnotes",
@@ -596,6 +602,10 @@ Invoiced:"Invoiced",
 SendAgain:"Send Again",
 
 //credit notes
+CreateCreditNoteWithoutInvoice:"Create Credit Note Without Invoice",
+CreateCreditNoteWithoutProduct:"Create Credit Note Without Product",
+RemainingInvoiceAmount:"Remaining Invoice Amount",
+CreditAmount:"Credit Amount",
 CreditNotes:" Tax Credit Notes",
 CREDITNOTE:"TAX CREDIT NOTE NUMBER",
 AddCreditNote:"Add New Tax Credit Note",

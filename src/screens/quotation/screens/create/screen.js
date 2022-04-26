@@ -2592,7 +2592,7 @@ discountType = (row) =>
 																		this.setState({ discountEnabled: !this.state.discountEnabled })}
 																	}}
 																/>
-																<Label>Apply Line Item Discount</Label>
+																<Label>{strings.ApplyLineItemDiscount}</Label>
 																</FormGroup>
 															</Col>
 														</Row>

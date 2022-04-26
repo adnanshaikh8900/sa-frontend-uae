@@ -330,7 +330,7 @@ class RecordCustomerPayment extends React.Component {
 	deleteInvoice = () => {
 		const message1 =
 		<text>
-		<b>Delete Customer Invoice?</b>
+		<b>{strings.DeleteCustomerInvoice}</b>
 		</text>
 		const message = 'This Customer Invoice will be deleted permanently and cannot be recovered. ';
 		this.setState({

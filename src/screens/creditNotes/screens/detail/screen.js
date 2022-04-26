@@ -1708,7 +1708,7 @@ class DetailCreditNote extends React.Component {
 																<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="taxTreatmentid">
-																		Tax Treatment
+																				{strings.TaxTreatment}
 																	</Label>
 																	<Input
 																	disabled
@@ -2018,7 +2018,7 @@ class DetailCreditNote extends React.Component {
 																{this.props.location.state.isCNWithoutProduct==true &&(<Col  lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="creditAmount"><span className="text-danger">* </span>
-																	Credit Amount
+																	{strings.CreditAmount}
 																	</Label>
 																	<Input
 																		type="text"
@@ -2246,7 +2246,7 @@ min="0"
 																			this.renderExcise(cell, rows, props)
 																		}
 																	>
-																	Excise
+																	{strings.Excises}
 																	<i
 																			id="ExiseTooltip"
 																			className="fa fa-question-circle ml-1"
@@ -2266,7 +2266,7 @@ min="0"
 																			this.renderDiscount(cell, rows, props)
 																		}
 																	>
-																	DisCount
+																		{strings.DisCount}
 																	</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="vat"
@@ -2284,7 +2284,7 @@ min="0"
 																		columnClassName="text-right"
 																		formatExtraData={universal_currency_list}
 																		>
-																		Vat amount
+																		{strings.VATAMOUNT}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="sub_total"
@@ -2452,7 +2452,7 @@ min="0"
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
-																					Total Excise
+																					{strings.TotalExcise}
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-right">

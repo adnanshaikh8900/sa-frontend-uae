@@ -100,13 +100,25 @@ RecieptNumber:"عدد إيصال",
        ProfitLoss: "الربح والخسارة",
 
         // Note Settings
+      Notes_Settings:"إعدادات الملاحظات",
+      CustomerInvoiceNotesSettings:"إعدادات ملاحظات فاتورة العميل",
       Footnote: "هامش",
       DefaultDeliveryNotes: "ملاحظات التسليم الافتراضية",
       DefaultFootnotes: "الحواشي السفلية الافتراضية",
       PaymentDetails: "على سبيل المثال بيانات الدفع",
 
+      //Credit Note
+      CreateCreditNoteWithoutInvoice:"إنشاء مذكرة ائتمان بدون فاتورة",
+      CreateCreditNoteWithoutProduct:"إنشاء مذكرة ائتمان بدون منتج",
+      RemainingInvoiceAmount:"مبلغ الفاتورة المتبقي",
+      CreditAmount:"مبلغ الائتمان",
+      TaxCreditDate:"تاريخ الخصم الضريبي",
         //Customer invoice
-        Import:"يستورد",
+      SelectPlaceOfSupply:"اختر مكان التوريد",
+      ApplyLineItemDiscount:" تطبيق خصم بند البند",
+      DeleteCustomerInvoice:"حذف فاتورة العميل؟",
+      Credit_Note_Created:"(تم إنشاء مذكرة ائتمان)",
+      Import:"يستورد",
       CustomerInvoices: "فواتير العملاء",
       Overdue: "المتاخره",
       DueWithinThisWeek: "مستحق خلال هذا الأسبوع",

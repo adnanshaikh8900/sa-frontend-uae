@@ -1128,7 +1128,7 @@ class DetailPurchaseOrder extends React.Component {
 				if (obj.discountType === 'PERCENTAGE') {	
 					 net_value =
 						((+obj.unitPrice -
-							(+((obj.unitPrice * obj.discount)) / 100)) * obj.quantity);
+							(+((obj.unitPrice * (obj.discount ? obj.discount : 0))) / 100)) * obj.quantity);
 					var discount = (obj.unitPrice* obj.quantity)- net_value
 				if(obj.exciseTaxId !=  0){
 					if(obj.exciseTaxId === 1){
@@ -1151,7 +1151,7 @@ class DetailPurchaseOrder extends React.Component {
 					((+net_value  * vat ) / 100);
 				}else{
 					 net_value =
-						((obj.unitPrice * obj.quantity) - obj.discount)
+						((obj.unitPrice * obj.quantity) - (obj.discount ? obj.discount : 0))
 					var discount =  (obj.unitPrice* obj.quantity) - net_value
 						if(obj.exciseTaxId !=  0){
 							if(obj.exciseTaxId === 1){
@@ -1183,7 +1183,7 @@ class DetailPurchaseOrder extends React.Component {
 					//net value after removing discount
 					 net_value =
 					((+obj.unitPrice -
-						(+((obj.unitPrice * obj.discount)) / 100)) * obj.quantity);
+						(+((obj.unitPrice * (obj.discount ? obj.discount : 0))) / 100)) * obj.quantity);
 
 				//discount amount
 				var discount =  (obj.unitPrice* obj.quantity) - net_value
@@ -1219,7 +1219,7 @@ class DetailPurchaseOrder extends React.Component {
 						{
 				//net value after removing discount
 				 net_value =
-				((obj.unitPrice * obj.quantity) - obj.discount)
+				((obj.unitPrice * obj.quantity) - (obj.discount ? obj.discount : 0))
 
 
 				//discount amount
@@ -1279,7 +1279,7 @@ class DetailPurchaseOrder extends React.Component {
 					...this.state.initValue,
 					...{
 						total_net:  total_net - total_excise,
-						invoiceVATAmount: total_vat,
+						totalVatAmount: total_vat,
 						discount:  discount_total ? discount_total : 0,
 						totalAmount:  total ,
 						total_excise: total_excise

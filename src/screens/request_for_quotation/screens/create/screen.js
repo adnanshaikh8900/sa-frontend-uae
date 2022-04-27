@@ -2512,7 +2512,7 @@ class CreateRequestForQuotation extends React.Component {
 																</BootstrapTable>
 															</Col>
 														</Row>
-														<Row className="ml-4 ">
+														{/* <Row className="ml-4 ">
 														<Col className=" ml-4">
 															<FormGroup className='pull-right'>
 															<Input
@@ -2529,7 +2529,7 @@ class CreateRequestForQuotation extends React.Component {
 															<Label>Apply Line Item Discount</Label>
 															</FormGroup>
 														</Col>
-													</Row>
+													</Row> */}
 													
 														{this.state.data.length > 0 ? (
 															<Row>

@@ -324,6 +324,7 @@ class Refund extends React.Component {
 		}//
 	else
 	{	
+		formData.append('isCreatedWithoutInvoice', this.props.location.state.isCNWithoutProduct==true ?true:false);
 		formData.append('type', 7);
 		formData.append('creditNoteId', this.props.location.state.id.id);
 		formData.append('receiptNo', receiptNo !== null ? receiptNo : '');

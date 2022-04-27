@@ -1333,7 +1333,7 @@ class Profile extends React.Component {
 																							'png',
 																							'jpeg',
 																						]}
-																						maxFileSize={40000}
+																						maxFileSize={110000}
 																						withPreview={true}
 																						singleImage={true}
 																						// withIcon={this.state.showIcon}
@@ -1344,7 +1344,7 @@ class Profile extends React.Component {
 																								? { height: 'inherit' }
 																								: {}
 																						}
-																						label="'Max file size: 40kb"
+																						label="'Max file size: 100KB"
 																						labelClass={
 																							this.state.userPhoto.length > 0
 																								? 'hideLabel'
@@ -1538,7 +1538,7 @@ class Profile extends React.Component {
 																							'png',
 																							'jpeg',
 																						]}
-																						maxFileSize={40000}
+																						maxFileSize={110000}
 																						withPreview={true}
 																						singleImage={true}
 																						// withIcon={this.state.showIcon}
@@ -1549,7 +1549,7 @@ class Profile extends React.Component {
 																								? { height: 'inherit' }
 																								: {}
 																						}
-																						label="'Max file size: 40kb"
+																						label="'Max file size: 100KB"
 																						labelClass={
 																							this.state.companyLogo.length > 0
 																								? 'hideLabel'

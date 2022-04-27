@@ -1494,7 +1494,7 @@ class DetailCreditNote extends React.Component {
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
 		};
 
-	deleteInvoice = () => {
+		deleteCN = () => {
 		const message1 =
 			<text>
 			<b>Delete Tax Credit Note?</b>
@@ -1520,7 +1520,7 @@ class DetailCreditNote extends React.Component {
 		
 		{this.setState({ loading:true, loadingMsg:"Deleting Credit Note..."});
 			this.props.creditNotesDetailActions
-			.deleteInvoice(current_customer_id)
+			.deleteCN(current_customer_id)
 			.then((res) => {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
@@ -2905,7 +2905,7 @@ min="0"
 																			color="danger"
 																			className="btn-square"
 																			disabled1={this.state.disabled1}
-																			onClick={this.deleteInvoice}
+																			onClick={this.deleteCN}
 																		>
 																			<i className="fa fa-trash"></i> {' '} {this.state.disabled1
 																			? 'Deleting...'

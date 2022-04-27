@@ -1877,7 +1877,7 @@ existForAccountNumber = (value) => {
 																 <FormGroup>
 															 {/* <Label htmlFor="select">{strings.POBoxNumber}</Label> */}
 															 <Label htmlFor="POBoxNumber">
-																 <span className="text-danger">* </span>{strings.POBoxNumber}
+																 <span className="text-danger"></span>{strings.POBoxNumber}
 															 </Label>
 															 <Input
 																 type="text"

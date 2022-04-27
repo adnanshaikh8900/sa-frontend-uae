@@ -313,7 +313,7 @@ class VatTransactions extends React.Component {
 								<Col lg={12}>
 									<div className="h4 mb-0 d-flex align-items-center">
 										<i className="fas fa-exchange-alt" />
-										<span className="ml-2">{strings.Vat+" "+strings.Transaction}</span>
+										<span className="ml-2">{strings.VAT+" "+strings.Transaction}</span>
 									</div>
 								</Col>
 							</Row>
@@ -517,7 +517,7 @@ class VatTransactions extends React.Component {
 									dataField="vatType" 
 									className="table-header-bg"
 									>
-										{strings.Vat+" "+strings.Type}
+										{strings.VAT+" "+strings.Type}
 									</TableHeaderColumn>
 									<TableHeaderColumn
 									dataSort

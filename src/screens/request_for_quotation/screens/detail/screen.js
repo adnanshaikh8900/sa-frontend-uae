@@ -756,7 +756,7 @@ class DetailRequestForQuotation extends React.Component {
 	renderVat = (cell, row, props) => {
 		const { vat_list } = this.state;
 		let vatList = vat_list.length
-			? [{ id: '', vat: 'Select Vat' }, ...vat_list]
+			? [{ id: '', vat: 'Select VAT' }, ...vat_list]
 			: vat_list;
 		let idx;
 		this.state.data.map((obj, index) => {
@@ -778,14 +778,14 @@ class DetailRequestForQuotation extends React.Component {
 										'name',
 										'id',
 										vat_list,
-										'Vat',
+										'VAT',
 								  )
 								: []
 						}
 						value={
 							vat_list &&
 							selectOptionsFactory
-								.renderOptions('name', 'id', vat_list, 'Vat')
+								.renderOptions('name', 'id', vat_list, 'VAT')
 								.find((option) => option.value === +row.vatCategoryId)
 						}
 						id="vatCategoryId"
@@ -1652,7 +1652,7 @@ setDate1= (props, value) => {
 																			},
 																		),
 																	vatCategoryId: Yup.string().required(
-																		'Vat is Required',
+																		'VAT is Required',
 																	),
 																	productId: Yup.string().required(
 																		'Product is Required',
@@ -2182,7 +2182,7 @@ setDate1= (props, value) => {
 																			columnClassName="text-right"
 																			formatExtraData={universal_currency_list}
 																			>
-																			Vat amount
+																			VAT amount
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="sub_total"
@@ -2198,14 +2198,14 @@ setDate1= (props, value) => {
 															</Row>
 															{data.length > 0 && (
 																<Row>
-																		<Col lg={8}>
-																		<FormGroup className="py-2">
+																	<Col lg={8}>
+																	<FormGroup className="py-2">
 																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
 																		<TextareaAutosize
 																			type="textarea"
-																			style={{width: "700px"}}
 																			className="textarea"
-																			maxLength="255"
+																			maxLength="250"
+																			style={{width: "700px"}}
 																			name="notes"
 																			id="notes"
 																			rows="2"
@@ -2216,7 +2216,35 @@ setDate1= (props, value) => {
 																			value={props.values.notes}
 																		/>
 																	</FormGroup>
-																	{/* <FormGroup className="mb-3">
+																	<Row>
+																		<Col lg={6}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="receiptNumber">
+																				{strings.ReferenceNumber}
+																				</Label>
+																				<Input
+																					type="text"
+																					maxLength="100"
+																					id="receiptNumber"
+																					name="receiptNumber"
+																					value={props.values.receiptNumber}
+																					placeholder={strings.ReceiptNumber}
+																					onChange={(value) => {
+																						props.handleChange('receiptNumber')(value);
+
+																					}}
+																					className={props.errors.receiptNumber && props.touched.receiptNumber ? "is-invalid" : ""}
+																				/>
+																				{props.errors.receiptNumber && props.touched.receiptNumber && (
+																					<div className="invalid-feedback">{props.errors.receiptNumber}</div>
+																				)}
+		 
+																					
+																				
+																			</FormGroup>
+																		</Col>
+																		<Col lg={6}>
+																			<FormGroup className="mb-3">
 																				<Field
 																					name="attachmentFile"
 																					render={({ field, form }) => (
@@ -2272,11 +2300,14 @@ setDate1= (props, value) => {
 																							{props.errors.attachmentFile}
 																						</div>
 																					)}
-																			</FormGroup> */}
-																				<FormGroup className="mb-3">
+																			</FormGroup>
+																		</Col>
+																	</Row>
+																	<FormGroup className="mb-3">
 																		<Label htmlFor="receiptAttachmentDescription">
 																			{strings.AttachmentDescription}
-																		</Label><br/>
+																		</Label>
+																		<br/>
 																		<TextareaAutosize
 																			type="textarea"
 																			className="textarea"
@@ -2297,6 +2328,7 @@ setDate1= (props, value) => {
 																			}
 																		/>
 																	</FormGroup>
+																	
 																</Col>
 																	<Col lg={4}>
 																		<div className="">

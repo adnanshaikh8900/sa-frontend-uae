@@ -873,7 +873,7 @@ class DetailPurchaseOrder extends React.Component {
 								.find((option) => option.value === +row.vatCategoryId)
 						}
 						id="vatCategoryId"
-						placeholder={strings.Select+strings.Vat}
+						placeholder={strings.Select+strings.VAT}
 						onChange={(e) => {
 							this.selectItem(
 								e.value,
@@ -1128,7 +1128,7 @@ class DetailPurchaseOrder extends React.Component {
 				if (obj.discountType === 'PERCENTAGE') {	
 					 net_value =
 						((+obj.unitPrice -
-							(+((obj.unitPrice * (obj.discount ? obj.discount : 0))) / 100)) * obj.quantity);
+							(+((obj.unitPrice * obj.discount)) / 100)) * obj.quantity);
 					var discount = (obj.unitPrice* obj.quantity)- net_value
 				if(obj.exciseTaxId !=  0){
 					if(obj.exciseTaxId === 1){
@@ -1151,7 +1151,7 @@ class DetailPurchaseOrder extends React.Component {
 					((+net_value  * vat ) / 100);
 				}else{
 					 net_value =
-						((obj.unitPrice * obj.quantity) - (obj.discount ? obj.discount : 0))
+						((obj.unitPrice * obj.quantity) - obj.discount)
 					var discount =  (obj.unitPrice* obj.quantity) - net_value
 						if(obj.exciseTaxId !=  0){
 							if(obj.exciseTaxId === 1){
@@ -1183,7 +1183,7 @@ class DetailPurchaseOrder extends React.Component {
 					//net value after removing discount
 					 net_value =
 					((+obj.unitPrice -
-						(+((obj.unitPrice * (obj.discount ? obj.discount : 0))) / 100)) * obj.quantity);
+						(+((obj.unitPrice * obj.discount)) / 100)) * obj.quantity);
 
 				//discount amount
 				var discount =  (obj.unitPrice* obj.quantity) - net_value
@@ -1219,7 +1219,7 @@ class DetailPurchaseOrder extends React.Component {
 						{
 				//net value after removing discount
 				 net_value =
-				((obj.unitPrice * obj.quantity) - (obj.discount ? obj.discount : 0))
+				((obj.unitPrice * obj.quantity) - obj.discount)
 
 
 				//discount amount
@@ -1279,7 +1279,7 @@ class DetailPurchaseOrder extends React.Component {
 					...this.state.initValue,
 					...{
 						total_net:  total_net - total_excise,
-						totalVatAmount: total_vat,
+						invoiceVATAmount: total_vat,
 						discount:  discount_total ? discount_total : 0,
 						totalAmount:  total ,
 						total_excise: total_excise
@@ -1736,7 +1736,7 @@ debugger
 																			},
 																		),
 																	vatCategoryId: Yup.string().required(
-																		'Vat is Required',
+																		'VAT is Required',
 																	),
 																	productId: Yup.string().required(
 																		'Product is Required',
@@ -2355,7 +2355,7 @@ debugger
 																			columnClassName="text-right"
 																			formatExtraData={universal_currency_list}
 																			>
-																			Vat amount
+																			VAT amount
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="sub_total"
@@ -2372,13 +2372,13 @@ debugger
 															{data.length > 0 && (
 																<Row>
 																		<Col lg={8}>
-																		<FormGroup className="py-2">
+																	<FormGroup className="py-2">
 																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
 																		<TextareaAutosize
 																			type="textarea"
-																			style={{width: "700px"}}
 																			className="textarea"
-																			maxLength="255"
+																			maxLength="250"
+																			style={{width: "700px"}}
 																			name="notes"
 																			id="notes"
 																			rows="2"
@@ -2389,10 +2389,98 @@ debugger
 																			value={props.values.notes}
 																		/>
 																	</FormGroup>
+																	<Row>
+																		<Col lg={6}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="receiptNumber">
+																				{strings.ReferenceNumber}
+																				</Label>
+																				<Input
+																					type="text"
+																					maxLength="100"
+																					id="receiptNumber"
+																					name="receiptNumber"
+																					value={props.values.receiptNumber}
+																					placeholder={strings.ReceiptNumber}
+																					onChange={(value) => {
+																						props.handleChange('receiptNumber')(value);
+
+																					}}
+																					className={props.errors.receiptNumber && props.touched.receiptNumber ? "is-invalid" : ""}
+																				/>
+																				{props.errors.receiptNumber && props.touched.receiptNumber && (
+																					<div className="invalid-feedback">{props.errors.receiptNumber}</div>
+																				)}
+		 
+																					
+																				
+																			</FormGroup>
+																		</Col>
+																		<Col lg={6}>
+																			<FormGroup className="mb-3">
+																				<Field
+																					name="attachmentFile"
+																					render={({ field, form }) => (
+																						<div>
+																							<Label>{strings.ReceiptAttachment}</Label>{' '}
+																							<br />
+																							<Button
+																								color="primary"
+																								onClick={() => {
+																									document
+																										.getElementById('fileInput')
+																										.click();
+																								}}
+																								className="btn-square mr-3"
+																							>
+																								<i className="fa fa-upload"></i>{' '}
+																								{strings.upload}
+																							</Button>
+																							<input
+																								id="fileInput"
+																								ref={(ref) => {
+																									this.uploadFile = ref;
+																								}}
+																								type="file"
+																								style={{ display: 'none' }}
+																								onChange={(e) => {
+																									this.handleFileChange(
+																										e,
+																										props,
+																									);
+																								}}
+																							
+																							/>
+																							{this.state.fileName && (
+																								<div>
+																									<i
+																										className="fa fa-close"
+																										onClick={() =>
+																											this.setState({
+																												fileName: '',
+																											})
+																										}
+																									></i>{' '}
+																									{this.state.fileName}
+																								</div>
+																							)}
+																						</div>
+																					)}
+																				/>
+																				{props.errors.attachmentFile &&
+																					props.touched.attachmentFile && (
+																						<div className="invalid-file">
+																							{props.errors.attachmentFile}
+																						</div>
+																					)}
+																			</FormGroup>
+																		</Col>
+																	</Row>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="receiptAttachmentDescription">
 																			{strings.AttachmentDescription}
-																		</Label><br/>
+																		</Label>
+																		<br/>
 																		<TextareaAutosize
 																			type="textarea"
 																			className="textarea"
@@ -2413,6 +2501,7 @@ debugger
 																			}
 																		/>
 																	</FormGroup>
+																	
 																</Col>
 																	<Col lg={4}>
 																		<div className="">

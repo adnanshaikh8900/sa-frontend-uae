@@ -2468,17 +2468,17 @@ discountType = (row) =>
 																			this.renderAddProduct(cell, rows, props)
 																		}
 																	></TableHeaderColumn> */}
-																	<TableHeaderColumn
+																	{/* <TableHeaderColumn
 																		dataField="description"
 																		dataFormat={(cell, rows) =>
 																			this.renderDescription(cell, rows, props)
 																		}
 																	>
 																	{strings.DESCRIPTION}
-																	</TableHeaderColumn>
+																	</TableHeaderColumn> */}
 																	<TableHeaderColumn
 																		dataField="quantity"
-																		width="100"
+																		width="13%"
 																		dataFormat={(cell, rows) =>
 																			this.renderQuantity(cell, rows, props)
 																		}
@@ -2499,6 +2499,7 @@ discountType = (row) =>
 																		</TableHeaderColumn> */}
 																	<TableHeaderColumn
 																		dataField="unitPrice"
+																		width="10%"
 																		dataFormat={(cell, rows) =>
 																			this.renderUnitPrice(cell, rows, props)
 																		}
@@ -2557,7 +2558,7 @@ discountType = (row) =>
 																		{strings.VAT}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
-																	width="10%"
+																	// width="10%"
 																	dataField="sub_total"
 																	dataFormat={this.renderVatAmount}
 																	className="text-right"

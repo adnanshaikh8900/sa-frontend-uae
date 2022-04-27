@@ -111,14 +111,14 @@ class DetailVatCode extends React.Component {
 			if (res.data > 0) {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					'This Vat catogery is in use ,Cannot delete this Vat Catogery',
+					'This VAT catogery is in use ,Cannot delete this Vat Catogery',
 				);
 			} else {
 		const message1 =
         <text>
         <b>Delete Vat Category?</b>
         </text>
-        const message = 'This Vat Category will be deleted permanently and cannot be recovered. ';
+        const message = 'This VAT Category will be deleted permanently and cannot be recovered. ';
 		this.setState({
 			dialog: (
 				<ConfirmDeleteModal
@@ -195,10 +195,10 @@ class DetailVatCode extends React.Component {
 													}}
 													validationSchema={Yup.object().shape({
 														name: Yup.string().required(
-															'Vat Category Name is Required',
+															'VAT Category Name is Required',
 														),
 														vat: Yup.string().required(
-															'Vat Percentage is Required',
+															'VAT Percentage is Required',
 														),
 													})}
 												>

@@ -740,7 +740,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 			return (
 				<Col lg={3}>
 				<FormGroup className="mb-3">
-					<Label htmlFor="vatCategoryId"><span className="text-danger">* </span>{strings.Vat}</Label>
+					<Label htmlFor="vatCategoryId"><span className="text-danger">* </span>{strings.VAT}</Label>
 					<Select
 						// styles={customStyles}
 						// className="select-default-width"
@@ -751,7 +751,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 										'name',
 										'id',
 										vat_list,
-										'Vat',
+										'VAT',
 								  )
 								: []
 						}
@@ -766,7 +766,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 							}
 						}}
 						
-						placeholder={strings.Select+strings.Vat }
+						placeholder={strings.Select+strings.VAT }
 						id="vatCategoryId"
 						name="vatCategoryId"
 						className={
@@ -928,7 +928,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 															},
 														),
 													vatCategoryId: Yup.string().required(
-														'Vat is Required',
+														'VAT is Required',
 													),
 													payMode: Yup.string().required(
 														'Pay Through is Required',
@@ -1525,7 +1525,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																	</FormGroup></Col></Row>
 														)
 														} */}
-														{props.values.vatCategoryId !=='' && props.values.vatCategoryId.label !=='Select Vat' &&
+														{props.values.vatCategoryId !=='' && props.values.vatCategoryId.label !=='Select VAT' &&
 														props.values.vatCategoryId.value ===1 && 
 														// props.values.vatCategoryId.value !==4 && 
 														// props.values.vatCategoryId.value !==10 &&
@@ -1534,7 +1534,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																<Col></Col>
 																	<Col >
 																	<FormGroup>
-																				<span className='mr-4'>Inclusive Vat</span>
+																				<span className='mr-4'>Inclusive VAT</span>
 																				<Switch
 																					checked={ this.state.exclusiveVat}
 																					onChange={(checked) => {
@@ -1552,7 +1552,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																					height={20}
 																					width={48}
 																					className="react-switch "																					/>
-																					<span  className='ml-4'>Exclusive Vat</span>
+																					<span  className='ml-4'>Exclusive VAT</span>
 
 																		</FormGroup>
 																	</Col>

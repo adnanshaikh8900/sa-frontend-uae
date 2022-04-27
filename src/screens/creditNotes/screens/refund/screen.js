@@ -356,7 +356,7 @@ class Refund extends React.Component {
 			'invoiceAmount',
 			this.props.location.state.id.invoiceAmount ?this.props.location.state.id.invoiceAmount :"00000",
 		);
-		this.setState({ loading:true, loadingMsg:"Creating Refund..."});
+		this.setState({ loading:true, loadingMsg:" Payment Refunding..."});
 		this.props.CustomerRecordPaymentActions.recordPayment(formData)
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(

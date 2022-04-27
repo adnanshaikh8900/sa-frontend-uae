@@ -32,7 +32,6 @@ import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
-
 import './style.scss';
 import moment from 'moment';
 import API_ROOT_URL from '../../../../constants/config';
@@ -259,7 +258,7 @@ class DetailCreditNote extends React.Component {
 									term: res.data.term ? res.data.term : '',
 									placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 									fileName: res.data.fileName ? res.data.fileName : '',
-									filePath: res.data.filePath ? res.data.filePath : '',
+									// filePath: res.data.filePath ? res.data.filePath : '',
 									total_excise: res.data.totalExciseTaxAmount ? res.data.totalExciseTaxAmount : 0,
 								},
 								
@@ -1513,7 +1512,7 @@ class DetailCreditNote extends React.Component {
 													onSubmit={(values, { resetForm }) => {
 														this.handleSubmit(values);
 													}}
-													// validationSchema={Yup.object().shape({
+													 validationSchema={Yup.object().shape({
 													// 	invoice_number: Yup.string().required(
 													// 		'Credit Note Number is Required',
 													// 	),
@@ -1574,43 +1573,43 @@ class DetailCreditNote extends React.Component {
 													// 				),
 													// 			}),
 													// 		),
-													// 	attachmentFile: Yup.mixed()
-													// 		.test(
-													// 			'fileType',
-													// 			'*Unsupported File Format',
-													// 			(value) => {
-													// 				value &&
-													// 					this.setState({
-													// 						fileName: value.name,
-													// 					});
-													// 				if (
-													// 					!value ||
-													// 					(value &&
-													// 						this.supported_format.includes(
-													// 							value.type,
-													// 						))
-													// 				) {
-													// 					return true;
-													// 				} else {
-													// 					return false;
-													// 				}
-													// 			},
-													// 		)
-													// 		.test(
-													// 			'fileSize',
-													// 			'*File Size is too large',
-													// 			(value) => {
-													// 				if (
-													// 					!value ||
-													// 					(value && value.size <= this.file_size)
-													// 				) {
-													// 					return true;
-													// 				} else {
-													// 					return false;
-													// 				}
-													// 			},
-													// 		),
-													// })}
+													attachmentFile: Yup.mixed()
+													.test(
+														'fileType',
+														'*Unsupported File Format',
+														(value) => {
+															value &&
+																this.setState({
+																	fileName: value.name,
+																});
+															if (
+																!value ||
+																(value &&
+																	this.supported_format.includes(
+																		value.type,
+																	))
+															) {
+																return true;
+															} else {
+																return false;
+															}
+														},
+													)
+													.test(
+														'fileSize',
+														'*File Size is too large',
+														(value) => {
+															if (
+																!value ||
+																(value && value.size <= this.file_size)
+															) {
+																return true;
+															} else {
+																return false;
+															}
+														},
+													),
+											})}
 												>
 													{(props) => (
 														<Form onSubmit={props.handleSubmit}>
@@ -2362,13 +2361,13 @@ min="0"
 																				/> */}
 																			</FormGroup>
 																		</Col>
-																		{/* <Col lg={6}>
+																		<Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Field
 																					name="attachmentFile"
 																					render={({ field, form }) => (
 																						<div>
-																							<Label>Reciept Attachment</Label>{' '}
+																							<Label>{strings.ReceiptAttachment}</Label>{' '}
 																							<br />
 																							<Button
 																								color="primary"
@@ -2380,7 +2379,7 @@ min="0"
 																								className="btn-square mr-3"
 																							>
 																								<i className="fa fa-upload"></i>{' '}
-																								Upload
+																								{strings.upload}
 																							</Button>
 																							<input
 																								id="fileInput"
@@ -2420,7 +2419,7 @@ min="0"
 																						</div>
 																					)}
 																			</FormGroup>
-																		</Col> */}
+																		</Col>
 																	</Row>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="receiptAttachmentDescription">

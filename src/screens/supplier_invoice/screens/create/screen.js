@@ -746,8 +746,13 @@ class CreateSupplierInvoice extends React.Component {
 																				discountType: res.data.discountType
 																					? res.data.discountType
 																					: '',
+																					discountEnabled : res.data.discount > 0 ? true : false,
+									                                             	discount:res.data.discount?res.data.discount:0
 				
 																		},
+																		discountEnabled : res.data.discount > 0 ? true : false,
+																		discount:res.data.discount?res.data.discount:0,
+   
 																		invoiceDateNoChange: res.data.rfqExpiryDate
 																				? moment(res.data.rfqExpiryDate)
 																				: '',

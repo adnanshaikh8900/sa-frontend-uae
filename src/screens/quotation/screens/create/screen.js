@@ -2468,17 +2468,17 @@ discountType = (row) =>
 																			this.renderAddProduct(cell, rows, props)
 																		}
 																	></TableHeaderColumn> */}
-																	<TableHeaderColumn
+																	{/* <TableHeaderColumn
 																		dataField="description"
 																		dataFormat={(cell, rows) =>
 																			this.renderDescription(cell, rows, props)
 																		}
 																	>
 																	{strings.DESCRIPTION}
-																	</TableHeaderColumn>
+																	</TableHeaderColumn> */}
 																	<TableHeaderColumn
 																		dataField="quantity"
-																		width="100"
+																		width="13%"
 																		dataFormat={(cell, rows) =>
 																			this.renderQuantity(cell, rows, props)
 																		}
@@ -2498,6 +2498,7 @@ discountType = (row) =>
 																		Units / Measurements</UncontrolledTooltip>
 																		</TableHeaderColumn> */}
 																	<TableHeaderColumn
+																	width="10%"
 																		dataField="unitPrice"
 																		dataFormat={(cell, rows) =>
 																			this.renderUnitPrice(cell, rows, props)

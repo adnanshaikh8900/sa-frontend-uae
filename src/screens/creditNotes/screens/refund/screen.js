@@ -323,9 +323,12 @@ class Refund extends React.Component {
 			});
 		}//
 	else
-	{	formData.append('receiptNo', receiptNo !== null ? receiptNo : '');
+	{	
+		formData.append('type', 7);
+		formData.append('creditNoteId', this.props.location.state.id.id);
+		formData.append('receiptNo', receiptNo !== null ? receiptNo : '');
 		formData.append(
-			'receiptDate',
+			'paymentDate',
 			typeof receiptDate === 'string'
 				? moment(receiptDate, 'DD-MM-YYYY').toDate()
 				: receiptDate,
@@ -334,13 +337,13 @@ class Refund extends React.Component {
 			'paidInvoiceListStr',
 			JSON.stringify(this.state.initValue.paidInvoiceListStr),
 		);
-		formData.append('amount', amount !== null ? amount : '');
+		formData.append('amountReceived', amount !== null ? amount : '');
 		formData.append('notes', notes !== null ? notes : '');
 		formData.append(
 			'referenceCode',
 			referenceCode !== null ? referenceCode : '',
 		);
-		formData.append('depositeTo', depositeTo !== null ? depositeTo.value : '');
+		formData.append('depositTo', depositeTo !== null ? depositeTo.value : '');
 		formData.append('payMode', payMode !== null ? payMode.value : '');
 		if (contactId) {
 			formData.append('contactId', contactId);

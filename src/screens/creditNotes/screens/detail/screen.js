@@ -323,7 +323,7 @@ class DetailCreditNote extends React.Component {
 									this.setState({
 										idCount,
 									});
-									this.addRow()
+									// this.addRow()
 								} else {
 									this.setState({
 										idCount: 0,
@@ -1007,7 +1007,7 @@ class DetailCreditNote extends React.Component {
 					<>
 					<Select
 					styles={customStyles}
-					// 					isDisabled
+					isDisabled
 						options={
 							product_list1
 								? selectOptionsFactory.renderOptions(

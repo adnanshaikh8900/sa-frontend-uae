@@ -2473,7 +2473,7 @@ class DetailCustomerInvoice extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="shippingStateId"><span className="text-danger">* </span>
 																		{/* {strings.StateRegion} */}
-																		{props.values.shippingCountryId.value === 229 ? "Emirite" : "State / Provinces"}
+																		{props.values.shippingCountryId.value === 229 ?strings.Emirate : strings.StateRegion}
 																	</Label>
 																	<Select
 																		options={
@@ -2482,7 +2482,7 @@ class DetailCustomerInvoice extends React.Component {
 																					'label',
 																					'value',
 																					state_list_for_shipping,
-																					props.values.shippingCountryId.value === 229 ? "Emirite" : "State / Provinces",
+																					props.values.shippingCountryId.value === 229 ? strings.Emirate : strings.StateRegion,
 																				)
 																				: []
 																		}
@@ -2500,7 +2500,7 @@ class DetailCustomerInvoice extends React.Component {
 																				props.handleChange('shippingStateId')('');
 																			}
 																		}}
-																		placeholder={props.values.shippingCountryId.value == 229 ? "Emirite" : "State / Provinces"}
+																		placeholder={props.values.shippingCountryId.value == 229 ?strings.Emirate : strings.StateRegion}
 																		id="shippingStateId"
 																		name="shippingStateId"
 																		className={
@@ -2993,7 +2993,7 @@ class DetailCustomerInvoice extends React.Component {
 																		this.setState({ discountEnabled: !this.state.discountEnabled })}
 																	}}
 																/>
-																<Label>Apply Line Item Discount</Label>
+																<Label>{strings.ApplyLineItemDiscount}</Label>
 																</FormGroup>
 															</Col>
 														</Row>

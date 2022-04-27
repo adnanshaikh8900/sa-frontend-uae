@@ -851,9 +851,8 @@ discountType = (row) =>
 			<Field
 				name={`lineItemsString.${idx}.vatCategoryId`}
 				render={({ field, form }) => (
+					<>
 					<Select
-					isDisabled
-						styles={customStyles}
 						options={
 							vat_list
 								? selectOptionsFactory.renderOptions(
@@ -882,17 +881,28 @@ discountType = (row) =>
 								props,
 							);
 						}}
-						className={`${props.errors.lineItemsString &&
-								props.errors.lineItemsString[parseInt(idx, 10)] &&
-								props.errors.lineItemsString[parseInt(idx, 10)].vatCategoryId &&
-								Object.keys(props.touched).length > 0 &&
-								props.touched.lineItemsString &&
-								props.touched.lineItemsString[parseInt(idx, 10)] &&
-								props.touched.lineItemsString[parseInt(idx, 10)].vatCategoryId
+						className={`${
+							props.errors.lineItemsString &&
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)].vatCategoryId &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)].vatCategoryId
 								? 'is-invalid'
 								: ''
 						}`}
 					/>
+					   {props.errors.lineItemsString &&
+						props.errors.lineItemsString[parseInt(idx, 10)] &&
+						props.errors.lineItemsString[parseInt(idx, 10)].vatCategoryId &&
+						Object.keys(props.touched).length > 0 &&
+						(
+					   <div className='invalid-feedback'>
+					   {props.errors.lineItemsString[parseInt(idx, 10)].vatCategoryId}
+					   </div>
+						 )}
+					   </>
 				)}
 			/>
 		);
@@ -1067,7 +1077,7 @@ discountType = (row) =>
 
 	renderProduct = (cell, row, props) => {
 		var { product_list } = this.props;
-		product_list=product_list.filter((row)=>row.stockOnHand !=0 )
+		// product_list=product_list.filter((row)=>row.stockOnHand !=0 )
 		let idx;
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -1082,9 +1092,11 @@ discountType = (row) =>
 					render={({ field, form }) => (
 						<>
 						<Select
+						isDisabled
+						styles={customStyles}
 							options={
 								product_list
-									? optionFactory.renderOptions(
+									? selectOptionsFactory.renderOptions(
 											'name',
 											'id',
 											product_list,
@@ -1112,12 +1124,12 @@ discountType = (row) =>
 										field,
 										props,
 									);
-									this.props.customerInvoiceActions.getInventoryByProductId(e.value).then((response) => {
-										this.setState({inventoryList:response.data						
-										});
-										// if(response.data.length !== 0 && response.data.length !== 1){
-										// this.openMultiSupplierProductModal(response);}
-									});
+									// this.props.creditNotesActions.getInventoryByProductId(e.value).then((response) => {
+									// 	this.setState({inventoryList:response.data						
+									// 	});
+									// 	// if(response.data.length !== 0 && response.data.length !== 1){
+									// 	// this.openMultiSupplierProductModal(response);}
+									// });
 									if(this.checkedRow()==false)
 									   this.addRow();
 									   console.log(this.state.data,"prodlist")
@@ -1135,7 +1147,7 @@ discountType = (row) =>
 												quantity: 1,
 												unitPrice: '',
 												vatCategoryId: '',
-												vatAmount:0,
+												// vatAmount:0,
 												subTotal: 0,
 												productId: '',
 											},

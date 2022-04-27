@@ -292,7 +292,7 @@ class DetailCreditNote extends React.Component {
 									filePath: res.data.filePath ? res.data.filePath : '',
 									total_excise: res.data.totalExciseTaxAmount ? res.data.totalExciseTaxAmount : 0,
 								},
-								
+								discountEnabled : res.data.discount > 0 ? true : false,
 								customer_taxTreatment_des : res.data.taxTreatment ? res.data.taxTreatment : '',
 								checked: res.data.exciseType ? res.data.exciseType : res.data.exciseType,
 								discountAmount: res.data.discount ? res.data.discount : 0,
@@ -324,6 +324,7 @@ class DetailCreditNote extends React.Component {
 									this.setState({
 										idCount,
 									});
+									this.addRow()
 								} else {
 									this.setState({
 										idCount: 0,
@@ -483,6 +484,7 @@ class DetailCreditNote extends React.Component {
 				name={`lineItemsString.${idx}.quantity`}
 				render={({ field, form }) => (
 					<div>
+						<div class="input-group">
 						<Input
 							type="text"
 							min="0"
@@ -501,8 +503,7 @@ class DetailCreditNote extends React.Component {
 								}
 							}}
 							placeholder={strings.Quantity}
-							className={`form-control 
-           						${
+							className={`form-control w-50 ${
 												props.errors.lineItemsString &&
 												props.errors.lineItemsString[parseInt(idx, 10)] &&
 												props.errors.lineItemsString[parseInt(idx, 10)]
@@ -516,6 +517,9 @@ class DetailCreditNote extends React.Component {
 													: ''
 											}`}
 						/>
+						 {row['productId'] != '' ? 
+						<Input value={row['unitType'] }  disabled/> : ''}
+						</div>
 						{props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
@@ -907,11 +911,75 @@ class DetailCreditNote extends React.Component {
 			</Button>
 		);
 	};
+	// renderProduct = (cell, row, props) => {
+	// 	const { product_list } = this.props;
+	// 	let productList = product_list.length
+	// 		? [{ id: '', name: 'Select Product' }, ...product_list]
+	// 		: product_list;
+	// 	let idx;
+	// 	this.state.data.map((obj, index) => {
+	// 		if (obj.id === row.id) {
+	// 			idx = index;
+	// 		}
+	// 		return obj;
+	// 	});
+
+	// 	return (
+	// 		<Field
+	// 			name={`lineItemsString.${idx}.productId`}
+	// 			render={({ field, form }) => (
+	// 				<Select
+	// 					styles={customStyles}
+	// 					isDisabled
+	// 					options={
+	// 						product_list
+	// 							? selectOptionsFactory.renderOptions(
+	// 									'name',
+	// 									'id',
+	// 									product_list,
+	// 									'Product',
+	// 							  )
+	// 							: []
+	// 					}
+	// 					value={
+	// 						product_list &&
+	// 						selectOptionsFactory
+	// 							.renderOptions('name', 'id', product_list, 'Product')
+	// 							.find((option) => option.value === +row.productId)
+	// 					}
+	// 					id="productId"
+	// 					onChange={(e) => {
+	// 						if (e && e.label !== 'Select Product') {
+	// 							this.selectItem(e.value, row, 'productId', form, field, props);
+	// 							this.prductValue(e.value, row, 'productId', form, field, props);
+	// 						}
+	// 					}}
+	// 					className={`${
+	// 						props.errors.lineItemsString &&
+	// 						props.errors.lineItemsString[parseInt(idx, 10)] &&
+	// 						props.errors.lineItemsString[parseInt(idx, 10)].productId &&
+	// 						Object.keys(props.touched).length > 0 &&
+	// 						props.touched.lineItemsString &&
+	// 						props.touched.lineItemsString[parseInt(idx, 10)] &&
+	// 						props.touched.lineItemsString[parseInt(idx, 10)].productId
+	// 							? 'is-invalid'
+	// 							: ''
+	// 					}`}
+	// 				/>
+	// 			)}
+	// 		/>
+	// 	);
+	// };
+
 	renderProduct = (cell, row, props) => {
-		const { product_list } = this.props;
-		let productList = product_list.length
-			? [{ id: '', name: 'Select Product' }, ...product_list]
-			: product_list;
+		var { product_list } = this.props;
+		var {data}=this.state;
+		//  productList = product_list.length
+		// 	? [{ id: '', name: 'Select Product' }, ...product_list]
+		// 	: product_list;
+			
+		var product_list1=product_list.filter((obj)=>obj.stockOnHand !=0 )
+		
 		let idx;
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -920,19 +988,33 @@ class DetailCreditNote extends React.Component {
 			return obj;
 		});
 
+		// let product_list2=[]
+		
+		// product_list1.map(function (o1) {
+		// 	 data.map(function (o2) {
+		// 		if( o1.id !== o2.productId)
+		// 		{	
+		// 			 
+		// 			product_list2.push(o1)
+		// 	 // return the ones with equal id.
+		// 		}
+		// });
+		// 	});
+			
 		return (
 			<Field
 				name={`lineItemsString.${idx}.productId`}
 				render={({ field, form }) => (
+					<>
 					<Select
-						styles={customStyles}
-						isDisabled
+					styles={customStyles}
+					// 					isDisabled
 						options={
-							product_list
+							product_list1
 								? selectOptionsFactory.renderOptions(
 										'name',
 										'id',
-										product_list,
+										product_list1,
 										'Product',
 								  )
 								: []
@@ -948,6 +1030,8 @@ class DetailCreditNote extends React.Component {
 							if (e && e.label !== 'Select Product') {
 								this.selectItem(e.value, row, 'productId', form, field, props);
 								this.prductValue(e.value, row, 'productId', form, field, props);
+								if(this.checkedRow()==false)
+								this.addRow();
 							}
 						}}
 						className={`${
@@ -962,6 +1046,42 @@ class DetailCreditNote extends React.Component {
 								: ''
 						}`}
 					/>
+					{props.errors.lineItemsString &&
+                    props.errors.lineItemsString[parseInt(idx, 10)] &&
+                    props.errors.lineItemsString[parseInt(idx, 10)].productId &&
+                    Object.keys(props.touched).length > 0 &&
+					props.touched.lineItemsString &&
+					props.touched.lineItemsString[parseInt(idx, 10)] &&
+					props.touched.lineItemsString[parseInt(idx, 10)].productId && 
+                    (
+                   <div className='invalid-feedback'>
+                   {props.errors.lineItemsString[parseInt(idx, 10)].productId}
+                   </div>
+                     )}
+					  {row['productId'] != '' ? 
+						   <div className='mt-1'>
+						   <Input
+						type="text"
+						maxLength="250"
+						value={row['description'] !== '' ? row['description'] : ''}
+						onChange={(e) => {
+							this.selectItem(e.target.value, row, 'description', form, field);
+						}}
+						placeholder={strings.Description}
+						className={`form-control ${
+							props.errors.lineItemsString &&
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)].description &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)].description
+								? 'is-invalid'
+								: ''
+						}`}
+					/>
+						   </div> : ''}
+					   </>
 				)}
 			/>
 		);
@@ -978,18 +1098,17 @@ class DetailCreditNote extends React.Component {
 	};
 
 	renderActions = (cell, rows, props) => {
-		return (
+		return rows['productId'] != '' ? 
 			<Button
 				size="sm"
-				className="btn-twitter btn-brand icon"
+				className="btn-twitter btn-brand icon mt-1"
 				disabled={this.state.data.length === 1 ? true : false}
 				onClick={(e) => {
 					this.deleteRow(e, rows, props);
 				}}
 			>
 				<i className="fas fa-trash"></i>
-			</Button>
-		);
+			</Button> : ''
 	};
 
 	checkedRow = () => {
@@ -2226,7 +2345,7 @@ min="0"
 																			this.renderAddProduct(cell, rows, props)
 																		}
 																	></TableHeaderColumn> */}
-																		<TableHeaderColumn
+																		{/* <TableHeaderColumn
 																			dataField="description"
 																			dataFormat={(cell, rows) =>
 																				this.renderDescription(
@@ -2237,7 +2356,7 @@ min="0"
 																			}
 																		>
 																		 {strings.DESCRIPTION}
-																		</TableHeaderColumn>
+																		</TableHeaderColumn> */}
 																		<TableHeaderColumn
 																			dataField="quantity"
 																			dataFormat={(cell, rows) =>
@@ -2246,7 +2365,7 @@ min="0"
 																		>
 																			 {strings.QUANTITY}
 																		</TableHeaderColumn>
-																		<TableHeaderColumn
+																		{/* <TableHeaderColumn
 																			width="5%"
 																			dataField="unitType"
 																     	>{strings.Unit}	<i
@@ -2260,7 +2379,7 @@ min="0"
 																	 >
 																		Units / Measurements
 																	 </UncontrolledTooltip>
-																 </TableHeaderColumn> 
+																 </TableHeaderColumn>  */}
 																		<TableHeaderColumn
 																			dataField="unitPrice"
 																			dataFormat={(cell, rows) =>
@@ -2269,6 +2388,7 @@ min="0"
 																		>
 																			{strings.UNITPRICE}
 																		</TableHeaderColumn>
+																		{initValue.total_excise != 0 &&
 																		<TableHeaderColumn
 																	width="10%"
 																		dataField="exciseTaxId"
@@ -2288,7 +2408,8 @@ min="0"
 																			If Exise Type for a product is Inclusive
 																			then the Excise dropdown will be Disabled
 																		</UncontrolledTooltip>
-																	</TableHeaderColumn>
+																	</TableHeaderColumn>}
+																	{this.state.discountEnabled == true &&
 																	<TableHeaderColumn
 																		width="12%"
 																		dataField="discount"
@@ -2297,7 +2418,7 @@ min="0"
 																		}
 																	>
 																	DisCount
-																	</TableHeaderColumn>
+																	</TableHeaderColumn>}
 																		<TableHeaderColumn
 																			dataField="vat"
 																			dataFormat={(cell, rows) =>
@@ -2328,6 +2449,24 @@ min="0"
 																	</BootstrapTable>
 																</Col>
 															</Row>)}
+															<Row className="ml-4 ">
+															<Col className=" ml-4">
+																<FormGroup className='pull-right'>
+																<Input
+																	type="checkbox"
+																	id="discountEnabled"
+																	checked={this.state.discountEnabled}
+																	onChange={(option) => {
+																		if(initValue.discount > 0){
+																			this.setState({ discountEnabled: true })
+																		}else{
+																		this.setState({ discountEnabled: !this.state.discountEnabled })}
+																	}}
+																/>
+																<Label>Apply Discount</Label>
+																</FormGroup>
+															</Col>
+														</Row>
 															{data.length > 0 && (
 																<Row>
 																	<Col lg={8}>
@@ -2478,6 +2617,7 @@ min="0"
 																	</FormGroup>
 																</Col>
 																	<Col lg={4}>
+																	{initValue.total_excise > 0 ?
 																	<div className="total-item p-2" >
 																			<Row>
 																				<Col lg={6}>
@@ -2493,7 +2633,7 @@ min="0"
 																					</label>
 																				</Col>
 																			</Row>
-																		</div>
+																		</div> : ''}
 																		<div className="">
 																			{/* <div className="total-item p-2">
 																				<Row>
@@ -2640,6 +2780,7 @@ min="0"
 																					</Col>
 																				</Row>
 																			</div> */}
+																			{this.state.discountEnabled == true ?
 																				<div className="total-item p-2">
 																			<Row>
 																				<Col lg={6}>
@@ -2656,7 +2797,7 @@ min="0"
 																					</label>
 																				</Col>
 																			</Row>
-																		</div>
+																		</div>: ''}
 																		
 																			<div className="total-item p-2">
 																				<Row>

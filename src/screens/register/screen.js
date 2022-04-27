@@ -393,7 +393,7 @@ class Register extends React.Component {
 																{
 																	is: (value) => value === true,
 																	then: Yup.string().required(
-																		'Vat Registration Date is Required',
+																		'VAT Registration Date is Required',
 																	),
 																	otherwise: Yup.string(),
 																},
@@ -899,7 +899,7 @@ class Register extends React.Component {
 																						: ''
 																				}
 																			/>
-																			Is Vat Registered?
+																			Is VAT Registered?
 																			{props.errors.IsRegistered &&
 																				props.touched.IsRegistered && (
 																					<div className="invalid-feedback">
@@ -957,14 +957,14 @@ class Register extends React.Component {
 															<Col lg={4}>
 																<FormGroup>
 																	<Label htmlFor="date">
-																	Vat Registered On
+																	VAT Registered On
 																	</Label>
 																	<DatePicker
 																		autoComplete="off"
 																		id="vatRegistrationDate"
 																		minDate={new Date("01/01/2018")}
 																		name="vatRegistrationDate"
-																		placeholderText="Select Vat Registered Date"
+																		placeholderText="Select VAT Registered Date"
 																		maxDate={new Date()}
 																		showMonthDropdown
 																		showYearDropdown

@@ -930,18 +930,18 @@ discountType = (row) =>
 										'name',
 										'id',
 										vat_list,
-										'Vat',
+										'VAT',
 								  )
 								: []
 						}
 						value={
 							vat_list &&
 							selectOptionsFactory
-								.renderOptions('name', 'id', vat_list, 'Vat')
+								.renderOptions('name', 'id', vat_list, 'VAT')
 								.find((option) => option.value === +row.vatCategoryId)
 						}
 						id="vatCategoryId"
-						placeholder={strings.Select+strings.Vat}
+						placeholder={strings.Select+strings.VAT}
 						onChange={(e) => {
 							this.selectItem(
 								e.value,
@@ -1966,7 +1966,7 @@ discountType = (row) =>
 																		},
 																	),
 																vatCategoryId: Yup.string().required(
- 																	'Vat is Required',
+ 																	'VAT is Required',
 																),
 																productId: Yup.string().required(
 																	'Product is Required',
@@ -2468,17 +2468,17 @@ discountType = (row) =>
 																			this.renderAddProduct(cell, rows, props)
 																		}
 																	></TableHeaderColumn> */}
-																	{/* <TableHeaderColumn
+																	<TableHeaderColumn
 																		dataField="description"
 																		dataFormat={(cell, rows) =>
 																			this.renderDescription(cell, rows, props)
 																		}
 																	>
 																	{strings.DESCRIPTION}
-																	</TableHeaderColumn> */}
+																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="quantity"
-																		width="13%"
+																		width="100"
 																		dataFormat={(cell, rows) =>
 																			this.renderQuantity(cell, rows, props)
 																		}
@@ -2499,7 +2499,6 @@ discountType = (row) =>
 																		</TableHeaderColumn> */}
 																	<TableHeaderColumn
 																		dataField="unitPrice"
-																		width="10%"
 																		dataFormat={(cell, rows) =>
 																			this.renderUnitPrice(cell, rows, props)
 																		}
@@ -2558,7 +2557,7 @@ discountType = (row) =>
 																		{strings.VAT}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
-																	// width="10%"
+																	width="10%"
 																	dataField="sub_total"
 																	dataFormat={this.renderVatAmount}
 																	className="text-right"

@@ -465,9 +465,9 @@ class VatReports extends React.Component {
 	delete = (id) => {
 		const message1 =
 			<text>
-				<b>Delete Vat Report File ?</b>
+				<b>Delete VAT Report File ?</b>
 			</text>
-		const message = 'This vat report file will be deleted permanently and cannot be recovered. ';
+		const message = 'This VAT report file will be deleted permanently and cannot be recovered. ';
 		 
 		this.setState({
 			dialog: (
@@ -490,7 +490,7 @@ class VatReports extends React.Component {
 					this.props.commonActions.tostifyAlert(
 						'success',
 						res.data && res.data.message?res.data.message: 
-						'Vat Report File Deleted Successfully'
+						'VAT Report File Deleted Successfully'
 					);
 					this.setState({
 						dialog: null,
@@ -501,7 +501,7 @@ class VatReports extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data ? err.data.message : 'Vat Report File Deleted Unsuccessfully'
+					err.data ? err.data.message : 'VAT Report File Deleted Unsuccessfully'
 				);
 				this.setState({
 					dialog: null,
@@ -571,7 +571,7 @@ class VatReports extends React.Component {
 												}}
 												onClick={this.viewFilter}
 											>
-												<i className="fa fa-cog mr-2"></i>Vat Report
+												<i className="fa fa-cog mr-2"></i>VAT Report
 											</p>
 										</div>
 										<div>
@@ -616,7 +616,7 @@ class VatReports extends React.Component {
 												onClick={() => {
 													this.props.history.push('/admin/report/vatreports/vatpaymentrecordhistory')
 												}}>
-												<i className="fas fa-history"></i> Vat Payment Record
+												<i className="fas fa-history"></i> VAT Payment Record
 											</Button>
 
 											<Button name="button" color="primary" className="btn-square pull-right "
@@ -630,7 +630,7 @@ class VatReports extends React.Component {
 													}
 												}}>
 												
-												<i class="fas fa-plus"></i> Generate Vat Report
+												<i class="fas fa-plus"></i> Generate VAT Report
 
 												
 											</Button>

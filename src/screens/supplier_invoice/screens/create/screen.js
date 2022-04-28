@@ -3059,7 +3059,7 @@ class CreateSupplierInvoice extends React.Component {
 																			this.renderUnitPrice(cell, rows, props)
 																		}
 																	>
-																		Unit Price
+																		{strings.UnitPrice}
 																	</TableHeaderColumn>
 																	{initValue.total_excise != 0 &&
 																	<TableHeaderColumn
@@ -3109,7 +3109,7 @@ class CreateSupplierInvoice extends React.Component {
 																		columnClassName="text-right"
 																		formatExtraData={universal_currency_list}
 																	>
-																		VAT amount
+																		{strings.VATAMOUNT}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		width="10%"
@@ -3134,7 +3134,7 @@ class CreateSupplierInvoice extends React.Component {
 																		this.setState({ isReverseChargeEnabled: !this.state.isReverseChargeEnabled })
 																	}}
 																/>
-																<Label>Is Reverse Charge</Label>
+																<Label>{strings.IsReverseCharge}</Label>
 															</Col>
 															
 															<Col className=" ml-4">
@@ -3150,7 +3150,7 @@ class CreateSupplierInvoice extends React.Component {
 																		this.setState({ discountEnabled: !this.state.discountEnabled })}
 																	}}
 																/>
-																<Label>Apply Line Item Discount</Label>
+																<Label>{strings.ApplyLineItemDiscount}</Label>
 																</FormGroup>
 															</Col>
 													

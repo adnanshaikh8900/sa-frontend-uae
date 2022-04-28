@@ -240,6 +240,11 @@ Relationship2:"Relationship 2",
       excise:"Excise",
 
       //Expenses
+      IsReverseCharge:"Is Reverse Charge",
+      UnitPrice:"UNIT PRICE",
+      ExpenseNumber:"Expense Number",
+      InclusiveVAT:"Inclusive VAT",
+      ExclusiveVAT:"Exclusive VAT",
       PayThrough:"Pay Through",
       Expenses:"Expenses",
       EXPENSEDATE:"EXPENSE DATE",		
@@ -662,6 +667,7 @@ PaymentForSupplierInvoice:"Payment For Supplier Invoice",
 Approve:"Approve",
 
 //PROFILE
+UniquePasswordNote:" * Please Use Unique Password.This Password Was Used Earlier. ",
 EmailID:"Email ID",
 Role:"Role",
 TimeZonePreference:"Time Zone Preference",

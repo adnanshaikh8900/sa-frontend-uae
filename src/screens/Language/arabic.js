@@ -113,6 +113,12 @@ RecieptNumber:"عدد إيصال",
       RemainingInvoiceAmount:"مبلغ الفاتورة المتبقي",
       CreditAmount:"مبلغ الائتمان",
       TaxCreditDate:"تاريخ الخصم الضريبي",
+
+        //Expenses
+        ExpenseNumber:"رقم المصروفات ",
+
+
+
         //Customer invoice
       SelectPlaceOfSupply:"اختر مكان التوريد",
       ApplyLineItemDiscount:" تطبيق خصم بند البند",
@@ -229,6 +235,10 @@ RecieptNumber:"عدد إيصال",
       CreateSupplier:"إنشاء المورد ",		
 
       //Expenses
+      IsReverseCharge:"هو الشحن العكسي",
+      UnitPrice:"سعر الوحدة",
+      InclusiveVAT:"شامل ضريبة القيمة المضافة",
+      ExclusiveVAT:"ضريبة القيمة المضافة الحصرية",
       PayThrough:"الدفع من خلال",
       Expenses:"النفقات",				
       EXPENSEDATE:"تاريخ المصروفات",		
@@ -281,7 +291,8 @@ RequestForQuotation:"طلب عرض أسعار",
 RFQNUMBER:"رقم طلب عرض الأسعار",
 RFQDate:"تاريخ طلب عرض الأسعار",												
 RFQDATE:"تاريخ طلب عرض الأسعار",			
-RFQDUEDATE:"تاريخ استحقاق طلب عرض الأسعار",						
+RFQDUEDATE:"تاريخ استحقاق طلب عرض الأسعار",				
+RFQDueDate:"تاريخ استحقاق RFQ",		
 
 											
 //Create RFQ			
@@ -643,6 +654,7 @@ PaymentForSupplierInvoice:"دفع فاتورة المورد",
 Approve:"يوافق",
 
 //PROFILE
+UniquePasswordNote:"* يرجى استخدام كلمة مرور فريدة من نوعها.تم استخدام كلمة المرور هذه في وقت سابق. ",
 EmailID:"معرف البريد الإلكتروني",	
 Role:"دور",	
 TimeZonePreference:"تفضيل المنطقة الزمنية",	

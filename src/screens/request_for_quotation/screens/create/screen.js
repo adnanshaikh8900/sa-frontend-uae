@@ -2498,7 +2498,7 @@ class CreateRequestForQuotation extends React.Component {
 																	columnClassName="text-right"
 																	formatExtraData={universal_currency_list}
 																	>
-																	VAT amount
+																	{strings.VATAMOUNT}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="sub_total"

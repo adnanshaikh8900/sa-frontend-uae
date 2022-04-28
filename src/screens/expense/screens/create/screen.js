@@ -976,7 +976,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="expenseNumber">
 																			<span className="text-danger">* </span>
-																			Expense Number
+																			{strings.ExpenseNumber}
 																			{/* <i
 																				id="ProductCodeTooltip"
 																				className="fa fa-question-circle ml-1"

@@ -103,7 +103,7 @@ class CreatePurchaseOrder extends React.Component {
 			loading: false,
 			discountOptions: [
 				{ value: 'FIXED', label: 'Fixed' },
-				{ value: 'PERCENTAGE', label: 'Percentage' },
+				{ value: 'PERCENTAGE', label: '%' },
 			],
 			discount_option: '',
 			disabled: false,
@@ -1316,8 +1316,7 @@ class CreatePurchaseOrder extends React.Component {
 	};
 
 	updateAmount = (data, props) => {
-		const { vat_list , excise_list} = this.props;
-		const { discountPercentage, discountAmount } = this.state;
+		const { vat_list } = this.state;
 		let total_net = 0;
 		let total_excise = 0;
 		let total = 0;
@@ -1330,19 +1329,19 @@ class CreatePurchaseOrder extends React.Component {
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
-			
+
 			//Exclusive case
 			if(this.state.taxType === false){
 				if (obj.discountType === 'PERCENTAGE') {	
 					 net_value =
 						((+obj.unitPrice -
 							(+((obj.unitPrice * obj.discount)) / 100)) * obj.quantity);
-					var discount =  (obj.unitPrice* obj.quantity) - net_value
+					var discount =  (obj.unitPrice * obj.quantity) - net_value
 				if(obj.exciseTaxId !=  0){
 					if(obj.exciseTaxId === 1){
 						const value = +(net_value) / 2 ;
 							net_value = parseFloat(net_value) + parseFloat(value) ;
-							obj.exciseAmount = parseFloat(value);
+							obj.exciseAmount = parseFloat(value) ;
 						}else if (obj.exciseTaxId === 2){
 							const value = net_value;
 							net_value = parseFloat(net_value) +  parseFloat(value) ;
@@ -1359,8 +1358,8 @@ class CreatePurchaseOrder extends React.Component {
 					((+net_value  * vat ) / 100);
 				}else{
 					 net_value =
-						((obj.unitPrice * obj.quantity) )
-					var discount = (obj.unitPrice* obj.quantity) - net_value
+						((obj.unitPrice * obj.quantity) - obj.discount)
+					var discount =  (obj.unitPrice * obj.quantity) - net_value
 						if(obj.exciseTaxId !=  0){
 							if(obj.exciseTaxId === 1){
 								const value = +(net_value) / 2 ;
@@ -1427,7 +1426,7 @@ class CreatePurchaseOrder extends React.Component {
 						{
 				//net value after removing discount
 				 net_value =
-				((obj.unitPrice * obj.quantity))
+				((obj.unitPrice * obj.quantity) - obj.discount)
 
 
 				//discount amount
@@ -1486,7 +1485,7 @@ class CreatePurchaseOrder extends React.Component {
 				initValue: {
 					...this.state.initValue,
 					...{
-						total_net:  total_net - total_excise,
+						total_net:  total_net-total_excise,
 						totalVatAmount: total_vat,
 						discount:  discount_total ? discount_total : 0,
 						totalAmount:  total ,
@@ -1498,6 +1497,7 @@ class CreatePurchaseOrder extends React.Component {
 
 		);
 	};
+
 	handleSubmit = (data, resetForm) => {
 		this.setState({ disabled: true });
 		const {
@@ -1537,6 +1537,7 @@ class CreatePurchaseOrder extends React.Component {
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
 		formData.append('totalVatAmount', this.state.initValue.totalVatAmount);
 		formData.append('totalAmount', this.state.initValue.totalAmount);
+		formData.append('discount', this.state.initValue.discount);
 		if (supplierId && supplierId.value) {
 			formData.append('supplierId', supplierId.value);
 		}
@@ -2784,7 +2785,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																	id="discountEnabled"
 																	checked={this.state.discountEnabled}
 																	onChange={(option) => {
-																		debugger
+																		
 																		if(initValue.discount > 0){
 																			this.setState({ discountEnabled: true })
 																		}else{

@@ -401,6 +401,13 @@ class ViewFtaAuditReport extends React.Component {
 													</h5></b>
 													</td>
 												</tr>
+												<tr>
+													<td>
+													<h6>
+													CompInfoStart
+													</h6>
+													</td>
+												</tr>
 												<Table>
 												
 												<thead>
@@ -470,6 +477,14 @@ class ViewFtaAuditReport extends React.Component {
 												
 												</tbody>
 												</Table>
+												
+												<tr>
+													<td colSpan={12}>
+													<h6>
+													CompInfoEnd
+													</h6>
+													</td>
+												</tr>
 													<tr>
 															<> </>
 													</tr>
@@ -477,6 +492,13 @@ class ViewFtaAuditReport extends React.Component {
 													<td><b><h5>
 													Costumer Data Audit File
 													</h5></b></td>
+												</tr>
+												<tr>
+													<td>
+													<h6>
+													CustomerDataStart
+													</h6>
+													</td>
 												</tr>
 												<Table>
 												
@@ -523,14 +545,22 @@ class ViewFtaAuditReport extends React.Component {
 																					</td>
 																					
 																				
-																				</tr>
-																		
+																				</tr>				
 																	</>
 																);
 															},
 														)}
 												</tbody>
 												</Table>
+												
+												<tr>
+													<td colSpan={12}>
+													<h6>
+													CustomerDataEnd
+													</h6>
+													</td>
+												</tr>
+														
 												<tr>
 												<> </>
 													</tr>
@@ -539,6 +569,14 @@ class ViewFtaAuditReport extends React.Component {
 												Supplier Data Audit File</h5></b>
 												</td>
 												</tr>
+												<tr>
+													<td>
+													<h6>
+													SupplierDataStart
+													</h6>
+													</td>
+												</tr>
+
 												<Table>
 												
 												<thead>
@@ -583,8 +621,7 @@ class ViewFtaAuditReport extends React.Component {
 																					</td>
 																					
 																				
-																				</tr>
-																		
+																				</tr>					
 																	</>
 																);
 															},
@@ -593,6 +630,14 @@ class ViewFtaAuditReport extends React.Component {
 												</Table>
 												
 												<tr>
+													<td colSpan={12}>
+													<h6>
+													SupplierDataEnd
+													</h6>
+													</td>
+												</tr>
+																									
+												<tr>
 												<> </>
 												</tr>
 												<tr>
@@ -600,6 +645,14 @@ class ViewFtaAuditReport extends React.Component {
 													Purchase Listing Table
 													</h5></b></td>
 												</tr>
+												<tr>
+													<td colSpan={12}>
+													<h6>
+													PurcDataStart
+													</h6>
+													</td>
+												</tr>
+
 												<Table>
 												
 												<thead>
@@ -680,14 +733,22 @@ class ViewFtaAuditReport extends React.Component {
 																						{item['fcycode']}
 																					</td>
 																				
-																				</tr>
-																		
+																				</tr>				
 																	</>
 																);
 															},
 														)}
 												</tbody>
 												</Table>
+												
+												<tr>
+													<td colSpan={16}>
+													<h6>
+													PurcDataEnd
+													</h6>
+													</td>
+												</tr>
+														
 												<tr>
 													<> </>
 												</tr>
@@ -744,6 +805,14 @@ class ViewFtaAuditReport extends React.Component {
 												Supply Listing Table</h5></b>
 												</td>
 												</tr>
+												<tr>
+													<td>
+													<h6>
+													SuppDataStart
+													</h6>
+													</td>
+												</tr>
+
 												<Table>
 												
 												<thead>
@@ -820,14 +889,22 @@ class ViewFtaAuditReport extends React.Component {
 																						{item['fcycode']}
 																					</td>
 																				
-																				</tr>
-																		
+																				</tr>					
 																	</>
 																);
 															},
 														)}
 												</tbody>
 												</Table>
+												
+												<tr>
+													<td colSpan={16}>
+													<h6>
+													SuppDataEnd
+													</h6>
+													</td>
+												</tr>
+													
 												<tr>
 													<> </>
 												</tr>
@@ -883,6 +960,14 @@ class ViewFtaAuditReport extends React.Component {
 													General Ledger Table
 													</h5></b></td>
 												</tr>
+												<tr>
+													<td>
+													<h6>
+													GLDataStart
+													</h6>
+													</td>
+												</tr>
+
 												<Table>
 												
 												<thead>
@@ -945,13 +1030,21 @@ class ViewFtaAuditReport extends React.Component {
 																					</td>
 																				
 																				</tr>
-																		
+																								
 																	</>
 																);
 															},
 														)}
 												</tbody>
 												</Table>
+												<tr>
+													<td colSpan={12}> 
+													<h6>
+													GLDataEnd
+													</h6>
+													</td>
+												</tr>
+														
 												<tr>
 													<> </>
 												</tr>

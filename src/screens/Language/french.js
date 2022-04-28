@@ -994,7 +994,7 @@ RemainingBalance:"Solde restant",
 
 
 //View
-InvoiceAmountIn:"Montant de la facture en entrée",
+InvoiceAmountIn:"Montant de la facture",
 BalanceDue:"Solde dû",	
 BillTo:"Facturer à",
 ShipTo:"adresse de livraison",	

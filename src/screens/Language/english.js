@@ -1018,7 +1018,7 @@ RemainingBalance:"Remaining Balance",
 
 
 //View
-InvoiceAmountIn:"Invoice Amount In",
+InvoiceAmountIn:"Invoice Amount ",
 BalanceDue:"Balance Due",	
 BillTo:"Bill To",	
 CreditTo:"Credit To",

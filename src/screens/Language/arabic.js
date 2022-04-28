@@ -991,7 +991,7 @@ RemainingBalance:"الرصيد المتبقي",
 
 
 //View
-InvoiceAmountIn:"مبلغ الفاتورة",
+InvoiceAmountIn:"قيمة الفاتورة",
 BalanceDue:"الرصيد المستحق",	
 BillTo:"مشروع قانون ل",	
 ShipTo:"عنوان الشحن",

@@ -400,7 +400,7 @@ class InvoiceTemplate extends Component {
 									</th>
 									{/* <th style={{ padding: '0.5rem' }}>Item</th> */}
 									<th style={{ padding: '0.5rem' }}>{strings.ProductNameAndDescription}</th>
-									<th className="center" style={{ padding: '0.5rem' }}>
+									<th className="text-center" style={{ padding: '0.5rem' }}>
 										{strings.Quantity}
 									</th>
 									
@@ -731,7 +731,7 @@ class InvoiceTemplate extends Component {
 											{invoiceData.exchangeRate == 1 ? " " :
 												<tr style={{ background: '#f2f2f2' }}>
 													<td style={{ width: '40%' }}>
-														<strong>{strings.InvoiceAmountIn}{" " + invoiceData.baseCurrencyIsoCode}</strong>
+														<strong>{strings.InvoiceAmountIn}</strong>
 													</td>
 													<td>
 														<b

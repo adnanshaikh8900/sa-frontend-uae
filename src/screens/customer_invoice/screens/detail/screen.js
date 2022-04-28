@@ -127,7 +127,7 @@ class DetailCustomerInvoice extends React.Component {
 			shippingStateId:'',
 			shippingCity:'',
 			shippingPostZipCode:'',
-			poBoxNumber: '',
+			POBoxNumber: '',
 			shippingTelephone:'',
 			shippingFax:'',
 			loadingMsg:"Loading",
@@ -1780,8 +1780,8 @@ class DetailCustomerInvoice extends React.Component {
 
 														if(values.changeShippingAddress==true){
 															if (values.shippingCountryId == 229 || values.shippingCountryId.value == 229) {
-																if (values.poBoxNumber === '')
-																	errors.poBoxNumber = 'PO Box Number is Required';
+																if (values.shippingPostZipCode == '')
+																	errors.shippingPostZipCode = 'PO Box Number is Required';
 															} else {
 																if (values.shippingPostZipCode == '')
 																	errors.shippingPostZipCode = 'Postal Code is Required';

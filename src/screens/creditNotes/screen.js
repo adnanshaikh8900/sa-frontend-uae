@@ -82,7 +82,7 @@ class CreditNotes extends React.Component {
 			openEmailModal: false,
 			actionButtons: {},
 			filterData: {
-				customerId: '',
+				contactId: '',
 				referenceNumber: '',
 				invoiceDate: '',
 				invoiceDueDate: '',
@@ -706,7 +706,7 @@ class CreditNotes extends React.Component {
 		this.setState(
 			{
 				filterData: {
-					customerId: '',
+					contactId: '',
 					referenceNumber: '',
 					invoiceDate: '',
 					invoiceDueDate: '',
@@ -738,16 +738,16 @@ class CreditNotes extends React.Component {
 			universal_currency_list,
 		} = this.props;
 		const customer_invoice_data =
-			this.props.customer_invoice_list && this.props.customer_invoice_list.data
-				? this.props.customer_invoice_list.data.map((customer) => ({
+			this.props.customer_invoice_list
+				? this.props.customer_invoice_list.map((customer) => ({
 						id: customer.id,
 						status: customer.status,
 						statusEnum: customer.statusEnum,
-						customerName: customer.name,
+						customerName: customer.customerName,
 						dueAmount:customer.dueAmount ? customer.dueAmount : 0,
 						contactId: customer.contactId,
-						invoiceNumber: customer.referenceNumber,
-						invoiceDate: customer.invoiceDate ? customer.invoiceDate : '',
+						invoiceNumber: customer.creditNoteNumber,
+						invoiceDate: customer.creditNoteDate ? customer.creditNoteDate : '',
 						invoiceDueDate: customer.invoiceDueDate
 							? customer.invoiceDueDate
 							: '',
@@ -766,7 +766,7 @@ class CreditNotes extends React.Component {
 			let obj = {label: item.label.contactName, value: item.value}
 			tmpCustomer_list.push(obj)
 		})
-
+console.log(customer_invoice_data,"this.props.customer_invoice_list",this.props.customer_invoice_list,"customer_invoice_data");
 		return (
 			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 <div>
@@ -968,12 +968,12 @@ class CreditNotes extends React.Component {
 															  )
 															: []
 													}
-													value={filterData.customerId}
+													value={filterData.contactId}
 													onChange={(option) => {
 														if (option && option.value) {
-															this.handleChange(option, 'customerId');
+															this.handleChange(option, 'contactId');
 														} else {
-															this.handleChange('', 'customerId');
+															this.handleChange('', 'contactId');
 														}
 													}}
 												/>
@@ -1101,7 +1101,7 @@ class CreditNotes extends React.Component {
 												dataField="invoiceNumber"
 												// dataFormat={this.renderInvoiceNumber}
 												dataSort
-											//	width="7%"
+												width="16%"
 												className="table-header-bg"
 											>
 													
@@ -1120,7 +1120,7 @@ class CreditNotes extends React.Component {
 												dataField="invoiceNumber"
 												// dataFormat={this.renderInvoiceNumber}
 												dataSort
-											//	width="7%"
+												width="12%"
 												className="table-header-bg"
 											>		
 												{strings.INVOICENUMBER}
@@ -1128,7 +1128,7 @@ class CreditNotes extends React.Component {
 											<TableHeaderColumn
 												dataField="invoiceDate"
 												dataSort
-												//width="6%"
+												width="10%"
 												dataFormat={this.invoiceDate}
 												className="table-header-bg"
 											>
@@ -1178,7 +1178,7 @@ class CreditNotes extends React.Component {
 												dataAlign="right"
 												dataField="totalAmount"
 												dataSort
-												width="20%"
+												width="25%"
 												dataFormat={this.renderInvoiceAmount}
 												formatExtraData={universal_currency_list}
 												className="table-header-bg"

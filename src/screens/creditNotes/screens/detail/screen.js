@@ -292,6 +292,7 @@ class DetailCreditNote extends React.Component {
 									total_excise: res.data.totalExciseTaxAmount ? res.data.totalExciseTaxAmount : 0,
 								},
 								discountEnabled : res.data.discount > 0 ? true : false,
+								isCreatedWIWP:this.props.location.state.isCNWithoutProduct,
 								customer_taxTreatment_des : res.data.taxTreatment ? res.data.taxTreatment : '',
 								checked: res.data.exciseType ? res.data.exciseType : res.data.exciseType,
 								discountAmount: res.data.discount ? res.data.discount : 0,
@@ -1661,67 +1662,15 @@ class DetailCreditNote extends React.Component {
 													onSubmit={(values, { resetForm }) => {
 														this.handleSubmit(values);
 													}}
+													validate={(values) => {
+														let errors = {};
+												
+														if(this.state.isCreatedWIWP==true && !values.creditAmount)
+														   errors.creditAmount =	'Credit Amount is Required';													
+														return errors;
+													}}
 													 validationSchema={Yup.object().shape({
-													// 	invoice_number: Yup.string().required(
-													// 		'Credit Note Number is Required',
-													// 	),
-													// 	contactId: Yup.string().required(
-													// 		'Supplier is Required',
-													// 	),
-													// 	term: Yup.string().required('term is Required'),
-													// 	placeOfSupplyId: Yup.string().required('Place of supply is Required'),
-													// 	invoiceDate: Yup.string().required(
-													// 		'Credit Note Date is Required',
-													// 	),
-													// 	invoiceDueDate: Yup.string().required(
-													// 		'Credit Note Due Date is Required',
-													// 	),
-													// 	currency: Yup.string().required(
-													// 		'Currency is Required',
-													// 	),
-													// 	lineItemsString: Yup.array()
-													// 		.required(
-													// 			'Atleast one invoice sub detail is mandatory',
-													// 		)
-													// 		.of(
-													// 			Yup.object().shape({
-													// 				// description: Yup.string().required(
-													// 				// 	'Value is Required',
-													// 				// ),
-													// 				quantity: Yup.string()
-													// 					.required('Value is Required')
-													// 					.test(
-													// 						'quantity',
-													// 						'Quantity Should be Greater than 1',
-													// 						(value) => {
-													// 							if (value > 0) {
-													// 								return true;
-													// 							} else {
-													// 								return false;
-													// 							}
-													// 						},
-													// 					),
-													// 				unitPrice: Yup.string()
-													// 					.required('Value is Required')
-													// 					.test(
-													// 						'Unit Price',
-													// 						'Unit Price Should be Greater than 1',
-													// 						(value) => {
-													// 							if (value > 0) {
-													// 								return true;
-													// 							} else {
-													// 								return false;
-													// 							}
-													// 						},
-													// 					),
-													// 				vatCategoryId: Yup.string().required(
-													// 					'Value is Required',
-													// 				),
-													// 				productId: Yup.string().required(
-													// 					'Product is Required',
-													// 				),
-													// 			}),
-													// 		),
+												
 													attachmentFile: Yup.mixed()
 													.test(
 														'fileType',

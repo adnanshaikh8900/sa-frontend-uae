@@ -1943,7 +1943,7 @@ if (invoiceNumber && invoiceNumber.value) {
 													if(this.state.isCreatedWIWP==false && !values.invoiceNumber)
 													{
 														errors.invoiceNumber =	'Invoice Number is Required';}
-													if(this.state.isCreatedWIWP==true && this.state.invoiceSelected ==true && !values.creditAmount)
+													if(this.state.isCreatedWIWP==true && !values.creditAmount)
 														{
 															errors.creditAmount =	'Credit Amount is Required';}
 													// if(this.state.invoiceSelected && this.state.initValue.totalAmount>this.state.remainingInvoiceAmount)

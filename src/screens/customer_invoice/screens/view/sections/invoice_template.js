@@ -514,7 +514,7 @@ class InvoiceTemplate extends Component {
 						>
 							<div
 								style={{
-									width: '200%',
+									width: '40%',
 									display: 'flex',
 									flexDirection: 'column',
 									marginLeft: '2rem'
@@ -530,7 +530,17 @@ class InvoiceTemplate extends Component {
 							</div>
 							<div
 								style={{
-									width: '100%',
+									width: '20%',
+									display: 'flex',
+									flexDirection: 'column',
+									marginLeft: '2rem'
+								}}
+							>				
+							
+							</div>
+							<div
+								style={{
+									width: '40%',
 									display: 'flex',
 									justifyContent: 'space-between',
 									marginRight: '1rem'

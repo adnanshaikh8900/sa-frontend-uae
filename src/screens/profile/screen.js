@@ -1333,7 +1333,7 @@ class Profile extends React.Component {
 																							'png',
 																							'jpeg',
 																						]}
-																						maxFileSize={40000}
+																						maxFileSize={110000}
 																						withPreview={true}
 																						singleImage={true}
 																						// withIcon={this.state.showIcon}
@@ -1344,7 +1344,7 @@ class Profile extends React.Component {
 																								? { height: 'inherit' }
 																								: {}
 																						}
-																						label="'Max file size: 40kb"
+																						label="'Max file size: 100KB"
 																						labelClass={
 																							this.state.userPhoto.length > 0
 																								? 'hideLabel'
@@ -1490,9 +1490,9 @@ class Profile extends React.Component {
 																companyStateCode: Yup.string().required(
 																	'State is Required',
 																),
-																companyCity: Yup.string().required(
-																	'City is Required',
-																),
+																// companyCity: Yup.string().required(
+																// 	'City is Required',
+																// ),
 																companyPoBoxNumber: Yup.string().required(
 																	'PO Box Number is Required',
 																),
@@ -1538,7 +1538,7 @@ class Profile extends React.Component {
 																							'png',
 																							'jpeg',
 																						]}
-																						maxFileSize={40000}
+																						maxFileSize={110000}
 																						withPreview={true}
 																						singleImage={true}
 																						// withIcon={this.state.showIcon}
@@ -1549,7 +1549,7 @@ class Profile extends React.Component {
 																								? { height: 'inherit' }
 																								: {}
 																						}
-																						label="'Max file size: 40kb"
+																						label="'Max file size: 100KB"
 																						labelClass={
 																							this.state.companyLogo.length > 0
 																								? 'hideLabel'
@@ -2257,14 +2257,14 @@ class Profile extends React.Component {
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="companyCity">
-																					<span className="text-danger">*</span> {strings.City}
+																					<span className="text-danger"></span> {strings.City}
 																				</Label>
 																					<Input
 																						type="text"
 																						maxLength='100'
 																						id="companyCity"
 																						name="companyCity"
-																						placeholder={strings.Enter+strings.City}
+																						placeholder={strings.Location}
 																						value={
 																							isSame
 																								? this.state.companyAddress
@@ -2935,7 +2935,7 @@ class Profile extends React.Component {
 																						type="text"
 																						id="invoicingCity"
 																						name="invoicingCity"
-																						placeholder={strings.Enter+strings.City}
+																						placeholder={strings.Location}
 																						value={
 																							props.values.invoicingCity || ''
 																						}
@@ -3454,7 +3454,7 @@ class Profile extends React.Component {
 																						type="text"
 																						id="companyCity"
 																						name="companyCity"
-																						placeholder={strings.Enter+strings.City}
+																						placeholder={strings.Location}
 																						value={
 																							isSame
 																								? this.state.companyAddress

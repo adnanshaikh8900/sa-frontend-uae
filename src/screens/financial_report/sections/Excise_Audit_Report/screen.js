@@ -471,6 +471,13 @@ class ViewFtaExciseAuditReport extends React.Component {
 													</h5></b>
 													</td>
 												</tr>
+												<tr>
+													<td>
+													<h6>
+													CompInfoStart
+													</h6>
+													</td>
+												</tr>
 												<Table>
 												
 												<thead>
@@ -532,11 +539,19 @@ class ViewFtaExciseAuditReport extends React.Component {
 																						{this.state.FtaExciseAuditData.fafVersion}
 																					</td>
 																				
-																				</tr>
-																		
+																				</tr>																		
 														
 												</tbody>
 												</Table>
+												
+												<tr>
+													<td colSpan={13}>
+													<h6>
+													CompInfoEnd
+													</h6>
+													</td>
+												</tr>
+
 												<tr>
 													<> </>
 												</tr>
@@ -545,6 +560,15 @@ class ViewFtaExciseAuditReport extends React.Component {
 													Costumer Data Audit File
 													</h5></b></td>
 												</tr>
+
+												<tr>
+													<td>
+													<h6>
+													CustomerDataStart
+													</h6>
+													</td>
+												</tr>
+
 												<Table>
 												
 												<thead>
@@ -589,7 +613,6 @@ class ViewFtaExciseAuditReport extends React.Component {
 																						{item['Reverse Charge']}
 																					</td>
 																					
-																				
 																				</tr>
 																		
 																	</>
@@ -598,6 +621,14 @@ class ViewFtaExciseAuditReport extends React.Component {
 														)}
 												</tbody>
 												</Table>
+												
+												<tr>
+													<td colSpan={5}>
+													<h6>
+													CustomerDataEnd
+													</h6>
+													</td>
+												</tr>
 												<tr>
 													<> </>
 												</tr>
@@ -605,6 +636,13 @@ class ViewFtaExciseAuditReport extends React.Component {
 												<td><b><h5>
 												Supplier Data Audit File</h5></b>
 												</td>
+												</tr>
+												<tr>
+													<td>
+													<h6>
+													SupplierDataStart
+													</h6>
+													</td>
 												</tr>
 												<Table>
 												
@@ -648,9 +686,7 @@ class ViewFtaExciseAuditReport extends React.Component {
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['reverseCharge']}
 																					</td>
-																					
-																					
-																				
+
 																				</tr>
 																		
 																	</>
@@ -659,13 +695,28 @@ class ViewFtaExciseAuditReport extends React.Component {
 														)}
 												</tbody>
 												</Table>
+												
+												<tr>
+													<td colSpan={12}>
+													<h6>
+													SupplierDataEnd
+													</h6>
+													</td>
+												</tr>
 												<tr>
 													<> </>
 												</tr>
 												<tr>
 												<td><b><h5>
-												Purchase Data Information</h5></b>
+												Purchase Listing Table</h5></b>
 												</td>
+												</tr>
+												<tr>
+													<td colSpan={12}>
+													<h6>
+													PurcDataStart
+													</h6>
+													</td>
 												</tr>
 												<Table>
 												
@@ -749,8 +800,6 @@ class ViewFtaExciseAuditReport extends React.Component {
 																						{item['exciseTaxFCY']}
 																					</td>
 																					
-																					
-																				
 																				</tr>
 																		
 																	</>
@@ -759,6 +808,14 @@ class ViewFtaExciseAuditReport extends React.Component {
 														)}
 												</tbody>
 												</Table>
+												
+												<tr>
+													<td colSpan={16}>
+													<h6>
+													PurcDataEnd
+													</h6>
+													</td>
+												</tr>
 												<tr>
 													<> </>
 												</tr>
@@ -817,8 +874,15 @@ class ViewFtaExciseAuditReport extends React.Component {
 													</tr>
 													<tr>
 													<td><b><h5>
-													Supply Data Information
+													Supply Listing Table
 													</h5></b></td>
+												</tr>
+												<tr>
+													<td>
+													<h6>
+													SuppDataStart
+													</h6>
+													</td>
 												</tr>
 												<Table>
 												
@@ -889,7 +953,6 @@ class ViewFtaExciseAuditReport extends React.Component {
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['excisetaxCode']}
 																					</td>
-																				
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['fcycode']}
 																					</td>
@@ -908,6 +971,14 @@ class ViewFtaExciseAuditReport extends React.Component {
 														)}
 												</tbody>
 												</Table>
+												
+												<tr>
+													<td colSpan={16}>
+													<h6>
+													SuppDataEnd
+													</h6>
+													</td>
+												</tr>
 												<tr>
 													<> </>
 												</tr>
@@ -965,6 +1036,13 @@ class ViewFtaExciseAuditReport extends React.Component {
 													<td><b><h5>
 													General Ledger Table
 													</h5></b></td>
+												</tr>
+												<tr>
+													<td>
+													<h6>
+													GLDataStart
+													</h6>
+													</td>
 												</tr>
 												<Table>
 												
@@ -1035,6 +1113,14 @@ class ViewFtaExciseAuditReport extends React.Component {
 														)}
 												</tbody>
 												</Table>
+																		
+												<tr>
+													<td colSpan={12}> 
+													<h6>
+													GLDataEnd
+													</h6>
+													</td>
+												</tr>
 												<tr>
 													<> </>
 												</tr>
@@ -1093,6 +1179,14 @@ class ViewFtaExciseAuditReport extends React.Component {
 													</h5></b>
 													</td>
 												</tr>
+												<tr>
+													<td>
+													<h6>
+													SFStart
+													</h6>
+													</td>
+												</tr>
+
 												<Table>
 												
 												<thead>
@@ -1150,6 +1244,13 @@ class ViewFtaExciseAuditReport extends React.Component {
 																				</tr>
 												</tbody>
 												</Table>
+												<tr>
+													<td>
+													<h6>
+													CompInfoEnd
+													</h6>
+													</td>
+												</tr>
 											</Table>
 										</div>
 									)}

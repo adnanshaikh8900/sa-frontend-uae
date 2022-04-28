@@ -23,7 +23,7 @@ export const saveNoteSettingsInfo = (formData) => {
 	return (dispatch) => {
 		let data = {
 			method: 'post',
-			url: `/rest/datalist/saveNoteSettingsInfo?defaultNote`,
+			url: `/rest/datalist/saveNoteSettingsInfo`,
 			data:formData
 		};
 		return authApi(data)

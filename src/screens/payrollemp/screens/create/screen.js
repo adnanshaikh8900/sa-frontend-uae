@@ -1274,8 +1274,8 @@ existForAccountNumber = (value) => {
                                                                             .required('Country is Required') ,
                                                                             stateId: Yup.string()
                                                                             .required('State is Required') ,
-                                                                            city: Yup.string()
-                                                                            .required('City is Required') ,
+                                                                            // city: Yup.string()
+                                                                            // .required('City is Required') ,
                                                                           
                                                                             active : Yup.string()
                                                                             .required('status is Required') , 
@@ -1877,7 +1877,7 @@ existForAccountNumber = (value) => {
 																 <FormGroup>
 															 {/* <Label htmlFor="select">{strings.POBoxNumber}</Label> */}
 															 <Label htmlFor="POBoxNumber">
-																 <span className="text-danger">* </span>{strings.POBoxNumber}
+																 <span className="text-danger"></span>{strings.POBoxNumber}
 															 </Label>
 															 <Input
 																 type="text"
@@ -2052,14 +2052,14 @@ existForAccountNumber = (value) => {
                                                                                             </Col>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="state"><span className="text-danger">* </span>{strings.City} </Label>
+                                                                                                    <Label htmlFor="state"><span className="text-danger"></span>{strings.City} </Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         maxLength="100"
                                                                                                         id="city"
                                                                                                         name="city"
                                                                                                         value={props.values.city}
-                                                                                                        placeholder={strings.Enter+strings.City}
+                                                                                                        placeholder={strings.Location}
 
                                                                                                         onChange={(option) => {
                                                                                                             if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('city')(option) }

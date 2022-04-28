@@ -161,6 +161,7 @@ setConfigurations=(configurationList)=>{
 					endRows:data[0].endRows,
 					skipColumns:data[0].skipColumns,
 			selectedConfiguration: this.state.selectedConfiguration,
+			templateId : this.state.selectedConfiguration,
 			selectedDateFormat:
 				data[0].dateFormatId,
 			selectedDelimiter: data[0].delimiter,
@@ -170,7 +171,7 @@ setConfigurations=(configurationList)=>{
 			},
 		});
 
-		this.processData(this.props.location.state.dataString)
+		// this.processData(this.props.location.state.dataString)
 
 }}
 	initializeData = () => {
@@ -185,9 +186,12 @@ setConfigurations=(configurationList)=>{
 			 
 			this.setConfigurations(res.data)
 		});
+	
+		 
+		this.processData(this.props.location.state.dataString)
 		if (this.props.location.state && this.props.location.state.bankAccountId) {
-			 this.processData(this.props.location.state.dataString)
-
+			
+		
 			this.props.importTransactionActions
 				.getTableHeaderList()
 				.then((res) => {
@@ -261,6 +265,7 @@ setConfigurations=(configurationList)=>{
 	};
 
 	handleApply = (value, resetForm) => {
+		debugger
 		if (this.validateForm()) {
 			const { initValue } = this.state;
 			initValue['delimiter'] = this.state.selectedDelimiter;
@@ -280,7 +285,7 @@ setConfigurations=(configurationList)=>{
 			);
 			formData.append('skipRows', initValue.skipRows ? initValue.skipRows : '-');
 			formData.append('endRows', initValue.endRows ? initValue.endRows : '-');
-			formData.append('skipColumns', initValue.skipColumns ? initValue.skipColumns : []);
+			formData.append('skipColumns',initValue.skipColumns.length >= 1  ? initValue.skipColumns : '');
 			formData.append(
 				'textQualifier',
 				initValue.textQualifier ? initValue.textQualifier : '',
@@ -473,6 +478,7 @@ setConfigurations=(configurationList)=>{
 				return item;
 			});
 			let postData = { ...this.state.initValue };
+			postData.skipColumns = this.state.initValue.skipColumns.length >= 1  ? this.state.initValue.skipColumns : ''
 			postData.indexMap = a;
 			this.props.importTransactionActions
 				.createConfiguration(postData)
@@ -611,7 +617,7 @@ setConfigurations=(configurationList)=>{
 	};
 
 	processData = dataString => {
-	 
+	 debugger
 		 let parse = Papa.parse(dataString, this.state.config)
 		// let parse = dataString
 		const skipColumns = this.state.initValue.skipColumns
@@ -622,12 +628,12 @@ setConfigurations=(configurationList)=>{
 			newString+=(parseInt(row)-1)+","
 		})
 	}
-	 
-		const dataStringLines = parse.data.slice(this.state.skipRows, this.state.endRows);
+	 debugger
+		const dataStringLines = this.state.skipRows && this.state.endRows ? parse.data.slice(this.state.skipRows, this.state.endRows) : parse.data;
 		const header = parse.data[this.state.headerRowNo === undefined ? 0 : this.state.headerRowNo - 1]
 		console.log(parse,"parse")
 		let headers = header
-
+debugger
 		const list = [];
 
 		for (let i = 1; i < dataStringLines.length; i++) {
@@ -1384,7 +1390,6 @@ setConfigurations=(configurationList)=>{
 
 														<div id="list_xls">
 															{this.state.tableDataKey && this.state.tableDataKey.length > 0 && this.state.isDateFormatAndFileDateFormatSame == true ? (
-
 																<BootstrapTable
 																	data={tableData}
 																	keyField={this.state.tableDataKey[0]}
@@ -1402,7 +1407,7 @@ setConfigurations=(configurationList)=>{
 																	))}
 																</BootstrapTable>
 																// <TableWrapper data={tableData} keyField={this.state.tableDataKey}/>
-															) : null}
+															) : ''}
 														</div>
 														{/* </div> */}
 

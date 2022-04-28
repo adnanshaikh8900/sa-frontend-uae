@@ -129,7 +129,7 @@ class CreateRole extends React.Component {
 
 	// Show Success Toast
 	success = () => {
-		toast.success('Vat Code Updated successfully... ', {
+		toast.success('VAT Code Updated successfully... ', {
 			position: toast.POSITION.TOP_RIGHT,
 		});
 	};

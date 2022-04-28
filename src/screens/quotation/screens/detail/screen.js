@@ -41,6 +41,7 @@ import moment from 'moment';
 import Switch from "react-switch";
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import { TextareaAutosize } from '@material-ui/core';
 const mapStateToProps = (state) => {
 	return {
 		project_list: state.request_for_quotation.project_list,
@@ -253,6 +254,7 @@ class DetailQuotation extends React.Component {
 									? res.data.discountPercentage
 									: 0,
 								loading: false,
+								discountEnabled : res.data.discount > 0 ? true : false,
 							},
 							() => {
 								if (this.state.data.length > 0) {
@@ -270,6 +272,7 @@ class DetailQuotation extends React.Component {
 									this.setState({
 										idCount,
 									});
+									this.addRow()
 								} else {
 									this.setState({
 										idCount: 0,
@@ -504,9 +507,11 @@ class DetailQuotation extends React.Component {
 				name={`lineItemsString.${idx}.quantity`}
 				render={({ field, form }) => (
 					<div>
+								<div class="input-group">
 						<Input
 							type="text"
-min="0"
+							min="0"
+							maxLength="10"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
 								if (e.target.value === '' || this.regEx.test(e.target.value)) {
@@ -521,7 +526,7 @@ min="0"
 								}
 							}}
 							placeholder={strings.Quantity}
-							className={`form-control 
+							className={`form-control  w-50 
            						${
 												props.errors.lineItemsString &&
 												props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -536,6 +541,9 @@ min="0"
 													: ''
 											}`}
 						/>
+							 {row['productId'] != '' ? 
+						<Input value={row['unitType'] }  disabled/> : ''}
+						</div>
 						{props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
@@ -768,10 +776,21 @@ min="0"
 	
 	addRow = () => {
 		const data = [...this.state.data];
+		const idCount =
+		this.state.idCount?
+				this.state.idCount:
+								data.length > 0
+									? Math.max.apply(
+											Math,
+											data.map((item) => {
+												return item.id;
+											}),
+									)
+									: 0;
 		this.setState(
 			{
 				data: data.concat({
-					id: this.state.idCount + 1,
+					id: idCount + 1,
 					description: '',
 					quantity: 1,
 					unitPrice: '',
@@ -831,7 +850,7 @@ min="0"
 	renderVat = (cell, row, props) => {
 		const { vat_list } = this.state;
 		let vatList = vat_list.length
-			? [{ id: '', vat: 'Select Vat' }, ...vat_list]
+			? [{ id: '', vat: 'Select VAT' }, ...vat_list]
 			: vat_list;
 		let idx;
 		this.state.data.map((obj, index) => {
@@ -853,18 +872,18 @@ min="0"
 										'name',
 										'id',
 										vat_list,
-										'Vat',
+										'VAT',
 								  )
 								: []
 						}
 						value={
 							vat_list &&
 							selectOptionsFactory
-								.renderOptions('name', 'id', vat_list, 'Vat')
+								.renderOptions('name', 'id', vat_list, 'VAT')
 								.find((option) => option.value === +row.vatCategoryId)
 						}
 						id="vatCategoryId"
-						placeholder={strings.Select+strings.Vat}
+						placeholder={strings.Select+strings.VAT}
 						onChange={(e) => {
 							this.selectItem(
 								e.value,
@@ -1015,6 +1034,29 @@ min="0"
 								: ''
 						}`}
 					/>
+					  {row['productId'] != '' ? 
+						   <div className='mt-1'>
+						   <Input
+						type="text"
+						maxLength="250"
+						value={row['description'] !== '' ? row['description'] : ''}
+						onChange={(e) => {
+							this.selectItem(e.target.value, row, 'description', form, field);
+						}}
+						placeholder={strings.Description}
+						className={`form-control ${
+							props.errors.lineItemsString &&
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)].description &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)].description
+								? 'is-invalid'
+								: ''
+						}`}
+					/>
+						   </div> : ''}
 					{props.errors.lineItemsString &&
                     props.errors.lineItemsString[parseInt(idx, 10)] &&
                     props.errors.lineItemsString[parseInt(idx, 10)].productId &&
@@ -1046,18 +1088,18 @@ min="0"
 	};
 
 	renderActions = (cell, rows, props) => {
-		return (
+		return rows['productId'] != '' ? 
 			<Button
 				size="sm"
-				className="btn-twitter btn-brand icon"
+				className="btn-twitter btn-brand icon mt-1"
 				disabled={this.state.data.length === 1 ? true : false}
 				onClick={(e) => {
 					this.deleteRow(e, rows, props);
 				}}
 			>
 				<i className="fas fa-trash"></i>
-			</Button>
-		);
+			</Button>:"";
+	
 	};
 
 	checkedRow = () => {
@@ -1638,7 +1680,7 @@ console.log(this.state.supplier_currency)
 																		},
 																	),
 																vatCategoryId: Yup.string().required(
-																	'Vat is Required',
+																	'VAT is Required',
 																),
 																productId: Yup.string().required(
 																	'Product is Required',
@@ -1689,42 +1731,42 @@ console.log(this.state.supplier_currency)
 														// 			),
 														// 		}),
 														// 	),
-														// attachmentFile: Yup.mixed()
-														// 	.test(
-														// 		'fileType',
-														// 		'*Unsupported File Format',
-														// 		(value) => {
-														// 			value &&
-														// 				this.setState({
-														// 					fileName: value.name,
-														// 				});
-														// 			if (
-														// 				!value ||
-														// 				(value &&
-														// 					this.supported_format.includes(
-														// 						value.type,
-														// 					))
-														// 			) {
-														// 				return true;
-														// 			} else {
-														// 				return false;
-														// 			}
-														// 		},
-														// 	)
-														// 	.test(
-														// 		'fileSize',
-														// 		'*File Size is too large',
-														// 		(value) => {
-														// 			if (
-														// 				!value ||
-														// 				(value && value.size <= this.file_size)
-														// 			) {
-														// 				return true;
-														// 			} else {
-														// 				return false;
-														// 			}
-														// 		},
-														// 	),
+														attachmentFile: Yup.mixed()
+															.test(
+																'fileType',
+																'*Unsupported File Format',
+																(value) => {
+																	value &&
+																		this.setState({
+																			fileName: value.name,
+																		});
+																	if (
+																		!value ||
+																		(value &&
+																			this.supported_format.includes(
+																				value.type,
+																			))
+																	) {
+																		return true;
+																	} else {
+																		return false;
+																	}
+																},
+															)
+															.test(
+																'fileSize',
+																'*File Size is too large',
+																(value) => {
+																	if (
+																		!value ||
+																		(value && value.size <= this.file_size)
+																	) {
+																		return true;
+																	} else {
+																		return false;
+																	}
+																},
+															),
 													})}
 												>
 													{(props) => (
@@ -2034,7 +2076,7 @@ console.log(this.state.supplier_currency)
 																
 															<Row>
 																<Col lg={8} className="mb-3">
-																	<Button
+																	{/* <Button
 																		color="primary"
 																		className={`btn-square mr-3 ${
 																			this.checkedRow() ? `disabled-cursor` : ``
@@ -2048,10 +2090,10 @@ console.log(this.state.supplier_currency)
 																		disabled={this.checkedRow() ? true : false}
 																	>
 																		<i className="fa fa-plus"></i> {strings.Addmore}
-																	</Button>
+																	</Button> */}
 																</Col>
 																<Col  >
-																<label className='mr-4'><b>{strings.tax_type}</b></label>
+																
 																{this.state.taxType === false ?
 																	<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Exclusive}</b></span> :
 																	<span className='mr-4'>{strings.Exclusive}</span>}
@@ -2122,7 +2164,7 @@ console.log(this.state.supplier_currency)
 																			}
 																		></TableHeaderColumn>
 																		<TableHeaderColumn
-																			width="12%"
+																			width="17%"
 																			dataField="product"
 																			dataFormat={(cell, rows) =>
 																				this.renderProduct(cell, rows, props)
@@ -2146,7 +2188,7 @@ console.log(this.state.supplier_currency)
 																		>
 																			Account
 																		</TableHeaderColumn> */}
-																		<TableHeaderColumn
+																		{/* <TableHeaderColumn
 																			dataField="description"
 																			dataFormat={(cell, rows) =>
 																				this.renderDescription(
@@ -2157,17 +2199,17 @@ console.log(this.state.supplier_currency)
 																			}
 																		>
 																			{strings.DESCRIPTION}
-																		</TableHeaderColumn>
+																		</TableHeaderColumn> */}
 																		<TableHeaderColumn
 																			dataField="quantity"
-																			width="100"
+																			width="13%"
 																			dataFormat={(cell, rows) =>
 																				this.renderQuantity(cell, rows, props)
 																			}
 																		>
 																			{strings.QUANTITY}
 																		</TableHeaderColumn>
-																		<TableHeaderColumn
+																		{/* <TableHeaderColumn
 																			width="5%"
 																			dataField="unitType"
 																     	>{strings.Unit}	<i
@@ -2181,7 +2223,7 @@ console.log(this.state.supplier_currency)
 																	 >
 																		Units / Measurements
 																	 </UncontrolledTooltip>
-																 </TableHeaderColumn> 
+																 </TableHeaderColumn>  */}
 																		<TableHeaderColumn
 																			dataField="unitPrice"
 																			dataFormat={(cell, rows) =>
@@ -2190,6 +2232,7 @@ console.log(this.state.supplier_currency)
 																		>
 																			{strings.UNITPRICE}
 																		</TableHeaderColumn>
+																		{initValue.total_excise != 0 &&
 																		<TableHeaderColumn
 																	width="10%"
 																		dataField="exciseTaxId"
@@ -2209,7 +2252,8 @@ console.log(this.state.supplier_currency)
 																			If Exise Type for a product is Inclusive
 																			then the Excise dropdown will be Disabled
 																		</UncontrolledTooltip>
-																	</TableHeaderColumn> 
+																	</TableHeaderColumn> }
+																	{this.state.discountEnabled == true &&
 																	<TableHeaderColumn
 																	width="12%"
 																		dataField="discount"
@@ -2218,7 +2262,7 @@ console.log(this.state.supplier_currency)
 																		}
 																	>
 																		{strings.DISCOUNT_TYPE}
-																	</TableHeaderColumn>
+																	</TableHeaderColumn>}
 																		<TableHeaderColumn
 																			dataField="vat"
 																			dataFormat={(cell, rows) =>
@@ -2249,17 +2293,37 @@ console.log(this.state.supplier_currency)
 																	</BootstrapTable>
 																</Col>
 															</Row>
+															<Row className="ml-4 ">
+															<Col className=" ml-4">
+																<FormGroup className='pull-right'>
+																<Input
+																	type="checkbox"
+																	id="discountEnabled"
+																	checked={this.state.discountEnabled}
+																	onChange={(option) => {
+																		if(initValue.discount > 0){
+																			this.setState({ discountEnabled: true })
+																		}else{
+																		this.setState({ discountEnabled: !this.state.discountEnabled })}
+																	}}
+																/>
+																<Label>{strings.ApplyLineItemDiscount}</Label>
+																</FormGroup>
+															</Col>
+														</Row>
 															{data.length > 0 && (
 																<Row>
 																		<Col lg={8}>
-																	<FormGroup className="py-2">
-																		<Label htmlFor="notes">{strings.Notes}</Label>
-																		<Input
+																		<FormGroup className="py-2">
+																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
+																		<TextareaAutosize
 																			type="textarea"
-																			maxLength="250"
+																			style={{width: "700px"}}
+																			className="textarea"
+																			maxLength="255"
 																			name="notes"
 																			id="notes"
-																			rows="6"
+																			rows="2"
 																			placeholder={strings.DeliveryNotes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
@@ -2267,6 +2331,114 @@ console.log(this.state.supplier_currency)
 																			value={props.values.notes}
 																		/>
 																	</FormGroup>
+																	<Row>
+																		<Col lg={6}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="receiptNumber">
+																					{strings.ReferenceNumber}
+																				</Label>
+																				<Input
+																					type="text"
+																					maxLength="100"
+																					id="receiptNumber"
+																					name="receiptNumber"
+																					value={props.values.receiptNumber}
+																					placeholder={strings.ReceiptNumber}
+																					onChange={(value) => {
+																						props.handleChange('receiptNumber')(value);
+
+																					}}
+																					className={props.errors.receiptNumber && props.touched.receiptNumber ? "is-invalid" : ""}
+																				/>
+																				{props.errors.receiptNumber && props.touched.receiptNumber && (
+																					<div className="invalid-feedback">{props.errors.receiptNumber}</div>
+																				)}
+																			</FormGroup>
+																		</Col>
+																		<Col lg={6}>
+																			<FormGroup className="mb-3">
+																				<Field
+																					name="attachmentFile"
+																					render={({ field, form }) => (
+																						<div>
+																							<Label>{strings.ReceiptAttachment}</Label>{' '}
+																							<br />
+																							<Button
+																								color="primary"
+																								onClick={() => {
+																									document
+																										.getElementById('fileInput')
+																										.click();
+																								}}
+																								className="btn-square mr-3"
+																							>
+																								<i className="fa fa-upload"></i>{' '}
+																								{strings.upload}
+																							</Button>
+																							<input
+																								id="fileInput"
+																								ref={(ref) => {
+																									this.uploadFile = ref;
+																								}}
+																								type="file"
+																								style={{ display: 'none' }}
+																								onChange={(e) => {
+																									this.handleFileChange(
+																										e,
+																										props,
+																									);
+																								}}
+																							/>
+																							{this.state.fileName && (
+																								<div>
+																									<i
+																										className="fa fa-close"
+																										onClick={() =>
+																											this.setState({
+																												fileName: '',
+																											})
+																										}
+																									></i>{' '}
+																									{this.state.fileName}
+																								</div>
+																							)}
+																						</div>
+																					)}
+																				/>
+																				{props.errors.attachmentFile &&
+																					props.touched.attachmentFile && (
+																						<div className="invalid-file">
+																							{props.errors.attachmentFile}
+																						</div>
+																					)}
+																			</FormGroup>
+																		</Col>
+																	</Row>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="receiptAttachmentDescription">
+																			{strings.AttachmentDescription}
+																		</Label><br/>
+																		<TextareaAutosize
+																			type="textarea"
+																			className="textarea"
+																			maxLength="250"
+																			style={{width: "700px"}}
+																			name="receiptAttachmentDescription"
+																			id="receiptAttachmentDescription"
+																			rows="2"
+																			placeholder={strings.ReceiptAttachmentDescription}
+																			onChange={(option) =>
+																				props.handleChange(
+																					'receiptAttachmentDescription',
+																				)(option)
+																			}
+																			value={
+																				props.values
+																					.receiptAttachmentDescription
+																			}
+																		/>
+																	</FormGroup>
+
 																
 																</Col>
 																	<Col lg={4}>

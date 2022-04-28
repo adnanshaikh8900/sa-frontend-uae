@@ -32,7 +32,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import { optionFactory, selectCurrencyFactory, selectOptionsFactory } from 'utils';
-
+import { TextareaAutosize } from '@material-ui/core';
 import './style.scss';
 import moment from 'moment';
 import {data}  from '../../../Language/index'
@@ -874,7 +874,7 @@ class DetailSupplierInvoice extends React.Component {
 	renderVat = (cell, row, props) => {
 		const { vat_list } = this.state;
 		let vatList = vat_list.length
-			? [{ id: '', vat: 'Select Vat' }, ...vat_list]
+			? [{ id: '', vat: 'Select VAT' }, ...vat_list]
 			: vat_list;
 		let idx;
 		this.state.data.map((obj, index) => {
@@ -896,18 +896,18 @@ class DetailSupplierInvoice extends React.Component {
 										'name',
 										'id',
 										vat_list,
-										'Vat',
+										'VAT',
 								  )
 								: []
 						}
 						value={
 							vat_list &&
 							selectOptionsFactory
-								.renderOptions('name', 'id', vat_list, 'Vat')
+								.renderOptions('name', 'id', vat_list, 'VAT')
 								.find((option) => option.value === +row.vatCategoryId)
 						}
 						id="vatCategoryId"
-						placeholder={strings.Select+strings.Vat}
+						placeholder={strings.Select+strings.VAT}
 						onChange={(e) => {
 							this.selectItem(
 								e.value,
@@ -1181,18 +1181,18 @@ class DetailSupplierInvoice extends React.Component {
 	};
 
 	renderActions = (cell, rows, props) => {
-		return (
+		return rows['productId'] != '' ?  
 			<Button
 				size="sm"
 				className="btn-twitter btn-brand icon"
-				disabled={this.state.data.length === 1 ? true : false}
+				// disabled={this.state.data.length === 1 ? true : false}
 				onClick={(e) => {
 					this.deleteRow(e, rows, props);
 				}}
 			>
 				<i className="fas fa-trash"></i>
 			</Button>
-		);
+			: ''
 	};
 
 	checkedRow = () => {
@@ -1849,7 +1849,7 @@ class DetailSupplierInvoice extends React.Component {
 																		},
 																	),
 																	vatCategoryId: Yup.string().required(
-																		'Vat is Required',
+																		'VAT is Required',
 																	),
 																	productId: Yup.string().required(
 																		'Product is Required',
@@ -2560,7 +2560,7 @@ class DetailSupplierInvoice extends React.Component {
 																	columnClassName="text-right"
 																	formatExtraData={universal_currency_list}
 																	>
-																	Vat amount
+																	VAT amount
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		width="10%"
@@ -2600,7 +2600,7 @@ class DetailSupplierInvoice extends React.Component {
 																		this.setState({ discountEnabled: !this.state.discountEnabled })}
 																	}}
 																/>
-																<Label>Apply Discount</Label>
+																<Label>Apply Line Item Discount</Label>
 																</FormGroup>
 															</Col>
 															</Row>
@@ -2608,14 +2608,16 @@ class DetailSupplierInvoice extends React.Component {
 															{data.length > 0 && (
 																<Row>
 																		<Col lg={8}>
-																	<FormGroup className="py-2">
-																		<Label htmlFor="notes"> {strings.Notes}</Label>
-																		<Input
+																		<FormGroup className="py-2">
+																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
+																		<TextareaAutosize
 																			type="textarea"
-																			maxLength="250"
+																			style={{width: "700px"}}
+																			className="textarea"
+																			maxLength="255"
 																			name="notes"
 																			id="notes"
-																			rows="6"
+																			rows="2"
 																			placeholder={strings.DeliveryNotes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
@@ -2713,14 +2715,16 @@ class DetailSupplierInvoice extends React.Component {
 																	</Row>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="receiptAttachmentDescription">
-																			 {strings.AttachmentDescription}
-																		</Label>
-																		<Input
+																			{strings.AttachmentDescription}
+																		</Label><br/>
+																		<TextareaAutosize
 																			type="textarea"
+																			className="textarea"
 																			maxLength="250"
+																			style={{width: "700px"}}
 																			name="receiptAttachmentDescription"
 																			id="receiptAttachmentDescription"
-																			rows="5"
+																			rows="2"
 																			placeholder={strings.ReceiptAttachmentDescription}
 																			onChange={(option) =>
 																				props.handleChange(

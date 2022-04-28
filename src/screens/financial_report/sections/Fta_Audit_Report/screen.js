@@ -80,7 +80,6 @@ class ViewFtaAuditReport extends React.Component {
 
 		// Company Information Table
 		this.columnHeaderCompany = [
-			{ label: 'Company Name', value: 'companyName', sort: true },
 			{ label: 'Taxable Person Name En', value: 'taxablePersonNameEn', sort: false },
 			{ label: 'Taxable Person Name Ar', value: 'taxablePersonNameAr', sort: true },
 			{ label: 'Tax Registration Number',value: 'taxRegistrationNumber',sort: true},
@@ -112,39 +111,12 @@ class ViewFtaAuditReport extends React.Component {
 			{ label: 'Supplier TRN', value: 'supplierTRN', sort: true },
 			{ label: 'Reverse Charge', value: 'reverseCharge', sort: true },
 		];
+
 		
-		// Supply Data Information
-		this.columnHeaderSupply = [
-			{ label: 'Customer Name', value: 'customerName', sort: true },
-			// { label: 'Customer Country', value: 'customerCountry', sort: false },
-			{ label: 'Customer TRN', value: 'customerTRN', sort: true },
-			{ label: 'Invoice Date', value: 'invoiceDate', sort: true },
-			{ label: 'Invoice Number', value: 'invoiceNo', sort: false },
-			{ label: 'Permit Number', value: 'permitNo', sort: true },
-			{ label: 'Transaction ID', value: 'transactionID', sort: true },
-			{ label: 'Line Number', value: 'lineNo', sort: false },
-			{ label: 'Product Name', value: 'productName', sort: true },
-			{ label: 'Product Type', value: 'productType', sort: true },
-			{ label: 'Product Description', value: 'productDescription', sort: false },
-			{ label: 'Supply Amount AED', value: 'supplyValue', sort: true },
-			{ label: 'VAT Amount AED', value: 'vatvalue', sort: true },
-			{ label: 'Tax Code', value: 'taxCode', sort: false },
-			{ label: 'VAT Amount FCY', value: 'vatfcy', sort: true },
-			{ label: 'Supply FCY', value: 'supplyFCY', sort: true },
-			{ label: 'FCY Code', value: 'fcycode', sort: false },
-		];
-		
-		// Supply Listing Total
-		this.columnHeaderCustomerTotal = [
-			{ label: 'Transaction Count Total', value: 'customerTransactionCountTotal', sort: true },
-			{ label: 'Supply Total AED', value: 'supplyTotal', sort: false },
-			{ label: 'VAT Total AED', value: 'customerVATTotal', sort: true },
-		];
 		
 		// Supply Data Information
 		this.columnHeaderPurchase = [
 			{ label: 'Supplier Name', value: 'supplierName', sort: true },
-			// { label: 'Supplier Country', value: 'supplierCountry', sort: false },
 			{ label: 'Supplier TRN', value: 'supplierTRN', sort: true },
 			{ label: 'Invoice Date', value: 'invoiceDate', sort: true },
 			{ label: 'Invoice Number', value: 'invoiceNo', sort: false },
@@ -164,12 +136,41 @@ class ViewFtaAuditReport extends React.Component {
 		
 		// Supplier Purchase Listing Total
 		this.columnHeaderSupplierTotal = [
-			{ label: 'Transaction Count Total', value: 'supplierTransactionCountTotal', sort: true },
+			
 			{ label: 'Purchase Total AED', value: 'purchaseTotal', sort: false },
 			{ label: 'VAT Total AED', value: 'supplierVATTotal', sort: true },
+			{ label: 'Transaction Count Total', value: 'supplierTransactionCountTotal', sort: true },
 
 		];
+				
+		// Supply Data Information
+		this.columnHeaderSupply = [
+			{ label: 'Customer Name', value: 'customerName', sort: true },
+			{ label: 'Customer TRN', value: 'customerTRN', sort: true },
+			{ label: 'Invoice Date', value: 'invoiceDate', sort: true },
+			{ label: 'Invoice Number', value: 'invoiceNo', sort: false },
+			{ label: 'Permit Number', value: 'permitNo', sort: true },
+			{ label: 'Transaction ID', value: 'transactionID', sort: true },
+			{ label: 'Line Number', value: 'lineNo', sort: false },
+			{ label: 'Product Name', value: 'productName', sort: true },
+			{ label: 'Product Type', value: 'productType', sort: true },
+			{ label: 'Product Description', value: 'productDescription', sort: false },
+			{ label: 'Supply Amount AED', value: 'supplyValue', sort: true },
+			{ label: 'VAT Amount AED', value: 'vatvalue', sort: true },
+			{ label: 'Tax Code', value: 'taxCode', sort: false },
+			{ label: 'VAT Amount FCY', value: 'vatfcy', sort: true },
+			{ label: 'Supply FCY', value: 'supplyFCY', sort: true },
+			{ label: 'FCY Code', value: 'fcycode', sort: false },
+		];
 		
+		// Supply Listing Total
+		this.columnHeaderCustomerTotal = [
+			
+			{ label: 'Supply Total AED', value: 'supplyTotal', sort: false },
+			{ label: 'VAT Total AED', value: 'customerVATTotal', sort: true },
+			{ label: 'Transaction Count Total', value: 'customerTransactionCountTotal', sort: true },
+		];
+
 		// General Ledger Table
 		this.columnHeaderGenral = [
 			{ label: 'Transaction Date', value: 'transactionDate', sort: true },
@@ -400,6 +401,13 @@ class ViewFtaAuditReport extends React.Component {
 													</h5></b>
 													</td>
 												</tr>
+												<tr>
+													<td>
+													<h6>
+													CompInfoStart
+													</h6>
+													</td>
+												</tr>
 												<Table>
 												
 												<thead>
@@ -421,9 +429,9 @@ class ViewFtaAuditReport extends React.Component {
 												<tbody className="data-column">
 												
 																				<tr>
-																					<td style={{ width: '12%', textAlign: 'left'}}>
+																					{/* <td style={{ width: '12%', textAlign: 'left'}}>
 																						{this.state.FtaAuditData.companyName}
-																					</td>
+																					</td> */}
 																					<td style={{ width: '18%', textAlign: 'left'}}>
 																						{this.state.FtaAuditData.taxablePersonNameEn}
 																					</td>
@@ -469,6 +477,14 @@ class ViewFtaAuditReport extends React.Component {
 												
 												</tbody>
 												</Table>
+												
+												<tr>
+													<td colSpan={12}>
+													<h6>
+													CompInfoEnd
+													</h6>
+													</td>
+												</tr>
 													<tr>
 															<> </>
 													</tr>
@@ -476,6 +492,13 @@ class ViewFtaAuditReport extends React.Component {
 													<td><b><h5>
 													Costumer Data Audit File
 													</h5></b></td>
+												</tr>
+												<tr>
+													<td>
+													<h6>
+													CustomerDataStart
+													</h6>
+													</td>
 												</tr>
 												<Table>
 												
@@ -522,14 +545,22 @@ class ViewFtaAuditReport extends React.Component {
 																					</td>
 																					
 																				
-																				</tr>
-																		
+																				</tr>				
 																	</>
 																);
 															},
 														)}
 												</tbody>
 												</Table>
+												
+												<tr>
+													<td colSpan={12}>
+													<h6>
+													CustomerDataEnd
+													</h6>
+													</td>
+												</tr>
+														
 												<tr>
 												<> </>
 													</tr>
@@ -538,6 +569,14 @@ class ViewFtaAuditReport extends React.Component {
 												Supplier Data Audit File</h5></b>
 												</td>
 												</tr>
+												<tr>
+													<td>
+													<h6>
+													SupplierDataStart
+													</h6>
+													</td>
+												</tr>
+
 												<Table>
 												
 												<thead>
@@ -582,168 +621,38 @@ class ViewFtaAuditReport extends React.Component {
 																					</td>
 																					
 																				
-																				</tr>
-																		
+																				</tr>					
 																	</>
 																);
 															},
 														)}
 												</tbody>
 												</Table>
+												
+												<tr>
+													<td colSpan={12}>
+													<h6>
+													SupplierDataEnd
+													</h6>
+													</td>
+												</tr>
+																									
 												<tr>
 												<> </>
 												</tr>
-												
-												<tr>
-												<td><b><h5>
-												Supply Data Information</h5></b>
-												</td>
-												</tr>
-												<Table>
-												
-												<thead>
-													<tr className="header-row" style={{color:"black"}}>
-														{this.columnHeaderSupply.map((column, index) => {
-															return (
-																<th
-																	key={index}
-																	style={{ fontWeight: '600', color:'black' }}
-																	className={column.align ? 'text-right' : '' }
-																	className="table-header-bg"
-																>
-																	{column.label}
-																</th>
-															);
-														})}
-													</tr>
-												</thead>
-												<tbody className="data-column">
-													{this.state.FtaAuditData &&
-														this.state.FtaAuditData.customerSupplyListingResponseModel.map(
-															(item, index) => {
-																return (
-																	<>
-																		
-																		
-																				<tr key={index}>
-																					<td style={{ width: '12%', textAlign: 'left'}}>
-																						{item['customerName']}
-																					</td>
-																					{/* <td style={{ width: '12%', textAlign: 'left'}}>
-																						{item['customerCountry']}
-																					</td> */}
-																					<td style={{ width: '12%', textAlign: 'left'}}>
-																						{item['customerTRN']}
-																					</td>
-																					<td style={{ width: '12%', textAlign: 'left'}}>
-																						{this.renderDate(item['invoiceDate'],item)}
-																					</td>
-																					<td style={{ width: '12%', textAlign: 'left'}}>
-																						{item['invoiceNo']}
-																					</td>
-																					<td style={{ width: '12%', textAlign: 'left'}}>
-																						{item['permitNo']}
-																					</td>
-																					<td style={{ width: '12%', textAlign: 'left'}}>
-																						{item['transactionID']}
-																					</td>
-																					<td style={{ width: '12%', textAlign: 'left'}}>
-																						{item['lineNo']}
-																					</td>
-																					<td style={{ width: '12%', textAlign: 'left'}}>
-																						{item['productName']}
-																					</td>
-																					<td style={{ width: '12%', textAlign: 'left'}}>
-																						{item['productType']}
-																					</td>
-																					<td style={{ width: '12%', textAlign: 'left'}}>
-																						{item['productDescription']}
-																					</td>
-																					<td style={{ width: '12%', textAlign: 'left'}}>
-																						{item['supplyValue']}
-																					</td>
-																					<td style={{ width: '12%', textAlign: 'left'}}>
-																						{item['vatvalue']}
-																					</td>
-																					<td style={{ width: '12%', textAlign: 'left'}}>
-																						{item['taxCode']}
-																					</td>
-																					<td style={{ width: '12%', textAlign: 'left'}}>
-																						{item['supplyFCY']}
-																					</td>
-																					<td style={{ width: '12%', textAlign: 'left'}}>
-																						{item['vatfcy']}
-																					</td>
-																					<td style={{ width: '12%', textAlign: 'left'}}>
-																						{item['fcycode']}
-																					</td>
-																				
-																				</tr>
-																		
-																	</>
-																);
-															},
-														)}
-												</tbody>
-												</Table>
-												<tr>
-													<> </>
-												</tr>
 												<tr>
 													<td><b><h5>
-													Supply Listing Total
+													Purchase Listing Table
 													</h5></b></td>
 												</tr>
-												<Table>
-												
-												<thead>
-													<tr className="header-row" style={{color:"black"}}>
-														{this.columnHeaderCustomerTotal.map((column, index) => {
-															return (
-																<th
-																	key={index}
-																	style={{ fontWeight: '600', color:'black' }}
-																	className={column.align ? 'text-right' : '' }
-																	className="table-header-bg"
-																>
-																	{column.label}
-																</th>
-															);
-														})}
-													</tr>
-												</thead>
-												<tbody className="data-column">
-													
-																	<>
-																		
-																		
-																				<tr >
-																					<td style={{ width: '12%', textAlign: 'left'}}>
-																						{this.state.FtaAuditData.customerTransactionCountTotal}
-																					</td>
-																					<td style={{ width: '12%', textAlign: 'left'}}>
-																						{this.state.FtaAuditData.supplyTotal}
-																					</td>
-																					<td style={{ width: '12%', textAlign: 'left'}}>
-																						{this.state.FtaAuditData.customerVATTotal}
-																					</td>
-																					
-																				
-																				</tr>
-																		
-																	</>
-															
-												</tbody>
-												</Table>
+												<tr>
+													<td colSpan={12}>
+													<h6>
+													PurcDataStart
+													</h6>
+													</td>
+												</tr>
 
-												<tr>
-												<> </>
-												</tr>
-												<tr>
-													<td><b><h5>
-													Purchase Data Information
-													</h5></b></td>
-												</tr>
 												<Table>
 												
 												<thead>
@@ -824,14 +733,22 @@ class ViewFtaAuditReport extends React.Component {
 																						{item['fcycode']}
 																					</td>
 																				
-																				</tr>
-																		
+																				</tr>				
 																	</>
 																);
 															},
 														)}
 												</tbody>
 												</Table>
+												
+												<tr>
+													<td colSpan={16}>
+													<h6>
+													PurcDataEnd
+													</h6>
+													</td>
+												</tr>
+														
 												<tr>
 													<> </>
 												</tr>
@@ -864,14 +781,15 @@ class ViewFtaAuditReport extends React.Component {
 																		
 																		
 																				<tr >
-																					<td style={{ width: '12%', textAlign: 'left'}}>
-																						{this.state.FtaAuditData.supplierTransactionCountTotal}
-																					</td>
+																					
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{this.state.FtaAuditData.purchaseTotal}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{this.state.FtaAuditData.supplierVATTotal}
+																					</td>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
+																						{this.state.FtaAuditData.supplierTransactionCountTotal}
 																					</td>
 																				</tr>
 																		
@@ -883,10 +801,173 @@ class ViewFtaAuditReport extends React.Component {
 												<> </>
 												</tr>
 												<tr>
+												<td><b><h5>
+												Supply Listing Table</h5></b>
+												</td>
+												</tr>
+												<tr>
+													<td>
+													<h6>
+													SuppDataStart
+													</h6>
+													</td>
+												</tr>
+
+												<Table>
+												
+												<thead>
+													<tr className="header-row" style={{color:"black"}}>
+														{this.columnHeaderSupply.map((column, index) => {
+															return (
+																<th
+																	key={index}
+																	style={{ fontWeight: '600', color:'black' }}
+																	className={column.align ? 'text-right' : '' }
+																	className="table-header-bg"
+																>
+																	{column.label}
+																</th>
+															);
+														})}
+													</tr>
+												</thead>
+												<tbody className="data-column">
+													{this.state.FtaAuditData &&
+														this.state.FtaAuditData.customerSupplyListingResponseModel.map(
+															(item, index) => {
+																return (
+																	<>
+																		
+																		
+																				<tr key={index}>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
+																						{item['customerName']}
+																					</td>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
+																						{item['customerTRN']}
+																					</td>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
+																						{this.renderDate(item['invoiceDate'],item)}
+																					</td>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
+																						{item['invoiceNo']}
+																					</td>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
+																						{item['permitNo']}
+																					</td>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
+																						{item['transactionID']}
+																					</td>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
+																						{item['lineNo']}
+																					</td>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
+																						{item['productName']}
+																					</td>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
+																						{item['productType']}
+																					</td>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
+																						{item['productDescription']}
+																					</td>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
+																						{item['supplyValue']}
+																					</td>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
+																						{item['vatvalue']}
+																					</td>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
+																						{item['taxCode']}
+																					</td>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
+																						{item['supplyFCY']}
+																					</td>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
+																						{item['vatfcy']}
+																					</td>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
+																						{item['fcycode']}
+																					</td>
+																				
+																				</tr>					
+																	</>
+																);
+															},
+														)}
+												</tbody>
+												</Table>
+												
+												<tr>
+													<td colSpan={16}>
+													<h6>
+													SuppDataEnd
+													</h6>
+													</td>
+												</tr>
+													
+												<tr>
+													<> </>
+												</tr>
+												<tr>
+													<td><b><h5>
+													Supply Listing Total
+													</h5></b></td>
+												</tr>
+												<Table>
+												
+												<thead>
+													<tr className="header-row" style={{color:"black"}}>
+														{this.columnHeaderCustomerTotal.map((column, index) => {
+															return (
+																<th
+																	key={index}
+																	style={{ fontWeight: '600', color:'black' }}
+																	className={column.align ? 'text-right' : '' }
+																	className="table-header-bg"
+																>
+																	{column.label}
+																</th>
+															);
+														})}
+													</tr>
+												</thead>
+												<tbody className="data-column">
+													
+																	<>
+																		
+																		
+																				<tr >
+																					<td style={{ width: '12%', textAlign: 'left'}}>
+																						{this.state.FtaAuditData.customerTransactionCountTotal}
+																					</td>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
+																						{this.state.FtaAuditData.supplyTotal}
+																					</td>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
+																						{this.state.FtaAuditData.customerVATTotal}
+																					</td>
+																					
+																				
+																				</tr>
+																		
+																	</>
+															
+												</tbody>
+												</Table>
+
+												<tr>
 													<td><b><h5>
 													General Ledger Table
 													</h5></b></td>
 												</tr>
+												<tr>
+													<td>
+													<h6>
+													GLDataStart
+													</h6>
+													</td>
+												</tr>
+
 												<Table>
 												
 												<thead>
@@ -949,13 +1030,21 @@ class ViewFtaAuditReport extends React.Component {
 																					</td>
 																				
 																				</tr>
-																		
+																								
 																	</>
 																);
 															},
 														)}
 												</tbody>
 												</Table>
+												<tr>
+													<td colSpan={12}> 
+													<h6>
+													GLDataEnd
+													</h6>
+													</td>
+												</tr>
+														
 												<tr>
 													<> </>
 												</tr>

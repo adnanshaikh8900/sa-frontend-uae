@@ -548,7 +548,7 @@ class SupplierModal extends React.Component {
                             onChange={(option) =>
                               props.handleChange("city")(option)
                             }
-                            placeholder={strings.Select+strings.City}
+                            placeholder={strings.Location}
                             id="city"
                             name="city"
                             className={

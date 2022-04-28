@@ -39,7 +39,7 @@ import { CommonActions } from 'services/global';
 import { optionFactory, selectCurrencyFactory, selectOptionsFactory } from 'utils';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-
+import { TextareaAutosize } from '@material-ui/core';
 import './style.scss';
 import moment from 'moment';
 
@@ -126,6 +126,7 @@ class CreateQuotation extends React.Component {
 					unitTypeId:''
 				},
 			],
+			discountEnabled: false,
 			idCount: 0,
 			checked:false,
 			initValue: {
@@ -166,6 +167,7 @@ class CreateQuotation extends React.Component {
 			taxType: false,
 			currentData: {},
 			contactType: 2,
+			fileName: '',
 			openCustomerModal: false,
 			openProductModal: false,
 			openInvoiceNumberModel: false,
@@ -378,6 +380,7 @@ class CreateQuotation extends React.Component {
 				name={`lineItemsString.${idx}.quantity`}
 				render={({ field, form }) => (
 					<div>
+						<div class="input-group">
 						<Input
 							type="text"
 							min="0"
@@ -396,8 +399,7 @@ class CreateQuotation extends React.Component {
 								}
 							}}
 							placeholder={strings.Quantity}
-							className={`form-control 
-            ${
+							className={`form-control w-50${ 
 							props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
@@ -409,6 +411,9 @@ class CreateQuotation extends React.Component {
 								: ''
 						}`}
 						/>
+						 {row['productId'] != '' ?
+						<Input value={row['unitType'] }  disabled/> : ''}
+						</div>
 						{props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
@@ -574,6 +579,8 @@ class CreateQuotation extends React.Component {
 										: '',
 								customer_taxTreatment_des : res.data.taxtreatment ? res.data.taxtreatment : '',
 								placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+								fileName: res.data.fileName ? res.data.fileName : '',
+								filePath: res.data.filePath ? res.data.filePath : '',
 								total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
 								data: res.data.poQuatationLineItemRequestModelList
 									? res.data.poQuatationLineItemRequestModelList
@@ -638,7 +645,17 @@ class CreateQuotation extends React.Component {
 				this.getCurrentUser(this.props.location.state.contactData);
 		if(this.props.location.state && this.props.location.state.parentId )
 				this.getParentInvoiceDetails(this.props.location.state.parentId);
+				this.getDefaultNotes()
 	};
+
+	getDefaultNotes=()=>{
+		this.props.commonActions.getNoteSettingsInfo().then((res)=>{
+			if(res.status===200){
+				this.formRef.current.setFieldValue('notes',res.data.defaultNotes, true);
+				this.formRef.current.setFieldValue('footNote',  res.data.defaultFootNotes, true);
+			}
+		})
+	}
 
 	getInitialData = () => {
 		this.getInvoiceNo();
@@ -913,18 +930,18 @@ discountType = (row) =>
 										'name',
 										'id',
 										vat_list,
-										'Vat',
+										'VAT',
 								  )
 								: []
 						}
 						value={
 							vat_list &&
 							selectOptionsFactory
-								.renderOptions('name', 'id', vat_list, 'Vat')
+								.renderOptions('name', 'id', vat_list, 'VAT')
 								.find((option) => option.value === +row.vatCategoryId)
 						}
 						id="vatCategoryId"
-						placeholder={strings.Select+strings.Vat}
+						placeholder={strings.Select+strings.VAT}
 						onChange={(e) => {
 							this.selectItem(
 								e.value,
@@ -1112,6 +1129,29 @@ discountType = (row) =>
                    {props.errors.lineItemsString[parseInt(idx, 10)].productId}
                    </div>
                      )}
+					  {row['productId'] != '' ?
+						   <div className='mt-1'>
+						   <Input
+						type="text"
+						maxLength="250"
+						value={row['description'] !== '' ? row['description'] : ''}
+						onChange={(e) => {
+							this.selectItem(e.target.value, row, 'description', form, field);
+						}}
+						placeholder={strings.Description}
+						className={`form-control ${
+							props.errors.lineItemsString &&
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)].description &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)].description
+								? 'is-invalid'
+								: ''
+						}`}
+					/>
+						   </div> : ''}
                    </>
 				)}
 			/>
@@ -1162,7 +1202,7 @@ discountType = (row) =>
 	};
 
 	renderActions = (cell, rows, props) => {
-		return (
+		return rows['productId'] != '' ?
 			<Button
 				size="sm"
 				className="btn-twitter btn-brand icon mt-1"
@@ -1172,8 +1212,7 @@ discountType = (row) =>
 				}}
 			>
 				<i className="fas fa-trash"></i>
-			</Button>
-		);
+			</Button>: ''
 	};
 
 	checkedRow = () => {
@@ -1405,6 +1444,16 @@ discountType = (row) =>
 		);
 	};
 
+	handleFileChange = (e, props) => {
+		e.preventDefault();
+		let reader = new FileReader();
+		let file = e.target.files[0];
+		if (file) {
+			reader.onloadend = () => {};
+			reader.readAsDataURL(file);
+			props.setFieldValue('attachmentFile', file, true);
+		}
+	};
 
 	handleSubmit = (data, resetForm) => {
 		this.setState({ disabled: true });
@@ -1418,6 +1467,8 @@ discountType = (row) =>
 			discount,
 			discountType,
 			discountPercentage,
+			quotationId,
+			footNote
 		} = data;
 		const { term } = this.state;
 
@@ -1451,6 +1502,9 @@ discountType = (row) =>
 		}
 		if (placeOfSupplyId ) {
 			formData.append('placeOfSupplyId', placeOfSupplyId.value ?placeOfSupplyId.value:placeOfSupplyId);
+		}
+		if (this.uploadFile && this.uploadFile.files && this.uploadFile.files[0]) {
+			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
 		debugger
 		this.setState({ loading:true, loadingMsg:"Creating Quotation..."});
@@ -1559,16 +1613,6 @@ discountType = (row) =>
 		this.setState({ openProductModal: true });
 	};
 
-	handleFileChange = (e, props) => {
-		e.preventDefault();
-		let reader = new FileReader();
-		let file = e.target.files[0];
-		if (file) {
-			reader.onloadend = () => {};
-			reader.readAsDataURL(file);
-			props.setFieldValue('attachmentFile', file, true);
-		}
-	};
 
 	checkAmount=(discount)=>{
 		const { initValue } = this.state;
@@ -1922,16 +1966,50 @@ discountType = (row) =>
 																		},
 																	),
 																vatCategoryId: Yup.string().required(
- 																	'Vat is Required',
+ 																	'VAT is Required',
 																),
 																productId: Yup.string().required(
 																	'Product is Required',
 																),
 															}),
 														),
-												}
-												)
-											}
+														attachmentFile: Yup.mixed()
+														.test(
+															'fileType',
+															'*Unsupported File Format',
+															(value) => {
+																value &&
+																	this.setState({
+																		fileName: value.name,
+																	});
+																if (
+																	!value ||
+																	(value &&
+																		this.supported_format.includes(value.type))
+																) {
+																	return true;
+																} else {
+																	return false;
+																}
+															},
+														)
+														.test(
+															'fileSize',
+															'*File Size is too large',
+															(value) => {
+																if (
+																	!value ||
+																	(value && value.size <= this.file_size)
+																) {
+																	return true;
+																} else {
+																	return false;
+																}
+															},
+														),
+												})}
+												
+												
 											>
 												{(props) => (
 													<Form onSubmit={props.handleSubmit}>
@@ -2279,7 +2357,7 @@ discountType = (row) =>
 														<hr style={{display: props.values.exchangeRate === 1 ? 'none' : ''}} />
 														<Row>
 															<Col lg={8} className="mb-3">
-																<Button
+																{/* <Button
 																	color="primary"
 																	className={`btn-square mr-3 ${
 																		this.checkedRow() ? `disabled-cursor` : ``
@@ -2293,7 +2371,7 @@ discountType = (row) =>
 																	disabled={this.checkedRow() ? true : false}
 																>
 																	<i className="fa fa-plus"></i>{' '}{strings.Addmore} 
-																</Button>
+																</Button> */}
 																<Button
 																	color="primary"
 																	className= "btn-square mr-3"
@@ -2368,14 +2446,14 @@ discountType = (row) =>
 																	className="invoice-create-table"
 																>
 																	<TableHeaderColumn
-																		width="5%"
+																		width="4%"
 																		dataAlign="center"
 																		dataFormat={(cell, rows) =>
 																			this.renderActions(cell, rows, props)
 																		}
 																	></TableHeaderColumn>
 																	<TableHeaderColumn
-																	width="20%"
+																	width="17%"
 																		dataField="product"
 																		dataFormat={(cell, rows) =>
 																			this.renderProduct(cell, rows, props)
@@ -2390,24 +2468,24 @@ discountType = (row) =>
 																			this.renderAddProduct(cell, rows, props)
 																		}
 																	></TableHeaderColumn> */}
-																	<TableHeaderColumn
+																	{/* <TableHeaderColumn
 																		dataField="description"
 																		dataFormat={(cell, rows) =>
 																			this.renderDescription(cell, rows, props)
 																		}
 																	>
 																	{strings.DESCRIPTION}
-																	</TableHeaderColumn>
+																	</TableHeaderColumn> */}
 																	<TableHeaderColumn
 																		dataField="quantity"
-																		width="100"
+																		width="13%"
 																		dataFormat={(cell, rows) =>
 																			this.renderQuantity(cell, rows, props)
 																		}
 																	>
 																		{strings.QUANTITY}
 																	</TableHeaderColumn>
-																	<TableHeaderColumn
+																	{/* <TableHeaderColumn
 																			width="5%"
 																			dataField="unitType"
 																     	>{strings.Unit}	<i
@@ -2418,8 +2496,9 @@ discountType = (row) =>
 																		 target="unitTooltip"
 																	 >
 																		Units / Measurements</UncontrolledTooltip>
-																		</TableHeaderColumn>
+																		</TableHeaderColumn> */}
 																	<TableHeaderColumn
+																	width="10%"
 																		dataField="unitPrice"
 																		dataFormat={(cell, rows) =>
 																			this.renderUnitPrice(cell, rows, props)
@@ -2438,6 +2517,7 @@ discountType = (row) =>
 																			service
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn>
+																	{initValue.total_excise != 0 &&
 																	<TableHeaderColumn
 																	width="10%"
 																		dataField="exciseTaxId"
@@ -2457,7 +2537,8 @@ discountType = (row) =>
 																			If Exise Type for a product is Inclusive
 																			then the Excise dropdown will be Disabled
 																		</UncontrolledTooltip>
-																	</TableHeaderColumn> 
+																	</TableHeaderColumn>  }
+																	{this.state.discountEnabled == true &&
 																	<TableHeaderColumn
 																		width="12%"
 																		dataField="discount"
@@ -2466,8 +2547,9 @@ discountType = (row) =>
 																		}
 																	>
 																	{strings.DisCount}
-																	</TableHeaderColumn>
+																	</TableHeaderColumn>}
 																	<TableHeaderColumn
+																		width="13%"
 																		dataField="vat"
 																		dataFormat={(cell, rows) =>
 																			this.renderVat(cell, rows, props)
@@ -2497,18 +2579,39 @@ discountType = (row) =>
 																</BootstrapTable>
 															</Col>
 														</Row>
+														<Row className="ml-4 ">
+															<Col className=" ml-4">
+																<FormGroup className='pull-right'>
+																<Input
+																	type="checkbox"
+																	id="discountEnabled"
+																	checked={this.state.discountEnabled}
+																	onChange={(option) => {
+																		if(initValue.discount > 0){
+																			this.setState({ discountEnabled: true })
+																		}else{
+																		this.setState({ discountEnabled: !this.state.discountEnabled })}
+																	}}
+																/>
+																<Label>{strings.ApplyLineItemDiscount}</Label>
+																</FormGroup>
+															</Col>
+														</Row>
 														<hr />
 														{this.state.data.length > 0 ? (
 															<Row>
 																<Col lg={8}>
 																	<FormGroup className="py-2">
-																		<Label htmlFor="notes">{strings.Notes}</Label>
-																		<Input
+																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
+																		<TextareaAutosize
 																			type="textarea"
+																			style={{width: "700px"}}
+																			className="textarea"
+																	
 																			maxLength="250"
 																			name="notes"
 																			id="notes"
-																			rows="6"
+																			rows="2"
 																			placeholder={strings.DeliveryNotes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
@@ -2516,11 +2619,119 @@ discountType = (row) =>
 																			value={props.values.notes}
 																		/>
 																	</FormGroup>
+																	<Row>
+																		<Col lg={6}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="receiptNumber">
+																					{strings.ReferenceNumber}
+																				</Label>
+																				<Input
+																					type="text"
+																					maxLength="100"
+																					id="receiptNumber"
+																					name="receiptNumber"
+																					value={props.values.receiptNumber}
+																					placeholder={strings.ReceiptNumber}
+																					onChange={(value) => {
+																						props.handleChange('receiptNumber')(value);
+
+																					}}
+																					className={props.errors.receiptNumber && props.touched.receiptNumber ? "is-invalid" : ""}
+																				/>
+																				{props.errors.receiptNumber && props.touched.receiptNumber && (
+																					<div className="invalid-feedback">{props.errors.receiptNumber}</div>
+																				)}
+																			</FormGroup>
+																		</Col>
+																		<Col lg={6}>
+																			<FormGroup className="mb-3">
+																				<Field
+																					name="attachmentFile"
+																					render={({ field, form }) => (
+																						<div>
+																							<Label>{strings.ReceiptAttachment}</Label>{' '}
+																							<br />
+																							<Button
+																								color="primary"
+																								onClick={() => {
+																									document
+																										.getElementById('fileInput')
+																										.click();
+																								}}
+																								className="btn-square mr-3"
+																							>
+																								<i className="fa fa-upload"></i>{' '}
+																								{strings.upload}
+																							</Button>
+																							<input
+																								id="fileInput"
+																								ref={(ref) => {
+																									this.uploadFile = ref;
+																								}}
+																								type="file"
+																								style={{ display: 'none' }}
+																								onChange={(e) => {
+																									this.handleFileChange(
+																										e,
+																										props,
+																									);
+																								}}
+																							/>
+																							{this.state.fileName && (
+																								<div>
+																									<i
+																										className="fa fa-close"
+																										onClick={() =>
+																											this.setState({
+																												fileName: '',
+																											})
+																										}
+																									></i>{' '}
+																									{this.state.fileName}
+																								</div>
+																							)}
+																						</div>
+																					)}
+																				/>
+																				{props.errors.attachmentFile &&
+																					props.touched.attachmentFile && (
+																						<div className="invalid-file">
+																							{props.errors.attachmentFile}
+																						</div>
+																					)}
+																			</FormGroup>
+																		</Col>
+																	</Row>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="receiptAttachmentDescription">
+																			{strings.AttachmentDescription}
+																		</Label><br/>
+																		<TextareaAutosize
+																			type="textarea"
+																			className="textarea"
+																			maxLength="250"
+																			style={{width: "700px"}}
+																			name="receiptAttachmentDescription"
+																			id="receiptAttachmentDescription"
+																			rows="2"
+																			placeholder={strings.ReceiptAttachmentDescription}
+																			onChange={(option) =>
+																				props.handleChange(
+																					'receiptAttachmentDescription',
+																				)(option)
+																			}
+																			value={
+																				props.values
+																					.receiptAttachmentDescription
+																			}
+																		/>
+																	</FormGroup>
 
 																</Col>
 
 																<Col lg={4}>
 																	<div className="">
+																	{initValue.total_excise > 0 ?
 																	<div className="total-item p-2" >
 																	{/* style={{display:this.state.checked === true ? '':'none'}} */}
 																			<Row>
@@ -2537,7 +2748,8 @@ discountType = (row) =>
 																					</label>
 																				</Col>
 																			</Row>
-																		</div>
+																		</div> : ''}
+																		{this.state.discountEnabled == true ?
 																		<div className="total-item p-2">
 																			<Row>
 																				<Col lg={6}>
@@ -2565,7 +2777,7 @@ discountType = (row) =>
 																					</label>
 																				</Col>
 																			</Row>
-																		</div>
+																		</div>: ''}
 																		<div className="total-item p-2">
 																			<Row>
 																				<Col lg={6}>

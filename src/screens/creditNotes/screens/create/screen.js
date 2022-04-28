@@ -38,6 +38,7 @@ import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import Switch from "react-switch";
 import { Checkbox } from '@material-ui/core';
+import { TextareaAutosize } from '@material-ui/core';
 
 const mapStateToProps = (state) => {
 	return {
@@ -561,8 +562,17 @@ discountType = (row) =>
 
 	componentDidMount = () => {
 		this.getInitialData();
+		this.getDefaultNotes()
 	};
 
+	getDefaultNotes=()=>{
+		this.props.commonActions.getNoteSettingsInfo().then((res)=>{
+			if(res.status===200){
+				this.formRef.current.setFieldValue('notes',res.data.defaultNotes, true);
+				this.formRef.current.setFieldValue('footNote',  res.data.defaultFootNotes, true);
+			}
+		})
+	}
 	getInitialData = () => {
 		this.getInvoiceNo();
 		this.props.creditNotesActions.getInvoiceListForDropdown();
@@ -1859,7 +1869,7 @@ if (invoiceNumber && invoiceNumber.value) {
 																				onChange={(check)=>{
 																					this.setState({isCreatedWIWP:!this.state.isCreatedWIWP})
 																				}}
-																				/>	Create Credit Note Without Product 
+																				/>	{strings.CreateCreditNoteWithoutProduct} 
 																				</Col>
 																				</Row>
 																{this.state.invoiceSelected==false &&(<Row  >
@@ -1870,7 +1880,7 @@ if (invoiceNumber && invoiceNumber.value) {
 																					this.setState({isCreatedWithoutInvoice:!this.state.isCreatedWithoutInvoice})
 																					this.setState({isCreatedWIWP:!this.state.isCreatedWIWP})
 																				}}
-																				/>	Create Credit Note Without Invoice
+																				/>	{strings.CreateCreditNoteWithoutInvoice}
 																				</Col>
 																				</Row>)}
 																				<hr />
@@ -2022,7 +2032,7 @@ if (invoiceNumber && invoiceNumber.value) {
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="taxTreatmentid">
-																		Tax Treatment
+																	{strings.TaxTreatment}
 																	</Label>
 																	<Input
 																	disabled
@@ -2331,7 +2341,7 @@ if (invoiceNumber && invoiceNumber.value) {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="remainingInvoiceAmount">
 																
-																	Remaining Invoice Amount
+																{strings.RemainingInvoiceAmount}
 																	</Label>
 																	<Input
 																		type="text"
@@ -2354,7 +2364,7 @@ if (invoiceNumber && invoiceNumber.value) {
 															<Col  lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="creditAmount"><span className="text-danger">* </span>
-																	Credit Amount
+																	{strings.CreditAmount}
 																	</Label>
 																	<Input
 																		type="text"
@@ -2619,7 +2629,7 @@ min="0"
 																			this.renderExcise(cell, rows, props)
 																		}
 																	>
-																	Excise
+																	{strings.Excises}
 																	<i
 																			id="ExiseTooltip"
 																			className="fa fa-question-circle ml-1"
@@ -2639,7 +2649,7 @@ min="0"
 																			this.renderDiscount(cell, rows, props)
 																		}
 																	>
-																	DisCount
+																{strings.DisCount}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="vat"
@@ -2657,7 +2667,7 @@ min="0"
 																		columnClassName="text-right"
 																		formatExtraData={universal_currency_list}
 																	>
-																		Vat amount
+																		{strings.VATAMOUNT}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="sub_total"
@@ -2674,14 +2684,16 @@ min="0"
 														{this.state.data.length > 0 ? (
 															<Row>
 																<Col lg={8}>
-																	<FormGroup className="py-2">
-																		<Label htmlFor="notes">{strings.Notes}</Label>
-																		<Input
+																<FormGroup className="py-2">
+																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
+																		<TextareaAutosize
 																			type="textarea"
-																			maxLength="250"
+																			style={{width: "700px"}}
+																			className="textarea"
+																			maxLength="255"
 																			name="notes"
 																			id="notes"
-																			rows="6"
+																			rows="2"
 																			placeholder={strings.DeliveryNotes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
@@ -2794,14 +2806,16 @@ min="0"
 																	</Row>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="receiptAttachmentDescription">
-																			 {strings.AttachmentDescription}
-																		</Label>
-																		<Input
+																			{strings.AttachmentDescription}
+																		</Label><br/>
+																		<TextareaAutosize
 																			type="textarea"
+																			className="textarea"
 																			maxLength="250"
+																			style={{width: "700px"}}
 																			name="receiptAttachmentDescription"
 																			id="receiptAttachmentDescription"
-																			rows="5"
+																			rows="2"
 																			placeholder={strings.ReceiptAttachmentDescription}
 																			onChange={(option) =>
 																				props.handleChange(
@@ -2815,6 +2829,7 @@ min="0"
 																		/>
 																	</FormGroup>
 																</Col>
+																
 																<Col lg={4}>
 																{this.state.isCreatedWIWP===false &&(	<div className="">
 																		<div className="total-item p-2">
@@ -2962,7 +2977,7 @@ min="0"
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
-																					Total Excise
+																				{strings.TotalExcise}
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-right">

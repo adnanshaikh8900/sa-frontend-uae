@@ -192,7 +192,7 @@ class InvoiceTemplate extends Component {
 									}}
 								>
 									<h6 style={{ fontWeight: '600' }} className="mb-2 mt-2 ml-1">
-										<b>{strings.TaxCreditDate }:{' '}
+										<b>{strings.TaxCreditDate}:{' '}
 													{moment(invoiceData.invoiceDate).format(
 														'DD MMM YYYY',
 													)}</b>

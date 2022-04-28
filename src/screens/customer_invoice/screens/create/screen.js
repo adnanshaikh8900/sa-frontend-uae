@@ -1088,7 +1088,7 @@ discountType = (row) =>
 	renderVat = (cell, row, props) => {
 		const { vat_list } = this.props;
 		let vatList = vat_list.length
-			? [{ id: '', vat: 'Select Vat' }, ...vat_list]
+			? [{ id: '', vat: 'Select VAT' }, ...vat_list]
 			: vat_list;
 		let idx;
 		this.state.data.map((obj, index) => {
@@ -1110,14 +1110,14 @@ discountType = (row) =>
 										'name',
 										'id',
 										vat_list,
-										'Vat',
+										'VAT',
 								  )
 								: []
 						}
 						value={
 							vat_list &&
 							selectOptionsFactory
-								.renderOptions('name', 'id', vat_list, 'Vat')
+								.renderOptions('name', 'id', vat_list, 'VAT')
 								.find((option) => option.value === +row.vatCategoryId)
 						}
 						id="vatCategoryId"
@@ -2209,23 +2209,28 @@ if(changeShippingAddress && changeShippingAddress==true)
 												    }
 
 													if(values.changeShippingAddress==true){
-														if(values.shippingCountryId =="")  errors.shippingCountryId ='Country is Required';
+														if(values.shippingCountryId =="")  errors.shippingCountryId ='Shipping Country is Required';
 													}
 
 													if(values.changeShippingAddress==true){
-														if(values.shippingStateId =="")  errors.shippingStateId ='State is Required';
+														if(values.shippingStateId =="")  errors.shippingStateId ='Shipping State is Required';
 											        }
 
+													// if(values.changeShippingAddress==true){
+													// 	if(values.shippingCity =="")  errors.shippingCity ='City is Required';
+													// }
+													
 													if(values.changeShippingAddress==true){
-														if(values.shippingCity =="")  errors.shippingCity ='City is Required';
-													}
-													if(values.changeShippingAddress==true){
-													if(this.state.showpoBoxNumberErrorMsg==true)
-													errors.poBoxNumber="Please Enter 3 To 6 Digit PO Box Number";
-
-													if (values.poBoxNumber === '') {
-														errors.poBoxNumber ='PO Box Number is Required';
-													}}
+														if (values.shippingCountryId == 229 || values.shippingCountryId.value == 229) {
+															if (values.poBoxNumber === '')
+																errors.poBoxNumber = 'PO Box Number is Required';
+														} else {
+															if (values.shippingPostZipCode == '')
+																errors.shippingPostZipCode = 'Postal Code is Required';
+															else
+																if (values.shippingPostZipCode.length != 6)
+																	errors.shippingPostZipCode = "Please Enter 6 Digit Postal Zip Code"
+														}}
 														return errors;
 												}}
 												validationSchema={Yup.object().shape({
@@ -2278,7 +2283,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		},
 																	),
 																vatCategoryId: Yup.string().required(
-																	'Vat is Required',
+																	'VAT is Required',
 																),
 																productId: Yup.string().required(
 																	'Product is Required',
@@ -2955,7 +2960,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 														<Row style={{display: props.values.changeShippingAddress === true ? '' : 'none'}}>
 														<Col md="4">
 																<FormGroup>
-																	<Label htmlFor="shippingCity"><span className="text-danger">* </span>{strings.City}</Label>
+																	<Label htmlFor="shippingCity"><span className="text-danger"></span>{strings.City}</Label>
 																	<Input
 																
 																		// options={city ? selectOptionsFactory.renderOptions('cityName', 'cityCode', cityRegion) : ''}
@@ -2971,7 +2976,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																				props.handleChange('shippingCity')(option);
 																			}
 																		}}
-																		placeholder={strings.Enter + strings.City}
+																		placeholder={strings.Location}
 																		id="shippingCity"
 																		name="shippingCity"
 																		type="text"
@@ -2990,53 +2995,49 @@ if(changeShippingAddress && changeShippingAddress==true)
 																</FormGroup>
 															</Col>
 
-															<Col md="4">
-																<FormGroup>
-																	{/* <Label htmlFor="select">{strings.POBoxNumber}</Label> */}
-																	<Label htmlFor="POBoxNumber">
-																		<span className="text-danger">* </span>{strings.POBoxNumber}
-																	</Label>
-																	<Input
-																		type="text"
-																		minLength="3"
-																		maxLength="6"
-																		id="poBoxNumber"
-																		name="poBoxNumber"
-																		autoComplete="Off"
-																		placeholder={strings.Enter + strings.POBoxNumber}
-																		onChange={(option) => {
-																			if (
-																				option.target.value === '' ||
-																				this.regEx.test(option.target.value)
-																			) {
-																				if(option.target.value.length<3)
-																				this.setState({showpoBoxNumberErrorMsg:true})
-																				else
-																				this.setState({showpoBoxNumberErrorMsg:false})
-																				props.handleChange('poBoxNumber')(
-																					option,
-																				);
-																			}
-																		}}
-																		value={props.values.poBoxNumber}
-																		className={
-																			props.errors.poBoxNumber &&
-																				props.touched.poBoxNumber
-																				? 'is-invalid'
-																				: ''
-																		}
-																	/>
-																	{props.errors.poBoxNumber &&
-																		props.touched.poBoxNumber && (
-																			<div className="invalid-feedback">
-																				{props.errors.poBoxNumber}
-																			</div>
-																		)}
-																</FormGroup>
-															</Col>
+													
+																			<Col md="4" >
+																				<FormGroup>
+																					{props.values.shippingCountryId == 229 || props.values.shippingCountryId.value == 229 ?
+																					<Label htmlFor="POBoxNumber">
+																						<span className="text-danger">* </span>{strings.POBoxNumber}
+																					</Label>:
+																					<Label htmlFor="PostZipCode"><span className="text-danger">* </span>{strings.PostZipCode}</Label>
+																						}
+																				<Input
+																					type="text"
+																					maxLength="6"
+																					id="shippingPostZipCode"
+																					name="shippingPostZipCode"
+																					autoComplete="Off"
+																					placeholder={strings.Enter + strings.PostZipCode}
+																					onChange={(option) => {
+																						if (
+																							option.target.value === '' ||
+																							this.regEx.test(option.target.value)
+																						) {
+																							props.handleChange('shippingPostZipCode')(
+																								option,
+																							);
+																						}
 
-
-
+																					}}
+																					value={props.values.shippingPostZipCode}
+																					className={
+																						props.errors.shippingPostZipCode &&
+																							props.touched.shippingPostZipCode
+																							? 'is-invalid'
+																							: ''
+																					}
+																				/>
+																				{props.errors.shippingPostZipCode &&
+																					props.touched.shippingPostZipCode && (
+																						<div className="invalid-feedback">
+																							{props.errors.shippingPostZipCode}
+																						</div>
+																					)}
+																			</FormGroup>
+																			</Col>
 															<Col md="4">
 																<FormGroup>
 																	<Label htmlFor="shippingTelephone">{strings.Telephone}</Label>
@@ -3070,7 +3071,6 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		)}
 																</FormGroup>
 															</Col>
-
 														</Row>
 														<Row style={{display: props.values.changeShippingAddress === true ? '' : 'none'}}>
 														<Col md="4">
@@ -3439,7 +3439,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		this.setState({ discountEnabled: !this.state.discountEnabled })}
 																	}}
 																/>
-																<Label>Apply Discount</Label>
+																<Label>{strings.ApplyLineItemDiscount}</Label>
 																</FormGroup>
 															</Col>
 														</Row>
@@ -3572,18 +3572,18 @@ if(changeShippingAddress && changeShippingAddress==true)
 																	</FormGroup>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="footNote">
-																			Footnotes
+																		{strings.Footnote}
 																		</Label>
 																		<br/>
 																		<TextareaAutosize
 																			type="textarea"
 																			className="textarea"
 																			maxLength="255"
-																		 style={{width: "700px"}}
+																			style={{width: "700px"}}
 																			name="footNote"
 																			id="footNote"
 																			rows="2"
-																			placeholder="e.g. Thank You Note"
+																			placeholder={strings.PaymentDetails}
 																			onChange={(option) =>
 																				props.handleChange(
 																					'footNote',

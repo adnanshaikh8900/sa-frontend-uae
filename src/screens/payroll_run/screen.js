@@ -189,6 +189,10 @@ class PayrollRun extends React.Component {
 				this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
 			}
 			else
+			if (userValue === row.payrollApprover && userLabel === "Accountant" && row.status!=="Draft") {
+				this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
+			}
+			else
 			if ( userLabel === "Admin" && row.status==="Draft") {
 				this.props.history.push('/admin/payroll/payrollrun/updatePayroll', { id: row.id })
 			}
@@ -744,7 +748,7 @@ class PayrollRun extends React.Component {
 												</div>
 												<Row className="mb-4 ">
 											
-													{userForCheckApprover === "Payroll Approver" ? ""
+													{userForCheckApprover === "Payroll Approver" || userForCheckApprover === "Accountant"? ""
 														: <Col>
 														
 															<Button

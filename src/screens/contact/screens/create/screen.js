@@ -440,24 +440,26 @@ class CreateContact extends React.Component {
 																mobileNumber: Yup.string()
 																	.required('Mobile Number is Required')
 																,
+																billingAddress: Yup.string().required(
+																	'Billing Address is Required',
+																),
 																billingcountryId: Yup.string().required(
-																	'Country is Required',
+																	'Billing Country is Required',
 																),
 																billingStateProvince: Yup.string().required(
-																	'State is Required',
+																	'Billing State is Required',
 																),
-																billingCity: Yup.string().required(
-																	'City is Required',
+																
+																shippingAddress: Yup.string().required(
+																	'Shipping Address is Required',
 																),
 																shippingCountryId: Yup.string().required(
-																	'Country is Required',
+																	'Shipping Country is Required',
 																),
 																shippingStateId: Yup.string().required(
-																	'State is Required',
+																	'Shipping State is Required',
 																),
-																shippingCity: Yup.string().required(
-																	'City is Required',
-																),
+																
 															})}
 														>
 															{(props) => (
@@ -1170,16 +1172,16 @@ class CreateContact extends React.Component {
 																					id="stateId"
 																					name="stateId"
 																					className={
-																						props.errors.stateId &&
-																							props.touched.stateId
+																						props.errors.billingStateProvince &&
+																							props.touched.billingStateProvince
 																							? 'is-invalid'
 																							: ''
 																					}
 																				/>
-																				{props.errors.stateId &&
-																					props.touched.stateId && (
+																				{props.errors.billingStateProvince &&
+																					props.touched.billingStateProvince && (
 																						<div className="invalid-feedback">
-																							{props.errors.stateId}
+																							{props.errors.billingStateProvince}
 																						</div>
 																					)}
 																			</FormGroup>
@@ -1218,7 +1220,7 @@ class CreateContact extends React.Component {
 																		</Col>
 																		<Col md="4">
 																			<FormGroup>
-																				<Label htmlFor="city"><span className="text-danger">* </span>{strings.City}</Label>
+																				<Label htmlFor="city"><span className="text-danger"></span>{strings.City}</Label>
 																				<Input
 																					id="billingCity"
 																					name="billingCity"
@@ -1239,7 +1241,7 @@ class CreateContact extends React.Component {
 																						}
 
 																					}}
-																					placeholder={strings.Enter + strings.City}
+																					placeholder={strings.Location}
 																					className={
 																						props.errors.billingCity && props.touched.billingCity
 																							? 'is-invalid'
@@ -1634,7 +1636,7 @@ class CreateContact extends React.Component {
 																		</Col>
 																		<Col md="4">
 																			<FormGroup>
-																				<Label htmlFor="shippingCity"><span className="text-danger">* </span>{strings.City}</Label>
+																				<Label htmlFor="shippingCity"><span className="text-danger"></span>{strings.City}</Label>
 																				<Input
 																					autoComplete="Off"
 																					// options={city ? selectOptionsFactory.renderOptions('cityName', 'cityCode', cityRegion) : ''}
@@ -1651,7 +1653,7 @@ class CreateContact extends React.Component {
 																							this.setState({ isSame: false, });
 																						}
 																					}}
-																					placeholder={strings.Enter + strings.City}
+																					placeholder={strings.Location}
 																					id="shippingCity"
 																					name="shippingCity"
 																					type="text"

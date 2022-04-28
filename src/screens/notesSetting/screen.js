@@ -106,7 +106,7 @@ class NotesSettings extends React.Component {
 												<Col lg={12}>
 													<div className="h4 mb-0 d-flex align-items-center">
 														<i className="nav-icon fas fa-id-card-alt" />
-														<span className="ml-2">Customer Invoice Notes Settings</span>
+														<span className="ml-2">{strings.CustomerInvoiceNotesSettings}</span>
 													</div>
 												</Col>
 											</Row>
@@ -138,7 +138,7 @@ class NotesSettings extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="select">
 																		{/* <span className="text-danger">* </span> */}
-																		Default Delivery Notes
+																		{strings.DefaultDeliveryNotes}
 
 																	</Label>
 																	<br />
@@ -150,7 +150,7 @@ class NotesSettings extends React.Component {
 																		name="defaultNotes"
 																		id="defaultNotes"
 																		rows="5"
-																		placeholder="e.g. Business Terms & Conditions"
+																		placeholder={strings.DeliveryNotes}
 																		onChange={(option) => {
 																			props.handleChange(
 																				'defaultNotes',
@@ -174,7 +174,7 @@ class NotesSettings extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="defaultFootNotes ">
 																		{/* <span className="text-danger">* </span> */}
-																		Default Footnotes
+																		{strings.DefaultFootnotes}
 																	</Label>
 																	<br />
 																	<TextareaAutosize
@@ -185,7 +185,7 @@ class NotesSettings extends React.Component {
 																		name="defaultFootNotes"
 																		id="defaultFootNotes"
 																		rows="5"
-																		placeholder="e.g. Thank You Note"
+																		placeholder={strings.PaymentDetails}
 																		onChange={(option) => {
 																			props.handleChange(
 																				'defaultFootNotes',

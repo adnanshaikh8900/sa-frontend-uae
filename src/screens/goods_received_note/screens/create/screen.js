@@ -32,7 +32,7 @@ import { SupplierModal } from '../../../supplier_invoice/sections/index';
 import { ProductModal } from '../../../customer_invoice/sections';
 import { InvoiceNumberModel } from '../../../customer_invoice/sections';
 
-
+import { TextareaAutosize } from '@material-ui/core';
 import * as PurchaseOrderAction from '../../../purchase_order/actions'
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -351,7 +351,9 @@ class CreateGoodsReceivedNote extends React.Component {
 			<Field
 				name={`lineItemsString.${idx}.quantity`}
 				render={({ field, form }) => (
+					
 					<div>
+						<div class="input-group">
 						<Input
 						disabled
 							type="number"
@@ -371,8 +373,7 @@ class CreateGoodsReceivedNote extends React.Component {
 								}
 							}}
 							placeholder={strings.Quantity}
-							className={`form-control 
-            ${
+							className={`form-control w-50${ 
 							props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
@@ -384,6 +385,9 @@ class CreateGoodsReceivedNote extends React.Component {
 								: ''
 						}`}
 						/>
+						 {row['productId'] != '' ? 
+						<Input value={row['unitType'] }  disabled/> : ''}
+						</div>
 						{props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
@@ -414,6 +418,7 @@ class CreateGoodsReceivedNote extends React.Component {
 				name={`lineItemsString.${idx}.grnReceivedQuantity`}
 				render={({ field, form }) => (
 					<div>
+							<div class="input-group">
 							<Input
 							type="text"
 							min="0"
@@ -442,19 +447,23 @@ class CreateGoodsReceivedNote extends React.Component {
 								}
 							}}
 							placeholder={strings.ReceivedQuantity}
-			// 				className={`form-control 
-            // ${
-			// 				props.errors.lineItemsString &&
-			// 				props.errors.lineItemsString[parseInt(idx, 10)] &&
-			// 				props.errors.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity &&
-			// 				Object.keys(props.touched).length > 0 &&
-			// 				props.touched.lineItemsString &&
-			// 				props.touched.lineItemsString[parseInt(idx, 10)] &&
-			// 				props.touched.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity
-			// 					? 'is-invalid'
-			// 					: ''
-			// 			}`}
+							className={`form-control 
+							w-50
+            ${
+							props.errors.lineItemsString &&
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity
+								? 'is-invalid'
+								: ''
+						}`}
 						/>
+						 {row['productId'] != '' ? 
+						<Input value={row['unitType'] }  disabled/> : ''}
+						</div>
 						{/* {props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity &&
@@ -1029,6 +1038,29 @@ this.state.data.map((obj, index) => {
                    {props.errors.lineItemsString[parseInt(idx, 10)].productId}
                    </div>
                      )}
+					  {row['productId'] != '' ? 
+						   <div className='mt-1'>
+						   <Input
+						type="text"
+						maxLength="250"
+						value={row['description'] !== '' ? row['description'] : ''}
+						onChange={(e) => {
+							this.selectItem(e.target.value, row, 'description', form, field);
+						}}
+						placeholder={strings.Description}
+						className={`form-control ${
+							props.errors.lineItemsString &&
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)].description &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)].description
+								? 'is-invalid'
+								: ''
+						}`}
+					/>
+						   </div> : ''}
                    </>
 				)}
 			/>
@@ -1079,18 +1111,17 @@ this.state.data.map((obj, index) => {
 	};
 
 	renderActions = (cell, rows, props) => {
-		return (
+		return rows['productId'] != '' ? 
 			<Button
 				size="sm"
 				className="btn-twitter btn-brand icon mt-1"
-				disabled={this.state.data.length === 1 ? true : false}
+				// disabled={this.state.data.length === 1 ? true : false}
 				onClick={(e) => {
 					this.deleteRow(e, rows, props);
 				}}
 			>
 				<i className="fas fa-trash"></i>
-			</Button>
-		);
+			</Button>: ''
 	};
 
 	checkedRow = () => {
@@ -2223,7 +2254,7 @@ console.log(this.state.data)
 													
 														<Row>
 															<Col lg={12} className="mb-3">
-																<Button
+																{/* <Button
 																	color="primary"
 																	className={`btn-square mr-3 ${
 																		this.checkedRow() ? `disabled-cursor` : ``
@@ -2238,7 +2269,7 @@ console.log(this.state.data)
 																		props.values.poNumber ? true : false}
 																>
 																	<i className="fa fa-plus"></i>&nbsp;{strings.Addmore}
-																</Button>
+																</Button> */}
 																{this.props.location.state &&	this.props.location.state.poId ?"":<Button
 																	color="primary"
 																	className="btn-square mr-3"
@@ -2277,14 +2308,14 @@ console.log(this.state.data)
 																	className="invoice-create-table"
 																>
 																	<TableHeaderColumn
-																		width="5%"
+																		width="4%"
 																		dataAlign="center"
 																		dataFormat={(cell, rows) =>
 																			this.renderActions(cell, rows, props)
 																		}
 																	></TableHeaderColumn>
 																	<TableHeaderColumn
-																	width="20%"
+																	width="17%"
 																		dataField="product"
 																		dataFormat={(cell, rows) =>
 																			this.renderProduct(cell, rows, props)
@@ -2299,7 +2330,7 @@ console.log(this.state.data)
 																			this.renderAddProduct(cell, rows, props)
 																		}
 																	></TableHeaderColumn> */}
-																	<TableHeaderColumn
+																	{/* <TableHeaderColumn
 																		dataField="description"
 																		dataFormat={(cell, rows) =>
 																			this.renderDescription(cell, rows, props)
@@ -2307,7 +2338,7 @@ console.log(this.state.data)
 																		width='10%'
 																	>
 																		{strings.DESCRIPTION}
-																	</TableHeaderColumn>
+																	</TableHeaderColumn> */}
 
 																	<TableHeaderColumn
 																		dataField="poQuantity"
@@ -2318,7 +2349,7 @@ console.log(this.state.data)
 																	>
 																		{strings.RECEIVEDQUANTITY}
 																	</TableHeaderColumn>
-																	<TableHeaderColumn
+																	{/* <TableHeaderColumn
 																	width="5%"
 																	dataField="unitType"
 																 >{strings.Unit}	<i
@@ -2329,7 +2360,7 @@ console.log(this.state.data)
 																 target="unitTooltip"
 															 >
 																Units / Measurements</UncontrolledTooltip>
-																</TableHeaderColumn>
+																</TableHeaderColumn> */}
 																	<TableHeaderColumn
 																		dataField="quantity"
 																		width="10%"
@@ -2393,22 +2424,49 @@ console.log(this.state.data)
 														{this.state.data.length > 0 ? (
 															<Row>
 																<Col lg={8}>
-																	<FormGroup className="py-2">
-																		<Label htmlFor="grnRemarks">{strings.GRNREMARKS}</Label>
-																		<Input
+																<FormGroup className="py-2">
+																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
+																		<TextareaAutosize
 																			type="textarea"
-																			maxLength="250"
-																			name="grnRemarks"
-																			id="grnRemarks"
-																			rows="6"
-																			placeholder={strings.GRNREMARKS}
+																			style={{width: "700px"}}
+																			className="textarea"
+																			maxLength="255"
+																			name="notes"
+																			id="notes"
+																			rows="2"
+																			placeholder={strings.DeliveryNotes}
 																			onChange={(option) =>
-																				props.handleChange('grnRemarks')(option)
+																				props.handleChange('notes')(option)
 																			}
-																			value={props.values.grnRemarks}
+																			value={props.values.notes}
 																		/>
 																	</FormGroup>
-																	<FormGroup className="mb-3">
+																	<Row>
+																		<Col lg={6}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="grnRemarks">
+																					{strings.GRNREMARKS}
+																				</Label>
+																				<Input
+																					type="text"
+																					maxLength="100"
+																					id="grnRemarks"
+																					name="grnRemarks"
+																					value={props.values.grnRemarks}
+																					placeholder={strings.grnRemarks}
+																					onChange={(value) => {
+																						props.handleChange('grnRemarks')(value);
+
+																					}}
+																					className={props.errors.grnRemarks && props.touched.grnRemarks ? "is-invalid" : ""}
+																				/>
+																				{props.errors.grnRemarks && props.touched.grnRemarks && (
+																					<div className="invalid-feedback">{props.errors.grnRemarks}</div>
+																				)}
+																			</FormGroup>
+																		</Col>
+																		<Col lg={6}>
+																			<FormGroup className="mb-3">
 																				<Field
 																					name="attachmentFile"
 																					render={({ field, form }) => (
@@ -2464,7 +2522,33 @@ console.log(this.state.data)
 																						</div>
 																					)}
 																			</FormGroup>
-																</Col>
+																		</Col>
+																	</Row>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="receiptAttachmentDescription">
+																			{strings.AttachmentDescription}
+																		</Label><br/>
+																		<TextareaAutosize
+																			type="textarea"
+																			className="textarea"
+																			maxLength="250"
+																			style={{width: "700px"}}
+																			name="receiptAttachmentDescription"
+																			id="receiptAttachmentDescription"
+																			rows="2"
+																			placeholder={strings.ReceiptAttachmentDescription}
+																			onChange={(option) =>
+																				props.handleChange(
+																					'receiptAttachmentDescription',
+																				)(option)
+																			}
+																			value={
+																				props.values
+																					.receiptAttachmentDescription
+																			}
+																		/>
+																	</FormGroup>
+																	</Col>
 
 															</Row>
 														) : null}

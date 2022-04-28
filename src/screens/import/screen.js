@@ -1012,8 +1012,8 @@ class Import extends React.Component {
 														{(props) => (
 
 															<Form className="mt-3" onSubmit={props.handleSubmit}>
-																<div className="text-center dateWidth" style={{ display: "flex", marginLeft: "40%" }}>
-																	<div className="mt-2" style={{ width: "10%" }}>	<span className="text-danger">*</span>{strings.date}	</div>
+																<div className="text-center dateWidth" style={{ display: "flex", marginLeft: "40%" , width: "75%"}}>
+																	<div className="mt-2" style={{ width: "7%" }}>	<span className="text-danger"> * </span>{strings.date}	</div>
 																	<DatePicker
 																		className={`form-control ${props.errors.date && props.touched.date ? "is-invalid" : ""}`}
 																		id="date"
@@ -1023,7 +1023,7 @@ class Import extends React.Component {
 																		showYearDropdown
 																		dateFormat="dd-MM-yyyy"
 																		dropdownMode="select"
-																		style={{ textAlign: "center" }}
+																		style={{ textAlign: "center" ,marginLeft: "30%" }}
 																		selected={props.values.date}
 																		value={props.values.date}
 																		maxDate={new Date}
@@ -1053,6 +1053,10 @@ class Import extends React.Component {
 
 																				<Button name="button" color="primary" className="btn-square pull-right mr-3"
 																					onClick={() => {
+																							//	added validation popup	msg
+																						props.handleBlur();
+																						if(props.errors &&  Object.keys(props.errors).length != 0)
+																						this.props.commonActions.fillManDatoryDetails()
 																						this.setState({ createMore: false }, () => {
 																							props.handleSubmit()
 																						})

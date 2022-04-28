@@ -722,10 +722,6 @@ class DetailContact extends React.Component {
 																	billingStateProvince: Yup.string().required(
 																		'State is Required',
 																	),
-																	billingCity: Yup.string().required(
-																		'City is Required',
-																	),
-
 																	// billingPostZipCode: Yup.string().required(
 																	// 	'Postal Code is Required',
 																	// ),
@@ -738,9 +734,7 @@ class DetailContact extends React.Component {
 																	// shippingPostZipCode: Yup.string().required(
 																	// 	'Postal Code is Required',
 																	// ),
-																	shippingCity: Yup.string().required(
-																		'City is Required',
-																	),
+																	
 																})}
 															>
 																{(props) => (
@@ -1544,7 +1538,7 @@ class DetailContact extends React.Component {
 																			</Col>
 																			<Col md="4">
 																				<FormGroup>
-																					<Label htmlFor="city"><span className="text-danger">* </span>{strings.City}</Label>
+																					<Label htmlFor="city"><span className="text-danger"></span>{strings.City}</Label>
 																					<Input
 																						id="billingCity"
 																						name="billingCity"
@@ -1564,7 +1558,7 @@ class DetailContact extends React.Component {
 																							}
 
 																						}}
-																						placeholder={strings.Enter + strings.City}
+																						placeholder={strings.Location}
 																						className={
 																							props.errors.billingCity && props.touched.billingCity
 																								? 'is-invalid'
@@ -1948,7 +1942,7 @@ class DetailContact extends React.Component {
 																			</Col>
 																			<Col md="4">
 																				<FormGroup>
-																					<Label htmlFor="shippingCity"><span className="text-danger">* </span>{strings.City}</Label>
+																					<Label htmlFor="shippingCity"><span className="text-danger"></span>{strings.City}</Label>
 																					<Input
 																						value={props.values.shippingCity}
 																						onChange={(option) => {
@@ -1963,7 +1957,7 @@ class DetailContact extends React.Component {
 																								this.setState({ isSame: false, });
 																							}
 																						}}
-																						placeholder={strings.Enter + strings.City}
+																						placeholder={strings.Location}
 																						id="shippingCity"
 																						name="shippingCity"
 																						type="text"

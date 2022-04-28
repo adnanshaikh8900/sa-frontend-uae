@@ -22,6 +22,7 @@ import * as Yup from 'yup';
 import * as SupplierInvoiceCreateActions from './actions';
 import * as PurchaseOrderCreateAction from './actions'
 
+import { TextareaAutosize } from '@material-ui/core';
 import * as PurchaseOrderAction from '../../actions';
 import * as RequestForQuotationDetailsAction from '../../../request_for_quotation/screens/detail/actions'
 import * as ProductActions from '../../../product/actions';
@@ -102,7 +103,7 @@ class CreatePurchaseOrder extends React.Component {
 			loading: false,
 			discountOptions: [
 				{ value: 'FIXED', label: 'Fixed' },
-				{ value: 'PERCENTAGE', label: 'Percentage' },
+				{ value: 'PERCENTAGE', label: '%' },
 			],
 			discount_option: '',
 			disabled: false,
@@ -124,6 +125,7 @@ class CreatePurchaseOrder extends React.Component {
 					unitType:'',
 					unitTypeId:''				},
 			],
+			discountEnabled: false,
 			idCount: 0,
 			checked:false,
 			initValue: {
@@ -157,9 +159,9 @@ class CreatePurchaseOrder extends React.Component {
 				term: '',
 				totalAmount: 0,
 				notes: '',
-				// discount: 0,
+				discount: 0,
 				discountPercentage: 0,
-				// discountType: 'FIXED',
+				 discountType: 'FIXED',
 			},
 			taxType: false,
 			currentData: {},
@@ -377,6 +379,7 @@ class CreatePurchaseOrder extends React.Component {
 				name={`lineItemsString.${idx}.quantity`}
 				render={({ field, form }) => (
 					<div>
+							<div class="input-group">
 						<Input
 							type="text"
 							min="0"
@@ -395,8 +398,7 @@ class CreatePurchaseOrder extends React.Component {
 								}
 							}}
 							placeholder={strings.Quantity}
-							className={`form-control 
-            ${
+							className={`form-control w-50${
 							props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
@@ -408,6 +410,9 @@ class CreatePurchaseOrder extends React.Component {
 								: ''
 						}`}
 						/>
+						 {row['productId'] != '' ? 
+						<Input value={row['unitType'] }  disabled/> : ''}
+						</div>
 						{props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
@@ -488,102 +493,100 @@ class CreatePurchaseOrder extends React.Component {
 		);
 	};
 
-// 	renderDiscount = (cell, row, props) => {
-// 		const { discountOptions } = this.state;
-// 	   let idx;
-// 	   this.state.data.map((obj, index) => {
-// 		   if (obj.id === row.id) {
-// 			   idx = index;
-// 		   }
-// 		   return obj;
-// 	   });
-// 	    
-// 	   console.log('DiscountType:'+row.discountType)
-// 	   return (
-// 		   <Field
-// 			    name={`lineItemsString.${idx}.discountType`}
-// 			   render={({ field, form }) => (
-// 			   <div>
-// 			   <div  class="input-group">
-// 				   <Input
-// 	 					type="text"
-// 				   	    min="0"
-// 					    maxLength="14,2"
-// 					    value={row['discount'] !== 0 ? row['discount'] : 0}
-// 					    onChange={(e) => {
-// 						   if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
-// 							   this.selectItem(
-// 								   e.target.value,
-// 								   row,
-// 								   'discount',
-// 								   form,
-// 								   field,
-// 								   props,
-// 							   );
-// 						   }
+	renderDiscount = (cell, row, props) => {
+		const { discountOptions } = this.state;
+	   let idx;
+	   this.state.data.map((obj, index) => {
+		   if (obj.id === row.id) {
+			   idx = index;
+		   }
+		   return obj;
+	   });
+
+	   return (
+		   <Field
+			    name={`lineItemsString.${idx}.discountType`}
+			   render={({ field, form }) => (
+			   <div>
+			   <div  class="input-group">
+				   <Input
+	 					type="text"
+				   	    min="0"
+					    maxLength="14,2"
+					    value={row['discount'] !== 0 ? row['discount'] : 0}
+					    onChange={(e) => {
+						   if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+							   this.selectItem(
+								   e.target.value,
+								   row,
+								   'discount',
+								   form,
+								   field,
+								   props,
+							   );
+						   }
 					   
-// 							   this.updateAmount(
-// 								   this.state.data,
-// 								   props,
-// 							   );
+							   this.updateAmount(
+								   this.state.data,
+								   props,
+							   );
 					   
-// 					   }}
-// 					   placeholder={strings.discount}
-// 					   className={`form-control 
-// 		   ${
-// 						   props.errors.lineItemsString &&
-// 						   props.errors.lineItemsString[parseInt(idx, 10)] &&
-// 						   props.errors.lineItemsString[parseInt(idx, 10)].discount &&
-// 						   Object.keys(props.touched).length > 0 &&
-// 						   props.touched.lineItemsString &&
-// 						   props.touched.lineItemsString[parseInt(idx, 10)] &&
-// 						   props.touched.lineItemsString[parseInt(idx, 10)].discount
-// 							   ? 'is-invalid'
-// 							   : ''
-// 					   }`}
-//    type="text"
-//    />
-// 	<div class="dropdown open input-group-append">
+					   }}
+					   placeholder={strings.discount}
+					   className={`form-control 
+		   ${
+						   props.errors.lineItemsString &&
+						   props.errors.lineItemsString[parseInt(idx, 10)] &&
+						   props.errors.lineItemsString[parseInt(idx, 10)].discount &&
+						   Object.keys(props.touched).length > 0 &&
+						   props.touched.lineItemsString &&
+						   props.touched.lineItemsString[parseInt(idx, 10)] &&
+						   props.touched.lineItemsString[parseInt(idx, 10)].discount
+							   ? 'is-invalid'
+							   : ''
+					   }`}
 
-// 		<div 	style={{width:'100px'}}>
-// 		<Select
+   />
+	<div class="dropdown open input-group-append">
+
+		<div 	style={{width:'100px'}}>
+		<Select
 
 
-// 																						   options={discountOptions}
-// 																						   id="discountType"
-// 																						   name="discountType"
-// 																						   value={
-// 																						discountOptions &&
-// 																							selectOptionsFactory
-// 																								.renderOptions('label', 'value', discountOptions, 'discount')
-// 																								.find((option) => option.value == row.discountType)
-// 																						   }
-// 																						   onChange={(e) => {
-// 																							   this.selectItem(
-// 																								   e.value,
-// 																								   row,
-// 																								   'discountType',
-// 																								   form,
-// 																								   field,
-// 																								   props,
-// 																							   );
-// 																							   this.updateAmount(
-// 																								   this.state.data,
-// 																								   props,
-// 																							   );
-// 																						   }}
-// 																					   />
-// 			 </div>
-// 			  </div>
-// 			  </div>
-// 			   </div>
+																						   options={discountOptions}
+																						   id="discountType"
+																						   name="discountType"
+																						   value={
+																						discountOptions &&
+																							selectOptionsFactory
+																								.renderOptions('label', 'value', discountOptions, 'discount')
+																								.find((option) => option.value == row.discountType)
+																						   }
+																						   onChange={(e) => {
+																							   this.selectItem(
+																								   e.value,
+																								   row,
+																								   'discountType',
+																								   form,
+																								   field,
+																								   props,
+																							   );
+																							   this.updateAmount(
+																								   this.state.data,
+																								   props,
+																							   );
+																						   }}
+																					   />
+			 </div>
+			  </div>
+			  </div>
+			   </div>
 
-// 				   )}
+				   )}
 
-// 		   />
-// 	   );
-//    }
-
+		   />
+	   );
+   }
 	renderSubTotal = (cell, row, extraData) => {
 		// return row.subTotal === 0 ? (
 		// 	<Currency
@@ -988,18 +991,18 @@ class CreatePurchaseOrder extends React.Component {
 										'name',
 										'id',
 										vat_list,
-										'Vat',
+										'VAT',
 								  )
 								: []
 						}
 						value={
 							vat_list &&
 							selectOptionsFactory
-								.renderOptions('name', 'id', vat_list, 'Vat')
+								.renderOptions('name', 'id', vat_list, 'VAT')
 								.find((option) => option.value === +row.vatCategoryId)
 						}
 						id="vatCategoryId"
-						placeholder={strings.Select+strings.Vat}
+						placeholder={strings.Select+strings.VAT}
 						onChange={(e) => {
 							this.selectItem(
 								e.value,
@@ -1181,6 +1184,29 @@ class CreatePurchaseOrder extends React.Component {
                    {props.errors.lineItemsString[parseInt(idx, 10)].productId}
                    </div>
                      )}
+					  {row['productId'] != '' ? 
+						   <div className='mt-1'>
+						   <Input
+						type="text"
+						maxLength="250"
+						value={row['description'] !== '' ? row['description'] : ''}
+						onChange={(e) => {
+							this.selectItem(e.target.value, row, 'description', form, field);
+						}}
+						placeholder={strings.Description}
+						className={`form-control ${
+							props.errors.lineItemsString &&
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)].description &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)].description
+								? 'is-invalid'
+								: ''
+						}`}
+					/>
+						   </div> : ''}
                    </>
 				)}
 			/>
@@ -1231,7 +1257,7 @@ class CreatePurchaseOrder extends React.Component {
 	};
 
 	renderActions = (cell, rows, props) => {
-		return (
+		return rows['productId'] != '' ? 
 			<Button
 				size="sm"
 				className="btn-twitter btn-brand icon mt-1"
@@ -1241,8 +1267,7 @@ class CreatePurchaseOrder extends React.Component {
 				}}
 			>
 				<i className="fas fa-trash"></i>
-			</Button>
-		);
+				</Button> : ''
 	};
 
 	checkedRow = () => {
@@ -1291,8 +1316,7 @@ class CreatePurchaseOrder extends React.Component {
 	};
 
 	updateAmount = (data, props) => {
-		const { vat_list , excise_list} = this.props;
-		const { discountPercentage, discountAmount } = this.state;
+		const { vat_list } = this.state;
 		let total_net = 0;
 		let total_excise = 0;
 		let total = 0;
@@ -1305,19 +1329,19 @@ class CreatePurchaseOrder extends React.Component {
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
-			
+
 			//Exclusive case
 			if(this.state.taxType === false){
 				if (obj.discountType === 'PERCENTAGE') {	
 					 net_value =
 						((+obj.unitPrice -
 							(+((obj.unitPrice * obj.discount)) / 100)) * obj.quantity);
-					var discount =  (obj.unitPrice* obj.quantity) - net_value
+					var discount =  (obj.unitPrice * obj.quantity) - net_value
 				if(obj.exciseTaxId !=  0){
 					if(obj.exciseTaxId === 1){
 						const value = +(net_value) / 2 ;
 							net_value = parseFloat(net_value) + parseFloat(value) ;
-							obj.exciseAmount = parseFloat(value);
+							obj.exciseAmount = parseFloat(value) ;
 						}else if (obj.exciseTaxId === 2){
 							const value = net_value;
 							net_value = parseFloat(net_value) +  parseFloat(value) ;
@@ -1334,8 +1358,8 @@ class CreatePurchaseOrder extends React.Component {
 					((+net_value  * vat ) / 100);
 				}else{
 					 net_value =
-						((obj.unitPrice * obj.quantity) )
-					var discount = (obj.unitPrice* obj.quantity) - net_value
+						((obj.unitPrice * obj.quantity) - obj.discount)
+					var discount =  (obj.unitPrice * obj.quantity) - net_value
 						if(obj.exciseTaxId !=  0){
 							if(obj.exciseTaxId === 1){
 								const value = +(net_value) / 2 ;
@@ -1402,7 +1426,7 @@ class CreatePurchaseOrder extends React.Component {
 						{
 				//net value after removing discount
 				 net_value =
-				((obj.unitPrice * obj.quantity))
+				((obj.unitPrice * obj.quantity) - obj.discount)
 
 
 				//discount amount
@@ -1461,7 +1485,7 @@ class CreatePurchaseOrder extends React.Component {
 				initValue: {
 					...this.state.initValue,
 					...{
-						total_net:  total_net - total_excise,
+						total_net:  total_net-total_excise,
 						totalVatAmount: total_vat,
 						discount:  discount_total ? discount_total : 0,
 						totalAmount:  total ,
@@ -1473,6 +1497,7 @@ class CreatePurchaseOrder extends React.Component {
 
 		);
 	};
+
 	handleSubmit = (data, resetForm) => {
 		this.setState({ disabled: true });
 		const {
@@ -1512,6 +1537,7 @@ class CreatePurchaseOrder extends React.Component {
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
 		formData.append('totalVatAmount', this.state.initValue.totalVatAmount);
 		formData.append('totalAmount', this.state.initValue.totalAmount);
+		formData.append('discount', this.state.initValue.discount);
 		if (supplierId && supplierId.value) {
 			formData.append('supplierId', supplierId.value);
 		}
@@ -2061,7 +2087,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																		},
 																	),
 																vatCategoryId: Yup.string().required(
-																	'Vat is Required',
+																	'VAT is Required',
 																),
 																productId: Yup.string().required(
 																	'Product is Required',
@@ -2530,7 +2556,7 @@ getrfqDetails = (e, row, props,form,field) => {
 														<hr />
 														<Row>
 															<Col lg={8} className="mb-3">
-																<Button
+																{/* <Button
 																	color="primary"
 																	className={`btn-square mr-3 ${
 																		this.checkedRow() ? `disabled-cursor` : ``
@@ -2544,7 +2570,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																	disabled={this.checkedRow() ? true : false}
 																>
 																	<i className="fa fa-plus"></i> {strings.Addmore}
-																</Button>
+																</Button> */}
 																{this.props.location.state &&	this.props.location.state.rfqId ?"":<Button
 																	color="primary"
 																	className= "btn-square mr-3"
@@ -2558,8 +2584,8 @@ getrfqDetails = (e, row, props,form,field) => {
 								                                </Col>
 																<Col  >
 																{this.state.taxType === false ?
-																	<span style={{ color: "#0069d9" }} className='mr-4'><b>Exclusive</b></span> :
-																	<span className='mr-4'>Exclusive</span>}
+																	<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Exclusive}</b></span> :
+																	<span className='mr-4'>{strings.Exclusive}</span>}
 																<Switch
 																	value={props.values.taxType}
 																	checked={this.state.taxType}
@@ -2588,8 +2614,8 @@ getrfqDetails = (e, row, props,form,field) => {
 																	className="react-switch "
 																/>
 																{this.state.taxType === true ?
-																	<span style={{ color: "#0069d9" }} className='ml-4'><b>Inclusive</b></span>
-																	: <span className='ml-4'>Inclusive</span>
+																	<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.Inclusive}</b></span>
+																	: <span className='ml-4'>{strings.Inclusive}</span>
 																}
 															</Col>
 																</Row>
@@ -2619,14 +2645,14 @@ getrfqDetails = (e, row, props,form,field) => {
 																	className="invoice-create-table"
 																>
 																	<TableHeaderColumn
-																		width="5%"
+																		width="4%"
 																		dataAlign="center"
 																		dataFormat={(cell, rows) =>
 																			this.renderActions(cell, rows, props)
 																		}
 																	></TableHeaderColumn>
 																	<TableHeaderColumn
-																	width="20%"
+																	width="17%"
 																		dataField="product"
 																		dataFormat={(cell, rows) =>
 																			this.renderProduct(cell, rows, props)
@@ -2641,24 +2667,24 @@ getrfqDetails = (e, row, props,form,field) => {
 																			this.renderAddProduct(cell, rows, props)
 																		}
 																	></TableHeaderColumn> */}
-																	<TableHeaderColumn
+																	{/* <TableHeaderColumn
 																		dataField="description"
 																		dataFormat={(cell, rows) =>
 																			this.renderDescription(cell, rows, props)
 																		}
 																	>
 																		{strings.DESCRIPTION}
-																	</TableHeaderColumn>
+																	</TableHeaderColumn> */}
 																	<TableHeaderColumn
 																		dataField="quantity"
-																		width="100"
+																		width="13%"
 																		dataFormat={(cell, rows) =>
 																			this.renderQuantity(cell, rows, props)
 																		}
 																	>
 																		{strings.QUANTITY}
 																	</TableHeaderColumn>
-																	<TableHeaderColumn
+																	{/* <TableHeaderColumn
 																	width="6%"
 																	dataField="unitType"
 																 >{strings.Unit}	<i
@@ -2669,7 +2695,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																 target="unitTooltip"
 															 >
 																Units / Measurements</UncontrolledTooltip>
-																</TableHeaderColumn>
+																</TableHeaderColumn> */}
 																<TableHeaderColumn
 																		dataField="unitPrice"
 																		dataFormat={(cell, rows) =>
@@ -2689,6 +2715,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																			service
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn>
+																	{initValue.total_excise != 0 &&
 																	<TableHeaderColumn
 																	width="10%"
 																		dataField="exciseTaxId"
@@ -2708,17 +2735,19 @@ getrfqDetails = (e, row, props,form,field) => {
 																			If Exise Type for a product is Inclusive
 																			then the Excise dropdown will be Disabled
 																		</UncontrolledTooltip>
-																	</TableHeaderColumn> 
-																	{/* <TableHeaderColumn
+																	</TableHeaderColumn>  }
+																	{this.state.discountEnabled == true &&
+																	<TableHeaderColumn
 																		width="12%"
 																		dataField="discount"
 																		dataFormat={(cell, rows) =>
 																			this.renderDiscount(cell, rows, props)
 																		}
-																	>
-																	DisCount
-																	</TableHeaderColumn> */}
+																		>
+																	{strings.DisCount}
+																	</TableHeaderColumn>}
 																	<TableHeaderColumn
+																	width="13%"
 																		dataField="vat"
 																		dataFormat={(cell, rows) =>
 																			this.renderVat(cell, rows, props)
@@ -2727,14 +2756,14 @@ getrfqDetails = (e, row, props,form,field) => {
 																		{strings.VAT}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
-																	width="10%"
+																	width="13%"
 																	dataField="sub_total"
 																	dataFormat={this.renderVatAmount}
 																	className="text-right"
 																	columnClassName="text-right"
 																	formatExtraData={universal_currency_list}
 																	>
-																	Vat amount
+																	VAT amount
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="sub_total"
@@ -2748,19 +2777,40 @@ getrfqDetails = (e, row, props,form,field) => {
 																</BootstrapTable>
 															</Col>
 														</Row>
-														<hr />
+														<Row className="ml-4 ">
+															<Col className=" ml-4">
+																<FormGroup className='pull-right'>
+																<Input
+																	type="checkbox"
+																	id="discountEnabled"
+																	checked={this.state.discountEnabled}
+																	onChange={(option) => {
+																		
+																		if(initValue.discount > 0){
+																			this.setState({ discountEnabled: true })
+																		}else{
+																		this.setState({ discountEnabled: !this.state.discountEnabled })}
+																	}}
+																/>
+																<Label>Apply Line Item Discount</Label>
+																</FormGroup>
+															</Col>
+														</Row>
+													
 														{this.state.data.length > 0 ? (
 															<Row>
 																<Col lg={8}>
-																	<FormGroup className="py-2">
-																		<Label htmlFor="notes">{strings.Notes}</Label>
-																		<Input
+																<FormGroup className="py-2">
+																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
+																		<TextareaAutosize
 																			type="textarea"
-																			maxLength="250"
+																			style={{width: "700px"}}
+																			className="textarea"
+																			maxLength="255"
 																			name="notes"
 																			id="notes"
-																			rows="6"
-																			placeholder={strings.Notes}
+																			rows="2"
+																			placeholder={strings.DeliveryNotes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
 																			}
@@ -2768,7 +2818,32 @@ getrfqDetails = (e, row, props,form,field) => {
 																		/>
 																	</FormGroup>
 																			
-																	<FormGroup className="mb-3">
+																	<Row>
+																		<Col lg={6}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="receiptNumber">
+																					{strings.ReferenceNumber}
+																				</Label>
+																				<Input
+																					type="text"
+																					maxLength="100"
+																					id="receiptNumber"
+																					name="receiptNumber"
+																					value={props.values.receiptNumber}
+																					placeholder={strings.ReceiptNumber}
+																					onChange={(value) => {
+																						props.handleChange('receiptNumber')(value);
+
+																					}}
+																					className={props.errors.receiptNumber && props.touched.receiptNumber ? "is-invalid" : ""}
+																				/>
+																				{props.errors.receiptNumber && props.touched.receiptNumber && (
+																					<div className="invalid-feedback">{props.errors.receiptNumber}</div>
+																				)}
+																			</FormGroup>
+																		</Col>
+																		<Col lg={6}>
+																			<FormGroup className="mb-3">
 																				<Field
 																					name="attachmentFile"
 																					render={({ field, form }) => (
@@ -2824,10 +2899,36 @@ getrfqDetails = (e, row, props,form,field) => {
 																						</div>
 																					)}
 																			</FormGroup>
-																</Col>
-
+																		</Col>
+																	</Row>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="receiptAttachmentDescription">
+																			{strings.AttachmentDescription}
+																		</Label><br/>
+																		<TextareaAutosize
+																			type="textarea"
+																			className="textarea"
+																			maxLength="250"
+																			style={{width: "700px"}}
+																			name="receiptAttachmentDescription"
+																			id="receiptAttachmentDescription"
+																			rows="2"
+																			placeholder={strings.ReceiptAttachmentDescription}
+																			onChange={(option) =>
+																				props.handleChange(
+																					'receiptAttachmentDescription',
+																				)(option)
+																			}
+																			value={
+																				props.values
+																					.receiptAttachmentDescription
+																			}
+																		/>
+																	</FormGroup>
+														</Col>
 																<Col lg={4}>
 																	<div className="">
+																	{initValue.total_excise > 0 ?	
 																	<div className="total-item p-2">
 																			<Row>
 																				<Col lg={6}>
@@ -2843,8 +2944,9 @@ getrfqDetails = (e, row, props,form,field) => {
 																					</label>
 																				</Col>
 																			</Row>
-																		</div>
-																		{/* <div className="total-item p-2">
+																		</div>: ''}
+																		{this.state.discountEnabled == true ?
+																		 <div className="total-item p-2">
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
@@ -2852,7 +2954,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-right">
-																					<label className="mb-0"> */}
+																					<label className="mb-0">
 																						{/* {universal_currency_list[0] && (
 																							<Currency
 																								value={initValue.total_net.toFixed(
@@ -2866,12 +2968,12 @@ getrfqDetails = (e, row, props,form,field) => {
 																								}
 																							/>
 																						)} */}
-																						{/* {this.state.customer_currency_symbol} &nbsp;
+																						{this.state.customer_currency_symbol} &nbsp;
 																						{initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>
-																		</div> */}
+																		</div>: ''}
 																		<div className="total-item p-2">
 																			<Row>
 																				<Col lg={6}>
@@ -2972,10 +3074,6 @@ getrfqDetails = (e, row, props,form,field) => {
 																			if(this.state.data.length === 1)
 																				{
 																				console.log(props.errors,"ERRORs")
-																				//	added validation popup	msg
-																				props.handleBlur();
-																				if(props.errors &&  Object.keys(props.errors).length != 0)
-																				this.props.commonActions.fillManDatoryDetails();
 																				}
 																				else
 																				{ let newData=[]
@@ -3006,10 +3104,6 @@ getrfqDetails = (e, row, props,form,field) => {
 																			if(this.state.data.length === 1)
 																				{
 																				console.log(props.errors,"ERRORs")
-																				//	added validation popup	msg
-																				props.handleBlur();
-																				if(props.errors &&  Object.keys(props.errors).length != 0)
-																				this.props.commonActions.fillManDatoryDetails();
 																				}
 																				else
 																				{ let newData=[]

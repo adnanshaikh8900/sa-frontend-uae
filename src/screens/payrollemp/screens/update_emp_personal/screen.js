@@ -321,10 +321,10 @@ class UpdateEmployeePersonal extends React.Component {
 			'presentAddress',
 			presentAddress !== null ? presentAddress : '',
 		);
-        formData.append(
-			'city',
-			city !== null ? city : '',
-		);
+        // formData.append(
+		// 	'city',
+		// 	city !== null ? city : '',
+		// );
         formData.append(
             'university',
             university != null ? university :'',
@@ -471,14 +471,14 @@ class UpdateEmployeePersonal extends React.Component {
                                                             .required('DOB is Required'),
                                                             presentAddress: Yup.string()
                                                             .required("Present Address is Required"),
-                                                            pincode: Yup.string()
-                                                            .required("Pin Code is Required"),
+                                                            // pincode: Yup.string()
+                                                            // .required("Pin Code is Required"),
                                                             countryId: Yup.string()
                                                             .required("Country is Required"),
                                                             stateId: Yup.string()
                                                             .required("State is Required"),
-                                                            city: Yup.string()
-                                                            .required("City is Required"),
+                                                            // city: Yup.string()
+                                                            // .required("City is Required"),
                                                             gender: Yup.string()
                                                             .required("Gender is Required"),
                                                         // active: Yup.string()
@@ -1228,14 +1228,14 @@ class UpdateEmployeePersonal extends React.Component {
 
                                                                         <Col md="4">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="state"><span className="text-danger">* </span>{strings.City} </Label>
+                                                                                <Label htmlFor="state"><span className="text-danger"></span>{strings.City} </Label>
                                                                                 <Input
                                                                                                         type="text"
                                                                                                         maxLength="100"
                                                                                                         id="city"
                                                                                                         name="city"
                                                                                                         value={props.values.city}
-                                                                                                        placeholder={strings.Enter+strings.City}
+                                                                                                        placeholder={strings.Location}
 
                                                                                                         onChange={(option) => {
                                                                                                             if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('city')(option) }

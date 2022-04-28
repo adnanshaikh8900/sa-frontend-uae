@@ -139,7 +139,7 @@ class CreateCustomerInvoice extends React.Component {
 				shippingStateId:'',
 				shippingCity:'',
                 shippingPostZipCode:'',
-				poBoxNumber: '',
+				POBoxNumber: '',
 				lineItemsString: [
 					{
 						id: 0,
@@ -2205,31 +2205,30 @@ if(changeShippingAddress && changeShippingAddress==true)
 													}
 										
 													if(values.changeShippingAddress==true){
-														if(values.shippingAddress =="")  errors.shippingAddress ='Shipping Address is Required';
+														if(values.shippingAddress =="")  
+														errors.shippingAddress ='Shipping Address is Required';
 												    }
 
 													if(values.changeShippingAddress==true){
-														if(values.shippingCountryId =="")  errors.shippingCountryId ='Shipping Country is Required';
+														if(values.shippingCountryId =="")  
+														errors.shippingCountryId ='Shipping Country is Required';
 													}
 
 													if(values.changeShippingAddress==true){
-														if(values.shippingStateId =="")  errors.shippingStateId ='Shipping State is Required';
+														if(values.shippingStateId =="")  
+														errors.shippingStateId ='Shipping State is Required';
 											        }
-
-													// if(values.changeShippingAddress==true){
-													// 	if(values.shippingCity =="")  errors.shippingCity ='City is Required';
-													// }
-													
+															debugger									
 													if(values.changeShippingAddress==true){
 														if (values.shippingCountryId == 229 || values.shippingCountryId.value == 229) {
-															if (values.poBoxNumber === '')
-																errors.poBoxNumber = 'PO Box Number is Required';
+															if (values.shippingPostZipCode == '')
+																errors.shippingPostZipCode = 'PO Box Number is Required';
 														} else {
 															if (values.shippingPostZipCode == '')
 																errors.shippingPostZipCode = 'Postal Code is Required';
 															else
 																if (values.shippingPostZipCode.length != 6)
-																	errors.shippingPostZipCode = "Please Enter 6 Digit Postal Zip Code"
+																	errors.shippingPostZipCode = 'Please Enter 6 Digit Postal Zip Code';
 														}}
 														return errors;
 												}}
@@ -3010,7 +3009,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																					id="shippingPostZipCode"
 																					name="shippingPostZipCode"
 																					autoComplete="Off"
-																					placeholder={strings.Enter + strings.PostZipCode}
+																					placeholder={strings.Enter + strings.PoBoxZip}
 																					onChange={(option) => {
 																						if (
 																							option.target.value === '' ||

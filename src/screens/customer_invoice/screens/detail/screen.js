@@ -1777,11 +1777,7 @@ class DetailCustomerInvoice extends React.Component {
 														if(values.changeShippingAddress==true){
 															if(values.shippingStateId =="")  errors.shippingStateId ='State is Required';
 														}
-	
-														// if(values.changeShippingAddress==true){
-														// 	if(values.shippingCity =="")  errors.shippingCity ='City is Required';
-														// }
-	
+
 														if(values.changeShippingAddress==true){
 															if (values.shippingCountryId == 229 || values.shippingCountryId.value == 229) {
 																if (values.poBoxNumber === '')

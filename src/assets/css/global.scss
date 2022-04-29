@@ -49,6 +49,7 @@ em {
 .is-invalid ~ .invalid-feedback,
 .react-datepicker-wrapper + .invalid-feedback {
 	display: block;
+	white-space: normal;
 }
 
 div.Select.is-invalid {

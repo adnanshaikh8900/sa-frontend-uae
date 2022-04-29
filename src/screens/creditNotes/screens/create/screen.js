@@ -2877,7 +2877,7 @@ min="0"
 																</BootstrapTable>
 															</Col>
 															</Row>)}
-															<Row className="ml-4 ">
+															{this.state.isCreatedWIWP===false &&(<Row className="ml-4 ">
 															<Col className=" ml-4">
 																<FormGroup className='pull-right'>
 																<Input
@@ -2894,7 +2894,7 @@ min="0"
 																<Label>Apply Discount</Label>
 																</FormGroup>
 															</Col>
-														</Row>
+														</Row>)}
 														{this.state.data.length > 0 ? (
 															<Row>
 																<Col lg={8}>

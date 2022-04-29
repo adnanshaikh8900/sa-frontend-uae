@@ -141,6 +141,7 @@ class CreateCreditNoteModal extends React.Component {
 
 			fileName: '',
 			creditNoteDate: new Date(),
+			discountEnabled: false,
 		};
 	
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
@@ -320,6 +321,7 @@ class CreateCreditNoteModal extends React.Component {
 				name={`invoiceLineItems.${idx}.quantity`}
 				render={({ field, form }) => (
 					<div>
+						<div class="input-group">
 						<Input
 							type="number"
 							// disabled
@@ -337,8 +339,7 @@ class CreateCreditNoteModal extends React.Component {
 								}
 							}}
 							placeholder={strings.Quantity}
-							className={`form-control 
-           						${
+							className={`form-control w-50${
 												props.errors.invoiceLineItems &&
 												props.errors.invoiceLineItems[parseInt(idx, 10)] &&
 												props.errors.invoiceLineItems[parseInt(idx, 10)]
@@ -352,6 +353,9 @@ class CreateCreditNoteModal extends React.Component {
 													: ''
 											}`}
 						/>
+						{row['productId'] != '' ? 
+						<Input value={row['unitType'] }  disabled/> : ''}
+						</div>
 						{props.errors.invoiceLineItems &&
 							props.errors.invoiceLineItems[parseInt(idx, 10)] &&
 							props.errors.invoiceLineItems[parseInt(idx, 10)].quantity &&
@@ -592,6 +596,7 @@ class CreateCreditNoteModal extends React.Component {
 			<Field
 				name={`invoiceLineItems.${idx}.productId`}
 				render={({ field, form }) => (
+					<>
 					<Select
 						isDisabled={true}
 						styles={customStyles}
@@ -630,6 +635,39 @@ class CreateCreditNoteModal extends React.Component {
 								: ''
 						}`}
 					/>
+					{props.errors.lineItemsString &&
+						props.errors.lineItemsString[parseInt(idx, 10)] &&
+						props.errors.lineItemsString[parseInt(idx, 10)].productId &&
+						Object.keys(props.touched).length > 0 &&
+						(
+					   <div className='invalid-feedback'>
+					   {props.errors.lineItemsString[parseInt(idx, 10)].productId}
+					   </div>
+						 )}
+						 {row['productId'] != '' ? 
+						   <div className='mt-1'>
+						   <Input
+						type="text"
+						maxLength="250"
+						value={row['description'] !== '' ? row['description'] : ''}
+						onChange={(e) => {
+							this.selectItem(e.target.value, row, 'description', form, field);
+						}}
+						placeholder={strings.Description}
+						className={`form-control ${
+							props.errors.lineItemsString &&
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)].description &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)].description
+								? 'is-invalid'
+								: ''
+						}`}
+					/>
+						   </div> : ''}
+					   </>
 				)}
 			/>
 		);
@@ -692,7 +730,7 @@ class CreateCreditNoteModal extends React.Component {
 		);
 	};
 	renderActions = (cell, rows, props) => {
-		return (
+		return rows['productId'] != '' ? 
 			<Button
 				size="sm"
 				className="btn-twitter btn-brand icon"
@@ -702,8 +740,7 @@ class CreateCreditNoteModal extends React.Component {
 				}}
 			>
 				<i className="fas fa-trash"></i>
-			</Button>
-		);
+			</Button> : ''
 	};
 	deleteRow = (e, row, props) => {
 		const id = row['id'];
@@ -1458,17 +1495,17 @@ class CreateCreditNoteModal extends React.Component {
 																	>
 																		 {strings.PRODUCT}
 																	</TableHeaderColumn>
-																	<TableHeaderColumn
+																	{/* <TableHeaderColumn
 																		dataField="description"
 																		dataFormat={(cell, rows) =>
 																			this.renderDescription(cell, rows, props)
 																		}
 																	>
 																		{strings.DESCRIPTION}
-																	</TableHeaderColumn>
+																	</TableHeaderColumn> */}
 																	<TableHeaderColumn
 																		dataField="quantity"
-																		width="100"
+																		width="170"
 																		dataFormat={(cell, rows) =>
 																			this.renderQuantity(cell, rows, props)
 																		}
@@ -1494,7 +1531,7 @@ class CreateCreditNoteModal extends React.Component {
 																			service
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn>
-
+																	{initValue.total_excise != 0 &&
 																	<TableHeaderColumn
 																		dataField="vat"
 																		dataFormat={(cell, rows) =>
@@ -1513,7 +1550,7 @@ class CreateCreditNoteModal extends React.Component {
 																			If Exise Type for a product is Inclusive
 																			then the Excise dropdown will be Disabled
 																		</UncontrolledTooltip>
-																	</TableHeaderColumn>
+																	</TableHeaderColumn>}
 																	
 																	<TableHeaderColumn
 																		dataField="vat"
@@ -1546,6 +1583,24 @@ class CreateCreditNoteModal extends React.Component {
 																</BootstrapTable>
 															</Col>
 														</Row>
+														{/* <Row className="ml-4 ">
+															<Col className=" ml-4">
+																<FormGroup className='pull-right'>
+																<Input
+																	type="checkbox"
+																	id="discountEnabled"
+																	checked={this.state.discountEnabled}
+																	onChange={(option) => {
+																		if(initValue.discount > 0){
+																			this.setState({ discountEnabled: true })
+																		}else{
+																		this.setState({ discountEnabled: !this.state.discountEnabled })}
+																	}}
+																/>
+																<Label>Apply Discount</Label>
+																</FormGroup>
+															</Col>
+														</Row> */}
 														<hr />
 													
 														{this.state.selectedData.invoiceLineItems &&this.state.selectedData.invoiceLineItems.length > 0 && (
@@ -1570,7 +1625,7 @@ class CreateCreditNoteModal extends React.Component {
 																</Col>
 																	<Col lg={4}>
 																		<div className="">
-
+																		{initValue.total_excise > 0 ?	
 																		<div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>
@@ -1586,8 +1641,8 @@ class CreateCreditNoteModal extends React.Component {
 																						</label>
 																					</Col>
 																				</Row>
-																			</div>
-
+																			</div> : ''}
+																			{this.state.discountEnabled == true ?
 																		<div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>
@@ -1604,7 +1659,7 @@ class CreateCreditNoteModal extends React.Component {
 																						</label>
 																					</Col>
 																				</Row>
-																			</div>
+																			</div> : ''}
 																			<div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>

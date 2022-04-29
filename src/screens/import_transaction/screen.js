@@ -28,6 +28,7 @@ import * as DetailBankAccountActions from '../bank_account/screens/detail/action
 import moment from 'moment';
 import { Loader } from 'components';
 import { Formik } from 'formik';
+import { ThreeSixty } from '@material-ui/icons';
 
 const mapStateToProps = (state) => {
 	return {
@@ -94,6 +95,8 @@ class ImportTransaction extends React.Component {
 			selectError: [],
 			errorIndexList: [],
 			error: {},
+			isHeaderRow:false,
+			indexMap:'',
 			config: {
 				delimiter: "",	// auto-detect
 				newline: "",	// auto-detect
@@ -285,7 +288,7 @@ setConfigurations=(configurationList)=>{
 			);
 			formData.append('skipRows', initValue.skipRows ? initValue.skipRows : '-');
 			formData.append('endRows', initValue.endRows ? initValue.endRows : '-');
-			formData.append('skipColumns',initValue.skipColumns.length >= 1  ? initValue.skipColumns : '');
+			formData.append('skipColumns', initValue.skipColumns ? initValue.skipColumns : []);
 			formData.append(
 				'textQualifier',
 				initValue.textQualifier ? initValue.textQualifier : '',
@@ -348,6 +351,7 @@ setConfigurations=(configurationList)=>{
 									tableHeader: this.state.tableHeader.concat(res.data),
 									selectedValue: this.state.tableHeader.concat(temp),
 								});
+							
 							});
 					}
 				})
@@ -484,10 +488,10 @@ setConfigurations=(configurationList)=>{
 				.createConfiguration(postData)
 				.then((res) => {
 
-					this.props.commonActions.tostifyAlert(
-						'success',
-						'New Template Created Successfully',
-					);
+					// this.props.commonActions.tostifyAlert(
+					// 	'success',
+					// 	'New Template Created Successfully',
+					// );
 
 					// this.props.history.push('/admin/banking/bank-account/transaction', {
 					// 	id: res.data.id,
@@ -496,8 +500,7 @@ setConfigurations=(configurationList)=>{
 					
 					this.setState({ templateId: res.data.id });
 					this.processData(this.props.location.state.dataString)
-
-
+					// this.validate();
 				})
 				.catch((err) => {
 					this.props.commonActions.tostifyAlert(
@@ -554,21 +557,88 @@ setConfigurations=(configurationList)=>{
 			});
 	};
 
-	validate = () => {
-		
+	ImportWithoutTemplate = () => {
+		const { templateId, tableData, id } = this.state;
+		const postData = {
+			dateFormatId:	this.state.initValue.dateFormatId ? this.state.initValue.dateFormatId : '',
+			bankId: this.props.location.state.bankAccountId
+				? this.props.location.state.bankAccountId
+				: '',
+			templateId: templateId ? +templateId : '',
+			importDataMap: tableData,
+		};
+		this.props.importTransactionActions
+			.importTransactionWithoutTemplate(postData)
+			.then((res) => {
+				if (res.data.includes('Transactions Imported 0')) {
+					this.props.commonActions.tostifyAlert(
+						'error',
+						'Transaction Date Cannot be less than Bank opening date or Last Reconciled Date',
+						this.props.history.push('/admin/banking/bank-account/transaction',
+						 {
+							bankAccountId: postData.bankId
+						})
+					);
+					this.setState({ selectedTemplate: [], tableData: [], showMessage: true });
+				} else {
+					this.props.commonActions.tostifyAlert('success', res.data);
+					this.props.history.push('/admin/banking/bank-account/transaction', {
+						bankAccountId: postData.bankId
+					});
+				}
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+			});
+	};
+	validateWithoutTemplate = () => {
+		debugger
 		// const data ={
 		// 	data : this.state.csv,
 		// 	id : this.state.templateId
 		// }
+		let optionErr = [...this.state.selectError];
+		let item = -1;
+		this.state.selectedValueDropdown
+			.map((item, index) => {
+				if (item.value === '') {
+					optionErr[`${index}`] = true;
+				}
+				return item.value;
+			})
+			.indexOf('');
 
-		let formData = new FormData();
-
-		formData.append('data', this.state.csv);
-
-		formData.append('id', this.state.templateId ? this.state.templateId : '');
-
+		if (item === -1) {
+			let a = {};
+			let val;
+			let obj = {};
+			this.state.selectedValueDropdown.map((item, index) => {
+				if (item.value != '') {
+					val = item.value;
+					obj[val] = index;
+					a = { ...a, ...obj };
+				}
+				return item;
+			});
+			let postData = { ...this.state.initValue };
+			postData.skipColumns = this.state.initValue.skipColumns.length >= 1  ? this.state.initValue.skipColumns : ''
+			postData.indexMap = a;
+		let formData={
+			indexMap:a,
+			delimiter:postData.delimiter ? postData.delimiter : '',
+			headerRowNo:	postData.headerRowNo ? postData.headerRowNo : '',
+			dateFormatId:	postData.dateFormatId ? postData.dateFormatId : '',
+			skipRows:postData.skipRows ? postData.skipRows : '-',
+			textQualifier:postData.textQualifier ? postData.textQualifier : '',
+			otherDilimiterStr:postData.otherDilimiterStr ? postData.otherDilimiterStr : '',
+			data:this.state.csv,
+			id: this.state.templateId ? this.state.templateId : ''
+		}
 		this.props.importTransactionActions
-			.parseCsvFile(formData)
+			.parseCsvFileWithOutTemplate(formData)
 			.then((res) => {
 				console.log(res);
 				this.setState({
@@ -576,13 +646,76 @@ setConfigurations=(configurationList)=>{
 					tableDataKey: res.data.data[0] ? Object.keys(res.data.data[0]) : [],
 					errorIndexList: res.data.error ? res.data.error : [],
 				});
+				this.props.commonActions.tostifyAlert(
+					'Success',
+					'Validatation complete',
+				);
 				console.log('tableDataKey', this.state.tableDataKey);
 				// })
+					
+				if(this.state.errorIndexList.length <= 0){
+					this.ImportWithoutTemplate()
+				}
 			})
+			
 			.catch((err) => {
 				// this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
 				// this.setState({ loading: false })
+			});}
+	};
+
+	validate = () => {
+		let optionErr = [...this.state.selectError];
+		let item = -1;
+		this.state.selectedValueDropdown
+			.map((item, index) => {
+				if (item.value === '') {
+					optionErr[`${index}`] = true;
+				}
+				return item.value;
+			})
+			.indexOf('');
+
+		if (item === -1) {
+			let a = {};
+			let val;
+			let obj = {};
+			this.state.selectedValueDropdown.map((item, index) => {
+				if (item.value != '') {
+					val = item.value;
+					obj[val] = index;
+					a = { ...a, ...obj };
+				}
+				return item;
 			});
+			let postData = { ...this.state.initValue };
+			postData.skipColumns = this.state.initValue.skipColumns.length >= 1  ? this.state.initValue.skipColumns : ''
+			postData.indexMap = a;
+		this.props.importTransactionActions
+			.parseCsvFile(postData)
+			.then((res) => {
+				console.log(res);
+				this.setState({
+					tableData: res.data['data'],
+					tableDataKey: res.data.data[0] ? Object.keys(res.data.data[0]) : [],
+					errorIndexList: res.data.error ? res.data.error : [],
+				});
+				this.props.commonActions.tostifyAlert(
+					'Success',
+					'Validatation complete',
+				);
+				console.log('tableDataKey', this.state.tableDataKey);
+				// })
+					
+				if(this.state.errorIndexList.length <= 0){
+					this.Import()
+				}
+			})
+			
+			.catch((err) => {
+				// this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
+				// this.setState({ loading: false })
+			});}
 	}
 	handleSubmit = (data) => {
 		
@@ -627,13 +760,12 @@ setConfigurations=(configurationList)=>{
 		skipColumnsList.map((row)=>{
 			newString+=(parseInt(row)-1)+","
 		})
-	}
-	 debugger
-		const dataStringLines = this.state.skipRows && this.state.endRows ? parse.data.slice(this.state.skipRows, this.state.endRows) : parse.data;
-		const header = parse.data[this.state.headerRowNo === undefined ? 0 : this.state.headerRowNo - 1]
+		}
+		const dataStringLines = this.state.skipRows  ? parse.data.slice(this.state.skipRows) : parse.data;
+		const header = dataStringLines[0]
 		console.log(parse,"parse")
 		let headers = header
-debugger
+
 		const list = [];
 
 		for (let i = 1; i < dataStringLines.length; i++) {
@@ -666,8 +798,7 @@ debugger
 			}
 		}
 
-		headers = skipColumns && skipColumns.length > 0 ?
-			header.filter((row, id) => !newString.includes(id)) : header
+		headers =  header
 
 		const csv = convertArrayToCSV(list)
 	
@@ -679,6 +810,7 @@ debugger
 				tableDataKey: headers,
 				parse: parse,
 				csv: csv,
+		 initValue: {...this.state.initValue,...{otherDilimiterStr : parse.meta.delimiter}}
 			},
 
 			() => {
@@ -903,7 +1035,7 @@ debugger
 																	type="button"
 																	color="primary"
 																	className="btn-square mr-4"
-																	onClick={this.handleSave}
+																	onClick={()=>{ if(this.state.selectedTemplate) {this.validate() }else this.handleSave()}}
 																>
 																	<i className="fa fa-dot-circle-o"></i>{' '}
 																	Save Template
@@ -967,7 +1099,7 @@ debugger
 																					// 	'OTHER'
 																					// }
 																					onChange={(e) => {
-																					
+																					debugger
 																						this.handleInputChange(
 																							'otherDilimiterStr',
 																							e.target.value,
@@ -989,7 +1121,7 @@ debugger
 																				<Label
 																					className="ml-3"
 																					htmlFor="skip_rows">
-																					Include Rows From
+																				Skip First X Rows 
 																				</Label>
 																				<Input
 																					className="ml-3"
@@ -1016,7 +1148,7 @@ debugger
 																			</FormGroup>
 																		</Col>
 
-																		<Col >
+																		{/* <Col >
 																			<FormGroup>
 
 																				<Label htmlFor="skip_rows">
@@ -1044,10 +1176,10 @@ debugger
 																					}}
 																				/>
 																			</FormGroup>
-																		</Col>
+																		</Col> */}
 
 
-																		<Col>
+																		{/* <Col>
 																			<FormGroup>
 
 																				<Label htmlFor="description">
@@ -1077,9 +1209,9 @@ debugger
 																					}}
 																				/>
 																			</FormGroup>
-																		</Col>
+																		</Col> */}
 
-																		<Col>
+																		{/* <Col>
 																			<FormGroup>
 																				<Label htmlFor="description">
 																					Skip Columns
@@ -1107,8 +1239,21 @@ debugger
 
 																				/>
 																			</FormGroup>
-																		</Col>
-
+																		</Col> */}
+																	<Col className=" ml-4">
+																<FormGroup className='pull-right'>
+																<Input
+																	type="checkbox"
+																	id="isHeaderRow"
+																	checked={this.state.isHeaderRow}
+																	onChange={(option) => {
+																	
+																		this.setState({ isHeaderRow: !this.state.isHeaderRow })}
+																	}
+																/>
+																<Label>Is Header Row</Label>
+																</FormGroup>
+															</Col>
 																		<Col>
 																			<FormGroup>
 																				<Label htmlFor="description">
@@ -1207,7 +1352,7 @@ debugger
 																					{strings.Apply}
 																				</Button>
 																			</FormGroup>
-																			{this.state.templateId ? 
+																		
 																			<FormGroup>
 																				<Button
 																					type="button"
@@ -1216,16 +1361,19 @@ debugger
 																					// disabled={this.state.fileName ? false : true}
 																					onClick={() => {
 
-																						// if(this.setDateMessage())
+																						 if(this.state.templateId){
 
 																						this.validate()
+																					}else{
+																						this.validateWithoutTemplate()
 																					}
 																					}
+																				}	
 																				>
 																					<i className="fa fa-dot-circle-o"></i>{' '}
 																					Validate
 																				</Button>
-																			</FormGroup> : ''}
+																			</FormGroup> 
 																		</Col>
 																	</Row>
 																	{/* <Row>
@@ -1392,7 +1540,7 @@ debugger
 															{this.state.tableDataKey && this.state.tableDataKey.length > 0 && this.state.isDateFormatAndFileDateFormatSame == true ? (
 																<BootstrapTable
 																	data={tableData}
-																	keyField={this.state.tableDataKey[0]}
+																	 keyField={this.state.tableDataKey[0]}
 
 																>
 																	{this.state.tableDataKey.map((name,index) => (
@@ -1406,7 +1554,7 @@ debugger
 																		</TableHeaderColumn>
 																	))}
 																</BootstrapTable>
-																// <TableWrapper data={tableData} keyField={this.state.tableDataKey}/>
+																//  <TableWrapper data={tableData} keyField={this.state.tableDataKey}/>
 															) : ''}
 														</div>
 														{/* </div> */}

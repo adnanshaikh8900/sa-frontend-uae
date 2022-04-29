@@ -525,7 +525,7 @@ Totalprofitgenerated:"إجمالي الأرباح المتولدة",
 Summary:"ملخص",				
 PRODUCTNAME:"اسم المنتج",		
 ProductName:"اسم المنتج",	
-	
+ProductNameAndDescription:"اسم المنتج والوصف",
 ORDERQUANTITY:"كمية الطلب ",		
 QUANTITYSOLD:"الكمية المباعة",		
 STOCKINHAND:"المخزون في متناول اليد",		
@@ -991,9 +991,10 @@ RemainingBalance:"الرصيد المتبقي",
 
 
 //View
-InvoiceAmountIn:"مبلغ الفاتورة",
+InvoiceAmountIn:"قيمة الفاتورة",
 BalanceDue:"الرصيد المستحق",	
 BillTo:"مشروع قانون ل",	
+ShipTo:"عنوان الشحن",
 Company:"شركة",	
 AmountInWords:"المبلغ بالكلمات",	
 Details:"تفاصيل",

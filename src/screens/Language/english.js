@@ -548,6 +548,8 @@ STOCKINHAND:"STOCK IN HAND",
 StockInHand:"Stock In Hand",	
 SUPPLIERNAME:"SUPPLIER NAME",		
 InventorySummary:"Inventory Summary",	
+ShipTo:"Shipping Address",
+ProductNameAndDescription:"Product Name & Description",	
 Ason:"As On",
 Export:"Export",		
 PoweredBy:"Powered By",		
@@ -1016,7 +1018,7 @@ RemainingBalance:"Remaining Balance",
 
 
 //View
-InvoiceAmountIn:"Invoice Amount In",
+InvoiceAmountIn:"Invoice Amount ",
 BalanceDue:"Balance Due",	
 BillTo:"Bill To",	
 CreditTo:"Credit To",

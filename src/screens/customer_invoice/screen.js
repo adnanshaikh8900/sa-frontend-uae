@@ -527,7 +527,7 @@ class CustomerInvoice extends React.Component {
 							onClick={() =>
 								
 								this.props.history.push('/admin/income/customer-invoice/view', {
-									id: row.id, status:row.status
+									id: row.id, status:row.status,contactId:row.contactId
 								})
 							}
 						>

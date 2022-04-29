@@ -6,24 +6,25 @@ import '../../../style.scss';
 import logo from 'assets/images/brand/logo.png';
 import { Currency } from 'components';
 import { toInteger, upperCase } from 'lodash';
-import {data}  from '../../../../Language/index'
+import { data } from '../../../../Language/index'
 import LocalizedStrings from 'react-localization';
 
 let strings = new LocalizedStrings(data);
+const footer = require('assets/images/invoice/invoiceFooter.png');
 const { ToWords } = require('to-words');
 const toWords = new ToWords({
 	localeCode: 'en-IN',
 	converterOptions: {
-	//   currency: true,
-	  ignoreDecimal: false,
-	  ignoreZeroCurrency: false,
-	  doNotAddOnly: false,
+		//   currency: true,
+		ignoreDecimal: false,
+		ignoreZeroCurrency: false,
+		doNotAddOnly: false,
 	}
-  });
+});
 class InvoiceTemplate extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {language: window['localStorage'].getItem('language') };
+		this.state = { language: window['localStorage'].getItem('language') };
 		this.termList = [
 			{ label: 'Net 7 Days', value: 'NET_7' },
 			{ label: 'Net 10 Days', value: 'NET_10' },
@@ -67,7 +68,7 @@ class InvoiceTemplate extends Component {
 	// 	let term='';
 
 	// 	switch(termData){
-		
+
 	// 					case 'NET_7':  term="Payment due in 7 days";
 	// 					break;
 
@@ -79,7 +80,7 @@ class InvoiceTemplate extends Component {
 
 	// 					case 'NET_45': term="Payment due in 7 days";
 	// 					break;	
-						
+
 	// 					case 'NET_60': term="Payment due in 7 days";
 	// 					break;	
 
@@ -93,136 +94,157 @@ class InvoiceTemplate extends Component {
 	// 		<div>{term}</div>
 	// 	);
 	// }
-	renderShippingAddress =()=>{
-		const { invoiceData, currencyData, totalNet, totalExciseAmount,companyData,status, contactData } = this.props;
-//ischanged at inv level
+	renderShippingDetails=()=>{
+		const { invoiceData, companyData, contactData ,isBillingAndShippingAddressSame} = this.props;	
+		if(isBillingAndShippingAddressSame == false || invoiceData.changeShippingAddress == true)
+	    return		(<div>
 
-let shippingAddress="";
-if(invoiceData.changeShippingAddress && invoiceData.changeShippingAddress==true)
-{
- shippingAddress=invoiceData.shippingAddress ? invoiceData.shippingAddress:"";
-}else{
-	if(contactData && contactData.isBillingAndShippingAddressSame &&contactData.isBillingAndShippingAddressSame==true)
-	shippingAddress=contactData.addressLine1 ? contactData.addressLine1:"";
-	else
-	shippingAddress=contactData.addressLine2 ? contactData.addressLine2:"";
-}
+			   <br />
+			   <h6 className="mb-1 ml-2"><b>{strings.ShipTo} ,</b></h6><br />
+			   {/* <div className="mb-1 ml-2"><b>{invoiceData.organisationName ? invoiceData.organisationName : invoiceData.name}</b></div> */}
+			   {/* {contactData && contactData.addressLine1 &&(<div className="mb-1 ml-2"><b>{strings.BillingAddress} : </b> {contactData.addressLine1}</div>)} */}
+			   {invoiceData && contactData && (this.renderShippingAddress())}
+			   <div className="mb-1 ml-2">
+				   {invoiceData && contactData && (this.rendershippingState())}
+				   {invoiceData && contactData && (this.rendershippingCountry())}
+				   {invoiceData && contactData && (this.renderShippingPostZipCode())}
+			   </div>
+			   {/* {invoiceData && contactData&&( this.renderShippingCity())} */}
+			   <div className="mb-1 ml-2">{strings.VATRegistrationNo} : {invoiceData.taxRegistrationNo}</div>
+			   {contactData && contactData.mobileNumber && (<div className="mb-1 ml-2">{strings.MobileNumber} : +{contactData.mobileNumber}</div>)}
+			   {/* <span className="mb-1 ml-2"><b>{strings.Status} : </b> {this.renderInvoiceStatus(invoiceData.status)}</span> */}
+
+		   </div>
+			)
+			else
+			   return ""
+
+			}
+	renderShippingAddress = () => {
+		const { invoiceData, currencyData, totalNet, totalExciseAmount, companyData, status, contactData } = this.props;
+		//ischanged at inv level
+
+		let shippingAddress = "";
+		if (invoiceData.changeShippingAddress && invoiceData.changeShippingAddress == true) {
+			shippingAddress = invoiceData.shippingAddress ? invoiceData.shippingAddress : "";
+		} else {
+			if (contactData && contactData.isBillingAndShippingAddressSame && contactData.isBillingAndShippingAddressSame == true)
+				shippingAddress = contactData.addressLine1 ? contactData.addressLine1 : "";
+			else
+				shippingAddress = contactData.addressLine2 ? contactData.addressLine2 : "";
+		}
 
 
-    return(	<div className="mb-1 ml-2"><b>{strings.ShippingAddress} : </b>{shippingAddress}</div>);
+		return (<div className="mb-1 ml-2"><b>
+			{/* {strings.ShippingAddress} : */}
+		</b>{shippingAddress}</div>);
 	}
 
-	renderShippingPostZipCode =()=>{
-		const { invoiceData, currencyData, totalNet, totalExciseAmount,companyData,status, contactData } = this.props;
-//ischanged at inv level
+	renderShippingPostZipCode = () => {
+		const { invoiceData, currencyData, totalNet, totalExciseAmount, companyData, status, contactData } = this.props;
+		//ischanged at inv level
 
-let shippingPostZipCode="";
-if(invoiceData.changeShippingAddress && invoiceData.changeShippingAddress==true)
-{
-	shippingPostZipCode=invoiceData.shippingPostZipCode ? invoiceData.shippingPostZipCode:"";
-}else{
-	if(contactData && contactData.isBillingAndShippingAddressSame &&contactData.isBillingAndShippingAddressSame==true)
-	shippingPostZipCode=contactData.postZipCode ? contactData.postZipCode:"";
-	else
-	shippingPostZipCode=contactData.shippingPostZipCode ? contactData.shippingPostZipCode:"";
-}
+		let shippingPostZipCode = "";
+		if (invoiceData.changeShippingAddress && invoiceData.changeShippingAddress == true) {
+			shippingPostZipCode = invoiceData.shippingPostZipCode ? invoiceData.shippingPostZipCode : "";
+		} else {
+			if (contactData && contactData.isBillingAndShippingAddressSame && contactData.isBillingAndShippingAddressSame == true)
+				shippingPostZipCode = contactData.postZipCode ? contactData.postZipCode : "";
+			else
+				shippingPostZipCode = contactData.shippingPostZipCode ? contactData.shippingPostZipCode : "";
+		}
 
 
-    return(	<div className="mb-1 ml-2"><b>{strings.PinCode} : </b>{shippingPostZipCode}</div>);
+		return shippingPostZipCode;
 	}
 
-	renderShippingCity =()=>{
-		const { invoiceData, currencyData, totalNet, totalExciseAmount,companyData,status, contactData } = this.props;
-//ischanged at inv level
+	renderShippingCity = () => {
+		const { invoiceData, currencyData, totalNet, totalExciseAmount, companyData, status, contactData } = this.props;
+		//ischanged at inv level
 
-let shippingCity="";
-if(invoiceData.changeShippingAddress && invoiceData.changeShippingAddress==true)
-{
-	shippingCity=invoiceData.shippingCity ? invoiceData.shippingCity:"";
-}else{
-	if(contactData && contactData.isBillingAndShippingAddressSame &&contactData.isBillingAndShippingAddressSame==true)
-	shippingCity=contactData.city ? contactData.city:"";
-	else
-	shippingCity=contactData.shippingCity ? contactData.shippingCity:"";
-}
+		let shippingCity = "";
+		if (invoiceData.changeShippingAddress && invoiceData.changeShippingAddress == true) {
+			shippingCity = invoiceData.shippingCity ? invoiceData.shippingCity : "";
+		} else {
+			if (contactData && contactData.isBillingAndShippingAddressSame && contactData.isBillingAndShippingAddressSame == true)
+				shippingCity = contactData.city ? contactData.city : "";
+			else
+				shippingCity = contactData.shippingCity ? contactData.shippingCity : "";
+		}
 
 
-    return(	<div className="mb-1 ml-2"><b>{strings.City} : </b>{shippingCity}</div>);
+		return (<div className="mb-1 ml-2"><b>{strings.City} : </b>{shippingCity}</div>);
 	}
 
-	
-	rendershippingCountry =()=>{
-		const { invoiceData, currencyData, totalNet, totalExciseAmount,companyData,status, contactData } = this.props;
-//ischanged at inv level
 
-let shippingCountry="";
-if(invoiceData.changeShippingAddress && invoiceData.changeShippingAddress==true)
-{
-	shippingCountry=invoiceData.shippingCountryName ? invoiceData.shippingCountryName:"";
-}else{
-	if(contactData && contactData.isBillingAndShippingAddressSame &&contactData.isBillingAndShippingAddressSame==true)
-	shippingCountry=contactData.billingCountryName ? contactData.billingCountryName:"";
-	else
-	shippingCountry=contactData.shippingCountryName ? contactData.shippingCountryName:"";
-}
+	rendershippingCountry = () => {
+		const { invoiceData, currencyData, totalNet, totalExciseAmount, companyData, status, contactData } = this.props;
+		//ischanged at inv level
+
+		let shippingCountry = "";
+		if (invoiceData.changeShippingAddress && invoiceData.changeShippingAddress == true) {
+			shippingCountry = invoiceData.shippingCountryName ? invoiceData.shippingCountryName : "";
+		} else {
+			if (contactData && contactData.isBillingAndShippingAddressSame && contactData.isBillingAndShippingAddressSame == true)
+				shippingCountry = contactData.billingCountryName ? contactData.billingCountryName : "";
+			else
+				shippingCountry = contactData.shippingCountryName ? contactData.shippingCountryName : "";
+		}
 
 
-    return(	<div className="mb-1 ml-2"><b>{strings.Country} : </b>{shippingCountry}</div>);
+		return shippingCountry + " ,";
 	}
 
-		
-	rendershippingState =()=>{
-		const { invoiceData, currencyData, totalNet, totalExciseAmount,companyData,status, contactData } = this.props;
-//ischanged at inv level
 
-let shippingState="";
-if(invoiceData.changeShippingAddress && invoiceData.changeShippingAddress==true)
-{
-	shippingState=invoiceData.shippingStateName ? invoiceData.shippingStateName:"";
-}else{
-	if(contactData && contactData.isBillingAndShippingAddressSame &&contactData.isBillingAndShippingAddressSame==true)
-	shippingState=contactData.billingStateName ? contactData.billingStateName:"";
-	else
-	shippingState=contactData.shippingStateName ? contactData.shippingStateName:"";
-}
+	rendershippingState = () => {
+		const { invoiceData, currencyData, totalNet, totalExciseAmount, companyData, status, contactData } = this.props;
+		//ischanged at inv level
+		let shippingState = "";
+		if (invoiceData.changeShippingAddress && invoiceData.changeShippingAddress == true) {
+			shippingState = invoiceData.shippingStateName ? invoiceData.shippingStateName : "";
+		} else {
+			if (contactData && contactData.isBillingAndShippingAddressSame && contactData.isBillingAndShippingAddressSame == true)
+				shippingState = contactData.billingStateName ? contactData.billingStateName : "";
+			else
+				shippingState = contactData.shippingStateName ? contactData.shippingStateName : "";
+		}
 
 
-    return(	<div className="mb-1 ml-2"><b>{strings.StateRegion} : </b>{shippingState}</div>);
+		return shippingState + " , ";
 	}
-	getTerms=(term)=>{
+	getTerms = (term) => {
 
-		let	val=	this.termList &&
+		let val = this.termList &&
 			this.termList.find(
 				(option) =>
 					option.value === term,
 			)
-			return val && val.label ? val.label :''
+		return val && val.label ? val.label : ''
+	}
+	companyMobileNumber = (number) => {
+
+		let number1 = number.split(",")
+
+		if (number1.length != 0)
+			number1 = number1[0];
+		return number1
+	}
+
+	renderExcise = (item) => {
+		if (item.exciseTaxId && item.exciseTaxId == 1) {
+			return '50 %'
 		}
-		companyMobileNumber=(number)=>{
-
-			let	number1=	number.split(",")
-
-			if(number1.length!=0)
-				number1=number1[0];
-				return number1
+		else
+			if (item.exciseTaxId && item.exciseTaxId == 2) {
+				return '100 %'
 			}
+	}
 
-			renderExcise=(item)=>{
-			if(item.exciseTaxId && item.exciseTaxId==1)
-					{
-					  return '50 %'
-					}
-					else
-					if(item.exciseTaxId && item.exciseTaxId==2)
-					{
-					  return '100 %'
-					}
-				}
-        
-render() {
+	render() {
 		strings.setLanguage(this.state.language);
-		const { invoiceData, currencyData, totalNet, totalExciseAmount,companyData,status, contactData } = this.props;
-			return (
+		const { invoiceData, currencyData, totalNet, companyData, contactData ,isBillingAndShippingAddressSame} = this.props;
+		
+		return (
 			<div>
 				<Card id="singlePage" className="box">
 					{/* <div
@@ -233,209 +255,188 @@ render() {
 						<span>{invoiceData.status}</span>
 					</div> */}
 
-					<CardBody style={{ marginTop: '1rem' }}>
+					<CardBody style={{ margin: '1rem', border: 'solid 1px', borderColor: '#c8ced3', }}>
 						<div
 							style={{
 								width: '100%',
 								display: 'flex',
-								border:'1px solid',
-								padding:'7px',borderColor:'#c8ced3'
+								// border:'1px solid',
+								// padding:'7px',borderColor:'#c8ced3'
 							}}
 						>
-							<div style={{ width: '200%' }}>
+							<div style={{ width: '50%', marginTop: '4.5rem', marginLeft: '3rem' }}>
 								<div className="companyDetails">
 									<img
 										src={
 											companyData &&
-											companyData.companyLogoByteArray
+												companyData.companyLogoByteArray
 												? 'data:image/jpg;base64,' +
-												  companyData.companyLogoByteArray
+												companyData.companyLogoByteArray
 												: logo
 										}
 										className=""
 										alt=""
-										style={{ width: ' 240px' }}
+										style={{ width: ' 300px' }}
 									/>
-									
+
 								</div>
-								<div style={{ marginTop: '4.2rem' }}>
-								<div className="mb-1 ml-2"><b>{strings.CompanyName} : </b> {companyData.companyName}</div>
-									<div className="mb-1 ml-2"><b>{strings.CompanyAddress} : </b> {companyData.companyAddressLine1+","+companyData.companyAddressLine2}</div>
-									<div className="mb-1 ml-2"><b>{strings.PinCode} : </b> {companyData.companyPostZipCode}</div>
-									<div className="mb-1 ml-2"><b>{strings.StateRegion} : </b> {companyData.companyStateName}</div>
-									<div className="mb-1 ml-2"><b>{strings.Country} : </b> {companyData.companyCountryName}</div>
-									<div className="mb-1 ml-2"><b>{strings.VATRegistrationNo} : </b> {companyData.vatRegistrationNumber}</div>
-									<div className="mb-1 ml-2"><b>{strings.MobileNumber} : </b> {this.companyMobileNumber(companyData.phoneNumber?"+"+companyData.phoneNumber:'')}</div>
-							</div>
-							</div>
-							<div style={{ width: '200%',justifyContent:'center',marginTop:'5rem'}}>
-							
-									<div
-										style={{
-											width: '100%',
-											fontSize: '1.5rem',
-											fontWeight: '700',
-											textTransform: 'uppercase',
-											color: 'black',
-											textAlign:'center',
-										}}
-									>
-									 {strings.Tax+" "+strings.Invoice}
-									</div>
-								
+
 							</div>
 							<div
 								style={{
 									width: '70%',
 									display: 'flex',
 									flexDirection: 'column',
-									justifyContent: 'right',
+									justifyContent: 'left',
 								}}
 							>
-								<div 	style={{
-									width: '70%',
-									margin:'1.5rem 9.0rem 0.5rem 4rem',
-									// // border:'1px solid',
-									marginTop:'6.5rem',
-									 marginLeft:'8rem'
+								<div style={{
+									width: '97%',
+									textAlign: 'right',
+
 								}}>
-								<h4 className="mb-1 ml-2"><b>{companyData && companyData.company
-											? companyData.company.companyName
-											: ''}</b></h4>
-								<h4 className="mb-1 ml-2"><b>{strings.Invoice } # {invoiceData.referenceNumber}</b></h4>
-							    <br/>
-								<h6 className="mb-1 ml-2"><b>{strings.BillTo} ,</b></h6>
-								<div className="mb-1 ml-2"><b>{strings.Name} : </b>{invoiceData.organisationName ? invoiceData.organisationName : invoiceData.name}</div>
-								{contactData && contactData.addressLine1 &&(<div className="mb-1 ml-2"><b>{strings.BillingAddress} : </b> {contactData.addressLine1}</div>)}
-								{invoiceData && contactData&&( this.renderShippingAddress())}
-								{invoiceData && contactData&&( this.renderShippingPostZipCode())}
-								{invoiceData && contactData&&( this.rendershippingCountry())}
-								{invoiceData && contactData&&( this.rendershippingState())}
-								{invoiceData && contactData&&( this.renderShippingCity())}
-								<div className="mb-1 ml-2"><b>{strings.VATRegistrationNo} : </b> {invoiceData.taxRegistrationNo}</div>
-								{contactData&&contactData.mobileNumber&&(   <div className="mb-1 ml-2"><b>{strings.MobileNumber} : </b>+{contactData.mobileNumber}</div>)}
-								<span className="mb-1 ml-2"><b>{strings.Status} : </b> {this.renderInvoiceStatus(invoiceData.status)}</span>
-								<div className="mb-1 ml-2" style={{marginLeft:'8rem'}}><b>{strings.BalanceDue} : {invoiceData.dueAmount ? (
-														<Currency
-															value={invoiceData.dueAmount}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													) : (
-														<Currency
-															value={0}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													)}</b></div>
-								
-													{/* <div
-														className={`ribbon ${this.getRibbonColor(
-															invoiceData,
-														)}`}
-													>
-															<span className="mb-1 ml-2">{invoiceData.status}</span>
-														</div>  */}
-								</div>
+									<div style={{ marginTop: '4.2rem' }}>
+										<h2 className="mb-1 ml-2"><b>TAX INVOICE</b></h2><br />
+										<div className="mb-1 ml-2" style={{fontSize:"22px"}}><b>{companyData.companyName}</b></div>
+										<div className="mb-1 ml-2">{companyData.companyAddressLine1 + "," + companyData.companyAddressLine2}</div>
+										<div className="mb-1 ml-2">{companyData.companyPostZipCode}</div>
+										<div className="mb-1 ml-2">{companyData.companyStateName}</div>
+										<div className="mb-1 ml-2">{companyData.companyCountryName}</div>
+										<div className="mb-1 ml-2">{strings.VATRegistrationNo} : {companyData.vatRegistrationNumber}</div>
+										<div className="mb-1 ml-2">{strings.MobileNumber} : {this.companyMobileNumber(companyData.phoneNumber ? "+" + companyData.phoneNumber : '')}</div>
+									</div>
+		
+
 								</div>
 							</div>
-					
+						</div>
 
+						<hr />
 						<div
 							style={{
 								width: '100%',
 								display: 'flex',
 								justifyContent: 'space-between',
 								marginBottom: '1rem',
-								borderLeft:'1px solid',
-									borderRight:'1px solid',
-									borderBottom:'1px solid',borderColor:'#c8ced3'
+						
 							}}
 						>
-						<div
+							<div
 								style={{
 									width: '100%',
 									display: 'flex',
 									justifyContent: 'space-between',
+									marginLeft: '2rem'
 								}}
 							>
-								<div style={{ width: '80%' }}>
-									<Table className="table table-bordered" style={{width: '90%',margin:'0.5rem',border:'1px solid',width:'284px', textAlign: 'center' ,border:'1px solid',borderColor:'#c8ced3'}}>
-										<tbody>
-											<tr style={{ textAlign: 'right' }}>
-												<td  style={{backgroundColor:'#e3e3e3' ,width:'104px'  }}>{strings.InvoiceDate}</td>
-												<td style={{ width:'143px'  }}>
-													{' '}
-													{moment(invoiceData.invoiceDate).format(
-														'DD MMM YYYY',
-													)}
-												</td>
-											</tr>
-											<tr style={{ textAlign: 'right',width:'143px' }}>
-												<td style={{width:'109px' ,backgroundColor:'#e3e3e3' }}>{strings.Terms }</td>
-												<td style={{width:'143px'}}>{this.getTerms(invoiceData.term)}</td>
-											</tr>
-											<tr style={{ textAlign: 'right' }}>
-												<td style={{width:'104px' ,backgroundColor:'#e3e3e3' }}>{strings.DueDate }</td>
-												<td style={{ width:'143px'  }}>
-													{moment(invoiceData.invoiceDueDate).format(
-														'DD MMM YYYY',
-													)}
-												</td>
-											</tr>
-										</tbody>
-									</Table>
+								<div>
+									{/* <h4 className="mb-1 ml-2"><b>{companyData && companyData.company
+											? companyData.company.companyName
+											: ''}</b></h4> */}
+									<br />
+									<h6 className="mb-1 ml-2"><b>{strings.BillTo} ,</b></h6><br />
+									<div className="mb-1 ml-2"><b>{invoiceData.organisationName ? invoiceData.organisationName : invoiceData.name}</b></div>
+									{contactData && contactData.addressLine1 && (<div className="mb-1 ml-2">{contactData.addressLine1}</div>)}
+
+									<div className="mb-1 ml-2">
+									    {invoiceData && contactData && (contactData.billingStateName ? contactData.billingStateName + " , " : "")}
+										{invoiceData && contactData && (contactData.billingCountryName ? contactData.billingCountryName + " , " : "")}
+										{invoiceData && contactData && (
+											contactData.countryId==229 ?
+											contactData.poBoxNumber ? contactData.poBoxNumber : ""
+											:contactData.postZipCode ? contactData.postZipCode : ""
+											)}
+									</div>
+									<div className="mb-1 ml-2">{strings.VATRegistrationNo} :  {invoiceData.taxRegistrationNo}</div>
+									{contactData && contactData.mobileNumber && (<div className="mb-1 ml-2">{strings.MobileNumber} :+{contactData.mobileNumber}</div>)}
+									{/* <span className="mb-1 ml-2"><b>{strings.Status} : </b> {this.renderInvoiceStatus(invoiceData.status)}</span> */}
+
 								</div>
+							{this.renderShippingDetails()}
+
+								<div style={{ width: '27%' }}>
+
+									<br />
+									<div className="mb-1 ml-2"><b>{strings.Invoice} : </b> # {invoiceData.referenceNumber}</div>
+									<div className="mb-1 ml-2"><b>{strings.InvoiceDate} : </b>{' '}
+										{moment(invoiceData.invoiceDate).format(
+											'DD MMM YYYY',
+										)}</div>
+									<div className="mb-1 ml-2"><b>{strings.Terms} : </b>{this.getTerms(invoiceData.term)}</div>
+									<div className="mb-1 ml-2"><b>{strings.DueDate} : </b>{moment(invoiceData.invoiceDueDate).format(
+										'DD MMM YYYY',
+									)}</div>
+										<div className="mb-1 ml-2"><b>{strings.Status} : </b>{this.renderInvoiceStatus(invoiceData.status)}</div><br />
+										
+									<br />
+									<div className="mb-1 ml-2" >
+										<strong style={{ padding: '0.5rem', background: '#f2f2f2'}}>{strings.BalanceDue} :  {invoiceData.dueAmount ? (
+										<Currency
+											value={invoiceData.dueAmount}
+											currencySymbol={
+												currencyData[0]
+													? currencyData[0].currencyIsoCode
+													: 'USD'
+											}
+										/>
+									) : (
+										<Currency
+											value={0}
+											currencySymbol={
+												currencyData[0]
+													? currencyData[0].currencyIsoCode
+													: 'USD'
+											}
+										/>
+									)}</strong></div>
 								</div>
+							</div>
 						</div>
-						<Table  >
-							<thead className="header-row">
+						<Table className='table-striped' >
+							<thead className="header-row" style={{ fontSize:"12px" }}>
 								<tr>
-									<th className="center" style={{ padding: '0.5rem',    width: "40px" }}>
+									<th className="center" style={{ padding: '0.5rem', width: "40px" }}>
 										#
 									</th>
 									{/* <th style={{ padding: '0.5rem' }}>Item</th> */}
-									<th style={{ padding: '0.5rem' }}>{strings.ProductName }</th>
-									<th style={{ padding: '0.5rem' }}>{strings.Description }</th>
-									<th className="center" style={{ padding: '0.5rem' }}>
+									<th style={{ padding: '0.5rem' }}>{strings.ProductNameAndDescription}</th>
+									<th className="text-center" style={{ padding: '0.5rem' }}>
 										{strings.Quantity}
 									</th>
-									<th className="center" style={{ padding: '0.5rem' }}>
-										{strings.UnitType}
-									</th>
-								    <th style={{ padding: '0.5rem', textAlign: 'right' }}>
-										{strings.UnitCost }
-									</th>
+									
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
-										{strings.Discount }
+										{strings.UnitCost}
 									</th>
-									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.DiscountType}</th>
-									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.Excise}</th>
-									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.ExciseAmount}</th>
-									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.Vat }</th>
-									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.VatAmount}</th>
-									<th style={{ padding: '0.5rem', textAlign: 'right'}}>
-										{strings.SubTotal }
+									{invoiceData.discount > 0 && (<>
+										<th style={{ padding: '0.5rem', textAlign: 'right' }}>
+											{strings.Discount }
+										</th>
+										{/* <th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.DiscountType}</th> */}
+									</>)}
+									{ invoiceData.totalExciseAmount > 0 && (<>
+
+										{/* <th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.Excise}</th> */}
+										<th style={{ padding: '0.5rem', textAlign: 'right',width:"10%" }}>{strings.ExciseAmount}</th>
+									</>)}
+									{/* <th style={{ padding: '0.5rem', textAlign: 'right' ,width:"5%" }}>{strings.Vat}</th> */}
+									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.VatAmount}</th>
+									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
+										{strings.SubTotal}
 									</th>
 								</tr>
 							</thead>
-							<tbody className=" table-bordered table-hover">
+							<tbody className=" table-hover">
 								{invoiceData.invoiceLineItems &&
 									invoiceData.invoiceLineItems.length &&
 									invoiceData.invoiceLineItems.map((item, index) => {
 										return (
 											<tr key={index}>
 												<td className="center">{index + 1}</td>
-												<td>{item.productName}</td>
-												<td>{item.description}</td>
-												<td>{item.quantity}</td>
-												<td>{item.unitType}</td>
+												<td><b>{item.productName}</b><br/><br />{item.description}</td>
+
+												<td  style={{ textAlign: 'center' }}>{item.quantity}<br/><br/>
+											     <b style={{fontSize:"10.5px"}}>{item.unitType}</b>	
+												</td>
 												<td style={{ textAlign: 'right', width: '10%' }}>
 													<Currency
 														value={item.unitPrice}
@@ -446,34 +447,11 @@ render() {
 														}
 													/>
 												</td>
-										
-												{/* <td style={{ textAlign: 'right', width: '10%' }}>
-												<Currency
-														value={item.discount}
-														currencySymbol={
-															currencyData[0]
-																? currencyData[0].currencyIsoCode
-																: 'USD'
-														}
-													/>
-												</td> */}
-												<td style={{ textAlign: 'right' }}>
-												<Currency
-														value={item.discount}
-														currencySymbol={
-															currencyData[0]
-																? currencyData[0].currencyIsoCode
-																: 'USD'
-														}
-													/>
-												</td>
-												
-												<td style={{ textAlign: 'right' }}>{item.discountType}</td>
-												
-												<td style={{ textAlign: 'right' }}>{item.exciseTaxId ? this.renderExcise(item):"-"}</td>
-											    <td style={{ textAlign: 'right' }}>
+
+								
+												{invoiceData.discount > 0 && (<>	<td style={{ textAlign: 'right' }}>
 													<Currency
-														value={item.exciseAmount}
+														value={item.discount}
 														currencySymbol={
 															currencyData[0]
 																? currencyData[0].currencyIsoCode
@@ -481,9 +459,25 @@ render() {
 														}
 													/>
 												</td>
-												<td
+
+													{/* <td style={{ textAlign: 'right' }}>{item.discountType}</td> */}
+												</>)}
+												{ invoiceData.totalExciseAmount > 0 && (<>
+													{/* <td style={{ textAlign: 'right' }}>{item.exciseTaxId ? this.renderExcise(item) : "-"}</td> */}
+													<td style={{ textAlign: 'right' }}>
+														<Currency
+															value={item.exciseAmount}
+															currencySymbol={
+																currencyData[0]
+																	? currencyData[0].currencyIsoCode
+																	: 'USD'
+															}
+														/>
+													</td>
+												</>)}
+												{/* <td
 													style={{ textAlign: 'right' }}
-												>{`${item.vatPercentage}%`}</td>
+												>{`${item.vatPercentage}%`}</td> */}
 												<td style={{ textAlign: 'right' }}>
 													<Currency
 														value={item.vatAmount}
@@ -495,79 +489,79 @@ render() {
 													/>
 												</td>
 												<td style={{ textAlign: 'right' }}>
-													<Currency
+												<b>	<Currency
 														value={item.subTotal}
 														currencySymbol={
 															currencyData[0]
 																? currencyData[0].currencyIsoCode
 																: 'USD'
 														}
-													/>
+													/></b>
 												</td>
 											</tr>
 										);
 									})}
 							</tbody>
-						</Table>
-						<div 
+						</Table><hr />
+						<div
 							style={{
 								width: '100%',
 								display: 'flex',
 								justifyContent: 'space-between',
-								marginBottom: '1rem',border:'solid 1px',borderColor:'#c8ced3',
+								// marginBottom: '1rem',border:'solid 1px',borderColor:'#c8ced3',
 								fontSize: "14px"
 							}}
 						>
-								<div
+							<div
 								style={{
-									width: '200%',
+									width: '40%',
 									display: 'flex',
 									flexDirection: 'column',
-									
+									marginLeft: '2rem'
 								}}
-							>
-								<div className="pl-5 pb-2">{strings.AmountInWords }:<br/>
-									<b><u> {invoiceData.totalAmount ? upperCase(invoiceData.currencyName + " " +(toWords.convert(invoiceData.totalAmount))+" ONLY" ).replace("POINT","AND"): " -" }
-									{/* <b> {parseInt(invoiceData.dueAmount)} */}
-									</u></b></div>
-								<div className="pl-5 pb-2">{strings.Vat+" "+strings.AmountInWords }:
-										<br/>
-									<b><u> {invoiceData.totalVatAmount ? (upperCase(invoiceData.currencyName + " " +(toWords.convert(invoiceData.totalVatAmount)))+" ONLY").replace("POINT","AND") : " -" }</u></b>
-									{/* <b> {invoiceData.totalVatAmount}</b> */}
-								</div>
-							<div className="pl-5" style={{borderTop:'1px solid',borderColor:'#c8ced3'}}>
-
+							>				
+								<br />
 								<h6 className="mb-0 pt-2">
-									<b>{strings.Notes }:</b>
+									<b>{strings.Notes}:</b>
 								</h6>
 								<h6 className="mb-0">{invoiceData.notes}</h6>
+								{/* </div> */}
+
 							</div>
+							<div
+								style={{
+									width: '20%',
+									display: 'flex',
+									flexDirection: 'column',
+									marginLeft: '2rem'
+								}}
+							>				
 							
 							</div>
 							<div
 								style={{
-									width: '100%',
+									width: '40%',
 									display: 'flex',
 									justifyContent: 'space-between',
-								
+									marginRight: '1rem'
+
 								}}
 							>
 								<div style={{ width: '100%' }}>
-								<Table className="table-clear cal-table">
-									<tbody>
-									<tr >
-											<td style={{ width: '40%' }}>
-												<strong>{strings.TotalExcise}</strong>
-											</td>
-											<td
-												style={{
-													display: 'flex',
-													justifyContent: 'space-between',
-												}}
-											>
-												<span style={{ marginLeft: '2rem' }}></span>
-												<span>
-													{invoiceData.totalExciseAmount ? (
+									<Table className="table-clear cal-table">
+										<tbody>
+											{invoiceData.totalExciseAmount && invoiceData.totalExciseAmount > 0 ? <tr >
+												<td style={{ width: '40%' }}>
+													<strong>{strings.TotalExcise}</strong>
+												</td>
+												<td
+													style={{
+														display: 'flex',
+														justifyContent: 'space-between',
+													}}
+												>
+													<span style={{ marginLeft: '2rem' }}></span>
+													<span>
 														<Currency
 															value={invoiceData.totalExciseAmount}
 															currencySymbol={
@@ -576,171 +570,49 @@ render() {
 																	: 'USD'
 															}
 														/>
-													) : (
-														<Currency
-															value={0}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													)}
-												</span>
-											</td>
-										</tr>
-										
-										<tr >
-											<td style={{ width: '40%' }}>
-												<strong>
-													{strings.Discount }
-													{invoiceData.discountPercentage
-														? `(${invoiceData.discountPercentage}%)`
-														: ''}
-												</strong>
-											</td>
-											<td
-												style={{
-													display: 'flex',
-													justifyContent: 'space-between',
-												}}
-											>
-												<span style={{ marginLeft: '2rem' }}></span>
-												<span>
-													{invoiceData.discount ? (
-														<Currency
-															value={invoiceData.discount ? +invoiceData.discount : invoiceData.discount}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													) : (
-														<Currency
-															value={0}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													)}
-												</span>
-											</td>
-										</tr>
-										<tr >
-											<td style={{ width: '40%' }}><strong>{strings.TotalNet }</strong></td>
-											<td style={{display: 'flex',justifyContent: 'space-between',}}>
-												<span style={{ marginLeft: '2rem' }}></span>
-												<span>
-													 {totalNet ? (
-														<Currency
-															value={totalNet-invoiceData.totalVatAmount}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													) : (
-														<Currency
-															value={0}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															} 
-														/>
-													)}  
-												</span>
-											</td>
-										</tr>
-										<tr >
-											<td style={{ width: '40%' }}>
-												<strong>{strings.Vat }</strong>
-											</td>
-											<td
-												style={{
-													display: 'flex',
-													justifyContent: 'space-between',
-												}}
-											>
-												<span style={{ marginLeft: '2rem' }}></span>
-												<span>
-													{invoiceData.totalVatAmount ? (
-														<Currency
-															value={invoiceData.totalVatAmount}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													) : (
-														<Currency
-															value={0}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													)}
-												</span>
-											</td>
-										</tr>
-										<tr >
-											<td style={{ width: '40%' }}>
-												<strong>{strings.Total }</strong>
-											</td>
-											<td
-												style={{
-													display: 'flex',
-													justifyContent: 'space-between',
-												}}
-											>
-												<span style={{ marginLeft: '2rem' }}></span>
-												<span>
-													{invoiceData.totalAmount ? (
-														<Currency
-															value={invoiceData.totalAmount}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													) : (
-														<Currency
-															value={0}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													)}
-												</span>
-											</td>
-										</tr>
-										<tr style={{ background: '#f2f2f2' }}>
-											<td style={{ width: '40%' }}>
-												<strong>{strings.BalanceDue }</strong>
-											</td>
-											<td>
-												<b
-													style={{
-														fontWeight: '600',
-														display: 'flex',
-														justifyContent: 'space-between',
-													}}
-												>
+													</span>
+												</td>
+											</tr> : ""}
+
+											{invoiceData.discount && invoiceData.discount > 0 ?
+												<tr >
+													<td style={{ width: '40%' }}>
+														<strong>
+															{strings.Discount}
+															{invoiceData.discountPercentage
+																? `(${invoiceData.discountPercentage}%)`
+																: ''}
+														</strong>
+													</td>
+													<td
+														style={{
+															display: 'flex',
+															justifyContent: 'space-between',
+														}}
+													>
+														<span style={{ marginLeft: '2rem' }}></span>
+														<span>
+
+															<Currency
+																value={invoiceData.discount ? +invoiceData.discount : invoiceData.discount}
+																currencySymbol={
+																	currencyData[0]
+																		? currencyData[0].currencyIsoCode
+																		: 'USD'
+																}
+															/>
+
+														</span>
+													</td>
+												</tr> : ""}
+											<tr >
+												<td style={{ width: '40%' }}><strong>{strings.TotalNet}</strong></td>
+												<td style={{ display: 'flex', justifyContent: 'space-between', }}>
 													<span style={{ marginLeft: '2rem' }}></span>
 													<span>
-														{invoiceData.dueAmount ? (
+														{totalNet ? (
 															<Currency
-																value={invoiceData.dueAmount}
+																value={totalNet - invoiceData.totalVatAmount}
 																currencySymbol={
 																	currencyData[0]
 																		? currencyData[0].currencyIsoCode
@@ -758,18 +630,48 @@ render() {
 															/>
 														)}
 													</span>
-												</b>
-											</td>
-										</tr>
-										{invoiceData.exchangeRate == 1 ? " ":
-										<tr style={{ background: '#f2f2f2' }}>
-											<td style={{ width: '40%' }}>
-												<strong>{strings.InvoiceAmountIn}{" "+invoiceData.baseCurrencyIsoCode}</strong>
-											</td>
-											<td>
-												<b
+												</td>
+											</tr>
+											<tr >
+												<td style={{ width: '40%' }}>
+													<strong>{strings.Vat}</strong>
+												</td>
+												<td
 													style={{
-														fontWeight: '600',
+														display: 'flex',
+														justifyContent: 'space-between',
+													}}
+												>
+													<span style={{ marginLeft: '2rem' }}></span>
+													<span>
+														{invoiceData.totalVatAmount ? (
+															<Currency
+																value={invoiceData.totalVatAmount}
+																currencySymbol={
+																	currencyData[0]
+																		? currencyData[0].currencyIsoCode
+																		: 'USD'
+																}
+															/>
+														) : (
+															<Currency
+																value={0}
+																currencySymbol={
+																	currencyData[0]
+																		? currencyData[0].currencyIsoCode
+																		: 'USD'
+																}
+															/>
+														)}
+													</span>
+												</td>
+											</tr>
+											<tr >
+												<td style={{ width: '40%' }}>
+													<strong>{strings.Total}</strong>
+												</td>
+												<td
+													style={{
 														display: 'flex',
 														justifyContent: 'space-between',
 													}}
@@ -778,28 +680,108 @@ render() {
 													<span>
 														{invoiceData.totalAmount ? (
 															<Currency
-															value={invoiceData.totalAmount * invoiceData.exchangeRate}
+																value={invoiceData.totalAmount}
 																currencySymbol={
-																	invoiceData.baseCurrencyIsoCode
+																	currencyData[0]
+																		? currencyData[0].currencyIsoCode
+																		: 'USD'
 																}
 															/>
 														) : (
 															<Currency
 																value={0}
 																currencySymbol={
-																	invoiceData.baseCurrencyIsoCode
+																	currencyData[0]
+																		? currencyData[0].currencyIsoCode
+																		: 'USD'
 																}
 															/>
 														)}
 													</span>
-												</b>
-											</td>
-										</tr>}
-									</tbody>
-								</Table>
-								</div>		
+												</td>
+											</tr>
+											<tr style={{ background: '#f2f2f2' }}>
+												<td style={{ width: '40%' }}>
+													<strong>{strings.BalanceDue}</strong>
+												</td>
+												<td>
+													<b
+														style={{
+															fontWeight: '600',
+															display: 'flex',
+															justifyContent: 'space-between',
+														}}
+													>
+														<span style={{ marginLeft: '2rem' }}></span>
+														<strong>
+															<span>
+																{invoiceData.dueAmount ? (
+																	<Currency
+																		value={invoiceData.dueAmount}
+																		currencySymbol={
+																			currencyData[0]
+																				? currencyData[0].currencyIsoCode
+																				: 'USD'
+																		}
+																	/>
+																) : (
+																	<Currency
+																		value={0}
+																		currencySymbol={
+																			currencyData[0]
+																				? currencyData[0].currencyIsoCode
+																				: 'USD'
+																		}
+																	/>
+																)}
+															</span></strong>
+													</b>
+												</td>
+											</tr>
+											{invoiceData.exchangeRate == 1 ? " " :
+												<tr style={{ background: '#f2f2f2' }}>
+													<td style={{ width: '40%' }}>
+														<strong>{strings.InvoiceAmountIn}</strong>
+													</td>
+													<td>
+														<b
+															style={{
+																fontWeight: '600',
+																display: 'flex',
+																justifyContent: 'space-between',
+															}}
+														>
+															<span style={{ marginLeft: '2rem' }}></span>
+															<span>
+																{invoiceData.totalAmount ? (
+																	<Currency
+																		value={invoiceData.totalAmount * invoiceData.exchangeRate}
+																		currencySymbol={
+																			invoiceData.baseCurrencyIsoCode
+																		}
+																	/>
+																) : (
+																	<Currency
+																		value={0}
+																		currencySymbol={
+																			invoiceData.baseCurrencyIsoCode
+																		}
+																	/>
+																)}
+															</span>
+														</b>
+													</td>
+												</tr>}
+										</tbody>
+									</Table>
+								</div>
 							</div>
-						</div>												
+
+						</div>
+						{/* <hr />Data Innovation Technologies Limited Dubai company Was founded on August 13,2020 with identification number Avenue - South Zone, Dubai International Financial Center, Dubai, United Arab Emirates.<br /> */}
+						<hr />{invoiceData.footNote}<br />
+
+						<img className='mt-5' src={footer} style={{ height: "65px", width: "100%" }}></img>
 					</CardBody>
 				</Card>
 			</div>

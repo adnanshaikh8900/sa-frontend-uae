@@ -853,7 +853,7 @@ class DetailExpense extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="expenseNumber">
 																			<span className="text-danger">* </span>
-																			Expense Number
+																		{strings.ExpenseNumber}
 																			{/* <i
 																				id="ProductCodeTooltip"
 																				className="fa fa-question-circle ml-1"
@@ -1433,7 +1433,7 @@ class DetailExpense extends React.Component {
 																<Col></Col>
 																	<Col >
 																	<FormGroup>
-																				<span className='mr-4'>Inclusive VAT</span>
+																				<span className='mr-4'>{strings.InclusiveVAT}</span>
 																				<Switch
 																					checked={ this.state.exclusiveVat}
 																					onChange={() => {
@@ -1451,7 +1451,7 @@ class DetailExpense extends React.Component {
 																					height={20}
 																					width={48}
 																					className="react-switch "																					/>
-																					<span  className='ml-4'>Exclusive VAT</span>
+																					<span  className='ml-4'>{strings.ExclusiveVAT}</span>
 
 																		</FormGroup>
 																		{/* <FormGroup className="mb-3">

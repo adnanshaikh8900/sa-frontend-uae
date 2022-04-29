@@ -240,6 +240,11 @@ Relationship2:"Relationship 2",
       excise:"Excise",
 
       //Expenses
+      IsReverseCharge:"Is Reverse Charge",
+      UnitPrice:"UNIT PRICE",
+      ExpenseNumber:"Expense Number",
+      InclusiveVAT:"Inclusive VAT",
+      ExclusiveVAT:"Exclusive VAT",
       PayThrough:"Pay Through",
       Expenses:"Expenses",
       EXPENSEDATE:"EXPENSE DATE",		
@@ -496,8 +501,8 @@ AddNewProductCategory:"Add New Product Category",
 
 //Add Product Category
 NewProductCategory:"New Product Category",		
-ProductCategoryCode:"PRODUCT CATEGORY CODE",		
-ProductCategoryName:"PRODUCT CATEGORY NAME",	
+ProductCategoryCode:"Product Category Code",		
+ProductCategoryName:"Product Category Name",	
 
 //VatCategory	
 VatCategories:"VAT Categories",		
@@ -664,6 +669,7 @@ PaymentForSupplierInvoice:"Payment For Supplier Invoice",
 Approve:"Approve",
 
 //PROFILE
+UniquePasswordNote:" * Please Use Unique Password.This Password Was Used Earlier. ",
 EmailID:"Email ID",
 Role:"Role",
 TimeZonePreference:"Time Zone Preference",
@@ -784,7 +790,7 @@ CreateCN:"Create CN",
 //Payroll 
 PayrollConfigurations:"Payroll Config",
 Employees:"Employees",
-NewEmployee:"New Employee",
+NewEmployee:"Add New Employee",
 CreateEmployee:"Create Employee", 
 Employment:"Employment",
 SuperiorEmployeeName:"Superior Employee Name",

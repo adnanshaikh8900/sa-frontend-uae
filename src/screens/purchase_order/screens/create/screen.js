@@ -2763,7 +2763,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																	columnClassName="text-right"
 																	formatExtraData={universal_currency_list}
 																	>
-																	VAT amount
+																		{strings.VATAMOUNT}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="sub_total"
@@ -2792,7 +2792,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																		this.setState({ discountEnabled: !this.state.discountEnabled })}
 																	}}
 																/>
-																<Label>Apply Line Item Discount</Label>
+																<Label>{strings.ApplyLineItemDiscount}</Label>
 																</FormGroup>
 															</Col>
 														</Row>

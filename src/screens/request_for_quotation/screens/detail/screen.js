@@ -1757,7 +1757,7 @@ setDate1= (props, value) => {
 																<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="taxTreatmentid">
-																		Tax Treatment
+																		{strings.TaxTreatment}
 																	</Label>
 																	<Input
 																	disabled
@@ -2182,7 +2182,7 @@ setDate1= (props, value) => {
 																			columnClassName="text-right"
 																			formatExtraData={universal_currency_list}
 																			>
-																			VAT amount
+																			{strings.VATAMOUNT}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="sub_total"

@@ -414,7 +414,7 @@ class Receipt extends React.Component {
 											</ButtonGroup>
 										</div>
 										<div className="py-3">
-											<h5>{strings.Filter}: </h5>
+											<h5>{strings.Filter} : </h5>
 											<Row>
 												{/* <Col lg={2} className="mb-1">
 													<Input

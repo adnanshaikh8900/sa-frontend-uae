@@ -163,6 +163,12 @@ Quotation_For:"Devis pour,",
         CreditAmount:"Montant du crédit",
         TaxCreditDate:"Date du crédit d’impôt",
 
+
+      //Expenses
+      ExpenseNumber:"Numéro de dépense ",
+
+
+
       //Customer invoice
       SelectPlaceOfSupply:"Sélectionnez le lieu de fourniture",
       ApplyLineItemDiscount:" Appliquer une remise sur les postes",
@@ -277,6 +283,10 @@ Quotation_For:"Devis pour,",
       CreateSupplier:"Créer un fournisseur ",		
 
       //Expenses
+      IsReverseCharge:"Est l’autoliquidation",
+      UnitPrice:"PRIX UNITAIRE",
+      InclusiveVAT:"TVA incluse",
+      ExclusiveVAT:"TVA exclue",
       PayThrough:"Payer à travers",
       Expenses:"Dépense",				
       EXPENSEDATE:"DATE DE DÉPENSES",		
@@ -329,7 +339,8 @@ RFQDATE:"DEMANDE DE DATE DE DEVIS",
 RFQDueDate:"Demande de date d’échéance du devis",	
 RFQDUEDATE:"DEMANDE DE DATE D’échéance DU DEVIS ",					
 AddnewRequest:"Ajouter une nouvelle demande",			
-DueWithinThisMonth: "Exigible ce mois-ci",								
+DueWithinThisMonth: "Exigible ce mois-ci",
+								
 //Create RFQ			
 CreateRequestForQuotation:"Créer une demande de devis",			
 RFQNumber:"Demande de numéro de devis ",						
@@ -681,6 +692,7 @@ PaymentForSupplierInvoice:"Paiement de la facture fournisseur",
 Approve:"Approuver",
 
 //PROFILE
+UniquePasswordNote:"* Veuillez utiliser un mot de passe unique.Ce mot de passe a été utilisé précédemment. ",
 EmailID:"Id par courriel",	
 Role:"Rôle",	
 TimeZonePreference:"Préférence de fuseau horaire",	
@@ -766,6 +778,7 @@ APIKey:"API clé",
 CreateCN:"Créer un CN",
 
 //Payroll
+NewEmployee:"Ajouter un nouvel employé",
 Employees:"Des employés",
 NewEmployee:"Nouvel employé",
 CreateEmployee:"Créer un employé", 

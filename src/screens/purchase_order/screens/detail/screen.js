@@ -1976,7 +1976,7 @@ class DetailPurchaseOrder extends React.Component {
 																<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="taxTreatmentid">
-																		Tax Treatment
+																		{strings.TaxTreatment}
 																	</Label>
 																	<Input
 																	disabled
@@ -2462,7 +2462,7 @@ class DetailPurchaseOrder extends React.Component {
 																			columnClassName="text-right"
 																			formatExtraData={universal_currency_list}
 																			>
-																			VAT amount
+																			{strings.VATAMOUNT}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="sub_total"

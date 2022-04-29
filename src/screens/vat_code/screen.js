@@ -196,7 +196,7 @@ class VatCode extends React.Component {
 
 	// Show Success Toast
 	success = () => {
-		return toast.success('Vat Category Deleted Successfully... ', {
+		return toast.success('VAT Category Deleted Successfully... ', {
 			position: toast.POSITION.TOP_RIGHT,
 		});
 	};
@@ -245,7 +245,7 @@ class VatCode extends React.Component {
         <text>
         <b>Delete Vat Category?</b>
         </text>
-        const message = 'This Vat Category will be deleted permanently and cannot be recovered. ';
+        const message = 'This VAT Category will be deleted permanently and cannot be recovered. ';
 		if (selectedRows.length > 0) {
 			this.setState({
 				dialog: (

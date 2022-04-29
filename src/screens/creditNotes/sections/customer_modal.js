@@ -193,8 +193,8 @@ errors.mobileNumber =
 								.required("Country is Required"),
 								stateId: Yup.string()
 								.required("State Region is Required"),
-								 city: Yup.string()
-								.required("City is Required"),
+								//  city: Yup.string()
+								// .required("City is Required"),
 							//     addressLine1: Yup.string()
 							//       .required("Address is Required"),
 							//     city: Yup.string()
@@ -828,7 +828,7 @@ errors.mobileNumber =
 											</Col>
 											<Col md="4">
 												<FormGroup>
-													<Label htmlFor="city"><span className="text-danger">*</span>{strings.City}</Label>
+													<Label htmlFor="city"><span className="text-danger"></span>{strings.City}</Label>
 													<Input
 														// options={city ? selectOptionsFactory.renderOptions('cityName', 'cityCode', cityRegion) : ''}
 														value={props.values.city}
@@ -840,7 +840,7 @@ errors.mobileNumber =
 																props.handleChange('city')(option);
 															}
 														}}
-														placeholder={strings.Enter+strings.City}
+														placeholder={strings.Location}
 														id="city"
 														name="city"
 														type="text"

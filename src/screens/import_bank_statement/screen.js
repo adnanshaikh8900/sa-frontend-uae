@@ -192,14 +192,14 @@ class ImportBankStatement extends React.Component {
 			.importTransaction(postData)
 			.then((res) => {
 				if (res.data.includes('Transactions Imported 0')) {
-					// this.props.commonActions.tostifyAlert(
-					// 	'error',
-					// 	'Imported transaction should not contain any outdated transation',
-					// 	// this.props.history.push('/admin/banking/bank-account/transaction',
-					// 	//  {
-					// 	// 	bankAccountId: postData.bankId
-					// 	// })
-					// );
+					this.props.commonActions.tostifyAlert(
+						'error',
+						'Imported transaction should not contain any outdated transation',
+						// this.props.history.push('/admin/banking/bank-account/transaction',
+						//  {
+						// 	bankAccountId: postData.bankId
+						// })
+					);
 					this.setState({ selectedTemplate: [], tableData: [] ,showMessage : true});
 				} else {
 					this.props.commonActions.tostifyAlert('success', res.data);
@@ -412,6 +412,7 @@ class ImportBankStatement extends React.Component {
 																						...{ file: '' },
 																					},
 																				});
+																				// props.handleSubmit();
 																				this.handleFileUpload()
 																			}}
 																		/>

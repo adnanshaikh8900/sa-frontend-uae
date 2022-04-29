@@ -28,7 +28,7 @@ import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 import { SupplierModal } from '../../../supplier_invoice/sections/index';
 import { ProductModal } from '../../../customer_invoice/sections';
 
-
+import { TextareaAutosize } from '@material-ui/core';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
@@ -895,18 +895,18 @@ class CreateRequestForQuotation extends React.Component {
 										'name',
 										'id',
 										vat_list,
-										'Vat',
+										'VAT',
 								  )
 								: []
 						}
 						value={
 							vat_list &&
 							selectOptionsFactory
-								.renderOptions('name', 'id', vat_list, 'Vat')
+								.renderOptions('name', 'id', vat_list, 'VAT')
 								.find((option) => option.value === +row.vatCategoryId)
 						}
 						id="vatCategoryId"
-						placeholder={strings.Select+strings.Vat}
+						placeholder={strings.Select+strings.VAT}
 						onChange={(e) => {
 							this.selectItem(
 								e.value,
@@ -1934,7 +1934,7 @@ class CreateRequestForQuotation extends React.Component {
 																		},
 																	),
 																vatCategoryId: Yup.string().required(
-																	'Vat is Required',
+																	'VAT is Required',
 																),
 																productId: Yup.string().required(
 																	'Product is Required',
@@ -2320,8 +2320,8 @@ class CreateRequestForQuotation extends React.Component {
 													           </Col>
 															   <Col  >
 																{this.state.taxType === false ?
-																	<span style={{ color: "#0069d9" }} className='mr-4'><b>Exclusive</b></span> :
-																	<span className='mr-4'>Exclusive</span>}
+																	<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Exclusive}</b></span> :
+																	<span className='mr-4'>{strings.Exclusive}</span>}
 																<Switch
 																	value={props.values.taxType}
 																	checked={this.state.taxType}
@@ -2350,8 +2350,8 @@ class CreateRequestForQuotation extends React.Component {
 																	className="react-switch "
 																/>
 																{this.state.taxType === true ?
-																	<span style={{ color: "#0069d9" }} className='ml-4'><b>Inclusive</b></span>
-																	: <span className='ml-4'>Inclusive</span>
+																	<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.Inclusive}</b></span>
+																	: <span className='ml-4'>{strings.Inclusive}</span>
 																}
 															</Col>
 																				</Row>
@@ -2498,7 +2498,7 @@ class CreateRequestForQuotation extends React.Component {
 																	columnClassName="text-right"
 																	formatExtraData={universal_currency_list}
 																	>
-																	Vat amount
+																	VAT amount
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="sub_total"
@@ -2512,7 +2512,7 @@ class CreateRequestForQuotation extends React.Component {
 																</BootstrapTable>
 															</Col>
 														</Row>
-														<Row className="ml-4 ">
+														{/* <Row className="ml-4 ">
 														<Col className=" ml-4">
 															<FormGroup className='pull-right'>
 															<Input
@@ -2526,20 +2526,21 @@ class CreateRequestForQuotation extends React.Component {
 																	this.setState({ discountEnabled: !this.state.discountEnabled })}
 																}}
 															/>
-															<Label>Apply Discount</Label>
+															<Label>Apply Line Item Discount</Label>
 															</FormGroup>
 														</Col>
-													</Row>
+													</Row> */}
 													
 														{this.state.data.length > 0 ? (
 															<Row>
-																<Col lg={4}>
-																	<FormGroup className="py-2">
-																		<Label htmlFor="notes">{strings.Notes}</Label>
-																		<Input
+																<Col lg={8}>
+																<FormGroup className="py-2">
+																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
+																		<TextareaAutosize
 																			type="textarea"
 																			style={{width: "700px"}}
-																			maxLength="250"
+																			className="textarea"
+																			maxLength="255"
 																			name="notes"
 																			id="notes"
 																			rows="2"
@@ -2550,14 +2551,37 @@ class CreateRequestForQuotation extends React.Component {
 																			value={props.values.notes}
 																		/>
 																	</FormGroup>
+																	<Row>
+																		<Col lg={6}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="receiptNumber">
+																					{strings.ReferenceNumber}
+																				</Label>
+																				<Input
+																					type="text"
+																					maxLength="100"
+																					id="receiptNumber"
+																					name="receiptNumber"
+																					value={props.values.receiptNumber}
+																					placeholder={strings.ReceiptNumber}
+																					onChange={(value) => {
+																						props.handleChange('receiptNumber')(value);
 
-															
+																					}}
+																					className={props.errors.receiptNumber && props.touched.receiptNumber ? "is-invalid" : ""}
+																				/>
+																				{props.errors.receiptNumber && props.touched.receiptNumber && (
+																					<div className="invalid-feedback">{props.errors.receiptNumber}</div>
+																				)}
+																			</FormGroup>
+																		</Col>
+																		<Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Field
 																					name="attachmentFile"
 																					render={({ field, form }) => (
 																						<div>
-																							<Label>{strings.RecieptAttachment}</Label>{' '}
+																							<Label>{strings.ReceiptAttachment}</Label>{' '}
 																							<br />
 																							<Button
 																								color="primary"
@@ -2609,26 +2633,53 @@ class CreateRequestForQuotation extends React.Component {
 																					)}
 																			</FormGroup>
 																		</Col>
-																		<Col lg={4}> </Col>
-																<Col lg={4}>
+																	</Row>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="receiptAttachmentDescription">
+																			{strings.AttachmentDescription}
+																		</Label><br/>
+																		<TextareaAutosize
+																			type="textarea"
+																			className="textarea"
+																			maxLength="250"
+																			style={{width: "700px"}}
+																			name="receiptAttachmentDescription"
+																			id="receiptAttachmentDescription"
+																			rows="2"
+																			placeholder={strings.ReceiptAttachmentDescription}
+																			onChange={(option) =>
+																				props.handleChange(
+																					'receiptAttachmentDescription',
+																				)(option)
+																			}
+																			value={
+																				props.values
+																					.receiptAttachmentDescription
+																			}
+																		/>
+																	</FormGroup>
+														</Col>
+																		<Col lg={4}>
+																
 																	<div className="">
 																	{initValue.total_excise > 0 ?	
-																	<div className="total-item p-2" >
-																			<Row>
-																				<Col lg={6}>
-																					<h5 className="mb-0 text-right">
-																					Total Excise
-																					</h5>
-																				</Col>
-																				<Col lg={6} className="text-right">
-																					<label className="mb-0">
+																<div className="total-item p-2" >
+																<Row>
+																	<Col lg={6}>
+																		<h5 className="mb-0 text-right">
+																	{strings.Total_Excise}
+																		</h5>
+																	</Col>
+																	<Col lg={6} className="text-right">
+																		<label className="mb-0">
 
-																						{this.state.supplier_currency_symbol} &nbsp;
-																						{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
-																					</label>
-																				</Col>
-																			</Row>
-																		</div>: ''}
+																			{this.state.supplier_currency_symbol} &nbsp;
+																			{/* {this.rendertotalexcise()} */}
+																			{initValue.total_excise.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
+																		</label>
+																	</Col>
+																</Row>
+															</div> : ''}
 																		{this.state.discountEnabled == true ?
 																			<div className="total-item p-2">
 																			<Row>
@@ -2751,6 +2802,7 @@ class CreateRequestForQuotation extends React.Component {
 																		</div>
 																	</div>
 																</Col>
+															
 															</Row>
 														) : null}
 														<Row>

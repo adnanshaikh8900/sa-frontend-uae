@@ -25,7 +25,7 @@ import * as SupplierInvoiceActions from '../../actions';
 import * as ProductActions from '../../../product/actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 import * as CustomerInvoiceActions from '../../../customer_invoice/actions';
-
+import { TextareaAutosize } from '@material-ui/core';
 import { SupplierModal } from '../../sections';
 import { ProductModal } from '../../../customer_invoice/sections';
 
@@ -746,8 +746,13 @@ class CreateSupplierInvoice extends React.Component {
 																				discountType: res.data.discountType
 																					? res.data.discountType
 																					: '',
+																					discountEnabled : res.data.discount > 0 ? true : false,
+									                                             	discount:res.data.discount?res.data.discount:0
 				
 																		},
+																		discountEnabled : res.data.discount > 0 ? true : false,
+																		discount:res.data.discount?res.data.discount:0,
+   
 																		invoiceDateNoChange: res.data.rfqExpiryDate
 																				? moment(res.data.rfqExpiryDate)
 																				: '',
@@ -1131,18 +1136,18 @@ class CreateSupplierInvoice extends React.Component {
 									'name',
 									'id',
 									vat_list,
-									'Vat',
+									'VAT',
 								)
 								: []
 						}
 						value={
 							vat_list &&
 							selectOptionsFactory
-								.renderOptions('name', 'id', vat_list, 'Vat')
+								.renderOptions('name', 'id', vat_list, 'VAT')
 								.find((option) => option.value === +row.vatCategoryId)
 						}
 						id="vatCategoryId"
-						placeholder={strings.Select + strings.Vat}
+						placeholder={strings.Select + strings.VAT}
 						onChange={(e) => {
 							this.selectItem(
 								e.value,
@@ -2308,7 +2313,7 @@ class CreateSupplierInvoice extends React.Component {
 																		},
 																	),
 																vatCategoryId: Yup.string().required(
-																	'Vat is Required',
+																	'VAT is Required',
 																),
 																productId: Yup.string().required(
 																	'Product is Required',
@@ -2922,8 +2927,8 @@ class CreateSupplierInvoice extends React.Component {
 															<Col  >
 																
 																{this.state.taxType === false ?
-																	<span style={{ color: "#0069d9" }} className='mr-4'><b>Exclusive</b></span> :
-																	<span className='mr-4'>Exclusive</span>}
+																	<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Exclusive}</b></span> :
+																	<span className='mr-4'>{strings.Exclusive}</span>}
 																<Switch
 																	value={props.values.taxType}
 																	checked={this.state.taxType}
@@ -2952,8 +2957,8 @@ class CreateSupplierInvoice extends React.Component {
 																	className="react-switch "
 																/>
 																{this.state.taxType === true ?
-																	<span style={{ color: "#0069d9" }} className='ml-4'><b>Inclusive</b></span>
-																	: <span className='ml-4'>Inclusive</span>
+																	<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.Inclusive}</b></span>
+																	: <span className='ml-4'>{strings.Inclusive}</span>
 																}
 															</Col>
 
@@ -3104,7 +3109,7 @@ class CreateSupplierInvoice extends React.Component {
 																		columnClassName="text-right"
 																		formatExtraData={universal_currency_list}
 																	>
-																		Vat amount
+																		VAT amount
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		width="10%"
@@ -3145,7 +3150,7 @@ class CreateSupplierInvoice extends React.Component {
 																		this.setState({ discountEnabled: !this.state.discountEnabled })}
 																	}}
 																/>
-																<Label>Apply Discount</Label>
+																<Label>Apply Line Item Discount</Label>
 																</FormGroup>
 															</Col>
 													
@@ -3155,13 +3160,15 @@ class CreateSupplierInvoice extends React.Component {
 															<Row>
 																<Col lg={8}>
 																	<FormGroup className="py-2">
-																		<Label htmlFor="notes">{strings.Notes}</Label>
-																		<Input
+																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
+																		<TextareaAutosize
 																			type="textarea"
-																			maxLength="250"
+																			style={{width: "700px"}}
+																			className="textarea"
+																			maxLength="255"
 																			name="notes"
 																			id="notes"
-																			rows="6"
+																			rows="2"
 																			placeholder={strings.DeliveryNotes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
@@ -3172,7 +3179,7 @@ class CreateSupplierInvoice extends React.Component {
 
 																	<Row>
 																		<Col lg={6}>
-																			<FormGroup className="mb-3">
+																		<FormGroup className="mb-3">
 																				<Label htmlFor="receiptNumber">
 																					{strings.ReferenceNumber}
 																				</Label>
@@ -3256,13 +3263,15 @@ class CreateSupplierInvoice extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="receiptAttachmentDescription">
 																			{strings.AttachmentDescription}
-																		</Label>
-																		<Input
+																		</Label><br/>
+																		<TextareaAutosize
 																			type="textarea"
+																			className="textarea"
 																			maxLength="250"
+																			style={{width: "700px"}}
 																			name="receiptAttachmentDescription"
 																			id="receiptAttachmentDescription"
-																			rows="5"
+																			rows="2"
 																			placeholder={strings.ReceiptAttachmentDescription}
 																			onChange={(option) =>
 																				props.handleChange(

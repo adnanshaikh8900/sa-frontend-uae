@@ -147,7 +147,7 @@ class Header extends Component {
 							<DropdownItem
 								onClick={() => this.props.history.push('/admin/settings/notesSettings')}
 							>
-								<i className="fas fa-info-circle"></i> Notes Settings
+								<i className="fas fa-info-circle"></i> {strings.Notes_Settings}
 							</DropdownItem>
 							<DropdownItem
                                 onClick={() =>

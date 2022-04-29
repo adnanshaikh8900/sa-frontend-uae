@@ -36,6 +36,7 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import { optionFactory, selectCurrencyFactory, selectOptionsFactory } from 'utils';
 
+import { TextareaAutosize } from '@material-ui/core';
 import './style.scss';
 import moment from 'moment';
 import API_ROOT_URL from '../../../../constants/config';
@@ -215,6 +216,7 @@ class DetailGoodsReceivedNote extends React.Component {
 									lineItemsString: res.data.poQuatationLineItemRequestModelList
 										? res.data.poQuatationLineItemRequestModelList
 										: [],
+										fileName: res.data.fileName ? res.data.fileName : '',
 										supplierReferenceNumber: res.data.supplierReferenceNumber ?
 										res.data.supplierReferenceNumber :'',
 										poNumber: res.data.poNumber ? res.data.poNumber : '',
@@ -897,6 +899,29 @@ min="0"
                    {props.errors.lineItemsString[parseInt(idx, 10)].productId}
                    </div>
                      )}
+					  {row['productId'] != '' ? 
+						   <div className='mt-1'>
+						   <Input
+						type="text"
+						maxLength="250"
+						value={row['description'] !== '' ? row['description'] : ''}
+						onChange={(e) => {
+							this.selectItem(e.target.value, row, 'description', form, field);
+						}}
+						placeholder={strings.Description}
+						className={`form-control ${
+							props.errors.lineItemsString &&
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)].description &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)].description
+								? 'is-invalid'
+								: ''
+						}`}
+					/>
+						   </div> : ''}
                    </>
 				)}
 			/>
@@ -1385,42 +1410,42 @@ debugger
 														// 			),
 														// 		}),
 														// 	),
-														// attachmentFile: Yup.mixed()
-														// 	.test(
-														// 		'fileType',
-														// 		'*Unsupported File Format',
-														// 		(value) => {
-														// 			value &&
-														// 				this.setState({
-														// 					fileName: value.name,
-														// 				});
-														// 			if (
-														// 				!value ||
-														// 				(value &&
-														// 					this.supported_format.includes(
-														// 						value.type,
-														// 					))
-														// 			) {
-														// 				return true;
-														// 			} else {
-														// 				return false;
-														// 			}
-														// 		},
-														// 	)
-														// 	.test(
-														// 		'fileSize',
-														// 		'*File Size is too large',
-														// 		(value) => {
-														// 			if (
-														// 				!value ||
-														// 				(value && value.size <= this.file_size)
-														// 			) {
-														// 				return true;
-														// 			} else {
-														// 				return false;
-														// 			}
-														// 		},
-														// 	),
+														attachmentFile: Yup.mixed()
+															.test(
+																'fileType',
+																'*Unsupported File Format',
+																(value) => {
+																	value &&
+																		this.setState({
+																			fileName: value.name,
+																		});
+																	if (
+																		!value ||
+																		(value &&
+																			this.supported_format.includes(
+																				value.type,
+																			))
+																	) {
+																		return true;
+																	} else {
+																		return false;
+																	}
+																},
+															)
+															.test(
+																'fileSize',
+																'*File Size is too large',
+																(value) => {
+																	if (
+																		!value ||
+																		(value && value.size <= this.file_size)
+																	) {
+																		return true;
+																	} else {
+																		return false;
+																	}
+																},
+															),
 														lineItemsString: Yup.array()
 														.required(
 															'Atleast one invoice sub detail is mandatory',
@@ -1802,7 +1827,7 @@ debugger
 																		>
 																			Account
 																		</TableHeaderColumn> */}
-																		<TableHeaderColumn
+																		{/* <TableHeaderColumn
 																			dataField="description"
 																			dataFormat={(cell, rows) =>
 																				this.renderDescription(
@@ -1814,7 +1839,7 @@ debugger
 																			width="10%"
 																		>
 																			{strings.DESCRIPTION}
-																		</TableHeaderColumn>
+																		</TableHeaderColumn> */}
 																		<TableHeaderColumn
 																			dataField="grnReceivedQuantity"
 																			width="10%"
@@ -1878,25 +1903,137 @@ debugger
 															</Row>
 															{data.length > 0 && (
 																<Row>
-																		<Col lg={8}>
-																		<FormGroup className="py-2">
-																		<Label htmlFor="grnRemarks">{strings.GRNREMARKS}</Label>
-																		<Input
+																			<Col lg={8}>
+																	<FormGroup className="py-2">
+																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
+																		<TextareaAutosize
 																			type="textarea"
+																			className="textarea"
 																			maxLength="250"
-																			name="grnRemarks"
-																			id="grnRemarks"
-																			rows="6"
-																			placeholder={strings.GRNREMARKS}
+																			style={{width: "700px"}}
+																			name="notes"
+																			id="notes"
+																			rows="2"
+																			placeholder={strings.DeliveryNotes}
 																			onChange={(option) =>
-																				props.handleChange('grnRemarks')(option)
+																				props.handleChange('notes')(option)
 																			}
-																			value={props.values.grnRemarks}
+																			value={props.values.notes}
 																		/>
 																	</FormGroup>
-																
+																	<Row>
+																		<Col lg={6}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="receiptNumber">
+																				{strings.ReferenceNumber}
+																				</Label>
+																				<Input
+																					type="text"
+																					maxLength="100"
+																					id="receiptNumber"
+																					name="receiptNumber"
+																					value={props.values.receiptNumber}
+																					placeholder={strings.ReceiptNumber}
+																					onChange={(value) => {
+																						props.handleChange('receiptNumber')(value);
+
+																					}}
+																					className={props.errors.receiptNumber && props.touched.receiptNumber ? "is-invalid" : ""}
+																				/>
+																				{props.errors.receiptNumber && props.touched.receiptNumber && (
+																					<div className="invalid-feedback">{props.errors.receiptNumber}</div>
+																				)}
+		 
+																					
+																				
+																			</FormGroup>
+																		</Col>
+																		<Col lg={6}>
+																			<FormGroup className="mb-3">
+																				<Field
+																					name="attachmentFile"
+																					render={({ field, form }) => (
+																						<div>
+																							<Label>{strings.ReceiptAttachment}</Label>{' '}
+																							<br />
+																							<Button
+																								color="primary"
+																								onClick={() => {
+																									document
+																										.getElementById('fileInput')
+																										.click();
+																								}}
+																								className="btn-square mr-3"
+																							>
+																								<i className="fa fa-upload"></i>{' '}
+																								{strings.upload}
+																							</Button>
+																							<input
+																								id="fileInput"
+																								ref={(ref) => {
+																									this.uploadFile = ref;
+																								}}
+																								type="file"
+																								style={{ display: 'none' }}
+																								onChange={(e) => {
+																									this.handleFileChange(
+																										e,
+																										props,
+																									);
+																								}}
+																							
+																							/>
+																							{this.state.fileName && (
+																								<div>
+																									<i
+																										className="fa fa-close"
+																										onClick={() =>
+																											this.setState({
+																												fileName: '',
+																											})
+																										}
+																									></i>{' '}
+																									{this.state.fileName}
+																								</div>
+																							)}
+																						</div>
+																					)}
+																				/>
+																				{props.errors.attachmentFile &&
+																					props.touched.attachmentFile && (
+																						<div className="invalid-file">
+																							{props.errors.attachmentFile}
+																						</div>
+																					)}
+																			</FormGroup>
+																		</Col>
+																	</Row>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="receiptAttachmentDescription">
+																			{strings.AttachmentDescription}
+																		</Label>
+																		<br/>
+																		<TextareaAutosize
+																			type="textarea"
+																			className="textarea"
+																			maxLength="250"
+																			style={{width: "700px"}}
+																			name="receiptAttachmentDescription"
+																			id="receiptAttachmentDescription"
+																			rows="2"
+																			placeholder={strings.ReceiptAttachmentDescription}
+																			onChange={(option) =>
+																				props.handleChange(
+																					'receiptAttachmentDescription',
+																				)(option)
+																			}
+																			value={
+																				props.values
+																					.receiptAttachmentDescription
+																			}
+																		/>
+																	</FormGroup>
 																</Col>
-															
 																</Row>
 															)}
 															<Row>

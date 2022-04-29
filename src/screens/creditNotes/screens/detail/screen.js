@@ -32,14 +32,13 @@ import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
-
 import './style.scss';
 import moment from 'moment';
 import API_ROOT_URL from '../../../../constants/config';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import Switch from "react-switch";
-
+import { TextareaAutosize } from '@material-ui/core';
 
 const mapStateToProps = (state) => {
 	return {
@@ -259,7 +258,7 @@ class DetailCreditNote extends React.Component {
 									term: res.data.term ? res.data.term : '',
 									placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 									fileName: res.data.fileName ? res.data.fileName : '',
-									filePath: res.data.filePath ? res.data.filePath : '',
+									// filePath: res.data.filePath ? res.data.filePath : '',
 									total_excise: res.data.totalExciseTaxAmount ? res.data.totalExciseTaxAmount : 0,
 								},
 								
@@ -1513,7 +1512,7 @@ class DetailCreditNote extends React.Component {
 													onSubmit={(values, { resetForm }) => {
 														this.handleSubmit(values);
 													}}
-													// validationSchema={Yup.object().shape({
+													 validationSchema={Yup.object().shape({
 													// 	invoice_number: Yup.string().required(
 													// 		'Credit Note Number is Required',
 													// 	),
@@ -1574,43 +1573,43 @@ class DetailCreditNote extends React.Component {
 													// 				),
 													// 			}),
 													// 		),
-													// 	attachmentFile: Yup.mixed()
-													// 		.test(
-													// 			'fileType',
-													// 			'*Unsupported File Format',
-													// 			(value) => {
-													// 				value &&
-													// 					this.setState({
-													// 						fileName: value.name,
-													// 					});
-													// 				if (
-													// 					!value ||
-													// 					(value &&
-													// 						this.supported_format.includes(
-													// 							value.type,
-													// 						))
-													// 				) {
-													// 					return true;
-													// 				} else {
-													// 					return false;
-													// 				}
-													// 			},
-													// 		)
-													// 		.test(
-													// 			'fileSize',
-													// 			'*File Size is too large',
-													// 			(value) => {
-													// 				if (
-													// 					!value ||
-													// 					(value && value.size <= this.file_size)
-													// 				) {
-													// 					return true;
-													// 				} else {
-													// 					return false;
-													// 				}
-													// 			},
-													// 		),
-													// })}
+													attachmentFile: Yup.mixed()
+													.test(
+														'fileType',
+														'*Unsupported File Format',
+														(value) => {
+															value &&
+																this.setState({
+																	fileName: value.name,
+																});
+															if (
+																!value ||
+																(value &&
+																	this.supported_format.includes(
+																		value.type,
+																	))
+															) {
+																return true;
+															} else {
+																return false;
+															}
+														},
+													)
+													.test(
+														'fileSize',
+														'*File Size is too large',
+														(value) => {
+															if (
+																!value ||
+																(value && value.size <= this.file_size)
+															) {
+																return true;
+															} else {
+																return false;
+															}
+														},
+													),
+											})}
 												>
 													{(props) => (
 														<Form onSubmit={props.handleSubmit}>
@@ -1708,7 +1707,7 @@ class DetailCreditNote extends React.Component {
 																<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="taxTreatmentid">
-																		Tax Treatment
+																				{strings.TaxTreatment}
 																	</Label>
 																	<Input
 																	disabled
@@ -2018,7 +2017,7 @@ class DetailCreditNote extends React.Component {
 																{this.props.location.state.isCNWithoutProduct==true &&(<Col  lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="creditAmount"><span className="text-danger">* </span>
-																	Credit Amount
+																	{strings.CreditAmount}
 																	</Label>
 																	<Input
 																		type="text"
@@ -2246,7 +2245,7 @@ min="0"
 																			this.renderExcise(cell, rows, props)
 																		}
 																	>
-																	Excise
+																	{strings.Excises}
 																	<i
 																			id="ExiseTooltip"
 																			className="fa fa-question-circle ml-1"
@@ -2266,7 +2265,7 @@ min="0"
 																			this.renderDiscount(cell, rows, props)
 																		}
 																	>
-																	DisCount
+																		{strings.DisCount}
 																	</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="vat"
@@ -2284,7 +2283,7 @@ min="0"
 																		columnClassName="text-right"
 																		formatExtraData={universal_currency_list}
 																		>
-																		Vat amount
+																		{strings.VATAMOUNT}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="sub_total"
@@ -2302,13 +2301,15 @@ min="0"
 																<Row>
 																	<Col lg={8}>
 																	<FormGroup className="py-2">
-																		<Label htmlFor="notes">{strings.Notes}</Label>
-																		<Input
+																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
+																		<TextareaAutosize
 																			type="textarea"
-																			maxLength="250"
+																			style={{width: "700px"}}
+																			className="textarea"
+																			maxLength="255"
 																			name="notes"
 																			id="notes"
-																			rows="6"
+																			rows="2"
 																			placeholder={strings.DeliveryNotes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
@@ -2318,7 +2319,7 @@ min="0"
 																	</FormGroup>
 																	<Row>
 																		<Col lg={6}>
-																			<FormGroup className="mb-3">
+																		<FormGroup className="mb-3">
 																				<Label htmlFor="receiptNumber">
 																					 {strings.ReferenceNumber}
 																				</Label>
@@ -2360,13 +2361,13 @@ min="0"
 																				/> */}
 																			</FormGroup>
 																		</Col>
-																		{/* <Col lg={6}>
+																		<Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Field
 																					name="attachmentFile"
 																					render={({ field, form }) => (
 																						<div>
-																							<Label>Reciept Attachment</Label>{' '}
+																							<Label>{strings.ReceiptAttachment}</Label>{' '}
 																							<br />
 																							<Button
 																								color="primary"
@@ -2378,7 +2379,7 @@ min="0"
 																								className="btn-square mr-3"
 																							>
 																								<i className="fa fa-upload"></i>{' '}
-																								Upload
+																								{strings.upload}
 																							</Button>
 																							<input
 																								id="fileInput"
@@ -2418,18 +2419,20 @@ min="0"
 																						</div>
 																					)}
 																			</FormGroup>
-																		</Col> */}
+																		</Col>
 																	</Row>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="receiptAttachmentDescription">
-																			 {strings.AttachmentDescription}
-																		</Label>
-																		<Input
+																			{strings.AttachmentDescription}
+																		</Label><br/>
+																		<TextareaAutosize
 																			type="textarea"
+																			className="textarea"
 																			maxLength="250"
+																			style={{width: "700px"}}
 																			name="receiptAttachmentDescription"
 																			id="receiptAttachmentDescription"
-																			rows="5"
+																			rows="2"
 																			placeholder={strings.ReceiptAttachmentDescription}
 																			onChange={(option) =>
 																				props.handleChange(
@@ -2448,7 +2451,7 @@ min="0"
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
-																					Total Excise
+																					{strings.TotalExcise}
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-right">

@@ -114,7 +114,7 @@ class CreateVatCode extends React.Component {
 
 	// Show Success Toast
 	success = () => {
-		toast.success('Vat category Updated successfully... ', {
+		toast.success('VAT category Updated successfully... ', {
 			position: toast.POSITION.TOP_RIGHT,
 		});
 	};
@@ -129,7 +129,7 @@ class CreateVatCode extends React.Component {
 					this.setState({ disabled: false });
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'New vat category Created Successfully!',
+						'New VAT category Created Successfully!',
 					);
 					resetForm();
 					if (this.state.createMore) {
@@ -194,7 +194,7 @@ class CreateVatCode extends React.Component {
 													}
 
 													if (VatList.includes(values.name)) {
-														errors.name = 'Vat category already Exists';
+														errors.name = 'VAT category already Exists';
 													}
 
 													if (!values.vat) {

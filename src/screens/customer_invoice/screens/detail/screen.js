@@ -127,7 +127,7 @@ class DetailCustomerInvoice extends React.Component {
 			shippingStateId:'',
 			shippingCity:'',
 			shippingPostZipCode:'',
-			poBoxNumber: '',
+			POBoxNumber: '',
 			shippingTelephone:'',
 			shippingFax:'',
 			loadingMsg:"Loading",
@@ -1777,15 +1777,11 @@ class DetailCustomerInvoice extends React.Component {
 														if(values.changeShippingAddress==true){
 															if(values.shippingStateId =="")  errors.shippingStateId ='State is Required';
 														}
-	
-														if(values.changeShippingAddress==true){
-															if(values.shippingCity =="")  errors.shippingCity ='City is Required';
-														}
-	
+
 														if(values.changeShippingAddress==true){
 															if (values.shippingCountryId == 229 || values.shippingCountryId.value == 229) {
-																if (values.poBoxNumber === '')
-																	errors.poBoxNumber = 'PO Box Number is Required';
+																if (values.shippingPostZipCode == '')
+																	errors.shippingPostZipCode = 'PO Box Number is Required';
 															} else {
 																if (values.shippingPostZipCode == '')
 																	errors.shippingPostZipCode = 'Postal Code is Required';
@@ -2473,7 +2469,7 @@ class DetailCustomerInvoice extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="shippingStateId"><span className="text-danger">* </span>
 																		{/* {strings.StateRegion} */}
-																		{props.values.shippingCountryId.value === 229 ? "Emirite" : "State / Provinces"}
+																		{props.values.shippingCountryId.value === 229 ?strings.Emirate : strings.StateRegion}
 																	</Label>
 																	<Select
 																		options={
@@ -2482,7 +2478,7 @@ class DetailCustomerInvoice extends React.Component {
 																					'label',
 																					'value',
 																					state_list_for_shipping,
-																					props.values.shippingCountryId.value === 229 ? "Emirite" : "State / Provinces",
+																					props.values.shippingCountryId.value === 229 ? strings.Emirate : strings.StateRegion,
 																				)
 																				: []
 																		}
@@ -2500,7 +2496,7 @@ class DetailCustomerInvoice extends React.Component {
 																				props.handleChange('shippingStateId')('');
 																			}
 																		}}
-																		placeholder={props.values.shippingCountryId.value == 229 ? "Emirite" : "State / Provinces"}
+																		placeholder={props.values.shippingCountryId.value == 229 ?strings.Emirate : strings.StateRegion}
 																		id="shippingStateId"
 																		name="shippingStateId"
 																		className={
@@ -2522,7 +2518,7 @@ class DetailCustomerInvoice extends React.Component {
 														<Row style={{display: props.values.changeShippingAddress === true ? '' : 'none'}}>
 														<Col md="4">
 																<FormGroup>
-																	<Label htmlFor="shippingCity"><span className="text-danger">* </span>{strings.City}</Label>
+																	<Label htmlFor="shippingCity"><span className="text-danger"></span>{strings.City}</Label>
 																	<Input
 																
 																		// options={city ? selectOptionsFactory.renderOptions('cityName', 'cityCode', cityRegion) : ''}
@@ -2538,7 +2534,7 @@ class DetailCustomerInvoice extends React.Component {
 																				props.handleChange('shippingCity')(option);
 																			}
 																		}}
-																		placeholder={strings.Enter + strings.City}
+																		placeholder={strings.Location}
 																		id="shippingCity"
 																		name="shippingCity"
 																		type="text"
@@ -2557,55 +2553,15 @@ class DetailCustomerInvoice extends React.Component {
 																</FormGroup>
 															</Col>
 
-															{props.values.shippingCountryId == 229 || props.values.shippingCountryId.value == 229 ?
-																			<Col md="4" >
-																				<FormGroup>
-																					{/* <Label htmlFor="select">{strings.POBoxNumber}</Label> */}
+															
+																			<Col md="4" ><FormGroup>
+																			
+																					{props.values.shippingCountryId == 229 || props.values.shippingCountryId.value == 229 ?
 																					<Label htmlFor="POBoxNumber">
 																						<span className="text-danger">* </span>{strings.POBoxNumber}
-																					</Label>
-																					<Input
-																						type="text"
-																						minLength="3"
-																						maxLength="6"
-																						id="poBoxNumber"
-																						name="poBoxNumber"
-																						autoComplete="Off"
-																						placeholder={strings.Enter + strings.POBoxNumber}
-																						onChange={(option) => {
-																							if (
-																								option.target.value === '' ||
-																								this.regEx.test(option.target.value)
-																							) {
-																								if (option.target.value.length < 3)
-																									this.setState({ showpoBoxNumberErrorMsg: true })
-																								else
-																									this.setState({ showpoBoxNumberErrorMsg: false })
-																								props.handleChange('poBoxNumber')(
-																									option,
-																								);
-																							}
-																						}}
-																						value={props.values.poBoxNumber}
-																						className={
-																							props.errors.poBoxNumber &&
-																								props.touched.poBoxNumber
-																								? 'is-invalid'
-																								: ''
+																					</Label>:
+																					<Label htmlFor="PostZipCode"><span className="text-danger">* </span>{strings.PostZipCode}</Label>
 																						}
-																					/>
-																					{props.errors.poBoxNumber &&
-																						props.touched.poBoxNumber && (
-																							<div className="invalid-feedback">
-																								{props.errors.poBoxNumber}
-																							</div>
-																						)}
-																				</FormGroup>
-																			</Col>
-
-																			:
-																			<Col md="4" ><FormGroup>
-																				<Label htmlFor="PostZipCode"><span className="text-danger">* </span>{strings.PostZipCode}</Label>
 																				<Input
 																					type="text"
 																					maxLength="6"
@@ -2639,7 +2595,7 @@ class DetailCustomerInvoice extends React.Component {
 																						</div>
 																					)}
 																			</FormGroup>
-																			</Col>}
+																			</Col>
 
 															<Col md="4">
 																<FormGroup>
@@ -3033,7 +2989,7 @@ class DetailCustomerInvoice extends React.Component {
 																		this.setState({ discountEnabled: !this.state.discountEnabled })}
 																	}}
 																/>
-																<Label>Apply Line Item Discount</Label>
+																<Label>{strings.ApplyLineItemDiscount}</Label>
 																</FormGroup>
 															</Col>
 														</Row>

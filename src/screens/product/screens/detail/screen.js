@@ -982,7 +982,7 @@ renderName=(cell,row)=>{
 															'Product Code is Required',
 														),
 														vatCategoryId: Yup.string()
-															.required('Vat Category is Required')
+															.required('VAT Category is Required')
 															.nullable(),
 													})}
 												>
@@ -1384,7 +1384,7 @@ renderName=(cell,row)=>{
 																	</FormGroup>
 																</Col>
 															</Row> */}
-	<Row style={{display: props.values.productType !='SERVICE'   ?'' : 'none'}}		>
+															<Row style={{display: props.values.productType !='SERVICE'   ?'' : 'none'}}		>
 																{this.state.companyDetails && this.state.companyDetails.isRegisteredVat===true &&(<Col lg={4}>
 																<FormGroup check inline className="mb-3">
 																		<Label
@@ -1495,7 +1495,7 @@ renderName=(cell,row)=>{
 																</Col>
 
 															)}
-																</Row>
+															</Row>
 																{/* {this.state.exciseTaxCheck===true&&(	<Row style={{display: props.values.productType !='SERVICE'   ?'' : 'none'}}>
 															<Col >
 																<label className='mr-4'><b>Excise Type</b></label>

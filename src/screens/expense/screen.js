@@ -624,7 +624,7 @@ class Expense extends React.Component {
 		}
 	};
 	renderType=(cell,row)=>{		
-		let type =row && row.exclusiveVat ===true?"Exclusive Vat" :"Inclusive Vat";
+		let type =row && row.exclusiveVat ===true?"Exclusive VAT" :"Inclusive VAT";
 		return(<div className="text-left">{type}</div>);
 	}
 	clearAll = () => {

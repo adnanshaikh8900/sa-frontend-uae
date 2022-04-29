@@ -22,6 +22,7 @@ import * as Yup from 'yup';
 import * as SupplierInvoiceCreateActions from './actions';
 import * as PurchaseOrderCreateAction from './actions'
 
+import { TextareaAutosize } from '@material-ui/core';
 import * as PurchaseOrderAction from '../../actions';
 import * as RequestForQuotationDetailsAction from '../../../request_for_quotation/screens/detail/actions'
 import * as ProductActions from '../../../product/actions';
@@ -102,7 +103,7 @@ class CreatePurchaseOrder extends React.Component {
 			loading: false,
 			discountOptions: [
 				{ value: 'FIXED', label: 'Fixed' },
-				{ value: 'PERCENTAGE', label: 'Percentage' },
+				{ value: 'PERCENTAGE', label: '%' },
 			],
 			discount_option: '',
 			disabled: false,
@@ -990,18 +991,18 @@ class CreatePurchaseOrder extends React.Component {
 										'name',
 										'id',
 										vat_list,
-										'Vat',
+										'VAT',
 								  )
 								: []
 						}
 						value={
 							vat_list &&
 							selectOptionsFactory
-								.renderOptions('name', 'id', vat_list, 'Vat')
+								.renderOptions('name', 'id', vat_list, 'VAT')
 								.find((option) => option.value === +row.vatCategoryId)
 						}
 						id="vatCategoryId"
-						placeholder={strings.Select+strings.Vat}
+						placeholder={strings.Select+strings.VAT}
 						onChange={(e) => {
 							this.selectItem(
 								e.value,
@@ -1315,8 +1316,7 @@ class CreatePurchaseOrder extends React.Component {
 	};
 
 	updateAmount = (data, props) => {
-		const { vat_list , excise_list} = this.props;
-		const { discountPercentage, discountAmount } = this.state;
+		const { vat_list } = this.state;
 		let total_net = 0;
 		let total_excise = 0;
 		let total = 0;
@@ -1329,19 +1329,19 @@ class CreatePurchaseOrder extends React.Component {
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
-			
+
 			//Exclusive case
 			if(this.state.taxType === false){
 				if (obj.discountType === 'PERCENTAGE') {	
 					 net_value =
 						((+obj.unitPrice -
 							(+((obj.unitPrice * obj.discount)) / 100)) * obj.quantity);
-					var discount =  (obj.unitPrice* obj.quantity) - net_value
+					var discount =  (obj.unitPrice * obj.quantity) - net_value
 				if(obj.exciseTaxId !=  0){
 					if(obj.exciseTaxId === 1){
 						const value = +(net_value) / 2 ;
 							net_value = parseFloat(net_value) + parseFloat(value) ;
-							obj.exciseAmount = parseFloat(value);
+							obj.exciseAmount = parseFloat(value) ;
 						}else if (obj.exciseTaxId === 2){
 							const value = net_value;
 							net_value = parseFloat(net_value) +  parseFloat(value) ;
@@ -1358,8 +1358,8 @@ class CreatePurchaseOrder extends React.Component {
 					((+net_value  * vat ) / 100);
 				}else{
 					 net_value =
-						((obj.unitPrice * obj.quantity) )
-					var discount = (obj.unitPrice* obj.quantity) - net_value
+						((obj.unitPrice * obj.quantity) - obj.discount)
+					var discount =  (obj.unitPrice * obj.quantity) - net_value
 						if(obj.exciseTaxId !=  0){
 							if(obj.exciseTaxId === 1){
 								const value = +(net_value) / 2 ;
@@ -1426,7 +1426,7 @@ class CreatePurchaseOrder extends React.Component {
 						{
 				//net value after removing discount
 				 net_value =
-				((obj.unitPrice * obj.quantity))
+				((obj.unitPrice * obj.quantity) - obj.discount)
 
 
 				//discount amount
@@ -1485,7 +1485,7 @@ class CreatePurchaseOrder extends React.Component {
 				initValue: {
 					...this.state.initValue,
 					...{
-						total_net:  total_net - total_excise,
+						total_net:  total_net-total_excise,
 						totalVatAmount: total_vat,
 						discount:  discount_total ? discount_total : 0,
 						totalAmount:  total ,
@@ -1497,6 +1497,7 @@ class CreatePurchaseOrder extends React.Component {
 
 		);
 	};
+
 	handleSubmit = (data, resetForm) => {
 		this.setState({ disabled: true });
 		const {
@@ -1536,6 +1537,7 @@ class CreatePurchaseOrder extends React.Component {
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
 		formData.append('totalVatAmount', this.state.initValue.totalVatAmount);
 		formData.append('totalAmount', this.state.initValue.totalAmount);
+		formData.append('discount', this.state.initValue.discount);
 		if (supplierId && supplierId.value) {
 			formData.append('supplierId', supplierId.value);
 		}
@@ -2085,7 +2087,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																		},
 																	),
 																vatCategoryId: Yup.string().required(
-																	'Vat is Required',
+																	'VAT is Required',
 																),
 																productId: Yup.string().required(
 																	'Product is Required',
@@ -2582,8 +2584,8 @@ getrfqDetails = (e, row, props,form,field) => {
 								                                </Col>
 																<Col  >
 																{this.state.taxType === false ?
-																	<span style={{ color: "#0069d9" }} className='mr-4'><b>Exclusive</b></span> :
-																	<span className='mr-4'>Exclusive</span>}
+																	<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Exclusive}</b></span> :
+																	<span className='mr-4'>{strings.Exclusive}</span>}
 																<Switch
 																	value={props.values.taxType}
 																	checked={this.state.taxType}
@@ -2612,8 +2614,8 @@ getrfqDetails = (e, row, props,form,field) => {
 																	className="react-switch "
 																/>
 																{this.state.taxType === true ?
-																	<span style={{ color: "#0069d9" }} className='ml-4'><b>Inclusive</b></span>
-																	: <span className='ml-4'>Inclusive</span>
+																	<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.Inclusive}</b></span>
+																	: <span className='ml-4'>{strings.Inclusive}</span>
 																}
 															</Col>
 																</Row>
@@ -2761,7 +2763,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																	columnClassName="text-right"
 																	formatExtraData={universal_currency_list}
 																	>
-																	Vat amount
+																	VAT amount
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="sub_total"
@@ -2783,14 +2785,14 @@ getrfqDetails = (e, row, props,form,field) => {
 																	id="discountEnabled"
 																	checked={this.state.discountEnabled}
 																	onChange={(option) => {
-																		debugger
+																		
 																		if(initValue.discount > 0){
 																			this.setState({ discountEnabled: true })
 																		}else{
 																		this.setState({ discountEnabled: !this.state.discountEnabled })}
 																	}}
 																/>
-																<Label>Apply Discount</Label>
+																<Label>Apply Line Item Discount</Label>
 																</FormGroup>
 															</Col>
 														</Row>
@@ -2798,16 +2800,17 @@ getrfqDetails = (e, row, props,form,field) => {
 														{this.state.data.length > 0 ? (
 															<Row>
 																<Col lg={8}>
-																	<FormGroup className="py-2">
-																		<Label htmlFor="notes">{strings.Notes}</Label>
-																		<Input
+																<FormGroup className="py-2">
+																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
+																		<TextareaAutosize
 																			type="textarea"
 																			style={{width: "700px"}}
+																			className="textarea"
 																			maxLength="255"
 																			name="notes"
 																			id="notes"
 																			rows="2"
-																			placeholder={strings.Notes}
+																			placeholder={strings.DeliveryNotes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
 																			}
@@ -2815,7 +2818,32 @@ getrfqDetails = (e, row, props,form,field) => {
 																		/>
 																	</FormGroup>
 																			
-																	<FormGroup className="mb-3">
+																	<Row>
+																		<Col lg={6}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="receiptNumber">
+																					{strings.ReferenceNumber}
+																				</Label>
+																				<Input
+																					type="text"
+																					maxLength="100"
+																					id="receiptNumber"
+																					name="receiptNumber"
+																					value={props.values.receiptNumber}
+																					placeholder={strings.ReceiptNumber}
+																					onChange={(value) => {
+																						props.handleChange('receiptNumber')(value);
+
+																					}}
+																					className={props.errors.receiptNumber && props.touched.receiptNumber ? "is-invalid" : ""}
+																				/>
+																				{props.errors.receiptNumber && props.touched.receiptNumber && (
+																					<div className="invalid-feedback">{props.errors.receiptNumber}</div>
+																				)}
+																			</FormGroup>
+																		</Col>
+																		<Col lg={6}>
+																			<FormGroup className="mb-3">
 																				<Field
 																					name="attachmentFile"
 																					render={({ field, form }) => (
@@ -2871,8 +2899,33 @@ getrfqDetails = (e, row, props,form,field) => {
 																						</div>
 																					)}
 																			</FormGroup>
-																</Col>
-
+																		</Col>
+																	</Row>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="receiptAttachmentDescription">
+																			{strings.AttachmentDescription}
+																		</Label><br/>
+																		<TextareaAutosize
+																			type="textarea"
+																			className="textarea"
+																			maxLength="250"
+																			style={{width: "700px"}}
+																			name="receiptAttachmentDescription"
+																			id="receiptAttachmentDescription"
+																			rows="2"
+																			placeholder={strings.ReceiptAttachmentDescription}
+																			onChange={(option) =>
+																				props.handleChange(
+																					'receiptAttachmentDescription',
+																				)(option)
+																			}
+																			value={
+																				props.values
+																					.receiptAttachmentDescription
+																			}
+																		/>
+																	</FormGroup>
+														</Col>
 																<Col lg={4}>
 																	<div className="">
 																	{initValue.total_excise > 0 ?	

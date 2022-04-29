@@ -132,3 +132,39 @@ export const parseCsvFile = (obj) => {
 			});
 	};
 };
+
+export const parseCsvFileWithOutTemplate = (obj) => {
+	return (dispatch) => {
+		let data = {
+			method: 'POST',
+			url: `/rest/transactionimport/parseFileWithoutTemplate`,
+     data: obj
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
+export const importTransactionWithoutTemplate = (obj) => {
+	return (dispatch) => {
+		let data = {
+			method: 'post',
+			url: '/rest/transactionimport/savewithtemplate',
+			data: obj,
+		};
+		return authApi(data)
+			.then((res) => {
+				return res;
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};

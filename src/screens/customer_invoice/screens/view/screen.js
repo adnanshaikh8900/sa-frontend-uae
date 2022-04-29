@@ -40,6 +40,7 @@ class ViewCustomerInvoice extends React.Component {
 		super(props);
 		this.state = {
 			invoiceData: {},
+			isBillingAndShippingAddressSame:false,
 			totalNet: 0,
 			currencyData: {},
 			id: '',
@@ -111,20 +112,22 @@ class ViewCustomerInvoice extends React.Component {
 								}
 								if(this.state.invoiceData.contactId)
 						     {	
-							this.props.supplierInvoiceDetailActions
-							.getContactById(this.state.invoiceData.contactId)
-							.then((res) => {
-								if (res.status === 200) {									
-									this.setState({
-										contactData: res.data,
-									});
-								}
-							});
+							
 							}
 						},
 						);
 					}
 				});
+				this.props.supplierInvoiceDetailActions
+							.getContactById(this.props.location.state.contactId)
+							.then((res) => {
+								if (res.status === 200) {									
+									this.setState({
+										contactData: res.data,
+										isBillingAndShippingAddressSame:res.data.isBillingAndShippingAddressSame
+									});
+								}
+							});
 		}
 	};
 
@@ -132,7 +135,7 @@ class ViewCustomerInvoice extends React.Component {
 		this.pdfExportComponent.save();
 	};	
 	render() {
-		const { invoiceData, currencyData, id, contactData} = this.state;
+		const { invoiceData, currencyData, id, contactData,isBillingAndShippingAddressSame} = this.state;
 		const { profile } = this.props;
 
 		return (
@@ -202,12 +205,14 @@ class ViewCustomerInvoice extends React.Component {
 									<InvoiceTemplate
 									
 										invoiceData={invoiceData}
+										contactData={contactData}
+									     isBillingAndShippingAddressSame={isBillingAndShippingAddressSame}
 									    status={this.props.location.state.status}
 										currencyData={currencyData}
 										ref={(el) => (this.componentRef = el)}
 										totalNet={this.state.totalNet}
 										companyData={this.state && this.state.companyData ?this.state.companyData:''}
-										contactData={contactData}
+										
 									/>
 								</PDFExport>
 							</div>

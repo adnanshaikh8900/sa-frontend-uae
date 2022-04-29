@@ -501,8 +501,8 @@ AddNewProductCategory:"Add New Product Category",
 
 //Add Product Category
 NewProductCategory:"New Product Category",		
-ProductCategoryCode:"PRODUCT CATEGORY CODE",		
-ProductCategoryName:"PRODUCT CATEGORY NAME",	
+ProductCategoryCode:"Product Category Code",		
+ProductCategoryName:"Product Category Name",	
 
 //VatCategory	
 VatCategories:"VAT Categories",		
@@ -790,7 +790,7 @@ CreateCN:"Create CN",
 //Payroll 
 PayrollConfigurations:"Payroll Config",
 Employees:"Employees",
-NewEmployee:"New Employee",
+NewEmployee:"Add New Employee",
 CreateEmployee:"Create Employee", 
 Employment:"Employment",
 SuperiorEmployeeName:"Superior Employee Name",

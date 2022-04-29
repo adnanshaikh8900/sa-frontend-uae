@@ -493,8 +493,9 @@ AddNewProductCategory:"إضافة فئة منتج جديد",
 
 //Add Product Category
 NewProductCategory:"فئة المنتج الجديد",		
-ProductCategoryCode:"كود فئة المنتج",		
+ProductCategoryCode:"رمز فئة المنتج",		
 ProductCategoryName:"اسم فئة المنتج",	
+
 
 //VatCategory	
 VatCategories:"فئات ضريبة القيمة المضافة",		
@@ -774,6 +775,7 @@ APIKey:"مفتاح API",
 CreateCN:"CN قم بإنشاء",
 
 //Payroll
+NewEmployee:"إضافة موظف جديد",
 Employees:"الموظفين",
 NewEmployee:"موظف جديد",  
 CreateEmployee:"أنشئ موظفًا",  

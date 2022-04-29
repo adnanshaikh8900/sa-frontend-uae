@@ -227,7 +227,7 @@ class CreateProductCategory extends React.Component {
 																	maxLength='20'
 																	id="productCategoryCode"
 																	name="productCategoryCode"
-																	placeholder={strings.ENTER+strings.ProductCategoryCode}
+																	placeholder={strings.Enter+strings.ProductCategoryCode}
 																	onChange={(option) => {
 																		if (
 																			option.target.value === '' ||
@@ -264,7 +264,7 @@ class CreateProductCategory extends React.Component {
 																	maxLength='50'
 																	id="productCategoryName"
 																	name="productCategoryName"
-																	placeholder={strings.ENTER+strings.ProductCategoryName}
+																	placeholder={strings.Enter+strings.ProductCategoryName}
 																	onChange={(option) => {
 																		if (
 																			option.target.value === '' ||

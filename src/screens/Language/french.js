@@ -778,6 +778,7 @@ APIKey:"API clé",
 CreateCN:"Créer un CN",
 
 //Payroll
+NewEmployee:"Ajouter un nouvel employé",
 Employees:"Des employés",
 NewEmployee:"Nouvel employé",
 CreateEmployee:"Créer un employé", 

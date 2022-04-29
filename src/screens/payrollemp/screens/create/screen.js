@@ -133,7 +133,6 @@ class CreateEmployeePayroll extends React.Component {
             list: [],
             BankList: [],
             isDisabled:false,
-            loading: false,
             createMore: false,
             initValue: {
                 designationName: '',
@@ -621,6 +620,7 @@ existForAccountNumber = (value) => {
     }
 
     handleSubmit = (data, resetForm) => {
+        this.setState({ loading:true, loadingMsg:"Creating Employee Basic Details..."});
         this.setState({ disabled: true });
         const {
             firstName,
@@ -753,7 +753,8 @@ existForAccountNumber = (value) => {
             formData.append('employeeDesignationId', employeeDesignationId.value);
         }
         if(this.state.employeeid === null || this.state.employeeid === ""){ 
-            this.setState({ loading:true, loadingMsg:"Creating Employee Basic Details..."});
+
+       
         this.props.createPayrollEmployeeActions
             .createEmployee(formData)
             .then((res) => {
@@ -766,7 +767,6 @@ existForAccountNumber = (value) => {
                         employeeid: res.data,
 
                     })
-                    
                     if(this.props.location && this.props.location.state && this.props.location.state.goto && this.props.location.state.goto==="Expense"){                    
                             this.props.history.push(`/admin/expense/expense/create`)  
                             this.setState({ loading:false,});                     
@@ -780,7 +780,7 @@ existForAccountNumber = (value) => {
                 if(err.data && err.data.message !== undefined){
                     error=err.data.message ? err.data.message :err.data;
                 }
-                
+                this.setState({ disabled: false, loading: false });
                 this.props.commonActions.tostifyAlert('error',  error)
             })
         }

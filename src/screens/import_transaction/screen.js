@@ -631,7 +631,7 @@ setConfigurations=(configurationList)=>{
 			delimiter:postData.delimiter ? postData.delimiter : '',
 			headerRowNo:	postData.headerRowNo ? postData.headerRowNo : '',
 			dateFormatId:	postData.dateFormatId ? postData.dateFormatId : '',
-			skipRows:postData.skipRows ? postData.skipRows : '-',
+			skipRows:postData.skipRows ? postData.skipRows : null,
 			textQualifier:postData.textQualifier ? postData.textQualifier : '',
 			otherDilimiterStr:postData.otherDilimiterStr ? postData.otherDilimiterStr : '',
 			data:this.state.csv,
@@ -1353,27 +1353,7 @@ setConfigurations=(configurationList)=>{
 																				</Button>
 																			</FormGroup>
 																		
-																			<FormGroup>
-																				<Button
-																					type="button"
-																					color="primary"
-																					className="btn-square mt-4"
-																					// disabled={this.state.fileName ? false : true}
-																					onClick={() => {
-
-																						 if(this.state.templateId){
-
-																						this.validate()
-																					}else{
-																						this.validateWithoutTemplate()
-																					}
-																					}
-																				}	
-																				>
-																					<i className="fa fa-dot-circle-o"></i>{' '}
-																					Validate
-																				</Button>
-																			</FormGroup> 
+																		
 																		</Col>
 																	</Row>
 																	{/* <Row>
@@ -1452,6 +1432,31 @@ setConfigurations=(configurationList)=>{
 																	</Row> */}
 																</fieldset>
 															</Col>
+														</Row>
+														<Row>
+															<Col>
+														<FormGroup>
+																				<Button
+																					type="button"
+																					color="primary"
+																					className="btn-square mt-4 pull-right"
+																					// disabled={this.state.fileName ? false : true}
+																					onClick={() => {
+
+																						 if(this.state.templateId){
+
+																						this.validate()
+																					}else{
+																						this.validateWithoutTemplate()
+																					}
+																					}
+																				}	
+																				>
+																					<i className="fa fa-dot-circle-o"></i>{' '}
+																					Validate and Save
+																				</Button>
+																			</FormGroup> 
+																			</Col>
 														</Row>
 														{/* <Row className="mt-5"> */}
 														{/* </Row> */}
@@ -1566,7 +1571,7 @@ setConfigurations=(configurationList)=>{
 																	{this.state.tableDataKey && this.state.tableDataKey.length > 0 ? (
 
 																		<>
-																			<Button
+																			{/* <Button
 																				type="button"
 																				color="primary"
 																				className="btn-square mr-4"
@@ -1574,7 +1579,28 @@ setConfigurations=(configurationList)=>{
 																			>
 																				<i className="fa fa-dot-circle-o"></i>{' '}
 																				Save
-																			</Button>
+																			</Button> */}
+																			
+																				<Button
+																					type="button"
+																					color="primary"
+																					className="btn-square mr-4"
+																					// disabled={this.state.fileName ? false : true}
+																					onClick={() => {
+
+																						 if(this.state.templateId){
+
+																						this.validate()
+																					}else{
+																						this.validateWithoutTemplate()
+																					}
+																					}
+																				}	
+																				>
+																					<i className="fa fa-dot-circle-o"></i>{' '}
+																					Validate and Save
+																				</Button>
+																			
 																			<Button
 																				color="secondary"
 																				className="btn-square"

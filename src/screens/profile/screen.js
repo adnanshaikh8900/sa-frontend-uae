@@ -100,6 +100,7 @@ class Profile extends React.Component {
 			
 			  },
 			email:'',
+			showmessage: false,
 			initCompanyData: {
 				companyName: '',
 				companyRegistrationNumber: '',
@@ -756,7 +757,7 @@ class Profile extends React.Component {
 			});
 	};
 
-	handlePasswordSubmit = (data) => {
+	handlePasswordSubmit = (data,resetForm) => {
 		const {
 			currentPassword,
 			password,
@@ -765,32 +766,39 @@ class Profile extends React.Component {
 		formData.append('id', this.state.userId ? this.state.userId : '');
 		formData.append('currentPassword', currentPassword ? currentPassword : '');
 		formData.append('password', password ? password : '');
-
-		{this.setState({ loading:true, loadingMsg:"Updating Password"})} 
+		// {this.setState({ loading:true, loadingMsg:"Updating Password"})} 
 		this.props.profileActions
 			.resetNewpassword(formData)
 			.then((res) => {
-				
-				if (res.status === 200) {
+					
+				if  (res.status === 200) {
 					this.props.history.push('/login');
 					this.props.commonActions.tostifyAlert(
 						'success',
 						'Password Updated Successfully. Please Login With New Password',
 					);
-					{this.setState({ loading:false,})}
-				}
+					//{this.setState({ loading:false,})}
+					}
+					this.setState({ loading:false});
 			})
 			.catch((err) => {
+				if (err.status === 406) {					
+				
+					resetForm(this.state.initValue);
+					this.setState({
+					showmessage : true
+					})
+					}	
 				this.props.commonActions.tostifyAlert(
 					'error',
 					err && err.data ? err.data.message : 'Something Went Wrong',
 				);
-			});
+			});	
 	}
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { loading, isSame, timezone ,companyTypeList ,isPasswordShown,checkmobileNumberParam,loadingMsg} = this.state;
+		const { initValue,loading, isSame, timezone ,companyTypeList ,isPasswordShown,checkmobileNumberParam,loadingMsg} = this.state;
 		const {
 			currency_list,
 			country_list,
@@ -858,10 +866,12 @@ class Profile extends React.Component {
 														<Loader />
 													) : (
 															<Formik
-																initialValues={this.state.initUserData}
-																onSubmit={(values, { resetForm }) => {
+															
+																	initialValues={this.state.initUserData}
+																	onSubmit={(values, { resetForm }) => {
 																	this.handleUserSubmit(values);
-																	// resetForm(this.state.initValue)
+
+																	//resetForm(this.state.initValue)
 
 																	// this.setState({
 																	//   selectedContactCurrency: null,
@@ -3599,8 +3609,8 @@ class Profile extends React.Component {
 													<Formik
 																initialValues={this.state.initValue}
 																onSubmit={(values, { resetForm }) => {
-																	this.handlePasswordSubmit(values);
-																	// resetForm(this.state.initValue)
+																	this.handlePasswordSubmit(values,resetForm);
+																	//resetForm(this.state.initValue)
 
 																	// this.setState({
 																	//   selectedContactCurrency: null,
@@ -3665,19 +3675,24 @@ class Profile extends React.Component {
 																							</span> {strings.CurrentPassword}
 																						</Label>
 																							<Input
-																							onPaste={(e)=>{
+																							   onPaste={(e)=>{
 																								e.preventDefault()
 																								return false;
-																							  }} onCopy={(e)=>{
+																							  }} 
+																							  onCopy={(e)=>{
 																								e.preventDefault()
 																								return false;
 																							  }}
 																								minLength={8}
 																								maxLength={16}
-																								type="password"
+																								type={
+																									this.state.isPasswordShown
+																										? 'text'
+																										: 'password'
+																									}
 																								id="currentPassword"
 																								name="currentPassword"
-																								autoComplete="current-password"
+																								// autoComplete="current-password"
 																								placeholder={strings.Enter+strings.CurrentPassword}
 																								onChange={(option) => {
 																									props.handleChange('currentPassword')(
@@ -3829,6 +3844,11 @@ class Profile extends React.Component {
 																				
 																			</Col>
 																			
+																		</Row>
+																		<Row >
+																			<Col style={{display: this.state.showmessage ? '': 'none' }}>
+																		<b style={{ color: "red" }}>{strings.UniquePasswordNote}</b>
+																		</Col>
 																		</Row>
 																		<Row>
 																			<Col

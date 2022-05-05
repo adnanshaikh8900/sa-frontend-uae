@@ -1917,8 +1917,8 @@ class ExplainTrasactionDetail extends React.Component {
 																						}
 																						onChange={(option) => {
 																							props.handleChange('currencyCode')(option);
-																							this.setExchange(option.value);
-																							this.setCurrency(option.value)
+																							this.setExchange(option.value ? option.value : props.values.currencyCode);
+																							this.setCurrency(option.value ? option.value : props.values.currencyCode)
 																						}}
 																						className={
 																							props.errors.currencyCode &&

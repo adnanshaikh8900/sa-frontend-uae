@@ -346,6 +346,7 @@ class HorizontalBalanceSheet extends React.Component {
 								>
 							<div style={{	
 									
+									display: 'flex',
 									justifyContent: 'space-between',
 									marginBottom: '1rem'}}>
 									<div>
@@ -371,9 +372,9 @@ class HorizontalBalanceSheet extends React.Component {
 												? company_profile['companyName']
 												: ''}
 											</h2>	
-										
+											<br style={{ marginBottom: '5px' }} />
 											<b style ={{ fontSize: '18px'}}>{strings.HorizontalBalanceSheet}</b>
-											<br/>
+											<br style={{ marginBottom: '5px' }} />
 										{strings.Ason }  {initValue.endDate.replaceAll("/","-")} 
 											
 									</div>

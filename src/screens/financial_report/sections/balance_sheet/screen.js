@@ -373,9 +373,9 @@ class BalanceSheet extends React.Component {
 												? company_profile['companyName']
 												: ''}
 											</h2>	
-										
+											<br style={{ marginBottom: '5px' }} />
 											<b style ={{ fontSize: '18px'}}>{strings.BalanceSheet}</b>
-											<br/>
+											<br style={{ marginBottom: '5px' }} />
 											{strings.Ason}  {initValue.endDate.replaceAll("/","-")} 
 											
 									</div>

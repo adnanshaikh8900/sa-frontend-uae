@@ -325,7 +325,7 @@ class ReceivableInvoiceSummary extends React.Component {
 												? company_profile['companyName']
 												: ''}
 											</h2>	
-											
+											<br style={{ marginBottom: '5px' }} />
 											<b style ={{ fontSize: '18px'}}>{strings.ReceivableInvoiceSummary}</b>
 											<br style={{ marginBottom: '5px' }} />
 											{strings.From} {(initValue.startDate).replaceAll("/","-")} {strings.To} {initValue.endDate.replaceAll("/","-")} 

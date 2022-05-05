@@ -463,8 +463,9 @@ class ExpenseDetailsReport extends React.Component {
 													: ''}
 											</h2>
 											<div className="ml-4" >
+												<br style={{ marginBottom: '5px' }} />
 												<b style={{ fontSize: '18px' }}>{strings.Expense+" "+strings.Details}</b>
-												<br />
+												<br style={{ marginBottom: '5px' }} />
 
 												{strings.From} {(initValue.startDate).replaceAll("/","-")} {strings.To} {initValue.endDate.replaceAll("/","-")} 
 											</div>

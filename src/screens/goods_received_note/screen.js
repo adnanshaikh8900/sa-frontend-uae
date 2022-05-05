@@ -326,7 +326,7 @@ class GoodsReceivedNote extends React.Component {
 								this.postGrn(row.id);
 							}}
 						>
-								<i className="fas fa-send" />  {strings.Post}
+								<i className="fas fa-send" />  {strings.Send}
 						</DropdownItem>
 						)}
 						{/* {(row.status !== 'Draft' && row.status !== 'post' && row.status !== 'Closed' &&

@@ -459,7 +459,7 @@ class CustomerInvoice extends React.Component {
 									this.postInvoice(row,false);
 								}}
 							>
-								<i className="fas fa-send" /> {strings.Post}
+								<i className="fas fa-send" /> {strings.Send}
 							</DropdownItem>
 						)}
 						{/* <DropdownItem onClick={() => { this.openInvoicePreviewModal(row.id) }}>

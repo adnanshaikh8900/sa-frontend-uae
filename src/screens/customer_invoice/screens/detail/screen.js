@@ -1938,6 +1938,7 @@ class DetailCustomerInvoice extends React.Component {
 																		<Select
 																			id="contactId"
 																			name="contactId"
+																			isDisabled
 																			options={
 																				tmpCustomer_list
 																					? selectOptionsFactory.renderOptions(

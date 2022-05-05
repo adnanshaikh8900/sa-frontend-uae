@@ -2663,7 +2663,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		showMonthDropdown
 																		showYearDropdown
 																		dateFormat="dd-MM-yyyy"
-																		minDate={new Date()}
+																		//minDate={new Date()}
 																		dropdownMode="select"
 																		value={props.values.invoiceDate}
 																		selected={props.values.invoiceDate1 ?new Date(props.values.invoiceDate1):props.values.invoiceDate} 

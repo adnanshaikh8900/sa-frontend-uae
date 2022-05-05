@@ -1200,7 +1200,7 @@ class DetailExpense extends React.Component {
 																			showYearDropdown
 																			dropdownMode="select"
 																			dateFormat="dd-MM-yyyy"
-																			minDate={new Date()}
+																			//minDate={new Date()}
 																			onChange={(value) => {
 																				props.handleChange('expenseDate')(
 																					value,

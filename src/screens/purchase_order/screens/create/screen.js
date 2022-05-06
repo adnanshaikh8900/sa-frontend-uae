@@ -1996,6 +1996,21 @@ getrfqDetails = (e, row, props,form,field) => {
 														errors.po_number =
 															'PO Number already exists';
 													}
+													if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
+													||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
+													||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
+											    	{
+
+														if (!values.placeOfSupplyId) 
+													       	errors.placeOfSupplyId ='Place of Supply is Required';
+														if (values.placeOfSupplyId &&
+															(values.placeOfSupplyId=="" ||
+															(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")
+															)
+														   ) 
+													         errors.placeOfSupplyId ='Place of Supply is Required';
+													
+												   }
 													if (values.po_number==='') {
 														errors.po_number = 'PO Number is Required';
 													}
@@ -2012,7 +2027,7 @@ getrfqDetails = (e, row, props,form,field) => {
                                                     // rfqNumber: Yup.string().required(
 													// 	'Rfq Number is Required',
 													// ),
-													placeOfSupplyId: Yup.string().required('Place of supply is Required'),
+													// placeOfSupplyId: Yup.string().required('Place of supply is Required'),
 													
 													poApproveDate: Yup.string().required(
 														'Order Date is Required',
@@ -2335,7 +2350,13 @@ getrfqDetails = (e, row, props,form,field) => {
 									<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">
-																		<span className="text-danger">*</span>
+																		{/* <span className="text-danger">*</span> */}
+																		{this.state.customer_taxTreatment_des &&
+																		(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
+																		||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
+																		||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED") && (
+																			<span className="text-danger">* </span>
+																		)}
 																		{strings.PlaceofSupply}
 																	</Label>
 																	<Select

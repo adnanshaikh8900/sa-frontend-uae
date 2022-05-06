@@ -676,10 +676,7 @@ class Profile extends React.Component {
 			'companyStateCode',
 			companyStateCode ? companyStateCode : '',
 		);
-		formData.append(
-			'isDesignatedZone',
-			isDesignatedZone ? isDesignatedZone : '',
-		);
+		formData.append('isDesignatedZone',	isDesignatedZone);
 		formData.append(
 			'isRegisteredVat',
 			isRegisteredVat ? isRegisteredVat : 0,

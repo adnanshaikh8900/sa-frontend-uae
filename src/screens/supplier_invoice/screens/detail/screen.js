@@ -1798,6 +1798,21 @@ class DetailSupplierInvoice extends React.Component {
 															errors.discount =
 																'Discount amount Cannot be greater than Invoice Total Amount';
 														}
+														if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
+													||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
+													||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
+											    	{
+
+														if (!values.placeOfSupplyId) 
+													       	errors.placeOfSupplyId ='Place of Supply is Required';
+														if (values.placeOfSupplyId &&
+															(values.placeOfSupplyId=="" ||
+															(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")
+															)
+														   ) 
+													         errors.placeOfSupplyId ='Place of Supply is Required';
+													
+												   }
 														return errors;
 													}}
 													validationSchema={Yup.object().shape({
@@ -1808,7 +1823,7 @@ class DetailSupplierInvoice extends React.Component {
 															'Supplier is Required',
 														),
 														term: Yup.string().required('Term is Required'),
-														placeOfSupplyId: Yup.string().required('Place of Supply is Required'),
+														// placeOfSupplyId: Yup.string().required('Place of Supply is Required'),
 														invoiceDate: Yup.string().required(
 															'Invoice Date is Required',
 														),
@@ -1941,6 +1956,7 @@ class DetailSupplierInvoice extends React.Component {
 																		<Select
 																			id="contactId"
 																			name="contactId"
+																			isDisabled
 																			onBlur={props.handlerBlur}
 																			options={
 																				tmpSupplier_list
@@ -2024,7 +2040,13 @@ class DetailSupplierInvoice extends React.Component {
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="placeOfSupplyId">
+																			{/* <span className="text-danger">* </span> */}
+																		{this.state.customer_taxTreatment_des &&
+																		(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
+																		||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
+																		||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED") && (
 																			<span className="text-danger">* </span>
+																		)}
 																			 {strings.PlaceofSupply}
 																		</Label>
 																		<Select
@@ -2160,7 +2182,7 @@ class DetailSupplierInvoice extends React.Component {
 																			showMonthDropdown
 																			showYearDropdown
 																			dateFormat="dd-MM-yyyy"
-																			minDate={new Date()}
+																			//minDate={new Date()}
 																			dropdownMode="select"
 																			value={props.values.invoiceDate}
 																			selected={new Date(props.values.invoiceDate1)} 

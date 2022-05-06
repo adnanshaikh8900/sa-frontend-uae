@@ -217,9 +217,9 @@ class VatPaymentRecord extends React.Component {
 												? company_profile['companyName']
 												: 'ABC GROUP'}
 											</h2>	
-										
+											<br style={{ marginBottom: '5px' }} />
 											<b style ={{ fontSize: '18px'}}>Vat Payment Record</b>
-											<br/>
+											<br style={{ marginBottom: '5px' }} />
 											<br/>
 										
 										

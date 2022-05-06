@@ -42,6 +42,7 @@ import Switch from "react-switch";
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { TextareaAutosize } from '@material-ui/core';
+import { values } from 'lodash';
 const mapStateToProps = (state) => {
 	return {
 		project_list: state.request_for_quotation.project_list,
@@ -1645,6 +1646,24 @@ console.log(this.state.supplier_currency)
 													onSubmit={(values, { resetForm }) => {
 														this.handleSubmit(values);
 													}}
+													validate={(values)=>{
+														let errors={}
+														if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
+														||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
+														||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
+														{
+															if (!values.placeOfSupplyId) 
+																   errors.placeOfSupplyId ='Place of Supply is Required';
+															if (values.placeOfSupplyId &&
+																(values.placeOfSupplyId=="" ||
+																(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")
+																)
+															   ) 
+																 errors.placeOfSupplyId ='Place of Supply is Required';
+														
+													   }
+														return errors
+													}}
 													validationSchema={Yup.object().shape({
 														
 														lineItemsString: Yup.array()
@@ -1913,7 +1932,13 @@ console.log(this.state.supplier_currency)
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="placeOfSupplyId">
+																			{/* <span className="text-danger">* </span> */}
+																		{this.state.customer_taxTreatment_des &&
+																		(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
+																		||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
+																		||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED") && (
 																			<span className="text-danger">* </span>
+																		)}
 																			{strings.PlaceofSupply}
 																		</Label>
 																		<Select

@@ -492,7 +492,7 @@ class PayrollConfigurations extends React.Component {
 									{strings.SalaryRole}
 									</NavLink>
 								</NavItem>
-								<NavItem>
+								{/* <NavItem>
 									<NavLink
 										active={this.state.activeTab[0] === '2'}
 										onClick={() => {
@@ -501,7 +501,7 @@ class PayrollConfigurations extends React.Component {
 									>
 									{strings.SalaryStructure}
 									</NavLink>
-								</NavItem>
+								</NavItem> */}
 								<NavItem>
 									<NavLink
 										active={this.state.activeTab[0] === '3'}
@@ -708,7 +708,7 @@ class PayrollConfigurations extends React.Component {
                             {strings.NewSalaryStructure}
                           </Button> */}
 
-																			<div style={{ width: "1650px" }}>
+																			{/* <div style={{ width: "1650px" }}>
 																				<Button
 																					color="primary"
 																					className="btn-square pull-right mb-2 mr-2"
@@ -719,7 +719,7 @@ class PayrollConfigurations extends React.Component {
 																					<i className="fas fa-plus mr-1" />
 																					{strings.NewSalaryStructure}
 																				</Button>
-																			</div>
+																			</div> */}
 																			{/* <Button
                             color="warning"
                             className="btn-square"

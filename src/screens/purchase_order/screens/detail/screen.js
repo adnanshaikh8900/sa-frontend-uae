@@ -1746,6 +1746,25 @@ class DetailPurchaseOrder extends React.Component {
 													onSubmit={(values, { resetForm }) => {
 														this.handleSubmit(values);
 													}}
+													validate={(values)=>{
+														let errors={}
+														if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
+														||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
+														||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
+														{
+	
+															if (!values.placeOfSupplyId) 
+																   errors.placeOfSupplyId ='Place of Supply is Required';
+															if (values.placeOfSupplyId &&
+																(values.placeOfSupplyId=="" ||
+																(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")
+																)
+															   ) 
+																 errors.placeOfSupplyId ='Place of Supply is Required';
+														
+													   }
+														return errors;
+													}}
 													validationSchema={Yup.object().shape(
 														{
 														// 	po_number: Yup.string().required(
@@ -2010,7 +2029,13 @@ class DetailPurchaseOrder extends React.Component {
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="placeOfSupplyId">
+																			{/* <span className="text-danger">* </span> */}
+																		{this.state.customer_taxTreatment_des &&
+																		(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
+																		||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
+																		||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED") && (
 																			<span className="text-danger">* </span>
+																		)}
 																			{strings.PlaceofSupply}
 																		</Label>
 																		<Select

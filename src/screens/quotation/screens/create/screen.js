@@ -1911,6 +1911,20 @@ discountType = (row) =>
 													if (values.quotation_Number==='') {
 														errors.quotation_Number = 'Quotation Number is Required';
 													}
+													if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
+													||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
+													||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
+											    	{
+														if (!values.placeOfSupplyId) 
+													       	errors.placeOfSupplyId ='Place of Supply is Required';
+														if (values.placeOfSupplyId &&
+															(values.placeOfSupplyId=="" ||
+															(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")
+															)
+														   ) 
+													         errors.placeOfSupplyId ='Place of Supply is Required';
+													
+												   }
 													if (param === true) {
 														errors.discount =
 															'Discount amount Cannot be greater than Invoice Total Amount';
@@ -1925,7 +1939,7 @@ discountType = (row) =>
 														customerId: Yup.string().required(
 														'Customer is Required',
 													),
-														placeOfSupplyId: Yup.string().required('Place of Supply is Required'),
+														// placeOfSupplyId: Yup.string().required('Place of Supply is Required'),
 													
 													// poApproveDate: Yup.string().required(
 													// 	'Order Date is Required',
@@ -2167,7 +2181,13 @@ discountType = (row) =>
 									<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">
-																		<span className="text-danger">*</span>
+																		{/* <span className="text-danger">*</span> */}
+																		{this.state.customer_taxTreatment_des &&
+																		(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
+																		||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
+																		||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED") && (
+																			<span className="text-danger">* </span>
+																		)}
 																		{strings.PlaceofSupply}
 																	</Label>
 																	<Select

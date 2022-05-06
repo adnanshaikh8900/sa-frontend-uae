@@ -1843,6 +1843,20 @@ class CreateRequestForQuotation extends React.Component {
 														errors.rfq_number =
 															'RFQ number Already Exists';
 													}
+													if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
+													||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
+													||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
+													{
+														if (!values.placeOfSupplyId) 
+															   errors.placeOfSupplyId ='Place of Supply is Required';
+														if (values.placeOfSupplyId &&
+															(values.placeOfSupplyId=="" ||
+															(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")
+															)
+														   ) 
+															 errors.placeOfSupplyId ='Place of Supply is Required';
+													
+												   }
 													if (values.rfq_number==='') {
 														errors.rfq_number = 'RFQ Number is Required';
 													}
@@ -1856,9 +1870,9 @@ class CreateRequestForQuotation extends React.Component {
 													supplierId: Yup.string().required(
 														'Supplier is Required',
 													),
-													placeOfSupplyId: Yup.string().required(
-														'Place of Supply is Required'
-													),
+													// placeOfSupplyId: Yup.string().required(
+													// 	'Place of Supply is Required'
+													// ),
 													
 													rfqReceiveDate: Yup.string().required(
 														'Order Date is Required',
@@ -2102,7 +2116,13 @@ class CreateRequestForQuotation extends React.Component {
 									<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">
-																		<span className="text-danger">*</span>
+																		{/* <span className="text-danger">*</span> */}
+																		{this.state.customer_taxTreatment_des &&
+																		(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
+																		||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
+																		||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED") && (
+																			<span className="text-danger">* </span>
+																		)}
 																		{strings.PlaceofSupply}
 																	</Label>
 																	<Select

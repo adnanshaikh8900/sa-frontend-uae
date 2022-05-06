@@ -1758,14 +1758,31 @@ class DetailCustomerInvoice extends React.Component {
 															errors.discount =
 																'Discount amount Cannot be greater than Invoice Total Amount';
 														}
-														if (values.placeOfSupplyId && values.placeOfSupplyId.label &&( values.placeOfSupplyId.label === "Select Place of Supply"))
-														 {
-															errors.placeOfSupplyId ='Place of supply is Required';
-														}else
-														if (values.placeOfSupplyId === "")
-														 {
-															errors.placeOfSupplyId ='Place of supply is Required';
-														}
+
+														if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
+														||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
+														||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
+														{
+															debugger
+															if (!values.placeOfSupplyId) 
+																   errors.placeOfSupplyId ='Place of Supply is Required';
+															if (values.placeOfSupplyId &&
+																(values.placeOfSupplyId=="" ||
+																(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")
+																)
+															   ) 
+																 errors.placeOfSupplyId ='Place of Supply is Required';
+														
+													   }
+
+														// if (values.placeOfSupplyId && values.placeOfSupplyId.label &&( values.placeOfSupplyId.label === "Select Place of Supply"))
+														//  {
+														// 	errors.placeOfSupplyId ='Place of supply is Required';
+														// }else
+														// if (values.placeOfSupplyId === "")
+														//  {
+														// 	errors.placeOfSupplyId ='Place of supply is Required';
+														// }
 														if(values.changeShippingAddress==true){
 															if(values.shippingAddress =="")  errors.shippingAddress ='Shipping Address is Required';
 														}
@@ -2041,7 +2058,12 @@ class DetailCustomerInvoice extends React.Component {
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="placeOfSupplyId">
+																		{this.state.customer_taxTreatment_des &&
+																		(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
+																		||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
+																		||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED") && (
 																			<span className="text-danger">* </span>
+																		)}
 																			{strings.PlaceofSupply}
 																		</Label>
 																		<Select

@@ -1327,22 +1327,24 @@ class CustomerInvoice extends React.Component {
 											dataField="invoiceNumber"
 											// dataFormat={this.renderInvoiceNumber}
 											dataSort
-											//	width="7%"
+												width="10%"
 											className="table-header-bg"
 										>
 											{strings.INVOICENUMBER}
 										</TableHeaderColumn>
 										<TableHeaderColumn
 											dataField="customerName"
+											tdStyle={{ whiteSpace: 'normal' }}
 											//	dataSort width="10%"
 											className="table-header-bg"
+											
 										>
 											{strings.CUSTOMERNAME}
 										</TableHeaderColumn>
 										<TableHeaderColumn
 											dataField="invoiceDate"
 											dataSort
-											//width="6%"
+											// width="8%"
 											dataFormat={this.invoiceDate}
 											className="table-header-bg"
 										>
@@ -1351,14 +1353,14 @@ class CustomerInvoice extends React.Component {
 										<TableHeaderColumn
 											dataField="invoiceDueDate"
 											dataSort
-											//width="6%"
+											// width="8%"
 											dataFormat={this.invoiceDueDate}
 											className="table-header-bg"
 										>
 											{strings.DUEDATE}
 										</TableHeaderColumn>
 										<TableHeaderColumn
-											//width="9%"
+											width="7%"
 											dataField="status"
 											dataFormat={this.renderInvoiceStatus}
 											dataSort
@@ -1401,7 +1403,7 @@ class CustomerInvoice extends React.Component {
 										<TableHeaderColumn
 											className="text-right"
 											columnClassName="text-right"
-											//	width="5%"
+												width="5%"
 											dataFormat={this.renderActions}
 											className="table-header-bg"
 										></TableHeaderColumn>

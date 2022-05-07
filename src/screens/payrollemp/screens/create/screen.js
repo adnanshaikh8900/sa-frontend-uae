@@ -15,6 +15,7 @@ import {
     Form,
     Label,
     Table,
+    UncontrolledTooltip,
 } from 'reactstrap';
 import Select from 'react-select'
 
@@ -3103,7 +3104,18 @@ existForAccountNumber = (value) => {
                                              
                                                 <div style={{textAlign:"center"}}>
                                                         <FormGroup className="mt-3"   style={{textAlign:"center",display: "inline-grid"}} >
-                                                         <Label><span className="text-danger">* </span>  {strings.ctc} : </Label>
+                                                         <Label><span className="text-danger">* </span>  {strings.ctc} 
+                                                         <i				id="CtcTooltip"
+																				className="fa fa-question-circle ml-1"
+																			></i>
+																			<UncontrolledTooltip
+																				placement="right"
+																				target="CtcTooltip"
+																			>
+																				Cost To Company -  It indicates the total amount of expenses an company (organisation) spends on an employee during one year.
+																			</UncontrolledTooltip>
+                                                         
+                                                          : </Label>
                                                             <Input
                                                                 type="text"
                                                                 id="CTC"

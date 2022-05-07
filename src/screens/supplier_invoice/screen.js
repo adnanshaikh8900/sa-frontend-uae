@@ -1146,7 +1146,7 @@ console.log(supplier_invoice_list)
 												dataField="invoiceNumber"
 												// dataFormat={this.renderInvoiceNumber}
 												dataSort
-											//	width="10%"
+												width="10%"
 												className="table-header-bg"
 											>
 													{strings.INVOICENUMBER}
@@ -1154,6 +1154,7 @@ console.log(supplier_invoice_list)
 											<TableHeaderColumn
 												dataField="customerName"
 												dataSort
+												tdStyle={{ whiteSpace: 'normal' }}
 											//	width="12%"
 												className="table-header-bg"
 											>
@@ -1163,7 +1164,7 @@ console.log(supplier_invoice_list)
 											<TableHeaderColumn
 												dataField="invoiceDate"
 												dataSort
-											//	width="7%"
+												// width="7%"
 												dataFormat={this.invoiceDate}
 												className="table-header-bg"
 											>
@@ -1172,7 +1173,7 @@ console.log(supplier_invoice_list)
 											<TableHeaderColumn
 												dataField="invoiceDueDate"
 												dataSort
-											//	width="7%"
+												// width="7%"
 												dataFormat={this.invoiceDueDate}
 												className="table-header-bg"
 											>
@@ -1190,7 +1191,7 @@ console.log(supplier_invoice_list)
 											</TableHeaderColumn> */}
 
 											<TableHeaderColumn
-											//	width="10%"
+												width="7%"
 												dataField="status"
 												dataFormat={this.renderInvoiceStatus}
 												dataSort
@@ -1222,7 +1223,7 @@ console.log(supplier_invoice_list)
 											<TableHeaderColumn
 												className="text-right"
 												columnClassName="text-right"
-												//width="5%"
+												width="5%"
 												dataFormat={this.renderActions}
 												className="table-header-bg"
 											></TableHeaderColumn>

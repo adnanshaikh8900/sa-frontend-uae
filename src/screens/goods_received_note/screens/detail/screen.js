@@ -1922,7 +1922,7 @@ debugger
 																		/>
 																	</FormGroup>
 																	<Row>
-																		<Col lg={6}>
+																		{/* <Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="receiptNumber">
 																				{strings.ReferenceNumber}
@@ -1946,6 +1946,29 @@ debugger
 		 
 																					
 																				
+																			</FormGroup>
+																		</Col> */}
+																			<Col lg={6}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="grnRemarks">
+																					{strings.GRNREMARKS}
+																				</Label>
+																				<Input
+																					type="text"
+																					maxLength="100"
+																					id="grnRemarks"
+																					name="grnRemarks"
+																					value={props.values.grnRemarks}
+																					placeholder={strings.grnRemarks}
+																					onChange={(value) => {
+																						props.handleChange('grnRemarks')(value);
+
+																					}}
+																					className={props.errors.grnRemarks && props.touched.grnRemarks ? "is-invalid" : ""}
+																				/>
+																				{props.errors.grnRemarks && props.touched.grnRemarks && (
+																					<div className="invalid-feedback">{props.errors.grnRemarks}</div>
+																				)}
 																			</FormGroup>
 																		</Col>
 																		<Col lg={6}>

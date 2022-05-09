@@ -959,14 +959,6 @@ class ViewFtaAuditReport extends React.Component {
 												</tbody>
 												</Table>
 												<tr></tr>
-												<tr>
-													<td colSpan={16}>
-													<h6>
-													SuppDataEnd
-													</h6>
-													</td>
-												</tr>
-												<tr></tr>
 												<tr></tr>
 												<tr>
 													<td><b><h5>

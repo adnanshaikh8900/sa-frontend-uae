@@ -886,7 +886,7 @@ class Expense extends React.Component {
 											</TableHeaderColumn>
 											
 											<TableHeaderColumn
-												thStyle={{ whiteSpace: 'normal' }}
+												tdStyle={{ whiteSpace: 'normal' }}
 												dataField="payee"
 												dataSort
 												width="15%"
@@ -954,7 +954,7 @@ class Expense extends React.Component {
 												thStyle={{ whiteSpace: 'normal' }}
 												className="text-right"
 												columnClassName="text-right"
-												width="55"
+												// width="55%"
 												dataFormat={this.renderActions}
 												className='table-header-bg'
 											></TableHeaderColumn>

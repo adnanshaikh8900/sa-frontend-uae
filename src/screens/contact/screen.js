@@ -552,6 +552,7 @@ class Contact extends React.Component {
 											onGridReady={this.onGridReady}
 												>
 														<TableHeaderColumn
+															tdStyle={{ whiteSpace: 'normal' }}
 															isKey
 															dataField="fullName"
 															dataSort

@@ -1054,6 +1054,7 @@ class GoodsReceivedNote extends React.Component {
 												{strings.GRNNUMBER}
 											</TableHeaderColumn>
 											<TableHeaderColumn
+												tdStyle={{ whiteSpace: 'normal' }}
 												dataField="supplierName"
 												dataSort
 											//	width="12%"
@@ -1072,6 +1073,7 @@ class GoodsReceivedNote extends React.Component {
 												{strings.GRNRECEIVEDATE}
 											</TableHeaderColumn>
 											<TableHeaderColumn
+												tdStyle={{ whiteSpace: 'normal' }}
 												dataField="grnRemarks"
 												dataSort
 											//	width="7%"

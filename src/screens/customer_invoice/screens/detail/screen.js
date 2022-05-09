@@ -1103,6 +1103,7 @@ class DetailCustomerInvoice extends React.Component {
 		}
 	};
 	updateAmount = (data, props) => {
+		debugger
 		const { vat_list } = this.state;
 		let total_net = 0;
 		let total_excise = 0;
@@ -1123,7 +1124,7 @@ class DetailCustomerInvoice extends React.Component {
 					 net_value =
 						((+obj.unitPrice -
 							(+((obj.unitPrice * obj.discount)) / 100)) * obj.quantity);
-					var discount =  (obj.unitPrice * obj.discount) - net_value
+					var discount =  (obj.unitPrice * obj.quantity) - net_value;
 				if(obj.exciseTaxId !=  0){
 					if(obj.exciseTaxId === 1){
 						const value = +(net_value) / 2 ;
@@ -1134,9 +1135,7 @@ class DetailCustomerInvoice extends React.Component {
 							net_value = parseFloat(net_value) +  parseFloat(value) ;
 							obj.exciseAmount = parseFloat(value);
 						}
-						else{
-							net_value = obj.unitPrice
-						}
+					
 				}
 				else{
 					obj.exciseAmount = 0
@@ -1145,8 +1144,8 @@ class DetailCustomerInvoice extends React.Component {
 					((+net_value  * vat ) / 100);
 				}else{
 					 net_value =
-						((obj.unitPrice * obj.quantity) - obj.discount)
-					var discount =  (obj.unitPrice * obj.discount) - net_value
+						((obj.unitPrice * obj.quantity) - obj.discount);
+					var discount =  (obj.unitPrice * obj.quantity) - net_value;
 						if(obj.exciseTaxId !=  0){
 							if(obj.exciseTaxId === 1){
 								const value = +(net_value) / 2 ;
@@ -1157,9 +1156,7 @@ class DetailCustomerInvoice extends React.Component {
 									net_value = parseFloat(net_value) +  parseFloat(value) ;
 									obj.exciseAmount = parseFloat(value) ;
 								}
-								else{
-									net_value = obj.unitPrice
-								}
+								
 						}
 						else{
 							obj.exciseAmount = 0
@@ -1200,9 +1197,7 @@ class DetailCustomerInvoice extends React.Component {
 					const value = net_value / 2
 					obj.exciseAmount = parseFloat(value);
 				net_value = net_value}
-				else{
-					net_value = obj.unitPrice
-					}
+			
 						}
 						else{
 							obj.exciseAmount = 0
@@ -1237,9 +1232,7 @@ class DetailCustomerInvoice extends React.Component {
 						const value = net_value / 2
 						obj.exciseAmount = parseFloat(value);
 					net_value = net_value}
-					else{
-						net_value = obj.unitPrice
-						}
+					
 							}
 							else{
 								obj.exciseAmount = 0
@@ -2056,7 +2049,7 @@ class DetailCustomerInvoice extends React.Component {
 																	</Button>
 																</Col> */}
 																<Col lg={3}>
-																	<FormGroup className="mb-3">
+																{this.state.customer_taxTreatment_des!="NON GCC" &&(	<FormGroup className="mb-3">
 																		<Label htmlFor="placeOfSupplyId">
 																		{this.state.customer_taxTreatment_des &&
 																		(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
@@ -2117,7 +2110,7 @@ class DetailCustomerInvoice extends React.Component {
 																					{props.errors.placeOfSupplyId}
 																				</div>
 																			)}
-																	</FormGroup>
+																	</FormGroup>)}
 																</Col>
 															</Row>
 															<hr />

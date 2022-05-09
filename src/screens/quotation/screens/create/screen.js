@@ -1293,9 +1293,7 @@ discountType = (row) =>
 							net_value = parseFloat(net_value) +  parseFloat(value) ;
 							obj.exciseAmount = parseFloat(value);
 						}
-						else{
-							net_value = obj.unitPrice
-						}
+					
 				}
 				else{
 					obj.exciseAmount = 0
@@ -1316,9 +1314,7 @@ discountType = (row) =>
 									net_value = parseFloat(net_value) +  parseFloat(value) ;
 									obj.exciseAmount = parseFloat(value);
 								}
-								else{
-									net_value = obj.unitPrice
-								}
+							
 						}
 						else{
 							obj.exciseAmount = 0
@@ -1359,9 +1355,7 @@ discountType = (row) =>
 					const value = net_value / 2
 					obj.exciseAmount = parseFloat(value);
 				net_value = net_value}
-				else{
-					net_value = obj.unitPrice
-					}
+			
 						}
 						else{
 							obj.exciseAmount = 0
@@ -1396,9 +1390,7 @@ discountType = (row) =>
 						const value = net_value / 2
 						obj.exciseAmount = parseFloat(value);
 					net_value = net_value}
-					else{
-						net_value = obj.unitPrice
-						}
+				
 							}
 							else{
 								obj.exciseAmount = 0
@@ -2179,7 +2171,7 @@ discountType = (row) =>
 																</FormGroup>
 															</Col>: ''}
 									<Col lg={3}>
-																<FormGroup className="mb-3">
+									{this.state.customer_taxTreatment_des!="NON GCC" &&(			<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">
 																		{/* <span className="text-danger">*</span> */}
 																		{this.state.customer_taxTreatment_des &&
@@ -2238,7 +2230,7 @@ discountType = (row) =>
 																				{props.errors.placeOfSupplyId}
 																			</div>
 																		)}
-																</FormGroup>
+																</FormGroup>)}
 															</Col>
 															
 													

@@ -12,7 +12,8 @@ import {
     Label,
     Row,
     Col,
-    Table
+    Table,
+    UncontrolledTooltip
 } from 'reactstrap'
 import { Loader, ConfirmDeleteModal, ImageUploader } from 'components'
 import Select from 'react-select'
@@ -519,7 +520,16 @@ handleChange = (evt) => {
                                                          
                                                                <div style={{textAlign:"center"}}>
                                                         <FormGroup className="mt-3"   style={{textAlign:"center",display: "inline-grid"}} >
-                                                         <Label><span className="text-danger">*</span>  CTC : </Label>
+                                                         <Label><span className="text-danger">*</span>  Cost To Company
+                                                          <i				id="CtcTooltip"
+																				className="fa fa-question-circle ml-1"
+																			></i>
+																			<UncontrolledTooltip
+																				placement="right"
+																				target="CtcTooltip"
+																			>
+																				Cost To Company -  It indicates the total amount of expenses an company (organisation) spends on an employee during one year.
+																			</UncontrolledTooltip>  : </Label>
                                                             <Input
                                                                 type="text"
                                                                 id="CTC"

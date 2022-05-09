@@ -2348,7 +2348,7 @@ getrfqDetails = (e, row, props,form,field) => {
 															</Col>: ''}
 
 									<Col lg={3}>
-																<FormGroup className="mb-3">
+									{this.state.customer_taxTreatment_des!="NON GCC" &&(		<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">
 																		{/* <span className="text-danger">*</span> */}
 																		{this.state.customer_taxTreatment_des &&
@@ -2407,7 +2407,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																				{props.errors.placeOfSupplyId}
 																			</div>
 																		)}
-																</FormGroup>
+																</FormGroup>)}
 															</Col>
 															
 													

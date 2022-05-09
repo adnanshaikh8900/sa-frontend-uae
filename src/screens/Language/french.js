@@ -309,6 +309,7 @@ Description:"Description",
 Attachment:"Attachement",			
 Claimable: "Affaires",
 NonClaimable : "Personnel",	
+For:"pour",
 
 //Supplier Invoice
 SupplierInvoices:"Factures fournisseur",						

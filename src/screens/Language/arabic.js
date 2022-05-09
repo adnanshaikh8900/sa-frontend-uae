@@ -259,6 +259,7 @@ ExpenseDate:"تاريخ المصروفات",
 Tax:"ضريبة",	
 Claimable: "عمل",
 NonClaimable : "الشخصية",	
+For:"ل",
 
 Description:"وصف",				
 Attachment:"مرفق",				

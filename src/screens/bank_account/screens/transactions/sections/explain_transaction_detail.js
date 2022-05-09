@@ -208,6 +208,8 @@ class ExplainTrasactionDetail extends React.Component {
 								: '',
 							currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
 						},
+						amount: res.data.amount ? res.data.amount : '',
+						currencySymbol:res.data.curruncySymbol?res.data.curruncySymbol: '',
 						expenseType: res.data.expenseType ? true : false,
 						transactionCategoryLabel:res.data.transactionCategoryLabel,
 						transactionCategoryId:res.data.transactionCategoryId
@@ -922,7 +924,13 @@ class ExplainTrasactionDetail extends React.Component {
 													<div className="h4 mb-0 d-flex align-items-center">
 														<i className="icon-doc" />
 														<span className="ml-2">
-													  {strings.Explain+" "+strings.Transaction} {this.state.id}
+
+														{
+															this.props.selectedData.debitCreditFlag === 'D' ?
+															 strings.Explain+" "+strings.Transaction+" "+strings.For+" "+strings.WithdrawalAmount+" "+this.state.currencySymbol+" "+this.state.amount :
+															 strings.Explain+" "+strings.Transaction+" "+strings.For+" "+strings.DepositAmount+" "+this.state.currencySymbol+" "+this.state.amount
+														}
+												
 														</span>
 													</div>
 												</Col>

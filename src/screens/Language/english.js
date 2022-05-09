@@ -263,8 +263,8 @@ ExpenseCategory:"Expense Category",
 PaidBy:"Paid By",		
 ExpenseDate:"Expense Date",						
 Tax:"Tax",		
-Claimable: "Claimable",
-NonClaimable: "Non-Claimable",
+Claimable: "Business",
+NonClaimable: "Personal",
 				
 Attachment:"Attachment",				
 

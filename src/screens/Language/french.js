@@ -307,8 +307,8 @@ ExpenseDate:"Date des dépenses",
 Tax:"Taxe",			
 Description:"Description",				
 Attachment:"Attachement",			
-Claimable: "Réclamable",
-NonClaimable : "Non réclamable",	
+Claimable: "Affaires",
+NonClaimable : "Personnel",	
 
 //Supplier Invoice
 SupplierInvoices:"Factures fournisseur",						

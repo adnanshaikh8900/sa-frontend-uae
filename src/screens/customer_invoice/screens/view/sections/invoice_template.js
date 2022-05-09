@@ -744,7 +744,7 @@ class InvoiceTemplate extends Component {
 													</b>
 												</td>
 											</tr>
-											{invoiceData.exchangeRate == 1 ? " " :
+											{/* {invoiceData.exchangeRate == 1 ? " " :
 												<tr style={{ background: '#f2f2f2' }}>
 													<td style={{ width: '40%' }}>
 														<strong>{strings.InvoiceAmountIn}</strong>
@@ -777,7 +777,7 @@ class InvoiceTemplate extends Component {
 															</span>
 														</b>
 													</td>
-												</tr>}
+												</tr>} */}
 										</tbody>
 									</Table>
 								</div>

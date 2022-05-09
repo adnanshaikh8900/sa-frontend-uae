@@ -628,6 +628,7 @@ class ChartAccount extends React.Component {
 													 {strings.ACCOUNTCODE}
 												</TableHeaderColumn>
 												<TableHeaderColumn
+													tdStyle={{ whiteSpace: 'normal' }}
 													dataField="transactionCategoryName"
 													dataSort
 													columnTitle={this.customName}

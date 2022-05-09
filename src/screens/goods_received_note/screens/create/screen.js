@@ -1687,6 +1687,7 @@ this.state.data.map((obj, index) => {
 							label: response.data.supplierName,
 							value: response.data.supplierId,
 						},
+					grnRemarks:response.data.poNumber,	
 					data:response.data.poQuatationLineItemRequestModelList ,
 					supplierReferenceNumber: response.data.supplierReferenceNumber,
 					supplier_currency:response.data.currencyCode,
@@ -1715,7 +1716,7 @@ this.state.data.map((obj, index) => {
 				this.formRef.current.setFieldValue('supplierId', this.state.option, true);
 				this.formRef.current.setFieldValue('currencyCode', this.state.supplier_currency, true);
 				this.formRef.current.setFieldValue('supplierReferenceNumber', this.state.supplierReferenceNumber, true);
-				
+				this.formRef.current.setFieldValue('grnRemarks', this.state.grnRemarks, true);
 			});
 		}
 	}

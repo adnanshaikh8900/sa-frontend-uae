@@ -1251,9 +1251,7 @@ class CreateRequestForQuotation extends React.Component {
 							net_value = parseFloat(net_value) +  parseFloat(value) ;
 							obj.exciseAmount = parseFloat(value);
 						}
-						else{
-							net_value = obj.unitPrice
-						}
+					
 				}
 				else{
 					obj.exciseAmount = 0
@@ -1274,9 +1272,7 @@ class CreateRequestForQuotation extends React.Component {
 									net_value = parseFloat(net_value) +  parseFloat(value) ;
 									obj.exciseAmount = parseFloat(value);
 								}
-								else{
-									net_value = obj.unitPrice
-								}
+								
 						}
 						else{
 							obj.exciseAmount = 0
@@ -1317,9 +1313,7 @@ class CreateRequestForQuotation extends React.Component {
 					const value = net_value / 2
 					obj.exciseAmount = parseFloat(value);
 				net_value = net_value}
-				else{
-					net_value = obj.unitPrice
-					}
+			
 						}
 						else{
 							obj.exciseAmount = 0
@@ -1354,9 +1348,7 @@ class CreateRequestForQuotation extends React.Component {
 						const value = net_value / 2
 						obj.exciseAmount = parseFloat(value);
 					net_value = net_value}
-					else{
-						net_value = obj.unitPrice
-						}
+				
 							}
 							else{
 								obj.exciseAmount = 0

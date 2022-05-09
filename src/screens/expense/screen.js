@@ -233,6 +233,7 @@ class Expense extends React.Component {
 								</div>
 							</DropdownItem>
 						)}
+						{ row.payee !== 'Company Expense' &&(
 							<DropdownItem					
 								onClick={() =>
 									this.props.history.push(`/admin/expense/expense/create`,{parentId: row.expenseId})
@@ -240,6 +241,8 @@ class Expense extends React.Component {
 							>
 								<i className="fas fa-copy" /> {strings.CreateADuplicate}
 							</DropdownItem>
+						)}
+							
 						{row.expenseStatus !== 'Posted' && (
 							<DropdownItem
 								onClick={() => {

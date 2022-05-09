@@ -2027,7 +2027,7 @@ class DetailPurchaseOrder extends React.Component {
 																</FormGroup>
 															</Col>
 																<Col lg={3}>
-																	<FormGroup className="mb-3">
+																{this.state.customer_taxTreatment_des!="NON GCC" &&(	<FormGroup className="mb-3">
 																		<Label htmlFor="placeOfSupplyId">
 																			{/* <span className="text-danger">* </span> */}
 																		{this.state.customer_taxTreatment_des &&
@@ -2089,7 +2089,7 @@ class DetailPurchaseOrder extends React.Component {
 																					{props.errors.placeOfSupplyId}
 																				</div>
 																			)}
-																	</FormGroup>
+																	</FormGroup>)}
 																</Col>
 															
 																

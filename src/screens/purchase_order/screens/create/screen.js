@@ -1503,7 +1503,8 @@ class CreatePurchaseOrder extends React.Component {
 			po_number,
 			supplierReferenceNumber,
 			notes,
-			placeOfSupplyId
+			placeOfSupplyId,
+			receiptNumber
 		} = data;
 		const { term } = this.state;
 
@@ -1522,6 +1523,7 @@ class CreatePurchaseOrder extends React.Component {
 		formData.append('notes', notes ? notes : '');
 		formData.append('type', 4);
 		formData.append('totalExciseAmount', this.state.initValue.total_excise);
+		formData.append('receiptNumber',receiptNumber);
 		if (placeOfSupplyId ) {
 			formData.append('placeOfSupplyId', placeOfSupplyId.value ?placeOfSupplyId.value:placeOfSupplyId);
 		}
@@ -1871,7 +1873,7 @@ getrfqDetails = (e, row, props,form,field) => {
 					},
 				data:response.data.poQuatationLineItemRequestModelList ,
 				totalAmount:response.data.totalAmount,
-				
+				receiptNumber:response.data.rfqNumber,
 				supplier_currency:response.data.currencyCode,
 				initValue: {
 					...this.state.initValue,
@@ -1912,8 +1914,9 @@ getrfqDetails = (e, row, props,form,field) => {
 			
 			this.formRef.current.setFieldValue('supplierId', this.state.option, true);
 			this.formRef.current.setFieldValue('currencyCode', this.state.supplier_currency, true);
-			this.formRef.current.setFieldValue('placeOfSupplyId', this.state.placelist, true);
-
+			if(this.state.placelist && this.state.placelist.value)
+			this.formRef.current.setFieldValue('placeOfSupplyId', this.state.placelist.value, true);
+			this.formRef.current.setFieldValue('receiptNumber', this.state.receiptNumber, true);
 			this.getCurrency(this.state.option.value);
 			this.getTaxTreatment(this.state.option.value);	
         });
@@ -2376,8 +2379,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																		  ).find(
 																					(option) =>
 																					option.value ==
-																					((this.state.quotationId||this.state.parentId) ? this.state.placeOfSupplyId:props.values
-																					.placeOfSupplyId.toString())
+																					(this.state.parentId ? this.state.placeOfSupplyId:props.values.placeOfSupplyId.toString())
 																				)
 																			}
 																		className={

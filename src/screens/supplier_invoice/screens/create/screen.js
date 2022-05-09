@@ -640,6 +640,9 @@ class CreateSupplierInvoice extends React.Component {
 																		discountType: res.data.discountType
 																			? res.data.discountType
 																			: '',
+																		receiptNumber:	 res.data.rfqNumber
+																		? res.data.rfqNumber
+																		: '',
 		
 																},
 																invoiceDateNoChange: res.data.rfqExpiryDate
@@ -694,6 +697,7 @@ class CreateSupplierInvoice extends React.Component {
 																this.formRef.current.setFieldValue('placeOfSupplyId', res.data.placeOfSupplyId, true);
 																this.formRef.current.setFieldValue('currency', this.getCurrency(res.data.supplierId), true);
 																this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(res.data.supplierId), true);
+																this.formRef.current.setFieldValue('receiptNumber', res.data.rfqNumber, true);
 															   this.setExchange( this.getCurrency(res.data.supplierId) );
 																} else {
 																	this.setState({
@@ -805,6 +809,7 @@ class CreateSupplierInvoice extends React.Component {
 																		this.formRef.current.setFieldValue('placeOfSupplyId', res.data.placeOfSupplyId, true);
 																		this.formRef.current.setFieldValue('currency', this.getCurrency(res.data.supplierId), true);
 																		this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(res.data.supplierId), true);
+																		this.formRef.current.setFieldValue('receiptNumber', res.data.poNumber, true);
 																	   this.setExchange( this.getCurrency(res.data.supplierId) );
 																		} else {
 																			this.setState({

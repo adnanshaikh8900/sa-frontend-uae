@@ -265,6 +265,7 @@ ExpenseDate:"Expense Date",
 Tax:"Tax",		
 Claimable: "Business",
 NonClaimable: "Personal",
+For:"For",
 				
 Attachment:"Attachment",				
 

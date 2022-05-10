@@ -982,7 +982,7 @@ class DetailExpense extends React.Component {
 															{this.state.showPlacelist==true&& (	<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">
-																		<span className="text-danger">* </span>
+																		<span className="text-danger">*</span>
 																		{strings.PlaceofSupply}
 																	</Label>
 																	<Select
@@ -1037,7 +1037,7 @@ class DetailExpense extends React.Component {
 																</FormGroup>
 															</Col>)}
 
-															<Col className='mb-3' lg={3}>
+															<Col className='mb-4' lg={4}>
 															<Label htmlFor="inline-radio3"><span className="text-danger">* </span>{strings.ExpenseType}</Label>
 															<div>
 																{this.state.expenseType === false ?

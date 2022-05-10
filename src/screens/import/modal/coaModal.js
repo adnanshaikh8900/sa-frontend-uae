@@ -487,7 +487,7 @@ class AddEmployeesModal extends React.Component {
 													
 														<FormGroup>
 															<Label htmlFor="name">
-																<span className="text-danger">*</span>{strings.Name}
+																<span className="text-danger">* </span>{strings.Name}
 															</Label>
 															<Input
 																type="text" maxLength='50'
@@ -523,7 +523,7 @@ class AddEmployeesModal extends React.Component {
 														</FormGroup>
 														<FormGroup>
 															<Label htmlFor="name">
-																<span className="text-danger">*</span>{strings.Type}
+																<span className="text-danger">* </span>{strings.Type}
 															</Label>
 														
 															<Select

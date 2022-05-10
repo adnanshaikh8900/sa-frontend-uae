@@ -256,7 +256,7 @@ class DetailEmployee extends React.Component {
                                   </Col>
                                   <Col md="4">
                                     <FormGroup>
-                                      <Label htmlFor="select"><span className="text-danger">*</span>Email</Label>
+                                      <Label htmlFor="select"><span className="text-danger">* </span>Email</Label>
                                       <Input
                                         type="email"
                                         maxLength='80'

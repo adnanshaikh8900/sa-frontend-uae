@@ -986,7 +986,7 @@ min="0"
                                                               <Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="poNumber">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		 {strings.PONumber}
 																	</Label>
 																	<Input
@@ -1020,7 +1020,7 @@ min="0"
                                                             <Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="grn_number">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		 {strings.GRNNumber}
 																	</Label>
 																	<Input
@@ -1055,7 +1055,7 @@ min="0"
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currencyCode">
-																	<span className="text-danger">*</span>
+																	<span className="text-danger">* </span>
 																		{strings.Currency}
 																	</Label>
 																	<Input
@@ -1091,7 +1091,7 @@ min="0"
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="supplierName">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		 {strings.SupplierName}
 																	</Label>
                                                                     <Input
@@ -1172,7 +1172,7 @@ min="0"
                                                              <Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="supplierReferenceNumber">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.SupplierReferenceNumber}
 																	</Label>
 																	<Input
@@ -1208,7 +1208,7 @@ min="0"
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="date">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.ReceivedDate}
 																	</Label>
 																	<DatePicker

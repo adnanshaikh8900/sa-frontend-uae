@@ -373,7 +373,7 @@ class UpdateRole extends React.Component {
 															<Row>
 																	<Col >
 																		<FormGroup className="mb-3">
-																			<Label htmlFor="active"><span className="text-danger">*</span>{strings.Status}</Label>
+																			<Label htmlFor="active"><span className="text-danger">* </span>{strings.Status}</Label>
 																			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 																				<FormGroup check inline>
 																					<div className="custom-radio custom-control">
@@ -440,7 +440,7 @@ class UpdateRole extends React.Component {
 																	</Col></Row>
 															<FormGroup>
 																<Label htmlFor="name">
-																	<span className="text-danger">*</span> {strings.Name}
+																	<span className="text-danger">* </span> {strings.Name}
 																</Label>
 																<Input
 																	type="text"
@@ -495,7 +495,7 @@ class UpdateRole extends React.Component {
 																/>
 															</FormGroup>
 															<FormGroup>
-																<Label><span className="text-danger">*</span>{strings.Modules}
+																<Label><span className="text-danger">* </span>{strings.Modules}
 																{
 																	this.getvalidation()
 																}

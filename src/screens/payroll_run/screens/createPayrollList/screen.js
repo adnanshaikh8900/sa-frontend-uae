@@ -889,7 +889,7 @@ showTotal=()=>{
 																	
 																	
 																	<Col >	<Label htmlFor="due_date">
-																				{/* <span className="text-danger">*</span> */}
+																				{/* <span className="text-danger">* </span> */}
 																			{strings.payroll_approver}
 																			</Label>
 																		<FormGroup>

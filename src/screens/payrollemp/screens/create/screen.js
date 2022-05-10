@@ -2484,7 +2484,7 @@ existForAccountNumber = (value) => {
                                                                                          
                                                                                             {/* <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="salaryRoleId"><span className="text-danger">*</span> {strings.SalaryRole} </Label>
+                                                                                                    <Label htmlFor="salaryRoleId"><span className="text-danger">* </span> {strings.SalaryRole} </Label>
                                                                                                     <Select
 
                                                                                                         options={
@@ -2920,7 +2920,7 @@ existForAccountNumber = (value) => {
                                                                                             </Col>
                                                                                             {/* <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="select"><span className="text-danger">*</span> {strings.BankName} </Label>
+                                                                                                    <Label htmlFor="select"><span className="text-danger">* </span> {strings.BankName} </Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         id="bankName"

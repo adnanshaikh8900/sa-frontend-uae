@@ -438,7 +438,7 @@ class GenerateAuditFile extends React.Component {
 															</FormGroup>
 														</Col>
 														<Col lg={4}>
-															<FormGroup className="mb-3"><span className="text-danger">*</span>
+															<FormGroup className="mb-3"><span className="text-danger">* </span>
 																<Label htmlFor="taxFiledOn">Date Of Filling</Label>
 																<DatePicker
 																		id="taxFiledOn"

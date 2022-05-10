@@ -402,7 +402,7 @@ class UpdateEmployeeBank extends React.Component {
                                                                                             </Col>
                                                                         {/* <Col md="4">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="select"><span className="text-danger">*</span>{strings.BankName} </Label>
+                                                                                <Label htmlFor="select"><span className="text-danger">* </span>{strings.BankName} </Label>
                                                                                 <Input
                                                                                     type="text"
                                                                                     id="bankName"

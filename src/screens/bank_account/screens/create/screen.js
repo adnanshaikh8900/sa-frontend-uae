@@ -646,7 +646,7 @@ class CreateBankAccount extends React.Component {
 															{/* <Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="bank_name">
-																		<span className="text-danger">*</span>{strings.BankName}
+																		<span className="text-danger">* </span>{strings.BankName}
 																	</Label>
 																	<Input
 																		type="text"
@@ -835,7 +835,7 @@ class CreateBankAccount extends React.Component {
 															<Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="swift_code">
-																		{/* <span className="text-danger">*</span> */}
+																		{/* <span className="text-danger">* </span> */}
 															{/* 	Swift Code
 																		<i
 																			id="SwiftCodeToolTip"

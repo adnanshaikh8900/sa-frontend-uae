@@ -249,7 +249,7 @@ class EmployeeModal extends React.Component {
 											<Col md="4">
 												<FormGroup>
 													<Label htmlFor="firstName">
-														<span className="text-danger">*</span>First Name
+														<span className="text-danger">* </span>First Name
 													</Label>
 													<Input
 														type="text"
@@ -349,7 +349,7 @@ class EmployeeModal extends React.Component {
 										<Col md="4">
 												<FormGroup>
 													<Label htmlFor="email">
-														<span className="text-danger">*</span>Email
+														<span className="text-danger">* </span>Email
 													</Label>
 													<Input
 														type="text"
@@ -377,7 +377,7 @@ class EmployeeModal extends React.Component {
 
 											<Col md="4">
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="date"><span className="text-danger">*</span>Date Of Birth</Label>
+                                  <Label htmlFor="date"><span className="text-danger">* </span>Date Of Birth</Label>
 								  <DatePicker
 																				id="dob"
 																				name="dob"

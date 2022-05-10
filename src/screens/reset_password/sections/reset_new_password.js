@@ -132,7 +132,7 @@ class ResetNewPassword extends React.Component {
                                 <Col lg={12}>
                                   <FormGroup>
 																			<Label htmlFor="select">
-																				<span className="text-danger">*</span> Password
+																				<span className="text-danger">* </span> Password
 																			</Label>
 																			<div>
 																				<Input
@@ -203,7 +203,7 @@ class ResetNewPassword extends React.Component {
                                 <Col lg={12}>
                                   <FormGroup>
 																			<Label htmlFor="select">
-																				<span className="text-danger">*</span> Confirm Password
+																				<span className="text-danger">* </span> Confirm Password
 																			</Label>
 																			<Input
                                       onPaste={(e)=>{

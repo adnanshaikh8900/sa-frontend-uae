@@ -982,7 +982,7 @@ class DetailExpense extends React.Component {
 															{this.state.showPlacelist==true&& (	<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.PlaceofSupply}
 																	</Label>
 																	<Select

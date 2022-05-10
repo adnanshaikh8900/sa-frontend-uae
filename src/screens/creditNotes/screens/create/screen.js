@@ -2086,7 +2086,7 @@ if (invoiceNumber && invoiceNumber.value) {
 															{/* <Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		Place of Supply
 																	</Label>
 																	<Select
@@ -2132,7 +2132,7 @@ if (invoiceNumber && invoiceNumber.value) {
 															{/* <Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="term">
-																		<span className="text-danger">*</span>Terms{' '}
+																		<span className="text-danger">* </span>Terms{' '}
 																		<i
 																			id="UncontrolledTooltipExample"
 																			className="fa fa-question-circle ml-1"

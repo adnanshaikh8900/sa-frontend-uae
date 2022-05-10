@@ -1577,7 +1577,7 @@ class Profile extends React.Component {
 																					<Col lg={4}>
 																						<FormGroup className="mb-3">
 																							<Label htmlFor="product_code">
-																							<span className="text-danger">*</span> {strings.CompanyName}
+																							<span className="text-danger">* </span> {strings.CompanyName}
 																						</Label>
 																							<Input
 																								maxLength={150}
@@ -1618,7 +1618,7 @@ class Profile extends React.Component {
 																					<Col lg={4}>
 																						<FormGroup className="mb-3">
 																							<Label htmlFor="product_code">
-																							<span className="text-danger">*</span> {strings.CompanyRegistrationNo}
+																							<span className="text-danger">* </span> {strings.CompanyRegistrationNo}
 																						</Label>
 																							<Input
 																								maxLength={20}
@@ -1660,7 +1660,7 @@ class Profile extends React.Component {
 																					<Col lg={4}>
 																						<FormGroup>
 																							<Label htmlFor="companyId">
-																							<span className="text-danger">*</span> {strings.CompanyBusinessType}
+																							<span className="text-danger">* </span> {strings.CompanyBusinessType}
 																						</Label>
 																							<Select
 																							// isDisabled
@@ -1715,7 +1715,7 @@ class Profile extends React.Component {
 																					<Col lg={4}>
 																						<FormGroup className="mb-3">
 																							<Label htmlFor="product_code">
-																							{/* <span className="text-danger">*</span>  */}
+																							{/* <span className="text-danger">* </span>  */}
 																							{strings.EmailAddress}
 																						</Label>
 																							<Input
@@ -1749,7 +1749,7 @@ class Profile extends React.Component {
 																					<Col lg={4}>
 																						<FormGroup>
 																							<Label htmlFor="currencyCode">
-																							<span className="text-danger">*</span> {strings.CurrencyCode}
+																							<span className="text-danger">* </span> {strings.CurrencyCode}
 																						</Label>
 																							<Select
 																								isDisabled
@@ -1876,7 +1876,7 @@ class Profile extends React.Component {
 																				<Col lg={4}>
 																						<FormGroup className="mb-3">
 																							<Label htmlFor="phoneNumber">
-																							<span className="text-danger">*</span> {strings.MobileNumber}
+																							<span className="text-danger">* </span> {strings.MobileNumber}
 																						</Label>
 																						<div className={
 																		                 props.errors.phoneNumber &&
@@ -1990,7 +1990,7 @@ class Profile extends React.Component {
 																		<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="product_code">
-																					<span className="text-danger">*</span> {strings.CompanyAddressLine1}
+																					<span className="text-danger">* </span> {strings.CompanyAddressLine1}
 																				</Label>
 																					<Input
 																						type="text"
@@ -2030,7 +2030,7 @@ class Profile extends React.Component {
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="product_code">
-																					{/* <span className="text-danger">*</span> */}
+																					{/* <span className="text-danger">* </span> */}
 																						 {strings.CompanyAddressLine2}
 																				</Label>
 																					<Input
@@ -2070,7 +2070,7 @@ class Profile extends React.Component {
 																			{/* <Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="companyPostZipCode">
-																					<span className="text-danger">*</span> {strings.PostZipCode}
+																					<span className="text-danger">* </span> {strings.PostZipCode}
 																				</Label>
 																					<Input
 																						type="text"
@@ -2116,7 +2116,7 @@ class Profile extends React.Component {
 																			<Col lg={4}>
 																				<FormGroup>
 																					<Label htmlFor="companyCountryCode">
-																					<span className="text-danger">*</span> {strings.CountryCode}
+																					<span className="text-danger">* </span> {strings.CountryCode}
 																						{/* <Col> */}
 																				
 																			{/* </Col> */}
@@ -2206,7 +2206,7 @@ class Profile extends React.Component {
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="product_code">
-																					<span className="text-danger">*</span> {props.values.companyCountryCode === 229 ? strings.Emirate : strings.StateRegion}
+																					<span className="text-danger">* </span> {props.values.companyCountryCode === 229 ? strings.Emirate : strings.StateRegion}
 																				</Label>
 																					<Select
 																						options={selectOptionsFactory.renderOptions(
@@ -2361,7 +2361,7 @@ class Profile extends React.Component {
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="fax">
-																					{/* <span className="text-danger">*</span> */}
+																					{/* <span className="text-danger">* </span> */}
 																					{strings.Fax}
 																				</Label>
 																					<Input
@@ -2454,7 +2454,7 @@ class Profile extends React.Component {
 																			<Col lg={4}>
 																						<FormGroup className="mb-3">
 																							<Label htmlFor="product_code">
-																							<span className="text-danger">*</span> {strings.TaxRegistrationNumber}
+																							<span className="text-danger">* </span> {strings.TaxRegistrationNumber}
 																						</Label>
 																							<Input
 																								type="text"
@@ -2501,7 +2501,7 @@ class Profile extends React.Component {
 																					<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="expense_date">
-																			<span className="text-danger">*</span> {strings.VatRegisteredOn}
+																			<span className="text-danger">* </span> {strings.VatRegisteredOn}
 																		</Label>
 																		<DatePicker
 																			id="date"
@@ -2539,7 +2539,7 @@ class Profile extends React.Component {
 																					{/* <Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="date">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			Vat Registration Date
 																		</Label>
 																		<DatePicker
@@ -3131,7 +3131,7 @@ class Profile extends React.Component {
 																			<Col lg={4}>
 																						<FormGroup className="mb-3">
 																							<Label htmlFor="product_code">
-																							<span className="text-danger">*</span>
+																							<span className="text-danger">* </span>
 																							 {strings.TaxRegistrationNumber}
 																						</Label>
 																							<Input
@@ -3177,7 +3177,7 @@ class Profile extends React.Component {
 																					<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="expense_date">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			Vat Registered On 
 																		</Label>
 																		<DatePicker
@@ -3215,7 +3215,7 @@ class Profile extends React.Component {
 																					{/* <Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="date">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			Vat Registration Date
 																		</Label>
 																		<DatePicker
@@ -3261,7 +3261,7 @@ class Profile extends React.Component {
 																		<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="product_code">
-																					<span className="text-danger">*</span>
+																					<span className="text-danger">* </span>
 																						 {strings.CompanyAddressLine1}
 																				</Label>
 																					<Input
@@ -3302,7 +3302,7 @@ class Profile extends React.Component {
 																			<Col lg={4}>
 																				<FormGroup>
 																					<Label htmlFor="companyCountryCode">
-																					<span className="text-danger">*</span>
+																					<span className="text-danger">* </span>
 																						{strings.CountryCode} */}
 																						{/* <Col> */}
 																				
@@ -3392,7 +3392,7 @@ class Profile extends React.Component {
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="product_code">
-																					<span className="text-danger">*</span>
+																					<span className="text-danger">* </span>
 																						{props.values.companyCountryCode === 229 ? strings.Emirate : strings.StateRegion}
 																				</Label>
 																					<Select
@@ -3454,7 +3454,7 @@ class Profile extends React.Component {
 																		<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="companyCity">
-																					<span className="text-danger">*</span>
+																					<span className="text-danger">* </span>
 																						 {strings.City}
 																				</Label>
 																					<Input
@@ -3492,7 +3492,7 @@ class Profile extends React.Component {
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="companyPostZipCode">
-																					<span className="text-danger">*</span>
+																					<span className="text-danger">* </span>
 																						 {strings.PostZipCode}
 																				</Label>
 																					<Input
@@ -3537,7 +3537,7 @@ class Profile extends React.Component {
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="fax"> */}
-																					{/* <span className="text-danger">*</span> */}
+																					{/* <span className="text-danger">* </span> */}
 																						{/* Fax
 																				</Label>
 																					<Input

@@ -1043,7 +1043,7 @@ class ExplainTrasactionDetail extends React.Component {
 																	<Col lg={3}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="chartOfAccountId">
-																				<span className="text-danger">*</span>
+																				<span className="text-danger">* </span>
 																			     {strings.TransactionType}
 																		</Label>
 																			<Select
@@ -1115,7 +1115,7 @@ class ExplainTrasactionDetail extends React.Component {
 																	<Col lg={3}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="date">
-																						<span className="text-danger">*</span>
+																						<span className="text-danger">* </span>
 																					{strings.TransactionDate}
 																				</Label>
 																					<DatePicker
@@ -1160,7 +1160,7 @@ class ExplainTrasactionDetail extends React.Component {
 																	<Col lg={3}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="amount">
-																				<span className="text-danger">*</span>
+																				<span className="text-danger">* </span>
 																			{strings.Amount}
 																		</Label>
 																			<Input
@@ -1276,7 +1276,7 @@ class ExplainTrasactionDetail extends React.Component {
 																			<Col lg={3}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="expenseCategory">
-																						<span className="text-danger">*</span>
+																						<span className="text-danger">* </span>
 																					  {strings.ExpenseCategory}
 																				</Label>
 																					<Select
@@ -1432,7 +1432,7 @@ class ExplainTrasactionDetail extends React.Component {
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="vendorId">
-																						<span className="text-danger">*</span>
+																						<span className="text-danger">* </span>
 																					 {strings.Vendor}
 																				</Label>
 																					<Select
@@ -1578,7 +1578,7 @@ class ExplainTrasactionDetail extends React.Component {
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="customerId">
-																						<span className="text-danger">*</span>
+																						<span className="text-danger">* </span>
 																					   {strings.Customer}
 																				</Label>
 																					<Select
@@ -1641,7 +1641,7 @@ class ExplainTrasactionDetail extends React.Component {
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="invoiceIdList">
-																						<span className="text-danger">*</span>
+																						<span className="text-danger">* </span>
 																					{strings.Invoice}
 																				</Label>
 																					<Select
@@ -1730,7 +1730,7 @@ class ExplainTrasactionDetail extends React.Component {
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="transactionCategoryId">
-																						<span className="text-danger">*</span>
+																						<span className="text-danger">* </span>
 																					{strings.Category}
 																				</Label>
 																					<Select
@@ -1843,7 +1843,7 @@ class ExplainTrasactionDetail extends React.Component {
 																		 (
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
-																				<span className="text-danger">*</span>
+																				<span className="text-danger">* </span>
 																					<Label htmlFor="employeeId">User</Label>
 																					<Select
 																						styles={customStyles}
@@ -1891,7 +1891,7 @@ class ExplainTrasactionDetail extends React.Component {
 																		<Row>
 																			<Col lg={3}>
 																				<FormGroup className="mb-3">
-																					<Label htmlFor="currencyCode"><span className="text-danger">*</span>
+																					<Label htmlFor="currencyCode"><span className="text-danger">* </span>
 																						{strings.Currency}
 																						</Label>
 																					<Select

@@ -68,7 +68,7 @@ class WareHouseModal extends React.Component {
                     <Row>
                       <Col>
                         <FormGroup>
-                          <Label htmlFor="warehouseName"><span className="text-danger">*</span>Warehouse Name</Label>
+                          <Label htmlFor="warehouseName"><span className="text-danger">* </span>Warehouse Name</Label>
                             <Input
                               type="text"
                               id="warehouseName"

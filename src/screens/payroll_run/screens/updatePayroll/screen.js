@@ -1111,7 +1111,7 @@ class UpdatePayroll extends React.Component {
 
 																	
 																	<Col >	<Label htmlFor="due_date">
-																				{/* <span className="text-danger">*</span> */}
+																				{/* <span className="text-danger">* </span> */}
 																				Payroll Approver
 																			</Label>
 																		<FormGroup>

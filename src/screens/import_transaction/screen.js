@@ -991,7 +991,7 @@ setConfigurations=(configurationList)=>{
 															</Col>
 															<Col lg={1}>
 																<Label>
-																	<span className="text-danger">*</span>{strings.Name}
+																	<span className="text-danger">* </span>{strings.Name}
 																</Label>
 															</Col>
 															<Col lg={3}>

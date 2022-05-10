@@ -520,7 +520,7 @@ handleChange = (evt) => {
                                                          
                                                                <div style={{textAlign:"center"}}>
                                                         <FormGroup className="mt-3"   style={{textAlign:"center",display: "inline-grid"}} >
-                                                         <Label><span className="text-danger">*</span>  Cost To Company
+                                                         <Label><span className="text-danger">* </span>  Cost To Company
                                                           <i				id="CtcTooltip"
 																				className="fa fa-question-circle ml-1"
 																			></i>

@@ -1114,7 +1114,7 @@ class CreateCreditNoteModal extends React.Component {
                                                               <Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="invoiceNumber">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		 {strings.InvoiceNumber}
 																	</Label>
 																	<Input
@@ -1148,7 +1148,7 @@ class CreateCreditNoteModal extends React.Component {
                                                             <Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="po_number">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		 {strings.CreditNoteNumber}
 																	</Label>
 																	<Input
@@ -1185,7 +1185,7 @@ class CreateCreditNoteModal extends React.Component {
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="contactId">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		 {strings.CustomerName}
 																	</Label>
 																	<Input
@@ -1267,7 +1267,7 @@ class CreateCreditNoteModal extends React.Component {
                                                              <Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currencyCode">
-																	<span className="text-danger">*</span>
+																	<span className="text-danger">* </span>
 																		{strings.Currency}
 																	</Label>
 																	<Input
@@ -1304,7 +1304,7 @@ class CreateCreditNoteModal extends React.Component {
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="date">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.CreditNoteDate}
 																	</Label>
 																	<DatePicker

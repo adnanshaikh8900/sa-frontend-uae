@@ -1758,7 +1758,7 @@ class DetailCreditNote extends React.Component {
 																{/* <Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="placeOfSupplyId">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			Place of Supply
 																		</Label>
 																		<Select
@@ -1821,7 +1821,7 @@ class DetailCreditNote extends React.Component {
 																{/* <Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="term">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			Terms{' '}
 																			<i className="fa fa-question-circle"></i>
 																		</Label>

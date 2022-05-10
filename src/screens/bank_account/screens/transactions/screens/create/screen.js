@@ -1027,7 +1027,7 @@ class CreateBankTransaction extends React.Component {
 																				</FormGroup>
 																			</Col>
 																		)}
-																		<Col className='mb-3' lg={3}>
+																		<Col className='mb-6' lg={6}>
 																<Label htmlFor="inline-radio3"><span className="text-danger">* </span>{strings.ExpenseType}</Label>
 																<div>
 																	{this.state.expenseType === false ?

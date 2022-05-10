@@ -600,6 +600,7 @@ existForAccountNumber = (value) => {
             })
         }else{
             this.setState({ loading:true, loadingMsg:"Updating Employement Details..."});
+            formData.append('id', this.state.selectedData.employmentId);
             this.props.detailEmployeeEmployementAction.updateEmployment(formData).then((res) => {
                 if (res.status === 200) {
                     this.props.commonActions.tostifyAlert(
@@ -773,7 +774,13 @@ existForAccountNumber = (value) => {
                             this.setState({ loading:false,});                     
                     }
                     this.toggle(0, '2')
-                    this.renderActionForState(this.state.employeeid)
+
+                    const formData1 = new FormData();
+                    formData1.append('employee', this.state.employeeid)
+                    formData1.append('employeeCode',this.state.initValue.employeeCode != null ?this.state.initValue.employeeCode : '')
+                    this.props.createPayrollEmployeeActions.saveEmployment(formData1).then((res)=>{
+                        if(res.status==200)
+                         this.renderActionForState(this.state.employeeid);  })
                 }
             }).catch((err) => {
         
@@ -2333,12 +2340,13 @@ existForAccountNumber = (value) => {
                                                                                 <Row>
                                                                                     <Col lg={12} className="mt-5">
                                                                                       
-                                                                                    {/* <Button  color="secondary" className="btn-square"
-                                                                                              
-                                                                                               
-                                                                                            >
+                                                                                    <Button  
+                                                                                    color="secondary" 
+                                                                                    className="btn-square"
+                                                                                    onClick={()=>{this.props.history.push('/admin/master/employee')}}
+                                                                                           >
                                                                                                 <i className="fa fa-ban"></i> Back
-                                                                                              </Button> */}
+                                                                                              </Button>
                                                                                             <Button name="button" color="primary" className="btn-square pull-right"
                                                                                                 // onClick={() => {
                                                                                                 //     this.toggle(0, '2')
@@ -2798,13 +2806,8 @@ existForAccountNumber = (value) => {
                                                                             .required('Bank is Required') ,
                                                                             branch: Yup.string()
                                                                             .required("Branch is Required"),
-                                                                            swiftCode: Yup.string()
-                                                                            .required("Swift Code is Required"),
-                                                                            
-                                                                            
-                                                                            
-                                                                            
-                                                                                           
+                                                                            // swiftCode: Yup.string()
+                                                                            // .required("Swift Code is Required"),
                                                                         })}
                                                                     >
                                                                         {(props) => (
@@ -2989,7 +2992,9 @@ existForAccountNumber = (value) => {
 
                                                                                             <Col lg={4}>
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="select"><span className="text-danger">* </span>{strings.SwiftCode}</Label>
+                                                                                                    <Label htmlFor="select">
+                                                                                                        {/* <span className="text-danger">* </span> */}
+                                                                                                        {strings.SwiftCode}</Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         maxLength="11"

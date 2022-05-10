@@ -307,8 +307,8 @@ ExpenseDate:"Date des dépenses",
 Tax:"Taxe",			
 Description:"Description",				
 Attachment:"Attachement",			
-Claimable: "Affaires",
-NonClaimable : "Personnel",	
+Claimable: "TVA exigible",
+NonClaimable : "TVA non récupérable",	
 For:"pour",
 
 //Supplier Invoice

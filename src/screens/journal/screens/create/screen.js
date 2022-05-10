@@ -159,7 +159,6 @@ class CreateJournal extends React.Component {
 	};
 
 	getjournalReferenceNo = () => {
-		debugger
 		this.props.journalActions.getInvoiceNo().then((res) => {
 			if (res.status === 200) {
 				this.setState({
@@ -177,7 +176,6 @@ class CreateJournal extends React.Component {
 		});
 	};
 	validationCheck = (value) => {
-		debugger
 		const data = {
 			moduleType: 20,
 			name: value,
@@ -640,7 +638,12 @@ class CreateJournal extends React.Component {
 	};
 
 	handleSubmit = (values, resetForm) => {
-		this.setState({ disabled: true });
+		if(this.state.submitJournal &&
+          this.state.initValue.totalCreditAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) !==
+          this.state.initValue.totalDebitAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }))
+          this.setState({ disabled: false });
+        else
+    this.setState({ disabled: true });
 		const { data, initValue } = this.state;
 		if (initValue.totalCreditAmount === initValue.totalDebitAmount) {
 			data.map((item) => {
@@ -789,7 +792,6 @@ class CreateJournal extends React.Component {
 												}}
 												
 												validate={(values) => {
-													debugger
 													let errors = {};
 													if (exist === true) {
 														errors.journalReferenceNo =

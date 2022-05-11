@@ -276,11 +276,18 @@ renderSalaryDate=(cell,row)=>{
 
 						<CardBody>
 							<Row>
-								<Col lg={12}>
+								<Col>
 									<div className="h6 mb-4 d-flex align-items-center">
 
 										<h3>{upperFirst(this.state.EmployeeDetails.fullName)}</h3>
 									</div>
+								</Col>
+								<Col>
+								<div className='pull-right'>
+								                                                <Button  
+                                                                                    onClick={()=>{this.props.history.push('/admin/master/employee')}}
+                                                                                           > X </Button>
+								</div>
 								</Col>
 							</Row>
 							<Nav tabs pills>

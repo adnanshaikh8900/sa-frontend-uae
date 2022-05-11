@@ -1137,7 +1137,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		)}
 																</FormGroup>
 															</Col>)}
-															<Col className='mb-3' lg={3}>
+															<Col className='mb-5' lg={5}>
 																<Label htmlFor="inline-radio3"><span className="text-danger">* </span>{strings.ExpenseType}</Label>
 																<div>
 																	{this.state.expenseType === false ?
@@ -1165,8 +1165,8 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																	/>
 
 																	{this.state.expenseType === true ?
-																		<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.NonClaimable}</b></span>
-																		: <span className='ml-4'>{strings.NonClaimable}</span>
+																		<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.NonClaimable}</b></span> : 
+																		<span className='ml-4'>{strings.NonClaimable}</span>
 																	}
 																</div>
 

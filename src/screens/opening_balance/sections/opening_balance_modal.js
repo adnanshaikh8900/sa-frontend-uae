@@ -103,7 +103,7 @@ class OpeningBalanceModal extends React.Component {
                 {(props) => (
                   <Form onSubmit={props.handleSubmit}>
                     <FormGroup>
-                      <Label htmlFor="categoryCode"><span className="text-danger">*</span>{strings.Account}</Label>
+                      <Label htmlFor="categoryCode"><span className="text-danger">* </span>{strings.Account}</Label>
                       <Select
                       styles={customStyles}
                         options={bankAccountList ? selectOptionsFactory.renderOptions('name', 'bankAccountId', bankAccountList, 'Account') : []}
@@ -127,7 +127,7 @@ class OpeningBalanceModal extends React.Component {
                       )}
                     </FormGroup>
                     <FormGroup>
-                      <Label htmlFor="openingBalance"><span className="text-danger">*</span>{strings.OpeningBalance}</Label>
+                      <Label htmlFor="openingBalance"><span className="text-danger">* </span>{strings.OpeningBalance}</Label>
                       <Input
                         type="text"
                         id="openingBalance"

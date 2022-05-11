@@ -616,12 +616,14 @@ class Product extends React.Component {
 													{strings.PRODUCTCODE}
 												</TableHeaderColumn>
 												<TableHeaderColumn 
+													tdStyle={{ whiteSpace: 'normal' }}
 													width="15%"
 													isKey dataField="name" 
 													dataSort className="table-header-bg">
 													{strings.PRODUCTNAME}
 												</TableHeaderColumn >
 												<TableHeaderColumn
+													tdStyle={{ whiteSpace: 'normal' }}
 													width="10%"
                                                     className="table-header-bg"
                                                     dataField="productType"
@@ -657,6 +659,7 @@ class Product extends React.Component {
 													Description
 												</TableHeaderColumn>  */}
 												<TableHeaderColumn
+												tdStyle={{ whiteSpace: 'normal' }}
 													width="18%"
 													// dataAlign="right"
 													dataField="vatPercentage"
@@ -667,7 +670,7 @@ class Product extends React.Component {
 													 {strings.Vat+" "+strings.Type}
 												</TableHeaderColumn>
 												<TableHeaderColumn
-													 dataAlign="center"
+													dataAlign="center"
 													dataField="exciseTax"
 													dataSort
 												    dataFormat={this.exciseSlabFormatter}
@@ -677,7 +680,7 @@ class Product extends React.Component {
 												</TableHeaderColumn>
 												
 												<TableHeaderColumn
-													width="10%"
+													// width="10%"
 													dataAlign="center"
                                                     className="table-header-bg"
                                                     dataField="isActive"

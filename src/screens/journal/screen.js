@@ -254,7 +254,7 @@ class Journal extends React.Component {
 		const listItems = temp.map((number, index) => (
 			<li key={index} style={{ listStyleType: 'none', paddingBottom: '5px' }}>
 				{index === 0
-					? number + ' (' + (index === 0 ? rows.createdByName : '') + ')'
+					? number
 					: number}
 			</li>
 		));

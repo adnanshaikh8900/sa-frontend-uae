@@ -247,7 +247,7 @@ errors.mobileNumber =
 											<Col md="4">
 												<FormGroup>
 													<Label htmlFor="firstName">
-														<span className="text-danger">*</span>{strings.FirstName}
+														<span className="text-danger">* </span>{strings.FirstName}
 													</Label>
 													<Input
 														type="text"
@@ -313,7 +313,7 @@ errors.mobileNumber =
 											</Col>
 											<Col md="4">
 												<FormGroup>
-													<Label htmlFor="lastName"><span className="text-danger">*</span>{strings.LastName}</Label>
+													<Label htmlFor="lastName"><span className="text-danger">* </span>{strings.LastName}</Label>
 													<Input
 														type="text"
 														maxLength="100"
@@ -347,7 +347,7 @@ errors.mobileNumber =
 										<Col md="4">
 												<FormGroup>
 													<Label htmlFor="email">
-														<span className="text-danger">*</span>{strings.Email}
+														<span className="text-danger">* </span>{strings.Email}
 													</Label>
 													<Input
 														type="text"
@@ -376,7 +376,7 @@ errors.mobileNumber =
 												<FormGroup>
 													<Label htmlFor="mobileNumber">
 														{' '}
-														<span className="text-danger">*</span>{strings.MobileNumber}
+														<span className="text-danger">* </span>{strings.MobileNumber}
 													</Label>
 													<PhoneInput
 														country={"ae"}
@@ -441,7 +441,7 @@ errors.mobileNumber =
 											<Col md="4">
 												<FormGroup>
 													<Label htmlFor="vatRegistrationNumber">
-													<span className="text-danger">*</span>
+													<span className="text-danger">* </span>
 														{strings.TaxRegistrationNumber}
 													</Label>
 													<Input
@@ -483,7 +483,7 @@ errors.mobileNumber =
 											<Col md="4">
 												<FormGroup>
 													<Label htmlFor="currencyCode">
-													<span className="text-danger">*</span>{strings.Currency}
+													<span className="text-danger">* </span>{strings.Currency}
 													</Label>
 													<Select
 														options={
@@ -649,7 +649,7 @@ errors.mobileNumber =
 										<Row className="row-wrapper">
 											<Col md="4">
 												<FormGroup>
-													<Label htmlFor="addressLine1"><span className="text-danger">*</span>{strings.AddressLine1}</Label>
+													<Label htmlFor="addressLine1"><span className="text-danger">* </span>{strings.AddressLine1}</Label>
 													<Input
 														type="text"
 														maxLength="100"
@@ -682,7 +682,7 @@ errors.mobileNumber =
 											</Col>
 											<Col md="4">
 												<FormGroup>
-													<Label htmlFor="addressLine2"><span className="text-danger">*</span>{strings.AddressLine2}</Label>
+													<Label htmlFor="addressLine2"><span className="text-danger">* </span>{strings.AddressLine2}</Label>
 													<Input
 														type="text"
 														maxLength="100"
@@ -715,7 +715,7 @@ errors.mobileNumber =
 											</Col>
 											<Col md="4">
 												<FormGroup>
-													<Label htmlFor="addressLine3"><span className="text-danger">*</span>{strings.AddressLine3}</Label>
+													<Label htmlFor="addressLine3"><span className="text-danger">* </span>{strings.AddressLine3}</Label>
 													<Input
 														type="text"
 														maxLength="100"
@@ -751,7 +751,7 @@ errors.mobileNumber =
 										<Row className="row-wrapper">
 											<Col md="4">
 												<FormGroup>
-													<Label htmlFor="countryId"><span className="text-danger">*</span>{strings.Country}</Label>
+													<Label htmlFor="countryId"><span className="text-danger">* </span>{strings.Country}</Label>
 													<Select
 														options={
 															country_list
@@ -793,7 +793,7 @@ errors.mobileNumber =
 											</Col>
 											<Col md="4">
 												<FormGroup>
-													<Label htmlFor="stateId"><span className="text-danger">*</span>{strings.StateRegion}</Label>
+													<Label htmlFor="stateId"><span className="text-danger">* </span>{strings.StateRegion}</Label>
 													<Select
 														options={
 															state_list

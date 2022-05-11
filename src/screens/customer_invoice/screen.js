@@ -1360,7 +1360,7 @@ class CustomerInvoice extends React.Component {
 											{strings.DUEDATE}
 										</TableHeaderColumn>
 										<TableHeaderColumn
-											width="7%"
+											// width="7%"
 											dataField="status"
 											dataFormat={this.renderInvoiceStatus}
 											dataSort

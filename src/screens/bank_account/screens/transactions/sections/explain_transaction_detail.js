@@ -20,6 +20,7 @@ import * as Yup from 'yup';
 import * as TransactionsActions from '../actions';
 import * as transactionDetailActions from '../screens/detail/actions';
 import * as CurrencyConvertActions from '../../../../currencyConvert/actions';
+import * as detailBankAccountActions from './../../detail/actions';
 import { CommonActions } from 'services/global';
 import './style.scss';
 import { Loader, ConfirmDeleteModal } from 'components';
@@ -31,6 +32,7 @@ import Switch from "react-switch";
 import IconButton from '@material-ui/core/IconButton';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
+import { element } from 'prop-types';
 const mapStateToProps = (state) => {
 	return {
 		expense_list: state.bank_account.expense_list,
@@ -48,6 +50,10 @@ const mapDispatchToProps = (dispatch) => {
 		transactionsActions: bindActionCreators(TransactionsActions, dispatch),
 		transactionDetailActions: bindActionCreators(
 			transactionDetailActions,
+			dispatch,
+		),
+		detailBankAccountActions: bindActionCreators(
+			detailBankAccountActions,
 			dispatch,
 		),
 		commonActions: bindActionCreators(CommonActions, dispatch),
@@ -119,6 +125,8 @@ class ExplainTrasactionDetail extends React.Component {
 	initializeData = () => {
 		const { selectedData } = this.props;
 		const { bankId } = this.props;
+		
+			
 		this.setState({ loading: true, id: selectedData.id });
 		this.getCompanyCurrency();
 		this.props.currencyConvertActions.getCurrencyConversionList().then((response) => {
@@ -134,6 +142,20 @@ class ExplainTrasactionDetail extends React.Component {
 			});
 
 		});
+		this.props.detailBankAccountActions
+				.getBankAccountByID(bankId)
+				.then((res) => {
+					this.setState({
+						bankAccountCurrency: res.bankAccountCurrency,
+					});
+				})
+				.catch((err) => {
+					this.props.commonActions.tostifyAlert(
+						'error',
+						err && err.data ? err.data.message : 'Something Went Wrong',
+					);
+					this.props.history.push('/admin/banking/bank-account');
+				});
 		this.props.transactionDetailActions
 			.getTransactionDetail(selectedData.id)
 			.then((res) => {
@@ -214,8 +236,18 @@ class ExplainTrasactionDetail extends React.Component {
 						transactionCategoryLabel:res.data.transactionCategoryLabel,
 						transactionCategoryId:res.data.transactionCategoryId
 					},
+					
 					() => {
+						
+						if(selectedData.debitCreditFlag=== 'D'){
+							this.getCurrency(this.state.initValue.vendorId)
+							 this.setCurrency(this.state.initValue.currencyCode)
+						}else{
+							this.getCurrency(this.state.initValue.customerId)	
+						
+						}
 						if (
+							
 							this.state.initValue.coaCategoryId === 10 &&
 							Object.keys(this.state.initValue.explainParamList).length !== 0
 						) {
@@ -230,6 +262,7 @@ class ExplainTrasactionDetail extends React.Component {
 								},
 								() => { },
 							);
+							
 						}
 						if (this.state.initValue.customerId) {
 							this.getCustomerExplainedInvoiceList(
@@ -325,7 +358,7 @@ class ExplainTrasactionDetail extends React.Component {
 		} else {
 			this.props.transactionsActions
 				.getTransactionCategoryListForExplain(
-					type.value,
+					type.value ,
 					this.state.initValue.bankId,
 				)
 				.then((res) => {
@@ -340,7 +373,7 @@ class ExplainTrasactionDetail extends React.Component {
 						);
 					}
 				});
-		}
+			}	
 	};
 	getSuggestionInvoicesFotCust = (option, amount) => {
 		const data = {
@@ -444,7 +477,7 @@ class ExplainTrasactionDetail extends React.Component {
 	};
 
 	getVendorList = () => {
-		this.props.transactionsActions.getVendorList();
+		this.props.transactionsActions.getVendorList(this.state.initValue.bankId);
 	};
 
 	handleSubmit = (data, resetForm) => {
@@ -908,6 +941,10 @@ class ExplainTrasactionDetail extends React.Component {
 				}
 			}	
 		}
+
+		console.log(this.state.basecurrency,"base")
+		console.log(this.state.bankAccountCurrency,"bank")
+		console.log(this.state.supplier_currencyCode,"vendor")
 		return (
 			<div className="detail-bank-transaction-screen">
 				<div className="animated fadeIn">
@@ -1043,7 +1080,7 @@ class ExplainTrasactionDetail extends React.Component {
 																	<Col lg={3}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="chartOfAccountId">
-																				<span className="text-danger">*</span>
+																				<span className="text-danger">* </span>
 																			     {strings.TransactionType}
 																		</Label>
 																			<Select
@@ -1115,7 +1152,7 @@ class ExplainTrasactionDetail extends React.Component {
 																	<Col lg={3}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="date">
-																						<span className="text-danger">*</span>
+																						<span className="text-danger">* </span>
 																					{strings.TransactionDate}
 																				</Label>
 																					<DatePicker
@@ -1160,7 +1197,7 @@ class ExplainTrasactionDetail extends React.Component {
 																	<Col lg={3}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="amount">
-																				<span className="text-danger">*</span>
+																				<span className="text-danger">* </span>
 																			{strings.Amount}
 																		</Label>
 																			<Input
@@ -1276,7 +1313,7 @@ class ExplainTrasactionDetail extends React.Component {
 																			<Col lg={3}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="expenseCategory">
-																						<span className="text-danger">*</span>
+																						<span className="text-danger">* </span>
 																					  {strings.ExpenseCategory}
 																				</Label>
 																					<Select
@@ -1432,7 +1469,7 @@ class ExplainTrasactionDetail extends React.Component {
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="vendorId">
-																						<span className="text-danger">*</span>
+																						<span className="text-danger">* </span>
 																					 {strings.Vendor}
 																				</Label>
 																					<Select
@@ -1468,6 +1505,7 @@ class ExplainTrasactionDetail extends React.Component {
 																									option.value ===
 																									+props.values.vendorId,
 																							)
+																							
 																						}
 																						placeholder={strings.Select+strings.Type}
 																						id="vendorId"
@@ -1509,7 +1547,14 @@ class ExplainTrasactionDetail extends React.Component {
 																								}}
 																								value={
 																									supplier_invoice_list_state &&
-																										props.values.explainParamList
+																										props.values.explainParamList &&
+																										supplier_invoice_list_state.find(
+																											(option) =>
+																												option.value ===
+																												+props.values.explainParamList.map(
+																													(item) => item.id,
+																												),
+																										)
 																										? supplier_invoice_list_state.find(
 																											(option) =>
 																												option.value ===
@@ -1578,7 +1623,7 @@ class ExplainTrasactionDetail extends React.Component {
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="customerId">
-																						<span className="text-danger">*</span>
+																						<span className="text-danger">* </span>
 																					   {strings.Customer}
 																				</Label>
 																					<Select
@@ -1641,7 +1686,7 @@ class ExplainTrasactionDetail extends React.Component {
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="invoiceIdList">
-																						<span className="text-danger">*</span>
+																						<span className="text-danger">* </span>
 																					{strings.Invoice}
 																				</Label>
 																					<Select
@@ -1650,7 +1695,7 @@ class ExplainTrasactionDetail extends React.Component {
 																						options={
 																							customer_invoice_list_state
 																								? customer_invoice_list_state
-																								: []
+																								:[]
 																						}
 																						onChange={(option) => {
 																							props.handleChange(
@@ -1660,7 +1705,14 @@ class ExplainTrasactionDetail extends React.Component {
 																						}}
 																						value={
 																							customer_invoice_list_state &&
-																								props.values.explainParamList
+																								props.values.explainParamList &&
+																								customer_invoice_list_state.find(
+																									(option) =>
+																										option.value ===
+																										+props.values.explainParamList.map(
+																											(item) => item.id,
+																										),
+																								)
 																								? customer_invoice_list_state.find(
 																									(option) =>
 																										option.value ===
@@ -1730,7 +1782,7 @@ class ExplainTrasactionDetail extends React.Component {
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="transactionCategoryId">
-																						<span className="text-danger">*</span>
+																						<span className="text-danger">* </span>
 																					{strings.Category}
 																				</Label>
 																					<Select
@@ -1843,7 +1895,7 @@ class ExplainTrasactionDetail extends React.Component {
 																		 (
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
-																				<span className="text-danger">*</span>
+																				<span className="text-danger">* </span>
 																					<Label htmlFor="employeeId">User</Label>
 																					<Select
 																						styles={customStyles}
@@ -1886,12 +1938,11 @@ class ExplainTrasactionDetail extends React.Component {
 																</Row>
 																{props.values.coaCategoryId &&
 																	props.values.coaCategoryId.label ===
-																	'Expense' &&
-																	(
-																		<Row>
+																	'Expense' && (
+																		<Row  style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
 																			<Col lg={3}>
 																				<FormGroup className="mb-3">
-																					<Label htmlFor="currencyCode"><span className="text-danger">*</span>
+																					<Label htmlFor="currencyCode"><span className="text-danger">* </span>
 																						{strings.Currency}
 																						</Label>
 																					<Select
@@ -1908,6 +1959,7 @@ class ExplainTrasactionDetail extends React.Component {
 																								)
 																								: []
 																						}
+																						isDisabled={true}
 																						value={
 																							currency_convert_list &&
 																							selectCurrencyFactory
@@ -2003,7 +2055,7 @@ class ExplainTrasactionDetail extends React.Component {
 																					id="currencyName"
 																					name="currencyName"
 																					value={
-																						this.state.basecurrency.currencyIsoCode}
+																						this.state.basecurrency.currencyName}
 
 																				/>
 																			</Col>
@@ -2011,7 +2063,8 @@ class ExplainTrasactionDetail extends React.Component {
 																	)}
 																{props.values.coaCategoryId &&
 																	props.values.coaCategoryId.label ===
-																	'Sales' &&
+																	'Sales' && 
+																
 																	(
 																		<Row>
 																			<Col lg={3}>
@@ -2137,7 +2190,7 @@ class ExplainTrasactionDetail extends React.Component {
 																					id="currencyName"
 																					name="currencyName"
 																					value={
-																						this.state.basecurrency.currencyIsoCode}
+																						this.state.basecurrency.currencyName}
 
 																				/>
 																			</Col>
@@ -2146,6 +2199,10 @@ class ExplainTrasactionDetail extends React.Component {
 																{props.values.coaCategoryId &&
 																	props.values.coaCategoryId.label ===
 																	'Supplier Invoice' &&
+
+																	this.state.bankAccountCurrency != this.state.supplier_currencyCode ||
+																	this.state.bankAccountCurrency != this.state.basecurrency ||
+																	this.state.basecurrency != this.state.supplier_currencyCode &&
 																	(
 																		<Row>
 																			<Col lg={3}>
@@ -2201,7 +2258,9 @@ class ExplainTrasactionDetail extends React.Component {
 																	)}
 																{props.values.coaCategoryId &&
 																	props.values.coaCategoryId.label ===
-																	'Supplier Invoice' && (
+																	'Supplier Invoice' && 
+																
+																(
 																		<Row  style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
 																			<Col lg={2}>
 																				<Input
@@ -2263,7 +2322,7 @@ class ExplainTrasactionDetail extends React.Component {
 																					id="currencyName"
 																					name="currencyName"
 																					value={
-																						this.state.basecurrency.currencyIsoCode}
+																						this.state.basecurrency.currencyName}
 
 																				/>
 																			</Col>
@@ -2446,7 +2505,7 @@ class ExplainTrasactionDetail extends React.Component {
 																						type="text"
 																						id="reference"
 																						name="reference"
-																						placeholder={strings.ReferenceNumber}
+																						placeholder={strings.ReceiptNumber}
 																						onChange={(option) => {
 																							if (
 																								option.target.value === '' ||

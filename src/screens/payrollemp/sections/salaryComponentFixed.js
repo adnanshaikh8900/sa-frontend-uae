@@ -317,7 +317,7 @@ class SalaryComponentFixed extends React.Component {
 											<Col lg={8}>
 												<FormGroup className="mb-3">
 													<Label htmlFor="componentName">
-													<span className="text-danger">*</span>{strings.ComponentName}
+													<span className="text-danger">* </span>{strings.ComponentName}
 													</Label>
 													<Input
 														type="text"
@@ -341,7 +341,7 @@ class SalaryComponentFixed extends React.Component {
 											<Row>
 											<Col md="8">
 												<FormGroup>
-													<Label htmlFor="type"><span className="text-danger">*</span>{strings.Type}</Label>
+													<Label htmlFor="type"><span className="text-danger">* </span>{strings.Type}</Label>
 													<Select
 
 														options={
@@ -380,7 +380,7 @@ class SalaryComponentFixed extends React.Component {
 										<Row style={{ display: props.values.type.value !== 2 ? 'none' : '' }}>
 											<Col lg={8}>
 												<FormGroup className="mb-3">
-													<Label htmlFor="salaryStructure"><span className="text-danger">*</span>
+													<Label htmlFor="salaryStructure"><span className="text-danger">* </span>
 													 {strings.Percentage}
 													</Label>
 													<Input
@@ -407,7 +407,7 @@ class SalaryComponentFixed extends React.Component {
 										<Row  style={{ display: props.values.type.value !== 1 ? 'none' : '' }}>
 											<Col lg={8}>
 												<FormGroup className="mb-3">
-													<Label htmlFor="flatAmount"><span className="text-danger">*</span>
+													<Label htmlFor="flatAmount"><span className="text-danger">* </span>
 														 {strings.FlatAmount}
 													</Label>
 													<Input

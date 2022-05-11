@@ -1191,7 +1191,7 @@ console.log(supplier_invoice_list)
 											</TableHeaderColumn> */}
 
 											<TableHeaderColumn
-												width="7%"
+												// width="7%"
 												dataField="status"
 												dataFormat={this.renderInvoiceStatus}
 												dataSort

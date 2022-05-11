@@ -184,11 +184,11 @@ export const getCurrencyList = () => {
 	};
 };
 
-export const getVendorList = () => {
+export const getVendorList = (bankId) => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: `/rest/contact/getContactsForDropdown?contactType=1`,
+			url: `/rest/contact/getContactsForDropdownForVendor?bankId=${bankId}`,
 		};
 		return authApi(data)
 			.then((res) => {

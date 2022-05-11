@@ -561,6 +561,8 @@ this.props.customerInvoiceCreateActions.getQuotationById(quotationId)
 																discountType: res.data.discountType
 																	? res.data.discountType
 																	: '',
+																	receiptNumber:res.data.quotationNumber ?res.data.quotationNumber:''
+
 
 														},
 														invoiceDateNoChange: res.data.quotaionExpiration
@@ -615,6 +617,7 @@ this.props.customerInvoiceCreateActions.getQuotationById(quotationId)
 														this.formRef.current.setFieldValue('placeOfSupplyId', res.data.placeOfSupplyId, true);
 														this.formRef.current.setFieldValue('currency', this.getCurrency(res.data.customerId), true);
 														this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(res.data.customerId), true);
+														this.formRef.current.setFieldValue('receiptNumber', res.data.quotationNumber, true);
 													   this.setExchange( this.getCurrency(res.data.customerId) );
 														} else {
 															this.setState({
@@ -3004,7 +3007,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 													
 																			<Col md="4" >
 																				<FormGroup>
-																					{props.values.shippingCountryId == 229 || props.values.shippingCountryId.value == 229 ?
+																					{props.values.shippingCountryId &&( props.values.shippingCountryId == 229 || props.values.shippingCountryId.value == 229) ?
 																					<Label htmlFor="POBoxNumber">
 																						<span className="text-danger">* </span>{strings.POBoxNumber}
 																					</Label>:

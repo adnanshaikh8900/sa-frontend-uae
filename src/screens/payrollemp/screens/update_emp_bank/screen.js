@@ -233,9 +233,6 @@ class UpdateEmployeeBank extends React.Component {
         strings.setLanguage(this.state.language);
         const { loading, initValue, dialog ,bankList ,existForAccountNumber,loadingMsg } = this.state
         const { designation_dropdown, country_list, state_list, employee_list_dropdown } = this.props
-        console.log(this.state.gender, "gender")
-        console.log(this.state.bloodGroup, "blood")
-        console.log(this.state.selectedStatus)
 
         return (
             loading ==true? <Loader loadingMsg={loadingMsg}/> :
@@ -277,12 +274,12 @@ class UpdateEmployeeBank extends React.Component {
                                                             .required("Account Holder Name is Required"),
                                                         accountNumber: Yup.string()
                                                         .required("Account Number is Required"),
-                                                        bankName: Yup.string()
-                                                        .required("Bank Name is Required"),
+                                                        // bankName: Yup.string()
+                                                        // .required("Bank Name is Required"),
                                                         bankId: Yup.string()
-                                                        .required('Bank is Required') ,
-                                                        swiftCode: Yup.string()
-                                                        .required("Swift Code is Required"),
+                                                        .required('Bank Name is Required') ,
+                                                        // swiftCode: Yup.string()
+                                                        // .required("Swift Code is Required"),
                                                         branch: Yup.string()
                                                         .required("Branch is Required"),
                                                         iban: Yup.string()
@@ -405,7 +402,7 @@ class UpdateEmployeeBank extends React.Component {
                                                                                             </Col>
                                                                         {/* <Col md="4">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="select"><span className="text-danger">*</span>{strings.BankName} </Label>
+                                                                                <Label htmlFor="select"><span className="text-danger">* </span>{strings.BankName} </Label>
                                                                                 <Input
                                                                                     type="text"
                                                                                     id="bankName"
@@ -477,7 +474,9 @@ class UpdateEmployeeBank extends React.Component {
 
                                                                         <Col lg={4}>
                                                                             <FormGroup>
-                                                                                <Label htmlFor="select"><span className="text-danger">* </span>{strings.SwiftCode}</Label>
+                                                                                <Label htmlFor="select">
+                                                                                    {/* <span className="text-danger">* </span> */}
+                                                                                {strings.SwiftCode}</Label>
                                                                                 <Input
                                                                                     type="text"
                                                                                     maxLength="11"
@@ -510,6 +509,7 @@ class UpdateEmployeeBank extends React.Component {
                                                                         onClick={() => {
                                                                             //	added validation popup	msg
                                                                             props.handleBlur();
+                                                                            console.log(props.errors)
                                                                             if(props.errors &&  Object.keys(props.errors).length != 0)
                                                                             this.props.commonActions.fillManDatoryDetails();
                                                                     }}

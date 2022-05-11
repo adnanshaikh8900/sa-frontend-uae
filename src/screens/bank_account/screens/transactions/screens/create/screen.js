@@ -801,7 +801,7 @@ class CreateBankTransaction extends React.Component {
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="coaCategoryId">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		 {strings.TransactionType}
 																	</Label>
 																	<Select
@@ -1027,7 +1027,7 @@ class CreateBankTransaction extends React.Component {
 																				</FormGroup>
 																			</Col>
 																		)}
-																		<Col className='mb-3' lg={3}>
+																		<Col className='mb-6' lg={6}>
 																<Label htmlFor="inline-radio3"><span className="text-danger">* </span>{strings.ExpenseType}</Label>
 																<div>
 																	{this.state.expenseType === false ?
@@ -1072,7 +1072,7 @@ class CreateBankTransaction extends React.Component {
 																	<Col lg={3}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="vendorId">
-																				<span className="text-danger">*</span>
+																				<span className="text-danger">* </span>
 																				Vendor
 																			</Label>
 																			<Select
@@ -1130,7 +1130,7 @@ class CreateBankTransaction extends React.Component {
 																			<Col lg={3}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="invoiceIdList">
-																					<span className="text-danger">*</span>
+																					<span className="text-danger">* </span>
 																						Invoice
 																					</Label>
 																					<Select

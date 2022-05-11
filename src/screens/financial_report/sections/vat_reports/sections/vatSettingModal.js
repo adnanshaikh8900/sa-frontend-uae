@@ -166,7 +166,7 @@ class VatSettingModal extends React.Component {
 													<Row>
 														
 														<Col lg={4}>
-															<FormGroup className="mb-3"><span className="text-danger">*</span>
+															<FormGroup className="mb-3"><span className="text-danger">* </span>
 																<Label htmlFor="startDate">{strings.VatRegisteredOn}</Label>
 																<DatePicker
 																	id="date"
@@ -199,7 +199,7 @@ class VatSettingModal extends React.Component {
 															</FormGroup>
 														</Col>
 														<Col lg={4}>
-															<FormGroup className="mb-3"><span className="text-danger">*</span>
+															<FormGroup className="mb-3"><span className="text-danger">* </span>
 																<Label htmlFor="endDate">Generate First Tax Return From</Label>
 																<DatePicker
 																	id="date"

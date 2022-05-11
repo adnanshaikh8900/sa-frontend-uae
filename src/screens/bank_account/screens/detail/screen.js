@@ -725,7 +725,7 @@ class DetailBankAccount extends React.Component {
 														{/* <Col lg={4}>
 															<FormGroup className="mb-3">
 																<Label htmlFor="bank_name">
-																	<span className="text-danger">*</span>{strings.BankName}
+																	<span className="text-danger">* </span>{strings.BankName}
 																</Label>
 																<Input
 																	type="text"

@@ -2108,7 +2108,7 @@ class CreateRequestForQuotation extends React.Component {
 									<Col lg={3}>
 									{this.state.customer_taxTreatment_des!="NON GCC" &&(		<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">
-																		{/* <span className="text-danger">*</span> */}
+																		{/* <span className="text-danger">* </span> */}
 																		{this.state.customer_taxTreatment_des &&
 																		(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
 																		||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 

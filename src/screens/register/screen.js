@@ -787,7 +787,7 @@ class Register extends React.Component {
 															<Col lg={4}>
 																						<FormGroup className="mb-3 phoneNumber">
 																							<Label htmlFor="phoneNumber">
-																							<span className="text-danger">*</span> {strings.MobileNumber}
+																							<span className="text-danger">* </span> {strings.MobileNumber}
 																						</Label>
 																							<PhoneInput
 																								country={"ae"}

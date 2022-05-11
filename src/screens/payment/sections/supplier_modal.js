@@ -178,7 +178,7 @@ class SupplierModal extends React.Component {
                   <Row>
                     <Col lg="4">
                       <FormGroup>
-                        <Label htmlFor="firstName"><span className="text-danger">*</span>{strings.FirstName}</Label>
+                        <Label htmlFor="firstName"><span className="text-danger">* </span>{strings.FirstName}</Label>
                         <Input
                           type="text"
                           id="firstName"
@@ -200,7 +200,7 @@ class SupplierModal extends React.Component {
                     </Col>
                     <Col lg="4">
                       <FormGroup>
-                        <Label htmlFor="lastName"><span className="text-danger">*</span>{strings.MiddleName}</Label>
+                        <Label htmlFor="lastName"><span className="text-danger">* </span>{strings.MiddleName}</Label>
                         <Input
                           type="text"
                           id="middleName"
@@ -222,7 +222,7 @@ class SupplierModal extends React.Component {
                     </Col>
                     <Col lg="4">
                       <FormGroup>
-                        <Label htmlFor="lastName"><span className="text-danger">*</span>{strings.LastName}</Label>
+                        <Label htmlFor="lastName"><span className="text-danger">* </span>{strings.LastName}</Label>
                         <Input
                           type="text"
                           id="lastName"
@@ -316,7 +316,7 @@ class SupplierModal extends React.Component {
                       <Col md="4">
                         <FormGroup>
                           <Label htmlFor="email">
-                            <span className="text-danger">*</span>{strings.Email}
+                            <span className="text-danger">* </span>{strings.Email}
                           </Label>
                           <Input
                             type="text"
@@ -342,7 +342,7 @@ class SupplierModal extends React.Component {
                       </Col>
                       <Col md="4">
                         <FormGroup>
-                          <Label htmlFor="telephone"> <span className="text-danger">*</span>{strings.Telephone}</Label>
+                          <Label htmlFor="telephone"> <span className="text-danger">* </span>{strings.Telephone}</Label>
                           <Input
                           maxLength="15"
                             type="text"
@@ -367,7 +367,7 @@ class SupplierModal extends React.Component {
                       </Col>
                       <Col md="4">
                         <FormGroup>
-                          <Label htmlFor="mobileNumber"> <span className="text-danger">*</span>{strings.MobileNumber}</Label>
+                          <Label htmlFor="mobileNumber"> <span className="text-danger">* </span>{strings.MobileNumber}</Label>
                           <PhoneInput
                             country={"ae"}
                             enableSearch={true}
@@ -471,7 +471,7 @@ class SupplierModal extends React.Component {
                       <Col md="4">
                         <FormGroup>
                           <Label htmlFor="countryId">
-                            <span className="text-danger">*</span>{strings.Country}
+                            <span className="text-danger">* </span>{strings.Country}
                           </Label>
                           <Select
                             options={
@@ -568,7 +568,7 @@ class SupplierModal extends React.Component {
                     <Row className="row-wrapper">
                       <Col md="4">
                         <FormGroup>
-                          <Label htmlFor="postZipCode"><span className="text-danger">*</span>{strings.PostZipCode}</Label>
+                          <Label htmlFor="postZipCode"><span className="text-danger">* </span>{strings.PostZipCode}</Label>
                           <Input
                             type="text"
                             id="postZipCode"
@@ -658,7 +658,7 @@ class SupplierModal extends React.Component {
                       <Col md="4">
                         <FormGroup>
                           <Label htmlFor="vatRegistrationNumber">
-                            <span className="text-danger">*</span>{strings.TaxRegistrationNumber}
+                            <span className="text-danger">* </span>{strings.TaxRegistrationNumber}
                           </Label>
                           <Input
                             type="text"

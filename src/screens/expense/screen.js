@@ -875,7 +875,7 @@ class Expense extends React.Component {
 											csvFileName="expense_list.csv"
 										>
 											<TableHeaderColumn
-												thStyle={{ whiteSpace: 'normal' }}
+												tdStyle={{ whiteSpace: 'normal' }}
 												dataField="expenseNumber"
 												dataSort
 											    width="13%"
@@ -886,50 +886,42 @@ class Expense extends React.Component {
 											</TableHeaderColumn>
 											
 											<TableHeaderColumn
-												thStyle={{ whiteSpace: 'normal' }}
+												tdStyle={{ whiteSpace: 'normal' }}
 												dataField="payee"
 												dataSort
-												width="15%"
 												className='table-header-bg'
 											>
 												{strings.PAYEE}
 											</TableHeaderColumn>
 
 											<TableHeaderColumn
-												thStyle={{ whiteSpace: 'normal' }}
 												dataField="expenseDate"
 												dataSort
 												dataFormat={this.renderDate}
-												width="15%"
 												className='table-header-bg'
 											>
 												{strings.EXPENSEDATE}
 											</TableHeaderColumn>
 																						
 											<TableHeaderColumn
-												thStyle={{ whiteSpace: 'normal' }}
+												tdStyle={{ whiteSpace: 'normal' }}
 												dataField="transactionCategoryName"
 												dataSort
-												width="20%"
 												className='table-header-bg'
 											>
 												{strings.EXPENSECATEGORY}
 											</TableHeaderColumn>
 											<TableHeaderColumn
-													thStyle={{ whiteSpace: 'normal' }}
-													width="15%"
-                                                    className="table-header-bg"
-                                                    dataField="exclusiveVat"
-                                                    dataSort
-                                                    dataFormat={this.renderType}
-                                                    >
-                                                        {strings.ExpenseType}
+                                                className="table-header-bg"
+                                                dataField="exclusiveVat"
+                                                dataSort
+                                                dataFormat={this.renderType}
+                                            >
+                                                {strings.ExpenseType}
 
                           					</TableHeaderColumn>
 
 											<TableHeaderColumn
-												thStyle={{ whiteSpace: 'normal' }}
-												width="10%"
 												dataField="expenseStatus"
 												dataFormat={this.renderExpenseStatus}
 												dataSort
@@ -940,21 +932,19 @@ class Expense extends React.Component {
 											
 											<TableHeaderColumn
 												dataAlign="right"
-												thStyle={{ whiteSpace: 'normal' }}
 												dataField="expenseAmount"
 												dataSort
 												dataFormat={this.renderAmount}
 												formatExtraData={universal_currency_list}
-												width="37%"
+												width="25%"
 												className='table-header-bg'
 											>
 												{strings.EXPENSEAMOUNT}
 											</TableHeaderColumn>
 											<TableHeaderColumn
-												thStyle={{ whiteSpace: 'normal' }}
 												className="text-right"
 												columnClassName="text-right"
-												width="55"
+												width="5%"
 												dataFormat={this.renderActions}
 												className='table-header-bg'
 											></TableHeaderColumn>

@@ -92,6 +92,7 @@ class CreateExpense extends React.Component {
 				taxTreatmentId:'',
 				expenseType:false,
 			},
+			count:0,
 			expenseType:false,
 			isReverseChargeEnabled:false,
 			currentData: {},
@@ -140,6 +141,7 @@ class CreateExpense extends React.Component {
 			{ label: 'CASH', value: 'CASH' },
 			{ label: 'BANK', value: 'BANK' },
 		];
+	
 	}
 	getParentExpenseDetails=(parentId)=>{
 		this.props.expenseCreateActions
@@ -267,9 +269,24 @@ debugger
 					this.setState({ loading: false });
 				});					
 	}
+
+
+	getSnapshotBeforeUpdate(prevProps, prevState) {
+		if (prevProps.pay_to_list.length < this.props.pay_to_list.length) {
+			if (this.state.count === 0) {
+				let obj = {value: "Company Expense",label: "Company Expense" }
+			this.props.pay_to_list.unshift(obj)
+			}
+			this.setState({
+				count: 1
+			})
+		}
+		return null;
+	  }
 	componentDidMount = () => {
 		this.initializeData();
 		this.getExpenseNumber();
+		// this.savestate()
 		if(this.props.location.state && this.props.location.state.parentId )
 		this.getParentExpenseDetails(this.props.location.state.parentId);
 	};
@@ -826,6 +843,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 				},
 			}),
 		};
+		console.log(pay_to_list)
 		return (
 			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 			<div>
@@ -876,6 +894,9 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 													// 	!values.bankAccountId
 													// ) {
 													// 	errors.bankAccountId = 'Bank Account is Required';
+													// }
+													// if(values.payee.value === 'Company'){
+													// 	errors.payMode = 'Pay Through is Required'
 													// }
 													if (exist === true) {
 														errors.expenseNumber =
@@ -930,9 +951,9 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 													vatCategoryId: Yup.string().required(
 														'VAT is Required',
 													),
-													payMode: Yup.string().required(
-														'Pay Through is Required',
-													),
+													// payMode: Yup.string().required(
+													// 	'Pay Through is Required',
+													// ),
 													attachmentFile: Yup.mixed()
 														.test(
 															'fileType',
@@ -1137,7 +1158,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		)}
 																</FormGroup>
 															</Col>)}
-															<Col className='mb-5' lg={5}>
+															<Col className='mb-5' lg={3}>
 																<Label htmlFor="inline-radio3"><span className="text-danger">* </span>{strings.ExpenseType}</Label>
 																<div>
 																	{this.state.expenseType === false ?
@@ -1259,13 +1280,15 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		)}
 																</FormGroup>
 															</Col>
-															
+														
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="payee">
 																		<span className="text-danger">* </span>{strings.PaidBy}
 																	</Label>
-																	<Select
+																
+																		<Select
+																	
 																		options={
 																			pay_to_list
 																				? selectOptionsFactory.renderOptions(
@@ -1282,6 +1305,9 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																				props.handleChange('payee')(
 																					option,
 																				);
+																			this.setState({
+																				payee: option ? option : option.value
+																			})
 																			} else {
 																				props.handleChange('payee')('');
 																			}
@@ -1300,12 +1326,14 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																			<div className="invalid-feedback">
 																				{props.errors.payee}
 																			</div>
-																		)}
+																	)}
+																		
+																		
 																</FormGroup>
 															  
                                     
 															</Col>
-															
+														
 															<Col>
 															<Button
                                                                 color="primary"
@@ -1367,7 +1395,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 															</Col>													
 															{this.renderVat(props)}	
 															
-															{!props.values.payee && payMode.value === 'BANK' && (
+															{/* {!props.values.payee && payMode.value === 'BANK' && (
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="bankAccountId">
@@ -1408,7 +1436,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																			)}
 																	</FormGroup>
 																</Col>
-															)}
+															)} */}
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currency">
@@ -1453,6 +1481,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		)}
 																</FormGroup>
 															</Col>
+																{this.state.payee && this.state.payee.value === 'Company Expense'  ? 
 															<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="payMode"><span className="text-danger">* </span> {strings.PayThrough}</Label>
@@ -1495,7 +1524,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																				</div>
 																			)}
 																	</FormGroup>
-																</Col>
+																</Col>:''}
 														</Row>
 														{/* {props.values.vatCategoryId !=='' && props.values.vatCategoryId.label !=='Select Vat' &&
 														(
@@ -1696,7 +1725,7 @@ min="0"
 																			maxLength="255"
 																			name="notes"
 																			id="notes"
-																			rows="2"
+																			minRows={2}
 																			placeholder={strings.DeliveryNotes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
@@ -1799,7 +1828,7 @@ min="0"
 																			style={{width: "870px"}}
 																			name="receiptAttachmentDescription"
 																			id="receiptAttachmentDescription"
-																			rows="2"
+																			minRows={2}
 																			placeholder={strings.ReceiptAttachmentDescription}
 																			onChange={(option) =>
 																				props.handleChange(

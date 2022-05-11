@@ -252,7 +252,7 @@ class Expense extends React.Component {
 								<i className="fas fa-send" /> {strings.Post}
 							</DropdownItem>
 						)}
-						{row.expenseStatus === 'Posted' && row.payee !== 'Company Expense' && row.editFlag==true && (
+						{row.expenseStatus === 'Posted' && row.bankAccountId === null && row.editFlag==true && (
 							<DropdownItem
 								onClick={() => {
 									this.unPostExpense(row);

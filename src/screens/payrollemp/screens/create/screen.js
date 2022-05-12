@@ -212,7 +212,13 @@ class CreateEmployeePayroll extends React.Component {
             checkmobileNumberParam:false,
             checkmobileNumberParam1:false,
             checkmobileNumberParam2:false,
-            loadingMsg:"Loading..."
+            loadingMsg:"Loading...",
+            ctcTypeOption:{label:"ANNUALLY",value:1},
+            ctcType:"ANNUALLY",
+            ctcTypeList:[
+                {label:"ANNUALLY",value:1},
+                {label:"MONTHLY",value:2},
+            ]
         }        
         this.formRef = React.createRef();       
         this.regEx = /^[0-9\d]+$/;
@@ -397,7 +403,7 @@ existForAccountNumber = (value) => {
         const formData = new FormData();
         formData.append('employee', this.state.employeeid)
         formData.append('grossSalary', CTC != null ? CTC : '')
-
+        formData.append('ctcType',this.state.ctcTypeOption.label ?this.state.ctcTypeOption.label:"ANNUALLY")
         formData.append('salaryComponentString', JSON.stringify(this.state.list));
         this.setState({ loading:true, loadingMsg:"Creating New Employee..."});
         this.props.createPayrollEmployeeActions
@@ -3121,6 +3127,21 @@ existForAccountNumber = (value) => {
 																			</UncontrolledTooltip>
                                                          
                                                           : </Label>
+                                                          <div   style={{display:"flex"}}>
+                                                                 <div   style={{width:"-webkit-fill-available"}}>
+                                                                       <Select 
+                                                                                options={this.state.ctcTypeList}
+                                                                                id="ctcTypeOption"
+                                                                                name="ctcTypeOption"
+                                                                                className="mr-2"
+                                                                                value={this.state.ctcTypeOption}
+                                                                                onChange={(e) => {															
+                                                                                this.setState({ctcTypeOption:e,ctcType:e.label})	
+                                                                                props.handleChange('CTC')(0);
+                                                                                this.updateSalary(0)													
+                                                                                }}
+                                                                                />
+                                                                 </div>
                                                             <Input
                                                                 type="text"
                                                                 id="CTC"
@@ -3132,14 +3153,14 @@ existForAccountNumber = (value) => {
                                                                 placeholder={strings.Enter+ strings.ctc}
                                                                 onChange={(option) => {
                                                                     if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('CTC')(option) }
-                                                                    this.updateSalary(option.target.value);
-
+                                                                    
+                                                                    this.updateSalary(this.state.ctcType=="ANNUALLY"?option.target.value:parseFloat(option.target.value)*12);
                                                                 }}
                                                                 className={props.errors.CTC && props.touched.CTC ? "is-invalid" : ""}
                                                             />
                                                             {props.errors.CTC && props.touched.CTC && (
                                                                 <div className="invalid-feedback">{props.errors.CTC}</div>
-                                                            )}
+                                                            )}</div>
                                                         </FormGroup>
                                                         </div>
                                                
@@ -3557,8 +3578,8 @@ existForAccountNumber = (value) => {
                                                                 <Row >
                                                                         <Col className="p-2" >{"Company Cost"}</Col>
                                                                         <Col className="p-2"  > {"-"} </Col>
-                                                                        <Col className="p-2"  >{props.values.CTC ? (props.values.CTC / 12).toLocaleString() :"-"}</Col>
-                                                                        <Col className="p-2" >{props.values.CTC ? props.values.CTC : "-"}</Col>
+                                                                        <Col className="p-2"  >{this.state.CTC ? (this.state.CTC / 12).toLocaleString() :"-"}</Col>
+                                                                        <Col className="p-2" >{this.state.CTC ? this.state.CTC : "-"}</Col>
                                                                     </Row>
                                                                  
                                                                 </tbody>

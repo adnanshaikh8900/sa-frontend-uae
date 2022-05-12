@@ -282,7 +282,7 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 									</th>
 									<th style={{ padding: '0.5rem' }}>{strings.Excise}</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.ExciseAmount}</th>
-									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.Vat}</th>
+									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.VAT}</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.VatAmount}</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
 									{strings.Total}
@@ -357,7 +357,7 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 									<b> <u>{POData.totalAmount ? upperCase(POData.currencyName + " " +(toWords.convert(POData.totalAmount))+" ONLY").replace("POINT","AND") : " -"}
 									{/* <b> {parseInt(POData.dueAmount)} */}
 									</u></b></div>
-								<div className="pb-2">{strings.Vat+" "+strings.AmountInWords }:
+								<div className="pb-2">{strings.VAT+" "+strings.AmountInWords }:
 										<br/>
 									<b><u>{POData.totalVatAmount ? (upperCase(POData.currencyName + " " +(toWords.convert(POData.totalVatAmount))+" ONLY")).replace("POINT","AND") : " -" }</u></b>
 									{/* <b> {POData.totalVatAmount}</b> */}
@@ -417,7 +417,7 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 										
 										<tr >
 											<td style={{ width: '40%' }}>
-												<strong>{strings.Vat }</strong>
+												<strong>{strings.VAT}</strong>
 											</td>
 											<td
 												style={{

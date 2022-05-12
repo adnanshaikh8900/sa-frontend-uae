@@ -159,7 +159,7 @@ class GenerateVatReportModal extends React.Component {
 			.generateReport(postData)
 			.then((res) => {
 				if (res.status === 200) {
-					this.props.commonActions.tostifyAlert('success', res.data && res.data.message?res.data.message: 'Vat Report Generated Successfully')
+					this.props.commonActions.tostifyAlert('success', res.data && res.data.message?res.data.message: 'VAT Report Generated Successfully')
 				}
 				closeModal(false);
 			}).catch((err) => {
@@ -220,7 +220,7 @@ class GenerateVatReportModal extends React.Component {
 																		minDate={new Date("01/01/2018")}
 																		showMonthYearPicker
 																		withPortal
-																		placeholderText={'Month For Vat Report'}
+																		placeholderText={'Month For VAT Report'}
     																  portalId="root-portal"
 																	  className={`text-center`}
 																	  Style={{textAlign:"center !important"}}

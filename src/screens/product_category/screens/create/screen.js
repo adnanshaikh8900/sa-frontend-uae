@@ -98,7 +98,7 @@ class CreateProductCategory extends React.Component {
 	//   })
 	// }
 
-	// Create or Edit Vat
+	// Create or Edit VAT
 	handleSubmit = (data, resetForm) => {
 		this.setState({ disabled: true });
 		this.setState({ loading:true, loadingMsg:"Creating Product Category..."});

@@ -5,7 +5,7 @@ import {
 
 
 
-// Get Vat List
+// Get VAT List
 export const getProductCategoryList = (obj) => {
   let productCategoryCode = obj && obj.productCategoryCode ? obj.productCategoryCode : '';
   let productCategoryName = obj && obj.productCategoryName ? obj.productCategoryName : '';

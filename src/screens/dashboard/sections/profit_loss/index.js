@@ -212,7 +212,7 @@ class ProfitAndLoss extends Component {
 													/>
 													}
 												</h3>
-													<p>Input Vat</p>
+													<p>Input VAT</p>
 												</div>
 											</div>
 											<div className="data-item total m-0">
@@ -231,7 +231,7 @@ class ProfitAndLoss extends Component {
 													/>
 													}
 												</h3>
-													<p>Output Vat</p>
+													<p>Output VAT</p>
 												</div>
 											</div>
 											<div className="data-item m-0">

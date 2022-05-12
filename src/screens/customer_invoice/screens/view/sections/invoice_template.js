@@ -424,11 +424,9 @@ class InvoiceTemplate extends Component {
 										{/* <th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.Excise}</th> */}
 										<th style={{ padding: '0.5rem', textAlign: 'right',width:"10%" }}>{strings.ExciseAmount}</th>
 									</>)}
-									{/* <th style={{ padding: '0.5rem', textAlign: 'right' ,width:"5%" }}>{strings.Vat}</th> */}
+									{/* <th style={{ padding: '0.5rem', textAlign: 'right' ,width:"5%" }}>{strings.VAT}</th> */}
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.VatAmount}</th>
-									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
-										{strings.SubTotal}
-									</th>
+									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.SubTotal}</th>
 								</tr>
 							</thead>
 							<tbody className=" table-hover">
@@ -640,7 +638,7 @@ class InvoiceTemplate extends Component {
 											</tr>
 											<tr >
 												<td style={{ width: '40%' }}>
-													<strong>{strings.Vat}</strong>
+													<strong>{strings.VAT}</strong>
 												</td>
 												<td
 													style={{

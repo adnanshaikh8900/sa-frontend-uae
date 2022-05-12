@@ -111,12 +111,12 @@ class DetailVatCode extends React.Component {
 			if (res.data > 0) {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					'This VAT catogery is in use ,Cannot delete this Vat Catogery',
+					'This VAT catogery is in use ,Cannot delete this VAT Catogery',
 				);
 			} else {
 		const message1 =
         <text>
-        <b>Delete Vat Category?</b>
+        <b>Delete VAT Category?</b>
         </text>
         const message = 'This VAT Category will be deleted permanently and cannot be recovered. ';
 		this.setState({

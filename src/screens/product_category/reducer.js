@@ -8,7 +8,7 @@ const VatReducer = (state = initState, action) => {
   const { type, payload} = action
   
   switch(type) {
-    // Vat List
+    // VAT List
     case PRODUCT_CATEGORY.PRODUCT_CATEGORY_LIST:
       return {
         ...state,

@@ -120,7 +120,7 @@ class ExpenseTemplate extends Component {
 			  <td>{expenseData.expenseId}</td>
 	</tr> */}
 
-	<tr>      <td className="ml-3" style={{width:'245px'}}>	<b>{strings.Vat+" "+strings.Type }</b> : </td>  
+	<tr>      <td className="ml-3" style={{width:'245px'}}>	<b>{strings.VAT+" "+strings.Type }</b> : </td>  
 	          <td>{expenseData.vatCategoryName} </td>
 	</tr>
 	

@@ -429,14 +429,14 @@ class Organization extends React.Component {
                             </FormGroup>
                             <FormGroup row>
                               <Col md="2" className="text-right">
-                                <Label htmlFor="categoryName"><span className="text-danger">* </span>Vat Number</Label>
+                                <Label htmlFor="categoryName"><span className="text-danger">* </span>VAT Number</Label>
                               </Col>
                               <Col xs="12" md="8">
                                 <Input
                                   type="text"
                                   id="vatNumber"
                                   name="vatNumber"
-                                  placeholder="Enter Vat Number"
+                                  placeholder="Enter VAT Number"
                                   onChange={(option) => props.handleChange('vatNumber')(option)}
                                 />
                               </Col>

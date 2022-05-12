@@ -131,7 +131,7 @@ class FileTaxReturnModal extends React.Component {
 					this.setState({ disabled: false });
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data.message?res.data.message:'Vat Report Filed Successfully',
+						res.data.message?res.data.message:'VAT Report Filed Successfully',
 					);
 					resetForm();
 					this.setState({isTANMandetory:false})
@@ -185,7 +185,7 @@ dateLimit=()=>{
 							<Col lg={12}>
 								<div className="h4 mb-0 d-flex align-items-center">
 									<i className="nav-icon fas fa-user-tie" />
-									<span className="ml-2">File The Report For Vat Return ( {taxReturns} )</span>
+									<span className="ml-2">File The Report For VAT Return ( {taxReturns} )</span>
 								</div>
 							</Col>
 						</Row>

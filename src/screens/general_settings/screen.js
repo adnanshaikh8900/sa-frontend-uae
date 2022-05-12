@@ -746,7 +746,7 @@ class GeneralSettings extends React.Component {
 																					</tr>
 																					<tr>
 																						<td>{'{invoiceVatAmount}'}</td>
-																						<td>Invoice Vat Amount</td>
+																						<td>Invoice VAT Amount</td>
 																					</tr>
 																					<tr>
 																						<td>{'{product}'}</td>

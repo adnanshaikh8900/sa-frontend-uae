@@ -250,7 +250,7 @@ class UpdateEmployeePersonal extends React.Component {
 		this.props.createPayrollEmployeeActions.getStateList(countryCode);
 	};
 
-    // Create or Edit Vat
+    // Create or Edit VAT
     handleSubmit = (data) => {
 
         this.setState({ disabled: true });

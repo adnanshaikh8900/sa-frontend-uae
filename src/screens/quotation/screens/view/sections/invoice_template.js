@@ -269,7 +269,7 @@ class RFQTemplate extends Component {
 									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.DiscountType}</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.Excise}</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.ExciseAmount}</th>
-									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.Vat }</th>
+									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.VAT}</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.VatAmount }</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
 									  {strings.Total }
@@ -349,7 +349,7 @@ class RFQTemplate extends Component {
 									<b><u> {QuotationData.totalAmount ? upperCase(QuotationData.currencyName + " " +(toWords.convert(QuotationData.totalAmount))+" ONLY").replace("POINT","AND") : " -" }
 									{/* <b> {parseInt(POData.dueAmount)} */}
 									</u></b></div>
-								<div className="pb-2">{strings.Vat+" "+strings.AmountInWords }:
+								<div className="pb-2">{strings.VAT+" "+strings.AmountInWords }:
 										<br/>
 									<b><u>{QuotationData.totalVatAmount ? (upperCase(QuotationData.currencyName + " " +(toWords.convert(QuotationData.totalVatAmount))+" ONLY")).replace("POINT","AND") : " -" }</u></b>
 									{/* <b> {POData.totalVatAmount}</b> */}
@@ -425,7 +425,7 @@ class RFQTemplate extends Component {
 										</tr>
 											<tr >
 											<td style={{ width: '40%' }}>
-												<strong>{strings.Vat }</strong>
+												<strong>{strings.VAT}</strong>
 											</td>
 											<td
 												style={{

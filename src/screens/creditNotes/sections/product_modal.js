@@ -314,7 +314,7 @@ class ProductModal extends React.Component {
 							),
 							productCode: Yup.string().required('Product Code is Required'),
 							vatCategoryId: Yup.string()
-								.required('Vat Category is Required')
+								.required('VAT Category is Required')
 								.nullable(),
 						})}
 					>
@@ -604,7 +604,7 @@ class ProductModal extends React.Component {
 																		'name',
 																		'id',
 																		vat_list,
-																		'Vat',
+																		'VAT',
 																  )
 																: []
 														}
@@ -656,7 +656,7 @@ class ProductModal extends React.Component {
 																		check
 																		htmlFor="vatIncluded"
 																	>
-																		Vat Include
+																		VAT Include
 																	</Label>
 																</FormGroup>
 															</Col>

@@ -99,7 +99,7 @@ class FtaAuditReport extends React.Component {
 					this.props.commonActions.tostifyAlert(
 						'success',
 						res.data && res.data.message?res.data.message: 
-						' Vat UnFiled Successfully'
+						' VAT UnFiled Successfully'
 					);
 					this.getInitialData()
 				}
@@ -285,7 +285,7 @@ class FtaAuditReport extends React.Component {
 	delete = (id) => {
 		const message1 =
 			<text>
-				<b>Delete Vat Report File ?</b>
+				<b>Delete VAT Report File ?</b>
 			</text>
 		const message = 'This vat report file will be deleted permanently and cannot be recovered. ';
 		
@@ -310,7 +310,7 @@ class FtaAuditReport extends React.Component {
 					this.props.commonActions.tostifyAlert(
 						'success',
 						res.data && res.data.message?res.data.message: 
-						'Vat Report File Deleted Successfully'
+						'VAT Report File Deleted Successfully'
 					);
 					this.setState({
 						dialog: null,
@@ -321,7 +321,7 @@ class FtaAuditReport extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data ? err.data.message : 'Vat Report File Deleted Unsuccessfully'
+					err.data ? err.data.message : 'VAT Report File Deleted Unsuccessfully'
 				);
 				this.setState({
 					dialog: null,

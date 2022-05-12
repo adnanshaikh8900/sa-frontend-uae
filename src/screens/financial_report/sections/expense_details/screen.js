@@ -84,7 +84,7 @@ class ExpenseDetailsReport extends React.Component {
 			{ label: 'Quantity', value: 'quantity', sort: true },
 			{ label: 'Unit Price', value: 'unitPrice', sort: false, align: 'right' },
 			{ label: 'Discount', value: 'discount', sort: false, align: 'left' },
-			{ label: 'Vat Amount', value: 'vatAmount', sort: false, align: 'left' },
+			{ label: 'VAT Amount', value: 'vatAmount', sort: false, align: 'left' },
 			{ label: 'Total Amount', value: 'totalAmount', sort: false, align: 'left' },
 		];
 	}

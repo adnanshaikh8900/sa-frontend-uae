@@ -253,7 +253,7 @@ class CreateExpense extends React.Component {
 									'name',
 									'id',
 									this.props.vat_list,
-									'Vat',
+									'VAT',
 							  ).find((option)=>option.value==res.data.vatCategoryId)
 								this.formRef.current.setFieldValue('vatCategoryId',  vat, true);
 								this.formRef.current.setFieldValue('expenseDescription',  res.data.expenseDescription, true);

@@ -667,7 +667,7 @@ class Product extends React.Component {
 													// dataFormat={this.vatCategoryFormatter}
 													className="table-header-bg"
 												>
-													 {strings.Vat+" "+strings.Type}
+													 {strings.VAT+" "+strings.Type}
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataAlign="center"

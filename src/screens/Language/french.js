@@ -265,6 +265,8 @@ Quotation_For:"Devis pour,",
       
 
       //Income receipts
+      CreateIncomeReciept:"Créer un reçu de revenu",
+      AddNewReceipt:"Ajouter une nouvelle demande",
       Receipts:"Recette",		
       RECEIPTDATE:"DATE DE RÉCEPTION",		
       RECEIPTNUMBER:"NUMÉRO DE RÉCEPTION",		
@@ -324,7 +326,8 @@ AddNewSupplier:"Ajouter un nouveau fournisseur",
 AddASupplier:"Ajouter Un Fournisseur",
 
 //Purchase receipts
-Purchasereceipts:"Reçus D’achat",				
+Purchasereceipts:"Reçus D’achat",		
+CreatePurchaseReceipt:"Créer un reçu d'achat",		
 PAYMENTDATE:"DATE DE PAIEMENT",					
 PAYMENTNUMBER:"NUMÉRO DE PAIEMENT",				
 AMOUNT:"Quantité",

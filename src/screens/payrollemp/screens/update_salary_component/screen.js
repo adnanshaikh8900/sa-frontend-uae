@@ -583,7 +583,7 @@ handleChange = (evt) => {
                                                          
                                                                <div style={{textAlign:"center"}}>
                                                         <FormGroup className="mt-3"   style={{textAlign:"center",display: "inline-grid"}} >
-                                                          <Label><span className="text-danger">*</span>  Cost To Company
+                                                          <Label><span className="text-danger">*</span>  Cost To Company  ( CTC )
                                                           : </Label>
                                                         <div   style={{display:"flex"}}>
                                                                  <div   style={{width:"-webkit-fill-available"}}>

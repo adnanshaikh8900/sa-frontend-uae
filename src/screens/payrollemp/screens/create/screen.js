@@ -3115,8 +3115,8 @@ existForAccountNumber = (value) => {
                                              
                                                 <div style={{textAlign:"center"}}>
                                                         <FormGroup className="mt-3"   style={{textAlign:"center",display: "inline-grid"}} >
-                                                         <Label><span className="text-danger">* </span> Cost To Company 
-                                                         <i				id="CtcTooltip"
+                                                         <Label><span className="text-danger">* </span> Cost To Company  ( CTC )
+                                                         {/* <i				id="CtcTooltip"
 																				className="fa fa-question-circle ml-1"
 																			></i>
 																			<UncontrolledTooltip
@@ -3124,7 +3124,7 @@ existForAccountNumber = (value) => {
 																				target="CtcTooltip"
 																			>
 																				Cost To Company -  It indicates the total amount of expenses an company (organisation) spends on an employee during one year.
-																			</UncontrolledTooltip>
+																			</UncontrolledTooltip> */}
                                                          
                                                           : </Label>
                                                           <div   style={{display:"flex"}}>

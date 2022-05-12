@@ -108,8 +108,8 @@ const ExpenseReducer = (state = initState, action) => {
 		case EXPENSE.PAY_MODE:
 			let list1=payload;		
 			if(list1 &&
-			   list1.lenght &&
-			   list1.lenght>0)	
+			   list1.length &&
+			   list1.length>0)	
 			   list1=list1.map((data,index)=>{
 					if(index==0)
 				      data.label="Petty Cash"

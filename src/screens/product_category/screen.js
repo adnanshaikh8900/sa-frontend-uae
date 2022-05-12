@@ -191,7 +191,7 @@ class ProductCategory extends React.Component {
 	// Actions
 	//--------------------------
 
-	// Delete Vat By ID
+	// Delete VAT By ID
 	bulkDelete = () => {
 		const { selectedRows } = this.state;
 		const message1 =

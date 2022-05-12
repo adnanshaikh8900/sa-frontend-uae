@@ -951,7 +951,7 @@ class DetailExpense extends React.Component {
 																						option,
 																					);
 																					props.handleChange('placeOfSupplyId')('');
-																							// for resetting Vat
+																							// for resetting VAT
 																					props.handleChange('vatCategoryId')('');
 																					//placelist Setup
 																					this.placelistSetting(option,props)
@@ -1427,7 +1427,7 @@ class DetailExpense extends React.Component {
 																		</Col>
 																	)} */}
 															</Row>
-															{props.values.vatCategoryId !=='' && props.values.vatCategoryId.label !=='Select Vat' &&
+															{props.values.vatCategoryId !=='' && props.values.vatCategoryId.label !=='Select VAT' &&
 															props.values.vatCategoryId.value ===1 && 
 															// props.values.vatCategoryId.value !==4 && 
 															// props.values.vatCategoryId.value !==10 &&
@@ -1487,7 +1487,7 @@ class DetailExpense extends React.Component {
 																							className="custom-control-label"
 																							htmlFor="inline-radio2"
 																						>
-																							Inclusive Vat
+																							Inclusive VAT
 																							</label>
 																					</div>
 																				</FormGroup>
@@ -1518,7 +1518,7 @@ class DetailExpense extends React.Component {
 																							className="custom-control-label"
 																							htmlFor="inline-radio1"
 																						>
-																						Exclusive Vat	
+																						Exclusive VAT	
 																							</label>
 																					</div>
 																				</FormGroup>
@@ -1535,7 +1535,7 @@ class DetailExpense extends React.Component {
 																checked={this.state.isReverseChargeEnabled}
 																onChange={(option)=>{
 																		this.setState({isReverseChargeEnabled:!this.state.isReverseChargeEnabled,exclusiveVat:false})
-																										// for resetting Vat
+																										// for resetting VAT
 																										props.handleChange('vatCategoryId')('');
 																	}}
 															/>

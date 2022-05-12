@@ -600,7 +600,7 @@ try {
 														'Product code is Required',
 													),
 													vatCategoryId: Yup.string()
-														.required('Vat Category is Required')
+														.required('VAT Category is Required')
 														.nullable(),
 												})}
 											>
@@ -908,7 +908,7 @@ try {
 																							'name',
 																							'id',
 																							vat_list,
-																							'Vat',
+																							'VAT',
 																					  )
 																					: []
 																			}
@@ -1120,7 +1120,7 @@ try {
 																		check
 																		htmlFor="vatIncluded"
 																	>
-																		Vat Include
+																		VAT Include
 																	</Label>
 																</FormGroup>
 															</Col>

@@ -1261,7 +1261,7 @@ renderName=(cell,row)=>{
 																							'name',
 																							'id',
 																							vat_list,
-																							'Vat',
+																							'VAT',
 																					  )
 																					: []
 																			}
@@ -1275,7 +1275,7 @@ renderName=(cell,row)=>{
 																						'name',
 																						'id',
 																						vat_list_data,
-																						'Vat',
+																						'VAT',
 																					)
 																					.find(
 																						(option) =>
@@ -1379,7 +1379,7 @@ renderName=(cell,row)=>{
 																			check
 																			htmlFor="vatIncluded"
 																		>
-																			Vat Include
+																			VAT Include
 																		</Label>
 																	</FormGroup>
 																</Col>

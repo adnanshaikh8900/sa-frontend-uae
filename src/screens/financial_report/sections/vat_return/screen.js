@@ -1300,7 +1300,7 @@ class VatReturnsReport extends React.Component {
 												</Table>
 											
 											<div >
-												<p><b>{strings.Net+" "+strings.Vat+" "+strings.Due}</b></p>
+												<p><b>{strings.Net+" "+strings.VAT+" "+strings.Due}</b></p>
 												<Table responsive className="table-bordered">
 												<thead className="thead-dark ">
 													<tr className="header-row">

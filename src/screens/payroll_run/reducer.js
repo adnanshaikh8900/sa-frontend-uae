@@ -15,7 +15,7 @@ const PayrollRunReducer = (state = initState, action) => {
     const { type, payload } = action
 
     switch (type) {
-        // Vat List
+        // VAT List
         case EMPLOYEEPAYROLL.PAYROLL_EMPLOYEE_LIST:
             return {
                 ...state,

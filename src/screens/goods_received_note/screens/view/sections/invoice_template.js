@@ -230,7 +230,7 @@ class RFQTemplate extends Component {
 									{/* <th style={{ padding: '0.5rem', textAlign: 'right' }}>
 										{strings.UnitCost }
 									</th>
-									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.Vat}</th>
+									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.VAT}</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
 										{strings.Total }
 									</th> */}
@@ -282,7 +282,7 @@ class RFQTemplate extends Component {
 									<b><u> {RFQData.totalAmount ? upperCase(RFQData.currencyName + " " +(toWords.convert(RFQData.totalAmount))+" ONLY") : " -" }
 								
 									</u></b></div>
-								<div className="pb-2">{strings.Vat+" "+strings.AmountInWords }:
+								<div className="pb-2">{strings.VAT+" "+strings.AmountInWords }:
 										<br/>
 									<b> {RFQData.totalVatAmount ? (upperCase(RFQData.currencyName + " " +(toWords.convert(RFQData.totalVatAmount))+" ONLY")) : " -" }</b>
 								

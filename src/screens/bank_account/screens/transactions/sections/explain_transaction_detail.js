@@ -1376,7 +1376,7 @@ class ExplainTrasactionDetail extends React.Component {
 																				'Expense' &&  props.values.expenseCategory !==34 &&(
 																					<Col lg={3}>
 																						<FormGroup className="mb-3">
-																							<Label htmlFor="vatId">{strings.Vat}</Label>
+																							<Label htmlFor="vatId">{strings.VAT}</Label>
 																							<Select
 																								options={
 																									vat_list

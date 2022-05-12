@@ -104,7 +104,7 @@ class FinancialReport extends React.Component {
 											this.toggle(0, '4');
 										}}
 									>
-										Vat Returns Report
+										VAT Returns Report
 									</NavLink>
 								</NavItem>
 							</Nav>

@@ -91,7 +91,7 @@ class DeleteModal extends React.Component {
 					this.props.commonActions.tostifyAlert(
 						'success',
 						res.data && res.data.message?res.data.message: 
-						'Vat Report File Deleted Successfully'
+						'VAT Report File Deleted Successfully'
 					);
 					this.props.closeModal(false);
 				}
@@ -99,7 +99,7 @@ class DeleteModal extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data ? err.data.message : 'Vat Report File Deleted Unsuccessfully'
+					err.data ? err.data.message : 'VAT Report File Deleted Unsuccessfully'
 				);
 				this.props.closeModal(false);
 			});
@@ -111,7 +111,7 @@ class DeleteModal extends React.Component {
 		const { initValue, loading } = this.state;
 		const message1 =
 			<text>
-				<b>Delete Vat Report File ?</b>
+				<b>Delete VAT Report File ?</b>
 			</text>
 		const message = 'This vat report file will be deleted permanently and cannot be recovered. ';
 		return (

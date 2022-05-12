@@ -388,7 +388,7 @@ class InvoiceTemplate extends Component {
 									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.DiscountType}</th>
 									<th style={{ padding: '0.5rem' }}>{strings.Excise}</th>
 									<th style={{ padding: '0.5rem',textAlign: 'right' }}>{strings.ExciseAmount}</th>
-									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.Vat }</th>
+									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.VAT }</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.VatAmount}</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
 									{strings.SubTotal }
@@ -488,7 +488,7 @@ class InvoiceTemplate extends Component {
 								<b><u>{invoiceData.totalAmount ? (upperCase(invoiceData.currencyName + " " +(toWords.convert(invoiceData.totalAmount))+" ONLY")).replace("POINT","AND") : " -" }
 									{/* <b> {parseInt(invoiceData.dueAmount)} */}
 									</u></b></div>
-								<div className="pl-5 pb-2">{strings.Vat+" "+strings.AmountInWords }:
+								<div className="pl-5 pb-2">{strings.VAT+" "+strings.AmountInWords }:
 										<br/>
 									<b><u> {invoiceData.totalVatAmount ? (upperCase(invoiceData.currencyName + " " +(toWords.convert(invoiceData.totalVatAmount))+" ONLY")).replace("POINT","AND") : " -" }</u></b>
 									{/* <b> {invoiceData.totalVatAmount}</b> */}
@@ -649,7 +649,7 @@ class InvoiceTemplate extends Component {
 										</tr>
 										<tr >
 											<td style={{ width: '40%' }}>
-												<strong>{strings.Vat }</strong>
+												<strong>{strings.VAT }</strong>
 											</td>
 											<td
 												style={{

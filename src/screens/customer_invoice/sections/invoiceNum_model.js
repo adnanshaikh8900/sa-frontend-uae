@@ -178,7 +178,7 @@ class InvoiceNumberModel extends React.Component {
 						// 	),
 						// 	productCode: Yup.string().required('Product code is required'),
 						// 	vatCategoryId: Yup.string()
-						// 		.required('Vat Category is Required')
+						// 		.required('VAT Category is Required')
 						// 		.nullable(),
 						// })}
 					>

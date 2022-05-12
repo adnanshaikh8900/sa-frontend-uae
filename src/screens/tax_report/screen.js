@@ -149,7 +149,7 @@ class TaxReport extends React.Component {
                   <Form onSubmit={this.handleSubmit} name="simpleForm">
                     <div className="flex-wrap d-flex">
                       <FormGroup>
-                        <Label htmlFor="name">Vat:</Label>
+                        <Label htmlFor="name">VAT:</Label>
                         <div className="account-type">
                           <Select
                             options={vatOptions}

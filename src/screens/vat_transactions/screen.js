@@ -362,7 +362,7 @@ class VatTransactions extends React.Component {
 											className=""
 											options={vatOptions}
 											value={filterData.vat_type}
-											placeholder="Vat Type"
+											placeholder="VAT Type"
 											onChange={(option) => {
 												if (option && option.value) {
 													this.handleChange(option, 'vat_type');

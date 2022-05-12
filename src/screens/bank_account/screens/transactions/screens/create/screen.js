@@ -983,7 +983,7 @@ class CreateBankTransaction extends React.Component {
 																			'Expense'  && props.values.expenseCategory && props.values.expenseCategory.value !==34 && (
 																			<Col lg={3}>
 																				<FormGroup className="mb-3">
-																					<Label htmlFor="vatId">Vat</Label>
+																					<Label htmlFor="vatId">VAT</Label>
 																					<Select
 																						styles={customStyles}
 																						options={

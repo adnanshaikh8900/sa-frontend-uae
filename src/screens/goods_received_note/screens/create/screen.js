@@ -854,18 +854,18 @@ this.state.data.map((obj, index) => {
 										'name',
 										'id',
 										vat_list,
-										'Vat',
+										'VAT',
 								  )
 								: []
 						}
 						value={
 							vat_list &&
 							selectOptionsFactory
-								.renderOptions('name', 'id', vat_list, 'Vat')
+								.renderOptions('name', 'id', vat_list, 'VAT')
 								.find((option) => option.value === +row.vatCategoryId)
 						}
 						id="vatCategoryId"
-						placeholder={strings.Select+strings.Vat}
+						placeholder={strings.Select+strings.VAT}
 						onChange={(e) => {
 							this.selectItem(
 								e.value,

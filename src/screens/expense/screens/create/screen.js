@@ -222,7 +222,7 @@ class CreateExpense extends React.Component {
 
 						     	let tax=	selectOptionsFactory.renderOptions('name','id',this.state.taxTreatmentList,	'Tax Treatment',).find((option)=> option.value==res.data.taxTreatmentId)
 								this.formRef.current.setFieldValue('taxTreatmentId',tax, true);
-debugger
+
 							   let placeofSupply=this.state.placelist.find(	(option) =>option.value == res.data.placeOfSupplyId,	)	
 								this.formRef.current.setFieldValue('placeOfSupplyId', placeofSupply, true);
 
@@ -271,18 +271,6 @@ debugger
 	}
 
 
-	getSnapshotBeforeUpdate(prevProps, prevState) {
-		if (prevProps.pay_to_list.length < this.props.pay_to_list.length) {
-			if (this.state.count === 0) {
-				let obj = {value: "Company Expense",label: "Company Expense" }
-			this.props.pay_to_list.unshift(obj)
-			}
-			this.setState({
-				count: 1
-			})
-		}
-		return null;
-	  }
 	componentDidMount = () => {
 		this.initializeData();
 		this.getExpenseNumber();

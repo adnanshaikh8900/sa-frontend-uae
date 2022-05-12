@@ -134,19 +134,7 @@ class DetailExpense extends React.Component {
 			'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 		];
 	}
-	componentDidUpdate(prevProps, prevState) {
-		if (prevProps.pay_to_list.length < this.props.pay_to_list.length) {
-			if (this.state.count === 0) {
-				let obj = {value: "Company Expense",label: "Company Expense" }
-			this.props.pay_to_list.unshift(obj)
-			}
-			this.setState({
-				count: 1
-			})
-			console.log(this.props.pay_to_list)
-		}
-		return null;
-	  }
+
 	componentDidMount = () => {
 		this.getTaxTreatmentList();	
 		this.getcurentCompanyUser();

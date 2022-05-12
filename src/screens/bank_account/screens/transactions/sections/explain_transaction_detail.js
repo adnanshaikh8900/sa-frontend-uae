@@ -319,7 +319,7 @@ class ExplainTrasactionDetail extends React.Component {
 			transactionCategoryList: [],
 		}));
 	};
-	getCompanyCurrency = (basecurrency) => {
+	getCompanyCurrency = () => {
 		this.props.currencyConvertActions
 			.getCompanyCurrency()
 			.then((res) => {
@@ -1376,7 +1376,7 @@ class ExplainTrasactionDetail extends React.Component {
 																				'Expense' &&  props.values.expenseCategory !==34 &&(
 																					<Col lg={3}>
 																						<FormGroup className="mb-3">
-																							<Label htmlFor="vatId">{strings.Vat}</Label>
+																							<Label htmlFor="vatId">{strings.VAT}</Label>
 																							<Select
 																								options={
 																									vat_list
@@ -1938,8 +1938,8 @@ class ExplainTrasactionDetail extends React.Component {
 																</Row>
 																{props.values.coaCategoryId &&
 																	props.values.coaCategoryId.label ===
-																	'Expense' && (
-																		<Row  style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
+																	'Expense' &&  (
+																		<Row style={{display: this.state.bankAccountCurrency === this.state.basecurrency.currencyCode ? 'none': ''}}>
 																			<Col lg={3}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="currencyCode"><span className="text-danger">* </span>
@@ -2066,7 +2066,7 @@ class ExplainTrasactionDetail extends React.Component {
 																	'Sales' && 
 																
 																	(
-																		<Row>
+																		<Row style={{display: this.state.bankAccountCurrency === this.state.basecurrency.currencyCode ? 'none': ''}}>
 																			<Col lg={3}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="currencyCode">
@@ -2199,12 +2199,8 @@ class ExplainTrasactionDetail extends React.Component {
 																{props.values.coaCategoryId &&
 																	props.values.coaCategoryId.label ===
 																	'Supplier Invoice' &&
-
-																	this.state.bankAccountCurrency != this.state.supplier_currencyCode ||
-																	this.state.bankAccountCurrency != this.state.basecurrency ||
-																	this.state.basecurrency != this.state.supplier_currencyCode &&
 																	(
-																		<Row>
+																		<Row style={{display: this.state.bankAccountCurrency === this.state.basecurrency.currencyCode ? 'none': ''}}>
 																			<Col lg={3}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="currencyCode">

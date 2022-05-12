@@ -329,7 +329,7 @@ class VatSettingModal extends React.Component {
 																checked={this.state.isReverseChargeEnabled}
 																onChange={(option) => {
 																	this.setState({ isReverseChargeEnabled: !this.state.isReverseChargeEnabled })
-																	// for resetting Vat
+																	// for resetting VAT
 																	props.handleChange('vatCategoryId')('');
 																}}
 															/>

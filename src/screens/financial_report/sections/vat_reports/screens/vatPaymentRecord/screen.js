@@ -166,7 +166,7 @@ class VatPaymentRecord extends React.Component {
 												}}
 												onClick={this.viewFilter}
 											>
-												<i className="fa fa-history mr-2"></i>Vat Payment Record
+												<i className="fa fa-history mr-2"></i>VAT Payment Record
 											</p>
 										</div>
 										<div className="d-flex">
@@ -218,7 +218,7 @@ class VatPaymentRecord extends React.Component {
 												: 'ABC GROUP'}
 											</h2>	
 											<br style={{ marginBottom: '5px' }} />
-											<b style ={{ fontSize: '18px'}}>Vat Payment Record</b>
+											<b style ={{ fontSize: '18px'}}>VAT Payment Record</b>
 											<br style={{ marginBottom: '5px' }} />
 											<br/>
 										

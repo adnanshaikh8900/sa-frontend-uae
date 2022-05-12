@@ -1238,7 +1238,7 @@ class DetailContact extends React.Component {
 																									'name',
 																									'id',
 																									taxTreatmentList,
-																									'Vat',
+																									'VAT',
 																								)
 																								: []
 																						}

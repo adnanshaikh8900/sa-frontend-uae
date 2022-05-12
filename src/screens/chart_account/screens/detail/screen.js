@@ -213,7 +213,7 @@ class DetailChartAccount extends React.Component {
 		});
 	};
 
-	// Create or Edit Vat
+	// Create or Edit VAT
 	handleSubmit = (data, resetForm) => {
 		this.setState({ disabled: true });
 		const id = this.props.location.state.id;

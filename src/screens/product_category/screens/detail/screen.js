@@ -104,7 +104,7 @@ class DetailProductCategory extends React.Component {
     }
   }
 
-  // Create or Edit Vat
+  // Create or Edit VAT
   handleSubmit = (data) => {
     this.setState({ disabled: true });
     const { id, productCategoryName, productCategoryCode } = data;

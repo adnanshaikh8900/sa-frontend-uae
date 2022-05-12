@@ -137,7 +137,7 @@ class VatReports extends React.Component {
 			postingRefId: row.id,
 			postingRefType: 'PUBLISH',
 		};
-		this.setState({ loading:true, loadingMsg:"Vat UnFiling..."});
+		this.setState({ loading:true, loadingMsg:"VAT UnFiling..."});
 		this.props.vatreport
 			.markItUnfiled(postingRequestModel)
 			.then((res) => {
@@ -145,7 +145,7 @@ class VatReports extends React.Component {
 					this.props.commonActions.tostifyAlert(
 						'success',
 						res.data && res.data.message?res.data.message: 
-						' Vat UnFiled Successfully'
+						' VAT UnFiled Successfully'
 					);
 					this.getInitialData()
 					this.setState({ loading:false,});
@@ -596,7 +596,7 @@ class VatReports extends React.Component {
 						{dialog}
 						{/* <Card className="m-5  p-1 ">
 						
-							<CardBody className="text-center " style={{    border: '2px solid '}} onClick={()=>{this.props.history.push("/admin/report/vatreport")}}>	<h4>Vat Report</h4>	</CardBody>
+							<CardBody className="text-center " style={{    border: '2px solid '}} onClick={()=>{this.props.history.push("/admin/report/vatreport")}}>	<h4>VAT Report</h4>	</CardBody>
 						</Card>
 						<Card className="m-5  p-1 ">
 							<CardBody className="text-center "  style={{    border: '2px solid '}}>	<h4>Excise Tax Report</h4>	</CardBody>
@@ -607,7 +607,7 @@ class VatReports extends React.Component {
 						</Card > */}
 
 						<CardBody>
-							{/* <div 	className="text-center mb-4 mt-2 " > <h1>Vat Report</h1></div> */}
+							{/* <div 	className="text-center mb-4 mt-2 " > <h1>VAT Report</h1></div> */}
 							<Row>
 								<Col lg={12} className="mb-5">
 									<div className="table-wrapper">
@@ -650,7 +650,7 @@ class VatReports extends React.Component {
 												onClick={() => {
 													this.setState({ openVatSettingModal: true })
 												}}>
-												<i className="fa fa-cog mr-2"></i> Vat Settings
+												<i className="fa fa-cog mr-2"></i> VAT Settings
 											</Button> */}
 
 										</FormGroup>

@@ -213,7 +213,7 @@ class GoodsReceivedNote extends React.Component {
 						</label>
 					</div>
 					<div style={{display: row.totalVatAmount === 0 ? 'none' : ''}}>
-					<label className="font-weight-bold mr-2">Vat Amount : </label>
+					<label className="font-weight-bold mr-2">VAT Amount : </label>
 					<label>{row.totalVatAmount === 0  ?  row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) :  row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}</label>
 					</div>
 					

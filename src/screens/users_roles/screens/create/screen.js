@@ -134,7 +134,7 @@ class CreateRole extends React.Component {
 		});
 	};
 
-	// Create or Edit Vat
+	// Create or Edit VAT
 	handleSubmit = (data, resetForm) => {
 		
 		let index =this.state.checked ? this.state.checked.indexOf('SelectAll') :-1;

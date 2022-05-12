@@ -262,7 +262,7 @@ class ViewPurchaseOrder extends React.Component {
 			    {strings.Total+" "+strings.Amount }
 				</th>
 				{/* <th style={{ padding: '0.5rem', textAlign: 'left' }}>
-				TOTAL Vat Amount
+				TOTAL VAT Amount
 				</th> */}
 			
 			</tr>

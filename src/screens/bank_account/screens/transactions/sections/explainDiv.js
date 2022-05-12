@@ -391,7 +391,7 @@ class explainDiv extends React.Component {
 															<div className="col-md-6">
 																<div className="form-group row align-items-center ">
 																	<Label className="label col-sm-3">
-																		Vat Included
+																		VAT Included
 																	</Label>
 																	<div className="col-sm-9">
 																		<Select

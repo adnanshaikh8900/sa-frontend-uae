@@ -176,12 +176,12 @@ class UpdateRole extends React.Component {
 
 	// Show Success Toast
 	success = () => {
-		toast.success('Vat Code Updated successfully... ', {
+		toast.success('VAT Code Updated successfully... ', {
 			position: toast.POSITION.TOP_RIGHT,
 		});
 	};
 
-	// Create or Edit Vat
+	// Create or Edit VAT
 	handleSubmit = (data, resetForm) => {
 		this.setState({ disabled: true });
 		

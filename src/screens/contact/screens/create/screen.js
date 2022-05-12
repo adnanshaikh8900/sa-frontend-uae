@@ -966,7 +966,7 @@ class CreateContact extends React.Component {
 																								'name',
 																								'id',
 																								taxTreatmentList,
-																								'Vat',
+																								'VAT',
 																							)
 																							: []
 																					}

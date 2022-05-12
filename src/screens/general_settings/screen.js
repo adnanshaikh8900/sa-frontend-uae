@@ -179,6 +179,7 @@ class GeneralSettings extends React.Component {
 	};
 
 	handleSubmit = (data) => {
+		debugger
 		const { selected_smtp_auth, selected_smtp_enable, message } = this.state;
 		const postData = {
 			id: data.id,
@@ -745,7 +746,7 @@ class GeneralSettings extends React.Component {
 																					</tr>
 																					<tr>
 																						<td>{'{invoiceVatAmount}'}</td>
-																						<td>Invoice Vat Amount</td>
+																						<td>Invoice VAT Amount</td>
 																					</tr>
 																					<tr>
 																						<td>{'{product}'}</td>
@@ -810,6 +811,7 @@ class GeneralSettings extends React.Component {
 																			color="primary"
 																			className="btn-square"
 																			onClick={() => {
+																				this.handleSubmit(props.values)
 																				this.props.history.push(
 																					'/admin/dashboard',
 																				);

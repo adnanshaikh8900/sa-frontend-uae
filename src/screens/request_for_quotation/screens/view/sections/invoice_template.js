@@ -241,7 +241,7 @@ class RFQTemplate extends Component {
 									</th>
 									<th style={{ padding: '0.5rem' }}>{strings.Excise}</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.ExciseAmount}</th>
-									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.Vat}</th>
+									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.VAT}</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.VatAmount}</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
 										{strings.Total }
@@ -316,7 +316,7 @@ class RFQTemplate extends Component {
 									<b><u> {RFQData.totalAmount ? upperCase(RFQData.currencyName + " " +(toWords.convert(RFQData.totalAmount))+" ONLY").replace("POINT","AND") : " -" }
 									{/* <b> {parseInt(RFQData.dueAmount)} */}
 									</u></b></div>
-								<div className="pb-2">{strings.Vat+" "+strings.AmountInWords }:
+								<div className="pb-2">{strings.VAT+" "+strings.AmountInWords }:
 										<br/>
 									<b>{RFQData.totalVatAmount ? (upperCase(RFQData.currencyName + " " +(toWords.convert(RFQData.totalVatAmount))+" ONLY")).replace("POINT","AND") : " -" }</b>
 									{/* <b> {RFQData.totalVatAmount}</b> */}
@@ -376,7 +376,7 @@ class RFQTemplate extends Component {
 										
 										<tr >
 											<td style={{ width: '40%' }}>
-												<strong>{strings.Vat }</strong>
+												<strong>{strings.VAT }</strong>
 											</td>
 											<td
 												style={{

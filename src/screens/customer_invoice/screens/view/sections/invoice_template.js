@@ -305,7 +305,7 @@ class InvoiceTemplate extends Component {
 										<div className="mb-1 ml-2">{companyData.companyStateName}</div>
 										<div className="mb-1 ml-2">{companyData.companyCountryName}</div>
 										<div className="mb-1 ml-2">{strings.CompanyRegistrationNo} : {companyData.companyRegistrationNumber}</div>
-										<div className="mb-1 ml-2">{strings.VATRegistrationNo} : {companyData.vatRegistrationNumber}</div>
+										{companyData.isRegisteredVat==true&&(<div className="mb-1 ml-2">{strings.VATRegistrationNo} : {companyData.vatRegistrationNumber}</div>)}
 										<div className="mb-1 ml-2">{strings.MobileNumber} : {this.companyMobileNumber(companyData.phoneNumber ? "+" + companyData.phoneNumber : '')}</div>
 										{companyData.emailAddress&&(<div className="mb-1 ml-2">Email : {companyData.emailAddress}</div>)}
 									</div>
@@ -351,7 +351,7 @@ class InvoiceTemplate extends Component {
 											:contactData.postZipCode ? contactData.postZipCode : ""
 											)}
 									</div>
-									<div className="mb-1 ml-2">{strings.VATRegistrationNo} :  {invoiceData.taxRegistrationNo}</div>
+									{invoiceData && invoiceData.taxTreatment&& invoiceData.taxTreatment.includes("NON")==false &&(<div className="mb-1 ml-2">{strings.VATRegistrationNo} :  {invoiceData.taxRegistrationNo}</div>)}
 									{contactData && contactData.mobileNumber && (<div className="mb-1 ml-2">{strings.MobileNumber} :+{contactData.mobileNumber}</div>)}
 									{contactData && contactData.billingEmail && (<div className="mb-1 ml-2">{strings.Email} : {contactData.billingEmail}</div>)}
 									{/* <span className="mb-1 ml-2"><b>{strings.Status} : </b> {this.renderInvoiceStatus(invoiceData.status)}</span> */}
@@ -424,11 +424,9 @@ class InvoiceTemplate extends Component {
 										{/* <th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.Excise}</th> */}
 										<th style={{ padding: '0.5rem', textAlign: 'right',width:"10%" }}>{strings.ExciseAmount}</th>
 									</>)}
-									{/* <th style={{ padding: '0.5rem', textAlign: 'right' ,width:"5%" }}>{strings.Vat}</th> */}
+									{/* <th style={{ padding: '0.5rem', textAlign: 'right' ,width:"5%" }}>{strings.VAT}</th> */}
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.VatAmount}</th>
-									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
-										{strings.SubTotal}
-									</th>
+									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.SubTotal}</th>
 								</tr>
 							</thead>
 							<tbody className=" table-hover">
@@ -640,7 +638,7 @@ class InvoiceTemplate extends Component {
 											</tr>
 											<tr >
 												<td style={{ width: '40%' }}>
-													<strong>{strings.Vat}</strong>
+													<strong>{strings.VAT}</strong>
 												</td>
 												<td
 													style={{
@@ -796,10 +794,9 @@ class InvoiceTemplate extends Component {
 																			// rows="5"
 																			value={invoiceData.footNote}
 																		/>
-						<br />
-
-                    </CardBody>
-					<img className='mt-5' src={footer} style={{ height: "65px", width: "100%" }}></img>
+						<br /><br/><br/>
+						</CardBody>
+					<img className='footer' src={footer} style={{ height: "65px", width: "100%" }}></img>
 				</Card>
 			</div>
 			

@@ -96,7 +96,7 @@ class DetailExpense extends React.Component {
 			showReverseCharge:false,
 			lockPlacelist:false,
 			isDesignatedZone:true,
-			taxTreatmentList:[],
+			taxTreatmentList:[],count:0,
 			placelist : [
 				{ label: 'Abu Dhabi', value: '1' },
 				{ label: 'Dubai', value: '2' },
@@ -195,7 +195,7 @@ class DetailExpense extends React.Component {
 								current_expense_id: this.props.location.state.expenseId,
 								initValue: {
 									expenseNumber:res.data.expenseNumber,
-									payee: res.data.payee,
+									payee: res.data.payee ? res.data.payee : '',
 									expenseDate: res.data.expenseDate ? res.data.expenseDate : '',
 									currency: res.data.currencyCode ? res.data.currencyCode : '',
 									currencyName:res.data.currencyName ? res.data.currencyName : '',
@@ -225,6 +225,7 @@ class DetailExpense extends React.Component {
 									taxTreatmentId:res.data.taxTreatmentId ?res.data.taxTreatmentId:'',
 									
 								},
+								payee: res.data.payee ? res.data.payee : '',
 								expenseType: res.data.expenseType ? true : false,
 								showPlacelist:res.data.taxTreatmentId !=8?true:false,
 								lockPlacelist:res.data.taxTreatmentId ==7?true:false,
@@ -236,7 +237,6 @@ class DetailExpense extends React.Component {
 										: false,
 							},
 							() => {
-								
 								if (
 									this.props.location.state &&
 									this.props.location.state.view
@@ -705,6 +705,7 @@ class DetailExpense extends React.Component {
 
 		return array;
 	}
+
 	render() {
 		strings.setLanguage(this.state.language);
 		const {
@@ -950,7 +951,7 @@ class DetailExpense extends React.Component {
 																						option,
 																					);
 																					props.handleChange('placeOfSupplyId')('');
-																							// for resetting Vat
+																							// for resetting VAT
 																					props.handleChange('vatCategoryId')('');
 																					//placelist Setup
 																					this.placelistSetting(option,props)
@@ -1037,7 +1038,7 @@ class DetailExpense extends React.Component {
 																</FormGroup>
 															</Col>)}
 
-															<Col className='mb-4' lg={4}>
+															<Col className='mb-4' lg={3}>
 															<Label htmlFor="inline-radio3"><span className="text-danger">* </span>{strings.ExpenseType}</Label>
 															<div>
 																{this.state.expenseType === false ?
@@ -1128,6 +1129,45 @@ class DetailExpense extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
+																
+																<Col lg={3}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="expense_date">
+																			<span className="text-danger">* </span>
+																			 {strings.ExpenseDate}
+																		</Label>
+																		<DatePicker
+																			id="date"
+																			name="expenseDate"
+																			className={`form-control ${
+																				props.errors.expenseDate &&
+																				props.touched.expenseDate
+																					? 'is-invalid'
+																					: ''
+																			}`}
+																			placeholderText={strings.ExpenseDate}
+																			value={moment(
+																				props.values.expenseDate,
+																			).format('DD-MM-YYYY')}
+																			showMonthDropdown
+																			showYearDropdown
+																			dropdownMode="select"
+																			dateFormat="dd-MM-yyyy"
+																			//minDate={new Date()}
+																			onChange={(value) => {
+																				props.handleChange('expenseDate')(
+																					value,
+																				);
+																			}}
+																		/>
+																		{props.errors.expenseDate &&
+																			props.touched.expenseDate && (
+																				<div className="invalid-feedback">
+																					{props.errors.expenseDate}
+																				</div>
+																			)}
+																	</FormGroup>
+																</Col>
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="payee">	<span className="text-danger">* </span>{strings.PaidBy}</Label>
@@ -1177,44 +1217,50 @@ class DetailExpense extends React.Component {
 																		/>
 																	</FormGroup>
 																</Col>
+															</Row>
+															<Row>
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
-																		<Label htmlFor="expense_date">
+																		<Label htmlFor="expenseAmount">
 																			<span className="text-danger">* </span>
-																			 {strings.ExpenseDate}
+																			{strings.Amount}
 																		</Label>
-																		<DatePicker
-																			id="date"
-																			name="expenseDate"
-																			className={`form-control ${
-																				props.errors.expenseDate &&
-																				props.touched.expenseDate
+																		<Input
+																			type="text"
+																			// min="0"
+																			name="expenseAmount"
+																			maxLength="14,2"
+																			id="expenseAmount"
+																			rows="5"
+																			className={
+																				props.errors.expenseAmount &&
+																				props.touched.expenseAmount
 																					? 'is-invalid'
 																					: ''
-																			}`}
-																			placeholderText={strings.ExpenseDate}
-																			value={moment(
-																				props.values.expenseDate,
-																			).format('DD-MM-YYYY')}
-																			showMonthDropdown
-																			showYearDropdown
-																			dropdownMode="select"
-																			dateFormat="dd-MM-yyyy"
-																			//minDate={new Date()}
-																			onChange={(value) => {
-																				props.handleChange('expenseDate')(
-																					value,
-																				);
+																			}
+																			onChange={(option) => {
+																				if (
+																					option.target.value === '' ||
+																					this.regDecimal.test(
+																						option.target.value,
+																					)
+																				) {
+																					props.handleChange('expenseAmount')(
+																						option,
+																					);
+																				}
 																			}}
+																			value={props.values.expenseAmount}
 																		/>
-																		{props.errors.expenseDate &&
-																			props.touched.expenseDate && (
+																		{props.errors.expenseAmount &&
+																			props.touched.expenseAmount && (
 																				<div className="invalid-feedback">
-																					{props.errors.expenseDate}
+																					{props.errors.expenseAmount}
 																				</div>
 																			)}
 																	</FormGroup>
 																</Col>
+																{this.renderVat(props)}	
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="currency">
@@ -1267,51 +1313,7 @@ class DetailExpense extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
-															</Row>
-															<Row>
-																<Col lg={3}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="expenseAmount">
-																			<span className="text-danger">* </span>
-																			{strings.Amount}
-																		</Label>
-																		<Input
-																			type="text"
-																			// min="0"
-																			name="expenseAmount"
-																			maxLength="14,2"
-																			id="expenseAmount"
-																			rows="5"
-																			className={
-																				props.errors.expenseAmount &&
-																				props.touched.expenseAmount
-																					? 'is-invalid'
-																					: ''
-																			}
-																			onChange={(option) => {
-																				if (
-																					option.target.value === '' ||
-																					this.regDecimal.test(
-																						option.target.value,
-																					)
-																				) {
-																					props.handleChange('expenseAmount')(
-																						option,
-																					);
-																				}
-																			}}
-																			value={props.values.expenseAmount}
-																		/>
-																		{props.errors.expenseAmount &&
-																			props.touched.expenseAmount && (
-																				<div className="invalid-feedback">
-																					{props.errors.expenseAmount}
-																				</div>
-																			)}
-																	</FormGroup>
-																</Col>
-																{this.renderVat(props)}	
-											
+																{this.state.payee === 'Company Expense' ? 
 																	<Col lg={3}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="pay_through"><span className="text-danger">* </span>
@@ -1327,7 +1329,7 @@ class DetailExpense extends React.Component {
 																								'label',
 																								'value',
 																								pay_mode_list,
-																								'',
+																								'pay_through',
 																						  )
 																						: []
 																				}
@@ -1366,7 +1368,8 @@ class DetailExpense extends React.Component {
 																				)}
 																		</FormGroup>
 																	</Col>
-																{!props.values.payee &&
+																	:''}
+																{/* {!props.values.payee &&
 																	props.values.payMode === 'BANK' && (
 																		<Col lg={3}>
 																			<FormGroup className="mb-3">
@@ -1422,9 +1425,9 @@ class DetailExpense extends React.Component {
 																					)}
 																			</FormGroup>
 																		</Col>
-																	)}
+																	)} */}
 															</Row>
-															{props.values.vatCategoryId !=='' && props.values.vatCategoryId.label !=='Select Vat' &&
+															{props.values.vatCategoryId !=='' && props.values.vatCategoryId.label !=='Select VAT' &&
 															props.values.vatCategoryId.value ===1 && 
 															// props.values.vatCategoryId.value !==4 && 
 															// props.values.vatCategoryId.value !==10 &&
@@ -1484,7 +1487,7 @@ class DetailExpense extends React.Component {
 																							className="custom-control-label"
 																							htmlFor="inline-radio2"
 																						>
-																							Inclusive Vat
+																							Inclusive VAT
 																							</label>
 																					</div>
 																				</FormGroup>
@@ -1515,7 +1518,7 @@ class DetailExpense extends React.Component {
 																							className="custom-control-label"
 																							htmlFor="inline-radio1"
 																						>
-																						Exclusive Vat	
+																						Exclusive VAT	
 																							</label>
 																					</div>
 																				</FormGroup>
@@ -1532,7 +1535,7 @@ class DetailExpense extends React.Component {
 																checked={this.state.isReverseChargeEnabled}
 																onChange={(option)=>{
 																		this.setState({isReverseChargeEnabled:!this.state.isReverseChargeEnabled,exclusiveVat:false})
-																										// for resetting Vat
+																										// for resetting VAT
 																										props.handleChange('vatCategoryId')('');
 																	}}
 															/>
@@ -1627,7 +1630,7 @@ class DetailExpense extends React.Component {
 																			maxLength="255"
 																			name="notes"
 																			id="notes"
-																			rows="2"
+																			minRows={2}
 																			placeholder={strings.DeliveryNotes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)

@@ -276,11 +276,18 @@ renderSalaryDate=(cell,row)=>{
 
 						<CardBody>
 							<Row>
-								<Col lg={12}>
+								<Col>
 									<div className="h6 mb-4 d-flex align-items-center">
 
 										<h3>{upperFirst(this.state.EmployeeDetails.fullName)}</h3>
 									</div>
+								</Col>
+								<Col>
+								<div className='pull-right'>
+								                                                <Button  
+                                                                                    onClick={()=>{this.props.history.push('/admin/master/employee')}}
+                                                                                           > X </Button>
+								</div>
 								</Col>
 							</Row>
 							<Nav tabs pills>
@@ -480,9 +487,19 @@ renderSalaryDate=(cell,row)=>{
 												<div className='m-4'>
 													<Row style={{ width: '63%' }}>
 														<Col><h5> {strings.AnnualCTC} </h5>
-															<div><h3>  {this.state.CTC  ? (this.state.CTC).toLocaleString() : ''}</h3></div></Col>
+															<div><h3>  {this.state.CTC  ?
+																			this.state.EmployeeDetails.ctcType=="ANNUALLY"?
+																						(this.state.CTC).toLocaleString()
+																						:
+																						(parseFloat(this.state.CTC)*12).toLocaleString()															
+														               	: ''}</h3></div></Col>
 														<Col><h5> {strings.MonthlyIncome} </h5>
-															<div> <h3>{this.state.CTC ? (this.state.CTC /12).toLocaleString() : ''}</h3></div></Col>
+															<div> <h3>{this.state.CTC ?
+															this.state.EmployeeDetails.ctcType=="ANNUALLY"?
+														                            	(this.state.CTC /12).toLocaleString()
+																						:
+																						(this.state.CTC).toLocaleString()
+															 : ''}</h3></div></Col>
 															<Col>
 																		<Button
 																		className={`btn-square pull-right mb-2 mr-3 ${
@@ -493,7 +510,10 @@ renderSalaryDate=(cell,row)=>{
 																		
 																			style={{ marginBottom: '10px' }}
 																			onClick={() => this.props.history.push(`/admin/payroll/employee/updateSalaryComponent`,
-																				{ id: this.state.current_employee_id })}
+																				{ id: this.state.current_employee_id,ctcTypeOption:this.state.EmployeeDetails.ctcType=="ANNUALLY" ?
+																																			 {label:this.state.EmployeeDetails.ctcType,value:1}
+																																			:{label:this.state.EmployeeDetails.ctcType,value:2}
+																																		 })}
 																				
 																				title={
 																					this.disable()
@@ -573,8 +593,20 @@ renderSalaryDate=(cell,row)=>{
 																		))) : (<tr></tr>)}
 																	<tr style={{border:"3px solid #dfe9f7"}}>
 																		<td className="text-left"><h5><b> {strings.CosttoCompany}</b></h5></td>
-																		<td className="text-right"><h5>{this.state.CTC ? (this.state.CTC / 12).toLocaleString() : 0}</h5></td>
-																		<td className="text-right"><h5>{this.state.CTC  ? (this.state.CTC).toLocaleString() : 0}</h5></td>
+																		<td className="text-right"><h5> 
+																		   
+																		   {this.state.CTC ?
+														                 	this.state.EmployeeDetails.ctcType=="ANNUALLY"?
+														                            	(this.state.CTC /12).toLocaleString()
+																						:
+																						(this.state.CTC).toLocaleString()
+															 : ''}</h5></td>
+																		<td className="text-right"><h5>{this.state.CTC  ?
+																			this.state.EmployeeDetails.ctcType=="ANNUALLY"?
+																						(this.state.CTC).toLocaleString()
+																						:
+																						(parseFloat(this.state.CTC)*12).toLocaleString()															
+														               	: ''}</h5></td>
 																	</tr>
 																</tfoot>
 															</Table>

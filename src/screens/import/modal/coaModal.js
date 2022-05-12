@@ -209,7 +209,7 @@ class AddEmployeesModal extends React.Component {
 	// }
 
 
-	// Create or Edit Vat
+	// Create or Edit VAT
 
 	validationCheck = (value) => {
 		const data = {

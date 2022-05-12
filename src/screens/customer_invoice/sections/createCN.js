@@ -438,7 +438,7 @@ class CreateCreditNoteModal extends React.Component {
 	renderVat = (cell, row, props) => {
 		const { vat_list } = this.props;
 		let vatList = vat_list.length
-			? [{ id: '', vat: 'Select Vat' }, ...vat_list]
+			? [{ id: '', vat: 'Select VAT' }, ...vat_list]
 			: vat_list;
 		let idx;
 		this.state.selectedData.invoiceLineItems.map((obj, index) => {
@@ -461,18 +461,18 @@ class CreateCreditNoteModal extends React.Component {
 										'name',
 										'id',
 										vat_list,
-										'Vat',
+										'VAT',
 								  )
 								: []
 						}
 						value={
 							vat_list &&
 							selectOptionsFactory
-								.renderOptions('name', 'id', vat_list, 'Vat')
+								.renderOptions('name', 'id', vat_list, 'VAT')
 								.find((option) => option.value === +row.vatCategoryId)
 						}
 						id="vatCategoryId"
-						placeholder={strings.Select+strings.Vat}
+						placeholder={strings.Select+strings.VAT}
 						onChange={(e) => {
 							this.selectItem(
 								e.value,
@@ -535,7 +535,7 @@ class CreateCreditNoteModal extends React.Component {
 								.find((option) => option.value === +row.exciseTaxId)
 						}
 						id="exciseTaxId"
-						placeholder={strings.Select+strings.Vat}
+						placeholder={strings.Select+strings.VAT}
 						onChange={(e) => {
 							this.selectItem(
 								e.value,

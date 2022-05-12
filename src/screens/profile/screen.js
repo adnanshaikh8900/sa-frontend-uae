@@ -1512,7 +1512,7 @@ class Profile extends React.Component {
 																{
 																	is: (value) => value === true,
 																	then: Yup.string().required(
-																		'Vat Registration Date is Required',
+																		'VAT Registration Date is Required',
 																	),
 																	otherwise: Yup.string(),
 																},
@@ -2540,7 +2540,7 @@ class Profile extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="date">
 																			<span className="text-danger">* </span>
-																			Vat Registration Date
+																			VAT Registration Date
 																		</Label>
 																		<DatePicker
 																			id="vatRegistrationDate"
@@ -3178,7 +3178,7 @@ class Profile extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="expense_date">
 																			<span className="text-danger">* </span>
-																			Vat Registered On 
+																			VAT Registered On 
 																		</Label>
 																		<DatePicker
 																			id="date"
@@ -3216,7 +3216,7 @@ class Profile extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="date">
 																			<span className="text-danger">* </span>
-																			Vat Registration Date
+																			VAT Registration Date
 																		</Label>
 																		<DatePicker
 																			id="vatRegistrationDate"

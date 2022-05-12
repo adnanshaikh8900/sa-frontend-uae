@@ -213,7 +213,7 @@ class DetailTransactionCategory extends React.Component {
     })
   }
 
-  // Get All Transaction Vat Categories
+  // Get All Transaction VAT Categories
   getTransactionVatCategories = () => {
     this.setState({ loading: true })
     this.props.transactionActions.getTransactionVatCategories().then((res) => {
@@ -412,7 +412,7 @@ class DetailTransactionCategory extends React.Component {
                         </FormGroup>
                         <FormGroup>
                           <Label htmlFor="selectCategoryCode">
-                            Vat Code
+                          VAT Code
                           </Label>
                           <Select
                             id="selectCategoryCode"

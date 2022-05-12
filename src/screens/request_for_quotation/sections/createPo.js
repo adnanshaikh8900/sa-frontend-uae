@@ -440,7 +440,7 @@ min="0"
 								.find((option) => option.value ==row.exciseTaxId)
 						}
 						id="exciseTaxId"
-						placeholder={strings.Select+strings.Vat}
+						placeholder={strings.Select+strings.VAT}
 						onChange={(e) => {
 							this.selectItem(
 								e.value,

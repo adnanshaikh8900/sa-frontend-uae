@@ -1118,9 +1118,8 @@ class DetailQuotation extends React.Component {
 	};
 
 	updateAmount = (data, props) => {
-		
-		const { excise_list} = this.state;
-		const { discountPercentage, discountAmount, vat_list } = this.state;
+		const { vat_list , excise_list} = this.state;
+		const { discountPercentage, discountAmount } = this.state;
 		let total_net = 0;
 		let total_excise = 0;
 		let total = 0;
@@ -1136,7 +1135,7 @@ class DetailQuotation extends React.Component {
 
 			//Excise calculation
 			if(this.state.taxType === false){
-				if (obj.discountType === 'PERCENTAGE') {	
+				if (obj.discountType === 'PERCENTAGE') {
 					 net_value =
 						((+obj.unitPrice -
 							(+((obj.unitPrice * obj.discount)) / 100)) * obj.quantity);
@@ -1161,7 +1160,7 @@ class DetailQuotation extends React.Component {
 				}else{
 					 net_value =
 						((obj.unitPrice * obj.quantity) - obj.discount)
-					var discount = (obj.unitPrice* obj.quantity) - net_value
+					var discount =  (obj.unitPrice* obj.quantity) - net_value
 						if(obj.exciseTaxId !=  0){
 							if(obj.exciseTaxId === 1){
 								const value = +(net_value) / 2 ;
@@ -1172,7 +1171,7 @@ class DetailQuotation extends React.Component {
 									net_value = parseFloat(net_value) +  parseFloat(value) ;
 									obj.exciseAmount = parseFloat(value);
 								}
-								
+							
 						}
 						else{
 							obj.exciseAmount = 0
@@ -1184,8 +1183,8 @@ class DetailQuotation extends React.Component {
 			}
 			//Inclusive case
 			else
-			{			
-				if (obj.discountType === 'PERCENTAGE') {	
+			{
+				if (obj.discountType === 'PERCENTAGE') {
 
 					//net value after removing discount
 					 net_value =
@@ -1197,7 +1196,7 @@ class DetailQuotation extends React.Component {
 
 				//vat amount
 				var vat_amount =
-				(+net_value  * (vat/ (100 + vat)*100)) / 100; 
+				(+net_value  * (vat/ (100 + vat)*100)) / 100;
 
 				//net value after removing vat for inclusive
 				net_value = net_value - vat_amount
@@ -1206,7 +1205,7 @@ class DetailQuotation extends React.Component {
 				if(obj.exciseTaxId !=  0){
 				if(obj.exciseTaxId === 1){
 					const value = net_value / 3
-					net_value = net_value 
+					net_value = net_value
 					obj.exciseAmount = parseFloat(value);
 					}
 				else if (obj.exciseTaxId === 2){
@@ -1229,7 +1228,7 @@ class DetailQuotation extends React.Component {
 
 				//discount amount
 				var discount =  (obj.unitPrice * obj.quantity) - net_value
-						
+
 				//vat amount
 				var vat_amount =
 				(+net_value  * (vat/ (100 + vat)*100)) / 100; ;
@@ -1241,7 +1240,7 @@ class DetailQuotation extends React.Component {
 				if(obj.exciseTaxId !=  0){
 					if(obj.exciseTaxId === 1){
 						const value = net_value / 3
-						net_value = net_value 
+						net_value = net_value
 						obj.exciseAmount = parseFloat(value);
 						}
 					else if (obj.exciseTaxId === 2){
@@ -1256,8 +1255,8 @@ class DetailQuotation extends React.Component {
 					}
 
 			}
-			
-			
+
+
 			obj.vatAmount = vat_amount
 			obj.subTotal =
 			net_value && obj.vatCategoryId ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
@@ -1265,7 +1264,7 @@ class DetailQuotation extends React.Component {
 			discount_total = +discount_total +discount
 			total_net = +(total_net + parseFloat(net_value));
 			total_vat = +(total_vat + vat_amount);
-			
+
 			total_excise = +(total_excise + obj.exciseAmount)
 			total = total_vat + total_net;
 			return obj;
@@ -2460,6 +2459,7 @@ console.log(this.state.supplier_currency)
 																</Col>
 																	<Col lg={4}>
 																		<div className="">
+																		{initValue.total_excise > 0 ?
 																		<div className="total-item p-2" >
 																		{/* style={{display:this.state.checked === true ? '':'none'}} */}
 																			<Row>
@@ -2476,7 +2476,8 @@ console.log(this.state.supplier_currency)
 																					</label>
 																				</Col>
 																			</Row>
-																		</div>
+																		</div> : ''}
+																		{this.state.discountEnabled == true ?
 																		<div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>
@@ -2494,7 +2495,7 @@ console.log(this.state.supplier_currency)
 																						</label>
 																					</Col>
 																				</Row>
-																			</div>
+																			</div> : ''}
 																			<div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>

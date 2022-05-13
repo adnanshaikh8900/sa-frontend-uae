@@ -3150,7 +3150,7 @@ existForAccountNumber = (value) => {
                                                                 maxLength='10'
                                                                 style={{textAlign:"center"}}
                                                                 value={props.values.CTC}
-                                                                placeholder={strings.Enter+ strings.ctc}
+                                                                placeholder={this.state.ctcType=="MONTHLY"?"Enter Monthly Wages":(strings.Enter+ strings.ctc)}
                                                                 onChange={(option) => {
                                                                     if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('CTC')(option) }
                                                                     

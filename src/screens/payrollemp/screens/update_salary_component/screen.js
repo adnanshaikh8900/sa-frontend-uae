@@ -608,7 +608,7 @@ handleChange = (evt) => {
                                                                     maxLength='14,2'
                                                                     style={{textAlign:"center"}}
                                                                     value={props.values.CTC}
-                                                                    placeholder={strings.Enter+"CTC"}
+                                                                    placeholder={this.state.ctcType=="MONTHLY"?"Enter Monthly Wages":(strings.Enter+ strings.ctc)}
                                                                     onChange={(option) => {
                                                                         if (option.target.value === '' || this.regEx.test(option.target.value)) {
                                                                             let ctcValue=this.state.ctcType=="ANNUALLY"?option.target.value:parseFloat(option.target.value)*12

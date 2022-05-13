@@ -40,6 +40,7 @@ import './style.scss';
 import { CreateCreditNoteModal } from './sections';
 import moment from 'moment';
 import { upperCase } from 'lodash';
+import { toast } from 'react-toastify';
 
 const { ToWords } = require('to-words');
 const toWords = new ToWords({
@@ -226,10 +227,29 @@ class CustomerInvoice extends React.Component {
 		this.initializeData();
 	};
 
-	postInvoice = (row,markAsSent) => {
-		this.setState({
-			loading: true,
-		});
+	
+stockInHandTestForProduct = (row,markAsSent) => {
+this.props.customerInvoiceActions
+	.stockInHandTestForProduct(row.id)
+	.then((res) => {
+	 if (res.status == 200)
+		this.postInvoice(row,markAsSent);
+	})
+	.catch((error)=>{
+		if (error.status == 417)
+		{
+			this.props.commonActions.tostifyAlert(
+				'error',
+				'Invoice Can\'t Posted Because Some Products are Out Of Stock ',
+			);
+		}
+	})		
+}
+
+
+
+	postInvoice  = (row,markAsSent) => {
+	
 		const postingRequestModel = {
 			amount: row.invoiceAmount,
 			postingRefId: row.id,
@@ -447,7 +467,7 @@ class CustomerInvoice extends React.Component {
 						{row.statusEnum !== 'Sent' && row.statusEnum !== 'Paid' && row.statusEnum !== 'Partially Paid' && (
 							<DropdownItem
 								onClick={() => {
-									this.postInvoice(row,true);
+									this.stockInHandTestForProduct(row,true);
 								}}
 							>
 							<i class="far fa-arrow-alt-circle-right"></i>{strings.Mark_As_Sent}
@@ -456,7 +476,7 @@ class CustomerInvoice extends React.Component {
 						{row.statusEnum !== 'Sent' && row.statusEnum !== 'Paid' && row.statusEnum !== 'Partially Paid' && (
 							<DropdownItem
 								onClick={() => {
-									this.postInvoice(row,false);
+									this.stockInHandTestForProduct(row,false);
 								}}
 							>
 								<i className="fas fa-send" /> {strings.Send}

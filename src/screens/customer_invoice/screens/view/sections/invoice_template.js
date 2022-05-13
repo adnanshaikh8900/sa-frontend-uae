@@ -101,14 +101,15 @@ class InvoiceTemplate extends Component {
 	    return		(<div>
 
 			   <br />
-			   <h6 className="mb-1 ml-2"><b>{strings.ShipTo} ,</b></h6><br />
-			   {/* <div className="mb-1 ml-2"><b>{invoiceData.organisationName ? invoiceData.organisationName : invoiceData.name}</b></div> */}
+			   <h6 className="mb-1 ml-2"><b>{strings.ShipTo} ,</b></h6><br/>
+			   <div className="mb-1 ml-2"><b>{invoiceData.organisationName ? invoiceData.organisationName : invoiceData.name}</b></div>
 			   {/* {contactData && contactData.addressLine1 &&(<div className="mb-1 ml-2"><b>{strings.BillingAddress} : </b> {contactData.addressLine1}</div>)} */}
 			   {invoiceData && contactData && (this.renderShippingAddress())}
 			   <div className="mb-1 ml-2">
+			       {invoiceData && contactData && (this.renderShippingPostZipCode())}
 				   {invoiceData && contactData && (this.rendershippingState())}
 				   {invoiceData && contactData && (this.rendershippingCountry())}
-				   {invoiceData && contactData && (this.renderShippingPostZipCode())}
+				  
 			   </div>
 			   {/* {invoiceData && contactData&&( this.renderShippingCity())} */}
 			   {/* <div className="mb-1 ml-2">{strings.VATRegistrationNo} : {invoiceData.taxRegistrationNo}</div>
@@ -148,15 +149,24 @@ class InvoiceTemplate extends Component {
 		let shippingPostZipCode = "";
 		if (invoiceData.changeShippingAddress && invoiceData.changeShippingAddress == true) {
 			shippingPostZipCode = invoiceData.shippingPostZipCode ? invoiceData.shippingPostZipCode : "";
+			if(invoiceData.shippingCountry==229 )
+				shippingPostZipCode=strings.POBox +" : " +shippingPostZipCode	
 		} else {
 			if (contactData && contactData.isBillingAndShippingAddressSame && contactData.isBillingAndShippingAddressSame == true)
-				shippingPostZipCode = contactData.postZipCode ? contactData.postZipCode : "";
+				{shippingPostZipCode = contactData.postZipCode ? contactData.postZipCode : "";
+				if(contactData.shippingCountryId==229 )
+				shippingPostZipCode=strings.POBox +" : " +shippingPostZipCode
+			}
 			else
+			{	
 				shippingPostZipCode = contactData.shippingPostZipCode ? contactData.shippingPostZipCode : "";
+				if(contactData.shippingCountryId==229 )
+				shippingPostZipCode=strings.POBox +" : " +shippingPostZipCode
+		}
 		}
 
 
-		return shippingPostZipCode;
+		return shippingPostZipCode+", ";
 	}
 
 	renderShippingCity = () => {
@@ -193,7 +203,7 @@ class InvoiceTemplate extends Component {
 		}
 
 
-		return shippingCountry + " ,";
+		return shippingCountry;
 	}
 
 
@@ -301,10 +311,14 @@ class InvoiceTemplate extends Component {
 										<div className="mb-1 ml-2" style={{fontSize:"22px"}}><b>{companyData.companyName}</b></div>
 										<div className="mb-1 ml-2">{companyData.companyAddressLine1}</div>
 										<div className="mb-1 ml-2">{companyData.companyAddressLine2}</div>
-										<div className="mb-1 ml-2">{companyData.companyPostZipCode}</div>
+										<div className="mb-1 ml-2">{companyData.companyCountryCode==229 ?
+																	strings.POBox:
+																	""} 
+																&nbsp;		:		&nbsp;
+																	 {companyData.companyPoBoxNumber}</div>
 										<div className="mb-1 ml-2">{companyData.companyStateName}</div>
-										<div className="mb-1 ml-2">{companyData.companyCountryName}</div>
-										<div className="mb-1 ml-2">{strings.CompanyRegistrationNo} : {companyData.companyRegistrationNumber}</div>
+										<div className="mb-1 ml-2"> {companyData.companyCountryName}</div>
+										{companyData.companyRegistrationNumber && (<div className="mb-1 ml-2">{strings.CompanyRegistrationNo} : {companyData.companyRegistrationNumber}</div>)}
 										{companyData.isRegisteredVat==true&&(<div className="mb-1 ml-2">{strings.VATRegistrationNo} : {companyData.vatRegistrationNumber}</div>)}
 										<div className="mb-1 ml-2">{strings.MobileNumber} : {this.companyMobileNumber(companyData.phoneNumber ? "+" + companyData.phoneNumber : '')}</div>
 										{companyData.emailAddress&&(<div className="mb-1 ml-2">Email : {companyData.emailAddress}</div>)}
@@ -343,13 +357,13 @@ class InvoiceTemplate extends Component {
 									{contactData && contactData.addressLine1 && (<div className="mb-1 ml-2">{contactData.addressLine1}</div>)}
 
 									<div className="mb-1 ml-2">
-									    {invoiceData && contactData && (contactData.billingStateName ? contactData.billingStateName + " , " : "")}
-										{invoiceData && contactData && (contactData.billingCountryName ? contactData.billingCountryName + " , " : "")}
-										{invoiceData && contactData && (
+									{invoiceData && contactData && (
 											contactData.countryId==229 ?
-											contactData.poBoxNumber ? contactData.poBoxNumber : ""
+											contactData.poBoxNumber ?(strings.POBox +" : " +contactData.poBoxNumber ): ""
 											:contactData.postZipCode ? contactData.postZipCode : ""
-											)}
+											)} ,&nbsp;
+									    {invoiceData && contactData && (contactData.billingStateName ? contactData.billingStateName + " , " : "")}
+										{invoiceData && contactData && (contactData.billingCountryName ? contactData.billingCountryName : "")}
 									</div>
 									{invoiceData && invoiceData.taxTreatment&& invoiceData.taxTreatment.includes("NON")==false &&(<div className="mb-1 ml-2">{strings.VATRegistrationNo} :  {invoiceData.taxRegistrationNo}</div>)}
 									{contactData && contactData.mobileNumber && (<div className="mb-1 ml-2">{strings.MobileNumber} :+{contactData.mobileNumber}</div>)}

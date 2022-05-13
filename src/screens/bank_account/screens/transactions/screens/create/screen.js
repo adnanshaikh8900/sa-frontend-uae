@@ -483,7 +483,7 @@ class CreateBankTransaction extends React.Component {
 		this.props.transactionActions.getVatList();
 	};
 	getVendorList = () => {
-		this.props.transactionActions.getVendorList();
+		this.props.transactionActions.getVendorList(this.props.location.state.bankAccountId ?this.props.location.state.bankAccountId :'');
 	};
 	getSuggestionInvoicesFotCust = (option, amount) => {
 		const data = {

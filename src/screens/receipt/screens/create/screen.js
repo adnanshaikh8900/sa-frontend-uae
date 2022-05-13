@@ -229,7 +229,7 @@ class CreateReceipt extends React.Component {
 					'success',
 					res.data ? res.data.message : 'Payment Recorded Successfully',
 				);
-				this.props.history.push('/admin/income/customer-invoice');
+				this.props.history.push('/admin/income/receipt');
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(

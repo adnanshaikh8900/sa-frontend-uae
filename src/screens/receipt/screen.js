@@ -19,7 +19,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import { CommonActions } from 'services/global';
-import { CSVLink } from 'react-csv';
 import * as ReceiptActions from './actions';
 import moment from 'moment';
 import './style.scss';
@@ -506,7 +505,7 @@ class Receipt extends React.Component {
 												</Col>
 											</Row>
 										</div>
-										<Row>
+										{/* <Row>
 										<div style={{ width: "1650px" }}>
 											<Button
 												color="primary"
@@ -520,7 +519,7 @@ class Receipt extends React.Component {
 											{strings.AddNewReceipt}
 										</Button>
 										</div>
-										</Row>
+										</Row> */}
 										<div>
 											<BootstrapTable
 												selectRow={this.selectRowProp}

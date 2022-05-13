@@ -20,7 +20,6 @@ import { selectOptionsFactory } from 'utils';
 import { Formik, Field } from 'formik';
 import DatePicker from 'react-datepicker';
 import * as Yup from 'yup';
-import { Loader } from 'components';
 import moment from 'moment';
 import API_ROOT_URL from '../../../../constants/config';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -33,7 +32,7 @@ import * as SupplierInvoiceActions from '../../../supplier_invoice/actions';
 import { CommonActions } from 'services/global';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-// import { Loader, ConfirmDeleteModal } from 'components';
+import { Loader } from 'components';
 
 const mapStateToProps = (state) => {
 	return {
@@ -424,6 +423,9 @@ min="0" value="0.00" />;
 												depositeTo: Yup.string().required(
 													'Deposit to is Required',
 												),
+												payMode: Yup.string().required(
+													'Payment mode is Required',
+												),
 												paidInvoiceListStr: Yup.string().required(
 													'Please select atleast one invoice',
 												),
@@ -576,8 +578,9 @@ min="0" value="0.00" />;
 																	<Row>
 																		<Col lg={4}>
 																			<FormGroup className="mb-3">
-																				<Label htmlFor="payMode">
-																					{strings.PaymentMode}
+																				<Label>
+																				<span className="text-danger">* </span>{' '}
+																					 {strings.PaymentMode}
 																				</Label>
 																				<Select
 																					// styles={customStyles}

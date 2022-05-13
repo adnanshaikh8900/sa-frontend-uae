@@ -466,7 +466,7 @@ class Payment extends React.Component {
 												</Col>
 											</Row>
 										</div>
-										<Row>
+										{/* <Row>
 										<div style={{ width: "1650px" }}>
 											<Button
 												color="primary"
@@ -480,7 +480,7 @@ class Payment extends React.Component {
 												{strings.AddNewReceipt}
 											</Button>	
 										</div>
-										</Row>	
+										</Row>	 */}
 										<div>
 											<BootstrapTable
 												selectRow={this.selectRowProp}

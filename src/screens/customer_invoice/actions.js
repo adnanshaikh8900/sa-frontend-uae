@@ -578,3 +578,19 @@ export const getStateListForShippingAddress = (countryCode) => {
 		}
 	};
 };
+
+
+export const stockInHandTestForProduct = (id) => {
+	return (dispatch) => {
+	  let data = {
+		method: 'post',
+		url: `/rest/invoice/stockInHandTestForProduct?invoiceId=${id}`,
+	
+	  }
+	  return authApi(data).then((res) => {
+		return res
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }

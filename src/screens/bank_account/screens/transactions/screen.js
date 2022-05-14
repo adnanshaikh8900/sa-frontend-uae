@@ -9,7 +9,6 @@ import {
 	Row,
 	Col,
 	ButtonGroup,
-	TabPane,
 	Nav,
 	NavItem,
 	NavLink,
@@ -18,19 +17,14 @@ import {
 	DropdownMenu,
 	DropdownItem,
 } from 'reactstrap';
-import Select from 'react-select';
 import BootstrapTable from 'react-bootstrap-table-next';
 import DatePicker from 'react-datepicker';
-
-import { Loader, ConfirmDeleteModal, Currency } from 'components';
-
+import { Loader, ConfirmDeleteModal, } from 'components';
 import 'react-toastify/dist/ReactToastify.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import paginationFactory from 'react-bootstrap-table2-paginator';
-
 import 'bootstrap-daterangepicker/daterangepicker.css';
-
 import * as TransactionsActions from './actions';
 import * as detailBankAccountActions from './../detail/actions';
 import { CommonActions } from 'services/global';
@@ -630,9 +624,9 @@ class BankTransactions extends React.Component {
 		if (row.explinationStatusEnum === 'FULL') {
 			return <div className="label-info">Explained</div>;
 		} else if (row.explinationStatusEnum === 'RECONCILED') {
-			return <div className="label-success">Reconciled</div>;
+			return <div className="label-success">Reconciled</div>; 
 		} else if (row.explinationStatusEnum === 'PARTIAL') {
-			return <div className="label-info">Partially Explained</div>;
+			return <div className='label-PartiallyPaid'>Partially Explained</div>;
 		} else if (
 			row.explinationStatusEnum === 'NOT_EXPLAIN' &&
 			row.creationMode !== 'POTENTIAL_DUPLICATE'

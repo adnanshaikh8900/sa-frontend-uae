@@ -65,7 +65,8 @@ export const fillManDatoryDetails = (status, message) => {
 			"Please Fill All Mandatory Details",
 			{
 				position: "top-center",
-				draggable: true, autoClose: 1000,
+				draggable: true, 
+				autoClose: 2000,
 				progress: undefined,
 				hideProgressBar: true,
 			})

@@ -764,7 +764,7 @@ class PayrollRun extends React.Component {
 
 																{strings.create_pay_roll}
 															</Button>
-															<Button
+															{/* <Button
 																color="primary"
 																className="btn-square mt-2 pull-right"
 																// onClick={}
@@ -778,7 +778,7 @@ class PayrollRun extends React.Component {
 																<i className="fas fa-plus mr-1" />
 
 																{strings.create_company_details}
-															</Button>
+															</Button> */}
 														</Col>
 													}
 

@@ -19,8 +19,13 @@ import {
 	DropdownToggle,
 	DropdownMenu,
 	DropdownItem,
+	Input,
+	Label,
+	UncontrolledTooltip,
+	FormGroup,
+	Form,
 } from 'reactstrap';
-
+import { CreateCompanyDetails } from '../payroll_run/sections';
 import { ConfirmDeleteModal } from 'components'
 import * as DesignationActions from '../designation/actions'
 import * as EmployeeActions from "../salaryRoles/actions"
@@ -39,7 +44,9 @@ import {
 import { data } from '../Language/index'
 import LocalizedStrings from 'react-localization';
 import { Loader } from 'components';
-
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+import * as PayrollRun from '../payroll_run/actions';
 const mapStateToProps = (state) => {
 	return {
 		designation_list: state.employeeDesignation.designation_list,
@@ -56,6 +63,7 @@ const mapDispatchToProps = (dispatch) => {
 		salaryStructureActions: bindActionCreators(SalaryStructureAction, dispatch),
 		employeeActions: bindActionCreators(EmployeeActions, dispatch),
 		commonActions: bindActionCreators(CommonActions, dispatch),
+		payrollRun: bindActionCreators(PayrollRun, dispatch),
 	};
 };
 
@@ -70,15 +78,19 @@ class PayrollConfigurations extends React.Component {
 			language: window['localStorage'].getItem('language'),
 			openModal: false,
 			selectedData: {},
-			activeTab: new Array(4).fill('1'),
+			activeTab: new Array(5).fill('1'),
 			filterData: {
 				salaryRoleId: '',
 				salaryRoleName: ''
 			},
+			initValue: {
+				companyBankCode: '',
+				companyNumber: '',
+			},
 			current_employee_id: '',
 		};
-
-
+		this.formRef = React.createRef();
+		this.regEx = /^[0-9\d]+$/;
 		this.options = {
 			onRowClick: this.goToDetail,
 			paginationPosition: 'top',
@@ -92,10 +104,10 @@ class PayrollConfigurations extends React.Component {
 		}
 
 		this.selectRowProp = {
-		  bgColor: 'rgba(0,0,0, 0.05)',
-		  clickToSelect: false,
-		  onSelect: this.onRowSelect,
-		  onSelectAll: this.onSelectAll
+			bgColor: 'rgba(0,0,0, 0.05)',
+			clickToSelect: false,
+			onSelect: this.onRowSelect,
+			onSelectAll: this.onSelectAll
 		}
 		this.csvLink = React.createRef()
 	}
@@ -108,25 +120,44 @@ class PayrollConfigurations extends React.Component {
 	// }
 	componentDidMount = () => {
 		window['localStorage'].getItem('accessToken')
+		this.getCompanyDataForPayroll()
 		this.initializeData()
 		this.initializeDataForDesignations()
 		this.initializeDataForStructure()
-	}
 
+	}
+	getCompanyDataForPayroll = () => {
+		this.props.payrollRun.getCompanyDetails().then((res) => {
+			if (res.status == 200) {
+				this.setState({
+					initValue: {
+						...this.state.initValue,
+						...{
+							companyNumber: res.data.companyNumber ? res.data.companyNumber : "",
+							companyBankCode: res.data.companyBankCode ? res.data.companyBankCode : "",
+						}
+					}
+				});
+				this.formRef.current.setFieldValue('companyNumber', res.data.companyNumber ? res.data.companyNumber : "", true);
+				this.formRef.current.setFieldValue('companyBankCode', res.data.companyBankCode ? res.data.companyBankCode : "", true);
+			}
+		});
+
+	}
 	componentWillUnmount = () => {
 		this.setState({
 			selectedRows: []
 		})
 	}
 	renderActions = (cell, row) => {
-	
+
 	};
-	initializeData = (search) => {  
-		if(this.props.location.state!==undefined && this.props.location.state!==null && this.props.location.state.tabNo !== undefined && this.props.location.state.tabNo !== null){
+	initializeData = (search) => {
+		if (this.props.location.state !== undefined && this.props.location.state !== null && this.props.location.state.tabNo !== undefined && this.props.location.state.tabNo !== null) {
 			this.toggle(0, this.props.location.state.tabNo)
 		}
 		const { filterData } = this.state
-		
+
 		const paginationData = {
 			pageNo: this.options.page ? this.options.page - 1 : 0,
 			pageSize: this.options.sizePerPage
@@ -188,86 +219,86 @@ class PayrollConfigurations extends React.Component {
 	}
 
 	// goToDetail = (row) => {
-	
+
 	// 	this.props.history.push('/admin/payroll/salaryRoles/detail', { id: row.salaryRoleId })
 	// }
-	goToDetailForRoles=  (cell, row) => {
+	goToDetailForRoles = (cell, row) => {
 
 
 		return (
 			<Row>
-			<div>
-			{
-				row.salaryRoleId==1 ?"":(
-					<Button
-					className="btn btn-sm pdf-btn"
-					onClick={(e, ) => {
-						this.props.history.push('/admin/payroll/config/detailSalaryRoles', { id: row.salaryRoleId })
-					}}
-					>
-					<i class="far fa-edit fa-lg"></i>
-					</Button>
-				)
-			}
-			</div>
-		
+				<div>
+					{
+						row.salaryRoleId == 1 ? "" : (
+							<Button
+								className="btn btn-sm pdf-btn"
+								onClick={(e,) => {
+									this.props.history.push('/admin/payroll/config/detailSalaryRoles', { id: row.salaryRoleId })
+								}}
+							>
+								<i class="far fa-edit fa-lg"></i>
+							</Button>
+						)
+					}
+				</div>
+
 			</Row>
-			
-			
+
+
 		);
 	}
 	goToDetailForStructure = (cell, row) => {
 		return (
 			<Row>
-			<div>{
-				row.salaryStructureId ==1 || row.salaryStructureId ==2 || row.salaryStructureId ==3 || row.salaryStructureId ==4 ?
-				""
-				:
-				(
-				<Button
-				className="btn btn-sm pdf-btn"
-				onClick={(e, ) => {
-					
-					this.props.history.push('/admin/payroll/config/detailSalaryStructure', { id: row.salaryStructureId })
-				}}
-				>
-				<i class="far fa-edit fa-lg"></i>
-				</Button>
-				)
+				<div>{
+					row.salaryStructureId == 1 || row.salaryStructureId == 2 || row.salaryStructureId == 3 || row.salaryStructureId == 4 ?
+						""
+						:
+						(
+							<Button
+								className="btn btn-sm pdf-btn"
+								onClick={(e,) => {
+
+									this.props.history.push('/admin/payroll/config/detailSalaryStructure', { id: row.salaryStructureId })
+								}}
+							>
+								<i class="far fa-edit fa-lg"></i>
+							</Button>
+						)
 				}
-				
-			</div>
-		
+
+				</div>
+
 			</Row>
-			
-			
+
+
 		);
 	}
-	goToDetailForDesignations =  (cell, row) => {
+	goToDetailForDesignations = (cell, row) => {
 
 
 		return (
 			<Row>
-			<div>
-				{row.id==1 ||row.id==2 ||row.id==3  ? ""
-				:
-					(<Button
-						className="btn btn-sm pdf-btn"
-						onClick={(e, ) => {
-							this.props.history.push('/admin/payroll/config/detailEmployeeDesignation', { id: row.id })
-						}}
+				<div>
+					{row.id == 1 || row.id == 2 || row.id == 3 ? ""
+						:
+						(<Button
+							className="btn btn-sm pdf-btn"
+							onClick={(e,) => {
+								this.props.history.push('/admin/payroll/config/detailEmployeeDesignation', { id: row.id })
+							}}
 						>
-						<i class="far fa-edit fa-lg"></i>
+							<i class="far fa-edit fa-lg"></i>
 						</Button>)
-				}
-			</div>
-		
+					}
+				</div>
+
 			</Row>
-			
-			
+
+
 		);
 	}
-	
+
 	sortColumn = (sortName, sortOrder) => {
 		this.options.sortName = sortName;
 		this.options.sortOrder = sortOrder;
@@ -393,11 +424,11 @@ class PayrollConfigurations extends React.Component {
 			actionButtons: temp,
 		});
 	};
-	renderForId=(cell,row)=>{
-		for(let i=121;i<=10000;i++){
-		return (
-			<div>{row.designationId ?row.designationId :row.id}</div>
-		);
+	renderForId = (cell, row) => {
+		for (let i = 121; i <= 10000; i++) {
+			return (
+				<div>{row.designationId ? row.designationId : row.id}</div>
+			);
 		}
 	}
 	renderActions = (cell, row) => {
@@ -455,44 +486,65 @@ class PayrollConfigurations extends React.Component {
 		});
 	};
 
-
+	handleSubmit = (data, resetForm, setSubmitting) => {
+		let formdata = new FormData()
+		formdata.append("companyBankCode", data.companyBankCode)
+		formdata.append("companyNumber", data.companyNumber)
+		this.props.payrollRun
+			.updateCompany(formdata)
+			.then((res) => {
+				if (res.status === 200) {
+					this.props.commonActions.tostifyAlert(
+						'success',
+						'Company Details Saved Successfully',
+					);
+					// this.props.closeModal(false);				
+				}
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+			});
+	};
 
 	render() {
 		strings.setLanguage(this.state.language);
 		console.log(this.state.Fixed)
-		const { loading, dialog } = this.state;
-		const {  salaryRole_list, salaryStructure_list, designation_list } = this.props;
+		const { loading, dialog, initValue } = this.state;
+		const { salaryRole_list, salaryStructure_list, designation_list } = this.props;
 		return (
-			loading ==true? <Loader/> :
-<div>
-			<div className="financial-report-screen">
-				<div className="animated fadeIn">
-					<Card>
-						<CardHeader>
-							<Row>
-								<Col lg={12}>
-									<div className="h4 mb-0 d-flex align-items-center">
-										<i className="nav-icon fas fa-cogs" />
-										<span className="ml-2">{strings.PayrollConfigurations}</span>
-									</div>
-								</Col>
-							</Row>
-						</CardHeader>
-						<CardBody>
+			loading == true ? <Loader /> :
+				<div>
+					<div className="financial-report-screen">
+						<div className="animated fadeIn">
+							<Card>
+								<CardHeader>
+									<Row>
+										<Col lg={12}>
+											<div className="h4 mb-0 d-flex align-items-center">
+												<i className="nav-icon fas fa-cogs" />
+												<span className="ml-2">{strings.PayrollConfigurations}</span>
+											</div>
+										</Col>
+									</Row>
+								</CardHeader>
+								<CardBody>
 
 
-							<Nav tabs pills>
-								<NavItem>
-									<NavLink
-										active={this.state.activeTab[0] === '1'}
-										onClick={() => {
-											this.toggle(0, '1');
-										}}
-									>
-									{strings.SalaryRole}
-									</NavLink>
-								</NavItem>
-								{/* <NavItem>
+									<Nav tabs pills>
+										<NavItem>
+											<NavLink
+												active={this.state.activeTab[0] === '1'}
+												onClick={() => {
+													this.toggle(0, '1');
+												}}
+											>
+												{strings.SalaryRole}
+											</NavLink>
+										</NavItem>
+										{/* <NavItem>
 									<NavLink
 										active={this.state.activeTab[0] === '2'}
 										onClick={() => {
@@ -502,60 +554,68 @@ class PayrollConfigurations extends React.Component {
 									{strings.SalaryStructure}
 									</NavLink>
 								</NavItem> */}
-								<NavItem>
-									<NavLink
-										active={this.state.activeTab[0] === '3'}
-										onClick={() => {
-											this.toggle(0, '3');
-										}}
-									>
-										{strings.EmployeeDesignation}
-									</NavLink>
-								</NavItem>
+										<NavItem>
+											<NavLink
+												active={this.state.activeTab[0] === '3'}
+												onClick={() => {
+													this.toggle(0, '3');
+												}}
+											>
+												{strings.EmployeeDesignation}
+											</NavLink>
+										</NavItem>
+										<NavItem>
+											<NavLink
+												active={this.state.activeTab[0] === '4'}
+												onClick={() => {
+													this.toggle(0, '4');
+												}}
+											>Company Details
+											</NavLink>
+										</NavItem>
+									</Nav>
+									<TabContent activeTab={this.state.activeTab[0]}>
+										<TabPane tabId="1" >
+											<div className="employee-screen">
+												<div className="animated fadeIn">
+													{dialog}
+													{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
+													{/* <Card> */}
 
-							</Nav>
-							<TabContent activeTab={this.state.activeTab[0]}>
-								<TabPane tabId="1" >
-									<div className="employee-screen">
-										<div className="animated fadeIn">
-											{dialog}
-											{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
-											{/* <Card> */}
-
-												{/* <div>
+													{/* <div>
 												Change Language:   <select onChange={this.handleLanguageChange}>
 													<option value="en">En- English</option>
 													<option value="it">fr-french</option>
 													<option value="ar">ar-Arabic</option>
 												</select>
 											</div> */}
-											{/* </Card> */}
-											{/* <Card> */}
-												<CardHeader>
-													<Row>
-														<Col lg={12}>
-															<div className="h4 mb-0 mt-0 d-flex align-items-center">
-																<i className="fas fa-object-group" />
-																<span className="ml-2 "> {strings.SalaryRole}</span>
-															</div>
-														</Col>
-													</Row>
-												</CardHeader>
-												<CardBody>
-													{
-														loading ?
-															<Row>
-																<Col lg={12}>
-																	<Loader />
-																</Col>
-															</Row>
-															:
-															<Row>
+													{/* </Card> */}
+													{/* <Card> */}
+													<CardHeader>
+														<Row>
+															<Col lg={12}>
+																<div className="h4 mb-0 mt-0 d-flex align-items-center">
+																	<i className="fas fa-object-group" />
+																	<span className="ml-2 "> {strings.SalaryRole}</span>
+																</div>
+															</Col>
+														</Row>
+													</CardHeader>
+													<CardBody>
+														{
+															loading ?
+																<Row>
+																	<Col lg={12}>
+																		<Loader />
+																	</Col>
+																</Row>
+																:
+																<Row>
 
-																<Col lg={12}>
-																	<div className="d-flex justify-content-end">
-																		<ButtonGroup size="sm">
-																			{/* <Button
+																	<Col lg={12}>
+																		<div className="d-flex justify-content-end">
+																			<ButtonGroup size="sm">
+																				{/* <Button
                             color="success"
                             className="btn-square"
                             onClick={() => this.getCsvData()}
@@ -569,7 +629,7 @@ class PayrollConfigurations extends React.Component {
                             ref={this.csvLink}
                             target="_blank"
                           />} */}
-																			{/* <Button
+																				{/* <Button
 
                             color="primary"
                             className="btn-square mb-2"
@@ -579,19 +639,19 @@ class PayrollConfigurations extends React.Component {
                             {strings.NewSalaryRoles}
                           </Button> */}
 
-																			<div style={{ width: "1650px" }}>
-																				<Button
-																					color="primary"
-																					className="btn-square pull-right mb-2 mr-2"
-																					style={{ marginBottom: '10px' }}
-																					onClick={() => this.props.history.push(`/admin/payroll/config/createSalaryRoles`)}
+																				<div style={{ width: "1650px" }}>
+																					<Button
+																						color="primary"
+																						className="btn-square pull-right mb-2 mr-2"
+																						style={{ marginBottom: '10px' }}
+																						onClick={() => this.props.history.push(`/admin/payroll/config/createSalaryRoles`)}
 
-																				>
-																					<i className="fas fa-plus mr-1" />
-																					{strings.NewSalaryRoles}
-																				</Button>
-																			</div>
-																			{/* <Button
+																					>
+																						<i className="fas fa-plus mr-1" />
+																						{strings.NewSalaryRoles}
+																					</Button>
+																				</div>
+																				{/* <Button
                             color="warning"
                             className="btn-square"
                             onClick={this.bulkDelete}
@@ -600,92 +660,92 @@ class PayrollConfigurations extends React.Component {
                             <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
                             Bulk Delete
                           </Button> */}
-																		</ButtonGroup>
-																	</div>
+																			</ButtonGroup>
+																		</div>
 
-																	<div>
-																		<BootstrapTable
-																			selectRow={this.selectRowProp}
-																			search={false}
-																			options={this.options}
-																			data={salaryRole_list && salaryRole_list.data ? salaryRole_list.data : []}
-																			version="4"
-																			hover
-																			// pagination={salaryRole_list && salaryRole_list.data && salaryRole_list.data.length > 0 ? true : false}
-																			keyField="id"
-																			remote
-																			fetchInfo={{ dataTotalSize: salaryRole_list.count ? salaryRole_list.count : 0 }}
-																			//  className="employee-table"
-																			trClassName="cursor-pointer"
-																			csvFileName="salaryRole_list.csv"
-																			ref={(node) => this.table = node}
-																		>
-																			<TableHeaderColumn
-																				dataField="salaryRoleId"
-																				className="table-header-bg"
+																		<div>
+																			<BootstrapTable
+																				selectRow={this.selectRowProp}
+																				search={false}
+																				options={this.options}
+																				data={salaryRole_list && salaryRole_list.data ? salaryRole_list.data : []}
+																				version="4"
+																				hover
+																				// pagination={salaryRole_list && salaryRole_list.data && salaryRole_list.data.length > 0 ? true : false}
+																				keyField="id"
+																				remote
+																				fetchInfo={{ dataTotalSize: salaryRole_list.count ? salaryRole_list.count : 0 }}
+																				//  className="employee-table"
+																				trClassName="cursor-pointer"
+																				csvFileName="salaryRole_list.csv"
+																				ref={(node) => this.table = node}
 																			>
-																				{strings.SALARYROLEID}
-																			</TableHeaderColumn>
-																			<TableHeaderColumn
-																				dataField="salaryRoleName"
-																				className="table-header-bg"
-																			>
-																				{strings.SALARYROLENAME}
-																			</TableHeaderColumn>
-																			<TableHeaderColumn
-																				dataField="salaryRoleName"
-																				className="table-header-bg"
-																				dataFormat={this.goToDetailForRoles}
-																			>
-																			
-																			</TableHeaderColumn>
-																			
-																		</BootstrapTable>
-																	</div>
-																</Col>
+																				<TableHeaderColumn
+																					dataField="salaryRoleId"
+																					className="table-header-bg"
+																				>
+																					{strings.SALARYROLEID}
+																				</TableHeaderColumn>
+																				<TableHeaderColumn
+																					dataField="salaryRoleName"
+																					className="table-header-bg"
+																				>
+																					{strings.SALARYROLENAME}
+																				</TableHeaderColumn>
+																				<TableHeaderColumn
+																					dataField="salaryRoleName"
+																					className="table-header-bg"
+																					dataFormat={this.goToDetailForRoles}
+																				>
 
-															</Row>
+																				</TableHeaderColumn>
 
+																			</BootstrapTable>
+																		</div>
+																	</Col>
 
-													}
-												</CardBody>
-											{/* </Card> */}
-										</div>
-									</div>
-								</TabPane>
+																</Row>
 
 
+														}
+													</CardBody>
+													{/* </Card> */}
+												</div>
+											</div>
+										</TabPane>
 
-								<TabPane tabId="2">
-									<div className="employee-screen">
-										<div className="animated fadeIn">
-											{dialog}
-											{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
-											{/* <Card> */}
-												<CardHeader>
-													<Row>
-														<Col lg={12}>
-															<div className="h4 mb-0 d-flex align-items-center">
-																<i className="fas fa-object-group" />
-																<span className="ml-2">{strings.SalaryStructure}</span>
-															</div>
-														</Col>
-													</Row>
-												</CardHeader>
-												<CardBody>
-													{
-														loading ?
-															<Row>
-																<Col lg={12}>
-																	<Loader />
-																</Col>
-															</Row>
-															:
-															<Row>
-																<Col lg={12}>
-																	<div className="d-flex justify-content-end">
-																		<ButtonGroup size="sm">
-																			{/* <Button
+
+
+										<TabPane tabId="2">
+											<div className="employee-screen">
+												<div className="animated fadeIn">
+													{dialog}
+													{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
+													{/* <Card> */}
+													<CardHeader>
+														<Row>
+															<Col lg={12}>
+																<div className="h4 mb-0 d-flex align-items-center">
+																	<i className="fas fa-object-group" />
+																	<span className="ml-2">{strings.SalaryStructure}</span>
+																</div>
+															</Col>
+														</Row>
+													</CardHeader>
+													<CardBody>
+														{
+															loading ?
+																<Row>
+																	<Col lg={12}>
+																		<Loader />
+																	</Col>
+																</Row>
+																:
+																<Row>
+																	<Col lg={12}>
+																		<div className="d-flex justify-content-end">
+																			<ButtonGroup size="sm">
+																				{/* <Button
                             color="success"
                             className="btn-square"
                             onClick={() => this.getCsvData()}
@@ -699,7 +759,7 @@ class PayrollConfigurations extends React.Component {
                             ref={this.csvLink}
                             target="_blank"
                           />} */}
-																			{/* <Button
+																				{/* <Button
                             color="primary"
                             className="btn-square"
                             onClick={() => this.props.history.push(`/admin/payroll/salaryStructure/create`)}
@@ -708,7 +768,7 @@ class PayrollConfigurations extends React.Component {
                             {strings.NewSalaryStructure}
                           </Button> */}
 
-																			{/* <div style={{ width: "1650px" }}>
+																				{/* <div style={{ width: "1650px" }}>
 																				<Button
 																					color="primary"
 																					className="btn-square pull-right mb-2 mr-2"
@@ -720,7 +780,7 @@ class PayrollConfigurations extends React.Component {
 																					{strings.NewSalaryStructure}
 																				</Button>
 																			</div> */}
-																			{/* <Button
+																				{/* <Button
                             color="warning"
                             className="btn-square"
                             onClick={this.bulkDelete}
@@ -729,9 +789,9 @@ class PayrollConfigurations extends React.Component {
                             <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
                             Bulk Delete
                           </Button> */}
-																		</ButtonGroup>
-																	</div>
-																	{/* <div className="py-3">
+																			</ButtonGroup>
+																		</div>
+																		{/* <div className="py-3">
                         <h5>Filter : </h5>
                         <form >
                           <Row>
@@ -752,89 +812,89 @@ class PayrollConfigurations extends React.Component {
                           </Row>
                         </form>
                          </div> */}
-																	<div>
-																		<BootstrapTable
-																		   selectRow={this.selectRowProp}
-																			search={false}
-																			options={this.options}
-																			data={salaryStructure_list && salaryStructure_list.data ? salaryStructure_list.data : []}
-																			version="4"
-																			hover
-																			// pagination={salaryStructure_list && salaryStructure_list.data && salaryStructure_list.data.length > 0 ? true : false}
-																			keyField="id"
-																			remote
-																			fetchInfo={{ dataTotalSize: salaryStructure_list.count ? salaryStructure_list.count : 0 }}
-																			className="employee-table"
-																			trClassName="cursor-pointer"
-																			// csvFileName="salaryStructure_list.csv"
-																			ref={(node) => this.table = node}
-																		>
-																			<TableHeaderColumn
-																				className="table-header-bg"
-																				dataField="salaryStructureType"
-
+																		<div>
+																			<BootstrapTable
+																				selectRow={this.selectRowProp}
+																				search={false}
+																				options={this.options}
+																				data={salaryStructure_list && salaryStructure_list.data ? salaryStructure_list.data : []}
+																				version="4"
+																				hover
+																				// pagination={salaryStructure_list && salaryStructure_list.data && salaryStructure_list.data.length > 0 ? true : false}
+																				keyField="id"
+																				remote
+																				fetchInfo={{ dataTotalSize: salaryStructure_list.count ? salaryStructure_list.count : 0 }}
+																				className="employee-table"
+																				trClassName="cursor-pointer"
+																				// csvFileName="salaryStructure_list.csv"
+																				ref={(node) => this.table = node}
 																			>
-																				{strings.SalaryStructureType}
-																			</TableHeaderColumn>
-																			<TableHeaderColumn
-																				className="table-header-bg"
-																				dataField="salaryStructureName"
+																				<TableHeaderColumn
+																					className="table-header-bg"
+																					dataField="salaryStructureType"
 
-																			// dataFormat={this.vatCategoryFormatter}
-																			>
-																				{strings.SalaryStructureName}
-																			</TableHeaderColumn>
-																			<TableHeaderColumn
-																				className="table-header-bg"
-																				dataField="salaryStructureName"
+																				>
+																					{strings.SalaryStructureType}
+																				</TableHeaderColumn>
+																				<TableHeaderColumn
+																					className="table-header-bg"
+																					dataField="salaryStructureName"
 
-																			 dataFormat={this.goToDetailForStructure}
-																			>
-																			
-																			</TableHeaderColumn>
-																			
-																		</BootstrapTable>
-																	</div>
-																</Col>
-															</Row>
-													}
-												</CardBody>
-											{/* </Card> */}
-										</div>
-									</div>
-								</TabPane>
+																				// dataFormat={this.vatCategoryFormatter}
+																				>
+																					{strings.SalaryStructureName}
+																				</TableHeaderColumn>
+																				<TableHeaderColumn
+																					className="table-header-bg"
+																					dataField="salaryStructureName"
+
+																					dataFormat={this.goToDetailForStructure}
+																				>
+
+																				</TableHeaderColumn>
+
+																			</BootstrapTable>
+																		</div>
+																	</Col>
+																</Row>
+														}
+													</CardBody>
+													{/* </Card> */}
+												</div>
+											</div>
+										</TabPane>
 
 
-								<TabPane tabId="3">
-									<div className="employee-screen">
-										<div className="animated fadeIn">
-											{dialog}
-											{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
-											{/* <Card> */}
-												<CardHeader>
-													<Row>
-														<Col lg={12}>
-															<div className="h4 mb-0 d-flex align-items-center">
-																<i className="fas fa-object-group" />
-																<span className="ml-2">{strings.EmployeeDesignation}</span>
-															</div>
-														</Col>
-													</Row>
-												</CardHeader>
-												<CardBody>
-													{
-														loading ?
-															<Row>
-																<Col lg={12}>
-																	<Loader />
-																</Col>
-															</Row>
-															:
-															<Row>
-																<Col lg={12}>
-																	<div className="d-flex justify-content-end">
-																		<ButtonGroup size="sm">
-																			{/* <Button
+										<TabPane tabId="3">
+											<div className="employee-screen">
+												<div className="animated fadeIn">
+													{dialog}
+													{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
+													{/* <Card> */}
+													<CardHeader>
+														<Row>
+															<Col lg={12}>
+																<div className="h4 mb-0 d-flex align-items-center">
+																	<i className="fas fa-object-group" />
+																	<span className="ml-2">{strings.EmployeeDesignation}</span>
+																</div>
+															</Col>
+														</Row>
+													</CardHeader>
+													<CardBody>
+														{
+															loading ?
+																<Row>
+																	<Col lg={12}>
+																		<Loader />
+																	</Col>
+																</Row>
+																:
+																<Row>
+																	<Col lg={12}>
+																		<div className="d-flex justify-content-end">
+																			<ButtonGroup size="sm">
+																				{/* <Button
                             color="success"
                             className="btn-square"
                             onClick={() => this.getCsvData()}
@@ -849,19 +909,19 @@ class PayrollConfigurations extends React.Component {
                             target="_blank"
                           />} */}
 
-																			<div style={{ width: "1650px" }}>
-																				<Button
-																					color="primary"
-																					className="btn-square pull-right mb-2 mr-2"
-																					style={{ marginBottom: '10px' }}
-																					onClick={() => this.props.history.push(`/admin/payroll/config/createEmployeeDesignation`)}
+																				<div style={{ width: "1650px" }}>
+																					<Button
+																						color="primary"
+																						className="btn-square pull-right mb-2 mr-2"
+																						style={{ marginBottom: '10px' }}
+																						onClick={() => this.props.history.push(`/admin/payroll/config/createEmployeeDesignation`)}
 
-																				>
-																					<i className="fas fa-plus mr-1" />
-																					{strings.NewDesignation}
-																				</Button>
-																			</div>
-																			{/* <Button
+																					>
+																						<i className="fas fa-plus mr-1" />
+																						{strings.NewDesignation}
+																					</Button>
+																				</div>
+																				{/* <Button
                             color="warning"
                             className="btn-square"
                             onClick={this.bulkDelete}
@@ -870,67 +930,289 @@ class PayrollConfigurations extends React.Component {
                             <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
                             Bulk Delete
                           </Button> */}
-																		</ButtonGroup>
-																	</div>
+																			</ButtonGroup>
+																		</div>
 
-																	<div>
-																		<BootstrapTable
-																			 selectRow={this.selectRowProp}
-																			search={false}
-																			options={this.options}
-																			data={designation_list && designation_list.data ? designation_list.data : []}
-																			version="4"
-																			hover
-																			// pagination={designation_list && designation_list.data && designation_list.data.length > 0 ? true : false}
-																			keyField="id"
-																			remote
-																			fetchInfo={{ dataTotalSize: designation_list.count ? designation_list.count : 0 }}
-																			className="employee-table"
-																			trClassName="cursor-pointer"
-																			csvFileName="designation_list.csv"
-																			ref={(node) => this.table = node}
-																		>
-																			<TableHeaderColumn
-																				className="table-header-bg"
-																				dataField="designationId"
-																				dataFormat={this.renderForId}																				
+																		<div>
+																			<BootstrapTable
+																				selectRow={this.selectRowProp}
+																				search={false}
+																				options={this.options}
+																				data={designation_list && designation_list.data ? designation_list.data : []}
+																				version="4"
+																				hover
+																				// pagination={designation_list && designation_list.data && designation_list.data.length > 0 ? true : false}
+																				keyField="id"
+																				remote
+																				fetchInfo={{ dataTotalSize: designation_list.count ? designation_list.count : 0 }}
+																				className="employee-table"
+																				trClassName="cursor-pointer"
+																				csvFileName="designation_list.csv"
+																				ref={(node) => this.table = node}
 																			>
-																				{strings.DESIGNATIONID}
-																			</TableHeaderColumn>
-																			<TableHeaderColumn
-																				className="table-header-bg"
-																				dataField="designationName"
-																			
-																			// dataFormat={this.vatCategoryFormatter}
-																			>
-																				{strings.DESIGNATIONNAME}
-																			</TableHeaderColumn>
-																			<TableHeaderColumn
-																				className="table-header-bg"
-																				dataField="designationName"
-																		
-																			 dataFormat={this.goToDetailForDesignations}
-																			>
-																			
-																			</TableHeaderColumn>
-																			
-																		</BootstrapTable>
-																	</div>
-																</Col>
-															</Row>
-													}
-												</CardBody>
-											{/* </Card> */}
-										</div>
-									</div>
-								</TabPane>
+																				<TableHeaderColumn
+																					className="table-header-bg"
+																					dataField="designationId"
+																					dataFormat={this.renderForId}
+																				>
+																					{strings.DESIGNATIONID}
+																				</TableHeaderColumn>
+																				<TableHeaderColumn
+																					className="table-header-bg"
+																					dataField="designationName"
 
-							</TabContent>
+																				// dataFormat={this.vatCategoryFormatter}
+																				>
+																					{strings.DESIGNATIONNAME}
+																				</TableHeaderColumn>
+																				<TableHeaderColumn
+																					className="table-header-bg"
+																					dataField="designationName"
 
-						</CardBody>
-					</Card>
-				</div>
-				{/* <ViewPaySlip
+																					dataFormat={this.goToDetailForDesignations}
+																				>
+
+																				</TableHeaderColumn>
+
+																			</BootstrapTable>
+																		</div>
+																	</Col>
+																</Row>
+														}
+													</CardBody>
+													{/* </Card> */}
+												</div>
+											</div>
+										</TabPane>
+										<TabPane tabId="4">
+											<div className="employee-screen">
+												<div className="animated fadeIn">
+													{dialog}
+													{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
+													{/* <Card> */}
+													<CardHeader>
+														<Row>
+															<Col lg={12}>
+																<div className="h4 mb-0 d-flex align-items-center">
+																	<i className="fas fa-object-group" />
+																	<span className="ml-2">Company Details </span>
+																	<i
+																									id="Tooltip"
+																									className="fa fa-question-circle ml-3"
+																								></i>
+																								<UncontrolledTooltip
+																									placement="right"
+																									target="Tooltip"
+																								>
+																									These Company Details Will be Populated On Payroll - SIF (Salary Information File).
+																								</UncontrolledTooltip>
+																</div>
+															</Col>
+														</Row>
+													</CardHeader>
+													<CardBody>
+														{
+															loading ?
+																<Row>
+																	<Col lg={12}>
+																		<Loader />
+																	</Col>
+																</Row>
+																:
+
+																<Formik
+																	ref={this.formRef}
+																	initialValues={this.state.initValue}
+																	onSubmit={(values, { resetForm, setSubmitting }) => {
+																		this.handleSubmit(values, resetForm);
+																	}}
+																	validate={(values) => {
+																		let errors = {};
+																		if (values.companyBankCode.length < 9 && values.companyBankCode.length != 0)
+																			errors.companyBankCode = "Company Bank Code Should Be 9 Digits Numeric ";
+
+																		if (values.companyNumber.length < 13 && values.companyNumber.length != 0)
+																			errors.companyNumber = "Company Number Should Be 13 Digits Numeric ";
+
+																		if (this.state.invalidCompanyBankCode && this.state.invalidCompanyBankCode == true)
+																			errors.companyBankCode = "Company Bank Code Should Be Numeric ";
+
+																		if (this.state.invalidCompanyNumber && this.state.invalidCompanyNumber == true)
+																			errors.companyNumber = "Company Number Should Be Numeric ";
+
+																		return errors;
+																	}}
+																	validationSchema={Yup.object().shape({
+																		companyBankCode: Yup.string().required('Company Bank Code is Required'),
+																		companyNumber: Yup.string().required('Company Number is Required'),
+																	})}
+																>
+																	{(props) => {
+																		const { isSubmitting } = props;
+																		return (
+																			<Form
+																				name="simpleForm"
+																				onSubmit={props.handleSubmit}
+																				className="create-contact-screen"
+																			>
+
+
+																				<Row>
+																					<Col lg={4}>
+																						<FormGroup className="mb-3"><span className="text-danger">* </span>
+																							<Label htmlFor="companyNumber">{strings.company_num}
+																								<i
+																									id="cnoTooltip"
+																									className="fa fa-question-circle ml-1"
+																								></i>
+																								<UncontrolledTooltip
+																									placement="right"
+																									target="cnoTooltip"
+																								>
+																									Company Number is 13 digit Numeric
+																								</UncontrolledTooltip>
+																							</Label>
+																							<Input
+																								type="text"
+																								name="companyNumber"
+																								id="companyNumber"
+																								maxLength="13"
+																								minLength="13"
+
+																								placeholder={"Enter Company Number"}
+																								onChange={(option) => {
+																									if (option.target.value === '' || this.regEx.test(option.target.value,)) {
+																										props.handleChange('companyNumber',)(option.target.value);
+																										this.setState({ invalidCompanyNumber: false })
+																									} else {
+																										props.handleChange('companyNumber',)("");
+																										this.setState({ invalidCompanyNumber: true })
+																									}
+
+																								}
+																								}
+																								className={
+																									props.errors.companyNumber &&
+																										props.touched.companyNumber
+																										? 'is-invalid'
+																										: ''
+																								}
+																								value={props.values.companyNumber}
+																							/>
+																							{props.errors.companyNumber &&
+																								(
+																									<div className='text-danger' >
+																										{props.errors.companyNumber}
+																									</div>
+																								)}
+																						</FormGroup>
+																					</Col>
+																					<Col lg={4}>
+																						<FormGroup className="mb-3"><span className="text-danger">* </span>
+																							<Label htmlFor="companyBankCode">{strings.com_code}
+																								<i
+																									id="cbcodeTooltip"
+																									className="fa fa-question-circle ml-1"
+																								></i>
+																								<UncontrolledTooltip
+																									placement="right"
+																									target="cbcodeTooltip"
+																								>
+																									Company Bank Code is 9 digit Numeric
+																								</UncontrolledTooltip>
+																							</Label>
+																							<Input
+																								type="text"
+																								name="companyBankCode"
+																								id="companyBankCode"
+																								maxLength="9"
+																								minLength="9"
+																								placeholder={"Enter Company Bank Code"}
+																								onChange={(option) => {
+																									if (option.target.value === '' || this.regEx.test(option.target.value)) {
+																										props.handleChange('companyBankCode')(option.target.value);
+																										this.setState({ invalidCompanyBankCode: false })
+																									}
+																									else {
+																										props.handleChange('companyBankCode')("");
+																										this.setState({ invalidCompanyBankCode: true })
+																									}
+																								}
+																								}
+																								className={
+																									props.errors.companyBankCode &&
+																										props.touched.companyBankCode
+																										? 'is-invalid'
+																										: ''
+																								}
+																								value={props.values.companyBankCode}
+																							/>
+																							{props.errors.companyBankCode &&
+																								(
+																									<div className='text-danger' >
+																										{props.errors.companyBankCode}
+																									</div>
+																								)}
+																						</FormGroup>
+																					</Col>
+
+
+																				</Row>
+
+
+																				<Row>
+																				<Col></Col>
+																				<Col>
+																						<Button
+																							color="primary"
+																							type="submit"
+																							className="btn-square pull-right"
+																							// disabled={this.state.disabled}
+																							disabled={isSubmitting}
+																							onClick={() => {
+																								//  added validation popup  msg                                                                
+																								props.handleBlur();
+																								if (props.errors && Object.keys(props.errors).length != 0)
+																									this.props.commonActions.fillManDatoryDetails();
+																							}}
+																						>
+																							<i className="fa fa-dot-circle-o"></i> 	{this.state.disabled
+																								? 'Saving...'
+																								: strings.Save}
+																						</Button>
+																					</Col>
+																				<Col></Col>
+																					
+
+																				</Row>
+
+																				{/* <Button
+																				color="secondary"
+																				className="btn-square"
+																				// onClick={() => {					
+																				// 	closeModal(false);
+																				// }}
+																			>
+																				<i className="fa fa-ban"></i> {strings.Cancel}
+																			</Button> */}
+
+																			</Form>
+																		);
+																	}}
+																</Formik>
+
+														}
+													</CardBody>
+													{/* </Card> */}
+												</div>
+											</div>
+										</TabPane>
+									</TabContent>
+
+								</CardBody>
+							</Card>
+						</div>
+						{/* <ViewPaySlip
 					openModal={this.state.openModal}
 					closeModal={(e) => {
 						this.closeModal(e);
@@ -945,8 +1227,8 @@ class PayrollConfigurations extends React.Component {
 				 Variable={this.state.Variable}
 				 companyData={profile}
 				/> */}
-			</div>
-			</div>
+					</div>
+				</div>
 		);
 	}
 }

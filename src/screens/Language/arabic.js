@@ -199,6 +199,7 @@ RecieptNumber:"عدد إيصال",
       MoreDetails:"مزيد من التفاصيل ",
       OrganizationName:"اسم المؤسسة ",
       POBoxNumber: "رقم صندوق البريد",
+      POBox:"صندوق بريد",
       Telephone:"تلفون ",
       AddressLine1:"سطر العنوان 1",
       AddressLine2:"سطر العنوان 2",
@@ -217,6 +218,7 @@ RecieptNumber:"عدد إيصال",
       VerifyTRN:"تحقق من TRN",
       
       //Income receipts
+      CreateIncomeReciept:"إنشاء إيصال الدخل",
       Receipts:"ايصالات",		
       RECEIPTDATE:"تاريخ الاستلام",		
       RECEIPTNUMBER:"رقم الإيصال",		
@@ -274,12 +276,12 @@ SupplierInvoice:"فاتورة المورد",
 SupplierName:"اسم المورد",
 Supplier:"المورد",			
 AddNewSupplier:"إضافة مورد جديد",			
-			
-													
 AddASupplier:"إضافة مورد",
 
 //Purchase receipts
-Purchasereceipts:"إيصالات الشراء",				
+AddNewReceipt:"إضافة طلب جديد",
+CreatePurchaseReceipt:"إنشاء إيصال الشراء",
+Purchasereceipts:"إيصالات الشراء",		
 PAYMENTDATE:"تاريخ الدفع",					
 PAYMENTNUMBER:"رقم الدفع",				
 AMOUNT:"مبلغ",

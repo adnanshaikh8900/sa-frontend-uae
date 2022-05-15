@@ -247,6 +247,7 @@ Quotation_For:"Devis pour,",
       MoreDetails:"Plus de détails",
       OrganizationName:"Nom de l’organisation",
       POBoxNumber: "Po Numéro de boîte ",
+      POBox:"Boîte postale",
       Telephone:"Téléphone",
       AddressLine1:"Adresse Ligne 1 ",
       AddressLine2:"Adresse Ligne 2 ",
@@ -265,6 +266,8 @@ Quotation_For:"Devis pour,",
       
 
       //Income receipts
+      CreateIncomeReciept:"Créer un reçu de revenu",
+      AddNewReceipt:"Ajouter une nouvelle demande",
       Receipts:"Recette",		
       RECEIPTDATE:"DATE DE RÉCEPTION",		
       RECEIPTNUMBER:"NUMÉRO DE RÉCEPTION",		
@@ -324,7 +327,8 @@ AddNewSupplier:"Ajouter un nouveau fournisseur",
 AddASupplier:"Ajouter Un Fournisseur",
 
 //Purchase receipts
-Purchasereceipts:"Reçus D’achat",				
+Purchasereceipts:"Reçus D’achat",		
+CreatePurchaseReceipt:"Créer un reçu d'achat",		
 PAYMENTDATE:"DATE DE PAIEMENT",					
 PAYMENTNUMBER:"NUMÉRO DE PAIEMENT",				
 AMOUNT:"Quantité",

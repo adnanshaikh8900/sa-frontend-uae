@@ -10,7 +10,6 @@ import {
 	Row,
 	Col,
 	ButtonGroup,
-	Input,
 } from 'reactstrap';
 import { selectOptionsFactory } from 'utils';
 import Select from 'react-select';
@@ -18,17 +17,13 @@ import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { Loader, ConfirmDeleteModal } from 'components';
 import DatePicker from 'react-datepicker';
-
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'bootstrap-daterangepicker/daterangepicker.css';
-
 import { CommonActions } from 'services/global';
 import * as PaymentActions from './actions';
 import moment from 'moment';
-import { CSVLink } from 'react-csv';
-
 import './style.scss';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
@@ -443,7 +438,7 @@ class Payment extends React.Component {
 												{/* <Col lg={2} className="mb-1">
 													<Input
 														type="number"
-min="0"
+														min="0"
 														placeholder={strings.InvoiceAmount}  
 														value={filterData.invoiceAmount}
 														onChange={(e) =>
@@ -471,17 +466,21 @@ min="0"
 												</Col>
 											</Row>
 										</div>
-										{/* <Button
-											color="primary"
-											style={{ marginBottom: '10px' }}
-											className="btn-square"
-											onClick={() =>
-												this.props.history.push(`/admin/expense/payment/create`)
-											}
-										>
-											<i className="fas fa-plus mr-1" />
-											Add New Payment
-										</Button> */}
+										{/* <Row>
+										<div style={{ width: "1650px" }}>
+											<Button
+												color="primary"
+												style={{ marginBottom: '10px' }}
+												className="btn-square pull-right mb-2"
+												onClick={() =>
+													this.props.history.push(`/admin/expense/payment/create`)
+												}
+											>
+												<i className="fas fa-plus mr-1" />
+												{strings.AddNewReceipt}
+											</Button>	
+										</div>
+										</Row>	 */}
 										<div>
 											<BootstrapTable
 												selectRow={this.selectRowProp}

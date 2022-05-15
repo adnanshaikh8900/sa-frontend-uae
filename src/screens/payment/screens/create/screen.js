@@ -20,22 +20,19 @@ import { selectOptionsFactory } from 'utils';
 import { Formik, Field } from 'formik';
 import DatePicker from 'react-datepicker';
 import * as Yup from 'yup';
-import { Loader } from 'components';
 import moment from 'moment';
-
 import API_ROOT_URL from '../../../../constants/config';
 import 'react-datepicker/dist/react-datepicker.css';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
-
 import './style.scss';
 import * as PaymentActions from '../../actions';
 import * as CreatePaymentActions from './actions';
 import * as SupplierInvoiceActions from '../../../supplier_invoice/actions';
-
 import { CommonActions } from 'services/global';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import { Loader } from 'components';
 
 const mapStateToProps = (state) => {
 	return {
@@ -84,7 +81,7 @@ class CreatePayment extends React.Component {
 				paidInvoiceListStr: [],
 				deleteFlag: true,
 			},
-			data: [],
+			data1: [],
 			paidInvoiceListStr: [],
 			currentData: {},
 			openSupplierModal: false,
@@ -100,6 +97,17 @@ class CreatePayment extends React.Component {
 		};
 		this.regEx = /^[0-9\d]+$/;
 		this.formRef = React.createRef();
+
+		this.options = {
+			paginationPosition: 'bottom',
+			page: 1,
+			sizePerPage: 10,
+			onSizePerPageList: this.onSizePerPageList,
+			onPageChange: this.onPageChange,
+			sortName: '',
+			sortOrder: '',
+			onSortChange: this.sortColumn,
+		};
 	}
 
 	onRowSelect = (row, isSelected, e) => {
@@ -163,7 +171,7 @@ class CreatePayment extends React.Component {
 				if (res.status === 200) {
 					this.setState(
 						{
-							data: res.data,
+							data1: res.data,
 							initValue: {
 								...this.state.initValue,
 								...{
@@ -195,8 +203,12 @@ class CreatePayment extends React.Component {
 
 	renderActions = (cell, row) => {
 		return (
-			<Button size="sm" className="btn-twitter btn-brand icon">
+			<Button size="sm" 
+					className="btn-twitter btn-brand icon"
+					disabled={this.state.data1.length === 1 ? true : false}
+				>
 				<i className="fas fa-trash"></i>
+				
 			</Button>
 		);
 	};
@@ -336,7 +348,7 @@ min="0" value="0.00" />;
 	};
 
 	renderAmount = (cell, rows, props) => {
-		let data = this.state.data;
+		let data = this.state.data1;
 		let idx;
 		data.map((obj, index) => {
 			if (obj.id === rows.id) {
@@ -351,14 +363,14 @@ min="0" value="0.00" />;
 				render={({ field, form }) => (
 					<Input
 					type="number"
-min="0"
-						readOnly
-						value={rows.totalAount}
-						// onChange={(e) => {
-						// 	this.selectItem(e, row, 'description', form, field);
-						// }}
-						placeholder={strings.Amount}
-						className={`form-control`}
+					min="0"
+					readOnly
+					value={rows.totalAount}
+					// onChange={(e) => {
+					// 	this.selectItem(e, row, 'description', form, field);
+					// }}
+					placeholder={strings.Amount}
+					className={`form-control`}
 					/>
 				)}
 			/>
@@ -367,17 +379,20 @@ min="0"
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { supplier_list, deposit_list, pay_mode } = this.props;
+		const {	initValue, loadingMsg, loading, data1} = this.state;
+		const { supplier_list, deposit_list,pay_mode } = this.props;
 
-		const { initValue, data } = this.state;
-		const { loading } = this.state;
+		let tmpSupplier_list = []
 
+		supplier_list.map(item => {
+			let obj = {label: item.label.contactName, value: item.value}
+			tmpSupplier_list.push(obj)
+		})
 		return (
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 			<div className="create-payment-screen">
 				<div className="animated fadeIn">
-					{loading ? (
-						<Loader />
-					) : (
+					
 						<Row>
 							<Col lg={12} className="mx-auto">
 								<Card>
@@ -386,7 +401,7 @@ min="0"
 											<Col lg={12}>
 												<div className="h4 mb-0 d-flex align-items-center">
 													<i className="fas fa-money-check" />
-													<span className="ml-2">{strings.CreatePayment} </span>
+													<span className="ml-2">{strings.CreatePurchaseReceipt} </span>
 												</div>
 											</Col>
 										</Row>
@@ -407,6 +422,9 @@ min="0"
 												),
 												depositeTo: Yup.string().required(
 													'Deposit to is Required',
+												),
+												payMode: Yup.string().required(
+													'Payment mode is Required',
 												),
 												paidInvoiceListStr: Yup.string().required(
 													'Please select atleast one invoice',
@@ -433,11 +451,11 @@ min="0"
 																	id="contactId"
 																	name="contactId"
 																	options={
-																		supplier_list
+																		tmpSupplier_list
 																			? selectOptionsFactory.renderOptions(
 																					'label',
 																					'value',
-																					supplier_list,
+																					tmpSupplier_list,
 																					'Supplier Name',
 																			  )
 																			: []
@@ -466,41 +484,12 @@ min="0"
 																	)}
 															</FormGroup>
 														</Col>
-														{/* <Col lg={4}>
-															<FormGroup className="mb-3">
-																<Label htmlFor="project">
-																	<span className="text-danger">* </span> Payment
-																</Label>
-																<Input
-																	type="text"
-																	id="paymentNo"
-																	name="paymentNo"
-																	placeholder=""
-																	disabled
-																	value={props.values.paymentNo}
-																	onChange={(value) => {
-																		props.handleChange('paymentNo')(value);
-																	}}
-																	className={
-																		props.errors.paymentNo &&
-																		props.touched.paymentNo
-																			? 'is-invalid'
-																			: ''
-																	}
-																/>
-																{props.errors.paymentNo &&
-																	props.touched.paymentNo && (
-																		<div className="invalid-feedback">
-																			{props.errors.paymentNo}
-																		</div>
-																	)}
-															</FormGroup>
-														</Col> */}
+													
 													</Row>
 													<hr />
 													{props.values.contactId && (
 														<div>
-															{this.state.data.length > 0 ? (
+															{this.state.data1.length > 0 ? (
 																<div>
 																	<Row>
 																		<Col lg={4}>
@@ -511,10 +500,10 @@ min="0"
 																				</Label>
 																				<Input
 																					type="number"
-min="0"
+																					min="0"
 																					id="amount"
 																					name="amount"
-																					readOnly
+																					// readOnly
 																					placeholder={strings.Amount}
 																					onChange={(option) => {
 																						if (
@@ -589,11 +578,12 @@ min="0"
 																	<Row>
 																		<Col lg={4}>
 																			<FormGroup className="mb-3">
-																				<Label htmlFor="payMode">
-																					{strings.PaymentMode}
+																				<Label>
+																				<span className="text-danger">* </span>{' '}
+																					 {strings.PaymentMode}
 																				</Label>
 																				<Select
-																					styles={customStyles}
+																					// styles={customStyles}
 																					options={
 																						pay_mode
 																							? selectOptionsFactory.renderOptions(
@@ -685,7 +675,7 @@ min="0"
 																							type="text"
 																							id="referenceCode"
 																							name="referenceCode"
-																							placeholder={strings.Enter+strings.ReferenceNumber}
+																							placeholder={strings.Enter+strings.ReceiptNumber}
 																							onChange={(option) => {
 																								if (
 																									option.target.value === '' ||
@@ -706,13 +696,15 @@ min="0"
 																			<Row>
 																				<Col lg={12}>
 																					<FormGroup className="mb-3">
-																						<Label htmlFor="notes">{strings.Notes}</Label>
+																						<Label htmlFor="notes">
+																							{strings.Notes}
+																						</Label>
 																						<Input
 																							type="textarea"
 																							name="notes"
 																							id="notes"
 																							rows="5"
-																							placeholder={strings.Notes}
+																							placeholder={strings.DeliveryNotes}
 																							onChange={(option) =>
 																								props.handleChange('notes')(
 																									option,
@@ -747,7 +739,7 @@ min="0"
 																											className="btn-square mr-3"
 																										>
 																											<i className="fa fa-upload"></i>{' '}
-																											{strings.upload} 
+																											{strings.Attachment} 
 																										</Button>
 																										<input
 																											id="fileInput"
@@ -834,12 +826,23 @@ min="0"
 																	<Row>
 																		<BootstrapTable
 																			selectRow={this.selectRowProp}
-																			data={data}
+																			search={false}
+																			options={this.options}
+																			data={data1}
 																			version="4"
 																			hover
+																			responsive
 																			keyField="id"
-																			className="invoice-create-table"
-																		>
+																			pagination={true}
+																			remote				
+																			
+																			>
+																			
+																			<TableHeaderColumn 
+																				dataField="referenceNo">
+																				{strings.InvoiceNumber} 
+																			</TableHeaderColumn>
+
 																			<TableHeaderColumn
 																				dataField="date"
 																				dataFormat={(cell, rows) =>
@@ -848,15 +851,17 @@ min="0"
 																			>
 																				{strings.Date} 
 																			</TableHeaderColumn>
-																			<TableHeaderColumn dataField="referenceNo">
-																				{strings.InvoiceNumber} 
-																			</TableHeaderColumn>
-																			<TableHeaderColumn dataField="totalAount">
+
+																			<TableHeaderColumn 
+																				dataField="totalAount">
 																				{strings.InvoiceAmount}
 																			</TableHeaderColumn>
-																			<TableHeaderColumn dataField="dueAmount">
+
+																			<TableHeaderColumn 
+																				dataField="dueAmount">
 																				{strings.AmountDue} 
 																			</TableHeaderColumn>
+
 																			<TableHeaderColumn
 																				dataField="paidAmount"
 																				dataFormat={(cell, rows) =>
@@ -933,7 +938,6 @@ min="0"
 								</Card>
 							</Col>
 						</Row>
-					)}
 				</div>
 			</div>
 		);

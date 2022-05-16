@@ -203,7 +203,7 @@ class ExplainTrasactionDetail extends React.Component {
 							bankId: bankId,
 							amount: res.data.amount ? res.data.amount : '',
 							date: res.data.date
-								? moment(res.data.date, 'DD-MM-YYYY').format('DD-MM-YYYY')
+								? res.data.date
 								: '',
 							description: res.data.description ? res.data.description : '',
 							transactionCategoryId: res.data.transactionCategoryId
@@ -230,6 +230,7 @@ class ExplainTrasactionDetail extends React.Component {
 								: '',
 							currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
 						},
+						date: res.data.date ? res.data.date : '',
 						amount: res.data.amount ? res.data.amount : '',
 						currencySymbol:res.data.curruncySymbol?res.data.curruncySymbol: '',
 						expenseType: res.data.expenseType ? true : false,
@@ -549,7 +550,9 @@ class ExplainTrasactionDetail extends React.Component {
 		formData.append('bankId ', bankId ? bankId : '');
 		formData.append(
 			'date',
-			typeof date === 'object' ? moment(date).format('DD/MM/YYYY') : date.replaceAll("-","/"),
+			this.state.date
+			? moment(this.state.date)
+			: date,
 		);
 		formData.append(
 			'exchangeRate',
@@ -735,7 +738,7 @@ class ExplainTrasactionDetail extends React.Component {
 		let formData = new FormData();
 		for (var key in this.state.unexplainValue) {
 			formData.append(key, this.state.unexplainValue[key]);
-			formData.set('date',JSON.stringify(this.state.unexplainValue['date'].replaceAll("-","/")),);
+			formData.set('date',moment(this.state.unexplainValue['date']));
 			if (
 				Object.keys(this.state.unexplainValue['explainParamList']).length > 0
 			) {

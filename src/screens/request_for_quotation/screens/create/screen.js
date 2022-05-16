@@ -112,6 +112,7 @@ class CreateRequestForQuotation extends React.Component {
 			date1:new Date().setMonth(new Date().getMonth() + 1),
 			checked:false,
 			initValue: {
+				receiptNumber: '',
 				total_excise: 0,
 				contact_po_number: '',
 				currencyCode: '',
@@ -648,18 +649,23 @@ class CreateRequestForQuotation extends React.Component {
 										placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 										total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : 0,
 										taxType : res.data.taxType ? true : false,
+										receiptNumber:res.data.rfqNumber ?res.data.rfqNumber:'',	
 								},
 										rfqExpiryDateNoChange: res.data.rfqExpiryDate
 										?  moment(res.data.rfqExpiryDate)
 										: '',
 										rfqReceiveDateNoChange: res.data.rfqReceiveDate
 										? moment(res.data.rfqReceiveDate)
-										: '',	
+										: '',
+									
 										rfqReceiveDate: res.data.rfqReceiveDate
 										? res.data.rfqReceiveDate
 										: '',	
 										rfqExpiryDate: res.data.rfqExpiryDate
 										? res.data.rfqExpiryDate
+										: '',
+										receiptNumber: res.data.receiptNumber
+										? res.data.receiptNumber
 										: '',
 										taxType : res.data.taxType ? true : false,
 								customer_taxTreatment_des : res.data.taxtreatment ? res.data.taxtreatment : '',
@@ -700,6 +706,7 @@ class CreateRequestForQuotation extends React.Component {
 									this.formRef.current.setFieldValue('placeOfSupplyId', res.data.placeOfSupplyId, true);
 									this.formRef.current.setFieldValue('currency', this.getCurrency(res.data.supplierId), true);
 									this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(res.data.supplierId), true);
+									this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
 									this.formRef.current.setFieldValue('notes',  res.data.notes, true);
 									this.addRow();
 								} else {
@@ -727,7 +734,7 @@ class CreateRequestForQuotation extends React.Component {
 	getInitialData = () => {
 		this.props.requestForQuotationAction.getVatList().then((res)=>{
 			if(res.status==200 && res.data)
-			 this.setState({vat_list:res.data})
+			this.setState({vat_list:res.data})
 		});
 		this.getInvoiceNo();
 		this.props.requestForQuotationAction.getSupplierList(this.state.contactType);
@@ -835,6 +842,7 @@ class CreateRequestForQuotation extends React.Component {
 					false,
 					true,
 				);
+				
 			},
 		);
 	};
@@ -1411,6 +1419,7 @@ class CreateRequestForQuotation extends React.Component {
 			currency,
 			rfqExpiryDate,
 			rfqReceiveDate,
+			receiptNumber,
 			supplierId,
 			project,
 			rfq_number,
@@ -1429,6 +1438,10 @@ class CreateRequestForQuotation extends React.Component {
 		formData.append(
 			'rfqExpiryDate',
 			rfqExpiryDate ? rfqExpiryDate : '',
+		);
+		formData.append(
+			'receiptNumber',
+			receiptNumber !== null ? receiptNumber : '',
 		);
 		formData.append('notes', notes ? notes : '');
 		formData.append('type', 3);

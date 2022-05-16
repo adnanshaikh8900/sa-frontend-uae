@@ -32,7 +32,6 @@ import Switch from "react-switch";
 import IconButton from '@material-ui/core/IconButton';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
-import { element } from 'prop-types';
 const mapStateToProps = (state) => {
 	return {
 		expense_list: state.bank_account.expense_list,
@@ -1432,7 +1431,7 @@ class ExplainTrasactionDetail extends React.Component {
 																				)}
 																				<Col className='mb-3' lg={3}>
 															<Label htmlFor="inline-radio3"><span className="text-danger">* </span>{strings.ExpenseType}</Label>
-															<div>
+															<div style={{display:"flex"}}>
 																{this.state.expenseType === false ?
 																	<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Claimable}</b></span> :
 																	<span className='mr-4'>{strings.Claimable}</span>}

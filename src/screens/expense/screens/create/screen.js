@@ -15,29 +15,23 @@ import {
 	Label,
 } from 'reactstrap';
 import Select from 'react-select';
-
 import DatePicker from 'react-datepicker';
-
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
-
 import { CommonActions } from 'services/global';
 import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
 import * as ExpenseActions from '../../actions';
 import * as ExpenseCreateActions from './actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
-
-
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
-
 import './style.scss';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { Checkbox } from '@material-ui/core';
 import Switch from "react-switch";
-import moment from 'moment';
 import { TextareaAutosize } from '@material-ui/core';
+
 const mapStateToProps = (state) => {
 	return {
 		currency_list: state.expense.currency_list,
@@ -1146,9 +1140,9 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		)}
 																</FormGroup>
 															</Col>)}
-															<Col className='mb-5' lg={5}>
+															<Col className='mb-2' lg={3}>
 																<Label htmlFor="inline-radio3"><span className="text-danger">* </span>{strings.ExpenseType}</Label>
-																<div>
+																<div style={{display:"flex"}}>
 																	{this.state.expenseType === false ?
 																		<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Claimable}</b></span> :
 																		<span className='mr-4'>{strings.Claimable}</span>}
@@ -1176,6 +1170,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																	{this.state.expenseType === true ?
 																		<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.NonClaimable}</b></span> : 
 																		<span className='ml-4'>{strings.NonClaimable}</span>
+																		
 																	}
 																</div>
 

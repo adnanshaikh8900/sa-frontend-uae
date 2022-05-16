@@ -60,7 +60,7 @@ export const getTransactionCategoryList = (obj) => {
 	return (dispatch) => {
 		let data = {
 			method: 'GET',
-			url: `/rest/transactioncategory/getList`,
+			url: `/rest/transactioncategory/getList?transactionCategoryCode=${transactionCategoryCode}&transactionCategoryName=${transactionCategoryName}&chartOfAccountId=${chartOfAccountId}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`,
 		};
 		return authApi(data)
 			.then((res) => {

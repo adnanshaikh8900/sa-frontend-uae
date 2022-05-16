@@ -234,7 +234,7 @@ class Expense extends React.Component {
 								</div>
 							</DropdownItem>
 						)}
-						{ row.payee !== 'Company Expense' &&(
+						{row.bankAccountId === null &&(
 							<DropdownItem					
 								onClick={() =>
 									this.props.history.push(`/admin/expense/expense/create`,{parentId: row.expenseId})

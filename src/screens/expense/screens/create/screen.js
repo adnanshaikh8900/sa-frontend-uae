@@ -178,7 +178,7 @@ class CreateExpense extends React.Component {
 										? res.data.expenseCategory
 										: '',
 									expenseAmount: res.data.expenseAmount,
-									vatCategoryId: vatCategoryId,
+									vatCategoryId: vatCategoryId ? vatCategoryId : '',
 									payMode: res.data.payMode ? res.data.payMode : '',
 									bankAccountId: res.data.bankAccountId
 										? res.data.bankAccountId

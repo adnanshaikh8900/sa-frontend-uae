@@ -3137,8 +3137,7 @@ existForAccountNumber = (value) => {
                                                                                 value={this.state.ctcTypeOption}
                                                                                 onChange={(e) => {															
                                                                                 this.setState({ctcTypeOption:e,ctcType:e.label})	
-                                                                                props.handleChange('CTC')(0);
-                                                                                this.updateSalary(0)													
+                                                                                this.updateSalary(e.label=="ANNUALLY"?props.values.CTC:parseFloat(props.values.CTC)*12);														
                                                                                 }}
                                                                                 />
                                                                  </div>

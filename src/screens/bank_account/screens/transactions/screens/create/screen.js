@@ -316,7 +316,7 @@ class CreateBankTransaction extends React.Component {
 		formData.append('bankId ', bankAccountId ? bankAccountId : '');
 		formData.append(
 			'date',
-			transactionDate ? moment(transactionDate).format('DD/MM/YYYY') : '',
+			transactionDate ? transactionDate : '',
 		);
 		formData.append('description', description ? description : '');
 		formData.append('amount', transactionAmount ? transactionAmount : '');

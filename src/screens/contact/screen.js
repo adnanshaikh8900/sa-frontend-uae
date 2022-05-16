@@ -428,7 +428,7 @@ class Contact extends React.Component {
 	contactName = (cell,row) => {
 		if(row.organization === null || row.organization === "")
 		{return row.fullName ? row.fullName : '-'}
-		else{return row.organization ? row.organization : '-'}
+		else{return row.organization ? row.fullName+" ("+row.organization+")" : '-'}
 		
 	}
 	render() {
@@ -556,7 +556,7 @@ class Contact extends React.Component {
 															isKey
 															dataField="fullName"
 															dataSort
-														    columnTitle={this.customName}
+														    dataFormat={this.contactName}
 															className="table-header-bg"
 														>
 															{strings.CONTACTORGANIZATIONTNAME}

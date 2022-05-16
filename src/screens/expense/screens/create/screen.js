@@ -1146,7 +1146,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		)}
 																</FormGroup>
 															</Col>)}
-															<Col className='mb-5' lg={3}>
+															<Col className='mb-5' lg={5}>
 																<Label htmlFor="inline-radio3"><span className="text-danger">* </span>{strings.ExpenseType}</Label>
 																<div>
 																	{this.state.expenseType === false ?

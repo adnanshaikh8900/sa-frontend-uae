@@ -495,7 +495,7 @@ this.props.customerInvoiceActions
 								<i className="fas fa-file" /> {strings.Draft}
 							</DropdownItem>
 						)}
-						{row.statusEnum !== 'Draft' && row.statusEnum !== 'Paid' && row.exchangeRate === 1 && (
+						{row.statusEnum !== 'Draft' && row.statusEnum !== 'Paid' && row.exchangeRate ==1 && (
 							<DropdownItem
 								onClick={() =>
 									this.props.history.push(
@@ -987,6 +987,7 @@ this.props.customerInvoiceActions
 					vatAmount: customer.totalVatAmount,
 					cnCreatedOnPaidInvoice:customer.cnCreatedOnPaidInvoice,
 					editFlag:customer.editFlag,
+					exchangeRate:customer.exchangeRate,
 				}))
 				: '';
 

@@ -107,12 +107,12 @@ class PayrollRun extends React.Component {
 		};
 
 		this.selectRowProp = {
-			mode: 'checkbox',
+			//	mode: 'checkbox',
 			bgColor: 'rgba(0,0,0, 0.05)',
 			clickToSelect: false,
 			onSelect: this.onRowSelect,
-			onSelectAll: this.onSelectAll
-		}
+			onSelectAll: this.onSelectAll,
+		};
 		this.csvLink = React.createRef();
 	}
 
@@ -138,23 +138,17 @@ class PayrollRun extends React.Component {
 	};
 
 	initializeData = (search) => {
-		const { initValue } = this.state;
-		const postData =
-			initValue.presentdate
 
-
-		// this.props.payRollActions.getIncompletedEmployeeList()
-		// .then((res) => {
-		// 	if (res.status === 200) {
-
-		// 		this.setState({
-		// 			incompleteEmployeeList: res.data,
-		// 		})
-		// 	}
-		// })
-		// .catch((err) => {
-		// 	this.setState({ loading: false });
-		// });
+			let { filterData } = this.state;
+			const paginationData = {
+				pageNo: this.options.page ? this.options.page - 1 : 0,
+				pageSize: this.options.sizePerPage,
+			};
+			const sortingData = {
+				order: this.options.sortOrder ? this.options.sortOrder : '',
+				sortingCol: this.options.sortName ? this.options.sortName : '',
+			};
+			const postData = { ...filterData, ...paginationData, ...sortingData };
 
 		this.props.payRollActions
 			.getPayrollList(postData)
@@ -790,12 +784,20 @@ class PayrollRun extends React.Component {
 														search={false}
 														options={this.options}
 														data={this.state.payroll_employee_list1 &&
-															this.state.payroll_employee_list1 ? this.state.payroll_employee_list1 : []}
+															this.state.payroll_employee_list1.data ? this.state.payroll_employee_list1.data : []}
 														version="4"
 														hover
 														keyField="employeeId"
 														remote
-														// fetchInfo={{ dataTotalSize: payroll_employee_list.count ? payroll_employee_list.count : 0 }}
+														pagination={
+															this.state.payroll_employee_list1 &&
+															this.state.payroll_employee_list1.data &&
+															this.state.payroll_employee_list1.data.length > 0 
+																? true
+																: false
+														}
+														fetchInfo={{ dataTotalSize: this.state.payroll_employee_list1 &&
+															this.state.payroll_employee_list1.count ? this.state.payroll_employee_list1.count : 0 }}
 														// className="employee-table mt-4"
 														trClassName="cursor-pointer"
 														csvFileName="payroll_employee_list.csv"

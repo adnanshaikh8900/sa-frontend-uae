@@ -366,7 +366,7 @@ class SupplierInvoice extends React.Component {
 								<i className="fas fa-file" /> {strings.Draft}
 							</DropdownItem>
 						)}
-						{row.statusEnum !== 'Draft' && row.statusEnum !== 'Paid' && row.exchangeRate === 1 &&  (
+						{row.statusEnum !== 'Draft' && row.statusEnum !== 'Paid' && row.exchangeRate == 1 &&  (
 							<DropdownItem
 								onClick={() =>
 									this.props.history.push(
@@ -785,6 +785,7 @@ console.log(supplier_invoice_list)
 						currencySymbol: supplier.currencySymbol ? supplier.currencySymbol : '',
 						contactId: supplier.contactId,
 						editFlag:supplier.editFlag,
+						exchangeRate:supplier.exchangeRate,
 				  }))
 				: '';
 

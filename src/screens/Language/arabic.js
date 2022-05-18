@@ -199,7 +199,7 @@ RecieptNumber:"عدد إيصال",
       MoreDetails:"مزيد من التفاصيل ",
       OrganizationName:"اسم المؤسسة ",
       POBoxNumber: "رقم صندوق البريد",
-      POBox:"صندوق بريد",
+      POBox:"ص. صندوق",
       Telephone:"تلفون ",
       AddressLine1:"سطر العنوان 1",
       AddressLine2:"سطر العنوان 2",
@@ -232,7 +232,8 @@ RecieptNumber:"عدد إيصال",
 
       //Create Quotation
       CreateQuotation:"إنشاء عرض أسعار",		
-      QuotationNumber:"رقم الكواتيشن",					
+      QuotationNumber:"رقم الكواتيشن",	
+      QuotationNo:"سؤال رقم",				
       ExpirationDate:"تاريخ انتهاء الصلاحية ",			
       CreateSupplier:"إنشاء المورد ",		
 
@@ -306,7 +307,8 @@ ExpiryDate:"تاريخ انتهاء الصلاحية",
 			
 //Purchase Order
 PurchaseOrder:"أمر الشراء",				
-PONUMBER:"رقم البريد",						
+PONUMBER:"رقم البريد",		
+PONo:"PO لا",				
 PODATE:"تاريخ أمر الشراء",		
 POEXPIRYDATE:"تاريخ انتهاء صلاحية أمر الشراء",
 POExpiryDate:"تاريخ انتهاء صلاحية أمر الشراء",					
@@ -324,7 +326,8 @@ PODueDate:"تاريخ استحقاق أمر الشراء",
 		
 //GRN
 GoodsReceivedNotes:"البضائع المستلمة ملاحظات",						
-GRNNUMBER:"رقم الملاحظات المستلمة للسلع ",									
+GRNNUMBER:"رقم الملاحظات المستلمة للسلع ",
+GRNNo:"GRN لا",									
 GRNRECEIVEDATE:"تاريخ استلام الملاحظات المستلمة للبضائع ",			
 GRNREMARKS:"ملاحظات ملاحظات الملاحظات المستلمة للسلع",			
 AddNewGoodsReceivedNotes:"إضافة مذكرة استلام بضائع جديدة",

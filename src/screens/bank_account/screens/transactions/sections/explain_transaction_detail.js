@@ -2531,7 +2531,8 @@ class ExplainTrasactionDetail extends React.Component {
 																			<Col lg={12} className="mt-5">
 																				<FormGroup className="text-left">
 																					{props.values.explinationStatusEnum !==
-																						'FULL' ? (
+																						'FULL' && props.values.explinationStatusEnum !==
+																						'PARTIAL' ? (
 																							<div>
 																								<Button
 																									type="button"

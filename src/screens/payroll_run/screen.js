@@ -174,7 +174,9 @@ class PayrollRun extends React.Component {
 		 
 		var userValue = user_approver_generater_dropdown_list.length ? user_approver_generater_dropdown_list[0].value : '';
 		var userLabel = user_approver_generater_dropdown_list.length ? user_approver_generater_dropdown_list[0].label : '';
-
+		if(row.status=="Void")
+		toast.success("Unable to View Void Payroll !")
+		else
 		if (userValue.toString() === row.generatedBy && userLabel === "Payroll Generator") {
 			this.props.history.push('/admin/payroll/payrollrun/updatePayroll', { id: row.id })
 		}
@@ -413,6 +415,8 @@ class PayrollRun extends React.Component {
 			classname = 'label-sent';
 		}else if (row.status === 'Partially Paid') {
 			classname = 'label-PartiallyPaid';
+		}else if (row.status === 'Void') {
+			classname = 'label-closed';
 		}
 		// else {
 		// 	classname = 'label-overdue';

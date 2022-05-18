@@ -302,7 +302,20 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 				this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'File Already Opened please close file')
 			})
 	}
-
+	voidPayroll=()=>{
+		let formData={
+			postingRefId:this.state.payroll_id,
+			postingRefType:"PAYROLL"
+		}
+		this.props.createPayrollActions.voidPayroll(formData).then((res)=>{
+			if(res.status===200){
+				toast.success("Payroll Voided Successfully");
+				this.props.history.push('/admin/payroll/payrollrun')
+			}
+		}).catch((err)=>{
+			toast.error("Payroll Voided UnSuccessfully")
+		})
+	}
 	handleSubmit = (data, resetForm) => {
 		this.setState({ disabled: true });
 		const {
@@ -535,7 +548,22 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 																)	:
 																	""	
 																	}
+
+                                                {this.state.status==="Approved" &&(  <Button
+																			type="button"
+																			color="primary"
+																			className="btn-square mb-3 pull-right "
+																			onClick={() =>{
+																					this.voidPayroll()
+																			}
+																			}	
+																		>
+																			<i class="fas fa-user-times mr-1"></i>
+
+																			Void This Payroll
+																		</Button>)}
 																	</Col>
+																
 
 				</Row>
 				<div >

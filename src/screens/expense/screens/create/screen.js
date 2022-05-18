@@ -164,7 +164,7 @@ class CreateExpense extends React.Component {
 								current_expense_id: this.props.location.state.expenseId,
 								initValue: {
 									expenseNumber:res.data.expenseNumber,
-									payee: res.data.payee,
+									payee:res.data.payee ? res.data.payee :'', 
 									expenseDate: res.data.expenseDate ? res.data.expenseDate : '',
 									currency: res.data.currencyCode ? res.data.currencyCode : '',
 									currencyName:res.data.currencyName ? res.data.currencyName : '',
@@ -193,6 +193,7 @@ class CreateExpense extends React.Component {
 									taxTreatmentId:res.data.taxTreatmentId ?res.data.taxTreatmentId:'',
 									
 								},
+								payee:res.data.payee ? res.data.payee :'', 
 								expenseType: res.data.expenseType ? true : false,
 								showPlacelist:res.data.taxTreatmentId !=8?true:false,
 								lockPlacelist:res.data.taxTreatmentId ==7?true:false,
@@ -226,7 +227,7 @@ class CreateExpense extends React.Component {
 
 								this.formRef.current.setFieldValue('expenseDate', new Date(res.data.expenseDate), true);
 								let payee=	selectOptionsFactory.renderOptions(	'label','value',	this.props.pay_to_list,	'Payee',)
-																.find((option) =>	option.label ==res.data.payee)
+																.find((option) => 	option.label == res.data.payee)
 								this.formRef.current.setFieldValue('payee',payee, true);
 
 								let currency=	selectCurrencyFactory.renderOptions(	'currencyName','currencyCode',this.props.currency_convert_list,'Currency',)
@@ -236,8 +237,8 @@ class CreateExpense extends React.Component {
 																	)
 								this.formRef.current.setFieldValue('currency',currency , true);
 								this.formRef.current.setFieldValue('currencyCode',currency , true);
-								this.setExchange(currency.value);
-								this.setCurrency(currency.value);
+								this.setExchange(currency && currency.value);
+								this.setCurrency(currency && currency.value);
 							let payMode=	selectOptionsFactory.renderOptions('label',	'value',this.props.pay_mode_list,	'',)
 																.find((option)=>option.value==res.data.payMode)
 								this.formRef.current.setFieldValue('payMode',payMode , true);
@@ -474,9 +475,8 @@ class CreateExpense extends React.Component {
 		let result = this.props.currency_convert_list.filter((obj) => {
 		return obj.currencyCode === value;
 		});
-		console.log( this.props.currency_convert_list)
-		console.log(result)
-this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
+	
+		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
 			}
 		};
 
@@ -485,8 +485,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 			let result = this.props.currency_convert_list.filter((obj) => {
 			return obj.currencyCode === value;
 			});
-			console.log( this.props.currency_convert_list)
-			console.log(result)
+			
 			this.formRef.current.setFieldValue('curreancyname', result[0].currencyName, true);
 			}
 		};
@@ -665,8 +664,8 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 	renderVat=(props)=>{
 		let vat_list=[]
 		let vatIds=[]
-		if(this.state.isDesignatedZone && this.state.isDesignatedZone !=null&&this.state.isDesignatedZone==true)
-			switch(props.values.taxTreatmentId.value ?props.values.taxTreatmentId.value:''){
+		if(this.state.isDesignatedZone && this.state.isDesignatedZone !=null&&this.state.isDesignatedZone==true){
+			switch(props.values.taxTreatmentId && props.values.taxTreatmentId.value ?props.values.taxTreatmentId.value:''){
 
 				case 1: 
 				case 3: 
@@ -698,6 +697,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 					
 				break;
 			}
+		}
 		else
 //Not Designated Zone		
 			if(this.state.isDesignatedZone==false)
@@ -825,7 +825,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 				},
 			}),
 		};
-		console.log(pay_to_list)
+		console.log(this.state.payee)
 		return (
 			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 			<div>
@@ -1464,7 +1464,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		)}
 																</FormGroup>
 															</Col>
-																{this.state.payee && this.state.payee.value === 'Company Expense'  ? 
+																{this.state.payee  && this.state.payee.value === 'Company Expense' || this.state.payee === 'Company Expense' ? 
 															<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="payMode"><span className="text-danger">* </span> {strings.PayThrough}</Label>

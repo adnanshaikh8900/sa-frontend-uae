@@ -297,7 +297,8 @@ class ExplainTrasactionDetail extends React.Component {
 						
 						if (
 							this.props.selectedData.explinationStatusEnum === 'FULL' ||
-							this.props.selectedData.explinationStatusEnum === 'RECONCILED'
+							this.props.selectedData.explinationStatusEnum === 'RECONCILED'||
+							this.props.selectedData.explinationStatusEnum === 'PARTIAL'
 						) {
 							const id = this.state.chartOfAccountCategoryList[0].options.find(
 								(option) => option.value === this.state.initValue.coaCategoryId,
@@ -944,9 +945,6 @@ class ExplainTrasactionDetail extends React.Component {
 			}	
 		}
 
-		console.log(this.state.basecurrency,"base")
-		console.log(this.state.bankAccountCurrency,"bank")
-		console.log(this.state.supplier_currencyCode,"vendor")
 		return (
 			<div className="detail-bank-transaction-screen">
 				<div className="animated fadeIn">

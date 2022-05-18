@@ -106,8 +106,8 @@ class PayrollEmployee extends React.Component {
     initializeData = (search) => {
         const { filterData } = this.state
         const paginationData = {
-            // pageNo: this.options.page ? this.options.page - 1 : 0,
-            // pageSize: this.options.sizePerPage
+            pageNo: this.options.page ? this.options.page - 1 : 0,
+            pageSize: this.options.sizePerPage
         }
         const sortingData = {
             order: this.options.sortOrder ? this.options.sortOrder : '',

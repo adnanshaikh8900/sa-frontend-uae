@@ -223,6 +223,9 @@ class DetailRequestForQuotation extends React.Component {
 										rfqReceiveDate1: res.data.rfqReceiveDate
 										? res.data.rfqReceiveDate
 										: '',
+										receiptNumber: res.data.receiptNumber
+										? res.data.receiptNumber
+										: '',
 										rfqExpiryDate: res.data.rfqExpiryDate
 										? moment(res.data.rfqExpiryDate).format('DD-MM-YYYY')
 										: '',
@@ -1202,6 +1205,7 @@ class DetailRequestForQuotation extends React.Component {
 		const { current_rfq_id, term } = this.state;
 		const {
 			rfqReceiveDate,
+			receiptNumber,
 			rfqExpiryDate,
 			supplierId,
 			rfqNumber,
@@ -1250,6 +1254,10 @@ debugger
 					: '',
 			);
 		}
+		formData.append(
+			'receiptNumber',
+			receiptNumber !== null ? receiptNumber : '',
+		);
 		formData.append('notes', notes ? notes : '');
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
 		formData.append('totalVatAmount', this.state.initValue.totalVatAmount);

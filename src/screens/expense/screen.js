@@ -112,6 +112,7 @@ class Expense extends React.Component {
 	componentDidMount = () => {
 		this.props.expenseActions.getExpenseCategoriesList();
 		this.initializeData();
+		this.props.expenseActions.getVatList();
 		this.props.expenseActions.getPaytoList();
 	};
 
@@ -233,7 +234,7 @@ class Expense extends React.Component {
 								</div>
 							</DropdownItem>
 						)}
-						{ row.payee !== 'Company Expense' &&(
+						{row.bankAccountId === null &&(
 							<DropdownItem					
 								onClick={() =>
 									this.props.history.push(`/admin/expense/expense/create`,{parentId: row.expenseId})
@@ -869,9 +870,9 @@ class Expense extends React.Component {
 													: 0,
 											}}
 											multiColumnSort
-											//className="expense-table"
-											// trClassName="cursor-pointer"
-											//ref={(node) => (this.table = node)}
+											className="expense-table"
+											trClassName="cursor-pointer"
+											ref={(node) => (this.table = node)}
 											csvFileName="expense_list.csv"
 										>
 											<TableHeaderColumn

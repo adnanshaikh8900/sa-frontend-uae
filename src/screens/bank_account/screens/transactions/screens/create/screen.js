@@ -17,16 +17,12 @@ import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
-
 import { CommonActions } from 'services/global';
-
 import moment from 'moment';
-
 import * as transactionCreateActions from './actions';
 import * as transactionActions from '../../actions';
 import * as detailBankAccountActions from '../../../detail/actions';
 import * as CurrencyConvertActions from '../../../../../currencyConvert/actions';
-
 import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
 import {data}  from '../../../../../Language/index'
@@ -316,7 +312,7 @@ class CreateBankTransaction extends React.Component {
 		formData.append('bankId ', bankAccountId ? bankAccountId : '');
 		formData.append(
 			'date',
-			transactionDate ? moment(transactionDate).format('DD/MM/YYYY') : '',
+			transactionDate ? transactionDate : '',
 		);
 		formData.append('description', description ? description : '');
 		formData.append('amount', transactionAmount ? transactionAmount : '');
@@ -1029,7 +1025,7 @@ class CreateBankTransaction extends React.Component {
 																		)}
 																		<Col className='mb-6' lg={6}>
 																<Label htmlFor="inline-radio3"><span className="text-danger">* </span>{strings.ExpenseType}</Label>
-																<div>
+																<div style={{display:"flex"}}>
 																	{this.state.expenseType === false ?
 																		<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Claimable}</b></span> :
 																		<span className='mr-4'>{strings.Claimable}</span>}

@@ -8,24 +8,15 @@ import {
 	Button,
 	Row,
 	Col,
-	ButtonGroup,
-	Input,
 	ButtonDropdown,
 	DropdownToggle,
 	DropdownMenu,
 	DropdownItem,
 } from 'reactstrap';
-import Select from 'react-select';
-
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import { CSVLink } from 'react-csv';
-
-import { Loader, ConfirmDeleteModal, Currency } from 'components';
-import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
-
+import { Loader, ConfirmDeleteModal, } from 'components';
 import { CommonActions } from 'services/global';
 import * as BankAccountActions from './actions';
-
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
@@ -822,6 +813,7 @@ class BankAccount extends React.Component {
 											>
 												
 												<TableHeaderColumn
+													tdStyle={{ whiteSpace: 'normal' }}
 													dataField="name"
 													dataSort
 													width="8%"

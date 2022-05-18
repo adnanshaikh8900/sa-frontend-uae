@@ -13,22 +13,16 @@ import {
 	FormGroup,
 	Input,
 	Label,
-	NavLink,
 } from 'reactstrap';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
-
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
-
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
-
 import {  ConfirmDeleteModal } from 'components';
 import { ViewExpenseDetails } from './sections';
-
 import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
-
 import * as ExpenseDetailsAction from './actions';
 import * as ExpenseActions from '../../actions';
 import { CommonActions } from 'services/global';
@@ -37,11 +31,11 @@ import * as ExpenseCreateActions from '../create/actions';
 import { TextareaAutosize } from '@material-ui/core';
 import moment from 'moment';
 import './style.scss';
-import API_ROOT_URL from '../../../../constants/config';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { Checkbox } from '@material-ui/core';
 import Switch from "react-switch";
+
 const mapStateToProps = (state) => {
 	return {
 		expense_detail: state.expense.expense_detail,
@@ -1040,7 +1034,7 @@ class DetailExpense extends React.Component {
 
 															<Col className='mb-4' lg={3}>
 															<Label htmlFor="inline-radio3"><span className="text-danger">* </span>{strings.ExpenseType}</Label>
-															<div>
+															<div style={{display:"flex"}}>
 																{this.state.expenseType === false ?
 																	<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Claimable}</b></span> :
 																	<span className='mr-4'>{strings.Claimable}</span>}
@@ -1066,8 +1060,8 @@ class DetailExpense extends React.Component {
 																/>
 
 																{this.state.expenseType === true ?
-																	<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.NonClaimable}</b></span>
-																	: <span className='ml-4'>{strings.NonClaimable}</span>
+																	<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.NonClaimable}</b></span> : 
+																	<span className='ml-4'>{strings.NonClaimable}</span>
 																}
 																</div>
 

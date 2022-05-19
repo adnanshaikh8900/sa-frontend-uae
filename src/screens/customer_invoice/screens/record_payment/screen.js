@@ -426,7 +426,7 @@ class RecordCustomerPayment extends React.Component {
 															'Deposit To is Required',
 														),
 														payMode: Yup.string().required(
-															'Payment mode is Required',
+															'Payment Mode is Required',
 														),
 														amount: Yup.mixed()
 														.test(

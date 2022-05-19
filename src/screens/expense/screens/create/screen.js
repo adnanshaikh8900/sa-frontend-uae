@@ -437,6 +437,7 @@ class CreateExpense extends React.Component {
 						resetForm(this.state.initValue);
 						this.setState({
 							createMore: false,
+							loading:false,
 						});
 					} else {
 						this.props.history.push('/admin/expense/expense');

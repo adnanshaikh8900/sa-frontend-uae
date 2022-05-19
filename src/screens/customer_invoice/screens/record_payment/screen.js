@@ -115,7 +115,7 @@ class RecordCustomerPayment extends React.Component {
 		];
 		this.regEx = /^[0-9\b]+$/;
 		this.regExBoth = /^[a-zA-Z0-9\s\D,'-/]+$/;
-		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/; 
+		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 
 		this.file_size = 1024000;
 		this.supported_format = [
@@ -416,8 +416,8 @@ class RecordCustomerPayment extends React.Component {
 													}}
 													validate={(values) => {
                                                     let errors = {};
-													 if (values.amount < 0) {
-                                                      errors.amount ='Amount Cannot be Less Than 0';
+													 if (values.amount <= 0) {
+                                                      errors.amount ='Amount Cannot be empty or 0';
 												 }
                                                  return errors
 												 }}
@@ -561,7 +561,7 @@ class RecordCustomerPayment extends React.Component {
 																		</Label>
 																		<Input
 																			type="text"
-																			min="0.01"
+																			min={0}
 																			maxLength="14,2"
 																			id="amount"
 																			name="amount"
@@ -569,10 +569,13 @@ class RecordCustomerPayment extends React.Component {
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
-																					this.regDecimal.test(option.target.value),
-																					props.handleChange('amount')(option)
+																					this.regDecimal.test(
+																						option.target.value,
+																					)
 																				) {
-																					props.handleChange('amount')(option);
+																					props.handleChange('amount')(
+																						option,
+																					);
 																				}
 																			}}
 																			placeholder={strings.AmountReceived}

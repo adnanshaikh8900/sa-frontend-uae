@@ -16,7 +16,6 @@ import {
 } from 'reactstrap';
 import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import { Currency } from 'components';
 import DatePicker from 'react-datepicker';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
@@ -24,22 +23,19 @@ import * as CustomerInvoiceCreateActions from './actions';
 import * as CustomerInvoiceActions from '../../actions';
 import * as ProductActions from '../../../product/actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
-import { CustomerModal, ProductModal,InvoiceNumberModel} from '../../sections';
+import { CustomerModal, ProductModal} from '../../sections';
 import { MultiSupplierProductModal } from '../../sections';
-import {  ImageUploader, Loader } from 'components';
+import {  Loader } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import { optionFactory, selectCurrencyFactory, selectOptionsFactory } from 'utils';
 import Switch from "react-switch";
-
 import './style.scss';
 import moment from 'moment';
-
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { TextareaAutosize } from '@material-ui/core';
-
 
 const mapStateToProps = (state) => {
 	return {
@@ -734,8 +730,8 @@ this.props.customerInvoiceCreateActions.getQuotationById(quotationId)
 								state=   state_list_for_shipping.find((option) =>	option.value ==this.state.initValue.shippingStateId)
 														
 								this.formRef.current.setFieldValue('shippingStateId',state, true);	
-								if(this.props.country_list &&this.props.country_list.length>0){
-									let country=  selectOptionsFactory.renderOptions(
+								if(this.props.country_list && this.props.country_list.length>0){
+									let country = selectOptionsFactory.renderOptions(
 																					'countryName',
 																					'countryCode',
 																					this.props.country_list,
@@ -1394,7 +1390,7 @@ discountType = (row) =>
 						   <Input
 						type="text"
 						maxLength="250"
-						value={row['description'] !== '' ? row['description'] : ''}
+						value={row['description'] !== '' && row['description'] !== null ? row['description'] : ''}
 						onChange={(e) => {
 							this.selectItem(e.target.value, row, 'description', form, field);
 						}}
@@ -2433,9 +2429,12 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		onChange={(option) => {
 																			if (option && option.value) {
 																				this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
-																				 this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(option.value), true);
+																				this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(option.value), true);
 																				this.setExchange( this.getCurrency(option.value) );
 																				props.handleChange('contactId')(option);
+																				this.setState({
+																					contactId : option.value
+																				})
 																			} else {
 																				props.handleChange('contactId')('');
 																			}
@@ -2558,11 +2557,14 @@ if(changeShippingAddress && changeShippingAddress==true)
 																				? 'is-invalid'
 																				: ''
 																		}
-																		onChange={(option) =>
+																		onChange={(option) =>{
 																			props.handleChange('placeOfSupplyId')(
 																				option,
 																			)
-																		}
+																			this.setState({
+																				placeOfSupplyId : option
+																		})
+																		}}
 																	/>
 																	{props.errors.placeOfSupplyId &&
 																		props.touched.placeOfSupplyId && (
@@ -3358,7 +3360,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																			this.renderUnitPrice(cell, rows, props)
 																		}
 																	>
-																	{strings.UNITPRICE}
+																	{strings.UnitPrice}
 																		<i
 																			id="UnitPriceTooltip"
 																			className="fa fa-question-circle ml-1"

@@ -298,7 +298,7 @@ NewSupplier:"New Supplier",
 			
 //RFQ			
 RequestForQuotation:"Request For Quotation",						
-RFQNUMBER:"RFQ NUMBER",	
+RFQNUMBER:"RFQ Number",	
 RFQDate:"RFQ Date",								
 RFQDATE:"RFQ DATE",			
 RFQDUEDATE:"RFQ DUE DATE",

@@ -21,28 +21,23 @@ import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import * as SupplierInvoiceCreateActions from './actions';
 import * as PurchaseOrderCreateAction from './actions'
-
 import { TextareaAutosize } from '@material-ui/core';
 import * as PurchaseOrderAction from '../../actions';
 import * as RequestForQuotationDetailsAction from '../../../request_for_quotation/screens/detail/actions'
 import * as ProductActions from '../../../product/actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
-
 import { SupplierModal } from '../../../supplier_invoice/sections/index';
 import {   Loader } from 'components';
 //import { SupplierModal } from '../../sections';
 import { ProductModal } from '../../../customer_invoice/sections';
-
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import { optionFactory, selectCurrencyFactory, selectOptionsFactory } from 'utils';
-
 import './style.scss';
 import Switch from "react-switch";
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-
 import moment from 'moment';
 
 const mapStateToProps = (state) => {
@@ -1189,7 +1184,7 @@ class CreatePurchaseOrder extends React.Component {
 						   <Input
 						type="text"
 						maxLength="250"
-						value={row['description'] !== '' ? row['description'] : ''}
+						value={row['description'] !== '' && row['description'] !== null ? row['description'] : ''}
 						onChange={(e) => {
 							this.selectItem(e.target.value, row, 'description', form, field);
 						}}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import {   Loader } from 'components';
+import { Loader } from 'components';
 import { bindActionCreators } from 'redux';
 import {
 	Card,
@@ -24,16 +24,13 @@ import * as RequestForQuotationCreateAction from './actions'
 import * as RequestForQuotationAction from '../../actions';
 import * as ProductActions from '../../../product/actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
-
 import { SupplierModal } from '../../../supplier_invoice/sections/index';
 import { ProductModal } from '../../../customer_invoice/sections';
-
 import { TextareaAutosize } from '@material-ui/core';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import { optionFactory, selectCurrencyFactory,selectOptionsFactory } from 'utils';
-
 import './style.scss';
 import Switch from "react-switch";
 import {data}  from '../../../Language/index'
@@ -1102,7 +1099,7 @@ class CreateRequestForQuotation extends React.Component {
 						   <Input
 						type="text"
 						maxLength="250"
-						value={row['description'] !== '' ? row['description'] : ''}
+						value={row['description'] !== '' && row['description'] !== null ? row['description'] : ''}
 						onChange={(e) => {
 							this.selectItem(e.target.value, row, 'description', form, field);
 						}}

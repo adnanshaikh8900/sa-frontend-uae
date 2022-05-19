@@ -12,13 +12,12 @@ import {
 	FormGroup,
 	Input,
 	Label,
-	UncontrolledTooltip,
 } from 'reactstrap';
 import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import DatePicker from 'react-datepicker';
 import { Formik, Field } from 'formik';
-import { Currency,Loader } from 'components';
+import { Loader } from 'components';
 import * as Yup from 'yup';
 import * as SupplierInvoiceCreateActions from './actions';
 import * as GoodsReceivedNoteCreateAction from './actions'
@@ -30,15 +29,12 @@ import * as CustomerInvoiceActions from '../../../customer_invoice/actions';
 import * as PurchaseOrderDetailsAction from '../../../purchase_order/screens/detail/actions'
 import { SupplierModal } from '../../../supplier_invoice/sections/index';
 import { ProductModal } from '../../../customer_invoice/sections';
-import { InvoiceNumberModel } from '../../../customer_invoice/sections';
-
 import { TextareaAutosize } from '@material-ui/core';
 import * as PurchaseOrderAction from '../../../purchase_order/actions'
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import { optionFactory, selectCurrencyFactory, selectOptionsFactory } from 'utils';
-
 import './style.scss';
 import moment from 'moment';
 import {data}  from '../../../Language/index'
@@ -1043,7 +1039,7 @@ this.state.data.map((obj, index) => {
 						   <Input
 						type="text"
 						maxLength="250"
-						value={row['description'] !== '' ? row['description'] : ''}
+						value={row['description'] !== '' && row['description'] !== null ? row['description'] : ''}
 						onChange={(e) => {
 							this.selectItem(e.target.value, row, 'description', form, field);
 						}}

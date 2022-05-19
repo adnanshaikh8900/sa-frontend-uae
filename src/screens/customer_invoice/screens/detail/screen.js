@@ -12,7 +12,6 @@ import {
 	FormGroup,
 	Input,
 	Label,
-	NavLink,
 	UncontrolledTooltip
 } from 'reactstrap';
 import Select from 'react-select';
@@ -24,15 +23,12 @@ import * as CustomerInvoiceDetailActions from './actions';
 import * as ProductActions from '../../../product/actions';
 import * as CustomerInvoiceActions from '../../actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
-
 import { CustomerModal ,ProductModal } from '../../sections';
-import { Loader, ConfirmDeleteModal,Currency } from 'components';
-
+import { Loader, ConfirmDeleteModal } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import { optionFactory, selectCurrencyFactory, selectOptionsFactory } from 'utils';
-
 import './style.scss';
 import moment from 'moment';
 import {data}  from '../../../Language/index'
@@ -1103,7 +1099,6 @@ class DetailCustomerInvoice extends React.Component {
 		}
 	};
 	updateAmount = (data, props) => {
-		debugger
 		const { vat_list } = this.state;
 		let total_net = 0;
 		let total_excise = 0;
@@ -1756,7 +1751,7 @@ class DetailCustomerInvoice extends React.Component {
 														||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
 														||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
 														{
-															debugger
+															
 															if (!values.placeOfSupplyId) 
 																   errors.placeOfSupplyId ='Place of Supply is Required';
 															if (values.placeOfSupplyId &&

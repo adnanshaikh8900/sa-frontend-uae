@@ -427,15 +427,14 @@ class CreateExpense extends React.Component {
 			.then((res) => {
 			
 				this.setState({ disabled: false });
-				this.setState({ loading:false});
-				if (res.status === 200) {
-					// this.setState({ loading:false});
-					resetForm(this.state.initValue);
+				
+				if (res.status === 200) {					
 					this.props.commonActions.tostifyAlert(
 						'success',
 						res.data ? res.data.message : 'Expense Created Successfully'
 					);
 					if (this.state.createMore) {
+						resetForm(this.state.initValue);
 						this.setState({
 							createMore: false,
 						});
@@ -475,7 +474,7 @@ class CreateExpense extends React.Component {
 		let result = this.props.currency_convert_list.filter((obj) => {
 		return obj.currencyCode === value;
 		});
-	
+		if(result &&result[0]&&  result[0].exchangeRate)
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
 			}
 		};

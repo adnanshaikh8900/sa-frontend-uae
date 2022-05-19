@@ -234,14 +234,15 @@ class ExplainTrasactionDetail extends React.Component {
 						currencySymbol:res.data.curruncySymbol?res.data.curruncySymbol: '',
 						expenseType: res.data.expenseType ? true : false,
 						transactionCategoryLabel:res.data.transactionCategoryLabel,
-						transactionCategoryId:res.data.transactionCategoryId
+						transactionCategoryId:res.data.transactionCategoryId,
+						currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
 					},
 					
 					() => {
 						
 						if(selectedData.debitCreditFlag=== 'D'){
 							this.getCurrency(this.state.initValue.vendorId)
-							 this.setCurrency(this.state.initValue.currencyCode)
+							 this.setCurrency(this.state.currencyCode)
 						}else{
 							this.getCurrency(this.state.initValue.customerId)	
 						
@@ -347,7 +348,9 @@ class ExplainTrasactionDetail extends React.Component {
 		let result = this.props.currency_convert_list.filter((obj) => {
 			return obj.currencyCode === value;
 		});
+		if(result[0] && result[0].currencyName){
 		this.formRef.current.setFieldValue('curreancyname', result[0].currencyName, true);
+	}
 	};
 
 
@@ -401,6 +404,7 @@ class ExplainTrasactionDetail extends React.Component {
 				this.setState({
 					customer_invoice_list_state: res.data,
 				});
+				this.getSuggestionInvoicesFotCust(option,amount)
 			});
 	};
 
@@ -416,6 +420,7 @@ class ExplainTrasactionDetail extends React.Component {
 				this.setState({
 					supplier_invoice_list_state: res.data,
 				});
+				this.getSuggestionInvoicesFotVend(option,amount)
 			});
 	};
 
@@ -492,7 +497,7 @@ class ExplainTrasactionDetail extends React.Component {
 		// 	return false;
 		// } 
 		// else {
-			
+
 		const {
 			bankId,
 			date,
@@ -572,7 +577,7 @@ class ExplainTrasactionDetail extends React.Component {
 			formData.append('customerId', customerId ? customerId : '');
 		}
 		if (vendorId && coaCategoryId.label === 'Supplier Invoice') {
-			formData.append('vendorId', vendorId.value);
+			formData.append('vendorId', vendorId.value ? vendorId.value : vendorId);
 		}
 		// if (
 		// 	currencyCode &&

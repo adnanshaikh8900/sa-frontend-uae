@@ -777,13 +777,13 @@ showTotal=()=>{
 													// {
 													// 	errors.selectedRows = 'At least selection of one employee  is Required for create payroll';
 													// }
-													if (this.state.startDate==='' && this.state.endDate==='') {
+													if (!this.state.startDate && !this.state.endDate) {
 														errors.startDate = 'Start and End Date is  required';
 													}else
-													if (this.state.startDate==='') {
+													if (!this.state.startDate) {
 														errors.startDate = 'Start Date is  required';
 													}else
-													if (this.state.endDate==='') {
+													if (!this.state.endDate) {
 														errors.startDate = 'End Date is  required';
 													}
 												
@@ -810,7 +810,7 @@ showTotal=()=>{
 																				}}
 																				className={props.errors.payrollSubject && props.touched.payrollSubject ? "is-invalid" : ""}
 																			/>
-																			{props.errors.payrollSubject && props.touched.payrollSubject && (
+																			{props.errors.payrollSubject && (
 																				<div className="invalid-feedback">
 																					{props.errors.payrollSubject}
 																				</div>
@@ -827,7 +827,7 @@ showTotal=()=>{
 																			<DatePicker
 																				id="payrollDate"
 																				name="payrollDate"
-																				placeholderText={strings.payrollDate}
+																				placeholderText="Select Payroll Date"
 																				showMonthDropdown
 																				showYearDropdown
 																				dateFormat="dd-MM-yyyy"
@@ -844,8 +844,7 @@ showTotal=()=>{
 																					: ''
 																					}`}
 																			/>
-																			{props.errors.payrollDate &&
-																				props.touched.payrollDate && (
+																			{props.errors.payrollDate && (
 																					<div className="invalid-feedback">
 																						{props.errors.payrollDate}
 																					</div>
@@ -876,8 +875,8 @@ showTotal=()=>{
 																				startDateId="startDate"
 																				/>																			
 																			{props.errors.startDate &&
-																				props.touched.startDate && (
-																					<div className="text-danger">
+																				 (
+																					<div className="invalid-feedback">
 																						{props.errors.startDate}
 																					</div>
 																				)}

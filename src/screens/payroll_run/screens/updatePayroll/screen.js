@@ -995,15 +995,15 @@ class UpdatePayroll extends React.Component {
 															//   {
 															// 	  errors.selectedRows = 'At least selection of one employee  is Required for create payroll';
 															//   }
-															  if (this.state.startDate==='' && this.state.endDate==='') {
-																  errors.startDate = 'Start and End Date is  required';
-															  }else
-															  if (this.state.startDate==='') {
-																  errors.startDate = 'Start Date is  required';
-															  }else
-															  if (this.state.endDate==='') {
-																  errors.startDate = 'End Date is  required';
-															  }
+															if (!this.state.startDate && !this.state.endDate) {
+																errors.startDate = 'Start and End Date is  required';
+															}else
+															if (!this.state.startDate) {
+																errors.startDate = 'Start Date is  required';
+															}else
+															if (!this.state.endDate) {
+																errors.startDate = 'End Date is  required';
+															}
 														  
 															  return errors;
 														  }}
@@ -1027,9 +1027,9 @@ class UpdatePayroll extends React.Component {
 																					props.handleChange('payrollSubject')(value);
 																					this.setState({payrollSubject:value.target.value})
 																				}}
-																				className={props.errors.payrollSubject && props.touched.payrollSubject ? "is-invalid" : ""}
+																				className={props.errors.payrollSubject ? "is-invalid" : ""}
 																			/>
-																			{props.errors.payrollSubject && props.touched.payrollSubject && (
+																			{props.errors.payrollSubject  && (
 																				<div className="invalid-feedback">
 																					{props.errors.payrollSubject}
 																				</div>
@@ -1046,7 +1046,7 @@ class UpdatePayroll extends React.Component {
 																			<DatePicker
 																				id="payrollDate"
 																				name="payrollDate"
-																				placeholderText={strings.payrollDate}
+																				placeholderText="Select Payroll Date"
 																				showMonthDropdown
 																				showYearDropdown
 																				dateFormat="dd-MM-yyyy"
@@ -1057,14 +1057,12 @@ class UpdatePayroll extends React.Component {
 																					this.setState({payrollDate:value})
 																				}}
 																				disabled={this.disableForAddButton() ? true : false}
-																				className={`form-control ${props.errors.payrollDate &&
-																					props.touched.payrollDate
+																				className={`form-control ${props.errors.payrollDate 
 																					? 'is-invalid'
 																					: ''
 																					}`}
 																			/>
-																			{props.errors.payrollDate &&
-																				props.touched.payrollDate && (
+																			{props.errors.payrollDate  && (
 																					<div className="invalid-feedback">
 																						{props.errors.payrollDate}
 																					</div>
@@ -1097,9 +1095,8 @@ class UpdatePayroll extends React.Component {
 																					}
 																				/>																							
 																	
-																			{props.errors.startDate &&
-																				props.touched.startDate && (
-																					<div className="text-danger">
+																			{props.errors.startDate && (
+																					<div className="invalid-feedback">
 																						{props.errors.startDate}
 																					</div>
 																				)}

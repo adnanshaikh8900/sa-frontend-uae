@@ -549,19 +549,6 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 																	""	
 																	}
 
-                                                {this.state.status==="Approved" &&(  <Button
-																			type="button"
-																			color="primary"
-																			className="btn-square mb-3 pull-right "
-																			onClick={() =>{
-																					this.voidPayroll()
-																			}
-																			}	
-																		>
-																			<i class="fas fa-user-times mr-1"></i>
-
-																			Void This Payroll
-																		</Button>)}
 																	</Col>
 																
 
@@ -1120,7 +1107,6 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 																			<Button
 																			color="primary"
 																			className="btn-square mt-4 "
-																			// onClick={}
 																			onClick={() =>{
 																				if(this.state.comment=="")
 																				   toast.error("Please Enter Reason")
@@ -1128,7 +1114,6 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 																				this.rejectPayroll()
 																			}
 																			}
-																		// disabled={this.state.comment==""?true:false}
 																		title={
 																			this.state.comment==""?"Please Enter Reason":""
 																		}
@@ -1138,9 +1123,20 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 																			Reject Payroll
 																		</Button>
 																		)
-																		
-																		
 																		}
+
+															{this.state.status==="Approved" &&(
+																	<div className=" mt-5 ">
+																	<Button
+																	color="primary"
+																	className="btn-square mt-5 "
+																	type="button"
+																	onClick={() =>{	this.voidPayroll()}}	
+																>
+																	<i class="fas fa-user-times mr-1"></i>
+
+																	Void This Payroll
+																</Button></div>)}
 																	
 																	</FormGroup>
 

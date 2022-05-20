@@ -295,6 +295,8 @@ class CreateJournal extends React.Component {
 			<Field
 				name={`journalLineItems.${idx}.transactionCategoryId`}
 				render={({ field, form }) => (
+					<>
+				
 					<Select
 						styles={{
 							menu: (provided) => ({ ...provided, zIndex: 9999 }),
@@ -302,29 +304,34 @@ class CreateJournal extends React.Component {
 						options={transactionCategoryList ? transactionCategoryList : []}
 						id="transactionCategoryId"
 						onChange={(e) => {
-							this.selectItem(
-								e.value,
-								row,
-								'transactionCategoryId',
-								form,
-								field,
-							);
+							this.selectItem(e.value,row,'transactionCategoryId',form,field);
 						}}
 						placeholder={strings.Select+strings.Account}
 						className={`${
 							props.errors.journalLineItems &&
 							props.errors.journalLineItems[parseInt(idx, 10)] &&
-							props.errors.journalLineItems[parseInt(idx, 10)]
-								.transactionCategoryId &&
+							props.errors.journalLineItems[parseInt(idx, 10)].transactionCategoryId &&
 							Object.keys(props.touched).length > 0 &&
 							props.touched.journalLineItems &&
 							props.touched.journalLineItems[parseInt(idx, 10)] &&
-							props.touched.journalLineItems[parseInt(idx, 10)]
-								.transactionCategoryId
+							props.touched.journalLineItems[parseInt(idx, 10)].transactionCategoryId
 								? 'is-invalid'
 								: ''
 						}`}
 					/>
+					{	props.errors.journalLineItems &&
+					props.errors.journalLineItems[parseInt(idx, 10)] &&
+					props.errors.journalLineItems[parseInt(idx, 10)].transactionCategoryId &&
+					Object.keys(props.touched).length > 0 &&
+					props.touched.journalLineItems &&
+					props.touched.journalLineItems[parseInt(idx, 10)] &&
+					props.touched.journalLineItems[parseInt(idx, 10)].transactionCategoryId &&(
+						<div className='invalid-feedback'>
+						{props.errors.journalLineItems[parseInt(idx, 10)].transactionCategoryId}
+					</div>
+						
+					)}
+					</>
 				)}
 			/>
 		);
@@ -1199,7 +1206,8 @@ class CreateJournal extends React.Component {
 																		className="btn-square mr-3"
 																		disabled={this.state.disabled}
 																		onClick={() => {
-																				//  added validation popup  msg                                                                
+																				//  added validation popup  msg  
+																				console.log(props.errors)                                                              
 																				props.handleBlur();
 																				if(props.errors &&  Object.keys(props.errors).length != 0)
 																				this.props.commonActions.fillManDatoryDetails();

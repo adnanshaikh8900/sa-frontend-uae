@@ -479,7 +479,7 @@ this.props.customerInvoiceActions
 									this.stockInHandTestForProduct(row,false);
 								}}
 							>
-								<i className="fas fa-send" /> {strings.Send}
+								<i className="fas fa-send" /> {strings.Post}
 							</DropdownItem>
 						)}
 						{/* <DropdownItem onClick={() => { this.openInvoicePreviewModal(row.id) }}>

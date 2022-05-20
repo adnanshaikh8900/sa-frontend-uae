@@ -18,7 +18,7 @@ import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import DatePicker from 'react-datepicker';
 import { Formik, Field } from 'formik';
-import { Currency ,Loader} from 'components';
+import { Loader } from 'components';
 import * as Yup from 'yup';
 import * as SupplierInvoiceCreateActions from './actions';
 import * as SupplierInvoiceActions from '../../actions';
@@ -28,13 +28,10 @@ import * as CustomerInvoiceActions from '../../../customer_invoice/actions';
 import { TextareaAutosize } from '@material-ui/core';
 import { SupplierModal } from '../../sections';
 import { ProductModal } from '../../../customer_invoice/sections';
-
-
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import { optionFactory, selectCurrencyFactory, selectOptionsFactory } from 'utils';
-
 import './style.scss';
 import moment from 'moment';
 import { data } from '../../../Language/index'
@@ -284,8 +281,8 @@ class CreateSupplierInvoice extends React.Component {
 							);
 						}}
 						placeholder={strings.Description}
-						className={`form-control 
-            ${props.errors.lineItemsString &&
+						className={`form-control ${
+								props.errors.lineItemsString &&
 								props.errors.lineItemsString[parseInt(idx, 10)] &&
 								props.errors.lineItemsString[parseInt(idx, 10)].description &&
 								Object.keys(props.touched).length > 0 &&
@@ -1414,7 +1411,7 @@ class CreateSupplierInvoice extends React.Component {
 						   <Input
 						type="text"
 						maxLength="250"
-						value={row['description'] !== '' ? row['description'] : ''}
+						value={row['description'] !== '' && row['description'] !== null ? row['description'] : ''}
 						onChange={(e) => {
 							this.selectItem(e.target.value, row, 'description', form, field);
 						}}
@@ -2453,6 +2450,9 @@ class CreateSupplierInvoice extends React.Component {
 																				this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(option.value), true);
 																				this.setExchange(this.getCurrency(option.value));
 																				props.handleChange('contactId')(option);
+																				this.setState({
+																					contactId : option.value
+																				})
 																			} else {
 
 																				props.handleChange('contactId')('');
@@ -2607,11 +2607,14 @@ class CreateSupplierInvoice extends React.Component {
 																				? 'is-invalid'
 																				: ''
 																		}
-																		onChange={(option) =>
+																		onChange={(option) =>{
 																			props.handleChange('placeOfSupplyId')(
 																				option,
 																			)
-																		}
+																			this.setState({
+																				placeOfSupplyId : option
+																		})
+																		}}
 																	/>
 																	{props.errors.placeOfSupplyId &&
 																		props.touched.placeOfSupplyId && (

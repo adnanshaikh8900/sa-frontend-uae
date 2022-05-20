@@ -515,41 +515,27 @@ class Contact extends React.Component {
 										</div>
 										<div>
 											<BootstrapTable
-												selectRow={this.selectRowProp}
-												search={false}
+												selectRow={this.selectRowProp}										
 												options={this.options}
-											
+												version="4"
+												hover
+												responsive												
+												remote
 											data={contact_list && contact_list.data
 												? contact_list.data
-												: []}
-												//  suppressDragLeaveHidesColumns={true}
-											// pivotMode={true}
-											// suppressPaginationPanel={false}
+												: []}										
 											pagination={
 												contact_list &&
 												contact_list.data &&
 												contact_list.data.length
 													? true
 													: false
-											}
-											remote
+											}											
 											fetchInfo={{
 												dataTotalSize: contact_list.count
 													? contact_list.count
 													: 0,
-											}}
-											rowSelection="multiple"
-											// paginationPageSize={10}
-											// paginationAutoPageSize={true}
-											paginationPageSize={this.state.paginationPageSize}
-												floatingFilter={true}
-												defaultColDef={{ 
-															resizable: true,
-															flex: 1,
-															sortable: true
-														}}
-											sideBar="columns"
-											onGridReady={this.onGridReady}
+											}}											
 												>
 														<TableHeaderColumn
 															tdStyle={{ whiteSpace: 'normal' }}

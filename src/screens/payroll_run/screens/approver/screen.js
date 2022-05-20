@@ -302,7 +302,20 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 				this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'File Already Opened please close file')
 			})
 	}
-
+	voidPayroll=()=>{
+		let formData={
+			postingRefId:this.state.payroll_id,
+			postingRefType:"PAYROLL"
+		}
+		this.props.createPayrollActions.voidPayroll(formData).then((res)=>{
+			if(res.status===200){
+				toast.success("Payroll Voided Successfully");
+				this.props.history.push('/admin/payroll/payrollrun')
+			}
+		}).catch((err)=>{
+			toast.error("Payroll Voided UnSuccessfully")
+		})
+	}
 	handleSubmit = (data, resetForm) => {
 		this.setState({ disabled: true });
 		const {
@@ -535,7 +548,9 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 																)	:
 																	""	
 																	}
+
 																	</Col>
+																
 
 				</Row>
 				<div >
@@ -1092,7 +1107,6 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 																			<Button
 																			color="primary"
 																			className="btn-square mt-4 "
-																			// onClick={}
 																			onClick={() =>{
 																				if(this.state.comment=="")
 																				   toast.error("Please Enter Reason")
@@ -1100,7 +1114,6 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 																				this.rejectPayroll()
 																			}
 																			}
-																		// disabled={this.state.comment==""?true:false}
 																		title={
 																			this.state.comment==""?"Please Enter Reason":""
 																		}
@@ -1110,9 +1123,20 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 																			Reject Payroll
 																		</Button>
 																		)
-																		
-																		
 																		}
+
+															{this.state.status==="Approved" &&(
+																	<div className=" mt-5 ">
+																	<Button
+																	color="primary"
+																	className="btn-square mt-5 "
+																	type="button"
+																	onClick={() =>{	this.voidPayroll()}}	
+																>
+																	<i class="fas fa-user-times mr-1"></i>
+
+																	Void This Payroll
+																</Button></div>)}
 																	
 																	</FormGroup>
 

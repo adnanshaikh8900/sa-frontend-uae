@@ -12,7 +12,6 @@ import {
 	FormGroup,
 	Input,
 	Label,
-	NavLink,
 } from 'reactstrap';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
@@ -20,21 +19,18 @@ import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import * as CustomerRecordPaymentActions from './actions';
 import * as CustomerInvoiceActions from '../../actions';
-
 import { CustomerModal } from '../../sections';
 import { Loader, ConfirmDeleteModal } from 'components';
-
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
-
 import './style.scss';
 import moment from 'moment';
-import API_ROOT_URL from '../../../../constants/config';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { TextareaAutosize } from '@material-ui/core';
+
 const mapStateToProps = (state) => {
 	return {
 		contact_list: state.customer_invoice.contact_list,
@@ -119,7 +115,7 @@ class RecordCustomerPayment extends React.Component {
 		];
 		this.regEx = /^[0-9\b]+$/;
 		this.regExBoth = /^[a-zA-Z0-9\s\D,'-/]+$/;
-		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/; 
+		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 
 		this.file_size = 1024000;
 		this.supported_format = [
@@ -420,8 +416,8 @@ class RecordCustomerPayment extends React.Component {
 													}}
 													validate={(values) => {
                                                     let errors = {};
-													 if (values.amount < 0) {
-                                                      errors.amount ='Amount Cannot be Less Than 0';
+													 if (values.amount <= 0) {
+                                                      errors.amount ='Amount Cannot be empty or 0';
 												 }
                                                  return errors
 												 }}
@@ -430,12 +426,12 @@ class RecordCustomerPayment extends React.Component {
 															'Deposit To is Required',
 														),
 														payMode: Yup.string().required(
-															'Payment mode is Required',
+															'Payment Mode is Required',
 														),
 														amount: Yup.mixed()
 														.test(
 															'amount',
-															'Amount cannot be greater than invoice amount',
+															'Amount Cannot be Greater Than Invoice Amount',
 															(value) => {
 																if (
 																	!value ||
@@ -564,8 +560,8 @@ class RecordCustomerPayment extends React.Component {
 																			{strings.AmountReceived}
 																		</Label>
 																		<Input
-																			type="number"
-																			min="0"
+																			type="text"
+																			min={0}
 																			maxLength="14,2"
 																			id="amount"
 																			name="amount"
@@ -573,10 +569,13 @@ class RecordCustomerPayment extends React.Component {
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
-																					this.regDecimal.test(option.target.value),
-																					props.handleChange('amount')(option)
+																					this.regDecimal.test(
+																						option.target.value,
+																					)
 																				) {
-																					props.handleChange('amount')(option);
+																					props.handleChange('amount')(
+																						option,
+																					);
 																				}
 																			}}
 																			placeholder={strings.AmountReceived}

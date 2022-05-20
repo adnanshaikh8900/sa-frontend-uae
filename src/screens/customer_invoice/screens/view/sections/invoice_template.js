@@ -311,13 +311,11 @@ class InvoiceTemplate extends Component {
 										<div className="mb-1 ml-2" style={{fontSize:"22px"}}><b>{companyData.companyName}</b></div>
 										<div className="mb-1 ml-2">{companyData.companyAddressLine1}</div>
 										<div className="mb-1 ml-2">{companyData.companyAddressLine2}</div>
-										<div className="mb-1 ml-2">{companyData.companyCountryCode==229 ?
+										{companyData.companyCountryCode==229 ?
 																	strings.POBox:
-																	""} 
-																&nbsp;		:		&nbsp;
-																	 {companyData.companyPoBoxNumber}</div>
-										<div className="mb-1 ml-2">{companyData.companyStateName}</div>
-										<div className="mb-1 ml-2"> {companyData.companyCountryName}</div>
+																	""} : {companyData.companyPoBoxNumber} ,&nbsp;
+										{companyData &&(companyData.companyStateName ? companyData.companyStateName + " , " : "")}
+										{companyData &&(companyData.companyCountryName ? companyData.companyCountryName : "")}
 										{companyData.companyRegistrationNumber && (<div className="mb-1 ml-2">{strings.CompanyRegistrationNo} : {companyData.companyRegistrationNumber}</div>)}
 										{companyData.isRegisteredVat==true&&(<div className="mb-1 ml-2">{strings.VATRegistrationNo} : {companyData.vatRegistrationNumber}</div>)}
 										<div className="mb-1 ml-2">{strings.MobileNumber} : {this.companyMobileNumber(companyData.phoneNumber ? "+" + companyData.phoneNumber : '')}</div>
@@ -545,16 +543,6 @@ class InvoiceTemplate extends Component {
 								<h6 className="mb-0">{invoiceData.notes}</h6>
                                 </>)}								{/* </div> */}
 
-							</div>
-							<div
-								style={{
-									width: '20%',
-									display: 'flex',
-									flexDirection: 'column',
-									marginLeft: '2rem'
-								}}
-							>				
-							
 							</div>
 							<div
 								style={{

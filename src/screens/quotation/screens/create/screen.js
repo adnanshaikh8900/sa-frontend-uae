@@ -1134,7 +1134,7 @@ discountType = (row) =>
 						   <Input
 						type="text"
 						maxLength="250"
-						value={row['description'] !== '' ? row['description'] : ''}
+						value={row['description'] !== '' && row['description'] !== null ? row['description'] : ''}
 						onChange={(e) => {
 							this.selectItem(e.target.value, row, 'description', form, field);
 						}}
@@ -2218,11 +2218,14 @@ discountType = (row) =>
 																				? 'is-invalid'
 																				: ''
 																		}
-																		onChange={(option) =>
+																		onChange={(option) =>{
 																			props.handleChange('placeOfSupplyId')(
 																				option,
 																			)
-																		}
+																			this.setState({
+																				placeOfSupplyId : option
+																		})
+																		}}
 																	/>
 																	{props.errors.placeOfSupplyId &&
 																		props.touched.placeOfSupplyId && (

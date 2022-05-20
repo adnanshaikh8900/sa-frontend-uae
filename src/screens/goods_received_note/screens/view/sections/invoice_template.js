@@ -7,6 +7,7 @@ import { Currency } from 'components';
 import { toInteger, upperCase } from 'lodash';
 import {data}  from '../../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import { TextareaAutosize } from '@material-ui/core';
 
 
 const { ToWords } = require('to-words');
@@ -20,6 +21,7 @@ const toWords = new ToWords({
 	}
   });
 let strings = new LocalizedStrings(data);
+const footer = require('assets/images/invoice/invoiceFooter.png');
 class RFQTemplate extends Component {
 	constructor(props) {
 		super(props);
@@ -53,7 +55,12 @@ class RFQTemplate extends Component {
 			number1=number1[0];
 			return number1
 		}
-
+getVatNo=(contactData,RFQData)=>{
+	if(contactData.taxTreatmentId!=2 &&contactData.taxTreatmentId!=4 && contactData.taxTreatmentId!=6 &&  contactData.taxTreatmentId!=7 )
+	return <div className="mb-1 ml-2">{strings.VATRegistrationNo} :  {RFQData.vatRegistrationNumber}</div>
+	else
+	return ""
+}
 	render() {
 		strings.setLanguage(this.state.language);
 		const { RFQData, currencyData, totalNet, companyData,status,contactData } = this.props;
@@ -69,16 +76,16 @@ class RFQTemplate extends Component {
 						<span>{RFQData.status}</span>
 					</div> */}
 
-					<CardBody >
+<CardBody style={{ margin: '1rem', border: 'solid 1px', borderColor: '#c8ced3', }}>
 					<div
 							style={{
 								width: '100%',
 								display: 'flex',
-								border:'1px solid',
-								padding:'7px',borderColor:'#c8ced3'
+								// border:'1px solid',
+								// padding:'7px',borderColor:'#c8ced3'
 							}}
 						>
-							<div style={{ width: '150%' }}>
+							<div style={{ width: '50%', marginTop: '4.5rem', marginLeft: '3rem' }}>
 								<div className="companyDetails">
 									<img
 										src={
@@ -90,65 +97,78 @@ class RFQTemplate extends Component {
 										}
 										className=""
 										alt=""
-										style={{ width: ' 240px' }}
+										style={{ width: ' 300px' }}
 									/>
 									</div>
-									<div style={{ marginTop: '3.5rem' }}>
-									<div className="mb-1 ml-2"><b>{strings.CompanyName} : </b> {companyData.companyName}</div>
-									<div className="mb-1 ml-2"><b>{strings.CompanyAddress} : </b>{companyData.companyAddressLine1+","+companyData.companyAddressLine2}</div>
-									<div className="mb-1 ml-2"><b>{strings.PinCode} : </b> {companyData.companyPostZipCode}</div>
-									<div className="mb-1 ml-2"><b>{strings.StateRegion} : </b>{companyData.companyStateName}</div>
-									<div className="mb-1 ml-2"><b>{strings.Country} : </b>{companyData.companyCountryName}</div>
-									<div className="mb-1 ml-2"><b>{strings.VATRegistrationNo} : </b> {companyData.vatRegistrationNumber}</div>
-									
-<div className="mb-1 ml-2"><b>{strings.MobileNumber} : </b> {this.companyMobileNumber(companyData.phoneNumber?"+"+companyData.phoneNumber:'')}</div>
-								</div>
-							</div>
-							<div style={{ width: '200%',justifyContent:'center',marginTop:'5rem' }}>
-
-									<div
-										style={{
-											width: '130%',
-											fontSize: '1.5rem',
-											fontWeight: '700',
-											textTransform: 'uppercase',
-											color: 'black',
-											marginLeft:'4rem',
-										}}
-									>
-									{strings.GoodsReceivedNotes}
 									</div>
-
-							</div>
-							<div
+									<div
 								style={{
 									width: '70%',
 									display: 'flex',
 									flexDirection: 'column',
-									justifyContent: 'right',
+									justifyContent: 'left',
 								}}
 							>
-								<div 	style={{
-									width: '62%',
-									margin:'1.5rem 9.0rem 0.5rem 4rem',
-									// // border:'1px solid',
-									marginTop:'6.6rem',
-								    marginLeft:'6.5rem'
+								<div style={{
+									width: '97%',
+									textAlign: 'right',
+
 								}}>
-								<h4 className="mb-1 ml-2"><b>{companyData && companyData.company
+									<div style={{ marginTop: '0.5rem' }}>
+									<h2 className="mb-1 ml-2"><b>Goods Received Notes</b></h2><br />
+									<div className="mb-1 ml-2" style={{fontSize:"22px"}}><b>{companyData.companyName}</b></div>
+									<div className="mb-1 ml-2">{companyData.companyAddressLine1}</div>
+										<div className="mb-1 ml-2">{companyData.companyAddressLine2}</div>
+										{companyData.companyCountryCode==229 ?
+																	strings.POBox:
+																	""} : {companyData.companyPoBoxNumber} ,&nbsp;
+										{companyData &&(companyData.companyStateName ? companyData.companyStateName + " , " : "")}
+										{companyData &&(companyData.companyCountryName ? companyData.companyCountryName : "")}
+										{companyData.companyRegistrationNumber && (<div className="mb-1 ml-2">{strings.CompanyRegistrationNo} : {companyData.companyRegistrationNumber}</div>)}
+										{companyData.isRegisteredVat==true&&(<div className="mb-1 ml-2">{strings.VATRegistrationNo} : {companyData.vatRegistrationNumber}</div>)}
+							    <div className="mb-1 ml-2">{strings.MobileNumber} : {this.companyMobileNumber(companyData.phoneNumber?"+"+companyData.phoneNumber:'')}</div>
+								{companyData.emailAddress&&(<div className="mb-1 ml-2">Email : {companyData.emailAddress}</div>)}
+								</div>
+							</div>
+							</div></div><hr/>
+							
+							<div
+							style={{
+								width: '100%',
+								display: 'flex',
+								justifyContent: 'space-between',
+								marginBottom: '1rem',
+						
+							}}
+						>
+							<div
+								style={{
+									width: '100%',
+									display: 'flex',
+									justifyContent: 'space-between',
+									marginLeft: '2rem'
+								}}
+							>
+								<div>
+								{/* <h4 className="mb-1 ml-2"><b>{companyData && companyData.company
 											? companyData.company.companyName
-											: ''}</b></h4>
-								<h4 className="mb-1 ml-2">{RFQData.grnNumber} </h4><br/>
-								<h6 className="mb-1 ml-2"><b>Received From,</b></h6>
-								<h6 className="mb-1 ml-2"><b>Name : </b>{RFQData.organisationName ? RFQData.organisationName : RFQData.supplierName}</h6>
-								{contactData && contactData.addressLine1 &&(<div className="mb-1 ml-2"><b>{strings.BillingAddress} : </b> {contactData.addressLine1}</div>)}
-								{contactData && contactData.postZipCode &&(	<div className="mb-1 ml-2"><b>{strings.PinCode} : </b> {contactData.postZipCode}</div>)}
-								{contactData&&contactData.billingStateName&&(<div className="mb-1 ml-2"><b>{strings.StateRegion} : </b> {contactData.billingStateName}</div>)}
-								{contactData && contactData.billingCountryName &&(<div className="mb-1 ml-2"><b>{strings.Country} : </b> {contactData.billingCountryName}</div>)}
-								<h6 className="mb-1 ml-2"><b>TRN : </b>{RFQData.vatRegistrationNumber}</h6>
-								{contactData&&contactData.mobileNumber&&(<div className="mb-1 ml-2"><b>{strings.MobileNumber} : </b>+{contactData.mobileNumber}</div>)}
+											: ''}</b></h4> */}
 								
-													<span className="mb-1 ml-2"><b>{strings.Status} :  </b>{this.renderRFQStatus(status)}</span>
+								<h6 className="mb-1 ml-2"><b>Received From,</b></h6><br/>
+								<h6 className="mb-1 ml-2"><b>{RFQData.organisationName ? RFQData.organisationName : RFQData.supplierName}</b></h6>
+								{contactData && contactData.addressLine1 &&(<div className="mb-1 ml-2">{contactData.addressLine1}</div>)}
+								<div className="mb-1 ml-2">
+									{RFQData && contactData && (
+											contactData.countryId==229 ?
+											contactData.poBoxNumber ?(strings.POBox +" : " +contactData.poBoxNumber ): ""
+											:contactData.postZipCode ? contactData.postZipCode : ""
+											)} ,&nbsp;
+									    {RFQData && contactData && (contactData.billingStateName ? contactData.billingStateName + " , " : "")}
+										{RFQData && contactData && (contactData.billingCountryName ? contactData.billingCountryName : "")}
+									</div>
+									{contactData &&(this.getVatNo(contactData,RFQData))}
+								{contactData&&contactData.mobileNumber&&(<div className="mb-1 ml-2">{strings.MobileNumber} : +{contactData.mobileNumber}</div>)}
+								{contactData && contactData.billingEmail && (<div className="mb-1 ml-2">{strings.Email} : {contactData.billingEmail}</div>)}
 
 													{/* <div
 														className={`ribbon ${this.getRibbonColor(
@@ -158,48 +178,19 @@ class RFQTemplate extends Component {
 															<span className="mb-1 ml-2">{RFQData.status}</span>
 														</div>  */}
 								</div>
+								<div style={{ width: '27%' }}>
+									<br/>
+									<div className="mb-1 ml-2"><b>{strings.GRNNo} : </b> # {RFQData.grnNumber}</div>
+								<div className="mb-1 ml-2"><b>{strings.ReceiveDate } : </b>{' '}
+										{moment(RFQData.grnReceiveDate).format(
+											'DD MMM YYYY',
+										)}</div>		
+								<div className="mb-1 ml-2"><b>{strings.Status} : </b>{this.renderRFQStatus(status)}</div><br />
+                                </div>
 								</div>
 							</div>
 
 							<div
-							style={{
-								width: '100%',
-								display: 'flex',
-								justifyContent: 'space-between',
-								marginBottom: '1rem',
-								borderLeft:'1px solid',
-									borderRight:'1px solid',
-									borderBottom:'1px solid',borderColor:'#c8ced3'
-							}}
-						>
-							<div
-								style={{
-									width: '100%',
-									display: 'flex',
-									justifyContent: 'space-between',
-									height: '50px'
-								}}
-							>
-
-							<div
-								style={{
-									width: '50%',
-									display: 'flex',
-									justifyContent: 'space-between',
-									
-								}}>
-								<h6 style={{textAlign: 'center',marginLeft:'15px'}} className={'mt-3 mb-2'}><b>{strings.ReceiveDate } : </b>{moment(RFQData.grnReceiveDate).format(
-									'DD MMM YYYY',
-								)}</h6>
-
-								</div>
-								</div>
-								</div>
-
-
-
-
-						<div
 							style={{
 								width: '100%',
 								display: 'flex',
@@ -212,20 +203,16 @@ class RFQTemplate extends Component {
 						>
 							
 						</div>
-						<Table  >
-							<thead className="header-row">
+						<Table className='table-striped' >
+						<thead className="header-row" style={{ fontSize:"12px" }}>
 								<tr>
-									<th className="center" style={{ padding: '0.5rem' }}>
+									<th className="center" style={{ padding: '0.5rem',width: "40px" }}>
 										#
 									</th>
 									{/* <th style={{ padding: '0.5rem' }}>Item</th> */}
-									<th style={{ padding: '0.5rem' }}>{strings.ProductName }</th>
-									<th style={{ padding: '0.5rem' }}>{strings.Description }</th>
-									<th className="center" style={{ padding: '0.5rem' }}>
+									<th style={{ padding: '0.5rem' }}>{strings.ProductNameAndDescription}</th>
+									<th  style={{ padding: '0.5rem',textAlign:"center" }}>
 										{strings.Quantity }
-									</th>
-									<th className="center" style={{ padding: '0.5rem' }}>
-										{strings.UnitType}
 									</th>
 									{/* <th style={{ padding: '0.5rem', textAlign: 'right' }}>
 										{strings.UnitCost }
@@ -236,17 +223,17 @@ class RFQTemplate extends Component {
 									</th> */}
 								</tr>
 							</thead>
-							<tbody className=" table-bordered table-hover">
+							<tbody className="table-hover">
 								{RFQData.poQuatationLineItemRequestModelList &&
 									RFQData.poQuatationLineItemRequestModelList.length &&
 									RFQData.poQuatationLineItemRequestModelList.map((item, index) => {
 										return (
 											<tr key={index}>
 												<td className="center">{index + 1}</td>
-												<td>{item.productName}</td>
-												<td>{item.description}</td>
-												<td>{item.grnReceivedQuantity}</td>
-												<td>{item.unitType}</td>
+												<td><b>{item.productName}</b><br/><br />{item.description}</td>
+												<td  style={{ textAlign: 'center' }}>{item.grnReceivedQuantity}<br/><br/>
+											     <b style={{fontSize:"10.5px"}}>{item.unitType}</b>	
+												</td>
 												{/* <td style={{ textAlign: 'right', width: '20%' }}>
 													
 													{RFQData.currencyIsoCode + " " +item.unitPrice}
@@ -262,22 +249,24 @@ class RFQTemplate extends Component {
 										);
 									})}
 							</tbody>
-						</Table>
-						<div className="pl-5"
+						</Table><hr/>
+						<div
 							style={{
 								width: '100%',
 								display: 'flex',
 								justifyContent: 'space-between',
-								marginBottom: '1rem',border:'solid 1px',borderColor:'#c8ced3'
+								// marginBottom: '1rem',border:'solid 1px',borderColor:'#c8ced3',
+								fontSize: "14px"
 							}}
 						>
-								<div
+							<div
 								style={{
-									width: '200%',
-									height:'70px',
-									
+									width: '40%',
+									display: 'flex',
+									flexDirection: 'column',
+									marginLeft: '2rem'
 								}}
-							>
+							>				
 								{/* <div className="pb-2">{strings.AmountInWords }:<br/>
 									<b><u> {RFQData.totalAmount ? upperCase(RFQData.currencyName + " " +(toWords.convert(RFQData.totalAmount))+" ONLY") : " -" }
 								
@@ -288,17 +277,33 @@ class RFQTemplate extends Component {
 								
 								</div> */}
 						
-
+						{RFQData.notes&& (<>
 								<h6 className="mb-0 pt-2">
 									<b>{strings.GRNREMARKS }:</b>
 								</h6>
+								<h6 className="mb-0">{RFQData.notes}</h6><br/>
+								<h6 className="mb-0 pt-2">
+									<b>{strings.Notes}:</b>
+								</h6>
 								<h6 className="mb-0">{RFQData.notes}</h6>
+                                </>)}
 						
 							
 							</div>
 						
-						</div>												
+						</div><hr/>	
+						<TextareaAutosize
+																			type="textarea"
+																			disabled
+																			className="textarea viewFootNote"
+																			maxLength="250"
+																			style={{width: "1220px"}}
+																			// rows="5"
+																			value={RFQData.footNote}
+																		/>
+						<br /><br/><br/>											
 					</CardBody>
+					<img className='footer' src={footer} style={{ height: "65px", width: "100%" }}></img>
 				</Card>
 			</div>
 		);

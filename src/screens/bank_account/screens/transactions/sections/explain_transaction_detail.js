@@ -168,7 +168,7 @@ class ExplainTrasactionDetail extends React.Component {
 							amount: res.data.amount ? res.data.amount : '',
 							dueAmount:res.data.dueAmount ? res.data.dueAmount : '',
 							date: res.data.date
-								? moment(res.data.date, 'DD-MM-YYYY').format('DD-MM-YYYY')
+								? moment(res.data.date).format('DD-MM-YYYY')
 								: '',
 							description: res.data.description ? res.data.description : '',
 							transactionCategoryId: res.data.transactionCategoryId
@@ -202,7 +202,7 @@ class ExplainTrasactionDetail extends React.Component {
 							bankId: bankId,
 							amount: res.data.amount ? res.data.amount : '',
 							date: res.data.date
-								? res.data.date
+								? moment(res.data.date).format('DD-MM-YYYY')
 								: '',
 							description: res.data.description ? res.data.description : '',
 							transactionCategoryId: res.data.transactionCategoryId
@@ -229,7 +229,9 @@ class ExplainTrasactionDetail extends React.Component {
 								: '',
 							currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
 						},
-						date: res.data.date ? res.data.date : '',
+						date: res.data.date
+								? moment(res.data.date).format('DD-MM-YYYY')
+								: '',
 						amount: res.data.amount ? res.data.amount : '',
 						currencySymbol:res.data.curruncySymbol?res.data.curruncySymbol: '',
 						expenseType: res.data.expenseType ? true : false,
@@ -1171,17 +1173,9 @@ class ExplainTrasactionDetail extends React.Component {
 																						placeholderText={strings.TransactionDate}
 																						showMonthDropdown
 																						showYearDropdown
-																						dateFormat="dd-MM-yyyy"
+																						dateFormat="DD-MM-YYYY"
 																						dropdownMode="select"
-																						value={
-																							props.values.date
-																								? moment(
-																									props.values.date,
-																									'DD-MM-YYYY',
-																								).format('DD-MM-YYYY')
-																								: ''
-																						}
-																						//selected={props.values.date}
+																						value={props.values.date}
 																						onChange={(value) =>
 																							props.handleChange('date')(value)
 																						}

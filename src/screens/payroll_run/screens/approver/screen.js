@@ -95,7 +95,7 @@ class PayrollApproverScreen extends React.Component {
 				onSelect: this.onRowSelect,
 				onSelectAll: this.onSelectAll,
 			},
-			currencyIsoCode : "AED"
+			currencyIsoCode: "AED"
 		}
 
 		this.regEx = /^[0-9\d]+$/;
@@ -137,9 +137,9 @@ class PayrollApproverScreen extends React.Component {
 	proceed = (payroll_id) => {
 		this.props.createPayrollActions.getPayrollById(payroll_id).then((res) => {
 			if (res.status === 200) {
-			//pay period date format 
-let dateArr=res.data.payPeriod.split("-");
-let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr[1]).format('DD-MM-YYYY')
+				//pay period date format 
+				let dateArr = res.data.payPeriod.split("-");
+				let payPeriodString = moment(dateArr[0]).format('DD-MM-YYYY') + " - " + moment(dateArr[1]).format('DD-MM-YYYY')
 
 				this.setState({
 					loading: false,
@@ -159,8 +159,8 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 					payrollSubject: res.data.payrollSubject ? res.data.payrollSubject : '',
 					runDate: res.data.runDate ? res.data.runDate : '',
 					status: res.data.status ? res.data.status : '',
-					currencyIsoCode : res.data.currencyIsoCode ? res.data.currencyIsoCode : "AED",
-					existEmpList:res.data.existEmpList ? res.data.existEmpList:[]
+					currencyIsoCode: res.data.currencyIsoCode ? res.data.currencyIsoCode : "AED",
+					existEmpList: res.data.existEmpList ? res.data.existEmpList : []
 				}
 				)
 
@@ -261,27 +261,27 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 	}
 	renderStatus = (status) => {
 		let classname = '';
-		
+
 		if (status === 'Approved') {
 			classname = 'label-success';
-		}if (status === 'Paid') {
+		} if (status === 'Paid') {
 			classname = 'label-sent';
-		 } else
-		 if (status === 'UnPaid') {
-			classname = 'label-closed';
-		 } else  if (status === 'Draft') {
-			classname = 'label-currency';
-		} else if (status === 'Paid') {
-			classname = 'label-approved';
-		}else if (status === 'Rejected') {
-			classname = 'label-due';
-		}  if (status === 'Submitted') {
-			classname = 'label-sent';
-		}else if (status === 'Partially Paid') {
-			classname = 'label-PartiallyPaid';
-		}else if (status === 'Void') {
-			classname = 'label-closed';
-		}
+		} else
+			if (status === 'UnPaid') {
+				classname = 'label-closed';
+			} else if (status === 'Draft') {
+				classname = 'label-currency';
+			} else if (status === 'Paid') {
+				classname = 'label-approved';
+			} else if (status === 'Rejected') {
+				classname = 'label-due';
+			} if (status === 'Submitted') {
+				classname = 'label-sent';
+			} else if (status === 'Partially Paid') {
+				classname = 'label-PartiallyPaid';
+			} else if (status === "Voided") {
+				classname = 'label-closed';
+			}
 		// else {
 		// 	classname = 'label-overdue';
 		// }
@@ -291,30 +291,31 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 			</span>
 		);
 	};
-	generateSifFile= () => {
+	generateSifFile = () => {
 		this.props.createPayrollActions
-			.generateSifFile(this.state.payroll_id,this.state.existEmpList)
+			.generateSifFile(this.state.payroll_id, this.state.existEmpList)
 			.then((res) => {
 				if (res.status === 200) {
-					const blob = new Blob([res.data[1]],{type:'application/sif'});
-					download(blob,res.data[0] ?res.data[0]+'.SIF':"payroll.SIF")
+					const blob = new Blob([res.data[1]], { type: 'application/sif' });
+					download(blob, res.data[0] ? res.data[0] + '.SIF' : "payroll.SIF")
 					this.props.commonActions.tostifyAlert('success', 'SIF File Downloaded Successfully')
 				}
 			}).catch((err) => {
 				this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'File Already Opened please close file')
 			})
 	}
-	voidPayroll=()=>{
-		let formData={
-			postingRefId:this.state.payroll_id,
-			postingRefType:"PAYROLL"
+	voidPayrollApi = () => {
+		let formData = {
+			postingRefId: this.state.payroll_id,
+			postingRefType: "PAYROLL",
+			comment: this.state.comment
 		}
-		this.props.createPayrollActions.voidPayroll(formData).then((res)=>{
-			if(res.status===200){
+		this.props.createPayrollActions.voidPayroll(formData).then((res) => {
+			if (res.status === 200) {
 				toast.success("Payroll Voided Successfully");
 				this.props.history.push('/admin/payroll/payrollrun')
 			}
-		}).catch((err)=>{
+		}).catch((err) => {
 			toast.error("Payroll Voided UnSuccessfully")
 		})
 	}
@@ -528,31 +529,31 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 					Remove Employees
 				</Button>
 			</Col> */}
-			<Col>		
-			<Label> Status : <span style={{fontSize: "larger"}}>  {this.renderStatus(this.state.status)}</span></Label>					
-			</Col>
-			<Col>
-			{this.state.status && (this.state.status==="Approved" || this.state.status==="Paid" ||this.state.status==="Partially Paid") ? 
-																(
-																	<Button
-																	type="button"
-																	color="primary"
-																	className="btn-square mb-3 pull-right "
-																	onClick={() =>
-																	{	
-																		// this.exportExcelFile()
-																		this.generateSifFile()}
-																	}
-																>
-																	<i class="fas fa-file-invoice-dollar"></i>
-																	{"  "}Download SIF file
-																</Button>
-																)	:
-																	""	
-																	}
+					<Col>
+						<Label> Status : <span style={{ fontSize: "larger" }}>  {this.renderStatus(this.state.status)}</span></Label>
+					</Col>
+					<Col>
+						{this.state.status && (this.state.status === "Approved" || this.state.status === "Paid" || this.state.status === "Partially Paid") ?
+							(
+								<Button
+									type="button"
+									color="primary"
+									className="btn-square mb-3 pull-right "
+									onClick={() => {
+										// this.exportExcelFile()
+										this.generateSifFile()
+									}
+									}
+								>
+									<i class="fas fa-file-invoice-dollar"></i>
+									{"  "}Download SIF file
+								</Button>
+							) :
+							""
+						}
 
-																	</Col>
-																
+					</Col>
+
 
 				</Row>
 				<div >
@@ -578,7 +579,7 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 									// 	return (
 									// 		<Input
 									// 		type="number"
-											// min="0"
+									// min="0"
 									// 		max={30}
 									// 		id="lopDay"
 									// 		name="lopDay"
@@ -621,18 +622,18 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 									// 	);
 
 									// } else 
-									 if(col.key === 'grossPay'){
-										
-										return  (<div>{this.state.currencyIsoCode ? this.state.currencyIsoCode : "AED"}{" "+cell.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</div>)
+									if (col.key === 'grossPay') {
+
+										return (<div>{this.state.currencyIsoCode ? this.state.currencyIsoCode : "AED"}{" " + cell.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</div>)
 									}
-									 else
-									 if(col.key === 'netPay'){
-										return	(<div>{this.state.currencyIsoCode ? this.state.currencyIsoCode : "AED"}{" "+cell.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</div>);
-								 }
-								 
-								  else if(col.key === 'deduction'){
-									return (<div>{this.state.currencyIsoCode ? this.state.currencyIsoCode : "AED"}{" "+cell.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</div>);
-							 }
+									else
+										if (col.key === 'netPay') {
+											return (<div>{this.state.currencyIsoCode ? this.state.currencyIsoCode : "AED"}{" " + cell.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</div>);
+										}
+
+										else if (col.key === 'deduction') {
+											return (<div>{this.state.currencyIsoCode ? this.state.currencyIsoCode : "AED"}{" " + cell.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</div>);
+										}
 									{
 										return (
 											<div>{cell}</div>
@@ -646,34 +647,36 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 
 
 
-								if(col.key === 'netPay' || col.key === 'deduction' || col.key === 'grossPay'){
+								if (col.key === 'netPay' || col.key === 'deduction' || col.key === 'grossPay') {
 									return (
-									<TableHeaderColumn
-										key={index}
-										dataFormat={format}
-										dataField={col.key}
-										dataAlign="right"
-										className="table-header-bg"
-										dataSort={col.dataSort}
-										width={col.width}>
-										{col.label}
-									</TableHeaderColumn>
-								
-								)}
-								else
-																{return (
-																	<TableHeaderColumn
-																		key={index}
-																		dataFormat={format}
-																		dataField={col.key}
-																		dataAlign="center"
-																		className="table-header-bg"
-																		dataSort={col.dataSort}
-																		width={col.width}>
-																		{col.label}
-																	</TableHeaderColumn>
-								
-																)}
+										<TableHeaderColumn
+											key={index}
+											dataFormat={format}
+											dataField={col.key}
+											dataAlign="right"
+											className="table-header-bg"
+											dataSort={col.dataSort}
+											width={col.width}>
+											{col.label}
+										</TableHeaderColumn>
+
+									)
+								}
+								else {
+									return (
+										<TableHeaderColumn
+											key={index}
+											dataFormat={format}
+											dataField={col.key}
+											dataAlign="center"
+											className="table-header-bg"
+											dataSort={col.dataSort}
+											width={col.width}>
+											{col.label}
+										</TableHeaderColumn>
+
+									)
+								}
 							})
 						}
 
@@ -685,7 +688,7 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 		)
 	}
 	generate = () => {
-		 
+
 
 
 		this.props.createPayrollActions
@@ -709,7 +712,7 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 			Object.keys(this.state.selectedRows).forEach(key => {
 				employeeList.push(this.state.selectedRows[key])
 			});
-			 
+
 			this.props.createPayrollActions.removeEmployee(employeeList).then((res) => {
 
 
@@ -782,9 +785,9 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 			selectedRows1: tempList1,
 		});
 	};
-	rejectPayroll1= () => {
+	rejectPayroll1 = () => {
 		this.props.createPayrollActions
-			.rejectPayroll(this.state.payroll_id,this.state.comment)
+			.rejectPayroll(this.state.payroll_id, this.state.comment)
 			.then((res) => {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert('success', 'Payroll Rejected Successfully')
@@ -799,12 +802,12 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 	}
 	rejectPayroll = () => {
 
-	
+
 		const message1 =
-        <text>
-        <b>Would you like to reject this payroll ?</b>
-        </text>
-        const message = 'This Payroll will be Rejected. ';
+			<text>
+				<b>Would you like to reject this payroll ?</b>
+			</text>
+		const message = 'This Payroll will be Rejected. ';
 		this.setState({
 			dialog: (
 				<ConfirmDeleteModal
@@ -816,10 +819,31 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 				/>
 			),
 		});
-	
+
 
 	};
+	voidPayroll = () => {
 
+
+		const message1 =
+			<text>
+				<b>Would you like to void this payroll ?</b>
+			</text>
+		const message = 'This Payroll will be Voided. ';
+		this.setState({
+			dialog: (
+				<ConfirmDeleteModal
+					isOpen={true}
+					okHandler={this.voidPayrollApi}
+					cancelHandler={this.removeDialog}
+					message={message}
+					message1={message1}
+				/>
+			),
+		});
+
+
+	};
 
 	removeDialog = () => {
 		this.setState({
@@ -830,148 +854,148 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 		strings.setLanguage(this.state.language);
 
 		const { employee_list, approver_dropdown_list } = this.props
-		const { loading, initValue,dialog } = this.state
+		const { loading, initValue, dialog } = this.state
 		console.log(approver_dropdown_list, "approver_dropdown_list")
 		return (
-			loading ==true? <Loader/> :
-<div>
-			<div className="create-employee-screen">
-				<div className="animated fadeIn">
-					<Row>
-						<Col lg={12} className="mx-auto">
-							<Card>
-								<CardHeader>
-									<Row>
-										<Col lg={12}>
-											<div className="h4 mb-0 d-flex align-items-center">
-												<i className="nav-icon fas fa-user-tie" />
-												<span className="ml-2"> Approve Payroll</span>
-											</div>
-										</Col>
-									</Row>
-								</CardHeader>
-								<CardBody>
-									{dialog}
-									{loading ? (
-										<Row>
-											<Col lg={12}>
-												<Loader />
-											</Col>
-										</Row>
-									) : (
-										<Row>
-											<Col lg={12}>
-												<div className="d-flex justify-content-end">
-													<ButtonGroup size="sm">
+			loading == true ? <Loader /> :
+				<div>
+					<div className="create-employee-screen">
+						<div className="animated fadeIn">
+							<Row>
+								<Col lg={12} className="mx-auto">
+									<Card>
+										<CardHeader>
+											<Row>
+												<Col lg={12}>
+													<div className="h4 mb-0 d-flex align-items-center">
+														<i className="nav-icon fas fa-user-tie" />
+														<span className="ml-2"> Approve Payroll</span>
+													</div>
+												</Col>
+											</Row>
+										</CardHeader>
+										<CardBody>
+											{dialog}
+											{loading ? (
+												<Row>
+													<Col lg={12}>
+														<Loader />
+													</Col>
+												</Row>
+											) : (
+												<Row>
+													<Col lg={12}>
+														<div className="d-flex justify-content-end">
+															<ButtonGroup size="sm">
 
-													</ButtonGroup>
-												</div>
+															</ButtonGroup>
+														</div>
 
-												<div>
-													<Formik
+														<div>
+															<Formik
 
-														initialValues={this.state}
-														onSubmit={(values, { resetForm }) => {
-															this.addEmployee(values)
+																initialValues={this.state}
+																onSubmit={(values, { resetForm }) => {
+																	this.addEmployee(values)
 
-														}}
+																}}
 
-													>
-														{(props) => (
-
-
-															<Form onSubmit={props.handleSubmit}>
-																<Row>
-																	<Col >
-																		<FormGroup className="mb-3">
-																			<Label htmlFor="date">
-																			
-																				Payroll Date
-																			</Label>
-																			<DatePicker
-																				id="payrollDate"
-																				name="payrollDate"
-																				disabled={true}
-																				placeholderText={strings.payrollDate}
-																				showMonthDropdown
-																				showYearDropdown
-																				dateFormat="dd-MM-yyyy"
-																				dropdownMode="select"
-																				value={this.state.payrollDate}
-																				onChange={(value) => {
-																					props.handleChange('payrollDate')(
-																						moment(value).format('DD-MM-YYYY'),
-																					);
-																					this.setDate(props, value);
-																				}}
-																				className={`form-control ${props.errors.payrollDate &&
-																						props.touched.payrollDate
-																						? 'is-invalid'
-																						: ''
-																					}`}
-																			/>
-																			{props.errors.payrollDate &&
-																				props.touched.payrollDate && (
-																					<div className="invalid-feedback">
-																						{props.errors.payrollDate}
-																					</div>
-																				)}
-																		</FormGroup>
-																	</Col>
-																	<Col>
-																		<FormGroup>
-																			<Label htmlFor="payrollSubject"> Payroll Subject</Label>
-																			<Input
-																				type="text"
-																				id="payrollSubject"
-																				name="payrollSubject"
-																				disabled={true}
-																				value={this.state.payrollSubject}
-																				placeholder={strings.Enter + " Payroll Subject"}
-																				onChange={(value) => {
-																					props.handleChange('payrollSubject')(value);
-
-																				}}
-																				className={props.errors.payrollSubject && props.touched.payrollSubject ? "is-invalid" : ""}
-																			/>
-																			{props.errors.payrollSubject && props.touched.payrollSubject && (
-																				<div className="invalid-feedback">
-																					{props.errors.payrollSubject}
-																				</div>
-																			)}
-
-																		</FormGroup>
-																	</Col>
-																	<Col>
-																		<FormGroup>
-																			<Label htmlFor="payPeriod">  Pay period</Label>
-																			<Input
-																				type="text"
-																				id="payPeriod"
-																				name="payPeriod"
-																				value={this.state.payPeriod}
-																				placeholder={strings.Enter + " Pay period"}
-																				onChange={(value) => {
-																					props.handleChange('payPeriod')(value);
-
-																				}}
-																				disabled={true}
-																				className={props.errors.payPeriod && props.touched.payPeriod ? "is-invalid" : ""}
-																			/>
-																			{props.errors.payPeriod && props.touched.payPeriod && (
-																				<div className="invalid-feedback">
-																					{props.errors.payPeriod}
-																				</div>
-																			)}
-
-																		</FormGroup>
-																	</Col>
+															>
+																{(props) => (
 
 
-																</Row>
-																<Row>
+																	<Form onSubmit={props.handleSubmit}>
+																		<Row>
+																			<Col >
+																				<FormGroup className="mb-3">
+																					<Label htmlFor="date">
 
-																	{/* <Col ></Col>
+																						Payroll Date
+																					</Label>
+																					<DatePicker
+																						id="payrollDate"
+																						name="payrollDate"
+																						disabled={true}
+																						placeholderText={strings.payrollDate}
+																						showMonthDropdown
+																						showYearDropdown
+																						dateFormat="dd-MM-yyyy"
+																						dropdownMode="select"
+																						value={this.state.payrollDate}
+																						onChange={(value) => {
+																							props.handleChange('payrollDate')(
+																								moment(value).format('DD-MM-YYYY'),
+																							);
+																							this.setDate(props, value);
+																						}}
+																						className={`form-control ${props.errors.payrollDate &&
+																							props.touched.payrollDate
+																							? 'is-invalid'
+																							: ''
+																							}`}
+																					/>
+																					{props.errors.payrollDate &&
+																						props.touched.payrollDate && (
+																							<div className="invalid-feedback">
+																								{props.errors.payrollDate}
+																							</div>
+																						)}
+																				</FormGroup>
+																			</Col>
+																			<Col>
+																				<FormGroup>
+																					<Label htmlFor="payrollSubject"> Payroll Subject</Label>
+																					<Input
+																						type="text"
+																						id="payrollSubject"
+																						name="payrollSubject"
+																						disabled={true}
+																						value={this.state.payrollSubject}
+																						placeholder={strings.Enter + " Payroll Subject"}
+																						onChange={(value) => {
+																							props.handleChange('payrollSubject')(value);
+
+																						}}
+																						className={props.errors.payrollSubject && props.touched.payrollSubject ? "is-invalid" : ""}
+																					/>
+																					{props.errors.payrollSubject && props.touched.payrollSubject && (
+																						<div className="invalid-feedback">
+																							{props.errors.payrollSubject}
+																						</div>
+																					)}
+
+																				</FormGroup>
+																			</Col>
+																			<Col>
+																				<FormGroup>
+																					<Label htmlFor="payPeriod">  Pay period</Label>
+																					<Input
+																						type="text"
+																						id="payPeriod"
+																						name="payPeriod"
+																						value={this.state.payPeriod}
+																						placeholder={strings.Enter + " Pay period"}
+																						onChange={(value) => {
+																							props.handleChange('payPeriod')(value);
+
+																						}}
+																						disabled={true}
+																						className={props.errors.payPeriod && props.touched.payPeriod ? "is-invalid" : ""}
+																					/>
+																					{props.errors.payPeriod && props.touched.payPeriod && (
+																						<div className="invalid-feedback">
+																							{props.errors.payPeriod}
+																						</div>
+																					)}
+
+																				</FormGroup>
+																			</Col>
+
+
+																		</Row>
+																		<Row>
+
+																			{/* <Col ></Col>
 																	<Col>
 																	<FormGroup>
 																			<Select
@@ -1041,168 +1065,177 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 																	</Col> */}
 
 
-																</Row>
+																		</Row>
 
-															</Form>
-														)
-														}
-													</Formik>
-
-
-												</div>
-												{this.getPayrollEmployeeList()}
-												<Formik
-
-													initialValues={this.state}
-													onSubmit={(values, { resetForm }) => {
-														this.addEmployee(values, resetForm)
-
-													}}
-
-												>
-													{(props) => (
-
-
-														<Form onSubmit={props.handleSubmit}>
-
-															<Row className="mb-4 ">
-															
-																<Col>
-																
-																	<FormGroup>
-																	{this.state.status && (this.state.status==="Approved" || this.state.status==="Rejected" ||this.state.status==="Partially Paid"  ||this.state.status==="Paid"||this.state.status==="Draft"||this.state.status==="Void" ) ? 
-																''	: (
-																		<div>
-
-																		<Label htmlFor="payrollSubject">Reason for Rejection </Label>
-																		<Input
-																			// className="mt-4 pull-right"
-																			type="text"
-																			maxLength="250"
-																			id="comment"
-																			name="comment"
-																			value={this.state.comment}
-																			disabled={this.state.status==="Approved" ?true :false }
-																			placeholder={strings.Enter + " reason for rejecting the payroll"}
-																			onChange={(event) => {
-																				this.setState({
-																					comment: event.target.value
-																				})
-		
-																			}}
-																			className={props.errors.comment && props.touched.comment ? "is-invalid" : ""}
-																		/>
-																		</div>
-																		
-																	)
-																
-																
+																	</Form>
+																)
 																}
-																		{props.errors.comment && props.touched.comment && (
-																			<div className="invalid-feedback">
-																				{props.errors.comment}
-																			</div>
-																		)}
-																		{this.state.status && (this.state.status==="Approved" || this.state.status==="Rejected" ||this.state.status==="Partially Paid"  ||this.state.status==="Paid"||this.state.status==="Draft"||this.state.status==="Void" ) ? 
-																''	:
-																		(
-																			<Button
-																			color="primary"
-																			className="btn-square mt-4 "
-																			onClick={() =>{
-																				if(this.state.comment=="")
-																				   toast.error("Please Enter Reason")
-																				else
-																				this.rejectPayroll()
-																			}
-																			}
-																		title={
-																			this.state.comment==""?"Please Enter Reason":""
-																		}
-																		>
-																			<i class="fas fa-user-times mr-1"></i>
-
-																			Reject Payroll
-																		</Button>
-																		)
-																		}
-
-															{this.state.status==="Approved" &&(
-																	<div className=" mt-5 ">
-																	<Button
-																	color="primary"
-																	className="btn-square mt-5 "
-																	type="button"
-																	onClick={() =>{	this.voidPayroll()}}	
-																>
-																	<i class="fas fa-user-times mr-1"></i>
-
-																	Void This Payroll
-																</Button></div>)}
-																	
-																	</FormGroup>
+															</Formik>
 
 
-																</Col>
+														</div>
+														{this.getPayrollEmployeeList()}
+														<Formik
 
-																<Col>
-																<ButtonGroup className="mt-5 pull-right ">
-																{this.state.status && (this.state.status==="Approved"  ||this.state.status==="Partially Paid"  ||this.state.status==="Paid" ||this.state.status==="Rejected" ||this.state.status==="Draft" ||this.state.status==="Void") ? 
-																""	:
-																	(
-																		<Button
-																		type="button"
-																		color="primary"
-																		className="btn-square mt-5 pull-right "
-																		onClick={() =>
-																			this.approveAndRunPayroll()
-																		}
-																	>
-																		<i class="fas fa-bullseye mr-1"></i>
-																		Approve & Run Payroll
-																	</Button>
-																	)
-																	
-																	
-																	}
-																<Button
-																		color="secondary"
-																		className="btn-square  pull-right   mt-5"
-																		onClick={() => {
-																			this.props.history.push('/admin/payroll/payrollrun')
-																		}}
-																	>
-																		<i className="fa fa-ban"></i> {strings.Cancel}
-																	</Button>
-																</ButtonGroup>
+															initialValues={this.state}
+															onSubmit={(values, { resetForm }) => {
+																this.addEmployee(values, resetForm)
 
-																
-																	
-															</Col>
-															</Row>
+															}}
 
-														</Form>
-													)
-													}
-												</Formik>
-											</Col>
-										</Row>
-									)}
-								</CardBody>
-							</Card>
-						</Col>
-					</Row>
+														>
+															{(props) => (
+
+
+																<Form onSubmit={props.handleSubmit}>
+
+																	<Row className="mb-4 ">
+
+																		<Col>
+
+																			<FormGroup>
+																				{this.state.status && (this.state.status === "Rejected" || this.state.status === "Partially Paid" || this.state.status === "Paid" || this.state.status === "Draft") ?
+																					'' : (
+																						<div>
+
+																							<Label htmlFor="payrollSubject">
+																								{this.state.status == "Approved" ||this.state.status == "Voided"  ?
+																									"Reason for voiding the payroll" :
+																									"Reason for  rejecting the payroll"}
+																							</Label>
+																							<Input
+																								// className="mt-4 pull-right"
+																								type="text"
+																								maxLength="250"
+																								id="comment"
+																								name="comment"
+																								value={this.state.comment}
+																								disabled={this.state.status == "Voided"?true :false }
+																								placeholder={strings.Enter + " reason "}
+																								onChange={(event) => {
+																									this.setState({
+																										comment: event.target.value
+																									})
+
+																								}}
+																								className={props.errors.comment && props.touched.comment ? "is-invalid" : ""}
+																							/>
+																						</div>
+
+																					)
+
+
+																				}
+																				{props.errors.comment && props.touched.comment && (
+																					<div className="invalid-feedback">
+																						{props.errors.comment}
+																					</div>
+																				)}
+																				{this.state.status && (this.state.status === "Approved" || this.state.status === "Rejected" || this.state.status === "Partially Paid" || this.state.status === "Paid" || this.state.status === "Draft" || this.state.status === "Voided") ?
+																					'' :
+																					(
+																						<Button
+																							color="primary"
+																							className="btn-square mt-4 "
+																							onClick={() => {
+																								if (this.state.comment == "")
+																									toast.error("Please Enter Reason")
+																								else
+																									this.rejectPayroll()
+																							}
+																							}
+																							title={
+																								this.state.comment == "" ? "Please Enter Reason" : ""
+																							}
+																						>
+																							<i class="fas fa-user-times mr-1"></i>
+
+																							Reject Payroll
+																						</Button>
+																					)
+																				}
+
+																				{this.state.status === "Approved" && (
+
+																					<Button
+																						color="primary"
+																						className="btn-square mt-4 "
+																						type="button"
+																						onClick={() => {
+																							if (this.state.comment == "")
+																								toast.error("Please Enter Reason")
+																							else
+																								this.voidPayroll()
+																						}}
+																					>
+																						<i class="fas fa-user-times mr-1"></i>
+
+																						Void This Payroll
+																					</Button>)}
+
+																			</FormGroup>
+
+
+																		</Col>
+
+																		<Col>
+																			<ButtonGroup className="mt-5 pull-right ">
+																				{this.state.status && (this.state.status === "Approved" || this.state.status === "Partially Paid" || this.state.status === "Paid" || this.state.status === "Rejected" || this.state.status === "Draft" || this.state.status === "Voided") ?
+																					"" :
+																					(
+																						<Button
+																							type="button"
+																							color="primary"
+																							className="btn-square mt-5 pull-right "
+																							onClick={() =>
+																								this.approveAndRunPayroll()
+																							}
+																						>
+																							<i class="fas fa-bullseye mr-1"></i>
+																							Approve & Run Payroll
+																						</Button>
+																					)
+
+
+																				}
+																				<Button
+																					color="secondary"
+																					className="btn-square  pull-right   mt-5"
+																					onClick={() => {
+																						this.props.history.push('/admin/payroll/payrollrun')
+																					}}
+																				>
+																					<i className="fa fa-ban"></i> {strings.Cancel}
+																				</Button>
+																			</ButtonGroup>
+
+
+
+																		</Col>
+																	</Row>
+
+																</Form>
+															)
+															}
+														</Formik>
+													</Col>
+												</Row>
+											)}
+										</CardBody>
+									</Card>
+								</Col>
+							</Row>
+						</div>
+						<AddEmployeesModal
+							openModal={this.state.openModal}
+							closeModal={(e) => {
+								this.closeModal(e);
+							}}
+
+						// employee_list={employee_list.data}				
+						/>
+					</div>
 				</div>
-				<AddEmployeesModal
-					openModal={this.state.openModal}
-					closeModal={(e) => {
-						this.closeModal(e);
-					}}
-
-				// employee_list={employee_list.data}				
-				/>
-			</div>
-			</div>
 		)
 	}
 }

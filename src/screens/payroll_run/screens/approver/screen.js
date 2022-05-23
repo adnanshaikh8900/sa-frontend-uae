@@ -279,6 +279,8 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 			classname = 'label-sent';
 		}else if (status === 'Partially Paid') {
 			classname = 'label-PartiallyPaid';
+		}else if (status === 'Void') {
+			classname = 'label-closed';
 		}
 		// else {
 		// 	classname = 'label-overdue';
@@ -1068,11 +1070,11 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 																<Col>
 																
 																	<FormGroup>
-																	{this.state.status && (this.state.status==="Approved" || this.state.status==="Rejected" ||this.state.status==="Partially Paid"  ||this.state.status==="Paid"||this.state.status==="Draft" ) ? 
+																	{this.state.status && (this.state.status==="Approved" || this.state.status==="Rejected" ||this.state.status==="Partially Paid"  ||this.state.status==="Paid"||this.state.status==="Draft") ? 
 																''	: (
 																		<div>
 
-																		<Label htmlFor="payrollSubject">Reason  </Label>
+																		<Label htmlFor="payrollSubject">Reason for Rejection </Label>
 																		<Input
 																			// className="mt-4 pull-right"
 																			type="text"
@@ -1101,7 +1103,7 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 																				{props.errors.comment}
 																			</div>
 																		)}
-																		{this.state.status && (this.state.status==="Approved" || this.state.status==="Rejected" ||this.state.status==="Partially Paid"  ||this.state.status==="Paid"||this.state.status==="Draft" ) ? 
+																		{this.state.status && (this.state.status==="Approved" || this.state.status==="Rejected" ||this.state.status==="Partially Paid"  ||this.state.status==="Paid"||this.state.status==="Draft"||this.state.status==="Void" ) ? 
 																''	:
 																		(
 																			<Button
@@ -1145,7 +1147,7 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 
 																<Col>
 																<ButtonGroup className="mt-5 pull-right ">
-																{this.state.status && (this.state.status==="Approved"  ||this.state.status==="Partially Paid"  ||this.state.status==="Paid" ||this.state.status==="Rejected" ||this.state.status==="Draft") ? 
+																{this.state.status && (this.state.status==="Approved"  ||this.state.status==="Partially Paid"  ||this.state.status==="Paid" ||this.state.status==="Rejected" ||this.state.status==="Draft" ||this.state.status==="Void") ? 
 																""	:
 																	(
 																		<Button

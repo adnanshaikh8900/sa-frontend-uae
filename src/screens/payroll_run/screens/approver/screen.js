@@ -1070,7 +1070,7 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 																<Col>
 																
 																	<FormGroup>
-																	{this.state.status && (this.state.status==="Approved" || this.state.status==="Rejected" ||this.state.status==="Partially Paid"  ||this.state.status==="Paid"||this.state.status==="Draft") ? 
+																	{this.state.status && (this.state.status==="Approved" || this.state.status==="Rejected" ||this.state.status==="Partially Paid"  ||this.state.status==="Paid"||this.state.status==="Draft"||this.state.status==="Void" ) ? 
 																''	: (
 																		<div>
 

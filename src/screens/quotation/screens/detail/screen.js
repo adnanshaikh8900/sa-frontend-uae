@@ -12,7 +12,6 @@ import {
 	FormGroup,
 	Input,
 	Label,
-	NavLink,
 	UncontrolledTooltip,
 } from 'reactstrap';
 import Select from 'react-select';
@@ -24,25 +23,22 @@ import * as SupplierInvoiceDetailActions from './actions';
 import * as SupplierInvoiceActions from '../../actions';
 import * as QuotationDetailsAction from './actions';
 import * as RequestForQuotationAction from '../../actions'
-import * as transactionCreateActions from '../../../bank_account/screens/transactions/actions';
 import * as ProductActions from '../../../product/actions';
 import { SupplierModal } from '../../sections';
 import { ProductModal } from '../../../customer_invoice/sections';
-import { Loader, ConfirmDeleteModal,Currency } from 'components';
+import { Loader, ConfirmDeleteModal } from 'components';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
-
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import { optionFactory, selectCurrencyFactory, selectOptionsFactory } from 'utils';
-
 import './style.scss';
 import moment from 'moment';
 import Switch from "react-switch";
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { TextareaAutosize } from '@material-ui/core';
-import { values } from 'lodash';
+
 const mapStateToProps = (state) => {
 	return {
 		project_list: state.request_for_quotation.project_list,
@@ -1644,13 +1640,13 @@ console.log(this.state.supplier_currency)
 														||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
 														{
 															if (!values.placeOfSupplyId) 
-																   errors.placeOfSupplyId ='Place of Supply is Required';
+																   errors.placeOfSupplyId ='Place of supply is required';
 															if (values.placeOfSupplyId &&
 																(values.placeOfSupplyId=="" ||
-																(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")
+																(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select place of supply")
 																)
 															   ) 
-																 errors.placeOfSupplyId ='Place of Supply is Required';
+																 errors.placeOfSupplyId ='Place of supply is required';
 														
 													   }
 														return errors
@@ -1664,7 +1660,7 @@ console.log(this.state.supplier_currency)
 														.of(
 															Yup.object().shape({
 																quantity: Yup.string()
-																	.required('Value is Required')
+																	.required('Value is required')
 																	.test(
 																		'quantity',
 																		'Quantity should be greater than 0',
@@ -1677,10 +1673,10 @@ console.log(this.state.supplier_currency)
 																		},
 																	),
 																unitPrice: Yup.string()
-																	.required('Value is Required')
+																	.required('Value is required')
 																	.test(
 																		'Unit Price',
-																		'Unit Price Should be Greater than 1',
+																		'Unit price should be greater than 1',
 																		(value) => {
 																			if (value > 0) {
 																				return true;
@@ -1690,26 +1686,26 @@ console.log(this.state.supplier_currency)
 																		},
 																	),
 																vatCategoryId: Yup.string().required(
-																	'VAT is Required',
+																	'VAT is required',
 																),
 																productId: Yup.string().required(
-																	'Product is Required',
+																	'Product is required',
 																),
 															}),
 														),
 														// invoice_number: Yup.string().required(
-														// 	'Invoice Number is Required',
+														// 	'Invoice Number is required',
 														// ),
 														// contactId: Yup.string().required(
-														// 	'Supplier is Required',
+														// 	'Supplier is required',
 														// ),
-														// term: Yup.string().required('Term is Required'),
-														// placeOfSupplyId: Yup.string().required('Place of supply is Required'),
+														// term: Yup.string().required('Term is required'),
+														// placeOfSupplyId: Yup.string().required('Place of supply is required'),
 														// invoiceDate: Yup.string().required(
-														// 	'Invoice Date is Required',
+														// 	'Invoice date is required',
 														// ),
 														// invoiceDueDate: Yup.string().required(
-														// 	'Invoice Due Date is Required',
+														// 	'Invoice due date is required',
 														// ),
 														// currency: Yup.string().required(
 														// 	'Currency is Requsired',
@@ -1721,30 +1717,30 @@ console.log(this.state.supplier_currency)
 														// 	.of(
 														// 		Yup.object().shape({
 														// 			// description: Yup.string().required(
-														// 			// 	'Value is Required',
+														// 			// 	'Value is required',
 														// 			// ),
 														// 			quantity: Yup.number()
-														// 				.required('Value is Required')
+														// 				.required('Value is required')
 														// 				.test(
 														// 					'quantity',
 														// 					'Quantity Should be Greater than 1',
 														// 					(value) => value > 0,
 														// 				),
 														// 			unitPrice: Yup.number().required(
-														// 				'Value is Required',
+														// 				'Value is required',
 														// 			),
 														// 			vatCategoryId: Yup.string().required(
-														// 				'Value is Required',
+														// 				'Value is required',
 														// 			),
 														// 			productId: Yup.string().required(
-														// 				'Product is Required',
+														// 				'Product is required',
 														// 			),
 														// 		}),
 														// 	),
 														attachmentFile: Yup.mixed()
 															.test(
 																'fileType',
-																'*Unsupported File Format',
+																'*Unsupported file format',
 																(value) => {
 																	value &&
 																		this.setState({
@@ -1765,7 +1761,7 @@ console.log(this.state.supplier_currency)
 															)
 															.test(
 																'fileSize',
-																'*File Size is too large',
+																'*File size is too large',
 																(value) => {
 																	if (
 																		!value ||

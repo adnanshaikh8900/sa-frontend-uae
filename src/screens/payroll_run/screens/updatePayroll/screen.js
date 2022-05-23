@@ -275,7 +275,7 @@ class UpdatePayroll extends React.Component {
 			return true;
 		}
 		else
-			if (this.state.status === "Submitted" || this.state.status==="Approved" || this.state.status==="Partially Paid"|| this.state.status==="Paid"||this.state.status==="Void") {
+			if (this.state.status === "Submitted" || this.state.status==="Approved" || this.state.status==="Partially Paid"|| this.state.status==="Paid"||this.state.status==="Voided") {
 				return true;
 			} else {
 				return false;
@@ -294,7 +294,7 @@ class UpdatePayroll extends React.Component {
 			}
 	};
 	disableForAddButton = () => {
-		if (this.state.status === "Submitted" || this.state.status==="Approved"|| this.state.status==="Partially Paid"|| this.state.status==="Paid"||this.state.status==="Void") {
+		if (this.state.status === "Submitted" || this.state.status==="Approved"|| this.state.status==="Partially Paid"|| this.state.status==="Paid"||this.state.status==="Voided") {
 			return true;
 		} else {
 			return false;
@@ -581,7 +581,7 @@ class UpdatePayroll extends React.Component {
 			classname = 'label-sent';
 		}else if (status === 'Partially Paid') {
 			classname = 'label-PartiallyPaid';
-		}else if (status === 'Void') {
+		}else if (status === "Voided") {
 			classname = 'label-closed';
 		}
 		// else {
@@ -1225,7 +1225,7 @@ class UpdatePayroll extends React.Component {
 
 
 																<Col>
-																{this.state.status && (this.state.status==="Submitted" ||this.state.status==="Approved"||this.state.status=="Partially Paid"|| this.state.status==="Paid"||this.state.status==="Void")?(""):(<>
+																{this.state.status && (this.state.status==="Submitted" ||this.state.status==="Approved"||this.state.status=="Partially Paid"|| this.state.status==="Paid"||this.state.status==="Voided")?(""):(<>
 																	<Button
 																			type="button"
 																			color="danger"
@@ -1249,7 +1249,7 @@ class UpdatePayroll extends React.Component {
 																	>
 																		<i className="fa fa-ban"></i> {strings.Cancel}
 																	</Button>
-																	{this.state.status && (this.state.status==="Submitted" ||this.state.status==="Approved" || this.state.status==="Partially Paid"|| this.state.status==="Paid"||this.state.status==="Void") ?(""):
+																	{this.state.status && (this.state.status==="Submitted" ||this.state.status==="Approved" || this.state.status==="Partially Paid"|| this.state.status==="Paid"||this.state.status==="Voided") ?(""):
 																	(		<>
 																	
 																	<Button

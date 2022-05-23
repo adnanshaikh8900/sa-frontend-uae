@@ -174,7 +174,7 @@ class PayrollRun extends React.Component {
 		 
 		var userValue = user_approver_generater_dropdown_list.length ? user_approver_generater_dropdown_list[0].value : '';
 		var userLabel = user_approver_generater_dropdown_list.length ? user_approver_generater_dropdown_list[0].label : '';
-		// if(row.status=="Void")
+		// if(row.status=="Voided")
 		// toast.success("Unable to View Void Payroll !")
 		// else
 		if (userValue.toString() === row.generatedBy && userLabel === "Payroll Generator") {
@@ -194,7 +194,7 @@ class PayrollRun extends React.Component {
 			}
 			else
 			
-				if ( userLabel === "Admin" && (row.status==="Submitted" || row.status==="Partially Paid" || row.status==="Approved" || row.status==="Paid"|| row.status==="Void")) {
+				if ( userLabel === "Admin" && (row.status==="Submitted" || row.status==="Partially Paid" || row.status==="Approved" || row.status==="Paid"|| row.status==="Voided")) {
 					this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
 				}else
 				// if ( userLabel === "Admin" && row.status==="Approved") {
@@ -418,7 +418,7 @@ class PayrollRun extends React.Component {
 			classname = 'label-sent';
 		}else if (row.status === 'Partially Paid') {
 			classname = 'label-PartiallyPaid';
-		}else if (row.status === 'Void') {
+		}else if (row.status === "Voided") {
 			classname = 'label-closed';
 		}
 		// else {

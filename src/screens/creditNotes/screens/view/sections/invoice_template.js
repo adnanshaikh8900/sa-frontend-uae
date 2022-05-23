@@ -337,9 +337,9 @@ class InvoiceTemplate extends Component {
 							>				
 								<br />
 						
-								{invoiceData.notes&& (<><h6 className=" ml-1 mb-0 pt-2">
+								{invoiceData.notes&& (<><h6 className="mb-0 pt-2">
 									<b>{strings.Notes }:</b>
-								</h6>
+								</h6><br/>
 								<h6 className="mb-0">{invoiceData.notes}</h6>
 							</>)}
 							

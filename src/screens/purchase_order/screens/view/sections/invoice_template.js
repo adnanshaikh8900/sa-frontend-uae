@@ -331,7 +331,7 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 								<br />
 								{POData.notes&& (<><h6 className="mb-0 pt-2">
 									<b>{strings.Notes}:</b>
-								</h6>
+								</h6><br/>
 								<h6 className="mb-0">{POData.notes}</h6>
                                 </>)}							
 

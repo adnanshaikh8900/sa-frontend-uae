@@ -650,7 +650,7 @@ class CreateJournal extends React.Component {
           this.state.initValue.totalDebitAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }))
           this.setState({ disabled: false });
         else
-    this.setState({ disabled: true });
+    	this.setState({ disabled: true });
 		const { data, initValue } = this.state;
 		if (initValue.totalCreditAmount === initValue.totalDebitAmount) {
 			data.map((item) => {
@@ -800,6 +800,10 @@ class CreateJournal extends React.Component {
 												
 												validate={(values) => {
 													let errors = {};
+													if (!values.journalDate) {
+														errors.journalDate =
+															'Date is  required';
+													}
 													if (exist === true) {
 														errors.journalReferenceNo =
 															'Journal Reference Number Already Exists';
@@ -808,9 +812,9 @@ class CreateJournal extends React.Component {
 												}
 											}
 												validationSchema={Yup.object().shape({
-													journalDate: Yup.date().required(
-														'Journal Date is Required',
-													),
+													// journalDate: Yup.date().required(
+													// 	'Journal Date is Required',
+													// ),
 													journalLineItems: Yup.array()
 														.of(
 															Yup.object().shape({
@@ -832,37 +836,37 @@ class CreateJournal extends React.Component {
 														<Row>
 															<Col lg={4}>
 																<FormGroup className="mb-3">
-																	<Label htmlFor="date">
+																<Label htmlFor="date">
 																		<span className="text-danger">* </span>
 																		{strings.JournalDate}
 																	</Label>
 																	<DatePicker
 																		id="journalDate"
 																		name="journalDate"
-																		placeholderText={strings.JournalDate}
-																		selected={props.values.journalDate}
-																		showMonthDropdown
-																		showYearDropdown
-																		dateFormat="dd-MM-yyyy"
-																		minDate={new Date()}
-																		dropdownMode="select"
-																		onChange={(value) => {
-																			props.handleChange('journalDate')(value);
-																		}}
-																		autoComplete="off"
 																		className={`form-control ${
 																			props.errors.journalDate &&
 																			props.touched.journalDate
 																				? 'is-invalid'
 																				: ''
 																		}`}
+																		placeholderText={strings.JournalDate}
+																		selected={props.values.journalDate}
+																		showMonthDropdown
+																		showYearDropdown
+																		dropdownMode="select"
+																		dateFormat="dd-MM-yyyy"
+																		maxDate={new Date()}
+																		onChange={(value) => {
+																			props.handleChange('journalDate')(value);
+																		}}
 																	/>
 																	{props.errors.journalDate &&
-																	props.touched.journalDate ? (
-																		<div className="invalid-feedback">
-																			{props.errors.journalDate}
-																		</div>
-																	) : null}
+																		props.touched.journalDate && (
+																			<div className="invalid-feedback">
+																				{props.errors.journalDate.includes("nullable()") ? "Journal Date is Required" :props.errors.journalDate}
+
+																			</div>
+																		)}
 																</FormGroup>
 															</Col>
 														</Row>

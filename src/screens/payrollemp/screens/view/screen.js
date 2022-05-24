@@ -691,6 +691,7 @@ renderSalaryDate=(cell,row)=>{
 				 Variable={this.state.Variable}
 				 companyData={profile}
 				 salaryDate={this.state.salaryDate}
+				 empData={this.state.EmployeeDetails}
 				/>
 			</div>
 		);

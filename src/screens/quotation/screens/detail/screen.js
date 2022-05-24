@@ -1118,13 +1118,12 @@ class DetailQuotation extends React.Component {
 	};
 
 	updateAmount = (data, props) => {
-		const { vat_list , excise_list} = this.state;
-		const { discountPercentage, discountAmount } = this.state;
+		const { vat_list } = this.state;
 		let total_net = 0;
 		let total_excise = 0;
 		let total = 0;
 		let total_vat = 0;
-		let net_value = 0;
+		let net_value = 0; 
 		let discount_total = 0;
 		data.map((obj) => {
 			const index =
@@ -1133,13 +1132,13 @@ class DetailQuotation extends React.Component {
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
 
-			//Excise calculation
+			//Exclusive case
 			if(this.state.taxType === false){
-				if (obj.discountType === 'PERCENTAGE') {
+				if (obj.discountType === 'PERCENTAGE') {	
 					 net_value =
 						((+obj.unitPrice -
 							(+((obj.unitPrice * obj.discount)) / 100)) * obj.quantity);
-					var discount =  (obj.unitPrice* obj.quantity) - net_value
+					var discount = (obj.unitPrice* obj.quantity)- net_value
 				if(obj.exciseTaxId !=  0){
 					if(obj.exciseTaxId === 1){
 						const value = +(net_value) / 2 ;
@@ -1183,8 +1182,8 @@ class DetailQuotation extends React.Component {
 			}
 			//Inclusive case
 			else
-			{
-				if (obj.discountType === 'PERCENTAGE') {
+			{			
+				if (obj.discountType === 'PERCENTAGE') {	
 
 					//net value after removing discount
 					 net_value =
@@ -1196,7 +1195,7 @@ class DetailQuotation extends React.Component {
 
 				//vat amount
 				var vat_amount =
-				(+net_value  * (vat/ (100 + vat)*100)) / 100;
+				(+net_value  * (vat/ (100 + vat)*100)) / 100; 
 
 				//net value after removing vat for inclusive
 				net_value = net_value - vat_amount
@@ -1205,7 +1204,7 @@ class DetailQuotation extends React.Component {
 				if(obj.exciseTaxId !=  0){
 				if(obj.exciseTaxId === 1){
 					const value = net_value / 3
-					net_value = net_value
+					net_value = net_value 
 					obj.exciseAmount = parseFloat(value);
 					}
 				else if (obj.exciseTaxId === 2){
@@ -1228,7 +1227,7 @@ class DetailQuotation extends React.Component {
 
 				//discount amount
 				var discount =  (obj.unitPrice * obj.quantity) - net_value
-
+						
 				//vat amount
 				var vat_amount =
 				(+net_value  * (vat/ (100 + vat)*100)) / 100; ;
@@ -1240,14 +1239,14 @@ class DetailQuotation extends React.Component {
 				if(obj.exciseTaxId !=  0){
 					if(obj.exciseTaxId === 1){
 						const value = net_value / 3
-						net_value = net_value
+						net_value = net_value 
 						obj.exciseAmount = parseFloat(value);
 						}
 					else if (obj.exciseTaxId === 2){
 						const value = net_value / 2
 						obj.exciseAmount = parseFloat(value);
 					net_value = net_value}
-				
+					
 							}
 							else{
 								obj.exciseAmount = 0
@@ -1255,8 +1254,8 @@ class DetailQuotation extends React.Component {
 					}
 
 			}
-
-
+			
+			
 			obj.vatAmount = vat_amount
 			obj.subTotal =
 			net_value && obj.vatCategoryId ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
@@ -1264,7 +1263,7 @@ class DetailQuotation extends React.Component {
 			discount_total = +discount_total +discount
 			total_net = +(total_net + parseFloat(net_value));
 			total_vat = +(total_vat + vat_amount);
-
+			
 			total_excise = +(total_excise + obj.exciseAmount)
 			total = total_vat + total_net;
 			return obj;
@@ -2248,6 +2247,16 @@ console.log(this.state.supplier_currency)
 																		>
 																			{strings.UNITPRICE}
 																		</TableHeaderColumn>
+																		{this.state.discountEnabled == true &&
+																	<TableHeaderColumn
+																	width="12%"
+																		dataField="discount"
+																		dataFormat={(cell, rows) =>
+																			this.renderDiscount(cell, rows, props)
+																		}
+																	>
+																		{strings.DISCOUNT_TYPE}
+																	</TableHeaderColumn>}
 																		{initValue.total_excise != 0 &&
 																		<TableHeaderColumn
 																	width="10%"
@@ -2265,20 +2274,10 @@ console.log(this.state.supplier_currency)
 																			placement="right"
 																			target="ExiseTooltip"
 																		>
-																			If Exise Type for a product is Inclusive
-																			then the Excise dropdown will be Disabled
+																			Excise dropdown will be enabled only for the excise products
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn> }
-																	{this.state.discountEnabled == true &&
-																	<TableHeaderColumn
-																	width="12%"
-																		dataField="discount"
-																		dataFormat={(cell, rows) =>
-																			this.renderDiscount(cell, rows, props)
-																		}
-																	>
-																		{strings.DISCOUNT_TYPE}
-																	</TableHeaderColumn>}
+																	
 																		<TableHeaderColumn
 																			dataField="vat"
 																			dataFormat={(cell, rows) =>

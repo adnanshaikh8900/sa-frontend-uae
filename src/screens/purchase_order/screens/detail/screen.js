@@ -2423,6 +2423,16 @@ class DetailPurchaseOrder extends React.Component {
 																		>
 																			 {strings.UNITPRICE}
 																		</TableHeaderColumn>
+																		{this.state.discountEnabled == true &&
+																	<TableHeaderColumn
+																	width="12%"
+																		dataField="discount"
+																		dataFormat={(cell, rows) =>
+																			this.renderDiscount(cell, rows, props)
+																		}
+																	>
+																		{strings.DISCOUNT_TYPE}
+																	</TableHeaderColumn>}
 																		{initValue.total_excise != 0 &&
 																		<TableHeaderColumn
 																	width="10%"
@@ -2440,8 +2450,7 @@ class DetailPurchaseOrder extends React.Component {
 																			placement="right"
 																			target="ExiseTooltip"
 																		>
-																			If Exise Type for a product is Inclusive
-																			then the Excise dropdown will be Disabled
+																			Excise dropdown will be enabled only for the excise products
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn> }
 																	{/* <TableHeaderColumn
@@ -2453,16 +2462,7 @@ class DetailPurchaseOrder extends React.Component {
 																	>
 																	DisCount
 																	</TableHeaderColumn> */}
-																	{this.state.discountEnabled == true &&
-																	<TableHeaderColumn
-																	width="12%"
-																		dataField="discount"
-																		dataFormat={(cell, rows) =>
-																			this.renderDiscount(cell, rows, props)
-																		}
-																	>
-																		{strings.DISCOUNT_TYPE}
-																	</TableHeaderColumn>}
+																	
 																		<TableHeaderColumn
 																			dataField="vat"
 																			dataFormat={(cell, rows) =>

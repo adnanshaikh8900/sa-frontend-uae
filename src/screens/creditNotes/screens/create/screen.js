@@ -23,7 +23,7 @@ import * as CreditNotesCreateActions from './actions';
 import * as CreditNotesActions from '../../actions';
 import * as ProductActions from '../../../product/actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
-import {  Loader } from 'components';
+import { LeavePage, Loader } from 'components';
 import { CustomerModal, ProductModal } from '../../sections';
 import { MultiSupplierProductModal } from '../../sections';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -178,7 +178,8 @@ class CreateCreditNote extends React.Component {
 			isCreatedWIWP:false,
 			quantityExceeded:'',
 			isCreatedWithoutInvoice:false,
-			loadingMsg:"Loading"
+			loadingMsg:"Loading",
+			disableLeavePage:false
 		};
 
 		this.formRef = React.createRef();
@@ -1203,7 +1204,7 @@ discountType = (row) =>
 
 	handleSubmit = (data, resetForm) => {
 		
-		this.setState({ disabled: true });
+		this.setState({ disabled: true,  disableLeavePage:true });
 		const {
 			receiptAttachmentDescription,
 			receiptNumber,
@@ -1367,7 +1368,7 @@ if (invoiceNumber && invoiceNumber.value) {
 				}
 			})
 			.catch((err) => {
-				this.setState({ disabled: false });
+				this.setState({ disabled: false});
 				this.props.commonActions.tostifyAlert(
 					'error',
 					err && err.data ? err.data.message : 'New Tax Credit Note Created Unsuccessfully.',
@@ -3193,6 +3194,7 @@ min="0"
 					
 				/> */}
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

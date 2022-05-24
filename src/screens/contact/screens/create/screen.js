@@ -14,16 +14,14 @@ import {
 	Label,
 } from 'reactstrap';
 import Select from 'react-select';
-import { ImageUploader, Loader } from 'components';
+import { LeavePage, Loader } from 'components';
 import { upperFirst } from 'lodash-es';
 import { selectOptionsFactory, selectCurrencyFactory } from 'utils';
-
 import './style.scss';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-
 import { CommonActions } from 'services/global';
 import * as ContactActions from '../../actions';
 import * as CreateContactActions from './actions';
@@ -68,7 +66,6 @@ class CreateContact extends React.Component {
 				billingEmail: '',
 				city: '',
 				contactType: this.props.contactType ? this.props.contactType : '',
-
 				countryId: '',
 				currencyCode: { label: "UAE Dirham - AED", value: 150 },
 				email: '',
@@ -93,7 +90,6 @@ class CreateContact extends React.Component {
 				billingCity: '',
 				billingPostZipCode: '',
 				billingPhoneNumber: '',
-
 				shippingCountryId: '',
 				shippingStateId: '',
 				shippingTelephone: '',
@@ -101,9 +97,6 @@ class CreateContact extends React.Component {
 				shippingCity: '',
 				shippingFax: '',
 				taxTreatmentId: '',
-
-
-
 			},
 			state_list_for_shipping: [],
 			createMore: false,
@@ -112,6 +105,7 @@ class CreateContact extends React.Component {
 			isActive: true,
 			isRegisteredForVat: false,
 			isSame: false,
+			disableLeavePage:false
 			//loadingMsg:"Loading...",
 			// billingAddress: {
 			// 	billingcountryId: '',
@@ -221,7 +215,7 @@ class CreateContact extends React.Component {
 		return temp;
 	};
 	handleSubmit = (data, resetForm) => {
-		this.setState({ loading: true, loadingMsg: "Creating Contact..." });
+		this.setState({ loading: true, disableLeavePage:true, loadingMsg: "Creating Contact..." });
 		this.setState({ disabled: true });
 		const postData = this.getData(data);
 
@@ -1917,6 +1911,7 @@ class CreateContact extends React.Component {
 							</Row>
 						</div>
 					</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 				</div>
 		);
 	}

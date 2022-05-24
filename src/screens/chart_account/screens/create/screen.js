@@ -13,17 +13,14 @@ import {
 	Row,
 	Col,
 } from 'reactstrap';
-import { Loader } from 'components';
-
+import { LeavePage, Loader } from 'components';
 import 'react-toastify/dist/ReactToastify.css';
 import './style.scss';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { CommonActions } from 'services/global';
-
 import * as ChartOfAccontActions from '../../actions';
 import * as CreateChartOfAccontActions from './actions';
-
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import Select from 'react-select';
@@ -70,7 +67,8 @@ class CreateChartAccount extends React.Component {
 			exist: false,
 			chartOfAccountCategory: [],
 			disabled: false,
-			loadingMsg:"Loading..."
+			loadingMsg:"Loading...",
+			disableLeavePage:false
 		};
         this.regExAlpha = /^[a-zA-Z ]+$/;
 	}
@@ -132,7 +130,7 @@ class CreateChartAccount extends React.Component {
 			transactionCategoryName: data.transactionCategoryName,
 			chartOfAccount: data.chartOfAccount.value,
 		};
-		this.setState({ loading:true, loadingMsg:"Creating  Chart Of Account ..."});
+		this.setState({ loading:true, disableLeavePage:true, loadingMsg:"Creating  Chart Of Account ..."});
 		this.props.createChartOfAccontActions
 			.createTransactionCategory(postData)
 			.then((res) => {
@@ -405,6 +403,7 @@ class CreateChartAccount extends React.Component {
 					{loading ? <Loader></Loader> : ''}
 				</div>
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

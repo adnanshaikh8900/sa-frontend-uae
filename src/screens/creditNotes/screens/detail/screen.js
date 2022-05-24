@@ -24,7 +24,7 @@ import * as ProductActions from '../../../product/actions';
 import * as CreditNotesActions from '../../actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 import { CustomerModal ,ProductModal } from '../../sections';
-import { Loader, ConfirmDeleteModal } from 'components';
+import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
@@ -106,7 +106,8 @@ class DetailCreditNote extends React.Component {
 			basecurrency:[],
 			customer_currency: '',
 			loadingMsg:"Loading...",
-			showInvoiceNumber:false
+			showInvoiceNumber:false,
+			disableLeavePage:false
 		};
 
 		// this.options = {
@@ -1212,7 +1213,7 @@ class DetailCreditNote extends React.Component {
 				this.setState({ loading:false,});
 			})
 			.catch((err) => {
-				this.setState({ disabled: false });
+				this.setState({ disabled: false, disableLeavePage:true });
 				this.props.commonActions.tostifyAlert(
 					'error',
 					err.data ? err.data.message : 'Credit Note Updated Unsuccessfully'
@@ -2805,6 +2806,7 @@ min="0"
 					purchaseCategory={this.state.purchaseCategory}
 				/>
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

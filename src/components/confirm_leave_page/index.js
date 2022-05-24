@@ -24,14 +24,14 @@ class ConfirmLeavePageModal extends React.Component {
 					</ModalBody>
 					<ModalFooter>
 						<Button color="primary" className="btn-square" onClick={okHandler}>
-							Yes
+							Confirm
 						</Button>{' '}
 						<Button
 							color="secondary"
 							className="btn-square"
 							onClick={cancelHandler}
 						>
-							No
+							Cancel
 						</Button>
 					</ModalFooter>
 				</Modal>

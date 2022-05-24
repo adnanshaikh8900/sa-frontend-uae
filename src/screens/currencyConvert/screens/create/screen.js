@@ -1,9 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import {
-	selectCurrencyFactory,
-} from 'utils';
+import { selectCurrencyFactory } from 'utils';
 import {
 	Card,
 	CardHeader,
@@ -14,20 +12,15 @@ import {
 	Label,
 	Row,
 	Col,
-	UncontrolledTooltip,
 } from 'reactstrap';
 import Select from 'react-select';
 import _ from 'lodash';
-import { Loader } from 'components';
-
+import { LeavePage, Loader } from 'components';
 import { AuthActions,CommonActions } from 'services/global';
-
 import 'react-toastify/dist/ReactToastify.css';
 import './style.scss';
-
 import * as CreateCurrencyConvertActions from './actions';
 import * as CurrencyConvertActions from '../../actions';
-
 import { Formik } from 'formik';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
@@ -68,7 +61,8 @@ class CreateCurrencyConvert extends React.Component {
 			currency_list : [],
 			selectedStatus: true,
 			isActive: true,
-			loadingMsg:"Loading..."
+			loadingMsg:"Loading...",
+			disableLeavePage:false
 			
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
@@ -140,7 +134,7 @@ class CreateCurrencyConvert extends React.Component {
 			exchangeRate: data.exchangeRate,
 			isActive:this.state.isActive
 		};
-		this.setState({ loading:true, loadingMsg:"Creating Currency Conversion..."});
+		this.setState({ loading:true, disableLeavePage:true, loadingMsg:"Creating Currency Conversion..."});
 		this.props.createCurrencyConvertActions
 			.createCurrencyConvert(obj)
 			.then((res) => {
@@ -164,7 +158,7 @@ class CreateCurrencyConvert extends React.Component {
 				}
 			})
 			.catch((err) => {
-				this.setState({ createDisabled: false });
+				this.setState({ createDisabled: false, loading: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
 					err.data ? err.data.message : 'Currency Convert Created Unsuccessfully'
@@ -547,6 +541,7 @@ class CreateCurrencyConvert extends React.Component {
 					{loading ? <Loader></Loader> : ''}
 				</div>
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

@@ -13,27 +13,17 @@ import {
     Row,
     Col
 } from 'reactstrap'
-import { Loader, ConfirmDeleteModal, ImageUploader } from 'components'
+import { Loader, LeavePage } from 'components'
 import Select from 'react-select'
-import {
-    CommonActions
-} from 'services/global'
+import { CommonActions } from 'services/global'
 import * as Yup from 'yup';
 import 'react-toastify/dist/ReactToastify.css'
-import DatePicker from 'react-datepicker'
-
 import * as DetailEmployeeBankAction from './actions';
-
-
 import { Formik } from 'formik';
 import { data } from '../../../Language/index'
-import LocalizedStrings from 'react-localization';
-  
+import LocalizedStrings from 'react-localization';  
 import { selectOptionsFactory } from 'utils'
-import moment from 'moment'
 import * as CreatePayrollEmployeeActions from '../create/actions'
-
-
 
 const mapStateToProps = (state) => {
     return ({
@@ -66,7 +56,8 @@ class UpdateEmployeeBank extends React.Component {
             bloodGroup: '',
             current_employee_id: null,
             existForAccountNumber: false,
-            loadingMsg:"Loading..."
+            loadingMsg:"Loading...",
+			disableLeavePage:false
         }
         this.regExAlpha = /^[a-zA-Z ]+$/;
         this.regExBoth = /[a-zA-Z0-9]+$/;
@@ -165,7 +156,7 @@ class UpdateEmployeeBank extends React.Component {
     // Create or Edit VAT
     handleSubmit = (data) => {
 
-        this.setState({ disabled: true });
+        this.setState({ disabled: true,	disableLeavePage:true });
         const { current_employee_id } = this.state;
         const {
             accountHolderName,
@@ -547,6 +538,7 @@ class UpdateEmployeeBank extends React.Component {
                     </Row>
                 </div>
             </div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
             </div>
         )
     }

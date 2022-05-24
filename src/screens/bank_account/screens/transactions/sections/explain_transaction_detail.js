@@ -1175,7 +1175,7 @@ class ExplainTrasactionDetail extends React.Component {
 																						showYearDropdown
 																						dateFormat="DD-MM-YYYY"
 																						dropdownMode="select"
-																						value={props.values.date}
+																						value={moment(props.values.date).format("DD-MM-YYYY")}
 																						onChange={(value) =>
 																							props.handleChange('date')(value)
 																						}

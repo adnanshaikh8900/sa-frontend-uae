@@ -2725,6 +2725,16 @@ getrfqDetails = (e, row, props,form,field) => {
 																			service
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn>
+																	{this.state.discountEnabled == true &&
+																	<TableHeaderColumn
+																		width="12%"
+																		dataField="discount"
+																		dataFormat={(cell, rows) =>
+																			this.renderDiscount(cell, rows, props)
+																		}
+																		>
+																	{strings.DisCount}
+																	</TableHeaderColumn>}
 																	{initValue.total_excise != 0 &&
 																	<TableHeaderColumn
 																	width="10%"
@@ -2742,20 +2752,10 @@ getrfqDetails = (e, row, props,form,field) => {
 																			placement="right"
 																			target="ExiseTooltip"
 																		>
-																			If Exise Type for a product is Inclusive
-																			then the Excise dropdown will be Disabled
+																			Excise dropdown will be enabled only for the excise products
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn>  }
-																	{this.state.discountEnabled == true &&
-																	<TableHeaderColumn
-																		width="12%"
-																		dataField="discount"
-																		dataFormat={(cell, rows) =>
-																			this.renderDiscount(cell, rows, props)
-																		}
-																		>
-																	{strings.DisCount}
-																	</TableHeaderColumn>}
+																	
 																	<TableHeaderColumn
 																	width="13%"
 																		dataField="vat"

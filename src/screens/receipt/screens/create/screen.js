@@ -29,7 +29,7 @@ import './style.scss';
 import moment from 'moment';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-import { Loader} from 'components';
+import { LeavePage, Loader} from 'components';
 
 const mapStateToProps = (state) => {
 	return {
@@ -82,6 +82,7 @@ class CreateReceipt extends React.Component {
 			},
 			data1: [],
 			paidInvoiceListStr: [],
+			disableLeavePage:false
 		};
 		this.formRef = React.createRef();
 		this.regEx = /^[0-9\d]+$/;
@@ -232,6 +233,7 @@ class CreateReceipt extends React.Component {
 				this.props.history.push('/admin/income/receipt');
 			})
 			.catch((err) => {
+				this.setState({ createDisabled: false, disableLeavePage:true, loading: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
 					err.data ? err.data.message : 'Payment Recorded Unsuccessfully'
@@ -885,6 +887,7 @@ class CreateReceipt extends React.Component {
 						</Col>
 					</Row>
 				</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

@@ -247,7 +247,7 @@ class ExplainTrasactionDetail extends React.Component {
 							 this.setCurrency(this.state.currencyCode)
 						}else{
 							this.getCurrency(this.state.initValue.customerId)	
-						
+							this.setCurrency(this.state.currencyCode)
 						}
 						if (
 							

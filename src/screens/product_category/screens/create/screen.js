@@ -15,7 +15,7 @@ import {
 	UncontrolledTooltip,
 } from 'reactstrap';
 import _ from 'lodash';
-import { Loader } from 'components';
+import { LeavePage, Loader } from 'components';
 
 import * as Yup from 'yup';
 import { CommonActions } from 'services/global';
@@ -63,7 +63,8 @@ class CreateProductCategory extends React.Component {
 			loading: false,
 			createMore: false,
 			disabled: false,
-			loadingMsg:"Loading"
+			loadingMsg:"Loading",
+			disableLeavePage:false
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regExBoth = /^[a-zA-Z0-9\s,'-/()]+$/;
@@ -101,7 +102,7 @@ class CreateProductCategory extends React.Component {
 	// Create or Edit VAT
 	handleSubmit = (data, resetForm) => {
 		this.setState({ disabled: true });
-		this.setState({ loading:true, loadingMsg:"Creating Product Category..."});
+		this.setState({ loading:true,disableLeavePage:true, loadingMsg:"Creating Product Category..."});
 		this.props.createProductCategoryActions
 			.createProductCategory(data)
 			.then((res) => {
@@ -360,6 +361,7 @@ class CreateProductCategory extends React.Component {
 					{loading ? <Loader></Loader> : ''}
 				</div>
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

@@ -472,7 +472,7 @@ existForAccountNumber = (value) => {
             swiftCode != null ? swiftCode : '',
         )
         if(this.state.selectedData.employeeBankDetailsId === null || this.state.selectedData.employeeBankDetailsId === ""){
-            this.setState({ loading:true, loadingMsg:"Creating Finacial Details..."});
+            // this.setState({ loading:true, loadingMsg:"Creating Finacial Details..."});
             this.props.createPayrollEmployeeActions
             .saveEmployeeBankDetails(formData)
             .then((res) => {
@@ -484,7 +484,7 @@ existForAccountNumber = (value) => {
                     this.toggle(0, '4')
                     this.getSalaryComponentByEmployeeId();
                     this.renderActionForState(this.state.employeeid)
-                    this.setState({ loading:false,});
+                    // this.setState({ loading:false,});
                 }
             }).catch((err) => {
 
@@ -494,7 +494,7 @@ existForAccountNumber = (value) => {
                      )
             })
         }else{
-            this.setState({ loading:true, loadingMsg:"Updating Employee..."});
+            // this.setState({ loading:true, loadingMsg:"Updating Employee..."});
             this.props.detailEmployeeBankAction.updateEmployeeBank(formData).then((res) => {
                 if (res.status === 200) {
                     this.props.commonActions.tostifyAlert(
@@ -504,7 +504,7 @@ existForAccountNumber = (value) => {
                     this.toggle(0, '4')
                     this.getSalaryComponentByEmployeeId();
                     this.renderActionForState(this.state.employeeid)
-                    this.setState({ loading:false,});
+                    // this.setState({ loading:false,});
                 }
             }).catch((err) => {
                 this.props.commonActions.tostifyAlert('error',  err.data.message ? err.data.message :'Updated Unssccessfully')
@@ -592,7 +592,7 @@ existForAccountNumber = (value) => {
                      )
             })
         }else{
-            this.setState({ loading:true, loadingMsg:"Updating Employement Details..."});
+            // this.setState({ loading:true, loadingMsg:"Updating Employement Details..."});
             formData.append('id', this.state.selectedData.employmentId);
             this.props.detailEmployeeEmployementAction.updateEmployment(formData).then((res) => {
                 if (res.status === 200) {
@@ -602,7 +602,7 @@ existForAccountNumber = (value) => {
                          )
                     this.toggle(0, '3')
                     this.renderActionForState(this.state.employeeid)
-                    this.setState({ loading:false,});
+                    // this.setState({ loading:false,});
                 }
             }).catch((err) => {
                 this.props.commonActions.tostifyAlert(
@@ -615,7 +615,7 @@ existForAccountNumber = (value) => {
     }
 
     handleSubmit = (data, resetForm) => {
-        this.setState({ loading:true, loadingMsg:"Creating Employee Basic Details..."});
+        // this.setState({ loading:true, loadingMsg:"Creating Employee Basic Details..."});
         this.setState({ disabled: true, disableLeavePage:true });
         const {
             firstName,
@@ -764,7 +764,7 @@ existForAccountNumber = (value) => {
                     })
                     if(this.props.location && this.props.location.state && this.props.location.state.goto && this.props.location.state.goto==="Expense"){                    
                             this.props.history.push(`/admin/expense/expense/create`)  
-                            this.setState({ loading:false,});                     
+                            // this.setState({ loading:false,});                     
                     }
                     this.toggle(0, '2')
 
@@ -786,7 +786,7 @@ existForAccountNumber = (value) => {
             })
         }
         else{
-            this.setState({ loading:true, loadingMsg:"Updating Employee Details..."});
+            // this.setState({ loading:true, loadingMsg:"Updating Employee Details..."});
             this.props.detailEmployeePersonalAction.updateEmployeePersonal(formData).then((res) => {
                 if (res.status === 200) {
                     this.props.commonActions.tostifyAlert(
@@ -795,7 +795,7 @@ existForAccountNumber = (value) => {
                         )
                     this.toggle(0, '2')
                     this.renderActionForState(this.state.employeeid)
-                    this.setState({ loading:false,});   
+                    // this.setState({ loading:false,});   
                     
                 }
             }).catch((err) => {

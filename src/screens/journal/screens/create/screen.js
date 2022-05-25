@@ -21,7 +21,7 @@ import DatePicker from 'react-datepicker';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 
-import { Currency , Loader} from 'components';
+import { Currency ,LeavePage, Loader} from 'components';
 import { CommonActions } from 'services/global';
 import { selectCurrencyFactory } from 'utils';
 import * as JournalActions from '../../actions';
@@ -120,7 +120,9 @@ class CreateJournal extends React.Component {
 				],
 			},
 			submitJournal: false,
-			loadingMsg:"Loading..."
+			loadingMsg:"Loading...",
+			disableLeavePage:false,
+
 			
 		};
 
@@ -184,7 +186,7 @@ class CreateJournal extends React.Component {
 			.checkValidation(data)
 			.then((response) => {
 				
-				if (response.data === 'Journal Reference Number Already Exists') {
+				if (response.data === 'Journal reference number already exists') {
 					this.setState(
 						{
 							exist: true,
@@ -675,7 +677,7 @@ class CreateJournal extends React.Component {
 				totalDebitAmount: initValue.totalDebitAmount,
 				journalLineItems: data,
 			};
-			this.setState({ loading:true, loadingMsg:"Creating New Journal..."});
+			this.setState({ loading:true, disableLeavePage:true,loadingMsg:"Creating New Journal..."});
 			this.props.journalCreateActions
 				.createJournal(postData)
 				.then((res) => {
@@ -806,7 +808,7 @@ class CreateJournal extends React.Component {
 													}
 													if (exist === true) {
 														errors.journalReferenceNo =
-															'Journal Reference Number Already Exists';
+															'Journal reference number already exists';
 													}
 													return errors;
 												}
@@ -819,7 +821,7 @@ class CreateJournal extends React.Component {
 														.of(
 															Yup.object().shape({
 																transactionCategoryId: Yup.string().required(
-																	'Account is Required',
+																	'Account is required',
 																),
 																debitAmount: Yup.number().required(),
 																creditAmount: Yup.number().required(),
@@ -863,7 +865,7 @@ class CreateJournal extends React.Component {
 																	{props.errors.journalDate &&
 																		props.touched.journalDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.journalDate.includes("nullable()") ? "Journal Date is Required" :props.errors.journalDate}
+																				{props.errors.journalDate.includes("nullable()") ? "Journal date is required" :props.errors.journalDate}
 
 																			</div>
 																		)}
@@ -1283,6 +1285,7 @@ class CreateJournal extends React.Component {
 					</Row>
 				</div>
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

@@ -1016,6 +1016,7 @@ class CreateJournal extends React.Component {
 																</div>
 															)}
 														{this.state.submitJournal &&
+														!props.errors.journalLineItems &&
 															this.state.initValue.totalCreditAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) !==
 															this.state.initValue.totalDebitAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) && (
 																<div

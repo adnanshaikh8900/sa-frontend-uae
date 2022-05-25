@@ -701,7 +701,7 @@ class CreateExpense extends React.Component {
 		else
 //Not Designated Zone		
 			if(this.state.isDesignatedZone==false)
-			switch(props.values.taxTreatmentId.value ?props.values.taxTreatmentId.value:''){
+			switch(props.values.taxTreatmentId && props.values.taxTreatmentId.value ?props.values.taxTreatmentId.value:''){
 
 				case 1: 
 					if(this.state.isReverseChargeEnabled==false)

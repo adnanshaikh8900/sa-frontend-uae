@@ -200,7 +200,7 @@ class PaySlipModal extends React.Component {
 											<PDFExport
 												ref={(component) => (this.pdfExportComponent = component)}
 												scale={0.8}
-												paperSize="A4"
+												paperSize="A3"
 												fileName={"Payslip of "+salaryDate+".pdf"}
 											>
 											
@@ -222,8 +222,10 @@ class PaySlipModal extends React.Component {
 																	// padding:'7px',borderColor:'#c8ced3'
 																}}
 															>
-																<div style={{ width: '50%', marginTop: '3.5rem' }}>
-																	<div className="companyDetails">
+																<div style={{ width: '20%', marginTop: '3.5rem' }}>
+																	<div className="companyDetails"
+																	style={{textAlign:" left"}}
+																	>
 																	<img
 																	src={
 																		companyData &&
@@ -235,7 +237,7 @@ class PaySlipModal extends React.Component {
 																	}
 																	className=""
 																	alt=""
-																	style={{ width: '300px' }}
+																	style={{ width: '200px' }}
 																/>
 
 								</div>
@@ -243,32 +245,34 @@ class PaySlipModal extends React.Component {
 							</div>
 							<div
 								style={{
-									width: '70%',
+									width: '80%',
 									display: 'flex',
 									flexDirection: 'column',
 									justifyContent: 'left',
 								}}
 							>
-								<div style={{
-									width: '97%',
+								<div
+								className='mr-1'
+								style={{
+									// width: '97%',
 									textAlign: 'right',
 
 								}}>
 									<div style={{ marginTop: '0.5rem' }}>
-										<h2 className="mb-1 "><b>	{strings.Payslip}</b> ( {this.state.selectedData.salaryMonth} )</h2><br/>
+									<div className="mb-1 ml-2" style={{     fontSize: "1.75rem"}} ><b>	{strings.Payslip}</b> ( {this.state.selectedData.salaryMonth+" )"}</div><br/>
 										<div className="mb-1 ml-2" style={{fontSize:"22px"}}><b>{companyData.company.companyName}</b></div>
 										<div className="mb-1 ml-2">{companyData.company.companyAddressLine1}</div>
 										<div className="mb-1 ml-2">{companyData.company.companyAddressLine2}</div>
-										{companyData.company.companyCountryCode==229 ?
-																	strings.POBox:
+										{companyData.company.companyCountryCode.countryCode==229 ?
+																	(strings.POBox+" : "):
 																	""}  {companyData.company.companyPoBoxNumber} ,&nbsp;
 										{companyData &&(companyData.company.companyStateCode.stateName ? companyData
 											.company.companyStateCode.stateName + " , " : "")}
 										{companyData &&(companyData.company.companyCountryCode.countryName ? companyData.company.companyCountryCode.countryName : "")}
-										{companyData.company.companyRegistrationNumber && (<div className="mb-1 ml-2">{strings.CompanyRegistrationNo} : {companyData.company.companyRegistrationNumber}</div>)}
+										{/* {companyData.company.companyRegistrationNumber && (<div className="mb-1 ml-2">{strings.CompanyRegistrationNo} : {companyData.company.companyRegistrationNumber}</div>)}
 										{companyData.company.isRegisteredVat==true&&(<div className="mb-1 ml-2">{strings.VATRegistrationNo} : {companyData.company.vatNumber}</div>)}
 										<div className="mb-1 ml-2">{strings.MobileNumber} : {this.companyMobileNumber(companyData.company.phoneNumber ? "+" + companyData.company.phoneNumber : '')}</div>
-										{companyData.company.emailAddress&&(<div className="mb-1 ml-2">Email : {companyData.company.emailAddress}</div>)}
+										{companyData.company.emailAddress&&(<div className="mb-1 ml-2">Email : {companyData.company.emailAddress}</div>)} */}
 									</div>
 		
 

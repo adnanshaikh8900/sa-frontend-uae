@@ -142,12 +142,12 @@ class FilterComponent extends Component {
 											<FormGroup className="mb-3">
 												<Label htmlFor="chart_of_account">{strings.ChartofAccounts}</Label>
 												<Select
-												styles={customStyles}
+												// styles={customStyles}
 													className="select-default-width"
 													placeholder={strings.Select}
 													id="chart_of_account"
 													name="chart_of_account_list"
-													options={chart_of_account_list ? selectOptionsFactory.renderOptions('transactionCategoryName', 'transactionCategoryId', chart_of_account_list, 'Chart of Account') : []}
+													options={chart_of_account_list ? selectOptionsFactory.renderOptions('label', 'value', chart_of_account_list, 'Chart of Account') : []}
 													value={props.values.chartOfAccountId}
 													onChange={(option) =>
 														props.handleChange("chartOfAccountId")(option)

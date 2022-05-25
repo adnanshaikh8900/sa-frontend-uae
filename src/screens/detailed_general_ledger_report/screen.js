@@ -98,15 +98,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 
 	componentDidMount = () => {
 		this.initializeData();
-		this.props.detailGeneralLedgerActions
-			.getTransactionCategoryList()
-			.then((res) => {
-				if (res.status === 200) {
-					this.setState({
-						chart_of_account_list: res.data.data,
-					});
-				}
-			});
+		
 			this.props.commonActions.getCompany() 
 	};
 
@@ -142,6 +134,15 @@ class DetailedGeneralLedgerReport extends React.Component {
 			})
 			.catch((err) => {
 				this.setState({ loading: false });
+			});
+			this.props.detailGeneralLedgerActions
+			.getTransactionCategoryList(postData)
+			.then((res) => {
+				if (res.status === 200) {
+					this.setState({
+						chart_of_account_list: res.data,
+					});
+				}
 			});
 	};
 

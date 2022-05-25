@@ -26,7 +26,7 @@ import { CommonActions } from 'services/global';
 import { selectCurrencyFactory } from 'utils';
 import * as JournalActions from '../../actions';
 import * as JournalDetailActions from './actions';
-import { Loader, ConfirmDeleteModal, Currency } from 'components';
+import { Loader, LeavePage,ConfirmDeleteModal, Currency } from 'components';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -76,6 +76,7 @@ class DetailJournal extends React.Component {
 			submitJournal: false,
 		    disabled1:false,
 			disabled2: false,
+			disableLeavePage:false,
 		};
 
 		this.formRef = React.createRef();
@@ -827,7 +828,7 @@ min="0"
 				journalLineItems: data,
 			};
 				this.setState({ disabled2: true });
-				this.setState({ loading:true, loadingMsg:"Updating Journal..."});
+				this.setState({ loading:true, disableLeavePage:true,loadingMsg:"Updating Journal..."});
 			this.props.journalDetailActions
 		
 				.updateJournal(postData)
@@ -890,13 +891,13 @@ min="0"
 													}}
 													validationSchema={Yup.object().shape({
 														journalDate: Yup.date().required(
-															'Journal Date is Required',
+															'Journal date is required',
 														),
 														journalLineItems: Yup.array()
 															.of(
 																Yup.object().shape({
 																	transactionCategoryId: Yup.string().required(
-																		'Account is Required',
+																		'Account is required',
 																	),
 																	debitAmount: Yup.number().required(),
 																	creditAmount: Yup.number().required(),
@@ -1391,6 +1392,7 @@ min="0"
 					</Row>
 				</div>
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

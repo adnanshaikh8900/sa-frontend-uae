@@ -29,7 +29,7 @@ import * as CustomerInvoiceActions from '../../../customer_invoice/actions';
 import { CustomerModal } from '../../../customer_invoice/sections/index';
 import { ProductModal } from '../../../customer_invoice/sections';
 import Switch from "react-switch";
-import { Loader } from 'components';
+import { LeavePage, Loader } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
@@ -178,6 +178,7 @@ class CreateQuotation extends React.Component {
 			exist: false,
 			param:false,
 			loadingMsg:"Loading...",
+			disableLeavePage:false,
 			vat_list:[
 				{
 					"id": 1,
@@ -1445,7 +1446,7 @@ discountType = (row) =>
 	};
 
 	handleSubmit = (data, resetForm) => {
-		this.setState({ disabled: true });
+		this.setState({ disabled: true, disableLeavePage:true });
 		const {
 			quotaionExpiration,
 			currency,
@@ -3024,6 +3025,7 @@ discountType = (row) =>
 					
 				/> */}
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

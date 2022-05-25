@@ -25,7 +25,7 @@ import * as ProductActions from '../../../product/actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 import { CustomerModal, ProductModal} from '../../sections';
 import { MultiSupplierProductModal } from '../../sections';
-import {  Loader } from 'components';
+import { LeavePage, Loader } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
@@ -183,6 +183,7 @@ class CreateCustomerInvoice extends React.Component {
 			contactId:'',
 			isQuotationSelected:false,
 			loadingMsg:"Loading...",
+			disableLeavePage:false, 
 			vat_list:[
 				{
 					"id": 1,
@@ -1789,7 +1790,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
 
-		this.setState({ loading:true, loadingMsg:"Creating Invoice..."});
+		this.setState({ loading:true, disableLeavePage:true, loadingMsg:"Creating Invoice..."});
 		this.props.customerInvoiceCreateActions
 			.createInvoice(formData)
 			.then((res) => {
@@ -3905,6 +3906,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 					inventory_list={this.state.inventoryList}
 				/>}			
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

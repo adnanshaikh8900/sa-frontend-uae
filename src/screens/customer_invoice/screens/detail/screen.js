@@ -24,7 +24,7 @@ import * as ProductActions from '../../../product/actions';
 import * as CustomerInvoiceActions from '../../actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 import { CustomerModal ,ProductModal } from '../../sections';
-import { Loader, ConfirmDeleteModal } from 'components';
+import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
@@ -127,6 +127,7 @@ class DetailCustomerInvoice extends React.Component {
 			shippingTelephone:'',
 			shippingFax:'',
 			loadingMsg:"Loading",
+			disableLeavePage:false, 
 		datesChanged : false	};
 
 		// this.options = {
@@ -1454,7 +1455,7 @@ class DetailCustomerInvoice extends React.Component {
 		if (this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
-		this.setState({ loading:true, loadingMsg:"Updating Invoice..."});
+		this.setState({ loading:true, disableLeavePage:true, loadingMsg:"Updating Invoice..."});
 		this.props.customerInvoiceDetailActions
 			.updateInvoice(formData)
 			.then((res) => {
@@ -1467,7 +1468,7 @@ class DetailCustomerInvoice extends React.Component {
 				this.setState({ loading:false,});
 			})
 			.catch((err) => {
-				this.setState({ disabled: false });
+				this.setState({ disabled: false, createDisabled: false, loading: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
 					err.data ? err.data.message : 'Invoice Updated Unsuccessfully'
@@ -3384,7 +3385,9 @@ class DetailCustomerInvoice extends React.Component {
 					salesCategory={this.state.salesCategory}
 					purchaseCategory={this.state.purchaseCategory}
 				/>
-			</div></div>
+			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
+			</div>
 		);
 	}
 }

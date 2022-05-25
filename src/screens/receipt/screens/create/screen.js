@@ -183,6 +183,7 @@ class CreateReceipt extends React.Component {
 	};
 
 	handleSubmit = (data, resetForm) => {
+		this.setState({ disabled: true, disableLeavePage:true, });
 		//const { invoiceId } = this.state;
 		const {
 			receiptNo,
@@ -233,7 +234,7 @@ class CreateReceipt extends React.Component {
 				this.props.history.push('/admin/income/receipt');
 			})
 			.catch((err) => {
-				this.setState({ createDisabled: false, disableLeavePage:true, loading: false });
+				this.setState({ createDisabled: false, loading: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
 					err.data ? err.data.message : 'Payment Recorded Unsuccessfully'

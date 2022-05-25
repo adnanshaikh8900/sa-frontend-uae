@@ -112,7 +112,7 @@ class FilterComponent extends Component {
 													dateFormat="dd-MM-yyyy"
 													onChange={(value) => {
 														props.handleChange("endDate")(value);
-														if (moment(value).isBefore(props.values.endDate)) {
+														if (moment(value).isBefore(props.values.startDate)) {
 															props.setFieldValue('startDate', moment(value).subtract(1, 'M'))
 														}
 													}}

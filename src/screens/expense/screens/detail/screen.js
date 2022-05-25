@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Loader} from 'components';
+import { LeavePage, Loader} from 'components';
 import { bindActionCreators } from 'redux';
 import {
 	Card,
@@ -101,7 +101,8 @@ class DetailExpense extends React.Component {
 				{ label: 'Fujairah', value: '7' },
 				
 			],
-			loadingMsg:"Loading..."
+			loadingMsg:"Loading...",
+			disableLeavePage:false
 		};
 		this.placelist = [
 			{ label: 'Abu Dhabi', value: '1' },
@@ -254,7 +255,7 @@ class DetailExpense extends React.Component {
 	};
 
 	handleSubmit = (data, resetValue) => {
-		this.setState({ disabled: true });
+		this.setState({ disabled: true, disableLeavePage:true });
 		const { current_expense_id } = this.state;
         const {
 			expenseNumber,
@@ -769,38 +770,38 @@ class DetailExpense extends React.Component {
 															values.payMode.value === 'BANK' &&
 															!values.bankAccountId
 														) {
-															errors.bankAccountId = 'Bank Account is Required';
+															errors.bankAccountId = 'Bank account is required';
 														}
 
 														if(this.state.showPlacelist===true && values.placeOfSupplyId ===''){
-															errors.placeOfSupplyId="Place Of Supply is Required"
+															errors.placeOfSupplyId="Place of supply is required"
 														}
 														return errors;
 													}}
 													validationSchema={Yup.object().shape({
 														expenseNumber: Yup.string().required(
-															'Expense number is Required',
+															'Expense number is required',
 														),
 														expenseCategory: Yup.string().required(
-															'Expense Category is Required',
+															'Expense category is required',
 														),
 														expenseDate: Yup.date().required(
-															'Expense Date is Required',
+															'Expense date is required',
 														),
 														taxTreatmentId: Yup.string().required(
-															'Tax Treatment is Required',
+															'Tax treatment is required',
 														),
 														currency: Yup.string().required(
-															'Currency is Required',
+															'Currency is required',
 														),
 														payMode: Yup.string().required(
-															'Pay Through is Required',
+															'Pay through is required',
 														),
 														expenseAmount: Yup.string()
-															.required('Amount is Required')
+															.required('Amount is required')
 															.matches(
 																/^[0-9][0-9]*[.]?[0-9]{0,2}$$/,
-																'Enter a Valid Amount',
+																'Enter a valid amount',
 															),
 														attachmentFile: Yup.mixed()
 															.test(
@@ -842,8 +843,7 @@ class DetailExpense extends React.Component {
 												>
 													{(props) => (
 														<Form onSubmit={props.handleSubmit}>
-
-<Row>
+														<Row>
 														<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="expenseNumber">
@@ -1812,6 +1812,7 @@ class DetailExpense extends React.Component {
 					)}
 				</div>
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

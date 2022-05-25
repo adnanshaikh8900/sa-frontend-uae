@@ -31,8 +31,9 @@ class LeavePage extends React.Component {
 	  }
 
 	leavePage =(isActive,onCancel,onConfirm) => {
-		const message1 =<text><b>Do you really want to leave this page?</b></text>
-		const message = 'You can save your changes, discard your changes, or cancel to continue editing.';
+		const message1 =<text><b>Do you want to switch to another page?
+	   </b></text>
+		const message = 'By doing so your current changes will get discarded.';
 		
 		var modal=isActive?
 							<ConfirmLeavePageModal

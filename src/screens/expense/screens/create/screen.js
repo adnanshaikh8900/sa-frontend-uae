@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Loader } from 'components';
+import { LeavePage, Loader } from 'components';
 import { bindActionCreators } from 'redux';
 import {
 	Card,
@@ -62,6 +62,7 @@ class CreateExpense extends React.Component {
 		super(props);
 		this.state = {
 			loading: false,
+			disableLeavePage:false,
 			createMore: false,
 			disabled: false,
 			initValue: {
@@ -344,8 +345,8 @@ class CreateExpense extends React.Component {
 			});
 	}
 	handleSubmit = (data, resetForm) => {
-		this.setState({ disabled: true });
-		this.setState({ disabled: true });
+		this.setState({ disabled: true ,
+			disableLeavePage:true });
 		const {
 			expenseNumber,
 			payee,
@@ -875,53 +876,53 @@ class CreateExpense extends React.Component {
 													// 	values.payMode.value === 'BANK' &&
 													// 	!values.bankAccountId
 													// ) {
-													// 	errors.bankAccountId = 'Bank Account is Required';
+													// 	errors.bankAccountId = 'Bank account is required';
 													// }
 													// if(values.payee.value === 'Company'){
-													// 	errors.payMode = 'Pay Through is Required'
+													// 	errors.payMode = 'Pay through is required'
 													// }
 													if (exist === true) {
 														errors.expenseNumber =
-															'Expense Number Already Exists';
+															'Expense number already exists';
 													}
 													if(values.currency ==='' ){
-														errors.currency="Currency is Required "
+														errors.currency="Currency is required "
 													}
 													if(this.state.showPlacelist===true && values.placeOfSupplyId ===''){
-														errors.placeOfSupplyId="Place Of Supply is Required"
+														errors.placeOfSupplyId="Place of supply is required"
 													}
 
 													return errors;
 												}}
 												validationSchema={Yup.object().shape({
 													expenseNumber: Yup.string().required(
-														'Expense number is Required',
+														'Expense number is required',
 													),
 													taxTreatmentId: Yup.string().required(
-														'Tax Treatment is Required',
+														'Tax treatment is required',
 													),
 													expenseCategory: Yup.string().required(
-														'Expense Category is Required',
+														'Expense category is required',
 													),
 													expenseDate: Yup.date().required(
-														'Expense Date is Required',
+														'Expense date is required',
 													),
 													
 													currency: Yup.string().required(
-														'Currency is Required',
+														'Currency is required',
 													),
 													payee: Yup.string().required(
-														'Paid By is Required',
+														'Paid by is required',
 													),
 													expenseAmount: Yup.string()
-														.required('Amount is Required')
+														.required('Amount is required')
 														.matches(
 															 /^[0-9][0-9]*[.]?[0-9]{0,2}$$/,
-															'Enter a Valid Amount',
+															'Enter a valid amount',
 														)
 														.test(
 															'Expense Amount',
-															'Expense Amount should be greater than 1',
+															'Expense amount should be greater than 1',
 															(value) => {
 																if (value > 0) {
 																	return true;
@@ -931,10 +932,10 @@ class CreateExpense extends React.Component {
 															},
 														),
 													vatCategoryId: Yup.string().required(
-														'VAT is Required',
+														'VAT is required',
 													),
 													// payMode: Yup.string().required(
-													// 	'Pay Through is Required',
+													// 	'Pay Through is required',
 													// ),
 													attachmentFile: Yup.mixed()
 														.test(
@@ -1903,6 +1904,7 @@ min="0"
 					</Row>
 				</div>
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

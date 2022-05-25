@@ -18,7 +18,7 @@ import {selectCurrencyFactory, selectOptionsFactory} from "utils";
 import { Formik } from "formik";
 import DatePicker from "react-datepicker";
 import * as Yup from "yup";
-import { Loader, ConfirmDeleteModal } from "components";
+import { LeavePage, Loader, ConfirmDeleteModal } from "components";
 import { SupplierModal } from "../../sections";
 import moment from "moment";
 import "react-datepicker/dist/react-datepicker.css";
@@ -70,7 +70,8 @@ class DetailPayment extends React.Component {
       openSupplierModal: false,
       selectedSupplier: "",
       contactType: 1,
-      current_payment_id: null
+      current_payment_id: null,
+      disableLeavePage:false
     };
 
     this.regEx = /^[0-9\d]+$/;
@@ -158,9 +159,10 @@ class DetailPayment extends React.Component {
         this.props.history.push("/admin/expense/payment");
       })
       .catch((err) => {
+				this.setState({ createDisabled: false, disableLeavePage:true, loading: false });
         this.props.commonActions.tostifyAlert(
           "error",
-          err && err.data ? err.data.message : 'Something Went Wrong'
+          err && err.data ? err.data.message : 'Payment Update Unuccessfully'
         );
       });
   }
@@ -654,6 +656,7 @@ class DetailPayment extends React.Component {
           country_list={this.props.country_list}
         />
       </div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
       </div>
     );
   }

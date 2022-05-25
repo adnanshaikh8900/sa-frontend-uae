@@ -32,7 +32,7 @@ import * as SupplierInvoiceActions from '../../../supplier_invoice/actions';
 import { CommonActions } from 'services/global';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-import { Loader } from 'components';
+import { LeavePage, Loader } from 'components';
 
 const mapStateToProps = (state) => {
 	return {
@@ -86,6 +86,7 @@ class CreatePayment extends React.Component {
 			currentData: {},
 			openSupplierModal: false,
 			contactType: 1,
+			disableLeavePage:false
 		};
 
 		this.options = {};
@@ -283,6 +284,7 @@ class CreatePayment extends React.Component {
 				}
 			})
 			.catch((err) => {
+				this.setState({ createDisabled: false, disableLeavePage:true, loading: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
 					err && err.data ? err.data.message : 'Something Went Wrong',
@@ -939,6 +941,7 @@ min="0" value="0.00" />;
 							</Col>
 						</Row>
 				</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

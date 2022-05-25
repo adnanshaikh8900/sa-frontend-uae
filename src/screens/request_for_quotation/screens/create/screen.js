@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Loader } from 'components';
+import { LeavePage, Loader } from 'components';
 import { bindActionCreators } from 'redux';
 import {
 	Card,
@@ -162,6 +162,7 @@ class CreateRequestForQuotation extends React.Component {
 			exist: false,
 			language: window['localStorage'].getItem('language'),	
 			loadingMsg:"Loading...",
+			disableLeavePage:false, 
 			vat_list:[
 				{
 					"id": 1,
@@ -1459,7 +1460,7 @@ class CreateRequestForQuotation extends React.Component {
 		if (currency !== null && currency) {
 			formData.append('currencyCode', this.state.supplier_currency);
 		}
-		this.setState({ loading:true, loadingMsg:"Creating Request For Quotation..."});
+		this.setState({ loading:true, disableLeavePage:true, loadingMsg:"Creating Request For Quotation..."});
 		this.props.requestForQuotationCreateAction
 			.createRFQ(formData)
 			.then((res) => {
@@ -1843,44 +1844,44 @@ class CreateRequestForQuotation extends React.Component {
 													let errors = {};
 													if (this.state.exist === true) {
 														errors.rfq_number =
-															'RFQ number Already Exists';
+															'RFQ number already exists';
 													}
 													if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
 													||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
 													||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
 													{
 														if (!values.placeOfSupplyId) 
-															   errors.placeOfSupplyId ='Place of Supply is Required';
+															   errors.placeOfSupplyId ='Place of supply is required';
 														if (values.placeOfSupplyId &&
 															(values.placeOfSupplyId=="" ||
-															(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")
+															(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select place of supply")
 															)
 														   ) 
-															 errors.placeOfSupplyId ='Place of Supply is Required';
+															 errors.placeOfSupplyId ='Place of supply is required';
 													
 												   }
 													if (values.rfq_number==='') {
-														errors.rfq_number = 'RFQ Number is Required';
+														errors.rfq_number = 'RFQ number is required';
 													}
 													return errors;
 												}}
 												validationSchema={Yup.object().shape(
 													{
 													rfq_number: Yup.string().required(
-														'Invoice Number is Required',
+														'Invoice number is required',
 													),
 													supplierId: Yup.string().required(
-														'Supplier is Required',
+														'Supplier is required',
 													),
 													// placeOfSupplyId: Yup.string().required(
-													// 	'Place of Supply is Required'
+													// 	'Place of Supply is required'
 													// ),
 													
 													rfqReceiveDate: Yup.string().required(
-														'Order Date is Required',
+														'Order date is required',
 													),
 													rfqExpiryDate: Yup.string().required(
-														'Order Due Date is Required'
+														'Order due date is required'
 													),
 													attachmentFile: Yup.mixed()
 													.test(
@@ -1924,7 +1925,7 @@ class CreateRequestForQuotation extends React.Component {
 														.of(
 															Yup.object().shape({
 																quantity: Yup.string()
-																	.required('Value is Required')
+																	.required('Value is required')
 																	.test(
 																		'quantity',
 																		'Quantity should be greater than 0',
@@ -1937,7 +1938,7 @@ class CreateRequestForQuotation extends React.Component {
 																		},
 																	),
 																unitPrice: Yup.string()
-																	.required('Value is Required')
+																	.required('Value is required')
 																	.test(
 																		'Unit Price',
 																		'Unit Price Should be Greater than 1',
@@ -1950,10 +1951,10 @@ class CreateRequestForQuotation extends React.Component {
 																		},
 																	),
 																vatCategoryId: Yup.string().required(
-																	'VAT is Required',
+																	'VAT is required',
 																),
 																productId: Yup.string().required(
-																	'Product is Required',
+																	'Product is required',
 																),
 															}),
 														),
@@ -2212,7 +2213,7 @@ class CreateRequestForQuotation extends React.Component {
 																	{props.errors.rfqReceiveDate &&
 																		props.touched.rfqReceiveDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.rfqReceiveDate.includes("nullable()") ? "Order Date is Required" :props.errors.rfqReceiveDate}		
+																				{props.errors.rfqReceiveDate.includes("nullable()") ? "Order date is required" :props.errors.rfqReceiveDate}		
 
 																			</div>
 																		)}
@@ -2247,7 +2248,7 @@ class CreateRequestForQuotation extends React.Component {
 																	{props.errors.rfqExpiryDate &&
 																		props.touched.rfqExpiryDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.rfqExpiryDate.includes("nullable()") ? "Order Due Date is Required" :props.errors.rfqExpiryDate}
+																				{props.errors.rfqExpiryDate.includes("nullable()") ? "Order due date is required" :props.errors.rfqExpiryDate}
 																			</div>
 																		)}
 																	
@@ -2965,6 +2966,7 @@ class CreateRequestForQuotation extends React.Component {
 					
 				/> */}
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

@@ -7,7 +7,6 @@ import {
 	CardBody,
 	Button,
 	Input,
-	Form,
 	FormGroup,
 	Label,
 	Row,
@@ -16,18 +15,13 @@ import {
 } from 'reactstrap';
 import _ from 'lodash';
 import { LeavePage, Loader } from 'components';
-
-import * as Yup from 'yup';
 import { CommonActions } from 'services/global';
-
 import 'react-toastify/dist/ReactToastify.css';
 import './style.scss';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-
 import * as CreateProductCategoryActions from './actions';
 import * as ProductCategoryActions from '../../actions';
-
 import { Formik } from 'formik';
 
 const mapStateToProps = (state) => {

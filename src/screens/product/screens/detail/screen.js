@@ -12,37 +12,23 @@ import {
 	FormGroup,
 	Input,
 	Label,
-	ButtonDropdown,
-	DropdownToggle,
-	DropdownMenu,
-	DropdownItem,
 } from 'reactstrap';
 import Select from 'react-select';
-
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-
 import _ from 'lodash';
-
 import './style.scss';
-
 import * as ProductActions from '../../actions';
-
 import { WareHouseModal } from '../../sections';
-
-import { Loader, ConfirmDeleteModal } from 'components';
+import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
 import { selectOptionsFactory } from 'utils';
 import * as DetailProductActions from './actions';
 import { CommonActions } from 'services/global';
 import * as SupplierInvoiceActions from '../../../supplier_invoice/actions';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-
-
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { InventoryHistoryModal} from './sections';
-import Switch from 'react-switch';
-
 
 const mapStateToProps = (state) => {
 	return {
@@ -101,6 +87,7 @@ class DetailProduct extends React.Component {
 			unitTypeList:[],
 			exciseTaxCheck:false,
 			loadingMsg:"Loading",
+			disableLeavePage:false,
 //			disableEditing:true,
 			inventoryTableData:[]
 		};
@@ -488,7 +475,7 @@ renderName=(cell,row)=>{
 				
 		};
 		const postData = this.getData(dataNew);
-		this.setState({ loading:true, loadingMsg:"Updating Product..."});
+		this.setState({ loading:true, disableLeavePage:false, loadingMsg:"Updating Product..."});
 		this.props.detailProductActions
 			.updateProduct(postData)
 			.then((res) => {
@@ -2398,6 +2385,7 @@ min="0"
 					 inventory_history_list={this.state.inventory_history_list}
 				/>
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

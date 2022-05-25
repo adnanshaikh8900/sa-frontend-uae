@@ -17,14 +17,11 @@ import Select from 'react-select'
 import DatePicker from 'react-datepicker'
 import { Formik } from 'formik';
 import * as Yup from "yup";
-import {  Loader } from 'components';
-import {
-  CommonActions
-} from 'services/global' 
-import {selectCurrencyFactory, selectOptionsFactory} from 'utils'
+import { LeavePage, Loader } from 'components';
+import { CommonActions } from 'services/global' 
+import {selectCurrencyFactory} from 'utils'
 import * as EmployeeActions from '../../actions';
 import * as EmployeeCreateActions from './actions';
-
 import 'react-datepicker/dist/react-datepicker.css'
 import './style.scss'
 
@@ -63,7 +60,8 @@ class CreateEmployee extends React.Component {
         vatRegestationNo: '',
         currencyCode: '',
         poBoxNumber: '',
-        loadingMsg:"Loading..."
+        loadingMsg:"Loading...",
+        disableLeavePage:false
       },
     }
 
@@ -81,7 +79,7 @@ class CreateEmployee extends React.Component {
     if(postData.currencyCode.value) {
       postData = {...postData,...{currencyCode: postData.currencyCode.value}}
     }
-    this.setState({ loading:true, loadingMsg:"Creating New Employee..."});
+    this.setState({ loading:true, disableLeavePage:true, loadingMsg:"Creating New Employee..."});
     this.props.employeeCreateActions.createEmployee(postData).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert(
@@ -495,6 +493,7 @@ class CreateEmployee extends React.Component {
           </Row>
         </div>
       </div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
       </div>
     )
   }

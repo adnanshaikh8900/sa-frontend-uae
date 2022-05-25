@@ -13,18 +13,14 @@ import {
     Row,
     Col
 } from 'reactstrap'
-import { Loader, ConfirmDeleteModal, ImageUploader } from 'components'
+import { Loader, LeavePage, ImageUploader } from 'components'
 import Select from 'react-select'
-import {
-    CommonActions
-} from 'services/global'
+import { CommonActions } from 'services/global'
 import * as Yup from 'yup';
 import 'react-toastify/dist/ReactToastify.css'
 import DatePicker from 'react-datepicker'
-
 import * as DetailEmployeePersonalAction from './actions';
 import * as CreatePayrollEmployeeActions from '../create/actions'
-
 import { Formik } from 'formik';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
@@ -32,9 +28,6 @@ import PhoneInput  from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css'
 import { selectOptionsFactory } from 'utils'
 import moment from 'moment'
-
-
-
 
 const mapStateToProps = (state) => {
     return ({
@@ -72,7 +65,8 @@ class UpdateEmployeePersonal extends React.Component {
             checkmobileNumberParam:false,
             checkmobileNumberParam1:false,
             checkmobileNumberParam2:false,
-            loadingMsg:"Loading...."
+            loadingMsg:"Loading....",
+			disableLeavePage:false
         }
 
         this.regExAlpha = /^[a-zA-Z ]+$/;
@@ -253,7 +247,7 @@ class UpdateEmployeePersonal extends React.Component {
     // Create or Edit VAT
     handleSubmit = (data) => {
 
-        this.setState({ disabled: true });
+        this.setState({ disabled: true, disableLeavePage:true, });
 		const { current_employee_id } = this.state;
 		const {
             firstName,
@@ -1568,6 +1562,7 @@ class UpdateEmployeePersonal extends React.Component {
                     </Row>
                 </div>
             </div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
             </div>
         )
     }

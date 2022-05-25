@@ -12,8 +12,6 @@ import {
 	FormGroup,
 	Input,
 	Label,
-	NavLink,
-	UncontrolledTooltip,
 } from 'reactstrap';
 import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
@@ -24,22 +22,18 @@ import * as SupplierInvoiceDetailActions from './actions';
 import * as SupplierInvoiceActions from '../../actions';
 import * as GoodsReceivedNoteDetailsAction from './actions';
 import * as RequestForQuotationAction from '../../actions'
-import * as transactionCreateActions from '../../../bank_account/screens/transactions/actions';
 import * as ProductActions from '../../../product/actions';
 import { SupplierModal } from '../../sections';
 import { ProductModal } from '../../../customer_invoice/sections';
-import { Loader, ConfirmDeleteModal,Currency } from 'components';
+import { Loader, ConfirmDeleteModal, LeavePage } from 'components';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
-
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import { optionFactory, selectCurrencyFactory, selectOptionsFactory } from 'utils';
-
 import { TextareaAutosize } from '@material-ui/core';
 import './style.scss';
 import moment from 'moment';
-import API_ROOT_URL from '../../../../constants/config';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 
@@ -123,7 +117,8 @@ class DetailGoodsReceivedNote extends React.Component {
 			supplier_currency: '',
 			disabled1:false,
 			dateChanged: false,
-			loadingMsg:"Loading..."
+			loadingMsg:"Loading...",
+			disableLeavePage:false
 		};
 
 		// this.options = {
@@ -1123,7 +1118,7 @@ debugger
 		if (currency !== null && currency) {
 			formData.append('currencyCode', this.state.supplier_currency);
 		}
-		this.setState({ loading:true, loadingMsg:"Updating Goods Received Note..."});
+		this.setState({ loading:true, disableLeavePage:true,  loadingMsg:"Updating Goods Received Note..."});
 		this.props.goodsReceivedNoteDetailsAction
 			.updateGRN(formData)
 			.then((res) => {
@@ -1367,18 +1362,18 @@ debugger
 													}}
 													validationSchema={Yup.object().shape({
 														// invoice_number: Yup.string().required(
-														// 	'Invoice Number is Required',
+														// 	'Invoice number is required',
 														// ),
 														// contactId: Yup.string().required(
-														// 	'Supplier is Required',
+														// 	'Supplier is required',
 														// ),
-														// term: Yup.string().required('Term is Required'),
-														// placeOfSupplyId: Yup.string().required('Place of supply is Required'),
+														// term: Yup.string().required('Term is required'),
+														// placeOfSupplyId: Yup.string().required('Place of supply is required'),
 														// invoiceDate: Yup.string().required(
-														// 	'Invoice Date is Required',
+														// 	'Invoice date is required',
 														// ),
 														// invoiceDueDate: Yup.string().required(
-														// 	'Invoice Due Date is Required',
+														// 	'Invoice due date is required',
 														// ),
 														// currency: Yup.string().required(
 														// 	'Currency is Requsired',
@@ -1390,23 +1385,23 @@ debugger
 														// 	.of(
 														// 		Yup.object().shape({
 														// 			// description: Yup.string().required(
-														// 			// 	'Value is Required',
+														// 			// 	'Value is required',
 														// 			// ),
 														// 			quantity: Yup.number()
-														// 				.required('Value is Required')
+														// 				.required('Value is required')
 														// 				.test(
 														// 					'quantity',
 														// 					'Quantity Should be Greater than 1',
 														// 					(value) => value > 0,
 														// 				),
 														// 			unitPrice: Yup.number().required(
-														// 				'Value is Required',
+														// 				'Value is required',
 														// 			),
 														// 			vatCategoryId: Yup.string().required(
-														// 				'Value is Required',
+														// 				'Value is required',
 														// 			),
 														// 			productId: Yup.string().required(
-														// 				'Product is Required',
+														// 				'Product is required',
 														// 			),
 														// 		}),
 														// 	),
@@ -1453,7 +1448,7 @@ debugger
 														.of(
 															Yup.object().shape({
 																grnReceivedQuantity: Yup.string()
-																	.required('Value is Required')
+																	.required('Value is required')
 																	.test(
 																		'grnReceivedQuantity',
 																		'Quantity should be greater than 0',
@@ -1466,10 +1461,10 @@ debugger
 																		},
 																	),
 																unitPrice: Yup.string()
-																	.required('Value is Required')
+																	.required('Value is required')
 																	.test(
 																		'Unit Price',
-																		'Unit Price Should be Greater than 1',
+																		'Unit price should be greater than 1',
 																		(value) => {
 																			if (value > 0) {
 																				return true;
@@ -1479,10 +1474,10 @@ debugger
 																		},
 																	),
 																vatCategoryId: Yup.string().required(
-																	'Value is Required',
+																	'Value is required',
 																),
 																productId: Yup.string().required(
-																	'Product is Required',
+																	'Product is required',
 																),
 															}),
 														),
@@ -2159,6 +2154,7 @@ debugger
 					purchaseCategory={this.state.purchaseCategory}
 				/>
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

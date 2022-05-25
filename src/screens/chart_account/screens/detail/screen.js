@@ -214,14 +214,14 @@ class DetailChartAccount extends React.Component {
 
 	// Create or Edit VAT
 	handleSubmit = (data, resetForm) => {
-		this.setState({ disabled: true });
+		this.setState({ disabled: true, disableLeavePage:true });
 		const id = this.props.location.state.id;
 		const postData = {
 			transactionCategoryName: data.transactionCategoryName,
 			chartOfAccount: data.chartOfAccount.value,
 			transactionCategoryId: id,
 		};
-		this.setState({ loading:true, disableLeavePage:true, loadingMsg:"Updating Chart Of Account..."});
+		this.setState({ loading:true, loadingMsg:"Updating Chart Of Account..."});
 		this.props.detailChartOfAccontActions
 			.updateTransactionCategory(postData)
 			.then((res) => {
@@ -288,12 +288,12 @@ class DetailChartAccount extends React.Component {
 													}}
 													validationSchema={Yup.object().shape({
 														// transactionCategoryCode: Yup.string()
-														//   .required("Code Name is Required"),
+														//   .required("Code Name is required"),
 														transactionCategoryName: Yup.string().required(
-															'Account is Required',
+															'Account is required',
 														),
 														chartOfAccount: Yup.string()
-															.required('Type is Required')
+															.required('Type is required')
 															.nullable(),
 													})}
 												>

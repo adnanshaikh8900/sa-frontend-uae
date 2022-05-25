@@ -105,6 +105,7 @@ class DetailReceipt extends React.Component {
   }
 
   handleSubmit = (data) => {
+		this.setState({ disabled: true, disableLeavePage:true, });
     const { current_receipt_id } = this.state
     const {
       receiptDate,
@@ -132,7 +133,7 @@ class DetailReceipt extends React.Component {
         this.props.history.push('/admin/revenue/receipt')
       }
     }).catch((err) => {
-      this.setState({ createDisabled: false, disableLeavePage:true, loading: false });
+      this.setState({ createDisabled: false, loading: false });
       this.props.commonActions.tostifyAlert('error',  err.data.message )
     })
   }

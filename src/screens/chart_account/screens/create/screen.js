@@ -125,12 +125,12 @@ class CreateChartAccount extends React.Component {
 			});
 	};
 	handleSubmit = (data, resetForm) => {
-		this.setState({ disabled: true });
+		this.setState({ disabled: true, disableLeavePage:true, });
 		const postData = {
 			transactionCategoryName: data.transactionCategoryName,
 			chartOfAccount: data.chartOfAccount.value,
 		};
-		this.setState({ loading:true, disableLeavePage:true, loadingMsg:"Creating  Chart Of Account ..."});
+		this.setState({ loading:true, loadingMsg:"Creating Chart Of Account ..."});
 		this.props.createChartOfAccontActions
 			.createTransactionCategory(postData)
 			.then((res) => {
@@ -215,19 +215,19 @@ class CreateChartAccount extends React.Component {
 													let errors = {};
 													if (this.state.exist === true) {
 														errors.transactionCategoryName =
-															'Chart Of Account Name is Already Exist';
+															'Chart of account name is already exist';
 													}
 													return errors;
 												}}
 												validationSchema={Yup.object().shape({
 													// transactionCategoryCode: Yup.string()
-													//   .required("Code Name is Required"),
+													//   .required("Code Name is required"),
 													transactionCategoryName: Yup.string()
-														.required('Name is Required')
-														.min(2, 'Name is Too Short!')
-														.max(50, 'Name is Too Long!'),
+														.required('Name is required')
+														.min(2, 'Name is too Short!')
+														.max(50, 'Name is too Long!'),
 													chartOfAccount: Yup.string().required(
-														'Type is Required',
+														'Type is required',
 													),
 												})}
 											>

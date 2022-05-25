@@ -26,7 +26,7 @@ import * as RequestForQuotationAction from '../../actions'
 import * as ProductActions from '../../../product/actions';
 import { SupplierModal } from '../../sections';
 import { ProductModal } from '../../../customer_invoice/sections';
-import { Loader, ConfirmDeleteModal } from 'components';
+import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -120,7 +120,7 @@ class DetailQuotation extends React.Component {
 			dateChanged: false,
 			vat_list:[],
 			loadingMsg:"Loading",
-
+			disableLeavePage:false, 
 
 			language: window['localStorage'].getItem('language'),
 		};
@@ -1288,7 +1288,7 @@ class DetailQuotation extends React.Component {
 		);
 	};
 	handleSubmit = (data) => {
-		this.setState({ disabled: true });
+		this.setState({ disabled: true, disableLeavePage:true, });
 		const { current_po_id, term } = this.state;
 		const {
 			quotaionExpiration,
@@ -1354,6 +1354,7 @@ class DetailQuotation extends React.Component {
 				this.setState({ loading:false,});
 			})
 			.catch((err) => {
+				this.setState({ createDisabled: false, loading: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
 					err.data ? err.data.message : 'Quotation Updated Unsuccessfully'
@@ -2669,6 +2670,7 @@ console.log(this.state.supplier_currency)
 					purchaseCategory={this.state.purchaseCategory}
 				/>
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

@@ -68,7 +68,7 @@ class CreateExpense extends React.Component {
 			initValue: {
 				payee: '',
 				placeOfSupplyId:'',
-				expenseDate: '',
+				expenseDate: new Date(),
 				currency: '',
 				project: '',
 				exchangeRate:'',

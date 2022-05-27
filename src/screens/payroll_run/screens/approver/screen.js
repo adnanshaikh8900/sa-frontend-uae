@@ -15,29 +15,22 @@ import {
 	Label,
 } from 'reactstrap'
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import Select from 'react-select'
 import DatePicker from 'react-datepicker'
 import { Formik } from 'formik';
-import * as Yup from "yup";
-import { ConfirmDeleteModal, ImageUploader, Loader } from 'components';
-import {
-	CommonActions
-} from 'services/global'
-import { selectCurrencyFactory, selectOptionsFactory } from 'utils'
+import { ConfirmDeleteModal, LeavePage, Loader } from 'components';
+import {CommonActions} from 'services/global'
 import * as EmployeeActions from '../../actions';
 import * as CreatePayrollActions from './actions';
 import * as CreatePayrollEmployeeActions from '../../../payrollemp/screens/create/actions';
 import * as PayrollEmployeeActions from '../../../payrollemp/actions'
 import 'react-datepicker/dist/react-datepicker.css'
 import './style.scss'
-
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { AddEmployeesModal } from './sections';
 import moment from 'moment';
 import download from 'downloadjs';
 import { toast } from 'react-toastify';
-
 
 const mapStateToProps = (state) => {
 
@@ -95,7 +88,8 @@ class PayrollApproverScreen extends React.Component {
 				onSelect: this.onRowSelect,
 				onSelectAll: this.onSelectAll,
 			},
-			currencyIsoCode: "AED"
+			currencyIsoCode: "AED",
+			disableLeavePage:false
 		}
 
 		this.regEx = /^[0-9\d]+$/;
@@ -320,7 +314,7 @@ class PayrollApproverScreen extends React.Component {
 		})
 	}
 	handleSubmit = (data, resetForm) => {
-		this.setState({ disabled: true });
+		this.setState({ disabled: true, disableLeavePage:true });
 		const {
 			type,
 			name
@@ -1235,6 +1229,7 @@ class PayrollApproverScreen extends React.Component {
 						// employee_list={employee_list.data}				
 						/>
 					</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 				</div>
 		)
 	}

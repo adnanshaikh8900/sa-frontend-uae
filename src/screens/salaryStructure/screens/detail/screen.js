@@ -208,9 +208,9 @@ class DetailSalaryStructure extends React.Component {
                             }}
                             validationSchema={Yup.object().shape({
                               salaryStructureType: Yup.string()
-                              .required("Salary Structure Type is Required"),
+                              .required("Salary structure type is required"),
                               salaryStructureName: Yup.string()
-                                .required("Salary Structure Name is Required"),
+                                .required("Salary structure name is required"),
                             
                             })}
                           >

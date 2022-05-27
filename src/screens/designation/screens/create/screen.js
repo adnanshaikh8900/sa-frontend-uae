@@ -13,21 +13,16 @@ import {
   Input,
   Label,
 } from 'reactstrap'
-import Select from 'react-select'
-import DatePicker from 'react-datepicker'
 import { Formik } from 'formik';
 import * as Yup from "yup";
-import { ImageUploader } from 'components';
+import { LeavePage } from 'components';
 import {
   CommonActions
 } from 'services/global'
-import {selectCurrencyFactory, selectOptionsFactory} from 'utils'
 import * as SalaryRoleActions from '../../actions';
 import * as EmployeeDesignationCreateActions from './actions';
-
 import 'react-datepicker/dist/react-datepicker.css'
-import './style.scss'
-  
+import './style.scss'  
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 
@@ -65,6 +60,7 @@ class CreateDesignation extends React.Component {
       language: window['localStorage'].getItem('language'),
       loading: false,
       createMore: false,
+			disableLeavePage:false,
       initValue: {
         designationName:'',
         designationId:''
@@ -88,7 +84,7 @@ class CreateDesignation extends React.Component {
   };
 
   handleSubmit = (data, resetForm) => {
-    this.setState({ disabled: true });
+    this.setState({ disabled: true,disableLeavePage:true });
 		const {
       designationName,
       designationId
@@ -166,9 +162,9 @@ class CreateDesignation extends React.Component {
                          }}
                         validationSchema={Yup.object().shape({
                           designationName: Yup.string()
-                            .required("Designation Name is Required"),  
+                            .required("Designation name is required"),  
                             designationId: Yup.string()
-                            .required("Designation Id is Required"),                  
+                            .required("Designation id is required"),                  
                         })}
                       >
                         {(props) => (
@@ -270,6 +266,7 @@ class CreateDesignation extends React.Component {
             </Col>
           </Row>
         </div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
       </div>
     )
   }

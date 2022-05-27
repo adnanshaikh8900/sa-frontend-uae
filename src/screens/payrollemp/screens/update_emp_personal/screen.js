@@ -442,53 +442,53 @@ class UpdateEmployeePersonal extends React.Component {
                                                             
                                                             if (values.employeeDesignationId && values.employeeDesignationId.label && values.employeeDesignationId.label === "Select Employee Designation") {
                                                                     errors.employeeDesignationId =
-                                                                    'Designation is Required';
+                                                                    'Designation is required';
                                                                 }
 
                                                                 if (values.salaryRoleId && values.salaryRoleId.label && values.salaryRoleId.label === "Select Salary Role") {
                                                                     errors.salaryRoleId =
-                                                                    'Salary Role is Required';
+                                                                    'Salary role is required';
                                                                 }
 
 														return errors;
 													}}
                                                     validationSchema={Yup.object().shape({
                                                         firstName: Yup.string()
-                                                            .required("first Name is Required"),
+                                                            .required("first name is required"),
                                                         lastName: Yup.string()
-                                                            .required("Last Name is Required"),
+                                                            .required("Last name is required"),
                                                         email: Yup.string()
-                                                            .required("Valid Email Required"),
+                                                            .required("Valid email Required"),
                                                         // salaryRoleId: Yup.string()
-                                                        //     .required(" Employee Role is required"),
+                                                        //     .required(" Employee role is required"),
                                                         dob: Yup.date()
-                                                            .required('DOB is Required'),
+                                                            .required('DOB is required'),
                                                             presentAddress: Yup.string()
-                                                            .required("Present Address is Required"),
+                                                            .required("Present address is required"),
                                                             // pincode: Yup.string()
-                                                            // .required("Pin Code is Required"),
+                                                            // .required("Pin code is required"),
                                                             countryId: Yup.string()
-                                                            .required("Country is Required"),
+                                                            .required("Country is required"),
                                                             stateId: Yup.string()
-                                                            .required("State is Required"),
+                                                            .required("State is required"),
                                                             // city: Yup.string()
-                                                            // .required("City is Required"),
+                                                            // .required("City is required"),
                                                             gender: Yup.string()
-                                                            .required("Gender is Required"),
+                                                            .required("Gender is required"),
                                                         // active: Yup.string()
-                                                        //     .required('status is Required'),
+                                                        //     .required('status is required'),
                                                         employeeDesignationId: Yup.string()
-                                                            .required('Designation is Required'),
+                                                            .required('Designation is required'),
                                                             salaryRoleId : Yup.string()
-                                                            .required('Salary Role is Required'),
+                                                            .required('Salary role is required'),
                                                             mobileNumber: Yup.string()
-															.required('Mobile Number is Required'),
+															.required('Mobile number is required'),
                                                             emergencyContactName1: Yup.string()
-                                                           .required('Contact Name 1 is Required') ,
+                                                           .required('Contact name 1 is required') ,
                                                             emergencyContactNumber1:Yup.string()
-                                                           .required("Contact Number 1 is Required"),
+                                                           .required("Contact number 1 is required"),
                                                             emergencyContactRelationship1: Yup.string()
-                                                           .required('Relationship 1 is Required') ,
+                                                           .required('Relationship 1 is required') ,
                                                                           
                                                     })}
 
@@ -673,7 +673,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                 {props.errors.dob && 
                                                                                     props.touched.dob && (
                                                                                     <div className="invalid-feedback">
-                                                                                        {props.errors.dob.includes("nullable()") ? "DOB is Required" :props.errors.dob}
+                                                                                        {props.errors.dob.includes("nullable()") ? "DOB is required" :props.errors.dob}
                                                                                     </div>
                                                                                 )}
                                                                             </FormGroup>

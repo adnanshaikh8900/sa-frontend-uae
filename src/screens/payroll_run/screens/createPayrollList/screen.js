@@ -19,24 +19,20 @@ import Select from 'react-select'
 import DatePicker from 'react-datepicker'
 import { Formik } from 'formik';
 import * as Yup from "yup";
-import { ImageUploader, Loader } from 'components';
-import {
-	CommonActions
-} from 'services/global'
-import { selectCurrencyFactory, selectOptionsFactory } from 'utils'
+import { LeavePage, Loader } from 'components';
+import {CommonActions} from 'services/global'
+import { selectOptionsFactory } from 'utils'
 import * as EmployeeActions from '../../actions';
 import * as CreatePayrollActions from './actions';
 import * as CreatePayrollEmployeeActions from '../../../payrollemp/screens/create/actions';
 import * as PayrollEmployeeActions from '../../../payrollemp/actions'
 import 'react-datepicker/dist/react-datepicker.css'
 import './style.scss'
-
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-import { AddEmployeesModal } from './sections';
 import moment from 'moment';
 import "react-dates/initialize";
-import { DateRangePicker ,isInclusivelyAfterDay,isInclusivelyBeforeDay} from 'react-dates';
+import { DateRangePicker } from 'react-dates';
 import "react-dates/lib/css/_datepicker.css";
 import { toast } from 'react-toastify';
 
@@ -108,7 +104,8 @@ class CreatePayrollList extends React.Component {
 			countForTableApiCall:0,
 			focusedInput:null,
 			currencyIsoCode:"AED",
-			loadingMsg:"Loading..."
+			loadingMsg:"Loading...",
+			disableLeavePage:false, 
 		}
 
 		this.regEx = /^[0-9\d]+$/;
@@ -228,7 +225,7 @@ calculatePayperioad=(startDate,endDate)=>{
 
 	handleSubmit = (data, resetForm) => {
 		
-		this.setState({ disabled: true });
+		this.setState({ disabled: true,	disableLeavePage:true });
 		const {
 			payrollSubject,
 			payrollDate,
@@ -1089,6 +1086,7 @@ showTotal=()=>{
 				// employee_list={employee_list.data}				
 				/> */}
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		)
 	}

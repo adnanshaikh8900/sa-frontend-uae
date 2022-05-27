@@ -29,6 +29,7 @@ import {
 } from 'services/global'
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import { toast } from 'react-toastify';
 const mapStateToProps = (state) => {
 	return {
 		profile: state.auth.profile,
@@ -176,6 +177,22 @@ class ViewEmployee extends React.Component {
 					<i className="fas fa-eye" />  {strings.View}
 						</Button>
 
+						<Button
+							className="btn-sm ml-3"
+							style={{padding:'0px'}}
+							color="link"
+							onClick={() => {						
+								this.props.employeeViewActions
+									.getSalarySlip({id: this.props.location.state.id, salaryDate: moment(row.salaryDate).format('DD/MM/YYYY') , sendMail:true })
+									.then((res) => {
+										if (res.status === 200) {
+											toast.success("Payslip Sent Successfully")						
+										}
+									})					
+							}}
+						>
+						<i className="fas fa-send" /> {strings.Send}
+						</Button>				
 			</div>
 		);
 	};

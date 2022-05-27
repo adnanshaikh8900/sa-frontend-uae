@@ -243,7 +243,7 @@ class PayrollApproverScreen extends React.Component {
 			.approveAndRunPayroll(this.state.payroll_id)
 			.then((res) => {
 				if (res.status === 200) {
-					this.props.commonActions.tostifyAlert('success', 'Payroll Approved Successfully')
+					this.props.commonActions.tostifyAlert('success', 'Payroll Approved Successfully. Payslip sent to employees Successfully')
 					this.getAllPayrollEmployee()
 					this.props.history.push('/admin/payroll/payrollrun')
 					// resetForm(this.state.initValue)

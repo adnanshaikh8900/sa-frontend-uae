@@ -231,7 +231,7 @@ class CreateExpense extends React.Component {
 																.find((option) => 	option.label == res.data.payee)
 								this.formRef.current.setFieldValue('payee',payee, true);
 
-								let currency=	selectCurrencyFactory.renderOptions(	'currencyName','currencyCode',this.props.currency_convert_list,'Currency',)
+								let currency=	selectCurrencyFactory.renderOptions('currencyName','currencyCode',this.props.currency_convert_list,'Currency',)
 																	.find(
 																		(option) =>
 																			option.value ==res.data.currencyCode,
@@ -486,8 +486,8 @@ class CreateExpense extends React.Component {
 			let result = this.props.currency_convert_list.filter((obj) => {
 			return obj.currencyCode === value;
 			});
-			
-			this.formRef.current.setFieldValue('curreancyname', result[0].currencyName, true);
+			if(result[0] && result[0].currencyName){
+				this.formRef.current.setFieldValue('curreancyname', result[0].currencyName, true);}
 			}
 		};
 

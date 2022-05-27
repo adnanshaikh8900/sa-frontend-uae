@@ -25,7 +25,7 @@ import * as ProductActions from '../../../product/actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 import { CustomerModal, ProductModal} from '../../sections';
 import { MultiSupplierProductModal } from '../../sections';
-import {  Loader } from 'components';
+import { LeavePage, Loader } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
@@ -183,6 +183,7 @@ class CreateCustomerInvoice extends React.Component {
 			contactId:'',
 			isQuotationSelected:false,
 			loadingMsg:"Loading...",
+			disableLeavePage:false, 
 			vat_list:[
 				{
 					"id": 1,
@@ -339,7 +340,7 @@ class CreateCustomerInvoice extends React.Component {
 									if(parseInt(e.target.value) >product_list[0].stockOnHand && product_list[0].isInventoryEnabled==true)
 									this.props.commonActions.tostifyAlert(
 										'error',
-										 `Quantity (${e.target.value}) Must Not Be Greater Than Stock On Hand  (${product_list[0].stockOnHand})`,
+										 `Quantity (${e.target.value}) Must not be greater than stock on hand  (${product_list[0].stockOnHand})`,
 									);
 									else
 									this.selectItem(
@@ -501,7 +502,7 @@ renderVatAmount = (cell, row,extraData) => {
 		this.props.customerInvoiceCreateActions
 			.checkValidation(data)
 			.then((response) => {
-				if (response.data === 'Invoice Number Already Exists') {
+				if (response.data === 'Invoice number already exists') {
 					this.setState(
 						{
 							exist: true,
@@ -1789,7 +1790,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
 
-		this.setState({ loading:true, loadingMsg:"Creating Invoice..."});
+		this.setState({ loading:true, disableLeavePage:true, loadingMsg:"Creating Invoice..."});
 		this.props.customerInvoiceCreateActions
 			.createInvoice(formData)
 			.then((res) => {
@@ -1954,10 +1955,10 @@ if(changeShippingAddress && changeShippingAddress==true)
 	getCurrentProduct = () => {
 		this.props.customerInvoiceActions.getProductList().then((res) => {
 			let newData=[]
-																			const data = this.state.data;
-																			newData = data.filter((obj) => obj.productId !== "");
-																			// props.setFieldValue('lineItemsString', newData, true);
-																			// this.updateAmount(newData, props);
+			const data = this.state.data;
+			newData = data.filter((obj) => obj.productId !== "");
+			// props.setFieldValue('lineItemsString', newData, true);
+			// this.updateAmount(newData, props);
 			this.setState(
 				{
 					data: newData.concat({
@@ -2174,14 +2175,14 @@ if(changeShippingAddress && changeShippingAddress==true)
 													let errors = {};
 													if (exist === true) {
 														errors.invoice_number =
-															'Invoice Number Already Exists';
+															'Invoice number already exists';
 													}
 													if (values.invoice_number==='') {
-														errors.invoice_number = 'Invoice Number is Required';
+														errors.invoice_number = 'Invoice number is required';
 													}
 													if (param === true) {
 														errors.discount =
-															'Discount amount Cannot be greater than Invoice Total Amount';
+															'Discount amount cannot be greater than invoice total amount';
 													}
 													
 													if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
@@ -2190,62 +2191,62 @@ if(changeShippingAddress && changeShippingAddress==true)
 											    	{
 
 														if (!values.placeOfSupplyId) 
-													       	errors.placeOfSupplyId ='Place of Supply is Required';
+													       	errors.placeOfSupplyId ='Place of supply is required';
 														if (values.placeOfSupplyId &&
 															(values.placeOfSupplyId=="" ||
-															(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")
+															(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select place of supply")
 															)
 														   ) 
-													         errors.placeOfSupplyId ='Place of Supply is Required';
+													         errors.placeOfSupplyId ='Place of supply is required';
 													
 												   }
 													if (values.term && values.term.label && values.term.label === "Select Terms") {
 														errors.term =
-														'Term is Required';
+														'Term is required';
 													}
 										
 													if(values.changeShippingAddress==true){
 														if(values.shippingAddress =="")  
-														errors.shippingAddress ='Shipping Address is Required';
+														errors.shippingAddress ='Shipping address is required';
 												    }
 
 													if(values.changeShippingAddress==true){
 														if(values.shippingCountryId =="")  
-														errors.shippingCountryId ='Shipping Country is Required';
+														errors.shippingCountryId ='Shipping country is required';
 													}
 
 													if(values.changeShippingAddress==true){
 														if(values.shippingStateId =="")  
-														errors.shippingStateId ='Shipping State is Required';
+														errors.shippingStateId ='Shipping state is required';
 											        }
 																								
 													if(values.changeShippingAddress==true){
 														if (values.shippingCountryId == 229 || values.shippingCountryId.value == 229) {
 															if (values.shippingPostZipCode == '')
-																errors.shippingPostZipCode = 'PO Box Number is Required';
+																errors.shippingPostZipCode = 'PO box number is required';
 														} else {
 															if (values.shippingPostZipCode == '')
-																errors.shippingPostZipCode = 'Postal Code is Required';
+																errors.shippingPostZipCode = 'Postal code is required';
 															else
 																if (values.shippingPostZipCode.length != 6)
-																	errors.shippingPostZipCode = 'Please Enter 6 Digit Postal Zip Code';
+																	errors.shippingPostZipCode = 'Please enter 6 digit postal zip code';
 														}}
 														return errors;
 												}}
 												validationSchema={Yup.object().shape({
 													invoice_number: Yup.string().required(
-														'Invoice Number is Required',
+														'Invoice number is required',
 													),
 													contactId: Yup.string().required(
-														'Customer is Required',
+														'Customer is required',
 													),
-													// placeOfSupplyId: Yup.string().required('Place of Supply is Required'),
-													term: Yup.string().required('Term is Required'),
+													// placeOfSupplyId: Yup.string().required('Place of Supply is required'),
+													term: Yup.string().required('Term is required'),
 													currency: Yup.string().required(
-														'Currency is Required',
+														'Currency is required',
 													),
 													invoiceDate: Yup.string().required(
-														'Invoice Date is Required',
+														'Invoice date is required',
 													),
 													
 													lineItemsString: Yup.array()
@@ -2256,7 +2257,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 															Yup.object().shape({
 														
 																quantity: Yup.string()
-																	.required('Value is Required')
+																	.required('Value is required')
 																	.test(
 																		'quantity',
 																		'Quantity should be greater than 0',
@@ -2269,10 +2270,10 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		},
 																	),
 																unitPrice: Yup.string()
-																	.required('Value is Required')
+																	.required('Value is required')
 																	.test(
 																		'Unit Price',
-																		'Unit Price Should be Greater than 1',
+																		'Unit price should be greater than 1',
 																		(value) => {
 																			if (value > 0) {
 																				return true;
@@ -2282,10 +2283,10 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		},
 																	),
 																vatCategoryId: Yup.string().required(
-																	'VAT is Required',
+																	'VAT is required',
 																),
 																productId: Yup.string().required(
-																	'Product is Required',
+																	'Product is required',
 																),
 																
 
@@ -2694,7 +2695,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																	{props.errors.invoiceDate &&
 																		props.touched.invoiceDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.invoiceDate.includes("nullable()") ? "Invoice Date is Required" :props.errors.invoiceDate}
+																				{props.errors.invoiceDate.includes("nullable()") ? "Invoice date is required" :props.errors.invoiceDate}
 																			</div>
 																		)}
 																</FormGroup>
@@ -3373,6 +3374,16 @@ if(changeShippingAddress && changeShippingAddress==true)
 																			service
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn>
+																	{this.state.discountEnabled == true &&
+																	<TableHeaderColumn
+																		width="12%"
+																		dataField="discount"
+																		dataFormat={(cell, rows) =>
+																			this.renderDiscount(cell, rows, props)
+																		}
+																		>
+																	{strings.DisCount}
+																	</TableHeaderColumn>}
 																	{initValue.total_excise != 0 &&
 																	<TableHeaderColumn
 																		width="10%"
@@ -3390,20 +3401,10 @@ if(changeShippingAddress && changeShippingAddress==true)
 																			placement="right"
 																			target="ExiseTooltip"
 																		>
-																			If Exise Type for a product is Inclusive
-																			then the Excise dropdown will be Disabled
+																			Excise dropdown will be enabled only for the excise products
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn> }
-																	{this.state.discountEnabled == true &&
-																	<TableHeaderColumn
-																		width="12%"
-																		dataField="discount"
-																		dataFormat={(cell, rows) =>
-																			this.renderDiscount(cell, rows, props)
-																		}
-																		>
-																	{strings.DisCount}
-																	</TableHeaderColumn>}
+																
 																	<TableHeaderColumn
 																		width="13%"
 																		dataField="vat"
@@ -3905,6 +3906,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 					inventory_list={this.state.inventoryList}
 				/>}			
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

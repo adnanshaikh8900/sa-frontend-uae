@@ -4,7 +4,7 @@ import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 
 import './style.scss';
 
-class ConfirmModal extends React.Component {
+class ConfirmLeavePageModal extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {};
@@ -40,4 +40,4 @@ class ConfirmModal extends React.Component {
 	}
 }
 
-export default ConfirmModal;
+export default ConfirmLeavePageModal;

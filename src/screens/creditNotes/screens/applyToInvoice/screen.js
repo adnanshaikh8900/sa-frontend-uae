@@ -11,32 +11,24 @@ import {
 	Form,
 	FormGroup,
 	Input,
-	Label,
-	NavLink,
 } from 'reactstrap';
 import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import DatePicker from 'react-datepicker';
 import { Formik, Field } from 'formik';
-import * as Yup from 'yup';
 import * as CustomerInvoiceDetailActions from './actions';
 import * as ProductActions from '../../../product/actions';
 import * as CustomerInvoiceActions from '../../actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
-
-import { CustomerModal ,ProductModal } from '../../sections';
-import { Loader, ConfirmDeleteModal,Currency } from 'components';
-
+import { Loader, ConfirmDeleteModal } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
-import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
-
+import { selectOptionsFactory } from 'utils';
 import './style.scss';
 import moment from 'moment';
-import API_ROOT_URL from '../../../../constants/config';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
+
 let strings = new LocalizedStrings(data);
 const mapStateToProps = (state) => {
 	return {
@@ -1065,7 +1057,7 @@ handleSubmit=(data)=>{
 			<text>
 			<b>Delete Customer Invoice?</b>
 			</text>
-			const message = 'This Credit Note  will be deleted permanently and cannot be recovered. ';
+			const message = 'This Credit Note will be deleted permanently and cannot be recovered. ';
 		this.setState({
 			dialog: (
 				<ConfirmDeleteModal

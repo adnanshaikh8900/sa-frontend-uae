@@ -12,7 +12,6 @@ import {
 	FormGroup,
 	Input,
 	Label,
-	NavLink,
 	UncontrolledTooltip
 } from 'reactstrap';
 import Select from 'react-select';
@@ -24,20 +23,16 @@ import * as CreditNotesDetailActions from './actions';
 import * as ProductActions from '../../../product/actions';
 import * as CreditNotesActions from '../../actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
-
 import { CustomerModal ,ProductModal } from '../../sections';
-import { Loader, ConfirmDeleteModal,Currency } from 'components';
-
+import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
 import './style.scss';
 import moment from 'moment';
-import API_ROOT_URL from '../../../../constants/config';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-import Switch from "react-switch";
 import { TextareaAutosize } from '@material-ui/core';
 
 const mapStateToProps = (state) => {
@@ -111,7 +106,8 @@ class DetailCreditNote extends React.Component {
 			basecurrency:[],
 			customer_currency: '',
 			loadingMsg:"Loading...",
-			showInvoiceNumber:false
+			showInvoiceNumber:false,
+			disableLeavePage:false
 		};
 
 		// this.options = {
@@ -1217,7 +1213,7 @@ class DetailCreditNote extends React.Component {
 				this.setState({ loading:false,});
 			})
 			.catch((err) => {
-				this.setState({ disabled: false });
+				this.setState({ disabled: false, disableLeavePage:true });
 				this.props.commonActions.tostifyAlert(
 					'error',
 					err.data ? err.data.message : 'Credit Note Updated Unsuccessfully'
@@ -1514,21 +1510,21 @@ class DetailCreditNote extends React.Component {
 													}}
 													 validationSchema={Yup.object().shape({
 													// 	invoice_number: Yup.string().required(
-													// 		'Credit Note Number is Required',
+													// 		'Credit Note Number is required',
 													// 	),
 													// 	contactId: Yup.string().required(
-													// 		'Supplier is Required',
+													// 		'Supplier is required',
 													// 	),
-													// 	term: Yup.string().required('term is Required'),
-													// 	placeOfSupplyId: Yup.string().required('Place of supply is Required'),
+													// 	term: Yup.string().required('term is required'),
+													// 	placeOfSupplyId: Yup.string().required('Place of supply is required'),
 													// 	invoiceDate: Yup.string().required(
-													// 		'Credit Note Date is Required',
+													// 		'Credit Note Date is required',
 													// 	),
 													// 	invoiceDueDate: Yup.string().required(
-													// 		'Credit Note Due Date is Required',
+													// 		'Credit Note Due Date is required',
 													// 	),
 													// 	currency: Yup.string().required(
-													// 		'Currency is Required',
+													// 		'Currency is required',
 													// 	),
 													// 	lineItemsString: Yup.array()
 													// 		.required(
@@ -1537,10 +1533,10 @@ class DetailCreditNote extends React.Component {
 													// 		.of(
 													// 			Yup.object().shape({
 													// 				// description: Yup.string().required(
-													// 				// 	'Value is Required',
+													// 				// 	'Value is required',
 													// 				// ),
 													// 				quantity: Yup.string()
-													// 					.required('Value is Required')
+													// 					.required('Value is required')
 													// 					.test(
 													// 						'quantity',
 													// 						'Quantity Should be Greater than 1',
@@ -1553,7 +1549,7 @@ class DetailCreditNote extends React.Component {
 													// 						},
 													// 					),
 													// 				unitPrice: Yup.string()
-													// 					.required('Value is Required')
+													// 					.required('Value is required')
 													// 					.test(
 													// 						'Unit Price',
 													// 						'Unit Price Should be Greater than 1',
@@ -1566,17 +1562,17 @@ class DetailCreditNote extends React.Component {
 													// 						},
 													// 					),
 													// 				vatCategoryId: Yup.string().required(
-													// 					'Value is Required',
+													// 					'Value is required',
 													// 				),
 													// 				productId: Yup.string().required(
-													// 					'Product is Required',
+													// 					'Product is required',
 													// 				),
 													// 			}),
 													// 		),
 													attachmentFile: Yup.mixed()
 													.test(
 														'fileType',
-														'*Unsupported File Format',
+														'*Unsupported file format',
 														(value) => {
 															value &&
 																this.setState({
@@ -2254,8 +2250,7 @@ min="0"
 																			placement="right"
 																			target="ExiseTooltip"
 																		>
-																			If Exise Type for a product is Inclusive
-																			then the Excise dropdown will be Disabled
+																			Excise dropdown will be enabled only for the excise products
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
@@ -2811,6 +2806,7 @@ min="0"
 					purchaseCategory={this.state.purchaseCategory}
 				/>
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

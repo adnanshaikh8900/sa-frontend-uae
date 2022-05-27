@@ -12,7 +12,6 @@ import {
 	FormGroup,
 	Input,
 	Label,
-	NavLink,
 	UncontrolledTooltip,
 } from 'reactstrap';
 import Select from 'react-select';
@@ -24,13 +23,11 @@ import * as SupplierInvoiceDetailActions from './actions';
 import * as SupplierInvoiceActions from '../../actions';
 import * as RequestForQuotationDetailsAction from './actions';
 import * as RequestForQuotationAction from '../../actions'
-import * as transactionCreateActions from '../../../bank_account/screens/transactions/actions';
 import * as ProductActions from '../../../product/actions';
 import { SupplierModal } from '../../sections';
 import { ProductModal } from '../../../customer_invoice/sections';
-import { Loader, ConfirmDeleteModal,Currency } from 'components';
+import { Loader, ConfirmDeleteModal, LeavePage } from 'components';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
-
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
@@ -123,7 +120,8 @@ class DetailRequestForQuotation extends React.Component {
 			vat_list:[],
 			dateChanged: false,
 			dateChanged1: false,
-			loadingMsg:"Loading..."
+			loadingMsg:"Loading...",
+			disableLeavePage:false
 		};
 
 		// this.options = {
@@ -1275,7 +1273,7 @@ debugger
 		if (currency !== null && currency) {
 			formData.append('currencyCode', this.state.supplier_currency);
 		}
-		this.setState({ loading:true, loadingMsg:"Updating Request For Quotation..."});
+		this.setState({ loading:true, disableLeavePage:true, loadingMsg:"Updating Request For Quotation..."});
 		this.props.requestForQuotationDetailsAction
 			.updateRFQ(formData)
 			.then((res) => {
@@ -1575,13 +1573,13 @@ setDate1= (props, value) => {
 														||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
 														{
 															if (!values.placeOfSupplyId) 
-																   errors.placeOfSupplyId ='Place of Supply is Required';
+																   errors.placeOfSupplyId ='Place of supply is required';
 															if (values.placeOfSupplyId &&
 																(values.placeOfSupplyId=="" ||
-																(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")
+																(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select place of supply")
 																)
 															   ) 
-																 errors.placeOfSupplyId ='Place of Supply is Required';
+																 errors.placeOfSupplyId ='Place of supply is required';
 														
 													   }
 													   return errors
@@ -1589,18 +1587,18 @@ setDate1= (props, value) => {
 													validationSchema={Yup.object().shape(
 														{
 														// rfq_number: Yup.string().required(
-														// 	'Invoice Number is Required',
+														// 	'Invoice number is required',
 														// ),
 														supplierId: Yup.string().required(
-															'Supplier is Required',
+															'Supplier is required',
 														),
-														// placeOfSupplyId: Yup.string().required('Place of Supply is Required'),
+														// placeOfSupplyId: Yup.string().required('Place of supply is required'),
 														
 														rfqReceiveDate: Yup.string().required(
-															'Order Date is Required',
+															'Order date is required',
 														),
 														rfqExpiryDate: Yup.string().required(
-															'Order Due Date is Required'
+															'Order due date is required'
 														),
 														attachmentFile: Yup.mixed()
 															.test(
@@ -1645,7 +1643,7 @@ setDate1= (props, value) => {
 															.of(
 																Yup.object().shape({
 																	quantity: Yup.string()
-																		.required('Value is Required')
+																		.required('Value is required')
 																		.test(
 																			'quantity',
 																			'Quantity should be greater than 0',
@@ -1658,10 +1656,10 @@ setDate1= (props, value) => {
 																			},
 																		),
 																	unitPrice: Yup.string()
-																		.required('Value is Required')
+																		.required('Value is required')
 																		.test(
 																			'Unit Price',
-																			'Unit Price Should be Greater than 1',
+																			'Unit price should be greater than 1',
 																			(value) => {
 																				if (value > 0) {
 																					return true;
@@ -1671,10 +1669,10 @@ setDate1= (props, value) => {
 																			},
 																		),
 																	vatCategoryId: Yup.string().required(
-																		'VAT is Required',
+																		'VAT is required',
 																	),
 																	productId: Yup.string().required(
-																		'Product is Required',
+																		'Product is required',
 																	),
 																}),
 															),
@@ -1911,7 +1909,7 @@ setDate1= (props, value) => {
 																		{props.errors.rfqReceiveDate &&
 																			props.touched.rfqReceiveDate && (
 																				<div className="invalid-feedback">
-																					{props.errors.rfqReceiveDate.includes("nullable()") ? "Order Date is Required" :props.errors.rfqReceiveDate}
+																					{props.errors.rfqReceiveDate.includes("nullable()") ? "Order date is required" :props.errors.rfqReceiveDate}
 																				</div>
 																			)}
 																	</FormGroup>
@@ -2187,8 +2185,7 @@ setDate1= (props, value) => {
 																			placement="right"
 																			target="ExiseTooltip"
 																		>
-																			If Exise Type for a product is Inclusive
-																			then the Excise dropdown will be Disabled
+																			Excise dropdown will be enabled only for the excise products
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn> }
 																		<TableHeaderColumn
@@ -2552,6 +2549,7 @@ setDate1= (props, value) => {
 					purchaseCategory={this.state.purchaseCategory}
 				/>
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

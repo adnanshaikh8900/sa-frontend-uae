@@ -20,7 +20,7 @@ import * as Yup from 'yup';
 import * as CustomerRecordPaymentActions from './actions';
 import * as CustomerInvoiceActions from '../../actions';
 import { CustomerModal } from '../../sections';
-import { Loader, ConfirmDeleteModal } from 'components';
+import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
@@ -100,7 +100,8 @@ class RecordCustomerPayment extends React.Component {
 			discountAmount: 0,
 			fileName: '',
 			disabled: false,
-			loadingMsg:"Loading..."
+			loadingMsg:"Loading...",
+			disableLeavePage:false
 		};
 
 		// this.options = {
@@ -230,7 +231,7 @@ class RecordCustomerPayment extends React.Component {
 	};
 
 	handleSubmit = (data) => {
-		this.setState({ disabled: true });
+		this.setState({ disabled: true, disableLeavePage:true, });
 		const { invoiceId } = this.state;
 		const {
 			receiptNo,
@@ -288,6 +289,7 @@ class RecordCustomerPayment extends React.Component {
 				this.setState({ loading:false,});
 			})
 			.catch((err) => {
+				this.setState({ createDisabled: false, loading: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
 					err && err.data ? err.data.message : 'Payment Recorded Unsuccessfully',
@@ -328,7 +330,7 @@ class RecordCustomerPayment extends React.Component {
 		<text>
 		<b>{strings.DeleteCustomerInvoice}</b>
 		</text>
-		const message = 'This Customer Invoice will be deleted permanently and cannot be recovered. ';
+		const message = 'This customer invoice will be deleted permanently and cannot be recovered. ';
 		this.setState({
 			dialog: (
 				<ConfirmDeleteModal
@@ -417,21 +419,21 @@ class RecordCustomerPayment extends React.Component {
 													validate={(values) => {
                                                     let errors = {};
 													 if (values.amount <= 0) {
-                                                      errors.amount ='Amount Cannot be empty or 0';
+                                                      errors.amount ='Amount cannot be empty or 0';
 												 }
                                                  return errors
 												 }}
 													validationSchema={Yup.object().shape({
 														depositeTo: Yup.string().required(
-															'Deposit To is Required',
+															'Deposit to is required',
 														),
 														payMode: Yup.string().required(
-															'Payment Mode is Required',
+															'Payment mode is required',
 														),
 														amount: Yup.mixed()
 														.test(
 															'amount',
-															'Amount Cannot be Greater Than Invoice Amount',
+															'Amount cannot be greater than invoice amount',
 															(value) => {
 																if (
 																	!value ||
@@ -467,7 +469,7 @@ class RecordCustomerPayment extends React.Component {
 															)
 															.test(
 																'fileSize',
-																'*File Size is too large',
+																'*File size is too large',
 																(value) => {
 																	if (
 																		!value ||
@@ -910,6 +912,7 @@ class RecordCustomerPayment extends React.Component {
 					getStateList={this.props.customerInvoiceActions.getStateList}
 				/>
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

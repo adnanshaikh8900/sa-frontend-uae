@@ -13,31 +13,17 @@ import {
     Row,
     Col,
     Table,
-    UncontrolledTooltip
 } from 'reactstrap'
-import { Loader, ConfirmDeleteModal, ImageUploader } from 'components'
+import { Loader, LeavePage } from 'components'
 import Select from 'react-select'
-import {
-    CommonActions
-} from 'services/global'
-import * as Yup from 'yup';
+import {CommonActions} from 'services/global'
 import 'react-toastify/dist/ReactToastify.css'
-import DatePicker from 'react-datepicker'
-
 import * as DetailSalaryComponentAction from './actions';
 import * as CreatePayrollEmployeeActions from '../create/actions'
 import { SalaryComponentDeduction, SalaryComponentFixed, SalaryComponentVariable } from 'screens/payrollemp/sections';
-
 import { Formik } from 'formik';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-  
-import { selectOptionsFactory } from 'utils'
-import moment from 'moment'
-import Switch from "react-switch";
-
-
-
 
 const mapStateToProps = (state) => {
     return ({
@@ -79,6 +65,7 @@ class UpdateSalaryComponent extends React.Component {
             openSalaryComponentVariable: false,
             openSalaryComponentDeduction: false,
             loadingMsg:"Loading....",
+			disableLeavePage:false,
             ctcTypeOption:this.props.location.state.ctcTypeOption?this.props.location.state.ctcTypeOption:{label:"ANNUALLY",value:1},
             ctcType:this.props.location.state.ctcTypeOption?this.props.location.state.ctcTypeOption.label:"ANNUALLY",
             ctcTypeList:[
@@ -239,7 +226,7 @@ handleChange = (evt) => {
     // Create or Edit VAT
     handleSubmit = (data) => {
 
-        this.setState({ disabled: true });
+        this.setState({ disabled: true, disableLeavePage:true, });
         const { current_employee_id } = this.state;
         const {
             employee,

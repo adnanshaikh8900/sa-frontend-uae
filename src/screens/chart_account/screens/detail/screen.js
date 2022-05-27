@@ -15,16 +15,14 @@ import {
 } from 'reactstrap';
 import { toast } from 'react-toastify';
 import _ from 'lodash';
-import { Loader, ConfirmDeleteModal } from 'components';
+import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
 import 'react-toastify/dist/ReactToastify.css';
 import './style.scss';
 import * as ChartOfAccontActions from '../../actions';
 import * as DetailChartOfAccontActions from './actions';
 import Select from 'react-select';
-
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-
 import { CommonActions } from 'services/global';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
@@ -69,7 +67,8 @@ class DetailChartAccount extends React.Component {
 			coaId: '',
 			disabled: false,
 			disabled1:false,
-			loadingMsg:"Loading..."
+			loadingMsg:"Loading...",
+			disableLeavePage:false
 		};
 		// this.regExAlpha = /^[a-zA-Z]+$/;
 		this.regExAlpha = /^[A-Za-z0-9 !@#$%^&*)(+=._-]+$/;
@@ -215,7 +214,7 @@ class DetailChartAccount extends React.Component {
 
 	// Create or Edit VAT
 	handleSubmit = (data, resetForm) => {
-		this.setState({ disabled: true });
+		this.setState({ disabled: true, disableLeavePage:true });
 		const id = this.props.location.state.id;
 		const postData = {
 			transactionCategoryName: data.transactionCategoryName,
@@ -289,12 +288,12 @@ class DetailChartAccount extends React.Component {
 													}}
 													validationSchema={Yup.object().shape({
 														// transactionCategoryCode: Yup.string()
-														//   .required("Code Name is Required"),
+														//   .required("Code Name is required"),
 														transactionCategoryName: Yup.string().required(
-															'Account is Required',
+															'Account is required',
 														),
 														chartOfAccount: Yup.string()
-															.required('Type is Required')
+															.required('Type is required')
 															.nullable(),
 													})}
 												>
@@ -469,6 +468,7 @@ class DetailChartAccount extends React.Component {
 					)}
 				</div>
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

@@ -18,7 +18,7 @@ import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import DatePicker from 'react-datepicker';
 import { Formik, Field } from 'formik';
-import { Loader } from 'components';
+import { LeavePage, Loader } from 'components';
 import * as Yup from 'yup';
 import * as SupplierInvoiceCreateActions from './actions';
 import * as SupplierInvoiceActions from '../../actions';
@@ -178,6 +178,7 @@ class CreateSupplierInvoice extends React.Component {
 			param: false,
 			date: '',
 			loadingMsg:"Loading...",
+			disableLeavePage:false,
 			isSelected:false,
 			vat_list:[
 				{
@@ -1775,7 +1776,7 @@ class CreateSupplierInvoice extends React.Component {
 
 	handleSubmit = (data, resetForm) => {
 
-		this.setState({ disabled: true });
+		this.setState({ disabled: true ,disableLeavePage:true});
 		const {
 			receiptAttachmentDescription,
 			receiptNumber,
@@ -2242,13 +2243,13 @@ class CreateSupplierInvoice extends React.Component {
 													let errors = {};
 													if (this.state.exist === true) {
 														errors.invoice_number =
-															'Invoice Number Already Exists';
+															'Invoice number already exists';
 													}
 													if (values.invoice_number === '') {
-														errors.invoice_number = 'Invoice Number is Required';
+														errors.invoice_number = 'Invoice number is required';
 													}
 													// if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
-													// 	errors.placeOfSupplyId = 'Place of Supply is Required';
+													// 	errors.placeOfSupplyId = 'Place of Supply is required';
 													// }
 													if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
 													||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
@@ -2256,38 +2257,38 @@ class CreateSupplierInvoice extends React.Component {
 											    	{
 
 														if (!values.placeOfSupplyId) 
-													       	errors.placeOfSupplyId ='Place of Supply is Required';
+													       	errors.placeOfSupplyId ='Place of supply is required';
 														if (values.placeOfSupplyId &&
 															(values.placeOfSupplyId=="" ||
-															(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")
+															(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select place of supply")
 															)
 														   ) 
-													         errors.placeOfSupplyId ='Place of Supply is Required';
+													         errors.placeOfSupplyId ='Place of supply is required';
 													
 												   }
 													if (values.term && values.term.label && values.term.label === "Select Terms") {
-														errors.term = 'Term is Required';
+														errors.term = 'Term is required';
 													}
 													if (param === true) {
 														errors.discount =
-															'Discount amount Cannot be greater than Invoice Total Amount';
+															'Discount amount cannot be greater than invoice Total Amount';
 													}
 													return errors;
 												}}
 												validationSchema={Yup.object().shape({
 													invoice_number: Yup.string().required(
-														'Invoice Number is Required',
+														'Invoice number is required',
 													),
 													contactId: Yup.string().required(
-														'Supplier is Required',
+														'Supplier is required',
 													),
-													// placeOfSupplyId: Yup.string().required('Place of Supply is Required'),
-													term: Yup.string().required('Term is Required'),
+													// placeOfSupplyId: Yup.string().required('Place of Supply is required'),
+													term: Yup.string().required('Term is required'),
 													invoiceDate: Yup.string().required(
-														'Invoice Date is Required',
+														'Invoice Date is required',
 													),
 													currency: Yup.string().required(
-														'Currency is Required',
+														'Currency is required',
 													),
 													lineItemsString: Yup.array()
 														.required(
@@ -2296,7 +2297,7 @@ class CreateSupplierInvoice extends React.Component {
 														.of(
 															Yup.object().shape({
 																quantity: Yup.string()
-																	.required('Value is Required')
+																	.required('Value is required')
 																	.test(
 																		'quantity',
 																		'Quantity should be greater than 0',
@@ -2309,10 +2310,10 @@ class CreateSupplierInvoice extends React.Component {
 																		},
 																	),
 																unitPrice: Yup.string()
-																	.required('Value is Required')
+																	.required('Value is required')
 																	.test(
 																		'Unit Price',
-																		'Unit Price Should be Greater than 1',
+																		'Unit price should be greater than 1',
 																		(value) => {
 																			if (value > 0) {
 																				return true;
@@ -2322,13 +2323,13 @@ class CreateSupplierInvoice extends React.Component {
 																		},
 																	),
 																vatCategoryId: Yup.string().required(
-																	'VAT is Required',
+																	'VAT is required',
 																),
 																productId: Yup.string().required(
-																	'Product is Required',
+																	'Product is required',
 																),
 																// transactionCategoryId: Yup.string().required(
-																// 	'Account is Required',
+																// 	'Account is required',
 																// ),
 															}),
 														),
@@ -2739,7 +2740,7 @@ class CreateSupplierInvoice extends React.Component {
 																	{props.errors.invoiceDate &&
 																		props.touched.invoiceDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.invoiceDate.includes("nullable()") ? "Invoice Date is Required" : props.errors.invoiceDate}
+																				{props.errors.invoiceDate.includes("nullable()") ? "Invoice date is required" : props.errors.invoiceDate}
 																			</div>
 																		)}
 																</FormGroup>
@@ -3082,6 +3083,16 @@ class CreateSupplierInvoice extends React.Component {
 																	>
 																		{strings.UnitPrice}
 																	</TableHeaderColumn>
+																	{this.state.discountEnabled == true &&
+																	<TableHeaderColumn
+																		width="12%"
+																		dataField="discount"
+																		dataFormat={(cell, rows) =>
+																			this.renderDiscount(cell, rows, props)
+																		}
+																	>
+																		Discount Type
+																	</TableHeaderColumn>}
 																	{initValue.total_excise != 0 &&
 																	<TableHeaderColumn
 																		width="10%"
@@ -3099,20 +3110,10 @@ class CreateSupplierInvoice extends React.Component {
 																			placement="right"
 																			target="ExiseTooltip"
 																		>
-																			If Exise Type for a product is Inclusive
-																			then the Excise dropdown will be Disabled
+																			Excise dropdown will be enabled only for the excise products
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn>}
-																	{this.state.discountEnabled == true &&
-																	<TableHeaderColumn
-																		width="12%"
-																		dataField="discount"
-																		dataFormat={(cell, rows) =>
-																			this.renderDiscount(cell, rows, props)
-																		}
-																	>
-																		Discount Type
-																	</TableHeaderColumn>}
+																	
 																	<TableHeaderColumn
 																		width="10%"
 																		dataField="vat"
@@ -3611,6 +3612,7 @@ class CreateSupplierInvoice extends React.Component {
 					
 				/> */}
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

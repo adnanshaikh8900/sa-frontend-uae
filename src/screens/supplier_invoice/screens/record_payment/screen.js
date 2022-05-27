@@ -21,7 +21,7 @@ import * as SupplierRecordPaymentActions from './actions';
 import * as SupplierInvoiceActions from '../../actions';
 import { TextareaAutosize } from '@material-ui/core';
 import { SupplierModal } from '../../sections';
-import { Loader, ConfirmDeleteModal } from 'components';
+import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
@@ -101,7 +101,8 @@ class RecordSupplierPayment extends React.Component {
 			discountAmount: 0,
 			fileName: '',
 			disabled: false,
-			loadingMsg:"Loading..."
+			loadingMsg:"Loading...",
+			disableLeavePage:false
 		};
 
 		// this.options = {
@@ -232,7 +233,7 @@ class RecordSupplierPayment extends React.Component {
 	};
 
 	handleSubmit = (data) => {
-		this.setState({ disabled: true });
+		this.setState({ disabled: true , disableLeavePage:true,  });
 		const { invoiceId } = this.state;
 		const {
 			paymentNo,
@@ -417,21 +418,21 @@ class RecordSupplierPayment extends React.Component {
 													validate={(values) => {
 														let errors = {};
 														 if (values.amount < 0) {
-														  errors.amount ='Amount Cannot be Less Than 0';
+														  errors.amount ='Amount cannot be Less than 0';
 													 }
 													 return errors
 													 }}
 													validationSchema={Yup.object().shape({
 														depositeTo: Yup.string().required(
-															'Deposit To is Required',
+															'Deposit to is required',
 														),
 														payMode: Yup.string().required(
-															'Payment Mode is Required',
+															'Payment mode is required',
 														),
 														amount: Yup.mixed()
 														.test(
 															'amount',
-															'Amount Cannot be Greater Than Invoice Amount',
+															'Amount cannot be greater than invoice amount',
 															(value) => {
 																if (
 																	!value ||
@@ -903,6 +904,7 @@ class RecordSupplierPayment extends React.Component {
 					getStateList={this.props.SupplierInvoiceActions.getStateList}
 				/>
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

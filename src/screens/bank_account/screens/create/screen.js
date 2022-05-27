@@ -15,7 +15,7 @@ import {
 	UncontrolledTooltip,
 } from 'reactstrap';
 import Select from 'react-select';
-import {  Loader } from 'components';
+import { LeavePage, Loader } from 'components';
 import _ from 'lodash';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -119,7 +119,8 @@ class CreateBankAccount extends React.Component {
 			BankList: [],
 			currentData: {},
 			language: window['localStorage'].getItem('language'),
-			loadingMsg:"Loading..."
+			loadingMsg:"Loading...",
+			disableLeavePage:false, 
 		};
 		this.formRef = React.createRef();
 		this.regExAlpha = /^[a-zA-Z_ ]+$/;
@@ -185,7 +186,7 @@ class CreateBankAccount extends React.Component {
 		this.props.createBankAccountActions
 			.checkValidation(data)
 			.then((response) => {
-				if (response.data === 'Bank Account Already Exists') {
+				if (response.data === 'Bank account already exists') {
 					this.setState({
 						exist: true,
 					});
@@ -237,7 +238,7 @@ class CreateBankAccount extends React.Component {
 			personalCorporateAccountInd: account_is_for ? account_is_for : '',
 			// bankId:bankId ? bankId : "",
 		};
-		this.setState({ loading:true, loadingMsg:"Creating New Bank Account..."});
+		this.setState({ loading:true, disableLeavePage:true,loadingMsg:"Creating New Bank Account..."});
 		this.props.createBankAccountActions
 			.createBankAccount(obj)
 			.then((res) => {
@@ -311,38 +312,38 @@ class CreateBankAccount extends React.Component {
 													let errors = {};
 													if (this.state.exist === true) {
 														errors.account_number =
-															'Account Number Already Exists';
+															'Account number already exists';
 													}
 													return errors;
 												}}
 												validationSchema={Yup.object().shape({
 													account_name: Yup.string()
-														.required('Account Name is Required')
-														.min(2, 'Account Name is Too Short!'),
+														.required('Account name is required')
+														.min(2, 'Account name is too short!'),
 														// .max(, 'Account Name Is Too Long!'),
 													opening_balance: Yup.string().required(
-														'Opening Balance is Required',
+														'Opening balance is required',
 													),
 													openingDate: Yup.date().required(
-														'Opening Date is Required',
+														'Opening date is required',
 													),
 													currency: Yup.string().required(
-														'Currency is Required',
+														'Currency is required',
 													),
 													account_type: Yup.string().required(
-														'Account Type is Required',
+														'Account type is required',
 													),
 													// bank_name: Yup.string()
 													// 	.required('Bank Name is Required')
 													// 	.min(2, 'Bank Name Is Too Short!')
 													// 	.max(30, 'Bank Name Is Too Long!'),
-													bankId: Yup.string().required('Bank Name is Required') ,
+													bankId: Yup.string().required('Bank name is required') ,
 													account_number: Yup.string()
-														.required('Account Number is Required')
-														.min(2, 'Account Number is Too Short!')
-														.max(30, 'Account Number is Too Long!'),
+														.required('Account number is required')
+														.min(2, 'Account number is too short!')
+														.max(30, 'Account number is too long!'),
 													account_is_for: Yup.string().required(
-														'Account for is Required',
+														'Account for is required',
 													),
 													// swift_code: Yup.string().required(
 													// 	'Please Enter Valid Swift Code',
@@ -362,6 +363,7 @@ class CreateBankAccount extends React.Component {
 																		type="text"
 																		maxLength="100"
 																		id="account_name"
+																		autoComplete="off"
 																		name="account_name"
 																		placeholder={strings.Enter+strings.AccountName}
 																		value={props.values.account_name}
@@ -461,6 +463,7 @@ class CreateBankAccount extends React.Component {
 																		type="type"
 																		maxLength="14,2"
 																		id="opening_balance"
+																		autoComplete="off"
 																		name="opening_balance"
 																		placeholder={strings.Enter+strings.OpeningBalance}
 																		value={props.values.opening_balance}
@@ -535,7 +538,7 @@ class CreateBankAccount extends React.Component {
 																	{props.errors.openingDate &&
 																		props.touched.openingDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.openingDate.includes("nullable()") ? "Opening Date is Required" :props.errors.openingDate}
+																				{props.errors.openingDate.includes("nullable()") ? "Opening date is required" :props.errors.openingDate}
 
 																			</div>
 																		)}
@@ -550,6 +553,7 @@ class CreateBankAccount extends React.Component {
 																	<Select
 																		id="account_type"
 																		name="account_type"
+																		autoComplete="off"
 																		options={
 																			account_type_list
 																				? selectOptionsFactory.renderOptions(
@@ -628,6 +632,7 @@ class CreateBankAccount extends React.Component {
                                                                                                         placeholder={strings.Select+strings.BankName}
                                                                                                         id="bankId"
                                                                                                         name="bankId"
+																										autoComplete="off"
                                                                                                         className={
                                                                                                             props.errors.bankId &&
                                                                                                                 props.touched.bankId
@@ -688,6 +693,7 @@ class CreateBankAccount extends React.Component {
 																		type="text"
 																		maxLength="100"
 																		id="account_number"
+																		autoComplete="Off"
 																		name="account_number"
 																		placeholder={strings.Enter+strings.AccountNumber}
 																		value={props.values.account_number}
@@ -1007,6 +1013,7 @@ class CreateBankAccount extends React.Component {
 					</Row>
 				</div>
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

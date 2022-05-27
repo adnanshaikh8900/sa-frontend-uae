@@ -14,7 +14,7 @@ import {
   Row,
   Col
 } from 'reactstrap'
-import { Loader , ConfirmDeleteModal} from 'components'
+import { Loader ,LeavePage, ConfirmDeleteModal} from 'components'
 import Select from 'react-select';
 
 import { selectOptionsFactory } from 'utils';
@@ -59,7 +59,8 @@ class DetailOpeningBalance extends React.Component {
       loading: true,
       dialog: null,
       current_opening_balance_id: null,
-      loadingMsg:"Loading..."
+      loadingMsg:"Loading...",
+      disableLeavePage:false, 
     }
     this.regExAlpha = /^[a-zA-Z ]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
@@ -114,7 +115,7 @@ class DetailOpeningBalance extends React.Component {
 		let postData = this.getData(data);
 
 		postData = { ...postData, ...{ id: current_opening_balance_id } };
-    this.setState({ loading:true, loadingMsg:"Updating Opening Balance..."});
+    this.setState({ loading:true,  disableLeavePage:true,loadingMsg:"Updating Opening Balance..."});
       this.props.detailOpeningBalancesAction.updateOpeningBalance(postData).then((res) => {
       if (res.status === 200) {
         resetForm();
@@ -340,6 +341,7 @@ class DetailOpeningBalance extends React.Component {
           </Row>
         </div>
       </div>
+      {this.state.disableLeavePage ?"":<LeavePage/>}
       </div>
     )
   }

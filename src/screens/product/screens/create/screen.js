@@ -15,21 +15,18 @@ import {
 	UncontrolledTooltip,
 } from 'reactstrap';
 import Select from 'react-select';
-import {   Loader } from 'components';
+import { LeavePage, Loader } from 'components';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-
 import './style.scss';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-
 import * as ProductActions from '../../actions';
 import * as SupplierInvoiceActions from '../../../supplier_invoice/actions';
 import { CommonActions } from 'services/global';
-
 import { WareHouseModal } from '../../sections';
 import { selectOptionsFactory } from 'utils';
-import Switch from "react-switch";
+
 const mapStateToProps = (state) => {
 	return {
 		vat_list: state.product.vat_list,
@@ -75,7 +72,6 @@ class CreateProduct extends React.Component {
 				productDescription: '',
 				productCode: '',
 				vatCategoryId:'',
-
 				unitTypeId:'',
 				productCategoryId: '',
 				productWarehouseId: '',
@@ -116,7 +112,8 @@ class CreateProduct extends React.Component {
 			exciseTaxCheck:false,
 			exciseType:false,
 			exciseAmount:0	,
-			loadingMsg:"Loading"		
+			loadingMsg:"Loading",
+			disableLeavePage:false
 		};
 		this.formRef = React.createRef();       
 		this.regEx = /^[0-9\d]+$/;
@@ -339,7 +336,7 @@ try {
 			}),
 		};
 		const postData = this.getData(dataNew);
-		this.setState({ loading:true, loadingMsg:"Creating Product..."});
+		this.setState({ loading:true, disableLeavePage:true, loadingMsg:"Creating Product..."});
 		this.props.productActions
 			.createAndSaveProduct(postData)
 			.then((res) => {
@@ -2025,6 +2022,7 @@ try {
 					closeWarehouseModal={this.closeWarehouseModal}
 				/>
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

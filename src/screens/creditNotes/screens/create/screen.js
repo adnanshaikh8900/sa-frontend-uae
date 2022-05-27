@@ -23,20 +23,17 @@ import * as CreditNotesCreateActions from './actions';
 import * as CreditNotesActions from '../../actions';
 import * as ProductActions from '../../../product/actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
-import {  ImageUploader, Loader } from 'components';
-import { CustomerModal, ProductModal,InvoiceNumberModel} from '../../sections';
+import { LeavePage, Loader } from 'components';
+import { CustomerModal, ProductModal } from '../../sections';
 import { MultiSupplierProductModal } from '../../sections';
-
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
-
 import './style.scss';
 import moment from 'moment';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-import Switch from "react-switch";
 import { Checkbox } from '@material-ui/core';
 import { TextareaAutosize } from '@material-ui/core';
 
@@ -181,7 +178,8 @@ class CreateCreditNote extends React.Component {
 			isCreatedWIWP:false,
 			quantityExceeded:'',
 			isCreatedWithoutInvoice:false,
-			loadingMsg:"Loading"
+			loadingMsg:"Loading",
+			disableLeavePage:false
 		};
 
 		this.formRef = React.createRef();
@@ -545,7 +543,7 @@ discountType = (row) =>
 		this.props.creditNotesCreateActions
 			.checkValidation(data)
 			.then((response) => {
-				if (response.data === 'Invoice Number Already Exists') {
+				if (response.data === 'Invoice number already exists') {
 					this.setState(
 						{
 							exist: true,
@@ -1206,7 +1204,7 @@ discountType = (row) =>
 
 	handleSubmit = (data, resetForm) => {
 		
-		this.setState({ disabled: true });
+		this.setState({ disabled: true,  disableLeavePage:true });
 		const {
 			receiptAttachmentDescription,
 			receiptNumber,
@@ -1370,7 +1368,7 @@ if (invoiceNumber && invoiceNumber.value) {
 				}
 			})
 			.catch((err) => {
-				this.setState({ disabled: false });
+				this.setState({ disabled: false});
 				this.props.commonActions.tostifyAlert(
 					'error',
 					err && err.data ? err.data.message : 'New Tax Credit Note Created Unsuccessfully.',
@@ -1606,7 +1604,7 @@ if (invoiceNumber && invoiceNumber.value) {
 				}
 				return obj;
 			});
-		if (e && e.label !== 'Select invoiceNumber') {
+		if (e && e.label !== 'Select Invoice Number') {
 	
 			this.invoiceValue(
 				e.value,
@@ -1743,18 +1741,18 @@ if (invoiceNumber && invoiceNumber.value) {
 													 
 													if (exist === true) 
 													{
-														errors.creditNoteNumber ='Tax Credit Note Number Cannot be Same';
+														errors.creditNoteNumber ='Tax credit note number cannot be same';
 													}	
 													
 													if(this.state.isCreatedWIWP==false && !values.invoiceNumber)
 													{
-														errors.invoiceNumber =	'Invoice Number is Required';}
-													if(this.state.isCreatedWIWP==true && this.state.invoiceSelected ==true && !values.creditAmount)
+														errors.invoiceNumber = 'Invoice number is required';}
+													if(this.state.isCreatedWIWP == true && this.state.invoiceSelected == true && !values.creditAmount)
 														{
-															errors.creditAmount =	'Credit Amount is Required';}
+															errors.creditAmount = 'Credit amount is required';}
 													// if(this.state.invoiceSelected && this.state.initValue.totalAmount>this.state.remainingInvoiceAmount)
 													// {
-													// 	errors.remainingInvoiceAmount =	'Invoice Total Amount Cannot be greater than  Remaining Invoice Amount';
+													// 	errors.remainingInvoiceAmount =	'Invoice Total Amount Cannot be greater than Remaining Invoice Amount';
 													// }	
 													// if(this.state.remainingInvoiceAmount && values.creditAmount<this.state.remainingInvoiceAmount)		
 													// {
@@ -1764,24 +1762,24 @@ if (invoiceNumber && invoiceNumber.value) {
 												}}
 												validationSchema={Yup.object().shape({
 													// invoiceNumber: Yup.string().required(
-													// 	'Invoice Number is Required',
+													// 	'Invoice Number is required',
 													// ),
 													creditNoteNumber: Yup.string().required(
-														'Tax Credit Note Number is Required',
+														'Tax credit note number is required',
 													),
 													contactId: Yup.string().required(
-															'Customer Name is Required',
+															'Customer name is required',
 														),
 													// contactId: Yup.string().required(
-													// 	'Customer is Required',
+													// 	'Customer is required',
 													// ),
-													// placeOfSupplyId: Yup.string().required('Place of supply is Required'),
-													// term: Yup.string().required('Term is Required'),
+													// placeOfSupplyId: Yup.string().required('Place of supply is required'),
+													// term: Yup.string().required('Term is required'),
 													// currency: Yup.string().required(
-													// 	'Currency is Required',
+													// 	'Currency is required',
 													// ),
 													creditNoteDate: Yup.string().required(
-														'Tax Credit Note Date is Required',
+														'Tax credit note date is required',
 													),
 													// lineItemsString: Yup.array()
 													// 	.required(
@@ -1790,7 +1788,7 @@ if (invoiceNumber && invoiceNumber.value) {
 													// 	.of(
 													// 		Yup.object().shape({
 													// 			quantity: Yup.string()
-													// 				.required('Value is Required')
+													// 				.required('Value is required')
 													// 				.test(
 													// 					'quantity',
 													// 					'Quantity should be greater than 0',
@@ -1803,7 +1801,7 @@ if (invoiceNumber && invoiceNumber.value) {
 													// 					},
 													// 				),
 													// 			unitPrice: Yup.string()
-													// 				.required('Value is Required')
+													// 				.required('Value is required')
 													// 				.test(
 													// 					'Unit Price',
 													// 					'Unit Price Should be Greater than 1',
@@ -1816,17 +1814,17 @@ if (invoiceNumber && invoiceNumber.value) {
 													// 					},
 													// 				),
 													// 			vatCategoryId: Yup.string().required(
-													// 				'Value is Required',
+													// 				'Value is required',
 													// 			),
 													// 			productId: Yup.string().required(
-													// 				'Product is Required',
+													// 				'Product is required',
 													// 			),
 													// 		}),
 													// 	),
 													attachmentFile: Yup.mixed()
 														.test(
 															'fileType',
-															'*Unsupported File Format',
+															'*Unsupported file format',
 															(value) => {
 																value &&
 																	this.setState({
@@ -1845,7 +1843,7 @@ if (invoiceNumber && invoiceNumber.value) {
 														)
 														.test(
 															'fileSize',
-															'*File Size is too large',
+															'*File size is too large',
 															(value) => {
 																if (
 																	!value ||
@@ -2245,7 +2243,7 @@ if (invoiceNumber && invoiceNumber.value) {
 																	{props.errors.creditNoteDate &&
 																		props.touched.creditNoteDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.creditNoteDate.includes("nullable()") ? "Tax Credit Note Date is Required" :props.errors.creditNoteDate}		
+																				{props.errors.creditNoteDate.includes("nullable()") ? "Tax credit note date is required" :props.errors.creditNoteDate}		
 																			</div>
 																		)}
 																</FormGroup>
@@ -2638,8 +2636,7 @@ min="0"
 																			placement="right"
 																			target="ExiseTooltip"
 																		>
-																			If Exise Type for a product is Inclusive
-																			then the Excise dropdown will be Disabled
+																			Excise dropdown will be enabled only for the excise products
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn> 
 																	<TableHeaderColumn
@@ -3197,6 +3194,7 @@ min="0"
 					
 				/> */}
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

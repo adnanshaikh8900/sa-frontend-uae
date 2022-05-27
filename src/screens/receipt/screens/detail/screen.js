@@ -15,28 +15,18 @@ import {
 } from 'reactstrap'
 import Select from 'react-select'
 import DatePicker from 'react-datepicker'
-
 import { Formik } from 'formik';
 import * as Yup from "yup";
 import moment from 'moment'
-
-
-import {
-  CommonActions
-} from 'services/global'
+import { CommonActions } from 'services/global'
 import { selectOptionsFactory } from 'utils'
 import * as ReceiptActions from '../../actions';
 import * as ReceiptDetailActions from './actions';
-
-import { Loader, ConfirmDeleteModal } from 'components'
-
-
+import { LeavePage, Loader, ConfirmDeleteModal } from 'components'
 import 'react-datepicker/dist/react-datepicker.css'
-
 import './style.scss'
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-
 
 const mapStateToProps = (state) => {
   return ({
@@ -71,7 +61,8 @@ class DetailReceipt extends React.Component {
       loading: true,
       dialog: null,
       initValue: {},
-      current_receipt_id: null
+      current_receipt_id: null,
+      disableLeavePage:false,
     }
 
     this.regEx = /^[0-9\d]+$/;
@@ -114,6 +105,7 @@ class DetailReceipt extends React.Component {
   }
 
   handleSubmit = (data) => {
+		this.setState({ disabled: true, disableLeavePage:true, });
     const { current_receipt_id } = this.state
     const {
       receiptDate,
@@ -141,6 +133,7 @@ class DetailReceipt extends React.Component {
         this.props.history.push('/admin/revenue/receipt')
       }
     }).catch((err) => {
+      this.setState({ createDisabled: false, loading: false });
       this.props.commonActions.tostifyAlert('error',  err.data.message )
     })
   }
@@ -431,6 +424,7 @@ min="0"
           </Row>
         </div>
       </div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
       </div>
     )
   }

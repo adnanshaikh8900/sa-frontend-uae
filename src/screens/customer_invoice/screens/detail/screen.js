@@ -24,7 +24,7 @@ import * as ProductActions from '../../../product/actions';
 import * as CustomerInvoiceActions from '../../actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 import { CustomerModal ,ProductModal } from '../../sections';
-import { Loader, ConfirmDeleteModal } from 'components';
+import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
@@ -127,6 +127,7 @@ class DetailCustomerInvoice extends React.Component {
 			shippingTelephone:'',
 			shippingFax:'',
 			loadingMsg:"Loading",
+			disableLeavePage:false, 
 		datesChanged : false	};
 
 		// this.options = {
@@ -601,7 +602,7 @@ class DetailCustomerInvoice extends React.Component {
 									if(parseInt(e.target.value) >product_list[0].stockOnHand && product_list[0].isInventoryEnabled==true)
 									this.props.commonActions.tostifyAlert(
 										'error',
-										 `Quantity (${e.target.value}) Must Not Be Greater Than Stock On Hand  (${product_list[0].stockOnHand})`,
+										 `Quantity (${e.target.value}) Must not be greater than stock on hand  (${product_list[0].stockOnHand})`,
 									);
 									else
 									this.selectItem(
@@ -1454,7 +1455,7 @@ class DetailCustomerInvoice extends React.Component {
 		if (this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
-		this.setState({ loading:true, loadingMsg:"Updating Invoice..."});
+		this.setState({ loading:true, disableLeavePage:true, loadingMsg:"Updating Invoice..."});
 		this.props.customerInvoiceDetailActions
 			.updateInvoice(formData)
 			.then((res) => {
@@ -1467,7 +1468,7 @@ class DetailCustomerInvoice extends React.Component {
 				this.setState({ loading:false,});
 			})
 			.catch((err) => {
-				this.setState({ disabled: false });
+				this.setState({ disabled: false, createDisabled: false, loading: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
 					err.data ? err.data.message : 'Invoice Updated Unsuccessfully'
@@ -1590,7 +1591,7 @@ class DetailCustomerInvoice extends React.Component {
 			<text>
 			<b>Delete Customer Invoice?</b>
 			</text>
-			const message = 'This Customer Invoice will be deleted permanently and cannot be recovered. ';
+			const message = 'This customer invoice will be deleted permanently and cannot be recovered. ';
 		this.setState({
 			dialog: (
 				<ConfirmDeleteModal
@@ -1744,7 +1745,7 @@ class DetailCustomerInvoice extends React.Component {
 														// }
 														if (param === true) {
 															errors.discount =
-																'Discount amount Cannot be greater than Invoice Total Amount';
+																'Discount amount Cannot be greater than invoice total amount';
 														}
 
 														if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
@@ -1753,66 +1754,66 @@ class DetailCustomerInvoice extends React.Component {
 														{
 															
 															if (!values.placeOfSupplyId) 
-																   errors.placeOfSupplyId ='Place of Supply is Required';
-															if (values.placeOfSupplyId &&
-																(values.placeOfSupplyId=="" ||
-																(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")
-																)
-															   ) 
-																 errors.placeOfSupplyId ='Place of Supply is Required';
+													       	errors.placeOfSupplyId ='Place of supply is required';
+														if (values.placeOfSupplyId &&
+															(values.placeOfSupplyId=="" ||
+															(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select place of supply")
+															)
+														   ) 
+													         errors.placeOfSupplyId ='Place of supply is required';
 														
 													   }
 
 														// if (values.placeOfSupplyId && values.placeOfSupplyId.label &&( values.placeOfSupplyId.label === "Select Place of Supply"))
 														//  {
-														// 	errors.placeOfSupplyId ='Place of supply is Required';
+														// 	errors.placeOfSupplyId ='Place of supply is required';
 														// }else
 														// if (values.placeOfSupplyId === "")
 														//  {
-														// 	errors.placeOfSupplyId ='Place of supply is Required';
+														// 	errors.placeOfSupplyId ='Place of supply is required';
 														// }
 														if(values.changeShippingAddress==true){
-															if(values.shippingAddress =="")  errors.shippingAddress ='Shipping Address is Required';
+															if(values.shippingAddress =="")  errors.shippingAddress ='Shipping address is required';
 														}
 	
 														if(values.changeShippingAddress==true){
-															if(values.shippingCountryId =="")  errors.shippingCountryId ='Country is Required';
+															if(values.shippingCountryId =="")  errors.shippingCountryId ='Country is required';
 														}
 	
 														if(values.changeShippingAddress==true){
-															if(values.shippingStateId =="")  errors.shippingStateId ='State is Required';
+															if(values.shippingStateId =="")  errors.shippingStateId ='State is required';
 														}
 
 														if(values.changeShippingAddress==true){
 															if (values.shippingCountryId == 229 || values.shippingCountryId.value == 229) {
 																if (values.shippingPostZipCode == '')
-																	errors.shippingPostZipCode = 'PO Box Number is Required';
+																	errors.shippingPostZipCode = 'PO box number is required';
 															} else {
 																if (values.shippingPostZipCode == '')
-																	errors.shippingPostZipCode = 'Postal Code is Required';
+																	errors.shippingPostZipCode = 'Postal code is required';
 																else
 																	if (values.shippingPostZipCode.length != 6)
-																		errors.shippingPostZipCode = "Please Enter 6 Digit Postal Zip Code"
+																		errors.shippingPostZipCode = "Please enter 6 digit postal zip code"
 															}}
 															return errors;
 													}}
 													validationSchema={Yup.object().shape({
 														invoice_number: Yup.string().required(
-															'Invoice Number is Required',
+															'Invoice number is required',
 														),
 														contactId: Yup.string().required(
-															'Supplier is Required',
+															'Supplier is required',
 														),
-														term: Yup.string().required('Term is Required'),
-													//	placeOfSupplyId: Yup.string().required('Place of supply is Required'),
+														term: Yup.string().required('Term is required'),
+													//	placeOfSupplyId: Yup.string().required('Place of supply is required'),
 														invoiceDate: Yup.string().required(
-															'Invoice Date is Required',
+															'Invoice date is required',
 														),
 														invoiceDueDate: Yup.string().required(
-															'Invoice Due Date is Required',
+															'Invoice due date is required',
 														),
 														currencyCode: Yup.string().required(
-															'Currency is Required',
+															'Currency is required',
 														),
 														lineItemsString: Yup.array()
 															.required(
@@ -1821,10 +1822,10 @@ class DetailCustomerInvoice extends React.Component {
 															.of(
 																Yup.object().shape({
 																	// description: Yup.string().required(
-																	// 	'Value is Required',
+																	// 	'Value is required',
 																	// ),
 																	quantity: Yup.string()
-																		.required('Value is Required')
+																		.required('Value is required')
 																		.test(
 																			'quantity',
 																			'Quantity should be greater than 0',
@@ -1837,10 +1838,10 @@ class DetailCustomerInvoice extends React.Component {
 																			},
 																		),
 																	unitPrice: Yup.string()
-																		.required('Value is Required')
+																		.required('Value is required')
 																		.test(
 																			'Unit Price',
-																			'Unit Price Should be Greater than 1',
+																			'Unit price should be greater than 1',
 																			(value) => {
 																				if (value > 0) {
 																					return true;
@@ -1850,10 +1851,10 @@ class DetailCustomerInvoice extends React.Component {
 																			},
 																		),
 																	vatCategoryId: Yup.string().required(
-																		'VAT is Required',
+																		'VAT is required',
 																	),
 																	productId: Yup.string().required(
-																		'Product is Required',
+																		'Product is required',
 																	),
 																}),
 															),
@@ -1881,7 +1882,7 @@ class DetailCustomerInvoice extends React.Component {
 															)
 															.test(
 																'fileSize',
-																'*File Size is too large',
+																'*File size is too large',
 																(value) => {
 																	if (
 																		!value ||
@@ -2239,7 +2240,7 @@ class DetailCustomerInvoice extends React.Component {
 																		{props.errors.invoiceDate &&
 																			props.touched.invoiceDate && (
 																				<div className="invalid-feedback">
-																					{props.errors.invoiceDate.includes("nullable()") ? "Invoice Date is Required" :props.errors.invoiceDate}																				</div>
+																					{props.errors.invoiceDate.includes("nullable()") ? "Invoice date is required" :props.errors.invoiceDate}																				</div>
 																			)}
 																	</FormGroup>
 																</Col>
@@ -2274,7 +2275,7 @@ class DetailCustomerInvoice extends React.Component {
 																			{props.errors.invoiceDueDate &&
 																				props.touched.invoiceDueDate && (
 																					<div className="invalid-feedback">
-																						{props.errors.invoiceDate.includes("nullable()") ? "Invoice Date is Required" :props.errors.invoiceDate}																							</div>
+																						{props.errors.invoiceDate.includes("nullable()") ? "Invoice date is required" :props.errors.invoiceDate}																							</div>
 																				)}
 																		</div>
 																	</FormGroup>
@@ -2924,6 +2925,16 @@ class DetailCustomerInvoice extends React.Component {
 																		>
 																			{strings.UNITPRICE}
 																		</TableHeaderColumn>
+																		{this.state.discountEnabled == true &&
+																	<TableHeaderColumn
+																	width="12%"
+																		dataField="discount"
+																		dataFormat={(cell, rows) =>
+																			this.renderDiscount(cell, rows, props)
+																		}
+																	>
+																		{strings.DISCOUNT_TYPE}
+																	</TableHeaderColumn>}
 																		{initValue.total_excise != 0 &&
 																		<TableHeaderColumn
 																	width="10%"
@@ -2941,20 +2952,10 @@ class DetailCustomerInvoice extends React.Component {
 																			placement="right"
 																			target="ExiseTooltip"
 																		>
-																			If Exise Type for a product is Inclusive
-																			then the Excise dropdown will be Disabled
+																			Excise dropdown will be enabled only for the excise products
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn> }
-																	{this.state.discountEnabled == true &&
-																	<TableHeaderColumn
-																	width="12%"
-																		dataField="discount"
-																		dataFormat={(cell, rows) =>
-																			this.renderDiscount(cell, rows, props)
-																		}
-																	>
-																		{strings.DISCOUNT_TYPE}
-																	</TableHeaderColumn>}
+																	
 
 																		<TableHeaderColumn
 																			dataField="vat"
@@ -3384,7 +3385,9 @@ class DetailCustomerInvoice extends React.Component {
 					salesCategory={this.state.salesCategory}
 					purchaseCategory={this.state.purchaseCategory}
 				/>
-			</div></div>
+			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
+			</div>
 		);
 	}
 }

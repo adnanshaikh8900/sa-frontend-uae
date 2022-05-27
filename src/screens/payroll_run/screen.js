@@ -174,9 +174,9 @@ class PayrollRun extends React.Component {
 		 
 		var userValue = user_approver_generater_dropdown_list.length ? user_approver_generater_dropdown_list[0].value : '';
 		var userLabel = user_approver_generater_dropdown_list.length ? user_approver_generater_dropdown_list[0].label : '';
-		if(row.status=="Void")
-		toast.success("Unable to View Void Payroll !")
-		else
+		// if(row.status=="Voided")
+		// toast.success("Unable to View Void Payroll !")
+		// else
 		if (userValue.toString() === row.generatedBy && userLabel === "Payroll Generator") {
 			this.props.history.push('/admin/payroll/payrollrun/updatePayroll', { id: row.id })
 		}
@@ -189,31 +189,32 @@ class PayrollRun extends React.Component {
 				this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
 			}
 			else
-			if ( userLabel === "Admin" && row.status==="Draft") {
+			if ( userLabel === "Admin" && (row.status==="Draft" || row.status==="Rejected")) {
 				this.props.history.push('/admin/payroll/payrollrun/updatePayroll', { id: row.id })
 			}
 			else
 			
-				if ( userLabel === "Admin" && row.status==="Submitted") {
+				if ( userLabel === "Admin" && (row.status==="Submitted" || row.status==="Partially Paid" || row.status==="Approved" || row.status==="Paid"|| row.status==="Voided")) {
 					this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
 				}else
-				if ( userLabel === "Admin" && row.status==="Approved") {
-					this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
-				}
-				else
-				if ( userLabel === "Admin" && row.status==="Paid") {
-					this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
-				}
-				else
-				if ( userLabel === "Admin" && row.status==="Partially Paid") {
-					this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
-				}
-				else
-				if ( userLabel === "Admin" && row.status==="Rejected") {
-					this.props.history.push('/admin/payroll/payrollrun/updatePayroll', { id: row.id })
-				}
-		        else{
-				let list = [...this.state.payroll_employee_list1];
+				// if ( userLabel === "Admin" && row.status==="Approved") {
+				// 	this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
+				// }
+				// else
+				// if ( userLabel === "Admin" && row.status==="Paid") {
+				// 	this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
+				// }
+				// else
+				// if ( userLabel === "Admin" && row.status==="Partially Paid") {
+				// 	this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
+				// }
+				// else
+				// if ( userLabel === "Admin" && row.status==="Rejected") {
+				// 	this.props.history.push('/admin/payroll/payrollrun/updatePayroll', { id: row.id })
+				// }
+				// else
+				{
+				let list = [...this.state.payroll_employee_list1.data];
 				list = list.map((data) => {
 					if (data.id === row.id) {
 						data.hover = true;
@@ -221,7 +222,9 @@ class PayrollRun extends React.Component {
 					return data;
 				});
 				console.log(list, "list")
-				this.setState({ payroll_employee_list1: list })
+				this.setState({ payroll_employee_list1:{...this.state.payroll_employee_list1,...{
+					data:list
+				}} })
 
 				toast.success("This is created by another user , So you can'nt able to Open it !")
 			}			
@@ -415,7 +418,7 @@ class PayrollRun extends React.Component {
 			classname = 'label-sent';
 		}else if (row.status === 'Partially Paid') {
 			classname = 'label-PartiallyPaid';
-		}else if (row.status === 'Void') {
+		}else if (row.status === "Voided") {
 			classname = 'label-closed';
 		}
 		// else {

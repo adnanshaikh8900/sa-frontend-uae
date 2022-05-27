@@ -16,17 +16,13 @@ import {
 import Select from "react-select";
 import {selectCurrencyFactory, selectOptionsFactory} from "utils";
 import { Formik } from "formik";
-
 import DatePicker from "react-datepicker";
 import * as Yup from "yup";
-import { Loader, ConfirmDeleteModal } from "components";
+import { LeavePage, Loader, ConfirmDeleteModal } from "components";
 import { SupplierModal } from "../../sections";
-
 import moment from "moment";
-
 import "react-datepicker/dist/react-datepicker.css";
 import "react-bootstrap-table/dist/react-bootstrap-table-all.min.css";
-
 import "./style.scss";
 import * as PaymentActions from "../../actions";
 import * as DetailPaymentActions from "./actions";
@@ -74,7 +70,8 @@ class DetailPayment extends React.Component {
       openSupplierModal: false,
       selectedSupplier: "",
       contactType: 1,
-      current_payment_id: null
+      current_payment_id: null,
+      disableLeavePage:false
     };
 
     this.regEx = /^[0-9\d]+$/;
@@ -162,9 +159,10 @@ class DetailPayment extends React.Component {
         this.props.history.push("/admin/expense/payment");
       })
       .catch((err) => {
+				this.setState({ createDisabled: false, disableLeavePage:true, loading: false });
         this.props.commonActions.tostifyAlert(
           "error",
-          err && err.data ? err.data.message : 'Something Went Wrong'
+          err && err.data ? err.data.message : 'Payment Update Unuccessfully'
         );
       });
   }
@@ -199,7 +197,7 @@ class DetailPayment extends React.Component {
 			<text>
 			<b>Delete Payments?</b>
 			</text>
-			const message = 'This Payments will be deleted permanently and cannot be recovered. ';
+			const message = 'This payments will be deleted permanently and cannot be recovered. ';
     this.setState({
       dialog: (
         <ConfirmDeleteModal
@@ -296,15 +294,15 @@ class DetailPayment extends React.Component {
                         //     value: Yup.string().required(),
                         //   }),
                         //   invoiceReferenceNo: Yup.string()
-                        //   .required('Reference is Required'),
+                        //   .required('Reference is required'),
                         //   amount: Yup.string()
-                        //   .required('Amount is Required'),
+                        //   .required('Amount is required'),
                         //   payment_date: Yup.string()
-                        //     .required('Payment Date is Required'),
+                        //     .required('Payment Date is required'),
                         //   payment_due_date: Yup.string()
-                        //     .required('Payment Due Date is Required'),
+                        //     .required('Payment Due Date is required'),
                         //   receiptNo: Yup.string()
-                        //     .required('Receipt Number is Required'),
+                        //     .required('Receipt Number is required'),
                         //   supplier: Yup.object().shape({
                         //     label: Yup.string().required(),
                         //     value: Yup.string().required(),
@@ -316,13 +314,13 @@ class DetailPayment extends React.Component {
                         // })
                         // }
                         validationSchema={Yup.object().shape({
-                          supplier: Yup.string().required("Supplier is Required"),
-                          invoiceId: Yup.string().required("Invoice Number is Required"),
-                          payment_date: Yup.date().required("Payment Date is Required"),
-                          currency: Yup.string().required("Currency is Required"),
+                          supplier: Yup.string().required("Supplier is required"),
+                          invoiceId: Yup.string().required("Invoice number is required"),
+                          payment_date: Yup.date().required("Payment date is required"),
+                          currency: Yup.string().required("Currency is required"),
                           invoiceAmount: Yup.string()
-                            .required("Invoice Amount is Required")
-                            .matches(/^[0-9]*$/, "Enter a Valid Amount")
+                            .required("Invoice amount is required")
+                            .matches(/^[0-9]*$/, "Enter a valid amount")
                         })}
                       >
                         {(props) => (
@@ -420,7 +418,7 @@ class DetailPayment extends React.Component {
                                       <Input
                                         // className="form-control"
                                         type="number"
-min="0"
+                                        min="0"
                                         id="invoiceAmount"
                                         name="invoiceAmount"
                                         placeholder={strings.Enter+strings.Amount}
@@ -658,6 +656,7 @@ min="0"
           country_list={this.props.country_list}
         />
       </div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
       </div>
     );
   }

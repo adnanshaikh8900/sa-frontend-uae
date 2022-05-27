@@ -15,33 +15,20 @@ import {
     Form,
     Label,
     Table,
-    UncontrolledTooltip,
 } from 'reactstrap';
 import Select from 'react-select'
-
 import { bindActionCreators } from 'redux'
 import 'react-datepicker/dist/react-datepicker.css'
 import './style.scss'
-
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'react-toastify/dist/ReactToastify.css';
-
-
-import {
-    FormGroup,
-    Button
-} from 'reactstrap'
-
+import { FormGroup, Button } from 'reactstrap'
 import DatePicker from 'react-datepicker'
 import { Formik } from 'formik';
 import * as Yup from "yup";
-import { ImageUploader ,Loader} from 'components';
-import {
-    CommonActions
-} from 'services/global'
-import { selectCurrencyFactory, selectOptionsFactory } from 'utils'
-
-
+import { LeavePage, ImageUploader, Loader} from 'components';
+import { CommonActions } from 'services/global'
+import { selectOptionsFactory } from 'utils'
 import 'react-datepicker/dist/react-datepicker.css'
 import PhoneInput  from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css'
@@ -55,7 +42,6 @@ import LocalizedStrings from 'react-localization';
 import * as DetailEmployeePersonalAction from '../update_emp_personal/actions';
 import * as DetailEmployeeEmployementAction from '../update_emp_employemet/actions';
 import * as DetailEmployeeBankAction from '../update_emp_bank/actions';
-
 
 const mapStateToProps = (state) => {
     return ({
@@ -213,6 +199,7 @@ class CreateEmployeePayroll extends React.Component {
             checkmobileNumberParam1:false,
             checkmobileNumberParam2:false,
             loadingMsg:"Loading...",
+			disableLeavePage:false,
             ctcTypeOption:{label:"ANNUALLY",value:1},
             ctcType:"ANNUALLY",
             ctcTypeList:[
@@ -393,7 +380,7 @@ existForAccountNumber = (value) => {
     }
 
     handleSubmitForSalary = (data, resetForm) => {
-        this.setState({ disabled: true });
+        this.setState({ disabled: true, disableLeavePage:true });
         const {
             employee,
             CTC
@@ -485,7 +472,7 @@ existForAccountNumber = (value) => {
             swiftCode != null ? swiftCode : '',
         )
         if(this.state.selectedData.employeeBankDetailsId === null || this.state.selectedData.employeeBankDetailsId === ""){
-            this.setState({ loading:true, loadingMsg:"Creating Finacial Details..."});
+            // this.setState({ loading:true, loadingMsg:"Creating Finacial Details..."});
             this.props.createPayrollEmployeeActions
             .saveEmployeeBankDetails(formData)
             .then((res) => {
@@ -497,7 +484,7 @@ existForAccountNumber = (value) => {
                     this.toggle(0, '4')
                     this.getSalaryComponentByEmployeeId();
                     this.renderActionForState(this.state.employeeid)
-                    this.setState({ loading:false,});
+                    // this.setState({ loading:false,});
                 }
             }).catch((err) => {
 
@@ -507,7 +494,7 @@ existForAccountNumber = (value) => {
                      )
             })
         }else{
-            this.setState({ loading:true, loadingMsg:"Updating Employee..."});
+            // this.setState({ loading:true, loadingMsg:"Updating Employee..."});
             this.props.detailEmployeeBankAction.updateEmployeeBank(formData).then((res) => {
                 if (res.status === 200) {
                     this.props.commonActions.tostifyAlert(
@@ -517,7 +504,7 @@ existForAccountNumber = (value) => {
                     this.toggle(0, '4')
                     this.getSalaryComponentByEmployeeId();
                     this.renderActionForState(this.state.employeeid)
-                    this.setState({ loading:false,});
+                    // this.setState({ loading:false,});
                 }
             }).catch((err) => {
                 this.props.commonActions.tostifyAlert('error',  err.data.message ? err.data.message :'Updated Unssccessfully')
@@ -605,7 +592,7 @@ existForAccountNumber = (value) => {
                      )
             })
         }else{
-            this.setState({ loading:true, loadingMsg:"Updating Employement Details..."});
+            // this.setState({ loading:true, loadingMsg:"Updating Employement Details..."});
             formData.append('id', this.state.selectedData.employmentId);
             this.props.detailEmployeeEmployementAction.updateEmployment(formData).then((res) => {
                 if (res.status === 200) {
@@ -615,7 +602,7 @@ existForAccountNumber = (value) => {
                          )
                     this.toggle(0, '3')
                     this.renderActionForState(this.state.employeeid)
-                    this.setState({ loading:false,});
+                    // this.setState({ loading:false,});
                 }
             }).catch((err) => {
                 this.props.commonActions.tostifyAlert(
@@ -628,8 +615,8 @@ existForAccountNumber = (value) => {
     }
 
     handleSubmit = (data, resetForm) => {
-        this.setState({ loading:true, loadingMsg:"Creating Employee Basic Details..."});
-        this.setState({ disabled: true });
+        // this.setState({ loading:true, loadingMsg:"Creating Employee Basic Details..."});
+        this.setState({ disabled: true, disableLeavePage:true });
         const {
             firstName,
             middleName,
@@ -777,7 +764,7 @@ existForAccountNumber = (value) => {
                     })
                     if(this.props.location && this.props.location.state && this.props.location.state.goto && this.props.location.state.goto==="Expense"){                    
                             this.props.history.push(`/admin/expense/expense/create`)  
-                            this.setState({ loading:false,});                     
+                            // this.setState({ loading:false,});                     
                     }
                     this.toggle(0, '2')
 
@@ -799,7 +786,7 @@ existForAccountNumber = (value) => {
             })
         }
         else{
-            this.setState({ loading:true, loadingMsg:"Updating Employee Details..."});
+            // this.setState({ loading:true, loadingMsg:"Updating Employee Details..."});
             this.props.detailEmployeePersonalAction.updateEmployeePersonal(formData).then((res) => {
                 if (res.status === 200) {
                     this.props.commonActions.tostifyAlert(
@@ -808,7 +795,7 @@ existForAccountNumber = (value) => {
                         )
                     this.toggle(0, '2')
                     this.renderActionForState(this.state.employeeid)
-                    this.setState({ loading:false,});   
+                    // this.setState({ loading:false,});   
                     
                 }
             }).catch((err) => {
@@ -3674,6 +3661,8 @@ existForAccountNumber = (value) => {
                     selectedData={this.state.selectedData}
 
                 />
+                
+			{this.state.disableLeavePage ?"":<LeavePage/>}
             </div>
         );
     }

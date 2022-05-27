@@ -13,28 +13,17 @@ import {
     Row,
     Col
 } from 'reactstrap'
-import { Loader, ConfirmDeleteModal, ImageUploader } from 'components'
-import Select from 'react-select'
-import {
-    CommonActions
-} from 'services/global'
+import { Loader, LeavePage } from 'components'
+import { CommonActions } from 'services/global'
 import * as Yup from 'yup';
 import 'react-toastify/dist/ReactToastify.css'
 import DatePicker from 'react-datepicker'
-
 import * as DetailEmployeeEmployementAction from './actions';
 import * as CreatePayrollEmployeeActions from '../create/actions'
-
-
 import { Formik } from 'formik';
 import { data } from '../../../Language/index'
-import LocalizedStrings from 'react-localization';
-  
-import { selectOptionsFactory } from 'utils'
+import LocalizedStrings from 'react-localization';  
 import moment from 'moment'
-
-
-
 
 const mapStateToProps = (state) => {
     return ({
@@ -63,6 +52,7 @@ class UpdateEmployeeEmployment extends React.Component {
             gender: '',
             bloodGroup: '',
             loadingMsg:"Loading...",
+			disableLeavePage:false,
             current_employee_id: null
         }
         this.regExAlpha = /^[a-zA-Z ]+$/;
@@ -649,6 +639,7 @@ class UpdateEmployeeEmployment extends React.Component {
 
                 </div>
             </div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
      </div>
         )
     }

@@ -18,7 +18,6 @@ import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import DatePicker from 'react-datepicker';
 import { Formik, Field } from 'formik';
-import { Currency } from 'components';
 import * as Yup from 'yup';
 import * as SupplierInvoiceCreateActions from './actions';
 import * as QuotationCreateAction from './actions'
@@ -27,12 +26,10 @@ import * as SupplierInvoiceActions from '../../../supplier_invoice/actions'
 import * as ProductActions from '../../../product/actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 import * as CustomerInvoiceActions from '../../../customer_invoice/actions';
-
 import { CustomerModal } from '../../../customer_invoice/sections/index';
 import { ProductModal } from '../../../customer_invoice/sections';
 import Switch from "react-switch";
-import {  ImageUploader, Loader } from 'components';
-
+import { LeavePage, Loader } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
@@ -181,6 +178,7 @@ class CreateQuotation extends React.Component {
 			exist: false,
 			param:false,
 			loadingMsg:"Loading...",
+			disableLeavePage:false,
 			vat_list:[
 				{
 					"id": 1,
@@ -1448,7 +1446,7 @@ discountType = (row) =>
 	};
 
 	handleSubmit = (data, resetForm) => {
-		this.setState({ disabled: true });
+		this.setState({ disabled: true, disableLeavePage:true });
 		const {
 			quotaionExpiration,
 			currency,
@@ -1797,7 +1795,7 @@ discountType = (row) =>
 		this.props.quotationCreateAction
 			.checkValidation(data)
 			.then((response) => {
-				if (response.data === 'Quotation Number Already Exists') {
+				if (response.data === 'Quotation number already exists') {
 					this.setState(
 						{
 							exist: true,
@@ -1898,23 +1896,23 @@ discountType = (row) =>
 													let errors = {};
 													if (this.state.exist === true) {
 														errors.quotation_Number =
-															'Quotation Number Already Exists';
+															'Quotation number already exists';
 													}
 													if (values.quotation_Number==='') {
-														errors.quotation_Number = 'Quotation Number is Required';
+														errors.quotation_Number = 'Quotation number is required';
 													}
 													if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
 													||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
 													||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
 											    	{
 														if (!values.placeOfSupplyId) 
-													       	errors.placeOfSupplyId ='Place of Supply is Required';
-														if (values.placeOfSupplyId &&
-															(values.placeOfSupplyId=="" ||
-															(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")
-															)
-														   ) 
-													         errors.placeOfSupplyId ='Place of Supply is Required';
+														errors.placeOfSupplyId ='Place of supply is required';
+												 if (values.placeOfSupplyId &&
+													 (values.placeOfSupplyId=="" ||
+													 (values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select place of supply")
+													 )
+													) 
+													  errors.placeOfSupplyId ='Place of supply is required';
 													
 												   }
 													if (param === true) {
@@ -1926,18 +1924,18 @@ discountType = (row) =>
 												validationSchema={Yup.object().shape(
 													{
 														quotation_Number: Yup.string().required(
-														'Invoice Number is Required',
+														'Invoice number is required',
 													),
 														customerId: Yup.string().required(
-														'Customer is Required',
+														'Customer is required',
 													),
-														// placeOfSupplyId: Yup.string().required('Place of Supply is Required'),
+														// placeOfSupplyId: Yup.string().required('Place of supply is required'),
 													
 													// poApproveDate: Yup.string().required(
-													// 	'Order Date is Required',
+													// 	'Order date is required',
 													// ),
 													quotaionExpiration: Yup.string().required(
-														'Order Due Date is Required'
+														'Order due date is required'
 													),
 													lineItemsString: Yup.array()
 														.required(
@@ -1946,7 +1944,7 @@ discountType = (row) =>
 														.of(
 															Yup.object().shape({
 																quantity: Yup.string()
-																	.required('Value is Required')
+																	.required('Value is required')
 																	.test(
 																		'quantity',
 																		'Quantity should be greater than 0',
@@ -1959,10 +1957,10 @@ discountType = (row) =>
 																		},
 																	),
 																unitPrice: Yup.string()
-																	.required('Value is Required')
+																	.required('Value is required')
 																	.test(
 																		'Unit Price',
-																		'Unit Price Should be Greater than 1',
+																		'Unit price should be greater than 1',
 																		(value) => {
 																			if (value > 0) {
 																				return true;
@@ -1972,17 +1970,17 @@ discountType = (row) =>
 																		},
 																	),
 																vatCategoryId: Yup.string().required(
- 																	'VAT is Required',
+ 																	'VAT is required',
 																),
 																productId: Yup.string().required(
-																	'Product is Required',
+																	'Product is required',
 																),
 															}),
 														),
 														attachmentFile: Yup.mixed()
 														.test(
 															'fileType',
-															'*Unsupported File Format',
+															'*Unsupported file format',
 															(value) => {
 																value &&
 																	this.setState({
@@ -2001,7 +1999,7 @@ discountType = (row) =>
 														)
 														.test(
 															'fileSize',
-															'*File Size is too large',
+															'*File size is too large',
 															(value) => {
 																if (
 																	!value ||
@@ -2305,7 +2303,7 @@ discountType = (row) =>
 																		props.touched.quotaionExpiration && (
 																			<div className="invalid-feedback">
 																				{/* {props.errors.quotaionExpiration} */}
-																				{props.errors.quotaionExpiration.includes("nullable()") ? "Date is Required" :props.errors.quotaionExpiration}
+																				{props.errors.quotaionExpiration.includes("nullable()") ? "Date is required" :props.errors.quotaionExpiration}
 																			</div>
 																		)}
 																	
@@ -2532,6 +2530,16 @@ discountType = (row) =>
 																			service
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn>
+																	{this.state.discountEnabled == true &&
+																	<TableHeaderColumn
+																		width="12%"
+																		dataField="discount"
+																		dataFormat={(cell, rows) =>
+																			this.renderDiscount(cell, rows, props)
+																		}
+																	>
+																	{strings.DisCount}
+																	</TableHeaderColumn>}
 																	{initValue.total_excise != 0 &&
 																	<TableHeaderColumn
 																	width="10%"
@@ -2549,20 +2557,10 @@ discountType = (row) =>
 																			placement="right"
 																			target="ExiseTooltip"
 																		>
-																			If Exise Type for a product is Inclusive
-																			then the Excise dropdown will be Disabled
+																			Excise dropdown will be enabled only for the excise products
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn>  }
-																	{this.state.discountEnabled == true &&
-																	<TableHeaderColumn
-																		width="12%"
-																		dataField="discount"
-																		dataFormat={(cell, rows) =>
-																			this.renderDiscount(cell, rows, props)
-																		}
-																	>
-																	{strings.DisCount}
-																	</TableHeaderColumn>}
+																
 																	<TableHeaderColumn
 																		width="13%"
 																		dataField="vat"
@@ -3027,6 +3025,7 @@ discountType = (row) =>
 					
 				/> */}
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

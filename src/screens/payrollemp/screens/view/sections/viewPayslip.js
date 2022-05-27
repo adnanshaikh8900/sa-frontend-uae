@@ -5,28 +5,20 @@ import {
 	Button,
 	Row,
 	Col,
-
 	Modal,
-
 	ModalBody,
 	ModalFooter,
-
 	CardBody,
 	Table,
-
 } from 'reactstrap';
-import { toInteger, upperCase, upperFirst } from 'lodash';
-
-
+import { upperCase } from 'lodash';
 import { toast } from 'react-toastify';
 import { data } from '../../../../Language/index'
 import LocalizedStrings from 'react-localization';
-
 import '../style.scss';
 import { PDFExport } from '@progress/kendo-react-pdf';
 import moment from 'moment';
 import { Currency } from 'components';
-
 
 const mapStateToProps = (state) => {
 
@@ -128,13 +120,24 @@ class PaySlipModal extends React.Component {
 		this.pdfExportComponent.save();
 	};
 
+	companyMobileNumber = (number) => {
+		let number1 = number.split(",")
+		if (number1.length != 0)
+			number1 = number1[0];
+		return number1
+	}
+
+	renderPayperiod = (payPeriod) => {
+		let dateArr=payPeriod ? payPeriod.split("-"):[];
+				let  startDate= moment(dateArr[0]).format('DD-MM-YYYY')
+				let	 endDate=moment(dateArr[1]).format('DD-MM-YYYY')
+		
+		return(<>{startDate} <b> To </b>{endDate}</>) ;
+	};
+
 	render() {
 		strings.setLanguage(this.state.language);
-		const { openModal, closeModal, id, companyData ,bankDetails,salaryDate,currencyData} = this.props;
-		const { initValue, contentState, data, supplierId } = this.state;
-
-		let tmpSupplier_list = []
-console.log(this.state.Variable,"Variable")
+		const { openModal, closeModal, id, companyData,empData ,bankDetails,salaryDate,currencyData} = this.props;
 
 		return (
 			<div className="contact-modal-screen">
@@ -189,7 +192,7 @@ console.log(this.state.Variable,"Variable")
 											<PDFExport
 												ref={(component) => (this.pdfExportComponent = component)}
 												scale={0.8}
-												paperSize="A4"
+												paperSize="A3"
 												fileName={"Payslip of "+salaryDate+".pdf"}
 											>
 											
@@ -203,8 +206,19 @@ console.log(this.state.Variable,"Variable")
 														}}
 													>
 														
-															<div >
-																<img
+															<div
+																style={{
+																	width: '100%',
+																	display: 'flex',
+																	// border:'1px solid',
+																	// padding:'7px',borderColor:'#c8ced3'
+																}}
+															>
+																<div style={{ width: '20%', marginTop: '3.5rem' }}>
+																	<div className="companyDetails"
+																	style={{textAlign:" left"}}
+																	>
+																	<img
 																	src={
 																		companyData &&
 																			companyData.company &&
@@ -217,17 +231,47 @@ console.log(this.state.Variable,"Variable")
 																	alt=""
 																	style={{ width: '200px' }}
 																/>
-															</div>
-													
+
+								</div>
+
+							</div>
+							<div
+								style={{
+									width: '80%',
+									display: 'flex',
+									flexDirection: 'column',
+									justifyContent: 'left',
+								}}
+							>
+								<div
+								className='mr-1'
+								style={{
+									// width: '97%',
+									textAlign: 'right',
+
+								}}>
+									<div style={{ marginTop: '0.5rem' }}>
+									<div className="mb-1 ml-2" style={{     fontSize: "1.75rem"}} ><b>	{strings.Payslip}</b> ( {this.state.selectedData.salaryMonth+" )"}</div><br/>
+										<div className="mb-1 ml-2" style={{fontSize:"22px"}}><b>{companyData.company.companyName}</b></div>
+										<div className="mb-1 ml-2">{companyData.company.companyAddressLine1}</div>
+										<div className="mb-1 ml-2">{companyData.company.companyAddressLine2}</div>
+										{companyData.company.companyCountryCode.countryCode==229 ?
+																	(strings.POBox+" : "):
+																	""}  {companyData.company.companyPoBoxNumber} ,&nbsp;
+										{companyData &&(companyData.company.companyStateCode.stateName ? companyData
+											.company.companyStateCode.stateName + " , " : "")}
+										{companyData &&(companyData.company.companyCountryCode.countryName ? companyData.company.companyCountryCode.countryName : "")}
+										{/* {companyData.company.companyRegistrationNumber && (<div className="mb-1 ml-2">{strings.CompanyRegistrationNo} : {companyData.company.companyRegistrationNumber}</div>)}
+										{companyData.company.isRegisteredVat==true&&(<div className="mb-1 ml-2">{strings.VATRegistrationNo} : {companyData.company.vatNumber}</div>)}
+										<div className="mb-1 ml-2">{strings.MobileNumber} : {this.companyMobileNumber(companyData.company.phoneNumber ? "+" + companyData.company.phoneNumber : '')}</div>
+										{companyData.company.emailAddress&&(<div className="mb-1 ml-2">Email : {companyData.company.emailAddress}</div>)} */}
+									</div>
+		
+
+								</div>
+							</div>
+						</div>
 														
-														
-														<div className="text-center"
-																style={{
-																
-																}}
-															>
-														<h5>	<b>	{strings.Payslip}</b> ( {this.state.selectedData.salaryMonth} )
-														</h5>	</div>
 
 														</div>
 													
@@ -251,19 +295,21 @@ console.log(this.state.Variable,"Variable")
 																}}
 															>
 																
-															
-																	<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.EmployeeName} </Col>
-																		<Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.employeename !== '' ? this.state.selectedData.employeename : ('-')}</Col></Row>
-
-																	<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.Designation} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.designation !== '' ? this.state.selectedData.designation : ('-')}</Col></Row>
+																<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.employee_unique_id} </Col><Col className='mt-2 mb-2'>: &nbsp;{empData.employeeCode !== '' ? empData.employeeCode : ('-')}</Col>
+																</Row>
+																<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.EmployeeName} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.employeename !== '' ? this.state.selectedData.employeename : ('-')}</Col></Row>
+																<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.Designation} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.designation !== '' ? this.state.selectedData.designation : ('-')}</Col></Row>
 
 																	{/* <Row> <Col className='mt-2 mb-2'>Personal Email  </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.email ? this.state.selectedData.email : ('-')}</Col></Row>				 */}
 
-																	<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.DateOfJoining}</Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.dateOfJoining !== '' ?  moment(this.state.selectedData.dateOfJoining).format("DD/MM/YYYY")  : ('-')}</Col></Row>
-
-																	<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.PayPeriod} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.salaryMonth !== '' ? this.state.selectedData.salaryMonth : ('-')}</Col></Row>
-																	<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.PayDate} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.payDate !== '' ? moment(this.state.selectedData.payDate).format("DD/MM/YYYY") : ('-')}</Col></Row>
-															
+																	<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.DateOfJoining}</Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.dateOfJoining !== '' ?  moment(this.state.selectedData.dateOfJoining).format("DD/MM/YYYY")  : ('-')}</Col>
+																	</Row>
+																	<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.PayPeriod} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.payPeriod !== '' ? this.renderPayperiod(this.state.selectedData.payPeriod) : ('-')}</Col>
+																	</Row>
+																	<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.PayDate} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.payDate !== '' ? moment(this.state.selectedData.payDate).format("DD/MM/YYYY") : ('-')}</Col>
+																	</Row>
+																	<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.LOPDays} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.lopDays !== '' ? this.state.selectedData.lopDays : ('-')}</Col>
+																	</Row>
 															</div>
 														</Col>
 														<Col style={{ width: '185%',border: '1px solid', borderColor: '#c8ced3' }}>

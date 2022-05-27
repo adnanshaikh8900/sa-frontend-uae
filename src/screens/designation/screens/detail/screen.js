@@ -13,26 +13,16 @@ import {
   Input,
   Label
 } from 'reactstrap'
-import Select from 'react-select'
-import DatePicker from 'react-datepicker'
 import { Formik } from 'formik';
 import * as Yup from "yup";
-import moment from 'moment'
-
-import { Loader, ConfirmDeleteModal } from 'components'
-
-import {
-  CommonActions
-} from 'services/global'
-import {selectCurrencyFactory, selectOptionsFactory} from 'utils'
+import { Loader, LeavePage, ConfirmDeleteModal } from 'components'
+import { CommonActions } from 'services/global'
 import * as EmployeeActions from '../../actions';
 import * as DesignationDetailActions from './actions';
-
 import 'react-datepicker/dist/react-datepicker.css'
 import './style.scss'
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-
 
 const mapStateToProps = (state) => {
   return ({
@@ -54,6 +44,7 @@ class DetailDesignation extends React.Component {
     this.state = {
       language: window['localStorage'].getItem('language'), 
       loading: true,
+			disableLeavePage:false,
       initValue: {},
       current_salary_role_id: null,
       dialog: false,
@@ -106,6 +97,7 @@ class DetailDesignation extends React.Component {
   //   })
   // }
   handleSubmit = (data) => {
+    this.setState({ disableLeavePage:true });
 		const { current_salary_role_id} = this.state;
 		const {
       designationName,
@@ -209,9 +201,9 @@ class DetailDesignation extends React.Component {
                             }}
                             validationSchema={Yup.object().shape({
                               designationId:Yup.string()
-                              .required("Designation Name is Required"),
+                              .required("Designation name is required"),
                               designationName: Yup.string()
-                                .required("Designation Name is Required"),
+                                .required("Designation name is required"),
                             
                             })}
                           >
@@ -310,6 +302,7 @@ class DetailDesignation extends React.Component {
           </Row>
         </div>
       </div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
       </div>
     )
   }

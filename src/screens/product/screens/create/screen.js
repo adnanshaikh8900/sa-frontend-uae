@@ -481,21 +481,21 @@ try {
 												validate={(values) => {
 													let errors = {};
 													if (!values.productName) {
-														errors.productName = 'Product Name Required';
+														errors.productName = 'Product name Required';
 													}
 													if (this.state.exist === true) {
 														errors.productName =
-															'Product Name Already Exist';
+															'Product name already Exist';
 													}
 													if (this.state.ProductExist === true) {
 														errors.productCode =
-															'Product Code Already Exist';
+															'Product code already exist';
 													}
 													if (values.productName==='') {
-														errors.productName = 'Product Name is Required';
+														errors.productName = 'Product name is required';
 													}
 													if (values.productCode==='') {
-														errors.productCode = 'Product Code is Required';
+														errors.productCode = 'Product code is required';
 													}
 													// if (values.inventoryReorderLevel > values.inventoryQty)
 													// {
@@ -528,20 +528,20 @@ try {
 														// }														
 														if(values.inventoryPurchasePrice ==='')
 														errors.inventoryPurchasePrice = 
-														'Inventory Purchase Price is Required';
+														'Inventory purchase price is required';
 
 														// if(values.inventoryReorderLevel ==='')
 														// errors.inventoryReorderLevel = 
-														// 'Inventory Reorder Level is Required';
+														// 'Inventory reorder level is required';
 
 														if(values.inventoryQty ==='')
 														errors.inventoryQty = 
-														'Inventory Quantity is Required';
+														'Inventory quantity is required';
 														
 													}
 
 													if(this.state.exciseTaxCheck===true && values.exciseTaxId=='' ){
-														errors.exciseTaxId = 'Excise Tax is Required';
+														errors.exciseTaxId = 'Excise tax is required';
 													}
 													return errors;
 												}}
@@ -549,13 +549,13 @@ try {
 												validationSchema={
 													Yup.object().shape({
 													// isActive : Yup.boolean()
-													// .required('status is Required') , 
+													// .required('status is required') , 
 													purchaseUnitPrice: Yup.string().when(
 														'productPriceType',
 														{
 															is: (value) => value.includes('PURCHASE'),
 															then: Yup.string().required(
-																'Purchase Price is Required',
+																'Purchase price is required',
 															),
 															otherwise: Yup.string(),
 														},
@@ -565,7 +565,7 @@ try {
 														{
 															is: (value) => value.includes('PURCHASE'),
 															then: Yup.string().required(
-																'Purchase Category is Required',
+																'Purchase category is required',
 															),
 															otherwise: Yup.string(),
 														},
@@ -575,7 +575,7 @@ try {
 														{
 															is: (value) => value.includes('SALES'),
 															then: Yup.string().required(
-																'Selling Category is Required',
+																'Selling category is required',
 															),
 															otherwise: Yup.string(),
 														},
@@ -585,19 +585,19 @@ try {
 														{
 															is: (value) => value.includes('SALES'),
 															then: Yup.string().required(
-																'Selling Price is Required',
+																'Selling price is required',
 															),
 															otherwise: Yup.string(),
 														},
 													),
 													productPriceType: Yup.string().required(
-														'At least one Selling type is Required',
+														'At least one selling type is required',
 													),
 													productCode: Yup.string().required(
-														'Product code is Required',
+														'Product code is required',
 													),
 													vatCategoryId: Yup.string()
-														.required('VAT Category is Required')
+														.required('VAT category is required')
 														.nullable(),
 												})}
 											>

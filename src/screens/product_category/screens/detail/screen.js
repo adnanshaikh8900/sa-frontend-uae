@@ -206,15 +206,15 @@ class DetailProductCategory extends React.Component {
                             }}
                           validationSchema={Yup.object().shape({
                             productCategoryName: Yup.string()
-                              .required("Product Category Name is Required"),
+                              .required("Product category name is required"),
                               productCategoryCode: Yup.string()
-                              .required("Code is Required")
+                              .required("Code is required")
                           })}
                           validate={(values) => {
                             let errors = {};
                             if (!values.productCategoryName) {
                               errors.productCategoryName =
-                                'Product Category Name is Required';
+                                'Product category name is required';
                             }
                             
                             let check=false;
@@ -232,12 +232,12 @@ class DetailProductCategory extends React.Component {
                                 && 
                                !(this.state.productCategoryCode===values.productCategoryCode)){
                               errors.productCategoryCode =
-                                'Product Category Code Already Exists';
+                                'Product category code already exists';
                             }
                             
                             if (!values.productCategoryCode ) {
                               errors.productCategoryCode =
-                                'Product Category Code is Required';
+                                'Product category code is required';
                             }
                             return errors;
                           }}

@@ -908,26 +908,26 @@ renderName=(cell,row)=>{
 														// 	'Purchase price cannot be greater than Sales price';
 														// }
 														if(this.state.exciseTaxCheck===true && values.exciseTaxId=='' ){
-															errors.exciseTaxId = 'Excise Tax is Required';
+															errors.exciseTaxId = 'Excise tax is required';
 														}
 														if (this.state.ProductExist === true) {
 															errors.productCode =
-																'Product Code Already Exist';
+																'Product code already exist';
 														}
 														return errors;
 													}}
 													validationSchema={Yup.object().shape({
 													// 	isActive : Yup.string()
-													// .required('status is Required') ,
+													// .required('status is required') ,
 														productName: Yup.string().required(
-															'Product Name is Required',
+															'Product name is required',
 														),
 														purchaseUnitPrice: Yup.string().when(
 															'productPriceType',
 															{
 																is: (value) => value.includes('PURCHASE'),
 																then: Yup.string().required(
-																	'Purchase Price is Required',
+																	'Purchase price is required',
 																),
 																otherwise: Yup.string(),
 															},
@@ -937,7 +937,7 @@ renderName=(cell,row)=>{
 															{
 																is: (value) => value.includes('PURCHASE'),
 																then: Yup.string().required(
-																	'Purchase Category is Required',
+																	'Purchase category is required',
 																),
 																otherwise: Yup.string(),
 															},
@@ -947,7 +947,7 @@ renderName=(cell,row)=>{
 															{
 																is: (value) => value.includes('SALES'),
 																then: Yup.string().required(
-																	'Selling Category is Required',
+																	'Selling category is required',
 																),
 																otherwise: Yup.string(),
 															},
@@ -957,19 +957,19 @@ renderName=(cell,row)=>{
 															{
 																is: (value) => value.includes('SALES'),
 																then: Yup.string().required(
-																	'Selling Price is Required',
+																	'Selling price is required',
 																),
 																otherwise: Yup.string(),
 															},
 														),
 														productPriceType: Yup.string().required(
-															'At Least One Selling Type is Required',
+															'At least one selling Type is required',
 														),
 														productCode: Yup.string().required(
-															'Product Code is Required',
+															'Product code is required',
 														),
 														vatCategoryId: Yup.string()
-															.required('VAT Category is Required')
+															.required('VAT category is required')
 															.nullable(),
 													})}
 												>

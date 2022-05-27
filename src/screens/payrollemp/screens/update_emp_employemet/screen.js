@@ -262,19 +262,19 @@ class UpdateEmployeeEmployment extends React.Component {
                                                     }}
                                                     validationSchema={Yup.object().shape({
                                                         employeeCode: Yup.string()
-                                                            .required("Employee Code is Required"),
+                                                            .required("Employee code is required"),
                                                         //     salaryRoleId: Yup.string()
-                                                        // .required("salary Role is Required"),
+                                                        // .required("salary role is required"),
                                             
                                                         dateOfJoining: Yup.date()
-                                                            .required('Date of Joining is Required')                   
+                                                            .required('Date of joining is required')                   
                                                     })}
                                                     validate={(values) => {
                                                         let errors = {};
                                                          
                                                         if (exist === true  && values.employeeCode!="") {
                                                             errors.employeeCode =
-                                                            'Employee Code Number Already Exists';
+                                                            'Employee code number already exists';
                                                         }
                                                         return errors;
 

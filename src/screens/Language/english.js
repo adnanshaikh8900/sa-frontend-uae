@@ -245,7 +245,6 @@ Relationship2:"Relationship 2",
 
       //Expenses
       IsReverseCharge:"Is Reverse Charge",
-      UnitPrice:"UNIT PRICE",
       ExpenseNumber:"Expense Number",
       InclusiveVAT:"Inclusive VAT",
       ExclusiveVAT:"Exclusive VAT",

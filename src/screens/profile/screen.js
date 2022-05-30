@@ -19,15 +19,8 @@ import {
 	NavLink,
 } from 'reactstrap';
 import Select from 'react-select';
-// import ImagesUploader from 'react-images-uploader'
-import { Loader, ImageUploader } from 'components';
-import {
-	selectOptionsFactory,
-	cryptoService,
-	selectCurrencyFactory,
-	api,
-} from 'utils';
-
+import { LeavePage, Loader, ImageUploader } from 'components';
+import { selectOptionsFactory, cryptoService, selectCurrencyFactory, api,} from 'utils';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import { Formik } from 'formik';
@@ -36,11 +29,9 @@ import * as ProfileActions from './actions';
 import { CommonActions, AuthActions } from 'services/global';
 import './style.scss';
 import { upperFirst } from 'lodash-es';
-
 import 'react-datepicker/dist/react-datepicker.css';
 // import 'react-images-uploader/styles.css'
 // import 'react-images-uploader/font.css'
-
 import './style.scss';
 import PhoneInput  from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css'
@@ -148,7 +139,8 @@ class Profile extends React.Component {
 				companyPostZipCode: '',
 				companyPoBoxNumber: '',
 				companyCountryCode: 229,
-				loadingMsg:"Loading..."
+				loadingMsg:"Loading...",
+				disableLeavePage:false
 			},
 			timezone: [],
 		};
@@ -331,7 +323,7 @@ class Profile extends React.Component {
 		// if (currentPassword.length > 0) {
 		// 	formData.append('currentPassword ', currentPassword);
 		// }
-		{this.setState({ loading:true, loadingMsg:"Updating Users Profile"})} 
+		{this.setState({ loading:true, disableLeavePage:true, loadingMsg:"Updating Users Profile"})} 
 		this.props.profileActions
 			.updateUser(formData)
 			.then((res) => {
@@ -878,29 +870,29 @@ class Profile extends React.Component {
 																}}
 																validationSchema={Yup.object().shape({
 																	firstName: Yup.string().required(
-																		'First Name is Required',
+																		'First name is required',
 																	),
 																	lastName: Yup.string().required(
-																		'Last Name is Required',
+																		'Last name is required',
 																	),
 																	email: Yup.string()
-																		.required('Email is Required')
+																		.required('Email is required')
 																		.email('Invalid Email'),
 																	roleId: Yup.string().required(
-																		'Role is Required',
+																		'Role is required',
 																	),
 																	timezone: Yup.string().required(
-																		'Time Zone is Required',
+																		'Time zone is required',
 																	),
 																	// password: Yup.string()
-																	// 	 .required("Password is Required")
-																	// 	// .min(8, "Password Too Short")
+																	// 	 .required("Password is required")
+																	// 	// .min(8, "Password too Short")
 																	// 	.matches(
 																	// 		/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
 																	// 		'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character',
 																	// 	),
 																	// confirmPassword: Yup.string()
-																	// 	 .required('Confirm Password is Required')
+																	// 	 .required('Confirm password is required')
 																	// 	.oneOf(
 																	// 		[Yup.ref('password'), null],
 																	// 		'Passwords must match',
@@ -1430,9 +1422,9 @@ class Profile extends React.Component {
 																}}
 															// validationSchema={Yup.object().shape({
 															//   firstName: Yup.()
-															//     .required("First Name is Required"),
+															//     .required("First name is required"),
 															//   lastName: Yup.()
-															//     .required("Last Name is Required"),
+															//     .required("Last name is required"),
 															// })}
 															validate={(values) => {
 																let errors = {};
@@ -1446,17 +1438,17 @@ class Profile extends React.Component {
 			
 															validationSchema={Yup.object().shape({
 																companyName: Yup.string().required(
-																	'Company Name is Required',
+																	'Company name is required',
 																),
 																companyRegistrationNumber: Yup.string().required(
-																	'Company Registration Number is Required',
+																	'Company registration number is required',
 																),
 																vatRegistrationNumber:Yup.string().when(
 																	'isRegisteredVat',
 																	{
 																		is: (value) => value === true,
 																		then: Yup.string().required(
-																			'Tax Registration Number is Required',
+																			'Tax registration number is required',
 																		)
 																		.test(
 																			'vatRegistrationNumber',
@@ -1473,38 +1465,38 @@ class Profile extends React.Component {
 																	},
 																),	
 																emailAddress: Yup.string()
-																	// .required('Email is Required')
+																	// .required('Email is required')
 																	.email('Invalid Email'),
 																companyTypeCode: Yup.string().required(
-																	'Company/Business Type is Required',
+																	'Company / business type is required',
 																),
 																phoneNumber: Yup.string().required(
-																	'Mobile Number is Required',
+																	'Mobile number is required',
 																),
 																companyAddressLine1: Yup.string().required(
-																	'Company Address Line 1 is Required',
+																	'Company address line 1 is required',
 																),
 																// companyAddressLine2: Yup.string().required(
-																// 	'Company Address Line 2 is Required',
+																// 	'Company address line 2 is required',
 																// ),
 																// companyAddressLine3: Yup.string().required(
-																// 	'Company Address Line 3 is Required',
+																// 	'Company Address Line 3 is required',
 																// ),
 																companyCountryCode: Yup.string().required(
-																	'Country is Required',
+																	'Country is required',
 																)
 																.nullable(),
 																companyStateCode: Yup.string().required(
-																	'State is Required',
+																	'State is required',
 																),
 																// companyCity: Yup.string().required(
-																// 	'City is Required',
+																// 	'City is required',
 																// ),
 																companyPoBoxNumber: Yup.string().required(
-																	'PO Box Number is Required',
+																	'PO box number is required',
 																),
 																// companyPostZipCode: Yup.string().required(
-																// 	'Post Zip Code is Required',
+																// 	'Post Zip Code is required',
 																// ),
 																							
 														    	vatRegistrationDate: Yup.string().when(
@@ -1512,7 +1504,7 @@ class Profile extends React.Component {
 																{
 																	is: (value) => value === true,
 																	then: Yup.string().required(
-																		'VAT Registration Date is Required',
+																		'VAT registration date is required',
 																	),
 																	otherwise: Yup.string(),
 																},
@@ -3617,37 +3609,37 @@ class Profile extends React.Component {
 																}}
 															// validationSchema={Yup.object().shape({
 															//   firstName: Yup.()
-															//     .required("First Name is Required"),
+															//     .required("First Name is required"),
 															//   lastName: Yup.()
-															//     .required("Last Name is Required"),
+															//     .required("Last Name is required"),
 															// })}
 															validate={(values)=>{
 																
 																let errors={};
 																	if(this.state.currentPasswordMatched==false)
-																	errors.currentPassword="Please Enter The Correct Password"
+																	errors.currentPassword="Please enter the correct password"
 																return errors;
 
 															}}
 															validationSchema={Yup.object().shape({
 																currentPassword: Yup.string().required(
-																	'Current Password is Required',
+																	'Current password is required',
 																),
 																// password: Yup.string().required(
-																// 	'New Password is Required',
+																// 	'New Password is required',
 																// ),
 																// confirmPassword: Yup.string().required(
-																// 	'Confirm Password is Required',
+																// 	'Confirm Password is required',
 																// ),
 																password: Yup.string()
-																	 .required("Password is Required")
+																	 .required("Password is required")
 																	// .min(8, "Password Too Short")
 																	.matches(
 																		/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
-																		'Must Contain 8 Characters,Must contain max 16 Characters, One Uppercase, One Lowercase, One Number and one special case Character',
+																		'Must contain min 8 characters, must contain max 16 characters, one uppercase, one lowercase, one number and one special case character',
 																	),
 																confirmPassword: Yup.string()
-																	 .required('Confirm Password is Required')
+																	 .required('Confirm password is required')
 																	.oneOf(
 																		[Yup.ref('password'), null],
 																		'Passwords Must Match',
@@ -3904,6 +3896,7 @@ class Profile extends React.Component {
 					</Row>
 				</div>
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

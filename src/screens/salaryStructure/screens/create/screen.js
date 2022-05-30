@@ -13,21 +13,14 @@ import {
   Input,
   Label,
 } from 'reactstrap'
-import Select from 'react-select'
-import DatePicker from 'react-datepicker'
 import { Formik } from 'formik';
 import * as Yup from "yup";
-import { ImageUploader } from 'components';
-import {
-  CommonActions
-} from 'services/global'
-import {selectCurrencyFactory, selectOptionsFactory} from 'utils'
+import { LeavePage } from 'components';
+import {CommonActions} from 'services/global'
 import * as EmployeeActions from '../../actions';
 import * as SalaryStructureCreateActions from './actions';
-
 import 'react-datepicker/dist/react-datepicker.css'
 import './style.scss'
-  
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 
@@ -65,6 +58,7 @@ class CreateSalaryStructure extends React.Component {
       language: window['localStorage'].getItem('language'),
       loading: false,
       createMore: false,
+			disableLeavePage:false,
       initValue: {
         type:'',
         name:'',
@@ -87,7 +81,7 @@ class CreateSalaryStructure extends React.Component {
   };
 
   handleSubmit = (data, resetForm) => {
-    this.setState({ disabled: true });
+    this.setState({ disabled: true, disableLeavePage:true });
 		const {
       type,
       name
@@ -162,9 +156,9 @@ class CreateSalaryStructure extends React.Component {
                         }}
                         validationSchema={Yup.object().shape({
                           type: Yup.string()
-                            .required("Salary Structure Type is Required"),
+                            .required("Salary structure type is required"),
                             name: Yup.string()
-                            .required("Salary Structure Name is Required"),
+                            .required("Salary structure name is required"),
                         
                         })}
                       >
@@ -268,6 +262,7 @@ class CreateSalaryStructure extends React.Component {
             </Col>
           </Row>
         </div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
       </div>
     )
   }

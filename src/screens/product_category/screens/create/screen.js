@@ -186,7 +186,7 @@ class CreateProductCategory extends React.Component {
 
 													if (!values.productCategoryCode) {
 														errors.productCategoryCode =
-															'Product Category Code is required';
+															'Product category code is required';
 													}
 													return errors;
 												}}

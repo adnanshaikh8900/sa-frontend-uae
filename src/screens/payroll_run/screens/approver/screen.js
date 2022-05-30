@@ -239,6 +239,7 @@ class PayrollApproverScreen extends React.Component {
 			})
 	}
 	approveAndRunPayroll = () => {
+		this.setState({disableLeavePage:true})
 		this.props.createPayrollActions
 			.approveAndRunPayroll(this.state.payroll_id)
 			.then((res) => {
@@ -795,8 +796,7 @@ class PayrollApproverScreen extends React.Component {
 
 	}
 	rejectPayroll = () => {
-
-
+		this.setState({ disableLeavePage:true });
 		const message1 =
 			<text>
 				<b>Would you like to reject this payroll ?</b>

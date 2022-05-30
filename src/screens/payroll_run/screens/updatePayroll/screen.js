@@ -974,34 +974,34 @@ class UpdatePayroll extends React.Component {
 														}}
 														validationSchema={Yup.object().shape({
 															// payrollSubject: Yup.string()
-															//   .required("Payroll Subject is Required"),
+															//   .required("Payroll Subject is required"),
 															payrollDate: Yup.string()
-															  .required("Payroll Date is Required"),
+															  .required("Payroll date is required"),
 														  // selectedRows: Yup.string()
-														  //     .required("At least selection of one employee  is Required for create payroll"),
+														  //     .required("At least selection of one employee is required for create payroll"),
 														  })}
 														  validate={(values) => {
 															 
 															  let errors = {};
 															  
 															  if (!this.state.payrollSubject) {
-																  errors.payrollSubject = 'Payroll Subject is  required';
+																  errors.payrollSubject = 'Payroll subject is required';
 															  }
 															  if (!values.payrollDate) {
-																  errors.payrollDate = 'Payroll date is  required';
+																  errors.payrollDate = 'Payroll date is required';
 															  }
 															//   if(this.state.selectedRows && this.state.selectedRows.length===0)
 															//   {
-															// 	  errors.selectedRows = 'At least selection of one employee  is Required for create payroll';
+															// 	  errors.selectedRows = 'At least selection of one employee is required for create payroll';
 															//   }
 															if (!this.state.startDate && !this.state.endDate) {
-																errors.startDate = 'Start and End Date is  required';
+																errors.startDate = 'Start and end date is required';
 															}else
 															if (!this.state.startDate) {
-																errors.startDate = 'Start Date is  required';
+																errors.startDate = 'Start date is required';
 															}else
 															if (!this.state.endDate) {
-																errors.startDate = 'End Date is  required';
+																errors.startDate = 'End date is required';
 															}
 														  
 															  return errors;

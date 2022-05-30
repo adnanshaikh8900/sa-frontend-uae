@@ -335,44 +335,44 @@ class Register extends React.Component {
 							
 														validationSchema={Yup.object().shape({
 															companyName: Yup.string().required(
-																'Company Name is Required',
+																'Company name is required',
 															),
 															currencyCode: Yup.string().required(
-																'Currency is Required',
+																'Currency is required',
 															),
 															companyTypeCode: Yup.string().required(
-																'Company / Business Type is Required',
+																'Company / business type is required',
 															),
 															companyAddress1: Yup.string().required(
-																'Company Address is Required',
+																'Company address is required',
 															),
 															countryId: Yup.string().required(
-																'Country is Required',
+																'Country is required',
 															),
 															stateId: Yup.string().required(
-																'State is Required',
+																'State is required',
 															),
 															firstName: Yup.string().required(
-																'First Name is Required',
+																'First name is required',
 															),
 															lastName: Yup.string().required(
-																'Last Name is Required',
+																'Last name is required',
 															),
 															email: Yup.string()
-																.required('Email is Required')
+																.required('Email is required')
 																.email('Invalid Email'),
 															timeZone: Yup.string().required(
-																'Time Zone is Required',
+																'Time zone is required',
 															),
 															phoneNumber: Yup.string().required(
-																'Mobile Number is Required',
+																'Mobile number is required',
 															),
 															TaxRegistrationNumber: Yup.string().when(
 																'IsRegistered',
 																{
 																	is: (value) => value === true,
 																	then: Yup.string().required(
-																		'Tax Registration Number is Required',
+																		'Tax registration number is required',
 																	)
 																	.test(
 																		'TaxRegistrationNumber',
@@ -393,7 +393,7 @@ class Register extends React.Component {
 																{
 																	is: (value) => value === true,
 																	then: Yup.string().required(
-																		'VAT Registration Date is Required',
+																		'VAT registration date is required',
 																	),
 																	otherwise: Yup.string(),
 																},

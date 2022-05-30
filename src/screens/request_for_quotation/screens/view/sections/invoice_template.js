@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import { Card, CardBody, Row, Col, Table } from 'reactstrap';
+import { Card, CardBody, Table } from 'reactstrap';
 import moment from 'moment';
 import '../style.scss';
 import logo from 'assets/images/brand/logo.png';
 import { Currency } from 'components';
-import { toInteger, upperCase } from 'lodash';
 import {data}  from '../../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { TextareaAutosize } from '@material-ui/core';
 const footer = require('assets/images/invoice/invoiceFooter.png');
+
 const { ToWords } = require('to-words');
 const toWords = new ToWords({
 	localeCode: 'en-IN',
@@ -356,7 +356,7 @@ class RFQTemplate extends Component {
 							>	
 								<br />
 								{RFQData.notes&& (<><h6 className="mb-0 pt-2">
-									<b>{strings.Notes}:</b>
+									<b>{strings.TermsAndConditions}:</b>
 								</h6><br/>
 								<h6 className="mb-0">{RFQData.notes}</h6>
                                 </>)}								{/* </div> */}
@@ -586,7 +586,7 @@ class RFQTemplate extends Component {
 																			disabled
 																			className="textarea viewFootNote"
 																			maxLength="250"
-																			style={{width: "1220px"}}
+																			style={{width: "1100px"}}
 																			// rows="5"
 																			value={RFQData.footNote}
 																		/>

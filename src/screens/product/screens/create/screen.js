@@ -794,7 +794,7 @@ try {
 																			name="productCode"
 	                         /**Added as per discussion with sajid sir ,disabled product code for sanity*/
 
-																			// disabled
+																			disabled
 																			placeholder={strings.Enter+strings.ProductCode}
 																			onChange={(option) => {
 																				if (

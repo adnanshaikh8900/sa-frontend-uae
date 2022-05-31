@@ -137,7 +137,7 @@ class CreateJournal extends React.Component {
 	};
 
 	initializeData = () => {
-	this.getjournalReferenceNo();
+
 
 		this.props.journalActions.getContactList();
 		this.props.journalActions.getCurrencyList().then((response) => {
@@ -160,23 +160,23 @@ class CreateJournal extends React.Component {
 		this.props.journalActions.getTransactionCategoryList();
 	};
 
-	getjournalReferenceNo = () => {
-		this.props.journalActions.getInvoiceNo().then((res) => {
-			if (res.status === 200) {
-				this.setState({
-					initValue: {
-						...this.state.initValue,
-						...{ journalReferenceNo: res.data },
-					},
-				});
-				if( res &&  res.data)
-				console.log(res.data)
-				this.formRef.current.setFieldValue('journalReferenceNo', res.data, true,
-				 this.validationCheck(res.data)
-				);
-			}
-		});
-	};
+	// getjournalReferenceNo = () => {
+	// 	this.props.journalActions.getInvoiceNo().then((res) => {
+	// 		if (res.status === 200) {
+	// 			this.setState({
+	// 				initValue: {
+	// 					...this.state.initValue,
+	// 					...{ journalReferenceNo: res.data },
+	// 				},
+	// 			});
+	// 			if( res &&  res.data)
+	// 			console.log(res.data)
+	// 			this.formRef.current.setFieldValue('journalReferenceNo', res.data, true,
+	// 			 this.validationCheck(res.data)
+	// 			);
+	// 		}
+	// 	});
+	// };
 	validationCheck = (value) => {
 		const data = {
 			moduleType: 20,
@@ -741,7 +741,7 @@ class CreateJournal extends React.Component {
 								},
 								() => {
 									resetForm(this.state.initValue);
-									this.getjournalReferenceNo()								},
+														},
 							);
 						} else {
 							this.props.history.push('/admin/accountant/journal');
@@ -891,7 +891,7 @@ class CreateJournal extends React.Component {
 																					'journalReferenceNo',
 																				)(option);
 																			
-																			this.validationCheck(option.target.value);
+																			// this.validationCheck(option.target.value);
 																		}}
 																		className={
 																			

@@ -300,6 +300,7 @@ class PayrollApproverScreen extends React.Component {
 			})
 	}
 	voidPayrollApi = () => {
+		this.setState({  disableLeavePage:true });
 		let formData = {
 			postingRefId: this.state.payroll_id,
 			postingRefType: "PAYROLL",
@@ -781,6 +782,7 @@ class PayrollApproverScreen extends React.Component {
 		});
 	};
 	rejectPayroll1 = () => {
+		this.setState({  disableLeavePage:true });
 		this.props.createPayrollActions
 			.rejectPayroll(this.state.payroll_id, this.state.comment)
 			.then((res) => {

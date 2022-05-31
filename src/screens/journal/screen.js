@@ -648,7 +648,7 @@ console.log(journal_list_data,"journal_list_data")
 													dataField="journalDate"
 													dataSort
 													dataFormat={this.renderDate}
-													width="12%"
+													width="10%"
 													className="table-header-bg"
 												>
 													{strings.POSTDATE}
@@ -659,6 +659,7 @@ console.log(journal_list_data,"journal_list_data")
 													dataSort
 													width="10%"
 													className="table-header-bg"
+													tdStyle={{whiteSpace:"normal"}}
 												>
 													{strings.NOTES}
 												</TableHeaderColumn>

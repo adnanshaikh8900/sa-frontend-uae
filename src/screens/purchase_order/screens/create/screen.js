@@ -2812,7 +2812,7 @@ getrfqDetails = (e, row, props,form,field) => {
 															<Row>
 																<Col lg={8}>
 																<FormGroup className="py-2">
-																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
+																		<Label htmlFor="notes">{strings.TermsAndConditions}</Label><br/>
 																		<TextareaAutosize
 																			type="textarea"
 																			style={{width: "700px"}}

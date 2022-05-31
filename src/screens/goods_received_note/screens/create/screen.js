@@ -2419,7 +2419,7 @@ console.log(this.state.data)
 														{this.state.data.length > 0 ? (
 															<Row>
 																<Col lg={8}>
-																<FormGroup className="py-2">
+																{/* <FormGroup className="py-2">
 																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
 																		<TextareaAutosize
 																			type="textarea"
@@ -2435,7 +2435,7 @@ console.log(this.state.data)
 																			}
 																			value={props.values.notes}
 																		/>
-																	</FormGroup>
+																	</FormGroup> */}
 																	<Row>
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">

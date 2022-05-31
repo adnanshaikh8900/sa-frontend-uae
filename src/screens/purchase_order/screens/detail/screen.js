@@ -2514,7 +2514,7 @@ class DetailPurchaseOrder extends React.Component {
 																<Row>
 																		<Col lg={8}>
 																	<FormGroup className="py-2">
-																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
+																		<Label htmlFor="notes">{strings.TermsAndConditions}</Label><br/>
 																		<TextareaAutosize
 																			type="textarea"
 																			className="textarea"

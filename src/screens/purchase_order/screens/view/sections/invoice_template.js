@@ -245,7 +245,7 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 									</th>
 									{/* <th style={{ padding: '0.5rem' }}>Item</th> */}
 									<th style={{ padding: '0.5rem' }}>{strings.ProductNameAndDescription}</th>
-									<th className="center" style={{ padding: '0.5rem' }}>
+									<th className="text-center" style={{ padding: '0.5rem' }}>
 										{strings.Quantity }
 									</th>
 					                <th style={{ padding: '0.5rem', textAlign: 'right' }}>

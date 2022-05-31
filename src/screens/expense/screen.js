@@ -142,6 +142,14 @@ class Expense extends React.Component {
 					err && err.data ? err.data.message : 'Something Went Wrong',
 				);
 			});
+
+			// added for props issue
+			this.props.expenseActions.getPaytoList();
+			this.props.expenseActions.getVatList();
+			this.props.expenseActions.getExpenseCategoriesList();
+			this.props.expenseActions.getBankList();
+			this.props.expenseActions.getPaymentMode();
+			this.props.expenseActions.getUserForDropdown();
 	};
 
 	componentWillUnmount = () => {
@@ -234,7 +242,7 @@ class Expense extends React.Component {
 								</div>
 							</DropdownItem>
 						)}
-						{(
+						{row.bankAccountId==null&&(
 							<DropdownItem					
 								onClick={() =>
 									this.props.history.push(`/admin/expense/expense/create`,{parentId: row.expenseId})

@@ -2403,11 +2403,18 @@ existForAccountNumber = (value) => {
                                                                         })}
                                                                         validate={(values) => {
                                                                             let errors = {};
-                                                                             
+                                                                            if(values.employeeCode &&
+                                                                                values.employeeCode.length && 
+                                                                                values.employeeCode.length!=14)
+                                                                            {
+                                                                                errors.employeeCode =
+                                                                                'Employee unique id  must be 14 digit';        
+                                                                            }else  
                                                                             if (exist === true  && values.employeeCode!="") {
                                                                                 errors.employeeCode =
-                                                                                'Employee code number already exists';
+                                                                                'Employee unique id  already exists';
                                                                             }
+                                                                            
                                                                             return errors;
 
                                                                         }}

@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
-import { Card, CardBody, Row, Col, Table } from 'reactstrap';
+import { Card, CardBody, Table } from 'reactstrap';
 import moment from 'moment';
 import '../style.scss';
 import logo from 'assets/images/brand/logo.png';
-import { Currency } from 'components';
-import { toInteger, upperCase } from 'lodash';
-import { textAlign } from '@material-ui/system';
 import {data}  from '../../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import { TextareaAutosize } from '@material-ui/core';
+
 const { ToWords } = require('to-words');
 const ZERO=0.00
 const toWords = new ToWords({
@@ -21,6 +20,7 @@ const toWords = new ToWords({
   });
 
 let strings = new LocalizedStrings(data);
+const footer = require('assets/images/invoice/invoiceFooter.png');
 class RFQTemplate extends Component {
 	constructor(props) {
 		super(props);
@@ -108,16 +108,16 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 						<span>{POData.status}</span>
 					</div> */}
 
-					<CardBody>
+<CardBody style={{ margin: '1rem', border: 'solid 1px', borderColor: '#c8ced3', }}>
 					<div
 							style={{
 								width: '100%',
 								display: 'flex',
-								border:'1px solid',
-								padding:'7px',borderColor:'#c8ced3'
+								// border:'1px solid',
+								// padding:'7px',borderColor:'#c8ced3'
 							}}
 						>
-							<div style={{ width: '150%' }}>
+							<div style={{ width: '50%', marginTop: '4.5rem', marginLeft: '3rem' }}>
 								<div className="companyDetails">
 									<img
 										src={
@@ -137,61 +137,80 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 									}
 										className=""
 										alt=""
-										style={{ width: ' 240px' }}
-									/>
-									</div><div style={{ marginTop: '4rem' }}> 
-									<div className="mb-1 ml-2"><b>{strings.CompanyName} : </b> {companyData.companyName}</div>
-									<div className="mb-1 ml-2"><b>{strings.CompanyAddress} : </b> {companyData.companyAddressLine1+","+companyData.companyAddressLine2}</div>
-									<div className="mb-1 ml-2"><b>{strings.PinCode} : </b> {companyData.companyPostZipCode}</div>
-									<div className="mb-1 ml-2"><b>{strings.StateRegion} : </b> {companyData.companyStateName}</div>
-									<div className="mb-1 ml-2"><b>{strings.Country} : </b> {companyData.companyCountryName}</div>
-									<div className="mb-1 ml-2"><b>{strings.VATRegistrationNo} : </b> {companyData.vatRegistrationNumber}</div>
-									<div className="mb-1 ml-2"><b>{strings.MobileNumber} : </b> {this.companyMobileNumber(companyData.phoneNumber?"+"+companyData.phoneNumber:'')}</div>
-								</div>
-							</div>
-							<div style={{ width: '130%',justifyContent:'center',marginTop:'5rem' }}>
-
-									<div
-										style={{
-											width: '130%',
-											fontSize: '1.5rem',
-											fontWeight: '700',
-											textTransform: 'uppercase',
-											color: 'black',
-										}}
-									>
-									{strings.PurchaseOrder}
+										style={{ width: ' 300px' }}
+									/></div>
 									</div>
-
-							</div>
-							<div
+									<div
 								style={{
 									width: '70%',
 									display: 'flex',
 									flexDirection: 'column',
-									justifyContent: 'right',
+									justifyContent: 'left',
 								}}
 							>
-								<div 	style={{
-									width: '62%',
-									margin:'1.5rem 9.0rem 0.5rem 4rem',
-									// // border:'1px solid',
-									 marginTop:'6.5rem',
-									 marginLeft:'6.5rem'
+								<div style={{
+									width: '97%',
+									textAlign: 'right',
+
 								}}>
-								<h4 className="mb-1 ml-2"><b>{companyData && companyData.company
+									<div style={{ marginTop: '0.5rem' }}>
+									<h2 className="mb-1 ml-2"><b>Purchase Order</b></h2><br />
+									<div className="mb-1 ml-2" style={{fontSize:"22px"}}><b>{companyData.companyName}</b></div>
+									<div className="mb-1 ml-2">{companyData.companyAddressLine1}</div>
+										<div className="mb-1 ml-2">{companyData.companyAddressLine2}</div>
+										{companyData.companyCountryCode==229 ?
+																	strings.POBox:
+																	""} : {companyData.companyPoBoxNumber} ,&nbsp;
+										{companyData &&(companyData.companyStateName ? companyData.companyStateName + " , " : "")}
+										{companyData &&(companyData.companyCountryName ? companyData.companyCountryName : "")}
+										{companyData.companyRegistrationNumber && (<div className="mb-1 ml-2">{strings.CompanyRegistrationNo} : {companyData.companyRegistrationNumber}</div>)}
+										{companyData.isRegisteredVat==true&&(<div className="mb-1 ml-2">{strings.VATRegistrationNo} : {companyData.vatRegistrationNumber}</div>)}
+									<div className="mb-1 ml-2">{strings.MobileNumber} : {this.companyMobileNumber(companyData.phoneNumber?"+"+companyData.phoneNumber:'')}</div>
+									{companyData.emailAddress&&(<div className="mb-1 ml-2">Email : {companyData.emailAddress}</div>)}
+								</div>
+							</div>
+							</div>
+							</div>
+							<hr/>
+							
+							<div
+							style={{
+								width: '100%',
+								display: 'flex',
+								justifyContent: 'space-between',
+								marginBottom: '1rem',
+						
+							}}
+						>
+							<div
+								style={{
+									width: '100%',
+									display: 'flex',
+									justifyContent: 'space-between',
+									marginLeft: '2rem'
+								}}
+							>
+								<div>
+								{/* <h4 className="mb-1 ml-2"><b>{companyData && companyData.company
 											? companyData.company.companyName
-											: ''}</b></h4>
-								<h4 className="mb-1 ml-2">{POData.poNumber} </h4><br/>
-								<h6 className="mb-1 ml-2"><b>Purchase From,</b></h6>
-								<h6 className="mb-1 ml-2"><b>Name : </b>{POData.organisationName ? POData.organisationName : POData.supplierName}</h6>
-								{contactData && contactData.addressLine1 &&(<div className="mb-1 ml-2"><b>{strings.BillingAddress} : </b> {contactData.addressLine1}</div>)}
-								{contactData && contactData.postZipCode &&(	<div className="mb-1 ml-2"><b>{strings.PinCode} : </b> {contactData.postZipCode}</div>)}
-								{contactData&&contactData.billingStateName&&(<div className="mb-1 ml-2"><b>{strings.StateRegion} : </b> {contactData.billingStateName}</div>)}
-								{contactData && contactData.billingCountryName &&(<div className="mb-1 ml-2"><b>{strings.Country} : </b> {contactData.billingCountryName}</div>)}
-								<h6 className="mb-1 ml-2"><b>TRN : </b>{POData.vatRegistrationNumber}</h6>
-								{contactData&&contactData.mobileNumber&&(<div className="mb-1 ml-2"><b>{strings.MobileNumber} : </b>+{contactData.mobileNumber}</div>)}
-													<span className="mb-1 ml-2"><b>{strings.Status} :  </b>{this.renderRFQStatus(status)}</span>
+											: ''}</b></h4> */}
+								<h6 className="mb-1 ml-2"><b>Purchase From,</b></h6><br/>
+								<div className="mb-1 ml-2"><b>{POData.organisationName ? POData.organisationName : POData.supplierName}</b></div>
+								{contactData && contactData.addressLine1 && (<div className="mb-1 ml-2">{contactData.addressLine1}</div>)}
+
+<div className="mb-1 ml-2">
+{POData && contactData && (
+		contactData.countryId==229 ?
+		contactData.poBoxNumber ?(strings.POBox +" : " +contactData.poBoxNumber ): ""
+		:contactData.postZipCode ? contactData.postZipCode : ""
+		)} ,&nbsp;
+	{POData && contactData && (contactData.billingStateName ? contactData.billingStateName + " , " : "")}
+	{POData && contactData && (contactData.billingCountryName ? contactData.billingCountryName : "")}
+</div>
+{POData && POData.taxtreatment&& POData.taxtreatment.includes("NON")==false &&(<div className="mb-1 ml-2">{strings.VATRegistrationNo} :  {POData.vatRegistrationNumber}</div>)}
+								{contactData&&contactData.mobileNumber&&(<div className="mb-1 ml-2">{strings.MobileNumber} :+{contactData.mobileNumber}</div>)}
+								{contactData && contactData.billingEmail && (<div className="mb-1 ml-2">{strings.Email} : {contactData.billingEmail}</div>)}
+													
 
 													{/* <div
 														className={`ribbon ${this.getRibbonColor(
@@ -201,106 +220,59 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 															<span className="mb-1 ml-2">{RFQData.status}</span>
 														</div>  */}
 								</div>
+								<div style={{ width: '27%' }}>
+
+									<br />
+									<div className="mb-1 ml-2"><b>{strings.PONo} : </b> # {POData.poNumber}</div>
+									{POData.receiptNumber&&(<div className="mb-1 ml-2"><b>{strings.ReferenceNo} : </b>{POData.receiptNumber}</div>)}
+									<div className="mb-1 ml-2"><b>{strings.Approve+" "+strings.Date } : </b>{' '}
+										{moment(POData.poApproveDate).format(
+											'DD MMM YYYY',
+										)}</div>
+										<div className="mb-1 ml-2"><b>{strings.ReceiveDate } : </b>{moment(POData.poReceiveDate).format(
+										'DD MMM YYYY',
+									)}</div>
+									<div className="mb-1 ml-2"><b>{strings.Status} : </b>{this.renderRFQStatus(status)}</div>
+
 								</div>
 							</div>
-
-							
-						
-							
-
-						<div
-							style={{
-								width: '100%',
-								display: 'flex',
-								justifyContent: 'space-between',
-								marginBottom: '1rem',
-								borderLeft:'1px solid',
-									borderRight:'1px solid',
-									borderBottom:'1px solid',borderColor:'#c8ced3'
-							}}
-						>
-						
-							<div
-								style={{
-									width: '100%',
-									display: 'flex',
-									justifyContent: 'space-between',
-									height: '50px'
-								}}
-							>
-								<div
-								style={{
-									width: '50%',
-									display: 'flex',
-									justifyContent: 'space-between',
-									
-								}}>
-								<h6
-								style={{textAlign: 'center',marginLeft:'220px'}}
-								className={'mt-3 mb-2'}
-								><b>{strings.Approve+" "+strings.Date } : </b>{' '}
-								{moment(POData.poApproveDate).format(
-									'DD MMM YYYY',
-								)}
-								</h6>
-								</div>
-								<div
-								style={{
-									width: '50%',
-									display: 'flex',
-									justifyContent: 'space-between',
-									
-								}}>
-								<h6
-								style={{textAlign: 'center',marginLeft:'220px'}}
-								className={'mt-3 mb-2'}
-								><b>{strings.ReceiveDate } : </b>{' '}
-								{moment(POData.poReceiveDate).format(
-									'DD MMM YYYY',
-								)}
-								</h6>
-								</div>
 							</div>
-						</div>
-						<Table  >
-							<thead className="header-row">
+							<Table className='table-striped' >
+							<thead className="header-row" style={{ fontSize:"12px" }}>
 								<tr>
-									<th className="center" style={{ padding: '0.5rem' }}>
+									<th className="center" style={{ padding: '0.5rem', width:"40px" }}>
 										#
 									</th>
 									{/* <th style={{ padding: '0.5rem' }}>Item</th> */}
-									<th style={{ padding: '0.5rem' }}>{strings.ProductName }</th>
-									<th style={{ padding: '0.5rem' }}>{strings.Description }</th>
+									<th style={{ padding: '0.5rem' }}>{strings.ProductNameAndDescription}</th>
 									<th className="center" style={{ padding: '0.5rem' }}>
 										{strings.Quantity }
-									</th>
-									<th className="center" style={{ padding: '0.5rem' }}>
-										{strings.UnitType}
 									</th>
 					                <th style={{ padding: '0.5rem', textAlign: 'right' }}>
 										{strings.UnitCost }
 									</th>
-									<th style={{ padding: '0.5rem' }}>{strings.Excise}</th>
-									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.ExciseAmount}</th>
-									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.Vat}</th>
+									{/* <th style={{ padding: '0.5rem' }}>{strings.Excise}</th> */}
+									{ POData.totalExciseAmount > 0 && (<>
+									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.ExciseAmount}</th></>)}
+									{/* <th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.VAT}</th> */}
 									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.VatAmount}</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
 									{strings.Total}
 									</th>
 								</tr>
 							</thead>
-							<tbody className=" table-bordered table-hover">
+							<tbody className=" table-hover">
 								{POData.poQuatationLineItemRequestModelList &&
 									POData.poQuatationLineItemRequestModelList.length &&
 									POData.poQuatationLineItemRequestModelList.map((item, index) => {
 										return (
 											<tr key={index}>
 												<td className="center">{index + 1}</td>
-												<td>{item.productName}</td>
-												<td>{item.description}</td>
-												<td>{item.quantity}</td>
-												<td>{item.unitType}</td>
-												<td style={{ textAlign: 'right', width: '20%' }}>
+												<td><b>{item.productName}</b><br/><br />{item.description}</td>
+												<td  style={{ textAlign: 'center' }}>{item.quantity}<br/><br/>
+											     <b style={{fontSize:"10.5px"}}>{item.unitType}</b>	
+												</td>
+												<td style={{ textAlign: 'right', width: '10%' }}>
 													{/* <Currency
 														value={item.unitPrice}
 														currencySymbol={
@@ -311,13 +283,13 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 													/> */}
 												{POData.currencyIsoCode + " " +item.unitPrice.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
 												</td>
-												<td>{item.exciseTaxId ? this.renderExcise(item):"-"}</td>
+												{/* { POData.totalExciseAmount > 0 && (<><td>{item.exciseTaxId ? this.renderExcise(item):"-"}</td></>)} */}
 												<td style={{ textAlign: 'right' }}>
 												{POData.currencyIsoCode + " " +item.exciseAmount.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
 												</td>
-												<td
+												{/* <td
 													style={{ textAlign: 'right' }}
-												>{`${item.vatPercentage}%`}</td>
+												>{`${item.vatPercentage}%`}</td> */}
 												<td style={{ textAlign: 'right' }}>
 												{POData.currencyIsoCode + " " +item.vatAmount.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
 												</td>
@@ -336,52 +308,46 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 										);
 									})}
 							</tbody>
-						</Table>
-						<div className="pl-5"
+						</Table><hr/>
+						<div
 							style={{
 								width: '100%',
 								display: 'flex',
 								justifyContent: 'space-between',
-								marginBottom: '1rem',border:'solid 1px',borderColor:'#c8ced3'
+								// marginBottom: '1rem',border:'solid 1px',borderColor:'#c8ced3',
+								fontSize: "14px"
 							}}
 						>
-								<div
-								style={{
-									width: '200%',
-									display: 'flex',
-									flexDirection: 'column',
-									justifyContent: 'center',
-								}}
-							>
-								<div className="pb-2">{strings.AmountInWords }:<br/>
-									<b> <u>{POData.totalAmount ? upperCase(POData.currencyName + " " +(toWords.convert(POData.totalAmount))+" ONLY").replace("POINT","AND") : " -"}
-									{/* <b> {parseInt(POData.dueAmount)} */}
-									</u></b></div>
-								<div className="pb-2">{strings.Vat+" "+strings.AmountInWords }:
-										<br/>
-									<b><u>{POData.totalVatAmount ? (upperCase(POData.currencyName + " " +(toWords.convert(POData.totalVatAmount))+" ONLY")).replace("POINT","AND") : " -" }</u></b>
-									{/* <b> {POData.totalVatAmount}</b> */}
-								</div>
-							<div style={{borderTop:'1px solid',borderColor:'#c8ced3'}}>
-
-								<h6 className="mb-0 pt-2">
-									<b>{strings.Notes }:</b>
-								</h6>
-								<h6 className="mb-0">{POData.notes}</h6>
-							</div>
-							
-							</div>
 							<div
 								style={{
-									width: '120%',
+									width: '40%',
+									display: 'flex',
+									flexDirection: 'column',
+									marginLeft: '2rem'
+								}}
+							>				
+								<br />
+								{POData.notes&& (<><h6 className="mb-0 pt-2">
+									<b>{strings.TermsAndConditions}:</b>
+								</h6><br/>
+								<h6 className="mb-0">{POData.notes}</h6>
+                                </>)}							
+
+							</div>
+							
+							
+							<div
+								style={{
+									width: '40%',
 									display: 'flex',
 									justifyContent: 'space-between',
+									marginRight: '1rem'
 								}}
 							>
 								<div style={{ width: '100%' }}>
 								<Table className="table-clear cal-table">
 									<tbody>
-									<tr >
+									{POData.totalExciseAmount && POData.totalExciseAmount > 0 ? <tr >
 											<td style={{ width: '40%' }}>
 												<strong>{strings.TotalExcise}</strong>
 											</td>
@@ -397,7 +363,7 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 												{POData.totalExciseAmount? POData.currencyIsoCode + " " +POData.totalExciseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):POData.currencyIsoCode + " " +ZERO.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}  
 												</span>
 											</td>
-										</tr>
+										</tr> : ""}
 										<tr>
 											<td style={{ width: '40%' }}>
 												<strong>Total Net</strong>
@@ -417,7 +383,7 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 										
 										<tr >
 											<td style={{ width: '40%' }}>
-												<strong>{strings.Vat }</strong>
+												<strong>{strings.VAT}</strong>
 											</td>
 											<td
 												style={{
@@ -490,8 +456,20 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 								</Table>
 								</div>		
 							</div>
-						</div>												
+						</div>	
+						<hr/>	
+						<TextareaAutosize
+																			type="textarea"
+																			disabled
+																			className="textarea viewFootNote"
+																			maxLength="250"
+																			style={{width: "1100px"}}
+																			// rows="5"
+																			value={POData.footNote}
+																		/>
+						<br /><br/><br/>										
 					</CardBody>
+					<img className='footer' src={footer} style={{ height: "65px", width: "100%" }}></img>
 				</Card>
 			</div>
 		);

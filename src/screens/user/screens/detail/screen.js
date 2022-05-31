@@ -15,10 +15,9 @@ import {
 } from 'reactstrap';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
-import { Loader, ConfirmDeleteModal, ImageUploader } from 'components';
+import { LeavePage, Loader, ConfirmDeleteModal, ImageUploader } from 'components';
 import * as UserActions from '../../actions';
 import * as UserDetailActions from './actions';
-
 import { CommonActions, AuthActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
 import moment from 'moment';
@@ -30,7 +29,6 @@ import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-import PasswordChecklist from "react-password-checklist"
 
 const eye = require('assets/images/settings/eye.png');
 const mapStateToProps = (state) => {
@@ -79,7 +77,8 @@ class DetailUser extends React.Component {
 			disabled1:false,
 			timezone: [],
 			exist: false,
-			loadingMsg:"Loading..."
+			loadingMsg:"Loading...",
+			disableLeavePage:false
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 	}
@@ -227,6 +226,7 @@ class DetailUser extends React.Component {
 	};
 
 	handleSubmit = (data) => {
+		this.setState({ createDisabled: true, disableLeavePage:true	});
 		const {
 			firstName,
 			lastName,
@@ -359,7 +359,7 @@ class DetailUser extends React.Component {
 														
 														if (this.state.exist === true) {
 															errors.email =
-																'User Already Exists';
+																'User already exists';
 														}
 	
 														if (errors.length) {
@@ -372,34 +372,34 @@ class DetailUser extends React.Component {
 													}}
 													validationSchema={Yup.object().shape({
 														firstName: Yup.string().required(
-															'First Name is Required',
+															'First name is required',
 														),
 														lastName: Yup.string().required(
-															'Last Name is Required',
+															'Last name is required',
 														),
 														email: Yup.string()
-															.required('Email is Required')
+															.required('Email is required')
 															.email('Invalid Email'),
 														roleId: Yup.string().required(
-															'Role Name is Required',
+															'Role name is required',
 														),
 														timeZone: Yup.string().required(
-															'Time Zone is Required',
+															'Time zone is required',
 														),
 													// 	password: Yup.string()
-													// 	.required('Password is Required')
-													// .min(8, "Password Too Short")
+													// 	.required('Password is required')
+													// .min(8, "Password too Short")
 													// .matches(
 													// 	/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
 														
 													// ),
 													// confirmPassword: Yup.string()
-													// .required('Confirm Password is Required')
+													// .required('Confirm password is required')
 													// .oneOf(
 													// 	[Yup.ref('password'), null],
 													// 	'Passwords must match',
 													// ),
-														//	dob: Yup.string().required('DOB is Required'),
+														//	dob: Yup.string().required('DOB is required'),
 													})}
 												>
 													{(props) => (
@@ -940,6 +940,7 @@ class DetailUser extends React.Component {
 					</Row>
 				</div>
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

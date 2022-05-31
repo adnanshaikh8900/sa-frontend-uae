@@ -243,7 +243,7 @@ class VatCode extends React.Component {
 				} else {
 		const message1 =
         <text>
-        <b>Delete Vat Category?</b>
+        <b>Delete VAT Category?</b>
         </text>
         const message = 'This VAT Category will be deleted permanently and cannot be recovered. ';
 		if (selectedRows.length > 0) {
@@ -440,7 +440,7 @@ class VatCode extends React.Component {
 														fullWidth
 												 		variant="outlined"
 														value={filterData.name}
-														placeholder={strings.Vat+" "+strings.Name}
+														placeholder={strings.VAT+" "+strings.Name}
 														onChange={(e) => {
 															this.handleChange(e.target.value, 'name');
 														}}
@@ -451,7 +451,7 @@ class VatCode extends React.Component {
 													{/* <Input
 														type="text"
 														value={filterData.vatPercentage}
-														placeholder="Vat Percentage"
+														placeholder="VAT Percentage"
 														onChange={(e) => {
 															e.preventDefault();
 															this.handleChange(
@@ -466,7 +466,7 @@ class VatCode extends React.Component {
 														fullWidth
 														type="text"
 														value={filterData.vatPercentage}
-														placeholder={strings.Vat+" "+strings.Percentage}
+														placeholder={strings.VAT+" "+strings.Percentage}
 														size="small"
 														onChange={(e) => {
 															this.handleChange(
@@ -520,18 +520,18 @@ class VatCode extends React.Component {
 											}
 											hover
 											version="4"
-											pagination={
-												vat_list_data &&  vat_list_data.length > 0
-													? true
-													: false
-											}
+											// pagination={
+											// 	vat_list_data &&  vat_list_data.length > 0
+											// 		? true
+											// 		: false
+											// }
 											search={false}
 											selectRow={this.selectRowProp}
 											options={this.options}
 											remote
-											fetchInfo={{
-												dataTotalSize: vat_list.count ? vat_list.count : 0,
-											}}
+											// fetchInfo={{
+											// 	dataTotalSize: vat_list.count ? vat_list.count : 0,
+											// }}
 											trClassName="cursor-pointer"
 											csvFileName="vat_code.csv"
 											ref={(node) => {

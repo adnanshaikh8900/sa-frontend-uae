@@ -393,7 +393,7 @@ class Employee extends React.Component {
                             dataSort
                           // dataFormat={this.vatCategoryFormatter}
                           >
-                            Vat Registration No
+                            VAT Registration No
                           </TableHeaderColumn>
                         </BootstrapTable>
                       </div>

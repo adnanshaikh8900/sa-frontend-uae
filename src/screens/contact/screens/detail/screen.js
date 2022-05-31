@@ -15,18 +15,14 @@ import {
 } from 'reactstrap';
 import Select from 'react-select';
 import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
-import { Loader, ConfirmDeleteModal } from 'components';
-
+import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
 import { toast } from 'react-toastify';
-
 import './style.scss';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-
 import { CommonActions } from 'services/global';
 import * as ContactActions from '../../actions';
 import * as DetailContactActions from './actions';
-
 import PhoneInput from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css'
 import { data } from '../../../Language/index'
@@ -69,7 +65,6 @@ class DetailContact extends React.Component {
 				billingEmail: '',
 				city: '',
 				contactType: '',
-
 				countryId: '',
 				currencyCode: '',
 				email: '',
@@ -97,8 +92,6 @@ class DetailContact extends React.Component {
 				shippingPostZipCode: '',
 				shippingCity: '',
 				taxTreatmentId: '',
-
-
 			},
 			state_list_for_shipping: [],
 			currentData: {},
@@ -110,8 +103,7 @@ class DetailContact extends React.Component {
 			selectedStatus: false,
 			isActive: false,
 			loadingMsg: "Loading",
-		
-
+			disableLeavePage:false
 		};
 
 		this.regEx = /^[0-9\d]+$/;
@@ -409,7 +401,7 @@ class DetailContact extends React.Component {
 		let postData = this.getData(data);
 
 		postData = { ...postData, ...{ contactId: current_contact_id } };
-		this.setState({ loading: true, loadingMsg: "Updating Contact..." });
+		this.setState({ loading: true, disableLeavePage:true, loadingMsg: "Updating Contact..." });
 		this.props.detailContactActions
 			.updateContact(postData)
 			.then((res) => {
@@ -1238,7 +1230,7 @@ class DetailContact extends React.Component {
 																									'name',
 																									'id',
 																									taxTreatmentList,
-																									'Vat',
+																									'VAT',
 																								)
 																								: []
 																						}
@@ -2208,6 +2200,7 @@ class DetailContact extends React.Component {
 							)}
 						</div>
 					</div>
+							{this.state.disableLeavePage ?"":<LeavePage/>}
 				</div>
 		);
 	}

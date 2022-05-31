@@ -156,7 +156,7 @@ class ContactModal extends React.Component {
                   {/* <Row>
                       <Col>
                         <FormGroup>
-                          <Label htmlFor="categoryCode"><span className="text-danger">*</span>Title</Label>
+                          <Label htmlFor="categoryCode"><span className="text-danger">* </span>Title</Label>
                           <Select
                             options={titleList? selectOptionsFactory.renderOptions('titleName', 'titleCode', titleList): []}
                             id="title"
@@ -184,7 +184,7 @@ class ContactModal extends React.Component {
                   <Row>
                     <Col>
                       <FormGroup>
-                        <Label htmlFor="categoryName"><span className="text-danger">*</span>First Name</Label>
+                        <Label htmlFor="categoryName"><span className="text-danger">* </span>First Name</Label>
                         <Input
                           type="text"
                           id="firstName"
@@ -230,7 +230,7 @@ class ContactModal extends React.Component {
                     </Col>
                     <Col>
                       <FormGroup>
-                        <Label htmlFor="categoryName"><span className="text-danger">*</span>Last Name</Label>
+                        <Label htmlFor="categoryName"><span className="text-danger">* </span>Last Name</Label>
                         <Input
                           type="text"
                           id="lastName"
@@ -315,7 +315,7 @@ class ContactModal extends React.Component {
                   <Row>
                     <Col>
                       <FormGroup>
-                        <Label htmlFor="categoryName"><span className="text-danger">*</span>Email</Label>
+                        <Label htmlFor="categoryName"><span className="text-danger">* </span>Email</Label>
                         <Input
                           type="text"
                           id="email"
@@ -336,7 +336,7 @@ class ContactModal extends React.Component {
                     </Col>
                     <Col md="4">
                       <FormGroup>
-                        <Label htmlFor="telephone"> <span className="text-danger">*</span>Telephone</Label>
+                        <Label htmlFor="telephone"> <span className="text-danger">* </span>Telephone</Label>
                         <Input
                         maxLength="15"
                           type="text"
@@ -361,7 +361,7 @@ class ContactModal extends React.Component {
                     </Col>
                     <Col md="4">
                       <FormGroup>
-                        <Label htmlFor="mobileNumber"> <span className="text-danger">*</span>Mobile Number</Label>
+                        <Label htmlFor="mobileNumber"> <span className="text-danger">* </span>Mobile Number</Label>
                         <PhoneInput
                           defaultCountry="AE"
                           international
@@ -386,7 +386,7 @@ class ContactModal extends React.Component {
                   <Row>
                     <Col>
                       <FormGroup>
-                        <Label htmlFor="categoryName"><span className="text-danger">*</span>Address Line 1</Label>
+                        <Label htmlFor="categoryName"><span className="text-danger">* </span>Address Line 1</Label>
                         <Input
                           type="text"
                           id="addressLine1"
@@ -407,7 +407,7 @@ class ContactModal extends React.Component {
                     </Col>
                     <Col>
                       <FormGroup>
-                        <Label htmlFor="categoryName"><span className="text-danger">*</span>Address Line 2</Label>
+                        <Label htmlFor="categoryName"><span className="text-danger">* </span>Address Line 2</Label>
                         <Input
                           type="text"
                           id="addressLine2"
@@ -445,7 +445,7 @@ class ContactModal extends React.Component {
                     <Col md="4">
                       <FormGroup>
                         <Label htmlFor="countryId">
-                          <span className="text-danger">*</span>Country
+                          <span className="text-danger">* </span>Country
                           </Label>
                         <Select
                           options={
@@ -543,7 +543,7 @@ class ContactModal extends React.Component {
                   <Row className="row-wrapper">
                       <Col md="4">
                         <FormGroup>
-                          <Label htmlFor="postZipCode"><span className="text-danger">*</span>Post Zip Code</Label>
+                          <Label htmlFor="postZipCode"><span className="text-danger">* </span>Post Zip Code</Label>
                           <Input
                             type="text"
                             id="postZipCode"
@@ -574,7 +574,7 @@ class ContactModal extends React.Component {
                   <Row>
                     <Col lg={4}>
                       <FormGroup>
-                        <Label htmlFor="categoryName"><span className="text-danger">*</span>Billing Email</Label>
+                        <Label htmlFor="categoryName"><span className="text-danger">* </span>Billing Email</Label>
                         <Input
                           type="text"
                           id="billingEmail"
@@ -627,7 +627,7 @@ class ContactModal extends React.Component {
                     <Col md="4">
                       <FormGroup>
                         <Label htmlFor="vatRegistrationNumber">
-                          <span className="text-danger">*</span>Tax Registration Number
+                          <span className="text-danger">* </span>Tax Registration Number
                           </Label>
                         <Input
                           type="text"

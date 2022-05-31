@@ -12,7 +12,6 @@ import {
 	FormGroup,
 	Input,
 	Label,
-	NavLink,
 	UncontrolledTooltip,
 } from 'reactstrap';
 import Select from 'react-select';
@@ -27,15 +26,13 @@ import * as RequestForQuotationAction from '../../actions'
 import * as ProductActions from '../../../product/actions';
 import { SupplierModal } from '../../sections';
 import { ProductModal } from '../../../customer_invoice/sections';
-import { Loader, ConfirmDeleteModal,Currency } from 'components';
+import { Loader, ConfirmDeleteModal,LeavePage } from 'components';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
-
 import { TextareaAutosize } from '@material-ui/core';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import { optionFactory, selectCurrencyFactory, selectOptionsFactory } from 'utils';
-
 import './style.scss';
 import moment from 'moment';
 import Switch from "react-switch";
@@ -125,6 +122,7 @@ class DetailPurchaseOrder extends React.Component {
 			dateChanged: false,
 			dateChanged1: false,
 			loadingMsg:"Loading...",
+			disableLeavePage:false,
 			discountEnabled:false
 		};
 
@@ -937,7 +935,7 @@ class DetailPurchaseOrder extends React.Component {
 	renderVat = (cell, row, props) => {
 		const { vat_list } = this.state;
 		let vatList = vat_list.length
-			? [{ id: '', vat: 'Select Vat' }, ...vat_list]
+			? [{ id: '', vat: 'Select VAT' }, ...vat_list]
 			: vat_list;
 		let idx;
 		this.state.data.map((obj, index) => {
@@ -959,14 +957,14 @@ class DetailPurchaseOrder extends React.Component {
 										'name',
 										'id',
 										vat_list,
-										'Vat',
+										'VAT',
 								  )
 								: []
 						}
 						value={
 							vat_list &&
 							selectOptionsFactory
-								.renderOptions('name', 'id', vat_list, 'Vat')
+								.renderOptions('name', 'id', vat_list, 'VAT')
 								.find((option) => option.value === +row.vatCategoryId)
 						}
 						id="vatCategoryId"
@@ -1237,9 +1235,7 @@ class DetailPurchaseOrder extends React.Component {
 							net_value = parseFloat(net_value) +  parseFloat(value) ;
 							obj.exciseAmount = parseFloat(value);
 						}
-						else{
-							net_value = obj.unitPrice
-						}
+					
 				}
 				else{
 					obj.exciseAmount = 0
@@ -1260,9 +1256,7 @@ class DetailPurchaseOrder extends React.Component {
 									net_value = parseFloat(net_value) +  parseFloat(value) ;
 									obj.exciseAmount = parseFloat(value);
 								}
-								else{
-									net_value = obj.unitPrice
-								}
+							
 						}
 						else{
 							obj.exciseAmount = 0
@@ -1303,9 +1297,7 @@ class DetailPurchaseOrder extends React.Component {
 					const value = net_value / 2
 					obj.exciseAmount = parseFloat(value);
 				net_value = net_value}
-				else{
-					net_value = obj.unitPrice
-					}
+			
 						}
 						else{
 							obj.exciseAmount = 0
@@ -1340,9 +1332,7 @@ class DetailPurchaseOrder extends React.Component {
 						const value = net_value / 2
 						obj.exciseAmount = parseFloat(value);
 					net_value = net_value}
-					else{
-						net_value = obj.unitPrice
-						}
+					
 							}
 							else{
 								obj.exciseAmount = 0
@@ -1459,7 +1449,7 @@ class DetailPurchaseOrder extends React.Component {
 		if (currency !== null && currency) {
 			formData.append('currencyCode', this.state.supplier_currency);
 		}
-		this.setState({ loading:true, loadingMsg:"Updating Purchase Order..."});
+		this.setState({ loading:true, disableLeavePage:true, loadingMsg:"Updating Purchase Order..."});
 		this.props.purchaseOrderDetailsAction
 			.updatePO(formData)
 			.then((res) => {
@@ -1746,25 +1736,44 @@ class DetailPurchaseOrder extends React.Component {
 													onSubmit={(values, { resetForm }) => {
 														this.handleSubmit(values);
 													}}
+													validate={(values)=>{
+														let errors={}
+														if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
+														||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
+														||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
+														{
+	
+															if (!values.placeOfSupplyId) 
+																   errors.placeOfSupplyId ='Place of supply is required';
+															if (values.placeOfSupplyId &&
+																(values.placeOfSupplyId=="" ||
+																(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select place of supply")
+																)
+															   ) 
+																 errors.placeOfSupplyId ='Place of supply is required';
+														
+													   }
+														return errors;
+													}}
 													validationSchema={Yup.object().shape(
 														{
 														// 	po_number: Yup.string().required(
-														// 	'Invoice Number is Required',
+														// 	'Invoice number is required',
 														// ),
 														// supplierId: Yup.string().required(
-														// 	'Supplier is Required',
+														// 	'Supplier is required',
 														// ),
 														// rfqNumber: Yup.string().required(
-														// 	'Rfq Number is Required',
+														// 	'Rfq number is required',
 														// ),
 														// placeOfSupplyId: Yup.string().required(
-														// 	'Place of Supply is Required'
+														// 	'Place of supply is required'
 														// ),
 														poApproveDate: Yup.string().required(
-															'Order Date is Required',
+															'Order date is required',
 														),
 														poReceiveDate: Yup.string().required(
-															'Order Due Date is Required'
+															'Order due date is required'
 														),
 														attachmentFile: Yup.mixed()
 														.test(
@@ -1807,7 +1816,7 @@ class DetailPurchaseOrder extends React.Component {
 															.of(
 																Yup.object().shape({
 																	quantity: Yup.string()
-																		.required('Value is Required')
+																		.required('Value is required')
 																		.test(
 																			'quantity',
 																			'Quantity should be greater than 0',
@@ -1820,10 +1829,10 @@ class DetailPurchaseOrder extends React.Component {
 																			},
 																		),
 																	unitPrice: Yup.string()
-																		.required('Value is Required')
+																		.required('Value is required')
 																		.test(
 																			'Unit Price',
-																			'Unit Price Should be Greater than 1',
+																			'Unit price should be greater than 1',
 																			(value) => {
 																				if (value > 0) {
 																					return true;
@@ -1833,10 +1842,10 @@ class DetailPurchaseOrder extends React.Component {
 																			},
 																		),
 																	vatCategoryId: Yup.string().required(
-																		'VAT is Required',
+																		'VAT is required',
 																	),
 																	productId: Yup.string().required(
-																		'Product is Required',
+																		'Product is required',
 																	),
 																}),
 															),
@@ -2008,9 +2017,15 @@ class DetailPurchaseOrder extends React.Component {
 																</FormGroup>
 															</Col>
 																<Col lg={3}>
-																	<FormGroup className="mb-3">
+																{this.state.customer_taxTreatment_des!="NON GCC" &&(	<FormGroup className="mb-3">
 																		<Label htmlFor="placeOfSupplyId">
+																			{/* <span className="text-danger">* </span> */}
+																		{this.state.customer_taxTreatment_des &&
+																		(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
+																		||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
+																		||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED") && (
 																			<span className="text-danger">* </span>
+																		)}
 																			{strings.PlaceofSupply}
 																		</Label>
 																		<Select
@@ -2064,7 +2079,7 @@ class DetailPurchaseOrder extends React.Component {
 																					{props.errors.placeOfSupplyId}
 																				</div>
 																			)}
-																	</FormGroup>
+																	</FormGroup>)}
 																</Col>
 															
 																
@@ -2406,6 +2421,16 @@ class DetailPurchaseOrder extends React.Component {
 																		>
 																			 {strings.UNITPRICE}
 																		</TableHeaderColumn>
+																		{this.state.discountEnabled == true &&
+																	<TableHeaderColumn
+																	width="12%"
+																		dataField="discount"
+																		dataFormat={(cell, rows) =>
+																			this.renderDiscount(cell, rows, props)
+																		}
+																	>
+																		{strings.DISCOUNT_TYPE}
+																	</TableHeaderColumn>}
 																		{initValue.total_excise != 0 &&
 																		<TableHeaderColumn
 																	width="10%"
@@ -2423,8 +2448,7 @@ class DetailPurchaseOrder extends React.Component {
 																			placement="right"
 																			target="ExiseTooltip"
 																		>
-																			If Exise Type for a product is Inclusive
-																			then the Excise dropdown will be Disabled
+																			Excise dropdown will be enabled only for the excise products
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn> }
 																	{/* <TableHeaderColumn
@@ -2436,16 +2460,7 @@ class DetailPurchaseOrder extends React.Component {
 																	>
 																	DisCount
 																	</TableHeaderColumn> */}
-																	{this.state.discountEnabled == true &&
-																	<TableHeaderColumn
-																	width="12%"
-																		dataField="discount"
-																		dataFormat={(cell, rows) =>
-																			this.renderDiscount(cell, rows, props)
-																		}
-																	>
-																		{strings.DISCOUNT_TYPE}
-																	</TableHeaderColumn>}
+																	
 																		<TableHeaderColumn
 																			dataField="vat"
 																			dataFormat={(cell, rows) =>
@@ -2843,6 +2858,7 @@ class DetailPurchaseOrder extends React.Component {
 					purchaseCategory={this.state.purchaseCategory}
 				/>
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

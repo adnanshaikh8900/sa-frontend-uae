@@ -367,7 +367,7 @@ class SalaryComponentDeduction extends React.Component {
 											<Col lg={8}>
 												<FormGroup className="mb-3">
 													<Label htmlFor="salaryStructure">
-													<span className="text-danger">*</span>{strings.ComponentName}
+													<span className="text-danger">* </span>{strings.ComponentName}
 													</Label>
 													<Input
 														type="text"
@@ -391,7 +391,7 @@ class SalaryComponentDeduction extends React.Component {
 										{/* <Row>
 											<Col md="8">
 												<FormGroup>
-													<Label htmlFor="gender">	<span className="text-danger">*</span>{strings.Type}</Label>
+													<Label htmlFor="gender">	<span className="text-danger">* </span>{strings.Type}</Label>
 													<Select
 														isDisabled
 														options={
@@ -441,7 +441,7 @@ class SalaryComponentDeduction extends React.Component {
 											<Col lg={8}>
 												<FormGroup className="mb-3">
 													<Label htmlFor="salaryStructure">
-													<span className="text-danger">*</span>	{strings.Percentage}
+													<span className="text-danger">* </span>	{strings.Percentage}
 													</Label>
 													<Input
 														type="number"
@@ -468,7 +468,7 @@ class SalaryComponentDeduction extends React.Component {
 											<Col lg={8}>
 												<FormGroup className="mb-3">
 													<Label htmlFor="flatAmount">
-													<span className="text-danger">*</span>	  {strings.FlatAmount}
+													<span className="text-danger">* </span>	  {strings.FlatAmount}
 													</Label>
 													<Input
 													maxLength="8"

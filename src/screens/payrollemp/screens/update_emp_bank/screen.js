@@ -13,27 +13,17 @@ import {
     Row,
     Col
 } from 'reactstrap'
-import { Loader, ConfirmDeleteModal, ImageUploader } from 'components'
+import { Loader, LeavePage } from 'components'
 import Select from 'react-select'
-import {
-    CommonActions
-} from 'services/global'
+import { CommonActions } from 'services/global'
 import * as Yup from 'yup';
 import 'react-toastify/dist/ReactToastify.css'
-import DatePicker from 'react-datepicker'
-
 import * as DetailEmployeeBankAction from './actions';
-
-
 import { Formik } from 'formik';
 import { data } from '../../../Language/index'
-import LocalizedStrings from 'react-localization';
-  
+import LocalizedStrings from 'react-localization';  
 import { selectOptionsFactory } from 'utils'
-import moment from 'moment'
 import * as CreatePayrollEmployeeActions from '../create/actions'
-
-
 
 const mapStateToProps = (state) => {
     return ({
@@ -66,7 +56,8 @@ class UpdateEmployeeBank extends React.Component {
             bloodGroup: '',
             current_employee_id: null,
             existForAccountNumber: false,
-            loadingMsg:"Loading..."
+            loadingMsg:"Loading...",
+			disableLeavePage:false
         }
         this.regExAlpha = /^[a-zA-Z ]+$/;
         this.regExBoth = /[a-zA-Z0-9]+$/;
@@ -162,10 +153,10 @@ class UpdateEmployeeBank extends React.Component {
             });
     };
   
-    // Create or Edit Vat
+    // Create or Edit VAT
     handleSubmit = (data) => {
 
-        this.setState({ disabled: true });
+        this.setState({ disabled: true,	disableLeavePage:true });
         const { current_employee_id } = this.state;
         const {
             accountHolderName,
@@ -233,9 +224,6 @@ class UpdateEmployeeBank extends React.Component {
         strings.setLanguage(this.state.language);
         const { loading, initValue, dialog ,bankList ,existForAccountNumber,loadingMsg } = this.state
         const { designation_dropdown, country_list, state_list, employee_list_dropdown } = this.props
-        console.log(this.state.gender, "gender")
-        console.log(this.state.bloodGroup, "blood")
-        console.log(this.state.selectedStatus)
 
         return (
             loading ==true? <Loader loadingMsg={loadingMsg}/> :
@@ -268,25 +256,25 @@ class UpdateEmployeeBank extends React.Component {
                                                         let errors = {};
                                                         if (existForAccountNumber === true) {
                                                             errors.accountNumber =
-                                                                'Account Number Already Exists';
+                                                                'Account number already Eeists';
                                                         }
                                                         return errors;
                                                     }}
                                                     validationSchema={Yup.object().shape({
                                                         accountHolderName: Yup.string()
-                                                            .required("Account Holder Name is Required"),
+                                                            .required("Account holder name is required"),
                                                         accountNumber: Yup.string()
-                                                        .required("Account Number is Required"),
-                                                        bankName: Yup.string()
-                                                        .required("Bank Name is Required"),
+                                                        .required("Account number is required"),
+                                                        // bankName: Yup.string()
+                                                        // .required("Bank name is required"),
                                                         bankId: Yup.string()
-                                                        .required('Bank is Required') ,
-                                                        swiftCode: Yup.string()
-                                                        .required("Swift Code is Required"),
+                                                        .required('Bank name is required') ,
+                                                        // swiftCode: Yup.string()
+                                                        // .required("Swift code is required"),
                                                         branch: Yup.string()
-                                                        .required("Branch is Required"),
+                                                        .required("Branch is required"),
                                                         iban: Yup.string()
-                                                        .required("IBAN is Required"),
+                                                        .required("IBAN is required"),
                                                                        
                                                     })}
 
@@ -405,7 +393,7 @@ class UpdateEmployeeBank extends React.Component {
                                                                                             </Col>
                                                                         {/* <Col md="4">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="select"><span className="text-danger">*</span>{strings.BankName} </Label>
+                                                                                <Label htmlFor="select"><span className="text-danger">* </span>{strings.BankName} </Label>
                                                                                 <Input
                                                                                     type="text"
                                                                                     id="bankName"
@@ -477,7 +465,9 @@ class UpdateEmployeeBank extends React.Component {
 
                                                                         <Col lg={4}>
                                                                             <FormGroup>
-                                                                                <Label htmlFor="select"><span className="text-danger">* </span>{strings.SwiftCode}</Label>
+                                                                                <Label htmlFor="select">
+                                                                                    {/* <span className="text-danger">* </span> */}
+                                                                                {strings.SwiftCode}</Label>
                                                                                 <Input
                                                                                     type="text"
                                                                                     maxLength="11"
@@ -510,6 +500,7 @@ class UpdateEmployeeBank extends React.Component {
                                                                         onClick={() => {
                                                                             //	added validation popup	msg
                                                                             props.handleBlur();
+                                                                            console.log(props.errors)
                                                                             if(props.errors &&  Object.keys(props.errors).length != 0)
                                                                             this.props.commonActions.fillManDatoryDetails();
                                                                     }}
@@ -547,6 +538,7 @@ class UpdateEmployeeBank extends React.Component {
                     </Row>
                 </div>
             </div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
             </div>
         )
     }

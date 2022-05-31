@@ -449,7 +449,7 @@ class CreditNotes extends React.Component {
 									this.creditNoteposting(row);
 								}}
 							>
-								<i className="fas fa-send" />  {strings.Post}
+								<i className="fas fa-send" />  {strings.Send}
 							</DropdownItem>
 						)}
 

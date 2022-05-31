@@ -12,7 +12,6 @@ import {
 	FormGroup,
 	Input,
 	Label,
-	NavLink,
 	UncontrolledTooltip
 } from 'reactstrap';
 import Select from 'react-select';
@@ -25,9 +24,8 @@ import * as SupplierInvoiceActions from '../../actions';
 import * as ProductActions from '../../../product/actions';
 import { SupplierModal } from '../../sections';
 import { ProductModal } from '../../../customer_invoice/sections';
-import { Loader, ConfirmDeleteModal,Currency } from 'components';
+import { Loader, ConfirmDeleteModal, LeavePage, } from 'components';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
-
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
@@ -117,7 +115,8 @@ class DetailSupplierInvoice extends React.Component {
 			disabled1:false,
 			date:'',
 			datesChanged : false,
-			loadingMsg:"Loading..."
+			loadingMsg:"Loading...",
+			disableLeavePage:false
 		};
 
 		// this.options = {
@@ -442,7 +441,7 @@ class DetailSupplierInvoice extends React.Component {
 								.find((option) => option.value === +row.exciseTaxId)
 						}
 						id="exciseTaxId"
-						placeholder={strings.Select+strings.Vat}
+						placeholder={strings.Select+strings.VAT}
 						onChange={(e) => {
 							this.selectItem(
 								e.value,
@@ -474,6 +473,7 @@ class DetailSupplierInvoice extends React.Component {
 			/>
 		);
 	};
+
 	renderDescription = (cell, row, props) => {
 		let idx;
 		this.state.data.map((obj, index) => {
@@ -1241,9 +1241,7 @@ class DetailSupplierInvoice extends React.Component {
 							net_value = parseFloat(net_value) +  parseFloat(value) ;
 							obj.exciseAmount = parseFloat(value);
 						}
-						else{
-							net_value = obj.unitPrice
-						}
+						
 				}
 				else{
 					obj.exciseAmount = 0
@@ -1264,9 +1262,7 @@ class DetailSupplierInvoice extends React.Component {
 									net_value = parseFloat(net_value) +  parseFloat(value) ;
 									obj.exciseAmount = parseFloat(value);
 								}
-								else{
-									net_value = obj.unitPrice
-								}
+								
 						}
 						else{
 							obj.exciseAmount = 0
@@ -1307,9 +1303,7 @@ class DetailSupplierInvoice extends React.Component {
 					const value = net_value / 2
 					obj.exciseAmount = parseFloat(value);
 				net_value = net_value}
-				else{
-					net_value = obj.unitPrice
-					}
+				
 						}
 						else{
 							obj.exciseAmount = 0
@@ -1344,9 +1338,7 @@ class DetailSupplierInvoice extends React.Component {
 						const value = net_value / 2
 						obj.exciseAmount = parseFloat(value);
 					net_value = net_value}
-					else{
-						net_value = obj.unitPrice
-						}
+				
 							}
 							else{
 								obj.exciseAmount = 0
@@ -1393,7 +1385,7 @@ class DetailSupplierInvoice extends React.Component {
 	};
 
 	handleSubmit = (data) => {
-		this.setState({ disabled: true });
+		this.setState({ disabled: true, disableLeavePage:true });
 		const { current_supplier_id, term } = this.state;
 		const {
 			receiptAttachmentDescription,
@@ -1798,22 +1790,37 @@ class DetailSupplierInvoice extends React.Component {
 															errors.discount =
 																'Discount amount Cannot be greater than Invoice Total Amount';
 														}
+														if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
+													||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
+													||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
+											    	{
+
+														if (!values.placeOfSupplyId) 
+													       	errors.placeOfSupplyId ='Place of supply is required';
+														if (values.placeOfSupplyId &&
+															(values.placeOfSupplyId=="" ||
+															(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select place of supply")
+															)
+														   ) 
+													         errors.placeOfSupplyId ='Place of supply is required';
+													
+												   }
 														return errors;
 													}}
 													validationSchema={Yup.object().shape({
 														invoice_number: Yup.string().required(
-															'Invoice Number is Required',
+															'Invoice number is required',
 														),
 														contactId: Yup.string().required(
-															'Supplier is Required',
+															'Supplier is required',
 														),
-														term: Yup.string().required('Term is Required'),
-														placeOfSupplyId: Yup.string().required('Place of Supply is Required'),
+														term: Yup.string().required('Term is required'),
+														// placeOfSupplyId: Yup.string().required('Place of Supply is required'),
 														invoiceDate: Yup.string().required(
-															'Invoice Date is Required',
+															'Invoice date is required',
 														),
 														invoiceDueDate: Yup.string().required(
-															'Invoice Due Date is Required',
+															'Invoice due date is required',
 														),
 														currencyCode: Yup.string().required(
 															'Currency is Requsired',
@@ -1825,21 +1832,21 @@ class DetailSupplierInvoice extends React.Component {
 															.of(
 																Yup.object().shape({
 																	// description: Yup.string().required(
-																	// 	'Value is Required',
+																	// 	'Value is required',
 																	// ),
 																	quantity: Yup.string()
-																		.required('Value is Required')
+																		.required('Value is required')
 																		.test(
 																			'quantity',
 																			'Quantity should be greater than 0',
 																			(value) => value > 0,
 																		),
 																	unitPrice: Yup.string().required(
-																		'Value is Required'
+																		'Value is required'
 																	)
 																	.test(
 																		'Unit Price',
-																		'Unit Price Should be Greater than 1',
+																		'Unit price Should be greater than 1',
 																		(value) => {
 																			if (value > 0) {
 																				return true;
@@ -1849,10 +1856,10 @@ class DetailSupplierInvoice extends React.Component {
 																		},
 																	),
 																	vatCategoryId: Yup.string().required(
-																		'VAT is Required',
+																		'VAT is required',
 																	),
 																	productId: Yup.string().required(
-																		'Product is Required',
+																		'Product is required',
 																	),
 																}),
 															),
@@ -1941,6 +1948,7 @@ class DetailSupplierInvoice extends React.Component {
 																		<Select
 																			id="contactId"
 																			name="contactId"
+																			isDisabled
 																			onBlur={props.handlerBlur}
 																			options={
 																				tmpSupplier_list
@@ -2022,9 +2030,15 @@ class DetailSupplierInvoice extends React.Component {
 																</FormGroup>
 															</Col>
 																<Col lg={3}>
-																	<FormGroup className="mb-3">
+																{this.state.customer_taxTreatment_des!="NON GCC" &&(	<FormGroup className="mb-3">
 																		<Label htmlFor="placeOfSupplyId">
+																			{/* <span className="text-danger">* </span> */}
+																		{this.state.customer_taxTreatment_des &&
+																		(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
+																		||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
+																		||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED") && (
 																			<span className="text-danger">* </span>
+																		)}
 																			 {strings.PlaceofSupply}
 																		</Label>
 																		<Select
@@ -2078,7 +2092,7 @@ class DetailSupplierInvoice extends React.Component {
 																					{props.errors.placeOfSupplyId}
 																				</div>
 																			)}
-																	</FormGroup>
+																	</FormGroup>)}
 																</Col>							
 															</Row>
 															<hr />
@@ -2160,7 +2174,7 @@ class DetailSupplierInvoice extends React.Component {
 																			showMonthDropdown
 																			showYearDropdown
 																			dateFormat="dd-MM-yyyy"
-																			minDate={new Date()}
+																			//minDate={new Date()}
 																			dropdownMode="select"
 																			value={props.values.invoiceDate}
 																			selected={new Date(props.values.invoiceDate1)} 
@@ -2180,7 +2194,7 @@ class DetailSupplierInvoice extends React.Component {
 																		{props.errors.invoiceDate &&
 																			props.touched.invoiceDate && (
 																				<div className="invalid-feedback">
-																				{props.errors.invoiceDate.includes("nullable()") ? "Invoice Date is Required" :props.errors.invoiceDate}
+																				{props.errors.invoiceDate.includes("nullable()") ? "Invoice date is required" :props.errors.invoiceDate}
 																				</div>
 																			)}
 																	</FormGroup>
@@ -2511,6 +2525,16 @@ class DetailSupplierInvoice extends React.Component {
 																	>
 																	{strings.UnitPrice}
 																	</TableHeaderColumn>
+																	{this.state.discountEnabled == true &&
+																	<TableHeaderColumn
+																	width="12%"
+																		dataField="discount"
+																		dataFormat={(cell, rows) =>
+																			this.renderDiscount(cell, rows, props)
+																		}
+																	>
+																	Discount Type
+																	</TableHeaderColumn>}
 																	{initValue.total_excise != 0 &&
 																	<TableHeaderColumn
 																	width="10%"
@@ -2528,20 +2552,10 @@ class DetailSupplierInvoice extends React.Component {
 																			placement="right"
 																			target="ExiseTooltip"
 																		>
-																			If Exise Type for a product is Inclusive
-																			then the Excise dropdown will be Disabled
+																			Excise dropdown will be enabled only for the excise products
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn>}
-																	{this.state.discountEnabled == true &&
-																	<TableHeaderColumn
-																	width="12%"
-																		dataField="discount"
-																		dataFormat={(cell, rows) =>
-																			this.renderDiscount(cell, rows, props)
-																		}
-																	>
-																	Discount Type
-																	</TableHeaderColumn>}
+																
 
 																	<TableHeaderColumn
 																		width="12%"
@@ -2957,6 +2971,7 @@ class DetailSupplierInvoice extends React.Component {
 					purchaseCategory={this.state.purchaseCategory}
 				/>
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

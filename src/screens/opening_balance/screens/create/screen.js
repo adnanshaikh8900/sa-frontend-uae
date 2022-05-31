@@ -16,7 +16,7 @@ import {
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import _ from 'lodash';
-import { Loader } from 'components';
+import { Loader ,LeavePage} from 'components';
 
 import moment from 'moment';
 import { AuthActions,CommonActions } from 'services/global';
@@ -66,7 +66,8 @@ class CreateOpeningBalance extends React.Component {
 			loading: false,
 			createMore: false,
 			disabled: false,
-			loadingMsg:"Loading..."
+			loadingMsg:"Loading...",
+			disableLeavePage:false, 
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
@@ -102,7 +103,7 @@ class CreateOpeningBalance extends React.Component {
 		    formData.append(`persistModelList[${0}].effectiveDate`, moment(data.effectiveDate));
 			formData.append(`persistModelList[${0}].openingBalance`, data.openingBalance);
 		
-			this.setState({ loading:true, loadingMsg:"Creating New Opening Balance..."});
+			this.setState({ loading:true, disableLeavePage:true,loadingMsg:"Creating New Opening Balance..."});
 			this.props.createOpeningBalancesActions
 				.addOpeningBalance(formData)
 				.then((res) => {
@@ -182,7 +183,7 @@ class CreateOpeningBalance extends React.Component {
 													let errors = {};
 													if (!values.transactionCategoryId) {
 														errors.transactionCategoryId =
-															'Transaction Category is  required';
+															'Transaction category is  required';
 													}
 													if (!values.effectiveDate) {
 														errors.effectiveDate =
@@ -194,7 +195,7 @@ class CreateOpeningBalance extends React.Component {
 													}
 													if (values.transactionCategoryId && values.transactionCategoryId.label && values.transactionCategoryId.label === "Select Transaction Category") {
 														errors.transactionCategoryId =
-														'Transaction Category is Required';
+														'Transaction category is required';
 													}
 													return errors;
 												}}
@@ -282,7 +283,7 @@ class CreateOpeningBalance extends React.Component {
 																	{props.errors.effectiveDate &&
 																		props.touched.effectiveDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.effectiveDate.includes("nullable()") ? "Opening Date is Required" :props.errors.effectiveDate}
+																				{props.errors.effectiveDate.includes("nullable()") ? "Opening date is required" :props.errors.effectiveDate}
 
 																			</div>
 																		)}
@@ -375,6 +376,7 @@ class CreateOpeningBalance extends React.Component {
 					{loading ? <Loader></Loader> : ''}
 				</div>
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

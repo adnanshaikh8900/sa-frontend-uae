@@ -11,32 +11,24 @@ import {
 	Form,
 	FormGroup,
 	Input,
-	Label,
-	NavLink,
 } from 'reactstrap';
 import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import DatePicker from 'react-datepicker';
 import { Formik, Field } from 'formik';
-import * as Yup from 'yup';
 import * as CustomerInvoiceDetailActions from './actions';
 import * as ProductActions from '../../../product/actions';
 import * as CustomerInvoiceActions from '../../actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
-
-import { CustomerModal ,ProductModal } from '../../sections';
-import { Loader, ConfirmDeleteModal,Currency } from 'components';
-
+import { Loader, ConfirmDeleteModal } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
-import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
-
+import { selectOptionsFactory } from 'utils';
 import './style.scss';
 import moment from 'moment';
-import API_ROOT_URL from '../../../../constants/config';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
+
 let strings = new LocalizedStrings(data);
 const mapStateToProps = (state) => {
 	return {
@@ -502,7 +494,7 @@ min="0"
 	renderVat = (cell, row, props) => {
 		const { vat_list } = this.props;
 		let vatList = vat_list.length
-			? [{ id: '', vat: 'Select Vat' }, ...vat_list]
+			? [{ id: '', vat: 'Select VAT' }, ...vat_list]
 			: vat_list;
 		let idx;
 		this.state.data.map((obj, index) => {
@@ -524,18 +516,18 @@ min="0"
 										'name',
 										'id',
 										vat_list,
-										'Vat',
+										'VAT',
 								  )
 								: []
 						}
 						value={
 							vat_list &&
 							selectOptionsFactory
-								.renderOptions('name', 'id', vat_list, 'Vat')
+								.renderOptions('name', 'id', vat_list, 'VAT')
 								.find((option) => option.value === +row.vatCategoryId)
 						}
 						id="vatCategoryId"
-						placeholder={strings.Select+strings.Vat}
+						placeholder={strings.Select+strings.VAT}
 						onChange={(e) => {
 							this.selectItem(
 								e.value,
@@ -1065,7 +1057,7 @@ handleSubmit=(data)=>{
 			<text>
 			<b>Delete Customer Invoice?</b>
 			</text>
-			const message = 'This Credit Note  will be deleted permanently and cannot be recovered. ';
+			const message = 'This Credit Note will be deleted permanently and cannot be recovered. ';
 		this.setState({
 			dialog: (
 				<ConfirmDeleteModal

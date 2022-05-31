@@ -442,7 +442,7 @@ class CreateCreditNoteModal extends React.Component {
 	renderVat = (cell, row, props) => {
 		const { vat_list } = this.props;
 		let vatList = vat_list.length
-			? [{ id: '', vat: 'Select Vat' }, ...vat_list]
+			? [{ id: '', vat: 'Select VAT' }, ...vat_list]
 			: vat_list;
 		let idx;
 		this.state.selectedData.invoiceLineItems.map((obj, index) => {
@@ -465,18 +465,18 @@ class CreateCreditNoteModal extends React.Component {
 										'name',
 										'id',
 										vat_list,
-										'Vat',
+										'VAT',
 								  )
 								: []
 						}
 						value={
 							vat_list &&
 							selectOptionsFactory
-								.renderOptions('name', 'id', vat_list, 'Vat')
+								.renderOptions('name', 'id', vat_list, 'VAT')
 								.find((option) => option.value === +row.vatCategoryId)
 						}
 						id="vatCategoryId"
-						placeholder={strings.Select+strings.Vat}
+						placeholder={strings.Select+strings.VAT}
 						onChange={(e) => {
 							this.selectItem(
 								e.value,
@@ -539,7 +539,7 @@ class CreateCreditNoteModal extends React.Component {
 								.find((option) => option.value === +row.exciseTaxId)
 						}
 						id="exciseTaxId"
-						placeholder={strings.Select+strings.Vat}
+						placeholder={strings.Select+strings.VAT}
 						onChange={(e) => {
 							this.selectItem(
 								e.value,
@@ -1151,7 +1151,7 @@ class CreateCreditNoteModal extends React.Component {
                                                               <Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="invoiceNumber">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		 {strings.InvoiceNumber}
 																	</Label>
 																	<Input
@@ -1185,7 +1185,7 @@ class CreateCreditNoteModal extends React.Component {
                                                             <Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="po_number">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		 {strings.CreditNoteNumber}
 																	</Label>
 																	<Input
@@ -1222,7 +1222,7 @@ class CreateCreditNoteModal extends React.Component {
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="contactId">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		 {strings.CustomerName}
 																	</Label>
 																	<Input
@@ -1304,7 +1304,7 @@ class CreateCreditNoteModal extends React.Component {
                                                              <Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currencyCode">
-																	<span className="text-danger">*</span>
+																	<span className="text-danger">* </span>
 																		{strings.Currency}
 																	</Label>
 																	<Input
@@ -1341,7 +1341,7 @@ class CreateCreditNoteModal extends React.Component {
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="date">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.CreditNoteDate}
 																	</Label>
 																	<DatePicker
@@ -1547,8 +1547,7 @@ class CreateCreditNoteModal extends React.Component {
 																			placement="right"
 																			target="ExiseTooltip"
 																		>
-																			If Exise Type for a product is Inclusive
-																			then the Excise dropdown will be Disabled
+																			Excise dropdown will be enabled only for the excise products
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn>}
 																	

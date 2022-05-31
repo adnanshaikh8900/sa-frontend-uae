@@ -15,23 +15,20 @@ import {
 } from 'reactstrap';
 import { toast } from 'react-toastify';
 import _ from 'lodash';
-import { Loader } from 'components';
-import Select from 'react-select';
+import { LeavePage, Loader } from 'components';
 import CheckboxTree from 'react-checkbox-tree';
 import 'react-checkbox-tree/lib/react-checkbox-tree.css';
 import * as Yup from 'yup';
-
 import { CommonActions } from 'services/global';
-
 import 'react-toastify/dist/ReactToastify.css';
 import './style.scss';
-
 import * as VatCreateActions from '../../../vat_code/screens/create/actions';
 import * as VatActions from '../../../vat_code/actions';
 import * as roleActions from '../../screens/create/actions';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { Formik } from 'formik';
+
 const mapStateToProps = (state) => {
 	return {
 		vat_row: state.vat.vat_row,
@@ -66,7 +63,8 @@ class CreateRole extends React.Component {
 			isChecked: true,
 			expanded: ["SelectAll"],
 			validationForSelect:0,
-			loadingMsg:"Loading..."
+			loadingMsg:"Loading...",
+			disableLeavePage:false
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regExDecimal = /^[0-9]*(\.[0-9]{0,2})?$/;
@@ -134,7 +132,7 @@ class CreateRole extends React.Component {
 		});
 	};
 
-	// Create or Edit Vat
+	// Create or Edit VAT
 	handleSubmit = (data, resetForm) => {
 		
 		let index =this.state.checked ? this.state.checked.indexOf('SelectAll') :-1;
@@ -154,7 +152,7 @@ class CreateRole extends React.Component {
 			.then((res) => {
 				if (res.status === 200) {
 					this.setState({ disabled: false });
-					this.setState({ loading:false});
+					this.setState({ loading:false, disableLeavePage:true });
 					this.props.commonActions.tostifyAlert(
 						'success',
 						'New Role Created Successfully!',
@@ -294,7 +292,7 @@ getvalidation=()=>{
 												}}
 												validationSchema={Yup.object().shape({
 													name: Yup.string().required(
-														'Role Name is Required',
+														'Role name is required',
 													),
 												
 
@@ -575,6 +573,7 @@ getvalidation=()=>{
 					{loading ? <Loader></Loader> : ''}
 				</div>
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

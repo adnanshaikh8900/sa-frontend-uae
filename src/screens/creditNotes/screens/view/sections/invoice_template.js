@@ -4,9 +4,9 @@ import moment from 'moment';
 import '../style.scss';
 import logo from 'assets/images/brand/logo.png';
 import { Currency } from 'components';
-import { toInteger, upperCase } from 'lodash';
 import {data}  from '../../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import { TextareaAutosize } from '@material-ui/core';
 
 const { ToWords } = require('to-words');
 const toWords = new ToWords({
@@ -19,6 +19,7 @@ const toWords = new ToWords({
 	}
   });
 let strings = new LocalizedStrings(data);
+const footer = require('assets/images/invoice/invoiceFooter.png');
 class InvoiceTemplate extends Component {
 	constructor(props) {
 		super(props);
@@ -89,16 +90,16 @@ class InvoiceTemplate extends Component {
 						<span>{invoiceData.status}</span>
 					</div> */}
 
-					<CardBody style={{ marginTop: '1rem' }}>
+<CardBody style={{ margin: '1rem', border: 'solid 1px', borderColor: '#c8ced3', }}>
 						<div
 							style={{
 								width: '100%',
 								display: 'flex',
-								border:'1px solid',
-								padding:'7px',borderColor:'#c8ced3'
+								// border:'1px solid',
+								// padding:'7px',borderColor:'#c8ced3'
 							}}
 						>
-							<div style={{ width: '200%' }}>
+							<div style={{ width: '50%', marginTop: '4.5rem', marginLeft: '3rem' }}>
 								<div className="companyDetails">
 									<img
 										src={
@@ -110,103 +111,96 @@ class InvoiceTemplate extends Component {
 										}
 										className=""
 										alt=""
-										style={{ width: ' 240px' }}
+										style={{ width: ' 300px' }}
 									/>
 									</div>
-									<div style={{ marginTop: '4.2rem' }}>
-										<div className="mb-1 ml-2"><b>{strings.CompanyName} : </b> {companyData.companyName}</div>
-									<div className="mb-1 ml-2"><b>{strings.CompanyAddress} : </b> {companyData.companyAddressLine1+","+companyData.companyAddressLine2}</div>
-									<div className="mb-1 ml-2"><b>{strings.PinCode} : </b> {companyData.companyPostZipCode}</div>
-									<div className="mb-1 ml-2"><b>{strings.StateRegion} : </b> {companyData.companyStateName}</div>
-									<div className="mb-1 ml-2"><b>{strings.Country} : </b> {companyData.companyCountryName}</div>
-									<div className="mb-1 ml-2"><b>{strings.VATRegistrationNo} : </b> {companyData.vatRegistrationNumber}</div>
-									<div className="mb-1 ml-2"><b>{strings.MobileNumber} : </b> {this.companyMobileNumber(companyData.phoneNumber?"+"+companyData.phoneNumber:'')}</div>
-								</div>
-							</div>
-							<div className="text-center" style={{ width: '200%',justifyContent:'center' }}>
-							<div 
-										style={{
-											width: '100%',
-											fontSize: '1.5rem',
-											marginTop:'4.4rem',
-											fontWeight: '700',
-											textTransform: 'uppercase',
-											color: 'black',
-										}}
-									>
-										{strings.CreditNote }
-							</div>
-								
-							</div>
-							<div
+									</div>
+									<div
 								style={{
 									width: '70%',
 									display: 'flex',
 									flexDirection: 'column',
-									justifyContent: 'right',
+									justifyContent: 'left',
 								}}
 							>
-								<div 	style={{
-									width: '70%',
-									margin:'1.5rem 9.0rem 0.5rem 4rem',
-									marginTop:'6.5rem',
-									marginLeft:'8rem'
+								<div style={{
+									width: '97%',
+									textAlign: 'right',
+
 								}}>
-								<h4 className="mb-1 ml-2"><b>{companyData && companyData.company
-											? companyData.company.companyName
-											: ''}</b></h4>
-								<h5 className="mb-1 ml-2">{strings.CreditNote } #{invoiceData.referenceNumber}</h5><br/>
-								<h6 className="mb-1 ml-2"><b>{strings.CreditTo} ,</b></h6>
-								{contactData  &&(<div className="mb-1 ml-2"><b>{strings.Name} : </b>{contactData.organization ? contactData.organization:( contactData.firstName+" "+contactData.lastName)}</div>)}
-								{contactData && contactData.addressLine1 &&(<div className="mb-1 ml-2"><b>{strings.BillingAddress} : </b> {contactData.addressLine1}</div>)}
-								{contactData && contactData.postZipCode &&(	<div className="mb-1 ml-2"><b>{strings.PinCode} : </b> {contactData.postZipCode}</div>)}
-								{contactData&&contactData.billingStateName&&(<div className="mb-1 ml-2"><b>{strings.StateRegion} : </b> {contactData.billingStateName}</div>)}
-								{contactData && contactData.billingCountryName &&(<div className="mb-1 ml-2"><b>{strings.Country} : </b> {contactData.billingCountryName}</div>)}
-								{contactData  &&(	<div className="mb-1 ml-2"><b>{strings.VATRegistrationNo} : </b> {contactData.vatRegistrationNumber}</div>)}
-								{contactData&&contactData.mobileNumber&&(   <div className="mb-1 ml-2"><b>{strings.MobileNumber} : </b>+{contactData.mobileNumber}</div>)}
-								
-													<span className="mb-1 ml-2"><b>{strings.Status }&nbsp; : </b> {this.renderInvoiceStatus(status)}</span>
-													
-								</div>
+									<div style={{ marginTop: '0.5rem' }}>
+									<h2 className="mb-1 ml-2"><b>TAX Credit Note</b></h2><br />
+									<div className="mb-1 ml-2" style={{fontSize:"22px"}}><b>{companyData.companyName}</b></div>
+									<div className="mb-1 ml-2">{companyData.companyAddressLine1}</div>
+										<div className="mb-1 ml-2">{companyData.companyAddressLine2}</div>
+										{companyData.companyCountryCode==229 ?
+																	strings.POBox:
+																	""} : {companyData.companyPoBoxNumber} ,&nbsp;
+										{companyData &&(companyData.companyStateName ? companyData.companyStateName + " , " : "")}
+										{companyData &&(companyData.companyCountryName ? companyData.companyCountryName : "")}
+										{companyData.companyRegistrationNumber && (<div className="mb-1 ml-2">{strings.CompanyRegistrationNo} : {companyData.companyRegistrationNumber}</div>)}
+										{companyData.isRegisteredVat==true&&(<div className="mb-1 ml-2">{strings.VATRegistrationNo} : {companyData.vatRegistrationNumber}</div>)}
+									<div className="mb-1 ml-2">{strings.MobileNumber} : {this.companyMobileNumber(companyData.phoneNumber?"+"+companyData.phoneNumber:'')}</div>
+									{companyData.emailAddress&&(<div className="mb-1 ml-2">Email : {companyData.emailAddress}</div>)}
 								</div>
 							</div>
-					
-
-						<div
+							</div>
+							</div>
+							<hr/>
+							
+							<div
 							style={{
 								width: '100%',
 								display: 'flex',
 								justifyContent: 'space-between',
 								marginBottom: '1rem',
-								borderLeft:'1px solid',
-									borderRight:'1px solid',
-									borderBottom:'1px solid',borderColor:'#c8ced3'
+						
 							}}
 						>
-							<div style={{width: '444%'}}>
-								<div
-									style={{
-										width: '41%',
-										margin:'0.5rem',
-										border:'1px solid',borderColor:'#c8ced3'
-									}}
-								>
-									<h6 style={{ fontWeight: '600' }} className="mb-2 mt-2 ml-1">
-										<b>{strings.TaxCreditDate}:{' '}
-													{moment(invoiceData.invoiceDate).format(
-														'DD MMM YYYY',
-													)}</b>
-									</h6>
-								</div>
-							</div>
 							<div
 								style={{
 									width: '100%',
 									display: 'flex',
 									justifyContent: 'space-between',
+									marginLeft: '2rem'
 								}}
 							>
-								{/* <div style={{ width: '80%' }}>
+								<div>
+								{/* <h4 className="mb-1 ml-2"><b>{companyData && companyData.company
+											? companyData.company.companyName
+											: ''}</b></h4> */}
+											<br/>
+								<h6 className="mb-1 ml-2"><b>{strings.CreditTo} ,</b></h6><br/>
+								{contactData  &&(<div className="mb-1 ml-2"><b>{contactData.organization ? contactData.organization:( contactData.firstName+" "+contactData.lastName)}</b></div>)}
+								{contactData && contactData.addressLine1 && (<div className="mb-1 ml-2">{contactData.addressLine1}</div>)}
+
+									<div className="mb-1 ml-2">
+									{invoiceData && contactData && (
+											contactData.countryId==229 ?
+											contactData.poBoxNumber ?(strings.POBox +" : " +contactData.poBoxNumber ): ""
+											:contactData.postZipCode ? contactData.postZipCode : ""
+											)} ,&nbsp;
+									    {invoiceData && contactData && (contactData.billingStateName ? contactData.billingStateName + " , " : "")}
+										{invoiceData && contactData && (contactData.billingCountryName ? contactData.billingCountryName : "")}
+									</div>
+									{console.log(invoiceData.taxTreatment,"invoiceData.taxTreatment")}
+									{invoiceData && invoiceData.taxTreatment&& invoiceData.taxTreatment.includes("NON")==false &&(<div className="mb-1 ml-2">{strings.VATRegistrationNo} :  {contactData &&contactData.vatRegistrationNumber&&(contactData.vatRegistrationNumber)}</div>)}
+								{contactData&&contactData.mobileNumber&&(   <div className="mb-1 ml-2">{strings.MobileNumber} : +{contactData.mobileNumber}</div>)}
+								{contactData && contactData.billingEmail && (<div className="mb-1 ml-2">{strings.Email} : {contactData.billingEmail}</div>)}
+								</div>
+								<div style={{ width: '27%' }}>
+									<br/>
+								<div className="mb-1 ml-2"><b>{strings.CreditNote} : </b> # {invoiceData.referenceNumber}</div>
+								<div className="mb-1 ml-2"><b>{strings.TaxCreditDate} : </b>{' '}
+										{moment(invoiceData.invoiceDate).format(
+											'DD MMM YYYY',
+										)}</div>
+											<div className="mb-1 ml-2"><b>{strings.Status} : </b>{this.renderInvoiceStatus(status)}</div>
+								</div>
+								</div>
+							</div>
+					  
+					  {/* <div style={{ width: '80%' }}>
 									<Table className="table table-bordered" style={{width: '90%',margin:'0.5rem',border:'1px solid',width:'250px', textAlign: 'center' ,border:'1px solid',borderColor:'#c8ced3'}}>
 										<tbody>
 											<tr style={{ textAlign: 'right' }}>
@@ -233,51 +227,47 @@ class InvoiceTemplate extends Component {
 										</tbody>
 									</Table>
 								</div> */}
-							</div>
-						</div>
-						{isCNWithoutProduct==false&&(<Table  >
-							<thead className="header-row">
+
+						{isCNWithoutProduct==false&&(<Table className='table-striped'>
+							<thead className="header-row" style={{ fontSize:"12px" }}>
 								<tr>
 									<th className="center" style={{ padding: '0.5rem',    width: "40px" }}>
 										#
 									</th>
 									{/* <th style={{ padding: '0.5rem' }}>Item</th> */}
-									<th style={{ padding: '0.5rem' }}>{strings.ProductName }</th>
-									<th style={{ padding: '0.5rem' }}>{strings.Description }</th>
-									<th className="center" style={{ padding: '0.5rem' }}>
+									<th style={{ padding: '0.5rem' }}>{strings.ProductNameAndDescription}</th>
+									<th className="text-center" style={{ padding: '0.5rem' }}>
 										{strings.Quantity }
-									</th>
-									<th className="center" style={{ padding: '0.5rem' }}>
-										{strings.UnitType}
 									</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
 										{strings.UnitCost }
 									</th>
+									{invoiceData.discount > 0 && (<>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
 										{strings.Discount }
-									</th>
-									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.DiscountType}</th>
-									<th style={{ padding: '0.5rem' }}>{strings.Excise}</th>
+									</th></>)}
+									{/* <th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.DiscountType}</th> */}
+									{/* <th style={{ padding: '0.5rem' }}>{strings.Excise}</th> */}
 									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.ExciseAmount}</th>
-									<th style={{ padding: '0.5rem', textAlign: 'right' ,   width: "60px" }}>{strings.Vat }</th>
+									{/* <th style={{ padding: '0.5rem', textAlign: 'right' ,   width: "60px" }}>{strings.VAT}</th> */}
 									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.VatAmount}</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
 									{strings.SubTotal }
 									</th>
 								</tr>
 							</thead>
-							<tbody className=" table-bordered table-hover">
+							<tbody className="table-hover">
 								{invoiceData.invoiceLineItems &&
 									invoiceData.invoiceLineItems.length &&
 									invoiceData.invoiceLineItems.map((item, index) => {
 										return (
 											<tr key={index}>
 												<td className="center">{index + 1}</td>
-												<td>{item.productName}</td>
-												<td>{item.description}</td>
-												<td>{item.quantity}</td>
-												<td>{item.unitType}</td>
-												<td style={{ textAlign: 'right', width: '20%' }}>
+												<td><b>{item.productName}</b><br/><br />{item.description}</td>
+												<td  style={{ textAlign: 'center' }}>{item.quantity}<br/><br/>
+											     <b style={{fontSize:"10.5px"}}>{item.unitType}</b>	
+												</td>
+												<td style={{ textAlign: 'right', width: '10%' }}>
 													<Currency
 														value={item.unitPrice}
 														currencySymbol={
@@ -287,10 +277,10 @@ class InvoiceTemplate extends Component {
 														}
 													/>
 												</td>
-												<td style={{ textAlign: 'right' }}>{item.discount}</td>
-												<td style={{ textAlign: 'right' }}>{item.discountType}</td>
-												<td>{item.exciseTaxId ? this.renderExcise(item):"-"}</td>
-												<td style={{ textAlign: 'right' }}>
+												{invoiceData.discount > 0 && (<>	<td style={{ textAlign: 'right' }}>{item.discount}</td></>)}
+												{/* <td style={{ textAlign: 'right' }}>{item.discountType}</td> */}
+												{/* <td>{item.exciseTaxId ? this.renderExcise(item):"-"}</td> */}
+												{ invoiceData.totalExciseAmount > 0 && (<><td style={{ textAlign: 'right' }}>
 													<Currency
 														value={item.exciseAmount}
 														currencySymbol={
@@ -299,10 +289,10 @@ class InvoiceTemplate extends Component {
 																: 'USD'
 														}
 													/>
-												</td>
-												<td
+												</td></>)}
+												{/* <td
 													style={{ textAlign: 'right' }}
-												>{`${item.vatPercentage}%`}</td>
+												>{`${item.vatPercentage}%`}</td> */}
 												<td style={{ textAlign: 'right' }}>
 													<Currency
 														value={item.vatAmount}
@@ -327,48 +317,39 @@ class InvoiceTemplate extends Component {
 										);
 									})}
 							</tbody>
-						</Table>)}
+						</Table>)}<hr/>
 						<div 
 							style={{
 								width: '100%',
 								display: 'flex',
 								justifyContent: 'space-between',
-								marginBottom: '1rem',border:'solid 1px',borderColor:'#c8ced3',
-								fontSize: "12px"
-							}}
-						>
-								<div
+								// marginBottom: '1rem',border:'solid 1px',borderColor:'#c8ced3',
+								fontSize: "14px"
+							}}>
+							<div
 								style={{
-									width: '200%',
+									width: '40%',
 									display: 'flex',
 									flexDirection: 'column',
-									justifyContent: 'center',
+									marginLeft: '2rem'
 								}}
-							>
-								<div className="pl-5 pb-2">{strings.AmountInWords }:<br/>
-									<b><u> {invoiceData.totalAmount ?upperCase (currencyName + " " +(toWords.convert(invoiceData.totalAmount))+" ONLY").replace("POINT","AND"): " -"}
-									{/* <b> {parseInt(invoiceData.dueAmount)} */}
-									</u></b></div>
-									{isCNWithoutProduct==false&&(		<div className="pl-5 pb-2">{strings.Vat+" "+strings.AmountInWords  }:
-										<br/>
-									<b><u>{invoiceData.totalVatAmount ? (upperCase(invoiceData.currencyName + " " +(toWords.convert(invoiceData.totalVatAmount))+" ONLY")).replace("POINT","AND") : " -" }</u></b>
-									{/* <b> {invoiceData.totalVatAmount}</b> */}
-								</div>)}
-							<div className="pl-5" style={{borderTop:'1px solid',borderColor:'#c8ced3'}}>
-
-								<h6 className="mb-0 pt-2">
-									<b>{strings.Notes }:</b>
-								</h6>
+							>				
+								<br />
+						
+								{invoiceData.notes&& (<><h6 className="mb-0 pt-2">
+									<b>{strings.TermsAndConditions }:</b>
+								</h6><br/>
 								<h6 className="mb-0">{invoiceData.notes}</h6>
-							</div>
+							</>)}
 							
 							</div>
 							<div
 								style={{
-									width: '150%',
+									width: '40%',
 									display: 'flex',
 									justifyContent: 'space-between',
-								
+									marginRight: '1rem'
+
 								}}
 							>
 								<div style={{ width: '100%' }}>
@@ -414,7 +395,7 @@ class InvoiceTemplate extends Component {
 											</td>
 										</tr> */}
 										
-										{isCNWithoutProduct==false&&(<tr >
+										{isCNWithoutProduct==false&&invoiceData.totalExciseAmount && invoiceData.totalExciseAmount > 0 ?(<tr >
 											<td style={{ width: '40%' }}>
 												<strong>{strings.TotalExcise}</strong>
 											</td>
@@ -447,8 +428,8 @@ class InvoiceTemplate extends Component {
 													)}
 												</span>
 											</td>
-										</tr>)}
-                                        {isCNWithoutProduct==false&&(<tr >
+										</tr>):""}
+                                        {isCNWithoutProduct==false&&invoiceData.discount && invoiceData.discount > 0 ?(<tr >
 											<td style={{ width: '40%' }}>
 												<strong>
 													{strings.Discount }
@@ -486,7 +467,7 @@ class InvoiceTemplate extends Component {
 													)}
 												</span>
 											</td>
-										</tr>)}
+										</tr>):""}
 										<tr >
 											<td style={{ width: '40%' }}><strong>{strings.TotalNet }</strong></td>
 											<td style={{display: 'flex',justifyContent: 'space-between',}}>
@@ -516,7 +497,7 @@ class InvoiceTemplate extends Component {
 										</tr>
 										{isCNWithoutProduct==false&&(<tr >
 											<td style={{ width: '40%' }}>
-												<strong>{strings.Vat}</strong>
+												<strong>{strings.VAT}</strong>
 											</td>
 											<td
 												style={{
@@ -623,8 +604,19 @@ class InvoiceTemplate extends Component {
 								</Table>
 								</div>		
 							</div>
-						</div>												
+						</div><hr/>
+						<TextareaAutosize
+																			type="textarea"
+																			disabled
+																			className="textarea viewFootNote"
+																			maxLength="250"
+																			style={{width: "1100px"}}
+																			// rows="5"
+																			value={invoiceData.footNote}
+																		/>
+						<br /><br/><br/>											
 					</CardBody>
+					<img className='footer' src={footer} style={{ height: "65px", width: "100%" }}></img>
 				</Card>
 			</div>
 		);

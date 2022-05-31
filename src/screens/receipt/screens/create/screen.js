@@ -12,28 +12,24 @@ import {
 	FormGroup,
 	Input,
 	Label,
-	NavLink,
 } from 'reactstrap';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
-
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
-
 import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
 import * as ReceiptActions from '../../actions';
 import * as ReceiptCreateActions from './actions';
 import * as CustomerInvoiceActions from '../../../customer_invoice/actions';
-import API_ROOT_URL from '../../../../constants/config';
 import 'react-datepicker/dist/react-datepicker.css';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
-
 import './style.scss';
 import moment from 'moment';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import { LeavePage, Loader} from 'components';
 
 const mapStateToProps = (state) => {
 	return {
@@ -84,8 +80,9 @@ class CreateReceipt extends React.Component {
 				attachmentFile: '',
 				paidInvoiceListStr: [],
 			},
-			data: [],
+			data1: [],
 			paidInvoiceListStr: [],
+			disableLeavePage:false
 		};
 		this.formRef = React.createRef();
 		this.regEx = /^[0-9\d]+$/;
@@ -107,6 +104,16 @@ class CreateReceipt extends React.Component {
 			'application/vnd.ms-excel',
 			'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 		];
+		this.options = {
+			paginationPosition: 'bottom',
+			page: 1,
+			sizePerPage: 10,
+			onSizePerPageList: this.onSizePerPageList,
+			onPageChange: this.onPageChange,
+			sortName: '',
+			sortOrder: '',
+			onSortChange: this.sortColumn,
+		};
 	}
 
 	onRowSelect = (row, isSelected, e) => {
@@ -176,6 +183,7 @@ class CreateReceipt extends React.Component {
 	};
 
 	handleSubmit = (data, resetForm) => {
+		this.setState({ disabled: true, disableLeavePage:true, });
 		//const { invoiceId } = this.state;
 		const {
 			receiptNo,
@@ -223,9 +231,10 @@ class CreateReceipt extends React.Component {
 					'success',
 					res.data ? res.data.message : 'Payment Recorded Successfully',
 				);
-				this.props.history.push('/admin/income/customer-invoice');
+				this.props.history.push('/admin/income/receipt');
 			})
 			.catch((err) => {
+				this.setState({ createDisabled: false, loading: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
 					err.data ? err.data.message : 'Payment Recorded Unsuccessfully'
@@ -240,7 +249,7 @@ class CreateReceipt extends React.Component {
 				if (res.status === 200) {
 					this.setState(
 						{
-							data: res.data,
+							data1: res.data,
 							initValue: {
 								...this.state.initValue,
 								...{
@@ -274,7 +283,7 @@ class CreateReceipt extends React.Component {
 			<Button
 				size="sm"
 				className="btn-twitter btn-brand icon"
-				disabled={this.state.data.length === 1 ? true : false}
+				disabled={this.state.data1.length === 1 ? true : false}
 				// onClick={(e) => {
 				// 	this.deleteRow(e, rows, props);
 				// }}
@@ -289,7 +298,7 @@ class CreateReceipt extends React.Component {
 	};
 
 	renderAmount = (cell, rows, props) => {
-		let data = this.state.data;
+		let data = this.state.data1;
 		let idx;
 		data.map((obj, index) => {
 			if (obj.id === rows.id) {
@@ -303,8 +312,8 @@ class CreateReceipt extends React.Component {
 				name="paidAmount"
 				render={({ field, form }) => (
 					<Input
-					type="number"
-min="0"
+						type="number"
+						min="0"
 						readOnly
 						value={rows.totalAount}
 						// onChange={(e) => {
@@ -320,9 +329,17 @@ min="0"
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { contact_list, deposit_list, pay_mode } = this.props;
-		const { initValue, data } = this.state;
+		const {	initValue, loadingMsg, loading, data1} = this.state;
+		const { contact_list, deposit_list,pay_mode } = this.props;
+
+		let tmpContact_list = []
+
+		contact_list.map(item => {
+			let obj = {label: item.label.contactName, value: item.value}
+			tmpContact_list.push(obj)
+		})
 		return (
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 			<div className="create-receipt-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -333,7 +350,7 @@ min="0"
 										<Col lg={12}>
 											<div className="h4 mb-0 d-flex align-items-center">
 												<i className="fa fa-file-o" />
-												<span className="ml-2">{strings.CreateReceipt}</span>
+												<span className="ml-2">{strings.CreateIncomeReciept}</span>
 											</div>
 										</Col>
 									</Row>
@@ -417,11 +434,11 @@ min="0"
 																	<Select
 																		styles={customStyles}
 																		options={
-																			contact_list
+																			tmpContact_list
 																				? selectOptionsFactory.renderOptions(
 																						'label',
 																						'value',
-																						contact_list,
+																						tmpContact_list,
 																						'Customer Name',
 																				  )
 																				: []
@@ -452,32 +469,11 @@ min="0"
 																		)}
 																</FormGroup>
 															</Col>
-															{/* <Col lg={4}>
-																<FormGroup className="mb-3">
-																	<Label htmlFor="receiptNo">Payment</Label>
-																	<Input
-																		type="text"
-																		id="receiptNo"
-																		name="receiptNo"
-																		readOnly
-																		placeholder="Payment Number"
-																		value={props.values.receiptNo}
-																		onChange={(option) => {
-																			if (
-																				option.target.value === '' ||
-																				this.regExBoth.test(option.target.value)
-																			) {
-																				props.handleChange('receiptNo')(option);
-																			}
-																		}}
-																	/>
-																</FormGroup>
-															</Col> */}
 														</Row>
 														<hr />
 														{props.values.contactId && (
 															<div>
-																{this.state.data.length > 0 ? (
+																{this.state.data1.length > 0 ? (
 																	<div>
 																		<Row>
 																			<Col lg={4}>
@@ -490,7 +486,7 @@ min="0"
 																						min="0"
 																						id="amount"
 																						name="amount"
-																						readOnly
+																						// readOnly
 																						placeholder={strings.Amount}
 																						onChange={(option) => {
 																							if (
@@ -526,9 +522,7 @@ min="0"
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="receipt_date">
-																						<span className="text-danger">
-																							*
-																						</span>
+																						<span className="text-danger">* </span>
 																						{strings.PaymentDate}
 																					</Label>
 																					<DatePicker
@@ -565,13 +559,10 @@ min="0"
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="payMode">
-																						<span className="text-danger">
-																							*
-																						</span>{' '}
+																						<span className="text-danger">* </span>{' '}
 																						{strings.PaymentMode}
 																					</Label>
 																					<Select
-																						styles={customStyles}
 																						options={
 																							pay_mode
 																								? selectOptionsFactory.renderOptions(
@@ -585,13 +576,9 @@ min="0"
 																						value={props.values.payMode}
 																						onChange={(option) => {
 																							if (option && option.value) {
-																								props.handleChange('payMode')(
-																									option,
-																								);
+																								props.handleChange('payMode')(option);
 																							} else {
-																								props.handleChange('payMode')(
-																									'',
-																								);
+																								props.handleChange('payMode')('');
 																							}
 																						}}
 																						placeholder={strings.Select+strings.PaymentMode}
@@ -615,10 +602,8 @@ min="0"
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="depositeTo">
-																						<span className="text-danger">
-																							*
-																						</span>{' '}
-																						{strings.DepositTo} 
+																						<span className="text-danger">* </span>{' '}
+																						{strings.ReceivedThrough} 
 																					</Label>
 																					<Select
 																						styles={customStyles}
@@ -635,7 +620,7 @@ min="0"
 																								)('');
 																							}
 																						}}
-																						placeholder={strings.Select+strings.DepositTo}
+																						placeholder={strings.Select+strings.ReceivedThrough}
 																						id="depositeTo"
 																						name="depositeTo"
 																						className={
@@ -667,7 +652,7 @@ min="0"
 																								type="text"
 																								id="referenceCode"
 																								name="referenceCode"
-																								placeholder={strings.Enter+strings.ReferenceNumber}
+    																							placeholder={strings.ReceiptNumber}
 																								onChange={(option) => {
 																									if (
 																										option.target.value ===
@@ -681,9 +666,7 @@ min="0"
 																										)(option);
 																									}
 																								}}
-																								value={
-																									props.values.referenceCode
-																								}
+																								value={props.values.referenceCode}
 																							/>
 																						</FormGroup>
 																					</Col>
@@ -699,15 +682,13 @@ min="0"
 																								name="notes"
 																								id="notes"
 																								rows="5"
-																								placeholder={strings.Notes} 
+																								placeholder={strings.DeliveryNotes} 
 																								onChange={(option) =>
 																									props.handleChange('notes')(
 																										option,
 																									)
 																								}
-																								defaultValue={
-																									props.values.notes
-																								}
+																								defaultValue={props.values.notes}
 																							/>
 																						</FormGroup>
 																					</Col>
@@ -737,7 +718,7 @@ min="0"
 																											className="btn-square mr-3"
 																										>
 																											<i className="fa fa-upload"></i>{' '}
-																											{strings.Upload} 
+																											{strings.Attachment} 
 																										</Button>
 																										<input
 																											id="fileInput"
@@ -808,12 +789,23 @@ min="0"
 																		<Row>
 																			<BootstrapTable
 																				selectRow={this.selectRowProp}
-																				data={data}
+																				search={false}
+																				options={this.options}
+																				data={data1}
 																				version="4"
 																				hover
+																				responsive
 																				keyField="id"
-																				className="invoice-create-table"
+																				pagination={true}
+																				remote
+
 																			>
+																				<TableHeaderColumn 
+																					dataField="referenceNo"
+																				>
+																					{strings.InvoiceNumber}
+																				</TableHeaderColumn>
+
 																				<TableHeaderColumn
 																					dataField="date"
 																					dataFormat={(cell, rows) =>
@@ -822,15 +814,18 @@ min="0"
 																				>
 																					{strings.Date}
 																				</TableHeaderColumn>
-																				<TableHeaderColumn dataField="referenceNo">
-																					{strings.InvoiceNumber}
-																				</TableHeaderColumn>
-																				<TableHeaderColumn dataField="totalAount">
+																				
+																				<TableHeaderColumn 
+																					dataField="totalAount"
+																				>
 																					{strings.InvoiceAmount}
 																				</TableHeaderColumn>
-																				<TableHeaderColumn dataField="dueAmount">
+																				<TableHeaderColumn 
+																					dataField="dueAmount"
+																				>
 																					 {strings.AmountDue}
 																				</TableHeaderColumn>
+																				
 																				<TableHeaderColumn
 																					dataField="paidAmount"
 																					dataFormat={(cell, rows) =>
@@ -893,6 +888,7 @@ min="0"
 						</Col>
 					</Row>
 				</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

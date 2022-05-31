@@ -21,7 +21,7 @@ import DatePicker from 'react-datepicker';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 
-import { Currency , Loader} from 'components';
+import { Currency ,LeavePage, Loader} from 'components';
 import { CommonActions } from 'services/global';
 import { selectCurrencyFactory } from 'utils';
 import * as JournalActions from '../../actions';
@@ -120,7 +120,9 @@ class CreateJournal extends React.Component {
 				],
 			},
 			submitJournal: false,
-			loadingMsg:"Loading..."
+			loadingMsg:"Loading...",
+			disableLeavePage:false,
+
 			
 		};
 
@@ -159,7 +161,6 @@ class CreateJournal extends React.Component {
 	};
 
 	getjournalReferenceNo = () => {
-		debugger
 		this.props.journalActions.getInvoiceNo().then((res) => {
 			if (res.status === 200) {
 				this.setState({
@@ -177,7 +178,6 @@ class CreateJournal extends React.Component {
 		});
 	};
 	validationCheck = (value) => {
-		debugger
 		const data = {
 			moduleType: 20,
 			name: value,
@@ -186,7 +186,7 @@ class CreateJournal extends React.Component {
 			.checkValidation(data)
 			.then((response) => {
 				
-				if (response.data === 'Journal Reference Number Already Exists') {
+				if (response.data === 'Journal reference number already exists') {
 					this.setState(
 						{
 							exist: true,
@@ -297,6 +297,8 @@ class CreateJournal extends React.Component {
 			<Field
 				name={`journalLineItems.${idx}.transactionCategoryId`}
 				render={({ field, form }) => (
+					<>
+				
 					<Select
 						styles={{
 							menu: (provided) => ({ ...provided, zIndex: 9999 }),
@@ -304,29 +306,34 @@ class CreateJournal extends React.Component {
 						options={transactionCategoryList ? transactionCategoryList : []}
 						id="transactionCategoryId"
 						onChange={(e) => {
-							this.selectItem(
-								e.value,
-								row,
-								'transactionCategoryId',
-								form,
-								field,
-							);
+							this.selectItem(e.value,row,'transactionCategoryId',form,field);
 						}}
 						placeholder={strings.Select+strings.Account}
 						className={`${
 							props.errors.journalLineItems &&
 							props.errors.journalLineItems[parseInt(idx, 10)] &&
-							props.errors.journalLineItems[parseInt(idx, 10)]
-								.transactionCategoryId &&
+							props.errors.journalLineItems[parseInt(idx, 10)].transactionCategoryId &&
 							Object.keys(props.touched).length > 0 &&
 							props.touched.journalLineItems &&
 							props.touched.journalLineItems[parseInt(idx, 10)] &&
-							props.touched.journalLineItems[parseInt(idx, 10)]
-								.transactionCategoryId
+							props.touched.journalLineItems[parseInt(idx, 10)].transactionCategoryId
 								? 'is-invalid'
 								: ''
 						}`}
 					/>
+					{	props.errors.journalLineItems &&
+					props.errors.journalLineItems[parseInt(idx, 10)] &&
+					props.errors.journalLineItems[parseInt(idx, 10)].transactionCategoryId &&
+					Object.keys(props.touched).length > 0 &&
+					props.touched.journalLineItems &&
+					props.touched.journalLineItems[parseInt(idx, 10)] &&
+					props.touched.journalLineItems[parseInt(idx, 10)].transactionCategoryId &&(
+						<div className='invalid-feedback'>
+						{props.errors.journalLineItems[parseInt(idx, 10)].transactionCategoryId}
+					</div>
+						
+					)}
+					</>
 				)}
 			/>
 		);
@@ -640,7 +647,12 @@ class CreateJournal extends React.Component {
 	};
 
 	handleSubmit = (values, resetForm) => {
-		this.setState({ disabled: true });
+		if(this.state.submitJournal &&
+          this.state.initValue.totalCreditAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) !==
+          this.state.initValue.totalDebitAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }))
+          this.setState({ disabled: false });
+        else
+    	this.setState({ disabled: true });
 		const { data, initValue } = this.state;
 		if (initValue.totalCreditAmount === initValue.totalDebitAmount) {
 			data.map((item) => {
@@ -665,7 +677,7 @@ class CreateJournal extends React.Component {
 				totalDebitAmount: initValue.totalDebitAmount,
 				journalLineItems: data,
 			};
-			this.setState({ loading:true, loadingMsg:"Creating New Journal..."});
+			this.setState({ loading:true, disableLeavePage:true,loadingMsg:"Creating New Journal..."});
 			this.props.journalCreateActions
 				.createJournal(postData)
 				.then((res) => {
@@ -789,24 +801,27 @@ class CreateJournal extends React.Component {
 												}}
 												
 												validate={(values) => {
-													debugger
 													let errors = {};
+													if (!values.journalDate) {
+														errors.journalDate =
+															'Date is  required';
+													}
 													if (exist === true) {
 														errors.journalReferenceNo =
-															'Journal Reference Number Already Exists';
+															'Journal reference number already exists';
 													}
 													return errors;
 												}
 											}
 												validationSchema={Yup.object().shape({
-													journalDate: Yup.date().required(
-														'Journal Date is Required',
-													),
+													// journalDate: Yup.date().required(
+													// 	'Journal Date is Required',
+													// ),
 													journalLineItems: Yup.array()
 														.of(
 															Yup.object().shape({
 																transactionCategoryId: Yup.string().required(
-																	'Account is Required',
+																	'Account is required',
 																),
 																debitAmount: Yup.number().required(),
 																creditAmount: Yup.number().required(),
@@ -823,37 +838,37 @@ class CreateJournal extends React.Component {
 														<Row>
 															<Col lg={4}>
 																<FormGroup className="mb-3">
-																	<Label htmlFor="date">
+																<Label htmlFor="date">
 																		<span className="text-danger">* </span>
 																		{strings.JournalDate}
 																	</Label>
 																	<DatePicker
 																		id="journalDate"
 																		name="journalDate"
-																		placeholderText={strings.JournalDate}
-																		selected={props.values.journalDate}
-																		showMonthDropdown
-																		showYearDropdown
-																		dateFormat="dd-MM-yyyy"
-																		minDate={new Date()}
-																		dropdownMode="select"
-																		onChange={(value) => {
-																			props.handleChange('journalDate')(value);
-																		}}
-																		autoComplete="off"
 																		className={`form-control ${
 																			props.errors.journalDate &&
 																			props.touched.journalDate
 																				? 'is-invalid'
 																				: ''
 																		}`}
+																		placeholderText={strings.JournalDate}
+																		selected={props.values.journalDate}
+																		showMonthDropdown
+																		showYearDropdown
+																		dropdownMode="select"
+																		dateFormat="dd-MM-yyyy"
+																		maxDate={new Date()}
+																		onChange={(value) => {
+																			props.handleChange('journalDate')(value);
+																		}}
 																	/>
 																	{props.errors.journalDate &&
-																	props.touched.journalDate ? (
-																		<div className="invalid-feedback">
-																			{props.errors.journalDate}
-																		</div>
-																	) : null}
+																		props.touched.journalDate && (
+																			<div className="invalid-feedback">
+																				{props.errors.journalDate.includes("nullable()") ? "Journal date is required" :props.errors.journalDate}
+
+																			</div>
+																		)}
 																</FormGroup>
 															</Col>
 														</Row>
@@ -1003,6 +1018,7 @@ class CreateJournal extends React.Component {
 																</div>
 															)}
 														{this.state.submitJournal &&
+														!props.errors.journalLineItems &&
 															this.state.initValue.totalCreditAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) !==
 															this.state.initValue.totalDebitAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) && (
 																<div
@@ -1197,7 +1213,8 @@ class CreateJournal extends React.Component {
 																		className="btn-square mr-3"
 																		disabled={this.state.disabled}
 																		onClick={() => {
-																				//  added validation popup  msg                                                                
+																				//  added validation popup  msg  
+																				console.log(props.errors)                                                              
 																				props.handleBlur();
 																				if(props.errors &&  Object.keys(props.errors).length != 0)
 																				this.props.commonActions.fillManDatoryDetails();
@@ -1268,6 +1285,7 @@ class CreateJournal extends React.Component {
 					</Row>
 				</div>
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

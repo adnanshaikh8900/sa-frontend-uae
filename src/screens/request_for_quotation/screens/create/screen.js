@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import {   Loader } from 'components';
+import { LeavePage, Loader } from 'components';
 import { bindActionCreators } from 'redux';
 import {
 	Card,
@@ -24,16 +24,13 @@ import * as RequestForQuotationCreateAction from './actions'
 import * as RequestForQuotationAction from '../../actions';
 import * as ProductActions from '../../../product/actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
-
 import { SupplierModal } from '../../../supplier_invoice/sections/index';
 import { ProductModal } from '../../../customer_invoice/sections';
-
 import { TextareaAutosize } from '@material-ui/core';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import { optionFactory, selectCurrencyFactory,selectOptionsFactory } from 'utils';
-
 import './style.scss';
 import Switch from "react-switch";
 import {data}  from '../../../Language/index'
@@ -112,6 +109,7 @@ class CreateRequestForQuotation extends React.Component {
 			date1:new Date().setMonth(new Date().getMonth() + 1),
 			checked:false,
 			initValue: {
+				receiptNumber: '',
 				total_excise: 0,
 				contact_po_number: '',
 				currencyCode: '',
@@ -164,6 +162,7 @@ class CreateRequestForQuotation extends React.Component {
 			exist: false,
 			language: window['localStorage'].getItem('language'),	
 			loadingMsg:"Loading...",
+			disableLeavePage:false, 
 			vat_list:[
 				{
 					"id": 1,
@@ -648,18 +647,23 @@ class CreateRequestForQuotation extends React.Component {
 										placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 										total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : 0,
 										taxType : res.data.taxType ? true : false,
+										receiptNumber:res.data.rfqNumber ?res.data.rfqNumber:'',	
 								},
 										rfqExpiryDateNoChange: res.data.rfqExpiryDate
 										?  moment(res.data.rfqExpiryDate)
 										: '',
 										rfqReceiveDateNoChange: res.data.rfqReceiveDate
 										? moment(res.data.rfqReceiveDate)
-										: '',	
+										: '',
+									
 										rfqReceiveDate: res.data.rfqReceiveDate
 										? res.data.rfqReceiveDate
 										: '',	
 										rfqExpiryDate: res.data.rfqExpiryDate
 										? res.data.rfqExpiryDate
+										: '',
+										receiptNumber: res.data.receiptNumber
+										? res.data.receiptNumber
 										: '',
 										taxType : res.data.taxType ? true : false,
 								customer_taxTreatment_des : res.data.taxtreatment ? res.data.taxtreatment : '',
@@ -700,6 +704,7 @@ class CreateRequestForQuotation extends React.Component {
 									this.formRef.current.setFieldValue('placeOfSupplyId', res.data.placeOfSupplyId, true);
 									this.formRef.current.setFieldValue('currency', this.getCurrency(res.data.supplierId), true);
 									this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(res.data.supplierId), true);
+									this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
 									this.formRef.current.setFieldValue('notes',  res.data.notes, true);
 									this.addRow();
 								} else {
@@ -727,7 +732,7 @@ class CreateRequestForQuotation extends React.Component {
 	getInitialData = () => {
 		this.props.requestForQuotationAction.getVatList().then((res)=>{
 			if(res.status==200 && res.data)
-			 this.setState({vat_list:res.data})
+			this.setState({vat_list:res.data})
 		});
 		this.getInvoiceNo();
 		this.props.requestForQuotationAction.getSupplierList(this.state.contactType);
@@ -835,6 +840,7 @@ class CreateRequestForQuotation extends React.Component {
 					false,
 					true,
 				);
+				
 			},
 		);
 	};
@@ -1094,7 +1100,7 @@ class CreateRequestForQuotation extends React.Component {
 						   <Input
 						type="text"
 						maxLength="250"
-						value={row['description'] !== '' ? row['description'] : ''}
+						value={row['description'] !== '' && row['description'] !== null ? row['description'] : ''}
 						onChange={(e) => {
 							this.selectItem(e.target.value, row, 'description', form, field);
 						}}
@@ -1251,9 +1257,7 @@ class CreateRequestForQuotation extends React.Component {
 							net_value = parseFloat(net_value) +  parseFloat(value) ;
 							obj.exciseAmount = parseFloat(value);
 						}
-						else{
-							net_value = obj.unitPrice
-						}
+					
 				}
 				else{
 					obj.exciseAmount = 0
@@ -1274,9 +1278,7 @@ class CreateRequestForQuotation extends React.Component {
 									net_value = parseFloat(net_value) +  parseFloat(value) ;
 									obj.exciseAmount = parseFloat(value);
 								}
-								else{
-									net_value = obj.unitPrice
-								}
+								
 						}
 						else{
 							obj.exciseAmount = 0
@@ -1317,9 +1319,7 @@ class CreateRequestForQuotation extends React.Component {
 					const value = net_value / 2
 					obj.exciseAmount = parseFloat(value);
 				net_value = net_value}
-				else{
-					net_value = obj.unitPrice
-					}
+			
 						}
 						else{
 							obj.exciseAmount = 0
@@ -1354,9 +1354,7 @@ class CreateRequestForQuotation extends React.Component {
 						const value = net_value / 2
 						obj.exciseAmount = parseFloat(value);
 					net_value = net_value}
-					else{
-						net_value = obj.unitPrice
-						}
+				
 							}
 							else{
 								obj.exciseAmount = 0
@@ -1419,6 +1417,7 @@ class CreateRequestForQuotation extends React.Component {
 			currency,
 			rfqExpiryDate,
 			rfqReceiveDate,
+			receiptNumber,
 			supplierId,
 			project,
 			rfq_number,
@@ -1437,6 +1436,10 @@ class CreateRequestForQuotation extends React.Component {
 		formData.append(
 			'rfqExpiryDate',
 			rfqExpiryDate ? rfqExpiryDate : '',
+		);
+		formData.append(
+			'receiptNumber',
+			receiptNumber !== null ? receiptNumber : '',
 		);
 		formData.append('notes', notes ? notes : '');
 		formData.append('type', 3);
@@ -1457,7 +1460,7 @@ class CreateRequestForQuotation extends React.Component {
 		if (currency !== null && currency) {
 			formData.append('currencyCode', this.state.supplier_currency);
 		}
-		this.setState({ loading:true, loadingMsg:"Creating Request For Quotation..."});
+		this.setState({ loading:true, disableLeavePage:true, loadingMsg:"Creating Request For Quotation..."});
 		this.props.requestForQuotationCreateAction
 			.createRFQ(formData)
 			.then((res) => {
@@ -1841,30 +1844,44 @@ class CreateRequestForQuotation extends React.Component {
 													let errors = {};
 													if (this.state.exist === true) {
 														errors.rfq_number =
-															'RFQ number Already Exists';
+															'RFQ number already exists';
 													}
+													if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
+													||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
+													||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
+													{
+														if (!values.placeOfSupplyId) 
+															   errors.placeOfSupplyId ='Place of supply is required';
+														if (values.placeOfSupplyId &&
+															(values.placeOfSupplyId=="" ||
+															(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select place of supply")
+															)
+														   ) 
+															 errors.placeOfSupplyId ='Place of supply is required';
+													
+												   }
 													if (values.rfq_number==='') {
-														errors.rfq_number = 'RFQ Number is Required';
+														errors.rfq_number = 'RFQ number is required';
 													}
 													return errors;
 												}}
 												validationSchema={Yup.object().shape(
 													{
 													rfq_number: Yup.string().required(
-														'Invoice Number is Required',
+														'Invoice number is required',
 													),
 													supplierId: Yup.string().required(
-														'Supplier is Required',
+														'Supplier is required',
 													),
-													placeOfSupplyId: Yup.string().required(
-														'Place of Supply is Required'
-													),
+													// placeOfSupplyId: Yup.string().required(
+													// 	'Place of Supply is required'
+													// ),
 													
 													rfqReceiveDate: Yup.string().required(
-														'Order Date is Required',
+														'Order date is required',
 													),
 													rfqExpiryDate: Yup.string().required(
-														'Order Due Date is Required'
+														'Order due date is required'
 													),
 													attachmentFile: Yup.mixed()
 													.test(
@@ -1908,7 +1925,7 @@ class CreateRequestForQuotation extends React.Component {
 														.of(
 															Yup.object().shape({
 																quantity: Yup.string()
-																	.required('Value is Required')
+																	.required('Value is required')
 																	.test(
 																		'quantity',
 																		'Quantity should be greater than 0',
@@ -1921,7 +1938,7 @@ class CreateRequestForQuotation extends React.Component {
 																		},
 																	),
 																unitPrice: Yup.string()
-																	.required('Value is Required')
+																	.required('Value is required')
 																	.test(
 																		'Unit Price',
 																		'Unit Price Should be Greater than 1',
@@ -1934,10 +1951,10 @@ class CreateRequestForQuotation extends React.Component {
 																		},
 																	),
 																vatCategoryId: Yup.string().required(
-																	'VAT is Required',
+																	'VAT is required',
 																),
 																productId: Yup.string().required(
-																	'Product is Required',
+																	'Product is required',
 																),
 															}),
 														),
@@ -2100,9 +2117,15 @@ class CreateRequestForQuotation extends React.Component {
 																</FormGroup>
 															</Col>: ''}
 									<Col lg={3}>
-																<FormGroup className="mb-3">
+									{this.state.customer_taxTreatment_des!="NON GCC" &&(		<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">
-																		<span className="text-danger">*</span>
+																		{/* <span className="text-danger">* </span> */}
+																		{this.state.customer_taxTreatment_des &&
+																		(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
+																		||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
+																		||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED") && (
+																			<span className="text-danger">* </span>
+																		)}
 																		{strings.PlaceofSupply}
 																	</Label>
 																	<Select
@@ -2153,7 +2176,7 @@ class CreateRequestForQuotation extends React.Component {
 																				{props.errors.placeOfSupplyId}
 																			</div>
 																		)}
-																</FormGroup>
+																</FormGroup>)}
 															</Col>
 															
 														
@@ -2190,7 +2213,7 @@ class CreateRequestForQuotation extends React.Component {
 																	{props.errors.rfqReceiveDate &&
 																		props.touched.rfqReceiveDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.rfqReceiveDate.includes("nullable()") ? "Order Date is Required" :props.errors.rfqReceiveDate}		
+																				{props.errors.rfqReceiveDate.includes("nullable()") ? "Order date is required" :props.errors.rfqReceiveDate}		
 
 																			</div>
 																		)}
@@ -2225,7 +2248,7 @@ class CreateRequestForQuotation extends React.Component {
 																	{props.errors.rfqExpiryDate &&
 																		props.touched.rfqExpiryDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.rfqExpiryDate.includes("nullable()") ? "Order Due Date is Required" :props.errors.rfqExpiryDate}
+																				{props.errors.rfqExpiryDate.includes("nullable()") ? "Order due date is required" :props.errors.rfqExpiryDate}
 																			</div>
 																		)}
 																	
@@ -2467,8 +2490,7 @@ class CreateRequestForQuotation extends React.Component {
 																			placement="right"
 																			target="ExiseTooltip"
 																		>
-																			If Exise Type for a product is Inclusive
-																			then the Excise dropdown will be Disabled
+																			Excise dropdown will be enabled only for the excise products
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn>}
 																	{this.state.discountEnabled == true &&
@@ -2944,6 +2966,7 @@ class CreateRequestForQuotation extends React.Component {
 					
 				/> */}
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import config from 'constants/config';
+import { toast } from 'react-toastify';
 
 const authApi = axios.create({
 	baseURL: config.API_ROOT_URL,
@@ -26,6 +27,7 @@ authApi.interceptors.response.use(
 	},
 	(error) => {
 		if (error.response && error.response.status === 401) {
+			toast.error("Session Ended. Log in Again !")
 			window['localStorage'].clear();
 			window['location'] = '/login';
 		} else {

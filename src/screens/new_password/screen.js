@@ -136,7 +136,7 @@ class NewPassword extends React.Component {
                                 <Col lg={12}>
                                   <FormGroup>
 																			<Label htmlFor="select">
-																				<span className="text-danger">*</span>
+																				<span className="text-danger">* </span>
 																				 Password
 																			</Label>
 																			<div>
@@ -206,7 +206,7 @@ class NewPassword extends React.Component {
                                 <Col lg={12}>
                                   <FormGroup>
 																			<Label htmlFor="select">
-																				<span className="text-danger">*</span>
+																				<span className="text-danger">* </span>
 																			Confirm Password
 																			</Label>
 																			<Input

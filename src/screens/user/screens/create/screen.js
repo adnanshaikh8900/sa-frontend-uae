@@ -17,22 +17,18 @@ import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { EmployeeModal } from '../../sections';
-import { ImageUploader,Loader } from 'components';
-
+import { LeavePage, ImageUploader, Loader } from 'components';
 import * as UserActions from '../../actions';
 import * as UserCreateActions from './actions';
 import * as SalaryTemplateActions from '../../../salaryTemplate/actions'
-
 import { CommonActions, AuthActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
 import moment from 'moment';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import PasswordChecklist from "react-password-checklist"
 import './style.scss';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-
 
 const eye = require('assets/images/settings/eye.png');
 const mapStateToProps = (state) => {
@@ -97,7 +93,8 @@ class CreateUser extends React.Component {
 			selectedStatus: true,
 			useractive: true,
 			openEmployeeModal: false,
-			loadingMsg:"Loading..."
+			loadingMsg:"Loading...",
+			disableLeavePage:false
 
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
@@ -146,10 +143,7 @@ class CreateUser extends React.Component {
 		this.setState({ isPasswordShown: !isPasswordShown });
 	};
 	handleSubmit = (data, resetForm) => {
-		this.setState({
-			createDisabled: true,
-		})
-
+		this.setState({ createDisabled: true, disableLeavePage:true	});
 		const {
 			firstName,
 			lastName,
@@ -333,7 +327,7 @@ class CreateUser extends React.Component {
 													let errors = {};
 													if (this.state.exist === true) {
 														errors.email =
-															'User Already Exists';
+															'User already exists';
 													}
 
 													if (errors.length) {
@@ -346,38 +340,38 @@ class CreateUser extends React.Component {
 												}}
 												validationSchema={Yup.object().shape({
 													firstName: Yup.string().required(
-														'First Name is Required',
+														'First name is required',
 													),
 													lastName: Yup.string().required(
-														'Last Name is Required',
+														'Last name is required',
 													),
 													email: Yup.string()
-														.required('Email is Required')
+														.required('Email is required')
 														.email('Invalid Email'),
 													roleId: Yup.string().required(
-														'Role Name is Required',
+														'Role name is required',
 													),
 													timezone: Yup.string().required(
-														'Time Zone is Required',
+														'Time zone is required',
 													),
 													// employeeId:Yup.string().required(
-													// 	'Employee is Required',
+													// 	'Employee is required',
 													// ),
 													// password: Yup.string()
-													// 	.required('Password is Required')
-													// .min(8, "Password Too Short")
+													// 	.required('Password is required')
+													// .min(8, "Password too Short")
 													// .matches(
 													// 	/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
 														
 													// ),
 													
 													// confirmPassword: Yup.string()
-													// 	.required('Confirm Password is Required')
+													// 	.required('Confirm password is required')
 													// 	.oneOf(
 													// 		[Yup.ref('password'), null],
 													// 		'Passwords must match',
 													// 	),
-													//	dob: Yup.date().required('DOB is Required'),
+													//	dob: Yup.date().required('DOB is required'),
 												})}
 											>
 												{(props) => (
@@ -925,7 +919,7 @@ class CreateUser extends React.Component {
 																	<Col lg={3}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="contactId">
-																				<span className="text-danger">*</span>
+																				<span className="text-danger">* </span>
 																		{strings.SalaryRole}
 																	</Label>
 																			<Select
@@ -1104,6 +1098,7 @@ class CreateUser extends React.Component {
 				// getStateList={this.props.customerInvoiceActions.getStateList}
 				/>
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

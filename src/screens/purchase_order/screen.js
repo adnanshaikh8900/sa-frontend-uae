@@ -1145,6 +1145,7 @@ class PurchaseOrder extends React.Component {
 												{strings.PONUMBER} 
 											</TableHeaderColumn>
 											<TableHeaderColumn
+												tdStyle={{ whiteSpace: 'normal' }}
 												dataField="supplierName"
 												// dataSort
 												width="15%"

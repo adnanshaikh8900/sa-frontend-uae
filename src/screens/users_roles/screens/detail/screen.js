@@ -15,22 +15,18 @@ import {
 } from 'reactstrap';
 import { toast } from 'react-toastify';
 import _ from 'lodash';
-import { Loader } from 'components';
-import Select from 'react-select';
+import { LeavePage, Loader } from 'components';
 import CheckboxTree from 'react-checkbox-tree';
 import 'react-checkbox-tree/lib/react-checkbox-tree.css';
-
 import {  ConfirmDeleteModal } from 'components';
 import { CommonActions } from 'services/global';
-
 import 'react-toastify/dist/ReactToastify.css';
 import * as roleActions from '../../screens/create/actions';
 import * as roleCommonActions from '../../actions';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-
-
 import { Formik } from 'formik';
+
 const mapStateToProps = (state) => {
 	return {};
 };
@@ -62,7 +58,8 @@ class UpdateRole extends React.Component {
 			current_role_id:null,
 			dialog: null,
 			expanded: ["SelectAll"],
-			loadingMsg:"Loading..."
+			loadingMsg:"Loading...",
+			disableLeavePage:false
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regExDecimal = /^[0-9]*(\.[0-9]{0,2})?$/;
@@ -176,12 +173,12 @@ class UpdateRole extends React.Component {
 
 	// Show Success Toast
 	success = () => {
-		toast.success('Vat Code Updated successfully... ', {
+		toast.success('VAT Code Updated successfully... ', {
 			position: toast.POSITION.TOP_RIGHT,
 		});
 	};
 
-	// Create or Edit Vat
+	// Create or Edit VAT
 	handleSubmit = (data, resetForm) => {
 		this.setState({ disabled: true });
 		
@@ -373,7 +370,7 @@ class UpdateRole extends React.Component {
 															<Row>
 																	<Col >
 																		<FormGroup className="mb-3">
-																			<Label htmlFor="active"><span className="text-danger">*</span>{strings.Status}</Label>
+																			<Label htmlFor="active"><span className="text-danger">* </span>{strings.Status}</Label>
 																			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 																				<FormGroup check inline>
 																					<div className="custom-radio custom-control">
@@ -440,7 +437,7 @@ class UpdateRole extends React.Component {
 																	</Col></Row>
 															<FormGroup>
 																<Label htmlFor="name">
-																	<span className="text-danger">*</span> {strings.Name}
+																	<span className="text-danger">* </span> {strings.Name}
 																</Label>
 																<Input
 																	type="text"
@@ -495,7 +492,7 @@ class UpdateRole extends React.Component {
 																/>
 															</FormGroup>
 															<FormGroup>
-																<Label><span className="text-danger">*</span>{strings.Modules}
+																<Label><span className="text-danger">* </span>{strings.Modules}
 																{
 																	this.getvalidation()
 																}

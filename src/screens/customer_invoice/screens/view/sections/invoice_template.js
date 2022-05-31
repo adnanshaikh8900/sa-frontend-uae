@@ -8,6 +8,7 @@ import { Currency } from 'components';
 import { toInteger, upperCase } from 'lodash';
 import { data } from '../../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import { TextareaAutosize } from '@material-ui/core';
 
 let strings = new LocalizedStrings(data);
 const footer = require('assets/images/invoice/invoiceFooter.png');
@@ -100,18 +101,19 @@ class InvoiceTemplate extends Component {
 	    return		(<div>
 
 			   <br />
-			   <h6 className="mb-1 ml-2"><b>{strings.ShipTo} ,</b></h6><br />
-			   {/* <div className="mb-1 ml-2"><b>{invoiceData.organisationName ? invoiceData.organisationName : invoiceData.name}</b></div> */}
+			   <h6 className="mb-1 ml-2"><b>{strings.ShipTo} ,</b></h6><br/>
+			   <div className="mb-1 ml-2"><b>{invoiceData.organisationName ? invoiceData.organisationName : invoiceData.name}</b></div>
 			   {/* {contactData && contactData.addressLine1 &&(<div className="mb-1 ml-2"><b>{strings.BillingAddress} : </b> {contactData.addressLine1}</div>)} */}
 			   {invoiceData && contactData && (this.renderShippingAddress())}
 			   <div className="mb-1 ml-2">
+			       {invoiceData && contactData && (this.renderShippingPostZipCode())}
 				   {invoiceData && contactData && (this.rendershippingState())}
 				   {invoiceData && contactData && (this.rendershippingCountry())}
-				   {invoiceData && contactData && (this.renderShippingPostZipCode())}
+				  
 			   </div>
 			   {/* {invoiceData && contactData&&( this.renderShippingCity())} */}
-			   <div className="mb-1 ml-2">{strings.VATRegistrationNo} : {invoiceData.taxRegistrationNo}</div>
-			   {contactData && contactData.mobileNumber && (<div className="mb-1 ml-2">{strings.MobileNumber} : +{contactData.mobileNumber}</div>)}
+			   {/* <div className="mb-1 ml-2">{strings.VATRegistrationNo} : {invoiceData.taxRegistrationNo}</div>
+			   {contactData && contactData.mobileNumber && (<div className="mb-1 ml-2">{strings.MobileNumber} : +{contactData.mobileNumber}</div>)} */}
 			   {/* <span className="mb-1 ml-2"><b>{strings.Status} : </b> {this.renderInvoiceStatus(invoiceData.status)}</span> */}
 
 		   </div>
@@ -147,15 +149,24 @@ class InvoiceTemplate extends Component {
 		let shippingPostZipCode = "";
 		if (invoiceData.changeShippingAddress && invoiceData.changeShippingAddress == true) {
 			shippingPostZipCode = invoiceData.shippingPostZipCode ? invoiceData.shippingPostZipCode : "";
+			if(invoiceData.shippingCountry==229 )
+				shippingPostZipCode=strings.POBox +" : " +shippingPostZipCode	
 		} else {
 			if (contactData && contactData.isBillingAndShippingAddressSame && contactData.isBillingAndShippingAddressSame == true)
-				shippingPostZipCode = contactData.postZipCode ? contactData.postZipCode : "";
+				{shippingPostZipCode = contactData.postZipCode ? contactData.postZipCode : "";
+				if(contactData.shippingCountryId==229 )
+				shippingPostZipCode=strings.POBox +" : " +shippingPostZipCode
+			}
 			else
+			{	
 				shippingPostZipCode = contactData.shippingPostZipCode ? contactData.shippingPostZipCode : "";
+				if(contactData.shippingCountryId==229 )
+				shippingPostZipCode=strings.POBox +" : " +shippingPostZipCode
+		}
 		}
 
 
-		return shippingPostZipCode;
+		return shippingPostZipCode+", ";
 	}
 
 	renderShippingCity = () => {
@@ -192,7 +203,7 @@ class InvoiceTemplate extends Component {
 		}
 
 
-		return shippingCountry + " ,";
+		return shippingCountry;
 	}
 
 
@@ -255,7 +266,7 @@ class InvoiceTemplate extends Component {
 						<span>{invoiceData.status}</span>
 					</div> */}
 
-					<CardBody style={{ margin: '1rem', border: 'solid 1px', borderColor: '#c8ced3', }}>
+					<CardBody style={{ margin: '1rem', border: 'solid 1px', borderColor: '#c8ced3', position:'relative', minHeight:'100vh' }}>
 						<div
 							style={{
 								width: '100%',
@@ -295,15 +306,20 @@ class InvoiceTemplate extends Component {
 									textAlign: 'right',
 
 								}}>
-									<div style={{ marginTop: '4.2rem' }}>
+									<div style={{ marginTop: '0.5rem' }}>
 										<h2 className="mb-1 ml-2"><b>TAX INVOICE</b></h2><br />
 										<div className="mb-1 ml-2" style={{fontSize:"22px"}}><b>{companyData.companyName}</b></div>
-										<div className="mb-1 ml-2">{companyData.companyAddressLine1 + "," + companyData.companyAddressLine2}</div>
-										<div className="mb-1 ml-2">{companyData.companyPostZipCode}</div>
-										<div className="mb-1 ml-2">{companyData.companyStateName}</div>
-										<div className="mb-1 ml-2">{companyData.companyCountryName}</div>
-										<div className="mb-1 ml-2">{strings.VATRegistrationNo} : {companyData.vatRegistrationNumber}</div>
+										<div className="mb-1 ml-2">{companyData.companyAddressLine1}</div>
+										<div className="mb-1 ml-2">{companyData.companyAddressLine2}</div>
+										{companyData.companyCountryCode==229 ?
+																	strings.POBox:
+																	""} : {companyData.companyPoBoxNumber} ,&nbsp;
+										{companyData &&(companyData.companyStateName ? companyData.companyStateName + " , " : "")}
+										{companyData &&(companyData.companyCountryName ? companyData.companyCountryName : "")}
+										{companyData.companyRegistrationNumber && (<div className="mb-1 ml-2">{strings.CompanyRegistrationNo} : {companyData.companyRegistrationNumber}</div>)}
+										{companyData.isRegisteredVat==true&&(<div className="mb-1 ml-2">{strings.VATRegistrationNo} : {companyData.vatRegistrationNumber}</div>)}
 										<div className="mb-1 ml-2">{strings.MobileNumber} : {this.companyMobileNumber(companyData.phoneNumber ? "+" + companyData.phoneNumber : '')}</div>
+										{companyData.emailAddress&&(<div className="mb-1 ml-2">Email : {companyData.emailAddress}</div>)}
 									</div>
 		
 
@@ -339,16 +355,17 @@ class InvoiceTemplate extends Component {
 									{contactData && contactData.addressLine1 && (<div className="mb-1 ml-2">{contactData.addressLine1}</div>)}
 
 									<div className="mb-1 ml-2">
-									    {invoiceData && contactData && (contactData.billingStateName ? contactData.billingStateName + " , " : "")}
-										{invoiceData && contactData && (contactData.billingCountryName ? contactData.billingCountryName + " , " : "")}
-										{invoiceData && contactData && (
+									{invoiceData && contactData && (
 											contactData.countryId==229 ?
-											contactData.poBoxNumber ? contactData.poBoxNumber : ""
+											contactData.poBoxNumber ?(strings.POBox +" : " +contactData.poBoxNumber ): ""
 											:contactData.postZipCode ? contactData.postZipCode : ""
-											)}
+											)} ,&nbsp;
+									    {invoiceData && contactData && (contactData.billingStateName ? contactData.billingStateName + " , " : "")}
+										{invoiceData && contactData && (contactData.billingCountryName ? contactData.billingCountryName : "")}
 									</div>
-									<div className="mb-1 ml-2">{strings.VATRegistrationNo} :  {invoiceData.taxRegistrationNo}</div>
+									{invoiceData && invoiceData.taxTreatment&& invoiceData.taxTreatment.includes("NON")==false &&(<div className="mb-1 ml-2">{strings.VATRegistrationNo} :  {invoiceData.taxRegistrationNo}</div>)}
 									{contactData && contactData.mobileNumber && (<div className="mb-1 ml-2">{strings.MobileNumber} :+{contactData.mobileNumber}</div>)}
+									{contactData && contactData.billingEmail && (<div className="mb-1 ml-2">{strings.Email} : {contactData.billingEmail}</div>)}
 									{/* <span className="mb-1 ml-2"><b>{strings.Status} : </b> {this.renderInvoiceStatus(invoiceData.status)}</span> */}
 
 								</div>
@@ -357,16 +374,17 @@ class InvoiceTemplate extends Component {
 								<div style={{ width: '27%' }}>
 
 									<br />
-									<div className="mb-1 ml-2"><b>{strings.Invoice} : </b> # {invoiceData.referenceNumber}</div>
+									<div className="mb-1 ml-2"><b>{strings.InvoiceNo} : </b> # {invoiceData.referenceNumber}</div>
+									{invoiceData.receiptNumber&&(<div className="mb-1 ml-2"><b>{strings.ReferenceNo} : </b>{invoiceData.receiptNumber}</div>)}
 									<div className="mb-1 ml-2"><b>{strings.InvoiceDate} : </b>{' '}
 										{moment(invoiceData.invoiceDate).format(
 											'DD MMM YYYY',
 										)}</div>
-									<div className="mb-1 ml-2"><b>{strings.Terms} : </b>{this.getTerms(invoiceData.term)}</div>
-									<div className="mb-1 ml-2"><b>{strings.DueDate} : </b>{moment(invoiceData.invoiceDueDate).format(
+										<div className="mb-1 ml-2"><b>{strings.DueDate} : </b>{moment(invoiceData.invoiceDueDate).format(
 										'DD MMM YYYY',
 									)}</div>
-										<div className="mb-1 ml-2"><b>{strings.Status} : </b>{this.renderInvoiceStatus(invoiceData.status)}</div><br />
+									<div className="mb-1 ml-2"><b>{strings.Terms} : </b>{this.getTerms(invoiceData.term)}</div>
+									<div className="mb-1 ml-2"><b>{strings.Status} : </b>{this.renderInvoiceStatus(invoiceData.status)}</div><br />
 										
 									<br />
 									<div className="mb-1 ml-2" >
@@ -418,11 +436,9 @@ class InvoiceTemplate extends Component {
 										{/* <th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.Excise}</th> */}
 										<th style={{ padding: '0.5rem', textAlign: 'right',width:"10%" }}>{strings.ExciseAmount}</th>
 									</>)}
-									{/* <th style={{ padding: '0.5rem', textAlign: 'right' ,width:"5%" }}>{strings.Vat}</th> */}
+									{/* <th style={{ padding: '0.5rem', textAlign: 'right' ,width:"5%" }}>{strings.VAT}</th> */}
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.VatAmount}</th>
-									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
-										{strings.SubTotal}
-									</th>
+									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.SubTotal}</th>
 								</tr>
 							</thead>
 							<tbody className=" table-hover">
@@ -521,22 +537,12 @@ class InvoiceTemplate extends Component {
 								}}
 							>				
 								<br />
-								<h6 className="mb-0 pt-2">
+								{invoiceData.notes&& (<><h6 className="mb-0 pt-2">
 									<b>{strings.Notes}:</b>
-								</h6>
+								</h6><br/>
 								<h6 className="mb-0">{invoiceData.notes}</h6>
-								{/* </div> */}
+                                </>)}								{/* </div> */}
 
-							</div>
-							<div
-								style={{
-									width: '20%',
-									display: 'flex',
-									flexDirection: 'column',
-									marginLeft: '2rem'
-								}}
-							>				
-							
 							</div>
 							<div
 								style={{
@@ -634,7 +640,7 @@ class InvoiceTemplate extends Component {
 											</tr>
 											<tr >
 												<td style={{ width: '40%' }}>
-													<strong>{strings.Vat}</strong>
+													<strong>{strings.VAT}</strong>
 												</td>
 												<td
 													style={{
@@ -738,7 +744,7 @@ class InvoiceTemplate extends Component {
 													</b>
 												</td>
 											</tr>
-											{invoiceData.exchangeRate == 1 ? " " :
+											{/* {invoiceData.exchangeRate == 1 ? " " :
 												<tr style={{ background: '#f2f2f2' }}>
 													<td style={{ width: '40%' }}>
 														<strong>{strings.InvoiceAmountIn}</strong>
@@ -771,7 +777,7 @@ class InvoiceTemplate extends Component {
 															</span>
 														</b>
 													</td>
-												</tr>}
+												</tr>} */}
 										</tbody>
 									</Table>
 								</div>
@@ -779,12 +785,23 @@ class InvoiceTemplate extends Component {
 
 						</div>
 						{/* <hr />Data Innovation Technologies Limited Dubai company Was founded on August 13,2020 with identification number Avenue - South Zone, Dubai International Financial Center, Dubai, United Arab Emirates.<br /> */}
-						<hr />{invoiceData.footNote}<br />
-
-						<img className='mt-5' src={footer} style={{ height: "65px", width: "100%" }}></img>
-					</CardBody>
+						<hr />
+						{/* {invoiceData.footNote} */}
+						<TextareaAutosize
+																			type="textarea"
+																			disabled
+																			className="textarea viewFootNote"
+																			maxLength="250"
+																			style={{width: "1220px"}}
+																			// rows="5"
+																			value={invoiceData.footNote}
+																		/>
+						<br /><br/><br/>
+						</CardBody>
+					<img className='footer' src={footer} style={{ height: "65px", width: "100%" }}></img>
 				</Card>
 			</div>
+			
 		);
 	}
 }

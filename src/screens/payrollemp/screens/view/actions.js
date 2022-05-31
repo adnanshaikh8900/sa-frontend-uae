@@ -1,3 +1,4 @@
+import { sendMail } from 'screens/customer_invoice/actions'
 import {
     authApi
   } from 'utils'
@@ -52,10 +53,11 @@ import {
 	return (dispatch) => {
 		let id=obj.id;
 		let salaryDate=obj.salaryDate;
+		let sendMail=obj.sendMail?obj.sendMail:false;
 	  let data = {
 		method: 'GET',
 		// url: `/rest/Salary/getSalariesByEmployeeId?id=${id}&salaryDate=${salaryDate}`
-		url: `/rest/Salary/getSalariesByEmployeeId?id=${id}&salaryDate=${salaryDate}`
+		url: `/rest/Salary/getSalariesByEmployeeId?id=${id}&salaryDate=${salaryDate}&sendMail=${sendMail}`
 		
 	  }
   

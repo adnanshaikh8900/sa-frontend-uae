@@ -84,7 +84,7 @@ class ExpenseDetailsReport extends React.Component {
 			{ label: 'Quantity', value: 'quantity', sort: true },
 			{ label: 'Unit Price', value: 'unitPrice', sort: false, align: 'right' },
 			{ label: 'Discount', value: 'discount', sort: false, align: 'left' },
-			{ label: 'Vat Amount', value: 'vatAmount', sort: false, align: 'left' },
+			{ label: 'VAT Amount', value: 'vatAmount', sort: false, align: 'left' },
 			{ label: 'Total Amount', value: 'totalAmount', sort: false, align: 'left' },
 		];
 	}
@@ -463,8 +463,9 @@ class ExpenseDetailsReport extends React.Component {
 													: ''}
 											</h2>
 											<div className="ml-4" >
+												<br style={{ marginBottom: '5px' }} />
 												<b style={{ fontSize: '18px' }}>{strings.Expense+" "+strings.Details}</b>
-												<br />
+												<br style={{ marginBottom: '5px' }} />
 
 												{strings.From} {(initValue.startDate).replaceAll("/","-")} {strings.To} {initValue.endDate.replaceAll("/","-")} 
 											</div>

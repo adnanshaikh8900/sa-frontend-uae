@@ -118,8 +118,8 @@ class ChartAccount extends React.Component {
 	initializeData = (search) => {
 		let { filterData } = this.state;
 		const paginationData = {
-			// pageNo: this.options.page ? this.options.page - 1 : 0,
-			// pageSize: this.options.sizePerPage,
+			pageNo: this.options.page ? this.options.page - 1 : 0,
+			pageSize: this.options.sizePerPage,
 		};
 		const sortingData = {
 			order: this.options.sortOrder ? this.options.sortOrder : '',
@@ -628,6 +628,7 @@ class ChartAccount extends React.Component {
 													 {strings.ACCOUNTCODE}
 												</TableHeaderColumn>
 												<TableHeaderColumn
+													tdStyle={{ whiteSpace: 'normal' }}
 													dataField="transactionCategoryName"
 													dataSort
 													columnTitle={this.customName}

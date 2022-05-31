@@ -7,7 +7,6 @@ import {
 	CardBody,
 	Button,
 	Input,
-	Form,
 	FormGroup,
 	Label,
 	Row,
@@ -15,19 +14,14 @@ import {
 	UncontrolledTooltip,
 } from 'reactstrap';
 import _ from 'lodash';
-import { Loader } from 'components';
-
-import * as Yup from 'yup';
+import { LeavePage, Loader } from 'components';
 import { CommonActions } from 'services/global';
-
 import 'react-toastify/dist/ReactToastify.css';
 import './style.scss';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-
 import * as CreateProductCategoryActions from './actions';
 import * as ProductCategoryActions from '../../actions';
-
 import { Formik } from 'formik';
 
 const mapStateToProps = (state) => {
@@ -63,7 +57,8 @@ class CreateProductCategory extends React.Component {
 			loading: false,
 			createMore: false,
 			disabled: false,
-			loadingMsg:"Loading"
+			loadingMsg:"Loading",
+			disableLeavePage:false
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regExBoth = /^[a-zA-Z0-9\s,'-/()]+$/;
@@ -98,10 +93,10 @@ class CreateProductCategory extends React.Component {
 	//   })
 	// }
 
-	// Create or Edit Vat
+	// Create or Edit VAT
 	handleSubmit = (data, resetForm) => {
 		this.setState({ disabled: true });
-		this.setState({ loading:true, loadingMsg:"Creating Product Category..."});
+		this.setState({ loading:true,disableLeavePage:true, loadingMsg:"Creating Product Category..."});
 		this.props.createProductCategoryActions
 			.createProductCategory(data)
 			.then((res) => {
@@ -176,7 +171,7 @@ class CreateProductCategory extends React.Component {
 													let errors = {};
 													if (!values.productCategoryName) {
 														errors.productCategoryName =
-															'Product Category Name is Required';
+															'Product category name is required';
 													}
 
 													if (
@@ -186,12 +181,12 @@ class CreateProductCategory extends React.Component {
 														)
 													) {
 														errors.productCategoryCode =
-															'Product Category Code Already Exists';
+															'Product category code already exists';
 													}
 
 													if (!values.productCategoryCode) {
 														errors.productCategoryCode =
-															'Product Category Code is Required';
+															'Product category code is required';
 													}
 													return errors;
 												}}
@@ -360,6 +355,7 @@ class CreateProductCategory extends React.Component {
 					{loading ? <Loader></Loader> : ''}
 				</div>
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

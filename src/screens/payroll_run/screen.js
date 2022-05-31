@@ -107,12 +107,12 @@ class PayrollRun extends React.Component {
 		};
 
 		this.selectRowProp = {
-			mode: 'checkbox',
+			//	mode: 'checkbox',
 			bgColor: 'rgba(0,0,0, 0.05)',
 			clickToSelect: false,
 			onSelect: this.onRowSelect,
-			onSelectAll: this.onSelectAll
-		}
+			onSelectAll: this.onSelectAll,
+		};
 		this.csvLink = React.createRef();
 	}
 
@@ -138,23 +138,17 @@ class PayrollRun extends React.Component {
 	};
 
 	initializeData = (search) => {
-		const { initValue } = this.state;
-		const postData =
-			initValue.presentdate
 
-
-		// this.props.payRollActions.getIncompletedEmployeeList()
-		// .then((res) => {
-		// 	if (res.status === 200) {
-
-		// 		this.setState({
-		// 			incompleteEmployeeList: res.data,
-		// 		})
-		// 	}
-		// })
-		// .catch((err) => {
-		// 	this.setState({ loading: false });
-		// });
+			let { filterData } = this.state;
+			const paginationData = {
+				pageNo: this.options.page ? this.options.page - 1 : 0,
+				pageSize: this.options.sizePerPage,
+			};
+			const sortingData = {
+				order: this.options.sortOrder ? this.options.sortOrder : '',
+				sortingCol: this.options.sortName ? this.options.sortName : '',
+			};
+			const postData = { ...filterData, ...paginationData, ...sortingData };
 
 		this.props.payRollActions
 			.getPayrollList(postData)
@@ -180,7 +174,9 @@ class PayrollRun extends React.Component {
 		 
 		var userValue = user_approver_generater_dropdown_list.length ? user_approver_generater_dropdown_list[0].value : '';
 		var userLabel = user_approver_generater_dropdown_list.length ? user_approver_generater_dropdown_list[0].label : '';
-
+		// if(row.status=="Voided")
+		// toast.success("Unable to View Void Payroll !")
+		// else
 		if (userValue.toString() === row.generatedBy && userLabel === "Payroll Generator") {
 			this.props.history.push('/admin/payroll/payrollrun/updatePayroll', { id: row.id })
 		}
@@ -193,31 +189,32 @@ class PayrollRun extends React.Component {
 				this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
 			}
 			else
-			if ( userLabel === "Admin" && row.status==="Draft") {
+			if ( userLabel === "Admin" && (row.status==="Draft" || row.status==="Rejected")) {
 				this.props.history.push('/admin/payroll/payrollrun/updatePayroll', { id: row.id })
 			}
 			else
 			
-				if ( userLabel === "Admin" && row.status==="Submitted") {
+				if ( userLabel === "Admin" && (row.status==="Submitted" || row.status==="Partially Paid" || row.status==="Approved" || row.status==="Paid"|| row.status==="Voided")) {
 					this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
 				}else
-				if ( userLabel === "Admin" && row.status==="Approved") {
-					this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
-				}
-				else
-				if ( userLabel === "Admin" && row.status==="Paid") {
-					this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
-				}
-				else
-				if ( userLabel === "Admin" && row.status==="Partially Paid") {
-					this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
-				}
-				else
-				if ( userLabel === "Admin" && row.status==="Rejected") {
-					this.props.history.push('/admin/payroll/payrollrun/updatePayroll', { id: row.id })
-				}
-		        else{
-				let list = [...this.state.payroll_employee_list1];
+				// if ( userLabel === "Admin" && row.status==="Approved") {
+				// 	this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
+				// }
+				// else
+				// if ( userLabel === "Admin" && row.status==="Paid") {
+				// 	this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
+				// }
+				// else
+				// if ( userLabel === "Admin" && row.status==="Partially Paid") {
+				// 	this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
+				// }
+				// else
+				// if ( userLabel === "Admin" && row.status==="Rejected") {
+				// 	this.props.history.push('/admin/payroll/payrollrun/updatePayroll', { id: row.id })
+				// }
+				// else
+				{
+				let list = [...this.state.payroll_employee_list1.data];
 				list = list.map((data) => {
 					if (data.id === row.id) {
 						data.hover = true;
@@ -225,7 +222,9 @@ class PayrollRun extends React.Component {
 					return data;
 				});
 				console.log(list, "list")
-				this.setState({ payroll_employee_list1: list })
+				this.setState({ payroll_employee_list1:{...this.state.payroll_employee_list1,...{
+					data:list
+				}} })
 
 				toast.success("This is created by another user , So you can'nt able to Open it !")
 			}			
@@ -419,6 +418,8 @@ class PayrollRun extends React.Component {
 			classname = 'label-sent';
 		}else if (row.status === 'Partially Paid') {
 			classname = 'label-PartiallyPaid';
+		}else if (row.status === "Voided") {
+			classname = 'label-closed';
 		}
 		// else {
 		// 	classname = 'label-overdue';
@@ -764,7 +765,7 @@ class PayrollRun extends React.Component {
 
 																{strings.create_pay_roll}
 															</Button>
-															<Button
+															{/* <Button
 																color="primary"
 																className="btn-square mt-2 pull-right"
 																// onClick={}
@@ -778,7 +779,7 @@ class PayrollRun extends React.Component {
 																<i className="fas fa-plus mr-1" />
 
 																{strings.create_company_details}
-															</Button>
+															</Button> */}
 														</Col>
 													}
 
@@ -790,12 +791,20 @@ class PayrollRun extends React.Component {
 														search={false}
 														options={this.options}
 														data={this.state.payroll_employee_list1 &&
-															this.state.payroll_employee_list1 ? this.state.payroll_employee_list1 : []}
+															this.state.payroll_employee_list1.data ? this.state.payroll_employee_list1.data : []}
 														version="4"
 														hover
 														keyField="employeeId"
 														remote
-														// fetchInfo={{ dataTotalSize: payroll_employee_list.count ? payroll_employee_list.count : 0 }}
+														pagination={
+															this.state.payroll_employee_list1 &&
+															this.state.payroll_employee_list1.data &&
+															this.state.payroll_employee_list1.data.length > 0 
+																? true
+																: false
+														}
+														fetchInfo={{ dataTotalSize: this.state.payroll_employee_list1 &&
+															this.state.payroll_employee_list1.count ? this.state.payroll_employee_list1.count : 0 }}
 														// className="employee-table mt-4"
 														trClassName="cursor-pointer"
 														csvFileName="payroll_employee_list.csv"

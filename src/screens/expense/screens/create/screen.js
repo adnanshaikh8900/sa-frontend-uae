@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Loader } from 'components';
+import { LeavePage, Loader } from 'components';
 import { bindActionCreators } from 'redux';
 import {
 	Card,
@@ -15,29 +15,23 @@ import {
 	Label,
 } from 'reactstrap';
 import Select from 'react-select';
-
 import DatePicker from 'react-datepicker';
-
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
-
 import { CommonActions } from 'services/global';
 import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
 import * as ExpenseActions from '../../actions';
 import * as ExpenseCreateActions from './actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
-
-
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
-
 import './style.scss';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { Checkbox } from '@material-ui/core';
 import Switch from "react-switch";
-import moment from 'moment';
 import { TextareaAutosize } from '@material-ui/core';
+
 const mapStateToProps = (state) => {
 	return {
 		currency_list: state.expense.currency_list,
@@ -68,12 +62,13 @@ class CreateExpense extends React.Component {
 		super(props);
 		this.state = {
 			loading: false,
+			disableLeavePage:false,
 			createMore: false,
 			disabled: false,
 			initValue: {
 				payee: '',
 				placeOfSupplyId:'',
-				expenseDate: '',
+				expenseDate: new Date(),
 				currency: '',
 				project: '',
 				exchangeRate:'',
@@ -92,6 +87,7 @@ class CreateExpense extends React.Component {
 				taxTreatmentId:'',
 				expenseType:false,
 			},
+			count:0,
 			expenseType:false,
 			isReverseChargeEnabled:false,
 			currentData: {},
@@ -140,6 +136,7 @@ class CreateExpense extends React.Component {
 			{ label: 'CASH', value: 'CASH' },
 			{ label: 'BANK', value: 'BANK' },
 		];
+	
 	}
 	getParentExpenseDetails=(parentId)=>{
 		this.props.expenseCreateActions
@@ -168,7 +165,7 @@ class CreateExpense extends React.Component {
 								current_expense_id: this.props.location.state.expenseId,
 								initValue: {
 									expenseNumber:res.data.expenseNumber,
-									payee: res.data.payee,
+									payee:res.data.payee ? res.data.payee :'', 
 									expenseDate: res.data.expenseDate ? res.data.expenseDate : '',
 									currency: res.data.currencyCode ? res.data.currencyCode : '',
 									currencyName:res.data.currencyName ? res.data.currencyName : '',
@@ -176,7 +173,7 @@ class CreateExpense extends React.Component {
 										? res.data.expenseCategory
 										: '',
 									expenseAmount: res.data.expenseAmount,
-									vatCategoryId: vatCategoryId,
+									vatCategoryId: vatCategoryId ? vatCategoryId : '',
 									payMode: res.data.payMode ? res.data.payMode : '',
 									bankAccountId: res.data.bankAccountId
 										? res.data.bankAccountId
@@ -197,6 +194,7 @@ class CreateExpense extends React.Component {
 									taxTreatmentId:res.data.taxTreatmentId ?res.data.taxTreatmentId:'',
 									
 								},
+								payee:res.data.payee ? res.data.payee :'', 
 								expenseType: res.data.expenseType ? true : false,
 								showPlacelist:res.data.taxTreatmentId !=8?true:false,
 								lockPlacelist:res.data.taxTreatmentId ==7?true:false,
@@ -220,7 +218,7 @@ class CreateExpense extends React.Component {
 
 						     	let tax=	selectOptionsFactory.renderOptions('name','id',this.state.taxTreatmentList,	'Tax Treatment',).find((option)=> option.value==res.data.taxTreatmentId)
 								this.formRef.current.setFieldValue('taxTreatmentId',tax, true);
-debugger
+
 							   let placeofSupply=this.state.placelist.find(	(option) =>option.value == res.data.placeOfSupplyId,	)	
 								this.formRef.current.setFieldValue('placeOfSupplyId', placeofSupply, true);
 
@@ -230,18 +228,18 @@ debugger
 
 								this.formRef.current.setFieldValue('expenseDate', new Date(res.data.expenseDate), true);
 								let payee=	selectOptionsFactory.renderOptions(	'label','value',	this.props.pay_to_list,	'Payee',)
-																.find((option) =>	option.label ==res.data.payee)
+																.find((option) => 	option.label == res.data.payee)
 								this.formRef.current.setFieldValue('payee',payee, true);
 
-								let currency=	selectCurrencyFactory.renderOptions(	'currencyName','currencyCode',this.props.currency_convert_list,'Currency',)
+								let currency=	selectCurrencyFactory.renderOptions('currencyName','currencyCode',this.props.currency_convert_list,'Currency',)
 																	.find(
 																		(option) =>
 																			option.value ==res.data.currencyCode,
 																	)
 								this.formRef.current.setFieldValue('currency',currency , true);
 								this.formRef.current.setFieldValue('currencyCode',currency , true);
-								this.setExchange(currency.value);
-								this.setCurrency(currency.value);
+								this.setExchange(currency && currency.value);
+								this.setCurrency(currency && currency.value);
 							let payMode=	selectOptionsFactory.renderOptions('label',	'value',this.props.pay_mode_list,	'',)
 																.find((option)=>option.value==res.data.payMode)
 								this.formRef.current.setFieldValue('payMode',payMode , true);
@@ -251,7 +249,7 @@ debugger
 									'name',
 									'id',
 									this.props.vat_list,
-									'Vat',
+									'VAT',
 							  ).find((option)=>option.value==res.data.vatCategoryId)
 								this.formRef.current.setFieldValue('vatCategoryId',  vat, true);
 								this.formRef.current.setFieldValue('expenseDescription',  res.data.expenseDescription, true);
@@ -267,9 +265,12 @@ debugger
 					this.setState({ loading: false });
 				});					
 	}
+
+
 	componentDidMount = () => {
 		this.initializeData();
 		this.getExpenseNumber();
+		// this.savestate()
 		if(this.props.location.state && this.props.location.state.parentId )
 		this.getParentExpenseDetails(this.props.location.state.parentId);
 	};
@@ -344,8 +345,8 @@ debugger
 			});
 	}
 	handleSubmit = (data, resetForm) => {
-		this.setState({ disabled: true });
-		this.setState({ disabled: true });
+		this.setState({ disabled: true ,
+			disableLeavePage:true });
 		const {
 			expenseNumber,
 			payee,
@@ -427,17 +428,17 @@ debugger
 			.then((res) => {
 			
 				this.setState({ disabled: false });
-				this.setState({ loading:false});
-				if (res.status === 200) {
-					// this.setState({ loading:false});
-					resetForm(this.state.initValue);
+				
+				if (res.status === 200) {					
 					this.props.commonActions.tostifyAlert(
 						'success',
 						res.data ? res.data.message : 'Expense Created Successfully'
 					);
 					if (this.state.createMore) {
+						resetForm(this.state.initValue);
 						this.setState({
 							createMore: false,
+							loading:false,
 						});
 					} else {
 						this.props.history.push('/admin/expense/expense');
@@ -475,9 +476,8 @@ debugger
 		let result = this.props.currency_convert_list.filter((obj) => {
 		return obj.currencyCode === value;
 		});
-		console.log( this.props.currency_convert_list)
-		console.log(result)
-this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
+		if(result &&result[0]&&  result[0].exchangeRate)
+		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
 			}
 		};
 
@@ -486,9 +486,8 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 			let result = this.props.currency_convert_list.filter((obj) => {
 			return obj.currencyCode === value;
 			});
-			console.log( this.props.currency_convert_list)
-			console.log(result)
-			this.formRef.current.setFieldValue('curreancyname', result[0].currencyName, true);
+			if(result[0] && result[0].currencyName){
+				this.formRef.current.setFieldValue('curreancyname', result[0].currencyName, true);}
 			}
 		};
 
@@ -666,8 +665,8 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 	renderVat=(props)=>{
 		let vat_list=[]
 		let vatIds=[]
-		if(this.state.isDesignatedZone && this.state.isDesignatedZone !=null&&this.state.isDesignatedZone==true)
-			switch(props.values.taxTreatmentId.value ?props.values.taxTreatmentId.value:''){
+		if(this.state.isDesignatedZone && this.state.isDesignatedZone !=null&&this.state.isDesignatedZone==true){
+			switch(props.values.taxTreatmentId && props.values.taxTreatmentId.value ?props.values.taxTreatmentId.value:''){
 
 				case 1: 
 				case 3: 
@@ -699,10 +698,11 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 					
 				break;
 			}
+		}
 		else
 //Not Designated Zone		
 			if(this.state.isDesignatedZone==false)
-			switch(props.values.taxTreatmentId.value ?props.values.taxTreatmentId.value:''){
+			switch(props.values.taxTreatmentId && props.values.taxTreatmentId.value ?props.values.taxTreatmentId.value:''){
 
 				case 1: 
 					if(this.state.isReverseChargeEnabled==false)
@@ -826,6 +826,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 				},
 			}),
 		};
+		console.log(this.state.payee)
 		return (
 			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 			<div>
@@ -875,50 +876,53 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 													// 	values.payMode.value === 'BANK' &&
 													// 	!values.bankAccountId
 													// ) {
-													// 	errors.bankAccountId = 'Bank Account is Required';
+													// 	errors.bankAccountId = 'Bank account is required';
+													// }
+													// if(values.payee.value === 'Company'){
+													// 	errors.payMode = 'Pay through is required'
 													// }
 													if (exist === true) {
 														errors.expenseNumber =
-															'Expense Number Already Exists';
+															'Expense number already exists';
 													}
 													if(values.currency ==='' ){
-														errors.currency="Currency is Required "
+														errors.currency="Currency is required "
 													}
 													if(this.state.showPlacelist===true && values.placeOfSupplyId ===''){
-														errors.placeOfSupplyId="Place Of Supply is Required"
+														errors.placeOfSupplyId="Place of supply is required"
 													}
 
 													return errors;
 												}}
 												validationSchema={Yup.object().shape({
 													expenseNumber: Yup.string().required(
-														'Expense number is Required',
+														'Expense number is required',
 													),
 													taxTreatmentId: Yup.string().required(
-														'Tax Treatment is Required',
+														'Tax treatment is required',
 													),
 													expenseCategory: Yup.string().required(
-														'Expense Category is Required',
+														'Expense category is required',
 													),
 													expenseDate: Yup.date().required(
-														'Expense Date is Required',
+														'Expense date is required',
 													),
 													
 													currency: Yup.string().required(
-														'Currency is Required',
+														'Currency is required',
 													),
 													payee: Yup.string().required(
-														'Paid By is Required',
+														'Paid by is required',
 													),
 													expenseAmount: Yup.string()
-														.required('Amount is Required')
+														.required('Amount is required')
 														.matches(
 															 /^[0-9][0-9]*[.]?[0-9]{0,2}$$/,
-															'Enter a Valid Amount',
+															'Enter a valid amount',
 														)
 														.test(
 															'Expense Amount',
-															'Expense Amount should be greater than 1',
+															'Expense amount should be greater than 1',
 															(value) => {
 																if (value > 0) {
 																	return true;
@@ -928,11 +932,11 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 															},
 														),
 													vatCategoryId: Yup.string().required(
-														'VAT is Required',
+														'VAT is required',
 													),
-													payMode: Yup.string().required(
-														'Pay Through is Required',
-													),
+													// payMode: Yup.string().required(
+													// 	'Pay Through is required',
+													// ),
 													attachmentFile: Yup.mixed()
 														.test(
 															'fileType',
@@ -1137,9 +1141,9 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		)}
 																</FormGroup>
 															</Col>)}
-															<Col className='mb-3' lg={3}>
+															<Col className='mb-2' lg={3}>
 																<Label htmlFor="inline-radio3"><span className="text-danger">* </span>{strings.ExpenseType}</Label>
-																<div>
+																<div style={{display:"flex"}}>
 																	{this.state.expenseType === false ?
 																		<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Claimable}</b></span> :
 																		<span className='mr-4'>{strings.Claimable}</span>}
@@ -1165,8 +1169,9 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																	/>
 
 																	{this.state.expenseType === true ?
-																		<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.NonClaimable}</b></span>
-																		: <span className='ml-4'>{strings.NonClaimable}</span>
+																		<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.NonClaimable}</b></span> : 
+																		<span className='ml-4'>{strings.NonClaimable}</span>
+																		
 																	}
 																</div>
 
@@ -1246,7 +1251,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		showYearDropdown
 																		dropdownMode="select"
 																		dateFormat="dd-MM-yyyy"
-																		minDate={new Date()}
+																		//minDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('expenseDate')(value);
 																		}}
@@ -1259,13 +1264,15 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		)}
 																</FormGroup>
 															</Col>
-															
+														
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="payee">
 																		<span className="text-danger">* </span>{strings.PaidBy}
 																	</Label>
-																	<Select
+																
+																		<Select
+																	
 																		options={
 																			pay_to_list
 																				? selectOptionsFactory.renderOptions(
@@ -1282,6 +1289,9 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																				props.handleChange('payee')(
 																					option,
 																				);
+																			this.setState({
+																				payee: option ? option : option.value
+																			})
 																			} else {
 																				props.handleChange('payee')('');
 																			}
@@ -1300,12 +1310,14 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																			<div className="invalid-feedback">
 																				{props.errors.payee}
 																			</div>
-																		)}
+																	)}
+																		
+																		
 																</FormGroup>
 															  
                                     
 															</Col>
-															
+														
 															<Col>
 															<Button
                                                                 color="primary"
@@ -1367,7 +1379,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 															</Col>													
 															{this.renderVat(props)}	
 															
-															{!props.values.payee && payMode.value === 'BANK' && (
+															{/* {!props.values.payee && payMode.value === 'BANK' && (
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="bankAccountId">
@@ -1408,7 +1420,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																			)}
 																	</FormGroup>
 																</Col>
-															)}
+															)} */}
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currency">
@@ -1453,6 +1465,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		)}
 																</FormGroup>
 															</Col>
+																{this.state.payee  && this.state.payee.value === 'Company Expense' || this.state.payee === 'Company Expense' ? 
 															<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="payMode"><span className="text-danger">* </span> {strings.PayThrough}</Label>
@@ -1495,7 +1508,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																				</div>
 																			)}
 																	</FormGroup>
-																</Col>
+																</Col>:''}
 														</Row>
 														{/* {props.values.vatCategoryId !=='' && props.values.vatCategoryId.label !=='Select Vat' &&
 														(
@@ -1696,7 +1709,7 @@ min="0"
 																			maxLength="255"
 																			name="notes"
 																			id="notes"
-																			rows="2"
+																			minRows={2}
 																			placeholder={strings.DeliveryNotes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
@@ -1799,7 +1812,7 @@ min="0"
 																			style={{width: "870px"}}
 																			name="receiptAttachmentDescription"
 																			id="receiptAttachmentDescription"
-																			rows="2"
+																			minRows={2}
 																			placeholder={strings.ReceiptAttachmentDescription}
 																			onChange={(option) =>
 																				props.handleChange(
@@ -1891,6 +1904,7 @@ min="0"
 					</Row>
 				</div>
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

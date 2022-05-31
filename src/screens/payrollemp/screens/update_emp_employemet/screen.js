@@ -13,28 +13,17 @@ import {
     Row,
     Col
 } from 'reactstrap'
-import { Loader, ConfirmDeleteModal, ImageUploader } from 'components'
-import Select from 'react-select'
-import {
-    CommonActions
-} from 'services/global'
+import { Loader, LeavePage } from 'components'
+import { CommonActions } from 'services/global'
 import * as Yup from 'yup';
 import 'react-toastify/dist/ReactToastify.css'
 import DatePicker from 'react-datepicker'
-
 import * as DetailEmployeeEmployementAction from './actions';
 import * as CreatePayrollEmployeeActions from '../create/actions'
-
-
 import { Formik } from 'formik';
 import { data } from '../../../Language/index'
-import LocalizedStrings from 'react-localization';
-  
-import { selectOptionsFactory } from 'utils'
+import LocalizedStrings from 'react-localization';  
 import moment from 'moment'
-
-
-
 
 const mapStateToProps = (state) => {
     return ({
@@ -63,6 +52,7 @@ class UpdateEmployeeEmployment extends React.Component {
             gender: '',
             bloodGroup: '',
             loadingMsg:"Loading...",
+			disableLeavePage:false,
             current_employee_id: null
         }
         this.regExAlpha = /^[a-zA-Z ]+$/;
@@ -142,7 +132,7 @@ class UpdateEmployeeEmployment extends React.Component {
 
 
 
-    // Create or Edit Vat
+    // Create or Edit VAT
     handleSubmit = (data) => {
 
         this.setState({ disabled: true });
@@ -272,19 +262,19 @@ class UpdateEmployeeEmployment extends React.Component {
                                                     }}
                                                     validationSchema={Yup.object().shape({
                                                         employeeCode: Yup.string()
-                                                            .required("Employee Code is Required"),
+                                                            .required("Employee code is required"),
                                                         //     salaryRoleId: Yup.string()
-                                                        // .required("salary Role is Required"),
+                                                        // .required("salary role is required"),
                                             
                                                         dateOfJoining: Yup.date()
-                                                            .required('Date of Joining is Required')                   
+                                                            .required('Date of joining is required')                   
                                                     })}
                                                     validate={(values) => {
                                                         let errors = {};
                                                          
                                                         if (exist === true  && values.employeeCode!="") {
                                                             errors.employeeCode =
-                                                            'Employee Code Number Already Exists';
+                                                            'Employee code number already exists';
                                                         }
                                                         return errors;
 
@@ -516,7 +506,7 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                  
                                                                         {/* <Col md="4">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="salaryRoleId"><span className="text-danger">*</span> {strings.SalaryRole} </Label>
+                                                                                <Label htmlFor="salaryRoleId"><span className="text-danger">* </span> {strings.SalaryRole} </Label>
                                                                                 <Select
 
                                                                                     options={
@@ -649,6 +639,7 @@ class UpdateEmployeeEmployment extends React.Component {
 
                 </div>
             </div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
      </div>
         )
     }

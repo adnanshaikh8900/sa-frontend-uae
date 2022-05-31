@@ -9,24 +9,18 @@ import {
 	Row,
 	Col,
 	ButtonGroup,
-	Input,
 } from 'reactstrap';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import { selectOptionsFactory } from 'utils';
-
 import { Loader, ConfirmDeleteModal, Currency } from 'components';
-
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import { CommonActions } from 'services/global';
-import { CSVLink } from 'react-csv';
-
 import * as ReceiptActions from './actions';
 import moment from 'moment';
-
 import './style.scss';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
@@ -51,7 +45,7 @@ const customStyles = {
 		borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
 		boxShadow: state.isFocused ? null : null,
 		'&:hover': {
-			borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
+		borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
 		},
 	}),
 };
@@ -77,7 +71,7 @@ class Receipt extends React.Component {
 		};
 
 		this.options = {
-			//onRowClick: this.goToDetail,
+			// onRowClick: this.goToDetail,
 			paginationPosition: 'bottom',
 			page: 1,
 			sizePerPage: 10,
@@ -134,7 +128,7 @@ class Receipt extends React.Component {
 	};
 
 	goToDetail = (row) => {
-		this.props.history.push('/admin/income/receipt/detail', {
+		this.props.history.push('/admin/income/viewCustomerInvoice/detail', {
 			id: row.receiptId,
 		});
 	};
@@ -336,16 +330,11 @@ class Receipt extends React.Component {
 		const {
 			loading,
 			dialog,
-			selectedRows,
 			filterData,
-			csvData,
-			view,
 		} = this.state;
 		const {
 			receipt_list,
-			invoice_list,
 			contact_list,
-			universal_currency_list,
 		} = this.props;
 		
 		let tmpContact_list = []
@@ -516,17 +505,21 @@ class Receipt extends React.Component {
 												</Col>
 											</Row>
 										</div>
-										{/* <Button
-											color="primary"
-											style={{ marginBottom: '10px' }}
-											className="btn-square"
-											onClick={() =>
-												this.props.history.push(`/admin/income/receipt/create`)
-											}
+										{/* <Row>
+										<div style={{ width: "1650px" }}>
+											<Button
+												color="primary"
+												style={{ marginBottom: '10px' }}
+												className="btn-square pull-right mb-2"
+												onClick={() =>
+													this.props.history.push(`/admin/income/receipt/create`)
+												}
 										>
 											<i className="fas fa-plus mr-1" />
-											Add New Receipt
-										</Button> */}
+											{strings.AddNewReceipt}
+										</Button>
+										</div>
+										</Row> */}
 										<div>
 											<BootstrapTable
 												selectRow={this.selectRowProp}
@@ -558,30 +551,6 @@ class Receipt extends React.Component {
 												csvFileName="Receipt.csv"
 												ref={(node) => (this.table = node)}
 											>
-												<TableHeaderColumn 
-												dataField="receiptId" 
-												dataSort
-												className="table-header-bg"
-												>
-													{strings.RECEIPTNUMBER}
-												</TableHeaderColumn>
-
-												<TableHeaderColumn 
-													dataField="customerName" 
-													dataSort
-													className="table-header-bg"
-												>
-													{strings.CustomerName}
-												</TableHeaderColumn>
-												
-												<TableHeaderColumn
-													dataField="invoiceNumber"
-													dataSort
-												    className="table-header-bg"
-													
-												>
-													{strings.InvoiceNumber}
-												</TableHeaderColumn>
 
 												<TableHeaderColumn
 													dataField="receiptDate"
@@ -592,19 +561,31 @@ class Receipt extends React.Component {
 												>
 													{strings.ReceivedDate}
 												</TableHeaderColumn>
-												{/* <TableHeaderColumn dataField="referenceCode" dataSort>
-													Reference Number
-												</TableHeaderColumn> */}
-																								
-												  {/* <TableHeaderColumn
-												  width="10%" 
-											  dataField="currencyIsoCode" 
-										 	 dataSort
-											  className="table-header-bg"
-											  dataFormat={this.renderCurrency}
-												  >
-												{strings.Currency}
-												</TableHeaderColumn> */}
+												
+												<TableHeaderColumn
+													dataField="invoiceNumber"
+													dataSort
+												    className="table-header-bg"
+												>
+													{strings.InvoiceNumber}
+												</TableHeaderColumn>
+												
+												<TableHeaderColumn 
+													dataField="customerName" 
+													dataSort
+													className="table-header-bg"
+												>
+													{strings.CustomerName}
+												</TableHeaderColumn>
+												
+												<TableHeaderColumn 
+												dataField="receiptId" 
+												dataSort
+												className="table-header-bg"
+												>
+													{strings.RECEIPTNUMBER}
+												</TableHeaderColumn>
+
 												<TableHeaderColumn
 													width="10%"
 													dataAlign="right"
@@ -616,14 +597,6 @@ class Receipt extends React.Component {
 												>
 													{strings.AMOUNT}
 												</TableHeaderColumn>
-												{/* <TableHeaderColumn
-													dataField="unusedAmount"
-													dataSort
-													dataAlign="right"
-													dataFormat={this.renderUnusedAmount}
-												>
-													Unused Amount
-												</TableHeaderColumn> */}
 											</BootstrapTable>
 										</div>
 									</Col>

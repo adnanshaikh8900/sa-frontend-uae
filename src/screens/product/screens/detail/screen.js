@@ -12,37 +12,23 @@ import {
 	FormGroup,
 	Input,
 	Label,
-	ButtonDropdown,
-	DropdownToggle,
-	DropdownMenu,
-	DropdownItem,
 } from 'reactstrap';
 import Select from 'react-select';
-
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-
 import _ from 'lodash';
-
 import './style.scss';
-
 import * as ProductActions from '../../actions';
-
 import { WareHouseModal } from '../../sections';
-
-import { Loader, ConfirmDeleteModal } from 'components';
+import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
 import { selectOptionsFactory } from 'utils';
 import * as DetailProductActions from './actions';
 import { CommonActions } from 'services/global';
 import * as SupplierInvoiceActions from '../../../supplier_invoice/actions';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-
-
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { InventoryHistoryModal} from './sections';
-import Switch from 'react-switch';
-
 
 const mapStateToProps = (state) => {
 	return {
@@ -101,6 +87,7 @@ class DetailProduct extends React.Component {
 			unitTypeList:[],
 			exciseTaxCheck:false,
 			loadingMsg:"Loading",
+			disableLeavePage:false,
 //			disableEditing:true,
 			inventoryTableData:[]
 		};
@@ -488,7 +475,7 @@ renderName=(cell,row)=>{
 				
 		};
 		const postData = this.getData(dataNew);
-		this.setState({ loading:true, loadingMsg:"Updating Product..."});
+		this.setState({ loading:true, disableLeavePage:false, loadingMsg:"Updating Product..."});
 		this.props.detailProductActions
 			.updateProduct(postData)
 			.then((res) => {
@@ -921,26 +908,26 @@ renderName=(cell,row)=>{
 														// 	'Purchase price cannot be greater than Sales price';
 														// }
 														if(this.state.exciseTaxCheck===true && values.exciseTaxId=='' ){
-															errors.exciseTaxId = 'Excise Tax is Required';
+															errors.exciseTaxId = 'Excise tax is required';
 														}
 														if (this.state.ProductExist === true) {
 															errors.productCode =
-																'Product Code Already Exist';
+																'Product code already exist';
 														}
 														return errors;
 													}}
 													validationSchema={Yup.object().shape({
 													// 	isActive : Yup.string()
-													// .required('status is Required') ,
+													// .required('status is required') ,
 														productName: Yup.string().required(
-															'Product Name is Required',
+															'Product name is required',
 														),
 														purchaseUnitPrice: Yup.string().when(
 															'productPriceType',
 															{
 																is: (value) => value.includes('PURCHASE'),
 																then: Yup.string().required(
-																	'Purchase Price is Required',
+																	'Purchase price is required',
 																),
 																otherwise: Yup.string(),
 															},
@@ -950,7 +937,7 @@ renderName=(cell,row)=>{
 															{
 																is: (value) => value.includes('PURCHASE'),
 																then: Yup.string().required(
-																	'Purchase Category is Required',
+																	'Purchase category is required',
 																),
 																otherwise: Yup.string(),
 															},
@@ -960,7 +947,7 @@ renderName=(cell,row)=>{
 															{
 																is: (value) => value.includes('SALES'),
 																then: Yup.string().required(
-																	'Selling Category is Required',
+																	'Selling category is required',
 																),
 																otherwise: Yup.string(),
 															},
@@ -970,19 +957,19 @@ renderName=(cell,row)=>{
 															{
 																is: (value) => value.includes('SALES'),
 																then: Yup.string().required(
-																	'Selling Price is Required',
+																	'Selling price is required',
 																),
 																otherwise: Yup.string(),
 															},
 														),
 														productPriceType: Yup.string().required(
-															'At Least One Selling Type is Required',
+															'At least one selling Type is required',
 														),
 														productCode: Yup.string().required(
-															'Product Code is Required',
+															'Product code is required',
 														),
 														vatCategoryId: Yup.string()
-															.required('VAT Category is Required')
+															.required('VAT category is required')
 															.nullable(),
 													})}
 												>
@@ -1261,7 +1248,7 @@ renderName=(cell,row)=>{
 																							'name',
 																							'id',
 																							vat_list,
-																							'Vat',
+																							'VAT',
 																					  )
 																					: []
 																			}
@@ -1275,7 +1262,7 @@ renderName=(cell,row)=>{
 																						'name',
 																						'id',
 																						vat_list_data,
-																						'Vat',
+																						'VAT',
 																					)
 																					.find(
 																						(option) =>
@@ -1379,7 +1366,7 @@ renderName=(cell,row)=>{
 																			check
 																			htmlFor="vatIncluded"
 																		>
-																			Vat Include
+																			VAT Include
 																		</Label>
 																	</FormGroup>
 																</Col>
@@ -2398,6 +2385,7 @@ min="0"
 					 inventory_history_list={this.state.inventory_history_list}
 				/>
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

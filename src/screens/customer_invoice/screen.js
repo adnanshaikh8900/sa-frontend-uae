@@ -40,6 +40,7 @@ import './style.scss';
 import { CreateCreditNoteModal } from './sections';
 import moment from 'moment';
 import { upperCase } from 'lodash';
+import { toast } from 'react-toastify';
 
 const { ToWords } = require('to-words');
 const toWords = new ToWords({
@@ -226,10 +227,29 @@ class CustomerInvoice extends React.Component {
 		this.initializeData();
 	};
 
-	postInvoice = (row,markAsSent) => {
-		this.setState({
-			loading: true,
-		});
+	
+stockInHandTestForProduct = (row,markAsSent) => {
+this.props.customerInvoiceActions
+	.stockInHandTestForProduct(row.id)
+	.then((res) => {
+	 if (res.status == 200)
+		this.postInvoice(row,markAsSent);
+	})
+	.catch((error)=>{
+		if (error.status == 417)
+		{
+			this.props.commonActions.tostifyAlert(
+				'error',
+				'Invoice Can\'t Posted Because Some Products are Out Of Stock ',
+			);
+		}
+	})		
+}
+
+
+
+	postInvoice  = (row,markAsSent) => {
+	
 		const postingRequestModel = {
 			amount: row.invoiceAmount,
 			postingRefId: row.id,
@@ -447,7 +467,7 @@ class CustomerInvoice extends React.Component {
 						{row.statusEnum !== 'Sent' && row.statusEnum !== 'Paid' && row.statusEnum !== 'Partially Paid' && (
 							<DropdownItem
 								onClick={() => {
-									this.postInvoice(row,true);
+									this.stockInHandTestForProduct(row,true);
 								}}
 							>
 							<i class="far fa-arrow-alt-circle-right"></i>{strings.Mark_As_Sent}
@@ -456,10 +476,10 @@ class CustomerInvoice extends React.Component {
 						{row.statusEnum !== 'Sent' && row.statusEnum !== 'Paid' && row.statusEnum !== 'Partially Paid' && (
 							<DropdownItem
 								onClick={() => {
-									this.postInvoice(row,false);
+									this.stockInHandTestForProduct(row,false);
 								}}
 							>
-								<i className="fas fa-send" /> {strings.Post}
+								<i className="fas fa-send" /> {strings.Send}
 							</DropdownItem>
 						)}
 						{/* <DropdownItem onClick={() => { this.openInvoicePreviewModal(row.id) }}>
@@ -475,7 +495,7 @@ class CustomerInvoice extends React.Component {
 								<i className="fas fa-file" /> {strings.Draft}
 							</DropdownItem>
 						)}
-						{row.statusEnum !== 'Draft' && row.statusEnum !== 'Paid' && (
+						{row.statusEnum !== 'Draft' && row.statusEnum !== 'Paid' && row.exchangeRate ==1 && (
 							<DropdownItem
 								onClick={() =>
 									this.props.history.push(
@@ -967,6 +987,7 @@ class CustomerInvoice extends React.Component {
 					vatAmount: customer.totalVatAmount,
 					cnCreatedOnPaidInvoice:customer.cnCreatedOnPaidInvoice,
 					editFlag:customer.editFlag,
+					exchangeRate:customer.exchangeRate,
 				}))
 				: '';
 
@@ -1327,22 +1348,24 @@ class CustomerInvoice extends React.Component {
 											dataField="invoiceNumber"
 											// dataFormat={this.renderInvoiceNumber}
 											dataSort
-											//	width="7%"
+												width="10%"
 											className="table-header-bg"
 										>
 											{strings.INVOICENUMBER}
 										</TableHeaderColumn>
 										<TableHeaderColumn
 											dataField="customerName"
+											tdStyle={{ whiteSpace: 'normal' }}
 											//	dataSort width="10%"
 											className="table-header-bg"
+											
 										>
 											{strings.CUSTOMERNAME}
 										</TableHeaderColumn>
 										<TableHeaderColumn
 											dataField="invoiceDate"
 											dataSort
-											//width="6%"
+											// width="8%"
 											dataFormat={this.invoiceDate}
 											className="table-header-bg"
 										>
@@ -1351,14 +1374,14 @@ class CustomerInvoice extends React.Component {
 										<TableHeaderColumn
 											dataField="invoiceDueDate"
 											dataSort
-											//width="6%"
+											// width="8%"
 											dataFormat={this.invoiceDueDate}
 											className="table-header-bg"
 										>
 											{strings.DUEDATE}
 										</TableHeaderColumn>
 										<TableHeaderColumn
-											//width="9%"
+											// width="7%"
 											dataField="status"
 											dataFormat={this.renderInvoiceStatus}
 											dataSort
@@ -1401,7 +1424,7 @@ class CustomerInvoice extends React.Component {
 										<TableHeaderColumn
 											className="text-right"
 											columnClassName="text-right"
-											//	width="5%"
+												width="5%"
 											dataFormat={this.renderActions}
 											className="table-header-bg"
 										></TableHeaderColumn>

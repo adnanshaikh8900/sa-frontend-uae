@@ -106,27 +106,37 @@ const ExpenseReducer = (state = initState, action) => {
 			};
 
 		case EXPENSE.PAY_MODE:
+			let list1=payload;		
+			if(list1 &&
+			   list1.length &&
+			   list1.length>0)	
+			   list1=list1.map((data,index)=>{
+					if(index==0)
+				      data.label="Petty Cash"
+					  return data;
+			    })
 			return {
 				...state,
-				pay_mode_list: Object.assign([], payload),
+				pay_mode_list: Object.assign([], list1),
 			};
 
 		case EXPENSE.USER_LIST:
 			
 			if(payload && payload[0] && payload[0].label){
 				let obj=new Object({label: "Company Expense",value: "Company Expense"});
-	     	    payload.push(obj);
-
+	     	    payload.unshift(obj);
 			}
 					
 			return {
 				...state,
 				user_list: Object.assign([],payload),
 			};
-			case EXPENSE.PAY_TO_LIST:
+			case EXPENSE.PAY_TO_LIST:		
+				let list=payload;
+				list.unshift({value: "Company Expense",label: "Company Expense" })
 			return {
 				...state,
-				pay_to_list: Object.assign([], payload),
+				pay_to_list: Object.assign([], list),
 			};
 
 		default:

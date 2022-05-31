@@ -314,7 +314,7 @@ class ProductModal extends React.Component {
 							),
 							productCode: Yup.string().required('Product Code is Required'),
 							vatCategoryId: Yup.string()
-								.required('Vat Category is Required')
+								.required('VAT Category is Required')
 								.nullable(),
 						})}
 					>
@@ -380,7 +380,7 @@ class ProductModal extends React.Component {
 
 											<Col lg={4}>
 																<FormGroup check inline className="mb-3">
-																	<Label className="productlabel mb-0 mr-1"><span className="text-danger">*</span>{strings.Status}</Label>
+																	<Label className="productlabel mb-0 mr-1"><span className="text-danger">* </span>{strings.Status}</Label>
 																	<div className="wrapper">
 																	<Label
 																		className="form-check-label mr-1"
@@ -445,7 +445,7 @@ class ProductModal extends React.Component {
 											<Col lg={4}>
 												<FormGroup className="mb-3">
 													<Label htmlFor="productName">
-														<span className="text-danger">*</span> {strings.Name}
+														<span className="text-danger">* </span> {strings.Name}
 													</Label>
 													<Input
 														type="text"
@@ -483,7 +483,7 @@ class ProductModal extends React.Component {
 											<Col lg={4}>
 												<FormGroup className="mb-3">
 													<Label htmlFor="productCode">
-														<span className="text-danger">*</span>
+														<span className="text-danger">* </span>
 														 {strings.ProductCode}
 														<i
 															id="ProductCodeTooltip"
@@ -594,7 +594,7 @@ class ProductModal extends React.Component {
 											<Col lg={4}>
 												<FormGroup className="mb-3">
 													<Label htmlFor="vatCategoryId">
-														<span className="text-danger">*</span> {strings.VatPercentage}
+														<span className="text-danger">* </span> {strings.VatPercentage}
 													</Label>
 													<Select
 														styles={customStyles}
@@ -604,7 +604,7 @@ class ProductModal extends React.Component {
 																		'name',
 																		'id',
 																		vat_list,
-																		'Vat',
+																		'VAT',
 																  )
 																: []
 														}
@@ -656,7 +656,7 @@ class ProductModal extends React.Component {
 																		check
 																		htmlFor="vatIncluded"
 																	>
-																		Vat Include
+																		VAT Include
 																	</Label>
 																</FormGroup>
 															</Col>
@@ -794,7 +794,7 @@ class ProductModal extends React.Component {
 												</FormGroup>
 												<FormGroup className="mb-3">
 													<Label htmlFor="salesUnitPrice">
-														<span className="text-danger">*</span>  {strings.SellingPrice}
+														<span className="text-danger">* </span>  {strings.SellingPrice}
 														<i
 															id="SalesTooltip"
 															className="fa fa-question-circle ml-1"
@@ -844,7 +844,7 @@ min="0"
 												</FormGroup>
 												<FormGroup className="mb-3">
 													<Label htmlFor="transactionCategoryId">
-														<span className="text-danger">*</span> {strings.Account}
+														<span className="text-danger">* </span> {strings.Account}
 													</Label>
 													<Select
 														styles={customStyles}
@@ -962,7 +962,7 @@ min="0"
 												</FormGroup>
 												<FormGroup className="mb-3">
 													<Label htmlFor="salesUnitPrice">
-														<span className="text-danger">*</span> {strings.PurchasePrice}
+														<span className="text-danger">* </span> {strings.PurchasePrice}
 														<i
 															id="PurchaseTooltip"
 															className="fa fa-question-circle ml-1"
@@ -1013,7 +1013,7 @@ min="0"
 
 												<FormGroup className="mb-3">
 													<Label htmlFor="salesUnitPrice">
-														<span className="text-danger">*</span>{strings.Account}
+														<span className="text-danger">* </span>{strings.Account}
 													</Label>
 													<Select
 														styles={customStyles}

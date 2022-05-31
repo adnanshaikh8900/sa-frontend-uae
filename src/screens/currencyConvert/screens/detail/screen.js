@@ -1,9 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import {
-	selectCurrencyFactory,
-} from 'utils';
+import { selectCurrencyFactory } from 'utils';
 import {
   Card,
   CardHeader,
@@ -16,20 +14,14 @@ import {
   Row,
   Col
 } from 'reactstrap'
-import { Loader , ConfirmDeleteModal} from 'components'
+import { LeavePage, Loader , ConfirmDeleteModal} from 'components'
 import Select from 'react-select';
 import * as Yup from 'yup';
-
-import {
-  CommonActions,AuthActions
-} from 'services/global'
-
+import {  CommonActions,AuthActions } from 'services/global'
 import 'react-toastify/dist/ReactToastify.css'
 import './style.scss'
-
 import * as DetailCurrencyConvertAction from './actions'
 import * as CurrencyConvertActions from '../../actions';
-
 import { Formik } from 'formik';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
@@ -66,8 +58,9 @@ class DetailCurrencyConvert extends React.Component {
       disabled: false,
       disabled1:false,
       selectedStatus: false,
-			isActive: false,
-			loadingMsg:"Loading..."
+		isActive: false,
+		loadingMsg:"Loading...",
+		disableLeavePage:false
     }
     this.regExAlpha = /^[a-zA-Z ]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
@@ -150,7 +143,7 @@ class DetailCurrencyConvert extends React.Component {
 		let postData = this.getData(obj);
 
 		postData = { ...postData, ...{ id: current_currency_convert_id } };
-		this.setState({ loading:true, loadingMsg:"Updating Currency Conversion..."});
+		this.setState({ loading:true, disableLeavePage:false, loadingMsg:"Updating Currency Conversion..."});
       this.props.detailCurrencyConvertAction.updateCurrencyConvert(postData).then((res) => {
       if (res.status === 200) {
         this.setState({ disabled: false });
@@ -162,6 +155,7 @@ class DetailCurrencyConvert extends React.Component {
 		this.setState({ loading:false,});
       }
     }).catch((err) => {
+		this.setState({ createDisabled: false, loading: false  });
       this.props.commonActions.tostifyAlert(
 		  'error',
 		   err.data ? err.data.message : 'Currency Conversion Updated Unsuccessfully')
@@ -511,13 +505,19 @@ class DetailCurrencyConvert extends React.Component {
                                         <i className="fa fa-dot-circle-o"></i> 	{this.state.disabled
 																			? 'Updating...'
 																			: strings.Update }
-                                      </Button>)}
-                                      <Button type="submit" color="secondary" className="btn-square"
-                                        onClick={() => { this.props.history.push('/admin/master/CurrencyConvert') }}>
-                                        <i className="fa fa-ban"></i> {this.state.disabled1
-																			? 'Deleting...'
-																			: strings.Cancel }
-                                      </Button>
+																	</Button>)}
+																	<Button
+																	type="button"
+																	color="secondary"
+																	className="btn-square"
+																	onClick={() => {
+																		this.props.history.push(
+																			'/admin/master/CurrencyConvert',
+																		);
+																	}}
+																>
+																	<i className="fa fa-ban"></i> {strings.Cancel}
+																</Button>
                                     </FormGroup>
                                   </Col>
                                 </Row>
@@ -531,8 +531,10 @@ class DetailCurrencyConvert extends React.Component {
               </Card>
             </Col>
           </Row>
+					{loading ? <Loader></Loader> : ''}
         </div>
       </div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 	  </div>
     )
   }

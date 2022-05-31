@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { EditorState } from 'draft-js';
-
 import {
 	Card,
 	CardBody,
@@ -17,16 +16,13 @@ import {
 } from 'reactstrap';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-
-import { Loader } from 'components';
-
+import { LeavePage, Loader } from 'components';
 import { CommonActions,AuthActions } from 'services/global';
 import './style.scss';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import * as GeneralSettingActions from './actions';
 import { data } from '../Language/index'
 import LocalizedStrings from 'react-localization';
-
 
 const mapStateToProps = (state) => {
 	return {};
@@ -58,6 +54,7 @@ class GeneralSettings extends React.Component {
 				mailingUserName: '',
 			},
 			loading: true,
+			disableLeavePage:false,
 			message: '',
 			contentState: {},
 			selected_smtp_auth: false,
@@ -179,6 +176,7 @@ class GeneralSettings extends React.Component {
 	};
 
 	handleSubmit = (data) => {
+		this.setState({ loading:true, disableLeavePage:true});
 		const { selected_smtp_auth, selected_smtp_enable, message } = this.state;
 		const postData = {
 			id: data.id,
@@ -254,19 +252,19 @@ class GeneralSettings extends React.Component {
 													}}
 													validationSchema={Yup.object().shape({
 														// invoicingReferencePattern: Yup.string().required(
-														// 	'Invoice Reference Number is Required',
+														// 	'Invoice reference number is required',
 														// ),
 														// mailingHost: Yup.string().required(
-														// 	'Mailing Host is Required',
+														// 	'Mailing host is required',
 														// ),
 														// mailingPort: Yup.string().required(
-														// 	'Mailing Port is Required',
+														// 	'Mailing port is required',
 														// ),
 														// mailingUserName: Yup.string().required(
-														// 	'Mailing Username is Required',
+														// 	'Mailing username is required',
 														// ),
 														// mailingPassword: Yup.string().required(
-														// 	'Mailing Password is Required',
+														// 	'Mailing password is required',
 														// ),
 													})}
 												>
@@ -745,7 +743,7 @@ class GeneralSettings extends React.Component {
 																					</tr>
 																					<tr>
 																						<td>{'{invoiceVatAmount}'}</td>
-																						<td>Invoice Vat Amount</td>
+																						<td>Invoice VAT Amount</td>
 																					</tr>
 																					<tr>
 																						<td>{'{product}'}</td>
@@ -810,6 +808,7 @@ class GeneralSettings extends React.Component {
 																			color="primary"
 																			className="btn-square"
 																			onClick={() => {
+																				this.handleSubmit(props.values)
 																				this.props.history.push(
 																					'/admin/dashboard',
 																				);
@@ -846,6 +845,7 @@ class GeneralSettings extends React.Component {
 						</Col>
 					</Row>
 				</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

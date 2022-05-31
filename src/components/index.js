@@ -12,6 +12,8 @@ import Tooltip from './tooltip';
 import Currency from './currency';
 import InvoiceTemplate from './invoice-template';
 import * as CustomStyles from './react-select';
+import ConfirmLeavePageModal from './confirm_leave_page'
+import LeavePage from './navigationPromtForLeavePage'
 
 export {
 	Loading,
@@ -22,6 +24,8 @@ export {
 	Message,
 	DateRangePicker2,
 	ConfirmDeleteModal,
+	ConfirmLeavePageModal,
+	LeavePage,
 	ImageUploader,
 	SidebarComponent,
 	CustomStyles,

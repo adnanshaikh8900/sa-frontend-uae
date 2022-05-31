@@ -112,6 +112,7 @@ class Expense extends React.Component {
 	componentDidMount = () => {
 		this.props.expenseActions.getExpenseCategoriesList();
 		this.initializeData();
+		this.props.expenseActions.getVatList();
 		this.props.expenseActions.getPaytoList();
 	};
 
@@ -233,6 +234,7 @@ class Expense extends React.Component {
 								</div>
 							</DropdownItem>
 						)}
+						{(
 							<DropdownItem					
 								onClick={() =>
 									this.props.history.push(`/admin/expense/expense/create`,{parentId: row.expenseId})
@@ -240,6 +242,8 @@ class Expense extends React.Component {
 							>
 								<i className="fas fa-copy" /> {strings.CreateADuplicate}
 							</DropdownItem>
+						)}
+							
 						{row.expenseStatus !== 'Posted' && (
 							<DropdownItem
 								onClick={() => {
@@ -249,7 +253,7 @@ class Expense extends React.Component {
 								<i className="fas fa-send" /> {strings.Post}
 							</DropdownItem>
 						)}
-						{row.expenseStatus === 'Posted' && row.payee !== 'Company Expense' && row.editFlag==true && (
+						{row.expenseStatus === 'Posted' && row.bankAccountId === null && row.editFlag==true && (
 							<DropdownItem
 								onClick={() => {
 									this.unPostExpense(row);
@@ -866,13 +870,13 @@ class Expense extends React.Component {
 													: 0,
 											}}
 											multiColumnSort
-											//className="expense-table"
-											// trClassName="cursor-pointer"
-											//ref={(node) => (this.table = node)}
+											className="expense-table"
+											trClassName="cursor-pointer"
+											ref={(node) => (this.table = node)}
 											csvFileName="expense_list.csv"
 										>
 											<TableHeaderColumn
-												thStyle={{ whiteSpace: 'normal' }}
+												tdStyle={{ whiteSpace: 'normal' }}
 												dataField="expenseNumber"
 												dataSort
 											    width="13%"
@@ -883,50 +887,42 @@ class Expense extends React.Component {
 											</TableHeaderColumn>
 											
 											<TableHeaderColumn
-												thStyle={{ whiteSpace: 'normal' }}
+												tdStyle={{ whiteSpace: 'normal' }}
 												dataField="payee"
 												dataSort
-												width="15%"
 												className='table-header-bg'
 											>
 												{strings.PAYEE}
 											</TableHeaderColumn>
 
 											<TableHeaderColumn
-												thStyle={{ whiteSpace: 'normal' }}
 												dataField="expenseDate"
 												dataSort
 												dataFormat={this.renderDate}
-												width="15%"
 												className='table-header-bg'
 											>
 												{strings.EXPENSEDATE}
 											</TableHeaderColumn>
 																						
 											<TableHeaderColumn
-												thStyle={{ whiteSpace: 'normal' }}
+												tdStyle={{ whiteSpace: 'normal' }}
 												dataField="transactionCategoryName"
 												dataSort
-												width="20%"
 												className='table-header-bg'
 											>
 												{strings.EXPENSECATEGORY}
 											</TableHeaderColumn>
 											<TableHeaderColumn
-													thStyle={{ whiteSpace: 'normal' }}
-													width="15%"
-                                                    className="table-header-bg"
-                                                    dataField="exclusiveVat"
-                                                    dataSort
-                                                    dataFormat={this.renderType}
-                                                    >
-                                                        {strings.ExpenseType}
+                                                className="table-header-bg"
+                                                dataField="exclusiveVat"
+                                                dataSort
+                                                dataFormat={this.renderType}
+                                            >
+                                                {strings.ExpenseType}
 
                           					</TableHeaderColumn>
 
 											<TableHeaderColumn
-												thStyle={{ whiteSpace: 'normal' }}
-												width="10%"
 												dataField="expenseStatus"
 												dataFormat={this.renderExpenseStatus}
 												dataSort
@@ -937,21 +933,19 @@ class Expense extends React.Component {
 											
 											<TableHeaderColumn
 												dataAlign="right"
-												thStyle={{ whiteSpace: 'normal' }}
 												dataField="expenseAmount"
 												dataSort
 												dataFormat={this.renderAmount}
 												formatExtraData={universal_currency_list}
-												width="37%"
+												width="25%"
 												className='table-header-bg'
 											>
 												{strings.EXPENSEAMOUNT}
 											</TableHeaderColumn>
 											<TableHeaderColumn
-												thStyle={{ whiteSpace: 'normal' }}
 												className="text-right"
 												columnClassName="text-right"
-												width="55"
+												width="5%"
 												dataFormat={this.renderActions}
 												className='table-header-bg'
 											></TableHeaderColumn>

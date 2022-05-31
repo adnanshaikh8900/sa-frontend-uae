@@ -343,7 +343,7 @@ class SupplierInvoice extends React.Component {
 									this.postInvoice(row,false);
 								}}
 							>
-								<i className="fas fa-send" />  {strings.Post}
+								<i className="fas fa-send" />  {strings.Send}
 							</DropdownItem>
 						)}
 						{/* <DropdownItem  onClick={() => {this.openInvoicePreviewModal(row.id)}}>
@@ -366,7 +366,7 @@ class SupplierInvoice extends React.Component {
 								<i className="fas fa-file" /> {strings.Draft}
 							</DropdownItem>
 						)}
-						{row.statusEnum !== 'Draft' && row.statusEnum !== 'Paid' && (
+						{row.statusEnum !== 'Draft' && row.statusEnum !== 'Paid' && row.exchangeRate == 1 &&  (
 							<DropdownItem
 								onClick={() =>
 									this.props.history.push(
@@ -785,6 +785,7 @@ console.log(supplier_invoice_list)
 						currencySymbol: supplier.currencySymbol ? supplier.currencySymbol : '',
 						contactId: supplier.contactId,
 						editFlag:supplier.editFlag,
+						exchangeRate:supplier.exchangeRate,
 				  }))
 				: '';
 
@@ -1146,7 +1147,7 @@ console.log(supplier_invoice_list)
 												dataField="invoiceNumber"
 												// dataFormat={this.renderInvoiceNumber}
 												dataSort
-											//	width="10%"
+												width="10%"
 												className="table-header-bg"
 											>
 													{strings.INVOICENUMBER}
@@ -1154,6 +1155,7 @@ console.log(supplier_invoice_list)
 											<TableHeaderColumn
 												dataField="customerName"
 												dataSort
+												tdStyle={{ whiteSpace: 'normal' }}
 											//	width="12%"
 												className="table-header-bg"
 											>
@@ -1163,7 +1165,7 @@ console.log(supplier_invoice_list)
 											<TableHeaderColumn
 												dataField="invoiceDate"
 												dataSort
-											//	width="7%"
+												// width="7%"
 												dataFormat={this.invoiceDate}
 												className="table-header-bg"
 											>
@@ -1172,7 +1174,7 @@ console.log(supplier_invoice_list)
 											<TableHeaderColumn
 												dataField="invoiceDueDate"
 												dataSort
-											//	width="7%"
+												// width="7%"
 												dataFormat={this.invoiceDueDate}
 												className="table-header-bg"
 											>
@@ -1190,7 +1192,7 @@ console.log(supplier_invoice_list)
 											</TableHeaderColumn> */}
 
 											<TableHeaderColumn
-											//	width="10%"
+												// width="7%"
 												dataField="status"
 												dataFormat={this.renderInvoiceStatus}
 												dataSort
@@ -1222,7 +1224,7 @@ console.log(supplier_invoice_list)
 											<TableHeaderColumn
 												className="text-right"
 												columnClassName="text-right"
-												//width="5%"
+												width="5%"
 												dataFormat={this.renderActions}
 												className="table-header-bg"
 											></TableHeaderColumn>

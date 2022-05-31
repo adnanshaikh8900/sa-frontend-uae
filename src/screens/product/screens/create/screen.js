@@ -15,21 +15,18 @@ import {
 	UncontrolledTooltip,
 } from 'reactstrap';
 import Select from 'react-select';
-import {   Loader } from 'components';
+import { LeavePage, Loader } from 'components';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-
 import './style.scss';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-
 import * as ProductActions from '../../actions';
 import * as SupplierInvoiceActions from '../../../supplier_invoice/actions';
 import { CommonActions } from 'services/global';
-
 import { WareHouseModal } from '../../sections';
 import { selectOptionsFactory } from 'utils';
-import Switch from "react-switch";
+
 const mapStateToProps = (state) => {
 	return {
 		vat_list: state.product.vat_list,
@@ -75,7 +72,6 @@ class CreateProduct extends React.Component {
 				productDescription: '',
 				productCode: '',
 				vatCategoryId:'',
-
 				unitTypeId:'',
 				productCategoryId: '',
 				productWarehouseId: '',
@@ -116,7 +112,8 @@ class CreateProduct extends React.Component {
 			exciseTaxCheck:false,
 			exciseType:false,
 			exciseAmount:0	,
-			loadingMsg:"Loading"		
+			loadingMsg:"Loading",
+			disableLeavePage:false
 		};
 		this.formRef = React.createRef();       
 		this.regEx = /^[0-9\d]+$/;
@@ -339,7 +336,7 @@ try {
 			}),
 		};
 		const postData = this.getData(dataNew);
-		this.setState({ loading:true, loadingMsg:"Creating Product..."});
+		this.setState({ loading:true, disableLeavePage:true, loadingMsg:"Creating Product..."});
 		this.props.productActions
 			.createAndSaveProduct(postData)
 			.then((res) => {
@@ -384,7 +381,7 @@ try {
 			name: value,
 		};
 		this.props.productActions.checkValidation(data).then((response) => {
-			if (response.data === 'Product Name Already Exists') {
+			if (response.data === 'Product name already exists') {
 				this.setState({
 					exist: true,
 				});
@@ -404,7 +401,7 @@ try {
 		this.props.productActions
 			.checkProductNameValidation(data)
 			.then((response) => {
-				if (response.data === 'Product Code Already Exists') {
+				if (response.data === 'Product code already exists') {
 					this.setState({
 						ProductExist: true,
 					});
@@ -484,21 +481,21 @@ try {
 												validate={(values) => {
 													let errors = {};
 													if (!values.productName) {
-														errors.productName = 'Product Name Required';
+														errors.productName = 'Product name required';
 													}
 													if (this.state.exist === true) {
 														errors.productName =
-															'Product Name Already Exist';
+															'Product name already exist';
 													}
 													if (this.state.ProductExist === true) {
 														errors.productCode =
-															'Product Code Already Exist';
+															'Product code already exist';
 													}
 													if (values.productName==='') {
-														errors.productName = 'Product Name is Required';
+														errors.productName = 'Product name is required';
 													}
 													if (values.productCode==='') {
-														errors.productCode = 'Product Code is Required';
+														errors.productCode = 'Product code is required';
 													}
 													// if (values.inventoryReorderLevel > values.inventoryQty)
 													// {
@@ -531,20 +528,20 @@ try {
 														// }														
 														if(values.inventoryPurchasePrice ==='')
 														errors.inventoryPurchasePrice = 
-														'Inventory Purchase Price is Required';
+														'Inventory purchase price is required';
 
 														// if(values.inventoryReorderLevel ==='')
 														// errors.inventoryReorderLevel = 
-														// 'Inventory Reorder Level is Required';
+														// 'Inventory reorder level is required';
 
 														if(values.inventoryQty ==='')
 														errors.inventoryQty = 
-														'Inventory Quantity is Required';
+														'Inventory quantity is required';
 														
 													}
 
 													if(this.state.exciseTaxCheck===true && values.exciseTaxId=='' ){
-														errors.exciseTaxId = 'Excise Tax is Required';
+														errors.exciseTaxId = 'Excise tax is required';
 													}
 													return errors;
 												}}
@@ -552,13 +549,13 @@ try {
 												validationSchema={
 													Yup.object().shape({
 													// isActive : Yup.boolean()
-													// .required('status is Required') , 
+													// .required('status is required') , 
 													purchaseUnitPrice: Yup.string().when(
 														'productPriceType',
 														{
 															is: (value) => value.includes('PURCHASE'),
 															then: Yup.string().required(
-																'Purchase Price is Required',
+																'Purchase price is required',
 															),
 															otherwise: Yup.string(),
 														},
@@ -568,7 +565,7 @@ try {
 														{
 															is: (value) => value.includes('PURCHASE'),
 															then: Yup.string().required(
-																'Purchase Category is Required',
+																'Purchase category is required',
 															),
 															otherwise: Yup.string(),
 														},
@@ -578,7 +575,7 @@ try {
 														{
 															is: (value) => value.includes('SALES'),
 															then: Yup.string().required(
-																'Selling Category is Required',
+																'Selling category is required',
 															),
 															otherwise: Yup.string(),
 														},
@@ -588,19 +585,19 @@ try {
 														{
 															is: (value) => value.includes('SALES'),
 															then: Yup.string().required(
-																'Selling Price is Required',
+																'Selling price is required',
 															),
 															otherwise: Yup.string(),
 														},
 													),
 													productPriceType: Yup.string().required(
-														'At least one Selling type is Required',
+														'At least one selling type is required',
 													),
 													productCode: Yup.string().required(
-														'Product code is Required',
+														'Product code is required',
 													),
 													vatCategoryId: Yup.string()
-														.required('Vat Category is Required')
+														.required('VAT category is required')
 														.nullable(),
 												})}
 											>
@@ -908,7 +905,7 @@ try {
 																							'name',
 																							'id',
 																							vat_list,
-																							'Vat',
+																							'VAT',
 																					  )
 																					: []
 																			}
@@ -1120,7 +1117,7 @@ try {
 																		check
 																		htmlFor="vatIncluded"
 																	>
-																		Vat Include
+																		VAT Include
 																	</Label>
 																</FormGroup>
 															</Col>
@@ -2025,6 +2022,7 @@ try {
 					closeWarehouseModal={this.closeWarehouseModal}
 				/>
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

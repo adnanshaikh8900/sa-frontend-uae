@@ -13,25 +13,16 @@ import {
   Row,
   Col
 } from 'reactstrap'
-import { Loader , ConfirmDeleteModal} from 'components'
-
-import {
-  CommonActions
-} from 'services/global'
+import { LeavePage, Loader, ConfirmDeleteModal} from 'components'
+import { CommonActions } from 'services/global'
 import * as Yup from 'yup';
 import 'react-toastify/dist/ReactToastify.css'
 import './style.scss'
-
 import * as DetailProductCategoryAction from './actions'
-
 import { Formik } from 'formik';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-
-import * as CreateProductCategoryActions from './actions';
 import * as ProductCategoryActions from '../../actions';
-import { truncate } from 'lodash-es'
-
 
 // const mapStateToProps = (state) => {
 //   return ({
@@ -67,6 +58,7 @@ class DetailProductCategory extends React.Component {
       disabled: false,
       disabled1:false,
       loadingMsg:"Loading",
+			disableLeavePage:false
     }
     this.regExAlpha = /^[a-zA-Z ]+$/;
     this.regExBoth = /^[a-zA-Z0-9\s,'-/()]+$/;
@@ -104,7 +96,7 @@ class DetailProductCategory extends React.Component {
     }
   }
 
-  // Create or Edit Vat
+  // Create or Edit VAT
   handleSubmit = (data) => {
     this.setState({ disabled: true });
     const { id, productCategoryName, productCategoryCode } = data;
@@ -113,7 +105,7 @@ class DetailProductCategory extends React.Component {
       productCategoryName: productCategoryName ? productCategoryName : '',
       productCategoryCode: productCategoryCode ? productCategoryCode : ''
     }
-    this.setState({ loading:true, loadingMsg:"Updating Product Category..."});
+    this.setState({ loading:true, disableLeavePage:true, loadingMsg:"Updating Product Category..."});
     this.props.detailProductCategoryAction.updateProductCategory(postData).then((res) => {
       if (res.status === 200) {
         this.setState({ disabled: false });
@@ -214,15 +206,15 @@ class DetailProductCategory extends React.Component {
                             }}
                           validationSchema={Yup.object().shape({
                             productCategoryName: Yup.string()
-                              .required("Product Category Name is Required"),
+                              .required("Product category name is required"),
                               productCategoryCode: Yup.string()
-                              .required("Code is Required")
+                              .required("Code is required")
                           })}
                           validate={(values) => {
                             let errors = {};
                             if (!values.productCategoryName) {
                               errors.productCategoryName =
-                                'Product Category Name is Required';
+                                'Product category name is required';
                             }
                             
                             let check=false;
@@ -240,12 +232,12 @@ class DetailProductCategory extends React.Component {
                                 && 
                                !(this.state.productCategoryCode===values.productCategoryCode)){
                               errors.productCategoryCode =
-                                'Product Category Code Already Exists';
+                                'Product category code already exists';
                             }
                             
                             if (!values.productCategoryCode ) {
                               errors.productCategoryCode =
-                                'Product Category Code is Required';
+                                'Product category code is required';
                             }
                             return errors;
                           }}
@@ -321,12 +313,18 @@ class DetailProductCategory extends React.Component {
 																			: strings.Update }
 
                                       </Button>
-                                      <Button type="submit" color="secondary" className="btn-square"
-                                        onClick={() => { this.props.history.push('/admin/master/product-category') }}>
-                                          <i className="fa fa-ban"></i> {this.state.disabled1
-																			? 'Deleting...'
-																			: strings.Cancel }
-                                      </Button>
+                                      <Button
+																	type="button"
+																	color="secondary"
+																	className="btn-square"
+																	onClick={() => {
+																		this.props.history.push(
+																			'/admin/master/product-category',
+																		);
+																	}}
+																>
+																	<i className="fa fa-ban mr-1"></i>{strings.Cancel}
+																</Button>
                                     </FormGroup>
                                   </Col>
                                 </Row>
@@ -340,8 +338,10 @@ class DetailProductCategory extends React.Component {
               </Card>
             </Col>
           </Row>
+					{loading ? <Loader></Loader> : ''}
         </div>
       </div>
+      {this.state.disableLeavePage ?"":<LeavePage/>}
       </div>
     )
   }

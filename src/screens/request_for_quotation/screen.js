@@ -1384,6 +1384,7 @@ class RequestForQuotation extends React.Component {
 											</TableHeaderColumn>
 											
 											<TableHeaderColumn
+												tdStyle={{ whiteSpace: 'normal' }}
 												dataField="supplierName"
 												dataSort
 											//	width="12%"

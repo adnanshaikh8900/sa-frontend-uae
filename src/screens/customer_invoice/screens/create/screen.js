@@ -16,7 +16,6 @@ import {
 } from 'reactstrap';
 import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import { Currency } from 'components';
 import DatePicker from 'react-datepicker';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
@@ -24,22 +23,19 @@ import * as CustomerInvoiceCreateActions from './actions';
 import * as CustomerInvoiceActions from '../../actions';
 import * as ProductActions from '../../../product/actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
-import { CustomerModal, ProductModal,InvoiceNumberModel} from '../../sections';
+import { CustomerModal, ProductModal} from '../../sections';
 import { MultiSupplierProductModal } from '../../sections';
-import {  ImageUploader, Loader } from 'components';
+import { LeavePage, Loader } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import { optionFactory, selectCurrencyFactory, selectOptionsFactory } from 'utils';
 import Switch from "react-switch";
-
 import './style.scss';
 import moment from 'moment';
-
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { TextareaAutosize } from '@material-ui/core';
-
 
 const mapStateToProps = (state) => {
 	return {
@@ -187,6 +183,7 @@ class CreateCustomerInvoice extends React.Component {
 			contactId:'',
 			isQuotationSelected:false,
 			loadingMsg:"Loading...",
+			disableLeavePage:false, 
 			vat_list:[
 				{
 					"id": 1,
@@ -343,7 +340,7 @@ class CreateCustomerInvoice extends React.Component {
 									if(parseInt(e.target.value) >product_list[0].stockOnHand && product_list[0].isInventoryEnabled==true)
 									this.props.commonActions.tostifyAlert(
 										'error',
-										 `Quantity (${e.target.value}) Must Not Be Greater Than Stock On Hand  (${product_list[0].stockOnHand})`,
+										 `Quantity (${e.target.value}) Must not be greater than stock on hand  (${product_list[0].stockOnHand})`,
 									);
 									else
 									this.selectItem(
@@ -505,7 +502,7 @@ renderVatAmount = (cell, row,extraData) => {
 		this.props.customerInvoiceCreateActions
 			.checkValidation(data)
 			.then((response) => {
-				if (response.data === 'Invoice Number Already Exists') {
+				if (response.data === 'Invoice number already exists') {
 					this.setState(
 						{
 							exist: true,
@@ -561,6 +558,8 @@ this.props.customerInvoiceCreateActions.getQuotationById(quotationId)
 																discountType: res.data.discountType
 																	? res.data.discountType
 																	: '',
+																	receiptNumber:res.data.quotationNumber ?res.data.quotationNumber:''
+
 
 														},
 														invoiceDateNoChange: res.data.quotaionExpiration
@@ -615,6 +614,7 @@ this.props.customerInvoiceCreateActions.getQuotationById(quotationId)
 														this.formRef.current.setFieldValue('placeOfSupplyId', res.data.placeOfSupplyId, true);
 														this.formRef.current.setFieldValue('currency', this.getCurrency(res.data.customerId), true);
 														this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(res.data.customerId), true);
+														this.formRef.current.setFieldValue('receiptNumber', res.data.quotationNumber, true);
 													   this.setExchange( this.getCurrency(res.data.customerId) );
 														} else {
 															this.setState({
@@ -731,8 +731,8 @@ this.props.customerInvoiceCreateActions.getQuotationById(quotationId)
 								state=   state_list_for_shipping.find((option) =>	option.value ==this.state.initValue.shippingStateId)
 														
 								this.formRef.current.setFieldValue('shippingStateId',state, true);	
-								if(this.props.country_list &&this.props.country_list.length>0){
-									let country=  selectOptionsFactory.renderOptions(
+								if(this.props.country_list && this.props.country_list.length>0){
+									let country = selectOptionsFactory.renderOptions(
 																					'countryName',
 																					'countryCode',
 																					this.props.country_list,
@@ -1121,7 +1121,7 @@ discountType = (row) =>
 								.find((option) => option.value === +row.vatCategoryId)
 						}
 						id="vatCategoryId"
-						placeholder={strings.Select+strings.Vat}
+						placeholder={strings.Select+strings.VAT}
 						onChange={(e) => {
 							this.selectItem(
 								e.value,
@@ -1391,7 +1391,7 @@ discountType = (row) =>
 						   <Input
 						type="text"
 						maxLength="250"
-						value={row['description'] !== '' ? row['description'] : ''}
+						value={row['description'] !== '' && row['description'] !== null ? row['description'] : ''}
 						onChange={(e) => {
 							this.selectItem(e.target.value, row, 'description', form, field);
 						}}
@@ -1502,9 +1502,6 @@ discountType = (row) =>
 							net_value = parseFloat(net_value) +  parseFloat(value) ;
 							obj.exciseAmount = parseFloat(value) ;
 						}
-						else{
-							net_value = obj.unitPrice
-						}
 				}
 				else{
 					obj.exciseAmount = 0
@@ -1524,9 +1521,6 @@ discountType = (row) =>
 									const value = net_value;
 									net_value = parseFloat(net_value) +  parseFloat(value) ;
 									obj.exciseAmount = parseFloat(value) ;
-								}
-								else{
-									net_value = obj.unitPrice
 								}
 						}
 						else{
@@ -1568,9 +1562,7 @@ discountType = (row) =>
 					const value = net_value / 2
 					obj.exciseAmount = parseFloat(value);
 				net_value = net_value}
-				else{
-					net_value = obj.unitPrice
-					}
+			
 						}
 						else{
 							obj.exciseAmount = 0
@@ -1605,9 +1597,7 @@ discountType = (row) =>
 						const value = net_value / 2
 						obj.exciseAmount = parseFloat(value);
 					net_value = net_value}
-					else{
-						net_value = obj.unitPrice
-						}
+					
 							}
 							else{
 								obj.exciseAmount = 0
@@ -1800,7 +1790,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
 
-		this.setState({ loading:true, loadingMsg:"Creating Invoice..."});
+		this.setState({ loading:true, disableLeavePage:true, loadingMsg:"Creating Invoice..."});
 		this.props.customerInvoiceCreateActions
 			.createInvoice(formData)
 			.then((res) => {
@@ -1965,10 +1955,10 @@ if(changeShippingAddress && changeShippingAddress==true)
 	getCurrentProduct = () => {
 		this.props.customerInvoiceActions.getProductList().then((res) => {
 			let newData=[]
-																			const data = this.state.data;
-																			newData = data.filter((obj) => obj.productId !== "");
-																			// props.setFieldValue('lineItemsString', newData, true);
-																			// this.updateAmount(newData, props);
+			const data = this.state.data;
+			newData = data.filter((obj) => obj.productId !== "");
+			// props.setFieldValue('lineItemsString', newData, true);
+			// this.updateAmount(newData, props);
 			this.setState(
 				{
 					data: newData.concat({
@@ -2185,67 +2175,78 @@ if(changeShippingAddress && changeShippingAddress==true)
 													let errors = {};
 													if (exist === true) {
 														errors.invoice_number =
-															'Invoice Number Already Exists';
+															'Invoice number already exists';
 													}
 													if (values.invoice_number==='') {
-														errors.invoice_number = 'Invoice Number is Required';
+														errors.invoice_number = 'Invoice number is required';
 													}
 													if (param === true) {
 														errors.discount =
-															'Discount amount Cannot be greater than Invoice Total Amount';
+															'Discount amount cannot be greater than invoice total amount';
 													}
 													
-													if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
-														errors.placeOfSupplyId =
-														'Place of Supply is Required';
-													}
+													if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
+													||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
+													||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
+											    	{
+
+														if (!values.placeOfSupplyId) 
+													       	errors.placeOfSupplyId ='Place of supply is required';
+														if (values.placeOfSupplyId &&
+															(values.placeOfSupplyId=="" ||
+															(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select place of supply")
+															)
+														   ) 
+													         errors.placeOfSupplyId ='Place of supply is required';
+													
+												   }
 													if (values.term && values.term.label && values.term.label === "Select Terms") {
 														errors.term =
-														'Term is Required';
+														'Term is required';
 													}
 										
 													if(values.changeShippingAddress==true){
 														if(values.shippingAddress =="")  
-														errors.shippingAddress ='Shipping Address is Required';
+														errors.shippingAddress ='Shipping address is required';
 												    }
 
 													if(values.changeShippingAddress==true){
 														if(values.shippingCountryId =="")  
-														errors.shippingCountryId ='Shipping Country is Required';
+														errors.shippingCountryId ='Shipping country is required';
 													}
 
 													if(values.changeShippingAddress==true){
 														if(values.shippingStateId =="")  
-														errors.shippingStateId ='Shipping State is Required';
+														errors.shippingStateId ='Shipping state is required';
 											        }
-															debugger									
+																								
 													if(values.changeShippingAddress==true){
 														if (values.shippingCountryId == 229 || values.shippingCountryId.value == 229) {
 															if (values.shippingPostZipCode == '')
-																errors.shippingPostZipCode = 'PO Box Number is Required';
+																errors.shippingPostZipCode = 'PO box number is required';
 														} else {
 															if (values.shippingPostZipCode == '')
-																errors.shippingPostZipCode = 'Postal Code is Required';
+																errors.shippingPostZipCode = 'Postal code is required';
 															else
 																if (values.shippingPostZipCode.length != 6)
-																	errors.shippingPostZipCode = 'Please Enter 6 Digit Postal Zip Code';
+																	errors.shippingPostZipCode = 'Please enter 6 digit postal zip code';
 														}}
 														return errors;
 												}}
 												validationSchema={Yup.object().shape({
 													invoice_number: Yup.string().required(
-														'Invoice Number is Required',
+														'Invoice number is required',
 													),
 													contactId: Yup.string().required(
-														'Customer is Required',
+														'Customer is required',
 													),
-													placeOfSupplyId: Yup.string().required('Place of Supply is Required'),
-													term: Yup.string().required('Term is Required'),
+													// placeOfSupplyId: Yup.string().required('Place of Supply is required'),
+													term: Yup.string().required('Term is required'),
 													currency: Yup.string().required(
-														'Currency is Required',
+														'Currency is required',
 													),
 													invoiceDate: Yup.string().required(
-														'Invoice Date is Required',
+														'Invoice date is required',
 													),
 													
 													lineItemsString: Yup.array()
@@ -2256,7 +2257,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 															Yup.object().shape({
 														
 																quantity: Yup.string()
-																	.required('Value is Required')
+																	.required('Value is required')
 																	.test(
 																		'quantity',
 																		'Quantity should be greater than 0',
@@ -2269,10 +2270,10 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		},
 																	),
 																unitPrice: Yup.string()
-																	.required('Value is Required')
+																	.required('Value is required')
 																	.test(
 																		'Unit Price',
-																		'Unit Price Should be Greater than 1',
+																		'Unit price should be greater than 1',
 																		(value) => {
 																			if (value > 0) {
 																				return true;
@@ -2282,10 +2283,10 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		},
 																	),
 																vatCategoryId: Yup.string().required(
-																	'VAT is Required',
+																	'VAT is required',
 																),
 																productId: Yup.string().required(
-																	'Product is Required',
+																	'Product is required',
 																),
 																
 
@@ -2429,9 +2430,12 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		onChange={(option) => {
 																			if (option && option.value) {
 																				this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
-																				 this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(option.value), true);
+																				this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(option.value), true);
 																				this.setExchange( this.getCurrency(option.value) );
 																				props.handleChange('contactId')(option);
+																				this.setState({
+																					contactId : option.value
+																				})
 																			} else {
 																				props.handleChange('contactId')('');
 																			}
@@ -2506,9 +2510,15 @@ if(changeShippingAddress && changeShippingAddress==true)
 																</FormGroup>
 															</Col>: ''}
 															<Col lg={3}>
-																<FormGroup className="mb-3">
+															{this.state.customer_taxTreatment_des!="NON GCC" &&(<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">
-																		<span className="text-danger">* </span>
+																		{/* <span className="text-danger">* </span> */}
+																	{this.state.customer_taxTreatment_des &&
+																		(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
+																		||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
+																		||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED") && (
+																			<span className="text-danger">* </span>
+																		)}
 																		{strings.PlaceofSupply}
 																	</Label>
 																	<Select
@@ -2548,11 +2558,14 @@ if(changeShippingAddress && changeShippingAddress==true)
 																				? 'is-invalid'
 																				: ''
 																		}
-																		onChange={(option) =>
+																		onChange={(option) =>{
 																			props.handleChange('placeOfSupplyId')(
 																				option,
 																			)
-																		}
+																			this.setState({
+																				placeOfSupplyId : option
+																		})
+																		}}
 																	/>
 																	{props.errors.placeOfSupplyId &&
 																		props.touched.placeOfSupplyId && (
@@ -2560,7 +2573,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																				{props.errors.placeOfSupplyId}
 																			</div>
 																		)}
-																</FormGroup>
+																</FormGroup>)}
 															</Col>
 														</Row>
 														<hr />
@@ -2663,7 +2676,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		showMonthDropdown
 																		showYearDropdown
 																		dateFormat="dd-MM-yyyy"
-																		minDate={new Date()}
+																		//minDate={new Date()}
 																		dropdownMode="select"
 																		value={props.values.invoiceDate}
 																		selected={props.values.invoiceDate1 ?new Date(props.values.invoiceDate1):props.values.invoiceDate} 
@@ -2682,7 +2695,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																	{props.errors.invoiceDate &&
 																		props.touched.invoiceDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.invoiceDate.includes("nullable()") ? "Invoice Date is Required" :props.errors.invoiceDate}
+																				{props.errors.invoiceDate.includes("nullable()") ? "Invoice date is required" :props.errors.invoiceDate}
 																			</div>
 																		)}
 																</FormGroup>
@@ -2997,7 +3010,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 													
 																			<Col md="4" >
 																				<FormGroup>
-																					{props.values.shippingCountryId == 229 || props.values.shippingCountryId.value == 229 ?
+																					{props.values.shippingCountryId &&( props.values.shippingCountryId == 229 || props.values.shippingCountryId.value == 229) ?
 																					<Label htmlFor="POBoxNumber">
 																						<span className="text-danger">* </span>{strings.POBoxNumber}
 																					</Label>:
@@ -3348,7 +3361,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																			this.renderUnitPrice(cell, rows, props)
 																		}
 																	>
-																	{strings.UNITPRICE}
+																	{strings.UnitPrice}
 																		<i
 																			id="UnitPriceTooltip"
 																			className="fa fa-question-circle ml-1"
@@ -3361,6 +3374,16 @@ if(changeShippingAddress && changeShippingAddress==true)
 																			service
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn>
+																	{this.state.discountEnabled == true &&
+																	<TableHeaderColumn
+																		width="12%"
+																		dataField="discount"
+																		dataFormat={(cell, rows) =>
+																			this.renderDiscount(cell, rows, props)
+																		}
+																		>
+																	{strings.DisCount}
+																	</TableHeaderColumn>}
 																	{initValue.total_excise != 0 &&
 																	<TableHeaderColumn
 																		width="10%"
@@ -3378,20 +3401,10 @@ if(changeShippingAddress && changeShippingAddress==true)
 																			placement="right"
 																			target="ExiseTooltip"
 																		>
-																			If Exise Type for a product is Inclusive
-																			then the Excise dropdown will be Disabled
+																			Excise dropdown will be enabled only for the excise products
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn> }
-																	{this.state.discountEnabled == true &&
-																	<TableHeaderColumn
-																		width="12%"
-																		dataField="discount"
-																		dataFormat={(cell, rows) =>
-																			this.renderDiscount(cell, rows, props)
-																		}
-																		>
-																	{strings.DisCount}
-																	</TableHeaderColumn>}
+																
 																	<TableHeaderColumn
 																		width="13%"
 																		dataField="vat"
@@ -3470,7 +3483,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																				</Label>
 																				<Input
 																					type="text"
-																					maxLength="100"
+																					maxLength="20"
 																					id="receiptNumber"
 																					name="receiptNumber"
 																					value={props.values.receiptNumber}
@@ -3893,6 +3906,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 					inventory_list={this.state.inventoryList}
 				/>}			
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

@@ -187,17 +187,17 @@ class DesignationModal extends React.Component {
 							this.handleSubmit(values, resetForm);
 						}}
 						validationSchema={Yup.object().shape({
-						//	firstName: Yup.string().required('First Name is Required'),
+						//	firstName: Yup.string().required('First Name is required'),
 						
-							//currrencyCode: Yup.string().required('Currency is Required'),
+							//currrencyCode: Yup.string().required('Currency is required'),
 							// contactType: Yup.string()
 							// .required("Please Select Contact Type"),
 							//       organization: Yup.string()
-							//       .required("Organization Name is Required"),
+							//       .required("Organization Name is required"),
 							//     poBoxNumber: Yup.number()
-							//       .required("PO Box Number is Required"),
+							//       .required("PO Box Number is required"),
 							// email: Yup.string()
-							// 	.required('Email is Required')
+							// 	.required('Email is required')
 							// 	.email('Invalid Email'),
 							// mobileNumber: Yup.string()
 							// 	.required('Mobile Number is required')
@@ -211,12 +211,12 @@ class DesignationModal extends React.Component {
 							//     addressLine1: Yup.string()
 							//       .required("Address is required"),
 							//     city: Yup.string()
-							//       .required("City is Required"),
+							//       .required("City is required"),
 							//     billingEmail: Yup.string()
-							//       .required("Billing Email is Required")
+							//       .required("Billing Email is required")
 							//       .email('Invalid Email'),
 							//     contractPoNumber: Yup.number()
-							//       .required("Contract PoNumber is Required"),
+							//       .required("Contract PoNumber is required"),
 							
 							//       currencyCode: Yup.string()
 							//       .required("Please Select Currency")
@@ -247,7 +247,7 @@ class DesignationModal extends React.Component {
 										<Row className="row-wrapper">
                                         <Col lg={8}>
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span> {strings.EmployeeDesignationName} </Label>
+                                  <Label htmlFor="select"><span className="text-danger">* </span> {strings.EmployeeDesignationName} </Label>
                                   <Input
                                     type="text"
                                     id="designationName"

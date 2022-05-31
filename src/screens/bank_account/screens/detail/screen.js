@@ -20,7 +20,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
-import { Loader, ConfirmDeleteModal } from 'components';
+import { Loader, ConfirmDeleteModal ,LeavePage} from 'components';
 import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
 import { CommonActions } from 'services/global';
 import * as detailBankAccountActions from './actions';
@@ -109,6 +109,7 @@ class DetailBankAccount extends React.Component {
 			initialVals: null,
 			currentData: {},
 			loadingMsg:"Loading...",
+			disableLeavePage:false, 
 			bankList:[]
 		};
 
@@ -221,7 +222,7 @@ class DetailBankAccount extends React.Component {
 			bankCountry: data.countryId,
 			bankAccountType: data.account_type,
 		};
-		this.setState({ loading:true, loadingMsg:"Updating Bank Account Details..."});
+		this.setState({ loading:true, disableLeavePage:true,loadingMsg:"Updating Bank Account Details..."});
 		this.props.detailBankAccountActions
 			.updateBankAccount(obj)
 			.then((res) => {
@@ -317,7 +318,7 @@ class DetailBankAccount extends React.Component {
 		this.props.detailBankAccountActions
 			.checkValidation(data)
 			.then((response) => {
-				if (response.data === 'Bank Account Already Exists') {
+				if (response.data === 'Bank account already exists') {
 					this.setState({
 						exist: true,
 					});
@@ -387,33 +388,33 @@ class DetailBankAccount extends React.Component {
 												let errors = {};
 												if (this.state.exist === true) {
 													errors.account_number =
-														'Account Number Already Exists';
+														'Account number already exists';
 												}
 												return errors;
 											}}
 											validationSchema={Yup.object().shape({
 												account_name: Yup.string()
-													.required('Account Name is Required')
-													.min(2, 'Account Name is Too Short!')
-													.max(30, 'Account Name is Too Long!'),
+													.required('Account name is required')
+													.min(2, 'Account name is too short!')
+													.max(30, 'Account name is too long!'),
 												opening_balance: Yup.string().required(
-													'Opening Balance is Required',
+													'Opening balance is required',
 												),
-												currency: Yup.string().required('Currency is Required'),
+												currency: Yup.string().required('Currency is required'),
 												account_type: Yup.string().required(
-													'Account Type is Required',
+													'Account type is required',
 												),
 												// bank_name: Yup.string()
 												// 	.required('Bank Name is Required')
 												// 	.min(2, 'Bank Name Is Too Short!')
 												// 	.max(50, 'Bank Name Is Too Long!'),
-												bank_name: Yup.string().required('Bank Name is Required') ,
+												bank_name: Yup.string().required('Bank name is required') ,
 												account_number: Yup.string()
-													.required('Account Number is Required')
-													.min(2, 'Account Number is Too Short!')
-													.max(20, 'Account Number is Too Long!'),
+													.required('Account number is required')
+													.min(2, 'Account number is too short!')
+													.max(20, 'Account number is too long!'),
 												account_is_for: Yup.string().required(
-													'Account for is Required',
+													'Account for is required',
 												),
 											})}
 										>
@@ -429,6 +430,7 @@ class DetailBankAccount extends React.Component {
 																	type="text"
 																	maxLength="100"
 																	id="account_name"
+																	autoComplete="Off"
 																	name="account_name"
 																	placeholder={strings.Enter + strings.AccountName}
 																	value={props.values.account_name}
@@ -725,7 +727,7 @@ class DetailBankAccount extends React.Component {
 														{/* <Col lg={4}>
 															<FormGroup className="mb-3">
 																<Label htmlFor="bank_name">
-																	<span className="text-danger">*</span>{strings.BankName}
+																	<span className="text-danger">* </span>{strings.BankName}
 																</Label>
 																<Input
 																	type="text"
@@ -764,6 +766,7 @@ class DetailBankAccount extends React.Component {
 																<Input
 																	type="text"
 																	id="account_number"
+																	autoComplete="Off"
 																	name="account_number"
 																	placeholder={strings.Enter + strings.AccountNumber}
 																	value={props.values.account_number}
@@ -1039,6 +1042,7 @@ class DetailBankAccount extends React.Component {
 					</Card>
 				</div>
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

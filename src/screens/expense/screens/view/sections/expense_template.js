@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, CardBody, Row, Col, Table } from 'reactstrap';
+import { Card, CardBody, Row, Col, Table, CardFooter } from 'reactstrap';
 import moment from 'moment';
 import '../style.scss';
 import logo from 'assets/images/brand/logo.png';
@@ -8,6 +8,7 @@ import {data}  from '../../../../Language/index'
 import LocalizedStrings from 'react-localization';
 
 let strings = new LocalizedStrings(data);
+const footer = require('assets/images/invoice/invoiceFooter.png');
 const ZERO=0.00
 
 class ExpenseTemplate extends Component {
@@ -40,32 +41,16 @@ class ExpenseTemplate extends Component {
 					>
 						<span>{expenseData.expenseStatus}</span>
 					</div> */}
-					<CardBody style={{ marginTop: '2.5rem' }}>
+	<CardBody style={{ margin: '1rem', border: 'solid 1px', borderColor: '#c8ced3'}}>
 						<div
 							style={{
 								width: '100%',
-								border:'1px solid',
-								padding:'7px',borderColor:'#c8ced3'
+								display: 'flex',
+								// border:'1px solid',
+								// padding:'7px',borderColor:'#c8ced3'
 							}}
 						>
-							
-							<div style={{ justifyContent:'center' ,
-													textAlign: '-webkit-center'}}>
-						
-											<td
-												style={{
-													
-													fontSize: '1.2rem',
-													// fontWeight: '700',
-													textTransform: 'uppercase',
-													color: 'black',
-													textAlign:'center'
-												}}
-											>
-												<b>{strings.Expense}</b>
-											</td>						
-									</div>
-									<div style={{ textAlign:'center'}}>
+						<div style={{ width: '50%', marginTop: '4.5rem', marginLeft: '3rem' }}>
 								
 								<div className="companyDetails">
 									<img
@@ -78,14 +63,32 @@ class ExpenseTemplate extends Component {
 									}
 										className=""
 										alt=""
-										style={{ width: ' 100px' }}
+										style={{ width: '300px' }}
 									/>
 								
 							</div>
-												</div>
-									<div style={{textAlign:'center'}}><h4> {expenseData.payee} </h4></div>
-									<div style={{textAlign:'center'}}><b>{strings.ExpenseDate}</b> : {moment(expenseData.expenseDate ).format('DD-MM-YYYY')}</div>
-					</div>
+							</div>
+									<div
+								style={{
+									width: '70%',
+									display: 'flex',
+									flexDirection: 'column',
+									justifyContent: 'left',
+								}}
+							>
+								<div style={{
+									width: '97%',
+									textAlign: 'right',
+
+								}}>
+									<h2 className="mb-1 ml-2">
+												<b>{strings.Expense}</b>
+											</h2>	
+											<div className="mb-1 ml-2" style={{fontSize:"22px"}}><b> {expenseData.payee} </b></div>
+									<div className="mb-1 ml-2"><b>{strings.ExpenseDate}</b> : {moment(expenseData.expenseDate ).format('DD-MM-YYYY')}</div> 
+											</div>
+											</div>
+					</div><br/><br/>
 <div style={{backgroundColor:'rgb(32 100 216)', height:'45px'}}></div>
 					<div className="card text-start border"
 						style={{
@@ -120,7 +123,7 @@ class ExpenseTemplate extends Component {
 			  <td>{expenseData.expenseId}</td>
 	</tr> */}
 
-	<tr>      <td className="ml-3" style={{width:'245px'}}>	<b>{strings.Vat+" "+strings.Type }</b> : </td>  
+	<tr>      <td className="ml-3" style={{width:'245px'}}>	<b>{strings.VAT+" "+strings.Type }</b> : </td>  
 	          <td>{expenseData.vatCategoryName} </td>
 	</tr>
 	
@@ -146,14 +149,13 @@ class ExpenseTemplate extends Component {
  
 </tbody>
 </Table>
-                                  
-									{/* <div>
+	{/* <div>
 									<b>Last Updated By</b> : {expenseData.lastUpdatedBy}
 									</div> */}
-									
-					</div>											
+					</div>	
+					<img className='footer' src={footer} style={{ height: "65px", width: "100%" ,marginBottom:" 1.3rem"}}></img>
 					</CardBody>
-					<div style={{ textAlignLast:'center'}}>{strings.PoweredBy+" " } <b>SimpleAccounts</b></div> 
+				<div style={{ textAlignLast:'center'}}>{strings.PoweredBy+" " } <b>SimpleAccounts</b></div> 
 				</Card>
 			</div>
 		);

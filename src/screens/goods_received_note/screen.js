@@ -213,7 +213,7 @@ class GoodsReceivedNote extends React.Component {
 						</label>
 					</div>
 					<div style={{display: row.totalVatAmount === 0 ? 'none' : ''}}>
-					<label className="font-weight-bold mr-2">Vat Amount : </label>
+					<label className="font-weight-bold mr-2">VAT Amount : </label>
 					<label>{row.totalVatAmount === 0  ?  row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) :  row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}</label>
 					</div>
 					
@@ -326,7 +326,7 @@ class GoodsReceivedNote extends React.Component {
 								this.postGrn(row.id);
 							}}
 						>
-								<i className="fas fa-send" />  {strings.Post}
+								<i className="fas fa-send" />  {strings.Send}
 						</DropdownItem>
 						)}
 						{/* {(row.status !== 'Draft' && row.status !== 'post' && row.status !== 'Closed' &&
@@ -1054,6 +1054,7 @@ class GoodsReceivedNote extends React.Component {
 												{strings.GRNNUMBER}
 											</TableHeaderColumn>
 											<TableHeaderColumn
+												tdStyle={{ whiteSpace: 'normal' }}
 												dataField="supplierName"
 												dataSort
 											//	width="12%"
@@ -1072,6 +1073,7 @@ class GoodsReceivedNote extends React.Component {
 												{strings.GRNRECEIVEDATE}
 											</TableHeaderColumn>
 											<TableHeaderColumn
+												tdStyle={{ whiteSpace: 'normal' }}
 												dataField="grnRemarks"
 												dataSort
 											//	width="7%"

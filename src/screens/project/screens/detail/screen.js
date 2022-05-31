@@ -138,7 +138,7 @@ class DetailProject extends React.Component {
     })
   }
 
-  // Create or Edit Vat
+  // Create or Edit VAT
   projectHandleSubmit = (data) => {
 
     const {current_project_id} = this.state;

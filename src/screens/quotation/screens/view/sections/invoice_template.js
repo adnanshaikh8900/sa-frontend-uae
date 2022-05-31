@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
-import { Card, CardBody, Row, Col, Table } from 'reactstrap';
+import { Card, CardBody, Table } from 'reactstrap';
 import moment from 'moment';
 import '../style.scss';
 import logo from 'assets/images/brand/logo.png';
-import { Currency } from 'components';
-import { toInteger, upperCase } from 'lodash';
-import { textAlign } from '@material-ui/system';
 import {data}  from '../../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import { TextareaAutosize } from '@material-ui/core';
 
 const { ToWords } = require('to-words');
 const ZERO=0.00
@@ -21,6 +19,7 @@ const toWords = new ToWords({
 	}
   });
 let strings = new LocalizedStrings(data);
+const footer = require('assets/images/invoice/invoiceFooter.png');
 class RFQTemplate extends Component {
 	constructor(props) {
 		super(props);
@@ -98,16 +97,16 @@ class RFQTemplate extends Component {
 						<span>{QuotationData.status}</span>
 					</div> */}
 
-					<CardBody style={{ marginTop: '1rem' }}>
+        <CardBody style={{ margin: '1rem', border: 'solid 1px', borderColor: '#c8ced3', }}>
 					<div
 							style={{
 								width: '100%',
 								display: 'flex',
-								border:'1px solid',
-								padding:'7px',borderColor:'#c8ced3'
+								// border:'1px solid',
+								// padding:'7px',borderColor:'#c8ced3'
 							}}
 						>
-							<div style={{ width: '150%' }}>
+							<div style={{ width: '50%', marginTop: '4.5rem', marginLeft: '3rem' }}>
 								<div className="companyDetails">
 									<img
 										src={
@@ -119,63 +118,80 @@ class RFQTemplate extends Component {
 										}
 										className=""
 										alt=""
-										style={{ width: '240px' }}
+										style={{ width: '300px' }}
 									/>
 									</div>
-									<div style={{ marginTop: '4rem' }}>
-									<div className="mb-1 ml-2"><b>{strings.CompanyName} : </b> {companyData.companyName}</div>
-									<div className="mb-1 ml-2"><b>{strings.CompanyAddress} : </b> {companyData.companyAddressLine1+","+companyData.companyAddressLine2}</div>
-									<div className="mb-1 ml-2"><b>{strings.PinCode} : </b> {companyData.companyPostZipCode}</div>
-									<div className="mb-1 ml-2"><b>{strings.StateRegion} : </b> {companyData.companyStateName}</div>
-									<div className="mb-1 ml-2"><b>{strings.Country} : </b> {companyData.companyCountryName}</div>
-									<div className="mb-1 ml-2"><b>{strings.VATRegistrationNo} : </b> {companyData.vatRegistrationNumber}</div>
-									<div className="mb-1 ml-2"><b>{strings.MobileNumber} : </b> {this.companyMobileNumber(companyData.phoneNumber?"+"+companyData.phoneNumber:'')}</div>
-								</div>
-							</div>
-							<div style={{ width: '200%',justifyContent:'center',marginTop:'4.5rem',marginLeft:'9.5rem'}}>
-
-									<div
-										style={{
-											width: '130%',
-											fontSize: '1.5rem',
-											fontWeight: '700',
-											textTransform: 'uppercase',
-											color: 'black',
-											marginLeft:'4rem',
-										}}
-									>
-									{strings.Quotation}
 									</div>
-
-							</div>
-							<div
+									<div
 								style={{
 									width: '70%',
 									display: 'flex',
 									flexDirection: 'column',
-									justifyContent: 'right',
+									justifyContent: 'left',
 								}}
 							>
-								<div 	style={{
-									width: '62%',
-									margin:'1.5rem 9.0rem 0.5rem 4rem',
-									// // border:'1px solid',
-									 marginTop:'6.4rem',
-									 marginLeft:'7rem'
+								<div style={{
+									width: '97%',
+									textAlign: 'right',
+
 								}}>
-								<h4 className="mb-1 ml-2"><b>{companyData && companyData.company
+									<div style={{ marginTop: '0.5rem' }}>
+									<h2 className="mb-1 ml-2"><b>Quotation</b></h2><br />
+									<div className="mb-1 ml-2"  style={{fontSize:"22px"}}><b>{companyData.companyName}</b></div>
+									<div className="mb-1 ml-2">{companyData.companyAddressLine1}</div>
+									<div className="mb-1 ml-2">{companyData.companyAddressLine2}</div>
+									{companyData.companyCountryCode==229 ?
+																	strings.POBox:
+																	""} : {companyData.companyPoBoxNumber} ,&nbsp;
+										{companyData &&(companyData.companyStateName ? companyData.companyStateName + " , " : "")}
+										{companyData &&(companyData.companyCountryName ? companyData.companyCountryName : "")}
+										{companyData.companyRegistrationNumber && (<div className="mb-1 ml-2">{strings.CompanyRegistrationNo} : {companyData.companyRegistrationNumber}</div>)}
+										{companyData.isRegisteredVat==true&&(<div className="mb-1 ml-2">{strings.VATRegistrationNo} : {companyData.vatRegistrationNumber}</div>)}
+										<div className="mb-1 ml-2">{strings.MobileNumber} : {this.companyMobileNumber(companyData.phoneNumber ? "+" + companyData.phoneNumber : '')}</div>
+										{companyData.emailAddress&&(<div className="mb-1 ml-2">Email : {companyData.emailAddress}</div>)}
+								</div>
+							</div>
+							</div>
+							</div>
+							<hr/>
+							
+							<div
+							style={{
+								width: '100%',
+								display: 'flex',
+								justifyContent: 'space-between',
+								marginBottom: '1rem',
+						
+							}}
+						>
+							<div
+								style={{
+									width: '100%',
+									display: 'flex',
+									justifyContent: 'space-between',
+									marginLeft: '2rem'
+								}}
+							>
+								<div>
+								{/* <h4 className="mb-1 ml-2"><b>{companyData && companyData.company
 											? companyData.company.companyName
-											: ''}</b></h4>
-								<h4 className="mb-1 ml-2">{QuotationData.quotationNumber}</h4><br/>
-								<h6 className="mb-1 ml-2"><b>{strings.Quotation_For}</b></h6>
-						<div className="mb-1 ml-2"><b>{strings.Name} : </b>{QuotationData.organisationName ? QuotationData.organisationName : QuotationData.customerName}</div>
-						{contactData && contactData.addressLine1 &&(<div className="mb-1 ml-2"><b>{strings.BillingAddress} : </b> {contactData.addressLine1}</div>)}
-								{contactData && contactData.postZipCode &&(	<div className="mb-1 ml-2"><b>{strings.PinCode} : </b> {contactData.postZipCode}</div>)}
-								{contactData&&contactData.billingStateName&&(<div className="mb-1 ml-2"><b>{strings.StateRegion} : </b> {contactData.billingStateName}</div>)}
-								{contactData && contactData.billingCountryName &&(<div className="mb-1 ml-2"><b>{strings.Country} : </b> {contactData.billingCountryName}</div>)}
-								<h6 className="mb-1 ml-2"><b>{strings.TRN} : </b>{QuotationData.vatRegistrationNumber}</h6>
-								{contactData&&contactData.mobileNumber&&(<div className="mb-1 ml-2"><b>{strings.MobileNumber} : </b>+{contactData.mobileNumber}</div>)}
-													<span className="mb-1 ml-2"><b>{strings.Status} : </b> {this.renderQuotationStatus(QuotationData.status)}</span>
+											: ''}</b></h4> */}
+								<h6 className="mb-1 ml-2"><b>{strings.Quotation_For}</b></h6><br/>
+						<div className="mb-1 ml-2"><b>{QuotationData.organisationName ? QuotationData.organisationName : QuotationData.customerName}</b></div>
+						{contactData && contactData.addressLine1 && (<div className="mb-1 ml-2">{contactData.addressLine1}</div>)}
+						<div className="mb-1 ml-2">
+									{QuotationData && contactData && (
+											contactData.countryId==229 ?
+											contactData.poBoxNumber ?(strings.POBox +" : " +contactData.poBoxNumber ): ""
+											:contactData.postZipCode ? contactData.postZipCode : ""
+											)} ,&nbsp;
+									    {QuotationData && contactData && (contactData.billingStateName ? contactData.billingStateName + " , " : "")}
+										{QuotationData && contactData && (contactData.billingCountryName ? contactData.billingCountryName : "")}
+									</div>
+								{QuotationData && QuotationData.taxtreatment&& QuotationData.taxtreatment.includes("NON")==false &&(<div className="mb-1 ml-2">{strings.VATRegistrationNo} :  {QuotationData.vatRegistrationNumber}</div>)}	
+								{contactData&&contactData.mobileNumber&&(<div className="mb-1 ml-2">{strings.MobileNumber} :+{contactData.mobileNumber}</div>)}
+								{contactData && contactData.billingEmail && (<div className="mb-1 ml-2">{strings.Email} : {contactData.billingEmail}</div>)}
+													
 
 													{/* <div
 														className={`ribbon ${this.getRibbonColor(
@@ -185,10 +201,25 @@ class RFQTemplate extends Component {
 															<span className="mb-1 ml-2">{QuotationData.status}</span>
 														</div>  */}
 								</div>
-								</div>
-							</div>
+						  
 							
-						
+							<div style={{ width: '27%' }}>
+
+<br />
+<div className="mb-1 ml-2"><b>{strings.QuotationNo} : </b> # {QuotationData.quotationNumber}</div>
+{QuotationData.receiptNumber&&(<div className="mb-1 ml-2"><b>{strings.ReferenceNo} : </b>{QuotationData.receiptNumber}</div>)}
+<div className="mb-1 ml-2"><b>{strings.Created_Date} : </b>{' '}
+	{moment(QuotationData.createdDate).format(
+		'DD MMM YYYY',
+	)}</div>
+	<div className="mb-1 ml-2"><b>{strings.ExpirationDate } : </b>{moment(QuotationData.quotaionExpiration).format(
+	'DD MMM YYYY',
+)}</div>
+<div className="mb-1 ml-2"><b>{strings.Status} : </b>{this.renderQuotationStatus(QuotationData.status)}</div><br />
+
+</div>
+</div>
+</div>
 							
 
 			
@@ -203,7 +234,7 @@ class RFQTemplate extends Component {
 								)}
 								</h6>
 								</div> */}
-							<div
+							{/* <div
 								style={{
 									width: '100%',
 									display: 'flex',
@@ -243,51 +274,50 @@ class RFQTemplate extends Component {
 								)}
 								</h6>
 								</div>
-							</div>
+							</div> */}
+						
 				
-						<Table  >
-							<thead className="header-row">
+							<Table className='table-striped' >
+							<thead className="header-row" style={{ fontSize:"12px" }}>
 								<tr>
-									<th className="center" style={{ padding: '0.5rem' }}>
+									<th className="center" style={{ padding: '0.5rem' , width: "40px" }}>
 										#
 									</th>
 									{/* <th style={{ padding: '0.5rem' }}>Item</th> */}
-									<th style={{ padding: '0.5rem' }}>{strings.ProductName }</th>
-									<th style={{ padding: '0.5rem' }}>{strings.Description }</th>
-									<th className="center" style={{ padding: '0.5rem' }}>
+									<th style={{ padding: '0.5rem' }}>{strings.ProductNameAndDescription}</th>
+									<th className="text-center" style={{ padding: '0.5rem' }}>
 										{strings.Quantity }
-									</th>
-									<th className="center" style={{ padding: '0.5rem' }}>
-										{strings.UnitType}
 									</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
 										{strings.UnitCost }
 									</th>
+									{QuotationData.discount > 0 && (<>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
 										{strings.Discount }
-									</th>
-									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.DiscountType}</th>
-									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.Excise}</th>
-									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.ExciseAmount}</th>
-									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.Vat }</th>
+									</th></>)}
+									{/* <th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.DiscountType}</th> */}
+									{/* <th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.Excise}</th> */}
+									{ QuotationData.totalExciseAmount > 0 && (<>
+									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.ExciseAmount}</th></>)}
+									{/* <th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.VAT}</th> */}
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.VatAmount }</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
 									  {strings.Total }
 									</th>
 								</tr>
 							</thead>
-							<tbody className=" table-bordered table-hover">
+							<tbody className="table-hover">
 								{QuotationData.poQuatationLineItemRequestModelList &&
 									QuotationData.poQuatationLineItemRequestModelList.length &&
 									QuotationData.poQuatationLineItemRequestModelList.map((item, index) => {
 										return (
 											<tr key={index}>
 												<td className="center">{index + 1}</td>
-												<td>{item.productName}</td>
-												<td>{item.description}</td>
-												<td>{item.quantity}</td>
-												<td>{item.unitType}</td>
-												<td style={{ textAlign: 'right', width: '20%' }}>
+												<td><b>{item.productName}</b><br/><br />{item.description}</td>
+												<td  style={{ textAlign: 'center' }}>{item.quantity}<br/><br/>
+												<b style={{fontSize:"10.5px"}}>{item.unitType}</b>	
+												</td>
+												<td style={{ textAlign: 'right', width: '10%' }}>
 													{/* <Currency
 														value={item.unitPrice}
 														currencySymbol={
@@ -298,18 +328,18 @@ class RFQTemplate extends Component {
 													/> */}
 												{QuotationData.currencyIsoCode + " " +item.unitPrice.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
 												</td>
-												
+												{QuotationData.discount > 0 && (<>
 												<td style={{ textAlign: 'right' }}>
 												{QuotationData.currencyIsoCode + " " +item.discount.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
-												</td>
-												<td style={{ textAlign: 'right' }}>{item.discountType}</td>
-												<td style={{ textAlign: 'right' }}>{item.exciseTaxId ? this.renderExcise(item):"-"}</td>
-												<td style={{ textAlign: 'right' }}>
+												</td>	</>)}
+												{/* <td style={{ textAlign: 'right' }}>{item.discountType}</td> */}
+												{/* <td style={{ textAlign: 'right' }}>{item.exciseTaxId ? this.renderExcise(item):"-"}</td> */}
+												{ QuotationData.totalExciseAmount > 0 && (<><td style={{ textAlign: 'right' }}>
 												{QuotationData.currencyIsoCode + " " +item.exciseAmount.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
-												</td>
-												<td
+												</td></>)}
+												{/* <td
 													style={{ textAlign: 'right' }}
-												>{`${item.vatPercentage}%`}</td>
+												>{`${item.vatPercentage}%`}</td> */}
 												<td style={{ textAlign: 'right' }}>
 												{QuotationData.currencyIsoCode + " " +item.vatAmount.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
 												</td>
@@ -328,51 +358,45 @@ class RFQTemplate extends Component {
 										);
 									})}
 							</tbody>
-						</Table>
+						</Table><hr/>
 						<div className="pl-5"
 							style={{
 								width: '100%',
 								display: 'flex',
 								justifyContent: 'space-between',
-								marginBottom: '1rem',border:'solid 1px',borderColor:'#c8ced3'
+								// marginBottom: '1rem',border:'solid 1px',borderColor:'#c8ced3'
+								fontSize: "14px"
 							}}
 						>
 								<div
 								style={{
-									width: '200%',
+									width: '40%',
 									display: 'flex',
 									flexDirection: 'column',
-									justifyContent: 'center',
+									marginLeft: '2rem'
 								}}
 							>
-								<div className="pb-2">{strings.AmountInWords }:<br/>
-									<b><u> {QuotationData.totalAmount ? upperCase(QuotationData.currencyName + " " +(toWords.convert(QuotationData.totalAmount))+" ONLY").replace("POINT","AND") : " -" }
-									{/* <b> {parseInt(POData.dueAmount)} */}
-									</u></b></div>
-								<div className="pb-2">{strings.Vat+" "+strings.AmountInWords }:
-										<br/>
-									<b><u>{QuotationData.totalVatAmount ? (upperCase(QuotationData.currencyName + " " +(toWords.convert(QuotationData.totalVatAmount))+" ONLY")).replace("POINT","AND") : " -" }</u></b>
-									{/* <b> {POData.totalVatAmount}</b> */}
-								</div>
-							<div style={{borderTop:'1px solid',borderColor:'#c8ced3'}}>
-
-								<h6 className="mb-0 pt-2">
-									<b>{strings.Notes }:</b>
-								</h6>
+								<br/>
+								{QuotationData.notes&& (<><h6 className="mb-0 pt-2">
+									<b>{strings.TermsAndConditions }:</b>
+								</h6><br/>
 								<h6 className="mb-0">{QuotationData.notes}</h6>
+								</>)}
 							</div>
 							
-							</div>
+					
 							<div
 								style={{
-									width: '120%',
+									width: '40%',
 									display: 'flex',
-									justifyContent: 'space-between',
+									flexDirection: 'column',
+									marginRight: '1rem'
 								}}
 							>
 								<div style={{ width: '100%' }}>
 								<Table className="table-clear cal-table">
 									<tbody>
+									{QuotationData.totalExciseAmount && QuotationData.totalExciseAmount > 0 ? 
 									<tr >
 											<td style={{ width: '40%' }}>
 												<strong>{strings.TotalExcise}</strong>
@@ -389,8 +413,8 @@ class RFQTemplate extends Component {
 												{QuotationData.totalExciseAmount? QuotationData.currencyIsoCode + " " +QuotationData.totalExciseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):QuotationData.currencyIsoCode + " " +ZERO.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}  
 												</span>
 											</td>
-										</tr>
-										<tr >
+										</tr> : ""}
+										{QuotationData.discount && QuotationData.discount > 0 ?<tr >
 											<td style={{ width: '40%' }}>
 												<strong>{strings.Discount}</strong>
 											</td>
@@ -405,7 +429,7 @@ class RFQTemplate extends Component {
 												{QuotationData.discount? QuotationData.currencyIsoCode + " " +QuotationData.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):QuotationData.currencyIsoCode + " " +ZERO.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}  
 												</span>
 											</td>
-										</tr>
+										</tr> : ""}
 
 										<tr>
 											<td style={{ width: '40%' }}>
@@ -425,7 +449,7 @@ class RFQTemplate extends Component {
 										</tr>
 											<tr >
 											<td style={{ width: '40%' }}>
-												<strong>{strings.Vat }</strong>
+												<strong>{strings.VAT}</strong>
 											</td>
 											<td
 												style={{
@@ -498,8 +522,19 @@ class RFQTemplate extends Component {
 								</div>		
 							</div>
 						</div>
-										
+						<hr/>
+						<TextareaAutosize
+																			type="textarea"
+																			disabled
+																			className="textarea viewFootNote"
+																			maxLength="250"
+																			style={{width: "1100px"}}
+																			// rows="5"
+																			value={QuotationData.footNote}
+																		/>
+						<br /><br/><br/>				
 					</CardBody>
+					<img className='footer' src={footer} style={{ height: "65px", width: "100%" }}></img>
 				</Card>
 			</div>
 		);

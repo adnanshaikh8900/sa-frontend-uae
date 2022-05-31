@@ -1,5 +1,6 @@
 import axios from 'axios';
 import config from 'constants/config';
+import { toast } from 'react-toastify';
 
 const authFileUploadApi = axios.create({
 	baseURL: config.API_ROOT_URL,
@@ -27,6 +28,7 @@ authFileUploadApi.interceptors.response.use(
 			error.response.status &&
 			error.response.status === 401
 		) {
+			toast.error("Session Ended. Log in Again !")
 			window['localStorage'].clear();
 			window['location'] = '/login';
 		} else {

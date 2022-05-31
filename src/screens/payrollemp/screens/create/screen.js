@@ -17,30 +17,18 @@ import {
     Table,
 } from 'reactstrap';
 import Select from 'react-select'
-
 import { bindActionCreators } from 'redux'
 import 'react-datepicker/dist/react-datepicker.css'
 import './style.scss'
-
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'react-toastify/dist/ReactToastify.css';
-
-
-import {
-    FormGroup,
-    Button
-} from 'reactstrap'
-
+import { FormGroup, Button } from 'reactstrap'
 import DatePicker from 'react-datepicker'
 import { Formik } from 'formik';
 import * as Yup from "yup";
-import { ImageUploader ,Loader} from 'components';
-import {
-    CommonActions
-} from 'services/global'
-import { selectCurrencyFactory, selectOptionsFactory } from 'utils'
-
-
+import { LeavePage, ImageUploader, Loader} from 'components';
+import { CommonActions } from 'services/global'
+import { selectOptionsFactory } from 'utils'
 import 'react-datepicker/dist/react-datepicker.css'
 import PhoneInput  from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css'
@@ -54,7 +42,6 @@ import LocalizedStrings from 'react-localization';
 import * as DetailEmployeePersonalAction from '../update_emp_personal/actions';
 import * as DetailEmployeeEmployementAction from '../update_emp_employemet/actions';
 import * as DetailEmployeeBankAction from '../update_emp_bank/actions';
-
 
 const mapStateToProps = (state) => {
     return ({
@@ -211,7 +198,14 @@ class CreateEmployeePayroll extends React.Component {
             checkmobileNumberParam:false,
             checkmobileNumberParam1:false,
             checkmobileNumberParam2:false,
-            loadingMsg:"Loading..."
+            loadingMsg:"Loading...",
+			disableLeavePage:false,
+            ctcTypeOption:{label:"ANNUALLY",value:1},
+            ctcType:"ANNUALLY",
+            ctcTypeList:[
+                {label:"ANNUALLY",value:1},
+                {label:"MONTHLY",value:2},
+            ]
         }        
         this.formRef = React.createRef();       
         this.regEx = /^[0-9\d]+$/;
@@ -386,7 +380,7 @@ existForAccountNumber = (value) => {
     }
 
     handleSubmitForSalary = (data, resetForm) => {
-        this.setState({ disabled: true });
+        this.setState({ disabled: true, disableLeavePage:true });
         const {
             employee,
             CTC
@@ -396,7 +390,7 @@ existForAccountNumber = (value) => {
         const formData = new FormData();
         formData.append('employee', this.state.employeeid)
         formData.append('grossSalary', CTC != null ? CTC : '')
-
+        formData.append('ctcType',this.state.ctcTypeOption.label ?this.state.ctcTypeOption.label:"ANNUALLY")
         formData.append('salaryComponentString', JSON.stringify(this.state.list));
         this.setState({ loading:true, loadingMsg:"Creating New Employee..."});
         this.props.createPayrollEmployeeActions
@@ -478,7 +472,7 @@ existForAccountNumber = (value) => {
             swiftCode != null ? swiftCode : '',
         )
         if(this.state.selectedData.employeeBankDetailsId === null || this.state.selectedData.employeeBankDetailsId === ""){
-            this.setState({ loading:true, loadingMsg:"Creating Finacial Details..."});
+            // this.setState({ loading:true, loadingMsg:"Creating Finacial Details..."});
             this.props.createPayrollEmployeeActions
             .saveEmployeeBankDetails(formData)
             .then((res) => {
@@ -490,7 +484,7 @@ existForAccountNumber = (value) => {
                     this.toggle(0, '4')
                     this.getSalaryComponentByEmployeeId();
                     this.renderActionForState(this.state.employeeid)
-                    this.setState({ loading:false,});
+                    // this.setState({ loading:false,});
                 }
             }).catch((err) => {
 
@@ -500,7 +494,7 @@ existForAccountNumber = (value) => {
                      )
             })
         }else{
-            this.setState({ loading:true, loadingMsg:"Updating Employee..."});
+            // this.setState({ loading:true, loadingMsg:"Updating Employee..."});
             this.props.detailEmployeeBankAction.updateEmployeeBank(formData).then((res) => {
                 if (res.status === 200) {
                     this.props.commonActions.tostifyAlert(
@@ -510,7 +504,7 @@ existForAccountNumber = (value) => {
                     this.toggle(0, '4')
                     this.getSalaryComponentByEmployeeId();
                     this.renderActionForState(this.state.employeeid)
-                    this.setState({ loading:false,});
+                    // this.setState({ loading:false,});
                 }
             }).catch((err) => {
                 this.props.commonActions.tostifyAlert('error',  err.data.message ? err.data.message :'Updated Unssccessfully')
@@ -598,7 +592,8 @@ existForAccountNumber = (value) => {
                      )
             })
         }else{
-            this.setState({ loading:true, loadingMsg:"Updating Employement Details..."});
+            // this.setState({ loading:true, loadingMsg:"Updating Employement Details..."});
+            formData.append('id', this.state.selectedData.employmentId);
             this.props.detailEmployeeEmployementAction.updateEmployment(formData).then((res) => {
                 if (res.status === 200) {
                     this.props.commonActions.tostifyAlert(
@@ -607,7 +602,7 @@ existForAccountNumber = (value) => {
                          )
                     this.toggle(0, '3')
                     this.renderActionForState(this.state.employeeid)
-                    this.setState({ loading:false,});
+                    // this.setState({ loading:false,});
                 }
             }).catch((err) => {
                 this.props.commonActions.tostifyAlert(
@@ -620,8 +615,8 @@ existForAccountNumber = (value) => {
     }
 
     handleSubmit = (data, resetForm) => {
-        this.setState({ loading:true, loadingMsg:"Creating Employee Basic Details..."});
-        this.setState({ disabled: true });
+        // this.setState({ loading:true, loadingMsg:"Creating Employee Basic Details..."});
+        this.setState({ disabled: true, disableLeavePage:true });
         const {
             firstName,
             middleName,
@@ -769,10 +764,16 @@ existForAccountNumber = (value) => {
                     })
                     if(this.props.location && this.props.location.state && this.props.location.state.goto && this.props.location.state.goto==="Expense"){                    
                             this.props.history.push(`/admin/expense/expense/create`)  
-                            this.setState({ loading:false,});                     
+                            // this.setState({ loading:false,});                     
                     }
                     this.toggle(0, '2')
-                    this.renderActionForState(this.state.employeeid)
+
+                    const formData1 = new FormData();
+                    formData1.append('employee', this.state.employeeid)
+                    formData1.append('employeeCode',this.state.initValue.employeeCode != null ?this.state.initValue.employeeCode : '')
+                    this.props.createPayrollEmployeeActions.saveEmployment(formData1).then((res)=>{
+                        if(res.status==200)
+                         this.renderActionForState(this.state.employeeid);  })
                 }
             }).catch((err) => {
         
@@ -785,7 +786,7 @@ existForAccountNumber = (value) => {
             })
         }
         else{
-            this.setState({ loading:true, loadingMsg:"Updating Employee Details..."});
+            // this.setState({ loading:true, loadingMsg:"Updating Employee Details..."});
             this.props.detailEmployeePersonalAction.updateEmployeePersonal(formData).then((res) => {
                 if (res.status === 200) {
                     this.props.commonActions.tostifyAlert(
@@ -794,7 +795,7 @@ existForAccountNumber = (value) => {
                         )
                     this.toggle(0, '2')
                     this.renderActionForState(this.state.employeeid)
-                    this.setState({ loading:false,});   
+                    // this.setState({ loading:false,});   
                     
                 }
             }).catch((err) => {
@@ -1224,25 +1225,25 @@ existForAccountNumber = (value) => {
                                                                             }
                                                                             if (values.gender && values.gender.label && values.gender.label === "Select Gender") {
                                                                                 errors.gender =
-                                                                                'Gender is Required';
+                                                                                'Gender is required';
                                                                             }
                                                                             if (values.employeeDesignationId && values.employeeDesignationId.label && values.employeeDesignationId.label === "Select Employee Designation") {
                                                                                 errors.employeeDesignationId =
-                                                                                'Designation is Required';
+                                                                                'Designation is required';
                                                                             }
                                                                             if (values.salaryRoleId && values.salaryRoleId.label && values.salaryRoleId.label === "Select Salary Role") {
                                                                                 errors.salaryRoleId =
-                                                                                'Salary Role is Required';
+                                                                                'Salary role is required';
                                                                             }
                                                                                 
                                                                             
                                                                             // if( values.stateId ===''){
                                                                             //     errors.stateId =
-                                                                            //     'State is Required';
+                                                                            //     'State is required';
                                                                             // }
                                                                             if( values.stateId.label && values.stateId.label ==='Select State'){
                                                                                 errors.stateId =
-                                                                                'State is Required';
+                                                                                'State is required';
                                                                             }
                                                                             
                                                                             // if (param === true) {
@@ -1253,42 +1254,42 @@ existForAccountNumber = (value) => {
                                                                         }}
                                                                         validationSchema={Yup.object().shape({
                                                                             firstName: Yup.string()
-                                                                                .required("First Name is Required"),
+                                                                                .required("First name is required"),
                                                                             lastName: Yup.string()
-                                                                            .required("Last Name is Required"),
+                                                                            .required("Last name is required"),
                                                                             email: Yup.string()
-                                                                            .required("Valid Email Required"),
+                                                                            .required("Valid email Required"),
                                                                             mobileNumber:Yup.string()
-                                                                            .required("Mobile Number is Required"),
+                                                                            .required("Mobile number is required"),
                                                                             // salaryRoleId :  Yup.string()
                                                                             // .required(" Employee Role is required"),
                                                                             dob: Yup.date()
-                                                                            .required('DOB is Required') ,
+                                                                            .required('DOB is required') ,
                                                                             gender: Yup.string()
-                                                                            .required('Gender is Required') ,
+                                                                            .required('Gender is required') ,
                                                                             presentAddress: Yup.string()
-                                                                            .required('Present Address is Required') ,
+                                                                            .required('Present address is required') ,
                                                                             // pincode: Yup.string()
-                                                                            // .required('Pin Code is Required') ,
+                                                                            // .required('Pin Code is required') ,
                                                                             countryId: Yup.string()
-                                                                            .required('Country is Required') ,
+                                                                            .required('Country is required') ,
                                                                             stateId: Yup.string()
-                                                                            .required('State is Required') ,
+                                                                            .required('State is required') ,
                                                                             // city: Yup.string()
-                                                                            // .required('City is Required') ,
+                                                                            // .required('City is required') ,
                                                                           
                                                                             active : Yup.string()
-                                                                            .required('status is Required') , 
+                                                                            .required('status is required') , 
                                                                             salaryRoleId : Yup.string()
-                                                                            .required('Salary Role is Required'),
+                                                                            .required('Salary role is required'),
                                                                             employeeDesignationId : Yup.string()
-                                                                            .required('Designation is Required') ,
+                                                                            .required('Designation is required') ,
                                                                             emergencyContactName1: Yup.string()
-                                                                            .required('Contact Name 1 is Required') ,
+                                                                            .required('Contact name 1 is required') ,
                                                                             emergencyContactNumber1:Yup.string()
-                                                                            .required("Contact Number 1 is Required"),
+                                                                            .required("Contact number 1 is required"),
                                                                             emergencyContactRelationship1: Yup.string()
-                                                                            .required('Relationship 1 is Required') ,
+                                                                            .required('Relationship 1 is required') ,
                                                                           
                                                                            
                                                                         })}
@@ -1441,7 +1442,7 @@ existForAccountNumber = (value) => {
                                                                                                     {props.errors.dob && 
                                                                                                         props.touched.dob && (
                                                                                                         <div className="invalid-feedback">
-                                                                                                            {props.errors.dob.includes("nullable()") ? "DOB is Required" :props.errors.dob}
+                                                                                                            {props.errors.dob.includes("nullable()") ? "DOB is required" :props.errors.dob}
 
                                                                                                         </div>
                                                                                                     )}
@@ -2332,12 +2333,13 @@ existForAccountNumber = (value) => {
                                                                                 <Row>
                                                                                     <Col lg={12} className="mt-5">
                                                                                       
-                                                                                    {/* <Button  color="secondary" className="btn-square"
-                                                                                              
-                                                                                               
-                                                                                            >
+                                                                                    <Button  
+                                                                                    color="secondary" 
+                                                                                    className="btn-square"
+                                                                                    onClick={()=>{this.props.history.push('/admin/master/employee')}}
+                                                                                           >
                                                                                                 <i className="fa fa-ban"></i> Back
-                                                                                              </Button> */}
+                                                                                              </Button>
                                                                                             <Button name="button" color="primary" className="btn-square pull-right"
                                                                                                 // onClick={() => {
                                                                                                 //     this.toggle(0, '2')
@@ -2390,21 +2392,21 @@ existForAccountNumber = (value) => {
                                                                         }}
                                                                         validationSchema={Yup.object().shape({
                                                                             employeeCode: Yup.string()
-                                                                                .required("Employee Unique Id is Required"),
+                                                                                .required("Employee unique id is required"),
                                                                                 agentId: Yup.string()
-                                                                                .required("Agent Id is Required"),
+                                                                                .required("Agent id is required"),
                                                                             //     salaryRoleId: Yup.string()
-                                                                            // .required("salary Role is Required"),
+                                                                            // .required("salary Role is required"),
                                                                 
                                                                             dateOfJoining: Yup.date()
-                                                                                .required('Date of Joining is Required')                   
+                                                                                .required('Date of joining is required')                   
                                                                         })}
                                                                         validate={(values) => {
                                                                             let errors = {};
                                                                              
                                                                             if (exist === true  && values.employeeCode!="") {
                                                                                 errors.employeeCode =
-                                                                                'Employee Code Number Already Exists';
+                                                                                'Employee code number already exists';
                                                                             }
                                                                             return errors;
 
@@ -2475,7 +2477,7 @@ existForAccountNumber = (value) => {
                                                                                          
                                                                                             {/* <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="salaryRoleId"><span className="text-danger">*</span> {strings.SalaryRole} </Label>
+                                                                                                    <Label htmlFor="salaryRoleId"><span className="text-danger">* </span> {strings.SalaryRole} </Label>
                                                                                                     <Select
 
                                                                                                         options={
@@ -2780,30 +2782,25 @@ existForAccountNumber = (value) => {
                                                                             let errors = {};
                                                                             if (existForAccountNumber === true) {
                                                                                 errors.accountNumber =
-                                                                                    'Account Number Already Exists';
+                                                                                    'Account number already exists';
                                                                             }
                                                                             return errors;
                                                                         }}
                                                                         validationSchema={Yup.object().shape({
                                                                             accountHolderName: Yup.string()
-                                                                                .required("Account Holder Name is Required"),
+                                                                                .required("Account holder name is required"),
                                                                             accountNumber: Yup.string()
-                                                                            .required("Account Number is Required"),
+                                                                            .required("Account number is required"),
                                                                             iban: Yup.string()
-                                                                            .required("IBAN is Required"),
+                                                                            .required("IBAN is required"),
                                                                             // bankName: Yup.string()
-                                                                            // .required("Bank Name is Required"),
+                                                                            // .required("Bank Name is required"),
                                                                             bankId: Yup.string()
-                                                                            .required('Bank is Required') ,
+                                                                            .required('Bank is required') ,
                                                                             branch: Yup.string()
-                                                                            .required("Branch is Required"),
-                                                                            swiftCode: Yup.string()
-                                                                            .required("Swift Code is Required"),
-                                                                            
-                                                                            
-                                                                            
-                                                                            
-                                                                                           
+                                                                            .required("Branch is required"),
+                                                                            // swiftCode: Yup.string()
+                                                                            // .required("Swift Code is required"),
                                                                         })}
                                                                     >
                                                                         {(props) => (
@@ -2858,7 +2855,7 @@ existForAccountNumber = (value) => {
                                                                                                         onChange={(option) => {
                                                                                                             if (
                                                                                                                 option.target.value === '' ||
-                                                                                                                this.regExBoth.test(option.target.value)
+                                                                                                                this.regEx.test(option.target.value)
                                                                                                             ) {
                                                                                                                 props.handleChange('accountNumber')(
                                                                                                                     option,
@@ -2916,7 +2913,7 @@ existForAccountNumber = (value) => {
                                                                                             </Col>
                                                                                             {/* <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="select"><span className="text-danger">*</span> {strings.BankName} </Label>
+                                                                                                    <Label htmlFor="select"><span className="text-danger">* </span> {strings.BankName} </Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         id="bankName"
@@ -2988,7 +2985,9 @@ existForAccountNumber = (value) => {
 
                                                                                             <Col lg={4}>
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="select"><span className="text-danger">* </span>{strings.SwiftCode}</Label>
+                                                                                                    <Label htmlFor="select">
+                                                                                                        {/* <span className="text-danger">* </span> */}
+                                                                                                        {strings.SwiftCode}</Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         maxLength="11"
@@ -3083,9 +3082,9 @@ existForAccountNumber = (value) => {
                                         }}
                                         validationSchema={Yup.object().shape({
                                             CTC: Yup.string()
-                                                .required("CTC is Required"),
+                                                .required("CTC is required"),
                                             // lastName: Yup.string()
-                                            // .required("Last Name is Required"),
+                                            // .required("Last Name is required"),
                                             // email: Yup.string()
                                             // .email("Valid Email Required"),
                                             // employeeDesignationId : Yup.string()
@@ -3093,7 +3092,7 @@ existForAccountNumber = (value) => {
                                             // salaryRoleId :  Yup.string()
                                             // .required(" Employee Role is required"),
                                             // dob: Yup.date()
-                                            //     .required('DOB is Required')                   
+                                            //     .required('DOB is required')                   
                                         })}
                                     >
                                         {(props) => (
@@ -3103,7 +3102,32 @@ existForAccountNumber = (value) => {
                                              
                                                 <div style={{textAlign:"center"}}>
                                                         <FormGroup className="mt-3"   style={{textAlign:"center",display: "inline-grid"}} >
-                                                         <Label><span className="text-danger">* </span>  {strings.ctc} : </Label>
+                                                         <Label><span className="text-danger">* </span> Cost To Company  ( CTC )
+                                                         {/* <i				id="CtcTooltip"
+																				className="fa fa-question-circle ml-1"
+																			></i>
+																			<UncontrolledTooltip
+																				placement="right"
+																				target="CtcTooltip"
+																			>
+																				Cost To Company -  It indicates the total amount of expenses an company (organisation) spends on an employee during one year.
+																			</UncontrolledTooltip> */}
+                                                         
+                                                          : </Label>
+                                                          <div   style={{display:"flex"}}>
+                                                                 <div   style={{width:"-webkit-fill-available"}}>
+                                                                       <Select 
+                                                                                options={this.state.ctcTypeList}
+                                                                                id="ctcTypeOption"
+                                                                                name="ctcTypeOption"
+                                                                                className="mr-2"
+                                                                                value={this.state.ctcTypeOption}
+                                                                                onChange={(e) => {															
+                                                                                this.setState({ctcTypeOption:e,ctcType:e.label})	
+                                                                                this.updateSalary(e.label=="ANNUALLY"?props.values.CTC:parseFloat(props.values.CTC)*12);														
+                                                                                }}
+                                                                                />
+                                                                 </div>
                                                             <Input
                                                                 type="text"
                                                                 id="CTC"
@@ -3112,17 +3136,17 @@ existForAccountNumber = (value) => {
                                                                 maxLength='10'
                                                                 style={{textAlign:"center"}}
                                                                 value={props.values.CTC}
-                                                                placeholder={strings.Enter+ strings.ctc}
+                                                                placeholder={this.state.ctcType=="MONTHLY"?"Enter Monthly Wages":(strings.Enter+ strings.ctc)}
                                                                 onChange={(option) => {
                                                                     if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('CTC')(option) }
-                                                                    this.updateSalary(option.target.value);
-
+                                                                    
+                                                                    this.updateSalary(this.state.ctcType=="ANNUALLY"?option.target.value:parseFloat(option.target.value)*12);
                                                                 }}
                                                                 className={props.errors.CTC && props.touched.CTC ? "is-invalid" : ""}
                                                             />
                                                             {props.errors.CTC && props.touched.CTC && (
                                                                 <div className="invalid-feedback">{props.errors.CTC}</div>
-                                                            )}
+                                                            )}</div>
                                                         </FormGroup>
                                                         </div>
                                                
@@ -3540,8 +3564,8 @@ existForAccountNumber = (value) => {
                                                                 <Row >
                                                                         <Col className="p-2" >{"Company Cost"}</Col>
                                                                         <Col className="p-2"  > {"-"} </Col>
-                                                                        <Col className="p-2"  >{props.values.CTC ? (props.values.CTC / 12).toLocaleString() :"-"}</Col>
-                                                                        <Col className="p-2" >{props.values.CTC ? props.values.CTC : "-"}</Col>
+                                                                        <Col className="p-2"  >{this.state.CTC ? (this.state.CTC / 12).toLocaleString() :"-"}</Col>
+                                                                        <Col className="p-2" >{this.state.CTC ? this.state.CTC : "-"}</Col>
                                                                     </Row>
                                                                  
                                                                 </tbody>
@@ -3637,6 +3661,8 @@ existForAccountNumber = (value) => {
                     selectedData={this.state.selectedData}
 
                 />
+                
+			{this.state.disableLeavePage ?"":<LeavePage/>}
             </div>
         );
     }

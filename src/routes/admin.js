@@ -365,7 +365,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/income/receipt/create',
-		name: 'Create',
+		name: 'CreateReciept',
 		component: CreateReceipt.screen,
 	},
 	{
@@ -525,7 +525,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/expense/payment/create',
-		name: 'AddSupplierReceipt',
+		name: 'CreatePurchaseReciept',
 		component: CreatePayment.screen,
 	},
 	{

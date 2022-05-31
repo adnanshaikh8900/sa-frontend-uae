@@ -73,7 +73,7 @@ export const getParentCategoryCodeListData = (code, val) => {
   }
 }
 
-// Get All Transaction Vat Categories
+// Get All Transaction VAT Categories
 export const getTransactionVatCategories = () => {
   return (dispatch) => {
     let data = {

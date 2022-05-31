@@ -12,30 +12,18 @@ import {
     Label,
     Row,
     Col,
-    Table
+    Table,
 } from 'reactstrap'
-import { Loader, ConfirmDeleteModal, ImageUploader } from 'components'
+import { Loader, LeavePage } from 'components'
 import Select from 'react-select'
-import {
-    CommonActions
-} from 'services/global'
-import * as Yup from 'yup';
+import {CommonActions} from 'services/global'
 import 'react-toastify/dist/ReactToastify.css'
-import DatePicker from 'react-datepicker'
-
 import * as DetailSalaryComponentAction from './actions';
 import * as CreatePayrollEmployeeActions from '../create/actions'
 import { SalaryComponentDeduction, SalaryComponentFixed, SalaryComponentVariable } from 'screens/payrollemp/sections';
-
 import { Formik } from 'formik';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-  
-import { selectOptionsFactory } from 'utils'
-import moment from 'moment'
-
-
-
 
 const mapStateToProps = (state) => {
     return ({
@@ -76,7 +64,14 @@ class UpdateSalaryComponent extends React.Component {
             openSalaryComponentFixed: false,
             openSalaryComponentVariable: false,
             openSalaryComponentDeduction: false,
-            loadingMsg:"Loading...."
+            loadingMsg:"Loading....",
+			disableLeavePage:false,
+            ctcTypeOption:this.props.location.state.ctcTypeOption?this.props.location.state.ctcTypeOption:{label:"ANNUALLY",value:1},
+            ctcType:this.props.location.state.ctcTypeOption?this.props.location.state.ctcTypeOption.label:"ANNUALLY",
+            ctcTypeList:[
+                {label:"ANNUALLY",value:1},
+                {label:"MONTHLY",value:2},
+            ]
         }
         
         this.regEx = /^[0-9\d]+$/;
@@ -106,18 +101,70 @@ handleChange = (evt) => {
   }
 //added by mudassar
     componentDidMount = () => {
-      this.getSalaryComponentByEmployeeId();
+      this.getSalaryComponentByEmployeeId_First_Time();
       this.props.createPayrollEmployeeActions.getSalaryComponentForDropdownFixed();
       this.props.createPayrollEmployeeActions.getSalaryComponentForDropdownDeduction();
       this.props.createPayrollEmployeeActions.getSalaryComponentForDropdownVariable();
     }
+    getSalaryComponentByEmployeeId_First_Time = () => {
+       
+        if (this.props.location.state && this.props.location.state.id) {
+            this.props.detailSalaryComponentAction.getSalaryComponentByEmployeeId(this.props.location.state.id).then((res) => {
 
+                if (res.status === 200) {
+                   
+                     let ctcValue= 
+                                    res.data.ctc ?
+                                                (
+                                                    this.state.ctcType=="ANNUALLY"?
+                                                    res.data.ctc
+                                                    :parseFloat(res.data.ctc)*12
+                                                )   
+                                    : ''
+                                                                        
+                    this.setState({
+                            loading: false,
+                            current_employee_id: this.props.location.state.id,
+                       
+                            id: res.data.id ? res.data.id : '',
+                            CTC: res.data.ctc ? res.data.ctc : '',
+                            Fixed:  res.data.salaryComponentResult.Fixed,
+                            Variable : res.data.salaryComponentResult.Variable,
+                            Deduction : res.data.salaryComponentResult.Deduction,
+                            Fixed_Allowance : res.data.salaryComponentResult.Fixed_Allowance,                      
+                            }
+                            )
+                  
+                     this.updateSalary(res.data.ctc ? ctcValue : this.state.CTC)
+                     this.formRef.current.setFieldValue('CTC',
+                                                            // this.state.CTC
+                                                            this.state.ctcType=="ANNUALLY"?
+                                                            this.state.CTC
+                                                            :parseFloat(this.state.CTC)/12 
+                                                            , true);	
+                }
+            }).catch((err) => {
+                this.setState({ loading: false })
+                this.props.history.push('/admin/master/employee')
+            })
+        } else {
+            this.props.history.push('/admin/master/employee')
+        }
+    }
     getSalaryComponentByEmployeeId = () => {
        
         if (this.props.location.state && this.props.location.state.id) {
             this.props.detailSalaryComponentAction.getSalaryComponentByEmployeeId(this.props.location.state.id).then((res) => {
 
                 if (res.status === 200) {
+                    let ctcValue= 
+                    res.data.ctc ?
+                                (
+                                    this.state.ctcType=="ANNUALLY"?
+                                    res.data.ctc
+                                    :parseFloat(res.data.ctc)*12
+                                )   
+                    : ''
                     this.setState({
                         loading: false,
                         current_employee_id: this.props.location.state.id,
@@ -132,7 +179,7 @@ handleChange = (evt) => {
                     }
                     )
                     
-                     this.updateSalary(res.data.ctc ? res.data.ctc : this.state.CTC)
+                    this.updateSalary1(res.data.ctc ? ctcValue : this.state.CTC)
                 }
             }).catch((err) => {
                 this.setState({ loading: false })
@@ -176,10 +223,10 @@ handleChange = (evt) => {
               
             });
     }
-    // Create or Edit Vat
+    // Create or Edit VAT
     handleSubmit = (data) => {
 
-        this.setState({ disabled: true });
+        this.setState({ disabled: true, disableLeavePage:true, });
         const { current_employee_id } = this.state;
         const {
             employee,
@@ -191,6 +238,7 @@ handleChange = (evt) => {
         formData.append('employee', current_employee_id)
         formData.append('employeeId', this.props.location.state.id?this.props.location.state.id:"");
         formData.append('grossSalary', CTC != null ? CTC : '')
+        formData.append('ctcType',this.state.ctcTypeOption.label ?this.state.ctcTypeOption.label:"ANNUALLY")
 
         formData.append('salaryComponentString', JSON.stringify(this.state.list));
         this.setState({ loading:true, loadingMsg:"Updating Salary Details ..."});
@@ -311,7 +359,11 @@ handleChange = (evt) => {
             {
                 componentTotal: componentTotal1,
                 CTC: CTC1,
-                list: locallist
+                list: locallist,
+                initValue:{...this.state.initValue,
+                    ...{
+                    CTC:CTC1
+                }}
 
             })
         console.log(this.state.componentTotal, "componentTotal")
@@ -482,8 +534,7 @@ handleChange = (evt) => {
         strings.setLanguage(this.state.language);
         const { loading,loadingMsg, initValue, dialog } = this.state
         const { designation_dropdown, country_list, state_list, employee_list_dropdown } = this.props
-        console.log(this.state.CTC, "Fixed")
-        console.log(this.state.Fixed_Allowance, "Fixed_Allowance")
+        console.log(initValue, "initValue")
      
         return (
             loading ==true? <Loader loadingMsg={loadingMsg}/> :
@@ -519,27 +570,44 @@ handleChange = (evt) => {
                                                          
                                                                <div style={{textAlign:"center"}}>
                                                         <FormGroup className="mt-3"   style={{textAlign:"center",display: "inline-grid"}} >
-                                                         <Label><span className="text-danger">*</span>  CTC : </Label>
-                                                            <Input
-                                                                type="text"
-                                                                id="CTC"
-                                                                size="30"
-                                                                name="CTC"
-                                                                maxLength='14,2'
-                                                                style={{textAlign:"center"}}
-                                                                value={this.state.CTC ? this.state.CTC : props.values.CTC}
-                                                                placeholder={strings.Enter+"CTC"}
-                                                                onChange={(option) => {
-                                                                    if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('CTC')(option) }
-                                                                   
-                                                                    this.updateSalary(option.target.value);
-
-                                                                }}
-                                                                className={props.errors.CTC && props.touched.CTC ? "is-invalid" : ""}
-                                                            />
+                                                          <Label><span className="text-danger">*</span>  Cost To Company  ( CTC )
+                                                          : </Label>
+                                                        <div   style={{display:"flex"}}>
+                                                                 <div   style={{width:"-webkit-fill-available"}}>
+                                                                       <Select 
+                                                                                options={this.state.ctcTypeList}
+                                                                                id="ctcTypeOption"
+                                                                                name="ctcTypeOption"
+                                                                                className="mr-2"
+                                                                                value={this.state.ctcTypeOption}
+                                                                                onChange={(e) => {															
+                                                                                this.setState({ctcTypeOption:e,ctcType:e.label})
+                                                                                this.updateSalary(e.label=="ANNUALLY"?props.values.CTC:parseFloat(props.values.CTC)*12);								
+                                                                                }}
+                                                                                />
+                                                                 </div>
+                                                                 <Input
+                                                                    type="text"  
+                                                                    id="CTC"
+                                                                    size="30"
+                                                                    name="CTC"
+                                                                    maxLength='14,2'
+                                                                    style={{textAlign:"center"}}
+                                                                    value={props.values.CTC}
+                                                                    placeholder={this.state.ctcType=="MONTHLY"?"Enter Monthly Wages":(strings.Enter+ strings.ctc)}
+                                                                    onChange={(option) => {
+                                                                        if (option.target.value === '' || this.regEx.test(option.target.value)) {
+                                                                            let ctcValue=this.state.ctcType=="ANNUALLY"?option.target.value:parseFloat(option.target.value)*12
+                                                                            props.handleChange('CTC')(option);
+                                                                            this.setState({ctcValue:ctcValue})
+                                                                    }
+                                                                    this.updateSalary(this.state.ctcType=="ANNUALLY"?option.target.value:parseFloat(option.target.value)*12); 
+                                                                   }}
+                                                                    className={props.errors.CTC && props.touched.CTC ? "is-invalid" : ""}
+                                                                />
                                                             {props.errors.CTC && props.touched.CTC && (
                                                                 <div className="invalid-feedback">{props.errors.CTC}</div>
-                                                            )}
+                                                            )}</div>
                                                         </FormGroup>
                                                         </div>
                                               
@@ -1048,6 +1116,7 @@ handleChange = (evt) => {
 
                 />
             </div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
             </div>
         )
     }

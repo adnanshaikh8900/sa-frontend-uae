@@ -12,13 +12,12 @@ import {
 	FormGroup,
 	Input,
 	Label,
-	UncontrolledTooltip,
 } from 'reactstrap';
 import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import DatePicker from 'react-datepicker';
 import { Formik, Field } from 'formik';
-import { Currency,Loader } from 'components';
+import { LeavePage, Loader } from 'components';
 import * as Yup from 'yup';
 import * as SupplierInvoiceCreateActions from './actions';
 import * as GoodsReceivedNoteCreateAction from './actions'
@@ -30,15 +29,12 @@ import * as CustomerInvoiceActions from '../../../customer_invoice/actions';
 import * as PurchaseOrderDetailsAction from '../../../purchase_order/screens/detail/actions'
 import { SupplierModal } from '../../../supplier_invoice/sections/index';
 import { ProductModal } from '../../../customer_invoice/sections';
-import { InvoiceNumberModel } from '../../../customer_invoice/sections';
-
 import { TextareaAutosize } from '@material-ui/core';
 import * as PurchaseOrderAction from '../../../purchase_order/actions'
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import { optionFactory, selectCurrencyFactory, selectOptionsFactory } from 'utils';
-
 import './style.scss';
 import moment from 'moment';
 import {data}  from '../../../Language/index'
@@ -160,8 +156,7 @@ class CreateGoodsReceivedNote extends React.Component {
 				],
 				grn_Number: '',
 				total_net: 0,
-				totalAmount: 0,
-			
+				totalAmount: 0,			
 				invoiceVATAmount: 0,
 				term: '',
 				grnRemarks: '',
@@ -176,9 +171,7 @@ class CreateGoodsReceivedNote extends React.Component {
 			openInvoiceNumberModel: false,
 			selectedContact: '',
 			createMore: false,
-			fileName: '',
-
-			
+			fileName: '',			
 			prefix: '',
 			selectedType: { value: 'FIXED', label: 'Fixed' },
 			discountPercentage: '',
@@ -188,6 +181,7 @@ class CreateGoodsReceivedNote extends React.Component {
 			language: window['localStorage'].getItem('language'),
 			// grnReceivedQuantityError:"Please Enter Quantity",
 			loadingMsg:"Loading...",
+			disableLeavePage:false,
 			vat_list:[
 				{
 					"id": 1,
@@ -854,18 +848,18 @@ this.state.data.map((obj, index) => {
 										'name',
 										'id',
 										vat_list,
-										'Vat',
+										'VAT',
 								  )
 								: []
 						}
 						value={
 							vat_list &&
 							selectOptionsFactory
-								.renderOptions('name', 'id', vat_list, 'Vat')
+								.renderOptions('name', 'id', vat_list, 'VAT')
 								.find((option) => option.value === +row.vatCategoryId)
 						}
 						id="vatCategoryId"
-						placeholder={strings.Select+strings.Vat}
+						placeholder={strings.Select+strings.VAT}
 						onChange={(e) => {
 							this.selectItem(
 								e.value,
@@ -1043,7 +1037,7 @@ this.state.data.map((obj, index) => {
 						   <Input
 						type="text"
 						maxLength="250"
-						value={row['description'] !== '' ? row['description'] : ''}
+						value={row['description'] !== '' && row['description'] !== null ? row['description'] : ''}
 						onChange={(e) => {
 							this.selectItem(e.target.value, row, 'description', form, field);
 						}}
@@ -1320,7 +1314,7 @@ this.state.data.map((obj, index) => {
 			formData.append('currencyCode', this.state.supplier_currency);
 
 		formData.append('supplierReferenceNumber', supplierReferenceNumber ? supplierReferenceNumber : '');
-		this.setState({ loading:true, loadingMsg:"Creating Goods Received Note..."});
+		this.setState({ loading:true, disableLeavePage:true, loadingMsg:"Creating Goods Received Note..."});
 		this.props.goodsReceivedNoteCreateAction
 			.createGNR(formData)
 			.then((res) => {
@@ -1687,6 +1681,7 @@ this.state.data.map((obj, index) => {
 							label: response.data.supplierName,
 							value: response.data.supplierId,
 						},
+					grnRemarks:response.data.poNumber,	
 					data:response.data.poQuatationLineItemRequestModelList ,
 					supplierReferenceNumber: response.data.supplierReferenceNumber,
 					supplier_currency:response.data.currencyCode,
@@ -1715,7 +1710,7 @@ this.state.data.map((obj, index) => {
 				this.formRef.current.setFieldValue('supplierId', this.state.option, true);
 				this.formRef.current.setFieldValue('currencyCode', this.state.supplier_currency, true);
 				this.formRef.current.setFieldValue('supplierReferenceNumber', this.state.supplierReferenceNumber, true);
-				
+				this.formRef.current.setFieldValue('grnRemarks', this.state.grnRemarks, true);
 			});
 		}
 	}
@@ -1784,28 +1779,28 @@ console.log(this.state.data)
 													let errors = {};
 													if (this.state.exist === true) {
 														errors.grn_Number =
-															'GRN Number Already Exists';
+															'GRN number already axists';
 													}
 													if (values.grn_Number==='') {
-														errors.grn_Number = 'GRN Number is Required';
+														errors.grn_Number = 'GRN number is required';
 													}
 													return errors;
 												}}
 												validationSchema={Yup.object().shape(
 													{
 													grn_Number: Yup.string().required(
-														'Invoice Number is Required',
+														'Invoice number is required',
 													),
 													supplierId: Yup.string().required(
-														'Supplier is Required',
+														'Supplier is required',
 													),
-													// placeOfSupplyId: Yup.string().required('Place of supply is Required'),
+													// placeOfSupplyId: Yup.string().required('Place of supply is required'),
 													
 													grnReceiveDate: Yup.string().required(
-														'Order Date is Required',
+														'Order date is required',
 													),
 													rfqExpiryDate: Yup.string().required(
-														'Order Due Date is Required'
+														'Order due date is required'
 													),
 													attachmentFile: Yup.mixed()
 													.test(
@@ -1848,7 +1843,7 @@ console.log(this.state.data)
 														.of(
 															Yup.object().shape({
 																grnReceivedQuantity: Yup.string()
-																	.required('Value is Required')
+																	.required('Value is required')
 																	.test(
 																		'grnReceivedQuantity',
 																		'Quantity should be greater than 0',
@@ -1861,10 +1856,10 @@ console.log(this.state.data)
 																		},
 																	),
 																unitPrice: Yup.string()
-																	.required('Value is Required')
+																	.required('Value is required')
 																	.test(
 																		'Unit Price',
-																		'Unit Price Should be Greater than 1',
+																		'Unit price should be greater than 1',
 																		(value) => {
 																			if (value > 0) {
 																				return true;
@@ -1874,10 +1869,10 @@ console.log(this.state.data)
 																		},
 																	),
 																vatCategoryId: Yup.string().required(
-																	'Value is Required',
+																	'Value is required',
 																),
 																productId: Yup.string().required(
-																	'Product is Required',
+																	'Product is required',
 																),
 															}),
 														),
@@ -2171,7 +2166,7 @@ console.log(this.state.data)
 																	{props.errors.grnReceiveDate &&
 																		props.touched.grnReceiveDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.grnReceiveDate.includes("nullable()") ? "Order Date is Required" :props.errors.grnReceiveDate}
+																				{props.errors.grnReceiveDate.includes("nullable()") ? "Order date is required" :props.errors.grnReceiveDate}
 
 																			</div>
 																		)}
@@ -2693,6 +2688,7 @@ console.log(this.state.data)
 					
 				/> */}
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

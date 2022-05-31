@@ -263,8 +263,8 @@ class UpdateEmployeeEmployment extends React.Component {
                                                     validationSchema={Yup.object().shape({
                                                         employeeCode: Yup.string()
                                                             .required("Employee unique id is required"),
-                                                        //     salaryRoleId: Yup.string()
-                                                        // .required("salary role is required"),
+                                                        agentId: Yup.string()
+                                                        .required("Agent id is required"),
                                             
                                                         dateOfJoining: Yup.date()
                                                             .required('Date of joining is required')                   

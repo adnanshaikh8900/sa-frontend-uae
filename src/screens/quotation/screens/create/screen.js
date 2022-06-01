@@ -649,7 +649,7 @@ class CreateQuotation extends React.Component {
 	getDefaultNotes=()=>{
 		this.props.commonActions.getNoteSettingsInfo().then((res)=>{
 			if(res.status===200){
-				this.formRef.current.setFieldValue('notes',res.data.defaultNotes, true);
+				this.formRef.current.setFieldValue('notes',res.data.defaultTermsAndConditions, true);
 				this.formRef.current.setFieldValue('footNote',  res.data.defaultFootNotes, true);
 			}
 		})

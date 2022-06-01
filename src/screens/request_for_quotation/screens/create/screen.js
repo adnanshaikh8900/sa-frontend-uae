@@ -718,8 +718,16 @@ class CreateRequestForQuotation extends React.Component {
 			}
 		});
 	}
-
+	getDefaultNotes=()=>{
+		this.props.commonActions.getNoteSettingsInfo().then((res)=>{
+			if(res.status===200){
+				this.formRef.current.setFieldValue('notes',res.data.defaultTermsAndConditions, true);
+				this.formRef.current.setFieldValue('footNote',  res.data.defaultFootNotes, true);
+			}
+		})
+	}
 	componentDidMount = () => {
+		this.getDefaultNotes()
 		this.props.requestForQuotationAction.getVatList();
 		this.getInitialData();
 		// if(this.props.location.state &&this.props.location.state.contactData)

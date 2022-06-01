@@ -262,19 +262,25 @@ class UpdateEmployeeEmployment extends React.Component {
                                                     }}
                                                     validationSchema={Yup.object().shape({
                                                         employeeCode: Yup.string()
-                                                            .required("Employee Code is Required"),
-                                                        //     salaryRoleId: Yup.string()
-                                                        // .required("salary Role is Required"),
+                                                            .required("Employee unique id is required"),
+                                                        agentId: Yup.string()
+                                                        .required("Agent id is required"),
                                             
                                                         dateOfJoining: Yup.date()
-                                                            .required('Date of Joining is Required')                   
+                                                            .required('Date of joining is required')                   
                                                     })}
                                                     validate={(values) => {
                                                         let errors = {};
-                                                         
+                                                        if(values.employeeCode &&
+                                                            values.employeeCode.length && 
+                                                            values.employeeCode.length!=14)
+                                                        {
+                                                            errors.employeeCode =
+                                                            'Employee unique id  must be 14 digit';        
+                                                        }else  
                                                         if (exist === true  && values.employeeCode!="") {
                                                             errors.employeeCode =
-                                                            'Employee Code Number Already Exists';
+                                                            'Employee unique id  already exists';
                                                         }
                                                         return errors;
 

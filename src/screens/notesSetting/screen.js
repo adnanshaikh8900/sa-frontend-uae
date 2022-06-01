@@ -9,29 +9,21 @@ import {
 	CardHeader,
 	CardBody,
 	Row,
-	TabContent,
-	TabPane,
-	Nav,
-	NavItem,
-	NavLink,
 	Form,
 	Label,
-	Table,
-	Input
 } from 'reactstrap';
 import { AuthActions, CommonActions } from 'services/global';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-datepicker/dist/react-datepicker.css'
 import './style.scss';
 import { data } from '../Language/index'
-
 import { Formik } from 'formik';
-import * as Yup from 'yup';
 import LocalizedStrings from 'react-localization';
-import { Loader } from 'components';
+import { LeavePage, Loader } from 'components';
 import { TextareaAutosize } from '@material-ui/core';
 import * as NotesSettingsAction from './actions';
 import { toast } from 'react-toastify';
+
 const mapStateToProps = (state) => {
 	return {
 		version: state.common.version,
@@ -58,7 +50,8 @@ class NotesSettings extends React.Component {
 			disabled: false,
 			defaultFootNotes: "",
 			defaultNotes: "",
-			loadingMsg: "Loading..."
+			loadingMsg: "Loading...",
+			disableLeavePage:false
 		};
 
 	}
@@ -76,7 +69,7 @@ class NotesSettings extends React.Component {
 	};
 
 	handleSubmit = (data) => {
-		
+		this.setState({ loading:true, disableLeavePage:true});		
 		let formData=new FormData()
 		formData.append("defaultNote",this.state.defaultNotes)
 		formData.append("defaultFootNote",this.state.defaultFootNotes)
@@ -121,10 +114,10 @@ class NotesSettings extends React.Component {
 													let errors = {};
 													// 
 													// if(this.state.defaultFootNotes=="")
-													// errors.defaultFootNotes='Default Foot Note is Required';
+													// errors.defaultFootNotes='Default foot note is required';
 
 													// if(this.state.defaultNotes=="")
-													// errors.defaultNotes='Default Note is Required'
+													// errors.defaultNotes='Default note is required'
 													return errors;
 
 												}}
@@ -250,6 +243,7 @@ class NotesSettings extends React.Component {
 							</Row>
 						</div>
 					</div>
+						{this.state.disableLeavePage ?"":<LeavePage/>}
 				</div>
 		);
 	}

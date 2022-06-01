@@ -1116,6 +1116,7 @@ handleChange = (evt) => {
 
                 />
             </div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
             </div>
         )
     }

@@ -171,7 +171,7 @@ class CreateProductCategory extends React.Component {
 													let errors = {};
 													if (!values.productCategoryName) {
 														errors.productCategoryName =
-															'Product Category Name is Required';
+															'Product category name is required';
 													}
 
 													if (
@@ -181,12 +181,12 @@ class CreateProductCategory extends React.Component {
 														)
 													) {
 														errors.productCategoryCode =
-															'Product Category Code Already Exists';
+															'Product category code already exists';
 													}
 
 													if (!values.productCategoryCode) {
 														errors.productCategoryCode =
-															'Product Category Code is Required';
+															'Product category code is required';
 													}
 													return errors;
 												}}

@@ -13,21 +13,12 @@ import {
   Input,
   Label
 } from 'reactstrap'
-import Select from 'react-select'
-import DatePicker from 'react-datepicker'
 import { Formik } from 'formik';
 import * as Yup from "yup";
-import moment from 'moment'
-
-import { Loader, ConfirmDeleteModal } from 'components'
-
-import {
-  CommonActions
-} from 'services/global'
-import {selectCurrencyFactory, selectOptionsFactory} from 'utils'
+import { LeavePage, Loader, ConfirmDeleteModal } from 'components'
+import { CommonActions } from 'services/global'
 import * as EmployeeActions from '../../actions';
 import * as SalarayStructureDetailActions from './actions';
-
 import 'react-datepicker/dist/react-datepicker.css'
 import './style.scss'
 import {data}  from '../../../Language/index'
@@ -53,6 +44,7 @@ class DetailSalaryStructure extends React.Component {
     this.state = {
       language: window['localStorage'].getItem('language'),
       loading: true,
+			disableLeavePage:false,
       initValue: {},
       current_salary_structure_id: null,
       dialog: false,
@@ -105,6 +97,7 @@ class DetailSalaryStructure extends React.Component {
   //   })
   // }
   handleSubmit = (data) => {
+    this.setState({ disableLeavePage:true });
 		const { current_salary_structure_id} = this.state;
 		const {
 		salaryStructureName,
@@ -208,9 +201,9 @@ class DetailSalaryStructure extends React.Component {
                             }}
                             validationSchema={Yup.object().shape({
                               salaryStructureType: Yup.string()
-                              .required("Salary Structure Type is Required"),
+                              .required("Salary structure type is required"),
                               salaryStructureName: Yup.string()
-                                .required("Salary Structure Name is Required"),
+                                .required("Salary structure name is required"),
                             
                             })}
                           >
@@ -315,6 +308,7 @@ class DetailSalaryStructure extends React.Component {
           </Row>
         </div>
       </div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
       </div>
     )
   }

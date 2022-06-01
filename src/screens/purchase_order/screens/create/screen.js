@@ -27,7 +27,7 @@ import * as RequestForQuotationDetailsAction from '../../../request_for_quotatio
 import * as ProductActions from '../../../product/actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 import { SupplierModal } from '../../../supplier_invoice/sections/index';
-import {   Loader } from 'components';
+import { LeavePage, Loader } from 'components';
 //import { SupplierModal } from '../../sections';
 import { ProductModal } from '../../../customer_invoice/sections';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -175,6 +175,7 @@ class CreatePurchaseOrder extends React.Component {
 			exist: false,
 			language: window['localStorage'].getItem('language'),	
 			loadingMsg:"Loading...",
+			disableLeavePage:false,
 			vat_list:[
 				{
 					"id": 1,
@@ -1539,7 +1540,7 @@ class CreatePurchaseOrder extends React.Component {
 		
 			formData.append('currencyCode', this.state.supplier_currency);
 		
-			this.setState({ loading:true, loadingMsg:"Creating Purchase Order..."});	
+			this.setState({ loading:true, disableLeavePage:true, loadingMsg:"Creating Purchase Order..."});	
 		this.props.purchaseOrderCreateAction
 			.createPO(formData)
 			.then((res) => {
@@ -1984,7 +1985,7 @@ getrfqDetails = (e, row, props,form,field) => {
 													let errors = {};
 													if (this.state.exist === true) {
 														errors.po_number =
-															'PO Number already exists';
+															'PO number already exists';
 													}
 													if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
 													||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
@@ -1992,38 +1993,38 @@ getrfqDetails = (e, row, props,form,field) => {
 											    	{
 
 														if (!values.placeOfSupplyId) 
-													       	errors.placeOfSupplyId ='Place of Supply is Required';
+													       	errors.placeOfSupplyId ='Place of supply is required';
 														if (values.placeOfSupplyId &&
 															(values.placeOfSupplyId=="" ||
-															(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")
+															(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select place of supply")
 															)
 														   ) 
-													         errors.placeOfSupplyId ='Place of Supply is Required';
+													         errors.placeOfSupplyId ='Place of supply is required';
 													
 												   }
 													if (values.po_number==='') {
-														errors.po_number = 'PO Number is Required';
+														errors.po_number = 'PO number is required';
 													}
 													return errors;
 												}}
 												validationSchema={Yup.object().shape(
 													{
 														po_number: Yup.string().required(
-														'Invoice Number is Required',
+														'Invoice number is required',
 													),
 													supplierId: Yup.string().required(
-														'Supplier is Required',
+														'Supplier is required',
 													),
                                                     // rfqNumber: Yup.string().required(
-													// 	'Rfq Number is Required',
+													// 	'Rfq number is required',
 													// ),
-													// placeOfSupplyId: Yup.string().required('Place of supply is Required'),
+													// placeOfSupplyId: Yup.string().required('Place of supply is required'),
 													
 													poApproveDate: Yup.string().required(
-														'Order Date is Required',
+														'Order date is required',
 													),
 													poReceiveDate: Yup.string().required(
-														'Order Due Date is Required'
+														'Order due date is required'
 													),
 													attachmentFile: Yup.mixed()
 													.test(
@@ -2066,7 +2067,7 @@ getrfqDetails = (e, row, props,form,field) => {
 														.of(
 															Yup.object().shape({
 																quantity: Yup.string()
-																	.required('Value is Required')
+																	.required('Value is required')
 																	.test(
 																		'quantity',
 																		'Quantity should be greater than 0',
@@ -2079,10 +2080,10 @@ getrfqDetails = (e, row, props,form,field) => {
 																		},
 																	),
 																unitPrice: Yup.string()
-																	.required('Value is Required')
+																	.required('Value is required')
 																	.test(
 																		'Unit Price',
-																		'Unit Price Should be Greater than 1',
+																		'Unit price should be greater than 1',
 																		(value) => {
 																			if (value > 0) {
 																				return true;
@@ -2092,10 +2093,10 @@ getrfqDetails = (e, row, props,form,field) => {
 																		},
 																	),
 																vatCategoryId: Yup.string().required(
-																	'VAT is Required',
+																	'VAT is required',
 																),
 																productId: Yup.string().required(
-																	'Product is Required',
+																	'Product is required',
 																),
 															}),
 														),
@@ -2811,7 +2812,7 @@ getrfqDetails = (e, row, props,form,field) => {
 															<Row>
 																<Col lg={8}>
 																<FormGroup className="py-2">
-																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
+																		<Label htmlFor="notes">{strings.TermsAndConditions}</Label><br/>
 																		<TextareaAutosize
 																			type="textarea"
 																			style={{width: "700px"}}
@@ -3203,6 +3204,7 @@ getrfqDetails = (e, row, props,form,field) => {
 					
 				/> */}
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

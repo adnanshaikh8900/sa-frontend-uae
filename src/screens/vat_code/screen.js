@@ -520,18 +520,18 @@ class VatCode extends React.Component {
 											}
 											hover
 											version="4"
-											pagination={
-												vat_list_data &&  vat_list_data.length > 0
-													? true
-													: false
-											}
+											// pagination={
+											// 	vat_list_data &&  vat_list_data.length > 0
+											// 		? true
+											// 		: false
+											// }
 											search={false}
 											selectRow={this.selectRowProp}
 											options={this.options}
 											remote
-											fetchInfo={{
-												dataTotalSize: vat_list.count ? vat_list.count : 0,
-											}}
+											// fetchInfo={{
+											// 	dataTotalSize: vat_list.count ? vat_list.count : 0,
+											// }}
 											trClassName="cursor-pointer"
 											csvFileName="vat_code.csv"
 											ref={(node) => {

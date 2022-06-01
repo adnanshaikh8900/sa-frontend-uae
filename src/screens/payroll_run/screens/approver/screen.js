@@ -15,29 +15,22 @@ import {
 	Label,
 } from 'reactstrap'
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import Select from 'react-select'
 import DatePicker from 'react-datepicker'
 import { Formik } from 'formik';
-import * as Yup from "yup";
-import { ConfirmDeleteModal, ImageUploader, Loader } from 'components';
-import {
-	CommonActions
-} from 'services/global'
-import { selectCurrencyFactory, selectOptionsFactory } from 'utils'
+import { ConfirmDeleteModal, LeavePage, Loader } from 'components';
+import {CommonActions} from 'services/global'
 import * as EmployeeActions from '../../actions';
 import * as CreatePayrollActions from './actions';
 import * as CreatePayrollEmployeeActions from '../../../payrollemp/screens/create/actions';
 import * as PayrollEmployeeActions from '../../../payrollemp/actions'
 import 'react-datepicker/dist/react-datepicker.css'
 import './style.scss'
-
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { AddEmployeesModal } from './sections';
 import moment from 'moment';
 import download from 'downloadjs';
 import { toast } from 'react-toastify';
-
 
 const mapStateToProps = (state) => {
 
@@ -95,7 +88,8 @@ class PayrollApproverScreen extends React.Component {
 				onSelect: this.onRowSelect,
 				onSelectAll: this.onSelectAll,
 			},
-			currencyIsoCode: "AED"
+			currencyIsoCode: "AED",
+			disableLeavePage:false
 		}
 
 		this.regEx = /^[0-9\d]+$/;
@@ -245,11 +239,12 @@ class PayrollApproverScreen extends React.Component {
 			})
 	}
 	approveAndRunPayroll = () => {
+		this.setState({disableLeavePage:true})
 		this.props.createPayrollActions
 			.approveAndRunPayroll(this.state.payroll_id)
 			.then((res) => {
 				if (res.status === 200) {
-					this.props.commonActions.tostifyAlert('success', 'Payroll Approved Successfully')
+					this.props.commonActions.tostifyAlert('success', 'Payroll Approved Successfully. Payslip sent to employees Successfully')
 					this.getAllPayrollEmployee()
 					this.props.history.push('/admin/payroll/payrollrun')
 					// resetForm(this.state.initValue)
@@ -305,6 +300,7 @@ class PayrollApproverScreen extends React.Component {
 			})
 	}
 	voidPayrollApi = () => {
+		this.setState({  disableLeavePage:true });
 		let formData = {
 			postingRefId: this.state.payroll_id,
 			postingRefType: "PAYROLL",
@@ -320,7 +316,7 @@ class PayrollApproverScreen extends React.Component {
 		})
 	}
 	handleSubmit = (data, resetForm) => {
-		this.setState({ disabled: true });
+		this.setState({ disabled: true, disableLeavePage:true });
 		const {
 			type,
 			name
@@ -786,6 +782,7 @@ class PayrollApproverScreen extends React.Component {
 		});
 	};
 	rejectPayroll1 = () => {
+		this.setState({  disableLeavePage:true });
 		this.props.createPayrollActions
 			.rejectPayroll(this.state.payroll_id, this.state.comment)
 			.then((res) => {
@@ -801,8 +798,7 @@ class PayrollApproverScreen extends React.Component {
 
 	}
 	rejectPayroll = () => {
-
-
+		this.setState({ disableLeavePage:true });
 		const message1 =
 			<text>
 				<b>Would you like to reject this payroll ?</b>
@@ -968,7 +964,7 @@ class PayrollApproverScreen extends React.Component {
 																			</Col>
 																			<Col>
 																				<FormGroup>
-																					<Label htmlFor="payPeriod">  Pay period</Label>
+																					<Label htmlFor="payPeriod">  Pay Period</Label>
 																					<Input
 																						type="text"
 																						id="payPeriod"
@@ -1235,6 +1231,7 @@ class PayrollApproverScreen extends React.Component {
 						// employee_list={employee_list.data}				
 						/>
 					</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 				</div>
 		)
 	}

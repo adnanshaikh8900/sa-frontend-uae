@@ -1935,7 +1935,7 @@ class ExplainTrasactionDetail extends React.Component {
 																			</Col>
 																		)}
 																</Row>
-																{props.values.coaCategoryId &&
+																{/* {props.values.coaCategoryId &&
 																	props.values.coaCategoryId.label ===
 																	'Expense' &&  (
 																		<Row style={{display: this.state.bankAccountCurrency === this.state.basecurrency.currencyCode ? 'none': ''}}>
@@ -2059,8 +2059,8 @@ class ExplainTrasactionDetail extends React.Component {
 																				/>
 																			</Col>
 																		</Row>
-																	)}
-																{props.values.coaCategoryId &&
+																	)} */}
+																{/* {props.values.coaCategoryId &&
 																	props.values.coaCategoryId.label ===
 																	'Sales' && 
 																
@@ -2194,8 +2194,8 @@ class ExplainTrasactionDetail extends React.Component {
 																				/>
 																			</Col>
 																		</Row>
-																	)}
-																{props.values.coaCategoryId &&
+																	)} */}
+																{/* {props.values.coaCategoryId &&
 																	props.values.coaCategoryId.label ===
 																	'Supplier Invoice' &&
 																	(
@@ -2269,9 +2269,7 @@ class ExplainTrasactionDetail extends React.Component {
 																			</Col>
 																			<Col lg={2}>
 																				<FormGroup className="mb-3">
-																					{/* <Label htmlFor="exchangeRate">
-																		Exchange rate
-																	</Label> */}
+																				
 																					<div>
 																						<Input
 																							disabled
@@ -2291,9 +2289,7 @@ class ExplainTrasactionDetail extends React.Component {
 																			<FormGroup className="mt-2"><label><b>=</b></label>	</FormGroup>
 																			<Col lg={2}>
 																				<FormGroup className="mb-3">
-																					{/* <Label htmlFor="exchangeRate">
-																		Exchange rate
-																	</Label> */}
+																				
 																					<div>
 																						<Input
 																							className="form-control"
@@ -2322,7 +2318,7 @@ class ExplainTrasactionDetail extends React.Component {
 																				/>
 																			</Col>
 																		</Row>
-																	)}
+																	)} */}
 																	<Row>
 																		{props.values.coaCategoryId === 12 ||
 																			(props.values.coaCategoryId === 6 && (

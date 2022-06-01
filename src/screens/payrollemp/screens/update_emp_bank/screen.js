@@ -256,25 +256,25 @@ class UpdateEmployeeBank extends React.Component {
                                                         let errors = {};
                                                         if (existForAccountNumber === true) {
                                                             errors.accountNumber =
-                                                                'Account Number Already Exists';
+                                                                'Account number already Eeists';
                                                         }
                                                         return errors;
                                                     }}
                                                     validationSchema={Yup.object().shape({
                                                         accountHolderName: Yup.string()
-                                                            .required("Account Holder Name is Required"),
+                                                            .required("Account holder name is required"),
                                                         accountNumber: Yup.string()
-                                                        .required("Account Number is Required"),
+                                                        .required("Account number is required"),
                                                         // bankName: Yup.string()
-                                                        // .required("Bank Name is Required"),
+                                                        // .required("Bank name is required"),
                                                         bankId: Yup.string()
-                                                        .required('Bank Name is Required') ,
+                                                        .required('Bank name is required') ,
                                                         // swiftCode: Yup.string()
-                                                        // .required("Swift Code is Required"),
+                                                        // .required("Swift code is required"),
                                                         branch: Yup.string()
-                                                        .required("Branch is Required"),
+                                                        .required("Branch is required"),
                                                         iban: Yup.string()
-                                                        .required("IBAN is Required"),
+                                                        .required("IBAN is required"),
                                                                        
                                                     })}
 

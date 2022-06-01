@@ -266,7 +266,7 @@ class InvoiceTemplate extends Component {
 						<span>{invoiceData.status}</span>
 					</div> */}
 
-					<CardBody style={{ margin: '1rem', border: 'solid 1px', borderColor: '#c8ced3', }}>
+					<CardBody style={{ margin: '1rem', border: 'solid 1px', borderColor: '#c8ced3', position:'relative', minHeight:'100vh' }}>
 						<div
 							style={{
 								width: '100%',

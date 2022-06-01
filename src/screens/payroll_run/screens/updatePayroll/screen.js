@@ -19,26 +19,22 @@ import Select from 'react-select'
 import DatePicker from 'react-datepicker'
 import { Formik } from 'formik';
 import * as Yup from "yup";
-import { ConfirmDeleteModal, ImageUploader, Loader } from 'components';
+import { ConfirmDeleteModal, LeavePage, Loader } from 'components';
 import {
 	CommonActions
 } from 'services/global'
-import { selectCurrencyFactory, selectOptionsFactory } from 'utils'
+import { selectOptionsFactory } from 'utils'
 import * as EmployeeActions from '../../actions';
 import * as CreatePayrollActions from './actions';
 import * as CreatePayrollEmployeeActions from '../../../payrollemp/screens/create/actions';
 import * as PayrollEmployeeActions from '../../../payrollemp/actions'
 import 'react-datepicker/dist/react-datepicker.css'
 import './style.scss'
-
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-import { AddEmployeesModal } from './sections';
 import moment from 'moment';
 import { DateRangePicker,isInclusivelyBeforeDay } from 'react-dates';
-import RoleReducer from 'screens/users_roles/screens/create/reducer';
 import { toast } from 'react-toastify';
-
 
 const mapStateToProps = (state) => {
 
@@ -111,7 +107,8 @@ class UpdatePayroll extends React.Component {
 			 currencyIsoCode:"AED",
 			 count:0,
 			 paidDays:30,
-			 checkForLopSetting:false
+			 checkForLopSetting:false,
+			 disableLeavePage:false
 		}
 
 		this.regEx = /^[0-9\d]+$/;
@@ -328,7 +325,7 @@ class UpdatePayroll extends React.Component {
 
 	handleSubmit = (data, resetForm) => {
 		
-		this.setState({ disabled: true });
+		this.setState({ disabled: true, disableLeavePage: true });
 		const {
 			payrollSubject,
 			payrollDate,
@@ -977,34 +974,34 @@ class UpdatePayroll extends React.Component {
 														}}
 														validationSchema={Yup.object().shape({
 															// payrollSubject: Yup.string()
-															//   .required("Payroll Subject is Required"),
+															//   .required("Payroll Subject is required"),
 															payrollDate: Yup.string()
-															  .required("Payroll Date is Required"),
+															  .required("Payroll date is required"),
 														  // selectedRows: Yup.string()
-														  //     .required("At least selection of one employee  is Required for create payroll"),
+														  //     .required("At least selection of one employee is required for create payroll"),
 														  })}
 														  validate={(values) => {
 															 
 															  let errors = {};
 															  
 															  if (!this.state.payrollSubject) {
-																  errors.payrollSubject = 'Payroll Subject is  required';
+																  errors.payrollSubject = 'Payroll subject is required';
 															  }
 															  if (!values.payrollDate) {
-																  errors.payrollDate = 'Payroll date is  required';
+																  errors.payrollDate = 'Payroll date is required';
 															  }
 															//   if(this.state.selectedRows && this.state.selectedRows.length===0)
 															//   {
-															// 	  errors.selectedRows = 'At least selection of one employee  is Required for create payroll';
+															// 	  errors.selectedRows = 'At least selection of one employee is required for create payroll';
 															//   }
 															if (!this.state.startDate && !this.state.endDate) {
-																errors.startDate = 'Start and End Date is  required';
+																errors.startDate = 'Start and end date is required';
 															}else
 															if (!this.state.startDate) {
-																errors.startDate = 'Start Date is  required';
+																errors.startDate = 'Start date is required';
 															}else
 															if (!this.state.endDate) {
-																errors.startDate = 'End Date is  required';
+																errors.startDate = 'End date is required';
 															}
 														  
 															  return errors;
@@ -1329,6 +1326,7 @@ class UpdatePayroll extends React.Component {
 				// employee_list={employee_list.data}				
 				/> */}
 			</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		)
 	}

@@ -13,21 +13,14 @@ import {
   Input,
   Label,
 } from 'reactstrap'
-import Select from 'react-select'
-import DatePicker from 'react-datepicker'
 import { Formik } from 'formik';
 import * as Yup from "yup";
-import { ImageUploader } from 'components';
-import {
-  CommonActions
-} from 'services/global'
-import {selectCurrencyFactory, selectOptionsFactory} from 'utils'
+import { LeavePage } from 'components';
+import { CommonActions } from 'services/global'
 import * as SalaryRoleActions from '../../actions';
 import * as SalaryRoleCreateActions from './actions';
-
 import 'react-datepicker/dist/react-datepicker.css'
-import './style.scss'
-  
+import './style.scss'  
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 
@@ -64,6 +57,7 @@ class CreateSalaryRoles extends React.Component {
       language: window['localStorage'].getItem('language'),
       loading: false,
       createMore: false,
+      disableLeavePage:false,
       disabled: false,
       initValue: {
         salaryRoleName:''
@@ -87,7 +81,7 @@ class CreateSalaryRoles extends React.Component {
   };
 
   handleSubmit = (data, resetForm) => {
-    this.setState({ disabled: true });
+    this.setState({ disabled: true , disableLeavePage: true });
     this.setState({ disabled: true });
 		const {
       salaryRoleName
@@ -163,7 +157,7 @@ class CreateSalaryRoles extends React.Component {
                          }}
                         validationSchema={Yup.object().shape({
                           salaryRoleName: Yup.string()
-                            .required("Salary Role Name is Required"),
+                            .required("Salary role name is required"),
                          
                         })}
                       >
@@ -250,6 +244,7 @@ class CreateSalaryRoles extends React.Component {
             </Col>
           </Row>
         </div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
       </div>
     )
   }

@@ -68,7 +68,7 @@ class CreateExpense extends React.Component {
 			initValue: {
 				payee: '',
 				placeOfSupplyId:'',
-				expenseDate: '',
+				expenseDate: new Date(),
 				currency: '',
 				project: '',
 				exchangeRate:'',
@@ -218,8 +218,23 @@ class CreateExpense extends React.Component {
 
 						     	let tax=	selectOptionsFactory.renderOptions('name','id',this.state.taxTreatmentList,	'Tax Treatment',).find((option)=> option.value==res.data.taxTreatmentId)
 								this.formRef.current.setFieldValue('taxTreatmentId',tax, true);
-
-							   let placeofSupply=this.state.placelist.find(	(option) =>option.value == res.data.placeOfSupplyId,	)	
+	                     
+							   this.placelistSetting(tax,undefined)
+							   let placelist=[
+								{ label: 'Abu Dhabi', value: '1' },
+								{ label: 'Dubai', value: '2' },
+								{ label: 'Sharjah', value: '3' },
+								{ label: 'Ajman', value: '4' },
+								{ label: 'Umm Al Quwain', value: '5' },
+								{ label: 'Ras Al-Khaimah', value: '6' },
+								{ label: 'Fujairah', value: '7' },
+								{ label: 'BAHRAIN', value: '8' },
+								{ label: 'SAUDI ARABIA', value: '9' },
+								{ label: 'OMAN', value: '10' },
+								{ label: 'KUWAIT', value: '11' },
+								{ label: 'QATAR', value: '12' },
+							]
+							    let placeofSupply=placelist.find(	(option) =>option.value == res.data.placeOfSupplyId,)	
 								this.formRef.current.setFieldValue('placeOfSupplyId', placeofSupply, true);
 
 								let expenseCategory= selectOptionsFactory.renderOptions('transactionCategoryName','transactionCategoryId',	this.props.expense_categories_list,	'Expense Category', )
@@ -227,11 +242,9 @@ class CreateExpense extends React.Component {
 								this.formRef.current.setFieldValue('expenseCategory',expenseCategory, true);
 
 								this.formRef.current.setFieldValue('expenseDate', new Date(res.data.expenseDate), true);
-								let payee=	selectOptionsFactory.renderOptions(	'label','value',	this.props.pay_to_list,	'Payee',)
-																.find((option) => 	option.label == res.data.payee)
-								this.formRef.current.setFieldValue('payee',payee, true);
 
-								let currency=	selectCurrencyFactory.renderOptions(	'currencyName','currencyCode',this.props.currency_convert_list,'Currency',)
+
+								let currency=	selectCurrencyFactory.renderOptions('currencyName','currencyCode',this.props.currency_convert_list,'Currency',)
 																	.find(
 																		(option) =>
 																			option.value ==res.data.currencyCode,
@@ -255,6 +268,10 @@ class CreateExpense extends React.Component {
 								this.formRef.current.setFieldValue('expenseDescription',  res.data.expenseDescription, true);
 								this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
 								this.formRef.current.setFieldValue('receiptAttachmentDescription', res.data.receiptAttachmentDescription, true);
+
+								let payee=	selectOptionsFactory.renderOptions(	'label','value',	this.props.pay_to_list,	'Payee',)
+								.find((option) => 	option.label == res.data.payee)
+								this.formRef.current.setFieldValue('payee',payee, true);
 							},
 						);
 						this.ReverseChargeSetting(res.data.taxTreatmentId,"")
@@ -486,8 +503,8 @@ class CreateExpense extends React.Component {
 			let result = this.props.currency_convert_list.filter((obj) => {
 			return obj.currencyCode === value;
 			});
-			
-			this.formRef.current.setFieldValue('curreancyname', result[0].currencyName, true);
+			if(result[0] && result[0].currencyName){
+				this.formRef.current.setFieldValue('curreancyname', result[0].currencyName, true);}
 			}
 		};
 
@@ -582,15 +599,21 @@ class CreateExpense extends React.Component {
 		else 
 		if(option.value===8)
 		{
+			if(props)
 			props.handleChange('placeOfSupplyId')('')
+			else
+			this.formRef.current.setFieldValue('placeOfSupplyId', "", true);
 			this.setState({showPlacelist:false})
 		}else
 		if(option.value===7){
 			let placeOfSupplyId=this.state.placelist.find(
 														(option) =>
 															option.label === this.state.userStateName,
-													    )				
+													    );		
+			if(props)													
 			props.handleChange('placeOfSupplyId')(placeOfSupplyId)
+			else
+			this.formRef.current.setFieldValue('placeOfSupplyId', placeOfSupplyId, true);
 			this.setState({lockPlacelist:true})
 		}
 		else

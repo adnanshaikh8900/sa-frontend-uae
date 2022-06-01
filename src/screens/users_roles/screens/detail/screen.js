@@ -15,22 +15,18 @@ import {
 } from 'reactstrap';
 import { toast } from 'react-toastify';
 import _ from 'lodash';
-import { Loader } from 'components';
-import Select from 'react-select';
+import { LeavePage, Loader } from 'components';
 import CheckboxTree from 'react-checkbox-tree';
 import 'react-checkbox-tree/lib/react-checkbox-tree.css';
-
 import {  ConfirmDeleteModal } from 'components';
 import { CommonActions } from 'services/global';
-
 import 'react-toastify/dist/ReactToastify.css';
 import * as roleActions from '../../screens/create/actions';
 import * as roleCommonActions from '../../actions';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-
-
 import { Formik } from 'formik';
+
 const mapStateToProps = (state) => {
 	return {};
 };
@@ -62,7 +58,8 @@ class UpdateRole extends React.Component {
 			current_role_id:null,
 			dialog: null,
 			expanded: ["SelectAll"],
-			loadingMsg:"Loading..."
+			loadingMsg:"Loading...",
+			disableLeavePage:false
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regExDecimal = /^[0-9]*(\.[0-9]{0,2})?$/;

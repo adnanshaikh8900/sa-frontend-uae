@@ -277,15 +277,15 @@ getVatNo=(contactData,RFQData)=>{
 								
 								</div> */}
 						
-						{RFQData.notes&& (<>
+							{RFQData.notes&& (<>
 								<h6 className="mb-0 pt-2">
 									<b>{strings.GRNREMARKS }:</b>
 								</h6>
 								<h6 className="mb-0">{RFQData.notes}</h6><br/>
-								<h6 className="mb-0 pt-2">
+								{/* <h6 className="mb-0 pt-2">
 									<b>{strings.Notes}:</b>
 								</h6><br/>
-								<h6 className="mb-0">{RFQData.notes}</h6>
+								<h6 className="mb-0">{RFQData.notes}</h6> */}
                                 </>)}
 						
 							
@@ -297,7 +297,7 @@ getVatNo=(contactData,RFQData)=>{
 																			disabled
 																			className="textarea viewFootNote"
 																			maxLength="250"
-																			style={{width: "1220px"}}
+																			style={{width: "1100px"}}
 																			// rows="5"
 																			value={RFQData.footNote}
 																		/>

@@ -6,6 +6,7 @@ import logo from 'assets/images/brand/logo.png';
 import {data}  from '../../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { TextareaAutosize } from '@material-ui/core';
+import { Currency } from 'components';
 
 const { ToWords } = require('to-words');
 const ZERO=0.00
@@ -328,10 +329,18 @@ class RFQTemplate extends Component {
 													/> */}
 												{QuotationData.currencyIsoCode + " " +item.unitPrice.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
 												</td>
-												{QuotationData.discount > 0 && (<>
-												<td style={{ textAlign: 'right' }}>
-												{QuotationData.currencyIsoCode + " " +item.discount.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
-												</td>	</>)}
+												{QuotationData.discount > 0 && (<><td style={{ textAlign: 'right' }}>
+												{item.discountType == "PERCENTAGE" ? item.discount + "  %" :
+												<Currency
+														value={item.discount}
+														currencySymbol={
+															currencyData[0]
+																? currencyData[0].currencyIsoCode
+																: 'AED'
+														}
+													/>}
+												</td>
+												</>)}
 												{/* <td style={{ textAlign: 'right' }}>{item.discountType}</td> */}
 												{/* <td style={{ textAlign: 'right' }}>{item.exciseTaxId ? this.renderExcise(item):"-"}</td> */}
 												{ QuotationData.totalExciseAmount > 0 && (<><td style={{ textAlign: 'right' }}>

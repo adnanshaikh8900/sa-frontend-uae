@@ -429,6 +429,7 @@ class InvoiceTemplate extends Component {
 													/>
 												</td>
 												{invoiceData.discount > 0 && (<><td style={{ textAlign: 'right' }}>
+												{item.discountType == "PERCENTAGE" ? item.discount + "  %" :
 												<Currency
 														value={item.discount}
 														currencySymbol={
@@ -436,7 +437,7 @@ class InvoiceTemplate extends Component {
 																? currencyData[0].currencyIsoCode
 																: 'USD'
 														}
-													/>
+													/>}
 												</td>
 												</>)}
 

@@ -289,10 +289,18 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 													/> */}
 												{POData.currencyIsoCode + " " +item.unitPrice.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
 												</td>
-												<td style={{ textAlign: 'right',  }}>
-												{item.discount.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}<Label><b>%</b></Label>
+												{POData.discount > 0 && (<><td style={{ textAlign: 'right' }}>
+												{item.discountType == "PERCENTAGE" ? item.discount + "  %" :
+												<Currency
+														value={item.discount}
+														currencySymbol={
+															currencyData[0]
+																? currencyData[0].currencyIsoCode
+																: 'AED'
+														}
+													/>}
 												</td>
-												
+												</>)}
 												{/* { POData.totalExciseAmount > 0 && (<><td>{item.exciseTaxId ? this.renderExcise(item):"-"}</td></>)} */}
 												<td style={{ textAlign: 'right' }}>
 												{POData.currencyIsoCode + " " +item.exciseAmount.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}

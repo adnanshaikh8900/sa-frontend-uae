@@ -353,6 +353,7 @@ try {
 							createMore: false,
 						});
 						resetForm(this.state.initValue);
+						this.getProductCode()
 						// this.props.history.push('/admin/master/product/create')
 					} else {
 						if(this.props.isParentComponentPresent &&this.props.isParentComponentPresent ==true)

@@ -230,19 +230,19 @@ class CreateCurrencyConvert extends React.Component {
 													let errors = {};
 													if (this.state.exist === true) {
 														errors.currencyCode =
-															'Currency Already Exists';
+															'Currency already exists';
 													}
 													return errors;
 												}}
 												validationSchema={Yup.object().shape({
 													currencyCode: Yup.string().required(
-														'Exchange Currency is Required',
+														'Exchange currency is required',
 													),
 													exchangeRate: Yup.string()
-														.required('Exchange Rate is Required')
+														.required('Exchange rate is required')
 														.test(
 														'exchangeRate',
-														'Exchange Rate should not be equal to 1',
+														'Exchange rate should not be equal to 1',
 														(value) => {
 															if (value != 1) {
 																return true;

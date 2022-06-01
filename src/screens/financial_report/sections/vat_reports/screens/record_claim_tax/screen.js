@@ -236,21 +236,21 @@ class RecordTaxClaim extends React.Component {
 													validate={(values) => {
 														let errors = {};
 														 if (values.amount < 1) {
-														  errors.amount ='Amount Cannot be Less Than 1';
+														  errors.amount ='Amount cannot be Less Than 1';
 													 }
 													 return errors
 													}}
 													validationSchema={Yup.object().shape({
 														depositeTo: Yup.string().required(
-															'Deposit To is Required',
+															'Deposit to is required',
 														),
 														// payMode: Yup.string().required(
-														// 	'Payment mode is Required',
+														// 	'Payment mode is required',
 														// ),
-														amount: Yup.mixed().required("Amount is Required")
+														amount: Yup.mixed().required("Amount is required")
 														.test(
 															'amount',
-															'Amount  should be equal to total tax reclaimable amount',
+															'Amount should be equal to total tax reclaimable amount',
 															(value) => {
 																if (
 																	!value 

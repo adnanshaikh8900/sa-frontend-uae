@@ -472,13 +472,13 @@ class AddEmployeesModal extends React.Component {
 												}}
 												validationSchema={Yup.object().shape({
 													// transactionCategoryCode: Yup.string()
-													//   .required("Code Name is Required"),
+													//   .required("Code Name is required"),
 													// transactionCategoryName: Yup.string()
-													// 	.required('Name is Required')
+													// 	.required('Name is required')
 													// 	.min(2, 'Name Is Too Short!')
 													// 	.max(50, 'Name Is Too Long!'),
 													chartOfAccount: Yup.string().required(
-														'Type is Required',
+														'Type is required',
 													),
 												})}
 											>

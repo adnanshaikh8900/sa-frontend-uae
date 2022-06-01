@@ -993,10 +993,10 @@ class Import extends React.Component {
 															let errors = {};
 
 															if (values.date === '' && values.date === null) {
-																errors.date = 'Date is Required';
+																errors.date = 'Date is required';
 															}
 															if (values.date === undefined) {
-																errors.date = 'Date is Required';
+																errors.date = 'Date is required';
 															}
 
 															return errors;
@@ -1004,7 +1004,7 @@ class Import extends React.Component {
 
 														validationSchema={Yup.object().shape({
 															date: Yup.string().required(
-																'Date is Required',
+																'Date is required',
 															),
 														})}
 

@@ -250,10 +250,10 @@ setConfigurations=(configurationList)=>{
 		for (let val in initValue) {
 			if (initValue.hasOwnProperty(val)) {
 				if (val === 'name' && !initValue['name']) {
-					temp['name'] = '*Template Name is Required';
+					temp['name'] = '*Template name is required';
 				}
 				if (val === 'dateFormatId' && !initValue['dateFormatId']) {
-					temp['dateFormatId'] = '*Date Format is Required';
+					temp['dateFormatId'] = '*Date format is required';
 				}
 			}
 		}

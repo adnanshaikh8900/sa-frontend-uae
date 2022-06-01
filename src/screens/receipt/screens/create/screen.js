@@ -366,24 +366,24 @@ class CreateReceipt extends React.Component {
 												}}
 												validationSchema={Yup.object().shape({
 													receiptDate: Yup.date().required(
-														'Receipt Date is Required',
+														'Receipt date is required',
 													),
 													contactId: Yup.string().required(
-														'Customer is Required',
+														'Customer is required',
 													),
 													depositeTo: Yup.string().required(
-														'Deposit to is Required',
+														'Deposit to is required',
 													),
 													payMode: Yup.string().required(
-														'Payment mode is Required',
+														'Payment mode is required',
 													),
 													paidInvoiceListStr: Yup.string().required(
 														'Please select atleast one invoice',
 													),
 													amount: Yup.string()
-														.required('Amount is Required')
+														.required('Amount is required')
 														.matches(/^[0-9]+([,.][0-9]+)?$/, {
-															message: 'Please enter valid Amount.',
+															message: 'Please enter valid amount.',
 															excludeEmptyString: false,
 														}),
 													attachmentFile: Yup.mixed()

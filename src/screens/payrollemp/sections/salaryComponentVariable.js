@@ -213,36 +213,36 @@ class SalaryComponentVariable extends React.Component {
 							if(this.state.addNewDisabled===true)
 							{	
 									if (values.description=="") {
-										errors.description = 'Component Name is Required';
+										errors.description = 'Component name is required';
 									}
 									if (values.type=="") {
-										errors.type = 'Type is Required';
+										errors.type = 'Type is required';
 									}
 
 									if(values.type.label && values.type.label ==="% of Basic" && values.formula==""){
-										errors.formula="Percentage is Required"
+										errors.formula="Percentage is required"
 									}else
 									if(values.type.label && values.type.label ==="Flat Amount" && values.flatAmount==""){
-										errors.flatAmount="Flat Amount is Required"
+										errors.flatAmount="Flat amount is required"
 									}
 						}
 						else if(this.state.selectDisable===true && (!values.id || values.id.label== "Select Type") ){
-							   errors.id="Component is Required"
+							   errors.id="Component is required"
 						}
 							return errors;
 						}}
 						// validationSchema={Yup.object().shape({
-							//	firstName: Yup.string().required('First Name is Required'),
+							//	firstName: Yup.string().required('First Name is required'),
 
-							//currrencyCode: Yup.string().required('Currency is Required'),
+							//currrencyCode: Yup.string().required('Currency is required'),
 							// contactType: Yup.string()
 							// .required("Please Select Contact Type"),
 							//       organization: Yup.string()
-							//       .required("Organization Name is Required"),
+							//       .required("Organization Name is required"),
 							//     poBoxNumber: Yup.number()
-							//       .required("PO Box Number is Required"),
+							//       .required("PO Box Number is required"),
 							// email: Yup.string()
-							// 	.required('Email is Required')
+							// 	.required('Email is required')
 							// 	.email('Invalid Email'),
 							// mobileNumber: Yup.string()
 							// 	.required('Mobile Number is required')
@@ -256,12 +256,12 @@ class SalaryComponentVariable extends React.Component {
 							//     addressLine1: Yup.string()
 							//       .required("Address is required"),
 							//     city: Yup.string()
-							//       .required("City is Required"),
+							//       .required("City is required"),
 							//     billingEmail: Yup.string()
-							//       .required("Billing Email is Required")
+							//       .required("Billing Email is required")
 							//       .email('Invalid Email'),
 							//     contractPoNumber: Yup.number()
-							//       .required("Contract PoNumber is Required"),
+							//       .required("Contract PoNumber is required"),
 
 							//       currencyCode: Yup.string()
 							//       .required("Please Select Currency")
@@ -269,10 +269,10 @@ class SalaryComponentVariable extends React.Component {
 							// currencyCode: Yup.string().required('Please Select Currency'),
 
 						// 	description: Yup.string().required(
-						// 		'Component Name is Required',
+						// 		'Component Name is required',
 						// 	),
 						// 	type: Yup.string().required(
-						// 		'Type is Required',
+						// 		'Type is required',
 						// 	),
 						// })}
 					>

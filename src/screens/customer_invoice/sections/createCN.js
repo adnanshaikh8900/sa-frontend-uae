@@ -1104,7 +1104,7 @@ class CreateCreditNoteModal extends React.Component {
 							
 							if(this.state.selectedData && this.state.totalAmount>this.state.selectedData.remainingInvoiceAmount)
 							{
-								errors.remainingInvoiceAmount =	'Invoice Total Amount Cannot be greater than  Remaining Invoice Amount';
+								errors.remainingInvoiceAmount =	'Invoice total amount cannot be greater than remaining invoice amount';
 							}
 						
 												
@@ -1114,9 +1114,9 @@ class CreateCreditNoteModal extends React.Component {
 						validationSchema={Yup.object().shape(
 							{
 							//  creditNoteNumber: Yup.string().required(
-                            // 							 	'credit Note Number Number is Required',
+                            // 							 	'credit Note Number Number is required',
                             // 							 ),
-							creditNoteDate: Yup.date().required("credit Note  Date is Required"),							
+							creditNoteDate: Yup.date().required("credit note date is required"),							
 						}
 						)
 					}

@@ -195,10 +195,10 @@ class DetailVatCode extends React.Component {
 													}}
 													validationSchema={Yup.object().shape({
 														name: Yup.string().required(
-															'VAT Category Name is Required',
+															'VAT category name is required',
 														),
 														vat: Yup.string().required(
-															'VAT Percentage is Required',
+															'VAT percentage is required',
 														),
 													})}
 												>

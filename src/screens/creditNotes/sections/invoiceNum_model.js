@@ -149,14 +149,14 @@ class InvoiceNumberModel extends React.Component {
 						// validationSchema={Yup.object().shape({
 						// 	purchaseUnitPrice: Yup.string().when('productPriceType', {
 						// 		is: (value) => value.includes('PURCHASE'),
-						// 		then: Yup.string().required('Purchase Price is Required'),
+						// 		then: Yup.string().required('Purchase Price is required'),
 						// 		otherwise: Yup.string(),
 						// 	}),
 						// 	purchaseTransactionCategoryId: Yup.string().when(
 						// 		'productPriceType',
 						// 		{
 						// 			is: (value) => value.includes('PURCHASE'),
-						// 			then: Yup.string().required('Purchase Category is Required'),
+						// 			then: Yup.string().required('Purchase Category is required'),
 						// 			otherwise: Yup.string(),
 						// 		},
 						// 	),
@@ -164,13 +164,13 @@ class InvoiceNumberModel extends React.Component {
 						// 		'productPriceType',
 						// 		{
 						// 			is: (value) => value.includes('SALES'),
-						// 			then: Yup.string().required('Selling Category is Required'),
+						// 			then: Yup.string().required('Selling Category is required'),
 						// 			otherwise: Yup.string(),
 						// 		},
 						// 	),
 						// 	salesUnitPrice: Yup.string().when('productPriceType', {
 						// 		is: (value) => value.includes('SALES'),
-						// 		then: Yup.string().required('Selling Price is Required'),
+						// 		then: Yup.string().required('Selling Price is required'),
 						// 		otherwise: Yup.string(),
 						// 	}),
 						// 	productPriceType: Yup.string().required(
@@ -178,7 +178,7 @@ class InvoiceNumberModel extends React.Component {
 						// 	),
 						// 	productCode: Yup.string().required('Product code is required'),
 						// 	vatCategoryId: Yup.string()
-						// 		.required('VAT Category is Required')
+						// 		.required('VAT Category is required')
 						// 		.nullable(),
 						// })}
 					>

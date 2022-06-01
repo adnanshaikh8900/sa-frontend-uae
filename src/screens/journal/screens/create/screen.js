@@ -804,7 +804,7 @@ class CreateJournal extends React.Component {
 													let errors = {};
 													if (!values.journalDate) {
 														errors.journalDate =
-															'Date is  required';
+															'Date is required';
 													}
 													if (exist === true) {
 														errors.journalReferenceNo =
@@ -815,7 +815,7 @@ class CreateJournal extends React.Component {
 											}
 												validationSchema={Yup.object().shape({
 													// journalDate: Yup.date().required(
-													// 	'Journal Date is Required',
+													// 	'Journal date is required',
 													// ),
 													journalLineItems: Yup.array()
 														.of(
@@ -829,7 +829,7 @@ class CreateJournal extends React.Component {
 														)
 														.min(
 															2,
-															'Atleast Two Journal Debit and Credit Details is mandatory',
+															'Atleast two journal debit and credit details is mandatory',
 														),
 												})}
 											>

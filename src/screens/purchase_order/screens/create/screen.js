@@ -595,7 +595,7 @@ class CreatePurchaseOrder extends React.Component {
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// );
-		return row.subTotal === 0 ? this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.subTotal === 0 ? this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 ,maximumFractionDigits:2}) : this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 });
 	};
 
 	renderVatAmount = (cell, row, extraData) => {
@@ -611,7 +611,7 @@ class CreatePurchaseOrder extends React.Component {
 		// 	/>
 		// );
 		let value =  row.vatAmount && row.vatAmount != 0 ?  row.vatAmount:0
-		return value === 0 ? this.state.supplier_currency_symbol +" "+ value.toLocaleString(navigator.language, { minimumFractionDigits: 2 ,maximumFractionDigits:2}) : this.state.supplier_currency_symbol +" "+ value.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return value === 0 ? this.state.supplier_currency_symbol +" "+ value.toLocaleString(navigator.language, { minimumFractionDigits: 2 ,maximumFractionDigits:2}) : this.state.supplier_currency_symbol +" "+ value.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 });
 	};
 
 	getParentPoDetails=(parentId)=>{
@@ -2951,7 +2951,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																					<label className="mb-0">
 
 																						{this.state.supplier_currency_symbol} &nbsp;
-																						{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																						{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2 ,maximumFractionDigits: 2})}
 																					</label>
 																				</Col>
 																			</Row>
@@ -2980,7 +2980,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																							/>
 																						)} */}
 																						{this.state.customer_currency_symbol} &nbsp;
-																						{initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																						{initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 ,maximumFractionDigits: 2})}
 																					</label>
 																				</Col>
 																			</Row>
@@ -3008,7 +3008,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																							/>
 																						)} */}
 																						{this.state.supplier_currency_symbol}  &nbsp;
-																						{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																						{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>
@@ -3036,7 +3036,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																							/>
 																						)} */}
 																						{this.state.supplier_currency_symbol}  &nbsp;
-																						{initValue.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																						{initValue.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 ,maximumFractionDigits: 2})}
 																					</label>
 																				</Col>
 																			</Row>
@@ -3064,7 +3064,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																							/>
 																						)} */}
 																						{this.state.supplier_currency_symbol}  &nbsp;
-																						{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																						{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>

@@ -745,7 +745,7 @@ class DetailPurchaseOrder extends React.Component {
 		// ) : (
 		// 	''
 		// );
-		return row.subTotal === 0 ? this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.subTotal === 0 ? this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits:2 }) : this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits:2});
 		// return row.subTotal ? row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '';
 	};
 
@@ -761,7 +761,7 @@ class DetailPurchaseOrder extends React.Component {
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// );
-		return row.vatAmount === 0 ? this.state.supplier_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.vatAmount === 0 ? this.state.supplier_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 ,maximumFractionDigits:2}) : this.state.supplier_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 ,maximumFractionDigits:2});
 	};
 
 	addRow = () => {
@@ -2659,7 +2659,7 @@ class DetailPurchaseOrder extends React.Component {
 																				<label className="mb-0">
 
 																						{this.state.supplier_currency_symbol} &nbsp;
-																						{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																						{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2 ,maximumFractionDigits:2})}
 																					</label>
 																				</Col>
 																			</Row>
@@ -2675,7 +2675,7 @@ class DetailPurchaseOrder extends React.Component {
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
 																						{this.state.customer_currency_symbol} &nbsp;
-																						{initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																						{initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 ,maximumFractionDigits:2})}
 																					</label>
 																				</Col>
 																			</Row>
@@ -2700,7 +2700,7 @@ class DetailPurchaseOrder extends React.Component {
 																							/>
 																							)} */}
 																							{this.state.supplier_currency_symbol} &nbsp;
-																							{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																							{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits:2 })}
 																						</label>
 																					</Col>
 																				</Row>
@@ -2725,7 +2725,7 @@ class DetailPurchaseOrder extends React.Component {
 																							/>
 																							)} */}
 																							{this.state.supplier_currency_symbol} &nbsp;
-																							{initValue.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																							{initValue.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 ,maximumFractionDigits:2})}
 																						</label>
 																					</Col>
 																				</Row>
@@ -2750,7 +2750,7 @@ class DetailPurchaseOrder extends React.Component {
 																							/>
 																							)} */}
 																							{this.state.supplier_currency_symbol} &nbsp;
-																							{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																							{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits:2 })}
 																						</label>
 																					</Col>
 																				</Row>

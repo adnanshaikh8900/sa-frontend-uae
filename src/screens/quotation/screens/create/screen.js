@@ -100,7 +100,7 @@ class CreateQuotation extends React.Component {
 			loading: false,
 			discountOptions: [
 				{ value: 'FIXED', label: 'Fixed' },
-				{ value: 'PERCENTAGE', label: 'Percentage' },
+				{ value: 'PERCENTAGE', label: '%' },
 			],
 			discount_option: '',
 			disabled: false,

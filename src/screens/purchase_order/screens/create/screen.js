@@ -729,6 +729,7 @@ class CreatePurchaseOrder extends React.Component {
 	}
 
 	componentDidMount = () => {
+		this.getDefaultNotes()	
 		this.props.purchaseOrderAction.getVatList();
 		if(this.props.location.state && this.props.location.state.rfqId){
 			this.props.purchaseOrderAction.getRFQList();
@@ -742,7 +743,14 @@ class CreatePurchaseOrder extends React.Component {
 				this.getParentPoDetails(this.props.location.state.parentId);
 	};
 
-    
+	getDefaultNotes=()=>{
+		this.props.commonActions.getNoteSettingsInfo().then((res)=>{
+			if(res.status===200){
+				this.formRef.current.setFieldValue('notes',res.data.defaultTermsAndConditions, true);
+				this.formRef.current.setFieldValue('footNote',  res.data.defaultFootNotes, true);
+			}
+		})
+	}
 	getInitialData = () => {
 		this.props.purchaseOrderAction.getVatList().then((res)=>{
 			if(res.status==200 && res.data)

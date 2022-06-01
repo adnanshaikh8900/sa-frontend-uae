@@ -50,6 +50,7 @@ class NotesSettings extends React.Component {
 			disabled: false,
 			defaultFootNotes: "",
 			defaultNotes: "",
+			defaultTermsAndConditions:"",
 			loadingMsg: "Loading...",
 			disableLeavePage:false
 		};
@@ -62,6 +63,7 @@ class NotesSettings extends React.Component {
 			if (res.status === 200) {
 				this.setState({
 					defaultFootNotes: res.data.defaultFootNotes,
+					defaultTermsAndConditions:res.data.defaultTermsAndConditions,
 					defaultNotes: res.data.defaultNotes
 				});
 			}
@@ -73,6 +75,7 @@ class NotesSettings extends React.Component {
 		let formData=new FormData()
 		formData.append("defaultNote",this.state.defaultNotes)
 		formData.append("defaultFootNote",this.state.defaultFootNotes)
+		formData.append("defaultTermsAndConditions",this.state.defaultTermsAndConditions)
 		this.props.notesSettingsAction.saveNoteSettingsInfo(formData).then((res) => {
 			if (res.status === 200) {
 				toast.success("Default Notes Saved Successfully")
@@ -99,7 +102,7 @@ class NotesSettings extends React.Component {
 												<Col lg={12}>
 													<div className="h4 mb-0 d-flex align-items-center">
 														<i className="nav-icon fas fa-id-card-alt" />
-														<span className="ml-2">{strings.CustomerInvoiceNotesSettings}</span>
+														<span className="ml-2">{strings.Notes_Settings}</span>
 													</div>
 												</Col>
 											</Row>
@@ -165,6 +168,42 @@ class NotesSettings extends React.Component {
 														<Row>
 															<Col md="4">
 																<FormGroup>
+																	<Label htmlFor="defaultTermsAndConditions">
+																		{/* <span className="text-danger">* </span> */}
+																		{"Default "+strings.TermsAndConditions}
+																	</Label>
+																	<br />
+																	<TextareaAutosize
+																		style={{ width: "1000px" }}
+																		type="textarea"
+																		maxLength="255"
+																		className='textarea'
+																		name="defaultTermsAndConditions"
+																		id="defaultTermsAndConditions"
+																		rows="5"
+																		placeholder={strings.DeliveryNotes}
+																		onChange={(option) => {
+																			props.handleChange(
+																				'defaultTermsAndConditions',
+																			)(option)
+																			this.setState({ defaultTermsAndConditions: option.target.value })
+																		}
+																		}
+																		value={
+																			this.state.defaultTermsAndConditions
+																		}
+																	/>
+																	{props.errors.defaultTermsAndConditions && (
+																		<div className="invalid-feedback">
+																			{props.errors.defaultTermsAndConditions}
+																		</div>
+																	)}
+																</FormGroup>
+															</Col>
+														</Row>
+														<Row>
+															<Col md="4">
+																<FormGroup>
 																	<Label htmlFor="defaultFootNotes ">
 																		{/* <span className="text-danger">* </span> */}
 																		{strings.DefaultFootnotes}
@@ -198,7 +237,6 @@ class NotesSettings extends React.Component {
 																</FormGroup>
 															</Col>
 														</Row>
-
 														<Row>
 															<Col lg={12} className="mt-5">
 																<FormGroup className="text-right">

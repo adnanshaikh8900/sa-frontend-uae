@@ -215,7 +215,7 @@ Relationship2:"Relationship 2",
       ShippingAddressIsSameAsBillingAddress:"Shipping Address Is Same As Billing Address",
 
       // Note Settings
-      Notes_Settings:"Notes Settings",
+      Notes_Settings:"Note Settings",
       CustomerInvoiceNotesSettings:"Customer Invoice Notes Settings",
       Footnote: "Footnote",
       DefaultDeliveryNotes: "Default Delivery Notes",

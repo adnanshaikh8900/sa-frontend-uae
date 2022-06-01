@@ -323,7 +323,7 @@ class Refund extends React.Component {
 			});
 		}//
 	else
-	{	{	formData.append('receiptNo', receiptNo !== null ? receiptNo : '');
+	{	formData.append('receiptNo', receiptNo !== null ? receiptNo : '');
 		formData.append(
 			'receiptDate',
 			typeof receiptDate === 'string'
@@ -334,11 +334,11 @@ class Refund extends React.Component {
 			'paidInvoiceListStr',
 			JSON.stringify(this.state.initValue.paidInvoiceListStr),
 		);
-		formData.append('amountReceived', amount !== null ? amount : '');
+		formData.append('amount', amount !== null ? amount : '');
 		formData.append('notes', notes !== null ? notes : '');
 		formData.append(
 			'referenceCode',
-			formData.append('amount', amount !== null ? amount : '');
+			referenceCode !== null ? referenceCode : '',
 			);
 			formData.append('depositeTo', depositeTo !== null ? depositeTo.value : '');
 			formData.append('payMode', payMode !== null ? payMode.value : '');

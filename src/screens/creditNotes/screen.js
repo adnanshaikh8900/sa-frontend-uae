@@ -766,6 +766,7 @@ class CreditNotes extends React.Component {
 			let obj = {label: item.label.contactName, value: item.value}
 			tmpCustomer_list.push(obj)
 		})
+		
 		return (
 			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 <div>

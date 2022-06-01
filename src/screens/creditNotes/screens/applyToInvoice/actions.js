@@ -69,7 +69,7 @@ export const refundAgainstInvoices = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'post',
-      url: '/rest/creditNote/applyToInvoice',
+      url: '/rest/creditNote/refundAgainstInvoices',
       data: obj
     }
     return authApi(data).then((res) => {

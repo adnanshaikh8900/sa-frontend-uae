@@ -68,36 +68,36 @@ class SupplierModal extends React.Component {
 							this.handleSubmit(values, resetForm);
 						}}
 						validationSchema={Yup.object().shape({
-							firstName: Yup.string().required('First name is required'),
-							vatRegistrationNumber: Yup.string().required(' Tax registration number is required'),
-							// lastName: Yup.string().required('Last Name is required'),
-							// middleName: Yup.string().required('Middle Name is required'),
+							firstName: Yup.string().required('First Name is Required'),
+							vatRegistrationNumber: Yup.string().required('	Tax Registration Number is Required'),
+							// lastName: Yup.string().required('Last Name is Required'),
+							// middleName: Yup.string().required('Middle Name is Required'),
 							// contactType: Yup.string()
 							// .required("Please Select Contact Type"),
 							//       organization: Yup.string()
-							//       .required("Organization Name is required"),
+							//       .required("Organization Name is Required"),
 							//     poBoxNumber: Yup.number()
-							//       .required("PO Box Number is required"),
+							//       .required("PO Box Number is Required"),
 						
 							//     addressLine1: Yup.string()
 							//       .required("Address is required"),
 							// countryId: Yup.string()
-							// 	.required('Country is required')
+							// 	.required('Country is Required')
 							// 	.nullable(),
 							// stateId: Yup.string().when('countryId', {
 							// 	is: (val) => (val ? true : false),
-							// 	then: Yup.string().required('State is required'),
+							// 	then: Yup.string().required('State is Required'),
 							// }),
 							//     city: Yup.string()
-							//       .required("City is required"),
-							//postZipCode: Yup.string().required('Postal Code is required'),
+							//       .required("City is Required"),
+							//postZipCode: Yup.string().required('Postal Code is Required'),
 							//     billingEmail: Yup.string()
-							//       .required("Billing Email is required")
+							//       .required("Billing Email is Required")
 							//       .email('Invalid Email'),
 							//     contractPoNumber: Yup.number()
-							//       .required("Contract PoNumber is required"),
+							//       .required("Contract PoNumber is Required"),
 							// vatRegistrationNumber: Yup.string().required(
-							// 	'Tax Registration Number is required',
+							// 	'Tax Registration Number is Required',
 							// ),
 							//       .nullable(),
 						})}

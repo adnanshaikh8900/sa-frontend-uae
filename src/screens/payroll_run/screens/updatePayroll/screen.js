@@ -1073,7 +1073,7 @@ class UpdatePayroll extends React.Component {
 																	<Col  >
 																	<Label htmlFor="date">
 																				<span className="text-danger">* </span>
-																				Pay-period (Start date - End Date)
+																				{strings.pay_period}
 																			</Label>
 																	<div style={{display: "flex"}}>
 																	{/* <FormGroup className="mt-2"><i class="far fa-calendar-alt mt-1"></i>&nbsp;</FormGroup> */}

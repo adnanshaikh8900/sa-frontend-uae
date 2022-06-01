@@ -964,7 +964,7 @@ class PayrollApproverScreen extends React.Component {
 																			</Col>
 																			<Col>
 																				<FormGroup>
-																					<Label htmlFor="payPeriod">  Pay Period</Label>
+																					<Label htmlFor="payPeriod">  {strings.pay_period}</Label>
 																					<Input
 																						type="text"
 																						id="payPeriod"

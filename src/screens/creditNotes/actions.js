@@ -176,12 +176,7 @@ export const getVatList = () => {
 		return authApi(data)
 			.then((res) => {
 				if (res.status === 200) {
-					dispatch({
-						type: CUSTOMER_INVOICE.VAT_LIST,
-						payload: {
-							data: res.data,
-						},
-					});
+							return res
 				}
 			})
 			.catch((err) => {
@@ -363,7 +358,7 @@ export const creditNoteposting = (obj) => {
 	return (dispatch) => {
 		let data = {
 			method: 'post',
-			url: '/rest/creditNote/creditNoteposting',
+			url: '/rest/creditNote/creditNotePosting',
 			data: obj,
 		};
 		return authApi(data)

@@ -131,7 +131,7 @@ class ViewCreditNote extends React.Component {
 				});}
 			else
 			{this.props.supplierInvoiceDetailActions
-				.getInvoiceById(this.props.location.state.id)
+				.getCreditNoteById(this.props.location.state.id,this.props.location.state.isCNWithoutProduct ?this.props.location.state.isCNWithoutProduct:false)
 				.then((res) => {
 					let val = 0;
 					if (res.status === 200) {

@@ -201,23 +201,23 @@ class DetailEmployee extends React.Component {
                             }}
                             validationSchema={Yup.object().shape({
                               firstName: Yup.string()
-                                .required("First Name is Required"),
+                                .required("First name is required"),
                               lastName: Yup.string()
-                                .required("Last Name is Required"),
+                                .required("Last name is required"),
                               middleName: Yup.string()
-                                .required("Middle Name is Required"),
+                                .required("Middle name is required"),
                               password: Yup.string()
-                                // .required("Password is Required")
+                                // .required("Password is required")
                                 // .min(8,"Password Too Short")
                                 .matches(
                                   /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
-                                  "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character"
+                                  "Must contain 8 characters, one uppercase, one lowercase, one number and one special case character"
                                 ),
                               confirmPassword: Yup.string()
-                                // .required('Confirm Password is Required')
+                                // .required('Confirm Password is required')
                                 .oneOf([Yup.ref("password"), null], "Passwords must match"),
                               dob: Yup.date()
-                                .required('DOB is Required')
+                                .required('DOB is required')
                             })}
                           >
                             {(props) => (
@@ -387,7 +387,7 @@ class DetailEmployee extends React.Component {
                                       {props.errors.dob && 
                                         props.touched.dob && (
                                         <div className="invalid-feedback">
-                                      {props.errors.dob.includes("nullable()") ? "DOB is Required" :props.errors.dob}
+                                      {props.errors.dob.includes("nullable()") ? "DOB is required" :props.errors.dob}
                                         </div>
                                       )}
                                     </FormGroup>

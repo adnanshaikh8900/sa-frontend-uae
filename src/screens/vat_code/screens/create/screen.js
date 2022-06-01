@@ -190,15 +190,15 @@ class CreateVatCode extends React.Component {
 													// let status = false
 													let errors = {};
 													if (!values.name) {
-														errors.name = 'Name is  required';
+														errors.name = 'Name is required';
 													}
 
 													if (VatList.includes(values.name)) {
-														errors.name = 'VAT category already Exists';
+														errors.name = 'VAT category already exists';
 													}
 
 													if (!values.vat) {
-														errors.vat = 'Percentage is  required';
+														errors.vat = 'Percentage is required';
 													}
 													return errors;
 												}}

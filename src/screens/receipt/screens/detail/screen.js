@@ -221,14 +221,14 @@ class DetailReceipt extends React.Component {
                             validationSchema={
                               Yup.object().shape({
                                 receiptDate: Yup.date()
-                                  .required("Receipt Date is Required"),
+                                  .required("Receipt date is required"),
                                 referenceCode: Yup.string()
-                                  .required("Reference Number is Required"),
+                                  .required("Reference number is required"),
                                 contactId: Yup.string()
-                                  .required('Customer is Required'),
+                                  .required('Customer is required'),
                                 amount: Yup.string()
-                                  .required('Amount is Required')
-                                  .matches(/^[0-9]+$/, { message: "Please enter valid Amount.", excludeEmptyString: false })
+                                  .required('Amount is required')
+                                  .matches(/^[0-9]+$/, { message: "Please enter valid amount.", excludeEmptyString: false })
 
                               })}
                           >

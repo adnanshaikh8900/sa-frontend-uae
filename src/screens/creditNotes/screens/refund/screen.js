@@ -339,9 +339,9 @@ class Refund extends React.Component {
 		formData.append(
 			'referenceCode',
 			referenceCode !== null ? referenceCode : '',
-		);
-		formData.append('depositeTo', depositeTo !== null ? depositeTo.value : '');
-		formData.append('payMode', payMode !== null ? payMode.value : '');
+			);
+			formData.append('depositeTo', depositeTo !== null ? depositeTo.value : '');
+			formData.append('payMode', payMode !== null ? payMode.value : '');
 		if (contactId) {
 			formData.append('contactId', contactId);
 		}

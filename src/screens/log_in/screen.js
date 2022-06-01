@@ -162,10 +162,10 @@ class LogIn extends React.Component {
 													}}
 													validationSchema={Yup.object().shape({
 														username: Yup.string().required(
-															'Email is Required',
+															'Email is required',
 														),
 														password: Yup.string().required(
-															'Please Enter your password',
+															'Please enter your password',
 														),
 													})}
 												>

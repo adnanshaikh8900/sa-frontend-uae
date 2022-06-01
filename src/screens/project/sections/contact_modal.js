@@ -122,11 +122,11 @@ class ContactModal extends React.Component {
               // currencyCode: Yup.string()
               //   .required('Currency is a required field'),
               firstName: Yup.string()
-                .required('First Name is a required field'),
+                .required('First name is a required field'),
               lastName: Yup.string()
-                .required('Last Name is a required field'),
+                .required('Last name is a required field'),
               middleName: Yup.string()
-                .required("Middle Name is Required"),
+                .required("Middle name is required"),
               email: Yup.string()
                 .email('Email must be a valid email')
                 .required('Email is a required field'),
@@ -134,20 +134,20 @@ class ContactModal extends React.Component {
                 .when('countryId', {
                   is: (val) => val ? true : false,
                   then: Yup.string()
-                    .required('State is Required')
+                    .required('State is required')
                 }),
               // addressLine1: Yup.string()
               //   .required('Address1 is a required field'),
               // addressLine2: Yup.string()
               //   .required('Address2 is a required field'),
               telephone: Yup.number()
-                .required("Telephone Number is Required"),
+                .required("Telephone number is required"),
               mobileNumber: Yup.string()
-                .required("Mobile Number is Required"),
+                .required("Mobile number is required"),
               postZipCode: Yup.string()
-                .required("Postal Code is Required"),
+                .required("Postal code is required"),
               vatRegistrationNumber: Yup.string()
-                .required("Tax Registration Number is Required"),
+                .required("Tax registration number is required"),
             })}>
             {(props) => (
               <Form name="simpleForm" onSubmit={props.handleSubmit}>

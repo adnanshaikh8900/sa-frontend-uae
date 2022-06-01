@@ -935,10 +935,10 @@ min="0"
 								.of(
 									Yup.object().shape({
 										unitPrice: Yup.string()
-											.required('Value is Required')
+											.required('Value is required')
 											.test(
 												'Unit Price',
-												'Unit Price Should be Greater than 1',
+												'Unit price should be greater than 1',
 												(value) => {
 													if (value > 0) {
 														return true;

@@ -188,14 +188,14 @@ class CreateProject extends React.Component {
                         }}
                         validationSchema={Yup.object().shape({
                           projectName: Yup.string()
-                            .required("Project Name is Required"),
+                            .required("Project name is required"),
                           contactId: Yup.string()
-                            .required("Contact is Required"),
+                            .required("Contact is required"),
                           // currency: Yup.string()
-                          //   .required("Currency is Required")
+                          //   .required("Currency is required")
                           //   .nullable(),
                           // invoiceLanguageCode: Yup.string()
-                          //   .required("Invoice Language is Required")
+                          //   .required("Invoice Language is required")
                         })}>
                         {(props) => (
                           <Form onSubmit={props.handleSubmit}>

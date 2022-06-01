@@ -738,8 +738,8 @@ class CreditNotes extends React.Component {
 			universal_currency_list,
 		} = this.props;
 		const customer_invoice_data =
-			this.props.customer_invoice_list && this.props.customer_invoice_list.data
-				? this.props.customer_invoice_list.data.map((customer) => ({
+		this.props.customer_invoice_list && this.props.customer_invoice_list.data
+			? this.props.customer_invoice_list.data.map((customer) => ({
 						id: customer.id,
 						status: customer.status,
 						statusEnum: customer.statusEnum,
@@ -766,7 +766,7 @@ class CreditNotes extends React.Component {
 			let obj = {label: item.label.contactName, value: item.value}
 			tmpCustomer_list.push(obj)
 		})
-
+		
 		return (
 			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 <div>
@@ -1101,7 +1101,7 @@ class CreditNotes extends React.Component {
 												dataField="invoiceNumber"
 												// dataFormat={this.renderInvoiceNumber}
 												dataSort
-											//	width="7%"
+												//	width="7%"
 												className="table-header-bg"
 											>
 													
@@ -1120,7 +1120,7 @@ class CreditNotes extends React.Component {
 												dataField="invoiceNumber"
 												// dataFormat={this.renderInvoiceNumber}
 												dataSort
-											//	width="7%"
+												//	width="7%"
 												className="table-header-bg"
 											>		
 												{strings.INVOICENUMBER}

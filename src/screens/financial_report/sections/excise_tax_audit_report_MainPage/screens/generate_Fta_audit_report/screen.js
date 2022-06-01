@@ -214,19 +214,19 @@ class GenerateAuditFile extends React.Component {
 							 
 							if (this.state.isTANMandetory === true &&( values.taxAgencyNumber=="" ||values.taxAgencyNumber==undefined)) 
 							{
-								errors.taxAgencyNumber ='TAN is Required';
+								errors.taxAgencyNumber ='TAN is required';
 							}													
 																			
 							return errors;
 						}}
 						validationSchema={Yup.object().shape({
-							taxAgentName: Yup.string().required('Tax Agent Name is Required'),
-							taxablePersonNameInEnglish: Yup.string().required('Taxable Person Name In English is Required'),
-							taxablePersonNameInArabic: Yup.string().required('Taxable Person Name In Arabic is Required'),
-							taxAgentApprovalNumber: Yup.string().required('Tax Agent Approval Number is Required'),
-							vatRegistrationNumber: Yup.string().required('Tax Registration Number is Required'),
+							taxAgentName: Yup.string().required('Tax agent name is required'),
+							taxablePersonNameInEnglish: Yup.string().required('Taxable person name in english is required'),
+							taxablePersonNameInArabic: Yup.string().required('Taxable person name in arabic is required'),
+							taxAgentApprovalNumber: Yup.string().required('Tax agent approval number is required'),
+							vatRegistrationNumber: Yup.string().required('Tax registration number is required'),
 							taxFiledOn: Yup.string().required(
-								'Date of Filling is Required',
+								'Date of filling is required',
 							),
 										})}
 					>

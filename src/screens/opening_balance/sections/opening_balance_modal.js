@@ -94,9 +94,9 @@ class OpeningBalanceModal extends React.Component {
                 validationSchema={
                   Yup.object().shape({
                     accountName: Yup.string()
-                      .required("Account Name is Required"),
+                      .required("Account name is required"),
                     openingBalance: Yup.string()
-                      .required("Opening Balance is Required"),
+                      .required("Opening balance is required"),
                   })
                 }
               >

@@ -1029,22 +1029,22 @@ class PayrollConfigurations extends React.Component {
 																	validate={(values) => {
 																		let errors = {};
 																		if (values.companyBankCode.length < 9 && values.companyBankCode.length != 0)
-																			errors.companyBankCode = "Company Bank Code Should Be 9 Digits Numeric ";
+																			errors.companyBankCode = "Company bank code should be 9 digits numeric ";
 
 																		if (values.companyNumber.length < 13 && values.companyNumber.length != 0)
-																			errors.companyNumber = "Company Number Should Be 13 Digits Numeric ";
+																			errors.companyNumber = "Company number should be 13 digits numeric ";
 
 																		if (this.state.invalidCompanyBankCode && this.state.invalidCompanyBankCode == true)
-																			errors.companyBankCode = "Company Bank Code Should Be Numeric ";
+																			errors.companyBankCode = "Company bank code should be numeric ";
 
 																		if (this.state.invalidCompanyNumber && this.state.invalidCompanyNumber == true)
-																			errors.companyNumber = "Company Number Should Be Numeric ";
+																			errors.companyNumber = "Company number should be numeric ";
 
 																		return errors;
 																	}}
 																	validationSchema={Yup.object().shape({
-																		companyBankCode: Yup.string().required('Company Bank Code is Required'),
-																		companyNumber: Yup.string().required('Company Number is Required'),
+																		companyBankCode: Yup.string().required('Company bank code is required'),
+																		companyNumber: Yup.string().required('Company number is required'),
 																	})}
 																>
 																	{(props) => {

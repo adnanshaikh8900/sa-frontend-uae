@@ -125,8 +125,8 @@ class ResetPassword extends React.Component {
                           }}
                           validationSchema={Yup.object().shape({
                             username: Yup.string()
-                              .required("Email Id is Required")
-                              .email("Invalid Email Id"),
+                              .required("Email id is required")
+                              .email("Invalid email Id"),
                           })}
                         >
                           {(props) => {

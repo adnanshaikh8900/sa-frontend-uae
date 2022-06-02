@@ -194,35 +194,35 @@ class SalaryComponentFixed extends React.Component {
 							if(this.state.addNewDisabled===true)
 							{	
 									if (values.description=="") {
-										errors.description = 'Component Name is Required';
+										errors.description = 'Component name is required';
 									}
 									if (values.type=="") {
-										errors.type = 'Type is Required';
+										errors.type = 'Type is required';
 									}
 
 									if(values.type.label && values.type.label ==="% of Basic" && values.formula==""){
-										errors.formula="Percentage is Required"
+										errors.formula="Percentage is required"
 									}else
 									if(values.type.label && values.type.label ==="Flat Amount" && values.flatAmount==""){
-										errors.flatAmount="Flat Amount is Required"
+										errors.flatAmount="Flat amount is required"
 									}
 						}
 						else if(this.state.selectDisable===true && (!values.id || values.id.label== "Select description")){
-							   errors.id="Component is Required"
+							   errors.id="Component is required"
 						}
 							return errors;
 						}}
 
 						// validationSchema={Yup.object().shape({
-							//	firstName: Yup.string().required('First Name is Required'),
+							//	firstName: Yup.string().required('First Name is required'),
 
-							//currrencyCode: Yup.string().required('Currency is Required'),
+							//currrencyCode: Yup.string().required('Currency is required'),
 
 						// 	componentName: Yup.string().required(
-						// 		'Component Name is Required',
+						// 		'Component Name is required',
 						// 	),
 						// 	type: Yup.string().required(
-						// 		'Type is Required',
+						// 		'Type is required',
 						// 	),
 						
 						// })}

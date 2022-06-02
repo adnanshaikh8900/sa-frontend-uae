@@ -245,21 +245,21 @@ class RecordVatPayment extends React.Component {
 													validate={(values) => {
 														let errors = {};
 														 if (values.amount < 1) {
-														  errors.amount ='Amount Cannot be Less Than 1';
+														  errors.amount ='Amount cannot be less Than 1';
 													 }
 													 return errors
 													}}
 													validationSchema={Yup.object().shape({
 														paidThrough: Yup.string().required(
-															'Paid Through is Required',
+															'Paid through is required',
 														),
 														// payMode: Yup.string().required(
-														// 	'Payment mode is Required',
+														// 	'Payment mode is required',
 														// ),
 														amount: Yup.mixed()
 														.test(
 															'amount',
-															'Amount cannot be greater than Total Tax Payable amount',
+															'Amount cannot be greater than total tax payable amount',
 															(value) => {
 																if (
 																	!value ||

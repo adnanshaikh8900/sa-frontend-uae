@@ -886,7 +886,7 @@ class UpdatePayroll extends React.Component {
 	};
 
 	removePayroll = () => {
-		this.setState({ disabled1: true });
+		this.setState({ disabled1: true, disableLeavePage: true });
 		const { current_user_id } = this.state;
 		this.props.createPayrollActions
 			.deletePayroll(this.state.payrollId ? this.state.payrollId :0)
@@ -1218,6 +1218,29 @@ class UpdatePayroll extends React.Component {
 																					</div>
 																				)}
 												</Col></Row>
+												<Row>
+												{this.state.status && (this.state.status === "Rejected" || this.state.status === "Voided") ?
+																					 (
+																						<div className='ml-3' style={{width:"50%"}}>
+
+																							<Label htmlFor="payrollSubject">
+																								{this.state.status == "Approved" ||this.state.status == "Voided"  ?
+																									"Reason for voiding the payroll" :
+																									"Reason for  rejecting the payroll"}
+																							</Label>
+																							<Input
+																								id="comment"
+																								name="comment"
+																								value={this.state.comment}
+																								disabled={true}
+																								placeholder={strings.Enter + " reason "}
+																								onChange={(event) => {this.setState({comment: event.target.value}); }}
+																								/>
+																						</div>
+
+																					):""
+																				}
+												</Row>
 															<Row className="mt-4 ">
 
 

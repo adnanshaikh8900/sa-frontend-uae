@@ -816,6 +816,8 @@ class PayrollRun extends React.Component {
 															dataFormat={this.renderDate}
 															dataSort
 															width="10%"
+															tdStyle={{whiteSpace:"normal"}}
+															thStyle={{whiteSpace:"normal"}}
 														>
 															{strings.pay_date}
 														</TableHeaderColumn>
@@ -824,6 +826,8 @@ class PayrollRun extends React.Component {
 															dataField="payrollSubject"
 															dataFormat={this.renderSubject}
 															dataSort
+															tdStyle={{whiteSpace:"normal"}}
+															thStyle={{whiteSpace:"normal"}}
 														>
 															{strings.pay_subject}
 														</TableHeaderColumn>
@@ -833,6 +837,8 @@ class PayrollRun extends React.Component {
 															dataFormat={this.renderPayperiod}
 															width='15%'
 															dataSort
+															// tdStyle={{whiteSpace:"normal"}}
+															thStyle={{whiteSpace:"normal"}}
 														>
 															{strings.pay_period}
 														</TableHeaderColumn>
@@ -841,6 +847,8 @@ class PayrollRun extends React.Component {
 															dataField="employeeCount"
 															dataSort
 															dataFormat={this.renderEmployeeCount}
+															tdStyle={{whiteSpace:"normal"}}
+															thStyle={{whiteSpace:"normal"}}
 														>
 															{strings.emp_count}
 														</TableHeaderColumn>
@@ -849,6 +857,8 @@ class PayrollRun extends React.Component {
 															dataField="generatedBy"
 															dataSort
 															dataFormat={this.renderGeneratedBy}
+															tdStyle={{whiteSpace:"normal"}}
+															thStyle={{whiteSpace:"normal"}}
 														>
 															{strings.generated_by}
 														</TableHeaderColumn>
@@ -857,6 +867,8 @@ class PayrollRun extends React.Component {
 															dataField="payrollApprover"
 															dataSort
 															dataFormat={this.renderPayrollApprover}
+															tdStyle={{whiteSpace:"normal"}}
+															thStyle={{whiteSpace:"normal"}}
 														>
 															{strings.approver}
 														</TableHeaderColumn>
@@ -874,6 +886,8 @@ class PayrollRun extends React.Component {
 															dataSort
 															width="10%"
 															dataFormat={this.renderRunDate}
+															tdStyle={{whiteSpace:"normal"}}
+															thStyle={{whiteSpace:"normal"}}
 														>
 															{strings.run_date}
 														</TableHeaderColumn>
@@ -884,6 +898,8 @@ class PayrollRun extends React.Component {
 															dataSort
 															width="15%"
 															dataFormat={this.renderPayrolltotalAmount}
+															tdStyle={{whiteSpace:"normal"}}
+															thStyle={{whiteSpace:"normal"}}
 														>
 															{strings.am}
 														</TableHeaderColumn>

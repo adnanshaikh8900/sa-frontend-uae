@@ -357,55 +357,55 @@ class CreateContact extends React.Component {
 																}
 
 																if (values.stateId === '') {
-																	errors.stateId = 'State is Required';
+																	errors.stateId = 'State is required';
 																}
 																if (this.state.isRegisteredForVat == true) {
 																	if (values.vatRegistrationNumber == "")
-																		errors.vatRegistrationNumber = 'Tax Registration Number is Required';
+																		errors.vatRegistrationNumber = 'Tax registration number is required';
 
 																	if (values.vatRegistrationNumber.length != 15) {
-																		errors.vatRegistrationNumber = "Please enter 15 digit Tax Registration Number"
+																		errors.vatRegistrationNumber = "Please enter 15 digit Tax registration number"
 																	}
 																	if (this.state.trnExist == true) {
-																		errors.vatRegistrationNumber = 'Tax Registration Number Already Exists';
+																		errors.vatRegistrationNumber = 'Tax registration number already exists';
 																	}
 																}
 
 																if (this.state.emailExist == true) {
-																	errors.email = 'Email Already Exists';
+																	errors.email = 'Email already exists';
 																}
 																if (values.billingcountryId == 229 || values.billingcountryId.value == 229) {
 																	if (values.poBoxNumber === '')
-																		errors.poBoxNumber = 'PO Box Number is Required';
+																		errors.poBoxNumber = 'PO box number is required';
 																} else {
 																	if (values.billingPostZipCode == '')
-																		errors.billingPostZipCode = 'Postal Code is Required';
+																		errors.billingPostZipCode = 'Postal code is required';
 																	else
 																		if (values.billingPostZipCode.length != 6)
-																			errors.billingPostZipCode = "Please Enter 6 Digit Postal Zip Code"
+																			errors.billingPostZipCode = "Please enter 6 digit postal zip code"
 
 																}
 																if (values.shippingCountryId == 229 || values.shippingCountryId.value == 229) {
 																	if (values.poBoxNumber === '')
-																		errors.poBoxNumber = 'PO Box Number is Required';
+																		errors.poBoxNumber = 'PO box number is required';
 																} else {
 																	if (values.shippingPostZipCode == '')
-																		errors.shippingPostZipCode = 'Postal Code is Required';
+																		errors.shippingPostZipCode = 'Postal Code is required';
 																	else
 																		if (values.shippingPostZipCode.length != 6)
-																			errors.shippingPostZipCode = "Please Enter 6 Digit Postal Zip Code"
+																			errors.shippingPostZipCode = "Please enter 6 digit Postal Zip Code"
 
 																}
 
 																if (this.state.showbillingFaxErrorMsg == true)
-																	errors.billingFax = "Please Enter 8 Digit Fax"
+																	errors.billingFax = "Please enter 8 digit Fax"
 
 
 																if (this.state.showshippingFaxErrorMsg == true)
-																	errors.shippingFax = "Please Enter 8 Digit Fax"
+																	errors.shippingFax = "Please enter 8 digit Fax"
 
 																if (this.state.showpoBoxNumberErrorMsg == true)
-																	errors.poBoxNumber = "Please Enter 3 To 6 Digit PO Box Number"
+																	errors.poBoxNumber = "Please enter 3 To 6 digit po box number"
 
 
 																return errors;
@@ -413,45 +413,45 @@ class CreateContact extends React.Component {
 															}}
 															validationSchema={Yup.object().shape({
 																firstName: Yup.string().required(
-																	'First Name is Required',
+																	'First name is required',
 																),
 																lastName: Yup.string().required(
-																	'Last Name is Required',
+																	'Last name is required',
 																),
 																currencyCode: Yup.string().required(
-																	'Currency is Required',
+																	'Currency is required',
 																),
 																contactType: Yup.string().required(
-																	'Contact Type is Required',
+																	'Contact type is required',
 																),
 																taxTreatmentId: Yup.string().required(
-																	'Tax Treatment is Required',
+																	'Tax treatment is required',
 																),
 																email: Yup.string()
-																	.required('Email is Required')
+																	.required('Email is required')
 																	.email('Invalid Email')
 																,
 																mobileNumber: Yup.string()
-																	.required('Mobile Number is Required')
+																	.required('Mobile number is required')
 																,
 																billingAddress: Yup.string().required(
-																	'Billing Address is Required',
+																	'Billing address is required',
 																),
 																billingcountryId: Yup.string().required(
-																	'Billing Country is Required',
+																	'Billing country is required',
 																),
 																billingStateProvince: Yup.string().required(
-																	'Billing State is Required',
+																	'Billing state is required',
 																),
 																
 																shippingAddress: Yup.string().required(
-																	'Shipping Address is Required',
+																	'Shipping address is required',
 																),
 																shippingCountryId: Yup.string().required(
-																	'Shipping Country is Required',
+																	'Shipping country is required',
 																),
 																shippingStateId: Yup.string().required(
-																	'Shipping State is Required',
+																	'Shipping state is required',
 																),
 																
 															})}

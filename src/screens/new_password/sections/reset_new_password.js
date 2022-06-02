@@ -113,14 +113,14 @@ class ResetNewPassword extends React.Component {
                         }}
                         validationSchema={Yup.object().shape({
                           password: Yup.string()
-                            .required("Password is Required")
+                            .required("Password is required")
                             // .min(8, "Password Too Short")
                             .matches(
                               /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
-                              "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character"
+                              "Must contain minimum 8 characters, one uppercase, one lowercase, one number and one special case character"
                             ),
                           confirmPassword: Yup.string()
-                            .required('Confirm Password is Required')
+                            .required('Confirm password is required')
                             .oneOf([Yup.ref("password"), null], "Passwords must match"),
                         })}
                       >

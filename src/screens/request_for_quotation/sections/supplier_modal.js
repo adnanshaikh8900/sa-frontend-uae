@@ -169,52 +169,52 @@ errors.mobileNumber =
   }}
 
 						validationSchema={Yup.object().shape({
-							firstName: Yup.string().required('First Name is Required'),
-							lastName: Yup.string().required('Last Name is Required'),
-							vatRegistrationNumber: Yup.string().required('	Tax Registration Number is Required'),
-							// lastName: Yup.string().required('Last Name is Required'),
-							// middleName: Yup.string().required('Middle Name is Required'),
+							firstName: Yup.string().required('First name is required'),
+							lastName: Yup.string().required('Last name is required'),
+							vatRegistrationNumber: Yup.string().required('	Tax registration number is required'),
+							// lastName: Yup.string().required('Last Name is required'),
+							// middleName: Yup.string().required('Middle Name is required'),
 							// contactType: Yup.string()
 							// .required("Please Select Contact Type"),
 							//       organization: Yup.string()
-							//       .required("Organization Name is Required"),
+							//       .required("Organization Name is required"),
 							//     poBoxNumber: Yup.number()
-							//       .required("PO Box Number is Required"),
+							//       .required("PO Box Number is required"),
 							email: Yup.string()
-								.required('Email is Required')
-								.email('Invalid Email'),
-							//telephone: Yup.number().required('Telephone Number is Required'),
+								.required('Email is required')
+								.email('Invalid email'),
+							//telephone: Yup.number().required('Telephone Number is required'),
 							mobileNumber: Yup.string()
-								.required('Mobile Number is Required'),
+								.required('Mobile number is required'),
 								addressLine1: Yup.string()
-								.required("Address Line 1 is Required"),
+								.required("Address line 1 is required"),
 								 addressLine2: Yup.string()
-								.required("Address Line 2 is Required"),
+								.required("Address line 2 is required"),
 								 addressLine3: Yup.string()
-								.required("Address Line 3 is Required"),
+								.required("Address line 3 is required"),
 								 countryId: Yup.string()
-								.required("Country is Required"),
+								.required("Country is required"),
 								stateId: Yup.string()
-								.required("State Region is Required"),
+								.required("State Region is required"),
 							//     addressLine1: Yup.string()
-							//       .required("Address is Required"),
+							//       .required("Address is required"),
 							// countryId: Yup.string()
-							// 	.required('Country is Required')
+							// 	.required('Country is required')
 							// 	.nullable(),
 							// stateId: Yup.string().when('countryId', {
 							// 	is: (val) => (val ? true : false),
-							// 	then: Yup.string().required('State is Required'),
+							// 	then: Yup.string().required('State is required'),
 							// }),
 							//     city: Yup.string()
-							//       .required("City is Required"),
-							//postZipCode: Yup.string().required('Postal Code is Required'),
+							//       .required("City is required"),
+							//postZipCode: Yup.string().required('Postal Code is required'),
 							//     billingEmail: Yup.string()
-							//       .required("Billing Email is Required")
+							//       .required("Billing Email is required")
 							//       .email('Invalid Email'),
 							//     contractPoNumber: Yup.number()
-							//       .required("Contract PoNumber is Required"),
+							//       .required("Contract PoNumber is required"),
 							// vatRegistrationNumber: Yup.string().required(
-							// 	'Tax Registration Number is Required',
+							// 	'Tax Registration Number is required',
 							// ),
 							currencyCode: Yup.string().required('Please Select Currency'),
 							//       .nullable(),

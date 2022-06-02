@@ -202,30 +202,30 @@ dateLimit=()=>{
 							 
 							if (this.state.isTANMandetory === true &&( values.taxAgencyNumber=="" ||values.taxAgencyNumber==undefined)) 
 							{
-								errors.taxAgencyNumber ='TAN is Required';
+								errors.taxAgencyNumber ='TAN is required';
 								if (values.taxAgentApprovalNumber=="" || values.taxAgentApprovalNumber==undefined)
 								{
-									errors.taxAgentApprovalNumber = 'TAAN is Required';
+									errors.taxAgentApprovalNumber = 'TAAN is required';
 								}
 								if (values.taxAgentName=="" || values.tax==undefined)
 								{
-									errors.taxAgentName = 'Tax Agent Name is Required';
+									errors.taxAgentName = 'Tax agent name is required';
 								}
 							} 
 							if (this.state.isTAANMandetory === true && (values.taxAgentApprovalNumber=="" || values.taxAgentApprovalNumber==undefined))
 							{
-								errors.taxAgentApprovalNumber = 'TAAN is Required';
+								errors.taxAgentApprovalNumber = 'TAAN is required';
 							}												
 							return errors;
 						}}
 						validationSchema={Yup.object().shape({
-							// taxAgentName: Yup.string().required('Tax Agent Name is Required'),
-							taxablePersonNameInEnglish: Yup.string().required('Taxable Person Name In English is Required'),
-							// taxablePersonNameInArabic: Yup.string().required('Taxable Person Name In Arabic is Required'),
-							// taxAgentApprovalNumber: Yup.string().required('TAAN is Required'),
-							vatRegistrationNumber: Yup.string().required('Tax Registration Number is Required'),
+							// taxAgentName: Yup.string().required('Tax Agent Name is required'),
+							taxablePersonNameInEnglish: Yup.string().required('Taxable person name in english is required'),
+							// taxablePersonNameInArabic: Yup.string().required('Taxable Person Name In Arabic is required'),
+							// taxAgentApprovalNumber: Yup.string().required('TAAN is required'),
+							vatRegistrationNumber: Yup.string().required('Tax registration number is required'),
 							taxFiledOn: Yup.string().required(
-								'Date of Filling is Required',
+								'Date of filling is required',
 							),
 										})}
 					>

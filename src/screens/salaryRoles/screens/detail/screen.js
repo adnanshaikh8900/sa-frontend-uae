@@ -193,18 +193,18 @@ class DetailSalaryRole extends React.Component {
                     (
                       <Row>
                         <Col lg={12}>
-                          <Formik
-                            initialValues={initValue}
-                            onSubmit={(values, { resetForm }) => {
-                              this.handleSubmit(values)
-                              // resetForm(this.state.initValue)
-                            }}
-                            validationSchema={Yup.object().shape({
-                              salaryRoleName: Yup.string()
-                                .required("Salary role name is required"),
-                            
-                            })}
-                          >
+                        <Formik
+                        initialValues={this.state.initValue}
+                        onSubmit={(values, { resetForm }) => {
+                          this.handleSubmit(values, resetForm)
+                        // resetForm(this.state.initValue)
+                         }}
+                        validationSchema={Yup.object().shape({
+                          salaryRoleName: Yup.string()
+                            .required("Salary role name is required"),  
+                                           
+                        })}
+                      >
                                   {(props) => (
 
                                   <Form  onSubmit={(values, { resetForm }) => {
@@ -218,20 +218,21 @@ class DetailSalaryRole extends React.Component {
                             <Row  className="row-wrapper">
                               
                               <Col lg={4}>
-                                <FormGroup>
+                              <FormGroup>
                                   <Label htmlFor="select"><span className="text-danger">* </span>{strings.SalaryRoleName}</Label>
                                   <Input
                                     type="text"
                                     id="salaryRoleName"
                                     name="salaryRoleName"
+                                    maxLength="30"
                                     value={props.values.salaryRoleName}
-                                    placeholder="Enter Salary Role Name"
+                                    placeholder={strings.Enter+strings.SalaryRoleName}
                                     onChange={(option) => {
                                       if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('salaryRoleName')(option) }
                                     }}
                                     className={props.errors.salaryRoleName && props.touched.salaryRoleName ? "is-invalid" : ""}
                                   />
-                                  {props.errors.firstName && props.touched.firstName && (
+                                  {props.errors.salaryRoleName && props.touched.salaryRoleName && (
                                     <div className="invalid-feedback">{props.errors.salaryRoleName}</div>
                                   )}
                                 </FormGroup>

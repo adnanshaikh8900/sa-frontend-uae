@@ -13,6 +13,7 @@ import {
 	CardGroup,
 	Table,
 	Button,
+	UncontrolledTooltip,
 } from 'reactstrap';
 import * as EmployeeViewActions from "./actions"
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -395,10 +396,35 @@ renderSalaryDate=(cell,row)=>{
 															<label > {strings.BasicInformation}</label>
 															<hr style={{ width: '50%' }}></hr>
 															<div style={{ fontSize: '16px' }}>
-																<div className='mt-2 mb-2'><i class="far fa-envelope"></i> &nbsp;{this.state.EmployeeDetails.email ? this.state.EmployeeDetails.email : '-'}</div>
-																<div className='mt-2 mb-2'><i class="far fa-user"></i> &nbsp;{this.state.EmployeeDetails.gender ? this.state.EmployeeDetails.gender :'-'}</div>
-																<div className='mt-2 mb-2'><i class="far fa-calendar-minus"></i> &nbsp;{this.state.EmployeeDetails.dateOfJoining ? this.state.EmployeeDetails.dateOfJoining :'-'}</div>
-																<div className='mt-2 mb-2'><i class="fas fa-network-wired"></i> &nbsp;{this.state.EmployeeDetails.department ? this.state.EmployeeDetails.department : '-'}</div>
+																<div className='mt-2 mb-2'><span id="mail"> <i class="far fa-envelope"></i>
+																<UncontrolledTooltip
+																			placement="left"
+																			target="mail"
+																		>
+																		E-mail
+																		</UncontrolledTooltip>&nbsp;{this.state.EmployeeDetails.email ? this.state.EmployeeDetails.email : '-'}</span></div>
+																<div className='mt-2 mb-2' ><span id="Gender"><i class="far fa-user"></i> 
+																<UncontrolledTooltip
+																			placement="left"
+																			target="Gender"
+																		>
+																		Gender
+																		</UncontrolledTooltip>&nbsp;{this.state.EmployeeDetails.gender ? this.state.EmployeeDetails.gender :'-'}</span></div>
+																<div className='mt-2 mb-2'  ><span id="dojTooltip"><i class="far fa-calendar-minus"></i>
+																<UncontrolledTooltip
+																			placement="left"
+																			target="dojTooltip"
+																		>
+																		Date of Joining
+																		</UncontrolledTooltip>  &nbsp;{this.state.EmployeeDetails.dateOfJoining ? this.state.EmployeeDetails.dateOfJoining :'-'}</span></div>
+																<div className='mt-2 mb-2' >
+																	<UncontrolledTooltip
+																			placement="left"
+																			target="department"
+																		>
+																		Department
+																		</UncontrolledTooltip> 
+																		<span id="department"> <i class="fas fa-network-wired"></i> &nbsp;{this.state.EmployeeDetails.department ? this.state.EmployeeDetails.department : '-'}</span></div>
 															</div>
 														</div>
 														<hr></hr>
@@ -433,7 +459,7 @@ renderSalaryDate=(cell,row)=>{
 																		</Button>
 																	</Col>
 																</Row>
-																<Row> <Col className='mt-2 mb-2'>{strings.FathersName} </Col>
+																<Row> <Col className='mt-2 mb-2'>{strings.MiddleName} </Col>
 																	<Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.middleName  && this.state.EmployeeDetails.lastName  ?
 																		this.state.EmployeeDetails.middleName + " " + this.state.EmployeeDetails.lastName : ('-')}</Col></Row>
 

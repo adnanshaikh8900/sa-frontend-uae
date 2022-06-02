@@ -302,9 +302,20 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 												</td>
 												</>)}
 												{/* { POData.totalExciseAmount > 0 && (<><td>{item.exciseTaxId ? this.renderExcise(item):"-"}</td></>)} */}
-												<td style={{ textAlign: 'right' }}>
-												{POData.currencyIsoCode + " " +item.exciseAmount.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
-												</td>
+											
+												{ POData.totalExciseAmount > 0 && (<>
+													{/* <td style={{ textAlign: 'right' }}>{item.exciseTaxId ? this.renderExcise(item) : "-"}</td> */}
+													<td style={{ textAlign: 'right' }}>
+														<Currency
+															value={item.exciseAmount}
+															currencySymbol={
+																POData.currencyIsoCode
+																	? POData.currencyIsoCode
+																	: 'AED'
+															}
+														/>
+													</td>
+												</>)}
 												{/* <td
 													style={{ textAlign: 'right' }}
 												>{`${item.vatPercentage}%`}</td> */}

@@ -1258,7 +1258,7 @@ existForAccountNumber = (value) => {
                                                                             lastName: Yup.string()
                                                                             .required("Last name is required"),
                                                                             email: Yup.string()
-                                                                            .required("Valid email Required"),
+                                                                            .required("Valid email Required").email('Invalid Email'),
                                                                             mobileNumber:Yup.string()
                                                                             .required("Mobile number is required"),
                                                                             // salaryRoleId :  Yup.string()

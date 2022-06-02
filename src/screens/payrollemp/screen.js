@@ -580,6 +580,7 @@ class PayrollEmployee extends React.Component {
                                                         dataField="employeeCode"
                                                         dataSort
                                                         width="12%"
+                                                        thStyle={{whiteSpace:"normal"}}
                                                         // dataFormat={this.fullname}
                                                     >
                                                          {strings.EmployeeCode}
@@ -590,6 +591,7 @@ class PayrollEmployee extends React.Component {
                                                         dataSort
                                                         width="20%"
                                                         dataFormat={this.renderName}
+                                                        thStyle={{whiteSpace:"normal"}}
                                                     >
                                                          {strings.FullName}
                                                     </TableHeaderColumn>
@@ -598,6 +600,7 @@ class PayrollEmployee extends React.Component {
                                                         dataField="email"
                                                         dataSort
                                                         width="20%"
+                                                        thStyle={{whiteSpace:"normal"}}
                                                     >
                                                          {strings.Email}
                                                     </TableHeaderColumn>
@@ -607,6 +610,7 @@ class PayrollEmployee extends React.Component {
                                                         dataSort
                                                     // dataFormat={this.vatCategoryFormatter}
                                                     width="12%"
+                                                    thStyle={{whiteSpace:"normal"}}
                                                     >
                                                          {strings.MobileNumber}
                                                     </TableHeaderColumn>
@@ -616,6 +620,7 @@ class PayrollEmployee extends React.Component {
                                                         dataSort
                                                         dataFormat={this.renderDOB}
                                                         width="12%"
+                                                        thStyle={{whiteSpace:"normal"}}
                                                     >
                                                          {strings.DateOfBirth}
                                                     </TableHeaderColumn>

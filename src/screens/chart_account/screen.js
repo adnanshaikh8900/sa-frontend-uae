@@ -559,7 +559,7 @@ class ChartAccount extends React.Component {
 																	}
 																}}
 																className="select-default-width"
-																placeholder={strings.TransactionType}
+																placeholder={strings.AccountType}
 																value={filterData.chartOfAccountId}
 															/>
 														</FormGroup>

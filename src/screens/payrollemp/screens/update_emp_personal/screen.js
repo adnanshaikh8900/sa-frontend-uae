@@ -458,7 +458,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                         lastName: Yup.string()
                                                             .required("Last name is required"),
                                                         email: Yup.string()
-                                                            .required("Valid email Required"),
+                                                            .required("Valid email Required").email('Invalid Email'),
                                                         // salaryRoleId: Yup.string()
                                                         //     .required(" Employee role is required"),
                                                         dob: Yup.date()

@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-
 import {
 	Card,
 	CardHeader,
@@ -19,14 +18,10 @@ import {
 import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import DatePicker from 'react-datepicker';
-import { CSVLink } from 'react-csv';
-
 import { Loader, ConfirmDeleteModal, Currency } from 'components';
-
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'react-datepicker/dist/react-datepicker.css';
-
 import EmailModal from './sections/email_template';
 import * as CustomerInvoiceDetailActions from './screens/detail/actions'
 import * as CustomerInvoiceActions from './actions';
@@ -35,12 +30,10 @@ import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
 import { data } from '../Language/index'
 import LocalizedStrings from 'react-localization';
-
 import './style.scss';
 import { CreateCreditNoteModal } from './sections';
 import moment from 'moment';
 import { upperCase } from 'lodash';
-import { toast } from 'react-toastify';
 
 const { ToWords } = require('to-words');
 const toWords = new ToWords({

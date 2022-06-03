@@ -1917,7 +1917,7 @@ discountType = (row) =>
 												   }
 													if (param === true) {
 														errors.discount =
-															'Discount amount Cannot be greater than Invoice Total Amount';
+															'Discount amount Cannot be greater than invoice total amount';
 													}
 													return errors;
 												}}

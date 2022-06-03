@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { Card, CardBody, Label, Table } from 'reactstrap';
+import { Card, CardBody, Table } from 'reactstrap';
 import moment from 'moment';
 import '../style.scss';
 import logo from 'assets/images/brand/logo.png';
 import {data}  from '../../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { TextareaAutosize } from '@material-ui/core';
-import { Currency } from 'components';
+
 const { ToWords } = require('to-words');
 const ZERO=0.00
 const toWords = new ToWords({
@@ -191,9 +191,7 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 								}}
 							>
 								<div>
-								{/* <h4 className="mb-1 ml-2"><b>{companyData && companyData.company
-											? companyData.company.companyName
-											: ''}</b></h4> */}
+								
 								<h6 className="mb-1 ml-2"><b>Purchase From,</b></h6><br/>
 								<div className="mb-1 ml-2"><b>{POData.organisationName ? POData.organisationName : POData.supplierName}</b></div>
 								{contactData && contactData.addressLine1 && (<div className="mb-1 ml-2">{contactData.addressLine1}</div>)}
@@ -210,15 +208,7 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 {POData && POData.taxtreatment&& POData.taxtreatment.includes("NON")==false &&(<div className="mb-1 ml-2">{strings.VATRegistrationNo} :  {POData.vatRegistrationNumber}</div>)}
 								{contactData&&contactData.mobileNumber&&(<div className="mb-1 ml-2">{strings.MobileNumber} :+{contactData.mobileNumber}</div>)}
 								{contactData && contactData.billingEmail && (<div className="mb-1 ml-2">{strings.Email} : {contactData.billingEmail}</div>)}
-													
-
-													{/* <div
-														className={`ribbon ${this.getRibbonColor(
-															RFQData,
-														)}`}
-													>
-															<span className="mb-1 ml-2">{RFQData.status}</span>
-														</div>  */}
+						
 								</div>
 								<div style={{ width: '27%' }}>
 
@@ -279,26 +269,15 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 											     <b style={{fontSize:"10.5px"}}>{item.unitType}</b>	
 												</td>
 												<td style={{ textAlign: 'right', width: '10%' }}>
-													{/* <Currency
-														value={item.unitPrice}
-														currencySymbol={
-															currencyData[0]
-																? currencyData[0].currencyIsoCode
-																: 'USD'
-														}
-													/> */}
+												
 												{POData.currencyIsoCode + " " +item.unitPrice.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
 												</td>
 												{POData.discount > 0 && (<><td style={{ textAlign: 'right' }}>
 												{item.discountType == "PERCENTAGE" ? item.discount + "  %" :
-												<Currency
-														value={item.discount}
-														currencySymbol={
-															currencyData[0]
-																? currencyData[0].currencyIsoCode
-																: 'AED'
-														}
-													/>}
+													(POData.currencyIsoCode
+														? POData.currencyIsoCode +" "+ POData.discount 
+														: 'AED'+" "+ POData.discount )
+													}
 												</td>
 												</>)}
 												{/* { POData.totalExciseAmount > 0 && (<><td>{item.exciseTaxId ? this.renderExcise(item):"-"}</td></>)} */}
@@ -306,14 +285,7 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 												{ POData.totalExciseAmount > 0 && (<>
 													{/* <td style={{ textAlign: 'right' }}>{item.exciseTaxId ? this.renderExcise(item) : "-"}</td> */}
 													<td style={{ textAlign: 'right' }}>
-														<Currency
-															value={item.exciseAmount}
-															currencySymbol={
-																POData.currencyIsoCode
-																	? POData.currencyIsoCode
-																	: 'AED'
-															}
-														/>
+													{ POData.totalExciseAmount? POData.currencyIsoCode + " " + POData.totalExciseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 }):POData.currencyIsoCode + " " + ZERO.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })}  
 													</td>
 												</>)}
 												{/* <td
@@ -323,14 +295,7 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 												{POData.currencyIsoCode + " " +item.vatAmount.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
 												</td>
 												<td style={{ textAlign: 'right' }}>
-													{/* <Currency
-														value={item.subTotal}
-														currencySymbol={
-															currencyData[0]
-																? currencyData[0].currencyIsoCode
-																: 'USD'
-														}
-													/> */}
+													
 													{POData.currencyIsoCode + " " +item.subTotal.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
 												</td>
 											</tr>
@@ -388,14 +353,19 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-												{/* {POData.totalExciseAmount? POData.currencyIsoCode + " " +(POData.totalExciseAmount-POData.totalExciseAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0 }  */}
 												{POData.totalExciseAmount? POData.currencyIsoCode + " " +POData.totalExciseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):POData.currencyIsoCode + " " +ZERO.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}  
 												</span>
 											</td>
 										</tr> : ""}
-										{POData.discount && POData.discount > 0 ?<tr >
+										{POData.discount && POData.discount > 0 ?
+										<tr >
 											<td style={{ width: '40%' }}>
-												<strong>{strings.Discount}</strong>
+												<strong>
+													{strings.Discount}
+													{POData.discountPercentage
+																? `(${POData.discountPercentage}%)`
+																: ''}
+													</strong>
 											</td>
 											<td
 												style={{
@@ -405,23 +375,17 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-												{POData.discount? POData.currencyIsoCode + " " +POData.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):POData.currencyIsoCode + " " +ZERO.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}  
+												{POData.discount ? POData.currencyIsoCode + " " +POData.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : POData.currencyIsoCode + " " +ZERO.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}  
 												</span>
 											</td>
 										</tr> : ""}
 										<tr>
 											<td style={{ width: '40%' }}>
-												<strong>Total Net</strong>
-											</td>
-											<td
-												style={{
-													display: 'flex',
-													justifyContent: 'space-between',
-												}}
-											>
+												<strong>{strings.TotalNet}</strong></td>
+											<td style={{ display: 'flex', justifyContent: 'space-between', }}>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-												{POData.totalAmount? POData.currencyIsoCode + " " +(POData.totalAmount-POData.totalVatAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0 } 
+												{POData.totalAmount? POData.currencyIsoCode + " " + ((parseFloat(POData.totalAmount)-parseFloat(POData.totalVatAmount))-parseFloat(POData.totalExciseAmount)).toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0 } 
 												</span>
 											</td>
 										</tr>
@@ -439,32 +403,13 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
 													{POData ?POData.currencyIsoCode+ " " +this.renderVat(POData).toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0 }
-										
-													{/* ? (
-														<Currency
-															value={POData.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													) : (
-														<Currency
-															value={0}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													)} */}
 												</span>
 											</td>
 										</tr>
+
 										<tr >
 											<td style={{ width: '40%' }}>
-												<strong>{strings.Total }</strong>
+												<strong>{strings.Total}</strong>
 											</td>
 											<td
 												style={{
@@ -475,25 +420,6 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
 													{POData.totalAmount?POData.currencyIsoCode + " " +POData.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0}
-													{/* {POData.totalAmount ? (
-														<Currency
-															value={POData.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													) : (
-														<Currency
-															value={0}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													)} */}
 												</span>
 											</td>
 										</tr>

@@ -6,7 +6,6 @@ import logo from 'assets/images/brand/logo.png';
 import {data}  from '../../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { TextareaAutosize } from '@material-ui/core';
-import { Currency } from 'components';
 
 const { ToWords } = require('to-words');
 const ZERO=0.00
@@ -98,7 +97,7 @@ class RFQTemplate extends Component {
 						<span>{QuotationData.status}</span>
 					</div> */}
 
-        <CardBody style={{ margin: '1rem', border: 'solid 1px', borderColor: '#c8ced3', }}>
+        		<CardBody style={{ margin: '1rem', border: 'solid 1px', borderColor: '#c8ced3', }}>
 					<div
 							style={{
 								width: '100%',
@@ -319,30 +318,18 @@ class RFQTemplate extends Component {
 												<b style={{fontSize:"10.5px"}}>{item.unitType}</b>	
 												</td>
 												<td style={{ textAlign: 'right', width: '10%' }}>
-													{/* <Currency
-														value={item.unitPrice}
-														currencySymbol={
-															currencyData[0]
-																? currencyData[0].currencyIsoCode
-																: 'USD'
-														}
-													/> */}
+												
 												{QuotationData.currencyIsoCode + " " +item.unitPrice.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
 												</td>
 												{QuotationData.discount > 0 && (<><td style={{ textAlign: 'right' }}>
 												{item.discountType == "PERCENTAGE" ? item.discount + "  %" :
-												<Currency
-														value={item.discount}
-														currencySymbol={
-															currencyData[0]
-																? currencyData[0].currencyIsoCode
-																: 'AED'
-														}
-													/>}
+													(QuotationData.currencyIsoCode
+														? QuotationData.currencyIsoCode +" "+ QuotationData.discount 
+														: 'AED'+" "+ QuotationData.discount )
+												}
 												</td>
 												</>)}
-												{/* <td style={{ textAlign: 'right' }}>{item.discountType}</td> */}
-												{/* <td style={{ textAlign: 'right' }}>{item.exciseTaxId ? this.renderExcise(item):"-"}</td> */}
+											
 												{ QuotationData.totalExciseAmount > 0 && (<><td style={{ textAlign: 'right' }}>
 												{QuotationData.currencyIsoCode + " " +item.exciseAmount.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
 												</td></>)}
@@ -358,7 +345,7 @@ class RFQTemplate extends Component {
 														currencySymbol={
 															currencyData[0]
 																? currencyData[0].currencyIsoCode
-																: 'USD'
+																: 'AED'
 														}
 													/> */}
 													{QuotationData.currencyIsoCode + " " +item.subTotal.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
@@ -418,14 +405,19 @@ class RFQTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-												{/* {QuotationData.totalExciseAmount? QuotationData.currencyIsoCode + " " +QuotationData.totalExciseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0. }  */}
-												{QuotationData.totalExciseAmount? QuotationData.currencyIsoCode + " " +QuotationData.totalExciseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):QuotationData.currencyIsoCode + " " +ZERO.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}  
+												{QuotationData.totalExciseAmount ? QuotationData.currencyIsoCode + " " + QuotationData.totalExciseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):QuotationData.currencyIsoCode + " " +ZERO.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}  
 												</span>
 											</td>
 										</tr> : ""}
-										{QuotationData.discount && QuotationData.discount > 0 ?<tr >
+										{QuotationData.discount && QuotationData.discount > 0 ?
+										<tr >
 											<td style={{ width: '40%' }}>
-												<strong>{strings.Discount}</strong>
+											<strong>
+													{strings.Discount }
+													{QuotationData.discountPercentage
+														? `(${QuotationData.discountPercentage}%)`
+														: ''}
+												</strong>
 											</td>
 											<td
 												style={{
@@ -435,26 +427,18 @@ class RFQTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-												{QuotationData.discount? QuotationData.currencyIsoCode + " " +QuotationData.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):QuotationData.currencyIsoCode + " " +ZERO.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}  
+												{ QuotationData.discount ? QuotationData.currencyIsoCode + " " + QuotationData.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : QuotationData.currencyIsoCode + " " + ZERO.toLocaleString(navigator.language, { minimumFractionDigits: 2 , })}  
 												</span>
 											</td>
 										</tr> : ""}
 
 										<tr>
-											<td style={{ width: '40%' }}>
-												<strong>{strings.TotalNet}</strong>
-											</td>
-											<td
-												style={{
-													display: 'flex',
-													justifyContent: 'space-between',
-												}}
-											>
-												<span style={{ marginLeft: '2rem' }}></span>
-												<span>
-												{QuotationData.totalAmount? QuotationData.currencyIsoCode + " " +(QuotationData.totalAmount-QuotationData.totalVatAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0 } 
-												</span>
-											</td>
+											<td style={{ width: '40%' }}><strong>{strings.TotalNet}</strong></td>
+											<td style={{ display: 'flex', justifyContent: 'space-between', }}>
+													<span style={{ marginLeft: '2rem' }}></span>
+													<span>
+													{QuotationData.totalAmount ? QuotationData.currencyIsoCode + " " + ((parseFloat(QuotationData.totalAmount)-parseFloat(QuotationData.totalVatAmount))-parseFloat(QuotationData.totalExciseAmount)).toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : 0 } 													</span>
+												</td>
 										</tr>
 											<tr >
 											<td style={{ width: '40%' }}>
@@ -469,25 +453,6 @@ class RFQTemplate extends Component {
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
 													{QuotationData.totalVatAmount?QuotationData.currencyIsoCode+ " " +QuotationData.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0 }
-													{/* ? (
-														<Currency
-															value={POData.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													) : (
-														<Currency
-															value={0}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													)} */}
 												</span>
 											</td>
 										</tr>
@@ -510,7 +475,7 @@ class RFQTemplate extends Component {
 															currencySymbol={
 																currencyData[0]
 																	? currencyData[0].currencyIsoCode
-																	: 'USD'
+																	: 'AED'
 															}
 														/>
 													) : (
@@ -519,7 +484,7 @@ class RFQTemplate extends Component {
 															currencySymbol={
 																currencyData[0]
 																	? currencyData[0].currencyIsoCode
-																	: 'USD'
+																	: 'AED'
 															}
 														/>
 													)} */}

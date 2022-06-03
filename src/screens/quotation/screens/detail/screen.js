@@ -332,20 +332,32 @@ class DetailQuotation extends React.Component {
 	};
 
 	getCurrentProduct = () => {
-		this.props.customerInvoiceActions.getProductList().then((res) => {
+		this.props.requestForQuotationAction.getProductList().then((res) => {
+			let newData=[]
+				const data = this.state.data;
+				newData = data.filter((obj) => obj.productId !== "");
+				// props.setFieldValue('lineItemsString', newData, true);
+				// this.updateAmount(newData, props);
 			this.setState(
 				{
-					data: [
-						{
-							id: 0,
+					data: newData.concat({
+						
+							id: this.state.idCount + 1,
 							description: res.data[0].description,
 							quantity: 1,
+							discount:0,
 							unitPrice: res.data[0].unitPrice,
 							vatCategoryId: res.data[0].vatCategoryId,
+							exciseTaxId: res.data[0].exciseTaxId,
 							subTotal: res.data[0].unitPrice,
 							productId: res.data[0].id,
-						},
-					],
+							discountType: res.data[0].discountType,
+							unitType:res.data[0].unitType,
+							unitTypeId:res.data[0].unitTypeId,
+							vatAmount:res.data[0].vatAmount ?res.data[0].vatAmount:0,
+							discountType: res.data[0].discountType,							
+					}),
+					idCount: this.state.idCount + 1,
 				},
 				() => {
 					const values = {
@@ -361,6 +373,16 @@ class DetailQuotation extends React.Component {
 			);
 			this.formRef.current.setFieldValue(
 				`lineItemsString.${0}.quantity`,
+				1,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.discount`,
+				1,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.discountType`,
 				1,
 				true,
 			);
@@ -774,16 +796,16 @@ class DetailQuotation extends React.Component {
 	addRow = () => {
 		const data = [...this.state.data];
 		const idCount =
-		this.state.idCount?
-				this.state.idCount:
-								data.length > 0
-									? Math.max.apply(
-											Math,
-											data.map((item) => {
-												return item.id;
-											}),
-									)
-									: 0;
+						this.state.idCount?
+								this.state.idCount:
+												data.length > 0
+													? Math.max.apply(
+															Math,
+															data.map((item) => {
+																return item.id;
+															}),
+													)
+													: 0;
 		this.setState(
 			{
 				data: data.concat({
@@ -793,10 +815,11 @@ class DetailQuotation extends React.Component {
 					unitPrice: '',
 					vatCategoryId: '',
 					subTotal: 0,
-					productId: '',
+					exciseTaxId:'',
 					discountType :'FIXED',
-					discount: 0,
 					vatAmount:0,
+					discount: 0,
+					productId: '',
 				}),
 				idCount: this.state.idCount + 1,
 			},
@@ -1134,12 +1157,12 @@ class DetailQuotation extends React.Component {
 					 net_value =
 						((+obj.unitPrice -
 							(+((obj.unitPrice * obj.discount)) / 100)) * obj.quantity);
-					var discount = (obj.unitPrice* obj.quantity)- net_value
+					var discount =  (obj.unitPrice * obj.quantity) - net_value;
 				if(obj.exciseTaxId !=  0){
 					if(obj.exciseTaxId === 1){
 						const value = +(net_value) / 2 ;
 							net_value = parseFloat(net_value) + parseFloat(value) ;
-							obj.exciseAmount = parseFloat(value);
+							obj.exciseAmount = parseFloat(value) ;
 						}else if (obj.exciseTaxId === 2){
 							const value = net_value;
 							net_value = parseFloat(net_value) +  parseFloat(value) ;
@@ -1154,25 +1177,25 @@ class DetailQuotation extends React.Component {
 					((+net_value  * vat ) / 100);
 				}else{
 					 net_value =
-						((obj.unitPrice * obj.quantity) - obj.discount)
-					var discount =  (obj.unitPrice* obj.quantity) - net_value
+						((obj.unitPrice * obj.quantity) - obj.discount);
+					var discount =  (obj.unitPrice * obj.quantity) - net_value;
 						if(obj.exciseTaxId !=  0){
 							if(obj.exciseTaxId === 1){
 								const value = +(net_value) / 2 ;
 									net_value = parseFloat(net_value) + parseFloat(value) ;
-									obj.exciseAmount = parseFloat(value);
+									obj.exciseAmount = parseFloat(value) ;
 								}else if (obj.exciseTaxId === 2){
 									const value = net_value;
 									net_value = parseFloat(net_value) +  parseFloat(value) ;
-									obj.exciseAmount = parseFloat(value);
+									obj.exciseAmount = parseFloat(value) ;
 								}
-							
+								
 						}
 						else{
 							obj.exciseAmount = 0
 						}
 						var vat_amount =
-						((+net_value  * vat ) / 100);
+						((+net_value  * vat) / 100);
 			}
 
 			}
@@ -1275,8 +1298,8 @@ class DetailQuotation extends React.Component {
 				initValue: {
 					...this.state.initValue,
 					...{
-						total_net:  total_net - total_excise,
-						invoiceVATAmount: total_vat,
+						total_net:  total_net-total_excise,
+						totalVatAmount: total_vat,
 						discount:  discount_total ? discount_total : 0,
 						totalAmount:  total ,
 						total_excise: total_excise
@@ -1434,56 +1457,6 @@ class DetailQuotation extends React.Component {
         }
     };
 
-	getCurrentProduct = () => {
-		this.props.customerInvoiceActions.getProductList().then((res) => {
-			this.setState(
-				{
-					data: [
-						{
-							id: 0,
-							description: res.data[0].description,
-							quantity: 1,
-							unitPrice: res.data[0].unitPrice,
-							vatCategoryId: res.data[0].vatCategoryId,
-							subTotal: res.data[0].unitPrice,
-							productId: res.data[0].id,
-						},
-					],
-				},
-				() => {
-					const values = {
-						values: this.state.initValue,
-					};
-					this.updateAmount(this.state.data, values);
-				},
-			);
-			this.formRef.current.setFieldValue(
-				`lineItemsString.${0}.unitPrice`,
-				res.data[0].unitPrice,
-				true,
-			);
-			this.formRef.current.setFieldValue(
-				`lineItemsString.${0}.unitType`,
-				res.data[0].unitType,
-				true,
-			);
-			this.formRef.current.setFieldValue(
-				`lineItemsString.${0}.quantity`,
-				1,
-				true,
-			);
-			this.formRef.current.setFieldValue(
-				`lineItemsString.${0}.vatCategoryId`,
-				res.data[0].vatCategoryId,
-				true,
-			);
-			this.formRef.current.setFieldValue(
-				`lineItemsString.${0}.productId`,
-				res.data[0].id,
-				true,
-			);
-		});
-	};
 	getCompanyCurrency = (basecurrency) => {
 		this.props.currencyConvertActions
 			.getCompanyCurrency()
@@ -2143,6 +2116,33 @@ console.log(this.state.supplier_currency)
 															</Col>
 															</Row>
 															<Row>
+															<Col lg={8} className="mb-3">
+																{/* <Button
+																	color="primary"
+																	className={`btn-square mr-3 ${
+																		this.checkedRow() ? `disabled-cursor` : ``
+																	} `}
+																	onClick={this.addRow}
+																	title={
+																		this.checkedRow()
+																			? `Please add detail to add more`
+																			: ''
+																	}
+																	disabled={this.checkedRow() ? true : false}
+																>
+																	<i className="fa fa-plus"></i>{' '}{strings.Addmore} 
+																</Button> */}
+																<Button
+																	color="primary"
+																	className= "btn-square mr-3"
+																	onClick={(e, props) => {
+																		this.openProductModal()
+																		// this.props.history.push(`/admin/master/product/create`,{gotoParentURL:"/admin/income/quotation/create"})
+																		}}
+													                >
+																	<i className="fa fa-plus"></i>{' '}{strings.Addproduct} 
+																</Button>
+																</Col>
 																<Col lg={12}>
 																	{props.errors.lineItemsString &&
 																		props.touched.lineItemsString &&
@@ -2662,9 +2662,12 @@ console.log(this.state.supplier_currency)
 					closeProductModal={(e) => {
 						this.closeProductModal(e);
 					}}
-					getCurrentProduct={(e) => this.getCurrentProduct(e)}
+					getCurrentProduct={(e) =>{ 
+						this.props.supplierInvoiceActions.getProductList();
+						this.getCurrentProduct(e);
+					}}
 					createProduct={this.props.ProductActions.createAndSaveProduct}
-					vat_list={this.state.vat_list}
+					vat_list={this.props.vat_list}
 					product_category_list={this.props.product_category_list}
 					salesCategory={this.state.salesCategory}
 					purchaseCategory={this.state.purchaseCategory}

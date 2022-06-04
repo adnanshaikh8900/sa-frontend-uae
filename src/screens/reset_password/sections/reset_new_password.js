@@ -118,7 +118,7 @@ class ResetNewPassword extends React.Component {
                             // .min(8, "Password Too Short")
                             .matches(
                               /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
-                              "Must contain 8 characters, must contain max 16 characters, one uppercase, one lowercase, one number and one special case character"
+                              "Must contain 8 characters, must contain max 255 characters, one uppercase, one lowercase, one number and one special case character"
                             ),
                           confirmPassword: Yup.string()
                             .required('Confirm password is required')
@@ -149,7 +149,7 @@ class ResetNewPassword extends React.Component {
 																							: 'password'
 																					}
                                           minLength={8}
-                                          maxLength={16}
+                                          maxLength={255}
                                           autoComplete="off"
 																					id="password"
 																					name="password"
@@ -194,7 +194,7 @@ class ResetNewPassword extends React.Component {
 																			{this.state.displayRules==true&&( <PasswordChecklist
 																				rules={["maxLength", "minLength", "specialChar", "number", "capital"]}
 																				minLength={8}
-                                        maxLength={16}
+                                        maxLength={255}
 																				value={props.values.password}
 																				valueAgain={props.values.confirmPassword}
 																			/>)}
@@ -214,7 +214,7 @@ class ResetNewPassword extends React.Component {
                                         return false;
                                         }}
                                         minLength={8}
-                                        maxLength={16}
+                                        maxLength={255}
                                         autoComplete="off"
 																				type="password"
 																				id="confirmPassword"
@@ -242,7 +242,7 @@ class ResetNewPassword extends React.Component {
 																				{this.state.displayRules==true&&( <PasswordChecklist
 																				rules={[ "match"]}
 																				minLength={8}
-                                        maxLength={16}
+                                        maxLength={255}
 																				value={props.values.password}
 																				valueAgain={props.values.confirmPassword}
 																			/>)}

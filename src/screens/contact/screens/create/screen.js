@@ -431,9 +431,9 @@ class CreateContact extends React.Component {
 																	.required('Email is required')
 																	.email('Invalid Email')
 																,
-																mobileNumber: Yup.string()
-																	.required('Mobile number is required')
-																,
+																// mobileNumber: Yup.string()
+																// 	.required('Mobile number is required')
+																// ,
 																billingAddress: Yup.string().required(
 																	'Billing address is required',
 																),
@@ -872,7 +872,7 @@ class CreateContact extends React.Component {
 																		<Col md="4">
 																			<FormGroup>
 																				<Label htmlFor="mobileNumber">
-																					<span className="text-danger">* </span>
+																					<span className="text-danger"> </span>
 																					{strings.MobileNumber}
 																				</Label>
 																				<div className={

@@ -761,6 +761,7 @@ class Profile extends React.Component {
 			.then((res) => {
 					
 				if  (res.status === 200) {
+					this.setState({disableLeavePage:true})
 					this.props.history.push('/login');
 					this.props.commonActions.tostifyAlert(
 						'success',
@@ -3636,7 +3637,7 @@ class Profile extends React.Component {
 																	// .min(8, "Password Too Short")
 																	.matches(
 																		/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
-																		'Must contain min 8 characters, must contain max 16 characters, one uppercase, one lowercase, one number and one special case character',
+																		'Must contain min 8 characters, must contain max 255 characters, one uppercase, one lowercase, one number and one special case character',
 																	),
 																confirmPassword: Yup.string()
 																	 .required('Confirm password is required')
@@ -3673,7 +3674,7 @@ class Profile extends React.Component {
 																								return false;
 																							  }}
 																								minLength={8}
-																								maxLength={16}
+																								maxLength={255}
 																								type={
 																									this.state.isPasswordShown
 																										? 'text'
@@ -3738,7 +3739,7 @@ class Profile extends React.Component {
 																							// ondrop="return false"
 																							// onpaste="return false"
 																								minLength={8}
-																								maxLength={16}
+																								maxLength={255}
 																								type="password"
 																								id="password"
 																								name="password"
@@ -3771,7 +3772,7 @@ class Profile extends React.Component {
 																						{this.state.displayRules==true&&(<PasswordChecklist
 																							rules={["maxLength", "minLength", "specialChar", "number", "capital"]}
 																							minLength={8}
-																							maxLength={16}
+																							maxLength={255}
 																							value={props.values.password}
 																							valueAgain={props.values.confirmPassword}
 																						/>)}
@@ -3797,7 +3798,7 @@ class Profile extends React.Component {
 																							// ondrop="return false"
 																							// onpaste="return false"
 																								minLength={8}
-																								maxLength={16}
+																								maxLength={255}
 																								type="password"
 																								id="confirmPassword"
 																								name="confirmPassword"

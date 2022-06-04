@@ -122,7 +122,7 @@ class NewPassword extends React.Component {
                             // .min(8, "Password Too Short")
                             .matches(
                               /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
-                              "Must contain minimum 8 characters, must contain maximum 16 characters, one uppercase, one lowercase, one number and one special case character"
+                              "Must contain minimum 8 characters, must contain maximum 255 characters, one uppercase, one lowercase, one number and one special case character"
                             ),
                           confirmPassword: Yup.string()
                             .required('Confirm password is required')
@@ -197,7 +197,7 @@ class NewPassword extends React.Component {
 																		{this.state.displayRules==true&&(	<PasswordChecklist
 																				rules={["maxLength", "minLength", "specialChar", "number", "capital"]}
 																				minLength={8}
-                                        maxLength={16}
+                                        maxLength={255}
 																				value={props.values.password}
 																				valueAgain={props.values.confirmPassword}
 																			/>)}

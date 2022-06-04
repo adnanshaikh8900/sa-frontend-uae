@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
-import { Card, CardBody, Row, Col, Table } from 'reactstrap';
+import { Card, CardBody, Table } from 'reactstrap';
 import moment from 'moment';
 import '../style.scss';
 import logo from 'assets/images/brand/logo.png';
-import { Currency } from 'components';
-import { toInteger, upperCase } from 'lodash';
 import {data}  from '../../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { TextareaAutosize } from '@material-ui/core';
 
 const { ToWords } = require('to-words');
+const ZERO=0.00
 const toWords = new ToWords({
 	localeCode: 'en-IN',
 	converterOptions: {
@@ -356,24 +355,14 @@ class InvoiceTemplate extends Component {
 												</div><br/>
 												<div className="mb-1 ml-2" >
 												<strong style={{ padding: '0.5rem', background: '#f2f2f2'}}>{strings.BalanceDue} :  {invoiceData.dueAmount ? (
-														<Currency
-															value={invoiceData.dueAmount}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													) : (
-														<Currency
-															value={0}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													)}</strong></div>
+										currencyData[0]
+											? currencyData[0].currencyIsoCode +" "+ invoiceData.dueAmount 
+											: 'AED'+" "+ invoiceData.dueAmount 
+									) : (
+										currencyData[0]
+											? currencyData[0].currencyIsoCode + " " + 0
+											: 'AED' + " " + 0
+									)}</strong></div>
 													</div></div></div>
 													<Table className='table-striped' >
 						<thead className="header-row" style={{ fontSize:"12px" }}>
@@ -419,25 +408,14 @@ class InvoiceTemplate extends Component {
 												<td  style={{ textAlign: 'center' }}>{item.quantity}<br/><br/>
 												<b style={{fontSize:"10.5px"}}>{item.unitType}</b></td>
 												<td style={{ textAlign: 'right', width: '10%' }}>
-													<Currency
-														value={item.unitPrice}
-														currencySymbol={
-															currencyData[0]
-																? currencyData[0].currencyIsoCode
-																: 'USD'
-														}
-													/>
+												{invoiceData.currencyIsoCode + " " +item.unitPrice.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
 												</td>
 												{invoiceData.discount > 0 && (<><td style={{ textAlign: 'right' }}>
 												{item.discountType == "PERCENTAGE" ? item.discount + "  %" :
-												<Currency
-														value={item.discount}
-														currencySymbol={
-															currencyData[0]
-																? currencyData[0].currencyIsoCode
-																: 'USD'
-														}
-													/>}
+														(currencyData[0]
+														? currencyData[0].currencyIsoCode +" "+ invoiceData.discount 
+														: 'AED'+" "+ invoiceData.discount )
+											}
 												</td>
 												</>)}
 
@@ -445,37 +423,18 @@ class InvoiceTemplate extends Component {
 												{/* <td>{item.exciseTaxId ? this.renderExcise(item):"-"}</td> */}
 												{ invoiceData.totalExciseAmount > 0 && (<>
 													<td style={{ textAlign: 'right' }}>
-													<Currency
-														value={item.exciseAmount}
-														currencySymbol={
-															currencyData[0]
-																? currencyData[0].currencyIsoCode
-																: 'USD'
-														}
-													/>
+													{	invoiceData.currencyIsoCode + " " +item.exciseAmount.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
 												</td></>)}
 												{/* <td
 													style={{ textAlign: 'right' }}
 												>{`${item.vatPercentage}%`}</td> */}
 											    <td style={{ textAlign: 'right' }}>
-												<Currency
-														value={item.vatAmount}
-														currencySymbol={
-															currencyData[0]
-																? currencyData[0].currencyIsoCode
-																: 'USD'
-														}
-													/>
+												{	invoiceData.currencyIsoCode + " " +item.vatAmount.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
 												</td>
 												<td style={{ textAlign: 'right' }}>
-													<b><Currency
-														value={item.subTotal}
-														currencySymbol={
-															currencyData[0]
-																? currencyData[0].currencyIsoCode
-																: 'USD'
-														}
-													/></b>
+													<b>
+														{	invoiceData.currencyIsoCode + " " +item.subTotal.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
+													</b>
 												</td>
 											</tr>
 										);
@@ -542,16 +501,7 @@ class InvoiceTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-														<Currency
-															value={invoiceData.totalExciseAmount}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														
-														/>
-												
+												{ invoiceData.totalExciseAmount? invoiceData.currencyIsoCode + " " +invoiceData.totalExciseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 }):invoiceData.currencyIsoCode + " " + ZERO.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })}  
 												</span>
 											</td>
 										</tr> : ""}
@@ -608,17 +558,8 @@ class InvoiceTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-												
-														<Currency
-															value={invoiceData.discount ? +invoiceData.discount : invoiceData.discount}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														
-														/>
-												
+												{ invoiceData.discount ? invoiceData.currencyIsoCode + " " + invoiceData.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : invoiceData.currencyIsoCode + " " + ZERO.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}  
+
 												</span>
 											</td>
 										</tr> : ""}
@@ -627,26 +568,7 @@ class InvoiceTemplate extends Component {
 											<td style={{display: 'flex',justifyContent: 'space-between',}}>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													 {totalNet ? (
-														<Currency
-															value={totalNet-invoiceData.totalVatAmount}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													) : (
-														<Currency
-															value={0}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															} 
-														/>
-													)}  
-												</span>
+												{invoiceData.totalAmount ? invoiceData.currencyIsoCode + " " + ((parseFloat(invoiceData.totalAmount)-parseFloat(invoiceData.totalVatAmount))-parseFloat(invoiceData.totalExciseAmount)).toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : 0 }												</span>
 											</td>
 										</tr>
 										<tr >
@@ -661,25 +583,7 @@ class InvoiceTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													{invoiceData.totalVatAmount ? (
-														<Currency
-															value={invoiceData.totalVatAmount}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													) : (
-														<Currency
-															value={0}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													)}
+												{invoiceData.totalVatAmount ? invoiceData.currencyIsoCode + " " + invoiceData.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : 0 }
 												</span>
 											</td>
 										</tr>
@@ -695,25 +599,7 @@ class InvoiceTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													{invoiceData.totalAmount ? (
-														<Currency
-															value={invoiceData.totalAmount}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													) : (
-														<Currency
-															value={0}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													)}
+												{invoiceData.totalAmount ? invoiceData.currencyIsoCode + " " + invoiceData.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : 0}
 												</span>
 											</td>
 										</tr>
@@ -731,25 +617,15 @@ class InvoiceTemplate extends Component {
 												>
 													<span style={{ marginLeft: '2rem' }}></span>
 													<span>
-														{invoiceData.dueAmount ? (
-															<Currency
-																value={invoiceData.dueAmount}
-																currencySymbol={
+													{invoiceData.dueAmount ? (
 																	currencyData[0]
-																		? currencyData[0].currencyIsoCode
-																		: 'USD'
-																}
-															/>
-														) : (
-															<Currency
-																value={0}
-																currencySymbol={
+																	? currencyData[0].currencyIsoCode +" "+ invoiceData.dueAmount 
+																	: 'AED'+" "+ invoiceData.dueAmount 
+																) : (
 																	currencyData[0]
-																		? currencyData[0].currencyIsoCode
-																		: 'USD'
-																}
-															/>
-														)}
+																	? currencyData[0].currencyIsoCode +" "+ invoiceData.dueAmount 
+																	: 'AED'+" "+ invoiceData.dueAmount 
+																)}
 													</span>
 												</b>
 											</td>
@@ -799,7 +675,7 @@ class InvoiceTemplate extends Component {
 																			disabled
 																			className="textarea viewFootNote"
 																			maxLength="250"
-																			style={{width: "1220px"}}
+																			style={{width: "1100px"}}
 																			// rows="5"
 																			value={invoiceData.footNote}
 																		/>

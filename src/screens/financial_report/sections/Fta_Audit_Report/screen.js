@@ -13,22 +13,14 @@ import {
 	DropdownMenu,
 	DropdownItem,
 } from 'reactstrap';
-
 import moment from 'moment';
 import { PDFExport } from '@progress/kendo-react-pdf';
-import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
-import { CSVLink } from 'react-csv';
-import { Loader, Currency } from 'components';
-
+import { Loader } from 'components';
 import * as FinancialReportActions from '../../actions';
-
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
-import logo from 'assets/images/brand/logo.png';
 import { CommonActions } from 'services/global';
-import LocalizedStrings from 'react-localization';
-
 
 const mapStateToProps = (state) => {
 	return {
@@ -1084,13 +1076,13 @@ class ViewFtaAuditReport extends React.Component {
 																		
 																				<tr >
 																					<td style={{ width: '12%', textAlign: 'left'}}>
-																						{this.state.FtaAuditData.transactionCountTotal}
+																						{this.state.FtaAuditData.totalDebit}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{this.state.FtaAuditData.totalCredit}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
-																						{this.state.FtaAuditData.totalDebit}
+																						{this.state.FtaAuditData.transactionCountTotal}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{this.state.FtaAuditData.gltcurrency}

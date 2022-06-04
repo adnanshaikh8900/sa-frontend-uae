@@ -226,7 +226,7 @@ class PayrollRun extends React.Component {
 					data:list
 				}} })
 
-				toast.success("This is created by another user , So you can'nt able to Open it !")
+				toast.success("Access Denied! This payroll is created by another user.")
 			}			
 			
 	};

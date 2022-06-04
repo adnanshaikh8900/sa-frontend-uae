@@ -934,7 +934,7 @@ class DetailPurchaseOrder extends React.Component {
    }
 	renderVat = (cell, row, props) => {
 		const { vat_list } = this.state;
-		let vatList = vat_list.length
+		let vatList = vat_list && vat_list.length
 			? [{ id: '', vat: 'Select VAT' }, ...vat_list]
 			: vat_list;
 		let idx;

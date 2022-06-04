@@ -685,10 +685,10 @@ class DetailContact extends React.Component {
 																	// telephone: Yup.number().required(
 																	//   'Telephone Number is Required',
 																	// ),
-																	mobileNumber: Yup.string()
-																		.required('Mobile Number is Required')
+																	// mobileNumber: Yup.string()
+																	// 	.required('Mobile Number is Required')
 
-																	,
+																	// ,
 																	// billingEmail: Yup.string().email("Invalid Billing  Email "),
 																	//     addressLine1: Yup.string()
 																	//       .required("Address is required"),
@@ -1144,7 +1144,7 @@ class DetailContact extends React.Component {
 																			<Col md="4">
 																				<FormGroup>
 																					<Label htmlFor="mobileNumber">
-																						<span className="text-danger">* </span>
+																						<span className="text-danger"> </span>
 																						{strings.MobileNumber}
 																					</Label>
 																					<div className={

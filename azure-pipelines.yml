@@ -13,8 +13,9 @@ variables:
     containerRegistryConnection: 'DataInnAzureContainerRegistryConnection'
     containerRegistryName: 'datainn'
     tag: 0.0.3-alpha-$(Build.BuildId)
-
+    
   npm_config_cache: $(Pipeline.Workspace)/.npm
+  CACHE_RESTORED: false
 
 stages:
   - stage: ci_build_simpleaccounts
@@ -74,12 +75,22 @@ stages:
           inputs:
             key: 'docker | "$(Agent.OS)" | cache'
             path: $(Pipeline.Workspace)/docker
-            cacheHitVar: false                #Variable to set to 'true' when the cache is restored
+            cacheHitVar: CACHE_RESTORED                #Variable to set to 'true' when the cache is restored
           
         - script: |
             docker load -i $(Pipeline.Workspace)/docker/cache.tar
           displayName: Docker restore
           condition: and(not(canceled()), eq(variables.CACHE_RESTORED, 'true'))
+
+        - task: Docker@2
+          displayName: Docker Build & Push
+          inputs:
+            containerRegistry: $(containerRegistryConnection)
+            repository: 'simpleaccounts-frontend'
+            command: 'buildAndPush'
+            Dockerfile: '**/Dockerfile'
+            tags: |
+              $(tag)
 
         - script: |
             mkdir -p $(Pipeline.Workspace)/docker
@@ -105,12 +116,4 @@ stages:
         #   displayName: Docker save
         #   condition: and(not(canceled()), or(failed(), ne(variables.CACHE_RESTORED, 'true')))
 
-        - task: Docker@2
-          displayName: Docker Build & Push
-          inputs:
-            containerRegistry: $(containerRegistryConnection)
-            repository: 'simpleaccounts-frontend'
-            command: 'buildAndPush'
-            Dockerfile: '**/Dockerfile'
-            tags: |
-              $(tag)
+

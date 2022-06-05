@@ -755,7 +755,7 @@ class CreateContact extends React.Component {
 																					placeholder={strings.Enter + strings.EmailAddress}
 																					onChange={(option) => {
 																						props.handleChange('email')(option);
-																						this.emailvalidationCheck(option.target.value)
+																						// this.emailvalidationCheck(option.target.value)
 																					}}
 																					value={props.values.email}
 																					className={

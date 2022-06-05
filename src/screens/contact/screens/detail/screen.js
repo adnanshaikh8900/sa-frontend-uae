@@ -593,10 +593,10 @@ class DetailContact extends React.Component {
 																validate={(values) => {
 																	let errors = {};
 
-																	if (checkmobileNumberParam === true) {
-																		errors.mobileNumber =
-																			'Invalid mobile number';
-																	}
+																	// if (checkmobileNumberParam === true) {
+																	// 	errors.mobileNumber =
+																	// 		'Invalid mobile number';
+																	// }
 
 																	if (values.stateId === '') {
 																		errors.stateId = 'State is Required';
@@ -1026,7 +1026,7 @@ class DetailContact extends React.Component {
 																						placeholder={strings.Enter + strings.EmailAddress}
 																						onChange={(option) => {
 																							props.handleChange('email')(option);
-																							this.emailvalidationCheck(option.target.value)
+																							// this.emailvalidationCheck(option.target.value)
 																						}}
 																						value={props.values.email}
 																						className={
@@ -1165,7 +1165,7 @@ class DetailContact extends React.Component {
 																								props.handleChange('mobileNumber')(
 																									option,
 																								);
-																								option.length !== 12 ? this.setState({ checkmobileNumberParam: true }) : this.setState({ checkmobileNumberParam: false });
+																								// option.length !== 12 ? this.setState({ checkmobileNumberParam: true }) : this.setState({ checkmobileNumberParam: false });
 																							}}
 																							isValid
 																						// className={

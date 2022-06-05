@@ -448,21 +448,21 @@ class UpdateEmployeePersonal extends React.Component {
                                                     validate={(values) => {
 														let errors = {};
 	
-														if (checkmobileNumberParam === true) {
-														errors.mobileNumber =
-														'Invalid mobile number';
-														}
+														// if (checkmobileNumberParam === true) {
+														// errors.mobileNumber =
+														// 'Invalid mobile number';
+														// }
 
                                                         
-                                                        if (checkmobileNumberParam1 === true) {
-                                                            errors.emergencyContactNumber1 =
-                                                            'Invalid mobile number';
-                                                            }
+                                                        // if (checkmobileNumberParam1 === true) {
+                                                        //     errors.emergencyContactNumber1 =
+                                                        //     'Invalid mobile number';
+                                                        //     }
 
-                                                            if (checkmobileNumberParam2 === true) {
-                                                                errors.emergencyContactNumber2 =
-                                                                'Invalid mobile number';
-                                                                }
+                                                        //     if (checkmobileNumberParam2 === true) {
+                                                        //         errors.emergencyContactNumber2 =
+                                                        //         'Invalid mobile number';
+                                                        //         }
                                                             
                                                             if (values.employeeDesignationId && values.employeeDesignationId.label && values.employeeDesignationId.label === "Select Employee Designation") {
                                                                     errors.employeeDesignationId =
@@ -726,7 +726,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                         props.handleChange('mobileNumber')(
                                                                                             option,
                                                                                         );
-                                                                                        option.length!==12 ?  this.setState({checkmobileNumberParam:true}) :this.setState({checkmobileNumberParam:false});
+                                                                                        // option.length!==12 ?  this.setState({checkmobileNumberParam:true}) :this.setState({checkmobileNumberParam:false});
                                                                                     }}
                                                                                     // className={
                                                                                     //     props.errors.mobileNumber &&
@@ -1420,7 +1420,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                                             props.handleChange('emergencyContactNumber1')(
                                                                                                                 option,
                                                                                                             );
-                                                                                                            option.length!==12 ?  this.setState({checkmobileNumberParam1:true}) :this.setState({checkmobileNumberParam1:false});
+                                                                                                            // option.length!==12 ?  this.setState({checkmobileNumberParam1:true}) :this.setState({checkmobileNumberParam1:false});
                                                                                                         }}
                                                                                                         className={
                                                                                                             props.errors.emergencyContactNumber1 &&
@@ -1497,7 +1497,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                                             props.handleChange('emergencyContactNumber2')(
                                                                                                                 option,
                                                                                                             );
-                                                                                                            option.length!==12 ?  this.setState({checkmobileNumberParam2:true}) :this.setState({checkmobileNumberParam2:false});
+                                                                                                            // option.length!==12 ?  this.setState({checkmobileNumberParam2:true}) :this.setState({checkmobileNumberParam2:false});
                                                                                                         }}
                                                                                                         className={
                                                                                                             props.errors.emergencyContactNumber2 &&

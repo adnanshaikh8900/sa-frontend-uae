@@ -74,7 +74,7 @@ stages:
         - task: Cache@2
           displayName: Cache task
           inputs:
-            key: 'docker | "$(Agent.OS)" | cache'
+            key: 'docker | "$(Agent.OS)" | $(containerRegistryName).azurecr.io/simpleaccounts-frontend:$(tag)'
             path: $(Pipeline.Workspace)/docker
             cacheHitVar: CACHE_RESTORED                #Variable to set to 'true' when the cache is restored
           
@@ -95,7 +95,7 @@ stages:
 
         - script: |
             mkdir -p $(Pipeline.Workspace)/docker
-            docker save -o $(Pipeline.Workspace)/docker/cache.tar cache
+            docker save -o $(Pipeline.Workspace)/docker/cache.tar $(containerRegistryName).azurecr.io/simpleaccounts-frontend:$(tag)
           displayName: Docker save
           condition: and(not(canceled()), or(failed(), ne(variables.CACHE_RESTORED, 'false')))
           

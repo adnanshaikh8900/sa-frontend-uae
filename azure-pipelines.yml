@@ -16,6 +16,7 @@ variables:
 
   npm_config_cache: $(Pipeline.Workspace)/.npm
   docker_cashe_path: simpleaccounts-frontend-$(Build.SourceBranchName)
+  YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
 
 
 stages:
@@ -29,6 +30,17 @@ stages:
         timeoutInMinutes: 30
 
         steps:
+        - task: Cache@2
+          inputs:
+            key: '"yarn" | "$(Agent.OS)" | yarn.lock'
+            restoreKeys: |
+              yarn | "$(Agent.OS)"
+              yarn
+            path: $(YARN_CACHE_FOLDER)
+          displayName: Cache Yarn packages
+
+        - script: yarn --frozen-lockfile
+
           # - task: NodeTool@0
           #   displayName: Install Node.js
           #   inputs:
@@ -55,30 +67,30 @@ stages:
           #       npm run build
           #   displayName: 'npm build'
 
-          - task: Cache@2
-            displayName: Cache task
-            inputs:
-              key: 'docker | "$(Agent.OS)" | cache'
-              path: $(Pipeline.Workspace)/$(docker_cashe_path)
-              cacheHitVar: CACHE_RESTORED                #Variable to set to 'true' when the cache is restored
+          # - task: Cache@2
+          #   displayName: Cache task
+          #   inputs:
+          #     key: 'docker | "$(Agent.OS)" | cache'
+          #     path: $(Pipeline.Workspace)/$(docker_cashe_path)
+          #     cacheHitVar: CACHE_RESTORED                #Variable to set to 'true' when the cache is restored
 
           # - script: |
           #     docker load -i $(Pipeline.Workspace)/$(docker_cashe_path)/docker-cache.tar
           #   displayName: Docker restore
           #   condition: and(not(canceled()), eq(variables.CACHE_RESTORED, 'true'))
 
-          - task: Docker@2
-            displayName: Docker Build & Push
-            inputs:
-              containerRegistry: $(containerRegistryConnection)
-              repository: 'simpleaccounts-frontend'
-              command: 'buildAndPush'
-              Dockerfile: '**/Dockerfile'
-              tags: |
-                $(tag)
+          # - task: Docker@2
+          #   displayName: Docker Build & Push
+          #   inputs:
+          #     containerRegistry: $(containerRegistryConnection)
+          #     repository: 'simpleaccounts-frontend'
+          #     command: 'buildAndPush'
+          #     Dockerfile: '**/Dockerfile'
+          #     tags: |
+          #       $(tag)
 
-          - script: |
-              mkdir -p $(Pipeline.Workspace)/$(docker_cashe_path)
-              docker save -o $(Pipeline.Workspace)/$(docker_cashe_path)/docker-cache.tar $(containerRegistryName).azurecr.io/simpleaccounts-frontend:$(tag)
-            displayName: Docker save
-            condition: and(not(canceled()), or(failed(), ne(variables.CACHE_RESTORED, 'true')))
+          # - script: |
+          #     mkdir -p $(Pipeline.Workspace)/$(docker_cashe_path)
+          #     docker save -o $(Pipeline.Workspace)/$(docker_cashe_path)/docker-cache.tar $(containerRegistryName).azurecr.io/simpleaccounts-frontend:$(tag)
+          #   displayName: Docker save
+          #   condition: and(not(canceled()), or(failed(), ne(variables.CACHE_RESTORED, 'true')))

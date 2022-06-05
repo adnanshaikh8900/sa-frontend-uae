@@ -30,6 +30,11 @@ stages:
         timeoutInMinutes: 30
 
         steps:
+        - task: CmdLine@2
+          inputs:
+            script: |
+              yarn install
+              
         - task: Cache@2
           inputs:
             key: '"yarn" | "$(Agent.OS)" | yarn.lock'

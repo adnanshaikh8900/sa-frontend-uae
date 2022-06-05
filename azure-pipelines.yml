@@ -16,8 +16,6 @@ variables:
 
   npm_config_cache: $(Pipeline.Workspace)/.npm
   docker_cashe_path: simpleaccounts-frontend-$(Build.SourceBranchName)
-  YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
-
 
 stages:
   - stage: ci_build_simpleaccounts
@@ -30,21 +28,16 @@ stages:
         timeoutInMinutes: 30
 
         steps:
-        - task: CmdLine@2
-          inputs:
-            script: |
-              yarn install
-              
+
         - task: Cache@2
           inputs:
-            key: '"yarn" | "$(Agent.OS)" | yarn.lock'
+            key: 'npm | "$(Agent.OS)" | package-lock.json'
             restoreKeys: |
-              yarn | "$(Agent.OS)"
-              yarn
-            path: $(YARN_CACHE_FOLDER)
-          displayName: Cache Yarn packages
+              npm | "$(Agent.OS)"
+            path: $(npm_config_cache)
+          displayName: Cache npm
 
-        - script: yarn --frozen-lockfile
+        - script: npm ci
 
           # - task: NodeTool@0
           #   displayName: Install Node.js

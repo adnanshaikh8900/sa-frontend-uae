@@ -15,7 +15,6 @@ variables:
     tag: 0.0.3-alpha-$(Build.BuildId)
 
   npm_config_cache: $(Pipeline.Workspace)/.npm
-  docker_cashe_path: simpleaccounts-frontend-$(Build.SourceBranchName)
 
 stages:
   - stage: ci_build_simpleaccounts
@@ -73,19 +72,37 @@ stages:
           displayName: Cache task
           inputs:
             key: 'docker | "$(Agent.OS)" | cache'
-            path: $(Pipeline.Workspace)/$(docker_cashe_path)
+            path: $(Pipeline.Workspace)/docker
             cacheHitVar: CACHE_RESTORED                #Variable to set to 'true' when the cache is restored
-
+          
         - script: |
-            docker load -i $(Pipeline.Workspace)/$(docker_cashe_path)/docker-cache.tar
+            docker load -i $(Pipeline.Workspace)/docker/cache.tar
           displayName: Docker restore
           condition: and(not(canceled()), eq(variables.CACHE_RESTORED, 'true'))
 
         - script: |
-            mkdir -p $(Pipeline.Workspace)/$(docker_cashe_path)
-            docker save -o $(Pipeline.Workspace)/$(docker_cashe_path)/docker-cache.tar $(containerRegistryName).azurecr.io/simpleaccounts-frontend:$(tag)
+            mkdir -p $(Pipeline.Workspace)/docker
+            docker save -o $(Pipeline.Workspace)/docker/cache.tar cache
           displayName: Docker save
           condition: and(not(canceled()), or(failed(), ne(variables.CACHE_RESTORED, 'true')))
+          
+        # - task: Cache@2
+        #   displayName: Cache task
+        #   inputs:
+        #     key: 'docker | "$(Agent.OS)" | cache'
+        #     path: $(Pipeline.Workspace)/$(docker_cashe_path)
+        #     cacheHitVar: CACHE_RESTORED                #Variable to set to 'true' when the cache is restored
+
+        # - script: |
+        #     docker load -i $(Pipeline.Workspace)/$(docker_cashe_path)/docker-cache.tar
+        #   displayName: Docker restore
+        #   condition: and(not(canceled()), eq(variables.CACHE_RESTORED, 'true'))
+
+        # - script: |
+        #     mkdir -p $(Pipeline.Workspace)/$(docker_cashe_path)
+        #     docker save -o $(Pipeline.Workspace)/$(docker_cashe_path)/docker-cache.tar $(containerRegistryName).azurecr.io/simpleaccounts-frontend:$(tag)
+        #   displayName: Docker save
+        #   condition: and(not(canceled()), or(failed(), ne(variables.CACHE_RESTORED, 'true')))
 
         - task: Docker@2
           displayName: Docker Build & Push

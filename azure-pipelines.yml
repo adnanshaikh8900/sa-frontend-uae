@@ -40,7 +40,9 @@ stages:
             path: $(npm_config_cache)
           displayName: Cache npm
 
-        - script: npm run build
+        - script: |
+            npm ci
+            npm run build
 
           # - task: NodeTool@0
           #   displayName: Install Node.js

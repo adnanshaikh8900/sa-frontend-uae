@@ -3,7 +3,8 @@
 #################
 
 .vscode/
-package-lock.json
+#package-lock.json
+yarn.lock
 node_modules/
 frontend/node_modules/
 target/

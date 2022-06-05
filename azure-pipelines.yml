@@ -78,10 +78,10 @@ stages:
             path: $(Pipeline.Workspace)/docker
             cacheHitVar: CACHE_RESTORED                #Variable to set to 'true' when the cache is restored
           
-        # - script: |
-        #     docker load -i $(Pipeline.Workspace)/docker/cache.tar
-        #   displayName: Docker restore
-        #   condition: and(not(canceled()), eq(variables.CACHE_RESTORED, 'true'))
+        - script: |
+            docker load -i $(Pipeline.Workspace)/docker/cache.tar
+          displayName: Docker restore
+          condition: and(not(canceled()), eq(variables.CACHE_RESTORED, 'true'))
 
         - task: Docker@2
           displayName: Docker Build & Push
@@ -97,7 +97,7 @@ stages:
             mkdir -p $(Pipeline.Workspace)/docker
             docker save -o $(Pipeline.Workspace)/docker/cache.tar $(containerRegistryName).azurecr.io/simpleaccounts-frontend:$(tag)
           displayName: Docker save
-          condition: and(not(canceled()), or(failed(), ne(variables.CACHE_RESTORED, 'false')))
+          condition: and(not(canceled()), or(failed(), ne(variables.CACHE_RESTORED, 'true')))
           
         # - task: Cache@2
         #   displayName: Cache task

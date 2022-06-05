@@ -77,9 +77,6 @@ class UpdateEmployeeEmployment extends React.Component {
                                 res.data.employeeCode && res.data.employeeCode !== null
                                     ? res.data.employeeCode
                                     : '',
-                                    agentId: res.data.agentId && res.data.agentId !== null
-                                    ? res.data.agentId
-                                    : '',
                             department:
                                 res.data.department && res.data.department !== null
                                     ? res.data.department
@@ -148,7 +145,6 @@ class UpdateEmployeeEmployment extends React.Component {
             salaryRoleId,
             visaExpiryDate,
             employeeCode,
-            agentId,
 
         } = data;
 
@@ -163,11 +159,7 @@ class UpdateEmployeeEmployment extends React.Component {
         formData.append(
             'employeeCode',
             employeeCode !== null ? employeeCode : '',
-        )
-        formData.append(
-            'agentId',
-            agentId !== null ? agentId : '',
-        )
+        );
         
         formData.append(
             'labourCard',
@@ -263,24 +255,22 @@ class UpdateEmployeeEmployment extends React.Component {
                                                     validationSchema={Yup.object().shape({
                                                         employeeCode: Yup.string()
                                                             .required("Employee unique id is required"),
-                                                        agentId: Yup.string()
-                                                        .required("Agent id is required"),
-                                            
+                                                                                                  
                                                         dateOfJoining: Yup.date()
                                                             .required('Date of joining is required')                   
                                                     })}
                                                     validate={(values) => {
                                                         let errors = {};
-                                                        if(values.employeeCode &&
-                                                            values.employeeCode.length && 
-                                                            values.employeeCode.length!=14)
-                                                        {
-                                                            errors.employeeCode =
-                                                            'Employee unique id  must be 14 digit';        
-                                                        }else  
+                                                        // if(values.employeeCode &&
+                                                        //     values.employeeCode.length && 
+                                                        //     values.employeeCode.length!=14)
+                                                        // {
+                                                        //     errors.employeeCode =
+                                                        //     'Employee unique id  must be 14 digit';        
+                                                        // }else  
                                                         if (exist === true  && values.employeeCode!="") {
                                                             errors.employeeCode =
-                                                            'Employee unique id  already exists';
+                                                            'Employee unique id already exists';
                                                         }
                                                         return errors;
 
@@ -295,67 +285,40 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                 <Col lg={12}>
                                                                   
                                                                     <Row  >
-                                                                    <Col md="4">
-                                                                        <FormGroup>
-                                                                        <Label htmlFor="select"><span className="text-danger">* </span> {strings.EmployeeCode}  </Label>
-                                                                        <Input
-                                                                            type="text"
-                                                                            maxLength="14"
-                                                                            minLength="14"
-                                                                            id="employeeCode"
-                                                                            name="employeeCode"
-                                                                            value={props.values.employeeCode}
-                                                                            placeholder={strings.Enter+strings.EmployeeCode}
-                                                                            onChange={(value) => {
-                                                                                props.handleChange('employeeCode')(value);
-                                                                                this.employeeValidationCheck(value.target.value);
-                                                                                }}
-                                                                            className={props.errors.employeeCode && props.touched.employeeCode ? "is-invalid" : ""}
-                                                                            />
-                                                                            {props.errors.employeeCode && props.touched.employeeCode && (
-                                                                        <div className="invalid-feedback">{props.errors.employeeCode}</div>
-                                                                        )}
-                                                                        </FormGroup>
-                                                                        </Col>
                                                                         <Col md="4">
-                                                                                                <FormGroup>
-                                                                                                    <Label htmlFor="select"><span className="text-danger">* </span>Agent ID </Label>
-                                                                                                    <Input
-                                                                                                        type="text"
-                                                                                                        maxLength="9"
-                                                                                                        minLength="9"
-                                                                                                        id="agentId"
-                                                                                                        name="agentId"
-                                                                                                        value={props.values.agentId}
-                                                                                                        placeholder={strings.Enter+" Agent Id"}
-                                                                                                       
-
-                                                                                                        onChange={(option) => {
-                                                                                                            if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('agentId')(option) }
-                                                                                                                 // this.validationCheck(option.target.value);
-                                                                                                        }}
-                                                                                                        className={props.errors.agentId && props.touched.agentId ? "is-invalid" : ""}
-                                                                                                    />
-                                                                                                    {props.errors.agentId && props.touched.agentId && (
-                                                                                                        <div className="invalid-feedback">{props.errors.agentId}</div>
-                                                                                                    )}
-                                                                                                </FormGroup>
-                                                                                            </Col>
-                                                                    
-                                                                       
-                                                                    </Row>
-                                                                    <Row>
-
-                                                                    <Col md="4">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="labourCard">{strings.LabourCard}</Label>
+                                                                            <Label htmlFor="select"><span className="text-danger">* </span> {strings.EmployeeCode}  </Label>
+                                                                            <Input
+                                                                                type="text"
+                                                                                maxLength="14"
+                                                                                autoComplete='off'
+                                                                                // minLength="14"
+                                                                                id="employeeCode"
+                                                                                name="employeeCode"
+                                                                                value={props.values.employeeCode}
+                                                                                placeholder={strings.Enter+strings.EmployeeCode}
+                                                                                onChange={(value) => {
+                                                                                    props.handleChange('employeeCode')(value);
+                                                                                    this.employeeValidationCheck(value.target.value);
+                                                                                    }}
+                                                                                className={props.errors.employeeCode && props.touched.employeeCode ? "is-invalid" : ""}
+                                                                                />
+                                                                                {props.errors.employeeCode && props.touched.employeeCode && (
+                                                                            <div className="invalid-feedback">{props.errors.employeeCode}</div>
+                                                                            )}
+                                                                            </FormGroup>
+                                                                        </Col>
+
+                                                                        <Col md="4">
+                                                                            <FormGroup>
+                                                                                <Label htmlFor="labourCard">{strings.LabourCardId}</Label>
                                                                                 <Input
                                                                                     type="text"
                                                                                     maxLength="14"
                                                                                     id="labourCard"
                                                                                     name="labourCard"
                                                                                     value={props.values.labourCard}
-                                                                                    placeholder={strings.Enter+strings.LabourCard}
+                                                                                    placeholder={strings.Enter+strings.LabourCardId}
                                                                                     onChange={(option) => {
                                                                                         if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('labourCard')(option) }
                                                                                     }}
@@ -369,6 +332,11 @@ class UpdateEmployeeEmployment extends React.Component {
 
                                                                             </FormGroup>
                                                                         </Col>
+
+                                                                    </Row>
+                                                                    
+                                                                    <Row>
+                                                                    
                                                                         <Col md="4">
                                                                             <FormGroup>
                                                                                 <Label htmlFor="select"> {strings.Department} </Label>
@@ -390,6 +358,33 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                                 )}
                                                                             </FormGroup>
                                                                         </Col>
+                                                                        
+                                                                        <Col md="4">
+                                                                            <FormGroup className="mb-3">
+                                                                                <Label htmlFor="dateOfJoining"><span className="text-danger">* </span> {strings.DateOfJoining}</Label>
+                                                                                <DatePicker
+                                                                                    className={`form-control ${props.errors.dateOfJoining && props.touched.dateOfJoining ? "is-invalid" : ""}`}
+                                                                                    id="dateOfJoining"
+                                                                                    name="dateOfJoining"
+                                                                                    placeholderText={strings.Select+strings.DateOfJoining}
+                                                                                    showMonthDropdown
+                                                                                    showYearDropdown
+                                                                                    // maxDate={new Date()}
+                                                                                    autoComplete={"off"}
+                                                                                    dateFormat="dd-MM-yyyy"
+                                                                                    dropdownMode="select"
+                                                                                    selected={props.values.dateOfJoining}
+                                                                                    value={props.values.dateOfJoining}
+                                                                                    onChange={(value) => {
+                                                                                        props.handleChange("dateOfJoining")(value)
+                                                                                    }}
+                                                                                />
+                                                                                {props.errors.dateOfJoining && props.touched.dateOfJoining && (
+                                                                                    <div className="invalid-feedback">{props.errors.dateOfJoining}</div>
+                                                                                )}
+                                                                            </FormGroup>
+                                                                        </Col>
+
                                                                     </Row>
                                                                     <Row>
                                                                         <Col md="4">
@@ -435,7 +430,9 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                                 )}
                                                                             </FormGroup>
                                                                         </Col>
-                                                                    </Row>  <Row>
+                                                                    </Row>
+                                                                    
+                                                                    {/* <Row>
                                                                         <Col md="4">
                                                                             <FormGroup>
                                                                                 <Label htmlFor="gender"> {strings.VisaNumber} </Label>
@@ -479,35 +476,8 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                                 )}
                                                                             </FormGroup>
                                                                         </Col>
-                                                                    </Row>
-                                                                    <Row>
-                                                                    <Col md="4">
-                                                                            <FormGroup className="mb-3">
-                                                                                <Label htmlFor="dateOfJoining"><span className="text-danger">* </span> {strings.DateOfJoining}</Label>
-                                                                                <DatePicker
-                                                                                    className={`form-control ${props.errors.dateOfJoining && props.touched.dateOfJoining ? "is-invalid" : ""}`}
-                                                                                    id="dateOfJoining"
-                                                                                    name="dateOfJoining"
-                                                                                    placeholderText={strings.Select+strings.DateOfJoining}
-                                                                                    showMonthDropdown
-                                                                                    showYearDropdown
-                                                                                    maxDate={new Date()}
-                                                                                    autoComplete={"off"}
-                                                                                    dateFormat="dd-MM-yyyy"
-                                                                                    dropdownMode="select"
-                                                                                    selected={props.values.dateOfJoining}
-                                                                                    value={props.values.dateOfJoining}
-                                                                                    onChange={(value) => {
-                                                                                        props.handleChange("dateOfJoining")(value)
-                                                                                    }}
-                                                                                />
-                                                                                {props.errors.dateOfJoining && props.touched.dateOfJoining && (
-                                                                                    <div className="invalid-feedback">{props.errors.dateOfJoining}</div>
-                                                                                )}
-                                                                            </FormGroup>
-                                                                        </Col>
+                                                                    </Row> */}
 
-                                                                    </Row>
                                                                     <Row>
                                                                  
                                                                         {/* <Col md="4">

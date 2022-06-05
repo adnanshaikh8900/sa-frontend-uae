@@ -213,6 +213,16 @@ class UpdateEmployeePersonal extends React.Component {
                                     ? this.state.userPhoto.concat(res.data.profilePicByteArray)
                                     : [],
 
+                            PostZipCode:
+                                res.data.pincode && res.data.pincode !== null
+                                    ? res.data.pincode
+                                    : '',
+
+                            poBoxNumber:
+                                res.data.pincode && res.data.pincode !== null
+                                    ? res.data.pincode
+                                    : '',
+
                         },
                         selectedStatus: res.data.isActive ? true : false,
                     },
@@ -244,7 +254,7 @@ class UpdateEmployeePersonal extends React.Component {
 		this.props.createPayrollEmployeeActions.getStateList(countryCode);
 	};
 
-    // Create or Edit VAT
+    // Create or Edit 
     handleSubmit = (data) => {
 
         this.setState({ disabled: true, disableLeavePage:true, });
@@ -275,7 +285,9 @@ class UpdateEmployeePersonal extends React.Component {
             emergencyContactRelationship1,
             emergencyContactNumber1,
             emergencyContactName2,
-            emergencyContactRelationship2
+            emergencyContactRelationship2,
+            poBoxNumber,
+            PostZipCode
 			
 		} = data;
 
@@ -308,8 +320,9 @@ class UpdateEmployeePersonal extends React.Component {
 		);
         formData.append(
 			'pincode',
-			pincode !== null ? pincode : '',
+			PostZipCode !== null ? PostZipCode : '',
 		);
+        
         formData.append('isActive', this.state.selectedStatus);
         formData.append(
 			'presentAddress',
@@ -388,6 +401,17 @@ class UpdateEmployeePersonal extends React.Component {
                   )
         })
     }
+    underAge=(birthday)=>{  
+        // set current day on 01:00:00 hours GMT+0100 (CET)
+        var currentDate = new Date().toJSON().slice(0,10)+' 01:00:00';  
+        // calculate age comparing current date and borthday
+        var myAge = ~~((Date.now(currentDate) - birthday) / (31557600000));
+
+        if(myAge < 14)
+            return true;
+        else
+            return false;
+   }
     render() {
         strings.setLanguage(this.state.language);
         const { loading, loadingMsg,initValue, dialog ,checkmobileNumberParam,checkmobileNumberParam1,checkmobileNumberParam2} = this.state
@@ -445,11 +469,13 @@ class UpdateEmployeePersonal extends React.Component {
                                                                     'Designation is required';
                                                                 }
 
-                                                                if (values.salaryRoleId && values.salaryRoleId.label && values.salaryRoleId.label === "Select Salary Role") {
-                                                                    errors.salaryRoleId =
-                                                                    'Salary role is required';
-                                                                }
-
+                                                                // if (values.salaryRoleId && values.salaryRoleId.label && values.salaryRoleId.label === "Select Salary Role") {
+                                                                //     errors.salaryRoleId =
+                                                                //     'Salary role is required';
+                                                                // }
+                                                                if(this.underAge(values.dob))
+                                                                errors.dob =
+                                                                'Age should be more than 14 years';
 														return errors;
 													}}
                                                     validationSchema={Yup.object().shape({
@@ -479,8 +505,8 @@ class UpdateEmployeePersonal extends React.Component {
                                                         //     .required('status is required'),
                                                         employeeDesignationId: Yup.string()
                                                             .required('Designation is required'),
-                                                            salaryRoleId : Yup.string()
-                                                            .required('Salary role is required'),
+                                                            // salaryRoleId : Yup.string()
+                                                            // .required('Salary role is required'),
                                                             mobileNumber: Yup.string()
 															.required('Mobile number is required'),
                                                             emergencyContactName1: Yup.string()
@@ -495,6 +521,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                 >
                                                     {(props) => (
                                                         <Form onSubmit={props.handleSubmit} name="simpleForm">
+
                                                             <Row>
                                                                 <Col xs="4" md="4" lg={2}>
                                                                                         <FormGroup className="mb-3 text-center">
@@ -529,6 +556,73 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                     </Col>
 
                                                                 <Col  xs="4" md="4" lg={10}>
+                                                                <Row>  <Col md="4">
+                                                                            <FormGroup className="mb-3">
+                                                                              
+                                                                                <div>
+                                                                                    <FormGroup check inline>  <span className="text-danger">* </span> {strings.Status}  &nbsp;  &nbsp;
+                                                                                        <div className="custom-radio custom-control">
+                                                                                            <input
+                                                                                                className="custom-control-input"
+                                                                                                type="radio"
+                                                                                                id="inline-radio1"
+                                                                                                name="active"
+                                                                                                checked={
+                                                                                                    this.state.selectedStatus
+                                                                                                }
+                                                                                                value={true}
+                                                                                                onChange={(e) => {
+                                                                                                    if (
+                                                                                                        e.target.value === 'true'
+                                                                                                    ) {
+                                                                                                        this.setState({
+                                                                                                            selectedStatus: true,
+                                                                                                            useractive: true
+                                                                                                        });
+                                                                                                    }
+                                                                                                }}
+                                                                                            />
+                                                                                            <label
+                                                                                                className="custom-control-label"
+                                                                                                htmlFor="inline-radio1"
+                                                                                            >
+                                                                                                {strings.Active}
+                                                                                            </label>
+                                                                                        </div>
+                                                                                    </FormGroup>
+                                                                                    <FormGroup check inline>
+                                                                                        <div className="custom-radio custom-control">
+                                                                                            <input
+                                                                                                className="custom-control-input"
+                                                                                                type="radio"
+                                                                                                id="inline-radio2"
+                                                                                                name="active"
+                                                                                                value={false}
+                                                                                                checked={
+                                                                                                    !this.state.selectedStatus
+                                                                                                }
+                                                                                                onChange={(e) => {
+                                                                                                    if (
+                                                                                                        e.target.value === 'false'
+                                                                                                    ) {
+                                                                                                        this.setState({
+                                                                                                            selectedStatus: false,
+                                                                                                            useractive: false
+                                                                                                        });
+                                                                                                    }
+                                                                                                }}
+                                                                                            />
+                                                                                            <label
+                                                                                                className="custom-control-label"
+                                                                                                htmlFor="inline-radio2"
+                                                                                            >
+                                                                                                {strings.Inactive}
+                                                                                            </label>
+                                                                                        </div>
+                                                                                    </FormGroup>
+                                                                                </div>
+                                                                            </FormGroup>
+                                                                        </Col></Row>
                                                                     <Row className="row-wrapper">
 
                                                                         <Col lg={4}>
@@ -678,75 +772,9 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                 )}
                                                                             </FormGroup>
                                                                         </Col>
-                                                                        <Col md="4">
-                                                                            <FormGroup className="mb-3">
-                                                                                <Label htmlFor="active"><span className="text-danger">* </span> {strings.Status}</Label>
-                                                                                <div>
-                                                                                    <FormGroup check inline>
-                                                                                        <div className="custom-radio custom-control">
-                                                                                            <input
-                                                                                                className="custom-control-input"
-                                                                                                type="radio"
-                                                                                                id="inline-radio1"
-                                                                                                name="active"
-                                                                                                checked={
-                                                                                                    this.state.selectedStatus
-                                                                                                }
-                                                                                                value={true}
-                                                                                                onChange={(e) => {
-                                                                                                    if (
-                                                                                                        e.target.value === 'true'
-                                                                                                    ) {
-                                                                                                        this.setState({
-                                                                                                            selectedStatus: true,
-                                                                                                            useractive: true
-                                                                                                        });
-                                                                                                    }
-                                                                                                }}
-                                                                                            />
-                                                                                            <label
-                                                                                                className="custom-control-label"
-                                                                                                htmlFor="inline-radio1"
-                                                                                            >
-                                                                                                {strings.Active}
-                                                                                            </label>
-                                                                                        </div>
-                                                                                    </FormGroup>
-                                                                                    <FormGroup check inline>
-                                                                                        <div className="custom-radio custom-control">
-                                                                                            <input
-                                                                                                className="custom-control-input"
-                                                                                                type="radio"
-                                                                                                id="inline-radio2"
-                                                                                                name="active"
-                                                                                                value={false}
-                                                                                                checked={
-                                                                                                    !this.state.selectedStatus
-                                                                                                }
-                                                                                                onChange={(e) => {
-                                                                                                    if (
-                                                                                                        e.target.value === 'false'
-                                                                                                    ) {
-                                                                                                        this.setState({
-                                                                                                            selectedStatus: false,
-                                                                                                            useractive: false
-                                                                                                        });
-                                                                                                    }
-                                                                                                }}
-                                                                                            />
-                                                                                            <label
-                                                                                                className="custom-control-label"
-                                                                                                htmlFor="inline-radio2"
-                                                                                            >
-                                                                                                {strings.Inactive}
-                                                                                            </label>
-                                                                                        </div>
-                                                                                    </FormGroup>
-                                                                                </div>
-                                                                            </FormGroup>
-                                                                        </Col>
-
+                                                                      
                                                                     </Row>
+
                                                                     <Row>
                                                                         <Col md="4">
                                                                             <FormGroup>
@@ -788,7 +816,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                 )}
                                                                             </FormGroup>
                                                                         </Col>
-                                                                        <Col md="4">
+                                                                        {/* <Col md="4">
                                                                             <FormGroup>
                                                                                 <Label htmlFor="bloodGroup">{strings.BloodGroup}</Label>
                                                                                 <Select
@@ -831,7 +859,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                 )}
 
                                                                             </FormGroup>
-                                                                        </Col>
+                                                                        </Col> */}
                                                                         <Col md="4">
                                                                             <FormGroup>
                                                                                 <Label htmlFor="parentId"> {strings.ReportsTo}</Label>
@@ -878,10 +906,56 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                 )}
                                                                             </FormGroup>
                                                                         </Col>
-                                                                       
+
+                                                                       <Col md="4">
+                                                                            <FormGroup>
+                                                                                <Label htmlFor="employeeDesignationId"><span className="text-danger">* </span>{strings.Designation}</Label>
+                                                                                <Select
+
+                                                                                    options={
+                                                                                        designation_dropdown
+                                                                                            ? selectOptionsFactory.renderOptions(
+                                                                                                'label',
+                                                                                                'value',
+                                                                                                designation_dropdown,
+                                                                                                'Employee Designation',
+                                                                                            )
+                                                                                            : []
+                                                                                    }
+                                                                                    id="employeeDesignationId"
+                                                                                    name="employeeDesignationId"
+                                                                                    placeholder={strings.Select + strings.Designation}
+                                                                                    value={designation_dropdown
+                                                                                        && selectOptionsFactory.renderOptions(
+                                                                                            'label',
+                                                                                            'value',
+                                                                                            designation_dropdown,
+                                                                                            'employeeDesignationId',
+                                                                                        ).find(
+                                                                                            (option) =>
+                                                                                                option.value ===
+                                                                                                +props.values.employeeDesignationId,
+                                                                                        )}
+                                                                                    onChange={(value) => {
+                                                                                        props.handleChange('employeeDesignationId')(value);
+
+                                                                                    }}
+                                                                                    className={`${props.errors.employeeDesignationId && props.touched.employeeDesignationId
+                                                                                        ? 'is-invalid'
+                                                                                        : ''
+                                                                                        }`}
+                                                                                />
+                                                                                {props.errors.employeeDesignationId && props.touched.employeeDesignationId && (
+                                                                                    <div className="invalid-feedback">
+                                                                                        {props.errors.employeeDesignationId}
+                                                                                    </div>
+                                                                                )}
+                                                                            </FormGroup>
+                                                                        </Col>
+
                                                                     </Row>
                                                                     <Row>
-                                                                    <Col md="4">
+                                                                    {/* <Col md="4">
                                                                             <FormGroup>
 
                                                                                 <Label htmlFor="salaryRoleId"><span className="text-danger">* </span> {strings.SalaryRole} </Label>
@@ -936,96 +1010,9 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                 )}
                                                                             </FormGroup>
                                                                         </Col>
-                                                                       
-                                                                        <Col md="4">
-                                                                            <FormGroup>
-                                                                                <Label htmlFor="employeeDesignationId"><span className="text-danger">* </span>{strings.Designation}</Label>
-                                                                                <Select
-
-                                                                                    options={
-                                                                                        designation_dropdown
-                                                                                            ? selectOptionsFactory.renderOptions(
-                                                                                                'label',
-                                                                                                'value',
-                                                                                                designation_dropdown,
-                                                                                                'Employee Designation',
-                                                                                            )
-                                                                                            : []
-                                                                                    }
-                                                                                    id="employeeDesignationId"
-                                                                                    name="employeeDesignationId"
-                                                                                    placeholder={strings.Select + strings.Designation}
-                                                                                    value={designation_dropdown
-                                                                                        && selectOptionsFactory.renderOptions(
-                                                                                            'label',
-                                                                                            'value',
-                                                                                            designation_dropdown,
-                                                                                            'employeeDesignationId',
-                                                                                        ).find(
-                                                                                            (option) =>
-                                                                                                option.value ===
-                                                                                                +props.values.employeeDesignationId,
-                                                                                        )}
-                                                                                    onChange={(value) => {
-                                                                                        props.handleChange('employeeDesignationId')(value);
-
-                                                                                    }}
-                                                                                    className={`${props.errors.employeeDesignationId && props.touched.employeeDesignationId
-                                                                                        ? 'is-invalid'
-                                                                                        : ''
-                                                                                        }`}
-                                                                                />
-                                                                                {props.errors.employeeDesignationId && props.touched.employeeDesignationId && (
-                                                                                    <div className="invalid-feedback">
-                                                                                        {props.errors.employeeDesignationId}
-                                                                                    </div>
-                                                                                )}
-                                                                            </FormGroup>
-                                                                        </Col>
-                                                                        <Col md="4">
-                                                                        <FormGroup>
-																	{/* <Label htmlFor="select">{strings.POBoxNumber}</Label> */}
-																	<Label htmlFor="POBoxNumber">
-																		<span className="text-danger"> </span>{strings.POBoxNumber}
-																	</Label>
-																	<Input
-																		type="text"
-																		minLength="3"
-																		maxLength="6"
-																		id="poBoxNumber"
-																		name="poBoxNumber"
-																		autoComplete="Off"
-																		placeholder={strings.Enter + strings.POBoxNumber}
-																		onChange={(option) => {
-																			if (
-																				option.target.value === '' ||
-																				this.regEx.test(option.target.value)
-																			) {
-																				if(option.target.value !="")
-																				this.setState({showpoBoxNumberErrorMsg:true})
-																				else
-																				this.setState({showpoBoxNumberErrorMsg:false})
-																				props.handleChange('poBoxNumber')(
-																					option,
-																				);
-																			}
-																		}}
-																		value={props.values.poBoxNumber}
-																		className={
-																			props.errors.poBoxNumber &&
-																				props.touched.poBoxNumber
-																				? 'is-invalid'
-																				: ''
-																		}
-																	/>
-																	{props.errors.poBoxNumber &&
-																		props.touched.poBoxNumber && (
-																			<div className="invalid-feedback">
-																				{props.errors.poBoxNumber}
-																			</div>
-																		)}
-																</FormGroup>
-															</Col>
+                                                                        */}
+                                                                      
+                                                           
                                                                         {/* <Col>
                                                                             <Label
                                                                                 htmlFor="employeeDesignationId"
@@ -1076,30 +1063,93 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                                 </FormGroup>
                                                                               
                                                                         </Col>
-                                                                        <Col md="4"style={{display:props.values.countryId == 229 || props.values.countryId.value == 229 ? 'none':''}}>
-                                                                            <FormGroup>
-                                                                                <Label htmlFor="city"><span className="text-danger">* </span>{strings.PinCode} </Label>
-                                                                                <Input
-                                                                                                        type="text"
-                                                                                                        maxLength="8"
-                                                                                                        id="pincode"
-                                                                                                        name="pincode"
-                                                                                                        value={props.values.pincode}
-                                                                                                        placeholder={strings.Enter+strings.PinCode}
 
-                                                                                                        onChange={(option) => {
-                                                                                                            if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('pincode')(option) }
-                                                                                                        }}
-                                                                                                        className={props.errors.pincode && props.touched.pincode ? "is-invalid" : ""}
-                                                                                                    />
-                                                                                                    {props.errors.pincode && props.touched.pincode && (
-                                                                                                        <div className="invalid-feedback">{props.errors.pincode}</div>
-                                                                                                    )}
-                                                                                                </FormGroup>
-                          
-                                                                                
-                                                                        </Col>
+                                                                        {props.values.countryId == 229 || props.values.countryId.value == 229 ? 
+														 	<Col md="4" >
+																 <FormGroup>
+															 {/* <Label htmlFor="select">{strings.POBoxNumber}</Label> */}
+															 <Label htmlFor="POBoxNumber">
+																 <span className="text-danger"></span>{strings.POBoxNumber}
+															 </Label>
+															 <Input
+																 type="text"
+																 minLength="3"
+																 maxLength="6"
+																 id="poBoxNumber"
+																 name="poBoxNumber"
+																 autoComplete="Off"
+																 placeholder={strings.Enter + strings.POBoxNumber}
+																 onChange={(option) => {
+																	 if (
+																		 option.target.value === '' ||
+																		 this.regEx.test(option.target.value)
+																	 ) {
+																		 if(option.target.value.length<3)
+																		 this.setState({showpoBoxNumberErrorMsg:true})
+																		 else
+																		 this.setState({showpoBoxNumberErrorMsg:false})
+                                                                         
+																		 props.handleChange('poBoxNumber')( option);
+                                                                         props.handleChange('PostZipCode')( option);
+																	 }
+																 }}
+																 value={props.values.PostZipCode}
+																 className={
+																	 props.errors.poBoxNumber &&
+																		 props.touched.poBoxNumber
+																		 ? 'is-invalid'
+																		 : ''
+																 }
+															 />
+															 {props.errors.poBoxNumber &&
+																 props.touched.poBoxNumber && (
+																	 <div className="invalid-feedback">
+																		 {props.errors.poBoxNumber}
+																	 </div>
+																 )}
+														 </FormGroup>
+														 </Col>
 
+														: 
+															<Col md="4" ><FormGroup>
+																	<Label htmlFor="postZipCode"><span className="text-danger"> </span>
+																		{strings.PostZipCode}
+																	</Label>
+																	<Input
+																		type="text"
+																		maxLength="6"
+																		id="PostZipCode"
+																		name="PostZipCode"
+																		autoComplete="Off"
+																		placeholder={strings.Enter + strings.PostZipCode}
+																		onChange={(option) => {
+																			if (
+																				option.target.value === '' ||
+																				this.regEx.test(option.target.value)
+																			) {
+																				props.handleChange('PostZipCode')(
+																					option,
+																				);
+																			}
+																
+																		}}
+																		value={props.values.PostZipCode}
+																		className={
+																			props.errors.PostZipCode &&
+																				props.touched.PostZipCode
+																				? 'is-invalid'
+																				: ''
+																		}
+																	/>
+																	{props.errors.PostZipCode &&
+																		props.touched.PostZipCode && (
+																			<div className="invalid-feedback">
+																				{props.errors.PostZipCode}
+																			</div>
+																		)}
+																</FormGroup>
+																</Col>}
+                                                                        
                                                                     </Row>
 
                                                                     <Row className="row-wrapper">
@@ -1134,6 +1184,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                     onChange={(option) => {
                                                                                         if (option && option.value) {
                                                                                             props.handleChange('countryId')(option);
+                                                                                            props.handleChange('PostZipCode')("" );
                                                                                             this.getStateList(option.value);
                                                                                         } else {
                                                                                             props.handleChange('countryId')('');
@@ -1165,7 +1216,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                         <Col md="4">
                                                                             <FormGroup>
                                                                                 <Label htmlFor="stateId"><span className="text-danger">* </span>
-                                                                                {props.values.countryId.value === 229 ? strings.Emirate: strings.StateRegion}</Label>
+                                                                                {props.values.countryId==229 || props.values.countryId.value  === 229 ? strings.Emirate: strings.StateRegion}</Label>
                                                                                 <Select
 
                                                                                     options={

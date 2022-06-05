@@ -135,7 +135,7 @@ class CreateEmployeePayroll extends React.Component {
                 countryId: {label: "United Arab Emirate", value: 229},
                 permanentAddress: '',
                 presentAddress: '',
-                bloodGroup: '',
+                // bloodGroup: '',
                 mobileNumber: '',
                 vatRegestationNo: '',
                 currencyCode:'',
@@ -143,16 +143,17 @@ class CreateEmployeePayroll extends React.Component {
                 employeeRole: '',
                 stateId: '',
                 gender: '',
+                // maritalStatus: '',
                 pincode: '',
                 city: '',
                 employeeDesignationId: '',
                 active: true,
                 passportNumber: '',
                 passportExpiryDate: '',
-                visaNumber: '',
+                // visaNumber: '',
                 employeeCode:'',
                 agentId:'',
-                visaExpiryDate: '',
+                // visaExpiryDate: '',
                 dateOfJoining: '',
                 department: '',
                 labourCard: '',
@@ -220,17 +221,24 @@ class CreateEmployeePayroll extends React.Component {
             { label: 'Female', value: 'Female' }
         ];
 
-        this.bloodGroup = [
-            { label: 'O+', value: 'O+' },
-            { label: 'O-', value: 'O-' },
-            { label: 'A+', value: 'A+' },
-            { label: 'A-', value: 'A-' },
-            { label: 'B+', value: 'B+' },
-            { label: 'B-', value: 'B-' },
-            { label: 'AB+', value: 'AB+' },
-            { label: 'AB-', value: 'AB-' },
+        // this.maritaStatus = [
+        //     { label: 'Single', value: 'Single' },
+        //     { label: 'Married', value: 'Married'},
+        //     { label: 'Widowed', value: 'Widowed'},
+        //     { label: 'Divorced', value: 'Divorced'},
+        //     { label: 'Separated', value: 'Separated'},
+        // ];
 
-        ];
+        // this.bloodGroup = [
+        //     { label: 'O+', value: 'O+' },
+        //     { label: 'O-', value: 'O-' },
+        //     { label: 'A+', value: 'A+' },
+        //     { label: 'A-', value: 'A-' },
+        //     { label: 'B+', value: 'B+' },
+        //     { label: 'B-', value: 'B-' },
+        //     { label: 'AB+', value: 'AB+' },
+        //     { label: 'AB-', value: 'AB-' },
+        // ];
 
         this.columnHeader1 = [
             { label: 'Component Name', value: 'Component Name', sort: false },
@@ -317,7 +325,6 @@ getEmployeeCode=()=>{
         }
     });
 
-console.log(this.state.employeeCode)
 }
 validationCheck = (value) => {
     const data = {
@@ -327,14 +334,11 @@ validationCheck = (value) => {
     this.props.createPayrollEmployeeActions
         .checkValidation(data)
         .then((response) => {
-            if (response.data === 'Employee Code Already Exists') {
+            if (response.data === 'Employee code already exists') {
                 this.setState(
                     {
                         exist: true,
-                    },
-                    
-                    () => {},
-                );
+                    });
             
             } else {
                 this.setState({
@@ -352,7 +356,7 @@ existForAccountNumber = (value) => {
     this.props.createPayrollEmployeeActions
         .checkValidation(data)
         .then((response) => {
-            if (response.data === 'Account Number Already Exists') {
+            if (response.data === 'Account number already exists') {
                 this.setState(
                     {
                         existForAccountNumber: true,
@@ -434,7 +438,8 @@ existForAccountNumber = (value) => {
             branch,
             iban,
             swiftCode,
-            bankId
+            bankId,
+            agentId
         } = data;
 
 
@@ -470,6 +475,14 @@ existForAccountNumber = (value) => {
         formData.append(
             'swiftCode',
             swiftCode != null ? swiftCode : '',
+        )
+        formData.append(
+            'employmentId',
+            this.state.selectedData &&  this.state.selectedData.employmentId ? this.state.selectedData.employmentId : '',
+        )
+        formData.append(
+            'agentId',
+            agentId != null ? agentId : '',
         )
         if(this.state.selectedData.employeeBankDetailsId === null || this.state.selectedData.employeeBankDetailsId === ""){
             // this.setState({ loading:true, loadingMsg:"Creating Finacial Details..."});
@@ -517,9 +530,9 @@ existForAccountNumber = (value) => {
         const {
             passportNumber,
             passportExpiryDate,
-            visaNumber,
+            // visaNumber,
             employeeCode,
-            visaExpiryDate,
+            // visaExpiryDate,
             dateOfJoining,
             department,
             labourCard,
@@ -538,21 +551,22 @@ existForAccountNumber = (value) => {
             'passportNumber',
             passportNumber != null ? passportNumber : '',
         )
-        formData.append(
-            'visaNumber',
-            visaNumber != null ? visaNumber : '',
-        )
         formData.append('passportExpiryDate', passportExpiryDate ? moment(passportExpiryDate).format('DD-MM-YYYY') : '')
-        formData.append('visaExpiryDate', visaExpiryDate ? moment(visaExpiryDate).format('DD-MM-YYYY') : '')
+
+        // formData.append(
+        //     'visaNumber',
+        //     visaNumber != null ? visaNumber : '',
+        // )
+        // formData.append('visaExpiryDate', visaExpiryDate ? moment(visaExpiryDate).format('DD-MM-YYYY') : '')
 
         formData.append(
             'employeeCode',
             employeeCode != null ? employeeCode : '',
         )
-        formData.append(
-            'agentId',
-            agentId != null ? agentId : '',
-        )
+        // formData.append(
+        //     'agentId',
+        //     agentId != null ? agentId : '',
+        // )
         formData.append('dateOfJoining', dateOfJoining ? moment(dateOfJoining).format('DD-MM-YYYY') : '')
         if (salaryRoleId && salaryRoleId.value) {
             formData.append('salaryRoleId', salaryRoleId.value);
@@ -630,8 +644,9 @@ existForAccountNumber = (value) => {
             pincode,
             employeeDesignationId,
             dob,
-            bloodGroup,
+            // bloodGroup,
             gender,
+            // maritalStatus,
             salaryRoleId,
             parentId,
             university,
@@ -642,7 +657,8 @@ existForAccountNumber = (value) => {
             emergencyContactRelationship1,
             emergencyContactNumber1,
             emergencyContactName2,
-            emergencyContactRelationship2
+            emergencyContactRelationship2,
+            PostZipCode
         } = data;
 
 
@@ -686,7 +702,7 @@ existForAccountNumber = (value) => {
         )
         formData.append(
             'pincode',
-            pincode != null ? pincode : '',
+            PostZipCode != null ? PostZipCode : '',
         )
             formData.append(
                 'university',
@@ -732,10 +748,13 @@ existForAccountNumber = (value) => {
         if (gender && gender.value) {
             formData.append('gender', gender.value);
         }
-        if (parentId && parentId.value) {
-            formData.append('parentId', parentId.value);
-        }
-            formData.append('bloodGroup', bloodGroup);
+        // if (maritalStatus && maritalStatus.value) {
+        //     formData.append('maritalStatus', maritalStatus.value);
+        // }
+        // if (parentId && parentId.value) {
+        //     formData.append('parentId', parentId.value);
+        // }
+        //     formData.append('bloodGroup', bloodGroup);
 
         if (countryId && countryId.value) {
             formData.append('countryId', countryId.value);
@@ -968,6 +987,19 @@ existForAccountNumber = (value) => {
 
             })
     }
+
+    underAge=(birthday)=>{  
+        // set current day on 01:00:00 hours GMT+0100 (CET)
+        var currentDate = new Date().toJSON().slice(0,10)+' 01:00:00';  
+        // calculate age comparing current date and borthday
+        var myAge = ~~((Date.now(currentDate) - birthday) / (31557600000));
+
+        if(myAge < 14)
+            return true;
+        else
+            return false;
+   }
+
     updateSalary1 = (CTC1,newFormula,id,newFlatAmount) => {
         const CTC = this.state.CTC
 
@@ -1149,10 +1181,10 @@ existForAccountNumber = (value) => {
                             <Nav className="justify-content-center" tabs pills  >
                                 <NavItem>
                                     <NavLink
-                                        active={this.state.activeTab[0] === '1'}
-                                    // onClick={() => {
-                                    // 	this.toggle(0, '1');
-                                    // }}
+                                    active={this.state.activeTab[0] === '1'}
+                                        // onClick={() => {
+                                        //     this.toggle(0, '1');
+                                        // }}
                                     >
                                          {strings.BasicDetails}
 									</NavLink>
@@ -1169,20 +1201,20 @@ existForAccountNumber = (value) => {
                                 </NavItem>
                                 <NavItem>
                                     <NavLink
-                                        active={this.state.activeTab[0] === '3'}
-                                    // onClick={() => {
-                                    // 	this.toggle(0, '3');
-                                    // }}
+                                    active={this.state.activeTab[0] === '3'}
+                                        // onClick={() => {
+                                        //     this.toggle(0, '3');
+                                        // }}
                                     >
                                          {strings.FinancialDetails}
 									</NavLink>
                                 </NavItem>
                                 <NavItem>
                                     <NavLink
-                                        active={this.state.activeTab[0] === '4'}
-                                    // onClick={() => {
-                                    // 	this.toggle(0, '4');
-                                    // }}
+                                    active={this.state.activeTab[0] === '4'}
+                                        // onClick={() => {
+                                        //     this.toggle(0, '4');
+                                        // }}
                                     >
                                         {strings.SalarySetup}
 									</NavLink>
@@ -1227,6 +1259,10 @@ existForAccountNumber = (value) => {
                                                                                 errors.gender =
                                                                                 'Gender is required';
                                                                             }
+                                                                            // if (values.maritalStatus && values.maritalStatus.label && values.maritalStatus.label === "Select Marital Status") {
+                                                                            //     errors.maritalStatus =
+                                                                            //     'Marital status is required';
+                                                                            // }
                                                                             if (values.employeeDesignationId && values.employeeDesignationId.label && values.employeeDesignationId.label === "Select Employee Designation") {
                                                                                 errors.employeeDesignationId =
                                                                                 'Designation is required';
@@ -1235,7 +1271,9 @@ existForAccountNumber = (value) => {
                                                                                 errors.salaryRoleId =
                                                                                 'Salary role is required';
                                                                             }
-                                                                                
+                                                                            if(this.underAge(values.dob))
+                                                                            errors.dob =
+                                                                            'Age should be more than 14 years';
                                                                             
                                                                             // if( values.stateId ===''){
                                                                             //     errors.stateId =
@@ -1258,7 +1296,7 @@ existForAccountNumber = (value) => {
                                                                             lastName: Yup.string()
                                                                             .required("Last name is required"),
                                                                             email: Yup.string()
-                                                                            .required("Valid email Required").email('Invalid Email'),
+                                                                            .required("Valid email required").email('Invalid Email'),
                                                                             mobileNumber:Yup.string()
                                                                             .required("Mobile number is required"),
                                                                             // salaryRoleId :  Yup.string()
@@ -1266,7 +1304,9 @@ existForAccountNumber = (value) => {
                                                                             dob: Yup.date()
                                                                             .required('DOB is required') ,
                                                                             gender: Yup.string()
-                                                                            .required('Gender is required') ,
+                                                                            .required('Gender is required') ,                                                                            
+                                                                            // maritalStatus: Yup.string()
+                                                                            // .required('Marital status is required') ,
                                                                             presentAddress: Yup.string()
                                                                             .required('Present address is required') ,
                                                                             // pincode: Yup.string()
@@ -1280,8 +1320,8 @@ existForAccountNumber = (value) => {
                                                                           
                                                                             active : Yup.string()
                                                                             .required('status is required') , 
-                                                                            salaryRoleId : Yup.string()
-                                                                            .required('Salary role is required'),
+                                                                            // salaryRoleId : Yup.string()
+                                                                            // .required('Salary role is required'),
                                                                             employeeDesignationId : Yup.string()
                                                                             .required('Designation is required') ,
                                                                             emergencyContactName1: Yup.string()
@@ -1334,6 +1374,77 @@ existForAccountNumber = (value) => {
                                                                                     </Col>
 
                                                                                     <Col xs="4" md="4" lg={10}>
+                                                                                        <Row>
+                                                                                        <Col md="4">
+                                                                                                <FormGroup className="mb-3">
+                                                                                                   
+                                                                                                    <div>
+                                                                                                        <FormGroup check inline>
+                                                                                                        <span className="text-danger">* </span>{strings.Status} &nbsp; &nbsp;
+                                                                                                            <div className="custom-radio custom-control">
+                                                                                                                <input
+                                                                                                                    className="custom-control-input"
+                                                                                                                    type="radio"
+                                                                                                                    id="inline-radio1"
+                                                                                                                    name="active"
+                                                                                                                    checked={
+                                                                                                                        this.state.selectedStatus
+                                                                                                                    }
+                                                                                                                    value={true}
+                                                                                                                    onChange={(e) => {
+                                                                                                                        if (
+                                                                                                                            e.target.value === 'true'
+                                                                                                                        ) {
+                                                                                                                            this.setState({
+                                                                                                                                selectedStatus: true,
+                                                                                                                                useractive: true
+                                                                                                                            });
+                                                                                                                        }
+                                                                                                                    }}
+                                                                                                                />
+                                                                                                                <label
+                                                                                                                    className="custom-control-label"
+                                                                                                                    htmlFor="inline-radio1"
+                                                                                                                >
+                                                                                                                     {strings.Active}
+																							</label>
+                                                                                                            </div>
+                                                                                                        </FormGroup>
+                                                                                                        <FormGroup check inline>
+                                                                                                            <div className="custom-radio custom-control">
+                                                                                                                <input
+                                                                                                                    className="custom-control-input"
+                                                                                                                    type="radio"
+                                                                                                                    id="inline-radio2"
+                                                                                                                    name="active"
+                                                                                                                    value={false}
+                                                                                                                    checked={
+                                                                                                                        !this.state.selectedStatus
+                                                                                                                    }
+                                                                                                                    onChange={(e) => {
+                                                                                                                        if (
+                                                                                                                            e.target.value === 'false'
+                                                                                                                        ) {
+                                                                                                                            this.setState({
+                                                                                                                                selectedStatus: false,
+                                                                                                                                useractive: false
+                                                                                                                            });
+                                                                                                                        }
+                                                                                                                    }}
+                                                                                                                />
+                                                                                                                <label
+                                                                                                                    className="custom-control-label"
+                                                                                                                    htmlFor="inline-radio2"
+                                                                                                                >
+                                                                                                                    {strings.Inactive}
+																							</label>
+                                                                                                            </div>
+                                                                                                        </FormGroup>
+                                                                                                    </div>
+                                                                                                </FormGroup>
+                                                                                            </Col>
+
+                                                                                        </Row>
                                                                                         <Row className="row-wrapper">
 
                                                                                             <Col lg={4}>
@@ -1560,74 +1671,7 @@ existForAccountNumber = (value) => {
                                                                                             </Col> */}
 
                                                                                         </Row>
-                                                                                        <Row> <Col md="4">
-                                                                                                <FormGroup className="mb-3">
-                                                                                                    <Label htmlFor="active"><span className="text-danger">* </span>{strings.Status}</Label>
-                                                                                                    <div>
-                                                                                                        <FormGroup check inline>
-                                                                                                            <div className="custom-radio custom-control">
-                                                                                                                <input
-                                                                                                                    className="custom-control-input"
-                                                                                                                    type="radio"
-                                                                                                                    id="inline-radio1"
-                                                                                                                    name="active"
-                                                                                                                    checked={
-                                                                                                                        this.state.selectedStatus
-                                                                                                                    }
-                                                                                                                    value={true}
-                                                                                                                    onChange={(e) => {
-                                                                                                                        if (
-                                                                                                                            e.target.value === 'true'
-                                                                                                                        ) {
-                                                                                                                            this.setState({
-                                                                                                                                selectedStatus: true,
-                                                                                                                                useractive: true
-                                                                                                                            });
-                                                                                                                        }
-                                                                                                                    }}
-                                                                                                                />
-                                                                                                                <label
-                                                                                                                    className="custom-control-label"
-                                                                                                                    htmlFor="inline-radio1"
-                                                                                                                >
-                                                                                                                     {strings.Active}
-																							</label>
-                                                                                                            </div>
-                                                                                                        </FormGroup>
-                                                                                                        <FormGroup check inline>
-                                                                                                            <div className="custom-radio custom-control">
-                                                                                                                <input
-                                                                                                                    className="custom-control-input"
-                                                                                                                    type="radio"
-                                                                                                                    id="inline-radio2"
-                                                                                                                    name="active"
-                                                                                                                    value={false}
-                                                                                                                    checked={
-                                                                                                                        !this.state.selectedStatus
-                                                                                                                    }
-                                                                                                                    onChange={(e) => {
-                                                                                                                        if (
-                                                                                                                            e.target.value === 'false'
-                                                                                                                        ) {
-                                                                                                                            this.setState({
-                                                                                                                                selectedStatus: false,
-                                                                                                                                useractive: false
-                                                                                                                            });
-                                                                                                                        }
-                                                                                                                    }}
-                                                                                                                />
-                                                                                                                <label
-                                                                                                                    className="custom-control-label"
-                                                                                                                    htmlFor="inline-radio2"
-                                                                                                                >
-                                                                                                                    {strings.Inactive}
-																							</label>
-                                                                                                            </div>
-                                                                                                        </FormGroup>
-                                                                                                    </div>
-                                                                                                </FormGroup>
-                                                                                            </Col>
-</Row>
+
 
                                                                                         <Row>
                                                                                             <Col md="4">
@@ -1665,7 +1709,44 @@ existForAccountNumber = (value) => {
                                                                                                     )}
                                                                                                 </FormGroup>
                                                                                             </Col>
-                                                                                            <Col md="4">
+                                                                                                    
+                                                                                            {/* <Col md="4">
+                                                                                                <FormGroup>
+                                                                                                    <Label htmlFor="maritalStatus"><span className="text-danger">* </span>{strings.maritalStatus}</Label>
+                                                                                                    <Select
+
+                                                                                                        options={
+                                                                                                            this.maritalStatus
+                                                                                                                ? selectOptionsFactory.renderOptions(
+                                                                                                                    'label',
+                                                                                                                    'value',
+                                                                                                                    this.maritalStatus,
+                                                                                                                    'Marital Status',
+                                                                                                                )
+                                                                                                                : []
+                                                                                                        }
+                                                                                                        id="maritalStatus"
+                                                                                                        name="maritalStatus"
+                                                                                                        placeholder={strings.Select+strings.maritalStatus}
+                                                                                                        value={this.state.maritalStatus}
+                                                                                                        onChange={(value) => {
+                                                                                                            props.handleChange('maritalStatus')(value);
+
+                                                                                                        }}
+                                                                                                        className={`${props.errors.maritalStatus && props.touched.maritalStatus
+                                                                                                            ? 'is-invalid'
+                                                                                                            : ''
+                                                                                                            }`}
+                                                                                                    />
+                                                                                                    {props.errors.maritalStatus && props.touched.maritalStatus && (
+                                                                                                        <div className="invalid-feedback">
+                                                                                                            {props.errors.maritalStatus}
+                                                                                                        </div>
+                                                                                                    )}
+                                                                                                </FormGroup>
+                                                                                            </Col> */}
+
+                                                                                            {/* <Col md="4">
                                                                                                 <FormGroup>
                                                                                                     <Label htmlFor="bloodGroup">{strings.BloodGroup}</Label>
                                                                                                     <Select
@@ -1700,7 +1781,8 @@ existForAccountNumber = (value) => {
                                                                                                     )}
 
                                                                                                 </FormGroup>
-                                                                                            </Col>
+                                                                                            </Col> */}
+
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
                                                                                                     <Label htmlFor="parentId">{strings.ReportsTo}</Label>
@@ -1736,11 +1818,71 @@ existForAccountNumber = (value) => {
                                                                                                     )}
                                                                                                 </FormGroup>
                                                                                             </Col>
-                                                                                          
+                                                                                            <Col>
+                                                                                        <div style={{display:"flex"}}>
+                                                                                            <div style={{width:"70%"}}>
+                                                                                                <FormGroup>
+                                                                                                    <Label htmlFor="employeeDesignationId"><span className="text-danger">* </span>{strings.Designation}</Label>
+                                                                                                    <Select
+
+                                                                                                        options={
+                                                                                                            designation_dropdown
+                                                                                                                ? selectOptionsFactory.renderOptions(
+                                                                                                                    'label',
+                                                                                                                    'value',
+                                                                                                                    designation_dropdown,
+                                                                                                                    'Employee Designation',
+                                                                                                                )
+                                                                                                                : []
+                                                                                                        }
+                                                                                                        id="employeeDesignationId"
+                                                                                                        name="employeeDesignationId"
+                                                                                                        placeholder={strings.Select+strings.Designation}
+                                                                                                        value={this.state.salaryDesignation}
+                                                                                                        onChange={(value) => {
+                                                                                                            props.handleChange('employeeDesignationId')(value);
+                                                                                                            props.handleChange( 'salaryRoleId')(1);
+                                                                                                        }}
+                                                                                                        className={`${props.errors.employeeDesignationId && props.touched.employeeDesignationId
+                                                                                                            ? 'is-invalid'
+                                                                                                            : ''
+                                                                                                            }`}
+                                                                                                    />
+                                                                                                    {props.errors.employeeDesignationId && props.touched.employeeDesignationId && (
+                                                                                                        <div className="invalid-feedback">
+                                                                                                            {props.errors.employeeDesignationId}
+                                                                                                        </div>
+                                                                                                    )}
+                                                                                                     
+                                                                                                </FormGroup>
+                                                                                            
+                                                                                            </div>
+                                                                                            <div>
+                                                                                                <Label
+                                                                                                    htmlFor="employeeDesignationId"
+                                                                                                    style={{display: "block"}}
+                                                                                                >
+
+                                                                                                </Label>
+                                                                                                <Button
+                                                                                                    type="button"
+                                                                                                    color="primary"
+                                                                                                    size="sm"
+                                                                                                    style={{fontSize:"9px"}}
+                                                                                                    className="btn-square mt-4"
+                                                                                                    onClick={(e, props) => {
+                                                                                                        this.openDesignationModal(props);
+                                                                                                    }}
+                                                                                                >
+                                                                                                    <i className="fa fa-plus"></i>  {strings.AddDesignation}
+															                            	</Button>
+                                                                                            </div>
+                                                                                            </div>
+                                                                                            </Col>
                                                                                         </Row>
 
                                                                                         <Row>
-                                                                                        <Col md="4">
+                                                                                        {/* <Col md="4">
                                                                                                 <FormGroup>
                                                                                                     <Label htmlFor="salaryRoleId"><span className="text-danger">* </span> {strings.SalaryRole} </Label>
                                                                                                     <Select
@@ -1793,60 +1935,8 @@ existForAccountNumber = (value) => {
                                                                                                         </div>
                                                                                                     )}
                                                                                                 </FormGroup>
-                                                                                            </Col>
-                                                                                            <Col md="4">
-                                                                                                <FormGroup>
-                                                                                                    <Label htmlFor="employeeDesignationId"><span className="text-danger">* </span>{strings.Designation}</Label>
-                                                                                                    <Select
-
-                                                                                                        options={
-                                                                                                            designation_dropdown
-                                                                                                                ? selectOptionsFactory.renderOptions(
-                                                                                                                    'label',
-                                                                                                                    'value',
-                                                                                                                    designation_dropdown,
-                                                                                                                    'Employee Designation',
-                                                                                                                )
-                                                                                                                : []
-                                                                                                        }
-                                                                                                        id="employeeDesignationId"
-                                                                                                        name="employeeDesignationId"
-                                                                                                        placeholder={strings.Select+strings.Designation}
-                                                                                                        value={this.state.salaryDesignation}
-                                                                                                        onChange={(value) => {
-                                                                                                            props.handleChange('employeeDesignationId')(value);
-
-                                                                                                        }}
-                                                                                                        className={`${props.errors.employeeDesignationId && props.touched.employeeDesignationId
-                                                                                                            ? 'is-invalid'
-                                                                                                            : ''
-                                                                                                            }`}
-                                                                                                    />
-                                                                                                    {props.errors.employeeDesignationId && props.touched.employeeDesignationId && (
-                                                                                                        <div className="invalid-feedback">
-                                                                                                            {props.errors.employeeDesignationId}
-                                                                                                        </div>
-                                                                                                    )}
-                                                                                                </FormGroup>
-                                                                                            </Col>
-                                                                                            <Col>
-                                                                                                <Label
-                                                                                                    htmlFor="employeeDesignationId"
-                                                                                                    style={{ display: 'block' }}
-                                                                                                >
-
-                                                                                                </Label>
-                                                                                                <Button
-                                                                                                    type="button"
-                                                                                                    color="primary"
-                                                                                                    className="btn-square mr-3 mb-3 mt-4"
-                                                                                                    onClick={(e, props) => {
-                                                                                                        this.openDesignationModal(props);
-                                                                                                    }}
-                                                                                                >
-                                                                                                    <i className="fa fa-plus"></i>  {strings.AddDesignation}
-															                            	</Button>
-                                                                                            </Col>
+                                                                                            </Col> */}
+                                                                                       
 
 
                                                                                         </Row>
@@ -1900,9 +1990,12 @@ existForAccountNumber = (value) => {
 																		 props.handleChange('poBoxNumber')(
 																			 option,
 																		 );
+                                                                         props.handleChange('PostZipCode')(
+                                                                            option,
+                                                                        );
 																	 }
 																 }}
-																 value={props.values.poBoxNumber}
+																 value={props.values.PostZipCode}
 																 className={
 																	 props.errors.poBoxNumber &&
 																		 props.touched.poBoxNumber
@@ -1979,6 +2072,8 @@ existForAccountNumber = (value) => {
                                                                                                         onChange={(option) => {
                                                                                                             if (option && option.value) {
                                                                                                                 props.handleChange('countryId')(option);
+                                                                                                                props.handleChange('PostZipCode')("");
+                                                                                                                
                                                                                                                 this.getStateList(option.value);
                                                                                                             } else {
                                                                                                                 props.handleChange('countryId')('');
@@ -2393,26 +2488,23 @@ existForAccountNumber = (value) => {
                                                                         validationSchema={Yup.object().shape({
                                                                             employeeCode: Yup.string()
                                                                                 .required("Employee unique id is required"),
-                                                                                agentId: Yup.string()
-                                                                                .required("Agent id is required"),
-                                                                            //     salaryRoleId: Yup.string()
-                                                                            // .required("salary Role is required"),
+                                                                           
                                                                 
                                                                             dateOfJoining: Yup.date()
                                                                                 .required('Date of joining is required')                   
                                                                         })}
                                                                         validate={(values) => {
                                                                             let errors = {};
-                                                                            if(values.employeeCode &&
-                                                                                values.employeeCode.length && 
-                                                                                values.employeeCode.length!=14)
-                                                                            {
-                                                                                errors.employeeCode =
-                                                                                'Employee unique id  must be 14 digit';        
-                                                                            }else  
+                                                                            // if(values.employeeCode &&
+                                                                            //     values.employeeCode.length && 
+                                                                            //     values.employeeCode.length!=14)
+                                                                            // {
+                                                                            //     errors.employeeCode =
+                                                                            //     'Employee unique id must be 14 digit';        
+                                                                            // }else  
                                                                             if (exist === true  && values.employeeCode!="") {
                                                                                 errors.employeeCode =
-                                                                                'Employee unique id  already exists';
+                                                                                'Employee unique id already exists';
                                                                             }
                                                                             
                                                                             return errors;
@@ -2435,7 +2527,8 @@ existForAccountNumber = (value) => {
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         maxLength="14"
-                                                                                                        minLength="14"
+                                                                                                        // minLength="14"
+                                                                                                        autoComplete='off'
                                                                                                         id="employeeCode"
                                                                                                         name="employeeCode"
                                                                                                         value={props.values.employeeCode}
@@ -2457,31 +2550,7 @@ existForAccountNumber = (value) => {
                                                                                                     )}
                                                                                                 </FormGroup>
                                                                                             </Col>
-                                                                                            <Col md="4">
-                                                                                                <FormGroup>
-                                                                                                    <Label htmlFor="select"><span className="text-danger">* </span>{strings.agent_id} </Label>
-                                                                                                    <Input
-                                                                                                        type="text"
-                                                                                                        maxLength="9"
-                                                                                                        minLength="9"
-                                                                                                        id="agentId"
-                                                                                                        name="agentId"
-                                                                                                        value={props.values.agentId}
-                                                                                                        placeholder={strings.Enter+ strings.agent_id}
-                                                                                                       
-
-                                                                                                        onChange={(option) => {
-                                                                                                            if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('agentId')(option) }
-                                                                                                            // this.validationCheck(option.target.value);
-                                                                                                        }}
-                                                                                                        className={props.errors.agentId && props.touched.agentId ? "is-invalid" : ""}
-                                                                                                    />
-                                                                                                    {props.errors.agentId && props.touched.agentId && (
-                                                                                                        <div className="invalid-feedback">{props.errors.agentId}</div>
-                                                                                                    )}
-                                                                                                </FormGroup>
-                                                                                            </Col>
-                                                                                         
+                                                                                                                                                                                     
                                                                                             {/* <Col md="4">
                                                                                                 <FormGroup>
                                                                                                     <Label htmlFor="salaryRoleId"><span className="text-danger">* </span> {strings.SalaryRole} </Label>
@@ -2560,6 +2629,30 @@ existForAccountNumber = (value) => {
                                                                                                     )}
                                                                                                 </FormGroup>
                                                                                             </Col> */}
+
+                                                                                            <Col md="4">
+                                                                                                <FormGroup>
+                                                                                                    <Label htmlFor="labourCard"> {strings.LabourCardId}</Label>
+                                                                                                    <Input
+                                                                                                        type="text"
+                                                                                                        maxLength="14"
+                                                                                                        id="labourCard"
+                                                                                                        name="labourCard"
+                                                                                                        value={props.values.labourCard}
+                                                                                                        placeholder={strings.Enter+strings.LabourCard}
+                                                                                                        onChange={(option) => {
+                                                                                                            if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('labourCard')(option) }
+                                                                                                        }}
+                                                                                                        className={props.errors.labourCard && props.touched.labourCard ? "is-invalid" : ""}
+                                                                                                    />                                                                                         {props.errors.labourCard && props.touched.labourCard && (
+                                                                                                        <div className="invalid-feedback">
+                                                                                                            {props.errors.labourCard}
+                                                                                                        </div>
+                                                                                                    )}
+
+                                                                                                </FormGroup>
+                                                                                            </Col>
+
                                                                                         </Row>
                                                                                         <Row  >
                                                                                             <Col md="4">
@@ -2594,7 +2687,7 @@ existForAccountNumber = (value) => {
                                                                                                         showYearDropdown
                                                                                                         dateFormat="dd-MM-yyyy"
                                                                                                         dropdownMode="select"
-                                                                                                        maxDate={new Date()}
+                                                                                                        // maxDate={new Date()}
                                                                                                         autoComplete={"off"}
                                                                                                         selected={props.values.dateOfJoining}
                                                                                                         value={props.values.dateOfJoining}
@@ -2653,7 +2746,9 @@ existForAccountNumber = (value) => {
                                                                                                     )}
                                                                                                 </FormGroup>
                                                                                             </Col>
-                                                                                        </Row>  <Row>
+                                                                                        </Row> 
+
+                                                                                        {/* <Row>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
                                                                                                     <Label htmlFor="gender"> {strings.VisaNumber} </Label>
@@ -2697,30 +2792,10 @@ existForAccountNumber = (value) => {
                                                                                                     )}
                                                                                                 </FormGroup>
                                                                                             </Col>
-                                                                                        </Row>
-                                                                                        <Row>
-                                                                                        <Col md="4">
-                                                                                                <FormGroup>
-                                                                                                    <Label htmlFor="labourCard"> {strings.LabourCard}</Label>
-                                                                                                    <Input
-                                                                                                        type="text"
-                                                                                                        maxLength="14"
-                                                                                                        id="labourCard"
-                                                                                                        name="labourCard"
-                                                                                                        value={props.values.labourCard}
-                                                                                                        placeholder={strings.Enter+strings.LabourCard}
-                                                                                                        onChange={(option) => {
-                                                                                                            if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('labourCard')(option) }
-                                                                                                        }}
-                                                                                                        className={props.errors.labourCard && props.touched.labourCard ? "is-invalid" : ""}
-                                                                                                    />                                                                                         {props.errors.labourCard && props.touched.labourCard && (
-                                                                                                        <div className="invalid-feedback">
-                                                                                                            {props.errors.labourCard}
-                                                                                                        </div>
-                                                                                                    )}
+                                                                                        </Row> */}
 
-                                                                                                </FormGroup>
-                                                                                            </Col>
+                                                                                        <Row>
+                                                                                       
                                                                                         </Row>
 
                                                                                     </Col>
@@ -2806,6 +2881,10 @@ existForAccountNumber = (value) => {
                                                                             .required('Bank is required') ,
                                                                             branch: Yup.string()
                                                                             .required("Branch is required"),
+                                                                             agentId: Yup.string()
+                                                                                .required("Agent id is required"),
+                                                                            //     salaryRoleId: Yup.string()
+                                                                            // .required("salary Role is required"),
                                                                             // swiftCode: Yup.string()
                                                                             // .required("Swift Code is required"),
                                                                         })}
@@ -3009,6 +3088,31 @@ existForAccountNumber = (value) => {
                                                                                                     />
                                                                                                     {props.errors.swiftCode && props.touched.swiftCode && (
                                                                                                         <div className="invalid-feedback">{props.errors.swiftCode}</div>
+                                                                                                    )}
+                                                                                                </FormGroup>
+                                                                                            </Col>
+
+                                                                                            <Col md="4">
+                                                                                                <FormGroup>
+                                                                                                    <Label htmlFor="select"><span className="text-danger">* </span>{strings.agent_id} </Label>
+                                                                                                    <Input
+                                                                                                        type="text"
+                                                                                                        maxLength="9"
+                                                                                                        minLength="9"
+                                                                                                        id="agentId"
+                                                                                                        name="agentId"
+                                                                                                        value={props.values.agentId}
+                                                                                                        placeholder={strings.Enter+ strings.agent_id}
+                                                                                                       
+
+                                                                                                        onChange={(option) => {
+                                                                                                            if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('agentId')(option) }
+                                                                                                            // this.validationCheck(option.target.value);
+                                                                                                        }}
+                                                                                                        className={props.errors.agentId && props.touched.agentId ? "is-invalid" : ""}
+                                                                                                    />
+                                                                                                    {props.errors.agentId && props.touched.agentId && (
+                                                                                                        <div className="invalid-feedback">{props.errors.agentId}</div>
                                                                                                     )}
                                                                                                 </FormGroup>
                                                                                             </Col>

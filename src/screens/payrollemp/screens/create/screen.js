@@ -1240,21 +1240,21 @@ existForAccountNumber = (value) => {
                                                                         validate={(values) => {
                                                                             let errors = {};
                         
-                                                                            if (checkmobileNumberParam === true) {
-                                                                            errors.mobileNumber =
-                                                                            'Invalid mobile number';
-                                                                            }
+                                                                            // if (checkmobileNumberParam === true) {
+                                                                            // errors.mobileNumber =
+                                                                            // 'Invalid mobile number';
+                                                                            // }
 
                                                                             
-                                                                            if (checkmobileNumberParam1 === true) {
-                                                                                errors.emergencyContactNumber1 =
-                                                                                'Invalid mobile number';
-                                                                            }
+                                                                            // if (checkmobileNumberParam1 === true) {
+                                                                            //     errors.emergencyContactNumber1 =
+                                                                            //     'Invalid mobile number';
+                                                                            // }
 
-                                                                             if (checkmobileNumberParam2 === true) {
-                                                                                    errors.emergencyContactNumber2 =
-                                                                                    'Invalid mobile number';
-                                                                            }
+                                                                            //  if (checkmobileNumberParam2 === true) {
+                                                                            //         errors.emergencyContactNumber2 =
+                                                                            //         'Invalid mobile number';
+                                                                            // }
                                                                             if (values.gender && values.gender.label && values.gender.label === "Select Gender") {
                                                                                 errors.gender =
                                                                                 'Gender is required';
@@ -1583,7 +1583,7 @@ existForAccountNumber = (value) => {
                                                                                                             props.handleChange('mobileNumber')(
                                                                                                                 option,
                                                                                                             );
-                                                                                                            option.length !==12 ? this.setState({checkmobileNumberParam: true }) : this.setState({ checkmobileNumberParam: false });
+                                                                                                            // option.length !==12 ? this.setState({checkmobileNumberParam: true }) : this.setState({ checkmobileNumberParam: false });
                                                                                                         }}
                                                                                                         isValid
                                                                                                         // className={
@@ -2302,7 +2302,7 @@ existForAccountNumber = (value) => {
                                                                                                             props.handleChange('emergencyContactNumber1')(
                                                                                                                 option,
                                                                                                             );
-                                                                                                            option.length !==12 ? this.setState({checkmobileNumberParam: true }) : this.setState({ checkmobileNumberParam: false });
+                                                                                                            // option.length !==12 ? this.setState({checkmobileNumberParam: true }) : this.setState({ checkmobileNumberParam: false });
                                                                                                         }}
                                                                                                         isValid
                                                                                                     /></div>
@@ -2380,7 +2380,7 @@ existForAccountNumber = (value) => {
                                                                                                             props.handleChange('emergencyContactNumber2')(
                                                                                                                 option,
                                                                                                             );
-                                                                                                            option.length!==12 ?  this.setState({checkmobileNumberParam2:true}) :this.setState({checkmobileNumberParam2:false});
+                                                                                                            // option.length!==12 ?  this.setState({checkmobileNumberParam2:true}) :this.setState({checkmobileNumberParam2:false});
                                                                                                         }}
                                                                                                         className={
                                                                                                             props.errors.emergencyContactNumber2 &&

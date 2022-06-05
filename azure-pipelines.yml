@@ -74,7 +74,7 @@ stages:
         - task: Cache@2
           displayName: Cache task
           inputs:
-            key: 'docker | "$(Agent.OS)" | $(containerRegistryName).azurecr.io/simpleaccounts-frontend:$(tag)'
+            key: 'docker | "$(Agent.OS)" | cache'
             path: $(Pipeline.Workspace)/docker
             cacheHitVar: CACHE_RESTORED                #Variable to set to 'true' when the cache is restored
           

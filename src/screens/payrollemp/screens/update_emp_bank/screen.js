@@ -59,6 +59,7 @@ class UpdateEmployeeBank extends React.Component {
             loadingMsg:"Loading...",
 			disableLeavePage:false
         }
+        this.regEx = /^[0-9\d]+$/;
         this.regExAlpha = /^[a-zA-Z ]+$/;
         this.regExBoth = /[a-zA-Z0-9]+$/;
         this.regExSpaceBoth = /[a-zA-Z0-9 ]+$/;
@@ -79,12 +80,16 @@ class UpdateEmployeeBank extends React.Component {
                     this.setState({
                         loading: false,
                         current_employee_id: this.props.location.state.id,
+                        employmentId: res.data.employmentId ? res.data.employmentId : '',
                         initValue: {
                             id: res.data.id ? res.data.id : '',
                             employeeBankDetailsId: res.data.employeeBankDetailsId ? res.data.employeeBankDetailsId : '',
                             accountHolderName:
                                 res.data.accountHolderName && res.data.accountHolderName !== null
                                     ? res.data.accountHolderName
+                                    : '', 
+                                    agentId: res.data.agentId && res.data.agentId !== null
+                                    ? res.data.agentId
                                     : '',
                             accountNumber:
                                 res.data.accountNumber && res.data.accountNumber !== null
@@ -166,6 +171,7 @@ class UpdateEmployeeBank extends React.Component {
             branch,
             swiftCode,
             bankId,
+            agentId,
 
         } = data;
 
@@ -202,6 +208,14 @@ class UpdateEmployeeBank extends React.Component {
             'swiftCode',
             swiftCode !== null ? swiftCode : '',
         );
+        formData.append(
+            'employmentId',
+            this.state.employmentId  ? this.state.employmentId : '',
+        )
+        formData.append(
+            'agentId',
+            agentId != null ? agentId : '',
+        )
         this.setState({ loading:true, loadingMsg:"Updating Employee Bank..."});
         this.props.detailEmployeeBankAction.updateEmployeeBank(formData).then((res) => {
             if (res.status === 200) {
@@ -275,6 +289,8 @@ class UpdateEmployeeBank extends React.Component {
                                                         .required("Branch is required"),
                                                         iban: Yup.string()
                                                         .required("IBAN is required"),
+                                                        agentId: Yup.string()
+                                                        .required("Agent id is required"),
                                                                        
                                                     })}
 
@@ -482,6 +498,28 @@ class UpdateEmployeeBank extends React.Component {
                                                                                 />                                                     {props.errors.swiftCode && props.touched.swiftCode && (
                                                                                     <div className="invalid-feedback">{props.errors.swiftCode}</div>
                                                                                 )}
+                                                                            </FormGroup>
+                                                                        </Col>
+
+                                                                        <Col md="4">
+                                                                            <FormGroup>
+                                                                                <Label htmlFor="select"><span className="text-danger">* </span>{strings.agent_id} </Label>
+                                                                                <Input
+                                                                                type="text"
+                                                                                maxLength="9"
+                                                                                minLength="9"
+                                                                                id="agentId"
+                                                                                name="agentId"
+                                                                                value={props.values.agentId}
+                                                                                placeholder={strings.Enter+" Agent Id"}
+                                                                                onChange={(option) => {
+                                                                                    if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('agentId')(option) }
+                                                                                }}
+                                                                                className={props.errors.agentId && props.touched.agentId ? "is-invalid" : ""}
+                                                                            />
+                                                                                {props.errors.agentId && props.touched.agentId && (
+                                                                                 <div className="invalid-feedback">{props.errors.agentId}</div>
+                                                                                    )}
                                                                             </FormGroup>
                                                                         </Col>
 

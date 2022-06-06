@@ -771,8 +771,8 @@ class CreateSupplierInvoice extends React.Component {
 																			? res.data.supplierId
 																			: '',
 																		taxType: res.data.taxType
-																			? res.data.taxType
-																			: '',
+																			? true 
+																			: false,
 																		poId: poId,
 																		initValue: {
 																			rfqExpiryDate: res.data.rfqExpiryDate

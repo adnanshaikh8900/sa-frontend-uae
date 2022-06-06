@@ -531,8 +531,8 @@ renderVatAmount = (cell, row,extraData) => {
 															? res.data.customerId
 															: '',
 														taxType: res.data.taxType
-															? res.data.taxType
-															: '',
+														? true 
+														: false,
 														quotationId: quotationId,
 														initValue: {
 																quotaionExpiration: res.data.quotaionExpiration

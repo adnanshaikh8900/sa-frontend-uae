@@ -213,7 +213,28 @@ class PayrollEmployee extends React.Component {
       };
       
     onBtnExport = () => {
-        this.gridApi.exportDataAsCsv();
+        
+        const { filterData } = this.state
+        const paginationData = {
+            pageNo: this.options.page ? this.options.page - 1 : 0,
+            pageSize: 9000
+        }
+        const sortingData = {
+            order: this.options.sortOrder ? this.options.sortOrder : '',
+            sortingCol: this.options.sortName ? this.options.sortName : ''
+        }
+        const postData = { ...filterData, ...paginationData, ...sortingData }
+        this.props.payrollEmployeeActions.getPayrollEmployeeList(postData).then((res) => {
+            if (res.status === 200) {
+                this.setState({ loading: false })
+                this.table.handleExportCSV();
+                this.initializeData()
+            }
+        }).catch((err) => {
+            this.setState({ loading: false })
+            this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
+        })
+      
       };
 
     onBtnExportexcel= () => {
@@ -502,7 +523,8 @@ class PayrollEmployee extends React.Component {
                                                                 onClick={() => this.onBtnExport()}
 
                                                             >             
-                                                            CSV
+                                                         	<i className="fa glyphicon glyphicon-export fa-download mr-1" />
+											             	{strings.export_csv}
                                                         </Button>
                                                             <Button
                                                                 color="primary"
@@ -572,12 +594,13 @@ class PayrollEmployee extends React.Component {
                                                     fetchInfo={{ dataTotalSize: payroll_employee_list.count ? payroll_employee_list.count : 0 }}
                                                     className="employee-table"
                                                     trClassName="cursor-pointer"
-                                                    csvFileName="payroll_employee_list.csv"
-                                                    ref={(node) => this.table = node}
+                                                    csvFileName="Employee_List.csv"
+                                                    ref={(node) => this.table = node}                                     
                                                 >
                                                     <TableHeaderColumn
                                                         className="table-header-bg"
                                                         dataField="employeeCode"
+                                                        csvHeader="EMPLOYEE UNIQUE ID"
                                                         dataSort
                                                         width="12%"
                                                         thStyle={{whiteSpace:"normal"}}
@@ -592,6 +615,7 @@ class PayrollEmployee extends React.Component {
                                                         width="20%"
                                                         dataFormat={this.renderName}
                                                         thStyle={{whiteSpace:"normal"}}
+                                                        csvHeader="FULL NAME"
                                                     >
                                                          {strings.FullName}
                                                     </TableHeaderColumn>
@@ -601,6 +625,7 @@ class PayrollEmployee extends React.Component {
                                                         dataSort
                                                         width="20%"
                                                         thStyle={{whiteSpace:"normal"}}
+                                                        csvHeader="EMAIL"
                                                     >
                                                          {strings.Email}
                                                     </TableHeaderColumn>
@@ -611,6 +636,7 @@ class PayrollEmployee extends React.Component {
                                                     // dataFormat={this.vatCategoryFormatter}
                                                     width="12%"
                                                     thStyle={{whiteSpace:"normal"}}
+                                                    csvHeader="MOBILE NUMBER"
                                                     >
                                                          {strings.MobileNumber}
                                                     </TableHeaderColumn>
@@ -621,6 +647,10 @@ class PayrollEmployee extends React.Component {
                                                         dataFormat={this.renderDOB}
                                                         width="12%"
                                                         thStyle={{whiteSpace:"normal"}}
+                                                        csvHeader="DATE OF BIRTH"
+                                                        csvFormat={(date)=>{
+                                                            return moment(date).format('DD-MM-YYYY')
+                                                        }}
                                                     >
                                                          {strings.DateOfBirth}
                                                     </TableHeaderColumn>
@@ -648,6 +678,13 @@ class PayrollEmployee extends React.Component {
                                                         dataSort
                                                         dataFormat={this.renderStatus}
                                                         width="10%"
+                                                        csvHeader="STATUS"
+                                                        csvFormat={(status)=>{
+                                                            if(status==true)
+                                                            return "Active"
+                                                            else
+                                                            return "InActive"
+                                                        }}
                                                     >
                                                         {strings.Status}
                                                     </TableHeaderColumn>

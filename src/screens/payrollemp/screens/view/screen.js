@@ -283,6 +283,15 @@ renderSalaryDate=(cell,row)=>{
 	let salaryDateString=moment(row.salaryDate).format('DD/MM/YYYY')	
 	return salaryDateString
 }
+getEmployeeInviteEmail=()=>{
+	this.props.employeeViewActions
+	.getEmployeeInviteEmail(this.props.location.state.id)
+	.then((res) => {
+		if (res.status === 200) {
+			toast.success("Mail Sent Successfully")						
+		}
+	})			
+}
 	render() {
 		strings.setLanguage(this.state.language);
 		console.log(this.state.Fixed)
@@ -302,9 +311,18 @@ renderSalaryDate=(cell,row)=>{
 								</Col>
 								<Col>
 								<div className='pull-right'>
+							                                             	<Button  
+                                                                                   type="submit"
+																				   color="primary"
+																				   className="btn-square mr-3"
+																				   onClick={()=>{this.getEmployeeInviteEmail()}}
+																			   ><i className="fas fa-envelope"></i>{' '}
+																				   Resend Invite
+																			   </Button>
 								                                                <Button  
                                                                                     onClick={()=>{this.props.history.push('/admin/master/employee')}}
-                                                                                           > X </Button>
+                                                                                > X </Button>																		
+																						   
 								</div>
 								</Col>
 							</Row>

@@ -767,8 +767,12 @@ class CreateSupplierInvoice extends React.Component {
 																this.setState(
 																	{
 																		isSelected:true,
-																		contactId: res.data.supplierId,
-																		taxType: res.data.taxType,
+																		contactId: res.data.supplierId
+																			? res.data.supplierId
+																			: '',
+																		taxType: res.data.taxType
+																			? res.data.taxType
+																			: '',
 																		poId: poId,
 																		initValue: {
 																			rfqExpiryDate: res.data.rfqExpiryDate

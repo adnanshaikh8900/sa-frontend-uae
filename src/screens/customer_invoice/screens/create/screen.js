@@ -519,7 +519,7 @@ renderVatAmount = (cell, row,extraData) => {
 			});
 	};
 	getQuotationDetails=(quotationId)=>{
-this.props.customerInvoiceCreateActions.getQuotationById(quotationId)
+									this.props.customerInvoiceCreateActions.getQuotationById(quotationId)
 										.then((res)=>{
 											if (res.status === 200) {
 												this.getCompanyCurrency();
@@ -527,66 +527,88 @@ this.props.customerInvoiceCreateActions.getQuotationById(quotationId)
 												this.setState(
 													{
 														isQuotationSelected:true,
-														contactId: res.data.customerId,
+														contactId: res.data.customerId
+															? res.data.customerId
+															: '',
+														taxType: res.data.taxType
+														? true 
+														: false,
 														quotationId: quotationId,
 														initValue: {
-															quotaionExpiration: res.data.quotaionExpiration
-																? moment(res.data.quotaionExpiration).format('DD-MM-YYYY')
-																: '',
+																quotaionExpiration: res.data.quotaionExpiration
+																	? moment(res.data.quotaionExpiration).format('DD-MM-YYYY')
+																	: '',
 																quotaionExpiration1: res.data.quotaionExpiration
-																? res.data.quotaionExpiration
-																: '',
-																contactId: res.data.customerId ? res.data.customerId : '',
+																	? res.data.quotaionExpiration
+																	: '',
+																contactId: res.data.customerId 
+																	? res.data.customerId 
+																	: '',
 																quotationNumber: res.data.quotationNumber
-																? res.data.quotationNumber
-																: '',
+																	? res.data.quotationNumber
+																	: '',
 																invoiceVATAmount: res.data.totalVatAmount
-																? res.data.totalVatAmount
-																: 0,
-																totalAmount: res.data.totalAmount ? res.data.totalAmount : 0,
+																	? res.data.totalVatAmount
+																	: 0,
+																totalAmount: res.data.totalAmount 
+																	? res.data.totalAmount 
+																	: 0,
 																total_net: 0,
-																notes: res.data.notes ? res.data.notes : '',
+																notes: res.data.notes 
+																	? res.data.notes 
+																	: '',
 																lineItemsString: res.data.poQuatationLineItemRequestModelList
-																? res.data.poQuatationLineItemRequestModelList
-																: [],
-																placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
-																total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
-																discount: res.data.discount ? res.data.discount : 0,
+																	? res.data.poQuatationLineItemRequestModelList
+																	: [],
+																placeOfSupplyId: res.data.placeOfSupplyId 
+																	? res.data.placeOfSupplyId 
+																	: '',
+																total_excise: res.data.totalExciseAmount
+																	? res.data.totalExciseAmount 
+																	: '',
+																discount: res.data.discount 
+																	? res.data.discount 
+																	: 0,
 																discountPercentage: res.data.discountPercentage
 																	? res.data.discountPercentage
 																	: 0,
 																discountType: res.data.discountType
 																	? res.data.discountType
 																	: '',
-																	receiptNumber:res.data.quotationNumber ?res.data.quotationNumber:''
-
-
-														},
-														invoiceDateNoChange: res.data.quotaionExpiration
-																? moment(res.data.quotaionExpiration)
-																: '',
-														invoiceDueDateNoChange: res.data.quotaionExpiration
-																? res.data.quotaionExpiration
-																: '',
-														customer_taxTreatment_des : res.data.taxtreatment ? res.data.taxtreatment : '',
-														// placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
-														total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
-														data: res.data.poQuatationLineItemRequestModelList
-															? res.data.poQuatationLineItemRequestModelList
-															: [],
-
-
-														//
-
-														discountAmount: res.data.discount ? res.data.discount : 0,
-														discountPercentage: res.data.discountPercentage
-															? res.data.discountPercentage
-															: '',
-
-														selectedContact: res.data.customerId ? res.data.customerId : '',
-														// term: res.data.term ? res.data.term : '',
-														placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
-														loading: false,
+																receiptNumber:res.data.quotationNumber
+																	?res.data.quotationNumber
+																	:'',
+															},
+																invoiceDateNoChange: res.data.quotaionExpiration
+																	? moment(res.data.quotaionExpiration)
+																	: '',
+																invoiceDueDateNoChange: res.data.quotaionExpiration
+																	? res.data.quotaionExpiration
+																	: '',
+																customer_taxTreatment_des : res.data.taxtreatment 
+																	? res.data.taxtreatment 
+																	: '',
+																// placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+																total_excise: res.data.totalExciseAmount 
+																	? res.data.totalExciseAmount 
+																	: '',
+																data: res.data.poQuatationLineItemRequestModelList
+																	? res.data.poQuatationLineItemRequestModelList
+																	: [],
+																discountAmount: res.data.discount 
+																	? res.data.discount 
+																	: 0,
+																discountPercentage: res.data.discountPercentage
+																	? res.data.discountPercentage
+																	: '',
+																selectedContact: res.data.customerId 
+																	? res.data.customerId 
+																	: '',
+																// term: res.data.term ? res.data.term : '',
+																placeOfSupplyId: res.data.placeOfSupplyId 
+																	? res.data.placeOfSupplyId 
+																	: '',
+																loading: false,
 
 													},
 													() => {

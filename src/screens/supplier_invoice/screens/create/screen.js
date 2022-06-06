@@ -478,20 +478,30 @@ class CreateSupplierInvoice extends React.Component {
 							contact_po_number: res.data.contactPoNumber
 								? res.data.contactPoNumber
 								: '',
-							currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
-							exchangeRate:res.data.exchangeRate ? res.data.exchangeRate : '',
-							currencyName:res.data.currencyName ? res.data.currencyName : '',
+							currencyCode: res.data.currencyCode
+								? res.data.currencyCode 
+								: '',
+							exchangeRate:res.data.exchangeRate 
+								? res.data.exchangeRate 
+								: '',
+							currencyName:res.data.currencyName 
+								? res.data.currencyName 
+								: '',
 							invoiceDueDate: res.data.invoiceDueDate
 								? moment(res.data.invoiceDueDate).format('DD-MM-YYYY')
 								: '',
 							invoiceDate: res.data.invoiceDate
-							? moment(res.data.invoiceDate).format('DD-MM-YYYY')
-							: '',
+								? moment(res.data.invoiceDate).format('DD-MM-YYYY')
+								: '',
 							invoiceDate1: res.data.invoiceDate
-							? res.data.invoiceDate
-							: '',
-							contactId: res.data.contactId ? res.data.contactId : '',
-							project: res.data.projectId ? res.data.projectId : '',
+								? res.data.invoiceDate
+								: '',
+							contactId: res.data.contactId 
+								? res.data.contactId 
+								: '',
+							project: res.data.projectId 
+								? res.data.projectId 
+								: '',
 							invoice_number: res.data.referenceNumber
 								? res.data.referenceNumber
 								: '',
@@ -499,54 +509,94 @@ class CreateSupplierInvoice extends React.Component {
 							invoiceVATAmount: res.data.totalVatAmount
 								? res.data.totalVatAmount
 								: 0,
-							totalAmount: res.data.totalAmount ? res.data.totalAmount : 0,
-							notes: res.data.notes ? res.data.notes : '',
+							totalAmount: res.data.totalAmount 
+								? res.data.totalAmount 
+								: 0,
+							notes: res.data.notes 
+								? res.data.notes 
+								: '',
 							lineItemsString: res.data.invoiceLineItems
 								? res.data.invoiceLineItems
 								: [],
-							discount: res.data.discount ? res.data.discount : 0,
+							discount: res.data.discount 
+								? res.data.discount 
+								: 0,
 							discountPercentage: res.data.discountPercentage
 								? res.data.discountPercentage
 								: 0,
 							discountType: res.data.discountType
 								? res.data.discountType
 								: '',
-							
-							term: res.data.term ? res.data.term : '',
-							placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
-							fileName: res.data.fileName ? res.data.fileName : '',
-							filePath: res.data.filePath ? res.data.filePath : '',
-							isReverseChargeEnabled: res.data.isReverseChargeEnabled ? true : false,
-							checked: res.data.exciseType ? res.data.exciseType : '',
-							total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : 0,
-							taxType : res.data.taxType ? true : false,
-						},
-						customer_taxTreatment_des: res.data.taxTreatment ? res.data.taxTreatment : '',
-						checked: res.data.exciseType ? res.data.exciseType : res.data.exciseType,
-						invoiceDateNoChange :res.data.invoiceDate
-						? moment(res.data.invoiceDate)
-						: '',
-						invoiceDueDateNoChange : res.data.invoiceDueDate ?
-						moment(res.data.invoiceDueDate) : '',
-						invoiceDate: res.data.invoiceDate
-								? res.data.invoiceDate
+							term: res.data.term 
+								? res.data.term 
 								: '',
+							placeOfSupplyId: res.data.placeOfSupplyId 
+								? res.data.placeOfSupplyId 
+								: '',
+							fileName: res.data.fileName 
+								? res.data.fileName 
+								: '',
+							filePath: res.data.filePath 
+								? res.data.filePath 
+								: '',
+							isReverseChargeEnabled: res.data.isReverseChargeEnabled 
+								? true 
+								: false,
+							checked: res.data.exciseType 
+								? res.data.exciseType 
+								: '',
+							total_excise: res.data.totalExciseAmount 
+								? res.data.totalExciseAmount 
+								: 0,
+							taxType : res.data.taxType 
+								? true 
+								: false,
+						},
+						customer_taxTreatment_des: res.data.taxTreatment 
+							? res.data.taxTreatment 
+							: '',
+						checked: res.data.exciseType 
+							? res.data.exciseType 
+							: res.data.exciseType,
+						invoiceDateNoChange :res.data.invoiceDate
+							? moment(res.data.invoiceDate)
+							: '',
+						invoiceDueDateNoChange : res.data.invoiceDueDate 
+							? moment(res.data.invoiceDueDate) 
+							: '',
+						invoiceDate: res.data.invoiceDate
+							? res.data.invoiceDate
+							: '',
 						invoiceDueDate: res.data.invoiceDueDate
 							? res.data.invoiceDueDate
 							: '',
-						discountAmount: res.data.discount ? res.data.discount : 0,
+						discountAmount: res.data.discount 
+							? res.data.discount 
+							: 0,
 						discountPercentage: res.data.discountPercentage
 							? res.data.discountPercentage
 							: 0,
 						data: res.data.invoiceLineItems
 							? res.data.invoiceLineItems
 							: [],
-							taxType : res.data.taxType ? true : false,
-						selectedContact: res.data.contactId ? res.data.contactId : '',
-						contactId: res.data.contactId ? res.data.contactId : '',
-						term: term ? term : '',
-						placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
-						isReverseChargeEnabled: res.data.isReverseChargeEnabled ? true : false,
+						taxType : res.data.taxType 
+							? true 
+							: false,
+						selectedContact: res.data.contactId 
+							? res.data.contactId 
+							: '',
+						contactId: res.data.contactId 
+							? res.data.contactId 
+							: '',
+						term: term 
+							? term 
+							: '',
+						placeOfSupplyId: res.data.placeOfSupplyId 
+							? res.data.placeOfSupplyId 
+							: '',
+						isReverseChargeEnabled: res.data.isReverseChargeEnabled 
+							? true 
+							: false,
 						loading: false,
 					},
 					() => {
@@ -717,53 +767,81 @@ class CreateSupplierInvoice extends React.Component {
 																this.setState(
 																	{
 																		isSelected:true,
-																		contactId: res.data.supplierId,
+																		contactId: res.data.supplierId
+																			? res.data.supplierId
+																			: '',
+																		taxType: res.data.taxType
+																			? true 
+																			: false,
 																		poId: poId,
 																		initValue: {
 																			rfqExpiryDate: res.data.rfqExpiryDate
-																				? moment(res.data.rfqExpiryDate).format('DD-MM-YYYY')
-																				: '',
+																					? moment(res.data.rfqExpiryDate).format('DD-MM-YYYY')
+																					: '',
 																				rfqExpiryDate: res.data.rfqExpiryDate
-																				? res.data.rfqExpiryDate
-																				: '',
-																				contactId: res.data.supplierId ? res.data.supplierId : '',
+																					? res.data.rfqExpiryDate
+																					: '',
+																				contactId: res.data.supplierId 
+																					? res.data.supplierId 
+																					: '',
 																				quotationNumber: res.data.quotationNumber
-																				? res.data.quotationNumber
-																				: '',
+																					? res.data.quotationNumber
+																					: '',
 																				invoiceVATAmount: res.data.totalVatAmount
-																				? res.data.totalVatAmount
-																				: 0,
-																				totalAmount: res.data.totalAmount ? res.data.totalAmount : 0,
+																					? res.data.totalVatAmount
+																					: 0,
+																				totalAmount: res.data.totalAmount 
+																					? res.data.totalAmount 
+																					: 0,
 																				total_net: 0,
-																				notes: res.data.notes ? res.data.notes : '',
+																				notes: res.data.notes 
+																					? res.data.notes 
+																					: '',
 																				lineItemsString: res.data.poQuatationLineItemRequestModelList
-																				? res.data.poQuatationLineItemRequestModelList
-																				: [],
-																				placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
-																				total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
-																				discount: res.data.discount ? res.data.discount : 0,
+																					? res.data.poQuatationLineItemRequestModelList
+																					: [],
+																				placeOfSupplyId: res.data.placeOfSupplyId 
+																					? res.data.placeOfSupplyId 
+																					: '',
+																				total_excise: res.data.totalExciseAmount 
+																					? res.data.totalExciseAmount 
+																					: '',
+																				discount: res.data.discount 
+																					? res.data.discount 
+																					: 0,
 																				discountPercentage: res.data.discountPercentage
 																					? res.data.discountPercentage
 																					: 0,
 																				discountType: res.data.discountType
 																					? res.data.discountType
 																					: '',
-																					discountEnabled : res.data.discount > 0 ? true : false,
-									                                             	discount:res.data.discount?res.data.discount:0
+																				discountEnabled : res.data.discount > 0 
+																					? true 
+																					: false,
+									                                            discount:res.data.discount
+																					? res.data.discount
+																					: 0
 				
 																		},
-																		discountEnabled : res.data.discount > 0 ? true : false,
-																		discount:res.data.discount?res.data.discount:0,
-   
+																		discountEnabled : res.data.discount > 0 
+																			? true 
+																			: false,
+																		discount:res.data.discount
+																			?res.data.discount
+																			:0,
 																		invoiceDateNoChange: res.data.rfqExpiryDate
-																				? moment(res.data.rfqExpiryDate)
-																				: '',
+																			? moment(res.data.rfqExpiryDate)
+																			: '',
 																		invoiceDueDateNoChange: res.data.rfqExpiryDate
-																				? res.data.rfqExpiryDate
-																				: '',
-																		customer_taxTreatment_des : res.data.taxtreatment ? res.data.taxtreatment : '',
+																			? res.data.rfqExpiryDate
+																			: '',
+																		customer_taxTreatment_des : res.data.taxtreatment 
+																			? res.data.taxtreatment 
+																			: '',
 																		// placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
-																		total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
+																		total_excise: res.data.totalExciseAmount 
+																			? res.data.totalExciseAmount 
+																			: '',
 																		data: res.data.poQuatationLineItemRequestModelList
 																			? res.data.poQuatationLineItemRequestModelList
 																			: [],
@@ -771,7 +849,9 @@ class CreateSupplierInvoice extends React.Component {
 				
 																		//
 				
-																		discountAmount: res.data.discount ? res.data.discount : 0,
+																		discountAmount: res.data.discount 
+																			? res.data.discount 
+																			: 0,
 																		discountPercentage: res.data.discountPercentage
 																			? res.data.discountPercentage
 																			: '',

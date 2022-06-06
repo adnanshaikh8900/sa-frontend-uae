@@ -83,3 +83,18 @@ import {
 // 	  })
 // 	}
 //   }
+
+
+  export const getEmployeeInviteEmail = (_id) => {
+	return (dispatch) => {
+	  let data = {
+		method: 'GET',
+		url: `/rest/employee/getEmployeeInviteEmail?id=${_id}`
+	  }
+	  return authApi(data).then((res) => {
+		return res
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }

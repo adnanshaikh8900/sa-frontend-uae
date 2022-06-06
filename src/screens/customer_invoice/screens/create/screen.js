@@ -527,8 +527,12 @@ renderVatAmount = (cell, row,extraData) => {
 												this.setState(
 													{
 														isQuotationSelected:true,
-														contactId: res.data.customerId,
-														taxType: res.data.taxType,
+														contactId: res.data.customerId
+															? res.data.customerId
+															: '',
+														taxType: res.data.taxType
+															? res.data.taxType
+															: '',
 														quotationId: quotationId,
 														initValue: {
 																quotaionExpiration: res.data.quotaionExpiration
@@ -562,7 +566,9 @@ renderVatAmount = (cell, row,extraData) => {
 																total_excise: res.data.totalExciseAmount
 																	? res.data.totalExciseAmount 
 																	: '',
-																discount: res.data.discount ? res.data.discount : 0,
+																discount: res.data.discount 
+																	? res.data.discount 
+																	: 0,
 																discountPercentage: res.data.discountPercentage
 																	? res.data.discountPercentage
 																	: 0,
@@ -572,12 +578,7 @@ renderVatAmount = (cell, row,extraData) => {
 																receiptNumber:res.data.quotationNumber
 																	?res.data.quotationNumber
 																	:'',
-																// taxType: res.data.taxType
-																// 	? res.data.taxType
-																// 	: ''
-
-
-																},
+															},
 																invoiceDateNoChange: res.data.quotaionExpiration
 																	? moment(res.data.quotaionExpiration)
 																	: '',
@@ -594,19 +595,20 @@ renderVatAmount = (cell, row,extraData) => {
 																data: res.data.poQuatationLineItemRequestModelList
 																	? res.data.poQuatationLineItemRequestModelList
 																	: [],
-
-
-														//
-
-														discountAmount: res.data.discount ? res.data.discount : 0,
-														discountPercentage: res.data.discountPercentage
-															? res.data.discountPercentage
-															: '',
-
-														selectedContact: res.data.customerId ? res.data.customerId : '',
-														// term: res.data.term ? res.data.term : '',
-														placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
-														loading: false,
+																discountAmount: res.data.discount 
+																	? res.data.discount 
+																	: 0,
+																discountPercentage: res.data.discountPercentage
+																	? res.data.discountPercentage
+																	: '',
+																selectedContact: res.data.customerId 
+																	? res.data.customerId 
+																	: '',
+																// term: res.data.term ? res.data.term : '',
+																placeOfSupplyId: res.data.placeOfSupplyId 
+																	? res.data.placeOfSupplyId 
+																	: '',
+																loading: false,
 
 													},
 													() => {

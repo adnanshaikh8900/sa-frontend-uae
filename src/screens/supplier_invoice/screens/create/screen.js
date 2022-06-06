@@ -478,20 +478,30 @@ class CreateSupplierInvoice extends React.Component {
 							contact_po_number: res.data.contactPoNumber
 								? res.data.contactPoNumber
 								: '',
-							currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
-							exchangeRate:res.data.exchangeRate ? res.data.exchangeRate : '',
-							currencyName:res.data.currencyName ? res.data.currencyName : '',
+							currencyCode: res.data.currencyCode
+								? res.data.currencyCode 
+								: '',
+							exchangeRate:res.data.exchangeRate 
+								? res.data.exchangeRate 
+								: '',
+							currencyName:res.data.currencyName 
+								? res.data.currencyName 
+								: '',
 							invoiceDueDate: res.data.invoiceDueDate
 								? moment(res.data.invoiceDueDate).format('DD-MM-YYYY')
 								: '',
 							invoiceDate: res.data.invoiceDate
-							? moment(res.data.invoiceDate).format('DD-MM-YYYY')
-							: '',
+								? moment(res.data.invoiceDate).format('DD-MM-YYYY')
+								: '',
 							invoiceDate1: res.data.invoiceDate
-							? res.data.invoiceDate
-							: '',
-							contactId: res.data.contactId ? res.data.contactId : '',
-							project: res.data.projectId ? res.data.projectId : '',
+								? res.data.invoiceDate
+								: '',
+							contactId: res.data.contactId 
+								? res.data.contactId 
+								: '',
+							project: res.data.projectId 
+								? res.data.projectId 
+								: '',
 							invoice_number: res.data.referenceNumber
 								? res.data.referenceNumber
 								: '',
@@ -499,27 +509,48 @@ class CreateSupplierInvoice extends React.Component {
 							invoiceVATAmount: res.data.totalVatAmount
 								? res.data.totalVatAmount
 								: 0,
-							totalAmount: res.data.totalAmount ? res.data.totalAmount : 0,
-							notes: res.data.notes ? res.data.notes : '',
+							totalAmount: res.data.totalAmount 
+								? res.data.totalAmount 
+								: 0,
+							notes: res.data.notes 
+								? res.data.notes 
+								: '',
 							lineItemsString: res.data.invoiceLineItems
 								? res.data.invoiceLineItems
 								: [],
-							discount: res.data.discount ? res.data.discount : 0,
+							discount: res.data.discount 
+								? res.data.discount 
+								: 0,
 							discountPercentage: res.data.discountPercentage
 								? res.data.discountPercentage
 								: 0,
 							discountType: res.data.discountType
 								? res.data.discountType
 								: '',
-							
-							term: res.data.term ? res.data.term : '',
-							placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
-							fileName: res.data.fileName ? res.data.fileName : '',
-							filePath: res.data.filePath ? res.data.filePath : '',
-							isReverseChargeEnabled: res.data.isReverseChargeEnabled ? true : false,
-							checked: res.data.exciseType ? res.data.exciseType : '',
-							total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : 0,
-							taxType : res.data.taxType ? true : false,
+							term: res.data.term 
+								? res.data.term 
+								: '',
+							placeOfSupplyId: res.data.placeOfSupplyId 
+								? res.data.placeOfSupplyId 
+								: '',
+							fileName: res.data.fileName 
+								? res.data.fileName 
+								: '',
+							filePath: res.data.filePath 
+								? res.data.filePath 
+								: '',
+							isReverseChargeEnabled: res.data.isReverseChargeEnabled 
+								? true 
+								: false,
+							checked: res.data.exciseType 
+								? res.data.exciseType 
+								: '',
+							total_excise: res.data.totalExciseAmount 
+								? res.data.totalExciseAmount 
+								: 0,
+							taxType : res.data.taxType 
+								? true 
+								: false,
 						},
 						customer_taxTreatment_des: res.data.taxTreatment ? res.data.taxTreatment : '',
 						checked: res.data.exciseType ? res.data.exciseType : res.data.exciseType,
@@ -541,7 +572,7 @@ class CreateSupplierInvoice extends React.Component {
 						data: res.data.invoiceLineItems
 							? res.data.invoiceLineItems
 							: [],
-							taxType : res.data.taxType ? true : false,
+						taxType : res.data.taxType ? true : false,
 						selectedContact: res.data.contactId ? res.data.contactId : '',
 						contactId: res.data.contactId ? res.data.contactId : '',
 						term: term ? term : '',
@@ -718,30 +749,43 @@ class CreateSupplierInvoice extends React.Component {
 																	{
 																		isSelected:true,
 																		contactId: res.data.supplierId,
+																		taxType: res.data.taxType,
 																		poId: poId,
 																		initValue: {
 																			rfqExpiryDate: res.data.rfqExpiryDate
-																				? moment(res.data.rfqExpiryDate).format('DD-MM-YYYY')
-																				: '',
+																					? moment(res.data.rfqExpiryDate).format('DD-MM-YYYY')
+																					: '',
 																				rfqExpiryDate: res.data.rfqExpiryDate
-																				? res.data.rfqExpiryDate
-																				: '',
-																				contactId: res.data.supplierId ? res.data.supplierId : '',
+																					? res.data.rfqExpiryDate
+																					: '',
+																				contactId: res.data.supplierId 
+																					? res.data.supplierId 
+																					: '',
 																				quotationNumber: res.data.quotationNumber
-																				? res.data.quotationNumber
-																				: '',
+																					? res.data.quotationNumber
+																					: '',
 																				invoiceVATAmount: res.data.totalVatAmount
-																				? res.data.totalVatAmount
-																				: 0,
-																				totalAmount: res.data.totalAmount ? res.data.totalAmount : 0,
+																					? res.data.totalVatAmount
+																					: 0,
+																				totalAmount: res.data.totalAmount 
+																					? res.data.totalAmount 
+																					: 0,
 																				total_net: 0,
-																				notes: res.data.notes ? res.data.notes : '',
+																				notes: res.data.notes 
+																					? res.data.notes 
+																					: '',
 																				lineItemsString: res.data.poQuatationLineItemRequestModelList
-																				? res.data.poQuatationLineItemRequestModelList
-																				: [],
-																				placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
-																				total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
-																				discount: res.data.discount ? res.data.discount : 0,
+																					? res.data.poQuatationLineItemRequestModelList
+																					: [],
+																				placeOfSupplyId: res.data.placeOfSupplyId 
+																				? res.data.placeOfSupplyId 
+																				: '',
+																				total_excise: res.data.totalExciseAmount 
+																					? res.data.totalExciseAmount 
+																					: '',
+																				discount: res.data.discount 
+																					? res.data.discount 
+																					: 0,
 																				discountPercentage: res.data.discountPercentage
 																					? res.data.discountPercentage
 																					: 0,

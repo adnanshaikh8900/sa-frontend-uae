@@ -664,6 +664,7 @@ class ChartAccount extends React.Component {
 													dataField="transactionCategoryName"
 													dataSort
 													columnTitle={this.customName}
+													width="50%"
 													className="table-header-bg"
 												>
 													{strings.ACCOUNTNAME}
@@ -676,13 +677,13 @@ class ChartAccount extends React.Component {
 												>
 												    {strings.ACCOUNTTYPE}
 												</TableHeaderColumn>
-												<TableHeaderColumn
+											{	this.state.hideForPrint==false&&	(	<TableHeaderColumn
 													dataField="isEditable"
 													dataFormat={this.editFormatter}
 													className="table-header-bg"
 												>
 													{strings.ACCOUNT}
-												</TableHeaderColumn>
+												</TableHeaderColumn>)}
 											</BootstrapTable> 
 										</div>
 										

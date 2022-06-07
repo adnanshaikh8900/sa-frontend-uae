@@ -302,11 +302,11 @@ class PaySlipModal extends React.Component {
 
 																	{/* <Row> <Col className='mt-2 mb-2'>Personal Email  </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.email ? this.state.selectedData.email : ('-')}</Col></Row>				 */}
 
-																	<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.DateOfJoining}</Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.dateOfJoining !== '' ?  moment(this.state.selectedData.dateOfJoining).format("DD/MM/YYYY")  : ('-')}</Col>
+																	<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.DateOfJoining}</Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.dateOfJoining !== '' ?  moment(this.state.selectedData.dateOfJoining).format("DD-MM-YYYY")  : ('-')}</Col>
 																	</Row>
 																	<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.PayPeriod} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.payPeriod !== '' ? this.renderPayperiod(this.state.selectedData.payPeriod) : ('-')}</Col>
 																	</Row>
-																	<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.PayDate} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.payDate !== '' ? moment(this.state.selectedData.payDate).format("DD/MM/YYYY") : ('-')}</Col>
+																	<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.PayDate} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.payDate !== '' ? moment(this.state.selectedData.payDate).format("DD-MM-YYYY") : ('-')}</Col>
 																	</Row>
 																	<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.LOPDays} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.lopDays !== '' ? this.state.selectedData.lopDays : ('-')}</Col>
 																	</Row>

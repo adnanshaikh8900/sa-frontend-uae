@@ -112,7 +112,7 @@ handleChange = (evt) => {
             this.props.detailSalaryComponentAction.getSalaryComponentByEmployeeId(this.props.location.state.id).then((res) => {
 
                 if (res.status === 200) {
-                   
+
                      let ctcValue= 
                                     res.data.ctc ?
                                                 (
@@ -138,9 +138,11 @@ handleChange = (evt) => {
                      this.updateSalary(res.data.ctc ? ctcValue : this.state.CTC)
                      this.formRef.current.setFieldValue('CTC',
                                                             // this.state.CTC
-                                                            this.state.ctcType=="ANNUALLY"?
+                                                            this.state.CTC!=""?
+                                                           ( this.state.ctcType=="ANNUALLY"?
                                                             this.state.CTC
-                                                            :parseFloat(this.state.CTC)/12 
+                                                            :parseFloat(this.state.CTC)/12 )
+                                                            :0
                                                             , true);	
                 }
             }).catch((err) => {

@@ -570,10 +570,12 @@ getEmployeeInviteEmail=()=>{
 																			color="primary"
 																		
 																			style={{ marginBottom: '10px' }}
-																			onClick={() => this.props.history.push(`/admin/payroll/employee/updateSalaryComponent`,
-																				{ id: this.state.current_employee_id,ctcTypeOption:this.state.EmployeeDetails.ctcType=="ANNUALLY" ?
+																			onClick={() => this.props.history.push(`/admin/master/employee/updateSalaryComponent`,
+																				{ id: this.state.current_employee_id,ctcTypeOption:this.state.EmployeeDetails.ctcType!=null?
+																																(	this.state.EmployeeDetails.ctcType=="ANNUALLY" ?
 																																			 {label:this.state.EmployeeDetails.ctcType,value:1}
-																																			:{label:this.state.EmployeeDetails.ctcType,value:2}
+																																			:{label:this.state.EmployeeDetails.ctcType,value:2})
+																																			:{label:"ANNUALLY",value:1}
 																																		 })}
 																				
 																				title={

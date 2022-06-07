@@ -2030,7 +2030,7 @@ discountType = (row) =>
 																		maxLength="50"
 																		id="quotation_Number"
 																		name="quotation_Number"
-																		placeholder={strings.InvoiceNumber}
+																		placeholder={strings.QuotationNumber}
 																		value={props.values.quotation_Number}
 																		onBlur={props.handleBlur('quotation_Number')}
 																		onChange={(option) => {

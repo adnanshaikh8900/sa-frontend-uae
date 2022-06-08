@@ -452,11 +452,11 @@ class CreateCustomerInvoice extends React.Component {
 	};
 
 		renderSubTotal = (cell, row,extraData) => {
-			return row.subTotal === 0 ? this.state.customer_currency_symbol +" "+  row.subTotal.toLocaleString(navigator.language,{ minimumFractionDigits: 2,maximumFractionDigits: 2 }): this.state.customer_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language,{ minimumFractionDigits: 2,maximumFractionDigits: 2 });
+			return row.subTotal === 0 ? this.state.customer_currency_symbol +" "+  row.subTotal.toLocaleString(navigator.language,{ minimumFractionDigits: 2, maximumFractionDigits: 2 }): this.state.customer_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language,{ minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 }
 renderVatAmount = (cell, row,extraData) => {
-	return row.vatAmount === 0 ? this.state.customer_currency_symbol +" "+  row.vatAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2,maximumFractionDigits: 2 }): this.state.customer_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2,maximumFractionDigits: 2 });
+	return row.vatAmount === 0 ? this.state.customer_currency_symbol +" "+  row.vatAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2, maximumFractionDigits: 2 }): this.state.customer_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 }
 	setDate = (props, value) => {
@@ -531,8 +531,8 @@ renderVatAmount = (cell, row,extraData) => {
 															? res.data.customerId
 															: '',
 														taxType: res.data.taxType
-														? true 
-														: false,
+															? true 
+															: false,
 														quotationId: quotationId,
 														initValue: {
 																quotaionExpiration: res.data.quotaionExpiration
@@ -579,6 +579,9 @@ renderVatAmount = (cell, row,extraData) => {
 																	?res.data.quotationNumber
 																	:'',
 															},
+																discountEnabled: res.data.discount > 0 
+																	? true
+																	: false,
 																invoiceDateNoChange: res.data.quotaionExpiration
 																	? moment(res.data.quotaionExpiration)
 																	: '',
@@ -2123,7 +2126,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 	rendertotalexcise=()=>{
 		const {initValue}= this.state
 		
-		let val=initValue.total_excise.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})
+		let val=initValue.total_excise.toLocaleString(navigator.language, {minimumFractionDigits: 2, maximumFractionDigits: 2})
 		
 		return parseFloat(val).toFixed(2)
 	}
@@ -3647,7 +3650,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 
 																						{this.state.customer_currency_symbol} &nbsp;
 																						{/* {this.rendertotalexcise()} */}
-																						{initValue.total_excise.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
+																						{initValue.total_excise.toLocaleString(navigator.language, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
 																					</label>
 																				</Col>
 																			</Row>
@@ -3676,7 +3679,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																							/>
 																						)} */}
 																						{this.state.customer_currency_symbol} &nbsp;
-																						{initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
+																						{initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>
@@ -3704,7 +3707,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																							/>
 																						)} */}
 																						{this.state.customer_currency_symbol} &nbsp;
-																						{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
+																						{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>
@@ -3749,7 +3752,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																							/>
 																						)} */}
 																						{this.state.customer_currency_symbol} &nbsp;
-																						{initValue.invoiceVATAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
+																						{initValue.invoiceVATAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>
@@ -3778,7 +3781,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																							/>
 																						)} */}
 																						{this.state.customer_currency_symbol} &nbsp;
-																						{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
+																						{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>

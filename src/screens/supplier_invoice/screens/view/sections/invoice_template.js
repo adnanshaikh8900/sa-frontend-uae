@@ -354,15 +354,14 @@ class InvoiceTemplate extends Component {
 												<div className="mb-1 ml-2"><b>{strings.Status} : </b>{this.renderInvoiceStatus(invoiceData.status)}
 												</div><br/>
 												<div className="mb-1 ml-2" >
-												<strong style={{ padding: '0.5rem', background: '#f2f2f2'}}>{strings.BalanceDue} :  {invoiceData.dueAmount ? (
-										currencyData[0]
-											? currencyData[0].currencyIsoCode +" "+ invoiceData.dueAmount 
-											: 'AED'+" "+ invoiceData.dueAmount 
-									) : (
-										currencyData[0]
-											? currencyData[0].currencyIsoCode + " " + 0
-											: 'AED' + " " + 0
-									)}</strong></div>
+
+													<strong style={{ padding: '0.5rem', background: '#f2f2f2'}}>{strings.BalanceDue} :  {invoiceData.dueAmount ?
+
+													invoiceData.currencyIsoCode + " " +invoiceData.dueAmount.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2}) :
+
+													invoiceData.currencyIsoCode + " " +ZERO.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
+
+												</strong></div>
 													</div></div></div>
 													<Table className='table-striped' >
 						<thead className="header-row" style={{ fontSize:"12px" }}>
@@ -616,17 +615,15 @@ class InvoiceTemplate extends Component {
 													}}
 												>
 													<span style={{ marginLeft: '2rem' }}></span>
-													<span>
-													{invoiceData.dueAmount ? (
-																	currencyData[0]
-																	? currencyData[0].currencyIsoCode +" "+ invoiceData.dueAmount 
-																	: 'AED'+" "+ invoiceData.dueAmount 
-																) : (
-																	currencyData[0]
-																	? currencyData[0].currencyIsoCode +" "+ invoiceData.dueAmount 
-																	: 'AED'+" "+ invoiceData.dueAmount 
-																)}
-													</span>
+													<div className="mb-1 ml-2" >
+
+                                        <strong style={{ padding: '0.5rem', background: '#f2f2f2'}}>{strings.BalanceDue} :  {invoiceData.dueAmount ?
+
+                                        invoiceData.currencyIsoCode + " " +invoiceData.dueAmount.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2}) :
+
+                                        invoiceData.currencyIsoCode + " " +ZERO.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
+
+                                    </strong></div>
 												</b>
 											</td>
 										</tr>

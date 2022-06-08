@@ -82,20 +82,6 @@ class DetailSalaryRole extends React.Component {
     }
   }
 
-  // handleSubmit = (data) => {
-  //   const postData = Object.assign({},data)
-  //   if(typeof postData.currencyCode === 'object') {
-  //     postData.currencyCode = data.currencyCode.value
-  //   }
-  //   this.props.employeeDetailActions.updateSalaryRole(postData).then((res) => {
-  //     if (res.status === 200) {
-  //       this.props.commonActions.tostifyAlert('success', 'Employee Updated Successfully')
-  //       this.props.history.push('/admin/master/employee')
-  //     }
-  //   }).catch((err) => {
-  //     this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
-  //   })
-  // }
   handleSubmit = (data) => {
     this.setState({ disabled: true, disableLeavePage:true });
 		const { current_salary_role_id} = this.state;
@@ -126,16 +112,16 @@ class DetailSalaryRole extends React.Component {
 			});
 	};
 
-  deleteEmployee = () => {
+  delete = () => {
     const message1 =
     <text>
-    <b>Delete Employee?</b>
+    <b>Delete Salary Role ?</b>
     </text>
-    const message = 'This Employee will be deleted permanently and cannot be recovered. ';
+    const message = 'This salary role will be deleted permanently and cannot be recovered. ';
     this.setState({
       dialog: <ConfirmDeleteModal
         isOpen={true}
-        okHandler={this.removeEmployee}
+        okHandler={this.remove}
         cancelHandler={this.removeDialog}
         message={message}
         message1={message1}
@@ -143,12 +129,13 @@ class DetailSalaryRole extends React.Component {
     })
   }
 
-  removeEmployee = () => {
-    const { current_employee_id } = this.state;
-    this.props.employeeDetailActions.deleteEmployee(current_employee_id).then((res) => {
+  remove = () => {
+    const { current_salary_role_id } = this.state;
+    this.props.salarayRoleDetailActions.deleteSalaryRole(current_salary_role_id).then((res) => {
       if (res.status === 200) {
-        this.props.commonActions.tostifyAlert('success', 'Employee Deleted Successfully !!')
-        this.props.history.push('/admin/master/employee')
+        this.setState({disableLeavePage:true})
+        this.props.commonActions.tostifyAlert('success', 'Salary role deleted successfully !!')
+        this.props.history.push('/admin/payroll/config',{tabNo:'1'})
       }
     }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
@@ -246,13 +233,13 @@ class DetailSalaryRole extends React.Component {
                                 </Row>
                                 <Row>
                                   <Col lg={12} className="d-flex align-items-center justify-content-between flex-wrap mt-5">
-                                    {/* <FormGroup>
+                                    <FormGroup>
                                       <Button type="button" name="button" color="danger" className="btn-square"
-                                        onClick={this.deleteEmployee}
+                                        onClick={this.delete}
                                       >
                                         <i className="fa fa-trash"></i>  {strings.Delete}
                                     </Button>
-                                    </FormGroup> */}
+                                    </FormGroup>
                                     <FormGroup className="text-right">
                                     <Button type="button" color="primary" className="btn-square mr-3" 	disabled={this.state.disabled}
                                      onClick={() => {

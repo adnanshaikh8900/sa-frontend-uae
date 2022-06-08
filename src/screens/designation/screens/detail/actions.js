@@ -32,11 +32,11 @@ export const updateEmployeeDesignation = (obj) => {
   }
 }
 
-export const deleteEmployee = (id) => {
+export const deleteDesignation = (id) => {
   return (dispatch) => {
     let data = {
       method: 'DELETE',
-      url: `/rest/employee/delete?id=${id}`
+      url: `/rest/employeeDesignation/deleteEmployeeDesignation?id=${id}`
     }
 
     return authApi(data).then((res) => {

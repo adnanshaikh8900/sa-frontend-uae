@@ -126,29 +126,30 @@ class DetailDesignation extends React.Component {
 			});
 	};
 
-  deleteEmployee = () => {
+  delete = () => {
     const message1 =
     <text>
-    <b>Delete Employee?</b>
+    <b>Delete Designation ?</b>
     </text>
-    const message = 'This Employee will be deleted permanently and cannot be recovered. ';
+    const message = 'This designation will be deleted permanently and cannot be recovered. ';
     this.setState({
       dialog: <ConfirmDeleteModal
-        isOpen={true}
-        okHandler={this.removeEmployee}
-        cancelHandler={this.removeDialog}
-        message={message}
-        message1={message1}
-      />
+                  isOpen={true}
+                  okHandler={this.remove}
+                  cancelHandler={this.removeDialog}
+                  message={message}
+                  message1={message1} 
+                />
     })
   }
 
-  removeEmployee = () => {
-    const { current_employee_id } = this.state;
-    this.props.employeeDetailActions.deleteEmployee(current_employee_id).then((res) => {
+  remove = () => {
+    const { current_salary_role_id } = this.state;
+    this.props.designationDetailActions.deleteDesignation(current_salary_role_id).then((res) => {
       if (res.status === 200) {
-        this.props.commonActions.tostifyAlert('success', 'Employee Deleted Successfully !!')
-        this.props.history.push('/admin/master/employee')
+        this.setState({disableLeavePage:true})
+        this.props.commonActions.tostifyAlert('success', 'Designation Deleted Successfully !')
+        this.props.history.push('/admin/payroll/config',{tabNo:'3'})
       }
     }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
@@ -267,13 +268,13 @@ class DetailDesignation extends React.Component {
                                 </Row>
                                 <Row>
                                   <Col lg={12} className="d-flex align-items-center justify-content-between flex-wrap mt-5">
-                                    {/* <FormGroup>
+                                    <FormGroup>
                                       <Button type="button" name="button" color="danger" className="btn-square"
-                                        onClick={this.deleteEmployee}
+                                        onClick={this.delete}
                                       >
                                         <i className="fa fa-trash"></i> {strings.Delete}
                                     </Button>
-                                    </FormGroup> */}
+                                    </FormGroup>
                                     <FormGroup className="text-right">
                                     <Button type="button" color="primary" className="btn-square mr-3" onClick={() => {
                                     this.setState({ createMore: false }, () => {

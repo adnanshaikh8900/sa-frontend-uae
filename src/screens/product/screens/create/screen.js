@@ -840,12 +840,11 @@ try {
 																			styles={customStyles}
 																			className="select-default-width"
 																			options={
-																				product_category_list &&
-																				product_category_list.data
+																				product_category_list 
 																					? selectOptionsFactory.renderOptions(
-																							'productCategoryName',
-																							'id',
-																							product_category_list.data,
+																							'label',
+																							'value',
+																							product_category_list,
 																							'Product Category',
 																					  )
 																					: []

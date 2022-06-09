@@ -1188,12 +1188,11 @@ renderName=(cell,row)=>{
 																			styles={customStyles}
 																			className="select-default-width"
 																			options={
-																				product_category_list &&
-																				product_category_list.data
+																				product_category_list
 																					? selectOptionsFactory.renderOptions(
-																							'productCategoryName',
-																							'id',
-																							product_category_list.data,
+																							'label',
+																							'value',
+																							product_category_list,
 																							'Product Category',
 																					  )
 																					: []
@@ -1202,12 +1201,11 @@ renderName=(cell,row)=>{
 																			name="productCategoryId"
 																			value={
 																				product_category_list &&
-																				product_category_list.data &&
 																				selectOptionsFactory
 																					.renderOptions(
-																						'productCategoryName',
-																						'id',
-																						product_category_list.data,
+																						'label',
+																						'value',
+																						product_category_list,
 																						'Product Category',
 																					)
 																					.find(

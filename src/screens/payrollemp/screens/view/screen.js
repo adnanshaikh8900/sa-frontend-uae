@@ -283,6 +283,15 @@ renderSalaryDate=(cell,row)=>{
 	let salaryDateString=moment(row.salaryDate).format('DD/MM/YYYY')	
 	return salaryDateString
 }
+getEmployeeInviteEmail=()=>{
+	this.props.employeeViewActions
+	.getEmployeeInviteEmail(this.props.location.state.id)
+	.then((res) => {
+		if (res.status === 200) {
+			toast.success("Mail Sent Successfully")						
+		}
+	})			
+}
 	render() {
 		strings.setLanguage(this.state.language);
 		console.log(this.state.Fixed)
@@ -302,9 +311,18 @@ renderSalaryDate=(cell,row)=>{
 								</Col>
 								<Col>
 								<div className='pull-right'>
+							                                             	<Button  
+                                                                                   type="submit"
+																				   color="primary"
+																				   className="btn-square mr-3"
+																				   onClick={()=>{this.getEmployeeInviteEmail()}}
+																			   ><i className="fas fa-envelope"></i>{' '}
+																				   Resend Invite
+																			   </Button>
 								                                                <Button  
                                                                                     onClick={()=>{this.props.history.push('/admin/master/employee')}}
-                                                                                           > X </Button>
+                                                                                > X </Button>																		
+																						   
 								</div>
 								</Col>
 							</Row>
@@ -552,10 +570,12 @@ renderSalaryDate=(cell,row)=>{
 																			color="primary"
 																		
 																			style={{ marginBottom: '10px' }}
-																			onClick={() => this.props.history.push(`/admin/payroll/employee/updateSalaryComponent`,
-																				{ id: this.state.current_employee_id,ctcTypeOption:this.state.EmployeeDetails.ctcType=="ANNUALLY" ?
+																			onClick={() => this.props.history.push(`/admin/master/employee/updateSalaryComponent`,
+																				{ id: this.state.current_employee_id,ctcTypeOption:this.state.EmployeeDetails.ctcType!=null?
+																																(	this.state.EmployeeDetails.ctcType=="ANNUALLY" ?
 																																			 {label:this.state.EmployeeDetails.ctcType,value:1}
-																																			:{label:this.state.EmployeeDetails.ctcType,value:2}
+																																			:{label:this.state.EmployeeDetails.ctcType,value:2})
+																																			:{label:"ANNUALLY",value:1}
 																																		 })}
 																				
 																				title={

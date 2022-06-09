@@ -68,6 +68,7 @@ class ChartAccount extends React.Component {
 			view: false,
 			unselectable: [],
 			pageSize:10,
+			hideForPrint:false
 		};
 
 		this.options = {
@@ -446,7 +447,7 @@ class ChartAccount extends React.Component {
 							) : (
 								<Row>
 									<Col lg={12}>
-										<div className="d-flex justify-content-end">
+									{this.state.hideForPrint==false&&(	<div className="d-flex justify-content-end">
 											<ButtonGroup size="sm">
 											
 											<Button
@@ -477,10 +478,40 @@ class ChartAccount extends React.Component {
 												)}
 												<Button 	color="primary"	className="mr-2 btn-square"
 													onClick={() => {
-														this.onBtPrinterFriendly();
-														this.setState({pageSize:10000})
-														this.gridApi.paginationSetPageSize(Number(10000));														
-														window.print()		
+														let { filterData } = this.state;
+														const paginationData = {
+															pageNo: this.options.page ? this.options.page - 1 : 0,
+															pageSize: 1000,
+														};
+														const sortingData = {
+															order: this.options.sortOrder ? this.options.sortOrder : '',
+															sortingCol: this.options.sortName ? this.options.sortName : '',
+														};
+														const postData = { ...filterData, ...paginationData, ...sortingData };
+														this.setState({	loading: false,hideForPrint:true});
+														this.props.chartOfAccountActions
+															.getTransactionCategoryList(postData)
+															.then((res) => {
+																if (res.status === 200) {
+																
+																	this.unselectable(res.data);
+																	window.print()	
+																	
+																	this.initializeData()
+																	this.setState({hideForPrint:false});
+																}
+															})
+															.catch((err) => {
+																this.props.commonActions.tostifyAlert(
+																	'error',
+																	err && err.data ? err.data.message : 'Something Went Wrong',
+																);
+																this.setState({ loading: false });
+															});
+														// this.onBtPrinterFriendly();
+														// this.setState({pageSize:10000})
+														// this.gridApi.paginationSetPageSize(Number(10000));														
+															
 														// this.onBtNormal()										
 													}}
 													style={{
@@ -498,8 +529,8 @@ class ChartAccount extends React.Component {
 													Bulk Delete
 												</Button> */}
 											</ButtonGroup>
-										</div>
-										<div className="py-3">
+										</div>)}
+										{	this.state.hideForPrint==false&&(<div className="py-3">
 											{/* <h5>{strings.Filter}: </h5> */}
 											<form>
 												<Row>
@@ -586,10 +617,11 @@ class ChartAccount extends React.Component {
 												</Row>
 											</form>
 											
-										</div>
+										</div>)}
 										
-										<div>
+										<div  id="section-to-print">
 											<BootstrapTable
+											
 												selectRow={this.selectRowProp}
 												search={false}
 												options={this.options}
@@ -602,18 +634,18 @@ class ChartAccount extends React.Component {
 												version="4"
 												hover
 												pagination={
-													transaction_category_list &&
+													this.state.hideForPrint==false&&	(	transaction_category_list &&
 													transaction_category_list.data &&
 													transaction_category_list.data.length
 														? true
-														: false
+														: false)
 												}
 												remote
-												fetchInfo={{
+												fetchInfo={	this.state.hideForPrint==false&&({
 													dataTotalSize: transaction_category_list.count
 														? transaction_category_list.count
 														: 0,
-												}}
+												})}
 												className="product-table"
 												trClassName="cursor-pointer"
 												csvFileName="Chart_Of_Account.csv"
@@ -632,6 +664,7 @@ class ChartAccount extends React.Component {
 													dataField="transactionCategoryName"
 													dataSort
 													columnTitle={this.customName}
+													width="50%"
 													className="table-header-bg"
 												>
 													{strings.ACCOUNTNAME}
@@ -644,13 +677,13 @@ class ChartAccount extends React.Component {
 												>
 												    {strings.ACCOUNTTYPE}
 												</TableHeaderColumn>
-												<TableHeaderColumn
+											{	this.state.hideForPrint==false&&	(	<TableHeaderColumn
 													dataField="isEditable"
 													dataFormat={this.editFormatter}
 													className="table-header-bg"
 												>
 													{strings.ACCOUNT}
-												</TableHeaderColumn>
+												</TableHeaderColumn>)}
 											</BootstrapTable> 
 										</div>
 										

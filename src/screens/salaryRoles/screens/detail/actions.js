@@ -32,11 +32,11 @@ export const updateSalaryRole = (obj) => {
   }
 }
 
-export const deleteEmployee = (id) => {
+export const deleteSalaryRole = (id) => {
   return (dispatch) => {
     let data = {
       method: 'DELETE',
-      url: `/rest/employee/delete?id=${id}`
+      url: `/rest/payroll/deleteSalaryRole?id=${id}`
     }
 
     return authApi(data).then((res) => {

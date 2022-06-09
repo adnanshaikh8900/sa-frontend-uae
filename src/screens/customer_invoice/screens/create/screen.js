@@ -452,11 +452,11 @@ class CreateCustomerInvoice extends React.Component {
 	};
 
 		renderSubTotal = (cell, row,extraData) => {
-			return row.subTotal === 0 ? this.state.customer_currency_symbol +" "+  row.subTotal.toLocaleString(navigator.language,{ minimumFractionDigits: 2,maximumFractionDigits: 2 }): this.state.customer_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language,{ minimumFractionDigits: 2,maximumFractionDigits: 2 });
+			return row.subTotal === 0 ? this.state.customer_currency_symbol +" "+  row.subTotal.toLocaleString(navigator.language,{ minimumFractionDigits: 2, maximumFractionDigits: 2 }): this.state.customer_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language,{ minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 }
 renderVatAmount = (cell, row,extraData) => {
-	return row.vatAmount === 0 ? this.state.customer_currency_symbol +" "+  row.vatAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2,maximumFractionDigits: 2 }): this.state.customer_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2,maximumFractionDigits: 2 });
+	return row.vatAmount === 0 ? this.state.customer_currency_symbol +" "+  row.vatAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2, maximumFractionDigits: 2 }): this.state.customer_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 }
 	setDate = (props, value) => {
@@ -519,7 +519,7 @@ renderVatAmount = (cell, row,extraData) => {
 			});
 	};
 	getQuotationDetails=(quotationId)=>{
-this.props.customerInvoiceCreateActions.getQuotationById(quotationId)
+									this.props.customerInvoiceCreateActions.getQuotationById(quotationId)
 										.then((res)=>{
 											if (res.status === 200) {
 												this.getCompanyCurrency();
@@ -527,66 +527,91 @@ this.props.customerInvoiceCreateActions.getQuotationById(quotationId)
 												this.setState(
 													{
 														isQuotationSelected:true,
-														contactId: res.data.customerId,
+														contactId: res.data.customerId
+															? res.data.customerId
+															: '',
+														taxType: res.data.taxType
+															? true 
+															: false,
 														quotationId: quotationId,
 														initValue: {
-															quotaionExpiration: res.data.quotaionExpiration
-																? moment(res.data.quotaionExpiration).format('DD-MM-YYYY')
-																: '',
+																quotaionExpiration: res.data.quotaionExpiration
+																	? moment(res.data.quotaionExpiration).format('DD-MM-YYYY')
+																	: '',
 																quotaionExpiration1: res.data.quotaionExpiration
-																? res.data.quotaionExpiration
-																: '',
-																contactId: res.data.customerId ? res.data.customerId : '',
+																	? res.data.quotaionExpiration
+																	: '',
+																contactId: res.data.customerId 
+																	? res.data.customerId 
+																	: '',
 																quotationNumber: res.data.quotationNumber
-																? res.data.quotationNumber
-																: '',
+																	? res.data.quotationNumber
+																	: '',
 																invoiceVATAmount: res.data.totalVatAmount
-																? res.data.totalVatAmount
-																: 0,
-																totalAmount: res.data.totalAmount ? res.data.totalAmount : 0,
+																	? res.data.totalVatAmount
+																	: 0,
+																totalAmount: res.data.totalAmount 
+																	? res.data.totalAmount 
+																	: 0,
 																total_net: 0,
-																notes: res.data.notes ? res.data.notes : '',
+																notes: res.data.notes 
+																	? res.data.notes 
+																	: '',
 																lineItemsString: res.data.poQuatationLineItemRequestModelList
-																? res.data.poQuatationLineItemRequestModelList
-																: [],
-																placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
-																total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
-																discount: res.data.discount ? res.data.discount : 0,
+																	? res.data.poQuatationLineItemRequestModelList
+																	: [],
+																placeOfSupplyId: res.data.placeOfSupplyId 
+																	? res.data.placeOfSupplyId 
+																	: '',
+																total_excise: res.data.totalExciseAmount
+																	? res.data.totalExciseAmount 
+																	: '',
+																discount: res.data.discount 
+																	? res.data.discount 
+																	: 0,
 																discountPercentage: res.data.discountPercentage
 																	? res.data.discountPercentage
 																	: 0,
 																discountType: res.data.discountType
 																	? res.data.discountType
 																	: '',
-																	receiptNumber:res.data.quotationNumber ?res.data.quotationNumber:''
-
-
-														},
-														invoiceDateNoChange: res.data.quotaionExpiration
-																? moment(res.data.quotaionExpiration)
-																: '',
-														invoiceDueDateNoChange: res.data.quotaionExpiration
-																? res.data.quotaionExpiration
-																: '',
-														customer_taxTreatment_des : res.data.taxtreatment ? res.data.taxtreatment : '',
-														// placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
-														total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
-														data: res.data.poQuatationLineItemRequestModelList
-															? res.data.poQuatationLineItemRequestModelList
-															: [],
-
-
-														//
-
-														discountAmount: res.data.discount ? res.data.discount : 0,
-														discountPercentage: res.data.discountPercentage
-															? res.data.discountPercentage
-															: '',
-
-														selectedContact: res.data.customerId ? res.data.customerId : '',
-														// term: res.data.term ? res.data.term : '',
-														placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
-														loading: false,
+																receiptNumber:res.data.quotationNumber
+																	?res.data.quotationNumber
+																	:'',
+															},
+																discountEnabled: res.data.discount > 0 
+																	? true
+																	: false,
+																invoiceDateNoChange: res.data.quotaionExpiration
+																	? moment(res.data.quotaionExpiration)
+																	: '',
+																invoiceDueDateNoChange: res.data.quotaionExpiration
+																	? res.data.quotaionExpiration
+																	: '',
+																customer_taxTreatment_des : res.data.taxtreatment 
+																	? res.data.taxtreatment 
+																	: '',
+																// placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+																total_excise: res.data.totalExciseAmount 
+																	? res.data.totalExciseAmount 
+																	: '',
+																data: res.data.poQuatationLineItemRequestModelList
+																	? res.data.poQuatationLineItemRequestModelList
+																	: [],
+																discountAmount: res.data.discount 
+																	? res.data.discount 
+																	: 0,
+																discountPercentage: res.data.discountPercentage
+																	? res.data.discountPercentage
+																	: '',
+																selectedContact: res.data.customerId 
+																	? res.data.customerId 
+																	: '',
+																// term: res.data.term ? res.data.term : '',
+																placeOfSupplyId: res.data.placeOfSupplyId 
+																	? res.data.placeOfSupplyId 
+																	: '',
+																loading: false,
 
 													},
 													() => {
@@ -2101,7 +2126,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 	rendertotalexcise=()=>{
 		const {initValue}= this.state
 		
-		let val=initValue.total_excise.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})
+		let val=initValue.total_excise.toLocaleString(navigator.language, {minimumFractionDigits: 2, maximumFractionDigits: 2})
 		
 		return parseFloat(val).toFixed(2)
 	}
@@ -3625,7 +3650,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 
 																						{this.state.customer_currency_symbol} &nbsp;
 																						{/* {this.rendertotalexcise()} */}
-																						{initValue.total_excise.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
+																						{initValue.total_excise.toLocaleString(navigator.language, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
 																					</label>
 																				</Col>
 																			</Row>
@@ -3654,7 +3679,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																							/>
 																						)} */}
 																						{this.state.customer_currency_symbol} &nbsp;
-																						{initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
+																						{initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>
@@ -3682,7 +3707,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																							/>
 																						)} */}
 																						{this.state.customer_currency_symbol} &nbsp;
-																						{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
+																						{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>
@@ -3727,7 +3752,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																							/>
 																						)} */}
 																						{this.state.customer_currency_symbol} &nbsp;
-																						{initValue.invoiceVATAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
+																						{initValue.invoiceVATAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>
@@ -3756,7 +3781,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																							/>
 																						)} */}
 																						{this.state.customer_currency_symbol} &nbsp;
-																						{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
+																						{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>

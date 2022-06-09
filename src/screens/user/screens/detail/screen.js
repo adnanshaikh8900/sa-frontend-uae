@@ -29,6 +29,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import { toast } from 'react-toastify';
 
 const eye = require('assets/images/settings/eye.png');
 const mapStateToProps = (state) => {
@@ -303,6 +304,22 @@ class DetailUser extends React.Component {
 			}
 		});
 	};
+	sendInviteMail = (event) => {
+		const { current_user_id } = this.state;
+		this.props.userDetailActions.getUserInviteEmail( current_user_id,window.location.origin).then((response) => {
+			debugger
+			if (response.status === 200) {
+			toast.success("Mail Sent Successfully !")
+			} else {
+				toast.success("Mail Sent UnSuccessfully !")
+			}
+		}).catch(
+			(e)=>{
+				toast.success("Mail Sent UnSuccessfully !")
+			}
+		);
+	};
+	
 	render() {
 		strings.setLanguage(this.state.language);
 		const { loading, dialog, timezone,current_user_id ,loadingMsg} = this.state;
@@ -911,6 +928,18 @@ class DetailUser extends React.Component {
 																		 {this.state.disabled
 																			? 'Updating...'
 																			: strings.Update }
+																		</Button>
+																		<Button
+																			type="submit"
+																			color="primary"
+																			className="btn-square mr-3"
+																			disabled={this.state.disabled}
+																			onClick={(event) => {
+																				this.sendInviteMail(event);
+																		 }}
+																		>
+																			<i className="fas fa-envelope"></i>{' '}
+																			Resend Invite
 																		</Button>
 																		<Button
 																			color="secondary"

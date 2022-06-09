@@ -157,7 +157,7 @@ export const getProductCategoryList = () => {
 	return (dispatch) => {
 		let data = {
 			method: 'GET',
-			url: '/rest/productcategory/getList',
+			url: '/rest/datalist/getProductCategoryList',
 		};
 
 		return authApi(data)

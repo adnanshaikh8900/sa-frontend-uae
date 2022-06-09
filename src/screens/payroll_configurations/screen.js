@@ -155,7 +155,8 @@ class PayrollConfigurations extends React.Component {
 	initializeData = (search) => {
 		if (this.props.location.state !== undefined && this.props.location.state !== null && this.props.location.state.tabNo !== undefined && this.props.location.state.tabNo !== null) {
 			this.toggle(0, this.props.location.state.tabNo)
-		}
+		}else
+		this.toggle(0, "3")
 		const { filterData } = this.state
 
 		const paginationData = {
@@ -534,7 +535,7 @@ class PayrollConfigurations extends React.Component {
 
 
 									<Nav tabs pills>
-										<NavItem>
+										{/* <NavItem>
 											<NavLink
 												active={this.state.activeTab[0] === '1'}
 												onClick={() => {
@@ -543,7 +544,7 @@ class PayrollConfigurations extends React.Component {
 											>
 												{strings.SalaryRole}
 											</NavLink>
-										</NavItem>
+										</NavItem> */}
 										{/* <NavItem>
 									<NavLink
 										active={this.state.activeTab[0] === '2'}

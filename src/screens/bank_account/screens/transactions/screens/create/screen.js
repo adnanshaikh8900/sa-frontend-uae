@@ -457,53 +457,6 @@ class CreateBankTransaction extends React.Component {
 		}
 	}
 
-	getInvoiceCurrency = (opt,props) => {
-		
-		const {
-			customer_invoice_list,
-		} = this.props;
-		customer_invoice_list.data.map(item => {
-			if (item.value === opt.value)
-			{
-				this.setState({
-				invoiceCurrency : item.currencyCode
-			},()=>{
-				this.getInvoices(
-					props.values.customerId,
-					props.values.transactionAmount,
-				);
-				this.formRef.current.setFieldValue('currencyCode', this.state.invoiceCurrency, true);
-				this.setCurrency( this.state.invoiceCurrency );
-			this.setExchange( this.state.invoiceCurrency );
-			})}
-		})
-		
-			
-	}
-	getVendorInvoiceCurrency = (opt,props) => {
-		
-		const {
-			vendor_invoice_list,
-		} = this.props;
-		vendor_invoice_list.data.map(item => {
-			if (item.value === opt.value)
-			{
-				this.setState({
-				invoiceCurrency : item.currencyCode
-			},()=>{
-				this.getInvoices(
-					props.values.customerId,
-					props.values.transactionAmount,
-				);
-				this.formRef.current.setFieldValue('currencyCode', this.state.invoiceCurrency, true);
-				this.setCurrency( this.state.invoiceCurrency );
-			this.setExchange( this.state.invoiceCurrency );
-			})}
-		})
-		
-			
-	}
-
 	getExpensesCategoriesList = () => {
 		this.props.transactionActions.getExpensesCategoriesList();
 		this.props.transactionActions.getCurrencyList().then((response) => {
@@ -536,20 +489,13 @@ class CreateBankTransaction extends React.Component {
 		};
 		this.props.transactionActions.getCustomerInvoiceList(data);
 	};
-	getSuggestionInvoicesFotVend = (option, amount,invoice_list) => {
+	getSuggestionInvoicesFotVend = (option, amount) => {
 		const data = {
 			amount: amount,
 			id: option,
-			currency: this.state.invoiceCurrency && invoice_list != null ? this.state.invoiceCurrency : 0,
 			bankId:this.props.location.state.bankAccountId
 		};
 		this.props.transactionActions.getVendorInvoiceList(data);
-		if(invoice_list === null){
-			
-			this.formRef.current.setFieldValue('curreancyname',"", true);
-			this.formRef.current.setFieldValue('exchangeRate', "", true);
-			this.formRef.current.setFieldValue('currencyCode', "", true);
-	}
 	};
 
 	invoiceIdList = (option) => {
@@ -621,7 +567,6 @@ class CreateBankTransaction extends React.Component {
 			});
 	};	
 	setExchange = (value) => {
-		
 		let result = this.props.currency_convert_list.filter((obj) => {
 		return obj.currencyCode === value;
 		});
@@ -629,7 +574,6 @@ class CreateBankTransaction extends React.Component {
 		};
 
 		setCurrency = (value) => {
-			debugger
 			let result = this.props.currency_convert_list.filter((obj) => {
 			return obj.currencyCode === value;
 			});
@@ -711,21 +655,14 @@ class CreateBankTransaction extends React.Component {
 		}
 	};
 
-	getInvoices = (option, amount,invoice_list) => {
-		debugger
+	getInvoices = (option, amount) => {
 		const data = {
 			amount: amount,
-			currency: this.state.invoiceCurrency && invoice_list != null ? this.state.invoiceCurrency : 0,
 			id: option.value,
+			type: this.state.cat_label === 'Money Received' ? 'CUSTOMER' : 'SUPLLIER',
 			bankId:this.props.location.state.bankAccountId
 		};
 		this.props.transactionActions.getCustomerInvoiceList(data);
-		if(invoice_list === null){
-			
-				this.formRef.current.setFieldValue('curreancyname',"", true);
-				this.formRef.current.setFieldValue('exchangeRate', "", true);
-				this.formRef.current.setFieldValue('currencyCode', "", true);
-		}
 	};
 
 	render() {
@@ -1180,7 +1117,8 @@ class CreateBankTransaction extends React.Component {
 																				// }
 																				onChange={(option) => {
 																					if (option && option.value) {
-																				
+																						this.formRef.current.setFieldValue('currencyCode', this.getCurrency(option.value), true);
+																						this.setExchange( this.getCurrency(option.value) );
 																						props.handleChange('vendorId')(option);
 																						props.handleChange('invoiceIdList',)("");		
 																					} else {
@@ -1193,8 +1131,6 @@ class CreateBankTransaction extends React.Component {
 																						props.values.transactionAmount,
 																					);
 																				}}
-
-																		
 																				placeholder={strings.Select+" "+strings.Type}
 																				id="vendorId"
 																				name="vendorId"
@@ -1226,21 +1162,9 @@ class CreateBankTransaction extends React.Component {
 																								: []
 																						}
 																						onChange={(option) => {
-																							debugger
-																							if(option === null){
-																								this.getSuggestionInvoicesFotVend(
-																									props.values.vendorId.value,
-																									props.values.transactionAmount,
-																									option
-																								);
-																							}
-																							
 																							props.handleChange('invoiceIdList',)(option);
 																							this.invoiceIdList(option);
 																							this.totalAmount(option);
-																							if(option != null){
-																							this.getVendorInvoiceCurrency(option[0],props);
-																							}
 																						}}
 																						value={props.values.invoiceIdList}
 																						placeholder={strings.Select+" "+strings.Type}
@@ -1477,20 +1401,18 @@ class CreateBankTransaction extends React.Component {
 																					value={props.values.customerId}
 																					onChange={(option) => {
 																					
-																						props.handleChange('customerId')(option,);
-																					
-																						// if (option && option.value) {
-																						// 	this.formRef.current.setFieldValue('currencyCode', this.getCurrency(option.value), true);
+																						if (option && option.value) {
+																							this.formRef.current.setFieldValue('currencyCode', this.getCurrency(option.value), true);
 																							 
-																						// 	this.setExchange( this.getCurrency(option.value) );
-																						// 	props.handleChange('customerId')(
-																						// 		option.value,
-																						// 	);
-																						// } else {
-																						// 	props.handleChange('customerId')(
-																						// 		'',
-																						// 	);
-																						// }
+																							this.setExchange( this.getCurrency(option.value) );
+																							props.handleChange('customerId')(
+																								option.value,
+																							);
+																						} else {
+																							props.handleChange('customerId')(
+																								'',
+																							);
+																						}
 																						props.handleChange('invoiceIdList')('');
 																						this.getInvoices(
 																							option,
@@ -1528,21 +1450,9 @@ class CreateBankTransaction extends React.Component {
 																				// 	invoice_list ? invoice_list.data : []
 																				// }
 																				id="invoiceIdList"
-																				onChange={(option ) => {
-																					if(option === null){
-																						this.getInvoices(
-																							props.values.customerId,
-																							props.values.transactionAmount,
-																							option
-																						);
-																					}
-																					
+																				onChange={(option) => {
 																					props.handleChange('invoiceIdList')(option,);
 																					this.totalAmount(option);
-																					
-																					if(option != null){
-																				this.getInvoiceCurrency(option[0],props);
-																					}
 																				}}
 																			/>
 																		</FormGroup>
@@ -1550,145 +1460,8 @@ class CreateBankTransaction extends React.Component {
 																)}
 															</Row>
 														)}
-															 {/* {props.values.coaCategoryId &&
-																	props.values.coaCategoryId.label ===
-																	'Sales' && 
-																
-																	(
-																		<Row
-																		  style={{display: this.state.bankAccountCurrency === this.state.invoiceCurrency ? 'none': ''}}
-																		>
-																			<Col lg={3}>
-																				<FormGroup className="mb-3">
-																					<Label htmlFor="currencyCode">
-																						{strings.Currency}
-																						</Label>
-																					<Select
-																						styles={customStyles}
-																						id="currencyCode"
-																						name="currencyCode"
-																						options={
-																							currency_convert_list
-																								? selectCurrencyFactory.renderOptions(
-																									'currencyName',
-																									'currencyCode',
-																									currency_convert_list,
-																									'Currency',
-																								)
-																								: []
-																						}
-																						isDisabled={true}
-																						value={
-																							currency_convert_list &&
-																							selectCurrencyFactory
-																								.renderOptions(
-																									'currencyName',
-																									'currencyCode',
-																									currency_convert_list,
-																									'Currency',
-																								)
-																								.find(
-																									(option) =>
-																										option.value ===
-																										+this.state.invoiceCurrency,
-																								)
-																						}
-																						onChange={(option) => {
-																							if (option && option.value) {
-																								props.handleChange(
-																									'currencyCode',
-																								)(option.value);
-																							} else {
-																								props.handleChange(
-																									'currencyCode',
-																								)('');
-																							}
-																							this.setExchange(option.value);
-																							this.setCurrency(option.value)
-																						}}
-																						className={
-																							props.errors.currencyCode &&
-																								props.touched.currencyCode
-																								? 'is-invalid'
-																								: ''
-																						}
-																					/>
-																					{props.errors.currencyCode &&
-																						props.touched.currencyCode && (
-																							<div className="invalid-feedback">
-																								{props.errors.currencyCode}
-																							</div>
-																						)}
-																				</FormGroup>
-																			</Col>
-																		</Row>
-																	)}
-																{props.values.coaCategoryId &&
-																	props.values.coaCategoryId.label ===
-																	'Sales' && (
-																		<Row  style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
-																			<Col lg={2}>
-																				<Input
-																					disabled
-																					id="1"
-																					name="1"
-																					value={
-																						1}
-
-																				/>
-																			</Col>
-																			<Col lg={2}>
-																				<FormGroup className="mb-3">
-																					<div>
-																						<Input
-																							disabled
-																							className="form-control"
-																							id="curreancyname"
-																							name="curreancyname"
-
-																							value={props.values.curreancyname}
-																							onChange={(value) => {
-																								props.handleChange('curreancyname')(
-																									value,
-																								);
-																							}}
-																						/>
-																					</div>
-																				</FormGroup>
-																			</Col>
-																			<FormGroup className="mt-2"><label><b>=</b></label>	</FormGroup>
-																			<Col lg={2}>
-																				<FormGroup className="mb-3">
-																					<div>
-																						<Input
-																							className="form-control"
-																							id="exchangeRate"
-																							name="exchangeRate"
-
-																							value={props.values.exchangeRate}
-																							onChange={(value) => {
-																								props.handleChange('exchangeRate')(
-																									value,
-																								);
-																							}}
-																						/>
-																					</div>
-																				</FormGroup>
-																			</Col>
-																			<Col lg={2}>
-																				<Input
-																					disabled
-																					id="currencyName"
-																					name="currencyName"
-																					value={
-																						this.state.basecurrency.currencyName}
-
-																				/>
-																			</Col>
-																		</Row>
-																	)} */}
-	                                    {props.values.coaCategoryId &&
-															(
+	                                     {/* {props.values.coaCategoryId &&
+															(props.values.coaCategoryId.label ==='Expense'||
 															props.values.coaCategoryId.label ==='Sales'  ||
 															props.values.coaCategoryId.label ==='Supplier Invoice')&& (
 																	<Row>
@@ -1748,12 +1521,11 @@ class CreateBankTransaction extends React.Component {
 																				</FormGroup>
 																			</Col>
 																	</Row>
-																	)} 
+																	)} */}
 																	
-																	{props.values.coaCategoryId &&
-															(
-															props.values.coaCategoryId.label ==='Sales'  ||
-															props.values.coaCategoryId.label ==='Supplier Invoice')&& (
+																				{/* {props.values.coaCategoryId &&
+															props.values.coaCategoryId.label ===
+																'Expense' && (
 																	<Row  style={{display: props.values.exchangeRate === 1 ? 'none' : ''}} >
 																	<Col lg={1}>
 																<Input
@@ -1817,7 +1589,7 @@ class CreateBankTransaction extends React.Component {
 																			/>
 														</Col>
 														</Row>
-																)}
+																)} */}
 											
 														<Row>
 															<Col lg={8}>

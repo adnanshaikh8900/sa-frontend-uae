@@ -608,11 +608,11 @@ class InvoiceTemplate extends Component {
 													>
 														<span style={{ marginLeft: '2rem' }}></span>
 
-                                        <strong style={{ padding: '0.5rem', background: '#f2f2f2'}}>{strings.BalanceDue} :  {invoiceData.dueAmount ?
+                                        <strong style={{ padding: '0.5rem', background: '#f2f2f2'}}> {invoiceData.dueAmount ?
 
-                                        invoiceData.currencyIsoCode + " " +invoiceData.dueAmount.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2}) :
+                                        invoiceData.currencyIsoCode + " " +invoiceData.dueAmount.toLocaleString(navigator.language, {minimumFractionDigits: 2, maximumFractionDigits: 2}) :
 
-                                        invoiceData.currencyIsoCode + " " +ZERO.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
+                                        invoiceData.currencyIsoCode + " " +ZERO.toLocaleString(navigator.language, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
 
                                     	</strong>
 													</b>

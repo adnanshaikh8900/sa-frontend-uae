@@ -470,7 +470,7 @@ class DetailQuotation extends React.Component {
 	};
 	salesCategory = () => {
 		try {
-			this.props.productActions
+			this.props.ProductActions
 				.getTransactionCategoryListForSalesProduct('2')
 				.then((res) => {
 					if (res.status === 200) {

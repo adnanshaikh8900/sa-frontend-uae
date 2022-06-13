@@ -139,7 +139,7 @@ class UpdateEmployeePersonal extends React.Component {
                                         ? res.data.salaryRoleId
                                         : '',
                             dob: res.data.dob
-                                ? moment(res.data.dob, 'DD-MM-YYYY').toDate()
+                                ?moment(res.data.dob).format('DD-MM-YYYY')
                                 : '',
                                 gender: res.data.gender ? res.data.gender : '',
                             presentAddress:
@@ -310,7 +310,7 @@ class UpdateEmployeePersonal extends React.Component {
 			'email',
 			email !== null ? email : '',
 		);
-        formData.append('dob', dob ? moment(dob).format('DD-MM-YYYY') : '');
+        formData.append('dob', dob ? dob : '');
         formData.append('gender', gender);
 
         formData.append('bloodGroup', bloodGroup);
@@ -402,16 +402,30 @@ class UpdateEmployeePersonal extends React.Component {
         })
     }
     underAge=(birthday)=>{  
+        let dateArray=birthday.split("-")
+        let birthdate=dateArray[1]+"/"+dateArray[0]+"/"+dateArray[2]
         // set current day on 01:00:00 hours GMT+0100 (CET)
         var currentDate = new Date().toJSON().slice(0,10)+' 01:00:00';  
         // calculate age comparing current date and borthday
-        var myAge = ~~((Date.now(currentDate) - birthday) / (31557600000));
+        var myAge = ~~((Date.now(currentDate) - new Date(birthdate)) / (31557600000));
 
         if(myAge < 14)
             return true;
         else
             return false;
    }
+   selectedDate=(props)=>{
+    debugger
+    if(props.values.dob && props.values.dob!="") 
+    {  
+        let  date=props.values.dob.split("-")
+        let d=date[1]+"/"+date[0]+"/"+date[2]
+     return new Date(d);
+    }
+    else
+     return new Date()
+}
+
     render() {
         strings.setLanguage(this.state.language);
         const { loading, loadingMsg,initValue, dialog ,checkmobileNumberParam,checkmobileNumberParam1,checkmobileNumberParam2} = this.state
@@ -487,7 +501,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                             .required("Valid email Required").email('Invalid Email'),
                                                         // salaryRoleId: Yup.string()
                                                         //     .required(" Employee role is required"),
-                                                        dob: Yup.date()
+                                                        dob: Yup.string()
                                                             .required('DOB is required'),
                                                             presentAddress: Yup.string()
                                                             .required("Present address is required"),
@@ -758,10 +772,10 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                     autoComplete={"off"}
                                                                                     dateFormat="dd-MM-yyyy"
                                                                                     dropdownMode="select"
-                                                                                    selected={props.values.dob}
+                                                                                    selected={this.selectedDate(props) }
                                                                                     value={props.values.dob}
                                                                                     onChange={(value) => {
-                                                                                        props.handleChange("dob")(value)
+                                                                                        props.handleChange("dob")(moment(value).format("DD-MM-YYYY"))
                                                                                     }}
                                                                                 />
                                                                                 {props.errors.dob && 

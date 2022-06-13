@@ -579,14 +579,10 @@ const adminRoutes = [
 		name: 'Employee',
 		component: PayrollEmployee.screen,
 	},
-	{
-		path: '/admin/payroll/payrollrun',
-		name: 'Payroll Run',
-		component: PayrollRun.screen,
-	},
+	
 	{
 		path: '/admin/payroll/payrollrun/updatePayroll',
-		name: 'Generate Payroll',
+		name: 'Update Payroll',
 		component: UpdatePayroll.screen,
 	},
 	{
@@ -619,11 +615,7 @@ const adminRoutes = [
 		name: 'Update Salary Template',
 		component: DetailSalaryTemplate.screen,
 	},
-	{
-		path: '/admin/payroll/config',
-		name: 'View Salary Role',
-		component: PayrollConfigurations.screen,
-	},
+	
 
 	{
 		path: '/admin/payroll/salaryTemplate/create',
@@ -659,6 +651,16 @@ const adminRoutes = [
 		path: '/admin/payroll/employeeDesignation',
 		name: 'View Employee Designation',
 		component: Designation.screen,
+	},
+	{
+		path: '/admin/payroll/config',
+		name: 'Payroll Config',
+		component: PayrollConfigurations.screen,
+	},
+	{
+		path: '/admin/payroll/payrollrun',
+		name: 'Payroll Run',
+		component: PayrollRun.screen,
 	},
 	{
 		redirect: true,
@@ -778,7 +780,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/report/arAgingReport',
-		name: 'Record Tax Payment',
+		name: 'Aged Receivable Summary',
 		component: ARAgingReport.screen,
 	},
 	{

@@ -150,14 +150,14 @@ class AdminLayout extends React.Component {
 			 			icon: item.icon,
 			 		});
 				 }
-				 if (moduleName === 'ViewReports' && item.name === strings.Report) {
+				 if (moduleName === 'Report' && item.name === strings.Report) {
 					arr.items.push({
 			 			name: item.name,
 			 			url: item.url,
 			 			icon: item.icon,
 			 		});
 				 }
-				 if (moduleName === 'InventorySummary' && item.name === strings.Inventory) {
+				 if (moduleName === 'Inventory Summary' && item.name === strings.Inventory) {
 					arr.items.push({
 			 			name: item.name,
 			 			url: item.url,

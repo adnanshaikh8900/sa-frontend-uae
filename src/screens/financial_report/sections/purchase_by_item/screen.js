@@ -13,16 +13,11 @@ import {
 	DropdownMenu,
 	DropdownItem,
 } from 'reactstrap';
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-
 import moment from 'moment';
 import { PDFExport } from '@progress/kendo-react-pdf';
-import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
-import { CSVLink } from 'react-csv';
 import { Loader, Currency } from 'components';
 import * as FinancialReportActions from '../../actions';
-import FilterComponent from '../filterComponent';
 import FilterComponent2 from '../filterComponet2';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
@@ -354,10 +349,7 @@ language: window['localStorage'].getItem('language'),
 													<tr>
 														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.ProductName}</th>
 														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.QuantityPurchased}</th>
-
-														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>
-															{strings.Total+" "+strings.Amount}
-														</th>
+														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>{strings.Total+" "+strings.Amount}</th>
 														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>{strings.Average+" "+strings.Amount}</th>
 
 													</tr>

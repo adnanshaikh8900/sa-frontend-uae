@@ -934,13 +934,13 @@ class ViewFtaAuditReport extends React.Component {
 																		
 																				<tr >
 																					<td style={{ width: '12%', textAlign: 'left'}}>
-																						{this.state.FtaAuditData.customerTransactionCountTotal}
-																					</td>
-																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{this.state.FtaAuditData.supplyTotal}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{this.state.FtaAuditData.customerVATTotal}
+																					</td>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
+																						{this.state.FtaAuditData.customerTransactionCountTotal}
 																					</td>
 																					
 																				

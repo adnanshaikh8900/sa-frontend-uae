@@ -386,7 +386,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/income/credit-notes/create',
-		name: 'Credit Notes',
+		name: 'Add Credit Notes',
 		component: CreateCreditNote.screen,
 	},
 	{
@@ -565,7 +565,7 @@ const adminRoutes = [
 		component: UpdateEmployeeEmployment.screen,
 	},
 	{
-		path: '/admin/payroll/employee/updateSalaryComponent',
+		path: '/admin/master/employee/updateSalaryComponent',
 		name: 'Update Employee',
 		component: UpdateSalaryComponent.screen,
 	},

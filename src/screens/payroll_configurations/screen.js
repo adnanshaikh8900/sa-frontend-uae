@@ -1101,6 +1101,7 @@ class PayrollConfigurations extends React.Component {
 																								value={props.values.companyNumber}
 																							/>
 																							{props.errors.companyNumber &&
+																							props.touched.companyNumber&&
 																								(
 																									<div className='text-danger' >
 																										{props.errors.companyNumber}
@@ -1149,6 +1150,7 @@ class PayrollConfigurations extends React.Component {
 																								value={props.values.companyBankCode}
 																							/>
 																							{props.errors.companyBankCode &&
+																							props.touched.companyBankCode &&
 																								(
 																									<div className='text-danger' >
 																										{props.errors.companyBankCode}

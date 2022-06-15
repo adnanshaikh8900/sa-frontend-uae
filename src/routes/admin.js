@@ -232,11 +232,7 @@ const adminRoutes = [
 		name: 'Journals',
 		component: Journal.screen,
 	},
-	{
-		path: '/admin/accountant/opening-balance',
-		name: 'Opening Balances',
-		component: OpeningBalance.screen,
-	},
+
 	{
 		path: '/admin/accountant/opening-balance/create',
 		name: 'Add Opening Balance',
@@ -246,6 +242,11 @@ const adminRoutes = [
 		path: '/admin/accountant/opening-balance/detail',
 		name: 'Update Opening Balance',
 		component: DetailOpeningBalance.screen,
+	},
+	{
+		path: '/admin/accountant/opening-balance',
+		name: 'Opening Balances',
+		component: OpeningBalance.screen,
 	},
 	{
 
@@ -379,11 +380,7 @@ const adminRoutes = [
 		component: Receipt.screen,
 	},
 	//
-	{
-		path: '/admin/income/credit-notes',
-		name: 'Credit Notes',
-		component: CreditNotes.screen,
-	},
+	
 	{
 		path: '/admin/income/credit-notes/create',
 		name: 'Add Credit Notes',
@@ -394,7 +391,6 @@ const adminRoutes = [
 		name: 'View Credit Notes',
 		component: ViewCreditNote.screen,
 	},
-
 	{
 		path: '/admin/income/credit-notes/detail',
 		name: 'Update Credit Notes',
@@ -410,6 +406,11 @@ const adminRoutes = [
 		path: '/admin/income/credit-notes/refund',
 		name: 'Refund',
 		component: Refund.screen,
+	},
+	{
+		path: '/admin/income/credit-notes',
+		name: 'Credit Notes',
+		component: CreditNotes.screen,
 	},
 	{
 		redirect: true,
@@ -514,15 +515,16 @@ const adminRoutes = [
 		component: DetailExpense.screen,
 	},
 	{
-		path: '/admin/expense/expense',
-		name: 'Expenses',
-		component: Expense.screen,
-	},
-	{
 		path: '/admin/expense/expense/view',
 		name: 'View Expense',
 		component: ViewExpense.screen,
 	},
+	{
+		path: '/admin/expense/expense',
+		name: 'Expenses',
+		component: Expense.screen,
+	},
+	
 	{
 		path: '/admin/expense/payment/create',
 		name: 'Create Purchase Reciept',

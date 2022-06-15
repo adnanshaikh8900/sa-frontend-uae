@@ -151,8 +151,21 @@ class DetailDesignation extends React.Component {
         this.props.commonActions.tostifyAlert('success', 'Designation Deleted Successfully !')
         this.props.history.push('/admin/payroll/config',{tabNo:'3'})
       }
+
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
+      /**
+       * “already exists http status code” 
+       *  The appropriate status code for "Already Exists" would be 
+       * '409 Conflict'
+       */
+      if(err.status===409)  
+       {
+        this.setState({disableLeavePage:true})
+        this.props.commonActions.tostifyAlert('error', 'Designation can\'t be deleted, you need to delete employee first.')
+        this.props.history.push('/admin/payroll/config',{tabNo:'3'})
+        }
+      else
+      this.props.commonActions.tostifyAlert('error', 'Something Went Wrong')
     })
   }
 

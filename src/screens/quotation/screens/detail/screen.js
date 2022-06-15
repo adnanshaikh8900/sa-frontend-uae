@@ -266,8 +266,9 @@ class DetailQuotation extends React.Component {
 													}),
 											  )
 											: 0;
+											debugger
 									this.setState({
-										idCount,
+										idCount:idCount,
 									});
 									this.addRow()
 								} else {
@@ -278,6 +279,7 @@ class DetailQuotation extends React.Component {
 							},
 						);
 						this.getCurrency(res.data.customerId)	
+						this.salesCategory()
 					}
 				});
 		} else {
@@ -334,41 +336,57 @@ class DetailQuotation extends React.Component {
 	getCurrentProduct = () => {
 		this.props.requestForQuotationAction.getProductList().then((res) => {
 			let newData=[]
-				const data = this.state.data;
-				newData = data.filter((obj) => obj.productId !== "");
-				// props.setFieldValue('lineItemsString', newData, true);
-				// this.updateAmount(newData, props);
+			const data = this.state.data;
+			newData = data.filter((obj) => obj.productId !== "");
+			// props.setFieldValue('lineItemsString', newData, true);
+			// this.updateAmount(newData, props);
+			debugger
+			const idCount =
+							this.state.idCount?
+									this.state.idCount:
+													data.length > 0
+														? Math.max.apply(
+																Math,
+																data.map((item) => {
+																	return item.id;
+																}),
+														)
+														: 0;
 			this.setState(
 				{
 					data: newData.concat({
-						
-							id: this.state.idCount + 1,
-							description: res.data[0].description,
-							quantity: 1,
-							discount:0,
-							unitPrice: res.data[0].unitPrice,
-							vatCategoryId: res.data[0].vatCategoryId,
-							exciseTaxId: res.data[0].exciseTaxId,
-							subTotal: res.data[0].unitPrice,
-							productId: res.data[0].id,
-							discountType: res.data[0].discountType,
-							unitType:res.data[0].unitType,
-							unitTypeId:res.data[0].unitTypeId,
-							vatAmount:res.data[0].vatAmount ?res.data[0].vatAmount:0,
-							discountType: res.data[0].discountType,							
+						id: idCount + 1,
+						description: res.data[0].description,
+						quantity: 1,
+						discount:0,
+						unitPrice: res.data[0].unitPrice,
+						vatCategoryId: res.data[0].vatCategoryId,
+						exciseTaxId: res.data[0].exciseTaxId,
+						vatAmount:res.data[0].vatAmount ?res.data[0].vatAmount:0,
+						subTotal: res.data[0].unitPrice,
+						productId: res.data[0].id,
+						discountType: res.data[0].discountType,
+						unitType:res.data[0].unitType,
+						unitTypeId:res.data[0].unitTypeId,
 					}),
-					idCount: this.state.idCount + 1,
+					idCount: this.state.idCount + 1,					
 				},
 				() => {
 					const values = {
 						values: this.state.initValue,
 					};
 					this.updateAmount(this.state.data, values);
+					this.addRow()
 				},
 			);
 			this.formRef.current.setFieldValue(
 				`lineItemsString.${0}.unitPrice`,
 				res.data[0].unitPrice,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.unitType`,
+				res.data[0].unitType,
 				true,
 			);
 			this.formRef.current.setFieldValue(
@@ -392,12 +410,18 @@ class DetailQuotation extends React.Component {
 				true,
 			);
 			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.exciseTaxId`,
+				1,
+				true,
+			);
+			this.formRef.current.setFieldValue(
 				`lineItemsString.${0}.productId`,
 				res.data[0].id,
 				true,
 			);
 		});
 	};
+
 
 	renderDescription = (cell, row, props) => {
 		let idx;
@@ -443,6 +467,26 @@ class DetailQuotation extends React.Component {
 				)}
 			/>
 		);
+	};
+	salesCategory = () => {
+		try {
+			this.props.ProductActions
+				.getTransactionCategoryListForSalesProduct('2')
+				.then((res) => {
+					if (res.status === 200) {
+						this.setState(
+							{
+								salesCategory: res.data,
+							},
+							() => {
+
+							},
+						);
+					}
+				});
+		} catch (err) {
+			console.log(err);
+		}
 	};
 	renderExcise = (cell, row, props) => {
 		const { excise_list } = this.props;

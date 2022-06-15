@@ -34,13 +34,13 @@ export default {
 					name: strings.CustomerInvoices,
 					url: '/admin/income/customer-invoice',
 					icon: 'far fa-address-card',
-					path: 'CustomerInvoices',
+					path: 'Customer Invoices',
 				},
 				{
 					name: strings.IncomeReceipts,
 					url: '/admin/income/receipt',
 					icon: 'fas fa-receipt',
-					path: 'CustomerReceipts',
+					path: 'Customer Receipts',
 				},
 				{
 					name: strings.Quotation,
@@ -52,7 +52,7 @@ export default {
 					name: strings.CreditNotes,
 					url: '/admin/income/credit-notes',
 					icon: 'fas fa-donate',
-					path: 'CreditNotes',
+					path: 'Credit Notes',
 				},
 			],
 		},
@@ -71,33 +71,33 @@ export default {
 					name: strings.SupplierInvoices,
 					url: '/admin/expense/supplier-invoice',
 					icon: 'far fa-address-card',
-					path: 'SupplierInvoices',
+					path: 'Supplier Invoices',
 				},
 				{
 					name: strings.Purchasereceipts,
 					url: '/admin/expense/purchase',
 					icon: 'fas fa-money-check',
-					path: 'SupplierReceipts',
+					path: 'Supplier Receipts',
 				},
 				{
 					name: strings.RFQ,
 					url: '/admin/expense/request-for-quotation',
 					icon: 'fas fa-shopping-basket',
-					path: 'RequestForQuotation',
+					path: 'Request For Quotation',
 				},
 				{
 					name: strings.PurchaseOrder,
 					url: '/admin/expense/purchase-order',
 					icon: 'fas fa-cash-register',
-					path: 'PurchaseOrder',
+					path: 'Purchase Order',
 				},
 				{
 					name: strings.GRN,
 					url: '/admin/expense/goods-received-note',
 					icon: 'fas fa-archive',
-					path: 'GoodsReceiveNotes',
+					path: 'Goods Receive Notes',
 				},
-				
+
 			],
 		},
 		{
@@ -109,7 +109,7 @@ export default {
 					name: strings.BankAccount,
 					url: '/admin/banking/bank-account',
 					icon: 'fas fa-university',
-					path: 'BankAccounts',
+					path: 'Bank Accounts',
 				},
 				// {
 				//   name: 'Upload Statement',
@@ -118,7 +118,7 @@ export default {
 				// }
 			],
 		},
-		
+
 		{
 			name: strings.Accountant,
 			url: '/admin/accountant',
@@ -128,20 +128,20 @@ export default {
 					name: strings.OpeningBalance,
 					url: '/admin/accountant/opening-balance',
 					icon: 'fas fa-balance-scale',
-					path: 'OpeningBalances',
+					path: 'Opening Balances',
 				},
-			
+
 				{
 					name: strings.Journals,
 					url: '/admin/accountant/journal',
 					icon: 'fas fa-gem',
 					path: 'Journals',
 				},
-		
+
 			],
 		},
-	
-		
+
+
 		// {
 		// 	name: 'Taxes',
 		// 	url: '/admin/taxes',
@@ -194,13 +194,13 @@ export default {
 			name: strings.Master,
 			url: '/admin/master',
 			icon: 'fas fa-database',
-			path: 'ChartOfAccounts',
+			path: 'Chart Of Accounts',
 			children: [
 				{
 					name: strings.ChartofAccounts,
 					url: '/admin/master/chart-account',
 					icon: 'fas fa-area-chart',
-					path: 'ChartOfAccounts',
+					path: 'Chart Of Accounts',
 				},
 				{
 					name: strings.Contact,
@@ -229,19 +229,19 @@ export default {
 					name: strings.VATCategory,
 					url: '/admin/master/vat-category',
 					icon: 'fas fa-briefcase',
-					path: 'VatCategory',
+					path: 'Vat Category',
 				},
 				{
 					name: strings.ProductCategory,
 					url: '/admin/master/product-category',
 					icon: 'fas fa-money',
-					path: 'ProductCategory',
+					path: 'Product Category',
 				},
 				{
 					name: strings.CurrencyRate,
 					url: '/admin/master/currencyConvert',
 					icon: 'fas fa-id-card-alt',
-					path: 'CurrencyConversion',
+					path: 'Currency Conversion',
 				},
 				// {
 				//   name: 'Currencies',
@@ -272,46 +272,14 @@ export default {
 					name: strings.PayrollRun,
 					url: '/admin/payroll/payrollrun',
 					icon: 'fas fa-money-check-alt',
-					path: 'PayrollRun',
+					path: 'Payroll Run',
 				},
 				{
 					name: strings.PayrollConfigurations,
 					url: '/admin/payroll/config',
 					icon: 'fas fa-cogs',
-					path: 'SalaryRole',
-				},
-				// {
-				// 	name: strings.SalaryRoles,
-				// 	url: '/admin/payroll/salaryRoles',
-				// 	icon: 'fas fa-user-tie',
-				// 	path: 'ViewSalaryRole',
-				// },
-				// {
-				// 	name: strings.SalaryTemplates,
-				// 	url: '/admin/payroll/salaryTemplate',
-				// 	icon: 'fas fa-chalkboard-teacher',
-				// 	path: 'ViewSalaryTemplate',
-				// },
-				// {
-				// 	name: strings.SalaryStructure,
-				// 	url: '/admin/payroll/salaryStructure',
-				// 	icon: 'fas fa-chalkboard-teacher',
-				// 	path: 'ViewSalaryStructure',
-				// },
-				// {
-				// 	name: strings.EmployeeDesignation,
-				// 	url: '/admin/payroll/employeeDesignation',
-				// 	icon: 'fas fa-id-card-alt',
-				// 	path: 'ViewEmployeeDesignation',
-				// },
-
-				// {
-				// 	name: 'Journals',
-				// 	url: '/admin/accountant/journal',
-				// 	icon: 'fa fa-diamond',
-				// 	path: 'ViewJournal',
-				// },
-		
+					path: 'Payroll Config',
+				}
 			],
 		},
 		// {

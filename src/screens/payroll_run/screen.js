@@ -754,11 +754,19 @@ class PayrollRun extends React.Component {
 														
 															<Button
 																color="primary"
-																disabled={this.state.disableCreatePayroll==true?true:false}
+																// disabled={this.state.disableCreatePayroll==true?true:false}
 																title={this.state.disableCreatePayroll==true?"Please Create Company Details":""}
 																className="btn-square mt-2 pull-right"
 																onClick={() =>
-																	this.props.history.push('/admin/payroll/payrollrun/createPayrollList')
+																	{
+																		if(this.state.disableCreatePayroll==true)
+																     	{	
+																		  toast.success("Please Create Company Details From Payroll-config");
+																          this.props.history.push('/admin/payroll/config',{tabNo:"4"})
+																		}
+																		else
+																		this.props.history.push('/admin/payroll/payrollrun/createPayrollList')
+																	}
 																}
 															>
 																<i className="fas fa-plus mr-1" />

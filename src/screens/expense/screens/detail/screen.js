@@ -794,9 +794,9 @@ class DetailExpense extends React.Component {
 														currency: Yup.string().required(
 															'Currency is required',
 														),
-														payMode: Yup.string().required(
-															'Pay through is required',
-														),
+														// payMode: Yup.string().required(
+														// 	'Pay through is required',
+														// ),
 														expenseAmount: Yup.string()
 															.required('Amount is required')
 															.matches(

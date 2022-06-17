@@ -419,6 +419,7 @@ ACCOUNTCODE:"رمز الحساب",
 Code:"رمز",	
 ACCOUNTNAME:"إسم الحساب",
 ACCOUNTTYPE:"نوع الحساب",
+AccountCode:" رمز الحساب",
 
 export_csv:"	تصدير إلى CSV",
 print_csv:"طبع",

@@ -6,15 +6,19 @@ name: Docker
 # documentation.
 
 on:
-  schedule:
-    - cron: '0/5 * * * *'
-  push:
-    branches: [ "develop" ]
-    # Publish semver tags as releases.
-    tags: [ 'v*.*.*' ]
-  pull_request:
-    branches: [ "develop" ]
-
+#   schedule:
+#     - cron: '0/5 * * * *'
+#   push:
+#     branches: [ "develop" ]
+#     # Publish semver tags as releases.
+#     tags: [ 'v*.*.*' ]
+#   pull_request:
+#     branches: [ "develop" ]
+  workflow_run:
+    workflows: ["Node.js CI"]
+    branches: ["develop"]
+    types: 
+      - completed
 env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io

@@ -15,6 +15,7 @@ import {
     Form,
     Label,
     Table,
+    UncontrolledTooltip,
 } from 'reactstrap';
 import Select from 'react-select'
 import { bindActionCreators } from 'redux'
@@ -194,6 +195,7 @@ class CreateEmployeePayroll extends React.Component {
             componentTotal: '',
             prefix: '',
             exist: false,
+            laborCardIdexist:false,
             existForAccountNumber: false,
             selectedStatus:true,
             checkmobileNumberParam:false,
@@ -347,7 +349,30 @@ validationCheck = (value) => {
             }
         });
 };
-
+laborCardIdValidationCheck = (value) => {
+    const data = {
+        moduleType: 23,
+        name: value,
+    };
+    this.props.createPayrollEmployeeActions
+        .checkValidation(data)
+        .then((response) => {
+            if (response.data === 'Labour Card Id Already Exists') {
+                this.setState(
+                    {
+                        laborCardIdexist: true,
+                    },
+                    
+                    () => {},
+                );
+            
+            } else {
+                this.setState({
+                    laborCardIdexist: false,
+                });
+            }
+        });
+};
 existForAccountNumber = (value) => {
     const data = {
         moduleType: 19,
@@ -1150,7 +1175,7 @@ existForAccountNumber = (value) => {
     }
     render() {
         strings.setLanguage(this.state.language);
-        const {	exist,checkmobileNumberParam,checkmobileNumberParam1,checkmobileNumberParam2,existForAccountNumber,bankList,loading,loadingMsg}=this.state
+        const {	exist,laborCardIdexist,checkmobileNumberParam,checkmobileNumberParam1,checkmobileNumberParam2,existForAccountNumber,bankList,loading,loadingMsg}=this.state
         const { salary_role_dropdown, designation_dropdown, country_list, state_list, employee_list_dropdown } = this.props
         return (
             loading ==true? <Loader loadingMsg={loadingMsg}/> :
@@ -2488,7 +2513,8 @@ existForAccountNumber = (value) => {
                                                                         validationSchema={Yup.object().shape({
                                                                             employeeCode: Yup.string()
                                                                                 .required("Employee unique id is required"),
-                                                                           
+                                                                            labourCard : Yup.string()
+                                                                                .required("Labour card id is required"),   
                                                                 
                                                                             dateOfJoining: Yup.date()
                                                                                 .required('Date of joining is required')                   
@@ -2505,6 +2531,10 @@ existForAccountNumber = (value) => {
                                                                             if (exist === true  && values.employeeCode!="") {
                                                                                 errors.employeeCode =
                                                                                 'Employee unique id already exists';
+                                                                            }
+                                                                            if (laborCardIdexist === true  && values.employeeCode!="") {
+                                                                                errors.labourCard =
+                                                                                'Labour card id already exists';
                                                                             }
                                                                             
                                                                             return errors;
@@ -2523,7 +2553,19 @@ existForAccountNumber = (value) => {
                                                                                         <Row>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="select"><span className="text-danger">* </span>{strings.employee_unique_id}</Label>
+                                                                                                    <Label htmlFor="select"><span className="text-danger">* </span>{strings.employee_unique_id}
+                                                                                                    <i	id="employeeCodeTooltip"
+                                                                                                            className="fa fa-question-circle ml-1"
+                                                                                                        ></i>
+                                                                                                        <UncontrolledTooltip
+                                                                                                            placement="right"
+                                                                                                            target="employeeCodeTooltip"
+                                                                                                        >
+                                                                                                        Employee Unique Id system is designed by the organization 
+                                                                                                        to identify the employee from a group of employees and his work details.
+                                                                                                        i.e. Its Internal ID designed for Identifying Employee.
+                                                                                                        </UncontrolledTooltip>
+                                                                                                    </Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         maxLength="14"
@@ -2632,7 +2674,22 @@ existForAccountNumber = (value) => {
 
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="labourCard"> {strings.LabourCardId}</Label>
+                                                                                                    <Label htmlFor="labourCard"><span className="text-danger">* </span>  {strings.LabourCardId}
+                                                                                                    <i	id="labourCardTooltip"
+                                                                                                            className="fa fa-question-circle ml-1"
+                                                                                                        ></i>
+                                                                                                        <UncontrolledTooltip
+                                                                                                            placement="right"
+                                                                                                            target="labourCardTooltip"
+                                                                                                        >
+                                                                                                          Labour Card Id (LIN) is a unique identification number issued to
+                                                                                                           employers to simplifying business regulations and
+                                                                                                            bringing in transparency and accountability in 
+                                                                                                            labor inspections by various agencies and 
+                                                                                                            bodies under the administrative control of Labour Ministry.
+                                                                                                          It will be available in SIF-file.
+                                                                                                        </UncontrolledTooltip>
+                                                                                                    </Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         maxLength="14"
@@ -2641,7 +2698,10 @@ existForAccountNumber = (value) => {
                                                                                                         value={props.values.labourCard}
                                                                                                         placeholder={strings.Enter+strings.LabourCard}
                                                                                                         onChange={(option) => {
-                                                                                                            if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('labourCard')(option) }
+                                                                                                            if (option.target.value === '' || this.regExBoth.test(option.target.value)) 
+                                                                                                            { props.handleChange('labourCard')(option)
+                                                                                                           this.laborCardIdValidationCheck(option.target.value)
+                                                                                                        }
                                                                                                         }}
                                                                                                         className={props.errors.labourCard && props.touched.labourCard ? "is-invalid" : ""}
                                                                                                     />                                                                                         {props.errors.labourCard && props.touched.labourCard && (

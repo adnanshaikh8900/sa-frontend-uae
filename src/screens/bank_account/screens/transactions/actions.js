@@ -115,7 +115,7 @@ export const getCustomerInvoiceList = (param) => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: `/rest/invoice/getSuggestionInvoicesFotCust?amount=${param.amount}&id=${param.id}&bankId=${param.bankId}`,
+			url: `/rest/invoice/getSuggestionInvoicesFotCust?amount=${param.amount}&currency=${param.currency}&id=${param.id}&bankId=${param.bankId}`,
 		};
 		return authApi(data)
 			.then((res) => {
@@ -140,7 +140,7 @@ export const getCustomerExplainedInvoiceList = (param) => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: `/rest/invoice/getSuggestionExplainedForCust?amount=${param.amount}&id=${param.id}&bankId=${param.bankId}`,
+			url: `/rest/invoice/getSuggestionExplainedForCust?amount=${param.amount}&currency=${param.currency}&id=${param.id}&bankId=${param.bankId}`,
 		};
 		return authApi(data)
 			.then((res) => {
@@ -209,7 +209,7 @@ export const getVendorInvoiceList = (param) => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: `/rest/invoice/getSuggestionInvoicesFotVend?amount=${param.amount}&id=${param.id}&bankId=${param.bankId}`,
+			url: `/rest/invoice/getSuggestionInvoicesFotVend?amount=${param.amount}&currency=${param.currency}&id=${param.id}&bankId=${param.bankId}`,
 		};
 		return authApi(data)
 			.then((res) => {
@@ -233,7 +233,7 @@ export const getVendorExplainedInvoiceList = (param) => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: `/rest/invoice/getSuggestionExplainedForVend?amount=${param.amount}&id=${param.id}&bankId=${param.bankId}`,
+			url: `/rest/invoice/getSuggestionExplainedForVend?amount=${param.amount}&currency=${param.currency}&id=${param.id}&bankId=${param.bankId}`,
 		};
 		return authApi(data)
 			.then((res) => {

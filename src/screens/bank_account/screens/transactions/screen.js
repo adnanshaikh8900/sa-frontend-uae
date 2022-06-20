@@ -32,6 +32,8 @@ import { ExplainTrasactionDetail } from './sections';
 import './style.scss';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import * as transactionDetailActions from '../transactions/screens/detail/actions';
+import { Suspense, lazy } from 'react';
 
 const mapStateToProps = (state) => {
 	return {
@@ -45,6 +47,10 @@ const mapDispatchToProps = (dispatch) => {
 		transactionsActions: bindActionCreators(TransactionsActions, dispatch),
 		detailBankAccountActions: bindActionCreators(
 			detailBankAccountActions,
+			dispatch,
+		),
+		transactionDetailActions: bindActionCreators(
+			transactionDetailActions,
 			dispatch,
 		),
 		commonActions: bindActionCreators(CommonActions, dispatch),
@@ -104,6 +110,8 @@ class BankTransactions extends React.Component {
 			nonexpand: [],
 			selected_id_list: [],
 			transation_data: '',
+			res:[],
+			showExpandedRow:false
 		};
 
 		this.options = {
@@ -537,6 +545,7 @@ class BankTransactions extends React.Component {
 	};
 
 	closeExplainTransactionModal = (res) => {
+		debugger
 		console.log(res)
 		this.componentDidMount();
 		if (!this.state.expanded.includes(res)) {
@@ -550,7 +559,10 @@ class BankTransactions extends React.Component {
 		}
 	};
 
-	handleOnExpand = (row) => {
+	handleOnExpand = (row,exapandRow) => {
+		
+		let data  = this.getbyid(row)
+		alert(data)
 		this.setState(() => ({
 			expanded: [...this.state.expanded, row.id],
 		}));
@@ -561,11 +573,16 @@ class BankTransactions extends React.Component {
 		else return false;
 	}
 	expandComponent(row) {
+		
 		//console.log(row);
 		return <div className="transition">{row.id}</div>;
 	}
 
 	handleTableChange = (type, { page, sizePerPage }) => {
+		
+		document.getElementById('#myTable').on('click-row.bs.table', function (e, row, $element) {
+			
+		  });
 		this.setState(
 			{
 				page,
@@ -679,6 +696,52 @@ class BankTransactions extends React.Component {
 		}
 	};
 
+	getbyid =(row) => {
+		
+		if(this.state.response && this.state.response.data){
+			if(row.explinationStatusEnum === 'PARTIAL' && row.dueAmount>0){   
+				
+				return(
+					<>
+						< ExplainTrasactionDetail
+					closeExplainTransactionModal={(e) => {
+							this.closeExplainTransactionModal(e);
+						}
+						}
+						bankId={this.props.location.state.bankAccountId}
+						creationMode={row.creationMode}
+						selectedData={row}
+						data={this.state.response.data[0]}
+					/>
+						< ExplainTrasactionDetail
+					closeExplainTransactionModal={(e) => {
+							this.closeExplainTransactionModal(e);
+						}
+						}
+						bankId={this.props.location.state.bankAccountId}
+						creationMode={row.creationMode}
+						selectedData={row}
+						data={this.state.response.data[1]}
+					/>
+					</>
+				
+			
+				)
+			}
+			else
+			return( < ExplainTrasactionDetail
+			closeExplainTransactionModal={(e) => {
+					this.closeExplainTransactionModal(e);
+				}
+				}
+				bankId={this.props.location.state.bankAccountId}
+				creationMode={row.creationMode}
+				selectedData={row}
+				data={this.state.response.data[0]}
+			/>)
+			}
+}
+
 	render() {
 		strings.setLanguage(this.state.language);
 		const {
@@ -732,23 +795,17 @@ class BankTransactions extends React.Component {
 			},
 		];
 		const expandRow = {
+           
 			onlyOneExpanding: true,
-			renderer: (row) => (
-				< ExplainTrasactionDetail
-				closeExplainTransactionModal={(e) => {
-						this.closeExplainTransactionModal(e);
-					}
-					}
-					bankId={this.props.location.state.bankAccountId}
-					creationMode={row.creationMode}
-					selectedData={row}
-				/>
-			),
-
-			expanded: [],
+			renderer: (row) => (this.getbyid(row)),
+				
+			expanded: false,
 			nonExpandable: nonexpand,
-			showExpandColumn: true,
+			showExpandColumn: this.state.showExpandedRow,
+			showExpandRow: this.state.showExpandedRow,
 		};
+
+		
 
 		return (
 			<div className="bank-transaction-screen transaction">
@@ -1036,14 +1093,32 @@ class BankTransactions extends React.Component {
 										</div>
 										<div>
 											<BootstrapTable
+											id="myTable"
 												keyField="id"
+												
 												data={
 													bank_transaction_list.data
 														? bank_transaction_list.data
 														: []
-												}
+												}	
+												
+																				
 												columns={columns}
 												expandRow={expandRow}
+												rowEvents={{
+													onClick:(event,row)=>{
+														// this.setState({response:undefined})
+														this.props.transactionDetailActions
+														.getTransactionDetail(row.id)
+														.then((response) => {
+															
+															if(response.status===200){
+																
+																this.setState({response:response, showExpandedRow:true})																													
+														}
+														})
+													}
+												}}
 												noDataIndication="There is no data to display"
 												remote
 												fetchInfo={{
@@ -1057,6 +1132,8 @@ class BankTransactions extends React.Component {
 													sizePerPage: this.options.sizePerPage,
 													totalSize: bank_transaction_list.count,
 												})}
+
+												
 											/>
 										</div>
 									</Col>
@@ -1069,6 +1146,7 @@ class BankTransactions extends React.Component {
 			</div>
 		);
 	}
+
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(BankTransactions);

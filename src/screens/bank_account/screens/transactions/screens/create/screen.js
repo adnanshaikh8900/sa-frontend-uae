@@ -489,13 +489,20 @@ class CreateBankTransaction extends React.Component {
 		};
 		this.props.transactionActions.getCustomerInvoiceList(data);
 	};
-	getSuggestionInvoicesFotVend = (option, amount) => {
+	 getSuggestionInvoicesFotVend = (option, amount,invoice_list) => {
 		const data = {
 			amount: amount,
 			id: option,
+			currency: this.state.invoiceCurrency && invoice_list != null ? this.state.invoiceCurrency : 0,
 			bankId:this.props.location.state.bankAccountId
 		};
 		this.props.transactionActions.getVendorInvoiceList(data);
+		if(invoice_list === null){
+			
+			this.formRef.current.setFieldValue('curreancyname',"", true);
+			this.formRef.current.setFieldValue('exchangeRate', "", true);
+			this.formRef.current.setFieldValue('currencyCode', "", true);
+	}
 	};
 
 	invoiceIdList = (option) => {
@@ -509,6 +516,52 @@ class CreateBankTransaction extends React.Component {
 		});
 		this.formRef.current.setFieldValue('invoiceIdList', option, true);
 	};
+	getInvoiceCurrency = (opt,props) => {
+		
+		const {
+			customer_invoice_list,
+		} = this.props;
+		customer_invoice_list.data.map(item => {
+			if (item.value === opt.value)
+			{
+				this.setState({
+				invoiceCurrency : item.currencyCode
+			},()=>{
+				this.getInvoices(
+					props.values.customerId,
+					props.values.transactionAmount,
+				);
+				this.formRef.current.setFieldValue('currencyCode', this.state.invoiceCurrency, true);
+				this.setCurrency( this.state.invoiceCurrency );
+			this.setExchange( this.state.invoiceCurrency );
+			})}
+		})
+		
+			
+	}
+	getVendorInvoiceCurrency = (opt,props) => {
+		
+		const {
+			vendor_invoice_list,
+		} = this.props;
+		vendor_invoice_list.data.map(item => {
+			if (item.value === opt.value)
+			{
+				this.setState({
+				invoiceCurrency : item.currencyCode
+			},()=>{
+				this.getInvoices(
+					props.values.customerId,
+					props.values.transactionAmount,
+				);
+				this.formRef.current.setFieldValue('currencyCode', this.state.invoiceCurrency, true);
+				this.setCurrency( this.state.invoiceCurrency );
+			this.setExchange( this.state.invoiceCurrency );
+			})}
+		})
+		
+			
+	}
 	payrollList = (option) => {
 		this.setState({
 		   initValue: {
@@ -655,14 +708,21 @@ class CreateBankTransaction extends React.Component {
 		}
 	};
 
-	getInvoices = (option, amount) => {
+	getInvoices = (option, amount,invoice_list) => {
 		const data = {
 			amount: amount,
 			id: option.value,
+			currency: this.state.invoiceCurrency && invoice_list != null ? this.state.invoiceCurrency : 0,
 			type: this.state.cat_label === 'Money Received' ? 'CUSTOMER' : 'SUPLLIER',
 			bankId:this.props.location.state.bankAccountId
 		};
 		this.props.transactionActions.getCustomerInvoiceList(data);
+		if(invoice_list === null){
+			
+			this.formRef.current.setFieldValue('curreancyname',"", true);
+			this.formRef.current.setFieldValue('exchangeRate', "", true);
+			this.formRef.current.setFieldValue('currencyCode', "", true);
+	}
 	};
 
 	render() {
@@ -1117,8 +1177,7 @@ class CreateBankTransaction extends React.Component {
 																				// }
 																				onChange={(option) => {
 																					if (option && option.value) {
-																						this.formRef.current.setFieldValue('currencyCode', this.getCurrency(option.value), true);
-																						this.setExchange( this.getCurrency(option.value) );
+																					
 																						props.handleChange('vendorId')(option);
 																						props.handleChange('invoiceIdList',)("");		
 																					} else {
@@ -1162,9 +1221,19 @@ class CreateBankTransaction extends React.Component {
 																								: []
 																						}
 																						onChange={(option) => {
+																							if(option === null){
+																								this.getSuggestionInvoicesFotVend(
+																									props.values.vendorId.value,
+																									props.values.transactionAmount,
+																									option
+																								);
+																							}
 																							props.handleChange('invoiceIdList',)(option);
 																							this.invoiceIdList(option);
 																							this.totalAmount(option);
+																							if(option != null){
+																								this.getVendorInvoiceCurrency(option[0],props);
+																								}
 																						}}
 																						value={props.values.invoiceIdList}
 																						placeholder={strings.Select+" "+strings.Type}
@@ -1401,18 +1470,18 @@ class CreateBankTransaction extends React.Component {
 																					value={props.values.customerId}
 																					onChange={(option) => {
 																					
-																						if (option && option.value) {
-																							this.formRef.current.setFieldValue('currencyCode', this.getCurrency(option.value), true);
+																						// if (option && option.value) {
+																						// 	this.formRef.current.setFieldValue('currencyCode', this.getCurrency(option.value), true);
 																							 
-																							this.setExchange( this.getCurrency(option.value) );
-																							props.handleChange('customerId')(
-																								option.value,
-																							);
-																						} else {
-																							props.handleChange('customerId')(
-																								'',
-																							);
-																						}
+																						// 	this.setExchange( this.getCurrency(option.value) );
+																							props.handleChange('customerId')(option)
+																						// 		option.value,
+																						// 	);
+																						// } else {
+																						// 	props.handleChange('customerId')(
+																						// 		'',
+																						// 	);
+																						// }
 																						props.handleChange('invoiceIdList')('');
 																						this.getInvoices(
 																							option,
@@ -1451,8 +1520,19 @@ class CreateBankTransaction extends React.Component {
 																				// }
 																				id="invoiceIdList"
 																				onChange={(option) => {
+																					if(option === null){
+																						this.getInvoices(
+																							props.values.customerId,
+																							props.values.transactionAmount,
+																							option
+																						);
+																					}
 																					props.handleChange('invoiceIdList')(option,);
 																					this.totalAmount(option);
+																						
+																					if(option != null){
+																						this.getInvoiceCurrency(option[0],props);
+																							}
 																				}}
 																			/>
 																		</FormGroup>

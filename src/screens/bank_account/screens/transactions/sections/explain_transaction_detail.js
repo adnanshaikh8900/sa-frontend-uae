@@ -96,6 +96,7 @@ class ExplainTrasactionDetail extends React.Component {
 			payrollListIds:'',
 			expenseType:true,
 			showMore:false,
+			res: []
 		};
 
 		this.file_size = 1024000;
@@ -115,6 +116,7 @@ class ExplainTrasactionDetail extends React.Component {
 	}
 
 	componentDidMount = () => {
+		debugger
 		if (this.props.selectedData) {
 			this.props.transactionDetailActions.getUnPaidPayrollsList();
 			this.initializeData();
@@ -122,7 +124,7 @@ class ExplainTrasactionDetail extends React.Component {
 	};
 
 	initializeData = () => {
-		const { selectedData } = this.props;
+		const { selectedData,data } = this.props;
 		const { bankId } = this.props;
 		
 			
@@ -155,136 +157,150 @@ class ExplainTrasactionDetail extends React.Component {
 					);
 					this.props.history.push('/admin/banking/bank-account');
 				});
-		this.props.transactionDetailActions
-			.getTransactionDetail(selectedData.id)
-			.then((res) => {
+
 				this.getChartOfAccountCategoryList(selectedData.debitCreditFlag);
-				this.setState(
-					{
-						loading: false,
-						creationMode: this.props.creationMode,
-						initValue: {
-							bankId: bankId,
-							amount: res.data.amount ? res.data.amount : '',
-							dueAmount:res.data.dueAmount ? res.data.dueAmount : '',
-							date: res.data.date1
-								? res.data.date1
-								: '',
-							description: res.data.description ? res.data.description : '',
-							transactionCategoryId: res.data.transactionCategoryId
-								? parseInt(res.data.transactionCategoryId)
-								: '',
-							transactionId: selectedData.id,
-							vatId: res.data.vatId ? res.data.vatId : '',
-							vendorId: res.data.vendorId ? res.data.vendorId : '',
-							customerId: res.data.customerId ? res.data.customerId : '',
-							employeeId: res.data.employeeId ? res.data.employeeId : '',
-							explinationStatusEnum: res.data.explinationStatusEnum,
-							reference: res.data.reference ? res.data.reference : '',
-							exchangeRate: res.data.exchangeRate ? res.data.exchangeRate : '',
-							//currencyName: res.data.currencyName ? res.data.currencyName : '',
-							coaCategoryId: res.data.coaCategoryId
-								? parseInt(res.data.coaCategoryId)
-								: '',
-							explainParamList: res.data.explainParamList
-								? res.data.explainParamList
-								: [],
-							transactionCategoryLabel: res.data.transactionCategoryLabel
-								? res.data.transactionCategoryLabel
-								: '',
-							invoiceError: '',
-							expenseCategory: res.data.expenseCategory,
-							currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
-							payrollListIds:res.data.payrollDropdownList?res.data.payrollDropdownList:[],
-							expenseType: res.data.expenseType ? true : false,
-						},
-						unexplainValue: {
-							bankId: bankId,
-							amount: res.data.amount ? res.data.amount : '',
-							date: res.data.date1
-								? res.data.date1
-								: '',
-							description: res.data.description ? res.data.description : '',
-							transactionCategoryId: res.data.transactionCategoryId
-								? parseInt(res.data.transactionCategoryId)
-								: '',
-							transactionId: selectedData.id,
-							vatId: res.data.vatId ? res.data.vatId : '',
-							vendorId: res.data.vendorId ? res.data.vendorId : '',
-							customerId: res.data.customerId ? res.data.customerId : '',
-							explinationStatusEnum: res.data.explinationStatusEnum,
-							reference: res.data.reference ? res.data.reference : '',
-							coaCategoryId: res.data.coaCategoryId
-								? res.data.coaCategoryId
-								: '',
-							explainParamList: res.data.explainParamList
-								? res.data.explainParamList
-								: [],
-							transactionCategoryLabel: res.data.transactionCategoryLabel
-								? res.data.transactionCategoryLabel
-								: '',
-							invoiceError: '',
-							expenseCategory: res.data.expenseCategory
-								? parseInt(res.data.expenseCategory)
-								: '',
-							currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
-						},
-						date: res.data.date1
-								? res.data.date1
-								: '',
-						amount: res.data.amount ? res.data.amount : '',
-						currencySymbol:res.data.curruncySymbol?res.data.curruncySymbol: '',
-						expenseType: res.data.expenseType ? true : false,
-						transactionCategoryLabel:res.data.transactionCategoryLabel,
-						transactionCategoryId:res.data.transactionCategoryId,
-						currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
-					},
-					
-					() => {
-						
-						if(selectedData.debitCreditFlag=== 'D'){
-							this.getCurrency(this.state.initValue.vendorId)
-							 this.setCurrency(this.state.currencyCode)
-						}else{
-							this.getCurrency(this.state.initValue.customerId)	
-							this.setCurrency(this.state.currencyCode)
-						}
-						if (
-							
-							this.state.initValue.coaCategoryId === 10 &&
-							Object.keys(this.state.initValue.explainParamList).length !== 0
-						) {
-							this.setState(
-								{
-									initValue: {
-										...this.state.initValue,
-										...{
-											coaCategoryId: 100,
-										},
-									},
+				debugger
+				
+					this.getData()
+				
+
+	};
+
+	getData = () => {
+		const { selectedData,data,bankId } = this.props;
+		const res={data:data}
+		this.setState(
+			{
+				loading: false,
+				creationMode: this.props.creationMode,
+				initValue: {
+					bankId: bankId,
+					amount: res.data.amount ? res.data.amount : '',
+					dueAmount:res.data.dueAmount ? res.data.dueAmount : '',
+					date: res.data.date1
+						? res.data.date1
+						: '',
+					description: res.data.description ? res.data.description : '',
+					transactionCategoryId: res.data.transactionCategoryId
+						? parseInt(res.data.transactionCategoryId)
+						: '',
+					transactionId: selectedData.id,
+					vatId: res.data.vatId ? res.data.vatId : '',
+					vendorId: res.data.vendorId ? res.data.vendorId : '',
+					customerId: res.data.customerId ? res.data.customerId : '',
+					employeeId: res.data.employeeId ? res.data.employeeId : '',
+					explinationStatusEnum: res.data.explinationStatusEnum,
+					reference: res.data.reference ? res.data.reference : '',
+					exchangeRate: res.data.exchangeRate ? res.data.exchangeRate : '',
+					//currencyName: res.data.currencyName ? res.data.currencyName : '',
+					coaCategoryId: res.data.coaCategoryId
+						? parseInt(res.data.coaCategoryId)
+						: '',
+					explainParamList: res.data.explainParamList
+						? res.data.explainParamList
+						: [],
+					transactionCategoryLabel: res.data.transactionCategoryLabel
+						? res.data.transactionCategoryLabel
+						: '',
+					invoiceError: '',
+					expenseCategory: res.data.expenseCategory,
+					currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
+					payrollListIds:res.data.payrollDropdownList?res.data.payrollDropdownList:[],
+					expenseType: res.data.expenseType ? true : false,
+				},
+				unexplainValue: {
+					bankId: bankId,
+					amount: res.data.amount ? res.data.amount : '',
+					date: res.data.date1
+						? res.data.date1
+						: '',
+					description: res.data.description ? res.data.description : '',
+					transactionCategoryId: res.data.transactionCategoryId
+						? parseInt(res.data.transactionCategoryId)
+						: '',
+					transactionId: selectedData.id,
+					explanationId: res.data.explanationId ? res.data.explanationId : '',
+					vatId: res.data.vatId ? res.data.vatId : '',
+					vendorId: res.data.vendorId ? res.data.vendorId : '',
+					customerId: res.data.customerId ? res.data.customerId : '',
+					explinationStatusEnum: res.data.explinationStatusEnum,
+					reference: res.data.reference ? res.data.reference : '',
+					coaCategoryId: res.data.coaCategoryId
+						? res.data.coaCategoryId
+						: '',
+					explainParamList: res.data.explainParamList
+						? res.data.explainParamList
+						: [],
+					transactionCategoryLabel: res.data.transactionCategoryLabel
+						? res.data.transactionCategoryLabel
+						: '',
+					invoiceError: '',
+					expenseCategory: res.data.expenseCategory
+						? parseInt(res.data.expenseCategory)
+						: '',
+					currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
+				},
+				transactionId: selectedData.id,
+				date: res.data.date1
+						? res.data.date1
+						: '',
+				amount: res.data.amount ? res.data.amount : '',
+				currencySymbol:res.data.curruncySymbol?res.data.curruncySymbol: '',
+				expenseType: res.data.expenseType ? true : false,
+				transactionCategoryLabel:res.data.transactionCategoryLabel,
+				transactionCategoryId:res.data.transactionCategoryId,
+				currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
+				
+			},
+			() => {
+				debugger
+				if(selectedData.debitCreditFlag=== 'D'){
+					this.getCurrency(this.state.initValue.vendorId)
+					 this.setCurrency(this.state.currencyCode)
+				}else{
+					this.getCurrency(this.state.initValue.customerId)
+					this.setCurrency(this.state.currencyCode)
+				}
+				if (
+
+					this.state.initValue.coaCategoryId === 10 &&
+					Object.keys(this.state.initValue.explainParamList).length !== 0
+				) {
+					this.setState(
+						{
+							initValue: {
+								...this.state.initValue,
+								...{
+									coaCategoryId: 100,
 								},
-								() => { },
-							);
-							
-						}
-						if (this.state.initValue.customerId) {
-							this.getCustomerExplainedInvoiceList(
-								this.state.initValue.customerId,
-								this.state.initValue.amount,
-							);
-						}
-						if (this.state.initValue.vendorId) {
-							this.getVendorExplainedInvoiceList(
-								this.state.initValue.vendorId,
-								this.state.initValue.amount,
-							);
-						}
-					},
-				);
-			})
-			.catch((err) => {
-				console.log(err);
-			});
+							},
+						},
+						() => { },
+					);
+
+				}
+				if (this.state.initValue.customerId) {
+					this.getCustomerExplainedInvoiceList(
+						this.state.initValue.customerId,
+						this.state.initValue.amount,
+					);
+				}
+				if (this.state.initValue.vendorId) {
+					this.getVendorExplainedInvoiceList(
+						this.state.initValue.vendorId,
+						this.state.initValue.amount,
+					);
+				}
+			}
+		
+		)
+			this.formRef.current.setFieldValue('amount', res.data.amount, true);
+			this.formRef.current.setFieldValue('date', res.data.date1, true);
+			this.formRef.current.setFieldValue('coaCategoryId', res.data.coaCategoryId? res.data.coaCategoryId : '', true);
+			this.formRef.current.setFieldValue('expenseCategory', res.data.transactionCategoryId, true);
+			this.formRef.current.setFieldValue('vatId', res.data.vatId, true);
+			this.formRef.current.setFieldValue('vendorId', res.data.vendorId? res.data.vendorId : '', true);
+		
 	};
 
 	getChartOfAccountCategoryList = (type) => {
@@ -306,6 +322,7 @@ class ExplainTrasactionDetail extends React.Component {
 							const id = this.state.chartOfAccountCategoryList[0].options.find(
 								(option) => option.value === this.state.initValue.coaCategoryId,
 							);
+							debugger
 							this.getTransactionCategoryList(id);
 						}
 						if (this.state.initValue.expenseCategory) {
@@ -357,9 +374,10 @@ class ExplainTrasactionDetail extends React.Component {
 
 
 	getTransactionCategoryList = (type) => {
+		debugger
 		this.formRef.current.setFieldValue('coaCategoryId', type, true);
 		this.setValue(null);
-		if (type.value === 100) {
+		if (type &&type.value && type.value === 100) {
 			this.getVendorList();
 		} else {
 			this.props.transactionsActions
@@ -381,10 +399,11 @@ class ExplainTrasactionDetail extends React.Component {
 				});
 			}	
 	};
-	getSuggestionInvoicesFotCust = (option, amount) => {
+	getSuggestionInvoicesFotCust = (option, amount,invoice_list)  => {
 		const data = {
 			amount: amount,
 			id: option,
+			currency: this.state.custInvoiceCurrency && invoice_list != null ? this.state.custInvoiceCurrency : 0,
 			bankId: this.props.bankId,
 		};
 		this.props.transactionsActions.getCustomerInvoiceList(data).then((res) => {
@@ -392,12 +411,18 @@ class ExplainTrasactionDetail extends React.Component {
 				customer_invoice_list_state: res.data,
 			});
 		});
+		if(invoice_list === null){
+			this.formRef.current.setFieldValue('curreancyname',"", true);
+			this.formRef.current.setFieldValue('exchangeRate', "", true);
+			this.formRef.current.setFieldValue('currencyCode', "", true);
+	}
 	};
 
 	getCustomerExplainedInvoiceList = (option, amount) => {
 		const data = {
 			amount: amount,
 			id: option,
+			currency: this.state.custInvoiceCurrency,
 			bankId: this.props.bankId,
 		};
 		this.props.transactionsActions
@@ -406,7 +431,7 @@ class ExplainTrasactionDetail extends React.Component {
 				this.setState({
 					customer_invoice_list_state: res.data,
 				});
-				this.getSuggestionInvoicesFotCust(option,amount)
+				this.getSuggestionInvoicesFotCust(option,amount,0)
 			});
 	};
 
@@ -414,6 +439,7 @@ class ExplainTrasactionDetail extends React.Component {
 		const data = {
 			amount: amount,
 			id: option,
+			currency: this.state.invoiceCurrency,
 			bankId: this.props.bankId,
 		};
 		this.props.transactionsActions
@@ -422,14 +448,15 @@ class ExplainTrasactionDetail extends React.Component {
 				this.setState({
 					supplier_invoice_list_state: res.data,
 				});
-				this.getSuggestionInvoicesFotVend(option,amount)
+				this.getSuggestionInvoicesFotVend(option,amount,0)
 			});
 	};
 
-	getSuggestionInvoicesFotVend = (option, amount) => {
+	getSuggestionInvoicesFotVend = (option, amount,invoice_list) => {
 		const data = {
 			amount: amount,
 			id: option,
+			currency: this.state.invoiceCurrency && invoice_list != null ? this.state.invoiceCurrency : 0,
 			bankId: this.props.bankId,
 		};
 		this.props.transactionsActions.getVendorInvoiceList(data).then((res) => {
@@ -437,8 +464,63 @@ class ExplainTrasactionDetail extends React.Component {
 				supplier_invoice_list_state: res.data,
 			});
 		});
+		if(invoice_list === null){
+			
+			this.formRef.current.setFieldValue('curreancyname',"", true);
+			this.formRef.current.setFieldValue('exchangeRate', "", true);
+			this.formRef.current.setFieldValue('currencyCode', "", true);
+	}
 	};
-
+	getInvoiceCurrency = (opt,props) => {
+		
+		const {
+			customer_invoice_list_state,
+		} = this.state;
+		customer_invoice_list_state.map(item => {
+			if (item.value === opt.value)
+			{
+				this.setState({
+					custInvoiceCurrency : item.currencyCode
+			},()=>{
+				this.getSuggestionInvoicesFotCust(
+					props.values.customerId.value,
+					props.values.amount,
+					0
+				);
+				this.formRef.current.setFieldValue('currencyCode', this.state.custInvoiceCurrency, true);
+				this.setCurrency( this.state.custInvoiceCurrency );
+			this.setExchange( this.state.custInvoiceCurrency );
+			})}
+		})
+			
+	}
+	getVendorInvoiceCurrency = (opt,props) => {
+		debugger
+		const {
+			supplier_invoice_list_state,
+		} = this.state;
+		supplier_invoice_list_state.map(item => {
+			if (item.value === opt.value)
+			{
+				this.setState({
+				invoiceCurrency : item.currencyCode
+			},()=>{
+				this.getSuggestionInvoicesFotVend(
+					props.values.vendorId.value,
+					this.state.initValue.amount,
+					0
+				);
+				
+				// this.formRef.current.setFieldValue('currencyCode', this.getCurrency(props.values.vendorId.value), true);
+				// this.setExchange( this.getCurrency(option.value) );
+				this.formRef.current.setFieldValue('currencyCode', this.state.invoiceCurrency, true);
+				this.setCurrency( this.state.invoiceCurrency );
+			this.setExchange( this.state.invoiceCurrency );
+			})}
+		})
+		
+			
+	}
 	getUserList = () => {
 		this.props.transactionsActions.getUserForDropdown();
 	};
@@ -554,17 +636,20 @@ class ExplainTrasactionDetail extends React.Component {
 		let formData = new FormData();
 		formData.append('expenseType',  this.state.expenseType);
 		formData.append('transactionId', transactionId ? transactionId : '');
-		formData.append('bankId ', bankId ? bankId : '');
+		formData.append('bankId ',this.props.bankId ? this.props.bankId : '');
 		formData.append(
 			'date',
 			this.state.date
 			? moment(this.state.date)
 			: date,
 		);
-		formData.append(
-			'exchangeRate',
-			exchangeRate !== null ? exchangeRate : '',
-		);
+		if(exchangeRate != null){
+			formData.append(
+				'exchangeRate',
+				exchangeRate ? exchangeRate : 1,
+			);
+		}
+		
 		formData.append('description', description ? description : '');
 		formData.append('amount', amount ? amount : '');
 		formData.append('dueAmount', dueAmount ? dueAmount : 0);
@@ -632,7 +717,7 @@ class ExplainTrasactionDetail extends React.Component {
 			formData.append('vatId', vatId ? vatId : '');
 		}
 		
-		if (employeeId !== null && employeeId.value !== undefined) {
+		if (employeeId !== null ) {
 			formData.append('employeeId', employeeId ? employeeId.value : '');
 		}else if(employeeId !== null){
 			formData.append('employeeId', employeeId ? employeeId : '');
@@ -746,6 +831,7 @@ class ExplainTrasactionDetail extends React.Component {
 		for (var key in this.state.unexplainValue) {
 			formData.append(key, this.state.unexplainValue[key]);
 			formData.set('date',moment(this.state.unexplainValue['date']));
+		
 			if (
 				Object.keys(this.state.unexplainValue['explainParamList']).length > 0
 			) {
@@ -892,6 +978,7 @@ class ExplainTrasactionDetail extends React.Component {
 	return option
  }
 	render() {
+		debugger
 		strings.setLanguage(this.state.language);
 		const {
 			initValue,
@@ -951,7 +1038,7 @@ class ExplainTrasactionDetail extends React.Component {
 				}
 			}	
 		}
-
+console.log(this.props.values,"sbfasgf")
 		return (
 			<div className="detail-bank-transaction-screen">
 				<div className="animated fadeIn">
@@ -983,7 +1070,7 @@ class ExplainTrasactionDetail extends React.Component {
 										<CardBody>
 											<Row>
 												<Col lg={12}>
-													<Formik
+													<Formik 	
 														initialValues={initValue}
 														ref={this.formRef}
 														onSubmit={(values, { resetForm }) => {
@@ -1485,8 +1572,7 @@ class ExplainTrasactionDetail extends React.Component {
 																						}
 																						onChange={(option) => {
 																							if (option && option.value) {
-																								this.formRef.current.setFieldValue('currencyCode', this.getCurrency(option.value), true);
-																								this.setExchange( this.getCurrency(option.value) );
+																								
 																								props.handleChange('vendorId')(option);
 																							} else {
 				
@@ -1495,6 +1581,7 @@ class ExplainTrasactionDetail extends React.Component {
 																							this.getSuggestionInvoicesFotVend(
 																								option.value,
 																								props.values.amount,
+																								
 																							);
 																						}}
 																						value={
@@ -1539,10 +1626,20 @@ class ExplainTrasactionDetail extends React.Component {
 																										: []
 																								}
 																								onChange={(option) => {
+																									if(option === null){
+																										this.getSuggestionInvoicesFotVend(
+																											props.values.vendorId.value,
+																											props.values.amount,
+																											option
+																										);
+																									}
 																									props.handleChange(
 																										'explainParamList',
 																									)(option);
 																									this.invoiceIdList(option);
+																									if(option != null){
+																										this.getVendorInvoiceCurrency(option[0],props);
+																										}
 																								}}
 																								value={
 																									supplier_invoice_list_state &&
@@ -1583,7 +1680,7 @@ class ExplainTrasactionDetail extends React.Component {
 																							{/* {this.state.initValue
 																							.invoiceIdList &&
 																							this.state.initValue.invoiceIdList.reduce(
-																								(totalAmount, invoice) =>
+																								(totalAmount, invoice) => 
 																									totalAmount + invoice.amount,
 																								0,
 																							) !== props.values.amount && (
@@ -1635,9 +1732,6 @@ class ExplainTrasactionDetail extends React.Component {
 																						}
 																						onChange={(option) => {
 																							if (option && option.value) {
-																								this.formRef.current.setFieldValue('currencyCode', this.getCurrency(option.value), true);
-																								 
-																								this.setExchange( this.getCurrency(option.value) );
 																								props.handleChange('customerId')(
 																									option.value,
 																								);
@@ -1697,10 +1791,20 @@ class ExplainTrasactionDetail extends React.Component {
 																								:[]
 																						}
 																						onChange={(option) => {
+																							if(option === null){
+																								this.getSuggestionInvoicesFotCust(
+																									props.values.vendorId.value,
+																									props.values.amount,
+																									option
+																								);
+																							}
 																							props.handleChange(
 																								'explainParamList',
 																							)(option);
 																							this.invoiceIdList(option);
+																							if(option != null){
+																								this.getInvoiceCurrency(option[0],props);
+																								}
 																						}}
 																						value={
 																							customer_invoice_list_state &&
@@ -2060,12 +2164,13 @@ class ExplainTrasactionDetail extends React.Component {
 																			</Col>
 																		</Row>
 																	)} */}
-																{/* {props.values.coaCategoryId &&
-																	props.values.coaCategoryId.label ===
-																	'Sales' && 
+																{
+																	props.values.coaCategoryId &&
+																		props.values.coaCategoryId.label ===
+																		'Sales' && 
 																
 																	(
-																		<Row style={{display: this.state.bankAccountCurrency === this.state.basecurrency.currencyCode ? 'none': ''}}>
+																		<Row >
 																			<Col lg={3}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="currencyCode">
@@ -2098,7 +2203,7 @@ class ExplainTrasactionDetail extends React.Component {
 																								.find(
 																									(option) =>
 																										option.value ===
-																										+props.values.currencyCode,
+																										+this.state.custInvoiceCurrency,
 																								)
 																						}
 																						onChange={(option) => {
@@ -2194,12 +2299,12 @@ class ExplainTrasactionDetail extends React.Component {
 																				/>
 																			</Col>
 																		</Row>
-																	)} */}
-																{/* {props.values.coaCategoryId &&
+																	)} 
+																 {props.values.coaCategoryId &&
 																	props.values.coaCategoryId.label ===
 																	'Supplier Invoice' &&
 																	(
-																		<Row style={{display: this.state.bankAccountCurrency === this.state.basecurrency.currencyCode ? 'none': ''}}>
+																		<Row >
 																			<Col lg={3}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="currencyCode">
@@ -2231,7 +2336,7 @@ class ExplainTrasactionDetail extends React.Component {
 																								.find(
 																									(option) =>
 																										option.value ===
-																										 +this.state.supplier_currency,
+																										+this.state.invoiceCurrency,
 																								)
 																						}
 																						isDisabled={true}
@@ -2318,7 +2423,7 @@ class ExplainTrasactionDetail extends React.Component {
 																				/>
 																			</Col>
 																		</Row>
-																	)} */}
+																	)} 
 																	<Row>
 																		{props.values.coaCategoryId === 12 ||
 																			(props.values.coaCategoryId === 6 && (
@@ -2521,12 +2626,12 @@ class ExplainTrasactionDetail extends React.Component {
 																	}	
 
 																<Row>
-																	{props.values.explinationStatusEnum !==
+																	{this.state.initValue.explinationStatusEnum !==
 																		'RECONCILED' && (
 																			<Col lg={12} className="mt-5">
 																				<FormGroup className="text-left">
-																					{props.values.explinationStatusEnum !==
-																						'FULL' && props.values.explinationStatusEnum !==
+																					{this.state.initValue.explinationStatusEnum !==
+																						'FULL' && this.state.initValue.explinationStatusEnum !==
 																						'PARTIAL' ? (
 																							<div>
 																								<Button
@@ -2538,12 +2643,12 @@ class ExplainTrasactionDetail extends React.Component {
 																									<i className="fa fa-dot-circle-o"></i>{' '}
 																						         {strings.Explain}
 																					</Button>
-																						{props.values.explinationStatusEnum !== "PARTIAL"&&	(<Button
+																						{this.state.initValue.explinationStatusEnum !== "PARTIAL"&&	(<Button
 																									color="secondary"
 																									className="btn-square"
 																									onClick={() =>
 																										this.closeTransaction(
-																											props.values.transactionId,
+																											this.state.initValue.transactionId,
 																										)
 																									}
 																								>
@@ -2558,7 +2663,7 @@ class ExplainTrasactionDetail extends React.Component {
 																									className="btn-square mr-3"
 																									onClick={() =>
 																										this.UnexplainTransaction(
-																											props.values.transactionId,
+																											this.state.initValue.transactionId,
 																										)
 																									}
 																								>

@@ -697,9 +697,9 @@ class BankTransactions extends React.Component {
 	};
 
 	getbyid =(row) => {
-		
+		debugger
 		if(this.state.response && this.state.response.data){
-			if(row.explinationStatusEnum === 'PARTIAL' && row.dueAmount>0){   
+			if(row.explanationIds.length > 1 || row.explinationStatusEnum === 'PARTIAL'  ){   
 				
 				return(
 					<>
@@ -799,7 +799,7 @@ class BankTransactions extends React.Component {
 			onlyOneExpanding: true,
 			renderer: (row) => (this.getbyid(row)),
 				
-			expanded: false,
+			expanded:false ,
 			nonExpandable: nonexpand,
 			showExpandColumn: this.state.showExpandedRow,
 			showExpandRow: this.state.showExpandedRow,

@@ -114,9 +114,8 @@ class ExplainTrasactionDetail extends React.Component {
 
 		this.formRef = React.createRef();
 	}
-
 	componentDidMount = () => {
-		debugger
+		 
 		if (this.props.selectedData) {
 			this.props.transactionDetailActions.getUnPaidPayrollsList();
 			this.initializeData();
@@ -159,7 +158,7 @@ class ExplainTrasactionDetail extends React.Component {
 				});
 
 				this.getChartOfAccountCategoryList(selectedData.debitCreditFlag);
-				debugger
+				 
 				
 					this.getData()
 				
@@ -167,7 +166,9 @@ class ExplainTrasactionDetail extends React.Component {
 	};
 
 	getData = () => {
+debugger
 		const { selectedData,data,bankId } = this.props;
+		if(data){
 		const res={data:data}
 		this.setState(
 			{
@@ -175,7 +176,7 @@ class ExplainTrasactionDetail extends React.Component {
 				creationMode: this.props.creationMode,
 				initValue: {
 					bankId: bankId,
-					amount: res.data.amount ? res.data.amount : '',
+					amount: res.data.amount ? res.data.amount : 0,
 					dueAmount:res.data.dueAmount ? res.data.dueAmount : '',
 					date: res.data.date1
 						? res.data.date1
@@ -207,10 +208,11 @@ class ExplainTrasactionDetail extends React.Component {
 					currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
 					payrollListIds:res.data.payrollDropdownList?res.data.payrollDropdownList:[],
 					expenseType: res.data.expenseType ? true : false,
+					explanationId: res.data.explanationId ? res.data.explanationId : '',
 				},
 				unexplainValue: {
 					bankId: bankId,
-					amount: res.data.amount ? res.data.amount : '',
+					amount: res.data.amount ? res.data.amount : 0,
 					date: res.data.date1
 						? res.data.date1
 						: '',
@@ -250,10 +252,10 @@ class ExplainTrasactionDetail extends React.Component {
 				transactionCategoryLabel:res.data.transactionCategoryLabel,
 				transactionCategoryId:res.data.transactionCategoryId,
 				currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
-				
+				explanationId: res.data.explanationId ? res.data.explanationId : '',
 			},
 			() => {
-				debugger
+				 
 				if(selectedData.debitCreditFlag=== 'D'){
 					this.getCurrency(this.state.initValue.vendorId)
 					 this.setCurrency(this.state.currencyCode)
@@ -280,27 +282,39 @@ class ExplainTrasactionDetail extends React.Component {
 
 				}
 				if (this.state.initValue.customerId) {
-					this.getCustomerExplainedInvoiceList(
+					this.getInvoiceCurrency(
 						this.state.initValue.customerId,
-						this.state.initValue.amount,
+						res.data.amount,
+
+					)
+					this.getCustomerExplainedInvoiceList(
+						res.data.customerId,
+						res.data.amount,
+
 					);
+				
 				}
 				if (this.state.initValue.vendorId) {
 					this.getVendorExplainedInvoiceList(
-						this.state.initValue.vendorId,
-						this.state.initValue.amount,
+						res.data.vendorId,
+						res.data.amount,
 					);
 				}
 			}
 		
 		)
-			this.formRef.current.setFieldValue('amount', res.data.amount, true);
+		 
+			this.formRef.current.setFieldValue('amount', res.data.amount ? res.data.amount : 0, true);
 			this.formRef.current.setFieldValue('date', res.data.date1, true);
 			this.formRef.current.setFieldValue('coaCategoryId', res.data.coaCategoryId? res.data.coaCategoryId : '', true);
 			this.formRef.current.setFieldValue('expenseCategory', res.data.transactionCategoryId, true);
 			this.formRef.current.setFieldValue('vatId', res.data.vatId, true);
 			this.formRef.current.setFieldValue('vendorId', res.data.vendorId? res.data.vendorId : '', true);
-		
+			this.formRef.current.setFieldValue('invoiceIdList', res.data.explainParamList? res.data.explainParamList : '', true);
+			this.formRef.current.setFieldValue('customerId', res.data.customerId ? res.data.customerId : '', true);
+			this.formRef.current.setFieldValue('exchangeRate', res.data.exchangeRate, true);
+			
+		}	
 	};
 
 	getChartOfAccountCategoryList = (type) => {
@@ -323,7 +337,9 @@ class ExplainTrasactionDetail extends React.Component {
 								(option) => option.value === this.state.initValue.coaCategoryId,
 							);
 							debugger
+							 if(id != null){
 							this.getTransactionCategoryList(id);
+							 }
 						}
 						if (this.state.initValue.expenseCategory) {
 							this.props.transactionsActions.getExpensesCategoriesList();
@@ -374,7 +390,7 @@ class ExplainTrasactionDetail extends React.Component {
 
 
 	getTransactionCategoryList = (type) => {
-		debugger
+		 debugger
 		this.formRef.current.setFieldValue('coaCategoryId', type, true);
 		this.setValue(null);
 		if (type &&type.value && type.value === 100) {
@@ -400,6 +416,7 @@ class ExplainTrasactionDetail extends React.Component {
 			}	
 	};
 	getSuggestionInvoicesFotCust = (option, amount,invoice_list)  => {
+		 
 		const data = {
 			amount: amount,
 			id: option,
@@ -422,7 +439,7 @@ class ExplainTrasactionDetail extends React.Component {
 		const data = {
 			amount: amount,
 			id: option,
-			currency: this.state.custInvoiceCurrency,
+			currency: this.state.custInvoiceCurrency ? this.state.custInvoiceCurrency : 0 ,
 			bankId: this.props.bankId,
 		};
 		this.props.transactionsActions
@@ -472,20 +489,19 @@ class ExplainTrasactionDetail extends React.Component {
 	}
 	};
 	getInvoiceCurrency = (opt,props) => {
-		
+		 
 		const {
 			customer_invoice_list_state,
 		} = this.state;
 		customer_invoice_list_state.map(item => {
-			if (item.value === opt.value)
+			if (item.value ===  opt.value)
 			{
 				this.setState({
 					custInvoiceCurrency : item.currencyCode
 			},()=>{
 				this.getSuggestionInvoicesFotCust(
-					props.values.customerId.value,
-					props.values.amount,
-					0
+					opt && opt.value,
+					props
 				);
 				this.formRef.current.setFieldValue('currencyCode', this.state.custInvoiceCurrency, true);
 				this.setCurrency( this.state.custInvoiceCurrency );
@@ -495,7 +511,7 @@ class ExplainTrasactionDetail extends React.Component {
 			
 	}
 	getVendorInvoiceCurrency = (opt,props) => {
-		debugger
+		 
 		const {
 			supplier_invoice_list_state,
 		} = this.state;
@@ -635,7 +651,8 @@ class ExplainTrasactionDetail extends React.Component {
 		}
 		let formData = new FormData();
 		formData.append('expenseType',  this.state.expenseType);
-		formData.append('transactionId', transactionId ? transactionId : '');
+		formData.append('transactionId', this.state.transactionId ? this.state.transactionId : '');
+		formData.append('explanationId', this.state.explanationId ? this.state.explanationId : '')
 		formData.append('bankId ',this.props.bankId ? this.props.bankId : '');
 		formData.append(
 			'date',
@@ -978,7 +995,7 @@ class ExplainTrasactionDetail extends React.Component {
 	return option
  }
 	render() {
-		debugger
+		 
 		strings.setLanguage(this.state.language);
 		const {
 			initValue,
@@ -1071,7 +1088,7 @@ console.log(this.props.values,"sbfasgf")
 											<Row>
 												<Col lg={12}>
 													<Formik 	
-														initialValues={initValue}
+														initialValues={this.state.initValue}
 														ref={this.formRef}
 														onSubmit={(values, { resetForm }) => {
 															this.handleSubmit(values, resetForm);
@@ -1802,6 +1819,7 @@ console.log(this.props.values,"sbfasgf")
 																								'explainParamList',
 																							)(option);
 																							this.invoiceIdList(option);
+																							debugger
 																							if(option != null){
 																								this.getInvoiceCurrency(option[0],props);
 																								}
@@ -2294,7 +2312,7 @@ console.log(this.props.values,"sbfasgf")
 																					id="currencyName"
 																					name="currencyName"
 																					value={
-																						this.state.basecurrency.currencyName}
+																						this.state.basecurrency}
 
 																				/>
 																			</Col>

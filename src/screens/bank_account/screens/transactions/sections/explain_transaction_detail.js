@@ -166,7 +166,7 @@ class ExplainTrasactionDetail extends React.Component {
 	};
 
 	getData = () => {
-debugger
+
 		const { selectedData,data,bankId } = this.props;
 		if(data){
 		const res={data:data}
@@ -281,9 +281,9 @@ debugger
 					);
 
 				}
-				if (this.state.initValue.customerId) {
+				if (res.data.customerId) {
 					this.getInvoiceCurrency(
-						this.state.initValue.customerId,
+						res.data.customerId,
 						res.data.amount,
 
 					)
@@ -294,7 +294,7 @@ debugger
 					);
 				
 				}
-				if (this.state.initValue.vendorId) {
+				if (res.data.vendorId) {
 					this.getVendorExplainedInvoiceList(
 						res.data.vendorId,
 						res.data.amount,
@@ -308,11 +308,14 @@ debugger
 			this.formRef.current.setFieldValue('date', res.data.date1, true);
 			this.formRef.current.setFieldValue('coaCategoryId', res.data.coaCategoryId? res.data.coaCategoryId : '', true);
 			this.formRef.current.setFieldValue('expenseCategory', res.data.transactionCategoryId, true);
-			this.formRef.current.setFieldValue('vatId', res.data.vatId, true);
+			this.formRef.current.setFieldValue('vatId', res.data.vatId ? res.data.vatId : '', true);
 			this.formRef.current.setFieldValue('vendorId', res.data.vendorId? res.data.vendorId : '', true);
-			this.formRef.current.setFieldValue('invoiceIdList', res.data.explainParamList? res.data.explainParamList : '', true);
+			this.formRef.current.setFieldValue('explainParamList', res.data.explainParamList? res.data.explainParamList : '', true);
 			this.formRef.current.setFieldValue('customerId', res.data.customerId ? res.data.customerId : '', true);
 			this.formRef.current.setFieldValue('exchangeRate', res.data.exchangeRate, true);
+			this.formRef.current.setFieldValue('payrollListIds', res.data.payrollListIds, true);
+			this.formRef.current.setFieldValue('employeeId',res.data.employeeId ? res.data.employeeId : '',true);
+			this.formRef.current.setFieldValue('expenseType',res.data.expenseType,true)
 			
 		}	
 	};
@@ -336,7 +339,7 @@ debugger
 							const id = this.state.chartOfAccountCategoryList[0].options.find(
 								(option) => option.value === this.state.initValue.coaCategoryId,
 							);
-							debugger
+							
 							 if(id != null){
 							this.getTransactionCategoryList(id);
 							 }
@@ -390,7 +393,7 @@ debugger
 
 
 	getTransactionCategoryList = (type) => {
-		 debugger
+		 
 		this.formRef.current.setFieldValue('coaCategoryId', type, true);
 		this.setValue(null);
 		if (type &&type.value && type.value === 100) {
@@ -1055,7 +1058,7 @@ debugger
 				}
 			}	
 		}
-console.log(this.props.values,"sbfasgf")
+
 		return (
 			<div className="detail-bank-transaction-screen">
 				<div className="animated fadeIn">
@@ -1825,6 +1828,7 @@ console.log(this.props.values,"sbfasgf")
 																								}
 																						}}
 																						value={
+																							
 																							customer_invoice_list_state &&
 																								props.values.explainParamList &&
 																								customer_invoice_list_state.find(

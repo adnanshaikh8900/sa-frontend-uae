@@ -103,7 +103,7 @@ class BankTransactions extends React.Component {
 			bankAccountCurrencySymbol:'',
 			bankAccountCurrencyIsoCode:'',
 			accounName: '',
-			expanded: [],
+			expanded: false,
 			page: 1,
 			activeTab: new Array(3).fill('all'),
 			transactionType: 'all',
@@ -282,7 +282,7 @@ class BankTransactions extends React.Component {
 							if (item.creationMode === 'POTENTIAL_DUPLICATE') {
 								array.push(item.id)
 							}
-							this.setState({ nonexpand: array })
+							this.setState({ nonexpand: array})
 						});
 					}
 				})
@@ -546,27 +546,22 @@ class BankTransactions extends React.Component {
 
 	closeExplainTransactionModal = (res) => {
 		debugger
-		console.log(res)
-		this.componentDidMount();
-		if (!this.state.expanded.includes(res)) {
+		 this.componentDidMount();
+	const array = []
 			this.setState(() => ({
-				expanded: [...this.state.expanded, res],
-			}));
-		} else {
-			this.setState(() => ({
-				expanded: this.state.expanded.filter((x) => x !== res),
-			}));
-		}
+				expanded: array	
+	})
+			)	
 	};
 
-	handleOnExpand = (row,exapandRow) => {
+	// handleOnExpand = (row,exapandRow) => {
 		
-		let data  = this.getbyid(row)
-		alert(data)
-		this.setState(() => ({
-			expanded: [...this.state.expanded, row.id],
-		}));
-	};
+	// 	let data  = this.getbyid(row)
+	// 	alert(data)
+	// 	this.setState(() => ({
+	// 		expanded: [...this.state.expanded, row.id],
+	// 	}));
+	// };
 
 	isExpandableRow(row) {
 		if (row.id) return true;
@@ -697,7 +692,7 @@ class BankTransactions extends React.Component {
 	};
 
 	getbyid =(row) => {
-		debugger
+		
 		if(this.state.response && this.state.response.data){
 			if(row.explanationIds.length > 1 || row.explinationStatusEnum === 'PARTIAL'  ){   
 				
@@ -752,6 +747,7 @@ class BankTransactions extends React.Component {
 			csvData,
 			view,
 			nonexpand,
+			expanded
 		} = this.state;
 		const {
 			bank_transaction_list,
@@ -799,7 +795,7 @@ class BankTransactions extends React.Component {
 			onlyOneExpanding: true,
 			renderer: (row) => (this.getbyid(row)),
 				
-			expanded:false ,
+			expanded: expanded ,
 			nonExpandable: nonexpand,
 			showExpandColumn: this.state.showExpandedRow,
 			showExpandRow: this.state.showExpandedRow,
@@ -1106,7 +1102,9 @@ class BankTransactions extends React.Component {
 												columns={columns}
 												expandRow={expandRow}
 												rowEvents={{
+
 													onClick:(event,row)=>{
+														this.setState({expanded: false})		
 														// this.setState({response:undefined})
 														this.props.transactionDetailActions
 														.getTransactionDetail(row.id)

@@ -997,7 +997,7 @@ class Profile extends React.Component {
 																							</span> {strings.EmailID}
 																						</Label>
 																							<Input
-																								type="text"
+																								type="email"
 																								id="email"
 																								name="email"
 																								placeholder={strings.Enter+strings.EmailID}

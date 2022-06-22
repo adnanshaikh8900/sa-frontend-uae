@@ -559,7 +559,7 @@ class DetailUser extends React.Component {
 																					 {strings.EmailID}
 																				</Label>
 																				<Input
-																					type="text"
+																					type="email"
 																					id="email"
 																					name="email"
 																					placeholder={strings.Enter+strings.EmailID}

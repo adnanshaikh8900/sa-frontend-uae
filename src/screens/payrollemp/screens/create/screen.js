@@ -1220,9 +1220,9 @@ existForAccountNumber = (value) => {
                                 <NavItem>
                                     <NavLink
                                         active={this.state.activeTab[0] === '2'}
-                                        onClick={() => {
-                                            this.toggle(0, '2');
-                                        }}
+                                        // onClick={() => {
+                                        //     this.toggle(0, '2');
+                                        // }}
                                     >
                                         {strings.Employment}
 									</NavLink>

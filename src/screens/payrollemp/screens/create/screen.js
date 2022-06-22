@@ -408,7 +408,7 @@ existForAccountNumber = (value) => {
             });
     }
 
-    xdleSubmitForSalary = (data, resetForm) => {
+    handleSubmitForSalary = (data, resetForm) => {
         this.setState({ disabled: true, disableLeavePage:true });
         const {
             employee,

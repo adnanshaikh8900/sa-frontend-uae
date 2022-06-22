@@ -295,6 +295,10 @@ class ExplainTrasactionDetail extends React.Component {
 				
 				}
 				if (res.data.vendorId) {
+					this.getVendorInvoiceCurrency(
+						res.data.vendorId,
+						res.data.amount,
+					)
 					this.getVendorExplainedInvoiceList(
 						res.data.vendorId,
 						res.data.amount,
@@ -360,11 +364,12 @@ class ExplainTrasactionDetail extends React.Component {
 		}));
 	};
 	getCompanyCurrency = () => {
+		debugger
 		this.props.currencyConvertActions
 			.getCompanyCurrency()
 			.then((res) => {
 				if (res.status === 200) {
-					this.setState({ basecurrency: res.data });
+					this.setState({ basecurrency: res.data.currencyName });
 				}
 			})
 			.catch((err) => {
@@ -1198,7 +1203,7 @@ class ExplainTrasactionDetail extends React.Component {
 																			     {strings.TransactionType}
 																		</Label>
 																			<Select
-																				styles={customStyles}
+																				// styles={customStyles}
 																				options={
 																					chartOfAccountCategoryList
 																						? chartOfAccountCategoryList
@@ -1209,7 +1214,7 @@ class ExplainTrasactionDetail extends React.Component {
 																					chartOfAccountCategoryList[0].options.find(
 																						(option) =>
 																							option.value ===
-																							+props.values.coaCategoryId.value,
+																							+props.values.coaCategoryId && props.values.coaCategoryId.value,
 																					)
 																				}
 																				onChange={(option) => {
@@ -2440,7 +2445,7 @@ class ExplainTrasactionDetail extends React.Component {
 																					id="currencyName"
 																					name="currencyName"
 																					value={
-																						this.state.basecurrency.currencyName}
+																						this.state.basecurrency}
 
 																				/>
 																			</Col>

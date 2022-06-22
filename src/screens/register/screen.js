@@ -735,7 +735,7 @@ class Register extends React.Component {
 															<Col lg={4}>
 																<FormGroup>
 																	{/* <Label htmlFor="stateId"> {props.values.countryId.value === 229 ? "Emirates" : "State/Provinces"}</Label> */}
-																	<Label htmlFor="select"><span className="text-danger">* </span>Emirates</Label>
+																	<Label htmlFor="select"><span className="text-danger">* </span>Emirate</Label>
 																	<Select
 																		styles={customStyles}
 																		options={
@@ -744,7 +744,7 @@ class Register extends React.Component {
 																						'label',
 																						'value',
 																						state_list,
-																						'Emirates',
+																						'Emirate',
 																				  )
 																				: []
 																		}

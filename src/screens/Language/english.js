@@ -898,7 +898,7 @@ SalaryStructureName:"Salary Structure Name",
 UpdateSalaryStructure:"Update Salary Structure",
 
 Designations:"Designations",	
-DESIGNATIONID:"Designation Id",	
+DESIGNATIONID:"Designation ID",	
 DESIGNATIONNAME:"DESIGNATION NAME",	
 NewDesignation:"New Designation",
 

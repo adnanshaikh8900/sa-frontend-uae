@@ -1067,7 +1067,7 @@ class Register extends React.Component {
 																				<Label htmlFor="email">
 																				<span className="text-danger">* </span>Email Address</Label>
 																				<Input
-																					type="text"
+																					type="email"
 																					maxLength="80"
 																					id="email"
 																					name="email"

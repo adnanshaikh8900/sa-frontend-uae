@@ -722,7 +722,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                             <FormGroup>
                                                                                 <Label htmlFor="select"><span className="text-danger">* </span>{strings.Email}</Label>
                                                                                 <Input
-                                                                                    type="text"
+                                                                                    type="email"
                                                                                     id="email"
                                                                                     name="email"
                                                                                     value={props.values.email}

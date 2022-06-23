@@ -500,7 +500,7 @@ class CreateUser extends React.Component {
 																				 {strings.EmailID}
 																			</Label>
 																			<Input
-																				type="text"
+																				type="email"
 																				maxLength="80"
 																				id="email"
 																				name="email"

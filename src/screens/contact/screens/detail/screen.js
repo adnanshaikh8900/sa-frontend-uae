@@ -1020,7 +1020,7 @@ class DetailContact extends React.Component {
 																						{strings.Email}
 																					</Label>
 																					<Input
-																						type="text"
+																						type="email"
 																						id="email"
 																						name="email"
 																						placeholder={strings.Enter + strings.EmailAddress}

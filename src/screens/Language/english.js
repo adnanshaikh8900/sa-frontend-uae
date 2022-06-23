@@ -427,6 +427,7 @@ Code:"Code",
 ACCOUNTNAME:"ACCOUNT NAME",
 ACCOUNT:"ACCOUNT",
 ACCOUNTTYPE:"ACCOUNT TYPE",
+AccountCode:"Account Code",
 				
 NAME:"NAME",
 ACCOUNT:"ACCOUNT",
@@ -898,7 +899,7 @@ SalaryStructureName:"Salary Structure Name",
 UpdateSalaryStructure:"Update Salary Structure",
 
 Designations:"Designations",	
-DESIGNATIONID:"Designation Id",	
+DESIGNATIONID:"Designation ID",	
 DESIGNATIONNAME:"DESIGNATION NAME",	
 NewDesignation:"New Designation",
 

@@ -350,7 +350,7 @@ class Register extends React.Component {
 																'Country is required',
 															),
 															stateId: Yup.string().required(
-																'State is required',
+																'Emirate is required',
 															),
 															firstName: Yup.string().required(
 																'First name is required',
@@ -768,7 +768,7 @@ class Register extends React.Component {
 																		// placeholder={strings.Select+strings.StateRegion}
 																		id="stateId"
 																		name="stateId"
-																		placeholder="Select Emirates"
+																		placeholder="Select Emirate"
 																		className={
 																			props.errors.stateId &&
 																			props.touched.stateId

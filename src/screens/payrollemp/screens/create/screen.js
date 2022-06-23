@@ -223,13 +223,13 @@ class CreateEmployeePayroll extends React.Component {
             { label: 'Female', value: 'Female' }
         ];
 
-        // this.maritaStatus = [
-        //     { label: 'Single', value: 'Single' },
-        //     { label: 'Married', value: 'Married'},
-        //     { label: 'Widowed', value: 'Widowed'},
-        //     { label: 'Divorced', value: 'Divorced'},
-        //     { label: 'Separated', value: 'Separated'},
-        // ];
+        this.maritalStatus = [
+            { label: 'Single', value: 'Single' },
+            { label: 'Married', value: 'Married'},
+            { label: 'Widowed', value: 'Widowed'},
+            { label: 'Divorced', value: 'Divorced'},
+            { label: 'Separated', value: 'Separated'},
+        ];
 
         // this.bloodGroup = [
         //     { label: 'O+', value: 'O+' },
@@ -323,12 +323,12 @@ getEmployeeCode=()=>{
                     ...{ employeeCode: res.data },
                 },
             });
-            this.formRef.current.setFieldValue('employeeCode', res.data, true,this.validationCheck(res.data));
+            this.formRef.current.setFieldValue('employeeCode', res.data, true,this.employeeValidationCheck(res.data));
         }
     });
 
 }
-validationCheck = (value) => {
+employeeValidationCheck = (value) => {
     const data = {
         moduleType: 15,
         name: value,
@@ -336,7 +336,7 @@ validationCheck = (value) => {
     this.props.createPayrollEmployeeActions
         .checkValidation(data)
         .then((response) => {
-            if (response.data === 'Employee code already exists') {
+            if (response.data === 'Employee Code Already Exists') {
                 this.setState(
                     {
                         exist: true,
@@ -671,7 +671,7 @@ existForAccountNumber = (value) => {
             dob,
             // bloodGroup,
             gender,
-            // maritalStatus,
+            maritalStatus,
             salaryRoleId,
             parentId,
             university,
@@ -767,15 +767,18 @@ existForAccountNumber = (value) => {
                 'emergencyContactRelationship2',
                 emergencyContactRelationship2 != null ?emergencyContactRelationship2:'',
             );
+            
+            formData.append(
+                'maritalStatus',
+                maritalStatus.value,
+            )
         if (this.state.userPhotoFile.length > 0) {
             formData.append('profileImageBinary ', this.state.userPhotoFile[0]);
         }
         if (gender && gender.value) {
             formData.append('gender', gender.value);
         }
-        // if (maritalStatus && maritalStatus.value) {
-        //     formData.append('maritalStatus', maritalStatus.value);
-        // }
+        
         // if (parentId && parentId.value) {
         //     formData.append('parentId', parentId.value);
         // }
@@ -1284,10 +1287,10 @@ existForAccountNumber = (value) => {
                                                                                 errors.gender =
                                                                                 'Gender is required';
                                                                             }
-                                                                            // if (values.maritalStatus && values.maritalStatus.label && values.maritalStatus.label === "Select Marital Status") {
-                                                                            //     errors.maritalStatus =
-                                                                            //     'Marital status is required';
-                                                                            // }
+                                                                            if (values.maritalStatus && values.maritalStatus.label && values.maritalStatus.label === "Select Marital Status") {
+                                                                                errors.maritalStatus =
+                                                                                'Marital status is required';
+                                                                            }
                                                                             if (values.employeeDesignationId && values.employeeDesignationId.label && values.employeeDesignationId.label === "Select Employee Designation") {
                                                                                 errors.employeeDesignationId =
                                                                                 'Designation is required';
@@ -1330,8 +1333,8 @@ existForAccountNumber = (value) => {
                                                                             .required('DOB is required') ,
                                                                             gender: Yup.string()
                                                                             .required('Gender is required') ,                                                                            
-                                                                            // maritalStatus: Yup.string()
-                                                                            // .required('Marital status is required') ,
+                                                                            maritalStatus: Yup.string()
+                                                                            .required('Marital status is required') ,
                                                                             presentAddress: Yup.string()
                                                                             .required('Present address is required') ,
                                                                             // pincode: Yup.string()
@@ -1735,7 +1738,7 @@ existForAccountNumber = (value) => {
                                                                                                 </FormGroup>
                                                                                             </Col>
                                                                                                     
-                                                                                            {/* <Col md="4">
+                                                                                            <Col md="4">
                                                                                                 <FormGroup>
                                                                                                     <Label htmlFor="maritalStatus"><span className="text-danger">* </span>{strings.maritalStatus}</Label>
                                                                                                     <Select
@@ -1753,10 +1756,10 @@ existForAccountNumber = (value) => {
                                                                                                         id="maritalStatus"
                                                                                                         name="maritalStatus"
                                                                                                         placeholder={strings.Select+strings.maritalStatus}
-                                                                                                        value={this.state.maritalStatus}
-                                                                                                        onChange={(value) => {
-                                                                                                            props.handleChange('maritalStatus')(value);
-
+                                                                                                        value={props.values.maritalStatus}
+                                                                                                        onChange={(option) => {
+                                                                                                            props.handleChange('maritalStatus')(option);
+                                                                                                            this.setState({maritalStatus:option.value})
                                                                                                         }}
                                                                                                         className={`${props.errors.maritalStatus && props.touched.maritalStatus
                                                                                                             ? 'is-invalid'
@@ -1769,7 +1772,7 @@ existForAccountNumber = (value) => {
                                                                                                         </div>
                                                                                                     )}
                                                                                                 </FormGroup>
-                                                                                            </Col> */}
+                                                                                            </Col>
 
                                                                                             {/* <Col md="4">
                                                                                                 <FormGroup>
@@ -1807,42 +1810,6 @@ existForAccountNumber = (value) => {
 
                                                                                                 </FormGroup>
                                                                                             </Col> */}
-
-                                                                                            <Col md="4">
-                                                                                                <FormGroup>
-                                                                                                    <Label htmlFor="parentId">{strings.ReportsTo}</Label>
-                                                                                                    <Select
-
-                                                                                                        options={
-                                                                                                            employee_list_dropdown.data
-                                                                                                                ? selectOptionsFactory.renderOptions(
-                                                                                                                    'label',
-                                                                                                                    'value',
-                                                                                                                    employee_list_dropdown.data,
-                                                                                                                    'Employee',
-                                                                                                                )
-                                                                                                                : []
-                                                                                                        }
-                                                                                                        id="parentId"
-                                                                                                        name="parentId"
-                                                                                                        placeholder={strings.Select+strings.SuperiorEmployeeName}
-                                                                                                        value={this.state.parentId}
-                                                                                                        onChange={(value) => {
-                                                                                                            props.handleChange('parentId')(value);
-
-                                                                                                        }}
-                                                                                                        className={`${props.errors.parentId && props.touched.parentId
-                                                                                                            ? 'is-invalid'
-                                                                                                            : ''
-                                                                                                            }`}
-                                                                                                    />
-                                                                                                    {props.errors.parentId && props.touched.parentId && (
-                                                                                                        <div className="invalid-feedback">
-                                                                                                            {props.errors.parentId}
-                                                                                                        </div>
-                                                                                                    )}
-                                                                                                </FormGroup>
-                                                                                            </Col>
                                                                                             <Col>
                                                                                         <div style={{display:"flex"}}>
                                                                                             <div style={{width:"70%"}}>
@@ -1905,6 +1872,42 @@ existForAccountNumber = (value) => {
                                                                                             </div>
                                                                                             </Col>
                                                                                         </Row>
+
+                                                                                        <Col md="4">
+                                                                                                <FormGroup>
+                                                                                                    <Label htmlFor="parentId">{strings.ReportsTo}</Label>
+                                                                                                    <Select
+
+                                                                                                        options={
+                                                                                                            employee_list_dropdown.data
+                                                                                                                ? selectOptionsFactory.renderOptions(
+                                                                                                                    'label',
+                                                                                                                    'value',
+                                                                                                                    employee_list_dropdown.data,
+                                                                                                                    'Employee',
+                                                                                                                )
+                                                                                                                : []
+                                                                                                        }
+                                                                                                        id="parentId"
+                                                                                                        name="parentId"
+                                                                                                        placeholder={strings.Select+strings.SuperiorEmployeeName}
+                                                                                                        value={this.state.parentId}
+                                                                                                        onChange={(value) => {
+                                                                                                            props.handleChange('parentId')(value);
+
+                                                                                                        }}
+                                                                                                        className={`${props.errors.parentId && props.touched.parentId
+                                                                                                            ? 'is-invalid'
+                                                                                                            : ''
+                                                                                                            }`}
+                                                                                                    />
+                                                                                                    {props.errors.parentId && props.touched.parentId && (
+                                                                                                        <div className="invalid-feedback">
+                                                                                                            {props.errors.parentId}
+                                                                                                        </div>
+                                                                                                    )}
+                                                                                                </FormGroup>
+                                                                                            </Col>
 
                                                                                         <Row>
                                                                                         {/* <Col md="4">
@@ -2583,7 +2586,7 @@ existForAccountNumber = (value) => {
                                                                                                             props.handleChange('employeeCode')(
                                                                                                                 option,
                                                                                                             );
-                                                                                                            this.validationCheck(option.target.value);
+                                                                                                            this.employeeValidationCheck(option.target.value);
                                                                                                         }}
                                                                                                         className={props.errors.employeeCode && props.touched.employeeCode ? "is-invalid" : ""}
                                                                                                     />

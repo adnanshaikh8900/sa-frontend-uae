@@ -75,22 +75,31 @@ class UpdateEmployeePersonal extends React.Component {
         this.regExSpaceBoth = /[a-zA-Z0-9 ]+$/;
 		this.regExAddress = /^[a-zA-Z0-9\s\D,'-/ ]+$/;
         this.formRef = React.createRef();
+
         this.gender = [
             { label: 'Male', value: 'Male' },
             { label: 'Female', value: 'Female' }
         ];
 
-        this.bloodGroup = [
-            { label: 'O+', value: 'O+' },
-            { label: 'O-', value: 'O-' },
-            { label: 'A+', value: 'A+' },
-            { label: 'A-', value: 'A-' },
-            { label: 'B+', value: 'B+' },
-            { label: 'B-', value: 'B-' },
-            { label: 'AB+', value: 'AB+' },
-            { label: 'AB-', value: 'AB-' },
-
+        this.maritalStatus = [
+            { label: 'Single', value: 'Single' },
+            { label: 'Married', value: 'Married'},
+            { label: 'Widowed', value: 'Widowed'},
+            { label: 'Divorced', value: 'Divorced'},
+            { label: 'Separated', value: 'Separated'},
         ];
+
+        // this.bloodGroup = [
+        //     { label: 'O+', value: 'O+' },
+        //     { label: 'O-', value: 'O-' },
+        //     { label: 'A+', value: 'A+' },
+        //     { label: 'A-', value: 'A-' },
+        //     { label: 'B+', value: 'B+' },
+        //     { label: 'B-', value: 'B-' },
+        //     { label: 'AB+', value: 'AB+' },
+        //     { label: 'AB-', value: 'AB-' },
+
+        // ];
     }
 
     uploadImage = (picture, file) => {
@@ -130,6 +139,8 @@ class UpdateEmployeePersonal extends React.Component {
                                 res.data.email && res.data.email !== null
                                     ? res.data.email
                                     : '',
+                            maritalStatus:
+                                res.data.maritalStatus ? res.data.maritalStatus : '',       
                             mobileNumber:
                                 res.data.mobileNumber && res.data.mobileNumber !== null
                                     ? res.data.mobileNumber
@@ -162,10 +173,10 @@ class UpdateEmployeePersonal extends React.Component {
                                 res.data.pincode && res.data.pincode !== null
                                     ? res.data.pincode
                                     : '',
-                            bloodGroup:
-                                res.data.bloodGroup && res.data.bloodGroup !== null
-                                    ? res.data.bloodGroup
-                                    : '',
+                            // bloodGroup:
+                            //     res.data.bloodGroup && res.data.bloodGroup !== null
+                            //         ? res.data.bloodGroup
+                            //         : '',
                             employeeDesignationId:
                                 res.data.employeeDesignationId && res.data.employeeDesignationId !== null
                                     ? res.data.employeeDesignationId
@@ -224,6 +235,7 @@ class UpdateEmployeePersonal extends React.Component {
                                     : '',
 
                         },
+
                         selectedStatus: res.data.isActive ? true : false,
                     },
                     () => {
@@ -245,7 +257,7 @@ class UpdateEmployeePersonal extends React.Component {
             })
         } else {
             // this.props.history.push('/admin/payroll/employee')
-            this.props.history.push('/admin/master/employee')
+            this.props.history.push('/admin/master/employee/viewEmployee')
         }
     }
 
@@ -272,7 +284,8 @@ class UpdateEmployeePersonal extends React.Component {
             city,
             gender,
             pincode,
-            bloodGroup,
+            // bloodGroup,            
+            maritalStatus,
             presentAddress,
             employeeDesignationId,
             salaryRoleId,
@@ -313,7 +326,7 @@ class UpdateEmployeePersonal extends React.Component {
         formData.append('dob', dob ? dob : '');
         formData.append('gender', gender);
 
-        formData.append('bloodGroup', bloodGroup);
+        // formData.append('bloodGroup', bloodGroup);
         formData.append(
 			'mobileNumber',
 			mobileNumber !== null ? mobileNumber : '',
@@ -370,6 +383,10 @@ class UpdateEmployeePersonal extends React.Component {
             'emergencyContactRelationship2',
             emergencyContactRelationship2 != null ?emergencyContactRelationship2:'',
         );
+        formData.append(
+            'maritalStatus',
+            maritalStatus,
+        )
         if (employeeDesignationId && employeeDesignationId.value) {
 			formData.append('employeeDesignationId', employeeDesignationId.value);
 		}
@@ -514,7 +531,9 @@ class UpdateEmployeePersonal extends React.Component {
                                                             // city: Yup.string()
                                                             // .required("City is required"),
                                                             gender: Yup.string()
-                                                            .required("Gender is required"),
+                                                            .required("Gender is required"),                                                                            
+                                                            maritalStatus: Yup.string()
+                                                            .required('Marital status is required') ,
                                                         // active: Yup.string()
                                                         //     .required('status is required'),
                                                         employeeDesignationId: Yup.string()
@@ -830,6 +849,48 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                 )}
                                                                             </FormGroup>
                                                                         </Col>
+
+                                                                        <Col md="4">
+                                                                                                <FormGroup>
+                                                                                                    <Label htmlFor="maritalStatus"><span className="text-danger">* </span>{strings.maritalStatus}</Label>
+                                                                                                    <Select
+
+                                                                                                        options={
+                                                                                                            this.maritalStatus
+                                                                                                                ? selectOptionsFactory.renderOptions(
+                                                                                                                    'label',
+                                                                                                                    'value',
+                                                                                                                    this.maritalStatus,
+                                                                                                                    'Marital Status',
+                                                                                                                )
+                                                                                                                : []
+                                                                                                        }
+                                                                                                        id="maritalStatus"
+                                                                                                        name="maritalStatus"
+                                                                                                        placeholder={strings.Select+strings.maritalStatus}
+                                                                                                        value={this.maritalStatus &&
+                                                                                                            this.maritalStatus.find(
+                                                                                                                (option) =>
+                                                                                                                    option.value === props.values.maritalStatus,
+                                                                                                            )
+                                                                                                        }
+                                                                                                        onChange={(option) => {
+                                                                                                            props.handleChange('maritalStatus')(option);
+                                                                                                            this.setState({maritalStatus:option.value})
+                                                                                                        }}
+                                                                                                        className={`${props.errors.maritalStatus && props.touched.maritalStatus
+                                                                                                            ? 'is-invalid'
+                                                                                                            : ''
+                                                                                                            }`}
+                                                                                                    />
+                                                                                                    {props.errors.maritalStatus && props.touched.maritalStatus && (
+                                                                                                        <div className="invalid-feedback">
+                                                                                                            {props.errors.maritalStatus}
+                                                                                                        </div>
+                                                                                                    )}
+                                                                                                </FormGroup>
+                                                                                            </Col>
+
                                                                         {/* <Col md="4">
                                                                             <FormGroup>
                                                                                 <Label htmlFor="bloodGroup">{strings.BloodGroup}</Label>

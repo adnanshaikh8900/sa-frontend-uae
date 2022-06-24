@@ -1873,6 +1873,7 @@ existForAccountNumber = (value) => {
                                                                                             </Col>
                                                                                         </Row>
 
+                                                                                        <Row>
                                                                                         <Col md="4">
                                                                                                 <FormGroup>
                                                                                                     <Label htmlFor="parentId">{strings.ReportsTo}</Label>
@@ -1909,7 +1910,6 @@ existForAccountNumber = (value) => {
                                                                                                 </FormGroup>
                                                                                             </Col>
 
-                                                                                        <Row>
                                                                                         {/* <Col md="4">
                                                                                                 <FormGroup>
                                                                                                     <Label htmlFor="salaryRoleId"><span className="text-danger">* </span> {strings.SalaryRole} </Label>

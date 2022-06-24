@@ -737,7 +737,7 @@ class Register extends React.Component {
 																	{/* <Label htmlFor="stateId"> {props.values.countryId.value === 229 ? "Emirates" : "State/Provinces"}</Label> */}
 																	<Label htmlFor="select"><span className="text-danger">* </span>Emirate</Label>
 																	<Select
-																		styles={customStyles}
+																		// styles={customStyles}
 																		options={
 																			state_list
 																				? selectOptionsFactory.renderOptions(
@@ -808,7 +808,7 @@ class Register extends React.Component {
 																								className={
 																									props.errors.phoneNumber &&
 																										props.touched.phoneNumber
-																										? ' invalid-feedback is-invalid '
+																										? ' invalid-feedback is-invalid is-invalidMobile '
 																										: ''
 																								}
 																							/>

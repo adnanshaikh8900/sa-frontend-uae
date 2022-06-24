@@ -547,7 +547,7 @@ class Register extends React.Component {
 																								placeholder={strings.Enter+strings.CompanyName}
 																								id="companyTypeCode"
 																								name="companyTypeCode"
-																								placeholder="Enter Buisness Type"
+																								placeholder="Select Company/Business type "
 																								className={
 																									props.errors.companyTypeCode &&
 																										props.touched.companyTypeCode

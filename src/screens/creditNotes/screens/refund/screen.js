@@ -12,7 +12,6 @@ import {
 	FormGroup,
 	Input,
 	Label,
-	NavLink,
 } from 'reactstrap';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
@@ -20,21 +19,18 @@ import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import * as CustomerRecordPaymentActions from './actions';
 import * as CnActions from '../../actions';
-
 import { CustomerModal } from '../../sections';
 import { Loader, ConfirmDeleteModal } from 'components';
-
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
-
 import './style.scss';
 import moment from 'moment';
-import API_ROOT_URL from '../../../../constants/config';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { TextareaAutosize } from '@material-ui/core';
+
 const mapStateToProps = (state) => {
 	return {
 		contact_list: state.customer_invoice.contact_list,
@@ -256,20 +252,16 @@ class Refund extends React.Component {
 		return(
 			this.state.showInvoiceNumber &&(
 			<Col lg={4}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="project">
-																			
-																			 {strings.InvoiceNumber}
-																		</Label>
-																		<Input
-																			
-																			disabled
-																			id="invoiceNumber"
-																			name="invoiceNumber"
-																			value={this.state.invoiceNumber}
-																		/>
-																	</FormGroup>
-																</Col>)
+				<FormGroup className="mb-3">
+				<Label htmlFor="project">{strings.InvoiceNumber}</Label>
+					<Input
+						disabled
+						id="invoiceNumber"
+						name="invoiceNumber"
+						value={this.state.invoiceNumber}
+			/>
+				</FormGroup>
+			</Col>)
 		)
 	}
 	handleSubmit = (data) => {
@@ -499,16 +491,16 @@ class Refund extends React.Component {
 														let errors = {};
 														 if (values.amount == 0) {
 														  errors.amount =
-														'Amount Cannot be recorded zero';
+														'Amount cannot be empty or 0';
 													 }
 													 return errors
 													 }}
 													validationSchema={Yup.object().shape({
 														depositeTo: Yup.string().required(
-															'Deposit To is Required',
+															'Deposit to is required',
 														),
 														payMode: Yup.string().required(
-															'Payment mode is Required',
+															'Payment mode is required',
 														),
 														attachmentFile: Yup.mixed()
 															.test(
@@ -630,9 +622,10 @@ class Refund extends React.Component {
 																			 {strings.AmountPaid}
 																		</Label>
 																		<Input
-																			type="number"
+																			type="text"
+																			min={0}
+																			maxLength="14,2"
 																			max={this.state.amount}
-																			min="0"
 																			id="amount"
 																			name="amount"
 																			value={props.values.amount}

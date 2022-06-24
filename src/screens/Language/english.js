@@ -326,7 +326,7 @@ CreatePurchaseOrder:"Create Purchase Order",
 PONumber:"PO Number",				
 SupplierReferenceNumber:"Supplier Reference Number",		
 PODate:"PO Date",		
-PODueDate:"PO Due Date",		
+PODueDate:"PO Expire Date",		
 		
 //GRN
 GoodsReceivedNotes:"Goods Received Notes",						

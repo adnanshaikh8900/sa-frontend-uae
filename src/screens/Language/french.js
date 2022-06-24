@@ -369,7 +369,7 @@ RFQNumber:"Demande de numéro de devis ",
 PONumber:"Numéro de commande d’achat",				
 SupplierReferenceNumber:"Numéro de référence fournisseur",		
 PODate:"Date de commande",		
-PODueDate:"Date d’échéance du bon de commande",		
+PODueDate:"Date d'expiration du bon de commande",		
 		
 //GRN
 GoodsReceivedNotes:"Marchandises reçues Notes",						

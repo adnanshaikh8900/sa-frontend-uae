@@ -548,6 +548,7 @@ class Contact extends React.Component {
 															{strings.CONTACTORGANIZATIONTNAME}
 														</TableHeaderColumn>							
 														<TableHeaderColumn
+														width='10%'
 															dataField="contactTypeString"
 															dataSort
 															// dataFormat={this.typeFormatter}

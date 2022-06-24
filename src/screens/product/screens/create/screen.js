@@ -382,7 +382,7 @@ try {
 			name: value,
 		};
 		this.props.productActions.checkValidation(data).then((response) => {
-			if (response.data === 'Product name already exists') {
+			if (response.data === 'Product Name Already Exists') {
 				this.setState({
 					exist: true,
 				});
@@ -402,7 +402,7 @@ try {
 		this.props.productActions
 			.checkProductNameValidation(data)
 			.then((response) => {
-				if (response.data === 'Product code already exists') {
+				if (response.data === 'Product Code Already Exists') {
 					this.setState({
 						ProductExist: true,
 					});

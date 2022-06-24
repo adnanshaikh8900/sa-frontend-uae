@@ -381,7 +381,7 @@ existForAccountNumber = (value) => {
     this.props.createPayrollEmployeeActions
         .checkValidation(data)
         .then((response) => {
-            if (response.data === 'Account number already exists') {
+            if (response.data === 'Account Number Already Exists') {
                 this.setState(
                     {
                         existForAccountNumber: true,

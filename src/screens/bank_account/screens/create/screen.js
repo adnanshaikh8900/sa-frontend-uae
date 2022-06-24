@@ -186,7 +186,7 @@ class CreateBankAccount extends React.Component {
 		this.props.createBankAccountActions
 			.checkValidation(data)
 			.then((response) => {
-				if (response.data === 'Bank account already exists') {
+				if (response.data === 'Bank Account Already Exists') {
 					this.setState({
 						exist: true,
 					});

@@ -186,7 +186,7 @@ class CreateJournal extends React.Component {
 			.checkValidation(data)
 			.then((response) => {
 				
-				if (response.data === 'Journal reference number already exists') {
+				if (response.data === 'Journal Reference Number Already Exists') {
 					this.setState(
 						{
 							exist: true,

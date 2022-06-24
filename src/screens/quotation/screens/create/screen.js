@@ -1795,7 +1795,7 @@ discountType = (row) =>
 		this.props.quotationCreateAction
 			.checkValidation(data)
 			.then((response) => {
-				if (response.data === 'Quotation number already exists') {
+				if (response.data === 'Quotation Number Already Exists') {
 					this.setState(
 						{
 							exist: true,

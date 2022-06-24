@@ -324,8 +324,8 @@ class RFQTemplate extends Component {
 												{QuotationData.discount > 0 && (<><td style={{ textAlign: 'right' }}>
 												{item.discountType == "PERCENTAGE" ? item.discount + "  %" :
 													(QuotationData.currencyIsoCode
-														? QuotationData.currencyIsoCode +" "+ QuotationData.discount 
-														: 'AED'+" "+ QuotationData.discount )
+														? QuotationData.currencyIsoCode +" "+ item.discount 
+														: 'AED'+" "+ item.discount )
 												}
 												</td>
 												</>)}

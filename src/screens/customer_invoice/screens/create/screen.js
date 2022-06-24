@@ -709,8 +709,8 @@ renderVatAmount = (cell, row,extraData) => {
 								? res.data.invoiceLineItems
 								: [],
 							discount: res.data.discount ? res.data.discount : 0,
-							
-						
+
+
 							term: term,
 							placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 							fileName: res.data.fileName ? res.data.fileName : '',
@@ -741,6 +741,7 @@ renderVatAmount = (cell, row,extraData) => {
 						selectedContact: res.data.contactId ? res.data.contactId : '',
 						contactId: res.data.contactId ? res.data.contactId : '',
 						term: term,
+						discountEnabled : res.data.discount > 0 ? true : false,
 						placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 						loading: false,
 					},

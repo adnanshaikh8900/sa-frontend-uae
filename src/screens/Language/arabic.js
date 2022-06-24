@@ -322,7 +322,7 @@ CreatePurchaseOrder:"إنشاء أمر شراء",
 PONumber:"رقم أمر الشراء",				
 SupplierReferenceNumber:"رقم مرجع المورد",		
 PODate:"تاريخ أمر الشراء",		
-PODueDate:"تاريخ استحقاق أمر الشراء",		
+PODueDate:"تاريخ انتهاء أمر الشراء",		
 		
 //GRN
 GoodsReceivedNotes:"البضائع المستلمة ملاحظات",						

@@ -144,7 +144,7 @@ class CreateEmployeePayroll extends React.Component {
                 employeeRole: '',
                 stateId: '',
                 gender: '',
-                // maritalStatus: '',
+                maritalStatus: '',
                 pincode: '',
                 city: '',
                 employeeDesignationId: '',

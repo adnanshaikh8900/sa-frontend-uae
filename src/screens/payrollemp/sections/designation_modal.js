@@ -125,6 +125,7 @@ class DesignationModal extends React.Component {
             
                 this.props.closeDesignationModal(true);
                 this.props.getCurrentUser(res.data);
+				toast.success("Designation Created Successfully")
             }
         })
         .catch((err) => {

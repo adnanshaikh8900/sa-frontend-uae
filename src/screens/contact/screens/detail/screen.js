@@ -87,9 +87,11 @@ class DetailContact extends React.Component {
 				billingStateProvince: '',
 				billingPostZipCode: '',
 				billingcountryId: '',
+				billingPoBoxNumber: '',
 				shippingCountryId: '',
 				shippingStateId: '',
 				shippingPostZipCode: '',
+				shippingPoBoxNumber: '',
 				shippingCity: '',
 				taxTreatmentId: '',
 			},
@@ -208,6 +210,13 @@ class DetailContact extends React.Component {
 									res.data.fax && res.data.fax !== null
 										? res.data.fax
 										: '',
+								billingPoBoxNumber:res.data.poBoxNumber && res.data.poBoxNumber !== null
+								? res.data.poBoxNumber
+								: '',
+								billingPostZipCode:
+								res.data.poBoxNumber && res.data.poBoxNumber !== null
+										? res.data.poBoxNumber
+										: '',		
 								shippingCountryId:
 									res.data.shippingCountryId && res.data.shippingCountryId !== null
 										? res.data.shippingCountryId
@@ -232,6 +241,7 @@ class DetailContact extends React.Component {
 									res.data.shippingPostZipCode && res.data.shippingPostZipCode !== null
 										? res.data.shippingPostZipCode
 										: '',
+										
 								website:
 									res.data.website && res.data.website !== null
 										? res.data.website
@@ -623,8 +633,8 @@ class DetailContact extends React.Component {
 																	}
 
 																	if (values.billingcountryId == 229 || values.billingcountryId.value == 229) {
-																		if (values.poBoxNumber === '')
-																			errors.poBoxNumber = 'PO Box Number is Required';
+																		if (values.billingPoBoxNumber === '')
+																			errors.poBoxNumber = 'Billing PO Box Number is Required';
 																	} else {
 																		if (values.billingPostZipCode == '')
 																			errors.billingPostZipCode = 'Postal Code is Required';
@@ -634,8 +644,8 @@ class DetailContact extends React.Component {
 
 																	}
 																	if (values.shippingCountryId == 229 || values.shippingCountryId.value == 229) {
-																		if (values.poBoxNumber === '')
-																			errors.poBoxNumber = 'PO Box Number is Required';
+																		if (values.shippingPoBoxNumber === '')
+																			errors.poBoxNumber = 'Shipping PO Box Number is Required';
 																	} else {
 																		if (values.shippingPostZipCode == '')
 																			errors.shippingPostZipCode = 'Postal Code is Required';
@@ -1569,7 +1579,7 @@ class DetailContact extends React.Component {
 																					<FormGroup>
 																						{/* <Label htmlFor="select">{strings.POBoxNumber}</Label> */}
 																						<Label htmlFor="POBoxNumber">
-																							<span className="text-danger">* </span>{strings.POBoxNumber}
+																							<span className="text-danger">* </span>{strings.BillingPOBoxNumber}
 																						</Label>
 																						<Input
 																							type="text"
@@ -1578,7 +1588,7 @@ class DetailContact extends React.Component {
 																							id="poBoxNumber"
 																							name="poBoxNumber"
 																							autoComplete="Off"
-																							placeholder={strings.Enter + strings.POBoxNumber}
+																							placeholder={strings.Enter + strings.BillingPOBoxNumber}
 																							onChange={(option) => {
 																								if (
 																									option.target.value === '' ||
@@ -1588,12 +1598,12 @@ class DetailContact extends React.Component {
 																										this.setState({ showpoBoxNumberErrorMsg: true })
 																									else
 																										this.setState({ showpoBoxNumberErrorMsg: false })
-																									props.handleChange('poBoxNumber')(
+																									props.handleChange('billingPoBoxNumber')(
 																										option,
 																									);
 																								}
 																							}}
-																							value={props.values.poBoxNumber}
+																							value={props.values.billingPoBoxNumber}
 																							className={
 																								props.errors.poBoxNumber &&
 																									props.touched.poBoxNumber
@@ -1752,10 +1762,11 @@ class DetailContact extends React.Component {
 																									props.handleChange('shippingAddress')(props.values.billingAddress);
 																									props.handleChange('shippingCity')(props.values.billingCity);
 																									props.handleChange('shippingCountryId')(props.values.billingcountryId.value ? props.values.billingcountryId.value : props.values.billingcountryId);
-
 																									props.handleChange('shippingStateId')(props.values.billingStateProvince.value ? props.values.billingStateProvince.value : props.values.billingStateProvince);
 																									props.handleChange('shippingTelephone')(props.values.billingPhoneNumber);
 																									props.handleChange('shippingPostZipCode')(props.values.billingPostZipCode);
+																									props.handleChange('shippingPoBoxNumber')(props.values.billingPostZipCode);
+																									props.handleChange('shippingPoBoxNumber')(props.values.billingPoBoxNumber);
 																									props.handleChange('shippingFax')(props.values.billingFax);
 																								} else {
 																									this.setState({ isSame: !this.state.isSame, });
@@ -1766,6 +1777,7 @@ class DetailContact extends React.Component {
 																									props.handleChange('shippingStateId')("");
 																									props.handleChange('shippingPostZipCode')("");
 																									props.handleChange('shippingTelephone')("");
+																									props.handleChange('shippingPoBoxNumber')("");
 																									props.handleChange('shippingFax')("");
 																								}
 																							}}
@@ -1973,16 +1985,16 @@ class DetailContact extends React.Component {
 																					<FormGroup>
 																						{/* <Label htmlFor="select">{strings.POBoxNumber}</Label> */}
 																						<Label htmlFor="POBoxNumber">
-																							<span className="text-danger">* </span>{strings.POBoxNumber}
+																							<span className="text-danger">* </span>{strings.ShippingPOBoxNumber}
 																						</Label>
 																						<Input
 																							type="text"
 																							minLength="3"
 																							maxLength="6"
-																							id="poBoxNumber"
-																							name="poBoxNumber"
+																							id="shippingPoBoxNumber"
+																							name="shippingPoBoxNumber"
 																							autoComplete="Off"
-																							placeholder={strings.Enter + strings.POBoxNumber}
+																							placeholder={strings.Enter + strings.ShippingPOBoxNumber}
 																							onChange={(option) => {
 																								if (
 																									option.target.value === '' ||
@@ -1992,12 +2004,12 @@ class DetailContact extends React.Component {
 																										this.setState({ showpoBoxNumberErrorMsg: true })
 																									else
 																										this.setState({ showpoBoxNumberErrorMsg: false })
-																									props.handleChange('poBoxNumber')(
+																									props.handleChange('shippingPoBoxNumber')(
 																										option,
 																									);
 																								}
 																							}}
-																							value={props.values.poBoxNumber}
+																							value={props.values.shippingPoBoxNumber}
 																							className={
 																								props.errors.poBoxNumber &&
 																									props.touched.poBoxNumber

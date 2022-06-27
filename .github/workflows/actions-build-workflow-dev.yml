@@ -15,7 +15,7 @@ env:
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
   VERSION_PREFIX: 1.0.0-alpha
-  
+
 jobs:
   build:
 
@@ -26,12 +26,12 @@ jobs:
       # This is used to complete the identity challenge
       # with sigstore/fulcio when running outside of PRs.
       id-token: write
-      
+
     strategy:
       matrix:
         node-version: [14.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-  
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
@@ -48,18 +48,18 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - run: CI=false npm run build --if-present
-    
+
     # Install the cosign tool except on PR
     # https://github.com/sigstore/cosign-installer
 #     - name: Install Cosign
 #       uses: sigstore/cosign-installer@main
 #     - name: Check install!
 #       run: cosign version
-  
+
     # https://github.com/docker/build-push-action
     - name: Setup Docker buildx
       uses: docker/setup-buildx-action@v2
-      
+
     # Login against a Docker registry except on PR
     # https://github.com/docker/login-action
     - name: Log into registry ${{ env.REGISTRY }}
@@ -72,10 +72,10 @@ jobs:
 
     - name: Generate build number
       id: buildnumber
-      uses: einaregilsson/build-number@v3 
+      uses: einaregilsson/build-number@v3
       with:
-        token: ${{secrets.github_token}}        
-        
+        token: ${{secrets.github_token}}
+
     # Extract metadata (tags, labels) for Docker
     # https://github.com/docker/metadata-action
     - name: Extract Docker metadata
@@ -88,8 +88,8 @@ jobs:
           org.opencontainers.image.title=SimpleAccounts-Frontend
           org.opencontainers.image.description=SimpleAccounts frontend application
           org.opencontainers.image.vendor=Data Innovation Technologies Limited.
-          org.opencontainers.image.licenses=Copyright 2022 Data Innovation Technologies Limited.  
-        
+          org.opencontainers.image.licenses=Copyright 2022 Data Innovation Technologies Limited.
+
     # Build and push Docker image with Buildx (don't push on PR)
     # https://github.com/docker/build-push-action
     - name: Build and push Docker image
@@ -102,7 +102,7 @@ jobs:
         labels: ${{ steps.meta.outputs.labels }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
-        
+
     # Sign the resulting Docker image digest except on PRs.
     # This will only write to the public Rekor transparency log when the Docker
     # repository is public to avoid leaking data.  If you would like to publish
@@ -115,3 +115,20 @@ jobs:
 #       # This step uses the identity token to provision an ephemeral certificate
 #       # against the sigstore community Fulcio instance.
 #       run: cosign sign ${{ steps.meta.outputs.tags }}@${{ steps.build-and-push.outputs.digest }}
+
+    - name: get CCE Cluster Credentials
+      uses: huaweicloud/cce-credential-action@v1.0.0
+      with:
+        ak: ${{ secrets.ACCESSKEY }}
+        sk: ${{ secrets.SECRETACCESSKEY }}
+        region: "ap-southeast-3"
+        project_id: "e6cfc29b7dbe4c838cbd29d60dbc2871"
+        cluster_id: "f7430d03-f461-11ec-b3dd-0255ac101242"
+
+    - name: Helm chart Test
+      run: |
+        helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=${{ env.VERSION_PREFIX }}.${{ steps.buildnumber.outputs.build_number }},image.repository.frontend.tag=${{ env.VERSION_PREFIX }}.${{ steps.buildnumber.outputs.build_number }},image.repository.frontend.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},maindomain=app.simpleaccounts.io,simpleVatHost=https://dev-api.app.simpleaccounts.io,fullnameOverride=dev-frontend,serviceAccount.name=dev-deploy-robot-frontend,ingress.hosts[0].host=dev.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=dev-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=app.simpleaccounts.io,ingress.tls[0].hosts[1]=dev-api.app.simpleaccounts.io,ingress.tls[0].hosts[2]=dev.app.simpleaccounts.io --wait --dry-run --debug --namespace dev --create-namespace dev-frontend ./simpleaccounts-frontend
+
+    - name: Helm chart install
+      run: |
+        helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=${{ env.VERSION_PREFIX }}.${{ steps.buildnumber.outputs.build_number }},image.repository.frontend.tag=${{ env.VERSION_PREFIX }}.${{ steps.buildnumber.outputs.build_number }},image.repository.frontend.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},maindomain=app.simpleaccounts.io,simpleVatHost=https://dev-api.app.simpleaccounts.io,fullnameOverride=dev-frontend,serviceAccount.name=dev-deploy-robot-frontend,ingress.hosts[0].host=dev.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=dev-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=app.simpleaccounts.io,ingress.tls[0].hosts[1]=dev-api.app.simpleaccounts.io,ingress.tls[0].hosts[2]=dev.app.simpleaccounts.io --wait --namespace dev --create-namespace dev-frontend ./simpleaccounts-frontend

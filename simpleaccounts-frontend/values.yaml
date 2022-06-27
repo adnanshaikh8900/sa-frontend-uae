@@ -24,7 +24,7 @@ ports:
   containerPort:
     frontendPort: 80
 imagePullSecrets:
-#  - name: az-acr-service-principal-credentials.
+  - name: github-package-secret
 nameOverride: ""
 fullnameOverride: ""
 

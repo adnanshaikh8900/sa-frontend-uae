@@ -6,15 +6,11 @@ import {
 	FormGroup,
 	Form,
 	ButtonGroup,
-
 } from 'reactstrap';
-import { AgGridReact,AgGridColumn } from 'ag-grid-react/lib/agGridReact';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import * as ProductActions from '../../../product/actions';
-
 import moment from 'moment';
-
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 // import 'react-select/dist/react-select.css'
@@ -22,10 +18,8 @@ import './style.scss';
 import { PDFExport } from '@progress/kendo-react-pdf';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
-
 import { Loader  } from 'components';
 import * as InventoryActions from '../../actions';
-
 import logo from 'assets/images/brand/logo.png';
 import { CommonActions } from 'services/global';
 import {data}  from '../../../Language/index'
@@ -492,19 +486,19 @@ class InventorySummary extends React.Component {
 												{strings.PRODUCTNAME}
 												</TableHeaderColumn >
 										
-												<TableHeaderColumn  dataField="purchaseOrder" dataSort className="table-header-bg">
+												<TableHeaderColumn  dataField="purchaseOrder" dataSort className="text-center table-header-bg" columnClassName="text-center">
 												{strings.ORDERQUANTITY}
 												</TableHeaderColumn >
 
-												<TableHeaderColumn  dataField="quantitySold" dataSort className="table-header-bg">
+												<TableHeaderColumn  dataField="quantitySold" dataSort className="text-center table-header-bg" columnClassName="text-center">
 												{strings.QUANTITYSOLD}
 												</TableHeaderColumn >
 
-												<TableHeaderColumn  dataField="stockInHand" dataSort className="table-header-bg">
+												<TableHeaderColumn  dataField="stockInHand" dataSort className="text-center table-header-bg" columnClassName="text-center">
 												{strings.STOCKINHAND}
 												</TableHeaderColumn >
 
-												<TableHeaderColumn  dataField="supplierName" dataFormat={this.renderName} dataSort className="table-header-bg">
+												<TableHeaderColumn  dataField="supplierName" dataFormat={this.renderName} dataSort className="text-center table-header-bg" columnClassName="text-center">
 												{strings.SUPPLIERNAME}
 												</TableHeaderColumn >
 

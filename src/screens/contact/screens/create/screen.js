@@ -90,12 +90,14 @@ class CreateContact extends React.Component {
 				billingCity: '',
 				billingPostZipCode: '',
 				billingPhoneNumber: '',
+				billingPoBoxNumber: '',
 				shippingCountryId: '',
 				shippingStateId: '',
 				shippingTelephone: '',
 				shippingPostZipCode: '',
 				shippingCity: '',
 				shippingFax: '',
+				shippingPoBoxNumber: '',
 				taxTreatmentId: '',
 			},
 			state_list_for_shipping: [],
@@ -202,7 +204,7 @@ class CreateContact extends React.Component {
 		temp[`city`] = data[`billingCity`];
 		temp[`fax`] = data[`billingFax`];
 		temp[`billingTelephone`] = data[`billingPhoneNumber`];
-
+		temp[`shippingPostZipCode`] = data[`shippingPostZipCode`];
 
 		temp[`addressLine2`] = data[`shippingAddress`];
 		// temp[`shippingCountryId`] = isSame ? this.state.billingAddress.billingcountryId :  data[`shippingCountryId`].value;
@@ -375,8 +377,8 @@ class CreateContact extends React.Component {
 																	errors.email = 'Email already exists';
 																}
 																if (values.billingcountryId == 229 || values.billingcountryId.value == 229) {
-																	if (values.poBoxNumber === '')
-																		errors.poBoxNumber = 'PO box number is required';
+																	if (values.billingPoBoxNumber === '')
+																		errors.poBoxNumber = 'Billing PO box number is required';
 																} else {
 																	if (values.billingPostZipCode == '')
 																		errors.billingPostZipCode = 'Postal code is required';
@@ -386,8 +388,8 @@ class CreateContact extends React.Component {
 
 																}
 																if (values.shippingCountryId == 229 || values.shippingCountryId.value == 229) {
-																	if (values.poBoxNumber === '')
-																		errors.poBoxNumber = 'PO box number is required';
+																	if (values.shippingPoBoxNumber === '')
+																		errors.poBoxNumber = 'Shipping PO box number is required';
 																} else {
 																	if (values.shippingPostZipCode == '')
 																		errors.shippingPostZipCode = 'Postal Code is required';
@@ -1255,7 +1257,7 @@ class CreateContact extends React.Component {
 																				<FormGroup>
 																					{/* <Label htmlFor="select">{strings.POBoxNumber}</Label> */}
 																					<Label htmlFor="POBoxNumber">
-																						<span className="text-danger">* </span>{strings.POBoxNumber}
+																						<span className="text-danger">* </span>{strings.BillingPOBoxNumber}
 																					</Label>
 																					<Input
 																						type="text"
@@ -1264,7 +1266,7 @@ class CreateContact extends React.Component {
 																						id="poBoxNumber"
 																						name="poBoxNumber"
 																						autoComplete="Off"
-																						placeholder={strings.Enter + strings.POBoxNumber}
+																						placeholder={strings.Enter + strings.BillingPOBoxNumber}
 																						onChange={(option) => {
 																							if (
 																								option.target.value === '' ||
@@ -1274,12 +1276,12 @@ class CreateContact extends React.Component {
 																									this.setState({ showpoBoxNumberErrorMsg: true })
 																								else
 																									this.setState({ showpoBoxNumberErrorMsg: false })
-																								props.handleChange('poBoxNumber')(
+																								props.handleChange('billingPoBoxNumber')(
 																									option,
 																								);
 																							}
 																						}}
-																						value={props.values.poBoxNumber}
+																						value={props.values.billingPoBoxNumber}
 																						className={
 																							props.errors.poBoxNumber &&
 																								props.touched.poBoxNumber
@@ -1439,6 +1441,8 @@ class CreateContact extends React.Component {
 																								props.handleChange('shippingStateId')(props.values.billingStateProvince);
 																								props.handleChange('shippingTelephone')(props.values.billingPhoneNumber);
 																								props.handleChange('shippingPostZipCode')(props.values.billingPostZipCode);
+																								props.handleChange('shippingPoBoxNumber')(props.values.billingPostZipCode);
+																								props.handleChange('shippingPoBoxNumber')(props.values.billingPoBoxNumber);
 																								props.handleChange('shippingFax')(props.values.billingFax);
 																								if (props.values.billingFax.length != 8 && props.values.billingFax != "")
 																									this.setState({ showshippingFaxErrorMsg: true })
@@ -1452,6 +1456,7 @@ class CreateContact extends React.Component {
 																								props.handleChange('shippingCountryId')("");
 																								props.handleChange('shippingStateId')("");
 																								props.handleChange('shippingTelephone')("");
+																								props.handleChange('shippingPoBoxNumber')("");
 																								props.handleChange('shippingPostZipCode')("");
 																								props.handleChange('shippingFax')("");
 																							}
@@ -1671,16 +1676,16 @@ class CreateContact extends React.Component {
 																				<FormGroup>
 																					{/* <Label htmlFor="select">{strings.POBoxNumber}</Label> */}
 																					<Label htmlFor="POBoxNumber">
-																						<span className="text-danger">* </span>{strings.POBoxNumber}
+																						<span className="text-danger">* </span>{strings.ShippingPOBoxNumber}
 																					</Label>
 																					<Input
 																						type="text"
 																						minLength="3"
 																						maxLength="6"
-																						id="poBoxNumber"
-																						name="poBoxNumber"
+																						id="shippingPoBoxNumber"
+																						name="shippingPoBoxNumber"
 																						autoComplete="Off"
-																						placeholder={strings.Enter + strings.POBoxNumber}
+																						placeholder={strings.Enter + strings.ShippingPOBoxNumber}
 																						onChange={(option) => {
 																							if (
 																								option.target.value === '' ||
@@ -1690,12 +1695,12 @@ class CreateContact extends React.Component {
 																									this.setState({ showpoBoxNumberErrorMsg: true })
 																								else
 																									this.setState({ showpoBoxNumberErrorMsg: false })
-																								props.handleChange('poBoxNumber')(
+																								props.handleChange('shippingPoBoxNumber')(
 																									option,
 																								);
 																							}
 																						}}
-																						value={props.values.poBoxNumber}
+																						value={props.values.shippingPoBoxNumber}
 																						className={
 																							props.errors.poBoxNumber &&
 																								props.touched.poBoxNumber

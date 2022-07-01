@@ -6,8 +6,6 @@ name: SimpleAccounts Build
 on:
   push:
     branches: [ "develop" ]
-  pull_request:
-    branches: [ "develop" ]
 
 env:
   # Use docker.io for Docker Hub if empty

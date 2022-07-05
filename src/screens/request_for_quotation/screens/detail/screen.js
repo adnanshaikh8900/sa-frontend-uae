@@ -1265,7 +1265,7 @@ debugger
 		formData.append('placeOfSupplyId' , placeOfSupplyId.value ? placeOfSupplyId.value : placeOfSupplyId);}
 
 		if (supplierId) {
-			formData.append('supplierId', supplierId);
+			formData.append('supplierId', supplierId && supplierId.value);
 		}
 		// if (this.uploadFile.files[0]) {
 		// 	formData.append('attachmentFile', this.uploadFile.files[0]);

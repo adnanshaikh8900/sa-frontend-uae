@@ -452,7 +452,7 @@ class RFQTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													{QuotationData.totalVatAmount?QuotationData.currencyIsoCode+ " " +QuotationData.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0 }
+													{QuotationData.totalVatAmount?QuotationData.currencyIsoCode+ " " +QuotationData.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):QuotationData.currencyIsoCode + " " + ZERO.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits:2 }) }
 												</span>
 											</td>
 										</tr>

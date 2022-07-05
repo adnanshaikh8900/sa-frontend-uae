@@ -598,7 +598,7 @@ class InvoiceTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-												{invoiceData.totalAmount ? invoiceData.currencyIsoCode + " " + invoiceData.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : 0}
+												{invoiceData.totalAmount ? invoiceData.currencyIsoCode + " " + invoiceData.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : invoiceData.currencyIsoCode + " " + ZERO.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits:2 })}
 												</span>
 											</td>
 										</tr>

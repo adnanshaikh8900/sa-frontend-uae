@@ -2654,7 +2654,8 @@ class ExplainTrasactionDetail extends React.Component {
 
 																<Row>
 																	{this.state.initValue.explinationStatusEnum !==
-																		'RECONCILED' && (
+																		'RECONCILED' &&  (
+																			
 																			<Col lg={12} className="mt-5">
 																				<FormGroup className="text-left">
 																					{this.state.initValue.explinationStatusEnum !==
@@ -2670,7 +2671,9 @@ class ExplainTrasactionDetail extends React.Component {
 																									<i className="fa fa-dot-circle-o"></i>{' '}
 																						         {strings.Explain}
 																					</Button>
-																						{this.state.initValue.explinationStatusEnum !== "PARTIAL"&&	(<Button
+																					
+																						{this.state.initValue.explinationStatusEnum !== "PARTIAL"||	this.state.initValue.explinationStatusEnum !== null
+																						?(<Button
 																									color="secondary"
 																									className="btn-square"
 																									onClick={() =>
@@ -2680,7 +2683,7 @@ class ExplainTrasactionDetail extends React.Component {
 																									}
 																								>
 																									<i className="fa fa-ban"></i> {strings.Delete}
-																					</Button>)}
+																					</Button>): ''}
 																							</div>
 																						) : (
 																							<div>
@@ -2697,6 +2700,8 @@ class ExplainTrasactionDetail extends React.Component {
 																									<i className="fa fa-dot-circle-o"></i>{' '}
 																						          {strings.Unexplain}
 																					</Button>
+																					{/* {this.state.initValue.explinationStatusEnum !== "PARTIAL"&&	this.state.initValue.explinationStatusEnum !== null
+																						&&(
 																								<Button
 																									color="secondary"
 																									className="btn-square"
@@ -2704,7 +2709,7 @@ class ExplainTrasactionDetail extends React.Component {
 																								>
 																									<i className="fa fa-dot-circle-o"></i>{' '}
 																						{strings.Update}
-																					</Button>
+																					</Button>)} */}
 																							</div>
 																						)}
 																				</FormGroup>

@@ -1404,7 +1404,7 @@ class DetailQuotation extends React.Component {
 		formData.append('placeOfSupplyId' , placeOfSupplyId.value ? placeOfSupplyId.value : placeOfSupplyId);}
 		// formData.append('exciseType', this.state.checked);
 		if (customerId) {
-			formData.append('customerId', customerId);
+			formData.append('customerId', customerId && customerId.value);
 		}
 		if (currency !== null && currency) {
 			formData.append('currencyCode', this.state.supplier_currency);

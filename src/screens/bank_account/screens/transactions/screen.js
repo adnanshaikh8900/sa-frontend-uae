@@ -545,8 +545,8 @@ class BankTransactions extends React.Component {
 	};
 
 	closeExplainTransactionModal = (res) => {
-		debugger
-		 this.componentDidMount();
+
+		 this.initializeData();
 	const array = []
 			this.setState(() => ({
 				expanded: array	

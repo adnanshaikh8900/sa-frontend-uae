@@ -691,7 +691,7 @@ class CreateSupplierInvoice extends React.Component {
 																		receiptNumber:	 res.data.rfqNumber
 																		? res.data.rfqNumber
 																		: '',
-		
+																		taxType:res.data.taxType
 																},
 																invoiceDateNoChange: res.data.rfqExpiryDate
 																		? moment(res.data.rfqExpiryDate)
@@ -705,7 +705,7 @@ class CreateSupplierInvoice extends React.Component {
 																data: res.data.poQuatationLineItemRequestModelList
 																	? res.data.poQuatationLineItemRequestModelList
 																	: [],
-		
+																	taxType:res.data.taxType,
 		
 																//
 		

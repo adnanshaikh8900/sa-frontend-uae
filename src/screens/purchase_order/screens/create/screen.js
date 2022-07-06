@@ -1879,6 +1879,7 @@ getrfqDetails = (e, row, props,form,field) => {
 				totalAmount:response.data.totalAmount,
 				receiptNumber:response.data.rfqNumber,
 				supplier_currency:response.data.currencyCode,
+				taxType:response.data.taxType,
 				initValue: {
 					...this.state.initValue,
 					...{

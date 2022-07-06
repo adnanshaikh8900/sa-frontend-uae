@@ -737,17 +737,19 @@ class CreditNotes extends React.Component {
 			customer_invoice_list,
 			universal_currency_list,
 		} = this.props;
+		debugger
 		const customer_invoice_data =
-		this.props.customer_invoice_list && this.props.customer_invoice_list.data
-			? this.props.customer_invoice_list.data.map((customer) => ({
+		this.props.customer_invoice_list
+			? this.props.customer_invoice_list.map((customer) => ({
 						id: customer.id,
 						status: customer.status,
 						statusEnum: customer.statusEnum,
-						customerName: customer.name,
+						customerName: customer.customerName,
 						dueAmount:customer.dueAmount ? customer.dueAmount : 0,
 						contactId: customer.contactId,
-						invoiceNumber: customer.referenceNumber,
-						invoiceDate: customer.invoiceDate ? customer.invoiceDate : '',
+						invoiceNumber: customer.invNumber,
+						creditNoteNumber: customer.creditNoteNumber,
+						invoiceDate: customer.creditNoteDate ? customer.creditNoteDate : '',
 						invoiceDueDate: customer.invoiceDueDate
 							? customer.invoiceDueDate
 							: '',
@@ -1098,7 +1100,7 @@ class CreditNotes extends React.Component {
 											}}
 										>
 												<TableHeaderColumn
-												dataField="invoiceNumber"
+												dataField="creditNoteNumber"
 												// dataFormat={this.renderInvoiceNumber}
 												dataSort
 												//	width="7%"

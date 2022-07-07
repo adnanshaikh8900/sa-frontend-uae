@@ -567,7 +567,7 @@ class CreateQuotation extends React.Component {
 										discountType: res.data.discountType
 											? res.data.discountType
 											: '',
-
+										taxType : res.data.taxType
 								},
 								quotaionExpirationNotChanged: res.data.quotaionExpiration
 										? moment(res.data.quotaionExpiration)
@@ -589,7 +589,9 @@ class CreateQuotation extends React.Component {
 								discountPercentage: res.data.discountPercentage
 									? res.data.discountPercentage
 									: 0,
+									taxType : res.data.taxType,
 								loading: false,
+								discountEnabled : res.data.discount > 0 ? true : false,
 							},
 							() => {
 								if (this.state.data.length > 0) {

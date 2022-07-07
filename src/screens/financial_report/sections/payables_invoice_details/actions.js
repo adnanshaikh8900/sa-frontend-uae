@@ -45,7 +45,7 @@ export const getCompany = () => {
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: 'rest/company/getById?id=1',
+      url: 'rest/company/getById?id=10000',
     };
     return authApi(data)
       .then((res) => {

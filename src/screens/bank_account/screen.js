@@ -359,7 +359,7 @@ class BankAccount extends React.Component {
 						>
 							<i className="fas fa-eye" />  {strings.ViewTransactions}
 						</DropdownItem>
-						{row.bankAccountId != 1001 ? 
+						{row.bankAccountId != 1001 && row.transactionCount === 0 ? 
 						<DropdownItem
 							onClick={() => this.closeBankAccount(row.bankAccountId)}
 						>

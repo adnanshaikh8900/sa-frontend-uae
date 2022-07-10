@@ -438,7 +438,10 @@ class DetailUser extends React.Component {
 																		<ImageUploader
 																			// withIcon={true}
 																			buttonText="Choose images"
-																			onChange={this.uploadImage}
+																			onChange={(picture, file)=>{
+																				this.uploadImage(picture, file);
+																				props.handleChange("photo")(picture);
+																			}}
 																			imgExtension={[
 																				'jpg',
 																				'png',

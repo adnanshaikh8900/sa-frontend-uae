@@ -59,6 +59,7 @@ class UpdateEmployeePersonal extends React.Component {
             gender:'',
             bloodGroup:'',
             userPhoto: [],
+            imageState: true,
 			showIcon: false,
 			userPhotoFile: {},
             current_employee_id: null,
@@ -102,7 +103,15 @@ class UpdateEmployeePersonal extends React.Component {
         // ];
     }
 
-    uploadImage = (picture, file) => {
+	uploadImage = (picture, file) => {
+		if (
+			this.state.userPhoto[0] &&
+			this.state.userPhoto[0].indexOf('data') < 0
+		) {
+			this.setState({ imageState: true });
+		} else {
+			this.setState({ imageState: false });
+		}
 		this.setState({
 			userPhoto: picture,
 			userPhotoFile: file,
@@ -235,7 +244,9 @@ class UpdateEmployeePersonal extends React.Component {
                                     : '',
 
                         },
-
+                        userPhoto: res.data.profileImageBinary
+                        ? this.state.userPhoto.concat(res.data.profileImageBinary)
+                        : [],
                         selectedStatus: res.data.isActive ? true : false,
                     },
                     () => {
@@ -399,7 +410,9 @@ class UpdateEmployeePersonal extends React.Component {
         if (parentId && parentId.value) {
 			formData.append('parentId', parentId.value);
 		}
-
+        if (this.state.userPhotoFile.length > 0) {
+            formData.append('profileImageBinary ', this.state.userPhotoFile[0]);
+        }
         this.setState({ loading:true, loadingMsg:"Updating Employee ..."});
         this.props.detailEmployeePersonalAction.updateEmployeePersonal(formData).then((res) => {
             if (res.status === 200) {
@@ -432,7 +445,7 @@ class UpdateEmployeePersonal extends React.Component {
             return false;
    }
    selectedDate=(props)=>{
-    debugger
+    
     if(props.values.dob && props.values.dob!="") 
     {  
         let  date=props.values.dob.split("-")
@@ -558,33 +571,42 @@ class UpdateEmployeePersonal extends React.Component {
                                                             <Row>
                                                                 <Col xs="4" md="4" lg={2}>
                                                                                         <FormGroup className="mb-3 text-center">
-                                                                                            <ImageUploader
-                                                                                                // withIcon={true}
-                                                                                                buttonText="Choose images"
-                                                                                                onChange={this.uploadImage}
-                                                                                                imgExtension={['jpg', 'gif', 'png', 'jpeg']}
-                                                                                                maxFileSize={11048576}
-                                                                                                withPreview={true}
-                                                                                                singleImage={true}
-                                                                                                withIcon={this.state.showIcon}
-                                                                                                // buttonText="Choose Profile Image"
-                                                                                                flipHeight={
-                                                                                                    this.state.userPhoto.length > 0
-                                                                                                        ? { height: 'inherit' }
-                                                                                                        : {}
-                                                                                                }
-                                                                                                label="'Max file size: 1mb"
-                                                                                                labelClass={
-                                                                                                    this.state.userPhoto.length > 0
-                                                                                                        ? 'hideLabel'
-                                                                                                        : 'showLabel'
-                                                                                                }
-                                                                                                buttonClassName={
-                                                                                                    this.state.userPhoto.length > 0
-                                                                                                        ? 'hideButton'
-                                                                                                        : 'showButton'
-                                                                                                }
-                                                                                            />
+                                                                                        <ImageUploader
+																			// withIcon={true}
+																			buttonText="Choose images"
+																			onChange={(picture, file)=>{
+																				this.uploadImage(picture, file);
+																				props.handleChange("photo")(picture);
+																			}}
+																			imgExtension={[
+																				'jpg',
+																				'png',
+																				'jpeg',
+																			]}
+																			maxFileSize={1048576}
+																			withPreview={true}
+																			singleImage={true}
+																			withIcon={this.state.showIcon}
+																			// buttonText="Choose Profile Image"
+																			flipHeight={
+																				this.state.userPhoto.length > 0
+																					? { height: 'inherit' }
+																					: {}
+																			}
+																			label="'Max file size: 1mb"
+																			labelClass={
+																				this.state.userPhoto.length > 0
+																					? 'hideLabel'
+																					: 'showLabel'
+																			}
+																			buttonClassName={
+																				this.state.userPhoto.length > 0
+																					? 'hideButton'
+																					: 'showButton'
+																			}
+																			defaultImages={this.state.userPhoto}
+																			imageState={this.state.imageState}
+																		/>
                                                                                         </FormGroup>
                                                                                     </Col>
 

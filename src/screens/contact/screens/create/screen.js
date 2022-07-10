@@ -1155,13 +1155,19 @@ class CreateContact extends React.Component {
 																							)
 																							: []
 																					}
-																					value={props.values.billingStateProvince}
-
+																					// value={props.values.billingStateProvince}
+																					value={
+																						state_list.find(
+																							(option) =>
+																								option.value ===
+																								+props.values.billingStateProvince.value,
+																						)
+																					}
 																					onChange={(option) => {
 																						if (option && option.value) {
 																							props.handleChange('billingStateProvince')(option);
 																						} else {
-																							props.handleChange('stateId')('');
+																							props.handleChange('billingStateProvince')('');
 																						}
 																					}}
 																					placeholder={strings.Select + props.values.billingcountryId === 229 || props.values.billingcountryId.value === 229 ? strings.Emirate : strings.StateRegion}

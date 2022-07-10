@@ -1452,7 +1452,7 @@ class DetailContact extends React.Component {
 																			</Col>
 																			<Col md="4">
 																				<FormGroup>
-																					<Label htmlFor="stateId"><span className="text-danger">* </span>
+																					<Label htmlFor="billingStateProvince"><span className="text-danger">* </span>
 																						{/* {strings.StateRegion} */}
 																						{props.values.billingcountryId.value === 229 ? strings.Emirate : strings.StateRegion}
 																					</Label>
@@ -1485,23 +1485,23 @@ class DetailContact extends React.Component {
 																								props.handleChange('billingStateProvince')(option);
 
 																							} else {
-																								props.handleChange('stateId')('');
+																								props.handleChange('billingStateProvince')('');
 																							}
 																						}}
 																						placeholder={strings.Select + props.values.billingcountryId === 229 || props.values.billingcountryId.value === 229 ? strings.Emirate : strings.StateRegion}
-																						id="stateId"
-																						name="stateId"
+																						id="billingStateProvince"
+																						name="billingStateProvince"
 																						className={
-																							props.errors.stateId &&
-																								props.touched.stateId
+																							props.errors.billingStateProvince &&
+																								props.touched.billingStateProvince
 																								? 'is-invalid'
 																								: ''
 																						}
 																					/>
-																					{props.errors.stateId &&
-																						props.touched.stateId && (
+																					{props.errors.billingStateProvince &&
+																						props.touched.billingStateProvince && (
 																							<div className="invalid-feedback">
-																								{props.errors.stateId}
+																								{props.errors.billingStateProvince}
 																							</div>
 																						)}
 																				</FormGroup>

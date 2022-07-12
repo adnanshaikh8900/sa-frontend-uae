@@ -409,11 +409,11 @@ class InvoiceTemplate extends Component {
 												<td style={{ textAlign: 'right', width: '10%' }}>
 												{invoiceData.currencyIsoCode + " " +item.unitPrice.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
 												</td>
-												{invoiceData.discount > 0 && (<><td style={{ textAlign: 'right' }}>
+												{item.discount > 0 && (<><td style={{ textAlign: 'right' }}>
 												{item.discountType == "PERCENTAGE" ? item.discount + "  %" :
 														(currencyData[0]
-														? currencyData[0].currencyIsoCode +" "+ invoiceData.discount 
-														: 'AED'+" "+ invoiceData.discount )
+														? currencyData[0].currencyIsoCode +" "+ item.discount 
+														: 'AED'+" "+ item.discount )
 											}
 												</td>
 												</>)}

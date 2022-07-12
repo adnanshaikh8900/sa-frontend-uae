@@ -243,7 +243,6 @@ class CreateExpense extends React.Component {
 
 								this.formRef.current.setFieldValue('expenseDate', new Date(res.data.expenseDate), true);
 
-
 								let currency=	selectCurrencyFactory.renderOptions('currencyName','currencyCode',this.props.currency_convert_list,'Currency',)
 																	.find(
 																		(option) =>
@@ -901,15 +900,15 @@ class CreateExpense extends React.Component {
 													// ) {
 													// 	errors.bankAccountId = 'Bank account is required';
 													// }
-													// if(values.payee.value === 'Company'){
-													// 	errors.payMode = 'Pay through is required'
-													// }
+													if(values.payee.value === 'Company'){
+														errors.payMode = 'Pay through is required'
+													}
 													if (exist === true) {
 														errors.expenseNumber =
-															'Expense number already exists';
+															'Expense number already exists'
 													}
-													if(values.currency ==='' ){
-														errors.currency="Currency is required "
+													if(this.state.curr===true && values.currency === ' ' ){
+														errors.currency = 'Currency is required'
 													}
 													if(this.state.showPlacelist===true && values.placeOfSupplyId ===''){
 														errors.placeOfSupplyId="Place of supply is required"
@@ -957,9 +956,9 @@ class CreateExpense extends React.Component {
 													vatCategoryId: Yup.string().required(
 														'VAT is required',
 													),
-													// payMode: Yup.string().required(
-													// 	'Pay Through is required',
-													// ),
+													payMode: Yup.string().required(
+														'Pay through is required',
+													),
 													attachmentFile: Yup.mixed()
 														.test(
 															'fileType',
@@ -1354,10 +1353,10 @@ class CreateExpense extends React.Component {
                                                             >
                                                                 <i className="fas fa-plus mr-1" />
                                          {strings.NewEmployee}
-									</Button></Col>
-														
-															
-														</Row>
+										
+										</Button>
+												</Col>
+													</Row>
 														<Row>
 															<Col lg={3}>
 																<FormGroup className="mb-3">
@@ -1670,7 +1669,7 @@ class CreateExpense extends React.Component {
 																	<div>
 																		<Input
 																			type="number"
-min="0"
+																			min="0"
 																			className="form-control"
 																			id="exchangeRate"
 																			name="exchangeRate"

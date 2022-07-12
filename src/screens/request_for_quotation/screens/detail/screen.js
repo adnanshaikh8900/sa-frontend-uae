@@ -1199,6 +1199,7 @@ class DetailRequestForQuotation extends React.Component {
 		);
 	};
 	handleSubmit = (data) => {
+		debugger
 		this.setState({ disabled: true });
 		const { current_rfq_id, term } = this.state;
 		const {
@@ -1265,7 +1266,7 @@ debugger
 		formData.append('placeOfSupplyId' , placeOfSupplyId.value ? placeOfSupplyId.value : placeOfSupplyId);}
 
 	
-			formData.append('supplierId', supplierId && supplierId.value);
+			formData.append('supplierId',supplierId.value ? supplierId.value : supplierId );
 		
 		// if (this.uploadFile.files[0]) {
 		// 	formData.append('attachmentFile', this.uploadFile.files[0]);

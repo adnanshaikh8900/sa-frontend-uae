@@ -892,7 +892,7 @@ class CreateExpense extends React.Component {
 													// })
 												}}
 												validate={(values) => {
-													
+													debugger
 													let errors = {};
 													// if (
 													// 	values.payMode.value === 'BANK' &&
@@ -900,9 +900,15 @@ class CreateExpense extends React.Component {
 													// ) {
 													// 	errors.bankAccountId = 'Bank account is required';
 													// }
-													if(values.payee.value === 'Company'){
-														errors.payMode = 'Pay through is required'
+													if(values.payee.value === 'Company Expense' ){
+														if(values.payMode.value != "CASH"){
+															errors.payMode = 'Pay through is required'
+														}
+														
 													}
+													// if(values.payMode.value === "CASH"){
+													// 	errors.payMode = 'Pay through is required'
+													// }
 													if (exist === true) {
 														errors.expenseNumber =
 															'Expense number already exists'
@@ -956,9 +962,9 @@ class CreateExpense extends React.Component {
 													vatCategoryId: Yup.string().required(
 														'VAT is required',
 													),
-													payMode: Yup.string().required(
-														'Pay through is required',
-													),
+													// payMode: Yup.string().required(
+													// 	'Pay through is required',
+													// ),
 													attachmentFile: Yup.mixed()
 														.test(
 															'fileType',

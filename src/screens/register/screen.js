@@ -785,7 +785,7 @@ class Register extends React.Component {
 																</FormGroup>
 															</Col>
 															<Col lg={4}>
-																						<FormGroup className="mb-3 phoneNumber">
+																						<FormGroup className="mb-3 ">
 																							<Label htmlFor="phoneNumber">
 																							<span className="text-danger">* </span> {strings.MobileNumber}
 																						</Label>
@@ -793,7 +793,7 @@ class Register extends React.Component {
 																								country={"ae"}
 																								enableSearch={true}
 																								international
-																								style={{width:"260px !important"}}
+																								style={{width:"260px "}}
 																								value={props.values.phoneNumber}
 																								placeholder={strings.Enter+strings.MobileNumber}
 																								onChange={(option) => {
@@ -804,7 +804,6 @@ class Register extends React.Component {
 																									option.length !== 12 ? this.setState({ checkphoneNumberParam: true }) : this.setState({ checkphoneNumberParam: false });
 																								}}
 																								isValid
-																								className="phoneNumber"
 																								className={
 																									props.errors.phoneNumber &&
 																										props.touched.phoneNumber

@@ -217,6 +217,7 @@ class CreateEmployeePayroll extends React.Component {
         this.regExAddress = /^[a-zA-Z0-9\s\D,'-/ ]+$/;
         this.regExQualification = /^[a-zA-Z,-/ ]+$/;
         this.regExQualificationYear = /^[0-9,'-]+$/;
+        this.regExEmpUniqueId = /[a-zA-Z0-9,-/ ]+$/;
 
         this.gender = [
             { label: 'Male', value: 'Male' },
@@ -2578,15 +2579,11 @@ existForAccountNumber = (value) => {
                                                                                                         name="employeeCode"
                                                                                                         value={props.values.employeeCode}
                                                                                                         placeholder={strings.Enter+strings.EmployeeCode}
-                                                                                                        // onChange={(value) => {
-                                                                                                        //     props.handleChange('employeeCode')(value);
-                                                                                                        // }}
-
                                                                                                         onChange={(option) => {
-                                                                                                            props.handleChange('employeeCode')(
-                                                                                                                option,
-                                                                                                            );
-                                                                                                            this.employeeValidationCheck(option.target.value);
+                                                                                                            if (option.target.value === '' || this.regExEmpUniqueId.test(option.target.value)) 
+                                                                                                            { props.handleChange('employeeCode')(option)
+                                                                                                           this.employeeValidationCheck(option.target.value)
+                                                                                                        }
                                                                                                         }}
                                                                                                         className={props.errors.employeeCode && props.touched.employeeCode ? "is-invalid" : ""}
                                                                                                     />

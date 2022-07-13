@@ -763,7 +763,7 @@ min="0"
 	};
 
 	removeJournal = () => {
-		this.setState({ disabled1: true });
+		this.setState({ disabled1: true,disableLeavePage : true });
 		const { current_journal_id } = this.state;
 		this.props.journalDetailActions
 			.deleteJournal(current_journal_id)

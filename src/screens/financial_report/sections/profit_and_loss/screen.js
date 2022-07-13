@@ -434,7 +434,15 @@ class ProfitAndLossReport extends React.Component {
 																			}
 																		/>
 																	) : (
-																		'0.0'
+																		<Currency
+																			value={"0.00"}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
 																	)}
 																</td>
 															</tr>
@@ -486,7 +494,15 @@ class ProfitAndLossReport extends React.Component {
 																			}
 																		/>
 																	) : (
-																		'0.0'
+																		<Currency
+																		value={"0.00"}
+																		currencySymbol={
+																			universal_currency_list[0]
+																				? universal_currency_list[0]
+																						.currencyIsoCode
+																				: 'USD'
+																		}
+																	/>
 																	)}
 																</td>
 															</tr>
@@ -507,7 +523,15 @@ class ProfitAndLossReport extends React.Component {
 																			}
 																		/>
 																	) : (
-																		'0.0'
+																		<Currency
+																			value={"0.00"}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
 																	)}
 																</td>
 															</tr>
@@ -557,7 +581,15 @@ class ProfitAndLossReport extends React.Component {
 																			}
 																		/>
 																	) : (
-																		'0.0'
+																		<Currency
+																			value={"0.00"}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
 																	)}
 																</td>
 															</tr>
@@ -579,7 +611,15 @@ class ProfitAndLossReport extends React.Component {
 																			}
 																		/>
 																	) : (
-																		'0.0'
+																		<Currency
+																		value={"0.00"}
+																		currencySymbol={
+																			universal_currency_list[0]
+																				? universal_currency_list[0]
+																						.currencyIsoCode
+																				: 'USD'
+																		}
+																	/>
 																	)}
 																</td>
 															</tr>
@@ -631,7 +671,15 @@ class ProfitAndLossReport extends React.Component {
 																			}
 																		/>
 																	) : (
-																		'0.0'
+																		<Currency
+																			value={"0.00"}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
 																	)}
 																</td>
 															</tr>
@@ -684,7 +732,15 @@ class ProfitAndLossReport extends React.Component {
 																			}
 																		/>
 																	) : (
-																		'0.0'
+																		<Currency
+																			value={"0.00"}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
 																	)}
 																</td>
 															</tr>
@@ -705,7 +761,15 @@ class ProfitAndLossReport extends React.Component {
 																			}
 																		/>
 																	) : (
-																		'0.0'
+																		<Currency
+																			value={"0.00"}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
 																	)}
 																</td>
 															</tr>

@@ -563,7 +563,7 @@ class CreateCreditNoteModal extends React.Component {
 								.find((option) => option.value === +row.exciseTaxId)
 						}
 						id="exciseTaxId"
-						placeholder={strings.Select+strings.VAT}
+						placeholder={strings.Select+strings.excise}
 						onChange={(e) => {
 							this.selectItem(
 								e.value,
@@ -1637,7 +1637,7 @@ class CreateCreditNoteModal extends React.Component {
 																	>
 																		 {strings.QUANTITY}
 																	</TableHeaderColumn>
-																	<TableHeaderColumn
+																	{/* <TableHeaderColumn
 																			width="5%"
 																			dataField="unitType"
 																     	>{strings.Unit}
@@ -1649,7 +1649,7 @@ class CreateCreditNoteModal extends React.Component {
 																		 target="unitTooltip"
 																	 >
 																		Units / Measurements</UncontrolledTooltip>
-																		</TableHeaderColumn>
+																		</TableHeaderColumn> */}
 																	<TableHeaderColumn
 																		dataField="unitPrice"
 																		dataFormat={(cell, rows) =>
@@ -1903,7 +1903,7 @@ class CreateCreditNoteModal extends React.Component {
 																
 																<Col lg={4}>
 																		<div className="">
-																		{selectedData.totalExciseAmount && selectedData.totalExciseAmount!=0 && (<div className="total-item p-2" >
+																		{ selectedData.totalExciseAmount>0 ?(<div className="total-item p-2" >
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
@@ -1917,9 +1917,9 @@ class CreateCreditNoteModal extends React.Component {
 																					</label>
 																				</Col>
 																			</Row>
-																		</div>)}
+																		</div>): ''}
 																		
-																		{selectedData.discount && selectedData.discount!=0 && (<div className="total-item p-2">
+																		{selectedData.discount>0 ? (<div className="total-item p-2">
 																				<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
@@ -1933,7 +1933,7 @@ class CreateCreditNoteModal extends React.Component {
 																					</label>
 																				</Col>
 																			</Row>
-																			</div>)}
+																			</div>): ''}
 
 																			{/* {selectedData.total_net && selectedData.total_net!=0 && (<div className="total-item p-2">
 																			<Row>

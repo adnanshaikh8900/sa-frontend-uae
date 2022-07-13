@@ -12,7 +12,6 @@ import {
 	FormGroup,
 	Input,
 	Label,
-	UncontrolledTooltip,
 } from 'reactstrap';
 import Select from 'react-select';
 import { LeavePage, Loader } from 'components';
@@ -23,9 +22,7 @@ import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
 import { CommonActions } from 'services/global';
 import * as createBankAccountActions from './actions';
 import DatePicker from 'react-datepicker';
-import moment from 'moment';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
-
 import './style.scss';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
@@ -238,7 +235,7 @@ class CreateBankAccount extends React.Component {
 			personalCorporateAccountInd: account_is_for ? account_is_for : '',
 			// bankId:bankId ? bankId : "",
 		};
-		this.setState({ loading:true, disableLeavePage:true,loadingMsg:"Creating New Bank Account..."});
+		this.setState({ loading:true, disableLeavePage:true, loadingMsg:"Creating New Bank Account..."});
 		this.props.createBankAccountActions
 			.createBankAccount(obj)
 			.then((res) => {

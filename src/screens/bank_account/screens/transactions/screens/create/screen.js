@@ -27,8 +27,9 @@ import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
 import {data}  from '../../../../../Language/index'
 import LocalizedStrings from 'react-localization';
-import { selectOptionsFactory, selectCurrencyFactory } from 'utils';
+import { selectOptionsFactory } from 'utils';
 import Switch from "react-switch";
+import { LeavePage, Loader } from 'components';
 
 const mapStateToProps = (state) => {
 	return {
@@ -105,6 +106,8 @@ class CreateBankTransaction extends React.Component {
 
 			},
 			expenseType:false,
+			loadingMsg:"Loading...",
+			disableLeavePage:false, 
 			transactionCategoryList: [],
 			moneyCategoryList:[],
 			totalAmount: '',
@@ -264,7 +267,7 @@ class CreateBankTransaction extends React.Component {
 	};
 
 	handleSubmit = (data, resetForm) => {
-			this.setState({ disabled: true });
+			this.setState({ disabled: true, loading:true, disableLeavePage:true });
 		let bankAccountId =
 			this.props.location.state && this.props.location.state.bankAccountId
 				? this.props.location.state.bankAccountId
@@ -1858,6 +1861,7 @@ class CreateBankTransaction extends React.Component {
 						</Col>
 					</Row>
 				</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

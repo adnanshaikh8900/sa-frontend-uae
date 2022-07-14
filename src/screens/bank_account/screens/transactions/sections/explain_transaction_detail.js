@@ -145,6 +145,7 @@ class ExplainTrasactionDetail extends React.Component {
 		this.props.detailBankAccountActions
 				.getBankAccountByID(bankId)
 				.then((res) => {
+					debugger
 					this.setState({
 						bankAccountCurrency: res.bankAccountCurrency,
 					});
@@ -2194,9 +2195,10 @@ class ExplainTrasactionDetail extends React.Component {
 																{
 																	props.values.coaCategoryId &&
 																		props.values.coaCategoryId.label ===
-																		'Sales' && 
+																		'Sales'&&
 																
 																	(
+																		this.state.custInvoiceCurrency != this.state.bankAccountCurrency ?(
 																		<Row >
 																			<Col lg={3}>
 																				<FormGroup className="mb-3">
@@ -2262,10 +2264,10 @@ class ExplainTrasactionDetail extends React.Component {
 																				</FormGroup>
 																			</Col>
 																		</Row>
-																	)}
+																	) :'')}
 																{props.values.coaCategoryId &&
 																	props.values.coaCategoryId.label ===
-																	'Sales' && (
+																	'Sales'&& (
 																		<Row  style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
 																			<Col lg={2}>
 																				<Input
@@ -2331,6 +2333,7 @@ class ExplainTrasactionDetail extends React.Component {
 																	props.values.coaCategoryId.label ===
 																	'Supplier Invoice' &&
 																	(
+																		this.state.custInvoiceCurrency != this.state.bankAccountCurrency  ? (
 																		<Row >
 																			<Col lg={3}>
 																				<FormGroup className="mb-3">
@@ -2382,7 +2385,7 @@ class ExplainTrasactionDetail extends React.Component {
 																				</FormGroup>
 																			</Col>
 																		</Row>
-																	)}
+																	): '')}
 																{props.values.coaCategoryId &&
 																	props.values.coaCategoryId.label ===
 																	'Supplier Invoice' && 
@@ -2672,7 +2675,7 @@ class ExplainTrasactionDetail extends React.Component {
 																						         {strings.Explain}
 																					</Button>
 																					
-																						{this.state.initValue.explinationStatusEnum !== "PARTIAL"||	this.state.initValue.explinationStatusEnum !== null
+																						{this.state.initValue.explinationStatusEnum ==+ "NOT_EXPLAIN"||	this.state.initValue.explinationStatusEnum !== null
 																						?(<Button
 																									color="secondary"
 																									className="btn-square"

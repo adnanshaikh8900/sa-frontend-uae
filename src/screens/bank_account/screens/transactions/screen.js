@@ -694,6 +694,45 @@ class BankTransactions extends React.Component {
 	getbyid =(row) => {
 		
 		if(this.state.response && this.state.response.data){
+			if(row.explanationIds.length > 2 || row.explinationStatusEnum === 'PARTIAL'  ){   
+				
+				return(
+					<>
+						< ExplainTrasactionDetail
+					closeExplainTransactionModal={(e) => {
+							this.closeExplainTransactionModal(e);
+						}
+						}
+						bankId={this.props.location.state.bankAccountId}
+						creationMode={row.creationMode}
+						selectedData={row}
+						data={this.state.response.data[0]}
+					/>
+						< ExplainTrasactionDetail
+					closeExplainTransactionModal={(e) => {
+							this.closeExplainTransactionModal(e);
+						}
+						}
+						bankId={this.props.location.state.bankAccountId}
+						creationMode={row.creationMode}
+						selectedData={row}
+						data={this.state.response.data[1]}
+					/>
+					< ExplainTrasactionDetail
+					closeExplainTransactionModal={(e) => {
+							this.closeExplainTransactionModal(e);
+						}
+						}
+						bankId={this.props.location.state.bankAccountId}
+						creationMode={row.creationMode}
+						selectedData={row}
+						data={this.state.response.data[2]}
+					/>
+					</>
+				
+			
+				)
+			}
 			if(row.explanationIds.length > 1 || row.explinationStatusEnum === 'PARTIAL'  ){   
 				
 				return(

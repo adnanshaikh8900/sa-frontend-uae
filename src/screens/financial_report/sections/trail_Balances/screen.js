@@ -13,18 +13,12 @@ import {
 	DropdownMenu,
 	DropdownItem,
 } from 'reactstrap';
-
-import { DateRangePicker2 } from 'components';
 import moment from 'moment';
-
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'react-toastify/dist/ReactToastify.css';
-// import 'react-select/dist/react-select.css'
 import './style.scss';
 import { PDFExport } from '@progress/kendo-react-pdf';
-import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
-import { CSVLink } from 'react-csv';
 import { Loader, Currency } from 'components';
 import * as FinancialReportActions from '../../actions';
 import FilterComponent from '../filterComponent';
@@ -430,17 +424,8 @@ class TrailBalances extends React.Component {
 																			{this.state.data[
 																				'transactionCategoryMapper'
 																			][`${item}`] === 'Debit' ? (
-																				<Currency
-																					value={this.state.data['assets'][
-																						`${item}`
-																					]   }
-																					currencySymbol={
-																						universal_currency_list[0]
-																							? universal_currency_list[0]
-																									.currencyIsoCode
-																							: 'USD'
-																					}
-																				/>
+																				this.state.data['assets'][`${item}`]
+																				.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })
 																			) : (
 																				''
 																			)}
@@ -449,17 +434,8 @@ class TrailBalances extends React.Component {
 																			{this.state.data[
 																				'transactionCategoryMapper'
 																			][`${item}`] === 'Credit' ? (
-																				<Currency
-																					value={this.state.data['assets'][
-																						`${item}`
-																					]   }
-																					currencySymbol={
-																						universal_currency_list[0]
-																							? universal_currency_list[0]
-																									.currencyIsoCode
-																							: 'USD'
-																					}
-																				/>
+																				this.state.data['assets'][`${item}`]
+																				.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })
 																			) : (
 																				''
 																			)}
@@ -480,17 +456,8 @@ class TrailBalances extends React.Component {
 																			{this.state.data[
 																				'transactionCategoryMapper'
 																			][`${item}`] === 'Debit' ? (
-																				<Currency
-																					value={this.state.data['fixedAsset'][
-																						`${item}`
-																					]   }
-																					currencySymbol={
-																						universal_currency_list[0]
-																							? universal_currency_list[0]
-																									.currencyIsoCode
-																							: 'USD'
-																					}
-																				/>
+																				this.state.data['fixedAsset'][`${item}`]
+																				.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })
 																			) : (
 																				''
 																			)}
@@ -499,17 +466,8 @@ class TrailBalances extends React.Component {
 																			{this.state.data[
 																				'transactionCategoryMapper'
 																			][`${item}`] === 'Credit' ? (
-																				<Currency
-																					value={this.state.data['fixedAsset'][
-																						`${item}`
-																					]   }
-																					currencySymbol={
-																						universal_currency_list[0]
-																							? universal_currency_list[0]
-																									.currencyIsoCode
-																							: 'USD'
-																					}
-																				/>
+																				this.state.data['fixedAsset'][`${item}`]
+																				.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })
 																			) : (
 																				''
 																			)}
@@ -530,17 +488,8 @@ class TrailBalances extends React.Component {
 																			{this.state.data[
 																				'transactionCategoryMapper'
 																			][`${item}`] === 'Debit' ? (
-																				<Currency
-																					value={this.state.data['bank'][
-																						`${item}`
-																					]   }
-																					currencySymbol={
-																						universal_currency_list[0]
-																							? universal_currency_list[0]
-																									.currencyIsoCode
-																							: 'USD'
-																					}
-																				/>
+																				this.state.data['bank'][`${item}`]
+																				.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })
 																			) : (
 																				''
 																			)}
@@ -549,17 +498,8 @@ class TrailBalances extends React.Component {
 																			{this.state.data[
 																				'transactionCategoryMapper'
 																			][`${item}`] === 'Credit' ? (
-																				<Currency
-																					value={this.state.data['bank'][
-																						`${item}`
-																					]   }
-																					currencySymbol={
-																						universal_currency_list[0]
-																							? universal_currency_list[0]
-																									.currencyIsoCode
-																							: 'USD'
-																					}
-																				/>
+																				this.state.data['bank'][`${item}`]
+																				.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })
 																			) : (
 																				''
 																			)}
@@ -580,17 +520,9 @@ class TrailBalances extends React.Component {
 																			{this.state.data[
 																				'transactionCategoryMapper'
 																			][`${item}`] === 'Debit' ? (
-																				<Currency
-																					value={this.state.data['liabilities'][
-																						`${item}`
-																					]   }
-																					currencySymbol={
-																						universal_currency_list[0]
-																							? universal_currency_list[0]
-																									.currencyIsoCode
-																							: 'USD'
-																					}
-																				/>
+																				this.state.data['liabilities'][`${item}`]
+																				.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })
+																				
 																			) : (
 																				''
 																			)}
@@ -599,17 +531,9 @@ class TrailBalances extends React.Component {
 																			{this.state.data[
 																				'transactionCategoryMapper'
 																			][`${item}`] === 'Credit' ? (
-																				<Currency
-																					value={this.state.data['liabilities'][
-																						`${item}`
-																					]   }
-																					currencySymbol={
-																						universal_currency_list[0]
-																							? universal_currency_list[0]
-																									.currencyIsoCode
-																							: 'USD'
-																					}
-																				/>
+																				this.state.data['liabilities'][`${item}`]
+																				.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })
+																				
 																			) : (
 																				''
 																			)}
@@ -630,17 +554,8 @@ class TrailBalances extends React.Component {
 																			{this.state.data[
 																				'transactionCategoryMapper'
 																			][`${item}`] === 'Debit' ? (
-																				<Currency
-																					value={this.state.data['equities'][
-																						`${item}`
-																					]   }
-																					currencySymbol={
-																						universal_currency_list[0]
-																							? universal_currency_list[0]
-																									.currencyIsoCode
-																							: 'USD'
-																					}
-																				/>
+																				this.state.data['equities'][`${item}`]
+																				.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })
 																			) : (
 																				''
 																			)}
@@ -649,17 +564,8 @@ class TrailBalances extends React.Component {
 																			{this.state.data[
 																				'transactionCategoryMapper'
 																			][`${item}`] === 'Credit' ? (
-																				<Currency
-																					value={this.state.data['equities'][
-																						`${item}`
-																					]   }
-																					currencySymbol={
-																						universal_currency_list[0]
-																							? universal_currency_list[0]
-																									.currencyIsoCode
-																							: 'USD'
-																					}
-																				/>
+																				this.state.data['equities'][`${item}`]
+																				.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })
 																			) : (
 																				''
 																			)}
@@ -680,17 +586,8 @@ class TrailBalances extends React.Component {
 																			{this.state.data[
 																				'transactionCategoryMapper'
 																			][`${item}`] === 'Debit' ? (
-																				<Currency
-																					value={this.state.data['income'][
-																						`${item}`
-																					]   }
-																					currencySymbol={
-																						universal_currency_list[0]
-																							? universal_currency_list[0]
-																									.currencyIsoCode
-																							: 'USD'
-																					}
-																				/>
+																				this.state.data['income'][`${item}`]
+																				.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })
 																			) : (
 																				''
 																			)}
@@ -699,17 +596,8 @@ class TrailBalances extends React.Component {
 																			{this.state.data[
 																				'transactionCategoryMapper'
 																			][`${item}`] === 'Credit' ? (
-																				<Currency
-																					value={this.state.data['income'][
-																						`${item}`
-																					]   }
-																					currencySymbol={
-																						universal_currency_list[0]
-																							? universal_currency_list[0]
-																									.currencyIsoCode
-																							: 'USD'
-																					}
-																				/>
+																				this.state.data['income'][`${item}`]
+																				.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })																				
 																			) : (
 																				''
 																			)}
@@ -730,17 +618,8 @@ class TrailBalances extends React.Component {
 																			{this.state.data[
 																				'transactionCategoryMapper'
 																			][`${item}`] === 'Debit' ? (
-																				<Currency
-																					value={this.state.data['expense'][
-																						`${item}`
-																					]   }
-																					currencySymbol={
-																						universal_currency_list[0]
-																							? universal_currency_list[0]
-																									.currencyIsoCode
-																							: 'USD'
-																					}
-																				/>
+																				this.state.data['expense'][`${item}`]
+																				.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })
 																			) : (
 																				''
 																			)}
@@ -749,17 +628,8 @@ class TrailBalances extends React.Component {
 																			{this.state.data[
 																				'transactionCategoryMapper'
 																			][`${item}`] === 'Credit' ? (
-																				<Currency
-																					value={this.state.data['expense'][
-																						`${item}`
-																					]   }
-																					currencySymbol={
-																						universal_currency_list[0]
-																							? universal_currency_list[0]
-																									.currencyIsoCode
-																							: 'USD'
-																					}
-																				/>
+																				this.state.data['expense'][`${item}`]
+																				.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })
 																			) : (
 																				''
 																			)}
@@ -775,17 +645,8 @@ class TrailBalances extends React.Component {
 																	{this.state.data['transactionCategoryMapper'][
 																		'Accounts Receivable'
 																	] === 'Debit' ? (
-																		<Currency
-																			value={this.state.data[
-																				'accountReceivable'
-																			]['Accounts Receivable']   }
-																			currencySymbol={
-																				universal_currency_list[0]
-																					? universal_currency_list[0]
-																							.currencyIsoCode
-																					: 'USD'
-																			}
-																		/>
+																		this.state.data['accountReceivable']['Accounts Receivable']
+																		.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })
 																	) : (
 																		''
 																	)}
@@ -794,17 +655,8 @@ class TrailBalances extends React.Component {
 																	{this.state.data['transactionCategoryMapper'][
 																		'Accounts Receivable'
 																	] === 'Credit' ? (
-																		<Currency
-																			value={this.state.data[
-																				'accountReceivable'
-																			]['Accounts Receivable']   }
-																			currencySymbol={
-																				universal_currency_list[0]
-																					? universal_currency_list[0]
-																							.currencyIsoCode
-																					: 'USD'
-																			}
-																		/>
+																		this.state.data['accountReceivable']['Accounts Receivable']
+																		.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })
 																	) : (
 																		''
 																	)}
@@ -817,17 +669,8 @@ class TrailBalances extends React.Component {
 																	{this.state.data['transactionCategoryMapper'][
 																		'Accounts Payable'
 																	] === 'Debit' ? (
-																		<Currency
-																			value={this.state.data['accountpayable'][
-																				'Accounts Payable'
-																			]   }
-																			currencySymbol={
-																				universal_currency_list[0]
-																					? universal_currency_list[0]
-																							.currencyIsoCode
-																					: 'USD'
-																			}
-																		/>
+																		this.state.data['accountpayable']['Accounts Payable']
+																		.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })
 																	) : (
 																		''
 																	)}
@@ -836,17 +679,8 @@ class TrailBalances extends React.Component {
 																	{this.state.data['transactionCategoryMapper'][
 																		'Accounts Payable'
 																	] === 'Credit' ? (
-																		<Currency
-																			value={this.state.data['accountpayable'][
-																				'Accounts Payable'
-																			]   }
-																			currencySymbol={
-																				universal_currency_list[0]
-																					? universal_currency_list[0]
-																							.currencyIsoCode
-																					: 'USD'
-																			}
-																		/>
+																		this.state.data['accountpayable']['Accounts Payable']
+																		.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })
 																	) : (
 																		''
 																	)}

@@ -241,6 +241,10 @@ class DetailContact extends React.Component {
 									res.data.shippingPostZipCode && res.data.shippingPostZipCode !== null
 										? res.data.shippingPostZipCode
 										: '',
+								shippingPoBoxNumber : 
+									res.data.shippingPoBoxNumber && res.data.shippingPoBoxNumber !== null
+										? res.data.shippingPoBoxNumber
+										: '',
 										
 								website:
 									res.data.website && res.data.website !== null

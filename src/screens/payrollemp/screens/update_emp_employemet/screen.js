@@ -70,7 +70,9 @@ class UpdateEmployeeEmployment extends React.Component {
                     this.props.createPayrollEmployeeActions.getSalaryRolesForDropdown();
                     this.setState({
                         loading: false,
-                        current_employee_id: this.props.location.state.id,
+                        current_employee_id: this.props.location.state.id,           
+                        employeeChildActivitiesPresentOrNot:res.data.employeeChildActivitiesPresentOrNot,
+                        
                         initValue: {
                             id: res.data.id ? res.data.id : '',
                             employmentId: res.data.employmentId ? res.data.employmentId : '',
@@ -424,6 +426,7 @@ laborCardIdValidationCheck = (value) => {
                                                                             <FormGroup className="mb-3">
                                                                                 <Label htmlFor="dateOfJoining"><span className="text-danger">* </span> {strings.DateOfJoining}</Label>
                                                                                 <DatePicker
+                                                                                 disabled={this.state.employeeChildActivitiesPresentOrNot?true:false}
                                                                                     className={`form-control ${props.errors.dateOfJoining && props.touched.dateOfJoining ? "is-invalid" : ""}`}
                                                                                     id="dateOfJoining"
                                                                                     name="dateOfJoining"

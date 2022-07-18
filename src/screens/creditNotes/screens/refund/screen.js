@@ -281,7 +281,7 @@ class Refund extends React.Component {
 		let formData = new FormData();
 	if(this.state.isCNWithoutProduct ==true)
 	{	
-		formData.append('isCNWithoutProduct', this.state.isCNWithoutProduct);
+		// formData.append('isCNWithoutProduct', this.state.isCNWithoutProduct);
 		formData.append('creditNoteId', this.props.location.state.id.id);
 		formData.append('amountReceived', amount !== null ? amount : '');
 		formData.append('notes', notes !== null ? notes : '');
@@ -315,24 +315,24 @@ class Refund extends React.Component {
 			});
 		}//
 	else
-	{	formData.append('receiptNo', receiptNo !== null ? receiptNo : '');
-		formData.append(
-			'receiptDate',
-			typeof receiptDate === 'string'
-				? moment(receiptDate, 'DD-MM-YYYY').toDate()
-				: receiptDate,
-		);
-		formData.append(
-			'paidInvoiceListStr',
-			JSON.stringify(this.state.initValue.paidInvoiceListStr),
-		);
-		formData.append('amount', amount !== null ? amount : '');
+	{
+		formData.append('isCNWithoutProduct',false);
+		formData.append('creditNoteId', this.props.location.state.id.id);
+		formData.append('amountReceived', amount !== null ? amount : '');
 		formData.append('notes', notes !== null ? notes : '');
+		formData.append('type', '7');
+		formData.append('invoiceId',this.state.invoiceId)
+		formData.append('depositTo', depositeTo !== null ? depositeTo.value : '');
+		formData.append('payMode', payMode !== null ? payMode.value : '');
+		if (contactId) {
+			formData.append('contactId', contactId);
+		}
 		formData.append(
-			'referenceCode',
-			referenceCode !== null ? referenceCode : '',
-			);
-			formData.append('depositeTo', depositeTo !== null ? depositeTo.value : '');
+			'paymentDate',
+			typeof receiptDate === 'string'
+				? moment(receiptDate, 'DD/MM/YYYY').toDate()
+				: receiptDate,
+		);		
 			formData.append('payMode', payMode !== null ? payMode.value : '');
 		if (contactId) {
 			formData.append('contactId', contactId);
@@ -340,14 +340,6 @@ class Refund extends React.Component {
 		if (this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
-		formData.append(
-			'invoiceNumber',
-			this.props.location.state.id.invoiceNumber?this.props.location.state.id.invoiceNumber :"Invoice-00000",
-		);
-		formData.append(
-			'invoiceAmount',
-			this.props.location.state.id.invoiceAmount ?this.props.location.state.id.invoiceAmount :"00000",
-		);
 		this.setState({ loading:true, loadingMsg:" Payment Refunding..."});
 		this.props.CustomerRecordPaymentActions.recordPayment(formData)
 			.then((res) => {

@@ -2208,7 +2208,7 @@ console.log(this.state.data)
 																</FormGroup>
 															</Col> */}
 
-{props.values.supplierReferenceNumber ? (				
+							{props.values.supplierReferenceNumber ? (				
 					  	<Col lg={3} >
 						  <FormGroup className="mb-3">
 							  <Label htmlFor="supplierReferenceNumber">
@@ -2448,7 +2448,7 @@ console.log(this.state.data)
 																					id="grnRemarks"
 																					name="grnRemarks"
 																					value={props.values.grnRemarks}
-																					placeholder={strings.grnRemarks}
+																					placeholder={strings.GRNREMARKS}
 																					onChange={(value) => {
 																						props.handleChange('grnRemarks')(value);
 

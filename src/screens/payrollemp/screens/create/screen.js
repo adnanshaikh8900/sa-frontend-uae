@@ -1375,7 +1375,7 @@ existForAccountNumber = (value) => {
                                                                                                 buttonText={strings.chooseimage}
                                                                                                 onChange={this.uploadImage}
                                                                                                 imgExtension={['jpg', 'png', 'jpeg']}
-                                                                                                maxFileSize={11048576}
+                                                                                                maxFileSize={40000}
                                                                                                 withPreview={true}
                                                                                                 singleImage={true}
                                                                                                 withIcon={this.state.showIcon}

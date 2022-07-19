@@ -876,7 +876,7 @@ monthly:"Mensuel",
 annualy:"Annuellement",
 
 chooseimage:"Choisissez l’image",
-filesize:"'Taille maximale du fichier: 1mb",
+filesize:"'Taille maximale du fichier: 40kb",
 SalaryStructure:"Structure Salariale",		
 SALARYSTRUCTURETYPE:"TYPE DE STRUCTURE SALARIALE",		
 SALARYSTRUCTURENAME:"NOM DE LA STRUCTURE SALARIALE",		

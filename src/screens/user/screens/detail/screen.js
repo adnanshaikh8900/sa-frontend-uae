@@ -447,7 +447,7 @@ class DetailUser extends React.Component {
 																				'png',
 																				'jpeg',
 																			]}
-																			maxFileSize={1048576}
+																			maxFileSize={40000}
 																			withPreview={true}
 																			singleImage={true}
 																			withIcon={this.state.showIcon}
@@ -457,7 +457,7 @@ class DetailUser extends React.Component {
 																					? { height: 'inherit' }
 																					: {}
 																			}
-																			label="'Max file size: 1mb"
+																			label="'Max file size: 40kb"
 																			labelClass={
 																				this.state.userPhoto.length > 0
 																					? 'hideLabel'

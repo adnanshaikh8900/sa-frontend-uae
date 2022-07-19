@@ -385,7 +385,7 @@ class CreateUser extends React.Component {
 																		buttonText="Choose images"
 																		onChange={this.uploadImage}
 																		imgExtension={['jpg', 'png', 'jpeg']}
-																		maxFileSize={11048576}
+																		maxFileSize={40000}
 																		withPreview={true}
 																		singleImage={true}
 																		withIcon={this.state.showIcon}
@@ -395,7 +395,7 @@ class CreateUser extends React.Component {
 																				? { height: 'inherit' }
 																				: {}
 																		}
-																		label="'Max file size: 1mb"
+																		label="'Max file size: 40kb"
 																		labelClass={
 																			this.state.userPhoto.length > 0
 																				? 'hideLabel'

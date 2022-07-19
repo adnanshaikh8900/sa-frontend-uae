@@ -687,8 +687,8 @@ class CreateExpense extends React.Component {
 	renderVat=(props)=>{
 		let vat_list=[]
 		let vatIds=[]
-		if(this.state.isDesignatedZone && this.state.isDesignatedZone !=null&&this.state.isDesignatedZone==true){
-			switch(props.values.taxTreatmentId && props.values.taxTreatmentId.value ?props.values.taxTreatmentId.value:''){
+		if(this.state.isDesignatedZone && this.state.isDesignatedZone != null && this.state.isDesignatedZone == true){
+			switch(props.values.taxTreatmentId && props.values.taxTreatmentId.value ? props.values.taxTreatmentId.value:''){
 
 				case 1: 
 				case 3: 

@@ -3117,10 +3117,18 @@ existForAccountNumber = (value) => {
                                                                                                         maxLength="23"
                                                                                                         value={props.values.iban}
                                                                                                         placeholder={strings.Enter+strings.IBANNumber}
-                                                                                                        onChange={(value) => {
-                                                                                                            props.handleChange('iban')(value);
-
+                                                                                                        onChange={(option) => {
+                                                                                                            if (
+                                                                                                                option.target.value === '' ||
+                                                                                                                this.regEx.test(option.target.value)
+                                                                                                            ) {
+                                                                                                                props.handleChange('iban')(
+                                                                                                                    option,
+                                                                                                                );
+                                                                                                            }
                                                                                                         }}
+
+                                                                                                      
                                                                                                         className={props.errors.iban && props.touched.iban ? "is-invalid" : ""}
                                                                                                     />
                                                                                                     {props.errors.iban && props.touched.iban && (

@@ -582,6 +582,9 @@ class CreateSupplierInvoice extends React.Component {
 						taxType : res.data.taxType 
 							? true 
 							: false,
+							discountEnabled : res.data.discount > 0 
+																					? true 
+																					: false,
 						selectedContact: res.data.contactId 
 							? res.data.contactId 
 							: '',
@@ -708,7 +711,9 @@ class CreateSupplierInvoice extends React.Component {
 																	taxType:res.data.taxType,
 		
 																//
-		
+																discountEnabled : res.data.discount > 0 
+																? true 
+																: false,
 																discountAmount: res.data.discount ? res.data.discount : 0,
 																discountPercentage: res.data.discountPercentage
 																	? res.data.discountPercentage

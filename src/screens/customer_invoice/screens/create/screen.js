@@ -3803,16 +3803,12 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		className="btn-square mr-3"
 																		disabled={this.state.disabled}
 																		onClick={() => {
+																			props.handleBlur();
+																			if(props.errors &&  Object.keys(props.errors).length != 0){
+																			this.props.commonActions.fillManDatoryDetails();}
 																			if(this.state.data.length === 1)
 																				{
-																				console.log(props.errors,"ERRORs")
-																				//	added validation popup	msg
-																			props.handleBlur();
-																			if(props.errors &&  Object.keys(props.errors).length != 0)
-																			this.props.commonActions.fillManDatoryDetails();
-																				}
-																				else
-																				{ let newData=[]
+																			 let newData=[]
 																				const data = this.state.data;
 																				newData = data.filter((obj) => obj.productId !== "");
 																				props.setFieldValue('lineItemsString', newData, true);
@@ -3837,16 +3833,11 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		className="btn-square mr-3"
 																		disabled={this.state.disabled}
 																		onClick={() => {
+																			if(props.errors &&  Object.keys(props.errors).length != 0){
+																				this.props.commonActions.fillManDatoryDetails();}
 																			if(this.state.data.length === 1)
 																			{
-																			console.log(props.errors,"ERRORs")
-																			//	added validation popup	msg
-																			props.handleBlur();
-																			if(props.errors &&  Object.keys(props.errors).length != 0)
-																			this.props.commonActions.fillManDatoryDetails();
-																			}
-																			else
-																			{ let newData=[]
+																				let newData=[]
 																			const data = this.state.data;
 																			newData = data.filter((obj) => obj.productId !== "");
 																			props.setFieldValue('lineItemsString', newData, true);

@@ -159,6 +159,7 @@ class DetailCustomerInvoice extends React.Component {
 		this.regExAlpha = /^[a-zA-Z0-9!@#$&()-\\`.+,/\"]+$/;
 		this.regExTelephone = /^[0-9-]+$/;
 		this.regExAddress = /^[a-zA-Z0-9\s\D,'-/]+$/;
+		this.regExCity = /^[a-zA-Z ]+$/;
 
 		this.file_size = 1024000;
 		this.supported_format = [
@@ -2532,13 +2533,12 @@ class DetailCustomerInvoice extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="shippingCity"><span className="text-danger"></span>{strings.City}</Label>
 																	<Input
-																
 																		// options={city ? selectOptionsFactory.renderOptions('cityName', 'cityCode', cityRegion) : ''}
 																		value={props.values.shippingCity}
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||
-																				this.regExAlpha.test(
+																				this.regExCity.test(
 																					option.target.value,
 																				)
 																			) {
@@ -2564,8 +2564,6 @@ class DetailCustomerInvoice extends React.Component {
 																	)}
 																</FormGroup>
 															</Col>
-
-															
 																			<Col md="4" ><FormGroup>
 																			
 																					{props.values.shippingCountryId == 229 || props.values.shippingCountryId.value == 229 ?

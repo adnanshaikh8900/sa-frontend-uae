@@ -1954,7 +1954,7 @@ debugger
 																					id="grnRemarks"
 																					name="grnRemarks"
 																					value={props.values.grnRemarks}
-																					placeholder={strings.grnRemarks}
+																					placeholder={strings.GRNREMARKS}
 																					onChange={(value) => {
 																						props.handleChange('grnRemarks')(value);
 

@@ -1550,7 +1550,9 @@ existForAccountNumber = (value) => {
                                                                                                         name="email"
                                                                                                         value={props.values.email}
                                                                                                         placeholder={strings.Enter+strings.EmailAddress}
-                                                                                                        onChange={(value) => { props.handleChange('email')(value) }}
+                                                                                                        onChange={(value) => {
+                                                                                                             props.handleChange('email')(value) 
+                                                                                                            }}
                                                                                                         className={props.errors.email && props.touched.email ? "is-invalid" : ""}
                                                                                                     />
                                                                                                     {props.errors.email && props.touched.email && (
@@ -3096,9 +3098,11 @@ existForAccountNumber = (value) => {
                                                                                                         name="branch"
                                                                                                         value={props.values.branch}
                                                                                                         placeholder={strings.Enter+strings.Branch}
-                                                                                                        onChange={(value) => {
-                                                                                                            props.handleChange('branch')(value);
-
+                                                                                                        onChange={(option) => {
+                                                                                                            if (
+                                                                                                                option.target.value === '' || 
+                                                                                                                this.regExAlpha.test(option.target.value)) 
+                                                                                                            { props.handleChange('branch')(option) }
                                                                                                         }}
                                                                                                         className={props.errors.branch && props.touched.branch ? "is-invalid" : ""}
                                                                                                     />
@@ -3401,7 +3405,7 @@ existForAccountNumber = (value) => {
                                                                                         type="text"
                                                                                         size="30"
                                                                                         style={{textAlign:"center"}}
-                                                                                        value={item.monthlyAmount ? item.monthlyAmount.toLocaleString() : 0.00 }
+                                                                                        value={item.monthlyAmount ? item.monthlyAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 }) : 0.00 }
                                                                                         id='' />
                                                                                 </td>
 
@@ -3426,7 +3430,7 @@ existForAccountNumber = (value) => {
                                                                             {item.formula ?
                                                                                 (<td style={{border:"3px solid  #c8ced3"}} >
                                                                                      
-                                                                                        {item.yearlyAmount ?  item.yearlyAmount.toLocaleString() : 0.00}
+                                                                                        {item.yearlyAmount ?  item.yearlyAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 }) : 0.00}
                                                                                 </td>
 
                                                                                 ) : (
@@ -3519,7 +3523,7 @@ existForAccountNumber = (value) => {
                                                                                         size="30"
                                                                                         style={{textAlign:"center"}}
                                                                                           
-                                                                                        value={item.monthlyAmount.toLocaleString()}
+                                                                                        value={item.monthlyAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })}
                                                                                         id='' />
                                                                                 </td>
 
@@ -3546,7 +3550,7 @@ existForAccountNumber = (value) => {
                                                                         {item.formula ?
                                                                                 (<td style={{border:"3px solid  #c8ced3"}} >
                                                                                      
-                                                                                        {(item.yearlyAmount.toLocaleString())}
+                                                                                        {(item.yearlyAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 }))}
                                                                                 </td>
 
                                                                                 ) : (
@@ -3640,7 +3644,7 @@ existForAccountNumber = (value) => {
                                                                                         type="text"
                                                                                         size="30"
                                                                                         style={{textAlign:"center"}}
-                                                                                        value={item.monthlyAmount.toLocaleString()}
+                                                                                        value={item.monthlyAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })}
                                                                                     />
                                                                                 </td>
 
@@ -3667,7 +3671,7 @@ existForAccountNumber = (value) => {
                                                                         {item.formula ?
                                                                                 (<td style={{border:"3px solid  #c8ced3"}} >
                                                                                      
-                                                                                        {item.yearlyAmount.toLocaleString()}
+                                                                                        {item.yearlyAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })}
                                                                                 </td>
 
                                                                                 ) : (
@@ -3709,15 +3713,15 @@ existForAccountNumber = (value) => {
                                                                     </tr>
                                                                 </thead> */}
                                                                 <tbody> 
-                                                                    {this.state.FixedAllowance  ? (
+                                                                    {this.state.FixedAllowance ? (
                                                                     Object.values(
                                                                         this.state.FixedAllowance,
                                                                     ).map((item) => (
                                                                     <Row >
                                                                         <Col className="p-2"  >{item.description ? item.description : "-"}</Col>
                                                                         <Col className="p-2" > {"-"} </Col>
-                                                                        <Col className="p-2" > {item.monthlyAmount ? item.monthlyAmount.toLocaleString() :"-"} </Col>
-                                                                        <Col className="p-2" >{item.yearlyAmount ? item.yearlyAmount.toLocaleString() : "-"}</Col>
+                                                                        <Col className="p-2" >AED {item.monthlyAmount ? item.monthlyAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 }) : "0.00"} </Col>
+                                                                        <Col className="p-2" >AED {item.yearlyAmount ? item.yearlyAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 }) : "0.00"}</Col>
                                                                     </Row>
                                                                       ))) : (
                                                                        ""
@@ -3727,7 +3731,7 @@ existForAccountNumber = (value) => {
                                                           
                                                         </Col>
                                                         <Col lg={9}>
-                                                            <Table className="text-center"  style={{border:"3px solid #c8ced3",    width: '133%'}}>
+                                                            <Table className="text-center" style = {{border:"3px solid #c8ced3", width: '133%'}}>
                                                             {/* <thead style={{border:"3px solid #c8ced3"}}>
                                                                       <tr style={{border:"3px solid #c8ced3",    background: '#dfe9f7',color:"Black"}}>
                                                                         {this.columnHeader1.map((column, index) => {
@@ -3738,13 +3742,15 @@ existForAccountNumber = (value) => {
                                                                             );
                                                                         })}
                                                                     </tr>
+                                                                    
                                                                 </thead>  */}
+                                                                
                                                                 <tbody>
                                                                 <Row >
                                                                         <Col className="p-2" >{"Company Cost"}</Col>
-                                                                        <Col className="p-2"  > {"-"} </Col>
-                                                                        <Col className="p-2"  >{this.state.CTC ? (this.state.CTC / 12).toLocaleString() :"-"}</Col>
-                                                                        <Col className="p-2" >{this.state.CTC ? this.state.CTC : "-"}</Col>
+                                                                        <Col className="p-2" > {"-"} </Col>
+                                                                        <Col className="p-2" >AED {this.state.CTC ? (this.state.CTC / 12).toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 }) : "0.00"}</Col>
+                                                                        <Col className="p-2" >AED {this.state.CTC ? (this.state.CTC / 1).toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 }) : "0.00"}</Col>
                                                                     </Row>
                                                                  
                                                                 </tbody>

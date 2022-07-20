@@ -446,9 +446,11 @@ class UpdateEmployeeBank extends React.Component {
                                                                                     name="branch"
                                                                                     value={props.values.branch}
                                                                                     placeholder={strings.Enter+strings.Branch}
-                                                                                    onChange={(value) => {
-                                                                                        props.handleChange('branch')(value);
-
+                                                                                    onChange={(option) => {
+                                                                                        if (
+                                                                                            option.target.value === '' || 
+                                                                                            this.regExAlpha.test(option.target.value)) 
+                                                                                        { props.handleChange('branch')(option) }
                                                                                     }}
                                                                                     className={props.errors.branch && props.touched.branch ? "is-invalid" : ""}
                                                                                 />

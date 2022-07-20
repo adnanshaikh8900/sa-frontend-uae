@@ -572,7 +572,7 @@ handleChange = (evt) => {
                                                          
                                                                <div style={{textAlign:"center"}}>
                                                         <FormGroup className="mt-3"   style={{textAlign:"center",display: "inline-grid"}} >
-                                                          <Label><span className="text-danger">*</span>  Cost To Company  ( CTC )
+                                                          <Label><span className="text-danger">*</span>  {strings.CosttoCompany}  ( CTC )
                                                           : </Label>
                                                         <div   style={{display:"flex"}}>
                                                                  <div   style={{width:"-webkit-fill-available"}}>
@@ -1004,8 +1004,8 @@ handleChange = (evt) => {
                                                                     <Row >
                                                                         <Col className="p-2"  >{item.description ? item.description : "-"}</Col>
                                                                         <Col className="p-2" > {"-"} </Col>
-                                                                        <Col className="p-2" > {item.monthlyAmount ? item.monthlyAmount.toLocaleString() :"-"} </Col>
-                                                                        <Col className="p-2" >{item.yearlyAmount ? item.yearlyAmount.toLocaleString() : "-"}</Col>
+                                                                        <Col className="p-2" >AED {item.monthlyAmount ? item.monthlyAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 }) : "0.00"} </Col>
+                                                                        <Col className="p-2" >AED {item.yearlyAmount ? item.yearlyAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 }) : "0.00"}</Col>
                                                                     </Row>
                                                                       ))) : (
                                                                        ""
@@ -1031,8 +1031,8 @@ handleChange = (evt) => {
                                                                 <Row >
                                                                         <Col className="p-2" >{"Company Cost"}</Col>
                                                                         <Col className="p-2"  > {"-"} </Col>
-                                                                        <Col className="p-2"  >{this.state.CTC ? (this.state.CTC / 12).toLocaleString() :"-"}</Col>
-                                                                        <Col className="p-2" >{this.state.CTC ? this.state.CTC.toLocaleString() : "-"}</Col>
+                                                                        <Col className="p-2" >AED {this.state.CTC ? (this.state.CTC / 12).toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 }) : "0.00"}</Col>
+                                                                        <Col className="p-2" >AED {this.state.CTC ? (this.state.CTC / 1).toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 }) : "0.00"}</Col>
                                                                     </Row>
                                                                  
                                                                 </tbody>

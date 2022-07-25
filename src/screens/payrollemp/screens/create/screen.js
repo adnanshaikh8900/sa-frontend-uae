@@ -2147,7 +2147,7 @@ existForAccountNumber = (value) => {
                                                                                                                     'label',
                                                                                                                     'value',
                                                                                                                     state_list,
-                                                                                                                    'State',
+                                                                                                                    props.values.countryId.value === 229 ? strings.Emirate: strings.StateRegion,
                                                                                                                 )
                                                                                                                 : []
                                                                                                         }

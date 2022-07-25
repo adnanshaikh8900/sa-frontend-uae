@@ -1745,7 +1745,7 @@ debugger
 															</Col>
 																</Row>
 																
-															<Row>
+															{/* <Row>
 																<Col lg={12} className="mb-3">
 																	<Button
 																		color="primary"
@@ -1763,7 +1763,8 @@ debugger
 																		<i className="fa fa-plus"></i> {strings.Addmore}
 																	</Button>
 																</Col>
-															</Row>
+															</Row> */}
+															
 															<Row>
 																<Col lg={8}>
 																	{props.errors.lineItemsString &&

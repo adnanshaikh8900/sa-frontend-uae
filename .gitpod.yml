@@ -19,15 +19,15 @@ tasks:
       eval $(gp env -e)
       npm install
     command: |
-      REPO_NAME=backend-service
+      REPO_NAME=simpleaccounts-backend
       API_IP=$(tailscale status | grep $REPO_NAME | cut -d " " -f 1)
       if [ "${API_IP}" ]; then
         echo "🐳 Connected to $REPO_NAME through Tailscale"
-        SIMPLEVAT_HOST="http://$API_IP:5000/api" npm run dev
+        SIMPLEVAT_HOST="http://$API_IP:5000/api" npm run start
       else
         echo "🐳 Failed to connect to $REPO_NAME. Make sure a $REPO_NAME workspace is active and logged into Tailscale."
 
-        npm run dev
+        npm run start
       fi
     env:
       PORT: 3000
@@ -44,9 +44,24 @@ tasks:
       exit
 vscode:
   extensions:
-    - CodeStream.codestream
     - ms-vscode.vscode-github-issue-notebooks
-    - GitHub.vscode-pull-request-github
     - KnisterPeter.vscode-github
     - vscode.github-browser
     - codezombiech.gitignore
+
+github:
+  prebuilds:
+    # enable for the default branch (defaults to true)
+    develop: true
+    # enable for all branches in this repo (defaults to false)
+    branches: false
+    # enable for pull requests coming from this repo (defaults to true)
+    pullRequests: true
+    # enable for pull requests coming from forks (defaults to false)
+    pullRequestsFromForks: false
+    # add a check to pull requests (defaults to true)
+    addCheck: true
+    # add a "Review in Gitpod" button as a comment to pull requests (defaults to false)
+    addComment: false
+    # add a "Review in Gitpod" button to the pull request's description (defaults to false)
+    addBadge: false

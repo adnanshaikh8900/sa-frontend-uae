@@ -1322,7 +1322,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                                 'label',
                                                                                                 'value',
                                                                                                 state_list,
-                                                                                                'State',
+                                                                                                props.values.countryId.value === 229 ? strings.Emirate: strings.StateRegion,
                                                                                             )
                                                                                             : []
                                                                                     }
@@ -1332,7 +1332,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                                 'label',
                                                                                                 'value',
                                                                                                 state_list,
-                                                                                                'State',
+                                                                                                props.values.countryId.value === 229 ? strings.Emirate: strings.StateRegion,
                                                                                             )
                                                                                             .find(
                                                                                                 (option) =>

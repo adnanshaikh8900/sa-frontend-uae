@@ -30,8 +30,9 @@ build-job:       # This job runs in the build stage, which runs first.
     - curl -sL https://deb.nodesource.com/setup_14.x | bash -
     - apt-get -y install nodejs
     - node  -v
+    - apt-get install git
+    - git --version
     - echo "Compiling the code..."
-    # - CI=false npm install
     - npm ci
     - echo "Compile complete."
 

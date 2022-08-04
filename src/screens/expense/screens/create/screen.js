@@ -118,6 +118,7 @@ class CreateExpense extends React.Component {
 		};
 
 		this.regEx = /^[0-9\b]+$/;
+		this.regExInvNum = /[a-zA-Z0-9'-/]+$/;
 		this.regExAlpha = /^[a-zA-Z0-9!@#$&()-\\`.+,/\"]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
@@ -1030,7 +1031,7 @@ class CreateExpense extends React.Component {
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
-																					this.regExBoth.test(
+																					this.regExInvNum.test(
 																						option.target.value,
 																					)
 																				) {
@@ -1679,7 +1680,7 @@ class CreateExpense extends React.Component {
 																			className="form-control"
 																			id="exchangeRate"
 																			name="exchangeRate"
-																			
+																			maxLength="20"
 																			value={props.values.exchangeRate}
 																			onChange={(value) => {
 																				props.handleChange('exchangeRate')(

@@ -224,6 +224,7 @@ class CreateRequestForQuotation extends React.Component {
 		];
 		this.regEx = /^[0-9\b]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
+		this.regExInvNum = /[a-zA-Z0-9'-/]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 	}
 	
@@ -1989,9 +1990,16 @@ class CreateRequestForQuotation extends React.Component {
 																		value={props.values.rfq_number}
 																		onBlur={props.handleBlur('rfq_number')}
 																		onChange={(option) => {
+																			if (
+																				option.target.value === '' ||
+																				this.regExInvNum.test(
+																					option.target.value,
+																				)
+																			) {
 																			props.handleChange('rfq_number')(
 																				option,
 																			);
+																		}
 																			this.validationCheck(option.target.value);
 																		}}
 																		className={

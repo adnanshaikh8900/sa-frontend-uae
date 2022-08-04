@@ -239,6 +239,7 @@ class CreateQuotation extends React.Component {
 		];
 		this.regEx = /^[0-9\b]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
+		this.regExInvNum = /[a-zA-Z0-9'-/]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 	}
 
@@ -2036,9 +2037,16 @@ discountType = (row) =>
 																		value={props.values.quotation_Number}
 																		onBlur={props.handleBlur('quotation_Number')}
 																		onChange={(option) => {
+																			if (
+																				option.target.value === '' ||
+																				this.regExInvNum.test(
+																					option.target.value,
+																				)
+																			) {
 																			props.handleChange('quotation_Number')(
 																				option,
 																			);
+																		}
 																			this.validationCheck(option.target.value)
 																		}}
 																		className={

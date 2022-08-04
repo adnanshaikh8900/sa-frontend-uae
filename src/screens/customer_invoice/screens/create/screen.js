@@ -244,8 +244,9 @@ class CreateCustomerInvoice extends React.Component {
 			{ label: 'Ras al-Khaimah', value: '6' },
 			{ label: 'Fujairah', value: '7' },
 		];
-		this.regEx = /^[0-9\b]+$/;
+		this.regEx = /^[0-9/d]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
+		this.regExInvNum = /[a-zA-Z0-9'-/]+$/;
 		this.regExTelephone = /^[0-9-]+$/;
 		this.regExAddress = /^[a-zA-Z0-9\s\D,'-/]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
@@ -2372,10 +2373,19 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		value={props.values.invoice_number}
 																		onBlur={props.handleBlur('invoice_number')}
 																		onChange={(option) => {
-																			props.handleChange('invoice_number')(
-																				option,
+																			if(
+																				option.target.value === '' ||
+																				this.regExInvNum.test(
+																					option.target.value,
+																				)
+																			) {
+																				props.handleChange('invoice_number')(
+																					option,
+																				);
+																				}
+																			this.validationCheck(
+																				option.target.value
 																			);
-																			this.validationCheck(option.target.value);
 																		}}
 																		className={
 																			props.errors.invoice_number &&
@@ -3485,7 +3495,9 @@ if(changeShippingAddress && changeShippingAddress==true)
 															<Row>
 																<Col lg={8}>
 																	<FormGroup className="py-2">
-																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
+																		<Label htmlFor="notes">
+																			{strings.Notes}
+																		</Label><br/>
 																		<TextareaAutosize
 																			type="textarea"
 																			style={{width: "700px"}}

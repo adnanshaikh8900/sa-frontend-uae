@@ -1614,6 +1614,29 @@ class DetailExpense extends React.Component {
 														</Col>
 														</Row>
 														<Row>
+															<Col lg={8}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="expenseDescription">
+																	{strings.Description}  
+																	</Label>
+																	<Input
+																		type="textarea"
+																		maxLength="250"
+																		name="expenseDescription"
+																		id="expenseDescription"
+																		rows="5"
+																		placeholder={strings.Expense+" "+strings.Description}
+																		onChange={(option) =>
+																			props.handleChange('expenseDescription')(
+																				option,
+																			)
+																		}
+																		value={props.values.expenseDescription}
+																	/>
+																</FormGroup>
+															</Col>
+														</Row>
+														<Row>
 																<Col lg={8}>
 																<FormGroup className="py-2">
 																		<Label htmlFor="notes">{strings.Notes}</Label><br/>

@@ -25,9 +25,9 @@ build-job:       # This job runs in the build stage, which runs first.
   stage: build
   script:
     - echo "installing node@14..."
-    - sudo apt update
-    - curl -sL https://deb.nodesource.com/setup_14.x | sudo bash -
-    - sudo apt -y install nodejs
+    - apt update
+    - curl -sL https://deb.nodesource.com/setup_14.x | bash -
+    - apt -y install nodejs
     - node  -v
     - echo "Compiling the code..."
     - npm ci

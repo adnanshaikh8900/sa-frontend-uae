@@ -12,8 +12,8 @@ build-job:       # This job runs in the build stage, which runs first.
   #   key: $CI_COMMIT_REF_SLUG
   #   paths:
   #     - .npm/
-  # before_script:
-  #   - npm ci --cache .npm --prefer-offline
+  before_script:
+    - npm ci #--cache .npm --prefer-offline
   script:
     - echo "Compiling the code...!"
     - npm run build --if-present

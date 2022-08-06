@@ -8,7 +8,6 @@ build-job:       # This job runs in the build stage, which runs first.
   stage: dev-compile
   script:
     - echo "Compiling the code...!"
-    - export
     - npm install
     - CI=false npm run build --if-present
     - echo "Compile completed."
@@ -42,7 +41,7 @@ docker-job:   # This job runs in the test stage.
     - echo "Docker image pushed"
   allow_failure: false
   rules:
-    - if: $CI_PROJECT_NAMESPACE == 'datainn' && $CI_COMMIT_BRANCH == 'develop'
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
       when: always
     - when: never
 

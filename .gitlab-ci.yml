@@ -43,7 +43,7 @@ docker-job:   # This job runs in the test stage.
   script:
     - echo "Docker build and push..."
     - docker build -t registry.datainn.io/datainn/simpleaccounts/simpleaccounts-frontend .
-    - docker login registry.datainn.io --username $SIMPLEACCOUNTS_FRONTEND_REGISTRY_USER --password $SIMPLEACCOUNTS_FRONTEND_REGISTRY_PASS
+    - echo $SIMPLEACCOUNTS_FRONTEND_REGISTRY_PASS | docker login registry.datainn.io --username $SIMPLEACCOUNTS_FRONTEND_REGISTRY_USER --password-stdin
     - docker push registry.datainn.io/datainn/simpleaccounts/simpleaccounts-frontend:latest
     - echo "Docker image pushed"
   allow_failure: false

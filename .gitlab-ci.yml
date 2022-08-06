@@ -3,6 +3,11 @@ stages:          # List of stages for jobs, and their order of execution
   - dev-build
   # - SIT
   # - UAT
+variables: 
+  IMAGE: datainn/simpleaccounts/simpleaccounts-frontend
+  TAG: latest
+  ARTIFACT_PATH: ./build
+
 
 build-job:       # This job runs in the build stage, which runs first.
   stage: dev-compile
@@ -21,7 +26,7 @@ build-job:       # This job runs in the build stage, which runs first.
   allow_failure: false
   artifacts:
     paths:
-      - "./build"
+      - "$ARTIFACT_PATH"
     when: on_success
 
 docker-job:   # This job runs in the test stage.
@@ -42,9 +47,9 @@ docker-job:   # This job runs in the test stage.
     - "build-job"
   script:
     - echo "Docker build and push..."
-    - docker build -t registry.datainn.io/datainn/simpleaccounts/simpleaccounts-frontend .
-    - echo "$SIMPLEACCOUNTS_FRONTEND_REGISTRY_PASS" | docker login registry.datainn.io --username $SIMPLEACCOUNTS_FRONTEND_REGISTRY_USER --password-stdin
-    - docker push registry.datainn.io/datainn/simpleaccounts/simpleaccounts-frontend:latest
+    - docker build -t $REGISTRY_URL/$IMAGE:$TAG .
+    - echo "$REGISTRY_PASS" | docker login $REGISTRY_URL --username $REGISTRY_USER --password-stdin
+    - docker push $REGISTRY_URL/$IMAGE:$TAG
     - echo "Docker image pushed"
   allow_failure: false
   rules:

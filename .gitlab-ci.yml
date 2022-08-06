@@ -59,7 +59,7 @@ docker-job:   # This job runs in the test stage.
     - echo "Docker image pushed"
   allow_failure: false
   rules:
-    - if: $CI_PROJECT_NAMESPACE == 'datainn' && $CI_COMMIT_BRANCH == 'datainn/simpleaccounts'
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
       when: always
     - when: never
 

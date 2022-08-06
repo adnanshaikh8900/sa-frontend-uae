@@ -23,7 +23,7 @@ build-job:       # This job runs in the build stage, which runs first.
     paths:
       - "./build"
     when: on_success
-    
+
 docker-job:   # This job runs in the test stage.
   stage: dev-build    # It only starts when the job in the build stage completes successfully.
   image: docker:20.10.16
@@ -47,10 +47,10 @@ docker-job:   # This job runs in the test stage.
     - docker push registry.datainn.io/datainn/simpleaccounts/simpleaccounts-frontend:latest
     - echo "Docker image pushed"
   allow_failure: false
-  # rules:
-  #   - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
-  #     when: always
-  #   - when: never
+  rules:
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
+      when: always
+    - when: never
 
 # deploy-job:      # This job runs in the deploy stage.
 #   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.

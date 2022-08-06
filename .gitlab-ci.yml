@@ -53,12 +53,15 @@ docker-job:   # This job runs in the test stage.
     - "build-job"
   script:
     - echo "Docker build and push..."
-    - docker build -t registry.datainn.io/mohsin/simpleaccounts-frontend .
-    - docker login docker.io --username $DOCKER_HUB_USER --password $DOCKER_HUB_KEY
-    - docker push registry.datainn.io/mohsin/simpleaccounts-frontend:latest
+    - docker build -t registry.datainn.io/datainn/simpleaccounts/simpleaccounts-frontend .
+    - docker login registry.datainn.io --username $SIMPLEACCOUNTS_FRONTEND_REGISTRY_USER --password $SIMPLEACCOUNTS_FRONTEND_REGISTRY_PASS
+    - docker push registry.datainn.io/datainn/simpleaccounts/simpleaccounts-frontend:latest
     - echo "Docker image pushed"
   allow_failure: false
-
+  rules:
+    - if: $CI_PROJECT_NAMESPACE == 'datainn' && $CI_COMMIT_BRANCH == 'develop'
+      when: always
+    - when: never
 
 # deploy-job:      # This job runs in the deploy stage.
 #   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.

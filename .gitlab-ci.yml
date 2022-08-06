@@ -47,10 +47,10 @@ docker-job:   # This job runs in the test stage.
     - docker push registry.datainn.io/datainn/simpleaccounts/simpleaccounts-frontend:latest
     - echo "Docker image pushed"
   allow_failure: false
-  rules:
-    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
-      when: always
-    - when: never
+  # rules:
+  #   - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
+  #     when: always
+  #   - when: never
 
 # deploy-job:      # This job runs in the deploy stage.
 #   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.

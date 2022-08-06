@@ -6,10 +6,12 @@ stages:          # List of stages for jobs, and their order of execution
 
 build-job:       # This job runs in the build stage, which runs first.
   stage: dev-compile
+  variables: 
+    CI: "false"
   script:
     - echo "Compiling the code...!"
     - npm install
-    - npm run build
+    - npm run build --if-present
     - echo "Compile completed."
   allow_failure: false
   artifacts:
@@ -21,7 +23,7 @@ docker-job:   # This job runs in the test stage.
   stage: dev-build    # It only starts when the job in the build stage completes successfully.
   image: docker:20.10.16
   variables: 
-    DOCKER_HOST: tcp://docker:2376
+    DOCKER_HOST: "tcp://docker:2376"
     DOCKER_TLS_CERTDIR: "/certs"
     DOCKER_TLS_VERIFY: 1
     DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"

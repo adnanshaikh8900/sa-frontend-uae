@@ -8,9 +8,14 @@ build-job:       # This job runs in the build stage, which runs first.
   stage: dev-compile
   variables: 
     CI: "false"
+  cache:
+    key: $CI_COMMIT_REF_SLUG
+    paths:
+      - .npm/
+  before_script:
+    - npm ci --cache .npm --prefer-offline
   script:
     - echo "Compiling the code...!"
-    - npm install
     - npm run build --if-present
     - echo "Compile completed."
   allow_failure: false

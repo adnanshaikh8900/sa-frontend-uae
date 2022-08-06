@@ -9,7 +9,7 @@ build-job:       # This job runs in the build stage, which runs first.
   script:
     - echo "Compiling the code...!"
     - npm install
-    - CI=false npm run build --if-present
+    - npm run build
     - echo "Compile completed."
   allow_failure: false
   artifacts:

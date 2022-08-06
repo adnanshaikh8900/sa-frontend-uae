@@ -8,21 +8,17 @@ build-job:       # This job runs in the build stage, which runs first.
   stage: dev-compile
   variables: 
     CI: "false"
-  cache:
-    key: $CI_COMMIT_REF_SLUG
-    paths:
-      - .npm/
-  before_script:
-    - npm ci --cache .npm --prefer-offline
+  # cache:
+  #   key: $CI_COMMIT_REF_SLUG
+  #   paths:
+  #     - .npm/
+  # before_script:
+  #   - npm ci --cache .npm --prefer-offline
   script:
     - echo "Compiling the code...!"
     - npm run build --if-present
     - echo "Compile completed."
   allow_failure: false
-  artifacts:
-    paths:
-      - "./build"
-    when: on_success
 
 docker-job:   # This job runs in the test stage.
   stage: dev-build    # It only starts when the job in the build stage completes successfully.
@@ -43,7 +39,7 @@ docker-job:   # This job runs in the test stage.
   script:
     - echo "Docker build and push..."
     - docker build -t registry.datainn.io/datainn/simpleaccounts/simpleaccounts-frontend .
-    - echo $SIMPLEACCOUNTS_FRONTEND_REGISTRY_PASS | docker login registry.datainn.io --username $SIMPLEACCOUNTS_FRONTEND_REGISTRY_USER --password-stdin
+    - echo "$SIMPLEACCOUNTS_FRONTEND_REGISTRY_PASS" | docker login registry.datainn.io --username $SIMPLEACCOUNTS_FRONTEND_REGISTRY_USER --password-stdin
     - docker push registry.datainn.io/datainn/simpleaccounts/simpleaccounts-frontend:latest
     - echo "Docker image pushed"
   allow_failure: false

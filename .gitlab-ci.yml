@@ -17,12 +17,13 @@
 # https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
 
 stages:          # List of stages for jobs, and their order of execution
-  - DEV
+  - dev-compile
+  - dev-build
   # - SIT
   # - UAT
 
 build-job:       # This job runs in the build stage, which runs first.
-  stage: DEV
+  stage: dev-compile
   script:
     - echo "Compiling the code...!"
     - npm install
@@ -35,7 +36,7 @@ build-job:       # This job runs in the build stage, which runs first.
     when: on_success
 
 docker-job:   # This job runs in the test stage.
-  stage: DEV    # It only starts when the job in the build stage completes successfully.
+  stage: dev-build    # It only starts when the job in the build stage completes successfully.
   image: docker:20.10.16
   variables: 
     DOCKER_HOST: tcp://docker:2376

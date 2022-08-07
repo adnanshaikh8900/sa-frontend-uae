@@ -7,7 +7,6 @@ variables:
   IMAGE: datainn/simpleaccounts/simpleaccounts-frontend
   TAG: latest
   ARTIFACT_PATH: ./build
-  KUBECONFIG: $KUBECONFIG_DEV
 
 
 build-job:       # This job runs in the build stage, which runs first.
@@ -19,6 +18,7 @@ build-job:       # This job runs in the build stage, which runs first.
   #   paths:
   #     - .npm/
   before_script:
+    - echo $KUBECONFIG_DEV > ~/.kube/config
     - kubectl get deployments --all-namespaces=true
     - npm ci #--cache .npm --prefer-offline
   script:

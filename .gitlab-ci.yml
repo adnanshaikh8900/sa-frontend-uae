@@ -1,6 +1,7 @@
 stages:          # List of stages for jobs, and their order of execution
   - dev-compile
   - dev-build
+  # - dev-deploy
   # - SIT
   # - UAT
 variables: 
@@ -43,6 +44,8 @@ docker-job:   # This job runs in the test stage.
     - echo "Waiting for docker to initialise..."
     - i=0; while [ "$i" -lt 12 ]; do docker info && break; sleep 5; i=$(( i + 1 )) ; done
     - echo "Docker running"
+    - TAG=$VERSION_PREFIX.$SA_VERSION
+    - SA_VERSION=$(($SA_VERSION+1))
   dependencies:
     - "build-job"
   script:
@@ -58,7 +61,8 @@ docker-job:   # This job runs in the test stage.
     - when: never
 
 # deploy-job:      # This job runs in the deploy stage.
-#   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
+#   stage: dev-deploy  # It only runs when *both* jobs in the test stage complete successfully.
 #   script:
 #     - echo "Deploying application..."
+#     - 
 #     - echo "Application successfully deployed."

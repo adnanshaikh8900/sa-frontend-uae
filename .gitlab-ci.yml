@@ -7,7 +7,9 @@ stages:          # List of stages for jobs, and their order of execution
 variables: 
   IMAGE: datainn/simpleaccounts/simpleaccounts-frontend
   TAG: $VERSION_PREFIX.$SA_VERSION
+  SA_VERSION: $(($SA_VERSION+1))
   ARTIFACT_PATH: ./build
+
 
 build-job:       # This job runs in the build stage, which runs first.
   stage: dev-compile

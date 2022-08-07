@@ -7,7 +7,7 @@ variables:
   IMAGE: datainn/simpleaccounts/simpleaccounts-frontend
   TAG: latest
   ARTIFACT_PATH: ./build
-  KUBECONFIG: $KUBECONFIG_DEV
+  KUBECONFIG: KUBECONFIG_DEV
 
 
 build-job:       # This job runs in the build stage, which runs first.

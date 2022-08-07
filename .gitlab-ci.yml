@@ -62,7 +62,7 @@ docker-job:   # This job runs in the test stage.
       when: always
     - when: never
 
-# deploy-job:      # This job runs in the deploy stage
+# deploy-job:      # This job runs in the deploy stage.
 #   stage: dev-deploy  # It only runs when *both* jobs in the test stage complete successfully.
 #   script:
 #     - echo "Deploying application..."

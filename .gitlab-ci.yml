@@ -46,6 +46,7 @@ docker-job:   # This job runs in the test stage.
     - echo "Docker running"
     - TAG=$VERSION_PREFIX.$SA_VERSION
     - SA_VERSION=$(($SA_VERSION+1))
+    - curl --request PUT --header "PRIVATE-TOKEN:$GITLAB_API_TOKEN" "https://gitlab.example.com/api/v4/projects/1/variables/SA_VERSION" --form "value=$SA_VERSION"
   dependencies:
     - "build-job"
   script:

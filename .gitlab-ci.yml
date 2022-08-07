@@ -6,8 +6,7 @@ stages:          # List of stages for jobs, and their order of execution
   # - UAT
 variables: 
   IMAGE: datainn/simpleaccounts/simpleaccounts-frontend
-  TAG: $VERSION_PREFIX.$SA_VERSION
-  SA_VERSION: $(($SA_VERSION+1))
+  TAG: latest
   ARTIFACT_PATH: ./build
 
 
@@ -45,6 +44,8 @@ docker-job:   # This job runs in the test stage.
     - echo "Waiting for docker to initialise..."
     - i=0; while [ "$i" -lt 12 ]; do docker info && break; sleep 5; i=$(( i + 1 )) ; done
     - echo "Docker running"
+    - TAG=$VERSION_PREFIX.$SA_VERSION
+    - SA_VERSION=$(($SA_VERSION+1))
   dependencies:
     - "build-job"
   script:

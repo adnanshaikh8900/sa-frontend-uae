@@ -24,7 +24,7 @@ ports:
   containerPort:
     frontendPort: 80
 imagePullSecrets:
-  - name: github-package-secret
+  - name: datainnregistry
 nameOverride: ""
 fullnameOverride: ""
 

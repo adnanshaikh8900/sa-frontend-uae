@@ -19,8 +19,8 @@ build-job:       # This job runs in the build stage, which runs first.
   #     - .npm/
   before_script:
     - mkdir -p ~/.kube
-    - echo $KUBECONFIG_DEV > ~/.kube/config
-    - cat ~/.kube/config
+    - cat $KUBECONFIG_DEV > ~/.kube/config
+    - cat 
     - kubectl get deployments --all-namespaces=true
     - npm ci #--cache .npm --prefer-offline
   script:

@@ -92,6 +92,15 @@ approve-sit-deployment:
       when: manual
     - when: never
 
+approve-sit-deployment:
+  stage: sit-approval
+  script:
+    - echo "Approve SIT Deployment"
+  rules:
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
+      when: manual
+    - when: never
+
 sit1-deploy-job:      # This job runs in the deploy stage.
   stage: sit-deploy  # It only runs when *both* jobs in the test stage complete successfully.
   script:

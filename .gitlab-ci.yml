@@ -49,9 +49,9 @@ docker-build-job:   # This job runs in the test stage.
     - i=0; while [ "$i" -lt 12 ]; do docker info && break; sleep 5; i=$(( i + 1 )) ; done
     - echo "Docker running"
     - TAG=$VERSION_PREFIX.$SA_VERSION
-    - SA_VERSION=$(($SA_VERSION+1))
+    - echo "update version to $SA_VERSION"
     - apk add curl
-    - curl --request PUT --header "PRIVATE-TOKEN:$GITLAB_API_TOKEN" "https://gitlab.datainn.io/api/v4/projects/5/variables/SA_VERSION" --form "value=$SA_VERSION"
+    - curl --request PUT --header "PRIVATE-TOKEN:$GITLAB_API_TOKEN" "https://gitlab.datainn.io/api/v4/projects/5/variables/SA_VERSION" --form "value=$(($SA_VERSION+1))"
   dependencies:
     - "npm-compile-job"
   script:
@@ -87,15 +87,6 @@ approve-sit-deployment:
   script:
     - echo "Approve SIT Deployment"
   allow_failure: false
-  rules:
-    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
-      when: manual
-    - when: never
-
-approve-sit-deployment:
-  stage: sit-approval
-  script:
-    - echo "Approve SIT Deployment"
   rules:
     - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
       when: manual

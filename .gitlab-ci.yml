@@ -17,6 +17,7 @@ cache:
       - package-lock.json
   paths:
     - .npm/
+    - node_modules/
 
 npm-compile-job:       # This job runs in the build stage, which runs first.
   stage: compile

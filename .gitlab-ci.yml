@@ -2,6 +2,7 @@ stages:          # List of stages for jobs, and their order of execution
   - compile
   - build
   - dev-deploy
+  - sit-approval
   - sit-deploy
   # - UAT
 variables: 
@@ -77,6 +78,15 @@ dev-deploy-job:      # This job runs in the deploy stage.
   rules:
     - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
       when: always
+    - when: never
+
+approve-sit-deployment:
+  stage: sit-approval
+  script:
+    - echo "Approve SIT Deployment"
+  rules:
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
+      when: manual
     - when: never
 
 sit1-deploy-job:      # This job runs in the deploy stage.

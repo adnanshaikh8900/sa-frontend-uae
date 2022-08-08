@@ -48,7 +48,7 @@ docker-build-job:   # This job runs in the test stage.
     - echo "Waiting for docker to initialise..."
     - i=0; while [ "$i" -lt 12 ]; do docker info && break; sleep 5; i=$(( i + 1 )) ; done
     - echo "Docker running"
-    - echo "update version to $SA_VERSION"
+    - echo "update version to $TAG"
     - NEXT_VERSION=$(($SA_VERSION+1))
     - apk add curl
     - curl --request PUT --header "PRIVATE-TOKEN:$GITLAB_API_TOKEN" "https://gitlab.datainn.io/api/v4/projects/5/variables/SA_VERSION" --form "value="$NEXT_VERSION
@@ -60,7 +60,14 @@ docker-build-job:   # This job runs in the test stage.
     - echo "$REGISTRY_PASS" | docker login $REGISTRY_URL --username $REGISTRY_USER --password-stdin
     - docker push $REGISTRY_URL/$IMAGE:$TAG
     - echo "Docker image pushed"
+  after_script:
+    - echo $TAG > ./tag.txt
+    - echo $TAG
   allow_failure: false
+  artifacts:
+    paths:
+      - "./tag.txt"
+    when: on_success
   rules:
     - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
       when: on_success
@@ -68,6 +75,9 @@ docker-build-job:   # This job runs in the test stage.
 
 dev-deploy-job:      # This job runs in the deploy stage.
   stage: dev-deploy  # It only runs when *both* jobs in the test stage complete successfully.
+  before_script:
+    - TAG=$(< ./tag.txt)
+    - echo $TAG
   script:
     - echo "Deploying application to following cluster..."
     - kubectl cluster-info --kubeconfig="$KUBECONFIG_DEV"
@@ -94,6 +104,9 @@ approve-sit-deployment:
 
 sit1-deploy-job:      # This job runs in the deploy stage.
   stage: sit-deploy  # It only runs when *both* jobs in the test stage complete successfully.
+  before_script:
+    - TAG=$(< ./tag.txt)
+    - echo $TAG
   script:
     - echo "Deploying application to following cluster..."
     - kubectl cluster-info --kubeconfig="$KUBECONFIG_DEV"
@@ -110,6 +123,9 @@ sit1-deploy-job:      # This job runs in the deploy stage.
 
 sit2-deploy-job:      # This job runs in the deploy stage.
   stage: sit-deploy  # It only runs when *both* jobs in the test stage complete successfully.
+  before_script:
+    - TAG=$(< ./tag.txt)
+    - echo $TAG
   script:
     - echo "Deploying application to following cluster..."
     - kubectl cluster-info --kubeconfig="$KUBECONFIG_DEV"
@@ -126,6 +142,9 @@ sit2-deploy-job:      # This job runs in the deploy stage.
 
 sit-reports-deploy-job:      # This job runs in the deploy stage.
   stage: sit-deploy  # It only runs when *both* jobs in the test stage complete successfully.
+  before_script:
+    - TAG=$(< ./tag.txt)
+    - echo $TAG
   script:
     - echo "Deploying application to following cluster..."
     - kubectl cluster-info --kubeconfig="$KUBECONFIG_DEV"

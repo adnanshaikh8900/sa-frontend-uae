@@ -1,48 +1,128 @@
-# This file is a template, and might need editing before it works on your project.
-# This is a sample GitLab CI/CD configuration file that should run without any modifications.
-# It demonstrates a basic 3 stage CI/CD pipeline. Instead of real tests or scripts,
-# it uses echo commands to simulate the pipeline execution.
-#
-# A pipeline is composed of independent jobs that run scripts, grouped into stages.
-# Stages run in sequential order, but jobs within stages run in parallel.
-#
-# For more information, see: https://docs.gitlab.com/ee/ci/yaml/index.html#stages
-#
-# You can copy and paste this template into a new `.gitlab-ci.yml` file.
-# You should not add this template to an existing `.gitlab-ci.yml` file by using the `include:` keyword.
-#
-# To contribute improvements to CI/CD templates, please follow the Development guide at:
-# https://docs.gitlab.com/ee/development/cicd/templates.html
-# This specific template is located at:
-# https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
-
 stages:          # List of stages for jobs, and their order of execution
-  - build
-  - test
-  - deploy
+  - dev-compile
+  - dev-build
+  - dev-deploy
+  - sit-deploy
+  # - UAT
+variables: 
+  IMAGE: datainn/simpleaccounts/simpleaccounts-frontend
+  TAG: latest
+  ARTIFACT_PATH: ./build
+
 
 build-job:       # This job runs in the build stage, which runs first.
-  stage: build
+  stage: dev-compile
+  variables: 
+    CI: "false"
+  cache:
+    key: $CI_COMMIT_REF_SLUG
+    paths:
+      - .npm
+  before_script:
+    - npm set cache .npm
+    - npm ci --prefer-offline
   script:
     - echo "Compiling the code...!"
-    - echo "Compile complete."
+    - npm run build --if-present
+    - echo "Compile completed."
+  allow_failure: false
+  artifacts:
+    paths:
+      - "$ARTIFACT_PATH"
+    when: on_success
 
-# unit-test-job:   # This job runs in the test stage.
-#   stage: test    # It only starts when the job in the build stage completes successfully.
-#   script:
-#     - echo "Running unit tests... This will take about 60 seconds."
-#     - sleep 60
-#     - echo "Code coverage is 90%"
+docker-job:   # This job runs in the test stage.
+  stage: dev-build    # It only starts when the job in the build stage completes successfully.
+  image: docker:20.10.16
+  variables: 
+    DOCKER_HOST: "tcp://docker:2376"
+    DOCKER_TLS_CERTDIR: "/certs"
+    DOCKER_TLS_VERIFY: 1
+    DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
+  services:
+    - docker:20.10.16-dind
+  before_script:
+    - echo "Waiting for docker to initialise..."
+    - i=0; while [ "$i" -lt 12 ]; do docker info && break; sleep 5; i=$(( i + 1 )) ; done
+    - echo "Docker running"
+    - TAG=$VERSION_PREFIX.$SA_VERSION
+    - SA_VERSION=$(($SA_VERSION+1))
+    - apk add curl
+    - curl --request PUT --header "PRIVATE-TOKEN:$GITLAB_API_TOKEN" "https://gitlab.datainn.io/api/v4/projects/5/variables/SA_VERSION" --form "value=$SA_VERSION"
+  dependencies:
+    - "build-job"
+  script:
+    - echo "Docker build and push..."
+    - docker build -t $REGISTRY_URL/$IMAGE:$TAG .
+    - echo "$REGISTRY_PASS" | docker login $REGISTRY_URL --username $REGISTRY_USER --password-stdin
+    - docker push $REGISTRY_URL/$IMAGE:$TAG
+    - echo "Docker image pushed"
+  allow_failure: false
+  rules:
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
+      when: always
+    - when: never
 
-# lint-test-job:   # This job also runs in the test stage.
-#   stage: test    # It can run at the same time as unit-test-job (in parallel).
-#   script:
-#     - echo "Linting code... This will take about 10 seconds."
-#     - sleep 10
-#     - echo "No lint issues found."
+dev-deploy-job:      # This job runs in the deploy stage.
+  stage: dev-deploy  # It only runs when *both* jobs in the test stage complete successfully.
+  script:
+    - echo "Deploying application to following cluster..."
+    - kubectl cluster-info --kubeconfig="$KUBECONFIG_DEV"
+    - echo "Test deployment scripts..."
+    - helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=$REGISTRY_URL/$IMAGE,maindomain=dev.app.simpleaccounts.io,simpleVatHost=https://dev-api.app.simpleaccounts.io,fullnameOverride=dev-frontend,serviceAccount.name=dev-deploy-robot-frontend,ingress.hosts[0].host=dev.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=dev-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=dev-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=dev.app.simpleaccounts.io --wait --dry-run --debug --namespace dev --create-namespace dev-frontend ./simpleaccounts-frontend --kubeconfig="$KUBECONFIG_DEV"
+    - echo "Deployment started scripts..."
+    - helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=$REGISTRY_URL/$IMAGE,maindomain=dev.app.simpleaccounts.io,simpleVatHost=https://dev-api.app.simpleaccounts.io,fullnameOverride=dev-frontend,serviceAccount.name=dev-deploy-robot-frontend,ingress.hosts[0].host=dev.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=dev-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=dev-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=dev.app.simpleaccounts.io --wait --namespace dev --create-namespace dev-frontend ./simpleaccounts-frontend --kubeconfig="$KUBECONFIG_DEV"
+    - echo "Application successfully deployed."
+  allow_failure: false
+  rules:
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
+      when: always
+    - when: never
 
-# deploy-job:      # This job runs in the deploy stage.
-#   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
-#   script:
-#     - echo "Deploying application..."
-#     - echo "Application successfully deployed."
+sit1-deploy-job:      # This job runs in the deploy stage.
+  stage: sit-deploy  # It only runs when *both* jobs in the test stage complete successfully.
+  script:
+    - echo "Deploying application to following cluster..."
+    - kubectl cluster-info --kubeconfig="$KUBECONFIG_DEV"
+    - echo "Test deployment scripts..."
+    - helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=$REGISTRY_URL/$IMAGE,maindomain=sit1.app.simpleaccounts.io,simpleVatHost=https://sit1-api.app.simpleaccounts.io,fullnameOverride=sit1-frontend,serviceAccount.name=sit1-deploy-robot-frontend,ingress.hosts[0].host=sit1.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=sit1-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=sit1-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=sit1.app.simpleaccounts.io --wait --dry-run --debug --namespace sit1 --create-namespace sit1-frontend ./simpleaccounts-frontend --kubeconfig="$KUBECONFIG_DEV"
+    - echo "Deployment started scripts..."
+    - helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=$REGISTRY_URL/$IMAGE,maindomain=sit1.app.simpleaccounts.io,simpleVatHost=https://sit1-api.app.simpleaccounts.io,fullnameOverride=sit1-frontend,serviceAccount.name=sit1-deploy-robot-frontend,ingress.hosts[0].host=sit1.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=sit1-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=sit1-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=sit1.app.simpleaccounts.io --wait --namespace sit1 --create-namespace sit1-frontend ./simpleaccounts-frontend --kubeconfig="$KUBECONFIG_DEV"
+    - echo "Application successfully deployed."
+  allow_failure: false
+  rules:
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
+      when: always
+    - when: never
+    
+sit2-deploy-job:      # This job runs in the deploy stage.
+  stage: sit-deploy  # It only runs when *both* jobs in the test stage complete successfully.
+  script:
+    - echo "Deploying application to following cluster..."
+    - kubectl cluster-info --kubeconfig="$KUBECONFIG_DEV"
+    - echo "Test deployment scripts..."
+    - helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=$REGISTRY_URL/$IMAGE,maindomain=sit2.app.simpleaccounts.io,simpleVatHost=https://sit2-api.app.simpleaccounts.io,fullnameOverride=sit2-frontend,serviceAccount.name=sit2-deploy-robot-frontend,ingress.hosts[0].host=sit2.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=sit2-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=sit2-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=sit2.app.simpleaccounts.io --wait --dry-run --debug --namespace sit2 --create-namespace sit2-frontend ./simpleaccounts-frontend --kubeconfig="$KUBECONFIG_DEV"
+    - echo "Deployment started scripts..."
+    - helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=$REGISTRY_URL/$IMAGE,maindomain=sit2.app.simpleaccounts.io,simpleVatHost=https://sit2-api.app.simpleaccounts.io,fullnameOverride=sit2-frontend,serviceAccount.name=sit2-deploy-robot-frontend,ingress.hosts[0].host=sit2.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=sit2-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=sit2-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=sit2.app.simpleaccounts.io --wait --namespace sit2 --create-namespace sit2-frontend ./simpleaccounts-frontend --kubeconfig="$KUBECONFIG_DEV"
+    - echo "Application successfully deployed."
+  allow_failure: false
+  rules:
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
+      when: always
+    - when: never
+
+sit-reports-deploy-job:      # This job runs in the deploy stage.
+  stage: sit-deploy  # It only runs when *both* jobs in the test stage complete successfully.
+  script:
+    - echo "Deploying application to following cluster..."
+    - kubectl cluster-info --kubeconfig="$KUBECONFIG_DEV"
+    - echo "Test deployment scripts..."
+    - helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=$REGISTRY_URL/$IMAGE,maindomain=sit-reports.app.simpleaccounts.io,simpleVatHost=https://sit-reports-api.app.simpleaccounts.io,fullnameOverride=sit-reports-frontend,serviceAccount.name=sit-reports-deploy-robot-frontend,ingress.hosts[0].host=sit-reports.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=sit-reports-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=sit-reports-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=sit-reports.app.simpleaccounts.io --wait --dry-run --debug --namespace sit-reports --create-namespace sit-reports-frontend ./simpleaccounts-frontend --kubeconfig="$KUBECONFIG_DEV"
+    - echo "Deployment started scripts..."
+    - helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=$REGISTRY_URL/$IMAGE,maindomain=sit-reports.app.simpleaccounts.io,simpleVatHost=https://sit-reports-api.app.simpleaccounts.io,fullnameOverride=sit-reports-frontend,serviceAccount.name=sit-reports-deploy-robot-frontend,ingress.hosts[0].host=sit-reports.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=sit-reports-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=sit-reports-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=sit-reports.app.simpleaccounts.io --wait --namespace sit-reports --create-namespace sit-reports-frontend ./simpleaccounts-frontend --kubeconfig="$KUBECONFIG_DEV"
+    - echo "Application successfully deployed."
+  allow_failure: false
+  rules:
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
+      when: always
+    - when: never

@@ -320,10 +320,10 @@ class Quatation extends React.Component {
 							{row.status === 'Draft' && (
                             <DropdownItem
 								onClick={() => {
-									this.changeStatus(row.id,"Sent");
+									this.sendMail(row.id);
 								}}
 							>
-							<i class="far fa-arrow-alt-circle-right"></i>{strings.Mark_As_Sent}
+							<i className="fas fa-send"></i>{strings.Mark_As_Sent}
 							</DropdownItem>)}
 							{row.status === 'Sent' && (
 							<DropdownItem

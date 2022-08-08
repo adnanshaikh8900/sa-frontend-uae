@@ -10,14 +10,22 @@ variables:
   TAG: latest
   ARTIFACT_PATH: ./build
 
+# Cache modules using lock file
+cache:
+  key:
+    files:
+      - package-lock.json
+  paths:
+    - .npm/
+
 npm-compile-job:       # This job runs in the build stage, which runs first.
   stage: compile
   variables: 
     CI: "false"
   script:
     - echo "Compiling the code...!"
-    - npm ci
-    - npm run build
+    - npm ci --cache .npm --prefer-offline
+    # - npm run build
     - echo "Compile completed."
   allow_failure: false
   artifacts:

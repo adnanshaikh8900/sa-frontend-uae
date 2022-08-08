@@ -50,8 +50,9 @@ docker-build-job:   # This job runs in the test stage.
     - echo "Docker running"
     - TAG=$VERSION_PREFIX.$SA_VERSION
     - echo "update version to $SA_VERSION"
+    - NEXT_VERSION=$(($SA_VERSION+1))
     - apk add curl
-    - curl --request PUT --header "PRIVATE-TOKEN:$GITLAB_API_TOKEN" "https://gitlab.datainn.io/api/v4/projects/5/variables/SA_VERSION" --form "value=$(($SA_VERSION+1))"
+    - curl --request PUT --header "PRIVATE-TOKEN:$GITLAB_API_TOKEN" "https://gitlab.datainn.io/api/v4/projects/5/variables/SA_VERSION" --form "value="$NEXT_VERSION
   dependencies:
     - "npm-compile-job"
   script:

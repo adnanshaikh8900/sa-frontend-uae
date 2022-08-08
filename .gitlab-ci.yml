@@ -11,12 +11,12 @@ variables:
   ARTIFACT_PATH: ./build
 
 # Cache modules using lock file
-# cache:
-#   key:
-#     files:
-#       - package-lock.json
-#   paths:
-#     - .npm/
+cache:
+  key:
+    files:
+      - package-lock.json
+  paths:
+    - .npm/
 
 npm-compile-job:       # This job runs in the build stage, which runs first.
   stage: compile

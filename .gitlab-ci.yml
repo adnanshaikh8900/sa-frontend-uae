@@ -23,7 +23,7 @@ npm-compile-job:       # This job runs in the build stage, which runs first.
   variables: 
     CI: "false"
   before_script:
-    - npm ci --cache .npm --prefer-offline
+    - npm ci
   script:
     - echo "Compiling the code...!"
     - npm run build

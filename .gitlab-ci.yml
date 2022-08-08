@@ -1,7 +1,8 @@
 stages:          # List of stages for jobs, and their order of execution
-  - dev-compile
-  - dev-build
+  - compile
+  - build
   - dev-deploy
+  - sit-approval
   - sit-deploy
   # - UAT
 variables: 
@@ -10,8 +11,8 @@ variables:
   ARTIFACT_PATH: ./build
 
 
-build-job:       # This job runs in the build stage, which runs first.
-  stage: dev-compile
+npm-compile-job:       # This job runs in the build stage, which runs first.
+  stage: compile
   variables: 
     CI: "false"
   cache:
@@ -23,7 +24,7 @@ build-job:       # This job runs in the build stage, which runs first.
     - npm ci --prefer-offline
   script:
     - echo "Compiling the code...!"
-    - npm run build --if-present
+    - npm run build
     - echo "Compile completed."
   allow_failure: false
   artifacts:
@@ -31,8 +32,8 @@ build-job:       # This job runs in the build stage, which runs first.
       - "$ARTIFACT_PATH"
     when: on_success
 
-docker-job:   # This job runs in the test stage.
-  stage: dev-build    # It only starts when the job in the build stage completes successfully.
+docker-build-job:   # This job runs in the test stage.
+  stage: build    # It only starts when the job in the build stage completes successfully.
   image: docker:20.10.16
   variables: 
     DOCKER_HOST: "tcp://docker:2376"
@@ -50,7 +51,7 @@ docker-job:   # This job runs in the test stage.
     - apk add curl
     - curl --request PUT --header "PRIVATE-TOKEN:$GITLAB_API_TOKEN" "https://gitlab.datainn.io/api/v4/projects/5/variables/SA_VERSION" --form "value=$SA_VERSION"
   dependencies:
-    - "build-job"
+    - "npm-compile-job"
   script:
     - echo "Docker build and push..."
     - docker build -t $REGISTRY_URL/$IMAGE:$TAG .
@@ -79,6 +80,15 @@ dev-deploy-job:      # This job runs in the deploy stage.
       when: always
     - when: never
 
+approve-sit-deployment:
+  stage: sit-approval
+  script:
+    - echo "Approve SIT Deployment"
+  rules:
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
+      when: manual
+    - when: never
+
 sit1-deploy-job:      # This job runs in the deploy stage.
   stage: sit-deploy  # It only runs when *both* jobs in the test stage complete successfully.
   script:
@@ -94,7 +104,7 @@ sit1-deploy-job:      # This job runs in the deploy stage.
     - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
       when: always
     - when: never
-    
+
 sit2-deploy-job:      # This job runs in the deploy stage.
   stage: sit-deploy  # It only runs when *both* jobs in the test stage complete successfully.
   script:

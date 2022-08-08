@@ -10,18 +10,20 @@ variables:
   TAG: latest
   ARTIFACT_PATH: ./build
 
+# Cache modules using lock file
+cache:
+  key:
+    files:
+      - package-lock.json
+  paths:
+    - .npm/
 
 npm-compile-job:       # This job runs in the build stage, which runs first.
   stage: compile
   variables: 
     CI: "false"
-  cache:
-    key: $CI_COMMIT_REF_SLUG
-    paths:
-      - .npm
   before_script:
-    - npm set cache .npm
-    - npm ci --prefer-offline
+    - npm ci
   script:
     - echo "Compiling the code...!"
     - npm run build
@@ -61,7 +63,7 @@ docker-build-job:   # This job runs in the test stage.
   allow_failure: false
   rules:
     - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
-      when: always
+      when: on_success
     - when: never
 
 dev-deploy-job:      # This job runs in the deploy stage.
@@ -77,7 +79,17 @@ dev-deploy-job:      # This job runs in the deploy stage.
   allow_failure: false
   rules:
     - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
-      when: always
+      when: on_success
+    - when: never
+
+approve-sit-deployment:
+  stage: sit-approval
+  script:
+    - echo "Approve SIT Deployment"
+  allow_failure: false
+  rules:
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
+      when: manual
     - when: never
 
 approve-sit-deployment:
@@ -102,7 +114,7 @@ sit1-deploy-job:      # This job runs in the deploy stage.
   allow_failure: false
   rules:
     - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
-      when: always
+      when: on_success
     - when: never
 
 sit2-deploy-job:      # This job runs in the deploy stage.
@@ -118,7 +130,7 @@ sit2-deploy-job:      # This job runs in the deploy stage.
   allow_failure: false
   rules:
     - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
-      when: always
+      when: on_success
     - when: never
 
 sit-reports-deploy-job:      # This job runs in the deploy stage.
@@ -134,5 +146,5 @@ sit-reports-deploy-job:      # This job runs in the deploy stage.
   allow_failure: false
   rules:
     - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
-      when: always
+      when: on_success
     - when: never

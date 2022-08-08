@@ -9,31 +9,17 @@ variables:
   IMAGE: datainn/simpleaccounts/simpleaccounts-frontend
   TAG: latest
   ARTIFACT_PATH: ./build
-  npm_config_cache: "$CI_PROJECT_DIR/.npm"
-
-.dependencies_cache:
-  cache:
-    key:
-      files:
-        - package-lock.json
-    paths:
-      - .npm
-    policy: pull
 
 npm-compile-job:       # This job runs in the build stage, which runs first.
   stage: compile
   variables: 
     CI: "false"
-  before_script:
-    - npm ci
   script:
     - echo "Compiling the code...!"
+    - npm ci
     - npm run build
     - echo "Compile completed."
   allow_failure: false
-  extends: .dependencies_cache
-  cache:
-    policy: pull-push
   artifacts:
     paths:
       - "$ARTIFACT_PATH"

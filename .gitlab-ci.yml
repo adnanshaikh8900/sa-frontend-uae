@@ -17,7 +17,7 @@ npm-compile-job:       # This job runs in the build stage, which runs first.
   script:
     - echo "Compiling the code...!"
     - npm ci
-    - npm run build
+    #- npm run build
     - echo "Compile completed."
   allow_failure: false
   artifacts:

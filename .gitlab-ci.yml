@@ -2,7 +2,7 @@ stages:          # List of stages for jobs, and their order of execution
   - dev-compile
   - dev-build
   - dev-deploy
-  # - SIT
+  - sit-deploy
   # - UAT
 variables: 
   IMAGE: datainn/simpleaccounts/simpleaccounts-frontend
@@ -63,7 +63,7 @@ docker-job:   # This job runs in the test stage.
       when: always
     - when: never
 
-deploy-job:      # This job runs in the deploy stage.
+dev-deploy-job:      # This job runs in the deploy stage.
   stage: dev-deploy  # It only runs when *both* jobs in the test stage complete successfully.
   script:
     - echo "Deploying application to following cluster..."
@@ -72,6 +72,54 @@ deploy-job:      # This job runs in the deploy stage.
     - helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=$REGISTRY_URL/$IMAGE,maindomain=dev.app.simpleaccounts.io,simpleVatHost=https://dev-api.app.simpleaccounts.io,fullnameOverride=dev-frontend,serviceAccount.name=dev-deploy-robot-frontend,ingress.hosts[0].host=dev.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=dev-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=dev-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=dev.app.simpleaccounts.io --wait --dry-run --debug --namespace dev --create-namespace dev-frontend ./simpleaccounts-frontend --kubeconfig="$KUBECONFIG_DEV"
     - echo "Deployment started scripts..."
     - helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=$REGISTRY_URL/$IMAGE,maindomain=dev.app.simpleaccounts.io,simpleVatHost=https://dev-api.app.simpleaccounts.io,fullnameOverride=dev-frontend,serviceAccount.name=dev-deploy-robot-frontend,ingress.hosts[0].host=dev.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=dev-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=dev-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=dev.app.simpleaccounts.io --wait --namespace dev --create-namespace dev-frontend ./simpleaccounts-frontend --kubeconfig="$KUBECONFIG_DEV"
+    - echo "Application successfully deployed."
+  allow_failure: false
+  rules:
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
+      when: always
+    - when: never
+
+sit1-deploy-job:      # This job runs in the deploy stage.
+  stage: sit-deploy  # It only runs when *both* jobs in the test stage complete successfully.
+  script:
+    - echo "Deploying application to following cluster..."
+    - kubectl cluster-info --kubeconfig="$KUBECONFIG_DEV"
+    - echo "Test deployment scripts..."
+    - helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=$REGISTRY_URL/$IMAGE,maindomain=sit1.app.simpleaccounts.io,simpleVatHost=https://sit1-api.app.simpleaccounts.io,fullnameOverride=sit1-frontend,serviceAccount.name=sit1-deploy-robot-frontend,ingress.hosts[0].host=sit1.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=sit1-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=sit1-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=sit1.app.simpleaccounts.io --wait --dry-run --debug --namespace sit1 --create-namespace sit1-frontend ./simpleaccounts-frontend --kubeconfig="$KUBECONFIG_DEV"
+    - echo "Deployment started scripts..."
+    - helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=$REGISTRY_URL/$IMAGE,maindomain=sit1.app.simpleaccounts.io,simpleVatHost=https://sit1-api.app.simpleaccounts.io,fullnameOverride=sit1-frontend,serviceAccount.name=sit1-deploy-robot-frontend,ingress.hosts[0].host=sit1.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=sit1-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=sit1-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=sit1.app.simpleaccounts.io --wait --namespace sit1 --create-namespace sit1-frontend ./simpleaccounts-frontend --kubeconfig="$KUBECONFIG_DEV"
+    - echo "Application successfully deployed."
+  allow_failure: false
+  rules:
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
+      when: always
+    - when: never
+    
+sit2-deploy-job:      # This job runs in the deploy stage.
+  stage: sit-deploy  # It only runs when *both* jobs in the test stage complete successfully.
+  script:
+    - echo "Deploying application to following cluster..."
+    - kubectl cluster-info --kubeconfig="$KUBECONFIG_DEV"
+    - echo "Test deployment scripts..."
+    - helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=$REGISTRY_URL/$IMAGE,maindomain=sit2.app.simpleaccounts.io,simpleVatHost=https://sit2-api.app.simpleaccounts.io,fullnameOverride=sit2-frontend,serviceAccount.name=sit2-deploy-robot-frontend,ingress.hosts[0].host=sit2.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=sit2-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=sit2-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=sit2.app.simpleaccounts.io --wait --dry-run --debug --namespace sit2 --create-namespace sit2-frontend ./simpleaccounts-frontend --kubeconfig="$KUBECONFIG_DEV"
+    - echo "Deployment started scripts..."
+    - helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=$REGISTRY_URL/$IMAGE,maindomain=sit2.app.simpleaccounts.io,simpleVatHost=https://sit2-api.app.simpleaccounts.io,fullnameOverride=sit2-frontend,serviceAccount.name=sit2-deploy-robot-frontend,ingress.hosts[0].host=sit2.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=sit2-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=sit2-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=sit2.app.simpleaccounts.io --wait --namespace sit2 --create-namespace sit2-frontend ./simpleaccounts-frontend --kubeconfig="$KUBECONFIG_DEV"
+    - echo "Application successfully deployed."
+  allow_failure: false
+  rules:
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
+      when: always
+    - when: never
+
+sit-reports-deploy-job:      # This job runs in the deploy stage.
+  stage: sit-deploy  # It only runs when *both* jobs in the test stage complete successfully.
+  script:
+    - echo "Deploying application to following cluster..."
+    - kubectl cluster-info --kubeconfig="$KUBECONFIG_DEV"
+    - echo "Test deployment scripts..."
+    - helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=$REGISTRY_URL/$IMAGE,maindomain=sit-reports.app.simpleaccounts.io,simpleVatHost=https://sit-reports-api.app.simpleaccounts.io,fullnameOverride=sit-reports-frontend,serviceAccount.name=sit-reports-deploy-robot-frontend,ingress.hosts[0].host=sit-reports.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=sit-reports-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=sit-reports-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=sit-reports.app.simpleaccounts.io --wait --dry-run --debug --namespace sit-reports --create-namespace sit-reports-frontend ./simpleaccounts-frontend --kubeconfig="$KUBECONFIG_DEV"
+    - echo "Deployment started scripts..."
+    - helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=$REGISTRY_URL/$IMAGE,maindomain=sit-reports.app.simpleaccounts.io,simpleVatHost=https://sit-reports-api.app.simpleaccounts.io,fullnameOverride=sit-reports-frontend,serviceAccount.name=sit-reports-deploy-robot-frontend,ingress.hosts[0].host=sit-reports.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=sit-reports-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=sit-reports-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=sit-reports.app.simpleaccounts.io --wait --namespace sit-reports --create-namespace sit-reports-frontend ./simpleaccounts-frontend --kubeconfig="$KUBECONFIG_DEV"
     - echo "Application successfully deployed."
   allow_failure: false
   rules:

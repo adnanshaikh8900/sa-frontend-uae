@@ -16,7 +16,8 @@ import {
 } from 'reactstrap';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
-import { Loader } from 'components';
+import { Message } from 'components';
+import {  ImageUploader, Loader } from 'components';
 import { selectCurrencyFactory,selectOptionsFactory } from 'utils';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -24,12 +25,12 @@ import { AuthActions, CommonActions } from 'services/global';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-toastify/dist/ReactToastify.css';
+import PasswordChecklist from "react-password-checklist"
 import PhoneInput  from "react-phone-input-2";
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
-import { upperFirst } from 'lodash-es';
 
 const mapStateToProps = (state) => {
 	return {
@@ -113,7 +114,6 @@ class Register extends React.Component {
 		};
 
 		this.regEx = /^[0-9\d]+$/;
-		this.regExAlpha = /^[a-zA-Z ]+$/;
 	}
 
 	componentDidMount = () => {
@@ -331,7 +331,8 @@ class Register extends React.Component {
 															}
 															return errors;
 														}}
-
+		
+							
 														validationSchema={Yup.object().shape({
 															companyName: Yup.string().required(
 																'Company name is required',
@@ -349,7 +350,7 @@ class Register extends React.Component {
 																'Country is required',
 															),
 															stateId: Yup.string().required(
-																'Emirate is required',
+																'State is required',
 															),
 															firstName: Yup.string().required(
 																'First name is required',
@@ -406,17 +407,17 @@ class Register extends React.Component {
 																<Form onSubmit={props.handleSubmit}>
 																	{/* <h1>Log In</h1> */}
 																	<div className="registerScreen">
-																		<h2 className="">{strings.Register}</h2>
+																		<h2 className="">Register</h2>
 																		<p>Enter Your Details Below To Register</p>
 																	</div>
 																	<div>
-																	<h4 className="">{strings.CompanyDetails}</h4>
+																	<h4 className="">Company Details</h4>
 																	</div>
 																	<Row className="mt-2">
 																		<Col lg={4}>
 																			<FormGroup className="mb-3">
 																				
-																			<Label htmlFor="select"><span className="text-danger">* </span>{strings.CompanyName}</Label>
+																			<Label htmlFor="select"><span className="text-danger">* </span>Company Name</Label>
 																				<Input
 																					type="text"
 																					maxLength="100"
@@ -448,7 +449,7 @@ class Register extends React.Component {
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="currencyCode">
 																				
-																				{strings.Currency}
+																					Currency
 																				</Label>
 																				<Select
 																				isDisabled
@@ -510,7 +511,7 @@ class Register extends React.Component {
 																						<FormGroup>
 																							<Label htmlFor="companyId">
 																							<span className="text-danger">* </span>
-																							{strings.CompanyBusinessType}
+																								 Company / Business Type
 																						</Label>
 																							<Select
 																								options={
@@ -543,9 +544,10 @@ class Register extends React.Component {
 																										)('');
 																									}
 																								}}
-																								placeholder={strings.Enter + strings.CompanyName}
+																								placeholder={strings.Enter+strings.CompanyName}
 																								id="companyTypeCode"
 																								name="companyTypeCode"
+																								placeholder="Enter Buisness Type"
 																								className={
 																									props.errors.companyTypeCode &&
 																										props.touched.companyTypeCode
@@ -566,7 +568,7 @@ class Register extends React.Component {
 																	<Row className="row-wrapper">
 																		<Col lg={4}>
 																			<FormGroup className="mb-3">
-																			<Label htmlFor="select"><span className="text-danger">* </span>{strings.CompanyAddressLine1}</Label>
+																			<Label htmlFor="select"><span className="text-danger">* </span>Company Address Line 1</Label>
 																				<Input
 																					type="text"
 																					maxLength="100"
@@ -596,7 +598,7 @@ class Register extends React.Component {
 																		</Col>
 																		<Col lg={4}>
 																			<FormGroup className="mb-3">
-																				<Label htmlFor="companyAddress2">{strings.CompanyAddressLine2}</Label>
+																				<Label htmlFor="companyAddress2">Company Address Line 2</Label>
 																				<Input
 																					type="text"
 																				 	maxLength="100"
@@ -610,8 +612,8 @@ class Register extends React.Component {
 																						);
 																					}}
 																					className={
-																						props.errors.CompanyAddressLine2 &&
-																						props.touched.CompanyAddressLine2
+																						props.errors.companyAddress2 &&
+																						props.touched.companyAddress2
 																							? 'is-invalid'
 																							: ''
 																					}
@@ -619,7 +621,7 @@ class Register extends React.Component {
 																				{props.errors.companyAddress2 &&
 																					props.touched.companyAddress2 && (
 																						<div className="invalid-feedback">
-																							{props.errors.CompanyAddressLine2}
+																							{props.errors.companyAddress2}
 																						</div>
 																					)}
 																			</FormGroup>
@@ -627,7 +629,7 @@ class Register extends React.Component {
 																		<Col lg={4}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="timeZone">
-																				{strings.TimeZonePreference}
+																					Time Zone Preference
 																				</Label>
 																				<Select
 																					isDisabled
@@ -668,7 +670,7 @@ class Register extends React.Component {
 																		<Row className="row-wrapper">
 															<Col lg={4}>
 																<FormGroup>
-																	<Label htmlFor="countryId">{strings.Country}</Label>
+																	<Label htmlFor="countryId">Country</Label>
 																	<Select
 																		isDisabled
 																		styles={customStyles}
@@ -733,16 +735,16 @@ class Register extends React.Component {
 															<Col lg={4}>
 																<FormGroup>
 																	{/* <Label htmlFor="stateId"> {props.values.countryId.value === 229 ? "Emirates" : "State/Provinces"}</Label> */}
-																	<Label htmlFor="select"><span className="text-danger">* </span>{strings.Emirate}</Label>
+																	<Label htmlFor="select"><span className="text-danger">* </span>Emirates</Label>
 																	<Select
-																		// styles={customStyles}
+																		styles={customStyles}
 																		options={
 																			state_list
 																				? selectOptionsFactory.renderOptions(
 																						'label',
 																						'value',
 																						state_list,
-																						'Emirate',
+																						'Emirates',
 																				  )
 																				: []
 																		}
@@ -766,7 +768,7 @@ class Register extends React.Component {
 																		// placeholder={strings.Select+strings.StateRegion}
 																		id="stateId"
 																		name="stateId"
-																		placeholder="Select Emirate"
+																		placeholder="Select Emirates"
 																		className={
 																			props.errors.stateId &&
 																			props.touched.stateId
@@ -783,7 +785,7 @@ class Register extends React.Component {
 																</FormGroup>
 															</Col>
 															<Col lg={4}>
-																						<FormGroup className="mb-3 ">
+																						<FormGroup className="mb-3 phoneNumber">
 																							<Label htmlFor="phoneNumber">
 																							<span className="text-danger">* </span> {strings.MobileNumber}
 																						</Label>
@@ -791,7 +793,7 @@ class Register extends React.Component {
 																								country={"ae"}
 																								enableSearch={true}
 																								international
-																								style={{width:"260px "}}
+																								style={{width:"260px !important"}}
 																								value={props.values.phoneNumber}
 																								placeholder={strings.Enter+strings.MobileNumber}
 																								onChange={(option) => {
@@ -802,10 +804,11 @@ class Register extends React.Component {
 																									option.length !== 12 ? this.setState({ checkphoneNumberParam: true }) : this.setState({ checkphoneNumberParam: false });
 																								}}
 																								isValid
+																								className="phoneNumber"
 																								className={
 																									props.errors.phoneNumber &&
 																										props.touched.phoneNumber
-																										? ' invalid-feedback is-invalid is-invalidMobile '
+																										? ' invalid-feedback is-invalid '
 																										: ''
 																								}
 																							/>
@@ -911,7 +914,7 @@ class Register extends React.Component {
 																<Col lg={4}>
 																<FormGroup >
 																	<Label htmlFor="TaxRegistrationNumber">
-																	{strings.TaxRegistrationNumber}
+																	Tax Registration Number
 																	</Label>
 																	<Input
 																		type="text"
@@ -947,7 +950,7 @@ class Register extends React.Component {
 																		)}
 																			<div className="VerifyTRN">
 																		<br/>
-																		<b>	<a target="_blank" rel="noopener noreferrer"  href="https://eservices.tax.gov.ae/en-us/trn-verify" style={{ color: '#2266d8' }}  >{strings.VerifyTRN}</a></b>
+																		<b>	<a target="_blank" rel="noopener noreferrer"  href="https://eservices.tax.gov.ae/en-us/trn-verify" style={{ color: '#2266d8' }}  >Verify TRN</a></b>
 																	</div>
 																</FormGroup>
 															</Col>
@@ -1000,7 +1003,7 @@ class Register extends React.Component {
 																		<Col lg={4}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="firstName">
-																				<span className="text-danger">* </span>{strings.FirstName}</Label>
+																				<span className="text-danger">* </span>First Name</Label>
 																				<Input
 																					type="text"
 																					maxLength="100"
@@ -1009,22 +1012,10 @@ class Register extends React.Component {
 																					placeholder="Enter First Name"
 																					value={props.values.firstName}
 																					onChange={(option) => {
-																						if (
-																							option.target.value === '' ||
-																							this.regExAlpha.test(
-																								option.target.value,
-																							)
-																						) {
-
-																							let option1 = upperFirst(option.target.value)
-																							props.handleChange('firstName')(option1);
-																						}
+																						props.handleChange('firstName')(
+																							option,
+																						);
 																					}}
-																					// onChange={(option) => {
-																					// 	props.handleChange('firstName')(
-																					// 		option,
-																					// 	);
-																					// }}
 																					className={
 																						props.errors.firstName &&
 																						props.touched.firstName
@@ -1043,7 +1034,7 @@ class Register extends React.Component {
 																		<Col lg={4}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="lastName">
-																				<span className="text-danger">* </span>{strings.LastName}</Label>
+																				<span className="text-danger">* </span>Last Name</Label>
 																				<Input
 																					type="text"
 																					maxLength="100"
@@ -1052,22 +1043,10 @@ class Register extends React.Component {
 																					placeholder="Enter Last Name"
 																					value={props.values.lastName}
 																					onChange={(option) => {
-																						if (
-																							option.target.value === '' ||
-																							this.regExAlpha.test(
-																								option.target.value,
-																							)
-																						) {
-
-																							let option1 = upperFirst(option.target.value)
-																							props.handleChange('lastName')(option1);
-																						}
+																						props.handleChange('lastName')(
+																							option,
+																						);
 																					}}
-																					// onChange={(option) => {
-																					// 	props.handleChange('lastName')(
-																					// 		option,
-																					// 	);
-																					// }}
 																					className={
 																						props.errors.lastName &&
 																						props.touched.lastName
@@ -1086,9 +1065,9 @@ class Register extends React.Component {
 																		<Col lg={4}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="email">
-																				<span className="text-danger">* </span>{strings.EmailAddress}</Label>
+																				<span className="text-danger">* </span>Email Address</Label>
 																				<Input
-																					type="email"
+																					type="text"
 																					maxLength="80"
 																					id="email"
 																					name="email"

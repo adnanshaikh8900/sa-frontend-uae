@@ -331,8 +331,7 @@ class Register extends React.Component {
 															}
 															return errors;
 														}}
-		
-							
+
 														validationSchema={Yup.object().shape({
 															companyName: Yup.string().required(
 																'Company name is required',

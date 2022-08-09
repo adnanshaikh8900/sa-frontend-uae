@@ -2824,9 +2824,7 @@ discountType = (row) =>
 																							/>
 																						)} */}
 																						{this.state.supplier_currency_symbol}&nbsp;
-																						{initValue.total_net.toFixed(
-																									2,
-																								)}
+																						{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>
@@ -2854,9 +2852,7 @@ discountType = (row) =>
 																							/>
 																						)} */}
 																						{this.state.supplier_currency_symbol}&nbsp;
-																						{initValue.invoiceVATAmount.toFixed(
-																									2,
-																								)}
+																						{initValue.invoiceVATAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>
@@ -2884,9 +2880,7 @@ discountType = (row) =>
 																							/>
 																						)} */}
 																						{this.state.supplier_currency_symbol}&nbsp;
-																						{initValue.totalAmount.toFixed(
-																									2,
-																								)}
+																						{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>

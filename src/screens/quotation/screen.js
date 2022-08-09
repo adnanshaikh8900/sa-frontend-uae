@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-
 import {
 	Card,
 	CardHeader,
@@ -10,7 +9,6 @@ import {
 	Row,
 	Col,
 	ButtonGroup,
-	Input,
 	ButtonDropdown,
 	DropdownToggle,
 	DropdownMenu,
@@ -19,23 +17,15 @@ import {
 import Select from 'react-select';
 // import { ToastContainer, toast } from 'react-toastify'
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import DatePicker from 'react-datepicker';
-import { CSVLink } from 'react-csv';
-
 import EmailModal from '../customer_invoice/sections/email_template';
-
-import { Loader, ConfirmDeleteModal, Currency } from 'components';
-
+import { Loader, ConfirmDeleteModal } from 'components';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'react-datepicker/dist/react-datepicker.css';
-
-
 import * as QuotationAction from './actions';
 import * as CustomerInvoiceActions from './../customer_invoice/actions'
 import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
-
 import './style.scss';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';

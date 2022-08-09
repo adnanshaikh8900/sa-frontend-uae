@@ -1574,14 +1574,14 @@ min="0"
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
-																					Total Excise
+																					{strings.Total_Excise}
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
 
 																						{this.state.selectedData.currencyIsoCode} &nbsp;
-																						{this.state.selectedData.totalExciseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2})}
+																						{this.state.selectedData.totalExciseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>
@@ -1607,7 +1607,7 @@ min="0"
 																							)} */}
 																							{/* {this.getTotalNet()} */}
 																							{this.state.selectedData.currencyIsoCode}  &nbsp;
-																								{this.getTotalNet().toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
+																								{this.getTotalNet().toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>
@@ -1633,7 +1633,7 @@ min="0"
 																							)} */}
 																							{/* {this.state.totalVatAmount	} */}
 																							{this.state.selectedData.currencyIsoCode}  &nbsp;
-																							{this.state.totalVatAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
+																							{this.state.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>
@@ -1659,7 +1659,7 @@ min="0"
 																							)} */}
 																							{/* {this.state.totalAmount} */}
 																							{this.state.selectedData.currencyIsoCode} &nbsp;
-																							{this.state.totalAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
+																							{this.state.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>

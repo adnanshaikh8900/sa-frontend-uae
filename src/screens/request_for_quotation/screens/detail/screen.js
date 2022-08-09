@@ -2367,7 +2367,7 @@ setDate1= (props, value) => {
 																				<label className="mb-0">
 
 																						{this.state.supplier_currency_symbol} &nbsp;
-																						{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																						{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>
@@ -2392,7 +2392,7 @@ setDate1= (props, value) => {
 																							/>
 																							)} */}
 																								{this.state.supplier_currency_symbol} &nbsp;
-																							{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																							{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>
@@ -2417,7 +2417,7 @@ setDate1= (props, value) => {
 																							/>
 																							)} */}
 																								{this.state.supplier_currency_symbol} &nbsp;
-																							{initValue.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																							{initValue.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>
@@ -2442,7 +2442,7 @@ setDate1= (props, value) => {
 																							/>
 																							)} */}
 																								{this.state.supplier_currency_symbol} &nbsp;
-																							{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																							{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>

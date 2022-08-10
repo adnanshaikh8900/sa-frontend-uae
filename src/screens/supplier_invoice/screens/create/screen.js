@@ -583,8 +583,8 @@ class CreateSupplierInvoice extends React.Component {
 							? true 
 							: false,
 							discountEnabled : res.data.discount > 0 
-																					? true 
-																					: false,
+							? true 
+							: false,
 						selectedContact: res.data.contactId 
 							? res.data.contactId 
 							: '',
@@ -703,7 +703,7 @@ class CreateSupplierInvoice extends React.Component {
 																		? res.data.rfqExpiryDate
 																		: '',
 																customer_taxTreatment_des : res.data.taxtreatment ? res.data.taxtreatment : '',
-																// placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+																placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 																total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
 																data: res.data.poQuatationLineItemRequestModelList
 																	? res.data.poQuatationLineItemRequestModelList
@@ -843,7 +843,9 @@ class CreateSupplierInvoice extends React.Component {
 																		customer_taxTreatment_des : res.data.taxtreatment 
 																			? res.data.taxtreatment 
 																			: '',
-																		// placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+																		placeOfSupplyId: res.data.placeOfSupplyId
+																			? res.data.placeOfSupplyId 
+																			: '',
 																		total_excise: res.data.totalExciseAmount 
 																			? res.data.totalExciseAmount 
 																			: '',
@@ -2334,9 +2336,9 @@ class CreateSupplierInvoice extends React.Component {
 													if (values.invoice_number === '') {
 														errors.invoice_number = 'Invoice number is required';
 													}
-													// if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
-													// 	errors.placeOfSupplyId = 'Place of Supply is required';
-													// }
+													if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
+														errors.placeOfSupplyId = 'Place of Supply is required';
+													}
 													if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
 													||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
 													||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
@@ -2368,7 +2370,7 @@ class CreateSupplierInvoice extends React.Component {
 													contactId: Yup.string().required(
 														'Supplier is required',
 													),
-													// placeOfSupplyId: Yup.string().required('Place of Supply is required'),
+													placeOfSupplyId: Yup.string().required('Place of Supply is required'),
 													term: Yup.string().required('Term is required'),
 													invoiceDate: Yup.string().required(
 														'Invoice Date is required',
@@ -2645,13 +2647,13 @@ class CreateSupplierInvoice extends React.Component {
 															<Col lg={3}>
 															{this.state.customer_taxTreatment_des!="NON GCC" &&(<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">
-																		{/* <span className="text-danger">* </span> */}
-																		{this.state.customer_taxTreatment_des &&
+																		<span className="text-danger">* </span>
+																		{/* {this.state.customer_taxTreatment_des &&
 																		(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
 																		||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
 																		||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED") && (
 																			<span className="text-danger">* </span>
-																		)}
+																		)} */}
 																		{strings.PlaceofSupply}
 																	</Label>
 																	<Select

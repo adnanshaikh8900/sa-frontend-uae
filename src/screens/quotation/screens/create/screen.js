@@ -1726,7 +1726,6 @@ discountType = (row) =>
 							unitType:res.data[0].unitType,
 							unitTypeId:res.data[0].unitTypeId,
 							vatAmount:res.data[0].vatAmount ?res.data[0].vatAmount:0,
-							discountType: res.data[0].discountType,							
 					}),
 					idCount: this.state.idCount + 1,
 				},
@@ -1932,7 +1931,7 @@ discountType = (row) =>
 														customerId: Yup.string().required(
 														'Customer is required',
 													),
-														// placeOfSupplyId: Yup.string().required('Place of supply is required'),
+														placeOfSupplyId: Yup.string().required('Place of supply is required'),
 													
 													// poApproveDate: Yup.string().required(
 													// 	'Order date is required',
@@ -2179,15 +2178,16 @@ discountType = (row) =>
 																</FormGroup>
 															</Col>: ''}
 									<Col lg={3}>
-									{this.state.customer_taxTreatment_des!="NON GCC" &&(			<FormGroup className="mb-3">
+									{this.state.customer_taxTreatment_des!="NON GCC" &&(<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">
-																		{/* <span className="text-danger">* </span> */}
-																		{this.state.customer_taxTreatment_des &&
+																		<span className="text-danger">* </span>
+																		{/* {this.state.customer_taxTreatment_des &&
 																		(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
 																		||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
-																		||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED") && (
+																		||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED")
+																		 && (
 																			<span className="text-danger">* </span>
-																		)}
+																		)} */}
 																		{strings.PlaceofSupply}
 																	</Label>
 																	<Select

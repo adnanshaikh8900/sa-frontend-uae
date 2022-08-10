@@ -1806,7 +1806,9 @@ class DetailCustomerInvoice extends React.Component {
 															'Supplier is required',
 														),
 														term: Yup.string().required('Term is required'),
-													//	placeOfSupplyId: Yup.string().required('Place of supply is required'),
+														placeOfSupplyId: Yup.string().required(
+															'Place of supply is required',
+														),
 														invoiceDate: Yup.string().required(
 															'Invoice date is required',
 														),
@@ -2048,12 +2050,13 @@ class DetailCustomerInvoice extends React.Component {
 																<Col lg={3}>
 																{this.state.customer_taxTreatment_des!="NON GCC" &&(	<FormGroup className="mb-3">
 																		<Label htmlFor="placeOfSupplyId">
-																		{this.state.customer_taxTreatment_des &&
+																		<span className="text-danger">* </span>
+																		{/* {this.state.customer_taxTreatment_des &&
 																		(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
 																		||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
 																		||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED") && (
 																			<span className="text-danger">* </span>
-																		)}
+																		)} */}
 																			{strings.PlaceofSupply}
 																		</Label>
 																		<Select

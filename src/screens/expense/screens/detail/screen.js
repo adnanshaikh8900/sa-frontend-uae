@@ -209,8 +209,7 @@ class DetailExpense extends React.Component {
 									expenseDescription: res.data.expenseDescription,
 									receiptNumber: res.data.receiptNumber,
 									attachmentFile: res.data.attachmentFile,
-									receiptAttachmentDescription:
-										res.data.receiptAttachmentDescription,
+									receiptAttachmentDescription: res.data.receiptAttachmentDescription,
 									fileName: res.data.fileName ? res.data.fileName : '',
 									filePath: res.data.receiptAttachmentPath
 										? res.data.receiptAttachmentPath
@@ -268,6 +267,7 @@ class DetailExpense extends React.Component {
 			exchangeRate,
 			receiptNumber,
 			receiptAttachmentDescription,
+			DeliveryNotes,
 			vatCategoryId,
 			payMode,
 			bankAccountId,
@@ -284,10 +284,8 @@ class DetailExpense extends React.Component {
 		formData.append('expenseDate',expenseDate !== null ? moment(expenseDate) : '');
 		formData.append('expenseDescription', expenseDescription);
 		formData.append('receiptNumber', receiptNumber);
-		formData.append(
-			'receiptAttachmentDescription',
-			receiptAttachmentDescription,
-		);
+		formData.append('receiptAttachmentDescription',	receiptAttachmentDescription,);
+		formData.append('delieryNote',	DeliveryNotes,);
 		formData.append('expenseAmount', expenseAmount);
 		if (payMode) {
 			formData.append('payMode', payMode.value ?payMode.value :payMode);
@@ -1585,17 +1583,23 @@ class DetailExpense extends React.Component {
 																	</Label> */}
 																	<div>
 																		<Input
-																			type="number"
-
+																			type="text"
 																			className="form-control"
 																			id="exchangeRate"
 																			name="exchangeRate"
-																			
+																			maxLength='20'																			
 																			value={props.values.exchangeRate}
-																			onChange={(value) => {
-																				props.handleChange('exchangeRate')(
-																					value,
-																				);
+																			onChange={(option) => {
+																				if (
+																					option.target.value === '' ||
+																					this.regDecimal.test(
+																						option.target.value,
+																					)
+																				) {
+																					props.handleChange('exchangeRate')(
+																						option,
+																					);
+																				}
 																			}}
 																		/>
 																	</div>

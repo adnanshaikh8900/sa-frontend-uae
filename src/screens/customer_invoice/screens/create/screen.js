@@ -244,7 +244,8 @@ class CreateCustomerInvoice extends React.Component {
 			{ label: 'Ras al-Khaimah', value: '6' },
 			{ label: 'Fujairah', value: '7' },
 		];
-		this.regEx = /^[0-9/d]+$/;
+		this.regEx = /^[0-9\d]+$/;
+		this.regExFax = /^[0-9]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regExInvNum = /[a-zA-Z0-9'-/]+$/;
 		this.regExTelephone = /^[0-9-]+$/;
@@ -1855,6 +1856,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 									discountType: '',
 									discount: 0,
 									discountPercentage: '',
+									total_excise: 0,
 								},
 							},
 						},
@@ -2267,7 +2269,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 													contactId: Yup.string().required(
 														'Customer is required',
 													),
-													// placeOfSupplyId: Yup.string().required('Place of Supply is required'),
+													placeOfSupplyId: Yup.string().required('Place of Supply is required'),
 													term: Yup.string().required('Term is required'),
 													currency: Yup.string().required(
 														'Currency is required',
@@ -2491,7 +2493,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		)}
 																</FormGroup>
 															</Col>
-															{this.props.location.state &&	this.props.location.state.quotationId ?"":<Col  lg={3}>
+															{this.props.location.state && this.props.location.state.quotationId ? "" : <Col  lg={3}>
 																<Label
 																	htmlFor="contactId"
 																	style={{ display: 'block' }}
@@ -2514,7 +2516,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="taxTreatmentid">
-																		Tax Treatment
+																	{strings.TaxTreatment}
 																	</Label>
 																	<Input
 																	disabled
@@ -2548,13 +2550,13 @@ if(changeShippingAddress && changeShippingAddress==true)
 															<Col lg={3}>
 															{this.state.customer_taxTreatment_des!="NON GCC" &&(<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">
-																		{/* <span className="text-danger">* </span> */}
-																	{this.state.customer_taxTreatment_des &&
+																		<span className="text-danger">* </span>
+																	{/* {this.state.customer_taxTreatment_des &&
 																		(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
 																		||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
 																		||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED") && (
 																			<span className="text-danger">* </span>
-																		)}
+																		)} */}
 																		{strings.PlaceofSupply}
 																	</Label>
 																	<Select
@@ -3137,17 +3139,18 @@ if(changeShippingAddress && changeShippingAddress==true)
 																				option.target.value === '' ||
 																				this.regEx.test(option.target.value)
 																			) {
-																				if(option.target.value.length !=8 && option.target.value !="")
-																				this.setState({showshippingFaxErrorMsg:true})
+																				if (option.target.value.length != 8 && option.target.value != "")
+																					this.setState({ showshippingFaxErrorMsg: true })
 																				else
-																				this.setState({showshippingFaxErrorMsg:false})
+																					this.setState({ showshippingFaxErrorMsg: false })
 																				props.handleChange('shippingFax')(
 																					option,
 																				);
 																			}
-																	
 
-																			}}
+
+																		}}
+
 																		value={props.values.shippingFax}
 																		className={
 																			props.errors.shippingFax &&

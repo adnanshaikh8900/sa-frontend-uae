@@ -1726,7 +1726,6 @@ discountType = (row) =>
 							unitType:res.data[0].unitType,
 							unitTypeId:res.data[0].unitTypeId,
 							vatAmount:res.data[0].vatAmount ?res.data[0].vatAmount:0,
-							discountType: res.data[0].discountType,							
 					}),
 					idCount: this.state.idCount + 1,
 				},

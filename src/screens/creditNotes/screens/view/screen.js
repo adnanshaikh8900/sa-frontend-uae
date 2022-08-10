@@ -2,20 +2,16 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Button, Row, Col, Table, Card } from 'reactstrap';
-
 import * as SupplierInvoiceDetailActions from './actions';
 import * as SupplierInvoiceActions from '../../actions';
 import ReactToPrint from 'react-to-print';
-
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import { Currency } from 'components';
 import './style.scss';
 import { PDFExport } from '@progress/kendo-react-pdf';
-
 import './style.scss';
 import { InvoiceTemplate } from './sections';
-
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 
@@ -131,7 +127,7 @@ class ViewCreditNote extends React.Component {
 				});}
 			else
 			{this.props.supplierInvoiceDetailActions
-				.getInvoiceById(this.props.location.state.id)
+				.getCreditNoteById(this.props.location.state.id)
 				.then((res) => {
 					let val = 0;
 					if (res.status === 200) {

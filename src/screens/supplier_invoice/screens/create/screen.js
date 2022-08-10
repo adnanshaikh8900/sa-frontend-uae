@@ -1981,6 +1981,7 @@ class CreateSupplierInvoice extends React.Component {
 									discountType: '',
 									discount: 0,
 									discountPercentage: '',
+									total_excise: 0,
 								},
 							},
 						},

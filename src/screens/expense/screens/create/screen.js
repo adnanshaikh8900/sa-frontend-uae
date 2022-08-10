@@ -1494,7 +1494,7 @@ class CreateExpense extends React.Component {
 																		)}
 																</FormGroup>
 															</Col>
-																{this.state.payee  && this.state.payee.value === 'Company Expense' || this.state.payee === 'Company Expense' ? 
+																{/* {this.state.payee  && this.state.payee.value === 'Company Expense' || this.state.payee === 'Company Expense' ?  */}
 															<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="payMode"><span className="text-danger">* </span> {strings.PayThrough}</Label>
@@ -1537,7 +1537,8 @@ class CreateExpense extends React.Component {
 																				</div>
 																			)}
 																	</FormGroup>
-																</Col>:''}
+																</Col>
+																{/* :''} */}
 														</Row>
 														{/* {props.values.vatCategoryId !=='' && props.values.vatCategoryId.label !=='Select Vat' &&
 														(
@@ -1675,17 +1676,23 @@ class CreateExpense extends React.Component {
 																	</Label> */}
 																	<div>
 																		<Input
-																			type="number"
-																			min="0"
+																			type="text"
 																			className="form-control"
 																			id="exchangeRate"
 																			name="exchangeRate"
 																			maxLength="20"
 																			value={props.values.exchangeRate}
-																			onChange={(value) => {
-																				props.handleChange('exchangeRate')(
-																					value,
-																				);
+																			onChange={(option) => {
+																				if (
+																					option.target.value === '' ||
+																					this.regDecimal.test(
+																						option.target.value,
+																					)
+																				) {
+																					props.handleChange('exchangeRate')(
+																						option,
+																					);
+																				}
 																			}}
 																		/>
 																	</div>
@@ -1694,13 +1701,11 @@ class CreateExpense extends React.Component {
 														
 															<Col lg={2}>
 															<Input
-																		disabled
-																				id="currencyName"
-																				name="currencyName"
-																				value=	{
-																					this.state.basecurrency.currencyName }
-																				
-																			/>
+																			disabled
+																			id="currencyName"
+																			name="currencyName"
+																			value=	{ this.state.basecurrency.currencyName }
+																		/>
 														</Col>
 														</Row>
 														<Row>

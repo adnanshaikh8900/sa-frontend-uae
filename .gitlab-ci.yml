@@ -86,6 +86,11 @@ dev-deploy-job:      # This job runs in the deploy stage.
     - echo "Deployment started scripts..."
     - helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=$REGISTRY_URL/$IMAGE,maindomain=dev.app.simpleaccounts.io,simpleVatHost=https://dev-api.app.simpleaccounts.io,fullnameOverride=dev-frontend,serviceAccount.name=dev-deploy-robot-frontend,ingress.hosts[0].host=dev.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=dev-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=dev-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=dev.app.simpleaccounts.io --wait --namespace dev --create-namespace dev-frontend ./simpleaccounts-frontend --kubeconfig="$KUBECONFIG_DEV"
     - echo "Application successfully deployed."
+  resource_group: dev
+  environment:
+    name: Development
+    url: https://dev.app.simpleaccounts.io
+    action: start
   allow_failure: false
   rules:
     - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
@@ -115,6 +120,11 @@ sit1-deploy-job:      # This job runs in the deploy stage.
     - echo "Deployment started scripts..."
     - helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=$REGISTRY_URL/$IMAGE,maindomain=sit1.app.simpleaccounts.io,simpleVatHost=https://sit1-api.app.simpleaccounts.io,fullnameOverride=sit1-frontend,serviceAccount.name=sit1-deploy-robot-frontend,ingress.hosts[0].host=sit1.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=sit1-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=sit1-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=sit1.app.simpleaccounts.io --wait --namespace sit1 --create-namespace sit1-frontend ./simpleaccounts-frontend --kubeconfig="$KUBECONFIG_DEV"
     - echo "Application successfully deployed."
+  resource_group: test
+  environment:
+    name: SIT1
+    url: https://sit1.app.simpleaccounts.io
+    action: start
   allow_failure: false
   rules:
     - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
@@ -134,6 +144,11 @@ sit2-deploy-job:      # This job runs in the deploy stage.
     - echo "Deployment started scripts..."
     - helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=$REGISTRY_URL/$IMAGE,maindomain=sit2.app.simpleaccounts.io,simpleVatHost=https://sit2-api.app.simpleaccounts.io,fullnameOverride=sit2-frontend,serviceAccount.name=sit2-deploy-robot-frontend,ingress.hosts[0].host=sit2.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=sit2-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=sit2-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=sit2.app.simpleaccounts.io --wait --namespace sit2 --create-namespace sit2-frontend ./simpleaccounts-frontend --kubeconfig="$KUBECONFIG_DEV"
     - echo "Application successfully deployed."
+  resource_group: test
+  environment:
+    name: SIT2
+    url: https://sit2.app.simpleaccounts.io
+    action: start
   allow_failure: false
   rules:
     - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
@@ -153,6 +168,11 @@ sit-reports-deploy-job:      # This job runs in the deploy stage.
     - echo "Deployment started scripts..."
     - helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=$REGISTRY_URL/$IMAGE,maindomain=sit-reports.app.simpleaccounts.io,simpleVatHost=https://sit-reports-api.app.simpleaccounts.io,fullnameOverride=sit-reports-frontend,serviceAccount.name=sit-reports-deploy-robot-frontend,ingress.hosts[0].host=sit-reports.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=sit-reports-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=sit-reports-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=sit-reports.app.simpleaccounts.io --wait --namespace sit-reports --create-namespace sit-reports-frontend ./simpleaccounts-frontend --kubeconfig="$KUBECONFIG_DEV"
     - echo "Application successfully deployed."
+  resource_group: test
+  environment:
+    name: SIT-Reports
+    url: https://sit-reports.app.simpleaccounts.io
+    action: start
   allow_failure: false
   rules:
     - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'

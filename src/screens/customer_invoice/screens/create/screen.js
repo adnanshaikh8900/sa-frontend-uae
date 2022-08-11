@@ -2269,7 +2269,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 													contactId: Yup.string().required(
 														'Customer is required',
 													),
-													placeOfSupplyId: Yup.string().required('Place of Supply is required'),
+													placeOfSupplyId: Yup.string().required('Place of supply is required'),
 													term: Yup.string().required('Term is required'),
 													currency: Yup.string().required(
 														'Currency is required',

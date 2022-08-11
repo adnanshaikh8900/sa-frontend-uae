@@ -1,4 +1,4 @@
-FROM gitpod/workspace-full-vnc:latest
+FROM gitpod/workspace-full:latest
 
 RUN bash -c 'VERSION="14.8.0" \
     && source $HOME/.nvm/nvm.sh && nvm install $VERSION \

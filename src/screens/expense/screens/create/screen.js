@@ -182,7 +182,7 @@ class CreateExpense extends React.Component {
 									exclusiveVat:res.data.exclusiveVat && res.data.exclusiveVat != null ? res.data.exclusiveVat :'',
 									exchangeRate:res.data.exchangeRate ? res.data.exchangeRate : '',
 									expenseDescription: res.data.expenseDescription,
-									receiptNumber: res.data.receiptNumber,
+									// receiptNumber: res.data.receiptNumber,
 									attachmentFile: res.data.attachmentFile,
 									receiptAttachmentDescription:
 										res.data.receiptAttachmentDescription,
@@ -266,7 +266,7 @@ class CreateExpense extends React.Component {
 							  ).find((option)=>option.value==res.data.vatCategoryId)
 								this.formRef.current.setFieldValue('vatCategoryId',  vat, true);
 								this.formRef.current.setFieldValue('expenseDescription',  res.data.expenseDescription, true);
-								this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
+								// this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
 								this.formRef.current.setFieldValue('receiptAttachmentDescription', res.data.receiptAttachmentDescription, true);
 
 								let payee=	selectOptionsFactory.renderOptions(	'label','value',	this.props.pay_to_list,	'Payee',)

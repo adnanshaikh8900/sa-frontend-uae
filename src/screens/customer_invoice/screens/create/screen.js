@@ -2213,7 +2213,9 @@ if(changeShippingAddress && changeShippingAddress==true)
 														errors.discount =
 															'Discount amount cannot be greater than invoice total amount';
 													}
-													
+													if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
+														errors.placeOfSupplyId = 'Place of supply is required';
+													}
 													if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
 													||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
 													||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
@@ -2269,7 +2271,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 													contactId: Yup.string().required(
 														'Customer is required',
 													),
-													placeOfSupplyId: Yup.string().required('Place of Supply is required'),
+													placeOfSupplyId: Yup.string().required('Place of supply is required'),
 													term: Yup.string().required('Term is required'),
 													currency: Yup.string().required(
 														'Currency is required',

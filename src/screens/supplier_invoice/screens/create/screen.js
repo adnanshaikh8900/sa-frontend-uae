@@ -2337,7 +2337,7 @@ class CreateSupplierInvoice extends React.Component {
 														errors.invoice_number = 'Invoice number is required';
 													}
 													if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
-														errors.placeOfSupplyId = 'Place of Supply is required';
+														errors.placeOfSupplyId = 'Place of supply is required';
 													}
 													if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
 													||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 

@@ -18,3 +18,4 @@ helm install dev-backend ./simpleaccounts-frontend --values ./simpleaccounts-fro
 --set ingress.tls[0].hosts[1]=dev-api.app.simpleaccounts.io, \
 --set ingress.tls[0].hosts[2]=dev.app.simpleaccounts.io \
 --namespace $namespace
+./

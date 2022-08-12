@@ -1,6 +1,7 @@
 stages:          # List of stages for jobs, and their order of execution
-  - compile
-  - build
+  - npm-compile
+  - npm-build
+  - docker-build
   - dev-deploy
   - sit-approval
   - sit-deploy
@@ -8,34 +9,45 @@ stages:          # List of stages for jobs, and their order of execution
 variables: 
   IMAGE: datainn/simpleaccounts/simpleaccounts-frontend
   TAG: $VERSION_PREFIX.$CI_PIPELINE_ID
-  ARTIFACT_PATH: ./build
 
-# Cache modules using lock file
+# Cache modules in between jobs
 cache:
-  key:
-    files:
-      - package-lock.json
+  key: $CI_COMMIT_REF_SLUG
   paths:
     - .npm/
 
 npm-compile-job:       # This job runs in the build stage, which runs first.
-  stage: compile
+  stage: npm-compile
   variables: 
     CI: "false"
-  before_script:
-    - npm ci
   script:
     - echo "Compiling the code...!"
-    - npm run build
+    - npm ci --cache .npm --prefer-offline --loglevel verbose
     - echo "Compile completed."
   allow_failure: false
   artifacts:
     paths:
-      - "$ARTIFACT_PATH"
+      - "./node_modules"
+    when: on_success
+  
+npm-build-job:       # This job runs in the build stage, which runs first.
+  stage: npm-build
+  variables: 
+    CI: "false"
+  dependencies:
+    - "npm-compile-job"
+  script:
+    - echo "building the code...!"
+    - npm run build --loglevel verbose
+    - echo "build completed."
+  allow_failure: false
+  artifacts:
+    paths:
+      - "./build"
     when: on_success
 
 docker-build-job:   # This job runs in the test stage.
-  stage: build    # It only starts when the job in the build stage completes successfully.
+  stage: docker-build    # It only starts when the job in the build stage completes successfully.
   image: docker:20.10.16
   variables: 
     DOCKER_HOST: "tcp://docker:2376"
@@ -53,7 +65,7 @@ docker-build-job:   # This job runs in the test stage.
     # - apk add curl
     # - curl --request PUT --header "PRIVATE-TOKEN:$GITLAB_API_TOKEN" "https://gitlab.datainn.io/api/v4/projects/5/variables/SA_VERSION" --form "value="$NEXT_VERSION
   dependencies:
-    - "npm-compile-job"
+    - "npm-build-job"
   script:
     - echo "Docker build and push..."
     - docker build -t $REGISTRY_URL/$IMAGE:$TAG .

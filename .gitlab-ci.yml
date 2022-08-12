@@ -10,11 +10,9 @@ variables:
   IMAGE: datainn/simpleaccounts/simpleaccounts-frontend
   TAG: $VERSION_PREFIX.$CI_PIPELINE_ID
 
-# Cache modules using lock file
+# Cache modules in between jobs
 cache:
-  key:
-    files:
-      - package-lock.json
+  key: $CI_COMMIT_REF_SLUG
   paths:
     - .npm/
 

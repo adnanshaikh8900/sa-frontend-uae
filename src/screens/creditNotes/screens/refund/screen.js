@@ -65,6 +65,7 @@ const customStyles = {
 let strings = new LocalizedStrings(data);
 class Refund extends React.Component {
 	constructor(props) {
+
 		super(props);
 		this.state = {
 			language: window['localStorage'].getItem('language'),
@@ -130,6 +131,7 @@ class Refund extends React.Component {
 			'application/vnd.ms-excel',
 			'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 		];
+		debugger
 	}
 
 	componentDidMount = () => {
@@ -484,6 +486,9 @@ class Refund extends React.Component {
 														 if (values.amount == 0) {
 														  errors.amount =
 														'Amount cannot be empty or 0';
+													 }else if(this.state.amount<parseFloat(values.amount)){ 
+														errors.amount =
+														'Amount cannot More than the Invoice Amount';
 													 }
 													 return errors
 													 }}
@@ -637,6 +642,7 @@ class Refund extends React.Component {
 																					: ''
 																			}
 																		/>
+																		
 																		{props.errors.amount &&
 																			props.touched.amount && (
 																				<div className="invalid-feedback">
@@ -901,6 +907,7 @@ class Refund extends React.Component {
 																	lg={12}
 																	className="mt-5 d-flex flex-wrap align-items-center justify-content-between"
 															>
+																{console.log( this.props.location.state.id.dueAmount,this.state.amount,props.values.amount,props.errors)}
 																<FormGroup className="text-right w-100">
 																		<Button
 																			type="submit"

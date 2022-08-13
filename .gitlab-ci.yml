@@ -22,7 +22,8 @@ npm-compile-job:       # This job runs in the build stage, which runs first.
     CI: "false"
   script:
     - echo "Compiling the code...!"
-    - npm ci --cache .npm --prefer-offline --loglevel verbose
+    - npm ci --loglevel verbose
+    # - npm ci --cache .npm --prefer-offline --loglevel verbose
     - echo "Compile completed."
   allow_failure: false
   artifacts:

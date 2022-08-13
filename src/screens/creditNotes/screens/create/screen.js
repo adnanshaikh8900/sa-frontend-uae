@@ -295,6 +295,9 @@ class CreateCreditNote extends React.Component {
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
 								if (e.target.value === '' || this.regEx.test(e.target.value)) {
+									
+									
+								
 									this.selectItem(
 										e.target.value,
 										row,
@@ -305,6 +308,7 @@ class CreateCreditNote extends React.Component {
 									);
 
 									this.setState({currentRow:row})
+								
 								}
 
 							}}
@@ -1084,8 +1088,10 @@ discountType = (row) =>
 	};
 
 	updateAmount = (data, props) => {
+	
 		const { vat_list , excise_list} = this.props;
 		const { discountPercentage, discountAmount } = this.state;
+	
 		let total_net = 0;
 		let total_excise = 0;
 		let total = 0;
@@ -1172,6 +1178,7 @@ discountType = (row) =>
 		// 	props.values.discountType.value === 'PERCENTAGE'
 		// 		? +((total_net * discountPercentage) / 100)
 		// 		: discountAmount;
+		
 		this.setState(
 			{
 				data,
@@ -1182,7 +1189,9 @@ discountType = (row) =>
 						invoiceVATAmount: total_vat,
 						discount:  discount ? discount : 0,
 						totalAmount: total_net > discount ? total - discount : total - discount,
-						total_excise: total_excise
+						total_excise: total_excise,
+						
+						
 					},
 
 				},
@@ -3080,7 +3089,7 @@ min="0"
 																		type="button"
 																		color="primary"
 																		className="btn-square mr-3"
-																		disabled={this.state.disabled}
+																		disabled={this.state.disabled || (initValue.totalAmount>this.state.remainingInvoiceAmount)}
 																		onClick={() => {
 																				//	added validation popup	msg
 																				props.handleBlur();
@@ -3100,11 +3109,13 @@ min="0"
 																			? 'Creating...'
 																			: strings.Create}
 																	</Button>
+																	{console.log(this.state.totalAmount,this.state.remainingInvoiceAmount)}
 																	<Button
 																		type="button"
 																		color="primary"
 																		className="btn-square mr-3"
-																		disabled={this.state.disabled}
+																		
+																		disabled={this.state.disabled || (initValue.totalAmount>this.state.remainingInvoiceAmount)}
 																		onClick={() => {
 																				//	added validation popup	msg
 																				props.handleBlur();
@@ -3138,8 +3149,10 @@ min="0"
 																		<i className="fa fa-ban"></i> {strings.Cancel}
 																	</Button>
 																</FormGroup>
+														
 															</Col>
 														</Row>
+														{(initValue.totalAmount>this.state.remainingInvoiceAmount) && <div style={{color:'red'}}>Remaining Invoice Amount cananot less than Total Amount</div>}
 													</Form>
 												)}
 											</Formik>

@@ -417,7 +417,7 @@ class RecordSupplierPayment extends React.Component {
 													}}
 													validate={(values) => {
 														let errors = {};
-														 if (values.amount < 0) {
+														 if (values.amount <= 0) {
 														  errors.amount ='Amount cannot be Less than 0';
 													 }
 													 return errors

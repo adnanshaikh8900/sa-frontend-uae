@@ -8,6 +8,7 @@ import {data}  from '../../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { TextareaAutosize } from '@material-ui/core';
 
+
 const { ToWords } = require('to-words');
 const toWords = new ToWords({
 	localeCode: 'en-IN',
@@ -270,25 +271,23 @@ class InvoiceTemplate extends Component {
 												<td style={{ textAlign: 'right', width: '10%' }}>
 													<Currency
 														value={item.unitPrice}
-														currencySymbol={
-															currencyData[0]
-																? currencyData[0].currencyIsoCode
-																: 'USD'
-														}
+														currencySymbol={	currencyData[0]
+																	? currencyData[0].currencyIsoCode
+																	: 'USD'}
+												
 													/>
 												</td>
-												{invoiceData.discount > 0 && (<>	<td style={{ textAlign: 'right' }}>{item.discount}</td></>)}
+												{ (invoiceData.discount > 0 && <>	<td style={{ textAlign: 'right' }}>{item.discount}</td></>)}
 												{/* <td style={{ textAlign: 'right' }}>{item.discountType}</td> */}
 												{/* <td>{item.exciseTaxId ? this.renderExcise(item):"-"}</td> */}
-												{ invoiceData.totalExciseAmount > 0 && (<><td style={{ textAlign: 'right' }}>
+												{  (item.exciseAmount>0 && <><td style={{ textAlign: 'right' }}>
+												{
 													<Currency
 														value={item.exciseAmount}
-														currencySymbol={
-															currencyData[0]
-																? currencyData[0].currencyIsoCode
-																: 'USD'
-														}
-													/>
+														currencySymbol={	currencyData[0]
+																	? currencyData[0].currencyIsoCode
+																	: 'USD'}
+													/>}
 												</td></>)}
 												{/* <td
 													style={{ textAlign: 'right' }}
@@ -296,21 +295,17 @@ class InvoiceTemplate extends Component {
 												<td style={{ textAlign: 'right' }}>
 													<Currency
 														value={item.vatAmount}
-														currencySymbol={
-															currencyData[0]
-																? currencyData[0].currencyIsoCode
-																: 'AED'
-														}
+														currencySymbol={	currencyData[0]
+																	? currencyData[0].currencyIsoCode
+																	: 'USD'}
 													/>
 												</td>
 												<td style={{ textAlign: 'right' }}>
 													<Currency
 														value={item.subTotal}
-														currencySymbol={
-															currencyData[0]
-																? currencyData[0].currencyIsoCode
-																: 'USD'
-														}
+														currencySymbol={	currencyData[0]
+																	? currencyData[0].currencyIsoCode
+																	: 'USD'}
 													/>
 												</td>
 											</tr>
@@ -411,7 +406,7 @@ class InvoiceTemplate extends Component {
 														<Currency
 															value={invoiceData.totalExciseAmount}
 															currencySymbol={
-																currencyData[0]
+																	currencyData[0]
 																	? currencyData[0].currencyIsoCode
 																	: 'USD'
 															}
@@ -420,7 +415,7 @@ class InvoiceTemplate extends Component {
 														<Currency
 															value={0}
 															currencySymbol={
-																currencyData[0]
+																	currencyData[0]
 																	? currencyData[0].currencyIsoCode
 																	: 'USD'
 															}
@@ -450,7 +445,7 @@ class InvoiceTemplate extends Component {
 														<Currency
 															value={invoiceData.discount ? +invoiceData.discount : invoiceData.discount}
 															currencySymbol={
-																currencyData[0]
+																	currencyData[0]
 																	? currencyData[0].currencyIsoCode
 																	: 'USD'
 															}
@@ -459,7 +454,7 @@ class InvoiceTemplate extends Component {
 														<Currency
 															value={0}
 															currencySymbol={
-																currencyData[0]
+																	currencyData[0]
 																	? currencyData[0].currencyIsoCode
 																	: 'USD'
 															}
@@ -477,7 +472,7 @@ class InvoiceTemplate extends Component {
 														<Currency
 															value={totalNet-invoiceData.totalVatAmount}
 															currencySymbol={
-																currencyData[0]
+																	currencyData[0]
 																	? currencyData[0].currencyIsoCode
 																	: 'USD'
 															}
@@ -486,7 +481,7 @@ class InvoiceTemplate extends Component {
 														<Currency
 															value={0}
 															currencySymbol={
-																currencyData[0]
+																	currencyData[0]
 																	? currencyData[0].currencyIsoCode
 																	: 'USD'
 															} 

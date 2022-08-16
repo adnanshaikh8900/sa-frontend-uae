@@ -1088,7 +1088,6 @@ discountType = (row) =>
 	};
 
 	updateAmount = (data, props) => {
-	
 		const { vat_list , excise_list} = this.props;
 		const { discountPercentage, discountAmount } = this.state;
 	
@@ -1746,6 +1745,7 @@ if (invoiceNumber && invoiceNumber.value) {
 													this.handleSubmit(values, resetForm);
 												}}
 												validate={(values) => {
+													
 													let errors = {};
 													 
 													if (exist === true) 
@@ -1756,7 +1756,8 @@ if (invoiceNumber && invoiceNumber.value) {
 													if(this.state.isCreatedWIWP==false && !values.invoiceNumber)
 													{
 														errors.invoiceNumber = 'Invoice number is required';}
-													if(this.state.isCreatedWIWP == true && this.state.invoiceSelected == true && !values.creditAmount)
+											
+													if((this.state.isCreatedWIWP  && !this.state.invoiceSelected)&& values.creditAmount<1)
 														{
 															errors.creditAmount = 'Credit amount is required';}
 													// if(this.state.invoiceSelected && this.state.initValue.totalAmount>this.state.remainingInvoiceAmount)

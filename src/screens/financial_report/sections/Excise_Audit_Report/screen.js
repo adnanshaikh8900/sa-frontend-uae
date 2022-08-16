@@ -55,8 +55,8 @@ class ViewFtaExciseAuditReport extends React.Component {
 			initValue: {
 				startDate:this.props.location.state.startDate,
 				endDate: this.props.location.state.endDate,
-				companyId: 1,
-				userId: 1,
+				companyId: this.props.profile.company.companyId ,
+				userId: this.props.profile.userId ,
 				taxAgencyId: this.props.location.state.taxAgencyId,
 			},
 			csvData: [],

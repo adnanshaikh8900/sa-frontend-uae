@@ -2750,7 +2750,7 @@ min="0"
 																			
 																		}}
 																		>
-																			<i className="fa fa-dot-circle-o"></i>{this.state.disabled
+																			<i className="fa fa-dot-circle-o"></i> {this.state.disabled
 																			? 'Updating...'
 																			: strings.Update }
 																			{/* { {this.state.disabled }

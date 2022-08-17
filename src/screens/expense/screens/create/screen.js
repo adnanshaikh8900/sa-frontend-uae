@@ -31,6 +31,7 @@ import LocalizedStrings from 'react-localization';
 import { Checkbox } from '@material-ui/core';
 import Switch from "react-switch";
 import { TextareaAutosize } from '@material-ui/core';
+import currency from 'screens/currency';
 
 const mapStateToProps = (state) => {
 	return {
@@ -182,7 +183,7 @@ class CreateExpense extends React.Component {
 									exclusiveVat:res.data.exclusiveVat && res.data.exclusiveVat != null ? res.data.exclusiveVat :'',
 									exchangeRate:res.data.exchangeRate ? res.data.exchangeRate : '',
 									expenseDescription: res.data.expenseDescription,
-									// receiptNumber: res.data.receiptNumber,
+									receiptNumber: res.data.receiptNumber,
 									attachmentFile: res.data.attachmentFile,
 									receiptAttachmentDescription:
 										res.data.receiptAttachmentDescription,
@@ -266,7 +267,7 @@ class CreateExpense extends React.Component {
 							  ).find((option)=>option.value==res.data.vatCategoryId)
 								this.formRef.current.setFieldValue('vatCategoryId',  vat, true);
 								this.formRef.current.setFieldValue('expenseDescription',  res.data.expenseDescription, true);
-								// this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
+								this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
 								this.formRef.current.setFieldValue('receiptAttachmentDescription', res.data.receiptAttachmentDescription, true);
 
 								let payee=	selectOptionsFactory.renderOptions(	'label','value',	this.props.pay_to_list,	'Payee',)
@@ -350,7 +351,7 @@ class CreateExpense extends React.Component {
 				isDesignatedZone:isDesignatedZone})
 	
 	});
-}
+	}
 	getTaxTreatmentList=()=>{
 		this.props.expenseActions
 			.getTaxTreatment()
@@ -433,6 +434,8 @@ class CreateExpense extends React.Component {
 		if (currency) {
 			formData.append('currencyCode', currency.value);
 		}
+		console.log(currency);
+
 		if (vatCategoryId && vatCategoryId.value) {
 			formData.append('vatCategoryId', vatCategoryId.value);
 			 
@@ -838,6 +841,12 @@ class CreateExpense extends React.Component {
 		})
 
 		return array;
+	}
+	handleChangeCurrency=(event)=>{
+		var initValue = this.state.initValue;
+		initValue.currency = event;
+		this.setState({initValue});
+		alert(event);
 	}
 	render() {
 		strings.setLanguage(this.state.language);
@@ -1469,7 +1478,7 @@ class CreateExpense extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currency">
 																		<span className="text-danger">* </span>
-																		{strings.Currency}  
+																		{strings.Currency} 
 																	</Label>
 																	<Select
 																		id="currency"
@@ -1486,7 +1495,6 @@ class CreateExpense extends React.Component {
 																				: []
 																		}
 																		placeholder={strings.Select+strings.Currency}
-																		value={props.values.currencyCode}
 																		onChange={(option) => {
 																			if(option.value!="")
 																			{
@@ -1494,9 +1502,6 @@ class CreateExpense extends React.Component {
 																			this.setExchange(option.value);
 																			this.setCurrency(option.value);
 																		     }
-																			 else
-																			 props.handleChange('currency')('');
-																			 
 																		   }}
 																		className={
 																			props.errors.currency &&
@@ -1513,7 +1518,7 @@ class CreateExpense extends React.Component {
 																		)}
 																</FormGroup>
 															</Col>
-																{/* {this.state.payee  && this.state.payee.value === 'Company Expense' || this.state.payee === 'Company Expense' ?  */}
+																{this.state.payee  && this.state.payee.value === 'Company Expense' || this.state.payee === 'Company Expense' ? 
 															<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="payMode"><span className="text-danger">* </span> {strings.PayThrough}</Label>
@@ -1556,8 +1561,7 @@ class CreateExpense extends React.Component {
 																				</div>
 																			)}
 																	</FormGroup>
-																</Col>
-																{/* :''} */}
+																</Col>:''}
 														</Row>
 														{/* {props.values.vatCategoryId !=='' && props.values.vatCategoryId.label !=='Select Vat' &&
 														(
@@ -1695,23 +1699,17 @@ class CreateExpense extends React.Component {
 																	</Label> */}
 																	<div>
 																		<Input
-																			type="text"
+																			type="number"
+																			min="0"
 																			className="form-control"
 																			id="exchangeRate"
 																			name="exchangeRate"
 																			maxLength="20"
 																			value={props.values.exchangeRate}
-																			onChange={(option) => {
-																				if (
-																					option.target.value === '' ||
-																					this.regDecimal.test(
-																						option.target.value,
-																					)
-																				) {
-																					props.handleChange('exchangeRate')(
-																						option,
-																					);
-																				}
+																			onChange={(value) => {
+																				props.handleChange('exchangeRate')(
+																					value,
+																				);
 																			}}
 																		/>
 																	</div>
@@ -1720,11 +1718,13 @@ class CreateExpense extends React.Component {
 														
 															<Col lg={2}>
 															<Input
-																			disabled
-																			id="currencyName"
-																			name="currencyName"
-																			value=	{ this.state.basecurrency.currencyName }
-																		/>
+																		disabled
+																				id="currencyName"
+																				name="currencyName"
+																				value=	{
+																					this.state.basecurrency.currencyName }
+																				
+																			/>
 														</Col>
 														</Row>
 														<Row>

@@ -1374,6 +1374,7 @@ setDate1= (props, value) => {
 	const values2 = value ? value
 	: props.values.rfqExpiryDate1	
 	if ( values2) {
+
 		this.setState({
 			rfqExpiryDate: moment(values2),
 		});
@@ -1893,7 +1894,7 @@ setDate1= (props, value) => {
 																			minDate={new Date()}
 																			dropdownMode="select"
 																			value={props.values.rfqReceiveDate}
-																			selected={new Date(props.values.rfqReceiveDate1)} 
+																			selected={new Date(props.values.rfqReceiveDate)} 
 																			onChange={(value) => {
 																				props.handleChange('rfqReceiveDate')(
 																					value,
@@ -2227,7 +2228,7 @@ setDate1= (props, value) => {
 																		<TextareaAutosize
 																			type="textarea"
 																			className="textarea"
-																			maxLength="250"
+																			maxLength="255"
 																			style={{width: "700px"}}
 																			name="notes"
 																			id="notes"

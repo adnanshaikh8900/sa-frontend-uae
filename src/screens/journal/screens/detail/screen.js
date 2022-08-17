@@ -302,7 +302,7 @@ if(row && row.journalTransactionCategoryLabel==='Bank')
 												
 												return item.label === row.journalTransactionCategoryLabel
 											})?.options?.find((i)=>{
-												debugger
+			
 												return i.value===row.transactionCategoryId
 											})
 										

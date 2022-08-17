@@ -229,7 +229,7 @@ class CreditNotes extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data ? res.data.message : 'Credit Note Posted Successfully'
+						res.data= 'Credit Note Posted Successfully'
 					);
 					this.setState({
 						loading: false,

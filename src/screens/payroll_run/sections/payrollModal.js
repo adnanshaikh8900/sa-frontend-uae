@@ -322,7 +322,7 @@ min="0"
                                                                     ).map((item) => ( 
                                                                         <tr>
                                                                             <td>{item.name}</td>
-                                                                            <td>{item.value ? (
+                                                                            <td>{item.value.toLocaleString(undefined, {maximumFractionDigits:2}) ? (
                                                                                 item.value.toFixed (2)) : (" ")
                                                                             }</td>
                                                                         </tr>

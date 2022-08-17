@@ -143,6 +143,7 @@ class CreateRequestForQuotation extends React.Component {
 				notes: '',
 				discount: 0,
 				discountPercentage: 0,
+				receiptAttachmentDescription:'',
 				// discountType: { value: 'FIXED', label: 'Fixed' },
 			},
 			taxType: false,
@@ -1808,7 +1809,9 @@ class CreateRequestForQuotation extends React.Component {
 			let obj = {label: item.label.contactName, value: item.value}
 			tmpSupplier_list.push(obj)
 		})
-		console.log("date1",new Date(this.state.date1))
+		this.handleChanger=(event)	=>{
+
+		}
 		return (
 			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 			<div>
@@ -2159,20 +2162,20 @@ class CreateRequestForQuotation extends React.Component {
 																				  )
 																				: []
 																		}
-																		value={
-																			this.placelist &&
-																			selectOptionsFactory.renderOptions(
-																				'label',
-																				'value',
-																				this.placelist,
-																				'Place of Supply',
-																		  ).find(
-																					(option) =>
-																					option.value ==
-																					((this.state.quotationId||this.state.parentId) ? this.state.placeOfSupplyId:props.values
-																					.placeOfSupplyId.toString())
-																				)
-																			}
+																		value={props.values.placeOfSupplyId}
+																		// 	this.placelist &&
+																		// 	selectOptionsFactory.renderOptions(
+																		// 		'label',
+																		// 		'value',
+																		// 		this.placelist,
+																		// 		'Place of Supply',
+																		//   ).find(
+																		// 			(option) =>
+																		// 			option.value ==
+																		// 			((this.state.quotationId||this.state.parentId) ? this.state.placeOfSupplyId:props.values
+																		// 			.placeOfSupplyId.toString())
+																		// 		)
+																		// 	}
 						
 																		className={
 																			props.errors.placeOfSupplyId &&
@@ -2685,14 +2688,16 @@ class CreateRequestForQuotation extends React.Component {
 																			id="receiptAttachmentDescription"
 																			rows="2"
 																			placeholder={strings.ReceiptAttachmentDescription}
-																			onChange={(option) =>
+																			onChange={(option) =>{
 																				props.handleChange(
 																					'receiptAttachmentDescription',
 																				)(option)
+																			
+																				this.handleChanger(option)
+																			}
 																			}
 																			value={
-																				props.values
-																					.receiptAttachmentDescription
+																				this.state.receiptAttachmentDescription
 																			}
 																		/>
 																	</FormGroup>

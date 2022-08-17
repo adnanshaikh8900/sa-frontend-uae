@@ -30,6 +30,11 @@ npm-compile-job:       # This job runs in the build stage, which runs first.
     paths:
       - "./node_modules"
     when: on_success
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
   
 npm-build-job:       # This job runs in the build stage, which runs first.
   stage: npm-build
@@ -46,6 +51,11 @@ npm-build-job:       # This job runs in the build stage, which runs first.
     paths:
       - "./build"
     when: on_success
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
 
 docker-build-job:   # This job runs in the test stage.
   stage: docker-build    # It only starts when the job in the build stage completes successfully.
@@ -62,9 +72,6 @@ docker-build-job:   # This job runs in the test stage.
     - i=0; while [ "$i" -lt 12 ]; do docker info && break; sleep 5; i=$(( i + 1 )) ; done
     - echo "Docker running"
     - echo "update version to $TAG"
-    # - NEXT_VERSION=$(($SA_VERSION+1))
-    # - apk add curl
-    # - curl --request PUT --header "PRIVATE-TOKEN:$GITLAB_API_TOKEN" "https://gitlab.datainn.io/api/v4/projects/5/variables/SA_VERSION" --form "value="$NEXT_VERSION
   dependencies:
     - "npm-build-job"
   script:
@@ -73,24 +80,18 @@ docker-build-job:   # This job runs in the test stage.
     - echo "$REGISTRY_PASS" | docker login $REGISTRY_URL --username $REGISTRY_USER --password-stdin
     - docker push $REGISTRY_URL/$IMAGE:$TAG
     - echo "Docker image pushed"
-  # after_script:
-  #   - echo $TAG > ./tag.txt
-  #   - echo $TAG
-  # allow_failure: false
-  # artifacts:
-  #   paths:
-  #     - "./tag.txt"
-  #   when: on_success
   rules:
     - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
       when: on_success
     - when: never
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
 
 dev-deploy-job:      # This job runs in the deploy stage.
   stage: dev-deploy  # It only runs when *both* jobs in the test stage complete successfully.
-  # before_script:
-  #   - TAG=$(< ./tag.txt)
-  #   - echo $TAG
   script:
     - echo "Deploying application to following cluster..."
     - kubectl cluster-info --kubeconfig="$KUBECONFIG_DEV"
@@ -109,6 +110,11 @@ dev-deploy-job:      # This job runs in the deploy stage.
     - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
       when: on_success
     - when: never
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
 
 approve-sit-deployment:
   stage: sit-approval
@@ -120,12 +126,14 @@ approve-sit-deployment:
     - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
       when: manual
     - when: never
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
 
 sit1-deploy-job:      # This job runs in the deploy stage.
   stage: sit-deploy  # It only runs when *both* jobs in the test stage complete successfully.
-  # before_script:
-  #   - TAG=$(< ./tag.txt)
-  #   - echo $TAG
   script:
     - echo "Deploying application to following cluster..."
     - kubectl cluster-info --kubeconfig="$KUBECONFIG_DEV"
@@ -144,12 +152,14 @@ sit1-deploy-job:      # This job runs in the deploy stage.
     - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
       when: on_success
     - when: never
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
 
 sit2-deploy-job:      # This job runs in the deploy stage.
   stage: sit-deploy  # It only runs when *both* jobs in the test stage complete successfully.
-  # before_script:
-  #   - TAG=$(< ./tag.txt)
-  #   - echo $TAG
   script:
     - echo "Deploying application to following cluster..."
     - kubectl cluster-info --kubeconfig="$KUBECONFIG_DEV"
@@ -168,12 +178,14 @@ sit2-deploy-job:      # This job runs in the deploy stage.
     - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
       when: on_success
     - when: never
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
 
 sit-reports-deploy-job:      # This job runs in the deploy stage.
   stage: sit-deploy  # It only runs when *both* jobs in the test stage complete successfully.
-  # before_script:
-  #   - TAG=$(< ./tag.txt)
-  #   - echo $TAG
   script:
     - echo "Deploying application to following cluster..."
     - kubectl cluster-info --kubeconfig="$KUBECONFIG_DEV"
@@ -192,3 +204,8 @@ sit-reports-deploy-job:      # This job runs in the deploy stage.
     - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
       when: on_success
     - when: never
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure

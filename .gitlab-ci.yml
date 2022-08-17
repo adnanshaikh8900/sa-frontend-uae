@@ -10,20 +10,19 @@ variables:
   IMAGE: datainn/simpleaccounts/simpleaccounts-frontend
   TAG: $VERSION_PREFIX.$CI_PIPELINE_ID
 
-# # Cache modules in between jobs
-# cache:
-#   key: $CI_COMMIT_REF_SLUG
-#   paths:
-#     - .npm/
+# Cache modules in between jobs
+cache:
+  key: $CI_COMMIT_REF_SLUG
+  paths:
+    - .npm/
 
 npm-compile-job:       # This job runs in the build stage, which runs first.
   stage: npm-compile
-  variables: 
-    CI: "false"
   script:
+    - CI="false"
     - echo "Compiling the code...!"
-    # - npm ci --cache .npm --prefer-offline --loglevel verbose
-    - npm ci --loglevel verbose
+    - npm ci --cache .npm --prefer-offline --loglevel verbose
+    # - npm ci --loglevel verbose
     - echo "Compile completed."
   allow_failure: false
   artifacts:

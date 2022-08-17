@@ -67,7 +67,8 @@ class UpdateEmployeePersonal extends React.Component {
             checkmobileNumberParam1:false,
             checkmobileNumberParam2:false,
             loadingMsg:"Loading....",
-			disableLeavePage:false
+			disableLeavePage:false,
+            emailExist: false
         }
 
         this.regExAlpha = /^[a-zA-Z ]+$/;
@@ -455,6 +456,23 @@ class UpdateEmployeePersonal extends React.Component {
     else
      return new Date()
 }
+emailvalidationCheck = (value) => {
+    const data = {
+        moduleType: 24,
+        name: value,
+    };
+    this.props.commonActions.checkValidation(data).then((response) => {
+        if (response.data === 'Employee email already exists') {
+            this.setState({
+                emailExist: true,
+            });
+        } else {
+            this.setState({
+                emailExist: false,
+            });
+        }
+    });
+};
 
     render() {
         strings.setLanguage(this.state.language);
@@ -491,6 +509,10 @@ class UpdateEmployeePersonal extends React.Component {
                                                     }}
                                                     validate={(values) => {
 														let errors = {};
+
+                                                        if (this.state.emailExist == true) {
+                                                            errors.email = 'Email already exists';
+                                                        }
 	
 														// if (checkmobileNumberParam === true) {
 														// errors.mobileNumber =
@@ -749,7 +771,10 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                     name="email"
                                                                                     value={props.values.email}
                                                                                     placeholder={strings.Enter + strings.EmailAddress}
-                                                                                    onChange={(value) => { props.handleChange('email')(value) }}
+                                                                                    onChange={(option) => {
+                                                                                         props.handleChange('email')(option);
+                                                                                         this.emailvalidationCheck(option.target.value);
+                                                                                }}
                                                                                     className={props.errors.email && props.touched.email ? "is-invalid" : ""}
                                                                                 />
                                                                                 {props.errors.email && props.touched.email && (

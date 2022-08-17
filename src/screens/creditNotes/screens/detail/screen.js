@@ -724,6 +724,7 @@ class DetailCreditNote extends React.Component {
 			   <div>
 			   <div  class="input-group">
 				   <Input
+				   disabled
 						 type="text"
 						   min="0"
 						maxLength="14,2"
@@ -765,7 +766,7 @@ class DetailCreditNote extends React.Component {
 	
 		<div 	style={{width:'100px'}}>
 		<Select
-	
+	isDisabled
 	
 																						   options={discountOptions}
 																						   id="discountType"
@@ -985,7 +986,12 @@ class DetailCreditNote extends React.Component {
 				obj.vatCategoryId !== ''
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
-			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
+				console.log(index);
+				let vat=0;
+				if(vat_list.length!==0){
+					vat = index !== '' ? vat_list[`${index}`] : 0;
+				}
+			 
 
 			//Excise calculation
 			if(obj.exciseTaxId !=  0){

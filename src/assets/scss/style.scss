@@ -137,7 +137,9 @@ $spinkit-spinner-color: $body-color;
 	border: 1px solid #2064d8 !important;
 	box-shadow: none !important;
 }
-
+.textarea:focus{
+	border: 1px solid #2064d8 !important;
+}
 .invoice-detail {
 	font-weight: 600;
 }

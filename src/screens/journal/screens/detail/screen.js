@@ -151,6 +151,7 @@ class DetailJournal extends React.Component {
 								});
 							},
 						);
+						debugger
 					}
 				})
 				.catch((err) => {
@@ -197,6 +198,20 @@ class DetailJournal extends React.Component {
 
 	renderAccount = (cell, row, props) => {
 		const { transaction_category_list } = this.props;
+
+		// const getoptions=()=>{
+		// const tit=transactionCategoryList.find(
+		// 		(item) =>{
+		// 			debugger
+		// 			item.label === row.journalTransactionCategoryLabel
+		// 		})
+		// 	debugger	
+				
+		// 		?.options?.find((i)=>{
+		// 			debugger
+		// 			i.value===row.transactionCategoryId
+		// 		})?.label
+		// }
 		let transactionCategoryList =
 			transaction_category_list &&
 			transaction_category_list &&
@@ -280,14 +295,18 @@ if(row && row.journalTransactionCategoryLabel==='Bank')
 						value={
 							transactionCategoryList &&
 							transactionCategoryList.length > 0 &&
-							row.journalTransactionCategoryLabel
+							row.transactionCategoryName
 								? transactionCategoryList
 										.find(
-											(item) =>
-												item.label === row.journalTransactionCategoryLabel,
-												(item) => item.value === +row.transactionCategoryId,
-										)
-								: row.transactionCategoryId
+											(item) =>{
+												
+												return item.label === row.journalTransactionCategoryLabel
+											})?.options?.find((i)=>{
+												debugger
+												return i.value===row.transactionCategoryId
+											})
+										
+								: row.transactionCategoryName
 						}
 						placeholder={strings.Select+strings.Account}
 						className={`${

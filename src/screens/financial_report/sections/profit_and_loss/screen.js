@@ -258,7 +258,7 @@ class ProfitAndLossReport extends React.Component {
 															<DropdownItem onClick={this.exportPDFWithComponent}>
 															Pdf
 														</DropdownItem>
-														{/* <DropdownItem
+														<DropdownItem
 															onClick={() => {
 																this.exportFile(csvData, 'profitloss', 'xls');
 															}}
@@ -271,7 +271,7 @@ class ProfitAndLossReport extends React.Component {
 															}}
 														>
 															XLSX (Microsoft Excel)
-														</DropdownItem> */}
+														</DropdownItem>
 													</DropdownMenu>
 												</Dropdown>
 													&nbsp;&nbsp;

@@ -63,7 +63,6 @@ npm-build-job:       # This job runs in the build stage, which runs first.
   dependencies:
     - "npm-compile-job"
   script:
-    - CI="false"
     - echo "building the code...!"
     - npm run build
     - echo "build completed."

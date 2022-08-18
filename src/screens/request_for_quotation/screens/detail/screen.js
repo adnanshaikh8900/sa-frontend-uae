@@ -121,7 +121,9 @@ class DetailRequestForQuotation extends React.Component {
 			dateChanged: false,
 			dateChanged1: false,
 			loadingMsg:"Loading...",
-			disableLeavePage:false
+			disableLeavePage:false,
+			textValue:'xjnjxndjnjcnjdnkjcnkjdnvkjndkjnvjdvnkdjnkv',
+
 		};
 
 		// this.options = {
@@ -1894,7 +1896,7 @@ setDate1= (props, value) => {
 																			minDate={new Date()}
 																			dropdownMode="select"
 																			value={props.values.rfqReceiveDate}
-																			selected={new Date(props.values.rfqReceiveDate)} 
+																			selected={new Date(props.values.rfqReceiveDate1)} 
 																			onChange={(value) => {
 																				props.handleChange('rfqReceiveDate')(
 																					value,
@@ -2347,8 +2349,7 @@ setDate1= (props, value) => {
 																				)(option)
 																			}
 																			value={
-																				props.values
-																					.receiptAttachmentDescription
+																				props.values.textValue
 																			}
 																		/>
 																	</FormGroup>

@@ -1360,7 +1360,7 @@ class DetailCreditNote extends React.Component {
 	};
 
 	removeInvoice = () => {
-		this.setState({ disabled1: true });
+		this.setState({ disabled1: true,disableLeavePage:true });
 		const { current_customer_id } = this.state;
 		if(this.props.location.state.isCNWithoutProduct!=true)
 		
@@ -1369,6 +1369,7 @@ class DetailCreditNote extends React.Component {
 			.deleteInvoice(current_customer_id)
 			.then((res) => {
 				if (res.status === 200) {
+					this.setState({  });
 					this.props.commonActions.tostifyAlert(
 						'success',
 						res.data ? res.data.message : 'Credit Note Deleted Successfully'

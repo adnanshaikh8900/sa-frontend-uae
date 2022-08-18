@@ -181,7 +181,7 @@ class CreateCreditNote extends React.Component {
 			loadingMsg:"Loading",
 			disableLeavePage:false
 		};
-
+		
 		this.formRef = React.createRef();
 
 		this.file_size = 1024000;
@@ -363,7 +363,7 @@ class CreateCreditNote extends React.Component {
 						onChange={(e) => {
 							if (
 								e.target.value === '' ||
-								this.regDecimal.test(e.target.value)
+								(this.regDecimal.test(e.target.value) && row['unitPrice']>e.target.value )
 							) {
 								this.selectItem(
 									e.target.value,
@@ -1098,6 +1098,7 @@ discountType = (row) =>
 		let net_value = 0;
 		let discount = 0;
 		data.map((obj) => {
+			
 			const index =
 				obj.vatCategoryId !== ''
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
@@ -1106,7 +1107,7 @@ discountType = (row) =>
 
 			//Excise calculation
 			if(obj.exciseTaxId !=  0){
-				if(obj.isExciseTaxExclusive === true){
+				if(obj.isExciseTaxExclusive){
 				if(obj.exciseTaxId === 1){
 				const value = +(obj.unitPrice) / 2 ;
 					net_value = parseFloat(obj.unitPrice) + parseFloat(value) ;
@@ -1186,8 +1187,7 @@ discountType = (row) =>
 					...{
 						total_net: discount ? total_net - discount : total_net,
 						invoiceVATAmount: total_vat,
-						discount:  discount ? discount : 0,
-						totalAmount: total_net > discount ? total - discount : total - discount,
+ 						totalAmount: total_net > discount ? total - discount : total - discount,
 						total_excise: total_excise,
 						
 						
@@ -1197,6 +1197,7 @@ discountType = (row) =>
 			},
 
 		);
+		debugger
 	};
 
 	handleFileChange = (e, props) => {
@@ -1894,7 +1895,7 @@ if (invoiceNumber && invoiceNumber.value) {
 																				<hr />
 
 														<Row>
-														{this.state.isCreatedWithoutInvoice===false &&(<Col lg={3}>
+														{!this.state.isCreatedWIWP &&(<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="invoiceNumber"><span className="text-danger">* </span>
 																	{strings.InvoiceNumber}
@@ -2345,7 +2346,7 @@ if (invoiceNumber && invoiceNumber.value) {
 																</FormGroup>
 															</Col>
 															
-															{(this.state.isCreatedWIWP===false || this.state.invoiceSelected==true) &&(<Col lg={3}>
+															{(this.state.isCreatedWIWP===false && this.state.invoiceSelected==true) &&(<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="remainingInvoiceAmount">
 																
@@ -3090,7 +3091,7 @@ min="0"
 																		type="button"
 																		color="primary"
 																		className="btn-square mr-3"
-																		disabled={this.state.disabled || (initValue.totalAmount>this.state.remainingInvoiceAmount)}
+																		disabled={this.state.disabled || (initValue.totalAmount>this.state.remainingInvoiceAmount && !this.state.isCreatedWIWP)}
 																		onClick={() => {
 																				//	added validation popup	msg
 																				props.handleBlur();
@@ -3116,7 +3117,7 @@ min="0"
 																		color="primary"
 																		className="btn-square mr-3"
 																		
-																		disabled={this.state.disabled || (initValue.totalAmount>this.state.remainingInvoiceAmount)}
+																		disabled={this.state.disabled || (initValue.totalAmount>this.state.remainingInvoiceAmount && !this.state.isCreatedWIWP)}
 																		onClick={() => {
 																				//	added validation popup	msg
 																				props.handleBlur();
@@ -3153,7 +3154,8 @@ min="0"
 														
 															</Col>
 														</Row>
-														{(initValue.totalAmount>this.state.remainingInvoiceAmount) && <div style={{color:'red'}}>Remaining Invoice Amount cananot less than Total Amount</div>}
+														{console.log("sdasdasd",initValue.totalAmount>this.state.remainingInvoiceAmount ,this.state.isCreatedWIWP)}
+														{(initValue.totalAmount>this.state.remainingInvoiceAmount && !this.state.isCreatedWIWP)  && <div style={{color:'red'}}>Remaining Invoice Amount cananot less than Total Amount sdgsdg{this.state.isCreatedWithoutInvoice}</div>}
 													</Form>
 												)}
 											</Formik>

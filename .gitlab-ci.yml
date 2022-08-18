@@ -38,6 +38,8 @@ npm-compile-job:       # This job runs in the build stage, which runs first.
     when:
       - runner_system_failure
       - stuck_or_timeout_failure
+      - unknown_failure
+      - job_execution_timeout
   
 npm-build-job:       # This job runs in the build stage, which runs first.
   stage: npm-build
@@ -62,6 +64,8 @@ npm-build-job:       # This job runs in the build stage, which runs first.
     when:
       - runner_system_failure
       - stuck_or_timeout_failure
+      - unknown_failure
+      - job_execution_timeout
 
 docker-build-job:   # This job runs in the test stage.
   stage: docker-build    # It only starts when the job in the build stage completes successfully.
@@ -95,6 +99,8 @@ docker-build-job:   # This job runs in the test stage.
     when:
       - runner_system_failure
       - stuck_or_timeout_failure
+      - unknown_failure
+      - job_execution_timeout
 
 dev-deploy-job:      # This job runs in the deploy stage.
   stage: dev-deploy  # It only runs when *both* jobs in the test stage complete successfully.
@@ -121,6 +127,8 @@ dev-deploy-job:      # This job runs in the deploy stage.
     when:
       - runner_system_failure
       - stuck_or_timeout_failure
+      - unknown_failure
+      - job_execution_timeout
 
 approve-sit-deployment:
   stage: sit-approval
@@ -137,6 +145,8 @@ approve-sit-deployment:
     when:
       - runner_system_failure
       - stuck_or_timeout_failure
+      - unknown_failure
+      - job_execution_timeout
 
 sit1-deploy-job:      # This job runs in the deploy stage.
   stage: sit-deploy  # It only runs when *both* jobs in the test stage complete successfully.
@@ -163,6 +173,8 @@ sit1-deploy-job:      # This job runs in the deploy stage.
     when:
       - runner_system_failure
       - stuck_or_timeout_failure
+      - unknown_failure
+      - job_execution_timeout
 
 sit2-deploy-job:      # This job runs in the deploy stage.
   stage: sit-deploy  # It only runs when *both* jobs in the test stage complete successfully.
@@ -189,6 +201,8 @@ sit2-deploy-job:      # This job runs in the deploy stage.
     when:
       - runner_system_failure
       - stuck_or_timeout_failure
+      - unknown_failure
+      - job_execution_timeout
 
 sit-reports-deploy-job:      # This job runs in the deploy stage.
   stage: sit-deploy  # It only runs when *both* jobs in the test stage complete successfully.
@@ -215,3 +229,5 @@ sit-reports-deploy-job:      # This job runs in the deploy stage.
     when:
       - runner_system_failure
       - stuck_or_timeout_failure
+      - unknown_failure
+      - job_execution_timeout

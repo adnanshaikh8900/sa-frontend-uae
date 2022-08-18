@@ -2157,7 +2157,7 @@ existForAccountNumber = (value) => {
                                                                                             </Col>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="stateId"><span className="text-danger">* </span>
+                                                                                                    <Label htmlFor="stateId"><span className="text-danger">* </span> 
                                                                                                     {props.values.countryId.value === 229 ? strings.Emirate: strings.StateRegion}
 
                                                                                                     </Label>
@@ -2173,7 +2173,19 @@ existForAccountNumber = (value) => {
                                                                                                                 )
                                                                                                                 : []
                                                                                                         }
-                                                                                                        value={props.values.stateId}
+                                                                                                        value={state_list &&
+                                                                                                            selectOptionsFactory
+                                                                                                                .renderOptions(
+                                                                                                                    'label',
+                                                                                                                    'value',
+                                                                                                                    state_list,
+                                                                                                                    props.values.countryId.value === 229 ? strings.Emirate: strings.StateRegion,
+                                                                                                                )
+                                                                                                                .find(
+                                                                                                                    (option) =>
+                                                                                                                        option.value ===
+                                                                                                                        props.values.stateId,
+                                                                                                                )}
                                                                                                         onChange={(option) => {
                                                                                                             if (option && option.value) {
                                                                                                                 props.handleChange('stateId')(option);
@@ -2181,7 +2193,8 @@ existForAccountNumber = (value) => {
                                                                                                                 props.handleChange('stateId')('');
                                                                                                             }
                                                                                                         }}
-                                                                                                        placeholder={strings.Select + props.values.countryId === 229 || props.values.countryId.value === 229 ? strings.Emirate: strings.StateRegion}
+                                                                                                        placeholder={props.values.countryId.value === 229 ? strings.Emirate: strings.StateRegion}
+                                                            
                                                                                                         id="stateId"
                                                                                                         name="stateId"
                                                                                                         className={

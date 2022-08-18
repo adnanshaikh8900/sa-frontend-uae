@@ -1368,30 +1368,7 @@ class DetailCreditNote extends React.Component {
 	removeInvoice = () => {
 		this.setState({ disabled1: true,disableLeavePage:true });
 		const { current_customer_id } = this.state;
-		if(this.props.location.state.isCNWithoutProduct!=true)
-		
-		{this.setState({ loading:true, loadingMsg:"Deleting Tax Credit Note..."});
-			this.props.creditNotesDetailActions
-			.deleteInvoice(current_customer_id)
-			.then((res) => {
-				if (res.status === 200) {
-					this.setState({  });
-					this.props.commonActions.tostifyAlert(
-						'success',
-						res.data = 'Tax Credit Note Deleted Successfully'
-					);
-					this.props.history.push('/admin/income/credit-notes');
-					this.setState({ loading:false,});
-				}
-			})
-			.catch((err) => {
-				this.props.commonActions.tostifyAlert(
-					'error',
-					err.data = 'Tax Credit Note Deleted Unsuccessfully'
-				);
-			});}
-			else
-			{this.props.creditNotesDetailActions
+		this.props.creditNotesDetailActions
 				.deleteCN(current_customer_id)
 				.then((res) => {
 					if (res.status === 200) {
@@ -1407,7 +1384,7 @@ class DetailCreditNote extends React.Component {
 						'error',
 						err.data = 'Tax Credit Note Deleted Unsuccessfully'
 					);
-				});}
+				});
 	};
 
 	removeDialog = () => {

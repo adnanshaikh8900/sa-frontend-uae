@@ -1370,14 +1370,14 @@ class DetailCreditNote extends React.Component {
 		const { current_customer_id } = this.state;
 		if(this.props.location.state.isCNWithoutProduct!=true)
 		
-		{this.setState({ loading:true, loadingMsg:"Deleting Credit Note..."});
+		{this.setState({ loading:true, loadingMsg:"Deleting Tax Credit Note..."});
 			this.props.creditNotesDetailActions
 			.deleteInvoice(current_customer_id)
 			.then((res) => {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data ? res.data.message : 'Credit Note Deleted Successfully'
+						res.data = 'Tax Credit Note Deleted Successfully'
 					);
 					this.props.history.push('/admin/income/credit-notes');
 					this.setState({ loading:false,});
@@ -1386,7 +1386,7 @@ class DetailCreditNote extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data ? err.data.message : 'Credit Note Deleted Unsuccessfully'
+					err.data = 'Tax Credit Note Deleted Unsuccessfully'
 				);
 			});}
 			else
@@ -1396,7 +1396,7 @@ class DetailCreditNote extends React.Component {
 					if (res.status === 200) {
 						this.props.commonActions.tostifyAlert(
 							'success',
-							res.data ? res.data.message : 'Credit Note Deleted Successfully'
+							res.data = 'Tax Credit Note Deleted Successfully'
 						);
 						this.props.history.push('/admin/income/credit-notes');
 					}
@@ -1404,7 +1404,7 @@ class DetailCreditNote extends React.Component {
 				.catch((err) => {
 					this.props.commonActions.tostifyAlert(
 						'error',
-						err.data ? err.data.message : 'Credit Note Deleted Unsuccessfully'
+						err.data = 'Tax Credit Note Deleted Unsuccessfully'
 					);
 				});}
 	};

@@ -2161,7 +2161,12 @@ if(changeShippingAddress && changeShippingAddress==true)
 			let obj = {label: item.label.contactName, value: item.value}
 			tmpCustomer_list.push(obj)
 		})
-
+		this.handleFax= (e) => {
+			var initValue = this.state.initValue;
+			initValue.shippingAddress = e.target.value.replace(/[^0-9]/gi, '');;
+			this.setState({initValue});
+//			alert(this.state.initValue.shippingAddress );
+		  }
 		return (
 			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 			<div>
@@ -3136,24 +3141,23 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		id="shippingFax"
 																		name="shippingFax"
 																		placeholder={strings.Enter + strings.Fax}
+																		onKeyPress={this.handleKeyPress}
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||
 																				this.regEx.test(option.target.value)
 																			) {
 																				if (option.target.value.length != 8 && option.target.value != "")
-																					this.setState({ showshippingFaxErrorMsg: true })
-																				else
-																					this.setState({ showshippingFaxErrorMsg: false })
-																				props.handleChange('shippingFax')(
-																					option,
-																				);
+																					{this.setState({ showshippingFaxErrorMsg: true })}
+																					
+																				else{
+																					this.setState({ showshippingFaxErrorMsg: false })}
 																			}
-
+																			this.handleFax(option)
 
 																		}}
 
-																		value={props.values.shippingFax}
+																		value={this.state.initValue.shippingAddress }
 																		className={
 																			props.errors.shippingFax &&
 																				props.touched.shippingFax

@@ -229,7 +229,7 @@ class CreditNotes extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data ? res.data.message : 'Credit Note Posted Successfully'
+						res.data= 'Credit Note Posted Successfully'
 					);
 					this.setState({
 						loading: false,
@@ -249,6 +249,8 @@ class CreditNotes extends React.Component {
 			});
 	};
 
+	
+
 	unPostInvoice = (row) => {
 		this.setState({
 			loading: true,
@@ -256,9 +258,14 @@ class CreditNotes extends React.Component {
 		const postingRequestModel = {
 			amount: row.invoiceAmount,
 			postingRefId: row.id,
-			postingRefType: 'INVOICE',
+			postingRefType: 'CREDIT_NOTE',
+			isCNWithoutProduct :row.isCNWithoutProduct==true?true:false ,
+			amountInWords:upperCase(row.currencyName + " " +(toWords.convert(row.invoiceAmount))+" ONLY" ).replace("POINT","AND"),
+			vatInWords:row.totalVatAmount ? upperCase(row.currencyName + " " +(toWords.convert(row.totalVatAmount))+" ONLY" ).replace("POINT","AND") :"-",
+			markAsSent:false
 		};
-		this.props.customerInvoiceActions
+		debugger
+		this.props.creditNotesActions
 			.unPostInvoice(postingRequestModel)
 			.then((res) => {
 				if (res.status === 200) {
@@ -475,6 +482,13 @@ class CreditNotes extends React.Component {
 						>
 							<i className="fas fa-eye" />  {strings.View}
 						</DropdownItem>
+						{row.statusEnum === 'Open' && <DropdownItem
+							onClick={() =>
+								this.unPostInvoice(row)
+							}
+						>
+							<i className="fas fa-file" />  {strings.Draft}
+						</DropdownItem>}
 					</DropdownMenu>
 				</ButtonDropdown>
 			</div>

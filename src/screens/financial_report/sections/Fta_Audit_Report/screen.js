@@ -45,6 +45,7 @@ const mapDispatchToProps = (dispatch) => {
 
 class ViewFtaAuditReport extends React.Component {
 	constructor(props) {
+		
 		super(props);
 		this.state = {
 			language: window['localStorage'].getItem('language'),
@@ -55,8 +56,8 @@ class ViewFtaAuditReport extends React.Component {
 			initValue: {
 				startDate:this.props.location.state.startDate,
 				endDate: this.props.location.state.endDate,
-				companyId: 1,
-				userId: 1,
+				companyId:this.props.profile.company.companyId ,
+				userId: this.props.profile.userId,
 				taxAgencyId: this.props.location.state.taxAgencyId,
 			},
 			csvData: [],
@@ -192,8 +193,13 @@ class ViewFtaAuditReport extends React.Component {
 			 this.props.commonActions.getCompany() 
 	};
 
-	initializeData = () => {
+	initializeData = async () => {
 		const { initValue } = this.state;
+		
+		
+		
+		
+		
 		const postData = {
 			startDate: initValue.startDate,
 			endDate: initValue.endDate,
@@ -201,6 +207,7 @@ class ViewFtaAuditReport extends React.Component {
 			userId: initValue.userId,
 			taxAgencyId: initValue.taxAgencyId
 		};
+		debugger
 		this.props.financialReportActions
 			.getFtaAuditReport(postData)
 			.then((res) => {
@@ -274,7 +281,7 @@ class ViewFtaAuditReport extends React.Component {
 	};
 
 	render() {
-
+		
 		const {
 			loading,
 			initValue,

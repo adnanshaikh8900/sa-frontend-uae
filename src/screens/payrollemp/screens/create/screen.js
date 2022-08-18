@@ -1815,7 +1815,7 @@ existForAccountNumber = (value) => {
                                                                                             </Col> */}
                                                                                             <Col>
                                                                                         <div style={{display:"flex"}}>
-                                                                                            <div style={{width:"70%"}}>
+                                                                                            <div style={{width:"60%"}}>
                                                                                                 <FormGroup>
                                                                                                     <Label htmlFor="employeeDesignationId"><span className="text-danger">* </span>{strings.Designation}</Label>
                                                                                                     <Select
@@ -1859,15 +1859,16 @@ existForAccountNumber = (value) => {
                                                                                                 >
 
                                                                                                 </Label>
-                                                                                                <Button
+                                                                                                <Button 
                                                                                                     type="button"
                                                                                                     color="primary"
                                                                                                     size="sm"
-                                                                                                    style={{fontSize:"9px"}}
-                                                                                                    className="btn-square mt-4"
+                                                                                                    style={{fontSize:"12px"}}
+                                                                                                    className="btn-square mt-3"
                                                                                                     onClick={(e, props) => {
                                                                                                         this.openDesignationModal(props);
                                                                                                     }}
+                                                                                                    
                                                                                                 >
                                                                                                     <i className="fa fa-plus"></i>  {strings.AddDesignation}
 															                            	</Button>
@@ -3508,12 +3509,12 @@ existForAccountNumber = (value) => {
                                                                                                 
     
                                                                                             }}   
-                                                                                            value={item.formula}
+                                                                                            value={item.formula.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })}
                                                                                             id=''
                                                                                         />{' '}% of Basic
                                                                                     </td>
                                                                                 ) : (
-                                                                                    <td style={{border:"3px solid # #c8ced3"}}>{strings.FixedAmount}</td>)
+                                                                                    <td style={{border:"3px solid # #c8ced3"}}>{strings.FixedAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })}</td>)
                                                                             }
                                                                             {item.formula ?
                                                                                 (<td style={{border:"3px solid #c8ced3"}} >
@@ -3542,7 +3543,7 @@ existForAccountNumber = (value) => {
                                                                                              
     
                                                                                             }}  
-                                                                                            value={item.flatAmount}
+                                                                                            value={item.flatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })}
                                                                                             id='' />
                                                                                     </td>
                                                                                 )}
@@ -3555,7 +3556,7 @@ existForAccountNumber = (value) => {
 
                                                                                 ) : (
                                                                                     <td style={{border:"3px solid  #c8ced3"}} >
-                                                                                     {item.flatAmount * 12}
+                                                                                     {(item.flatAmount * 12).toLocaleString(undefined, {maximumFractionDigits:2})}
                                                                                     </td>
                                                                                 )}
                                                                                  <td>    
@@ -3663,7 +3664,7 @@ existForAccountNumber = (value) => {
                                                                                                
     
                                                                                             }}  
-                                                                                            value={item.flatAmount}
+                                                                                            value={item.flatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })}
                                                                                             id='' />
                                                                                     </td>
                                                                                 )}

@@ -38,10 +38,14 @@ npm-compile-job:       # This job runs in the build stage, which runs first.
 npm-build-job:       # This job runs in the build stage, which runs first.
   stage: npm-build
   variables: 
-    CI: "false"
+    KUBERNETES_CPU_REQUEST: 1
+    KUBERNETES_MEMORY_REQUEST: 2Gi
+    KUBERNETES_EPHEMERAL_STORAGE_REQUEST: 512Mi
+    KUBERNETES_EPHEMERAL_STORAGE_LIMIT: 1Gi
   dependencies:
     - "npm-compile-job"
   script:
+    - CI="false"
     - echo "building the code...!"
     - npm run build --loglevel verbose
     - echo "build completed."

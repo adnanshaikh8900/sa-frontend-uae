@@ -5,5 +5,5 @@ export default {
     //  API_ROOT_URL: 'http://192.168.2.105:8080',
 
    API_ROOT_URL: window._env_.SIMPLEVAT_HOST,
-    FRONTEND_RELEASE: window._env_.SIMPLEVAT_RELEASE,
+   FRONTEND_RELEASE: window._env_.SIMPLEVAT_RELEASE,
 };

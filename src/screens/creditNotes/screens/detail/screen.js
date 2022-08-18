@@ -724,6 +724,7 @@ class DetailCreditNote extends React.Component {
 			   <div>
 			   <div  class="input-group">
 				   <Input
+				   disabled
 						 type="text"
 						   min="0"
 						maxLength="14,2"
@@ -765,7 +766,7 @@ class DetailCreditNote extends React.Component {
 	
 		<div 	style={{width:'100px'}}>
 		<Select
-	
+	isDisabled
 	
 																						   options={discountOptions}
 																						   id="discountType"
@@ -985,7 +986,12 @@ class DetailCreditNote extends React.Component {
 				obj.vatCategoryId !== ''
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
-			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
+				console.log(index);
+				let vat=0;
+				if(vat_list.length!==0){
+					vat = index !== '' ? vat_list[`${index}`] : 0;
+				}
+			 
 
 			//Excise calculation
 			if(obj.exciseTaxId !=  0){
@@ -1364,7 +1370,7 @@ class DetailCreditNote extends React.Component {
 		const { current_customer_id } = this.state;
 		if(this.props.location.state.isCNWithoutProduct!=true)
 		
-		{this.setState({ loading:true, loadingMsg:"Deleting Credit Note..."});
+		{this.setState({ loading:true, loadingMsg:"Deleting Tax Credit Note..."});
 			this.props.creditNotesDetailActions
 			.deleteInvoice(current_customer_id)
 			.then((res) => {
@@ -1372,7 +1378,7 @@ class DetailCreditNote extends React.Component {
 					this.setState({  });
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data ? res.data.message : 'Credit Note Deleted Successfully'
+						res.data = 'Tax Credit Note Deleted Successfully'
 					);
 					this.props.history.push('/admin/income/credit-notes');
 					this.setState({ loading:false,});
@@ -1381,7 +1387,7 @@ class DetailCreditNote extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data ? err.data.message : 'Credit Note Deleted Unsuccessfully'
+					err.data = 'Tax Credit Note Deleted Unsuccessfully'
 				);
 			});}
 			else
@@ -1391,7 +1397,7 @@ class DetailCreditNote extends React.Component {
 					if (res.status === 200) {
 						this.props.commonActions.tostifyAlert(
 							'success',
-							res.data ? res.data.message : 'Credit Note Deleted Successfully'
+							res.data = 'Tax Credit Note Deleted Successfully'
 						);
 						this.props.history.push('/admin/income/credit-notes');
 					}
@@ -1399,7 +1405,7 @@ class DetailCreditNote extends React.Component {
 				.catch((err) => {
 					this.props.commonActions.tostifyAlert(
 						'error',
-						err.data ? err.data.message : 'Credit Note Deleted Unsuccessfully'
+						err.data = 'Tax Credit Note Deleted Unsuccessfully'
 					);
 				});}
 	};

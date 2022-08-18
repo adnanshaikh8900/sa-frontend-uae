@@ -18,6 +18,10 @@ cache:
 
 npm-compile-job:       # This job runs in the build stage, which runs first.
   stage: npm-compile
+  variables: 
+    KUBERNETES_CPU_REQUEST: 2
+    KUBERNETES_MEMORY_REQUEST: 4Gi
+    KUBERNETES_HELPER_MEMORY_REQUEST: 2Gi
   script:
     - CI="false"
     - echo "Compiling the code...!"
@@ -39,8 +43,10 @@ npm-compile-job:       # This job runs in the build stage, which runs first.
   
 npm-build-job:       # This job runs in the build stage, which runs first.
   stage: npm-build
-  variables:
-    KUBERNETES_HELPER_MEMORY_REQUEST: 8Gi
+  variables: 
+    KUBERNETES_CPU_REQUEST: 2
+    KUBERNETES_MEMORY_REQUEST: 4Gi
+    KUBERNETES_HELPER_MEMORY_REQUEST: 2Gi
   dependencies:
     - "npm-compile-job"
   script:

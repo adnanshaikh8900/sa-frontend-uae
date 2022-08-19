@@ -364,8 +364,8 @@ this.props.customerInvoiceActions
 			actionButtons: temp,
 		});
 	};
-	updateParentAmount = (totalAmount,totalVatAmount,totalNet) => {
-		this.setState({totalAmount:totalAmount,totalVatAmount:totalVatAmount})
+	updateParentAmount = (totalAmount,totalVatAmount,totalexcise) => {
+		this.setState({totalAmount:totalAmount,totalVatAmount:totalVatAmount,totalExciseAmount:totalexcise})
 		console.log(totalAmount,"00000000")
 		console.log(totalVatAmount,"00000000")
 	};
@@ -1445,8 +1445,8 @@ this.props.customerInvoiceActions
 						this.initializeData();
 					}}
 				updateParentAmount={
-					(e,e1) => {
-						this.updateParentAmount(e,e1);
+					(e,e1,e2) => {
+						this.updateParentAmount(e,e1,e2);
 				}}
 				updateParentSelelectedData={
 					(e) => {

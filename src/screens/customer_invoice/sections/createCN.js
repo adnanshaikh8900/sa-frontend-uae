@@ -202,6 +202,7 @@ class CreateCreditNoteModal extends React.Component {
 
 	
     static getDerivedStateFromProps(nextProps, prevState) {
+
         if (prevState.selectedData !== nextProps.selectedData || prevState.totalAmount !== nextProps.totalAmount ||
 			prevState.totalVatAmount != nextProps.totalVatAmount  ) {
 				let netVal=0
@@ -215,14 +216,10 @@ class CreateCreditNoteModal extends React.Component {
 	
 		 
 			}
-			
-
-			
-		debugger
 		 return { prefixData : nextProps.prefixData,
 		 	selectedData :nextProps.selectedData,
-			initialdata:prevState?.initialdata?.id?prevState?.initialdata: nextProps.selectedData,
 			 totalAmount :nextProps.totalAmount,
+			 initdata:prevState.data,
 			 totalExciseAmount:nextProps.totalExciseAmount,
 			 totalVatAmount :nextProps.totalVatAmount,
 			 invoiceNumber :nextProps.invoiceNumber,
@@ -924,6 +921,22 @@ class CreateCreditNoteModal extends React.Component {
 		let total_vat = 0;
 		let net_value = 0;
 		let discount = 0;
+
+		const totalnetamount=(a)=>{
+			total_net=total_net+a
+		}
+		const totalexcise=(a)=>{
+			total_excise=total_excise+a
+		}
+		const totalvalt=(a)=>{
+			total_vat=total_vat+a
+		}
+		const totalamount=(a)=>{
+			total=total+a
+		}
+		const discountamount=(a)=>{
+			discount=discount+a
+		}
 		data.map((obj) => {
 			
 			const index =
@@ -931,74 +944,48 @@ class CreateCreditNoteModal extends React.Component {
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
-			debugger
-			//Excise calculation
-			if(obj.exciseTaxId !=  0){
-				if(obj.isExciseTaxExclusive){
-				if(obj.exciseTaxId === 1){
-				const value = +(obj.unitPrice) / 2 ;
-					net_value = parseFloat(obj.unitPrice) + parseFloat(value) ;
-					obj.exciseAmount = parseFloat(value) * parseInt(obj.quantity);
-				}else if (obj.exciseTaxId === 2){
-					const value = obj.unitPrice;
-					net_value = parseFloat(obj.unitPrice) +  parseFloat(value) ;
-					obj.exciseAmount = parseFloat(value) * parseInt(obj.quantity);
-				}
-				else{
-					net_value = obj.unitPrice
-				}
-			}
-				else{
-				if(obj.exciseTaxId === 1){
-					const value = obj.unitPrice / 3
-					obj.exciseAmount = parseFloat(value) * parseInt(obj.quantity);
-				net_value = obj.unitPrice}
-				else if (obj.exciseTaxId === 2){
-					const value = obj.unitPrice / 2
-					obj.exciseAmount = parseFloat(value) * parseInt(obj.quantity);
-				net_value = obj.unitPrice}
-				else{
-					net_value = obj.unitPrice
-				}
-			}
-		}else{
-			net_value = obj.unitPrice;
-			obj.exciseAmount = 0
-		}
-			//vat calculation
-			if (obj.discountType === 'PERCENTAGE') {
-				var val =
-				((+net_value -
-				 (+((net_value * obj.discount)) / 100)) *
-					vat *
-					parseInt(obj.quantity)) /
-				100;
 
-				var val1 =
-				((+net_value -
-				 (+((net_value * obj.discount)) / 100)) * parseInt(obj.quantity) ) ;
-			} else if (obj.discountType === 'FIXED') {
-				var val =
-						 (net_value * parseInt(obj.quantity) - obj.discount ) *
-					(vat / 100);
+			if(obj.isExciseTaxExclusive){
+			const totalwithouttax= parseFloat(obj.unitPrice) * parseInt(obj.quantity)
+			const discounvalue=obj.discountType === 'PERCENTAGE'?
+			(totalwithouttax*obj.discount)/100:
+			obj.discountType === 'FIXED' && obj.discount
+			const totalAfterdiscount= totalwithouttax-discounvalue
+			
+			const excisevalue=obj.exciseTaxId === 1?totalAfterdiscount/2:totalAfterdiscount
+			const totalwithexcise=excisevalue+totalAfterdiscount
+			const vatvalue=(totalwithexcise*vat)/100
 
-					var val1 =
-					((net_value * parseInt(obj.quantity) )- obj.discount )
-
+			const finaltotalamount=totalwithexcise+vatvalue
+			totalnetamount(totalwithouttax)
+			totalexcise(excisevalue)
+			totalvalt(vatvalue)
+			totalamount(finaltotalamount)
+			discountamount(discounvalue)
+			obj.subTotal=totalwithouttax+vatvalue+excisevalue-discounvalue
+			obj.vatAmount=vatvalue
 			} else {
-				var val = (+net_value * vat * parseInt(obj.quantity)) / 100;
-				var val1 = net_value * parseInt(obj.quantity)
+				const totalwithtaxandexcise= parseFloat(obj.unitPrice) * parseInt(obj.quantity)
+				const discounvalue=obj.discountType === 'PERCENTAGE'?
+			(totalwithtaxandexcise*obj.discount)/100:
+			obj.discountType === 'FIXED' && obj.discount
+			const totalwitoutdiscount= totalwithtaxandexcise-discounvalue
+			const vatvalue=(totalwitoutdiscount*vat)/100
+			const totalwithoutvat=totalwitoutdiscount-vatvalue
+			const excisevalue=obj.exciseTaxId === 1?totalwitoutdiscount/3:totalwitoutdiscount/2
+			debugger
+			const finaltotalamount=totalwithoutvat-excisevalue
+			totalnetamount(finaltotalamount)
+			totalexcise(excisevalue)
+			totalvalt(vatvalue)
+			totalamount(totalwithtaxandexcise)
+			discountamount(discounvalue)	
+			obj.subTotal=totalwitoutdiscount+vatvalue+excisevalue
+			obj.vatAmount=vatvalue
 			}
-
-			//discount calculation
-			discount = +(discount +(net_value * parseInt(obj.quantity))) - parseFloat(val1)
-			total_net = +(total_net + net_value * parseInt(obj.quantity));
-			total_vat = +(total_vat + val);
-			obj.vatAmount = val
-			obj.subTotal =
-			net_value && obj.vatCategoryId ? parseFloat(val1) + parseFloat(val) : 0;
-			total_excise = +(total_excise + obj.exciseAmount)
-			total = total_vat + total_net;
+			
+			
+			
 			return obj;
 		});
 
@@ -1006,14 +993,14 @@ class CreateCreditNoteModal extends React.Component {
 		// 	props.values.discountType.value === 'PERCENTAGE'
 		// 		? +((total_net * discountPercentage) / 100)
 		// 		: discountAmount;
-		
+		debugger
 		this.setState(
 			{
 				data,
 					...{
-						total_net: discount ? total_net - discount : total_net,
+						total_net,
 						totalVatAmount: total_vat,
- 						totalAmount: total_net > discount ? total - discount : total - discount,
+ 						totalAmount: total,
 						 totalExciseAmount: total_excise,	
 						 discount
 					},
@@ -1021,8 +1008,8 @@ class CreateCreditNoteModal extends React.Component {
 			},
 
 		);
-		this.props.updateParentAmount(total_net > discount ? total - discount : total - discount,total_vat)
-
+		this.props.updateParentAmount(total_net,total_vat,total_excise)
+			console.log(this.state)
 	};
 
 

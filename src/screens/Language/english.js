@@ -284,7 +284,7 @@ const en = {
 			
 //Purchase receipts
       Purchasereceipts:"Purchase Receipts",				
-      PAYMENTDATE:"PAYMENT DATE",					
+      PAYMENTDATE:"Payment Date",					
       PAYMENTNUMBER:"PAYMENT NUMBER",				
       AMOUNT:"AMOUNT",
       CreatePayment:"Create Payment",

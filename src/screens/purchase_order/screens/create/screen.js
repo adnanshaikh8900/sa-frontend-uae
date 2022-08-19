@@ -237,6 +237,7 @@ class CreatePurchaseOrder extends React.Component {
 		this.regEx = /^[0-9\b]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
+		this.regExInvNum = /[a-zA-Z0-9'-/]+$/;
 	}
 
 	renderProductName = (cell, row) => {
@@ -2196,14 +2197,21 @@ getrfqDetails = (e, row, props,form,field) => {
 																		maxLength="50"
 																		id="po_number"
 																		name="po_number"
-																		placeholder={strings.InvoiceNumber}
+																		placeholder={strings.PONumber}
 																		value={props.values.po_number}
 																		onBlur={props.handleBlur('po_number')}
 																		onChange={(option) => {
+																			if (
+																				option.target.value === '' ||
+																				this.regExInvNum.test(
+																					option.target.value,
+																				)
+																			) {
 																			props.handleChange('po_number')(
 																				option,
 																			);
-																			this.validationCheck(option.target.value)
+																		}
+																			this.validationCheck(option.target.value);
 																		}}
 																		className={
 																			props.errors.po_number &&

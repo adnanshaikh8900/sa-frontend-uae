@@ -2122,7 +2122,7 @@ class DetailPurchaseOrder extends React.Component {
 																		{props.errors.poApproveDate &&
 																			props.touched.poApproveDate && (
 																				<div className="invalid-feedback">
-																					{props.errors.poApproveDate}
+																				{props.errors.poReceiveDate.includes("final value was:") ? "Order date is required" :props.errors.poReceiveDate}
 																				</div>
 																			)}
 																	</FormGroup>
@@ -2161,7 +2161,8 @@ class DetailPurchaseOrder extends React.Component {
 																			{props.errors.poReceiveDate &&
 																				props.touched.poReceiveDate && (
 																					<div className="invalid-feedback">
-																						{props.errors.poReceiveDate}
+																						{/* {props.errors.poReceiveDate} */}
+																				{props.errors.poReceiveDate.includes("final value was:") ? "Due date is required" :props.errors.poReceiveDate}
 																					</div>
 																				)}
 																		</div>

@@ -2279,7 +2279,8 @@ class DetailCustomerInvoice extends React.Component {
 																			{props.errors.invoiceDueDate &&
 																				props.touched.invoiceDueDate && (
 																					<div className="invalid-feedback">
-																						{props.errors.invoiceDate.includes("nullable()") ? "Invoice date is required" :props.errors.invoiceDate}																							</div>
+																						{props.errors.invoiceDate.includes("nullable()") ? "Invoice date is required" :props.errors.invoiceDate}
+																					</div>
 																				)}
 																		</div>
 																	</FormGroup>

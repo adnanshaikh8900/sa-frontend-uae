@@ -65,7 +65,7 @@ class CreateDesignation extends React.Component {
         designationName:'',
         designationId:''
       },
-
+      idExist:false
     }
 
     this.regEx = /^[0-9\d]+$/;
@@ -82,7 +82,23 @@ class CreateDesignation extends React.Component {
   initializeData = () => {
 
   };
-
+  designationIdvalidationCheck = (value) => {
+    const data = {
+        moduleType: 25,
+        name: value,
+    };
+    this.props.commonActions.checkValidation(data).then((response) => {
+        if (response.data === 'Designation ID already exists') {
+            this.setState({
+                idExist: true,
+            });
+        } else {
+            this.setState({
+                idExist: false,
+            });
+        }
+    });
+};
   handleSubmit = (data, resetForm) => {
     this.setState({ disabled: true,disableLeavePage:true });
 		const {
@@ -160,6 +176,14 @@ class CreateDesignation extends React.Component {
                         //   //   selectedInvoiceLanguage: null
                         //   // })
                          }}
+                         validate={(values) => {
+                          let errors = {};
+
+                         if(this.state.idExist==true)
+                            errors.designationId="Designation ID is already exist";
+
+                          return errors;
+                        }}
                         validationSchema={Yup.object().shape({
                           designationName: Yup.string()
                             .required("Designation name is required"),  
@@ -186,7 +210,10 @@ class CreateDesignation extends React.Component {
                                     value={props.values.designationId}
                                     placeholder={strings.Enter+strings.DESIGNATIONID}
                                     onChange={(option) => {
-                                      if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('designationId')(option) }
+                                      if (option.target.value === '' || this.regEx.test(option.target.value)) {
+                                         props.handleChange('designationId')(option)
+                                         this.designationIdvalidationCheck(option.target.value)
+                                     }
                                     }}
                                     className={props.errors.designationId && props.touched.designationId ? "is-invalid" : ""}
                                   />

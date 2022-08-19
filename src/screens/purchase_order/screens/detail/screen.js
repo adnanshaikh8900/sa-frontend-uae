@@ -1898,10 +1898,10 @@ class DetailPurchaseOrder extends React.Component {
 																		</Label>
 																		<Input
 																			type="text"
-																			maxLength="100"
+																			maxLength="50"
 																			id="poNumber"
 																			name="poNumber"
-																			placeholder=""
+																			placeholder={strings.PONumber}
 																			disabled
 																			value={props.values.poNumber}
 																			onChange={(value) => {

@@ -664,6 +664,7 @@ this.props.customerInvoiceActions
 		});
 		this.props.customerInvoiceDetailActions
 		.getInvoiceById(id).then((res) => {
+			debugger
 			this.setState({		
 				// current_rfq_id: this.props.location.state.id,
 				openModal:true, rowId : id,
@@ -683,6 +684,7 @@ this.props.customerInvoiceActions
 						? res.data.totalVatAmount
 						: 0,
 						totalAmount: res.data.totalAmount ? res.data.totalAmount : 0,
+						totalExciseAmount: res.data.totalExciseAmount ? res.data.totalExciseAmount : 0,
 						total_net: 0,
 					notes: res.data.notes ? res.data.notes : '',
 					lineItemsString: res.data.invoiceLineItems
@@ -1459,6 +1461,7 @@ this.props.customerInvoiceActions
 				createCreditNote={this.props.creditNotesActions.createCreditNote}
 				totalAmount={this.state.totalAmount}
 				totalVatAmount={this.state.totalVatAmount}
+				totalExciseAmount={this.state.totalExciseAmount}
 				// getRfqbyid={this.props.requestForQuotationDetailsAction.getRFQeById}
 				//	 getState={this.props.requestForQuotationDetailsAction.renderActionForState}
 				//	getInvoice={this.props.purchaseOrderCreateAction.getPoNo()}

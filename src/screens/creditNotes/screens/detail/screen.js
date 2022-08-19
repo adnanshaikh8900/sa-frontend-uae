@@ -989,7 +989,7 @@ class DetailCreditNote extends React.Component {
 				console.log(index);
 				let vat=0;
 				if(vat_list.length!==0){
-					vat = index !== '' ? vat_list[`${index}`] : 0;
+					vat = index !== '' ? vat_list[`${index}`].vat : 0;
 				}
 			 
 
@@ -1054,9 +1054,11 @@ class DetailCreditNote extends React.Component {
 			discount = +(discount +(net_value * obj.quantity)) - parseFloat(val1)
 			total_net = +(total_net + net_value * obj.quantity);
 			total_vat = +(total_vat + val);
+			debugger
 			obj.vatAmount = val
 			obj.subTotal =
 			net_value && obj.vatCategoryId ? parseFloat(val1) + parseFloat(val) : 0;
+			debugger
 			total_excise = +(total_excise + obj.exciseAmount)
 			total = total_vat + total_net;
 			return obj;

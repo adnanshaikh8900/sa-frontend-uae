@@ -206,25 +206,30 @@ class CreateCreditNoteModal extends React.Component {
         if (prevState.selectedData !== nextProps.selectedData || prevState.totalAmount !== nextProps.totalAmount ||
 			prevState.totalVatAmount != nextProps.totalVatAmount  ) {
 				let netVal=0
+				let totalvat=0
+				let totalexcise=0
 				
 			console.log('getDerivedStateFromProps state changed',nextProps.selectedData.invoiceLineItems);
 			if(nextProps.selectedData &&nextProps.selectedData.invoiceLineItems){
 				nextProps.selectedData.invoiceLineItems.map((item)=>{
-					
+					totalvat+=item.vatAmount
+					totalexcise+=item.exciseAmount
 					return  netVal+=item.subTotal
 		  })
 	
 		 
 			}
+			debugger
 		 return { prefixData : nextProps.prefixData,
 		 	selectedData :nextProps.selectedData,
-			 totalAmount :nextProps.totalAmount,
+			 totalAmount :netVal,
 			 initdata:prevState.data,
 			 totalExciseAmount:nextProps.totalExciseAmount,
 			 totalVatAmount :nextProps.totalVatAmount,
 			 invoiceNumber :nextProps.invoiceNumber,
 			 id:nextProps.id,
-			 total_net:netVal-parseFloat(nextProps.selectedData.totalVatAmount)-parseFloat(nextProps.selectedData.totalExciseAmount)
+			 total_net:netVal-parseFloat(totalvat)-parseFloat(totalexcise)
+
 		};
         }
 		// else if(prevState.totalAmount !== nextProps.totalAmount)
@@ -952,7 +957,7 @@ class CreateCreditNoteModal extends React.Component {
 			obj.discountType === 'FIXED' && obj.discount
 			const totalAfterdiscount= totalwithouttax-discounvalue
 			
-			const excisevalue=obj.exciseTaxId === 1?totalAfterdiscount/2:totalAfterdiscount
+			const excisevalue=obj.exciseTaxId === 1?totalAfterdiscount/2:obj.exciseTaxId===2?totalAfterdiscount:0
 			const totalwithexcise=excisevalue+totalAfterdiscount
 			const vatvalue=(totalwithexcise*vat)/100
 
@@ -964,24 +969,26 @@ class CreateCreditNoteModal extends React.Component {
 			discountamount(discounvalue)
 			obj.subTotal=totalwithouttax+vatvalue+excisevalue-discounvalue
 			obj.vatAmount=vatvalue
+			obj.exciseAmount=excisevalue
 			} else {
 				const totalwithtaxandexcise= parseFloat(obj.unitPrice) * parseInt(obj.quantity)
 				const discounvalue=obj.discountType === 'PERCENTAGE'?
 			(totalwithtaxandexcise*obj.discount)/100:
 			obj.discountType === 'FIXED' && obj.discount
 			const totalwitoutdiscount= totalwithtaxandexcise-discounvalue
-			const vatvalue=(totalwitoutdiscount*vat)/100
+			const vatvalue=(totalwitoutdiscount*vat)/(100+vat)
 			const totalwithoutvat=totalwitoutdiscount-vatvalue
-			const excisevalue=obj.exciseTaxId === 1?totalwitoutdiscount/3:totalwitoutdiscount/2
-			debugger
+			const excisevalue=obj.exciseTaxId === 1?totalwithoutvat/3:obj.exciseTaxId===2?totalwithoutvat/2:0
 			const finaltotalamount=totalwithoutvat-excisevalue
-			totalnetamount(finaltotalamount)
+			totalnetamount(totalwithtaxandexcise-(discounvalue+excisevalue+vatvalue))
+		
 			totalexcise(excisevalue)
 			totalvalt(vatvalue)
-			totalamount(totalwithtaxandexcise)
+			totalamount(totalwitoutdiscount)
 			discountamount(discounvalue)	
-			obj.subTotal=totalwitoutdiscount+vatvalue+excisevalue
+			obj.subTotal=totalwitoutdiscount
 			obj.vatAmount=vatvalue
+			obj.exciseAmount=excisevalue
 			}
 			
 			

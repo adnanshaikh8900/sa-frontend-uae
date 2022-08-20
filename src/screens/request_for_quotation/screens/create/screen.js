@@ -1885,9 +1885,9 @@ class CreateRequestForQuotation extends React.Component {
 													supplierId: Yup.string().required(
 														'Supplier is required',
 													),
-													// placeOfSupplyId: Yup.string().required(
-													// 	'Place of Supply is required'
-													// ),
+													placeOfSupplyId: Yup.string().required(
+														'Place of Supply is required'
+													),
 													
 													rfqReceiveDate: Yup.string().required(
 														'Order date is required',
@@ -2104,7 +2104,7 @@ class CreateRequestForQuotation extends React.Component {
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="taxTreatmentid">
-																		Tax Treatment
+																	{strings.TaxTreatment}
 																	</Label>
 																	<Input
 																	disabled
@@ -2136,15 +2136,16 @@ class CreateRequestForQuotation extends React.Component {
 																</FormGroup>
 															</Col>: ''}
 									<Col lg={3}>
-									{this.state.customer_taxTreatment_des!="NON GCC" &&(		<FormGroup className="mb-3">
+									{/* {this.state.customer_taxTreatment_des!="NON GCC" &&(		 */}
+																	<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">
 																		{/* <span className="text-danger">* </span> */}
-																		{this.state.customer_taxTreatment_des &&
+																		{/* {this.state.customer_taxTreatment_des &&
 																		(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
 																		||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
-																		||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED") && (
+																		||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED") && ( */}
 																			<span className="text-danger">* </span>
-																		)}
+																		{/* )} */}
 																		{strings.PlaceofSupply}
 																	</Label>
 																	<Select
@@ -2195,7 +2196,8 @@ class CreateRequestForQuotation extends React.Component {
 																				{props.errors.placeOfSupplyId}
 																			</div>
 																		)}
-																</FormGroup>)}
+																</FormGroup>
+																{/* )} */}
 															</Col>
 															
 														
@@ -2217,7 +2219,7 @@ class CreateRequestForQuotation extends React.Component {
 																				? 'is-invalid'
 																				: ''
 																		}`}
-																		placeholderText={strings.OrderDate}
+																		placeholderText={strings.RFQDate}
 																		selected={props.values.rfqReceiveDate ?new Date(props.values.rfqReceiveDate):props.values.rfqReceiveDate} 
 																		showMonthDropdown
 																		showYearDropdown
@@ -2253,7 +2255,7 @@ class CreateRequestForQuotation extends React.Component {
 																				? 'is-invalid'
 																				: ''
 																		}`}
-																		placeholderText={strings.OrderDueDate}
+																		placeholderText={strings.ExpiryDate}
 																		selected={props.values.rfqExpiryDate ?new Date(props.values.rfqExpiryDate):props.values.rfqExpiryDate} 
 																		showMonthDropdown
 																		showYearDropdown
@@ -2682,7 +2684,7 @@ class CreateRequestForQuotation extends React.Component {
 																		<TextareaAutosize
 																			type="textarea"
 																			className="textarea"
-																			maxLength="250"
+																			maxLength="255"
 																			style={{width: "700px"}}
 																			name="receiptAttachmentDescription"
 																			id="receiptAttachmentDescription"

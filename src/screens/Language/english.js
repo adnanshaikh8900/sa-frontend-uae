@@ -52,7 +52,9 @@ const en = {
       ContactNumber1:"Contact Number 1",
       ContactNumber2:"Contact Number 2",
       Relationship1:"Relationship 1",
-      Relationship2:"Relationship 2",
+      Relationship2:"Relationship 2",			
+      EXPIRYDATE:"EXPIRY DATE",			
+      ExpiryDate:"Expiry Date",	
 
 //Income
       noteforchangeaddress:"Do you want to change the Shipping Address for this invoice ?",
@@ -78,8 +80,8 @@ const en = {
       TransactionCategory: "Transaction Category",
       OpeningDate: "Opening Date",
       Amount: "Amount",
-      Create: " Create",
-      Cancel: " Cancel",
+      Create: "Create",
+      Cancel: "Cancel",
       AddOpeningBalance: "Add Opening Balance",
 
 
@@ -305,7 +307,7 @@ const en = {
       CreateRequestForQuotation:"Create Request For Quotation",			
       RFQNumber:"RFQ Number",						
       IssueDate:"Issue Date",			
-      ExpiryDate:"Expiry Date",																		
+      RFQExpiryDate:"RFQ Expiry Date",																		
 			
 //Purchase Order
       PurchaseOrder:"Purchase Order",				
@@ -328,7 +330,8 @@ const en = {
       GoodsReceivedNotes:"Goods Received Notes",						
       GRNNUMBER:"GRN NUMBER",	
       GRNNo:"GRN No",								
-      GRNRECEIVEDATE:"GRN RECEIVE DATE",			
+      GRNRECEIVEDATE:"GRN RECEIVE DATE",	
+      GRNExpiryDate: "GRNexpiry date",		
       GRNREMARKS:"GRN Remarks",			
       AddNewGoodsReceivedNotes:"Add New Goods Received Note",
 

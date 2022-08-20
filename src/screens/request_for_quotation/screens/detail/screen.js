@@ -1596,7 +1596,8 @@ setDate1= (props, value) => {
 														supplierId: Yup.string().required(
 															'Supplier is required',
 														),
-														// placeOfSupplyId: Yup.string().required('Place of supply is required'),
+														placeOfSupplyId: Yup.string().required(
+															'Place of supply is required'),
 														
 														rfqReceiveDate: Yup.string().required(
 															'Order date is required',
@@ -1810,15 +1811,16 @@ setDate1= (props, value) => {
 																</FormGroup>
 															</Col>
 																<Col lg={3}>
-																{this.state.customer_taxTreatment_des!="NON GCC" &&(		<FormGroup className="mb-3">
+																{/* {this.state.customer_taxTreatment_des!="NON GCC" &&(		 */}
+																	<FormGroup className="mb-3">
 																		<Label htmlFor="placeOfSupplyId">
-																			{/* <span className="text-danger">* </span> */}
-																		{this.state.customer_taxTreatment_des &&
+																			<span className="text-danger">* </span>
+																		{/* {this.state.customer_taxTreatment_des &&
 																		(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
 																		||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
 																		||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED") && (
 																			<span className="text-danger">* </span>
-																		)}
+																		)} */}
 																			{strings.PlaceofSupply}
 																		</Label>
 																		<Select
@@ -1872,7 +1874,8 @@ setDate1= (props, value) => {
 																					{props.errors.placeOfSupplyId}
 																				</div>
 																			)}
-																	</FormGroup>)}
+																	</FormGroup>
+																	{/* )} */}
 																</Col>
 															
 																
@@ -1913,7 +1916,7 @@ setDate1= (props, value) => {
 																		{props.errors.rfqReceiveDate &&
 																			props.touched.rfqReceiveDate && (
 																				<div className="invalid-feedback">
-																					{props.errors.rfqReceiveDate.includes("nullable()") ? "Order date is required" :props.errors.rfqReceiveDate}
+																					{props.errors.rfqReceiveDate.includes("nullable()") ? "RFQ date is required" :props.errors.rfqReceiveDate}
 																				</div>
 																			)}
 																	</FormGroup>
@@ -1921,13 +1924,13 @@ setDate1= (props, value) => {
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="due_date">
-																	   {strings.RFQDueDate}
+																	   {strings.RFQExpiryDate}
 																		</Label>
 																		<div>
 																			<DatePicker
 																				id="rfqExpiryDate"
 																				name="rfqExpiryDate"
-																				placeholderText={strings.DueDate}
+																				placeholderText={strings.RFQExpiryDate}
 																				value={props.values.rfqExpiryDate}
 																				showMonthDropdown
 																				showYearDropdown
@@ -1949,7 +1952,8 @@ setDate1= (props, value) => {
 																			{props.errors.rfqExpiryDate &&
 																				props.touched.rfqExpiryDate && (
 																					<div className="invalid-feedback">
-																						{props.errors.rfqExpiryDate}
+																						{/* {props.errors.rfqExpiryDate} */}
+																					{props.errors.rfqExpiryDate.includes("nullable()") ? "Expiry date is required" :props.errors.rfqExpiryDate}
 																					</div>
 																				)}
 																		</div>
@@ -2337,7 +2341,7 @@ setDate1= (props, value) => {
 																		<TextareaAutosize
 																			type="textarea"
 																			className="textarea"
-																			maxLength="250"
+																			maxLength="255"
 																			style={{width: "700px"}}
 																			name="receiptAttachmentDescription"
 																			id="receiptAttachmentDescription"

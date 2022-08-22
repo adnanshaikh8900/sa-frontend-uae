@@ -36,6 +36,7 @@ import moment from 'moment';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { TextareaAutosize } from '@material-ui/core';
+import { string } from 'prop-types';
 
 const mapStateToProps = (state) => {
 	return {
@@ -1031,6 +1032,7 @@ renderVatAmount = (cell, row,extraData) => {
 	 					type="text"
 				   	    min="0"
 					    maxLength="14,2"
+
 					    value={row['discount'] !== 0 ? row['discount'] : 0}
 					    onChange={(e) => {
 						   if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -1050,7 +1052,7 @@ renderVatAmount = (cell, row,extraData) => {
 							   );
 					   
 					   }}
-					   placeholder={strings.discount}
+					   placeholder={strings.Discount}
 					   className={`form-control 
 		   ${
 						   props.errors.lineItemsString &&

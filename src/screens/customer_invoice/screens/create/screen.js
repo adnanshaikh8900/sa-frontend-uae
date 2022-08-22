@@ -2266,8 +2266,8 @@ if(changeShippingAddress && changeShippingAddress==true)
 															if (values.shippingPostZipCode == '')
 																errors.shippingPostZipCode = 'Postal code is required';
 															else
-																if (values.shippingPostZipCode.length != 6)
-																	errors.shippingPostZipCode = 'Please enter 6 digit postal zip code';
+																if (values.shippingPostZipCode.length < 3)
+																	errors.shippingPostZipCode = 'Please enter atleast 3 digit postal zip code';
 														}}
 														return errors;
 												}}

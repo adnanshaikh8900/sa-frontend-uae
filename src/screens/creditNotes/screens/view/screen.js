@@ -154,7 +154,6 @@ this.props.supplierInvoiceDetailActions
 		strings.setLanguage(this.state.language);
 		const { invoiceData, currencyData,InvoiceDataList,contactData  } = this.state;
 		const { profile } = this.props;
-		debugger
 		return (
 			<div className="view-invoice-screen">
 				<div className="animated fadeIn">

@@ -80,6 +80,7 @@ class CreateExpense extends React.Component {
 				attachmentFile: '',
 				employee: '',
 				receiptAttachmentDescription: '',
+				notes: '',
 				vatCategoryId: '',
 				payMode: '',
 				bankAccountId: '',
@@ -119,7 +120,7 @@ class CreateExpense extends React.Component {
 		};
 
 		this.regEx = /^[0-9\b]+$/;
-		this.regExInvNum = /[a-zA-Z0-9'-/]+$/;
+		this.regExInvNum = /[a-zA-Z0-9-/]+$/;
 		this.regExAlpha = /^[a-zA-Z0-9!@#$&()-\\`.+,/\"]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
@@ -194,6 +195,9 @@ class CreateExpense extends React.Component {
 									isReverseChargeEnabled:res.data.isReverseChargeEnabled ?res.data.isReverseChargeEnabled:false,
 									placeOfSupplyId:res.data.placeOfSupplyId ?res.data.placeOfSupplyId:'',
 									taxTreatmentId:res.data.taxTreatmentId ?res.data.taxTreatmentId:'',
+									notes: res.data.notes 
+										? res.data.notes 
+										: '',
 									
 								},
 								payee:res.data.payee ? res.data.payee :'', 
@@ -269,6 +273,7 @@ class CreateExpense extends React.Component {
 								this.formRef.current.setFieldValue('expenseDescription',  res.data.expenseDescription, true);
 								this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
 								this.formRef.current.setFieldValue('receiptAttachmentDescription', res.data.receiptAttachmentDescription, true);
+								this.formRef.current.setFieldValue('notes',  res.data.notes, true);
 
 								let payee=	selectOptionsFactory.renderOptions(	'label','value',	this.props.pay_to_list,	'Payee',)
 								.find((option) => 	option.label == res.data.payee)
@@ -297,6 +302,7 @@ class CreateExpense extends React.Component {
 		this.props.commonActions.getNoteSettingsInfo().then((res)=>{
 			if(res.status===200){
 				this.formRef.current.setFieldValue('notes',res.data.defaultNotes, true);
+				this.formRef.current.setFieldValue('footNote',  res.data.defaultFootNotes, true);
 				
 			}
 		})
@@ -394,15 +400,17 @@ class CreateExpense extends React.Component {
 			exclusiveVat,
 			taxTreatmentId,
 			expenseType,
-			notes
+			notes,
+			footNote
 		} = data;
 		let formData = new FormData();
 		
 		formData.append('expenseType',  this.state.expenseType );
 		formData.append('delivaryNotes',notes);
+		formData.append('footNote',footNote? footNote : '')
 		formData.append('expenseNumber', expenseNumber ? expenseNumber : '');
 		if(payee)
-		formData.append('payee', payee.value ? payee.value : payee);
+		formData.append('payee', payee.value ? payee.value : '');
 		formData.append('expenseDate', expenseDate !== null ? expenseDate : '');
 		formData.append('expenseDescription', expenseDescription);
 		formData.append('receiptNumber', receiptNumber);
@@ -1518,7 +1526,7 @@ class CreateExpense extends React.Component {
 																		)}
 																</FormGroup>
 															</Col>
-																{this.state.payee  && this.state.payee.value === 'Company Expense' || this.state.payee === 'Company Expense' ? 
+																{/* {this.state.payee  && this.state.payee.value === 'Company Expense' || this.state.payee === 'Company Expense' ?  */}
 															<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="payMode"><span className="text-danger">* </span> {strings.PayThrough}</Label>
@@ -1561,7 +1569,8 @@ class CreateExpense extends React.Component {
 																				</div>
 																			)}
 																	</FormGroup>
-																</Col>:''}
+																</Col>
+																{/* :''} */}
 														</Row>
 														{/* {props.values.vatCategoryId !=='' && props.values.vatCategoryId.label !=='Select Vat' &&
 														(
@@ -1894,7 +1903,6 @@ class CreateExpense extends React.Component {
 																			props.handleBlur();
 																			if(props.errors &&  Object.keys(props.errors).length != 0)
 																			this.props.commonActions.fillManDatoryDetails();
-																			debugger
 																			console.log(props.errors,"errors")
 																			this.setState(
 																				{ createMore: false },

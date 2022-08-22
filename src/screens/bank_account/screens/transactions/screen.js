@@ -111,7 +111,7 @@ class BankTransactions extends React.Component {
 			selected_id_list: [],
 			transation_data: '',
 			res:[],
-			showExpandedRow:false
+			showExpandedRow:true
 		};
 
 		this.options = {
@@ -693,42 +693,43 @@ class BankTransactions extends React.Component {
 
 	getbyid =(row) => {
 		
-		if(this.state.response && this.state.response.data){
+			
+		if(this.state.response?.data?.length>0){
 			if(row.explanationIds.length > 2 || row.explinationStatusEnum === 'PARTIAL'  ){   
 				
-				return(
-					<>
-						< ExplainTrasactionDetail
-					closeExplainTransactionModal={(e) => {
-							this.closeExplainTransactionModal(e);
-						}
-						}
-						bankId={this.props.location.state.bankAccountId}
-						creationMode={row.creationMode}
-						selectedData={row}
-						data={this.state.response.data[0]}
-					/>
-						< ExplainTrasactionDetail
-					closeExplainTransactionModal={(e) => {
-							this.closeExplainTransactionModal(e);
-						}
-						}
-						bankId={this.props.location.state.bankAccountId}
-						creationMode={row.creationMode}
-						selectedData={row}
-						data={this.state.response.data[1]}
-					/>
-					< ExplainTrasactionDetail
-					closeExplainTransactionModal={(e) => {
-							this.closeExplainTransactionModal(e);
-						}
-						}
-						bankId={this.props.location.state.bankAccountId}
-						creationMode={row.creationMode}
-						selectedData={row}
-						data={this.state.response.data[2]}
-					/>
-					</>
+				return(<></>
+					// <>
+					// 	< ExplainTrasactionDetail
+					// closeExplainTransactionModal={(e) => {
+					// 		this.closeExplainTransactionModal(e);
+					// 	}
+					// 	}
+					// 	bankId={this.props.location.state.bankAccountId}
+					// 	creationMode={row.creationMode}
+					// 	selectedData={row}
+					// 	data={this.state.response.data[0]}
+					// />
+					// 	< ExplainTrasactionDetail
+					// closeExplainTransactionModal={(e) => {
+					// 		this.closeExplainTransactionModal(e);
+					// 	}
+					// 	}
+					// 	bankId={this.props.location.state.bankAccountId}
+					// 	creationMode={row.creationMode}
+					// 	selectedData={row}
+					// 	data={this.state.response.data[1]}
+					// />
+					// < ExplainTrasactionDetail
+					// closeExplainTransactionModal={(e) => {
+					// 		this.closeExplainTransactionModal(e);
+					// 	}
+					// 	}
+					// 	bankId={this.props.location.state.bankAccountId}
+					// 	creationMode={row.creationMode}
+					// 	selectedData={row}
+					// 	data={this.state.response.data[2]}
+					// />
+					// </>
 				
 			
 				)
@@ -833,7 +834,17 @@ class BankTransactions extends React.Component {
            
 			onlyOneExpanding: true,
 			renderer: (row) => (this.getbyid(row)),
-				
+				onExpand: async (e)=>{
+					const  response= await this.props.transactionDetailActions
+			.getTransactionDetail(e.id)
+			.then((responsedata) => {
+			if(responsedata.status===200){
+				this.setState({response:responsedata})											
+			return responsedata																												
+				}
+				return {}
+				})
+				},
 			expanded: expanded ,
 			nonExpandable: nonexpand,
 			showExpandColumn: this.state.showExpandedRow,
@@ -1140,22 +1151,7 @@ class BankTransactions extends React.Component {
 																				
 												columns={columns}
 												expandRow={expandRow}
-												rowEvents={{
-
-													onClick:(event,row)=>{
-														this.setState({expanded: false})		
-														// this.setState({response:undefined})
-														this.props.transactionDetailActions
-														.getTransactionDetail(row.id)
-														.then((response) => {
-															
-															if(response.status===200){
-																
-																this.setState({response:response, showExpandedRow:true})																													
-														}
-														})
-													}
-												}}
+												
 												noDataIndication="There is no data to display"
 												remote
 												fetchInfo={{

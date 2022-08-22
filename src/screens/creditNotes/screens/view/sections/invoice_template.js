@@ -503,7 +503,7 @@ class InvoiceTemplate extends Component {
 											</td>
 											</>}
 										</tr>
-										{isCNWithoutProduct==false&&(<tr >
+										{!isCNWithoutProduct&&(<tr >
 											<td style={{ width: '40%' }}>
 												<strong>{strings.VAT}</strong>
 											</td>
@@ -518,6 +518,41 @@ class InvoiceTemplate extends Component {
 													{invoiceData.totalVatAmount ? (
 														<Currency
 															value={invoiceData.totalVatAmount}
+															currencySymbol={
+																currencyData[0]
+																	? currencyData[0].currencyIsoCode
+																	: 'USD'
+															}
+														/>
+													) : (
+														<Currency
+															value={0}
+															currencySymbol={
+																currencyData[0]
+																	? currencyData[0].currencyIsoCode
+																	: 'USD'
+															}
+														/>
+													)}
+												</span>
+											</td>
+										</tr>)}
+
+										{(!isCNWithoutProduct && invoiceData.totalExciseTaxAmount>0) &&(<tr >
+											<td style={{ width: '40%' }}>
+												<strong>{strings.Excise}</strong>
+											</td>
+											<td
+												style={{
+													display: 'flex',
+													justifyContent: 'space-between',
+												}}
+											>
+												<span style={{ marginLeft: '2rem' }}></span>
+												<span>
+													{invoiceData.totalExciseTaxAmount ? (
+														<Currency
+															value={invoiceData.totalExciseTaxAmount}
 															currencySymbol={
 																currencyData[0]
 																	? currencyData[0].currencyIsoCode

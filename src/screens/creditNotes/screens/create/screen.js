@@ -524,13 +524,15 @@ discountType = (row) =>
 		// }
 	};
 
-	// setExchange = (value) => {
-	// 	let result = this.props.currency_convert_list.filter((obj) => {
-	// 	return obj.currencyCode === value;
-	// 	});
-	// 	console.log('currency result', result)
-	// 	this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
-	// 	};
+	setExchange = (value) => {
+		
+		let result = this.props.currency_convert_list.find((obj) => {
+		return obj.currencyCode === value;
+		});
+		console.log('currency result', result)
+		debugger
+		this.formRef.current.setFieldValue('exchangeRate', result.exchangeRate, true);
+		};
 
 	setCurrency = (value) => {
 		let result = this.props.currency_convert_list.filter((obj) => {
@@ -1091,7 +1093,7 @@ discountType = (row) =>
 	updateAmount = (data, props) => {
 		const { vat_list , excise_list} = this.props;
 		const { discountPercentage, discountAmount } = this.state;
-	
+		
 		let total_net = 0;
 		let total_excise = 0;
 		let total = 0;
@@ -1215,7 +1217,7 @@ discountType = (row) =>
 			contact_po_number,
 			currency,
 			invoiceNumber,
-			// exchangeRate,
+			 exchangeRate,
 			// invoiceDueDate,
 			creditNoteDate,
 			contactId,
@@ -1261,10 +1263,11 @@ discountType = (row) =>
 			'receiptNumber',
 			receiptNumber !== null ? receiptNumber : '',
 		);
-		// formData.append(
-		// 	'exchangeRate',
-		// 	exchangeRate !== null ? exchangeRate : '',
-		// );
+		debugger
+		formData.append(
+			'exchangeRate',
+			exchangeRate  ? exchangeRate : '',
+		);
 		formData.append(
 			'contactPoNumber',
 			contact_po_number !== null ? contact_po_number : '',
@@ -1631,16 +1634,7 @@ if (invoiceNumber && invoiceNumber.value) {
 					customer_currency:response.data.currencyCode,
 					remainingInvoiceAmount:response.data.remainingInvoiceAmount,
 				
-					initValue: {
-						...this.state.initValue,
-						...{
-							totalVatAmount: response.data.totalVatAmount,
-							totalAmount: response.data.totalAmount,
-							total_net: response.data.totalAmount -response.data.totalVatAmount ,
-							discount:response.data.discount,
-							total_excise:response.data.totalExciseAmount,
-						},
-					},
+					
 	
 				//	data1:response.data.supplierId,
 				},() => {
@@ -1654,6 +1648,7 @@ if (invoiceNumber && invoiceNumber.value) {
 						false,
 						true,
 					);
+					this.updateAmount( this.state.data)
 					// this.formRef.current.setFieldValue(
 						
 					// 	totalAmount,
@@ -2011,7 +2006,7 @@ if (invoiceNumber && invoiceNumber.value) {
 																			if (option && option.value) {
 																				this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
 																				this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(option.value), true);
-																				// this.setExchange( this.getCurrency(option.value) );
+																				this.setExchange( this.getCurrency(option.value) );
 																				props.handleChange('contactId')(option);
 																			} else {
 																				props.handleChange('contactId')('');

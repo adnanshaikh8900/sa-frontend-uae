@@ -825,11 +825,22 @@ class DetailExpense extends React.Component {
 															'VAT is required',
 														),
 														expenseAmount: Yup.string()
-															.required('Amount is required')
-															.matches(
-																/^[0-9][0-9]*[.]?[0-9]{0,2}$$/,
-																'Enter a valid amount',
-															),
+														.required('Amount is required')
+														.matches(
+															 /^[0-9][0-9]*[.]?[0-9]{0,2}$$/,
+															'Enter a valid amount',
+														)
+														.test(
+															'Expense Amount',
+															'Expense amount should be greater than 1',
+															(value) => {
+																if (value > 0) {
+																	return true;
+																} else {
+																	return false;
+																}
+															},
+														),
 														attachmentFile: Yup.mixed()
 															.test(
 																'fileType',
@@ -1259,7 +1270,7 @@ class DetailExpense extends React.Component {
 																		</Label>
 																		<Input
 																			type="text"
-																			// min="0"
+																			min="0"
 																			name="expenseAmount"
 																			maxLength="14,2"
 																			id="expenseAmount"
@@ -1283,6 +1294,7 @@ class DetailExpense extends React.Component {
 																				}
 																			}}
 																			value={props.values.expenseAmount}
+																			placeholder={strings.Amount}
 																		/>
 																		{props.errors.expenseAmount &&
 																			props.touched.expenseAmount && (

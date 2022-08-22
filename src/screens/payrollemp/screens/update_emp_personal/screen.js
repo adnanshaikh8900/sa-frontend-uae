@@ -578,9 +578,9 @@ emailvalidationCheck = (value) => {
                                                             mobileNumber: Yup.string()
 															.required('Mobile number is required'),
                                                             emergencyContactName1: Yup.string()
-                                                           .required('Contact name 1 is required') ,
+                                                           .required('Contact name is required') ,
                                                             emergencyContactNumber1:Yup.string()
-                                                           .required("Contact number 1 is required"),
+                                                           .required("Contact number is required"),
                                                             emergencyContactRelationship1: Yup.string()
                                                            .required('Relationship 1 is required') ,
                                                                           
@@ -1524,8 +1524,8 @@ emailvalidationCheck = (value) => {
                                                                                                 <FormGroup>
                                                                                                     <Label htmlFor="emergencyContactNumber1"><span className="text-danger">* </span>{strings.ContactNumber1} </Label>
                                                                                                     <div 	className={
-																		                            props.errors.mobileNumber &&
-																		                            props.touched.mobileNumber
+																		                            props.errors.emergencyContactNumber1 &&
+																		                            props.touched.emergencyContactNumber1
 																		                        	? ' is-invalidMobile '
 																			                        : ''
 												                                                    }>

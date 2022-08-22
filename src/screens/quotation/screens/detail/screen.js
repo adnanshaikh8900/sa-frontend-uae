@@ -1404,8 +1404,8 @@ class DetailQuotation extends React.Component {
         if(placeOfSupplyId){
 		formData.append('placeOfSupplyId' , placeOfSupplyId.value ? placeOfSupplyId.value : placeOfSupplyId);}
 		// formData.append('exciseType', this.state.checked);
-	
-			formData.append('customerId', customerId.value ? customerId.value : customerId);
+		if(customerId){
+			formData.append('customerId', customerId.value ? customerId.value : customerId);}
 		
 		if (currency !== null && currency) {
 			formData.append('currencyCode', this.state.supplier_currency);
@@ -1667,6 +1667,11 @@ console.log(this.state.supplier_currency)
 																 errors.placeOfSupplyId ='Place of supply is required';
 														
 													   }
+													   if (!values.customerId) 
+																errors.customerId ='Place of supply is required';
+															if (values.customerId &&(values.customerId=="" ||(values.customerId.label && values.customerId.label === "Customer Name"))) 
+																 errors.customerId ='Customer name is required';
+														
 														return errors
 													}}
 													validationSchema={Yup.object().shape({

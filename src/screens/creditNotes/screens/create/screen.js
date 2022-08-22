@@ -181,7 +181,7 @@ class CreateCreditNote extends React.Component {
 			loadingMsg:"Loading",
 			disableLeavePage:false
 		};
-
+		
 		this.formRef = React.createRef();
 
 		this.file_size = 1024000;
@@ -363,7 +363,7 @@ class CreateCreditNote extends React.Component {
 						onChange={(e) => {
 							if (
 								e.target.value === '' ||
-								this.regDecimal.test(e.target.value)
+								(this.regDecimal.test(e.target.value) && row['unitPrice']>e.target.value )
 							) {
 								this.selectItem(
 									e.target.value,
@@ -1087,6 +1087,7 @@ discountType = (row) =>
 		}
 	};
 
+	
 	updateAmount = (data, props) => {
 		const { vat_list , excise_list} = this.props;
 		const { discountPercentage, discountAmount } = this.state;
@@ -1097,79 +1098,73 @@ discountType = (row) =>
 		let total_vat = 0;
 		let net_value = 0;
 		let discount = 0;
+
+		const totalnetamount=(a)=>{
+			total_net=total_net+a
+		}
+		const totalexcise=(a)=>{
+			total_excise=total_excise+a
+		}
+		const totalvalt=(a)=>{
+			total_vat=total_vat+a
+		}
+		const totalamount=(a)=>{
+			total=total+a
+		}
+		const discountamount=(a)=>{
+			discount=discount+a
+		}
 		data.map((obj) => {
+			
 			const index =
 				obj.vatCategoryId !== ''
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
 
-			//Excise calculation
-			if(obj.exciseTaxId !=  0){
-				if(obj.isExciseTaxExclusive === true){
-				if(obj.exciseTaxId === 1){
-				const value = +(obj.unitPrice) / 2 ;
-					net_value = parseFloat(obj.unitPrice) + parseFloat(value) ;
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
-				}else if (obj.exciseTaxId === 2){
-					const value = obj.unitPrice;
-					net_value = parseFloat(obj.unitPrice) +  parseFloat(value) ;
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
-				}
-				else{
-					net_value = obj.unitPrice
-				}
-			}	else{
-				if(obj.exciseTaxId === 1){
-					const value = obj.unitPrice / 3
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
-				net_value = obj.unitPrice}
-				else if (obj.exciseTaxId === 2){
-					const value = obj.unitPrice / 2
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
-				net_value = obj.unitPrice}
-				else{
-					net_value = obj.unitPrice
-				}
-			}
-		}else{
-			net_value = obj.unitPrice;
-			obj.exciseAmount = 0
-		}
-			//vat calculation
-			if (obj.discountType === 'PERCENTAGE') {
-				var val =
-				((+net_value -
-				 (+((net_value * obj.discount)) / 100)) *
-					vat *
-					obj.quantity) /
-				100;
+			if(obj.isExciseTaxExclusive){
+			const totalwithouttax= parseFloat(obj.unitPrice) * parseInt(obj.quantity)
+			const discounvalue=obj.discountType === 'PERCENTAGE'?
+			(totalwithouttax*obj.discount)/100:
+			obj.discountType === 'FIXED' && obj.discount
+			const totalAfterdiscount= totalwithouttax-discounvalue
+			
+			const excisevalue=obj.exciseTaxId === 1?totalAfterdiscount/2:obj.exciseTaxId===2?totalAfterdiscount:0
+			const totalwithexcise=excisevalue+totalAfterdiscount
+			const vatvalue=(totalwithexcise*vat)/100
 
-				var val1 =
-				((+net_value -
-				 (+((net_value * obj.discount)) / 100)) * obj.quantity ) ;
-			} else if (obj.discountType === 'FIXED') {
-				var val =
-						 (net_value * obj.quantity - obj.discount ) *
-					(vat / 100);
-
-					var val1 =
-					((net_value * obj.quantity )- obj.discount )
-
+			const finaltotalamount=totalwithexcise+vatvalue
+			totalnetamount(totalwithouttax)
+			totalexcise(excisevalue)
+			totalvalt(vatvalue)
+			totalamount(finaltotalamount)
+			discountamount(discounvalue)
+			obj.subTotal=totalwithouttax+vatvalue+excisevalue-discounvalue
+			obj.vatAmount=vatvalue
+			obj.exciseAmount=excisevalue
 			} else {
-				var val = (+net_value * vat * obj.quantity) / 100;
-				var val1 = net_value * obj.quantity
+				const totalwithtaxandexcise= parseFloat(obj.unitPrice) * parseInt(obj.quantity)
+				const discounvalue=obj.discountType === 'PERCENTAGE'?
+			(totalwithtaxandexcise*obj.discount)/100:
+			obj.discountType === 'FIXED' && obj.discount
+			const totalwitoutdiscount= totalwithtaxandexcise-discounvalue
+			const vatvalue=(totalwitoutdiscount*vat)/(100+vat)
+			const totalwithoutvat=totalwitoutdiscount-vatvalue
+			const excisevalue=obj.exciseTaxId === 1?totalwithoutvat/3:obj.exciseTaxId===2?totalwithoutvat/2:0
+			const finaltotalamount=totalwithoutvat-excisevalue
+			totalnetamount(totalwithtaxandexcise-(discounvalue+excisevalue+vatvalue))
+		
+			totalexcise(excisevalue)
+			totalvalt(vatvalue)
+			totalamount(totalwitoutdiscount)
+			discountamount(discounvalue)	
+			obj.subTotal=totalwitoutdiscount
+			obj.vatAmount=vatvalue
+			obj.exciseAmount=excisevalue
 			}
-
-			//discount calculation
-			discount = +(discount +(net_value * obj.quantity)) - parseFloat(val1)
-			total_net = +(total_net + net_value * obj.quantity);
-			total_vat = +(total_vat + val);
-			obj.vatAmount = val
-			obj.subTotal =
-			net_value && obj.vatCategoryId ? parseFloat(val1) + parseFloat(val) : 0;
-			total_excise = +(total_excise + obj.exciseAmount)
-			total = total_vat + total_net;
+			
+			
+			
 			return obj;
 		});
 
@@ -1177,18 +1172,18 @@ discountType = (row) =>
 		// 	props.values.discountType.value === 'PERCENTAGE'
 		// 		? +((total_net * discountPercentage) / 100)
 		// 		: discountAmount;
-		
+		debugger
 		this.setState(
 			{
 				data,
 				initValue: {
 					...this.state.initValue,
 					...{
-						total_net: discount ? total_net - discount : total_net,
-						invoiceVATAmount: total_vat,
-						discount:  discount ? discount : 0,
-						totalAmount: total_net > discount ? total - discount : total - discount,
+						total_net:  total_net,
+						totalVatAmount: total_vat,
+ 						totalAmount: total,
 						total_excise: total_excise,
+						discount
 						
 						
 					},
@@ -1197,6 +1192,7 @@ discountType = (row) =>
 			},
 
 		);
+		
 	};
 
 	handleFileChange = (e, props) => {
@@ -1894,7 +1890,7 @@ if (invoiceNumber && invoiceNumber.value) {
 																				<hr />
 
 														<Row>
-														{this.state.isCreatedWithoutInvoice===false &&(<Col lg={3}>
+														{!this.state.isCreatedWIWP &&(<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="invoiceNumber"><span className="text-danger">* </span>
 																	{strings.InvoiceNumber}
@@ -2345,7 +2341,7 @@ if (invoiceNumber && invoiceNumber.value) {
 																</FormGroup>
 															</Col>
 															
-															{(this.state.isCreatedWIWP===false || this.state.invoiceSelected==true) &&(<Col lg={3}>
+															{(this.state.isCreatedWIWP===false && this.state.invoiceSelected==true) &&(<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="remainingInvoiceAmount">
 																
@@ -3090,7 +3086,7 @@ min="0"
 																		type="button"
 																		color="primary"
 																		className="btn-square mr-3"
-																		disabled={this.state.disabled || (initValue.totalAmount>this.state.remainingInvoiceAmount)}
+																		disabled={this.state.disabled || (initValue.totalAmount>this.state.remainingInvoiceAmount && !this.state.isCreatedWIWP)}
 																		onClick={() => {
 																				//	added validation popup	msg
 																				props.handleBlur();
@@ -3116,7 +3112,7 @@ min="0"
 																		color="primary"
 																		className="btn-square mr-3"
 																		
-																		disabled={this.state.disabled || (initValue.totalAmount>this.state.remainingInvoiceAmount)}
+																		disabled={this.state.disabled || (initValue.totalAmount>this.state.remainingInvoiceAmount && !this.state.isCreatedWIWP)}
 																		onClick={() => {
 																				//	added validation popup	msg
 																				props.handleBlur();
@@ -3153,7 +3149,8 @@ min="0"
 														
 															</Col>
 														</Row>
-														{(initValue.totalAmount>this.state.remainingInvoiceAmount) && <div style={{color:'red'}}>Remaining Invoice Amount cananot less than Total Amount</div>}
+														{console.log("sdasdasd",initValue.totalAmount>this.state.remainingInvoiceAmount ,this.state.isCreatedWIWP)}
+														{(initValue.totalAmount>this.state.remainingInvoiceAmount && !this.state.isCreatedWIWP)  && <div style={{color:'red'}}>Remaining Invoice Amount cananot less than Total Amount sdgsdg{this.state.isCreatedWithoutInvoice}</div>}
 													</Form>
 												)}
 											</Formik>

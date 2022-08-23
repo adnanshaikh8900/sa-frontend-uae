@@ -271,7 +271,7 @@ class CreditNotes extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data ? res.data.message : 'Invoice Unposted Successfully'
+						"Credit Note Moved To Draft Successfully " 
 					);
 					this.setState({
 						loading: false,

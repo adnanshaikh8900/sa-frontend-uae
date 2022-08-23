@@ -1124,7 +1124,7 @@ discountType = (row) =>
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
 
-			if(!obj.taxType){
+			if(obj.taxType){
 			const totalwithouttax= parseFloat(obj.unitPrice) * parseInt(obj.quantity)
 			const discounvalue=obj.discountType === 'PERCENTAGE'?
 			(totalwithouttax*obj.discount)/100:

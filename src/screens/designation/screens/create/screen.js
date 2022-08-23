@@ -88,6 +88,7 @@ class CreateDesignation extends React.Component {
         name: value,
     };
     this.props.commonActions.checkValidation(data).then((response) => {
+      console.log(response.data);
         if (response.data === 'Designation ID already exists') {
             this.setState({
                 idExist: true,
@@ -106,14 +107,13 @@ class CreateDesignation extends React.Component {
       designationId
 		} = data;
 
-
 		const formData = new FormData();
 
-    
+    if(!this.state.idExist){
     formData.append(
       'designationId',
       designationId != null ? designationId : '',
-    )
+    )}
     formData.append(
       'designationName',
       designationName != null ? designationName : '',

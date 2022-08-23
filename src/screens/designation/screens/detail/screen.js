@@ -48,7 +48,8 @@ class DetailDesignation extends React.Component {
       initValue: {},
       current_salary_role_id: null,
       dialog: false,
-      idExist:false
+      idExist:false,
+      nameExist:false
     }
 
     this.regEx = /^[0-9\d]+$/;
@@ -76,6 +77,24 @@ class DetailDesignation extends React.Component {
             });
         }
     });
+};
+
+designationNamevalidationCheck = (value) => {
+  const data = {
+      moduleType: 26,
+      name: value,
+  };
+  this.props.commonActions.checkValidation(data).then((response) => {
+      if (response.data === 'Designation name already exists') {
+          this.setState({
+              nameExist: true,
+          });
+      } else {
+          this.setState({
+              nameExist: false,
+          });
+      }
+  });
 };
 
   initializeData = () => {
@@ -236,6 +255,11 @@ class DetailDesignation extends React.Component {
                          validate={(values) => {
                           let errors = {};
 
+                          if(this.state.nameExist==true){
+                            errors.designationName=
+                             "Designation name is already exist";
+                        }
+
                          if(this.state.idExist==true)
                             errors.designationId="Designation ID is already exist";
 
@@ -243,7 +267,7 @@ class DetailDesignation extends React.Component {
                         }}
                             validationSchema={Yup.object().shape({
                               designationId:Yup.string()
-                              .required("Designation name is required"),
+                              .required("Designation ID is required"),
                               designationName: Yup.string()
                                 .required("Designation name is required"),
                             
@@ -294,7 +318,10 @@ class DetailDesignation extends React.Component {
                                     value={props.values.designationName}
                                     placeholder="Enter Designation Name"
                                     onChange={(option) => {
-                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('designationName')(option) }
+                                      if (option.target.value === '' || this.regExAlpha.test(option.target.value)) {
+                                         props.handleChange('designationName')(option)
+                                         this.designationNamevalidationCheck(option.target.value)
+                                        }
                                     }}
                                     className={props.errors.designationName && props.touched.designationName ? "is-invalid" : ""}
                                   />

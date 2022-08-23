@@ -65,7 +65,8 @@ class CreateDesignation extends React.Component {
         designationName:'',
         designationId:''
       },
-      idExist:false
+      idExist:false,
+      nameExist:false
     }
 
     this.regEx = /^[0-9\d]+$/;
@@ -100,6 +101,25 @@ class CreateDesignation extends React.Component {
         }
     });
 };
+
+designationNamevalidationCheck = (value) => {
+  const data = {
+      moduleType: 26,
+      name: value,
+  };
+  this.props.commonActions.checkValidation(data).then((response) => {
+      if (response.data === 'Designation name already exists') {
+          this.setState({
+              nameExist: true,
+          });
+      } else {
+          this.setState({
+              nameExist: false,
+          });
+      }
+  });
+};
+
   handleSubmit = (data, resetForm) => {
     this.setState({ disabled: true,disableLeavePage:true });
 		const {
@@ -179,11 +199,20 @@ class CreateDesignation extends React.Component {
                          validate={(values) => {
                           let errors = {};
 
-                         if(this.state.idExist==true)
-                            errors.designationId="Designation ID is already exist";
-
+                          if(this.state.nameExist==true){
+                            errors.designationName=
+                             "Designation name is already exist";
+                        }
+                        
+                         if(this.state.idExist==true){
+                            errors.designationId=
+                             "Designation ID is already exist";
+                         }
+                          // return errors;
+                         
                           return errors;
                         }}
+                        
                         validationSchema={Yup.object().shape({
                           designationName: Yup.string()
                             .required("Designation name is required"),  
@@ -233,7 +262,10 @@ class CreateDesignation extends React.Component {
                                     value={props.values.designationName}
                                     placeholder={strings.Enter+strings.DesignationName}
                                     onChange={(option) => {
-                                      if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('designationName')(option) }
+                                      if (option.target.value === '' || this.regExAlpha.test(option.target.value)) {
+                                         props.handleChange('designationName')(option)
+                                         this.designationNamevalidationCheck(option.target.value)
+                                        }
                                     }}
                                     className={props.errors.designationName && props.touched.designationName ? "is-invalid" : ""}
                                   />

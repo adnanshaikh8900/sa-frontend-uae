@@ -156,6 +156,7 @@ class DetailQuotation extends React.Component {
 			'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 		];
 		this.regEx = /^[0-9\b]+$/;
+		this.regExInvNum = /[a-zA-Z0-9,-/ ]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 	}
@@ -1668,7 +1669,7 @@ console.log(this.state.supplier_currency)
 														
 													   }
 													   if (!values.customerId) 
-																errors.customerId ='Place of supply is required';
+																errors.customerId ='Customer name is required';
 															if (values.customerId &&(values.customerId=="" ||(values.customerId.label && values.customerId.label === "Customer Name"))) 
 																 errors.customerId ='Customer name is required';
 														
@@ -1676,6 +1677,9 @@ console.log(this.state.supplier_currency)
 													}}
 													validationSchema={Yup.object().shape({
 														
+														quotaionExpiration: Yup.string().required(
+															'Expiry date is required'
+														),
 														lineItemsString: Yup.array()
 														.required(
 															'Atleast one invoice sub detail is mandatory',
@@ -2020,7 +2024,7 @@ console.log(this.state.supplier_currency)
 																		<DatePicker
 																			id="quotaionExpiration"
 																			name="quotaionExpiration"
-																			placeholderText={strings.InvoiceDate}
+																			placeholderText={strings.ExpirationDate}
 																			showMonthDropdown
 																			showYearDropdown
 																			dateFormat="dd-MM-yyyy"
@@ -2044,7 +2048,8 @@ console.log(this.state.supplier_currency)
 																		{props.errors.quotaionExpiration &&
 																			props.touched.quotaionExpiration && (
 																				<div className="invalid-feedback">
-																					{props.errors.quotaionExpiration}
+																					{/* {props.errors.quotaionExpiration} */}
+																				{props.errors.quotaionExpiration.includes("nullable()") ? "Expiry date is required" :props.errors.quotaionExpiration}
 																				</div>
 																			)}
 																	</FormGroup>

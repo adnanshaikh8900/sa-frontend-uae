@@ -396,9 +396,8 @@ class UpdateEmployeePersonal extends React.Component {
             emergencyContactRelationship2 != null ?emergencyContactRelationship2:'',
         );
         formData.append(
-            'maritalStatus',
-            maritalStatus,
-        )
+            'maritalStatus', maritalStatus.value,
+        );
         if (employeeDesignationId && employeeDesignationId.value) {
 			formData.append('employeeDesignationId', employeeDesignationId.value);
 		}
@@ -842,7 +841,12 @@ emailvalidationCheck = (value) => {
                                                                                     selected={this.selectedDate(props) }
                                                                                     value={props.values.dob}
                                                                                     onChange={(value) => {
-                                                                                        props.handleChange("dob")(moment(value).format("DD-MM-YYYY"))
+                                                                                        if(value){
+                                                                                            props.handleChange("dob")(moment(value).format("DD-MM-YYYY"))
+                                                                                        }else{
+                                                                                            props.handleChange("dob")('')
+
+                                                                                        }
                                                                                     }}
                                                                                 />
                                                                                 {props.errors.dob && 
@@ -1700,7 +1704,6 @@ emailvalidationCheck = (value) => {
                                                                             //	added validation popup	msg
                                                                             props.handleBlur();
                                                                             if(props.errors &&  Object.keys(props.errors).length != 0){
-                                                                            
                                                                             this.props.commonActions.fillManDatoryDetails();}
                                                                     }}
                                                                     >

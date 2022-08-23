@@ -442,7 +442,6 @@ class CreateExpense extends React.Component {
 		if (currency) {
 			formData.append('currencyCode', currency.value);
 		}
-		console.log(currency);
 
 		if (vatCategoryId && vatCategoryId.value) {
 			formData.append('vatCategoryId', vatCategoryId.value);
@@ -557,7 +556,6 @@ class CreateExpense extends React.Component {
 			}
 		});
 	
-	console.log(this.state.employeeCode)
 	}
 	
 	
@@ -662,52 +660,74 @@ class CreateExpense extends React.Component {
 	}
 
 	ReverseChargeSetting=(option,props)=>{
-		if(this.state.isDesignatedZone==true)
-			switch(option.value){
-
-				case 1: 
-				case 2: 
-				case 3: 
-				case 4: 
-				case 8: 
+		if(this.state.isDesignatedZone==true){
+			if((option>=1 && option<=4)|| option===8){
 				this.setState({
 					showReverseCharge:false,
 				})
-				break;
-
-				case 5: 
-				case 6: 
-				case 7: 
+			}
+			else{
 				this.setState({
 					showReverseCharge:true,
 				})
-				break;
+			}
+		}
+			// switch(option){
+
+			// 	case 1: 
+			// 	case 2: 
+			// 	case 3: 
+			// 	case 4: 
+			// 	case 8: 
+			// 	this.setState({
+			// 		showReverseCharge:false,
+			// 	})
+			// 	break;
+
+			// 	case 5: 
+			// 	case 6: 
+			// 	case 7: 
+			// 	this.setState({
+			// 		showReverseCharge:true,
+			// 	})
+			// 	break;
 				
 			
-			}
-		else
+			// }
+		else{
 //Not Designated Zone		
-			if(this.state.isDesignatedZone==false)
-			switch(option.value){
+			if(this.state.isDesignatedZone==false){
+				if(option===3 || option===8){
+					this.setState({
+						showReverseCharge:false,
+					})
+				}
+				else{
+					this.setState({
+						showReverseCharge:true,
+					})
+				}
+			// switch(option.value){
 
-				case 1: 
-				case 2: 
-				case 4: 
-				case 5: 
-				case 6: 
-				case 7: 
-				this.setState({
-					showReverseCharge:true,
-				})
-						break;
+			// 	case 1: 
+			// 	case 2: 
+			// 	case 4: 
+			// 	case 5: 
+			// 	case 6: 
+			// 	case 7: 
+			// 	this.setState({
+			// 		showReverseCharge:true,
+			// 	})
+			// 			break;
 
-				case 3: 
-				case 8: 
-				this.setState({
-					showReverseCharge:false,
-				})
-						break;
-			}
+			// 	case 3: 
+			// 	case 8: 
+			// 	this.setState({
+			// 		showReverseCharge:false,
+			// 	})
+			// 			break;
+			}}
+
 	}
 
 	renderVat=(props)=>{
@@ -880,7 +900,6 @@ class CreateExpense extends React.Component {
 				},
 			}),
 		};
-		console.log(this.state.payee)
 		return (
 			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 			<div>
@@ -1130,7 +1149,7 @@ class CreateExpense extends React.Component {
 																					//placelist Setup
 																					this.placelistSetting(option,props)
 																					// ReverseCharge setup
-																					this.ReverseChargeSetting(option,props)
+																					this.ReverseChargeSetting(option.value,props)
 																					this.setState({isReverseChargeEnabled:false,exclusiveVat:false})
 																																																													
 																				} else {
@@ -1635,9 +1654,8 @@ class CreateExpense extends React.Component {
 																	<Col></Col></Row>
 														)
 														} 
-														
-													{this.state.showReverseCharge==true &&(	<Row>
-														<Col >
+														<Row>
+													{this.state.showReverseCharge==true &&(<Col>
 															{/* <Input
 															type="checkbox"
 															id="isReverseChargeEnabled"
@@ -1657,8 +1675,8 @@ class CreateExpense extends React.Component {
 																}}
 															/>
 															<Label>Reverse Charge</Label>
-															</Col>
-														</Row>)}
+															</Col>)}
+															</Row>
 														<hr />
 														<Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
 																<Col>

@@ -1325,12 +1325,12 @@ this.state.data.map((obj, index) => {
 					res.data ? res.data.message : 'Goods Received Note Created Successfully'
 				);
 				if (this.state.createMore) {
-					
 					resetForm(this.state.initValue);
 					this.setState(
 						{
 							createMore: false,
 							selectedContact: '',
+							supplier_currency:'',
 							term: '',
 							data: [
 								{
@@ -1362,6 +1362,7 @@ this.state.data.map((obj, index) => {
 									totalAmount: 0,
 									discountType: '',
 									discount: 0,
+									currencyCode: '',
 									discountPercentage: '',
 									
 								},
@@ -1399,6 +1400,7 @@ this.state.data.map((obj, index) => {
 							);
 						},
 					);
+					
 				} else {
 					this.props.history.push('/admin/expense/goods-received-note');
 					this.setState({ loading:false,});

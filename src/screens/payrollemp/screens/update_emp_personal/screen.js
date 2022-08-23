@@ -509,7 +509,6 @@ emailvalidationCheck = (value) => {
                                                     }}
                                                     validate={(values) => {
 														let errors = {};
-
                                                         if (this.state.emailExist == true) {
                                                             errors.email = 'Email already exists';
                                                         }
@@ -540,8 +539,10 @@ emailvalidationCheck = (value) => {
                                                                 //     'Salary role is required';
                                                                 // }
                                                                 if(this.underAge(values.dob))
-                                                                errors.dob =
-                                                                'Age should be more than 14 years';
+                                                                errors.dob = 'Age should be more than 14 years';
+                                                                if(values.maritalStatus.value===''){
+                                                                    errors.maritalStatus='Marital status is required';
+                                                                }
 														return errors;
 													}}
                                                     validationSchema={Yup.object().shape({
@@ -1698,8 +1699,9 @@ emailvalidationCheck = (value) => {
                                                                         onClick={() => {
                                                                             //	added validation popup	msg
                                                                             props.handleBlur();
-                                                                            if(props.errors &&  Object.keys(props.errors).length != 0)
-                                                                            this.props.commonActions.fillManDatoryDetails();
+                                                                            if(props.errors &&  Object.keys(props.errors).length != 0){
+                                                                            
+                                                                            this.props.commonActions.fillManDatoryDetails();}
                                                                     }}
                                                                     >
                                                                         <i className="fa fa-dot-circle-o"></i>{' '}

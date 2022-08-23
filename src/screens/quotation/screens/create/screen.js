@@ -239,7 +239,7 @@ class CreateQuotation extends React.Component {
 		];
 		this.regEx = /^[0-9\b]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
-		this.regExInvNum = /[a-zA-Z0-9'-/]+$/;
+		this.regExInvNum = /[a-zA-Z0-9,-/ ]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 	}
 
@@ -845,7 +845,7 @@ class CreateQuotation extends React.Component {
 							   );
 					   
 					   }}
-					   placeholder={strings.discount}
+					   placeholder={strings.Discount}
 					   className={`form-control 
 		   ${
 						   props.errors.lineItemsString &&
@@ -1937,7 +1937,7 @@ discountType = (row) =>
 													// 	'Order date is required',
 													// ),
 													quotaionExpiration: Yup.string().required(
-														'Order due date is required'
+														'Expiry date is required'
 													),
 													lineItemsString: Yup.array()
 														.required(
@@ -2298,7 +2298,7 @@ discountType = (row) =>
 																				? 'is-invalid'
 																				: ''
 																		}`}
-																		placeholderText={strings.OrderDueDate}
+																		placeholderText={strings.ExpirationDate}
 																		 selected={props.values.quotaionExpiration ?new Date(props.values.quotaionExpiration):props.values.quotaionExpiration}
 																		showMonthDropdown
 																		showYearDropdown
@@ -2313,7 +2313,7 @@ discountType = (row) =>
 																		props.touched.quotaionExpiration && (
 																			<div className="invalid-feedback">
 																				{/* {props.errors.quotaionExpiration} */}
-																				{props.errors.quotaionExpiration.includes("nullable()") ? "Date is required" :props.errors.quotaionExpiration}
+																				{props.errors.quotaionExpiration.includes("nullable()") ? "Expiry date is required" :props.errors.quotaionExpiration}
 																			</div>
 																		)}
 																	

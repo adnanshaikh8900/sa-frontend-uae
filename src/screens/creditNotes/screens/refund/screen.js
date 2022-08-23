@@ -490,6 +490,9 @@ class Refund extends React.Component {
 														errors.amount =
 														'Amount cannot More than the Invoice Amount';
 													 }
+													 if(!values.receiptDate){
+														errors.receiptDate='Payment date is required';
+													 }
 													 return errors
 													 }}
 													validationSchema={Yup.object().shape({

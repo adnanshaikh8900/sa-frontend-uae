@@ -539,6 +539,10 @@ emailvalidationCheck = (value) => {
                                                                 // }
                                                                 if(this.underAge(values.dob))
                                                                 errors.dob = 'Age should be more than 14 years';
+                                                                if(values.dob===''){
+                                                                errors.dob = 'Date of birth is required';
+
+                                                                }
                                                                 if(values.maritalStatus.value===''){
                                                                     errors.maritalStatus='Marital status is required';
                                                                 }

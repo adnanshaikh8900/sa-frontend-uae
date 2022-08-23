@@ -424,7 +424,7 @@ class CreditNotes extends React.Component {
 									<i className="fas fa-edit" /> {strings.Edit}
 								</div>
 							</DropdownItem>
-						)}	{row.statusEnum !== 'Closed' && row.statusEnum !== 'Draft' && row.cnCreatedOnPaidInvoice !==true && row.isCNWithoutProduct !==true &&   (
+						)}	{row.statusEnum !== 'Closed' && row.statusEnum !== 'Draft' && row.cnCreatedOnPaidInvoice !==true  &&   (
 							<DropdownItem>
 								<div
 									onClick={() => {
@@ -1089,7 +1089,7 @@ class CreditNotes extends React.Component {
 											selectRow={this.selectRowProp}
 											search={false}
 											options={this.options}
-											data={customer_invoice_data ? customer_invoice_data.reverse() : []}
+											data={customer_invoice_data ? customer_invoice_data.sort((a,b)=>new Date(a.creditNoteDate)-new Date(b.creditNoteDate)) : []}
 											version="4"
 											hover
 											responsive

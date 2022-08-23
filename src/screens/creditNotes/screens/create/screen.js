@@ -529,8 +529,8 @@ discountType = (row) =>
 		let result = this.props.currency_convert_list.find((obj) => {
 		return obj.currencyCode === value;
 		});
-		console.log('currency result', result)
-		debugger
+		
+		
 		this.formRef.current.setFieldValue('exchangeRate', result.exchangeRate, true);
 		};
 
@@ -875,7 +875,7 @@ discountType = (row) =>
 		let idx;
 		data.map((obj, index) => {
 			if (obj.id === row.id) {
-				console.log(result);
+				
 				obj['unitPrice'] = result.unitPrice;
 				obj['vatCategoryId'] = result.vatCategoryId;
 				obj['description'] = result.description;
@@ -1124,7 +1124,7 @@ discountType = (row) =>
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
 
-			if(obj.isExciseTaxExclusive){
+			if(!obj.taxType){
 			const totalwithouttax= parseFloat(obj.unitPrice) * parseInt(obj.quantity)
 			const discounvalue=obj.discountType === 'PERCENTAGE'?
 			(totalwithouttax*obj.discount)/100:
@@ -1174,7 +1174,7 @@ discountType = (row) =>
 		// 	props.values.discountType.value === 'PERCENTAGE'
 		// 		? +((total_net * discountPercentage) / 100)
 		// 		: discountAmount;
-		debugger
+	
 		this.setState(
 			{
 				data,
@@ -1232,7 +1232,7 @@ discountType = (row) =>
 		} = data;
 		const { term } = this.state;
 		const formData = new FormData();
-
+		
 		formData.append('isCreatedWithoutInvoice',this.state.isCreatedWIWP);
 		
 
@@ -1241,11 +1241,11 @@ discountType = (row) =>
 
 		formData.append(
 			'creditNoteNumber',
-			creditNoteNumber !== null ? this.state.prefix + creditNoteNumber : '',
+			creditNoteNumber ? this.state.prefix + creditNoteNumber : '',
 		);
 		formData.append(
 			'email',
-			email !== null ? email : '',
+			email ? email : '',
 		);
 		// formData.append(
 		// 	'invoiceDueDate',
@@ -1263,7 +1263,7 @@ discountType = (row) =>
 			'receiptNumber',
 			receiptNumber !== null ? receiptNumber : '',
 		);
-		debugger
+		
 		formData.append(
 			'exchangeRate',
 			exchangeRate  ? exchangeRate : '',
@@ -1277,9 +1277,8 @@ discountType = (row) =>
 			receiptAttachmentDescription !== null ? receiptAttachmentDescription : '',
 		);
 		formData.append('notes', notes !== null ? notes : '');
-		formData.append('email', email !== null ? email : '');
 		formData.append('type', 7);
-		if(this.state.isCreatedWIWP ===true)
+		if(this.state.isCreatedWIWP ===true  )
 		formData.append('totalAmount', creditAmount);
 	
 			formData.append('vatCategoryId', 2);
@@ -1288,7 +1287,7 @@ if (invoiceNumber && invoiceNumber.value) {
 	formData.append('invoiceId', invoiceNumber.value);
 	formData.append('cnCreatedOnPaidInvoice','1');
 	}	
-		if(this.state.isCreatedWIWP ===false)
+		if(!this.state.isCreatedWIWP)
 		{
 							
 				formData.append('lineItemsString', JSON.stringify(this.state.data));
@@ -1418,6 +1417,7 @@ if (invoiceNumber && invoiceNumber.value) {
 	
 	getCurrentUser = (data) => {
 		let option;
+		
 		if (data.label || data.value) {
 			option = data;
 		} else {
@@ -1442,7 +1442,7 @@ if (invoiceNumber && invoiceNumber.value) {
 		// this.setState({
 			//   selectedContact: option
 			// })
-			console.log('data11', option)
+		
 		this.formRef.current.setFieldValue('contactId', option, true);
 	};
 
@@ -1589,7 +1589,7 @@ if (invoiceNumber && invoiceNumber.value) {
 		let idx;
 		data.map((obj, index) => {
 			if (obj.id === row.id) {
-				console.log(result);
+				
 				obj['unitPrice'] = result.unitPrice;
 				obj['vatCategoryId'] = result.vatCategoryId;
 				obj['description'] = result.description;
@@ -1623,6 +1623,9 @@ if (invoiceNumber && invoiceNumber.value) {
 			);
 			this.props.creditNotesCreateActions
 			.getInvoiceById(e.value).then((response) => {
+				const customerdetails={label: response.data.organisationName === '' ?  response.data.name : response.data.organisationName,
+				value: response.data.contactId}
+		
 				this.setState(
 					{
 						option : {
@@ -1662,16 +1665,16 @@ if (invoiceNumber && invoiceNumber.value) {
 				// },
 	
 				);
+				this.formRef.current.setFieldValue('currency', this.getCurrency(customerdetails.value), true);
+				this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(customerdetails.value), true);
+				this.setExchange( this.getCurrency(customerdetails.value) );
 				this.formRef.current.setFieldValue('contactId', this.state.option, true);
 				this.formRef.current.setFieldValue('remainingInvoiceAmount', this.state.remainingInvoiceAmount, true);
 				
 				this.formRef.current.setFieldValue('currencyCode', this.state.customer_currency, true);
 				this.getCurrency(this.state.option.value)	
 				this.getTaxTreatment(this.state.option.value)	
-				console.log(this.state.data,"api")
-				console.log("option ",this.state.option)
-				console.log(this.state.initValue.totalAmount,"this.state.initValue.totalAmount+++++++")
-				console.log(this.state.initValue.totalVatAmount,"this.state.initValue.totalVatAmount+++++++")
+			
 			});
 		}
 	}
@@ -1743,7 +1746,7 @@ if (invoiceNumber && invoiceNumber.value) {
 													{
 														errors.creditNoteNumber ='Tax credit note number cannot be same';
 													}	
-													
+													debugger
 													if(this.state.isCreatedWIWP==false && !values.invoiceNumber)
 													{
 														errors.invoiceNumber = 'Invoice number is required';}
@@ -1751,14 +1754,14 @@ if (invoiceNumber && invoiceNumber.value) {
 													if((this.state.isCreatedWIWP  && !this.state.invoiceSelected)&& values.creditAmount<1)
 														{
 															errors.creditAmount = 'Credit amount is required';}
-													// if(this.state.invoiceSelected && this.state.initValue.totalAmount>this.state.remainingInvoiceAmount)
-													// {
-													// 	errors.remainingInvoiceAmount =	'Invoice Total Amount Cannot be greater than Remaining Invoice Amount';
-													// }	
-													// if(this.state.remainingInvoiceAmount && values.creditAmount<this.state.remainingInvoiceAmount)		
-													// {
-													// 	errors.creditAmount = 'Credit Amount Cannot be less than Remaining Invoice Amount';
-													// }														
+													if(this.state.invoiceSelected && !this.state.isCreatedWIWP && this.state.initValue.totalAmount>this.state.remainingInvoiceAmount)
+													{
+														errors.remainingInvoiceAmount =	'Invoice Total Amount Cannot be greater than Remaining Invoice Amount';
+													}	
+													if(this.state.invoiceSelected && this.state.isCreatedWIWP && values.creditAmount>this.state.remainingInvoiceAmount)
+													{
+														errors.remainingInvoiceAmount =	'Invoice Total Amount Cannot be greater than Remaining Invoice Amount';
+													}											
 													return errors;
 												}}
 												validationSchema={Yup.object().shape({
@@ -1885,7 +1888,7 @@ if (invoiceNumber && invoiceNumber.value) {
 																				<hr />
 
 														<Row>
-														{!this.state.isCreatedWIWP &&(<Col lg={3}>
+														{!this.state.isCreatedWithoutInvoice &&(<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="invoiceNumber"><span className="text-danger">* </span>
 																	{strings.InvoiceNumber}
@@ -1908,9 +1911,11 @@ if (invoiceNumber && invoiceNumber.value) {
 
 																		onChange={(option) => {
 																			if (option && option.value) {
+																			
 																				 this.getInvoiceDetails(option, option.value, props)
 																				 props.handleChange('invoiceNumber')(option);
 																				this.setState({invoiceSelected :true})
+																				
 																			} else {
 																				this.setState({invoiceSelected :false})
 																				props.handleChange('invoiceNumber')('');
@@ -2004,6 +2009,7 @@ if (invoiceNumber && invoiceNumber.value) {
 																		isDisabled={this.state.invoiceSelected}
 																		onChange={(option) => {
 																			if (option && option.value) {
+																			
 																				this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
 																				this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(option.value), true);
 																				this.setExchange( this.getCurrency(option.value) );
@@ -2336,7 +2342,7 @@ if (invoiceNumber && invoiceNumber.value) {
 																</FormGroup>
 															</Col>
 															
-															{(this.state.isCreatedWIWP===false && this.state.invoiceSelected==true) &&(<Col lg={3}>
+															{(!this.state.isCreatedWithoutInvoice && this.state.invoiceSelected==true) &&(<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="remainingInvoiceAmount">
 																
@@ -3101,7 +3107,7 @@ min="0"
 																			? 'Creating...'
 																			: strings.Create}
 																	</Button>
-																	{console.log(this.state.totalAmount,this.state.remainingInvoiceAmount)}
+																
 																	<Button
 																		type="button"
 																		color="primary"
@@ -3144,7 +3150,7 @@ min="0"
 														
 															</Col>
 														</Row>
-														{console.log("sdasdasd",initValue.totalAmount>this.state.remainingInvoiceAmount ,this.state.isCreatedWIWP)}
+														
 														{(initValue.totalAmount>this.state.remainingInvoiceAmount && !this.state.isCreatedWIWP)  && <div style={{color:'red'}}>Remaining Invoice Amount cananot less than Total Amount sdgsdg{this.state.isCreatedWithoutInvoice}</div>}
 													</Form>
 												)}

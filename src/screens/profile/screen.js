@@ -1490,7 +1490,7 @@ class Profile extends React.Component {
 																)
 																.nullable(),
 																companyStateCode: Yup.string().required(
-																	'State is required',
+																	'Emirate state is required',
 																),
 																// companyCity: Yup.string().required(
 																// 	'City is required',
@@ -2249,7 +2249,7 @@ class Profile extends React.Component {
 																					{props.errors.companyStateCode &&
 																						props.touched.companyStateCode && (
 																							<div className="invalid-feedback">
-																								{props.errors.companyStateRegion}
+																								{props.errors.companyStateCode}
 																							</div>
 																						)}
 																				</FormGroup>

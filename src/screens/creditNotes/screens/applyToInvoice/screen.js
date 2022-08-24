@@ -98,7 +98,9 @@ class ApplyToInvoice extends React.Component {
 			fileName: '',
 			basecurrency:[],
 			customer_currency: '',
-			invoice_list:[]
+			invoice_list:[],
+			currenttotal:0,
+			selectedrowsdata:[]
 		};
 		
 		this.options = {
@@ -117,7 +119,7 @@ class ApplyToInvoice extends React.Component {
             mode: 'checkbox',
             bgColor: 'rgba(0,0,0, 0.05)',
             clickToSelect: false,
-            onSelect: this.onRowSelect,
+            onSelect:  this.onRowSelect,
             onSelectAll: this.onSelectAll
           }
 	
@@ -193,6 +195,7 @@ class ApplyToInvoice extends React.Component {
 				.getInvoicesListForCN(this.props.location.state.contactId)
 				.then((res) => {
 					if (res.status === 200) {
+					
 						this.setState(
 							{
 								invoice_list: res.data,
@@ -210,6 +213,8 @@ class ApplyToInvoice extends React.Component {
 								term: res.data.term ? res.data.term : '',
 								placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 								loading: false,
+								currenttotal:this.props.location.state.creditAmount,
+								cannotsave:false
 							},
 							() => {
 								if (this.state.data.length > 0) {
@@ -773,21 +778,91 @@ min="0"
 	};
 	onRowSelect = (row, isSelected, e) => {
 		let tempList = [];
-		if (isSelected) {
-			tempList = Object.assign([], this.state.selectedRows);
-			tempList.push(row.id);
-		} else {
-			this.state.selectedRows.map((item) => {
-				if (item !== row.id) {
-					tempList.push(item);
+		
+		let crtotal
+		let currenttotal=0
+		this.state.selectedrowsdata.map((i)=>{
+			if(i.creditstaken){
+				currenttotal=currenttotal+i.creditstaken
+			}
+		})
+		currenttotal=this.props.location.state.creditAmount-currenttotal
+			if (isSelected) {
+				tempList = [...this.state.selectedRows]
+				tempList.push(row);
+
+				if(currenttotal>0){
+					crtotal=currenttotal-row.dueAmount
+					
+					row['creditstaken']=crtotal>0?row.dueAmount:currenttotal
+					this.setState({
+						selectedRows: tempList,
+						currenttotal:crtotal>0?crtotal:0,
+						cannotsave:false,
+						selectedrowsdata:[...this.state.selectedrowsdata,{...row}]
+					})
+				} else {
+					this.setState({
+						selectedRows: tempList,
+						cannotsave:true
+					});
 				}
-				return item;
-			});
+				
+				
+			
+			} else {
+				
+				const indexofrowtemp=this.state.selectedRows.findIndex((i)=>row.id===i.id)
+				const newdatatemp=[...this.state.selectedRows]
+				if(indexofrowtemp>-1) newdatatemp.splice(indexofrowtemp,1)
+				;
+		
+
+				
+				const indexofrow=this.state.selectedrowsdata.findIndex((i)=>row.id===i.id)
+				const newdata=[...this.state.selectedrowsdata]
+				if(indexofrow>-1) newdata.splice(indexofrow,1)
+				const crtotal=currenttotal+row.creditstaken
+				
+			
+				const finaldata=[...newdata]
+				if(row.creditstaken){
+
+				
+					newdata.map((i,ind)=>{
+						if(i.dueAmount-i.creditstaken>=0) {
+							finaldata[ind].creditstaken=i.dueAmount
+
+						}else {
+							finaldata[ind].creditstaken=currenttotal
+						}
+					})
+				
+					delete row.creditstaken	
+					
+				} else {
+					debugger
+		if(newdatatemp.length===finaldata.length )
+					this.setState({
+						cannotsave:false
+					});
+				}
+				this.setState({					
+					selectedrowsdata:finaldata,
+					currenttotal:crtotal,
+					selectedRows:newdatatemp
+				})
+				
+			
+				
+			}
+			
+		
 		}
-		this.setState({
-			selectedRows: tempList,
-		});
-	};
+			
+		
+		
+		
 	onSelectAll = (isSelected, rows) => {
 		let tempList = [];
 		if (isSelected) {
@@ -1337,7 +1412,7 @@ console.log(this.state.selectedRows)
 																			type="submit"
 																			color="primary"
 																			className="btn-square mr-3"
-																			disabled={this.state.disabled}
+																			disabled={this.state.disabled ||this.state.cannotsave}
 																			onClick={this.handleSubmit}
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
@@ -1357,7 +1432,9 @@ console.log(this.state.selectedRows)
 																			<i className="fa fa-ban"></i> {strings.Cancel}
 																		</Button>
 																	</FormGroup>
+																	
 																</Col>
+																{this.state.cannotsave && <div style={{fontSize:'1rem',color:'red'}}>You Dont have Sufficient Credit</div>}
 															</Row>
 														</Form>
 													)}

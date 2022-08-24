@@ -396,9 +396,8 @@ class UpdateEmployeePersonal extends React.Component {
             emergencyContactRelationship2 != null ?emergencyContactRelationship2:'',
         );
         formData.append(
-            'maritalStatus',
-            maritalStatus,
-        )
+            'maritalStatus', maritalStatus.value,
+        );
         if (employeeDesignationId && employeeDesignationId.value) {
 			formData.append('employeeDesignationId', employeeDesignationId.value);
 		}
@@ -509,7 +508,6 @@ emailvalidationCheck = (value) => {
                                                     }}
                                                     validate={(values) => {
 														let errors = {};
-
                                                         if (this.state.emailExist == true) {
                                                             errors.email = 'Email already exists';
                                                         }
@@ -540,8 +538,14 @@ emailvalidationCheck = (value) => {
                                                                 //     'Salary role is required';
                                                                 // }
                                                                 if(this.underAge(values.dob))
-                                                                errors.dob =
-                                                                'Age should be more than 14 years';
+                                                                errors.dob = 'Age should be more than 14 years';
+                                                                if(values.dob===''){
+                                                                errors.dob = 'Date of birth is required';
+
+                                                                }
+                                                                if(values.maritalStatus.value===''){
+                                                                    errors.maritalStatus='Marital status is required';
+                                                                }
 														return errors;
 													}}
                                                     validationSchema={Yup.object().shape({
@@ -841,7 +845,12 @@ emailvalidationCheck = (value) => {
                                                                                     selected={this.selectedDate(props) }
                                                                                     value={props.values.dob}
                                                                                     onChange={(value) => {
-                                                                                        props.handleChange("dob")(moment(value).format("DD-MM-YYYY"))
+                                                                                        if(value){
+                                                                                            props.handleChange("dob")(moment(value).format("DD-MM-YYYY"))
+                                                                                        }else{
+                                                                                            props.handleChange("dob")('')
+
+                                                                                        }
                                                                                     }}
                                                                                 />
                                                                                 {props.errors.dob && 
@@ -1698,8 +1707,8 @@ emailvalidationCheck = (value) => {
                                                                         onClick={() => {
                                                                             //	added validation popup	msg
                                                                             props.handleBlur();
-                                                                            if(props.errors &&  Object.keys(props.errors).length != 0)
-                                                                            this.props.commonActions.fillManDatoryDetails();
+                                                                            if(props.errors &&  Object.keys(props.errors).length != 0){
+                                                                            this.props.commonActions.fillManDatoryDetails();}
                                                                     }}
                                                                     >
                                                                         <i className="fa fa-dot-circle-o"></i>{' '}

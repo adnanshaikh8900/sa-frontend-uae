@@ -1186,7 +1186,7 @@ emailvalidationCheck = (value) => {
                                                                               
                                                                         </Col>
 
-                                                                        {props.values.countryId == 229 || props.values.countryId.value == 229 ? 
+                                                                        {props.values.countryId === 229 || props.values.countryId.value === 229 ? 
 														 	<Col md="4" >
 																 <FormGroup>
 															 {/* <Label htmlFor="select">{strings.POBoxNumber}</Label> */}
@@ -1312,10 +1312,7 @@ emailvalidationCheck = (value) => {
                                                                                             props.handleChange('countryId')('');
                                                                                             this.getStateList(option.value);
                                                                                         }
-                                                                                        props.handleChange('stateId')({
-                                                                                            label: 'Select State',
-                                                                                            value: '',
-                                                                                        });
+                                                                                       
                                                                                     }}
                                                                                     placeholder={strings.Select + strings.Country}
                                                                                     id="countryId"

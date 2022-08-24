@@ -2124,16 +2124,12 @@ existForAccountNumber = (value) => {
                                                                                                             if (option && option.value) {
                                                                                                                 props.handleChange('countryId')(option);
                                                                                                                 props.handleChange('PostZipCode')("");
-                                                                                                                
                                                                                                                 this.getStateList(option.value);
+                                                                                                              
                                                                                                             } else {
                                                                                                                 props.handleChange('countryId')('');
                                                                                                                 this.getStateList('');
                                                                                                             }
-                                                                                                            props.handleChange('stateId')({
-                                                                                                                label: 'Select State',
-                                                                                                                value: '',
-                                                                                                            });
                                                                                                         }}
                                                                                                         placeholder={strings.Select+strings.Country}
                                                                                                         id="countryId"
@@ -2160,7 +2156,6 @@ existForAccountNumber = (value) => {
 
                                                                                                     </Label>
                                                                                                     <Select
-
                                                                                                         options={
                                                                                                             state_list
                                                                                                                 ? selectOptionsFactory.renderOptions(

@@ -171,6 +171,7 @@ class ExplainTrasactionDetail extends React.Component {
 		const { selectedData,data,bankId } = this.props;
 		if(data){
 		const res={data:data}
+		debugger
 		this.setState(
 			{
 				loading: false,
@@ -327,6 +328,7 @@ class ExplainTrasactionDetail extends React.Component {
 
 	getChartOfAccountCategoryList = (type) => {
 		this.setState({ loading: true });
+		debugger
 		this.props.transactionsActions.getChartOfCategoryList(type).then((res) => {
 			if (res.status === 200) {
 				this.setState(
@@ -344,7 +346,7 @@ class ExplainTrasactionDetail extends React.Component {
 							const id = this.state.chartOfAccountCategoryList[0].options.find(
 								(option) => option.value === this.state.initValue.coaCategoryId,
 							);
-							
+							debugger
 							 if(id != null){
 							this.getTransactionCategoryList(id);
 							 }
@@ -399,7 +401,7 @@ class ExplainTrasactionDetail extends React.Component {
 
 
 	getTransactionCategoryList = (type) => {
-		 
+		 debugger
 		this.formRef.current.setFieldValue('coaCategoryId', type, true);
 		this.setValue(null);
 		if (type &&type.value && type.value === 100) {
@@ -1196,6 +1198,8 @@ class ExplainTrasactionDetail extends React.Component {
 													>
 														{(props) => (
 															<Form onSubmit={props.handleSubmit}>
+																{console.log(props,this.state)}
+															
 																<Row>
 																	<Col lg={3}>
 																		<FormGroup className="mb-3">
@@ -1213,10 +1217,12 @@ class ExplainTrasactionDetail extends React.Component {
 																				value={
 																					chartOfAccountCategoryList[0] &&
 																					chartOfAccountCategoryList[0].options.find(
-																						(option) =>
-																							option.value ===
-																							+props.values.coaCategoryId && props.values.coaCategoryId.value,
-																					)
+																						(option) =>{
+																							debugger
+																						return	option.value ===
+																							typeof props.values.coaCategoryId==='object' ?props.values.coaCategoryId.value : props.values.coaCategoryId 
+																						}
+																							)
 																				}
 																				onChange={(option) => {
 																					if (option && option.value) {

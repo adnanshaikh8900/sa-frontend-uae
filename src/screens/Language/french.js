@@ -841,7 +841,7 @@ const fr = {
       CreateSalaryRole:"Créer un rôle salarial",
       UpdateSalaryRole:"Mettre à jour le rôle salarial", 
       CreateDesignation:"Créer Désignation",	
-      EmployeeDesignationName:"Désignation de l'employé Nom",	
+      DesignationName:"Désignation Nom",	
       CreateDeductionComponent:"Créer composant de déduction",	
       Component:"Composant",	
       ComponentName:"Nom du Composant",		

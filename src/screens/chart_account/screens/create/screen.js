@@ -387,7 +387,7 @@ class CreateChartAccount extends React.Component {
 																	);
 																}}
 															>
-																<i className="fa fa-ban"></i>{strings.Cancel}
+																<i className="fa fa-ban"></i> {strings.Cancel}
 															</Button>
 														</FormGroup>
 													</Form>

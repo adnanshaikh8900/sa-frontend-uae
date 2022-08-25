@@ -395,7 +395,8 @@ class CreatePurchaseOrder extends React.Component {
 								}
 							}}
 							placeholder={strings.Quantity}
-							className={`form-control w-50${
+							className={`form-control w-50
+							${
 							props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].quantity &&

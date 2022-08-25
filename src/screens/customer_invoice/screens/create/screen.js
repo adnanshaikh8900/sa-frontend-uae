@@ -371,7 +371,7 @@ class CreateCustomerInvoice extends React.Component {
 							props.touched.lineItemsString &&
 							props.touched.lineItemsString[parseInt(idx, 10)] &&
 							props.touched.lineItemsString[parseInt(idx, 10)].quantity && (
-								<div className="invalid-feedback">
+								<div className="invalid-feedback" style={{display:"block", whiteSpace: "normal"}}>
 									{props.errors.lineItemsString[parseInt(idx, 10)].quantity}
 								</div>
 							)}
@@ -3868,6 +3868,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		className="btn-square mr-3"
 																		disabled={this.state.disabled}
 																		onClick={() => {
+																			
                                                                             if(this.state.data.length === 1)
                                                                             {
                                                                                 console.log(props.errors,"ERRORs")

@@ -374,6 +374,20 @@ min="0"
 
 			</div>);
 	};
+
+	renderCredittaken = (cell, row, extraData) => {
+		return (
+			<div>
+				<div>
+				
+					<label>
+						{row.creditstaken|| 0}
+					</label>
+				</div>
+			
+
+			</div>);
+	};
 	renderUnitPrice = (cell, row, props) => {
 		let idx;
 		this.state.data.map((obj, index) => {
@@ -815,7 +829,7 @@ min="0"
 				const indexofrowtemp=this.state.selectedRows.findIndex((i)=>row.id===i.id)
 				const newdatatemp=[...this.state.selectedRows]
 				if(indexofrowtemp>-1) newdatatemp.splice(indexofrowtemp,1)
-				;
+				
 		
 
 				
@@ -823,21 +837,25 @@ min="0"
 				const newdata=[...this.state.selectedrowsdata]
 				if(indexofrow>-1) newdata.splice(indexofrow,1)
 				const crtotal=currenttotal+row.creditstaken
-				
+				const theinvoicelist=[...this.state.invoice_list]
 			
 				const finaldata=[...newdata]
 				if(row.creditstaken){
 
 				
 					newdata.map((i,ind)=>{
-						if(i.dueAmount-i.creditstaken>=0) {
+						const indd=theinvoicelist.findIndex((i)=>i.id===finaldata[ind].id)
+						debugger
+						if(i.creditstaken-i.dueAmount>=0) {
 							finaldata[ind].creditstaken=i.dueAmount
 
 						}else {
-							finaldata[ind].creditstaken=currenttotal
+							finaldata[ind].creditstaken=currenttotal+row.creditstaken+i.creditstaken
 						}
+
+						if(indd>-1) theinvoicelist[indd]=finaldata[ind]
 					})
-				
+				debugger
 					delete row.creditstaken	
 					
 				} else {
@@ -847,10 +865,13 @@ min="0"
 						cannotsave:false
 					});
 				}
+				
+				
 				this.setState({					
 					selectedrowsdata:finaldata,
 					currenttotal:crtotal,
-					selectedRows:newdatatemp
+					selectedRows:newdatatemp,
+					invoice_list:theinvoicelist
 				})
 				
 			
@@ -1344,7 +1365,17 @@ console.log(this.state.selectedRows)
 																		>
 																			 {strings.AmountToCredit}
 																		</TableHeaderColumn>
-																		
+																		<TableHeaderColumn
+																	    	dataField="creditstaken"
+																			dataFormat={this.renderCredittaken}
+																			formatExtraData={this.props.location.state.creditAmount}
+																			className="table-header-bg"
+																			// dataFormat={(cell, rows) =>
+																			// 	this.renderUnitPrice(cell, rows, props)
+																			// }
+																		>
+																			 {strings.CreditUsed || "Credit Used"}
+																		</TableHeaderColumn>
 																	</BootstrapTable>
 																</Col>
 															</Row>

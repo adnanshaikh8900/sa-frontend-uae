@@ -877,7 +877,7 @@ class DetailPurchaseOrder extends React.Component {
 							   );
 					   
 					   }}
-					   placeholder={strings.discount}
+					   placeholder={strings.Discount}
 					   className={`form-control 
 		   ${
 						   props.errors.lineItemsString &&
@@ -1529,15 +1529,13 @@ class DetailPurchaseOrder extends React.Component {
 		this.setState({
 			dateChanged: true,
 		});
-		const values1 = value
-			? value
-			: props.values.poApproveDate1
+		const values1 = value ? value : '';
 		if (values1 ) {
 			this.setState({
 				poApproveDate: moment(values1),
 			});
 			props.setFieldValue('poApproveDate1', values1, true);
-		}
+		 }
 	};
 	setDate1= (props, value) => {
 		debugger
@@ -1545,8 +1543,8 @@ class DetailPurchaseOrder extends React.Component {
 			dateChanged1: true,
 		});
 		
-		const values2 = value ? value
-		: props.values.poReceiveDate1	
+		const values2 = value ? value : '';
+		// : props.values.poReceiveDate1	
 		if ( values2) {
 			this.setState({
 				poReceiveDate: moment(values2),
@@ -1751,8 +1749,13 @@ class DetailPurchaseOrder extends React.Component {
 																)
 															   ) 
 																 errors.placeOfSupplyId ='Place of supply is required';
+															
 														
 													   }
+															if(values.poApproveDate && values.poReceiveDate && (values.poApproveDate > values.poReceiveDate)){
+																errors.poReceiveDate='Expiry date should be greater than issue date';
+																errors.poApproveDate='Issue date should be less than expiry date';
+															}
 														return errors;
 													}}
 													validationSchema={Yup.object().shape(
@@ -2109,10 +2112,16 @@ class DetailPurchaseOrder extends React.Component {
 																			value={props.values.poApproveDate}
 																			selected={new Date(props.values.poApproveDate1)} 
 																			onChange={(value) => {
-																				props.handleChange('poApproveDate')(
-																				value
-																				);
-																				this.setDate(props, value);
+																				if(value){
+																					props.handleChange('poApproveDate')(value);
+																					this.setDate(props, value);
+																				}
+																				else{
+																					props.handleChange('poApproveDate')('');
+																					this.setDate(props, '');
+
+																				}
+																				
 																			}}
 																			className={`form-control ${
 																				props.errors.poApproveDate &&
@@ -2124,7 +2133,8 @@ class DetailPurchaseOrder extends React.Component {
 																		{props.errors.poApproveDate &&
 																			props.touched.poApproveDate && (
 																				<div className="invalid-feedback">
-																				{props.errors.poReceiveDate.includes("final value was:") ? "Issue date is required" :props.errors.poReceiveDate}
+																				{props.errors.poApproveDate}
+																				{/* .includes("final value was:") ? "Issue date is required" :props.errors.poReceiveDate} */}
 																				</div>
 																			)}
 																	</FormGroup>
@@ -2148,10 +2158,16 @@ class DetailPurchaseOrder extends React.Component {
 																				minDate={new Date()}
 																				dropdownMode="select"
 																				onChange={(value) => {
-																					props.handleChange('poReceiveDate')(
-																						value
-																					);
-																					this.setDate1(props, value);
+																					if(value){
+																						props.handleChange('poReceiveDate')(
+																							value
+																						);
+																						this.setDate1(props, value);
+																					}
+																					else{
+																						props.handleChange('poReceiveDate')('');
+																						this.setDate1(props, '');
+																					}
 																				}}
 																				className={`form-control ${
 																					props.errors.poReceiveDate &&

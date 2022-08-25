@@ -946,7 +946,7 @@ renderVatAmount = (cell, row,extraData) => {
 					id: this.state.idCount + 1,
 					description: '',
 					quantity: 1,
-					unitPrice: '',
+					unitPrice: 0,
 					vatCategoryId: '',
 					subTotal: 0,
 					exciseTaxId:'',
@@ -1374,7 +1374,7 @@ discountType = (row) =>
 												id: 0,
 												description: '',
 												quantity: 1,
-												unitPrice: '',
+												unitPrice: 0,
 												vatCategoryId: '',
 												vatAmount:0,
 												subTotal: 0,
@@ -1497,6 +1497,7 @@ discountType = (row) =>
 	};
 
 	updateAmount = (data, props) => {
+		debugger
 		const { vat_list } = this.state;
 		let total_net = 0;
 		let total_excise = 0;
@@ -1988,7 +1989,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 			// this.updateAmount(newData, props);
 			this.setState(
 				{
-					data: newData.concat({
+					data: [...newData,{
 						id: this.state.idCount + 1,
 						description: res.data[0].description,
 						quantity: 1,
@@ -2002,7 +2003,9 @@ if(changeShippingAddress && changeShippingAddress==true)
 						discountType: res.data[0].discountType,
 						unitType:res.data[0].unitType,
 						unitTypeId:res.data[0].unitTypeId,
-					}),
+					},
+					
+				],
 					idCount: this.state.idCount + 1,
 					
 				},
@@ -2011,6 +2014,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 						values: this.state.initValue,
 					};
 					this.updateAmount(this.state.data, values);
+					this.addRow()
 				},
 			);
 			this.formRef.current.setFieldValue(

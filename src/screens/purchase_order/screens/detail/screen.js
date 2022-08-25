@@ -409,7 +409,8 @@ class DetailPurchaseOrder extends React.Component {
 				render={({ field, form }) => (
 					<Select
 						styles={customStyles}
-						isDisabled={row.exciseTaxId === 0}
+						// isDisabled={row.exciseTaxId === 0}
+						isDisabled={row.exciseTaxId === 0 || row.isExciseTaxExclusive === false}
 						options={
 							excise_list
 								? selectOptionsFactory.renderOptions(
@@ -421,11 +422,10 @@ class DetailPurchaseOrder extends React.Component {
 								: []
 						}
 						value={
-				
-							excise_list &&
-							selectOptionsFactory
-								.renderOptions('name', 'id', excise_list, 'Excise')
-								.find((option) => option.value === +row.exciseTaxId)
+								excise_list &&
+								selectOptionsFactory
+									.renderOptions('name', 'id', excise_list, 'Excise')
+									.find((option) => option.value === +row.exciseTaxId)
 						}
 						id="exciseTaxId"
 						placeholder={"Select Excise"}

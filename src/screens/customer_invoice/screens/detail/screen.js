@@ -1789,6 +1789,8 @@ class DetailCustomerInvoice extends React.Component {
 															if (values.shippingCountryId == 229 || values.shippingCountryId.value == 229) {
 																if (values.shippingPostZipCode == '')
 																	errors.shippingPostZipCode = 'PO box number is required';
+																else if (values.shippingPostZipCode.length < 3)
+																		errors.shippingPostZipCode = "Please enter atleast 3 digit postal zip code"
 															} else {
 																if (values.shippingPostZipCode == '')
 																	errors.shippingPostZipCode = 'Postal code is required';
@@ -3317,19 +3319,25 @@ class DetailCustomerInvoice extends React.Component {
 																			onClick={() => {
 																				if(this.state.data.length === 1)
 																					{
-																					console.log(props.errors,"ERRORs")
-																					//	added validation popup	msg
-																			props.handleBlur();
-																			if(props.errors &&  Object.keys(props.errors).length != 0)
-																			this.props.commonActions.fillManDatoryDetails();
+																						console.log(props.errors,"ERRORs")
+																								//	added validation popup	msg
+																						props.handleBlur();
+																						if(props.errors &&  Object.keys(props.errors).length != 0)
+																							this.props.commonActions.fillManDatoryDetails();
 																					}
 																					else
-																					{ let newData=[]
-																					const data = this.state.data;
-																					newData = data.filter((obj) => obj.productId !== "");
-																					props.setFieldValue('lineItemsString', newData, true);
-																					this.updateAmount(newData, props);
-																					}}}
+																					{ 
+																						let newData=[]
+																						const data = this.state.data;
+																						newData = data.filter((obj) => obj.productId !== "");
+																						props.setFieldValue('lineItemsString', newData, true);
+																						this.updateAmount(newData, props);
+																						props.handleBlur();
+																						if(props.errors &&  Object.keys(props.errors).length != 0)
+																							this.props.commonActions.fillManDatoryDetails();
+																					}
+																				}
+																			}
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
 																			{this.state.disabled

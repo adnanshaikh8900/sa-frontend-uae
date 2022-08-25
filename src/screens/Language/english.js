@@ -855,7 +855,7 @@ const en = {
       CreateSalaryRole:"Create Salary Role",
       UpdateSalaryRole:"Update Salary Role", 
       CreateDesignation:"Create Designation",	
-      EmployeeDesignationName:"Employee Designation Name",	
+      DesignationName:"Designation Name",	
       CreateDeductionComponent:"Create Deduction Component",	
       Component:"Component",	
       ComponentName:"Component Name",		

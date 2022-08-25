@@ -828,7 +828,7 @@ const ar = {
       CreateSalaryRole:"إنشاء دور الراتب",
       UpdateSalaryRole:"تحديث دور الراتب", 
       CreateDesignation:"إنشاء التعيين",	
-      EmployeeDesignationName:"اسم تعيين الموظف",	
+      DesignationName:"اسم التعيين",	
       CreateDeductionComponent:"إنشاء مكون الخصم",	
       Component:"مكون",	
       ComponentName:"اسم المكون",		

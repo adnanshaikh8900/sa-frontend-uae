@@ -198,16 +198,16 @@ designationNamevalidationCheck = (value) => {
                          }}
                          validate={(values) => {
                           let errors = {};
-
-                          if(this.state.nameExist==true){
-                            errors.designationName=
-                             "Designation name is already exist";
-                        }
                         
                          if(this.state.idExist==true){
                             errors.designationId=
-                             "Designation ID is already exist";
+                             "Designation ID already exist";
                          }
+
+                         if(this.state.nameExist==true){
+                          errors.designationName=
+                           "Designation name already exist";
+                      }
                           // return errors;
                          
                           return errors;
@@ -253,7 +253,7 @@ designationNamevalidationCheck = (value) => {
                               </Col>
                               <Col lg={4}>
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">* </span>{strings.EmployeeDesignationName}</Label>
+                                  <Label htmlFor="select"><span className="text-danger">* </span>{strings.DesignationName}</Label>
                                   <Input
                                     type="text"
                                     id="designationName"

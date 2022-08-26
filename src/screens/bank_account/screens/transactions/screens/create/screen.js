@@ -295,7 +295,7 @@ class CreateBankTransaction extends React.Component {
       userId,
       expenseType,
     } = data;
-    debugger
+    
     if (
       (invoiceIdList && coaCategoryId.label === "Sales") ||
       (invoiceIdList && coaCategoryId.label === "Supplier Invoice")
@@ -451,16 +451,18 @@ class CreateBankTransaction extends React.Component {
   totalAmount(option) {
     let totalInvoiceAmount = 0;
     console.log(option);
+    debugger
     if (option && option != "") {
       option.map((row) => {
-        let listData = row.label.split(" ");
-        totalInvoiceAmount += parseFloat(listData[2]);
+        let listData = row.amount;
+        totalInvoiceAmount += listData;
       });
 
       const amount = option.reduce(
-        (totalAmount, invoice) => totalAmount + invoice.label,
+        (totalAmount, invoice) => totalAmount + invoice.amount,
         0
       );
+      debugger
       this.setState(
         { totalAmount: amount, totalInvoiceAmount: totalInvoiceAmount },
         () => {}
@@ -512,7 +514,7 @@ class CreateBankTransaction extends React.Component {
     this.props.transactionActions.getCustomerInvoiceList(data);
   };
   getSuggestionInvoicesFotVend = (option, amount, invoice_list) => {
-    debugger;
+    ;
     const data = {
       amount: amount,
       id: option,
@@ -553,7 +555,7 @@ class CreateBankTransaction extends React.Component {
         invoiceCurrency: customerinvoice?.[0].currencyCode,
       },
       () => {
-        debugger;
+        ;
         console.log(props.values.invoiceIdList);
         // this.getInvoices(
         // 	props.values.customerId,
@@ -695,7 +697,7 @@ class CreateBankTransaction extends React.Component {
       }
     }
 
-    debugger;
+    ;
 
     this.formRef.current.setFieldValue(
       "exchangeRate",
@@ -710,7 +712,7 @@ class CreateBankTransaction extends React.Component {
     let result = this.props.currency_convert_list.find((obj) => {
       return obj.currencyCode === value;
     });
-    debugger;
+    ;
     this.formRef.current.setFieldValue(
       "curreancyname",
       result.currencyIsoCode,
@@ -870,12 +872,28 @@ class CreateBankTransaction extends React.Component {
                           this.handleSubmit(values, resetForm);
                         }}
                         validate={(values) => {
+                          
                           const date = moment(values.transactionDate).format(
                             "MM/DD/YYYY"
                           );
                           const date1 = new Date(date);
                           const date2 = new Date(this.state.date);
                           let errors = {};
+                          if((values.coaCategoryId?.value===2 || values.coaCategoryId?.value===100 )){
+                             if(!values.vendorId?.value && values.coaCategoryId?.value===100 ) {
+                                errors.vendorId="Please select the Vendor"
+                             }else  if(!values.customerId?.value &&values.coaCategoryId?.value===2 ){
+                              errors.customerId="Please select the Customer"
+
+                             }
+                             if( values.invoiceIdList.length===0){
+                            
+                                     errors.invoiceIdList ="Please Select Invoice"
+        
+                                         }
+                                     }
+
+
                           if (
                             date1 < date2 ||
                             date1 < new Date(this.state.reconciledDate)
@@ -903,7 +921,7 @@ class CreateBankTransaction extends React.Component {
                           ) {
                             errors.currencyCode = " Currency is Required";
                           }
-
+                          
                           if (
                             this.state.totalInvoiceAmount &&
                             this.state.totalInvoiceAmount != 0
@@ -914,6 +932,7 @@ class CreateBankTransaction extends React.Component {
                             )
                               errors.transactionAmount = `Transaction Amount Must be Equal to Invoice Total(  ${this.state.totalInvoiceAmount}  )`;
                           }
+                          debugger
                           return errors;
                         }}
                         validationSchema={Yup.object().shape({
@@ -1362,7 +1381,7 @@ class CreateBankTransaction extends React.Component {
                                                 : []
                                             }
                                             onChange={(option) => {
-                                              debugger;
+                                              ;
                                               if (option === null) {
                                                 this.getSuggestionInvoicesFotVend(
                                                   props.values.vendorId.value,
@@ -1716,6 +1735,12 @@ class CreateBankTransaction extends React.Component {
                                           }
                                         }}
                                       />
+                                      {props.errors.invoiceIdList &&
+                                            props.touched.invoiceIdList && (
+                                              <div className="invalid-feedback">
+                                                {props.errors.invoiceIdList}
+                                              </div>
+                                            )}
                                     </FormGroup>
                                   </Col>
                                 )}

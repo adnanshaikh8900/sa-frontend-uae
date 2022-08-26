@@ -59,6 +59,7 @@ const mapDispatchToProps = (dispatch) => {
 
 let strings = new LocalizedStrings(data);
 class CreateExpense extends React.Component {
+	_isMounted = false;
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -291,6 +292,7 @@ class CreateExpense extends React.Component {
 
 
 	componentDidMount = () => {
+		this._isMounted = true;
 		this.initializeData();
 		this.getExpenseNumber();
 		// this.savestate()
@@ -876,6 +878,12 @@ class CreateExpense extends React.Component {
 		this.setState({initValue});
 		alert(event);
 	}
+
+//added by mudassar to unmount the asyn call 
+componentWillUnmount() {
+    this._isMounted = false;
+  }
+
 	render() {
 		strings.setLanguage(this.state.language);
 		const { initValue, payMode ,exist,taxTreatmentList,placelist,vat_list,loading,loadingMsg} = this.state;

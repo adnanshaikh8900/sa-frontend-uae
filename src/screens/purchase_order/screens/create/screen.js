@@ -2019,6 +2019,10 @@ getrfqDetails = (e, row, props,form,field) => {
 													if (values.po_number==='') {
 														errors.po_number = 'PO number is required';
 													}
+													if(values.poApproveDate && values.poReceiveDate && (values.poApproveDate > values.poReceiveDate)){
+														errors.poReceiveDate='Expiry date should be later than the issue date';
+														errors.poApproveDate='Issue date should be earlier than the expiration date';
+													}
 													return errors;
 												}}
 												validationSchema={Yup.object().shape(

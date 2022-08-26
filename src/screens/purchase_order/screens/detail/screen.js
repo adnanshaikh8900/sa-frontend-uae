@@ -1753,8 +1753,8 @@ class DetailPurchaseOrder extends React.Component {
 														
 													   }
 															if(values.poApproveDate && values.poReceiveDate && (values.poApproveDate > values.poReceiveDate)){
-																errors.poReceiveDate='Expiry date should be greater than issue date';
-																errors.poApproveDate='Issue date should be less than expiry date';
+																errors.poReceiveDate='Expiry date should be later than the issue date';
+																errors.poApproveDate='Issue date should be earlier than the expiration date';
 															}
 														return errors;
 													}}

@@ -34,6 +34,7 @@ import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import * as transactionDetailActions from '../transactions/screens/detail/actions';
 import { Suspense, lazy } from 'react';
+import Getbyid from './sections/transactiondetails';
 
 const mapStateToProps = (state) => {
 	return {
@@ -690,79 +691,26 @@ class BankTransactions extends React.Component {
 
 	getbyid =(row) => {
 		
-			
-		if(this.state.response?.data?.length>0){
-			debugger
-			if(row.explanationIds.length > 2 || row.explinationStatusEnum === 'PARTIAL'  ){   
-				
-				return(
-					<>
-						< ExplainTrasactionDetail
-					closeExplainTransactionModal={(e) => {
-							this.closeExplainTransactionModal(e);
-						}
-						}
-						bankId={this.props.location.state.bankAccountId}
-						creationMode={row.creationMode}
-						selectedData={row}
-						data={this.state.response.data[0]}
-					/>
-						< ExplainTrasactionDetail
-					closeExplainTransactionModal={(e) => {
-							this.closeExplainTransactionModal(e);
-						}
-						}
-						bankId={this.props.location.state.bankAccountId}
-						creationMode={row.creationMode}
-						selectedData={row}
-						data={this.state.response.data[1]}
-					/>
-					< ExplainTrasactionDetail
-					closeExplainTransactionModal={(e) => {
-							this.closeExplainTransactionModal(e);
-						}
-						}
-						bankId={this.props.location.state.bankAccountId}
-						creationMode={row.creationMode}
-						selectedData={row}
-						data={this.state.response.data[2]}
-					/>
-					</>
-				
-			
-				)
-			}
-			if(row.explanationIds.length > 1 || row.explinationStatusEnum === 'PARTIAL'  ){   
-				
-				return(
-					<>
-						< ExplainTrasactionDetail
-					closeExplainTransactionModal={(e) => {
-							this.closeExplainTransactionModal(e);
-						}
-						}
-						bankId={this.props.location.state.bankAccountId}
-						creationMode={row.creationMode}
-						selectedData={row}
-						data={this.state.response.data[0]}
-					/>
-						< ExplainTrasactionDetail
-					closeExplainTransactionModal={(e) => {
-							this.closeExplainTransactionModal(e);
-						}
-						}
-						bankId={this.props.location.state.bankAccountId}
-						creationMode={row.creationMode}
-						selectedData={row}
-						data={this.state.response.data[1]}
-					/>
-					</>
-				
-			
-				)
-			}
-			else
-			return( < ExplainTrasactionDetail
+		
+		return <>
+		
+			<>{
+		this.state.response?.data?.length>0 && 
+			this.state.response?.data?.map((i,inx)=>{
+				 	return < ExplainTrasactionDetail
+				closeExplainTransactionModal={(e) => {
+						this.closeExplainTransactionModal(e);
+					}
+					}
+					bankId={this.props.location.state.bankAccountId}
+					creationMode={row.creationMode}
+					selectedData={row}
+					data={i}
+				/>
+			})}</>
+		<>
+	{row.explanationIds.length > 0 || row.explinationStatusEnum === 'PARTIAL'   &&   
+	< ExplainTrasactionDetail
 			closeExplainTransactionModal={(e) => {
 					this.closeExplainTransactionModal(e);
 				}
@@ -770,9 +718,11 @@ class BankTransactions extends React.Component {
 				bankId={this.props.location.state.bankAccountId}
 				creationMode={row.creationMode}
 				selectedData={row}
-				data={this.state.response.data[0]}
-			/>)
-			}
+				data={{}}
+			/>
+	}
+			</>
+			</>	
 }
 
 	render() {
@@ -831,21 +781,13 @@ class BankTransactions extends React.Component {
 		const expandRow = {
           
 			onlyOneExpanding: true,
-			renderer: (row) => (this.getbyid(row)),
-				onExpand: async (e)=>{
-					debugger
-				
-					const  response= await this.props.transactionDetailActions
-			.getTransactionDetail(e.id)
-			.then((responsedata) => {
-			if(responsedata.status===200){
-				this.setState({response:responsedata})											
-			return responsedata																												
-				}
-				return {}
-				})
-		
-				},
+			renderer: (row) => (<Getbyid row={row}  
+			closeExplainTransactionModal={(e) => {
+				this.closeExplainTransactionModal(e);
+			}}
+			bankAccountId={this.props.location.state.bankAccountId}
+			transactionDetailActions={this.props.transactionDetailActions}
+			/>),
 			expanded: expanded ,
 			nonExpandable: nonexpand,
 			showExpandColumn: this.state.showExpandedRow,

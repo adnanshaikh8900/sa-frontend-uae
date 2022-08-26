@@ -295,10 +295,12 @@ class CreateBankTransaction extends React.Component {
       userId,
       expenseType,
     } = data;
+    debugger
     if (
       (invoiceIdList && coaCategoryId.label === "Sales") ||
       (invoiceIdList && coaCategoryId.label === "Supplier Invoice")
     ) {
+    
       var result = invoiceIdList.map((o, index) => ({
         id: o.value,
         remainingInvoiceAmount: 0,
@@ -330,7 +332,7 @@ class CreateBankTransaction extends React.Component {
           : coaCategoryId.value
         : ""
     );
-    formData.append("exchangeRate", exchangeRate ? exchangeRate[0] : 1);
+    formData.append("exchangeRate", exchangeRate.lenght>0 ? exchangeRate[0] : 1);
     if (transactionCategoryId) {
       formData.append(
         "transactionCategoryId",

@@ -395,7 +395,8 @@ class CreatePurchaseOrder extends React.Component {
 								}
 							}}
 							placeholder={strings.Quantity}
-							className={`form-control w-50${
+							className={`form-control w-50
+							${
 							props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
@@ -2017,6 +2018,10 @@ getrfqDetails = (e, row, props,form,field) => {
 												   }
 													if (values.po_number==='') {
 														errors.po_number = 'PO number is required';
+													}
+													if(values.poApproveDate && values.poReceiveDate && (values.poApproveDate > values.poReceiveDate)){
+														errors.poReceiveDate='Expiry date should be later than the issue date';
+														errors.poApproveDate='Issue date should be earlier than the expiration date';
 													}
 													return errors;
 												}}

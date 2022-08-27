@@ -546,6 +546,12 @@ emailvalidationCheck = (value) => {
                                                                 if(values.maritalStatus.value===''){
                                                                     errors.maritalStatus='Marital status is required';
                                                                 }
+                                                                if(values.mobileNumber && values.mobileNumber.length<11){
+                                                                    errors.mobileNumber='Please enter 11 digits mobile number'
+                                                                }
+                                                                if(values.emergencyContactNumber1 && values.emergencyContactNumber1.length<11){
+                                                                    errors.emergencyContactNumber1='Please enter 11 digits mobile number'
+                                                                }
 														return errors;
 													}}
                                                     validationSchema={Yup.object().shape({

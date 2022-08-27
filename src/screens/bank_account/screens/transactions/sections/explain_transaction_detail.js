@@ -630,7 +630,7 @@ class ExplainTrasactionDetail extends React.Component {
 			expenseCategory,
 			payrollListIds,
 		} = data;
-
+debugger
 		const expenseType = this.state.selectedStatus;
 
 		if (
@@ -671,12 +671,12 @@ class ExplainTrasactionDetail extends React.Component {
 				? moment(this.state.date)
 				: date,
 		);
-		if (exchangeRate != null) {
-			formData.append(
+		
+		formData.append(
 				'exchangeRate',
 				exchangeRate ? exchangeRate : 1,
 			);
-		}
+		
 
 		formData.append('description', description ? description : '');
 		formData.append('amount', amount ? amount : '');
@@ -791,7 +791,7 @@ class ExplainTrasactionDetail extends React.Component {
 					err && err.data ? err.data.message : 'Something Went Wrong',
 				);
 			});
-
+			this.props.getbankdetails()
 	};
 	handleFileChange = (e, props) => {
 		e.preventDefault();
@@ -803,6 +803,7 @@ class ExplainTrasactionDetail extends React.Component {
 			props.setFieldValue('attachmentFile', file, true);
 		}
 	};
+
 	closeTransaction = (id) => {
 		this.setState({
 			dialog: (
@@ -880,6 +881,7 @@ class ExplainTrasactionDetail extends React.Component {
 						'Transaction Detail Updated Successfully.',
 					);
 					this.props.closeExplainTransactionModal(this.state.id);
+					this.props.getbankdetails()
 				}
 			})
 			.catch((err) => {
@@ -905,6 +907,7 @@ class ExplainTrasactionDetail extends React.Component {
 		);
 		this.formRef.current.setFieldValue('invoiceIdList', option, true);
 	};
+
 	removeTransaction = (id) => {
 		this.removeDialog();
 		this.props.transactionsActions
@@ -915,6 +918,7 @@ class ExplainTrasactionDetail extends React.Component {
 					'Transaction Deleted Successfully',
 				);
 				this.props.closeExplainTransactionModal(this.state.id);
+				this.props.getbankdetails()
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
@@ -923,6 +927,7 @@ class ExplainTrasactionDetail extends React.Component {
 				);
 			});
 	};
+
 
 	removeDialog = () => {
 		this.setState({
@@ -952,6 +957,7 @@ class ExplainTrasactionDetail extends React.Component {
 			return this.state.unexplainValue && this.state.unexplainValue.currencyCode ? this.state.unexplainValue.currencyCode : 0;
 		}
 	}
+
 	handleFileChange = (e, props) => {
 		e.preventDefault();
 		let reader = new FileReader();
@@ -1004,6 +1010,7 @@ class ExplainTrasactionDetail extends React.Component {
 
 		return option
 	}
+
 	render() {
 
 		strings.setLanguage(this.state.language);
@@ -1224,6 +1231,7 @@ class ExplainTrasactionDetail extends React.Component {
 																			}
 																			onChange={(option) => {
 																				if (option && option.value) {
+																					debugger
 																					props.handleChange('coaCategoryId')(
 																						option,
 																					);

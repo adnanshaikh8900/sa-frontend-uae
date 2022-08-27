@@ -385,7 +385,8 @@ class CreateRequestForQuotation extends React.Component {
 								}
 							} }
 							placeholder={strings.Quantity}
-							className={`form-control w-50${
+							className={`form-control w-50 
+							${
 								props.errors.lineItemsString &&
 									props.errors.lineItemsString[parseInt(idx, 10)] &&
 									props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
@@ -405,7 +406,7 @@ class CreateRequestForQuotation extends React.Component {
 							props.touched.lineItemsString &&
 							props.touched.lineItemsString[parseInt(idx, 10)] &&
 							props.touched.lineItemsString[parseInt(idx, 10)].quantity && (
-								<div className="invalid-feedback">
+								<div className="invalid-feedback" style={{display:"block", whiteSpace: "normal"}}>
 									{props.errors.lineItemsString[parseInt(idx, 10)].quantity}
 								</div>
 							)}

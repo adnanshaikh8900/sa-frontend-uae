@@ -2632,7 +2632,7 @@ console.log(this.state.data)
 																			);
 																		}}
 																	>
-																		<i className="fa fa-ban"></i>{strings.Cancel}
+																		<i className="fa fa-ban"></i> {strings.Cancel}
 																	</Button>
 																</FormGroup>
 															</Col>

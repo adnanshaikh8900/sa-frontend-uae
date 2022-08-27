@@ -213,6 +213,52 @@ class BankTransactions extends React.Component {
 	// 		this.props.history.push('/admin/banking/bank-account');
 	// 	}
 	// };
+
+	getnewbackdetils = () => {
+		if (this.props.location.state && this.props.location.state.bankAccountId) {
+		this.props.detailBankAccountActions
+			.getBankAccountByID(this.props.location.state.bankAccountId ||  localStorage.getItem('bankId'))
+			.then((res) => {
+				this.setState({
+					bankAccountCurrencySymbol:res.bankAccountCurrencySymbol,
+					bankAccountCurrencyIsoCode: res.bankAccountCurrencyIsoCode,
+					currentBalance: res.currentBalance,
+					closingBalance: res.closingBalance,
+					openingBalance:res.openingBalance,
+					accounName: res.bankAccountName,
+					transactionCount: res.transactionCount
+				});
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+				this.props.history.push('/admin/banking/bank-account');
+			});
+		this.toggle(0, 'all');
+		//.this.initializeData();
+		if (this.props.location.state !== undefined) {
+					localStorage.setItem(
+						'bankId',
+						localStorage.getItem('bankId') !==
+							this.props.location.state.bankAccountId
+							? this.props.location.state.bankAccountId
+							: localStorage.getItem('bankId'),
+					);
+				} else {
+					localStorage.setItem('bankId', localStorage.getItem('bankId'));
+					this.props.location.state =  {}
+					this.props.location.state.bankAccountId = localStorage.getItem('bankId')
+					console.log('props', this.props.location)
+		
+				}
+		this.props.transactionsActions.getTransactionTypeList();
+		this.initializeData();
+		
+	}};
+
+
 	componentDidMount = () => {
 		if (this.props.location.state && this.props.location.state.bankAccountId) {
 		this.props.detailBankAccountActions
@@ -782,6 +828,7 @@ class BankTransactions extends React.Component {
           
 			onlyOneExpanding: true,
 			renderer: (row) => (<Getbyid row={row}  
+				getbankdetls={this.getnewbackdetils}
 			closeExplainTransactionModal={(e) => {
 				this.closeExplainTransactionModal(e);
 			}}

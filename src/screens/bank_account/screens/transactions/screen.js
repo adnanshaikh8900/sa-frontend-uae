@@ -828,7 +828,7 @@ class BankTransactions extends React.Component {
           
 			onlyOneExpanding: true,
 			renderer: (row) => (<Getbyid row={row}  
-				getbankdetails={this.getnewbackdetils}
+				getbankdetls={this.getnewbackdetils}
 			closeExplainTransactionModal={(e) => {
 				this.closeExplainTransactionModal(e);
 			}}

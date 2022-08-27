@@ -12,15 +12,9 @@ import {
 	ModalBody,
 	ModalFooter,
 } from 'reactstrap';
-
-import DatePicker from 'react-datepicker'
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-
-
-import { toast } from 'react-toastify';
- 
-import moment from 'moment';
+import { toast } from 'react-toastify'; 
 import {data}  from '../../Language/index'
 import LocalizedStrings from 'react-localization';
 
@@ -48,7 +42,6 @@ class DesignationModal extends React.Component {
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regExAddress = /^[a-zA-Z0-9\s,'-]+$/;
 	}
-
 
 	getData = (data) => {
 		let temp = {};
@@ -103,11 +96,8 @@ class DesignationModal extends React.Component {
             const {
           designationName
             } = data;
+                const formData = new FormData();
     
-    
-            const formData = new FormData();
-    
-      
         formData.append(
           'designationName',
           designationName != null ? designationName : '',
@@ -135,8 +125,6 @@ class DesignationModal extends React.Component {
         });
       }
     
-	
-
 	displayMsg = (err) => {
 		toast.error(`${err.data}`, {
 			position: toast.POSITION.TOP_RIGHT,
@@ -166,6 +154,7 @@ class DesignationModal extends React.Component {
 	// .contact-modal {
 	// 	max-width: 70% !important;
 	// }
+
 	render() {
 		strings.setLanguage(this.state.language);
 		const {
@@ -244,11 +233,10 @@ class DesignationModal extends React.Component {
 										</Row>
 									</CardHeader>
 									<ModalBody>
-								
-										<Row className="row-wrapper">
+									<Row className="row-wrapper">
                                         <Col lg={8}>
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">* </span> {strings?.EmployeeDesignationName} </Label>
+                                  <Label htmlFor="select"><span className="text-danger">* </span> {strings.EmployeeDesignationName} </Label>
                                   <Input
                                     type="text"
                                     id="designationName"
@@ -265,8 +253,7 @@ class DesignationModal extends React.Component {
                                   )}
                                 </FormGroup>
                               </Col>	
-                              
-										</Row>		
+                              	</Row>		
 									</ModalBody>
 									<ModalFooter>
 									<Button
@@ -300,7 +287,6 @@ class DesignationModal extends React.Component {
 						}}
 					</Formik>
 				</Modal>
-				
 			</div>
 		);
 	}

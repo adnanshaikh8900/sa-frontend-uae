@@ -630,7 +630,7 @@ class ExplainTrasactionDetail extends React.Component {
 			expenseCategory,
 			payrollListIds,
 		} = data;
-
+debugger
 		const expenseType = this.state.selectedStatus;
 
 		if (
@@ -671,13 +671,13 @@ class ExplainTrasactionDetail extends React.Component {
 				? moment(this.state.date)
 				: date,
 		);
-		if (exchangeRate != null) {
+		if(exchangeRate != null){
 			formData.append(
 				'exchangeRate',
 				exchangeRate ? exchangeRate : 1,
 			);
 		}
-
+		
 		formData.append('description', description ? description : '');
 		formData.append('amount', amount ? amount : '');
 		formData.append('dueAmount', dueAmount ? dueAmount : 0);
@@ -791,7 +791,7 @@ class ExplainTrasactionDetail extends React.Component {
 					err && err.data ? err.data.message : 'Something Went Wrong',
 				);
 			});
-
+		
 	};
 	handleFileChange = (e, props) => {
 		e.preventDefault();
@@ -803,6 +803,7 @@ class ExplainTrasactionDetail extends React.Component {
 			props.setFieldValue('attachmentFile', file, true);
 		}
 	};
+
 	closeTransaction = (id) => {
 		this.setState({
 			dialog: (
@@ -880,6 +881,7 @@ class ExplainTrasactionDetail extends React.Component {
 						'Transaction Detail Updated Successfully.',
 					);
 					this.props.closeExplainTransactionModal(this.state.id);
+					this.props.getbankdetails()
 				}
 			})
 			.catch((err) => {
@@ -905,6 +907,7 @@ class ExplainTrasactionDetail extends React.Component {
 		);
 		this.formRef.current.setFieldValue('invoiceIdList', option, true);
 	};
+
 	removeTransaction = (id) => {
 		this.removeDialog();
 		this.props.transactionsActions
@@ -915,6 +918,7 @@ class ExplainTrasactionDetail extends React.Component {
 					'Transaction Deleted Successfully',
 				);
 				this.props.closeExplainTransactionModal(this.state.id);
+				this.props.getbankdetails()
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
@@ -923,6 +927,7 @@ class ExplainTrasactionDetail extends React.Component {
 				);
 			});
 	};
+
 
 	removeDialog = () => {
 		this.setState({
@@ -952,6 +957,7 @@ class ExplainTrasactionDetail extends React.Component {
 			return this.state.unexplainValue && this.state.unexplainValue.currencyCode ? this.state.unexplainValue.currencyCode : 0;
 		}
 	}
+
 	handleFileChange = (e, props) => {
 		e.preventDefault();
 		let reader = new FileReader();
@@ -1004,6 +1010,7 @@ class ExplainTrasactionDetail extends React.Component {
 
 		return option
 	}
+
 	render() {
 
 		strings.setLanguage(this.state.language);
@@ -1206,114 +1213,115 @@ class ExplainTrasactionDetail extends React.Component {
 																			<span className="text-danger">* </span>
 																			{strings.TransactionType}
 																		</Label>
-																		<Select
-																			// styles={customStyles}
-																			options={
-																				chartOfAccountCategoryList
-																					? chartOfAccountCategoryList
-																					: ''
-																			}
-																			value={
-																				chartOfAccountCategoryList[0] &&
-																				chartOfAccountCategoryList[0].options.find(
-																					(option) => {
-
-																						return option.value === props.values.coaCategoryId
+																			<Select
+																				// styles={customStyles}
+																				options={
+																					chartOfAccountCategoryList
+																						? chartOfAccountCategoryList
+																						: ''
+																				}
+																				value={
+																					chartOfAccountCategoryList[0] &&
+																					chartOfAccountCategoryList[0].options.find(
+																						(option) =>{
+																							debugger
+																						return	option.value ===
+																							typeof props.values.coaCategoryId==='object' ?props.values.coaCategoryId.value : props.values.coaCategoryId 
+																						}
+																							)
+																				}
+																				onChange={(option) => {
+																					if (option && option.value) {
+																						props.handleChange('coaCategoryId')(
+																							option,
+																						);
+																					} else {
+																						props.handleChange('coaCategoryId')(
+																							'',
+																						);
 																					}
-																				)
-																			}
-																			onChange={(option) => {
-																				if (option && option.value) {
-																					props.handleChange('coaCategoryId')(
-																						option,
-																					);
-																				} else {
-																					props.handleChange('coaCategoryId')(
+																					if (
+																						option.label !== 'Expense' &&
+																						option.label !== 'Supplier Invoice'
+																					) {
+																						this.getTransactionCategoryList(
+																							option,
+																						);
+																					}
+																					if (option.label === 'Expense') {
+																						this.getExpensesCategoriesList();
+																					}
+																					if (
+																						option.label === 'Supplier Invoice'
+																					) {
+																						this.getVendorList();
+																					}
+																					this.formRef.current.setFieldValue(
+																						'transactionCategoryLabel',
 																						'',
+																						true,
 																					);
+																					this.setValue(null);
+																				}}
+																				placeholder={strings.Select+strings.Type}
+																				id="coaCategoryId"
+																				name="coaCategoryId"
+																				className={
+																					props.errors.coaCategoryId &&
+																						props.touched.coaCategoryId
+																						? 'is-invalid'
+																						: ''
 																				}
-																				if (
-																					option.label !== 'Expense' &&
-																					option.label !== 'Supplier Invoice'
-																				) {
-																					this.getTransactionCategoryList(
-																						option,
-																					);
-																				}
-																				if (option.label === 'Expense') {
-																					this.getExpensesCategoriesList();
-																				}
-																				if (
-																					option.label === 'Supplier Invoice'
-																				) {
-																					this.getVendorList();
-																				}
-																				this.formRef.current.setFieldValue(
-																					'transactionCategoryLabel',
-																					'',
-																					true,
-																				);
-																				this.setValue(null);
-																			}}
-																			placeholder={strings.Select + strings.Type}
-																			id="coaCategoryId"
-																			name="coaCategoryId"
-																			className={
-																				props.errors.coaCategoryId &&
-																					props.touched.coaCategoryId
-																					? 'is-invalid'
-																					: ''
-																			}
-																		/>
-																		{props.errors.coaCategoryId &&
-																			props.touched.coaCategoryId && (
-																				<div className="invalid-feedback">
-																					{props.errors.coaCategoryId}
-																				</div>
-																			)}
-																	</FormGroup>
-																</Col>
-																<Col lg={3}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="date">
-																			<span className="text-danger">* </span>
-																			{strings.TransactionDate}
-																		</Label>
-																		<DatePicker
-																			id="date"
-																			name="date"
-																			readOnly={
-																				this.state.creationMode === 'MANUAL'
-																					? false
-																					: true
-																			}
-																			placeholderText={strings.TransactionDate}
-																			showMonthDropdown
-																			showYearDropdown
-																			dateFormat="DD-MM-YYYY"
-																			dropdownMode="select"
-																			value={moment(props.values.date).format("DD-MM-YYYY")}
-																			onChange={(value) =>
-																				props.handleChange('date')(value)
-																			}
-																			className={`form-control ${props.errors.date &&
-																				props.touched.date
-																				? 'is-invalid'
-																				: ''
-																				}`}
-																		/>
-																		{props.errors.date &&
-																			props.touched.date && (
-																				<div className="invalid-feedback">
-																					{props.errors.date}
-																				</div>
-																			)}
-																	</FormGroup>
-																</Col>
-																<Col lg={3}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="amount">
-																			<span className="text-danger">* </span>
+																			/>
+																			{props.errors.coaCategoryId &&
+																				props.touched.coaCategoryId && (
+																					<div className="invalid-feedback">
+																						{props.errors.coaCategoryId}
+																					</div>
+																				)}
+																		</FormGroup>
+																	</Col>
+																	<Col lg={3}>
+																				<FormGroup className="mb-3">
+																					<Label htmlFor="date">
+																						<span className="text-danger">* </span>
+																					{strings.TransactionDate}
+																				</Label>
+																					<DatePicker
+																						id="date"
+																						name="date"
+																						readOnly={
+																							this.state.creationMode === 'MANUAL'
+																								? false
+																								: true
+																						}
+																						placeholderText={strings.TransactionDate}
+																						showMonthDropdown
+																						showYearDropdown
+																						dateFormat="DD-MM-YYYY"
+																						dropdownMode="select"
+																						value={moment(props.values.date).format("DD-MM-YYYY")}
+																						onChange={(value) =>
+																							props.handleChange('date')(value)
+																						}
+																						className={`form-control ${props.errors.date &&
+																								props.touched.date
+																								? 'is-invalid'
+																								: ''
+																							}`}
+																					/>
+																					{props.errors.date &&
+																						props.touched.date && (
+																							<div className="invalid-feedback">
+																								{props.errors.date}
+																							</div>
+																						)}
+																				</FormGroup>
+																			</Col>
+																	<Col lg={3}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="amount">
+																				<span className="text-danger">* </span>
 																			{strings.Amount}
 																		</Label>
 																		<Input

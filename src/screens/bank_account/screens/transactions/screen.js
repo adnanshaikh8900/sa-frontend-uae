@@ -34,6 +34,7 @@ import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import * as transactionDetailActions from '../transactions/screens/detail/actions';
 import { Suspense, lazy } from 'react';
+import Getbyid from './sections/transactiondetails';
 
 const mapStateToProps = (state) => {
 	return {
@@ -111,7 +112,7 @@ class BankTransactions extends React.Component {
 			selected_id_list: [],
 			transation_data: '',
 			res:[],
-			showExpandedRow:false
+			showExpandedRow:true
 		};
 
 		this.options = {
@@ -212,6 +213,52 @@ class BankTransactions extends React.Component {
 	// 		this.props.history.push('/admin/banking/bank-account');
 	// 	}
 	// };
+
+	getnewbackdetils = () => {
+		if (this.props.location.state && this.props.location.state.bankAccountId) {
+		this.props.detailBankAccountActions
+			.getBankAccountByID(this.props.location.state.bankAccountId ||  localStorage.getItem('bankId'))
+			.then((res) => {
+				this.setState({
+					bankAccountCurrencySymbol:res.bankAccountCurrencySymbol,
+					bankAccountCurrencyIsoCode: res.bankAccountCurrencyIsoCode,
+					currentBalance: res.currentBalance,
+					closingBalance: res.closingBalance,
+					openingBalance:res.openingBalance,
+					accounName: res.bankAccountName,
+					transactionCount: res.transactionCount
+				});
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+				this.props.history.push('/admin/banking/bank-account');
+			});
+		this.toggle(0, 'all');
+		//.this.initializeData();
+		if (this.props.location.state !== undefined) {
+					localStorage.setItem(
+						'bankId',
+						localStorage.getItem('bankId') !==
+							this.props.location.state.bankAccountId
+							? this.props.location.state.bankAccountId
+							: localStorage.getItem('bankId'),
+					);
+				} else {
+					localStorage.setItem('bankId', localStorage.getItem('bankId'));
+					this.props.location.state =  {}
+					this.props.location.state.bankAccountId = localStorage.getItem('bankId')
+					console.log('props', this.props.location)
+		
+				}
+		this.props.transactionsActions.getTransactionTypeList();
+		this.initializeData();
+		
+	}};
+
+
 	componentDidMount = () => {
 		if (this.props.location.state && this.props.location.state.bankAccountId) {
 		this.props.detailBankAccountActions
@@ -574,10 +621,7 @@ class BankTransactions extends React.Component {
 	}
 
 	handleTableChange = (type, { page, sizePerPage }) => {
-		
-		document.getElementById('#myTable').on('click-row.bs.table', function (e, row, $element) {
-			
-		  });
+	
 		this.setState(
 			{
 				page,
@@ -693,77 +737,26 @@ class BankTransactions extends React.Component {
 
 	getbyid =(row) => {
 		
-		if(this.state.response && this.state.response.data){
-			if(row.explanationIds.length > 2 || row.explinationStatusEnum === 'PARTIAL'  ){   
-				
-				return(
-					<>
-						< ExplainTrasactionDetail
-					closeExplainTransactionModal={(e) => {
-							this.closeExplainTransactionModal(e);
-						}
-						}
-						bankId={this.props.location.state.bankAccountId}
-						creationMode={row.creationMode}
-						selectedData={row}
-						data={this.state.response.data[0]}
-					/>
-						< ExplainTrasactionDetail
-					closeExplainTransactionModal={(e) => {
-							this.closeExplainTransactionModal(e);
-						}
-						}
-						bankId={this.props.location.state.bankAccountId}
-						creationMode={row.creationMode}
-						selectedData={row}
-						data={this.state.response.data[1]}
-					/>
-					< ExplainTrasactionDetail
-					closeExplainTransactionModal={(e) => {
-							this.closeExplainTransactionModal(e);
-						}
-						}
-						bankId={this.props.location.state.bankAccountId}
-						creationMode={row.creationMode}
-						selectedData={row}
-						data={this.state.response.data[2]}
-					/>
-					</>
-				
-			
-				)
-			}
-			if(row.explanationIds.length > 1 || row.explinationStatusEnum === 'PARTIAL'  ){   
-				
-				return(
-					<>
-						< ExplainTrasactionDetail
-					closeExplainTransactionModal={(e) => {
-							this.closeExplainTransactionModal(e);
-						}
-						}
-						bankId={this.props.location.state.bankAccountId}
-						creationMode={row.creationMode}
-						selectedData={row}
-						data={this.state.response.data[0]}
-					/>
-						< ExplainTrasactionDetail
-					closeExplainTransactionModal={(e) => {
-							this.closeExplainTransactionModal(e);
-						}
-						}
-						bankId={this.props.location.state.bankAccountId}
-						creationMode={row.creationMode}
-						selectedData={row}
-						data={this.state.response.data[1]}
-					/>
-					</>
-				
-			
-				)
-			}
-			else
-			return( < ExplainTrasactionDetail
+		
+		return <>
+		
+			<>{
+		this.state.response?.data?.length>0 && 
+			this.state.response?.data?.map((i,inx)=>{
+				 	return < ExplainTrasactionDetail
+				closeExplainTransactionModal={(e) => {
+						this.closeExplainTransactionModal(e);
+					}
+					}
+					bankId={this.props.location.state.bankAccountId}
+					creationMode={row.creationMode}
+					selectedData={row}
+					data={i}
+				/>
+			})}</>
+		<>
+	{row.explanationIds.length > 0 || row.explinationStatusEnum === 'PARTIAL'   &&   
+	< ExplainTrasactionDetail
 			closeExplainTransactionModal={(e) => {
 					this.closeExplainTransactionModal(e);
 				}
@@ -771,9 +764,11 @@ class BankTransactions extends React.Component {
 				bankId={this.props.location.state.bankAccountId}
 				creationMode={row.creationMode}
 				selectedData={row}
-				data={this.state.response.data[0]}
-			/>)
-			}
+				data={{}}
+			/>
+	}
+			</>
+			</>	
 }
 
 	render() {
@@ -830,10 +825,16 @@ class BankTransactions extends React.Component {
 			},
 		];
 		const expandRow = {
-           
+          
 			onlyOneExpanding: true,
-			renderer: (row) => (this.getbyid(row)),
-				
+			renderer: (row) => (<Getbyid row={row}  
+				getbankdetls={this.getnewbackdetils}
+			closeExplainTransactionModal={(e) => {
+				this.closeExplainTransactionModal(e);
+			}}
+			bankAccountId={this.props.location.state.bankAccountId}
+			transactionDetailActions={this.props.transactionDetailActions}
+			/>),
 			expanded: expanded ,
 			nonExpandable: nonexpand,
 			showExpandColumn: this.state.showExpandedRow,
@@ -1140,22 +1141,7 @@ class BankTransactions extends React.Component {
 																				
 												columns={columns}
 												expandRow={expandRow}
-												rowEvents={{
-
-													onClick:(event,row)=>{
-														this.setState({expanded: false})		
-														// this.setState({response:undefined})
-														this.props.transactionDetailActions
-														.getTransactionDetail(row.id)
-														.then((response) => {
-															
-															if(response.status===200){
-																
-																this.setState({response:response, showExpandedRow:true})																													
-														}
-														})
-													}
-												}}
+												
 												noDataIndication="There is no data to display"
 												remote
 												fetchInfo={{

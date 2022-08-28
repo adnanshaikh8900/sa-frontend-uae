@@ -409,7 +409,8 @@ class DetailPurchaseOrder extends React.Component {
 				render={({ field, form }) => (
 					<Select
 						styles={customStyles}
-						isDisabled={row.exciseTaxId === 0}
+						// isDisabled={row.exciseTaxId === 0}
+						isDisabled={row.exciseTaxId === 0 || row.isExciseTaxExclusive === false}
 						options={
 							excise_list
 								? selectOptionsFactory.renderOptions(
@@ -421,11 +422,10 @@ class DetailPurchaseOrder extends React.Component {
 								: []
 						}
 						value={
-				
-							excise_list &&
-							selectOptionsFactory
-								.renderOptions('name', 'id', excise_list, 'Excise')
-								.find((option) => option.value === +row.exciseTaxId)
+								excise_list &&
+								selectOptionsFactory
+									.renderOptions('name', 'id', excise_list, 'Excise')
+									.find((option) => option.value === +row.exciseTaxId)
 						}
 						id="exciseTaxId"
 						placeholder={"Select Excise"}
@@ -877,7 +877,7 @@ class DetailPurchaseOrder extends React.Component {
 							   );
 					   
 					   }}
-					   placeholder={strings.discount}
+					   placeholder={strings.Discount}
 					   className={`form-control 
 		   ${
 						   props.errors.lineItemsString &&
@@ -1529,15 +1529,13 @@ class DetailPurchaseOrder extends React.Component {
 		this.setState({
 			dateChanged: true,
 		});
-		const values1 = value
-			? value
-			: props.values.poApproveDate1
+		const values1 = value ? value : '';
 		if (values1 ) {
 			this.setState({
 				poApproveDate: moment(values1),
 			});
 			props.setFieldValue('poApproveDate1', values1, true);
-		}
+		 }
 	};
 	setDate1= (props, value) => {
 		debugger
@@ -1545,8 +1543,8 @@ class DetailPurchaseOrder extends React.Component {
 			dateChanged1: true,
 		});
 		
-		const values2 = value ? value
-		: props.values.poReceiveDate1	
+		const values2 = value ? value : '';
+		// : props.values.poReceiveDate1	
 		if ( values2) {
 			this.setState({
 				poReceiveDate: moment(values2),
@@ -1751,8 +1749,13 @@ class DetailPurchaseOrder extends React.Component {
 																)
 															   ) 
 																 errors.placeOfSupplyId ='Place of supply is required';
+															
 														
 													   }
+															if(values.poApproveDate && values.poReceiveDate && (values.poApproveDate > values.poReceiveDate)){
+																errors.poReceiveDate='Expiry date should be later than the issue date';
+																errors.poApproveDate='Issue date should be earlier than the expiration date';
+															}
 														return errors;
 													}}
 													validationSchema={Yup.object().shape(
@@ -1766,9 +1769,9 @@ class DetailPurchaseOrder extends React.Component {
 														// rfqNumber: Yup.string().required(
 														// 	'Rfq number is required',
 														// ),
-														// placeOfSupplyId: Yup.string().required(
-														// 	'Place of supply is required'
-														// ),
+														placeOfSupplyId: Yup.string().required(
+															'Place of supply is required'
+														),
 														poApproveDate: Yup.string().required(
 															'Order date is required',
 														),
@@ -2017,15 +2020,16 @@ class DetailPurchaseOrder extends React.Component {
 																</FormGroup>
 															</Col>
 																<Col lg={3}>
-																{this.state.customer_taxTreatment_des!="NON GCC" &&(	<FormGroup className="mb-3">
+																{/* {this.state.customer_taxTreatment_des!="NON GCC" &&(	 */}
+																	<FormGroup className="mb-3">
 																		<Label htmlFor="placeOfSupplyId">
-																			{/* <span className="text-danger">* </span> */}
-																		{this.state.customer_taxTreatment_des &&
+																			<span className="text-danger">* </span>
+																		{/* {this.state.customer_taxTreatment_des &&
 																		(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
 																		||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
 																		||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED") && (
 																			<span className="text-danger">* </span>
-																		)}
+																		)} */}
 																			{strings.PlaceofSupply}
 																		</Label>
 																		<Select
@@ -2079,7 +2083,8 @@ class DetailPurchaseOrder extends React.Component {
 																					{props.errors.placeOfSupplyId}
 																				</div>
 																			)}
-																	</FormGroup>)}
+																	</FormGroup>
+																	{/* )} */}
 																</Col>
 															
 																
@@ -2098,7 +2103,7 @@ class DetailPurchaseOrder extends React.Component {
 																		<DatePicker
 																			id="poApproveDate"
 																			name="poApproveDate"
-																			placeholderText={strings.PODate}
+																			placeholderText={strings.IssueDate}
 																			showMonthDropdown
 																			showYearDropdown
 																			dateFormat="dd-MM-yyyy"
@@ -2107,10 +2112,16 @@ class DetailPurchaseOrder extends React.Component {
 																			value={props.values.poApproveDate}
 																			selected={new Date(props.values.poApproveDate1)} 
 																			onChange={(value) => {
-																				props.handleChange('poApproveDate')(
-																				value
-																				);
-																				this.setDate(props, value);
+																				if(value){
+																					props.handleChange('poApproveDate')(value);
+																					this.setDate(props, value);
+																				}
+																				else{
+																					props.handleChange('poApproveDate')('');
+																					this.setDate(props, '');
+
+																				}
+																				
 																			}}
 																			className={`form-control ${
 																				props.errors.poApproveDate &&
@@ -2122,7 +2133,8 @@ class DetailPurchaseOrder extends React.Component {
 																		{props.errors.poApproveDate &&
 																			props.touched.poApproveDate && (
 																				<div className="invalid-feedback">
-																					{props.errors.poApproveDate}
+																				{props.errors.poApproveDate}
+																				{/* .includes("final value was:") ? "Issue date is required" :props.errors.poReceiveDate} */}
 																				</div>
 																			)}
 																	</FormGroup>
@@ -2137,7 +2149,7 @@ class DetailPurchaseOrder extends React.Component {
 																			<DatePicker
 																				id="poReceiveDate"
 																				name="poReceiveDate"
-																				placeholderText={strings.DueDate}
+																				placeholderText={strings.ExpiryDate}
 																				value={props.values.poReceiveDate}
 																				selected={new Date(props.values.poReceiveDate1)}
 																				showMonthDropdown
@@ -2146,10 +2158,16 @@ class DetailPurchaseOrder extends React.Component {
 																				minDate={new Date()}
 																				dropdownMode="select"
 																				onChange={(value) => {
-																					props.handleChange('poReceiveDate')(
-																						value
-																					);
-																					this.setDate1(props, value);
+																					if(value){
+																						props.handleChange('poReceiveDate')(
+																							value
+																						);
+																						this.setDate1(props, value);
+																					}
+																					else{
+																						props.handleChange('poReceiveDate')('');
+																						this.setDate1(props, '');
+																					}
 																				}}
 																				className={`form-control ${
 																					props.errors.poReceiveDate &&
@@ -2161,7 +2179,8 @@ class DetailPurchaseOrder extends React.Component {
 																			{props.errors.poReceiveDate &&
 																				props.touched.poReceiveDate && (
 																					<div className="invalid-feedback">
-																						{props.errors.poReceiveDate}
+																						{/* {props.errors.poReceiveDate} */}
+																				{props.errors.poReceiveDate.includes("final value was:") ? "Expiry date is required" :props.errors.poReceiveDate}
 																					</div>
 																				)}
 																		</div>

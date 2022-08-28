@@ -309,7 +309,7 @@ class CreatePurchaseOrder extends React.Component {
 				render={({ field, form }) => (
 					<Select
 						styles={customStyles}
-						isDisabled={row.exciseTaxId === 0 || row.isExciseTaxExclusive === false}
+						isDisabled={row.exciseTaxId === 0 || row.isExciseTaxExclusive === true}
 						
 						options={
 							excise_list
@@ -395,7 +395,8 @@ class CreatePurchaseOrder extends React.Component {
 								}
 							}}
 							placeholder={strings.Quantity}
-							className={`form-control w-50${
+							className={`form-control w-50
+							${
 							props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
@@ -529,7 +530,7 @@ class CreatePurchaseOrder extends React.Component {
 							   );
 					   
 					   }}
-					   placeholder={strings.discount}
+					   placeholder={strings.Discount}
 					   className={`form-control 
 		   ${
 						   props.errors.lineItemsString &&
@@ -1997,6 +1998,9 @@ getrfqDetails = (e, row, props,form,field) => {
 														errors.po_number =
 															'PO number already exists';
 													}
+													if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
+														errors.placeOfSupplyId = 'Place of supply is required';
+													}
 													if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
 													||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
 													||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
@@ -2015,6 +2019,10 @@ getrfqDetails = (e, row, props,form,field) => {
 													if (values.po_number==='') {
 														errors.po_number = 'PO number is required';
 													}
+													if(values.poApproveDate && values.poReceiveDate && (values.poApproveDate > values.poReceiveDate)){
+														errors.poReceiveDate='Expiry date should be later than the issue date';
+														errors.poApproveDate='Issue date should be earlier than the expiration date';
+													}
 													return errors;
 												}}
 												validationSchema={Yup.object().shape(
@@ -2028,7 +2036,9 @@ getrfqDetails = (e, row, props,form,field) => {
                                                     // rfqNumber: Yup.string().required(
 													// 	'Rfq number is required',
 													// ),
-													// placeOfSupplyId: Yup.string().required('Place of supply is required'),
+													placeOfSupplyId: Yup.string().required(
+														'Place of supply is required'
+													),
 													
 													poApproveDate: Yup.string().required(
 														'Order date is required',
@@ -2356,15 +2366,16 @@ getrfqDetails = (e, row, props,form,field) => {
 															</Col>: ''}
 
 									<Col lg={3}>
-									{this.state.customer_taxTreatment_des!="NON GCC" &&(		<FormGroup className="mb-3">
+									{/* {this.state.customer_taxTreatment_des!="NON GCC" &&(		 */}
+																<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">
-																		{/* <span className="text-danger">* </span> */}
-																		{this.state.customer_taxTreatment_des &&
+																		<span className="text-danger">* </span>
+																		{/* {this.state.customer_taxTreatment_des &&
 																		(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
 																		||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
 																		||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED") && (
 																			<span className="text-danger">* </span>
-																		)}
+																		)} */}
 																		{strings.PlaceofSupply}
 																	</Label>
 																	<Select
@@ -2414,7 +2425,8 @@ getrfqDetails = (e, row, props,form,field) => {
 																				{props.errors.placeOfSupplyId}
 																			</div>
 																		)}
-																</FormGroup>)}
+																</FormGroup>
+																{/* )} */}
 															</Col>
 															
 													
@@ -2437,7 +2449,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																				? 'is-invalid'
 																				: ''
 																		}`}
-																		placeholderText={strings.OrderDate}
+																		placeholderText={strings.IssueDate}
 																		selected={props.values.poApproveDate ?new Date(props.values.poApproveDate):props.values.poApproveDate} 
 																		showMonthDropdown
 																		showYearDropdown
@@ -2451,7 +2463,8 @@ getrfqDetails = (e, row, props,form,field) => {
 																	{props.errors.poApproveDate &&
 																		props.touched.poApproveDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.poApproveDate}
+																				{props.errors.poApproveDate.includes("final value was:") ? "Issue date is required" :props.errors.poApproveDate}
+																				{/* {props.errors.poApproveDate} */}
 																			</div>
 																		)}
 																</FormGroup>
@@ -2471,7 +2484,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																				? 'is-invalid'
 																				: ''
 																		}`}
-																		placeholderText={strings.OrderDueDate}
+																		placeholderText={strings.ExpirationDate}
 																		selected={props.values.poReceiveDate ?new Date(props.values.poReceiveDate):props.values.poReceiveDate} 
 																		showMonthDropdown
 																		showYearDropdown
@@ -2485,7 +2498,8 @@ getrfqDetails = (e, row, props,form,field) => {
 																	{props.errors.poReceiveDate &&
 																		props.touched.poReceiveDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.poReceiveDate}
+																				{props.errors.poReceiveDate.includes("final value was:") ? "Expiry date is required" :props.errors.poReceiveDate}
+																				{/* {props.errors.poReceiveDate} */}
 																			</div>
 																		)}
 																	

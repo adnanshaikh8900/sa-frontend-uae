@@ -202,22 +202,34 @@ class CreateCreditNoteModal extends React.Component {
 
 	
     static getDerivedStateFromProps(nextProps, prevState) {
+
         if (prevState.selectedData !== nextProps.selectedData || prevState.totalAmount !== nextProps.totalAmount ||
 			prevState.totalVatAmount != nextProps.totalVatAmount  ) {
 				let netVal=0
+				let totalvat=0
+				let totalexcise=0
+				
 			console.log('getDerivedStateFromProps state changed',nextProps.selectedData.invoiceLineItems);
-			if(nextProps.selectedData &&nextProps.selectedData.invoiceLineItems)
-			nextProps.selectedData.invoiceLineItems.map((item)=>{
-                      return  netVal+=item.subTotal
-			})
+			if(nextProps.selectedData &&nextProps.selectedData.invoiceLineItems){
+				nextProps.selectedData.invoiceLineItems.map((item)=>{
+					totalvat+=item.vatAmount
+					totalexcise+=item.exciseAmount
+					return  netVal+=item.subTotal
+		  })
+	
+		 
+			}
+			debugger
 		 return { prefixData : nextProps.prefixData,
 		 	selectedData :nextProps.selectedData,
-			 totalAmount :nextProps.totalAmount,
-			 total_excise:nextProps.totalExciseAmount,
+			 totalAmount :netVal,
+			 initdata:prevState.data,
+			 totalExciseAmount:nextProps.totalExciseAmount,
 			 totalVatAmount :nextProps.totalVatAmount,
 			 invoiceNumber :nextProps.invoiceNumber,
 			 id:nextProps.id,
-			 total_net:netVal-parseFloat(nextProps.selectedData.totalVatAmount)-parseFloat(nextProps.selectedData.totalExciseAmount)
+			 total_net:netVal-parseFloat(totalvat)-parseFloat(totalexcise)
+
 		};
         }
 		// else if(prevState.totalAmount !== nextProps.totalAmount)
@@ -351,16 +363,19 @@ class CreateCreditNoteModal extends React.Component {
 							// disabled
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
-								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
-									this.selectItem(
-										e.target.value,
-										row,
-										'quantity',
-										form,
-										field,
-										props,
-									);
-								}
+								
+									if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+										this.selectItem(
+											e.target.value,
+											row,
+											'quantity',
+											form,
+											field,
+											props,
+										);
+									}
+							
+							
 							}}
 							placeholder={strings.Quantity}
 							className={`form-control w-50${
@@ -901,74 +916,109 @@ class CreateCreditNoteModal extends React.Component {
 
 
 	  }
-	updateAmount = (data, props) => {
-		const { vat_list } = this.props;
+	  updateAmount = (data, props) => {
+		const { vat_list , excise_list} = this.props;
+		const { discountPercentage, discountAmount } = this.state;
+	
 		let total_net = 0;
+		let total_excise = 0;
 		let total = 0;
 		let total_vat = 0;
-		const { discountPercentage, discountAmount } = this.state;
+		let net_value = 0;
+		let discount = 0;
 
+		const totalnetamount=(a)=>{
+			total_net=total_net+a
+		}
+		const totalexcise=(a)=>{
+			total_excise=total_excise+a
+		}
+		const totalvalt=(a)=>{
+			total_vat=total_vat+a
+		}
+		const totalamount=(a)=>{
+			total=total+a
+		}
+		const discountamount=(a)=>{
+			discount=discount+a
+		}
 		data.map((obj) => {
+			
 			const index =
 				obj.vatCategoryId !== ''
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
-			// let val = (((+obj.unitPrice) * vat) / 100)
-			if (props.values.discountType === 'PERCENTAGE') {
-				var val =
-					((+obj.unitPrice -
-						+((obj.unitPrice * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2 })) *
-						vat *
-						obj.quantity) /
-					100;
-			} else if (props.values.discountType === 'FIXED') {
-				var val =
-					(obj.unitPrice * obj.quantity - discountAmount / data.length) *
-					(vat / 100);
+
+			if(obj.taxType){
+			const totalwithouttax= parseFloat(obj.unitPrice) * parseInt(obj.quantity)
+			const discounvalue=obj.discountType === 'PERCENTAGE'?
+			(totalwithouttax*obj.discount)/100:
+			obj.discountType === 'FIXED' && obj.discount
+			const totalAfterdiscount= totalwithouttax-discounvalue
+			
+			const excisevalue=obj.exciseTaxId === 1?totalAfterdiscount/2:obj.exciseTaxId===2?totalAfterdiscount:0
+			const totalwithexcise=excisevalue+totalAfterdiscount
+			const vatvalue=(totalwithexcise*vat)/100
+
+			const finaltotalamount=totalwithexcise+vatvalue
+			totalnetamount(totalwithouttax)
+			totalexcise(excisevalue)
+			totalvalt(vatvalue)
+			totalamount(finaltotalamount)
+			discountamount(discounvalue)
+			obj.subTotal=totalwithouttax+vatvalue+excisevalue-discounvalue
+			obj.vatAmount=vatvalue
+			obj.exciseAmount=excisevalue
 			} else {
-				var val = (+obj.unitPrice * vat * obj.quantity) / 100;
+				const totalwithtaxandexcise= parseFloat(obj.unitPrice) * parseInt(obj.quantity)
+				const discounvalue=obj.discountType === 'PERCENTAGE'?
+			(totalwithtaxandexcise*obj.discount)/100:
+			obj.discountType === 'FIXED' && obj.discount
+			const totalwitoutdiscount= totalwithtaxandexcise-discounvalue
+			const vatvalue=(totalwitoutdiscount*vat)/(100+vat)
+			const totalwithoutvat=totalwitoutdiscount-vatvalue
+			const excisevalue=obj.exciseTaxId === 1?totalwithoutvat/3:obj.exciseTaxId===2?totalwithoutvat/2:0
+			const finaltotalamount=totalwithoutvat-excisevalue
+			totalnetamount(totalwithtaxandexcise-(discounvalue+excisevalue+vatvalue))
+		
+			totalexcise(excisevalue)
+			totalvalt(vatvalue)
+			totalamount(totalwitoutdiscount)
+			discountamount(discounvalue)	
+			obj.subTotal=totalwitoutdiscount
+			obj.vatAmount=vatvalue
+			obj.exciseAmount=excisevalue
 			}
-			obj.subTotal =
-				obj.unitPrice && obj.vatCategoryId ? +obj.unitPrice * obj.quantity : 0;
-			total_net = +(total_net + +obj.unitPrice * obj.quantity);
-			total_vat = +(total_vat + val);
-			total = total_vat + total_net;
+			
+			
+			
 			return obj;
 		});
-		console.log(total_net,"total_net")
-		console.log(total_vat,"total_vat")
-		console.log(total,"total")
-		const discount =
-			props.values.discountType === 'PERCENTAGE'
-				? +((total_net * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2 })
-				: discountAmount;
+
+		// const discount =
+		// 	props.values.discountType.value === 'PERCENTAGE'
+		// 		? +((total_net * discountPercentage) / 100)
+		// 		: discountAmount;
+		debugger
 		this.setState(
 			{
 				data,
-				initValue: {
-					...this.state.initValue,
 					...{
-						total_net: discount ? total_net - discount : total_net,
+						total_net,
 						totalVatAmount: total_vat,
-						discount: total_net > discount ? discount : 0,
-						totalAmount: total_net > discount ? total - discount : total,
+ 						totalAmount: total,
+						 totalExciseAmount: total_excise,	
+						 discount
 					},
-				},
-				
+
 			},
-					() => {
-				if (props.values.discountType === 'PERCENTAGE') {
-					this.formRef.current.setFieldValue('discount', discount);
-					
-				}
-			},
+
 		);
-	
-	this.props.updateParentAmount(total,total_vat)
-	console.log("selectData total_vat ***",total_vat)
-	console.log("selectDa tatotal ***",total)
+		this.props.updateParentAmount(total_net,total_vat,total_excise)
+			console.log(this.state)
 	};
+
 
     addRow = () => {
 		const data = [...this.state.data];
@@ -1200,7 +1250,7 @@ class CreateCreditNoteModal extends React.Component {
 	render() {
 		strings.setLanguage(this.state.language);
 		const { openModal, closeModal, id, supplier_list,rfqReceiveDate,prefixData ,selectedData,invoiceNumber} = this.props;
-		const { initValue, contentState,data,supplierId ,total_net} = this.state;
+		const { initValue, contentState,data,supplierId ,total_net,totalExciseAmount,totalAmount,totalVatAmount,discount} = this.state;
  console.log(this.state.prefixData,"prefixData")
 		let tmpSupplier_list = []
 
@@ -1267,7 +1317,7 @@ class CreateCreditNoteModal extends React.Component {
 								
 
 						
-            {console.log("in modal ",this.state.selectedData)}
+            {console.log("in modal ",this.state)}
            
             
 									<Row>
@@ -1903,7 +1953,7 @@ class CreateCreditNoteModal extends React.Component {
 																
 																<Col lg={4}>
 																		<div className="">
-																		{ selectedData.totalExciseAmount>0 ?(<div className="total-item p-2" >
+																		{ totalExciseAmount>0 ?(<div className="total-item p-2" >
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
@@ -1913,13 +1963,13 @@ class CreateCreditNoteModal extends React.Component {
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
 																						{this.state.customer_currency_symbol} &nbsp;
-																							{selectedData.totalExciseAmount!=0 && (selectedData.totalExciseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }))}
+																							{totalExciseAmount>0 && (totalExciseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }))}
 																					</label>
 																				</Col>
 																			</Row>
 																		</div>): ''}
 																		
-																		{selectedData.discount>0 ? (<div className="total-item p-2">
+																		{ discount>0 &&( <div className="total-item p-2">
 																				<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
@@ -1929,11 +1979,11 @@ class CreateCreditNoteModal extends React.Component {
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
 																						{this.state.customer_currency_symbol} &nbsp;
-																							{selectedData.discount!=0 && (selectedData.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }))}
+																							{discount!=0 && (discount?.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }))}
 																					</label>
 																				</Col>
 																			</Row>
-																			</div>): ''}
+																			</div>)}
 
 																			{/* {selectedData.total_net && selectedData.total_net!=0 && (<div className="total-item p-2">
 																			<Row>
@@ -1968,7 +2018,7 @@ class CreateCreditNoteModal extends React.Component {
 																			</Row>
 																		</div>
 
-																		{selectedData.totalVatAmount && selectedData.totalVatAmount!=0 && (<div className="total-item p-2">
+																		{totalVatAmount && totalVatAmount!=0 && (<div className="total-item p-2">
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
@@ -1978,13 +2028,13 @@ class CreateCreditNoteModal extends React.Component {
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
 																						{this.state.customer_currency_symbol} &nbsp;
-																							{selectedData.totalVatAmount!=0 && (selectedData.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }))}
+																							{totalVatAmount!=0 && (totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }))}
 																					</label>
 																				</Col>
 																			</Row>
 																		</div>)}
 
-																		{selectedData.totalAmount && selectedData.totalAmount!=0 && (<div className="total-item p-2">
+																		{totalAmount && totalAmount!=0 && (<div className="total-item p-2">
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
@@ -1994,7 +2044,7 @@ class CreateCreditNoteModal extends React.Component {
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
 																						{this.state.customer_currency_symbol} &nbsp;
-																							{selectedData.totalAmount!=0 && (selectedData.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }))}
+																							{totalAmount!=0 && (totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }))}
 																					</label>
 																				</Col>
 																			</Row>

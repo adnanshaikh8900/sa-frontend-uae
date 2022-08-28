@@ -1836,9 +1836,9 @@ existForAccountNumber = (value) => {
                                                                                             </Col> */}
                                                                                             <Col>
                                                                                         <div style={{display:"flex"}}>
-                                                                                            <div style={{width:"60%"}}>
+                                                                                            <div style={{width:"55%"}}>
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="employeeDesignationId"><span className="text-danger">* </span>{strings.Designation}</Label>
+                                                                                                    <Label htmlFor="employeeDesignationId" className='overflow-hidden text-truncate'><span className="text-danger">* </span>{strings.Designation}</Label>
                                                                                                     <Select
 
                                                                                                         options={
@@ -1853,7 +1853,7 @@ existForAccountNumber = (value) => {
                                                                                                         }
                                                                                                         id="employeeDesignationId"
                                                                                                         name="employeeDesignationId"
-                                                                                                        placeholder={strings.Select+strings.Designation}
+                                                                                                        placeholder={strings.Designation}
                                                                                                         value={this.state.salaryDesignation}
                                                                                                         onChange={(value) => {
                                                                                                             props.handleChange('employeeDesignationId')(value);
@@ -1883,16 +1883,14 @@ existForAccountNumber = (value) => {
                                                                                                 <Button 
                                                                                                     type="button"
                                                                                                     color="primary"
-                                                                                                    size="sm"
-                                                                                                    style={{fontSize:"12px"}}
-                                                                                                    className="btn-square mt-3"
+                                                                                                    className="btn-square mt-4  pull-right overflow-hidden text-truncate"
                                                                                                     onClick={(e, props) => {
                                                                                                         this.openDesignationModal(props);
                                                                                                     }}
                                                                                                     
                                                                                                 >
                                                                                                     <i className="fa fa-plus"></i>  {strings.AddDesignation}
-															                            	</Button>
+															                            	</Button>                                                                         
                                                                                             </div>
                                                                                             </div>
                                                                                             </Col>
@@ -2126,16 +2124,12 @@ existForAccountNumber = (value) => {
                                                                                                             if (option && option.value) {
                                                                                                                 props.handleChange('countryId')(option);
                                                                                                                 props.handleChange('PostZipCode')("");
-                                                                                                                
                                                                                                                 this.getStateList(option.value);
+                                                                                                              
                                                                                                             } else {
                                                                                                                 props.handleChange('countryId')('');
                                                                                                                 this.getStateList('');
                                                                                                             }
-                                                                                                            props.handleChange('stateId')({
-                                                                                                                label: 'Select State',
-                                                                                                                value: '',
-                                                                                                            });
                                                                                                         }}
                                                                                                         placeholder={strings.Select+strings.Country}
                                                                                                         id="countryId"
@@ -2162,7 +2156,6 @@ existForAccountNumber = (value) => {
 
                                                                                                     </Label>
                                                                                                     <Select
-
                                                                                                         options={
                                                                                                             state_list
                                                                                                                 ? selectOptionsFactory.renderOptions(

@@ -364,8 +364,8 @@ this.props.customerInvoiceActions
 			actionButtons: temp,
 		});
 	};
-	updateParentAmount = (totalAmount,totalVatAmount,totalNet) => {
-		this.setState({totalAmount:totalAmount,totalVatAmount:totalVatAmount})
+	updateParentAmount = (totalAmount,totalVatAmount,totalexcise) => {
+		this.setState({totalAmount:totalAmount,totalVatAmount:totalVatAmount,totalExciseAmount:totalexcise})
 		console.log(totalAmount,"00000000")
 		console.log(totalVatAmount,"00000000")
 	};
@@ -664,6 +664,7 @@ this.props.customerInvoiceActions
 		});
 		this.props.customerInvoiceDetailActions
 		.getInvoiceById(id).then((res) => {
+			debugger
 			this.setState({		
 				// current_rfq_id: this.props.location.state.id,
 				openModal:true, rowId : id,
@@ -683,6 +684,7 @@ this.props.customerInvoiceActions
 						? res.data.totalVatAmount
 						: 0,
 						totalAmount: res.data.totalAmount ? res.data.totalAmount : 0,
+						totalExciseAmount: res.data.totalExciseAmount ? res.data.totalExciseAmount : 0,
 						total_net: 0,
 					notes: res.data.notes ? res.data.notes : '',
 					lineItemsString: res.data.invoiceLineItems
@@ -1443,8 +1445,8 @@ this.props.customerInvoiceActions
 						this.initializeData();
 					}}
 				updateParentAmount={
-					(e,e1) => {
-						this.updateParentAmount(e,e1);
+					(e,e1,e2) => {
+						this.updateParentAmount(e,e1,e2);
 				}}
 				updateParentSelelectedData={
 					(e) => {
@@ -1459,6 +1461,7 @@ this.props.customerInvoiceActions
 				createCreditNote={this.props.creditNotesActions.createCreditNote}
 				totalAmount={this.state.totalAmount}
 				totalVatAmount={this.state.totalVatAmount}
+				totalExciseAmount={this.state.totalExciseAmount}
 				// getRfqbyid={this.props.requestForQuotationDetailsAction.getRFQeById}
 				//	 getState={this.props.requestForQuotationDetailsAction.renderActionForState}
 				//	getInvoice={this.props.purchaseOrderCreateAction.getPoNo()}

@@ -181,7 +181,7 @@ class CreateCreditNote extends React.Component {
 			loadingMsg:"Loading",
 			disableLeavePage:false
 		};
-
+		
 		this.formRef = React.createRef();
 
 		this.file_size = 1024000;
@@ -363,7 +363,7 @@ class CreateCreditNote extends React.Component {
 						onChange={(e) => {
 							if (
 								e.target.value === '' ||
-								this.regDecimal.test(e.target.value)
+								(this.regDecimal.test(e.target.value) && row['unitPrice']>e.target.value )
 							) {
 								this.selectItem(
 									e.target.value,
@@ -524,13 +524,15 @@ discountType = (row) =>
 		// }
 	};
 
-	// setExchange = (value) => {
-	// 	let result = this.props.currency_convert_list.filter((obj) => {
-	// 	return obj.currencyCode === value;
-	// 	});
-	// 	console.log('currency result', result)
-	// 	this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
-	// 	};
+	setExchange = (value) => {
+		
+		let result = this.props.currency_convert_list.find((obj) => {
+		return obj.currencyCode === value;
+		});
+		
+		
+		this.formRef.current.setFieldValue('exchangeRate', result.exchangeRate, true);
+		};
 
 	setCurrency = (value) => {
 		let result = this.props.currency_convert_list.filter((obj) => {
@@ -873,7 +875,7 @@ discountType = (row) =>
 		let idx;
 		data.map((obj, index) => {
 			if (obj.id === row.id) {
-				console.log(result);
+				
 				obj['unitPrice'] = result.unitPrice;
 				obj['vatCategoryId'] = result.vatCategoryId;
 				obj['description'] = result.description;
@@ -1087,89 +1089,84 @@ discountType = (row) =>
 		}
 	};
 
+	
 	updateAmount = (data, props) => {
 		const { vat_list , excise_list} = this.props;
 		const { discountPercentage, discountAmount } = this.state;
-	
+		
 		let total_net = 0;
 		let total_excise = 0;
 		let total = 0;
 		let total_vat = 0;
 		let net_value = 0;
 		let discount = 0;
+
+		const totalnetamount=(a)=>{
+			total_net=total_net+a
+		}
+		const totalexcise=(a)=>{
+			total_excise=total_excise+a
+		}
+		const totalvalt=(a)=>{
+			total_vat=total_vat+a
+		}
+		const totalamount=(a)=>{
+			total=total+a
+		}
+		const discountamount=(a)=>{
+			discount=discount+a
+		}
 		data.map((obj) => {
+			
 			const index =
 				obj.vatCategoryId !== ''
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
 
-			//Excise calculation
-			if(obj.exciseTaxId !=  0){
-				if(obj.isExciseTaxExclusive === true){
-				if(obj.exciseTaxId === 1){
-				const value = +(obj.unitPrice) / 2 ;
-					net_value = parseFloat(obj.unitPrice) + parseFloat(value) ;
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
-				}else if (obj.exciseTaxId === 2){
-					const value = obj.unitPrice;
-					net_value = parseFloat(obj.unitPrice) +  parseFloat(value) ;
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
-				}
-				else{
-					net_value = obj.unitPrice
-				}
-			}	else{
-				if(obj.exciseTaxId === 1){
-					const value = obj.unitPrice / 3
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
-				net_value = obj.unitPrice}
-				else if (obj.exciseTaxId === 2){
-					const value = obj.unitPrice / 2
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
-				net_value = obj.unitPrice}
-				else{
-					net_value = obj.unitPrice
-				}
-			}
-		}else{
-			net_value = obj.unitPrice;
-			obj.exciseAmount = 0
-		}
-			//vat calculation
-			if (obj.discountType === 'PERCENTAGE') {
-				var val =
-				((+net_value -
-				 (+((net_value * obj.discount)) / 100)) *
-					vat *
-					obj.quantity) /
-				100;
+			if(obj.taxType){
+			const totalwithouttax= parseFloat(obj.unitPrice) * parseInt(obj.quantity)
+			const discounvalue=obj.discountType === 'PERCENTAGE'?
+			(totalwithouttax*obj.discount)/100:
+			obj.discountType === 'FIXED' && obj.discount
+			const totalAfterdiscount= totalwithouttax-discounvalue
+			
+			const excisevalue=obj.exciseTaxId === 1?totalAfterdiscount/2:obj.exciseTaxId===2?totalAfterdiscount:0
+			const totalwithexcise=excisevalue+totalAfterdiscount
+			const vatvalue=(totalwithexcise*vat)/100
 
-				var val1 =
-				((+net_value -
-				 (+((net_value * obj.discount)) / 100)) * obj.quantity ) ;
-			} else if (obj.discountType === 'FIXED') {
-				var val =
-						 (net_value * obj.quantity - obj.discount ) *
-					(vat / 100);
-
-					var val1 =
-					((net_value * obj.quantity )- obj.discount )
-
+			const finaltotalamount=totalwithexcise+vatvalue
+			totalnetamount(totalwithouttax)
+			totalexcise(excisevalue)
+			totalvalt(vatvalue)
+			totalamount(finaltotalamount)
+			discountamount(discounvalue)
+			obj.subTotal=totalwithouttax+vatvalue+excisevalue-discounvalue
+			obj.vatAmount=vatvalue
+			obj.exciseAmount=excisevalue
 			} else {
-				var val = (+net_value * vat * obj.quantity) / 100;
-				var val1 = net_value * obj.quantity
+				const totalwithtaxandexcise= parseFloat(obj.unitPrice) * parseInt(obj.quantity)
+				const discounvalue=obj.discountType === 'PERCENTAGE'?
+			(totalwithtaxandexcise*obj.discount)/100:
+			obj.discountType === 'FIXED' && obj.discount
+			const totalwitoutdiscount= totalwithtaxandexcise-discounvalue
+			const vatvalue=(totalwitoutdiscount*vat)/(100+vat)
+			const totalwithoutvat=totalwitoutdiscount-vatvalue
+			const excisevalue=obj.exciseTaxId === 1?totalwithoutvat/3:obj.exciseTaxId===2?totalwithoutvat/2:0
+			const finaltotalamount=totalwithoutvat-excisevalue
+			totalnetamount(totalwithtaxandexcise-(discounvalue+excisevalue+vatvalue))
+		
+			totalexcise(excisevalue)
+			totalvalt(vatvalue)
+			totalamount(totalwitoutdiscount)
+			discountamount(discounvalue)	
+			obj.subTotal=totalwitoutdiscount
+			obj.vatAmount=vatvalue
+			obj.exciseAmount=excisevalue
 			}
-
-			//discount calculation
-			discount = +(discount +(net_value * obj.quantity)) - parseFloat(val1)
-			total_net = +(total_net + net_value * obj.quantity);
-			total_vat = +(total_vat + val);
-			obj.vatAmount = val
-			obj.subTotal =
-			net_value && obj.vatCategoryId ? parseFloat(val1) + parseFloat(val) : 0;
-			total_excise = +(total_excise + obj.exciseAmount)
-			total = total_vat + total_net;
+			
+			
+			
 			return obj;
 		});
 
@@ -1177,18 +1174,18 @@ discountType = (row) =>
 		// 	props.values.discountType.value === 'PERCENTAGE'
 		// 		? +((total_net * discountPercentage) / 100)
 		// 		: discountAmount;
-		
+	
 		this.setState(
 			{
 				data,
 				initValue: {
 					...this.state.initValue,
 					...{
-						total_net: discount ? total_net - discount : total_net,
-						invoiceVATAmount: total_vat,
-						discount:  discount ? discount : 0,
-						totalAmount: total_net > discount ? total - discount : total - discount,
+						total_net:  total_net,
+						totalVatAmount: total_vat,
+ 						totalAmount: total,
 						total_excise: total_excise,
+						discount
 						
 						
 					},
@@ -1197,6 +1194,7 @@ discountType = (row) =>
 			},
 
 		);
+		
 	};
 
 	handleFileChange = (e, props) => {
@@ -1219,7 +1217,7 @@ discountType = (row) =>
 			contact_po_number,
 			currency,
 			invoiceNumber,
-			// exchangeRate,
+			 exchangeRate,
 			// invoiceDueDate,
 			creditNoteDate,
 			contactId,
@@ -1234,7 +1232,7 @@ discountType = (row) =>
 		} = data;
 		const { term } = this.state;
 		const formData = new FormData();
-
+		
 		formData.append('isCreatedWithoutInvoice',this.state.isCreatedWIWP);
 		
 
@@ -1243,11 +1241,11 @@ discountType = (row) =>
 
 		formData.append(
 			'creditNoteNumber',
-			creditNoteNumber !== null ? this.state.prefix + creditNoteNumber : '',
+			creditNoteNumber ? this.state.prefix + creditNoteNumber : '',
 		);
 		formData.append(
 			'email',
-			email !== null ? email : '',
+			email ? email : '',
 		);
 		// formData.append(
 		// 	'invoiceDueDate',
@@ -1265,10 +1263,11 @@ discountType = (row) =>
 			'receiptNumber',
 			receiptNumber !== null ? receiptNumber : '',
 		);
-		// formData.append(
-		// 	'exchangeRate',
-		// 	exchangeRate !== null ? exchangeRate : '',
-		// );
+		
+		formData.append(
+			'exchangeRate',
+			exchangeRate  ? exchangeRate : '',
+		);
 		formData.append(
 			'contactPoNumber',
 			contact_po_number !== null ? contact_po_number : '',
@@ -1278,9 +1277,8 @@ discountType = (row) =>
 			receiptAttachmentDescription !== null ? receiptAttachmentDescription : '',
 		);
 		formData.append('notes', notes !== null ? notes : '');
-		formData.append('email', email !== null ? email : '');
 		formData.append('type', 7);
-		if(this.state.isCreatedWIWP ===true)
+		if(this.state.isCreatedWIWP ===true  )
 		formData.append('totalAmount', creditAmount);
 	
 			formData.append('vatCategoryId', 2);
@@ -1289,7 +1287,7 @@ if (invoiceNumber && invoiceNumber.value) {
 	formData.append('invoiceId', invoiceNumber.value);
 	formData.append('cnCreatedOnPaidInvoice','1');
 	}	
-		if(this.state.isCreatedWIWP ===false)
+		if(!this.state.isCreatedWIWP)
 		{
 							
 				formData.append('lineItemsString', JSON.stringify(this.state.data));
@@ -1419,6 +1417,7 @@ if (invoiceNumber && invoiceNumber.value) {
 	
 	getCurrentUser = (data) => {
 		let option;
+		
 		if (data.label || data.value) {
 			option = data;
 		} else {
@@ -1443,7 +1442,7 @@ if (invoiceNumber && invoiceNumber.value) {
 		// this.setState({
 			//   selectedContact: option
 			// })
-			console.log('data11', option)
+		
 		this.formRef.current.setFieldValue('contactId', option, true);
 	};
 
@@ -1590,7 +1589,7 @@ if (invoiceNumber && invoiceNumber.value) {
 		let idx;
 		data.map((obj, index) => {
 			if (obj.id === row.id) {
-				console.log(result);
+				
 				obj['unitPrice'] = result.unitPrice;
 				obj['vatCategoryId'] = result.vatCategoryId;
 				obj['description'] = result.description;
@@ -1624,6 +1623,9 @@ if (invoiceNumber && invoiceNumber.value) {
 			);
 			this.props.creditNotesCreateActions
 			.getInvoiceById(e.value).then((response) => {
+				const customerdetails={label: response.data.organisationName === '' ?  response.data.name : response.data.organisationName,
+				value: response.data.contactId}
+		
 				this.setState(
 					{
 						option : {
@@ -1635,16 +1637,7 @@ if (invoiceNumber && invoiceNumber.value) {
 					customer_currency:response.data.currencyCode,
 					remainingInvoiceAmount:response.data.remainingInvoiceAmount,
 				
-					initValue: {
-						...this.state.initValue,
-						...{
-							totalVatAmount: response.data.totalVatAmount,
-							totalAmount: response.data.totalAmount,
-							total_net: response.data.totalAmount -response.data.totalVatAmount ,
-							discount:response.data.discount,
-							total_excise:response.data.totalExciseAmount,
-						},
-					},
+					
 	
 				//	data1:response.data.supplierId,
 				},() => {
@@ -1658,6 +1651,7 @@ if (invoiceNumber && invoiceNumber.value) {
 						false,
 						true,
 					);
+					this.updateAmount( this.state.data)
 					// this.formRef.current.setFieldValue(
 						
 					// 	totalAmount,
@@ -1671,16 +1665,16 @@ if (invoiceNumber && invoiceNumber.value) {
 				// },
 	
 				);
+				this.formRef.current.setFieldValue('currency', this.getCurrency(customerdetails.value), true);
+				this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(customerdetails.value), true);
+				this.setExchange( this.getCurrency(customerdetails.value) );
 				this.formRef.current.setFieldValue('contactId', this.state.option, true);
 				this.formRef.current.setFieldValue('remainingInvoiceAmount', this.state.remainingInvoiceAmount, true);
 				
 				this.formRef.current.setFieldValue('currencyCode', this.state.customer_currency, true);
 				this.getCurrency(this.state.option.value)	
 				this.getTaxTreatment(this.state.option.value)	
-				console.log(this.state.data,"api")
-				console.log("option ",this.state.option)
-				console.log(this.state.initValue.totalAmount,"this.state.initValue.totalAmount+++++++")
-				console.log(this.state.initValue.totalVatAmount,"this.state.initValue.totalVatAmount+++++++")
+			
 			});
 		}
 	}
@@ -1752,7 +1746,7 @@ if (invoiceNumber && invoiceNumber.value) {
 													{
 														errors.creditNoteNumber ='Tax credit note number cannot be same';
 													}	
-													
+													debugger
 													if(this.state.isCreatedWIWP==false && !values.invoiceNumber)
 													{
 														errors.invoiceNumber = 'Invoice number is required';}
@@ -1760,14 +1754,14 @@ if (invoiceNumber && invoiceNumber.value) {
 													if((this.state.isCreatedWIWP  && !this.state.invoiceSelected)&& values.creditAmount<1)
 														{
 															errors.creditAmount = 'Credit amount is required';}
-													// if(this.state.invoiceSelected && this.state.initValue.totalAmount>this.state.remainingInvoiceAmount)
-													// {
-													// 	errors.remainingInvoiceAmount =	'Invoice Total Amount Cannot be greater than Remaining Invoice Amount';
-													// }	
-													// if(this.state.remainingInvoiceAmount && values.creditAmount<this.state.remainingInvoiceAmount)		
-													// {
-													// 	errors.creditAmount = 'Credit Amount Cannot be less than Remaining Invoice Amount';
-													// }														
+													if(this.state.invoiceSelected && !this.state.isCreatedWIWP && this.state.initValue.totalAmount>this.state.remainingInvoiceAmount)
+													{
+														errors.remainingInvoiceAmount =	'Invoice Total Amount Cannot be greater than Remaining Invoice Amount';
+													}	
+													if(this.state.invoiceSelected && this.state.isCreatedWIWP && values.creditAmount>this.state.remainingInvoiceAmount)
+													{
+														errors.remainingInvoiceAmount =	'Invoice Total Amount Cannot be greater than Remaining Invoice Amount';
+													}											
 													return errors;
 												}}
 												validationSchema={Yup.object().shape({
@@ -1894,7 +1888,7 @@ if (invoiceNumber && invoiceNumber.value) {
 																				<hr />
 
 														<Row>
-														{this.state.isCreatedWithoutInvoice===false &&(<Col lg={3}>
+														{!this.state.isCreatedWithoutInvoice &&(<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="invoiceNumber"><span className="text-danger">* </span>
 																	{strings.InvoiceNumber}
@@ -1917,9 +1911,11 @@ if (invoiceNumber && invoiceNumber.value) {
 
 																		onChange={(option) => {
 																			if (option && option.value) {
+																			
 																				 this.getInvoiceDetails(option, option.value, props)
 																				 props.handleChange('invoiceNumber')(option);
 																				this.setState({invoiceSelected :true})
+																				
 																			} else {
 																				this.setState({invoiceSelected :false})
 																				props.handleChange('invoiceNumber')('');
@@ -2013,9 +2009,10 @@ if (invoiceNumber && invoiceNumber.value) {
 																		isDisabled={this.state.invoiceSelected}
 																		onChange={(option) => {
 																			if (option && option.value) {
+																			
 																				this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
 																				this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(option.value), true);
-																				// this.setExchange( this.getCurrency(option.value) );
+																				this.setExchange( this.getCurrency(option.value) );
 																				props.handleChange('contactId')(option);
 																			} else {
 																				props.handleChange('contactId')('');
@@ -2345,7 +2342,7 @@ if (invoiceNumber && invoiceNumber.value) {
 																</FormGroup>
 															</Col>
 															
-															{(this.state.isCreatedWIWP===false || this.state.invoiceSelected==true) &&(<Col lg={3}>
+															{(!this.state.isCreatedWithoutInvoice && this.state.invoiceSelected==true) &&(<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="remainingInvoiceAmount">
 																
@@ -3090,7 +3087,7 @@ min="0"
 																		type="button"
 																		color="primary"
 																		className="btn-square mr-3"
-																		disabled={this.state.disabled || (initValue.totalAmount>this.state.remainingInvoiceAmount)}
+																		disabled={this.state.disabled || (initValue.totalAmount>this.state.remainingInvoiceAmount && !this.state.isCreatedWIWP)}
 																		onClick={() => {
 																				//	added validation popup	msg
 																				props.handleBlur();
@@ -3110,13 +3107,13 @@ min="0"
 																			? 'Creating...'
 																			: strings.Create}
 																	</Button>
-																	{console.log(this.state.totalAmount,this.state.remainingInvoiceAmount)}
+																
 																	<Button
 																		type="button"
 																		color="primary"
 																		className="btn-square mr-3"
 																		
-																		disabled={this.state.disabled || (initValue.totalAmount>this.state.remainingInvoiceAmount)}
+																		disabled={this.state.disabled || (initValue.totalAmount>this.state.remainingInvoiceAmount && !this.state.isCreatedWIWP)}
 																		onClick={() => {
 																				//	added validation popup	msg
 																				props.handleBlur();
@@ -3153,7 +3150,8 @@ min="0"
 														
 															</Col>
 														</Row>
-														{(initValue.totalAmount>this.state.remainingInvoiceAmount) && <div style={{color:'red'}}>Remaining Invoice Amount cananot less than Total Amount</div>}
+														
+														{(initValue.totalAmount>this.state.remainingInvoiceAmount && !this.state.isCreatedWIWP)  && <div style={{color:'red'}}>Remaining Invoice Amount cananot less than Total Amount sdgsdg{this.state.isCreatedWithoutInvoice}</div>}
 													</Form>
 												)}
 											</Formik>

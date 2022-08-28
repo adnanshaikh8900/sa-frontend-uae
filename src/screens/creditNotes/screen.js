@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-
+import moment from 'moment'
 import {
 	Card,
 	CardHeader,
@@ -264,14 +264,14 @@ class CreditNotes extends React.Component {
 			vatInWords:row.totalVatAmount ? upperCase(row.currencyName + " " +(toWords.convert(row.totalVatAmount))+" ONLY" ).replace("POINT","AND") :"-",
 			markAsSent:false
 		};
-		debugger
+	
 		this.props.creditNotesActions
 			.unPostInvoice(postingRequestModel)
 			.then((res) => {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data ? res.data.message : 'Invoice Unposted Successfully'
+						"Credit Note Moved To Draft Successfully " 
 					);
 					this.setState({
 						loading: false,
@@ -424,7 +424,7 @@ class CreditNotes extends React.Component {
 									<i className="fas fa-edit" /> {strings.Edit}
 								</div>
 							</DropdownItem>
-						)}	{row.statusEnum !== 'Closed' && row.statusEnum !== 'Draft' && row.cnCreatedOnPaidInvoice !==true && row.isCNWithoutProduct !==true &&   (
+						)}	{row.statusEnum !== 'Closed' && row.statusEnum !== 'Draft' && row.cnCreatedOnPaidInvoice !==true  &&   (
 							<DropdownItem>
 								<div
 									onClick={() => {
@@ -751,7 +751,7 @@ class CreditNotes extends React.Component {
 			customer_invoice_list,
 			universal_currency_list,
 		} = this.props;
-		debugger
+		
 		const customer_invoice_data =
 		this.props.customer_invoice_list
 			? this.props.customer_invoice_list.map((customer) => ({
@@ -1084,12 +1084,12 @@ class CreditNotes extends React.Component {
 										<i className="fas fa-plus mr-1" />
 									        {strings.AddCreditNote}
 									</Button></div></Row>
-								
+								{console.log("Asdasdas",customer_invoice_data)}
 										<BootstrapTable
 											selectRow={this.selectRowProp}
 											search={false}
 											options={this.options}
-											data={customer_invoice_data ? customer_invoice_data : []}
+											data={customer_invoice_data ? customer_invoice_data.sort((a,b)=>new Date(a.creditNoteDate)-new Date(b.creditNoteDate)) : []}
 											version="4"
 											hover
 											responsive

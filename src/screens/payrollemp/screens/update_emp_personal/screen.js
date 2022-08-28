@@ -396,9 +396,8 @@ class UpdateEmployeePersonal extends React.Component {
             emergencyContactRelationship2 != null ?emergencyContactRelationship2:'',
         );
         formData.append(
-            'maritalStatus',
-            maritalStatus,
-        )
+            'maritalStatus', maritalStatus.value,
+        );
         if (employeeDesignationId && employeeDesignationId.value) {
 			formData.append('employeeDesignationId', employeeDesignationId.value);
 		}
@@ -509,7 +508,6 @@ emailvalidationCheck = (value) => {
                                                     }}
                                                     validate={(values) => {
 														let errors = {};
-
                                                         if (this.state.emailExist == true) {
                                                             errors.email = 'Email already exists';
                                                         }
@@ -540,8 +538,20 @@ emailvalidationCheck = (value) => {
                                                                 //     'Salary role is required';
                                                                 // }
                                                                 if(this.underAge(values.dob))
-                                                                errors.dob =
-                                                                'Age should be more than 14 years';
+                                                                errors.dob = 'Age should be more than 14 years';
+                                                                if(values.dob===''){
+                                                                errors.dob = 'Date of birth is required';
+
+                                                                }
+                                                                if(values.maritalStatus.value===''){
+                                                                    errors.maritalStatus='Marital status is required';
+                                                                }
+                                                                if(values.mobileNumber && values.mobileNumber.length<11){
+                                                                    errors.mobileNumber='Please enter 11 digits mobile number'
+                                                                }
+                                                                if(values.emergencyContactNumber1 && values.emergencyContactNumber1.length<11){
+                                                                    errors.emergencyContactNumber1='Please enter 11 digits mobile number'
+                                                                }
 														return errors;
 													}}
                                                     validationSchema={Yup.object().shape({
@@ -578,9 +588,9 @@ emailvalidationCheck = (value) => {
                                                             mobileNumber: Yup.string()
 															.required('Mobile number is required'),
                                                             emergencyContactName1: Yup.string()
-                                                           .required('Contact name 1 is required') ,
+                                                           .required('Contact name is required') ,
                                                             emergencyContactNumber1:Yup.string()
-                                                           .required("Contact number 1 is required"),
+                                                           .required("Contact number is required"),
                                                             emergencyContactRelationship1: Yup.string()
                                                            .required('Relationship 1 is required') ,
                                                                           
@@ -841,7 +851,12 @@ emailvalidationCheck = (value) => {
                                                                                     selected={this.selectedDate(props) }
                                                                                     value={props.values.dob}
                                                                                     onChange={(value) => {
-                                                                                        props.handleChange("dob")(moment(value).format("DD-MM-YYYY"))
+                                                                                        if(value){
+                                                                                            props.handleChange("dob")(moment(value).format("DD-MM-YYYY"))
+                                                                                        }else{
+                                                                                            props.handleChange("dob")('')
+
+                                                                                        }
                                                                                     }}
                                                                                 />
                                                                                 {props.errors.dob && 
@@ -1186,7 +1201,7 @@ emailvalidationCheck = (value) => {
                                                                               
                                                                         </Col>
 
-                                                                        {props.values.countryId == 229 || props.values.countryId.value == 229 ? 
+                                                                        {props.values.countryId === 229 || props.values.countryId.value === 229 ? 
 														 	<Col md="4" >
 																 <FormGroup>
 															 {/* <Label htmlFor="select">{strings.POBoxNumber}</Label> */}
@@ -1312,10 +1327,7 @@ emailvalidationCheck = (value) => {
                                                                                             props.handleChange('countryId')('');
                                                                                             this.getStateList(option.value);
                                                                                         }
-                                                                                        props.handleChange('stateId')({
-                                                                                            label: 'Select State',
-                                                                                            value: '',
-                                                                                        });
+                                                                                       
                                                                                     }}
                                                                                     placeholder={strings.Select + strings.Country}
                                                                                     id="countryId"
@@ -1524,8 +1536,8 @@ emailvalidationCheck = (value) => {
                                                                                                 <FormGroup>
                                                                                                     <Label htmlFor="emergencyContactNumber1"><span className="text-danger">* </span>{strings.ContactNumber1} </Label>
                                                                                                     <div 	className={
-																		                            props.errors.mobileNumber &&
-																		                            props.touched.mobileNumber
+																		                            props.errors.emergencyContactNumber1 &&
+																		                            props.touched.emergencyContactNumber1
 																		                        	? ' is-invalidMobile '
 																			                        : ''
 												                                                    }>
@@ -1698,8 +1710,8 @@ emailvalidationCheck = (value) => {
                                                                         onClick={() => {
                                                                             //	added validation popup	msg
                                                                             props.handleBlur();
-                                                                            if(props.errors &&  Object.keys(props.errors).length != 0)
-                                                                            this.props.commonActions.fillManDatoryDetails();
+                                                                            if(props.errors &&  Object.keys(props.errors).length != 0){
+                                                                            this.props.commonActions.fillManDatoryDetails();}
                                                                     }}
                                                                     >
                                                                         <i className="fa fa-dot-circle-o"></i>{' '}

@@ -1124,7 +1124,7 @@ class CreateSupplierInvoice extends React.Component {
 									);
 
 								}}
-								placeholder={strings.discount}
+								placeholder={strings.Discount}
 								className={`form-control 
             ${props.errors.lineItemsString &&
 										props.errors.lineItemsString[parseInt(idx, 10)] &&

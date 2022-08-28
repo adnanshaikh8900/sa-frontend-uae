@@ -420,13 +420,21 @@ class RecordCustomerPayment extends React.Component {
                                                     let errors = {};
 													 if (values.amount <= 0) {
                                                       errors.amount ='Amount cannot be empty or 0';
-												 }
+												 	}
+													if(!values.receiptDate){
+														errors.receiptDate='Payment date is required';
+													}
+
+												 console.log("rec date: "+values.receiptDate);
                                                  return errors
 												 }}
 													validationSchema={Yup.object().shape({
 														depositeTo: Yup.string().required(
 															'Deposit to is required',
 														),
+														// receiptDate: Yup.date().required(
+														// 	'Payment date is required',
+														// ),
 														payMode: Yup.string().required(
 															'Payment mode is required',
 														),

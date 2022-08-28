@@ -304,7 +304,7 @@ class Refund extends React.Component {
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data ? res.data.message : 'Credit Refund Successfully',
+					res.data ? res.data.message : 'Credits applied to the invoice successfully',
 				);
 				this.props.history.push('/admin/income/credit-notes');
 				this.setState({ loading:false,});
@@ -489,6 +489,9 @@ class Refund extends React.Component {
 													 }else if(this.state.amount<parseFloat(values.amount)){ 
 														errors.amount =
 														'Amount cannot More than the Invoice Amount';
+													 }
+													 if(!values.receiptDate){
+														errors.receiptDate='Payment date is required';
 													 }
 													 return errors
 													 }}

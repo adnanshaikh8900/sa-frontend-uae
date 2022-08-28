@@ -290,7 +290,8 @@ const ar = {
       RFQDate:"تاريخ طلب عرض الأسعار",												
       RFQDATE:"تاريخ طلب عرض الأسعار",			
       RFQDUEDATE:"تاريخ استحقاق طلب عرض الأسعار",				
-      RFQDueDate:"تاريخ استحقاق RFQ",		
+      RFQDueDate:"تاريخ استحقاق RFQ",				
+      RFQExpiryDate:"تاريخ انتهاء RFQ",	
 											
 //Create RFQ			
       CreateRequestForQuotation:"إنشاء طلب عرض أسعار",			
@@ -319,7 +320,8 @@ const ar = {
       GoodsReceivedNotes:"البضائع المستلمة ملاحظات",						
       GRNNUMBER:"رقم الملاحظات المستلمة للسلع ",
       GRNNo:"GRN لا",									
-      GRNRECEIVEDATE:"تاريخ استلام الملاحظات المستلمة للبضائع ",			
+      GRNRECEIVEDATE:"تاريخ استلام الملاحظات المستلمة للبضائع ",	
+      GRNExpiryDate: "GRNexpiry date",			
       GRNREMARKS:"ملاحظات ملاحظات الملاحظات المستلمة للسلع",			
       AddNewGoodsReceivedNotes:"إضافة مذكرة استلام بضائع جديدة",
 
@@ -826,7 +828,6 @@ const ar = {
       CreateSalaryRole:"إنشاء دور الراتب",
       UpdateSalaryRole:"تحديث دور الراتب", 
       CreateDesignation:"إنشاء التعيين",	
-      EmployeeDesignationName:"اسم تعيين الموظف",	
       CreateDeductionComponent:"إنشاء مكون الخصم",	
       Component:"مكون",	
       ComponentName:"اسم المكون",		

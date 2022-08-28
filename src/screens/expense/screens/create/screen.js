@@ -59,6 +59,7 @@ const mapDispatchToProps = (dispatch) => {
 
 let strings = new LocalizedStrings(data);
 class CreateExpense extends React.Component {
+	_isMounted = false;
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -80,6 +81,7 @@ class CreateExpense extends React.Component {
 				attachmentFile: '',
 				employee: '',
 				receiptAttachmentDescription: '',
+				notes: '',
 				vatCategoryId: '',
 				payMode: '',
 				bankAccountId: '',
@@ -119,7 +121,7 @@ class CreateExpense extends React.Component {
 		};
 
 		this.regEx = /^[0-9\b]+$/;
-		this.regExInvNum = /[a-zA-Z0-9'-/]+$/;
+		this.regExInvNum = /[a-zA-Z0-9-/]+$/;
 		this.regExAlpha = /^[a-zA-Z0-9!@#$&()-\\`.+,/\"]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
@@ -194,6 +196,9 @@ class CreateExpense extends React.Component {
 									isReverseChargeEnabled:res.data.isReverseChargeEnabled ?res.data.isReverseChargeEnabled:false,
 									placeOfSupplyId:res.data.placeOfSupplyId ?res.data.placeOfSupplyId:'',
 									taxTreatmentId:res.data.taxTreatmentId ?res.data.taxTreatmentId:'',
+									notes: res.data.notes 
+										? res.data.notes 
+										: '',
 									
 								},
 								payee:res.data.payee ? res.data.payee :'', 
@@ -269,6 +274,7 @@ class CreateExpense extends React.Component {
 								this.formRef.current.setFieldValue('expenseDescription',  res.data.expenseDescription, true);
 								this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
 								this.formRef.current.setFieldValue('receiptAttachmentDescription', res.data.receiptAttachmentDescription, true);
+								this.formRef.current.setFieldValue('notes',  res.data.notes, true);
 
 								let payee=	selectOptionsFactory.renderOptions(	'label','value',	this.props.pay_to_list,	'Payee',)
 								.find((option) => 	option.label == res.data.payee)
@@ -286,6 +292,7 @@ class CreateExpense extends React.Component {
 
 
 	componentDidMount = () => {
+		this._isMounted = true;
 		this.initializeData();
 		this.getExpenseNumber();
 		// this.savestate()
@@ -297,6 +304,7 @@ class CreateExpense extends React.Component {
 		this.props.commonActions.getNoteSettingsInfo().then((res)=>{
 			if(res.status===200){
 				this.formRef.current.setFieldValue('notes',res.data.defaultNotes, true);
+				this.formRef.current.setFieldValue('footNote',  res.data.defaultFootNotes, true);
 				
 			}
 		})
@@ -394,15 +402,17 @@ class CreateExpense extends React.Component {
 			exclusiveVat,
 			taxTreatmentId,
 			expenseType,
-			notes
+			notes,
+			footNote
 		} = data;
 		let formData = new FormData();
 		
 		formData.append('expenseType',  this.state.expenseType );
 		formData.append('delivaryNotes',notes);
+		formData.append('footNote',footNote? footNote : '')
 		formData.append('expenseNumber', expenseNumber ? expenseNumber : '');
 		if(payee)
-		formData.append('payee', payee.value ? payee.value : payee);
+		formData.append('payee', payee.value ? payee.value : '');
 		formData.append('expenseDate', expenseDate !== null ? expenseDate : '');
 		formData.append('expenseDescription', expenseDescription);
 		formData.append('receiptNumber', receiptNumber);
@@ -434,7 +444,6 @@ class CreateExpense extends React.Component {
 		if (currency) {
 			formData.append('currencyCode', currency.value);
 		}
-		console.log(currency);
 
 		if (vatCategoryId && vatCategoryId.value) {
 			formData.append('vatCategoryId', vatCategoryId.value);
@@ -549,7 +558,6 @@ class CreateExpense extends React.Component {
 			}
 		});
 	
-	console.log(this.state.employeeCode)
 	}
 	
 	
@@ -654,52 +662,74 @@ class CreateExpense extends React.Component {
 	}
 
 	ReverseChargeSetting=(option,props)=>{
-		if(this.state.isDesignatedZone==true)
-			switch(option.value){
-
-				case 1: 
-				case 2: 
-				case 3: 
-				case 4: 
-				case 8: 
+		if(this.state.isDesignatedZone==true){
+			if((option>=1 && option<=4)|| option===8){
 				this.setState({
 					showReverseCharge:false,
 				})
-				break;
-
-				case 5: 
-				case 6: 
-				case 7: 
+			}
+			else{
 				this.setState({
 					showReverseCharge:true,
 				})
-				break;
+			}
+		}
+			// switch(option){
+
+			// 	case 1: 
+			// 	case 2: 
+			// 	case 3: 
+			// 	case 4: 
+			// 	case 8: 
+			// 	this.setState({
+			// 		showReverseCharge:false,
+			// 	})
+			// 	break;
+
+			// 	case 5: 
+			// 	case 6: 
+			// 	case 7: 
+			// 	this.setState({
+			// 		showReverseCharge:true,
+			// 	})
+			// 	break;
 				
 			
-			}
-		else
+			// }
+		else{
 //Not Designated Zone		
-			if(this.state.isDesignatedZone==false)
-			switch(option.value){
+			if(this.state.isDesignatedZone==false){
+				if(option===3 || option===8){
+					this.setState({
+						showReverseCharge:false,
+					})
+				}
+				else{
+					this.setState({
+						showReverseCharge:true,
+					})
+				}
+			// switch(option.value){
 
-				case 1: 
-				case 2: 
-				case 4: 
-				case 5: 
-				case 6: 
-				case 7: 
-				this.setState({
-					showReverseCharge:true,
-				})
-						break;
+			// 	case 1: 
+			// 	case 2: 
+			// 	case 4: 
+			// 	case 5: 
+			// 	case 6: 
+			// 	case 7: 
+			// 	this.setState({
+			// 		showReverseCharge:true,
+			// 	})
+			// 			break;
 
-				case 3: 
-				case 8: 
-				this.setState({
-					showReverseCharge:false,
-				})
-						break;
-			}
+			// 	case 3: 
+			// 	case 8: 
+			// 	this.setState({
+			// 		showReverseCharge:false,
+			// 	})
+			// 			break;
+			}}
+
 	}
 
 	renderVat=(props)=>{
@@ -848,6 +878,12 @@ class CreateExpense extends React.Component {
 		this.setState({initValue});
 		alert(event);
 	}
+
+//added by mudassar to unmount the asyn call 
+componentWillUnmount() {
+    this._isMounted = false;
+  }
+
 	render() {
 		strings.setLanguage(this.state.language);
 		const { initValue, payMode ,exist,taxTreatmentList,placelist,vat_list,loading,loadingMsg} = this.state;
@@ -872,7 +908,6 @@ class CreateExpense extends React.Component {
 				},
 			}),
 		};
-		console.log(this.state.payee)
 		return (
 			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 			<div>
@@ -1122,7 +1157,7 @@ class CreateExpense extends React.Component {
 																					//placelist Setup
 																					this.placelistSetting(option,props)
 																					// ReverseCharge setup
-																					this.ReverseChargeSetting(option,props)
+																					this.ReverseChargeSetting(option.value,props)
 																					this.setState({isReverseChargeEnabled:false,exclusiveVat:false})
 																																																													
 																				} else {
@@ -1518,7 +1553,7 @@ class CreateExpense extends React.Component {
 																		)}
 																</FormGroup>
 															</Col>
-																{this.state.payee  && this.state.payee.value === 'Company Expense' || this.state.payee === 'Company Expense' ? 
+																{/* {this.state.payee  && this.state.payee.value === 'Company Expense' || this.state.payee === 'Company Expense' ?  */}
 															<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="payMode"><span className="text-danger">* </span> {strings.PayThrough}</Label>
@@ -1561,7 +1596,8 @@ class CreateExpense extends React.Component {
 																				</div>
 																			)}
 																	</FormGroup>
-																</Col>:''}
+																</Col>
+																{/* :''} */}
 														</Row>
 														{/* {props.values.vatCategoryId !=='' && props.values.vatCategoryId.label !=='Select Vat' &&
 														(
@@ -1626,9 +1662,8 @@ class CreateExpense extends React.Component {
 																	<Col></Col></Row>
 														)
 														} 
-														
-													{this.state.showReverseCharge==true &&(	<Row>
-														<Col >
+														<Row>
+													{this.state.showReverseCharge==true &&(<Col>
 															{/* <Input
 															type="checkbox"
 															id="isReverseChargeEnabled"
@@ -1648,8 +1683,8 @@ class CreateExpense extends React.Component {
 																}}
 															/>
 															<Label>Reverse Charge</Label>
-															</Col>
-														</Row>)}
+															</Col>)}
+															</Row>
 														<hr />
 														<Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
 																<Col>
@@ -1894,7 +1929,6 @@ class CreateExpense extends React.Component {
 																			props.handleBlur();
 																			if(props.errors &&  Object.keys(props.errors).length != 0)
 																			this.props.commonActions.fillManDatoryDetails();
-																			debugger
 																			console.log(props.errors,"errors")
 																			this.setState(
 																				{ createMore: false },

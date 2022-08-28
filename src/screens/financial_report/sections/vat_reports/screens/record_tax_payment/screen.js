@@ -247,6 +247,9 @@ class RecordVatPayment extends React.Component {
 														 if (values.amount < 1) {
 														  errors.amount ='Amount cannot be less Than 1';
 													 }
+													 if(!values.vatPaymentDate){
+														errors.vatPaymentDate='Payment date is required';
+													 }
 													 return errors
 													}}
 													validationSchema={Yup.object().shape({

@@ -36,6 +36,7 @@ import moment from 'moment';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { TextareaAutosize } from '@material-ui/core';
+import { string } from 'prop-types';
 
 const mapStateToProps = (state) => {
 	return {
@@ -328,23 +329,14 @@ class CreateCustomerInvoice extends React.Component {
 				name={`lineItemsString.${idx}.quantity`}
 				render={({ field, form }) => (
 					<div>
-						<div class="input-group">
+					<div class="input-group">
 						<Input
 							type="text"
-							maxLength="10"
 							min="0"
+							maxLength="10"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
 								if (e.target.value === '' || this.regEx.test(e.target.value)) {
-									var { product_list } = this.props;
-									product_list=product_list.filter((obj)=>obj.id == row.productId)
-									
-									if(parseInt(e.target.value) >product_list[0].stockOnHand && product_list[0].isInventoryEnabled==true)
-									this.props.commonActions.tostifyAlert(
-										'error',
-										 `Quantity (${e.target.value}) Must not be greater than stock on hand  (${product_list[0].stockOnHand})`,
-									);
-									else
 									this.selectItem(
 										e.target.value,
 										row,
@@ -355,16 +347,15 @@ class CreateCustomerInvoice extends React.Component {
 									);
 								}
 							}}
-							
 							placeholder={strings.Quantity}
-							className={`form-control w-50${
-								props.errors.lineItemsString &&
-								props.errors.lineItemsString[parseInt(idx, 10)] &&
-								props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
-								Object.keys(props.touched).length > 0 &&
-								props.touched.lineItemsString &&
-								props.touched.lineItemsString[parseInt(idx, 10)] &&
-								props.touched.lineItemsString[parseInt(idx, 10)].quantity
+							className={`form-control w-50
+            ${props.errors.lineItemsString &&
+									props.errors.lineItemsString[parseInt(idx, 10)] &&
+									props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
+									Object.keys(props.touched).length > 0 &&
+									props.touched.lineItemsString &&
+									props.touched.lineItemsString[parseInt(idx, 10)] &&
+									props.touched.lineItemsString[parseInt(idx, 10)].quantity
 									? 'is-invalid'
 									: ''
 							}`}
@@ -380,7 +371,7 @@ class CreateCustomerInvoice extends React.Component {
 							props.touched.lineItemsString &&
 							props.touched.lineItemsString[parseInt(idx, 10)] &&
 							props.touched.lineItemsString[parseInt(idx, 10)].quantity && (
-								<div className="invalid-feedback">
+								<div className="invalid-feedback" style={{display:"block", whiteSpace: "normal"}}>
 									{props.errors.lineItemsString[parseInt(idx, 10)].quantity}
 								</div>
 							)}
@@ -476,6 +467,7 @@ renderVatAmount = (cell, row,extraData) => {
 				const date1 = moment(values)
 				.add(temp, 'days')
 				.format('DD-MM-YYYY')
+				props.handleChange('invoiceDate1')(value);
 				props.setFieldValue('invoiceDueDate',date1, true);
 			}
 	};
@@ -737,6 +729,9 @@ renderVatAmount = (cell, row,extraData) => {
 						discountPercentage: res.data.discountPercentage
 							? res.data.discountPercentage
 							: '',
+							invoiceDate1: res.data.invoiceDate
+								? res.data.invoiceDate
+								: '',
 						data: res.data.invoiceLineItems
 							? res.data.invoiceLineItems
 							: [],
@@ -806,13 +801,15 @@ renderVatAmount = (cell, row,extraData) => {
 							// this.setDate(undefined, '');
 							const val = term ? term.value.split('_') : '';
 							const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
-							const values = moment( moment( res.data.invoiceDate).format('DD-MM-YYYY'), 'DD-MM-YYYY').toDate();							
+							const values =  res.data.invoiceDate	
 								this.setState({
 									date: moment(values).add(temp, 'days'),
-									invoiceDate: moment(values),
+									invoiceDate1: moment(values),
 								});
 								const date1 = moment(values).add(temp, 'days').format('DD-MM-YYYY')
+								this.formRef.current.setFieldValue('invoiceDate1',values, true);
 								this.formRef.current.setFieldValue('invoiceDueDate',date1, true);
+								// this.formRef.current.setFieldValue('invoiceDate1',values, true);
 							this.setExchange( this.getCurrency(res.data.contactId) );
 							this.addRow();
 						} else {
@@ -949,7 +946,7 @@ renderVatAmount = (cell, row,extraData) => {
 					id: this.state.idCount + 1,
 					description: '',
 					quantity: 1,
-					unitPrice: '',
+					unitPrice: 0,
 					vatCategoryId: '',
 					subTotal: 0,
 					exciseTaxId:'',
@@ -1031,6 +1028,7 @@ renderVatAmount = (cell, row,extraData) => {
 	 					type="text"
 				   	    min="0"
 					    maxLength="14,2"
+
 					    value={row['discount'] !== 0 ? row['discount'] : 0}
 					    onChange={(e) => {
 						   if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -1050,7 +1048,7 @@ renderVatAmount = (cell, row,extraData) => {
 							   );
 					   
 					   }}
-					   placeholder={strings.discount}
+					   placeholder={strings.Discount}
 					   className={`form-control 
 		   ${
 						   props.errors.lineItemsString &&
@@ -1376,7 +1374,7 @@ discountType = (row) =>
 												id: 0,
 												description: '',
 												quantity: 1,
-												unitPrice: '',
+												unitPrice: 0,
 												vatCategoryId: '',
 												vatAmount:0,
 												subTotal: 0,
@@ -1499,6 +1497,7 @@ discountType = (row) =>
 	};
 
 	updateAmount = (data, props) => {
+		debugger
 		const { vat_list } = this.state;
 		let total_net = 0;
 		let total_excise = 0;
@@ -1990,7 +1989,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 			// this.updateAmount(newData, props);
 			this.setState(
 				{
-					data: newData.concat({
+					data: [...newData,{
 						id: this.state.idCount + 1,
 						description: res.data[0].description,
 						quantity: 1,
@@ -2004,7 +2003,9 @@ if(changeShippingAddress && changeShippingAddress==true)
 						discountType: res.data[0].discountType,
 						unitType:res.data[0].unitType,
 						unitTypeId:res.data[0].unitTypeId,
-					}),
+					},
+					
+				],
 					idCount: this.state.idCount + 1,
 					
 				},
@@ -2013,6 +2014,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 						values: this.state.initValue,
 					};
 					this.updateAmount(this.state.data, values);
+					this.addRow()
 				},
 			);
 			this.formRef.current.setFieldValue(
@@ -2260,12 +2262,15 @@ if(changeShippingAddress && changeShippingAddress==true)
 														if (values.shippingCountryId == 229 || values.shippingCountryId.value == 229) {
 															if (values.shippingPostZipCode == '')
 																errors.shippingPostZipCode = 'PO box number is required';
+															else
+																if (values.shippingPostZipCode.length < 3)
+																	errors.shippingPostZipCode = 'Please enter atleast 3 digit postal zip code';
 														} else {
 															if (values.shippingPostZipCode == '')
 																errors.shippingPostZipCode = 'Postal code is required';
 															else
-																if (values.shippingPostZipCode.length != 6)
-																	errors.shippingPostZipCode = 'Please enter 6 digit postal zip code';
+																if (values.shippingPostZipCode.length < 3)
+																	errors.shippingPostZipCode = 'Please enter atleast 3 digit postal zip code';
 														}}
 														return errors;
 												}}
@@ -2291,13 +2296,12 @@ if(changeShippingAddress && changeShippingAddress==true)
 														)
 														.of(
 															Yup.object().shape({
-														
-																quantity: Yup.string()
+															quantity: Yup.string()
 																	.required('Value is required')
 																	.test(
 																		'quantity',
 																		'Quantity should be greater than 0',
-																		(value) => {
+																		(value) => {                                      
 																			if (value > 0) {
 																				return true;
 																			} else {
@@ -2690,7 +2694,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																						term: option,
 																					},
 																					() => {
-																						this.setDate(props, '');
+																						this.setDate(props, props.values.invoiceDate1);
 																					},
 																				);
 																			}
@@ -2723,10 +2727,10 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		dateFormat="dd-MM-yyyy"
 																		//minDate={new Date()}
 																		dropdownMode="select"
-																		value={props.values.invoiceDate}
+																		value={props.values.invoiceDate1 ?new Date(props.values.invoiceDate1):props.values.invoiceDate}
 																		selected={props.values.invoiceDate1 ?new Date(props.values.invoiceDate1):props.values.invoiceDate} 
 																		onChange={(value) => {
-																			
+																		
 																			props.handleChange('invoiceDate')(value);
 																			this.setDate(props, value);
 																		}}
@@ -3826,11 +3830,11 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		onClick={() => {
 																			if(this.state.data.length === 1)
 																				{
-																				console.log(props.errors,"ERRORs")
 																				//	added validation popup	msg
-																			props.handleBlur();
-																			if(props.errors &&  Object.keys(props.errors).length != 0)
-																			this.props.commonActions.fillManDatoryDetails();
+																				props.handleBlur();
+																				if(props.errors &&  Object.keys(props.errors).length != 0){
+																					this.props.commonActions.fillManDatoryDetails();
+																					}
 																				}
 																				else
 																				{
@@ -3839,7 +3843,12 @@ if(changeShippingAddress && changeShippingAddress==true)
 																				newData = data.filter((obj) => obj.productId !== "");
 																				props.setFieldValue('lineItemsString', newData, true);
 																				this.updateAmount(newData, props);
+																				//	added validation popup	msg
+																				props.handleBlur();
+																				if(props.errors &&  Object.keys(props.errors).length != 0){
+																					this.props.commonActions.fillManDatoryDetails();
 																				}
+																			}
 																			this.setState(
 																				{ createMore: false },
 																				() => {
@@ -3859,22 +3868,26 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		className="btn-square mr-3"
 																		disabled={this.state.disabled}
 																		onClick={() => {
+																			
                                                                             if(this.state.data.length === 1)
-                                                                                {
+                                                                            {
                                                                                 console.log(props.errors,"ERRORs")
                                                                                 //  added validation popup  msg
-                                                                            props.handleBlur();
-                                                                            if(props.errors &&  Object.keys(props.errors).length != 0)
-                                                                            this.props.commonActions.fillManDatoryDetails();
-                                                                                }
-                                                                                else
-                                                                                {
+																				props.handleBlur();
+																				if(props.errors &&  Object.keys(props.errors).length != 0)
+																				this.props.commonActions.fillManDatoryDetails();
+                                                                            }
+                                                                            else
+                                                                            {
                                                                                 let newData=[]
                                                                                 const data = this.state.data;
                                                                                 newData = data.filter((obj) => obj.productId !== "");
                                                                                 props.setFieldValue('lineItemsString', newData, true);
                                                                                 this.updateAmount(newData, props);
-                                                                                }
+																				props.handleBlur();
+                                                                            	if(props.errors &&  Object.keys(props.errors).length != 0)
+                                                                            		this.props.commonActions.fillManDatoryDetails();
+                                                                            }
 																			this.setState(
 																				{
 																					createMore: true,

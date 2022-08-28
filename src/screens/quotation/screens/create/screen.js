@@ -239,7 +239,7 @@ class CreateQuotation extends React.Component {
 		];
 		this.regEx = /^[0-9\b]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
-		this.regExInvNum = /[a-zA-Z0-9'-/]+$/;
+		this.regExInvNum = /[a-zA-Z0-9,-/ ]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 	}
 
@@ -312,7 +312,7 @@ class CreateQuotation extends React.Component {
 				render={({ field, form }) => (
 					<Select
 						styles={customStyles}
-						isDisabled={row.exciseTaxId === 0 || row.isExciseTaxExclusive === false}
+						isDisabled={row.exciseTaxId === 0 || row.isExciseTaxExclusive === true}
 						
 						options={
 							excise_list
@@ -398,7 +398,8 @@ class CreateQuotation extends React.Component {
 								}
 							}}
 							placeholder={strings.Quantity}
-							className={`form-control w-50${ 
+							className={`form-control w-50 
+							${ 
 							props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
@@ -420,7 +421,7 @@ class CreateQuotation extends React.Component {
 							props.touched.lineItemsString &&
 							props.touched.lineItemsString[parseInt(idx, 10)] &&
 							props.touched.lineItemsString[parseInt(idx, 10)].quantity && (
-								<div className="invalid-feedback">
+								<div className="invalid-feedback" style={{display:"block", whiteSpace: "normal"}}>
 									{props.errors.lineItemsString[parseInt(idx, 10)].quantity}
 								</div>
 							)}
@@ -845,7 +846,7 @@ class CreateQuotation extends React.Component {
 							   );
 					   
 					   }}
-					   placeholder={strings.discount}
+					   placeholder={strings.Discount}
 					   className={`form-control 
 		   ${
 						   props.errors.lineItemsString &&
@@ -1937,7 +1938,7 @@ discountType = (row) =>
 													// 	'Order date is required',
 													// ),
 													quotaionExpiration: Yup.string().required(
-														'Order due date is required'
+														'Expiry date is required'
 													),
 													lineItemsString: Yup.array()
 														.required(
@@ -2298,7 +2299,7 @@ discountType = (row) =>
 																				? 'is-invalid'
 																				: ''
 																		}`}
-																		placeholderText={strings.OrderDueDate}
+																		placeholderText={strings.ExpirationDate}
 																		 selected={props.values.quotaionExpiration ?new Date(props.values.quotaionExpiration):props.values.quotaionExpiration}
 																		showMonthDropdown
 																		showYearDropdown
@@ -2313,7 +2314,7 @@ discountType = (row) =>
 																		props.touched.quotaionExpiration && (
 																			<div className="invalid-feedback">
 																				{/* {props.errors.quotaionExpiration} */}
-																				{props.errors.quotaionExpiration.includes("nullable()") ? "Date is required" :props.errors.quotaionExpiration}
+																				{props.errors.quotaionExpiration.includes("nullable()") ? "Expiry date is required" :props.errors.quotaionExpiration}
 																			</div>
 																		)}
 																	

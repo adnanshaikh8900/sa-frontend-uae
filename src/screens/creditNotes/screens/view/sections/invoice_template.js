@@ -243,10 +243,10 @@ class InvoiceTemplate extends Component {
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
 										{strings.UnitCost }
 									</th>
-									{invoiceData.discount > 0 && (<>
+									<>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
 										{strings.Discount }
-									</th></>)}
+									</th></>
 									{/* <th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.DiscountType}</th> */}
 									{/* <th style={{ padding: '0.5rem' }}>{strings.Excise}</th> */}
 									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.ExciseAmount}</th>
@@ -277,10 +277,17 @@ class InvoiceTemplate extends Component {
 												
 													/>
 												</td>
-												{ (invoiceData.discount > 0 && <>	<td style={{ textAlign: 'right' }}>{item.discount}</td></>)}
+												 <>	<td style={{ textAlign: 'right' }}>
+												 <Currency
+														value={item.discount}
+														currencySymbol={	currencyData[0]
+																	? currencyData[0].currencyIsoCode
+																	: 'USD'}
+													/>
+													</td></>
 												{/* <td style={{ textAlign: 'right' }}>{item.discountType}</td> */}
 												{/* <td>{item.exciseTaxId ? this.renderExcise(item):"-"}</td> */}
-												{  (item.exciseAmount>0 && <><td style={{ textAlign: 'right' }}>
+												<><td style={{ textAlign: 'right' }}>
 												{
 													<Currency
 														value={item.exciseAmount}
@@ -288,7 +295,7 @@ class InvoiceTemplate extends Component {
 																	? currencyData[0].currencyIsoCode
 																	: 'USD'}
 													/>}
-												</td></>)}
+												</td></>
 												{/* <td
 													style={{ textAlign: 'right' }}
 												>{`${item.vatPercentage}%`}</td> */}
@@ -464,11 +471,13 @@ class InvoiceTemplate extends Component {
 											</td>
 										</tr>):""}
 										<tr >
+											{!isCNWithoutProduct &&
+											<>
 											<td style={{ width: '40%' }}><strong>{strings.TotalNet }</strong></td>
 											<td style={{display: 'flex',justifyContent: 'space-between',}}>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													 {totalNet ? (
+													 { totalNet ? (
 														<Currency
 															value={totalNet-invoiceData.totalVatAmount}
 															currencySymbol={
@@ -488,9 +497,13 @@ class InvoiceTemplate extends Component {
 														/>
 													)}  
 												</span>
+											
+											
+											
 											</td>
+											</>}
 										</tr>
-										{isCNWithoutProduct==false&&(<tr >
+										{!isCNWithoutProduct&&(<tr >
 											<td style={{ width: '40%' }}>
 												<strong>{strings.VAT}</strong>
 											</td>
@@ -505,6 +518,41 @@ class InvoiceTemplate extends Component {
 													{invoiceData.totalVatAmount ? (
 														<Currency
 															value={invoiceData.totalVatAmount}
+															currencySymbol={
+																currencyData[0]
+																	? currencyData[0].currencyIsoCode
+																	: 'USD'
+															}
+														/>
+													) : (
+														<Currency
+															value={0}
+															currencySymbol={
+																currencyData[0]
+																	? currencyData[0].currencyIsoCode
+																	: 'USD'
+															}
+														/>
+													)}
+												</span>
+											</td>
+										</tr>)}
+
+										{(!isCNWithoutProduct && invoiceData.totalExciseTaxAmount>0) &&(<tr >
+											<td style={{ width: '40%' }}>
+												<strong>{strings.Excise}</strong>
+											</td>
+											<td
+												style={{
+													display: 'flex',
+													justifyContent: 'space-between',
+												}}
+											>
+												<span style={{ marginLeft: '2rem' }}></span>
+												<span>
+													{invoiceData.totalExciseTaxAmount ? (
+														<Currency
+															value={invoiceData.totalExciseTaxAmount}
 															currencySymbol={
 																currencyData[0]
 																	? currencyData[0].currencyIsoCode

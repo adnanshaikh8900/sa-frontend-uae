@@ -5,6 +5,7 @@ stages:          # List of stages for jobs, and their order of execution
   - dev-deploy
   - sit-approval
   - sit-deploy
+  - prod-approval
   - prod-build
   - prod-deploy
 variables: 
@@ -219,6 +220,24 @@ sit-reports-deploy-job:      # This job runs in the deploy stage.
   rules:
     - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
       when: on_success
+    - when: never
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+      - unknown_failure
+      - job_execution_timeout
+
+approve-prod-deployment:
+  stage: prod-approval
+  script:
+    - echo "Approve PROD Deployment"
+  resource_group: prod
+  allow_failure: false
+  rules:
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'master'
+      when: manual
     - when: never
   retry:
     max: 2

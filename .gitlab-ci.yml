@@ -5,7 +5,8 @@ stages:          # List of stages for jobs, and their order of execution
   - dev-deploy
   - sit-approval
   - sit-deploy
-  # - UAT
+  - prod-build
+  - prod-deploy
 variables: 
   IMAGE: datainn/simpleaccounts/simpleaccounts-frontend
   TAG: $VERSION_PREFIX.$CI_PIPELINE_ID
@@ -217,6 +218,72 @@ sit-reports-deploy-job:      # This job runs in the deploy stage.
   allow_failure: false
   rules:
     - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
+      when: on_success
+    - when: never
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+      - unknown_failure
+      - job_execution_timeout
+
+prod-build-job:   # This job runs in the test stage.
+  stage: prod-build    # It only starts when the job in the build stage completes successfully.
+  image: docker:20.10.16
+  variables: 
+    DOCKER_HOST: "tcp://docker:2376"
+    DOCKER_TLS_CERTDIR: "/certs"
+    DOCKER_TLS_VERIFY: 1
+    DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
+  services:
+    - docker:20.10.16-dind
+  before_script:
+    - echo "Waiting for docker to initialise..."
+    - i=0; while [ "$i" -lt 12 ]; do docker info && break; sleep 5; i=$(( i + 1 )) ; done
+    - echo "Docker running"
+    - echo "update version to $TAG"
+  dependencies:
+    - "npm-build-job"
+  script:
+    - echo "Docker build and push..."
+    - docker build -t $REGISTRY_URL/$IMAGE:$TAG .
+    - echo "$REGISTRY_PASS" | docker login $REGISTRY_URL --username $REGISTRY_USER --password-stdin
+    - docker push $REGISTRY_URL/$IMAGE:$TAG
+    - echo "Docker image pushed"
+  rules:
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'master'
+      when: on_success
+    - when: never
+  resource_group: prod
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+      - unknown_failure
+      - job_execution_timeout
+
+prod-deploy-job:      # This job runs in the deploy stage.
+  stage: prod-deploy  # It only runs when *both* jobs in the test stage complete successfully.
+  dependencies:
+    - "prod-build-job"
+  script:
+    - echo "Deploying application to following cluster..."
+    - kubectl cluster-info
+    - echo "Test deployment scripts..."
+    # - helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=$REGISTRY_URL/$IMAGE,maindomain=sit-reports.app.simpleaccounts.io,simpleVatHost=https://sit-reports-api.app.simpleaccounts.io,fullnameOverride=sit-reports-frontend,serviceAccount.name=sit-reports-deploy-robot-frontend,ingress.hosts[0].host=sit-reports.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=sit-reports-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=sit-reports-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=sit-reports.app.simpleaccounts.io --wait --dry-run --debug --namespace sit-reports --create-namespace sit-reports-frontend ./simpleaccounts-frontend --kubeconfig="$KUBECONFIG_DEV"
+    - echo "Deployment started scripts..."
+    # - helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=$REGISTRY_URL/$IMAGE,maindomain=sit-reports.app.simpleaccounts.io,simpleVatHost=https://sit-reports-api.app.simpleaccounts.io,fullnameOverride=sit-reports-frontend,serviceAccount.name=sit-reports-deploy-robot-frontend,ingress.hosts[0].host=sit-reports.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=sit-reports-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=sit-reports-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=sit-reports.app.simpleaccounts.io --wait --namespace sit-reports --create-namespace sit-reports-frontend ./simpleaccounts-frontend --kubeconfig="$KUBECONFIG_DEV"
+    - echo "Application successfully deployed."
+  resource_group: prod
+  environment:
+    name: prod
+    url: https://sandbox.ae.simpleaccounts.io
+    action: start
+  allow_failure: false
+  rules:
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'master'
       when: on_success
     - when: never
   retry:

@@ -114,7 +114,7 @@ class CreateRequestForQuotation extends React.Component {
 				contact_po_number: '',
 				currencyCode: '',
 				rfqReceiveDate: new Date(),
-				rfqExpiryDate: new Date().setMonth(new Date().getMonth() + 1),
+				rfqExpiryDate: new Date(new Date().setMonth(new Date().getMonth()+1)),
 				supplierId: '',
 				placeOfSupplyId: '',
 				project: '',
@@ -385,7 +385,8 @@ class CreateRequestForQuotation extends React.Component {
 								}
 							} }
 							placeholder={strings.Quantity}
-							className={`form-control w-50${
+							className={`form-control w-50 
+							${
 								props.errors.lineItemsString &&
 									props.errors.lineItemsString[parseInt(idx, 10)] &&
 									props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
@@ -405,7 +406,7 @@ class CreateRequestForQuotation extends React.Component {
 							props.touched.lineItemsString &&
 							props.touched.lineItemsString[parseInt(idx, 10)] &&
 							props.touched.lineItemsString[parseInt(idx, 10)].quantity && (
-								<div className="invalid-feedback">
+								<div className="invalid-feedback" style={{display:"block", whiteSpace: "normal"}}>
 									{props.errors.lineItemsString[parseInt(idx, 10)].quantity}
 								</div>
 							)}
@@ -622,34 +623,35 @@ class CreateRequestForQuotation extends React.Component {
 									rfqReceiveDate: res.data.rfqReceiveDate
 										? moment(res.data.rfqReceiveDate).format('DD-MM-YYYY')
 										: '',
-										rfqReceiveDate1: res.data.rfqReceiveDate
+									rfqReceiveDate1: res.data.rfqReceiveDate
 										? res.data.rfqReceiveDate
 										: '',
-										rfqExpiryDate: res.data.rfqExpiryDate
+									rfqExpiryDate: res.data.rfqExpiryDate
 										? moment(res.data.rfqExpiryDate).format('DD-MM-YYYY')
 										: '',
-										rfqExpiryDate1: res.data.rfqExpiryDate
+									rfqExpiryDate1: res.data.rfqExpiryDate
 										?  res.data.rfqExpiryDate
 										: '',
-										supplierId: res.data.supplierId ? res.data.supplierId : '',
-										rfqNumber: res.data.rfqNumber
+									supplierId: res.data.supplierId ? res.data.supplierId : '',
+									rfqNumber: res.data.rfqNumber
 										? res.data.rfqNumber
 										: '',
 									totalVatAmount: res.data.totalVatAmount
 										? res.data.totalVatAmount
 										: 0,
-										totalAmount: res.data.totalAmount ? res.data.totalAmount : 0,
+									totalAmount: res.data.totalAmount ? res.data.totalAmount : 0,
 										total_net: 0,
 									notes: res.data.notes ? res.data.notes : '',
 									lineItemsString: res.data.poQuatationLineItemRequestModelList
 										? res.data.poQuatationLineItemRequestModelList
 										: [],
-										fileName: res.data.fileName ? res.data.fileName : '',
+									fileName: res.data.fileName ? res.data.fileName : '',
 										
-										placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
-										total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : 0,
-										taxType : res.data.taxType ? true : false,
-										receiptNumber:res.data.rfqNumber ?res.data.rfqNumber:'',	
+									placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+									total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : 0,
+									taxType : res.data.taxType ? true : false,
+									receiptNumber:res.data.rfqNumber ?res.data.rfqNumber:'',	
+									receiptAttachmentDescription: res.data.receiptAttachmentDescription? res.data.receiptAttachmentDescription : '',
 								},
 										rfqExpiryDateNoChange: res.data.rfqExpiryDate
 										?  moment(res.data.rfqExpiryDate)
@@ -1470,6 +1472,7 @@ class CreateRequestForQuotation extends React.Component {
 		if (currency !== null && currency) {
 			formData.append('currencyCode', this.state.supplier_currency);
 		}
+		formData.append('receiptAttachmentDescription' , data.receiptAttachmentDescription ? data.receiptAttachmentDescription : '');
 		this.setState({ loading:true, disableLeavePage:true, loadingMsg:"Creating Request For Quotation..."});
 		this.props.requestForQuotationCreateAction
 			.createRFQ(formData)
@@ -1849,7 +1852,6 @@ class CreateRequestForQuotation extends React.Component {
 												ref={this.formRef}
 												onSubmit={(values, { resetForm }) => {
 													this.handleSubmit(values, resetForm);
-												
 												}}
 												validate={(values) => 
 													{
@@ -2855,31 +2857,33 @@ class CreateRequestForQuotation extends React.Component {
 																		onClick={() => {
 																			if(this.state.data.length === 1)
 																			{
-																			console.log(props.errors,"ERRORs")
 																				//	added validation popup	msg
 																				props.handleBlur();
 																				if(props.errors &&  Object.keys(props.errors).length != 0)
 																				this.props.commonActions.fillManDatoryDetails();
 																			}
 																			else
-																			{ let newData=[]
-																			const data = this.state.data;
-																			newData = data.filter((obj) => obj.productId !== "");
-																			props.setFieldValue('lineItemsString', newData, true);
-																			this.updateAmount(newData, props);
+																			{ 
+																				let newData=[]
+																				const data = this.state.data;
+																				newData = data.filter((obj) => obj.productId !== "");
+																				props.setFieldValue('lineItemsString', newData, true);
+																				this.updateAmount(newData, props);
 																			}
 																			this.setState(
 																				{ createMore: false },
 																				() => {
-																					props.handleSubmit();
-																				},
+																						props.handleSubmit();
+																		},
 																			);
 																		}}
 																	>
 																		<i className="fa fa-dot-circle-o"></i>{' '}
-																		{this.state.disabled
+																		{	
+																			this.state.disabled
 																			? 'Creating...'
-																			: strings.Create }
+																			: strings.Create 
+																		}
 																	</Button>
 																	{this.props.location.state &&	this.props.location.state.parentId ?"":<Button
 																		type="button"
@@ -2889,7 +2893,6 @@ class CreateRequestForQuotation extends React.Component {
 																		onClick={() => {
 																			if(this.state.data.length === 1)
 																			{
-																			console.log(props.errors,"ERRORs")
 																				//	added validation popup	msg
 																				props.handleBlur();
 																				if(props.errors &&  Object.keys(props.errors).length != 0)
@@ -2906,6 +2909,7 @@ class CreateRequestForQuotation extends React.Component {
 																				{ createMore: true },
 																				() => {
 																					props.handleSubmit();
+
 																				},
 																			);
 																		}}

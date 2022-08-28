@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import ExplainTrasactionDetail  from './explain_transaction_detail';
 
-const Getbyid=({row,bankAccountId,closeExplainTransactionModal,transactionDetailActions})=>{
+
+const Getbyid=({row,bankAccountId,closeExplainTransactionModal,transactionDetailActions,getbankdetails})=>{
     const [responsedata,setresponsedata]=useState({})
     useEffect(()=>{
       const  response= transactionDetailActions
@@ -27,6 +28,8 @@ const Getbyid=({row,bankAccountId,closeExplainTransactionModal,transactionDetail
 					creationMode={row.creationMode}
 					selectedData={row}
 					data={i}
+
+					getbankdetails={getbankdetails}
 				/>
 			})}</>
 		<>
@@ -39,6 +42,9 @@ const Getbyid=({row,bankAccountId,closeExplainTransactionModal,transactionDetail
 				bankId={bankAccountId}
 				creationMode={row.creationMode}
 				selectedData={row}
+
+				getbankdetails={getbankdetails}
+
 				data={{}}
 			/>
 	}

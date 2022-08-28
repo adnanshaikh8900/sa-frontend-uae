@@ -1490,7 +1490,7 @@ class Profile extends React.Component {
 																)
 																.nullable(),
 																companyStateCode: Yup.string().required(
-																	'Emirate state is required',
+																	'Emirate is required',
 																),
 																// companyCity: Yup.string().required(
 																// 	'City is required',

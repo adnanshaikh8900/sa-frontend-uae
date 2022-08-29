@@ -236,7 +236,7 @@ class DesignationModal extends React.Component {
 									<Row className="row-wrapper">
                                         <Col lg={8}>
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">* </span> {strings.DesignationName} </Label>
+                                  <Label htmlFor="select"><span className="text-danger">* </span>{strings.DesignationName}</Label>
                                   <Input
                                     type="text"
                                     id="designationName"

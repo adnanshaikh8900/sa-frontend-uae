@@ -294,7 +294,8 @@ class CreateBankTransaction extends React.Component {
       currencyCode,
       userId,
       expenseType,
-      ExplainedInvoiceListModal
+      ExplainedInvoiceListModal,
+      setexcessorshortamount
     } = data;
 
     if (
@@ -393,6 +394,29 @@ class CreateBankTransaction extends React.Component {
         "explainParamListStr",
         invoiceIdList ? JSON.stringify(result) : ""
       );
+
+      formData.append(
+        "explainedInvoiceListString",
+        invoiceIdList ?JSON.stringify(invoiceIdList.map((i)=>{
+
+         return {
+          invoiceId:i.value,
+          invoiceAmount:i.amount,
+          convertedInvoiceAmount:i.convertedInvoiceAmount,
+          explainedAmount:i.explainedAmount,
+          exchangeRate:i.exchangeRate,
+          partiallyPaid:i.pp
+         } })) : []
+      );
+
+    
+      formData.append(
+        "exchangeGainOrLossId",this.setexcessorshortamount().data<0?103:this.setexcessorshortamount().data>0?79:0
+      );
+      formData.append(
+        "exchangeGainOrLoss",this.setexcessorshortamount().data
+      );
+
     }
     formData.append("reference", reference ? reference : "");
     if (this.uploadFile.files[0]) {
@@ -452,7 +476,7 @@ class CreateBankTransaction extends React.Component {
   totalAmount(option) {
     let totalInvoiceAmount = 0;
     console.log(option);
-    debugger
+  
     if (option && option != "") {
       option.map((row) => {
         let listData = row.amount;
@@ -463,7 +487,7 @@ class CreateBankTransaction extends React.Component {
         (totalAmount, invoice) => totalAmount + invoice.amount,
         0
       );
-      debugger
+      
       this.setState(
         { totalAmount: amount, totalInvoiceAmount: totalInvoiceAmount },
         () => { }
@@ -534,7 +558,7 @@ class CreateBankTransaction extends React.Component {
   };
 
   invoiceIdList = (option) => {
-    debugger;
+  
     this.setState({
       initValue: {
         ...this.state.initValue,
@@ -729,7 +753,7 @@ class CreateBankTransaction extends React.Component {
     let result = this.props.currency_convert_list.filter((obj) => {
       return obj.currencyCode === customerinvoice;
     });
-    debugger
+  
     // this.state.invoiceCurrency
     // this.state.bankCurrency.bankAccountCurrency
     // this.state.basecurrency.currencyCode
@@ -751,12 +775,12 @@ class CreateBankTransaction extends React.Component {
       }
     }
 
-    debugger
+  
     return exchange
   }
 
   setexchnagedamount = (option, amount) => {
-
+    debugger
     if (option?.length > 0) {
       const transactionAmount = amount || this.formRef.current.state.values.transactionAmount
       const exchangerate = this.formRef.current.state.values?.exchangeRate
@@ -780,7 +804,7 @@ class CreateBankTransaction extends React.Component {
           }
           remainingcredit = localremainamount
         }
-        debugger
+      
         return {
           ...i,
 
@@ -806,7 +830,7 @@ class CreateBankTransaction extends React.Component {
   onppclick = (value, indexofinvoce) => {
     const local2 = [...this.formRef.current.state.values.invoiceIdList]
     local2[indexofinvoce].pp = value
-    const finaldata = [...(local2)]
+    let finaldata = [...(local2)]
     //how many are clicked
     const howManyAreClicked = finaldata.reduce((a, c, i) => a + (c.pp ? 1 : 0), 0)
     const transactionAmount = this.formRef.current.state.values.transactionAmount
@@ -814,12 +838,30 @@ class CreateBankTransaction extends React.Component {
     const shortAmount = transactionAmount - total
     let remainingcredit = transactionAmount
     let updatedfinaldata = []
-    debugger
+    let temp=finaldata.reduce((a,c,i)=>c.convertedInvoiceAmount>transactionAmount?a+1:a+0,0)
+    let amountislessthanallinvoice= temp===finaldata.length
+    let tempdata
+    if(amountislessthanallinvoice) {
+    if(value){
+      tempdata=finaldata.map((i)=>
+      {return {...i,pp:value,explainedAmount:transactionAmount/finaldata.length}
+     })
+    }
+    else {
+      const temp=finaldata.map((i)=>{
+        return {...i,pp:value}
+      })
+      tempdata=this.setexchnagedamount(temp)
+    }
+    finaldata=[...tempdata]
+    if(transactionAmount>0 && transactionAmount!=="")
+    this.formRef.current.setFieldValue('invoiceIdList', finaldata)
+   } else {
     finaldata.map((i, inx) => {
       const local = { ...i }
 
       if (i.pp) {
-        debugger
+        
         local.explainedAmount = local.convertedInvoiceAmount + (shortAmount / howManyAreClicked)
         remainingcredit = remainingcredit - local.explainedAmount
       } else {
@@ -841,7 +883,12 @@ class CreateBankTransaction extends React.Component {
       }
       updatedfinaldata.push(local)
     })
+    if(transactionAmount>0 && transactionAmount!=="")
     this.formRef.current.setFieldValue('invoiceIdList', updatedfinaldata)
+   }
+    
+
+  
   }
 
   getCurrency = (opt) => {
@@ -970,7 +1017,7 @@ class CreateBankTransaction extends React.Component {
     } else if (totalshort >= 0) {
       final = transactionAmount - totalconvetedamount
     }
-    debugger
+   
 
     return {value:`${final.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
       } ${this.state.bankCurrency
@@ -1055,7 +1102,18 @@ class CreateBankTransaction extends React.Component {
 
                               errors.invoiceIdList = "Please Select Invoice"
 
+                            }else {
+                              let isExplainAmountZero=false
+                              values.invoiceIdList.map((i)=>{
+                                  if(i.explainedAmount===0){
+                                    isExplainAmountZero=true 
+                                  }
+                              })
+                              if(isExplainAmountZero){
+                                errors.invoiceIdList="Expain Amount Cannot Be Zero"  
+                              }
                             }
+                            
                           }
 
 
@@ -1087,17 +1145,27 @@ class CreateBankTransaction extends React.Component {
                             errors.currencyCode = " Currency is Required";
                           }
 
+
                           if (
-                            this.state.totalInvoiceAmount &&
-                            this.state.totalInvoiceAmount != 0
+                            this.state.totalInvoiceAmount==="" &&
+                            this.state.totalInvoiceAmount === 0
                           ) {
-                            if (
-                              values.transactionAmount !=
-                              this.state.totalInvoiceAmount
-                            )
-                              errors.transactionAmount = `Transaction Amount Must be Equal to Invoice Total(  ${this.state.totalInvoiceAmount}  )`;
+                           
+                              errors.transactionAmount = `Enter Amount`;
                           }
-                          debugger
+
+                          // if (
+                          //   this.state.totalInvoiceAmount &&
+                          //   this.state.totalInvoiceAmount != 0
+                          // ) {
+                          //   if (
+                          //     values.transactionAmount !=
+                          //     this.state.totalInvoiceAmount
+                          //   )
+                          //     errors.transactionAmount = `Transaction Amount Must be Equal to Invoice Total(  ${this.state.totalInvoiceAmount}  )`;
+                          // }
+
+                      
                           return errors;
                         }}
                         validationSchema={Yup.object().shape({
@@ -1555,10 +1623,8 @@ class CreateBankTransaction extends React.Component {
                                                   option
                                                 );
                                               }
-                                              props.handleChange(
-                                                "invoiceIdList"
-                                              )(option);
-                                              this.invoiceIdList(option);
+                                              this.setexchnagedamount(option)
+                                              
                                               this.totalAmount(option);
                                               if (option) {
                                                 this.getVendorInvoiceCurrency(
@@ -1991,45 +2057,32 @@ class CreateBankTransaction extends React.Component {
                                 "Supplier Invoice") && (
                                 <>
                                   {props.values?.invoiceIdList.length > 0 &&
-                                    <Row>
+                                    <Row className="border-bottom">
                                       <Col lg={1}>
-                                        <span> Invoice Number</span>
+                                        <span className="font-weight-bold"> Invoice Number</span>
                                       </Col>
                                       <Col lg={2}>
-                                        <span> Invoice Date</span>
+                                        <span className="font-weight-bold"> Invoice Date</span>
                                       </Col>
                                       <Col lg={2}>
-                                        <span>Invoice Amount</span>
+                                        <span className="font-weight-bold">Invoice Amount</span>
                                       </Col>
-
-                                      <FormGroup className="mt-2">
-                                        <label>
-                                          <b> </b>
-                                        </label>{" "}
-                                      </FormGroup>
-
                                       <Col lg={2}>
                                         <FormGroup className="mb-3">
                                           <div>
-                                            <span>Currency Rate</span>
+                                            <span className="font-weight-bold">Currency Rate</span>
                                           </div>
                                         </FormGroup>
                                       </Col>
-
-                                      <FormGroup className="mt-2">
-                                        <label>
-                                          <b> </b>
-                                        </label>{" "}
-                                      </FormGroup>
                                       <Col lg={2}>
                                         <FormGroup className="mb-3">
                                           <div>
-                                            <span>Amount</span>
+                                            <span className="font-weight-bold">Amount</span>
                                           </div>
                                         </FormGroup>
                                       </Col>
                                       <Col lg={1} >
-                                        <FormGroup className="mb-3" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
+                                        <FormGroup className="font-weight-bold " style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
                                           <div>
                                             Partially Paid
                                           </div>
@@ -2037,7 +2090,7 @@ class CreateBankTransaction extends React.Component {
                                       </Col>
 
                                       <Col lg={2}>
-                                        <FormGroup className="mb-3">
+                                        <FormGroup className="font-weight-bold">
                                           <div>
                                             <span>Explained Amount</span>
                                           </div>
@@ -2051,7 +2104,7 @@ class CreateBankTransaction extends React.Component {
                                       return (
                                         <Row>
                                            <Col lg={1}>
-                                            <span>INV-{i.label.split(' ')[2]}</span>
+                                            <span>INV-{i.value}</span>
                                           </Col>
                                           <Col lg={2}>
                                             <Input
@@ -2087,7 +2140,7 @@ class CreateBankTransaction extends React.Component {
                                                   value={
                                                     i.exchangeRate}
                                                   onChange={(value) => {
-                                                    debugger
+                                                  
                                                     let local2 = [...props.values?.invoiceIdList]
                                                     local2[invindex].exchnageRate = value.target.value
 
@@ -2111,7 +2164,7 @@ class CreateBankTransaction extends React.Component {
                                                   id="exchangeRate"
                                                   name="exchangeRate"
                                                   disabled
-                                                  value={`${i.convertedInvoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${this.state.bankCurrency
+                                                  value={`${i.convertedInvoiceAmount?.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${this.state.bankCurrency
                                                     .bankAccountCurrencyIsoCode}`
 
                                                   }
@@ -2135,7 +2188,7 @@ class CreateBankTransaction extends React.Component {
                                                       0
                                                     ) > 0}
                                                   type="checkbox"
-                                                  value={i.pp !== undefined ? i.pp : false}
+                                                  checked={i.pp !== undefined ? i.pp : false}
                                                   onChange={(e) => {
 
                                                     this.onppclick(e.target.checked, invindex)
@@ -2153,7 +2206,7 @@ class CreateBankTransaction extends React.Component {
                                                   id="exchangeRate"
                                                   name="exchangeRate"
                                                   disabled
-                                                  value={`${i.explainedAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${this.state.bankCurrency
+                                                  value={`${i.explainedAmount?.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${this.state.bankCurrency
                                                     .bankAccountCurrencyIsoCode}`
 
                                                   }
@@ -2161,6 +2214,9 @@ class CreateBankTransaction extends React.Component {
 
                                                   }}
                                                 />
+                                                {i.explainedAmount===0 && <div
+                                                style={{color:'red',fontSize:'9px'}}
+                                                >Expain Amount Cannot be Zero</div>}
                                               </div>
                                             </FormGroup>
                                           </Col>
@@ -2215,7 +2271,7 @@ class CreateBankTransaction extends React.Component {
 
 
                                       </Row>
-                                      <Row
+                                    { this.setexcessorshortamount().data!== 0 && <Row
                                         style={{
                                           display: "flex",
                                           justifyContent: "flex-end",
@@ -2224,13 +2280,13 @@ class CreateBankTransaction extends React.Component {
                                       >
                                           <Col lg={5}>
                                         <Select
-                                        options={[{label:'Currency Gain ',value:55},
-                                        {label:'Currency Loss',value:5}
+                                        options={[{label:'Currency Gain ',value:79},
+                                        {label:'Currency Loss',value:103}
                                         
                                       ]}
-                                      isDisabled={this.setexcessorshortamount().data===0}
+                                      isDisabled={true}
                                       value={this.setexcessorshortamount().data<0
-                                      ?{label:'Currency Loss',value:5}:{label:'Currency Gain ',value:55}
+                                      ?{label:'Currency Loss',value:103}:{label:'Currency Gain ',value:103}
                                       }
                                         />
                                         </Col>
@@ -2257,7 +2313,7 @@ class CreateBankTransaction extends React.Component {
                                         </Col>
                                       
 
-                                      </Row>
+                                      </Row>}
                                     </>
                                   )}
                                 </>

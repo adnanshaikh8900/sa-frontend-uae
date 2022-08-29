@@ -304,7 +304,7 @@ prod-deploy-job:      # This job runs in the deploy stage.
     - "prod-build-job"
   script:
     - echo "Deploying application to following cluster..."
-    - kubectl cluster-info
+    # - kubectl cluster-info
     - echo "Test deployment scripts..."
     # - helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=$REGISTRY_URL/$IMAGE,maindomain=sit-reports.app.simpleaccounts.io,simpleVatHost=https://sit-reports-api.app.simpleaccounts.io,fullnameOverride=sit-reports-frontend,serviceAccount.name=sit-reports-deploy-robot-frontend,ingress.hosts[0].host=sit-reports.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=sit-reports-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=sit-reports-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=sit-reports.app.simpleaccounts.io --wait --dry-run --debug --namespace sit-reports --create-namespace sit-reports-frontend ./simpleaccounts-frontend --kubeconfig="$KUBECONFIG_DEV"
     - echo "Deployment started scripts..."

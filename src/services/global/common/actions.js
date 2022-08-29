@@ -234,7 +234,7 @@ export const getCompany = () => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: 'rest/company/getById?id=1',
+			url: 'rest/company/getById?id=10000',
 		};
 		return authApi(data)
 			.then((res) => {
@@ -253,3 +253,21 @@ export const getCompany = () => {
 			});
 	};
 };
+
+export const checkValidation = (obj) => {
+    return (dispatch) => {
+      let data = {
+        method: 'get',
+        url: `/rest/validation/validate?name=${obj.name}&moduleType=${obj.moduleType}`,
+      };
+      return authApi(data)
+        .then((res) => {
+          if (res.status === 200) {
+            return res;
+          }
+        })
+        .catch((err) => {
+          throw err;
+        });
+    };
+  };

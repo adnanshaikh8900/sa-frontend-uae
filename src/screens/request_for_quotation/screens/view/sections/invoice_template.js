@@ -412,7 +412,7 @@ class RFQTemplate extends Component {
 												>
 													<span style={{ marginLeft: '2rem' }}></span>
 													<span>
-													{RFQData.totalVatAmount ? RFQData.currencyIsoCode + " " + RFQData.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : 0 }
+													{RFQData.totalVatAmount ? RFQData.currencyIsoCode + " " + RFQData.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits:2 }) : RFQData.currencyIsoCode + " " + ZERO.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits:2 }) }
 													</span>
 												</td>
 											</tr>

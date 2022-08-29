@@ -613,8 +613,8 @@ getEmployeeInviteEmail=()=>{
 																					<td  className="text-left" style={{border:"3px solid #dfe9f7"}} >{item.description}<div className=''>
 																						{/* {item.description === 'Basic SALARY' ? '% of CTC' : '% of Baisc'} */}
 																					</div></td>
-																				<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.monthlyAmount ? item.monthlyAmount.toLocaleString() : '' }</td>
-																				<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.yearlyAmount ? item.yearlyAmount.toLocaleString() :''}</td>
+																				<td className="text-right" style={{border:"3px solid #dfe9f7"}} >AED {item.monthlyAmount ? item.monthlyAmount.toLocaleString() : '0.00' }</td>
+																				<td className="text-right" style={{border:"3px solid #dfe9f7"}} >AED {item.yearlyAmount ? item.yearlyAmount.toLocaleString() : '0.00'}</td>
 																			</tr>
 
 																		))) : (<tr></tr>)}
@@ -626,8 +626,8 @@ getEmployeeInviteEmail=()=>{
 																		).map((item) => (
 																			<tr>
 																							<td  className="text-left" style={{border:"3px solid #dfe9f7"}} >{item.description}</td>
-																							<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.monthlyAmount ? item.monthlyAmount.toLocaleString() : '' }</td>
-																							<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.yearlyAmount ? item.yearlyAmount.toLocaleString() :''}</td>
+																							<td className="text-right" style={{border:"3px solid #dfe9f7"}} >AED {item.monthlyAmount ? item.monthlyAmount.toLocaleString() : '' }</td>
+																							<td className="text-right" style={{border:"3px solid #dfe9f7"}} >AED {item.yearlyAmount ? item.yearlyAmount.toLocaleString() :''}</td>
 																			</tr>
 																		))) : (<tr></tr>)}
 
@@ -638,8 +638,8 @@ getEmployeeInviteEmail=()=>{
 																		).map((item) => (
 																			<tr>
 																						<td  className="text-left" style={{border:"3px solid #dfe9f7"}} >{item.description}</td>
-																						<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.monthlyAmount ? item.monthlyAmount.toLocaleString() : '' }</td>
-																						<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.yearlyAmount ? item.yearlyAmount.toLocaleString() :''}</td>
+																						<td className="text-right" style={{border:"3px solid #dfe9f7"}} >AED {item.monthlyAmount ? item.monthlyAmount.toLocaleString() : '' }</td>
+																						<td className="text-right" style={{border:"3px solid #dfe9f7"}} >AED {item.yearlyAmount ? item.yearlyAmount.toLocaleString() :''}</td>
 																			</tr>
 																		))) : (<tr></tr>)}
 																</tbody>
@@ -650,26 +650,14 @@ getEmployeeInviteEmail=()=>{
 																		).map((item) => (
 																			<tr>
 																				<td  className="text-left" style={{border:"3px solid #dfe9f7"}} >{item.description}</td>
-																				<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.monthlyAmount ? item.monthlyAmount.toLocaleString() : '' }</td>
-																				<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.yearlyAmount ? item.yearlyAmount.toLocaleString() :''}</td>
+																				<td className="text-right" style={{border:"3px solid #dfe9f7"}} >AED {item.monthlyAmount ? item.monthlyAmount.toLocaleString() : '' }</td>
+																				<td className="text-right" style={{border:"3px solid #dfe9f7"}} >AED {item.yearlyAmount ? item.yearlyAmount.toLocaleString() :''}</td>
 																			</tr>
 																		))) : (<tr></tr>)}
 																	<tr style={{border:"3px solid #dfe9f7"}}>
 																		<td className="text-left"><h5><b> {strings.CosttoCompany}</b></h5></td>
-																		<td className="text-right"><h5> 
-																		   
-																		   {this.state.CTC ?
-														                 	this.state.EmployeeDetails.ctcType=="ANNUALLY"?
-														                            	(this.state.CTC /12).toLocaleString()
-																						:
-																						(this.state.CTC).toLocaleString()
-															 : ''}</h5></td>
-																		<td className="text-right"><h5>{this.state.CTC  ?
-																			this.state.EmployeeDetails.ctcType=="ANNUALLY"?
-																						(this.state.CTC).toLocaleString()
-																						:
-																						(parseFloat(this.state.CTC)*12).toLocaleString()															
-														               	: ''}</h5></td>
+																		<td className="text-right"><h5>AED {this.state.CTC ? this.state.EmployeeDetails.ctcType=="ANNUALLY" ? (this.state.CTC /12).toLocaleString() : (this.state.CTC).toLocaleString() : ''}</h5></td>
+																		<td className="text-right"><h5>AED {this.state.CTC ? this.state.EmployeeDetails.ctcType=="ANNUALLY" ? (this.state.CTC).toLocaleString() : (parseFloat(this.state.CTC)*12).toLocaleString() : ''}</h5></td>
 																	</tr>
 																</tfoot>
 															</Table>

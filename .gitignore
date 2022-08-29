@@ -238,3 +238,4 @@ simplevat.iml
 
 !.idea/*
 /.idea/
+./src/constants/config.js

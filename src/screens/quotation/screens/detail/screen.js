@@ -156,6 +156,7 @@ class DetailQuotation extends React.Component {
 			'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 		];
 		this.regEx = /^[0-9\b]+$/;
+		this.regExInvNum = /[a-zA-Z0-9,-/ ]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 	}
@@ -504,7 +505,7 @@ class DetailQuotation extends React.Component {
 				render={({ field, form }) => (
 					<Select
 						styles={customStyles}
-						isDisabled={row.exciseTaxId === 0 || row.isExciseTaxExclusive === false}
+						isDisabled={row.exciseTaxId === 0 || row.isExciseTaxExclusive === true}
 						options={
 							excise_list
 								? selectOptionsFactory.renderOptions(
@@ -731,7 +732,7 @@ class DetailQuotation extends React.Component {
                                );
 
                        }}
-                       placeholder={strings.discount}
+                       placeholder={strings.Discount}
                        className={`form-control
            ${
                            props.errors.lineItemsString &&
@@ -1355,6 +1356,7 @@ class DetailQuotation extends React.Component {
 		);
 	};
 	handleSubmit = (data) => {
+		debugger
 		this.setState({ disabled: true, disableLeavePage:true, });
 		const { current_po_id, term } = this.state;
 		const {
@@ -1403,9 +1405,9 @@ class DetailQuotation extends React.Component {
         if(placeOfSupplyId){
 		formData.append('placeOfSupplyId' , placeOfSupplyId.value ? placeOfSupplyId.value : placeOfSupplyId);}
 		// formData.append('exciseType', this.state.checked);
-		if (customerId) {
-			formData.append('customerId', customerId);
-		}
+		if(customerId){
+			formData.append('customerId', customerId.value ? customerId.value : customerId);}
+		
 		if (currency !== null && currency) {
 			formData.append('currencyCode', this.state.supplier_currency);
 		}
@@ -1666,10 +1668,18 @@ console.log(this.state.supplier_currency)
 																 errors.placeOfSupplyId ='Place of supply is required';
 														
 													   }
+													   if (!values.customerId) 
+																errors.customerId ='Customer name is required';
+															if (values.customerId &&(values.customerId=="" ||(values.customerId.label && values.customerId.label === "Customer Name"))) 
+																 errors.customerId ='Customer name is required';
+														
 														return errors
 													}}
 													validationSchema={Yup.object().shape({
 														
+														quotaionExpiration: Yup.string().required(
+															'Expiry date is required'
+														),
 														lineItemsString: Yup.array()
 														.required(
 															'Atleast one invoice sub detail is mandatory',
@@ -2014,7 +2024,7 @@ console.log(this.state.supplier_currency)
 																		<DatePicker
 																			id="quotaionExpiration"
 																			name="quotaionExpiration"
-																			placeholderText={strings.InvoiceDate}
+																			placeholderText={strings.ExpirationDate}
 																			showMonthDropdown
 																			showYearDropdown
 																			dateFormat="dd-MM-yyyy"
@@ -2038,7 +2048,8 @@ console.log(this.state.supplier_currency)
 																		{props.errors.quotaionExpiration &&
 																			props.touched.quotaionExpiration && (
 																				<div className="invalid-feedback">
-																					{props.errors.quotaionExpiration}
+																					{/* {props.errors.quotaionExpiration} */}
+																				{props.errors.quotaionExpiration.includes("nullable()") ? "Expiry date is required" :props.errors.quotaionExpiration}
 																				</div>
 																			)}
 																	</FormGroup>
@@ -2528,7 +2539,7 @@ console.log(this.state.supplier_currency)
 																					<Col lg={6} className="text-right">
 																						<label className="mb-0">
 																						{this.state.supplier_currency_symbol} &nbsp;
-																							{this.state.initValue.discount  ? '-'+initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })
+																							{this.state.initValue.discount  ? initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })
 																							
 																						}
 																						
@@ -2556,7 +2567,7 @@ console.log(this.state.supplier_currency)
 																							/>
 																							)} */}
 																							{this.state.supplier_currency_symbol} &nbsp;
-																							{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																							{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>
@@ -2581,7 +2592,7 @@ console.log(this.state.supplier_currency)
 																							/>
 																							)} */}
 																							{this.state.supplier_currency_symbol}&nbsp;
-																							{initValue.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																							{initValue.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>
@@ -2606,7 +2617,7 @@ console.log(this.state.supplier_currency)
 																							/>
 																							)} */}
 																							{this.state.supplier_currency_symbol}&nbsp;
-																							{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																							{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>
@@ -2672,7 +2683,7 @@ console.log(this.state.supplier_currency)
 																				);
 																			}}
 																		>
-																			<i className="fa fa-ban"></i>{this.state.disabled1
+																			<i className="fa fa-ban"></i> {this.state.disabled1
 																			? 'Deleting...'
 																			: strings.Cancel }
 																		</Button>

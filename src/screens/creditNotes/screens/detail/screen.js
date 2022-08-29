@@ -297,6 +297,64 @@ class DetailCreditNote extends React.Component {
 							},
 						);
 							this.getCurrency(res.data.contactId)	
+							debugger
+							if(res.data.invoiceId){
+
+								this.props.creditNotesDetailActions
+				.getInvoiceById(res.data.invoiceId).then((response) => {
+					const customerdetails={label: response.data.organisationName === '' ?  response.data.name : response.data.organisationName,
+					value: response.data.contactId}
+			
+					this.setState(
+						{
+							option : {
+								label: response.data.organisationName === '' ?  response.data.name : response.data.organisationName,
+								value: response.data.contactId,
+							},
+						data:response.data.invoiceLineItems ,
+						totalAmount:response.data.totalAmount,
+						customer_currency:response.data.currencyCode,
+						remainingInvoiceAmount:response.data.remainingInvoiceAmount,
+					
+						
+		
+					//	data1:response.data.supplierId,
+					},() => {
+						this.formRef.current.setFieldValue(
+							'lineItemsString',
+							this.state.data,
+							true,
+						);
+						this.formRef.current.setFieldTouched(
+							`lineItemsString[${this.state.data.length - 1}]`,
+							false,
+							true,
+						);
+						this.updateAmount( this.state.data)
+						// this.formRef.current.setFieldValue(
+							
+						// 	totalAmount,
+						// 	true,
+						// );
+					},
+					// () => {
+					// 	this.formRef.current.setFieldValue('supplierId',
+					// 	this.state.option.value,
+					// 	true,)
+					// },
+		
+					);
+					this.formRef.current.setFieldValue('currency', this.getCurrency(customerdetails.value), true);
+					this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(customerdetails.value), true);
+					this.setExchange( this.getCurrency(customerdetails.value) );
+					this.formRef.current.setFieldValue('contactId', this.state.option, true);
+					this.formRef.current.setFieldValue('remainingInvoiceAmount', this.state.remainingInvoiceAmount, true);
+					
+					this.formRef.current.setFieldValue('currencyCode', this.state.customer_currency, true);
+					this.getTaxTreatment(this.state.option.value)	
+				
+				});
+			}
 					}
 				});
 		} else {
@@ -433,6 +491,10 @@ class DetailCreditNote extends React.Component {
 			/>
 		);
 	};
+
+
+	
+	
 
 	renderQuantity = (cell, row, props) => {
 		let idx;
@@ -724,6 +786,7 @@ class DetailCreditNote extends React.Component {
 			   <div>
 			   <div  class="input-group">
 				   <Input
+				   disabled
 						 type="text"
 						   min="0"
 						maxLength="14,2"
@@ -765,7 +828,7 @@ class DetailCreditNote extends React.Component {
 	
 		<div 	style={{width:'100px'}}>
 		<Select
-	
+	isDisabled
 	
 																						   options={discountOptions}
 																						   id="discountType"
@@ -973,86 +1036,83 @@ class DetailCreditNote extends React.Component {
 
 	updateAmount = (data, props) => {
 		const { vat_list , excise_list} = this.props;
+		debugger
 		const { discountPercentage, discountAmount } = this.state;
+		
 		let total_net = 0;
 		let total_excise = 0;
 		let total = 0;
 		let total_vat = 0;
 		let net_value = 0;
 		let discount = 0;
+
+		const totalnetamount=(a)=>{
+			total_net=total_net+a
+		}
+		const totalexcise=(a)=>{
+			total_excise=total_excise+a
+		}
+		const totalvalt=(a)=>{
+			total_vat=total_vat+a
+		}
+		const totalamount=(a)=>{
+			total=total+a
+		}
+		const discountamount=(a)=>{
+			discount=discount+a
+		}
 		data.map((obj) => {
+			
 			const index =
 				obj.vatCategoryId !== ''
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
-			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
+			debugger
+					const vat = index >-1 ? vat_list[`${index}`]?.vat : 0;
 
-			//Excise calculation
-			if(obj.exciseTaxId !=  0){
-				if(obj.isExciseTaxExclusive === true){
-				if(obj.exciseTaxId === 1){
-				const value = +(obj.unitPrice) / 2 ;
-					net_value = parseFloat(obj.unitPrice) + parseFloat(value) ;
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
-				}else if (obj.exciseTaxId === 2){
-					const value = obj.unitPrice;
-					net_value = parseFloat(obj.unitPrice) +  parseFloat(value) ;
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
-				}
-				else{
-					net_value = obj.unitPrice
-				}
-			}	else{
-				if(obj.exciseTaxId === 1){
-					const value = obj.unitPrice / 3
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
-				net_value = obj.unitPrice}
-				else if (obj.exciseTaxId === 2){
-					const value = obj.unitPrice / 2
-					obj.exciseAmount = parseFloat(value) * obj.quantity;
-				net_value = obj.unitPrice}
-				else{
-					net_value = obj.unitPrice
-				}
-			}
-		}else{
-			net_value = obj.unitPrice;
-			obj.exciseAmount = 0
-		}
-			//vat calculation
-			if (obj.discountType === 'PERCENTAGE') {
-				var val =
-				((+net_value -
-				 (+((net_value * obj.discount)) / 100)) *
-					vat *
-					obj.quantity) /
-				100;
+			if(!obj.isExciseTaxExclusive){
+			const totalwithouttax= parseFloat(obj.unitPrice) * parseInt(obj.quantity)
+			const discounvalue=obj.discountType === 'PERCENTAGE'?
+			(totalwithouttax*obj.discount)/100:
+			obj.discountType === 'FIXED' && obj.discount
+			const totalAfterdiscount= totalwithouttax-discounvalue
+			
+			const excisevalue=obj.exciseTaxId === 1?totalAfterdiscount/2:obj.exciseTaxId===2?totalAfterdiscount:0
+			const totalwithexcise=excisevalue+totalAfterdiscount
+			const vatvalue=(totalwithexcise*vat)/100
 
-				var val1 =
-				((+net_value -
-				 (+((net_value * obj.discount)) / 100)) * obj.quantity ) ;
-			} else if (obj.discountType === 'FIXED') {
-				var val =
-						 (net_value * obj.quantity - obj.discount ) *
-					(vat / 100);
-
-					var val1 =
-					((net_value * obj.quantity )- obj.discount )
-
+			const finaltotalamount=totalwithexcise+vatvalue
+			totalnetamount(totalwithouttax)
+			totalexcise(excisevalue)
+			totalvalt(vatvalue)
+			totalamount(finaltotalamount)
+			discountamount(discounvalue)
+			obj.subTotal=totalwithouttax+vatvalue+excisevalue-discounvalue
+			obj.vatAmount=vatvalue
+			obj.exciseAmount=excisevalue
 			} else {
-				var val = (+net_value * vat * obj.quantity) / 100;
-				var val1 = net_value * obj.quantity
+				const totalwithtaxandexcise= parseFloat(obj.unitPrice) * parseInt(obj.quantity)
+				const discounvalue=obj.discountType === 'PERCENTAGE'?
+			(totalwithtaxandexcise*obj.discount)/100:
+			obj.discountType === 'FIXED' && obj.discount
+			const totalwitoutdiscount= totalwithtaxandexcise-discounvalue
+			const vatvalue=(totalwitoutdiscount*vat)/(100+vat)
+			const totalwithoutvat=totalwitoutdiscount-vatvalue
+			const excisevalue=obj.exciseTaxId === 1?totalwithoutvat/3:obj.exciseTaxId===2?totalwithoutvat/2:0
+			const finaltotalamount=totalwithoutvat-excisevalue
+			totalnetamount(totalwithtaxandexcise-(discounvalue+excisevalue+vatvalue))
+		
+			totalexcise(excisevalue)
+			totalvalt(vatvalue)
+			totalamount(totalwitoutdiscount)
+			discountamount(discounvalue)	
+			obj.subTotal=totalwitoutdiscount
+			obj.vatAmount=vatvalue
+			obj.exciseAmount=excisevalue
 			}
-
-			//discount calculation
-			discount = +(discount +(net_value * obj.quantity)) - parseFloat(val1)
-			total_net = +(total_net + net_value * obj.quantity);
-			total_vat = +(total_vat + val);
-			obj.vatAmount = val
-			obj.subTotal =
-			net_value && obj.vatCategoryId ? parseFloat(val1) + parseFloat(val) : 0;
-			total_excise = +(total_excise + obj.exciseAmount)
-			total = total_vat + total_net;
+			
+			
+			
 			return obj;
 		});
 
@@ -1060,25 +1120,28 @@ class DetailCreditNote extends React.Component {
 		// 	props.values.discountType.value === 'PERCENTAGE'
 		// 		? +((total_net * discountPercentage) / 100)
 		// 		: discountAmount;
+	debugger
 		this.setState(
 			{
 				data,
 				initValue: {
 					...this.state.initValue,
 					...{
-						total_net: discount ? total_net - discount : total_net,
+						total_net:  total_net,
 						invoiceVATAmount: total_vat,
-						discount:  discount ? discount : 0,
-						totalAmount: total_net > discount ? total - discount : total - discount,
-						total_excise: total_excise
+ 						totalAmount: total,
+						total_excise: total_excise,
+						discount
+						
+						
 					},
 
 				},
 			},
 
 		);
+		
 	};
-
 	setDate = (props, value) => {
 		const { term } = this.state;
 		const val = term.split('_');
@@ -1360,37 +1423,15 @@ class DetailCreditNote extends React.Component {
 	};
 
 	removeInvoice = () => {
-		this.setState({ disabled1: true });
+		this.setState({ disabled1: true,disableLeavePage:true });
 		const { current_customer_id } = this.state;
-		if(this.props.location.state.isCNWithoutProduct!=true)
-		
-		{this.setState({ loading:true, loadingMsg:"Deleting Credit Note..."});
-			this.props.creditNotesDetailActions
-			.deleteInvoice(current_customer_id)
-			.then((res) => {
-				if (res.status === 200) {
-					this.props.commonActions.tostifyAlert(
-						'success',
-						res.data ? res.data.message : 'Credit Note Deleted Successfully'
-					);
-					this.props.history.push('/admin/income/credit-notes');
-					this.setState({ loading:false,});
-				}
-			})
-			.catch((err) => {
-				this.props.commonActions.tostifyAlert(
-					'error',
-					err.data ? err.data.message : 'Credit Note Deleted Unsuccessfully'
-				);
-			});}
-			else
-			{this.props.creditNotesDetailActions
+		this.props.creditNotesDetailActions
 				.deleteCN(current_customer_id)
 				.then((res) => {
 					if (res.status === 200) {
 						this.props.commonActions.tostifyAlert(
 							'success',
-							res.data ? res.data.message : 'Credit Note Deleted Successfully'
+							res.data = 'Tax Credit Note Deleted Successfully'
 						);
 						this.props.history.push('/admin/income/credit-notes');
 					}
@@ -1398,9 +1439,9 @@ class DetailCreditNote extends React.Component {
 				.catch((err) => {
 					this.props.commonActions.tostifyAlert(
 						'error',
-						err.data ? err.data.message : 'Credit Note Deleted Unsuccessfully'
+						err.data = 'Tax Credit Note Deleted Unsuccessfully'
 					);
-				});}
+				});
 	};
 
 	removeDialog = () => {
@@ -1508,104 +1549,124 @@ class DetailCreditNote extends React.Component {
 													onSubmit={(values, { resetForm }) => {
 														this.handleSubmit(values);
 													}}
-													 validationSchema={Yup.object().shape({
-													// 	invoice_number: Yup.string().required(
-													// 		'Credit Note Number is required',
-													// 	),
-													// 	contactId: Yup.string().required(
-													// 		'Supplier is required',
-													// 	),
-													// 	term: Yup.string().required('term is required'),
-													// 	placeOfSupplyId: Yup.string().required('Place of supply is required'),
-													// 	invoiceDate: Yup.string().required(
-													// 		'Credit Note Date is required',
-													// 	),
-													// 	invoiceDueDate: Yup.string().required(
-													// 		'Credit Note Due Date is required',
-													// 	),
-													// 	currency: Yup.string().required(
-													// 		'Currency is required',
-													// 	),
-													// 	lineItemsString: Yup.array()
-													// 		.required(
-													// 			'Atleast one invoice sub detail is mandatory',
-													// 		)
-													// 		.of(
-													// 			Yup.object().shape({
-													// 				// description: Yup.string().required(
-													// 				// 	'Value is required',
-													// 				// ),
-													// 				quantity: Yup.string()
-													// 					.required('Value is required')
-													// 					.test(
-													// 						'quantity',
-													// 						'Quantity Should be Greater than 1',
-													// 						(value) => {
-													// 							if (value > 0) {
-													// 								return true;
-													// 							} else {
-													// 								return false;
-													// 							}
-													// 						},
-													// 					),
-													// 				unitPrice: Yup.string()
-													// 					.required('Value is required')
-													// 					.test(
-													// 						'Unit Price',
-													// 						'Unit Price Should be Greater than 1',
-													// 						(value) => {
-													// 							if (value > 0) {
-													// 								return true;
-													// 							} else {
-													// 								return false;
-													// 							}
-													// 						},
-													// 					),
-													// 				vatCategoryId: Yup.string().required(
-													// 					'Value is required',
-													// 				),
-													// 				productId: Yup.string().required(
-													// 					'Product is required',
-													// 				),
-													// 			}),
-													// 		),
-													attachmentFile: Yup.mixed()
-													.test(
-														'fileType',
-														'*Unsupported file format',
-														(value) => {
-															value &&
-																this.setState({
-																	fileName: value.name,
-																});
-															if (
-																!value ||
-																(value &&
-																	this.supported_format.includes(
-																		value.type,
-																	))
-															) {
-																return true;
-															} else {
-																return false;
-															}
-														},
-													)
-													.test(
-														'fileSize',
-														'*File Size is too large',
-														(value) => {
-															if (
-																!value ||
-																(value && value.size <= this.file_size)
-															) {
-																return true;
-															} else {
-																return false;
-															}
-														},
-													),
-											})}
+													validate={(values) => {
+													
+														let errors = {};
+														 
+														
+														if(this.state.isCreatedWIWP==false && !values.invoiceNumber)
+														{
+															errors.invoiceNumber = 'Invoice number is required';}
+												
+														if((this.state.isCreatedWIWP  && !this.state.invoiceSelected)&& values.creditAmount<1)
+															{
+																errors.creditAmount = 'Credit amount is required';}
+														if(this.state.invoiceSelected && !this.state.isCreatedWIWP && this.state.initValue.totalAmount>this.state.remainingInvoiceAmount)
+														{
+															errors.remainingInvoiceAmount =	'Invoice Total Amount Cannot be greater than Remaining Invoice Amount';
+														}	
+														if(this.state.invoiceSelected && this.state.isCreatedWIWP && values.creditAmount>this.state.remainingInvoiceAmount)
+														{
+															errors.remainingInvoiceAmount =	'Invoice Total Amount Cannot be greater than Remaining Invoice Amount';
+														}											
+														return errors;
+													}}
+													validationSchema={Yup.object().shape({
+														// invoiceNumber: Yup.string().required(
+														// 	'Invoice Number is required',
+														// ),
+														creditNoteNumber: Yup.string().required(
+															'Tax credit note number is required',
+														),
+														contactId: Yup.string().required(
+																'Customer name is required',
+															),
+														// contactId: Yup.string().required(
+														// 	'Customer is required',
+														// ),
+														// placeOfSupplyId: Yup.string().required('Place of supply is required'),
+														// term: Yup.string().required('Term is required'),
+														// currency: Yup.string().required(
+														// 	'Currency is required',
+														// ),
+														creditNoteDate: Yup.string().required(
+															'Tax credit note date is required',
+														),
+														// lineItemsString: Yup.array()
+														// 	.required(
+														// 		'Atleast one Tax Credit Note sub detail is mandatory',
+														// 	)
+														// 	.of(
+														// 		Yup.object().shape({
+														// 			quantity: Yup.string()
+														// 				.required('Value is required')
+														// 				.test(
+														// 					'quantity',
+														// 					'Quantity should be greater than 0',
+														// 					(value) => {
+														// 						if (value > 0) {
+														// 							return true;
+														// 						} else {
+														// 							return false;
+														// 						}
+														// 					},
+														// 				),
+														// 			unitPrice: Yup.string()
+														// 				.required('Value is required')
+														// 				.test(
+														// 					'Unit Price',
+														// 					'Unit Price Should be Greater than 1',
+														// 					(value) => {
+														// 						if (value > 0) {
+														// 							return true;
+														// 						} else {
+														// 							return false;
+														// 						}
+														// 					},
+														// 				),
+														// 			vatCategoryId: Yup.string().required(
+														// 				'Value is required',
+														// 			),
+														// 			productId: Yup.string().required(
+														// 				'Product is required',
+														// 			),
+														// 		}),
+														// 	),
+														attachmentFile: Yup.mixed()
+															.test(
+																'fileType',
+																'*Unsupported file format',
+																(value) => {
+																	value &&
+																		this.setState({
+																			fileName: value.name,
+																		});
+																	if (
+																		!value ||
+																		(value &&
+																			this.supported_format.includes(value.type))
+																	) {
+																		return true;
+																	} else {
+																		return false;
+																	}
+																},
+															)
+															.test(
+																'fileSize',
+																'*File size is too large',
+																(value) => {
+																	if (
+																		!value ||
+																		(value && value.size <= this.file_size)
+																	) {
+																		return true;
+																	} else {
+																		return false;
+																	}
+																},
+															),
+													})}
 												>
 													{(props) => (
 														<Form onSubmit={props.handleSubmit}>
@@ -2010,7 +2071,7 @@ class DetailCreditNote extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
-																{this.props.location.state.isCNWithoutProduct==true &&(<Col  lg={3}>
+																{(<Col  lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="creditAmount"><span className="text-danger">* </span>
 																	{strings.CreditAmount}
@@ -2043,6 +2104,29 @@ class DetailCreditNote extends React.Component {
 																</FormGroup>
 															</Col>
 															)}
+
+{(!this.state.isCreatedWithoutInvoice && this.state.invoiceNumber) &&(<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="remainingInvoiceAmount">
+																
+																{strings.RemainingInvoiceAmount}
+																	</Label>
+																	<Input
+																		type="text"
+																		id="remainingInvoiceAmount"
+																		name="remainingInvoiceAmount"
+																		placeholder='Remaining invoice Amount'
+																		disabled={true}
+																		value={this.state.remainingInvoiceAmount}																							
+																	/>
+																	{props.errors.remainingInvoiceAmount &&
+																	 (
+																			<div className="text-danger">
+																				{props.errors.remainingInvoiceAmount}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>)}
 
 																</Row>
 																<hr />
@@ -2750,7 +2834,7 @@ min="0"
 																			
 																		}}
 																		>
-																			<i className="fa fa-dot-circle-o"></i>{this.state.disabled
+																			<i className="fa fa-dot-circle-o"></i> {this.state.disabled
 																			? 'Updating...'
 																			: strings.Update }
 																			{/* { {this.state.disabled }

@@ -18,16 +18,12 @@ import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
-
 import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
-
 import moment from 'moment';
-import { Loader } from 'components';
-
+import { LeavePage, Loader } from 'components';
 import * as transactionDetailActions from './actions';
 import * as transactionActions from '../../actions';
-
 import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
 import API_ROOT_URL from '../../../../../../constants/config';
@@ -71,6 +67,7 @@ class DetailBankTransaction extends React.Component {
       language: window['localStorage'].getItem('language'),
       createMore: false,
       loading: true,
+			disableLeavePage:false, 
       fileName: '',
       initValue: {},
       transaction_id: null,
@@ -179,6 +176,7 @@ class DetailBankTransaction extends React.Component {
   };
 
   handleSubmit = (data, resetForm) => {
+    this.setState({ disabled: true, loading:true, disableLeavePage:true });
     const {
       bankAccountId,
       transactionDate,
@@ -190,7 +188,6 @@ class DetailBankTransaction extends React.Component {
       receiptNumber,
       attachementDescription,
     } = data;
-    console.log(data);
     const { transaction_id } = this.state;
     let formData = new FormData();
     formData.append('bankAccountId ', bankAccountId ? bankAccountId : '');
@@ -803,6 +800,7 @@ min="0"
             </Col>
           </Row>
         </div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
       </div>
     );
   }

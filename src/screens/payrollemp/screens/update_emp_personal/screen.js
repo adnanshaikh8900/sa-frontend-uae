@@ -59,6 +59,7 @@ class UpdateEmployeePersonal extends React.Component {
             gender:'',
             bloodGroup:'',
             userPhoto: [],
+            imageState: true,
 			showIcon: false,
 			userPhotoFile: {},
             current_employee_id: null,
@@ -66,7 +67,8 @@ class UpdateEmployeePersonal extends React.Component {
             checkmobileNumberParam1:false,
             checkmobileNumberParam2:false,
             loadingMsg:"Loading....",
-			disableLeavePage:false
+			disableLeavePage:false,
+            emailExist: false
         }
 
         this.regExAlpha = /^[a-zA-Z ]+$/;
@@ -75,25 +77,42 @@ class UpdateEmployeePersonal extends React.Component {
         this.regExSpaceBoth = /[a-zA-Z0-9 ]+$/;
 		this.regExAddress = /^[a-zA-Z0-9\s\D,'-/ ]+$/;
         this.formRef = React.createRef();
+
         this.gender = [
             { label: 'Male', value: 'Male' },
             { label: 'Female', value: 'Female' }
         ];
 
-        this.bloodGroup = [
-            { label: 'O+', value: 'O+' },
-            { label: 'O-', value: 'O-' },
-            { label: 'A+', value: 'A+' },
-            { label: 'A-', value: 'A-' },
-            { label: 'B+', value: 'B+' },
-            { label: 'B-', value: 'B-' },
-            { label: 'AB+', value: 'AB+' },
-            { label: 'AB-', value: 'AB-' },
-
+        this.maritalStatus = [
+            { label: 'Single', value: 'Single' },
+            { label: 'Married', value: 'Married'},
+            { label: 'Widowed', value: 'Widowed'},
+            { label: 'Divorced', value: 'Divorced'},
+            { label: 'Separated', value: 'Separated'},
         ];
+
+        // this.bloodGroup = [
+        //     { label: 'O+', value: 'O+' },
+        //     { label: 'O-', value: 'O-' },
+        //     { label: 'A+', value: 'A+' },
+        //     { label: 'A-', value: 'A-' },
+        //     { label: 'B+', value: 'B+' },
+        //     { label: 'B-', value: 'B-' },
+        //     { label: 'AB+', value: 'AB+' },
+        //     { label: 'AB-', value: 'AB-' },
+
+        // ];
     }
 
-    uploadImage = (picture, file) => {
+	uploadImage = (picture, file) => {
+		if (
+			this.state.userPhoto[0] &&
+			this.state.userPhoto[0].indexOf('data') < 0
+		) {
+			this.setState({ imageState: true });
+		} else {
+			this.setState({ imageState: false });
+		}
 		this.setState({
 			userPhoto: picture,
 			userPhotoFile: file,
@@ -130,6 +149,8 @@ class UpdateEmployeePersonal extends React.Component {
                                 res.data.email && res.data.email !== null
                                     ? res.data.email
                                     : '',
+                            maritalStatus:
+                                res.data.maritalStatus ? res.data.maritalStatus : '',       
                             mobileNumber:
                                 res.data.mobileNumber && res.data.mobileNumber !== null
                                     ? res.data.mobileNumber
@@ -162,10 +183,10 @@ class UpdateEmployeePersonal extends React.Component {
                                 res.data.pincode && res.data.pincode !== null
                                     ? res.data.pincode
                                     : '',
-                            bloodGroup:
-                                res.data.bloodGroup && res.data.bloodGroup !== null
-                                    ? res.data.bloodGroup
-                                    : '',
+                            // bloodGroup:
+                            //     res.data.bloodGroup && res.data.bloodGroup !== null
+                            //         ? res.data.bloodGroup
+                            //         : '',
                             employeeDesignationId:
                                 res.data.employeeDesignationId && res.data.employeeDesignationId !== null
                                     ? res.data.employeeDesignationId
@@ -224,6 +245,9 @@ class UpdateEmployeePersonal extends React.Component {
                                     : '',
 
                         },
+                        userPhoto: res.data.profileImageBinary
+                        ? this.state.userPhoto.concat(res.data.profileImageBinary)
+                        : [],
                         selectedStatus: res.data.isActive ? true : false,
                     },
                     () => {
@@ -245,7 +269,7 @@ class UpdateEmployeePersonal extends React.Component {
             })
         } else {
             // this.props.history.push('/admin/payroll/employee')
-            this.props.history.push('/admin/master/employee')
+            this.props.history.push('/admin/master/employee/viewEmployee')
         }
     }
 
@@ -272,7 +296,8 @@ class UpdateEmployeePersonal extends React.Component {
             city,
             gender,
             pincode,
-            bloodGroup,
+            // bloodGroup,            
+            maritalStatus,
             presentAddress,
             employeeDesignationId,
             salaryRoleId,
@@ -313,7 +338,7 @@ class UpdateEmployeePersonal extends React.Component {
         formData.append('dob', dob ? dob : '');
         formData.append('gender', gender);
 
-        formData.append('bloodGroup', bloodGroup);
+        // formData.append('bloodGroup', bloodGroup);
         formData.append(
 			'mobileNumber',
 			mobileNumber !== null ? mobileNumber : '',
@@ -370,6 +395,9 @@ class UpdateEmployeePersonal extends React.Component {
             'emergencyContactRelationship2',
             emergencyContactRelationship2 != null ?emergencyContactRelationship2:'',
         );
+        formData.append(
+            'maritalStatus', maritalStatus.value,
+        );
         if (employeeDesignationId && employeeDesignationId.value) {
 			formData.append('employeeDesignationId', employeeDesignationId.value);
 		}
@@ -382,7 +410,9 @@ class UpdateEmployeePersonal extends React.Component {
         if (parentId && parentId.value) {
 			formData.append('parentId', parentId.value);
 		}
-
+        if (this.state.userPhotoFile.length > 0) {
+            formData.append('profileImageBinary ', this.state.userPhotoFile[0]);
+        }
         this.setState({ loading:true, loadingMsg:"Updating Employee ..."});
         this.props.detailEmployeePersonalAction.updateEmployeePersonal(formData).then((res) => {
             if (res.status === 200) {
@@ -415,7 +445,7 @@ class UpdateEmployeePersonal extends React.Component {
             return false;
    }
    selectedDate=(props)=>{
-    debugger
+    
     if(props.values.dob && props.values.dob!="") 
     {  
         let  date=props.values.dob.split("-")
@@ -425,6 +455,23 @@ class UpdateEmployeePersonal extends React.Component {
     else
      return new Date()
 }
+emailvalidationCheck = (value) => {
+    const data = {
+        moduleType: 24,
+        name: value,
+    };
+    this.props.commonActions.checkValidation(data).then((response) => {
+        if (response.data === 'Employee email already exists') {
+            this.setState({
+                emailExist: true,
+            });
+        } else {
+            this.setState({
+                emailExist: false,
+            });
+        }
+    });
+};
 
     render() {
         strings.setLanguage(this.state.language);
@@ -461,6 +508,9 @@ class UpdateEmployeePersonal extends React.Component {
                                                     }}
                                                     validate={(values) => {
 														let errors = {};
+                                                        if (this.state.emailExist == true) {
+                                                            errors.email = 'Email already exists';
+                                                        }
 	
 														// if (checkmobileNumberParam === true) {
 														// errors.mobileNumber =
@@ -488,8 +538,20 @@ class UpdateEmployeePersonal extends React.Component {
                                                                 //     'Salary role is required';
                                                                 // }
                                                                 if(this.underAge(values.dob))
-                                                                errors.dob =
-                                                                'Age should be more than 14 years';
+                                                                errors.dob = 'Age should be more than 14 years';
+                                                                if(values.dob===''){
+                                                                errors.dob = 'Date of birth is required';
+
+                                                                }
+                                                                if(values.maritalStatus.value===''){
+                                                                    errors.maritalStatus='Marital status is required';
+                                                                }
+                                                                if(values.mobileNumber && values.mobileNumber.length<11){
+                                                                    errors.mobileNumber='Please enter 11 digits mobile number'
+                                                                }
+                                                                if(values.emergencyContactNumber1 && values.emergencyContactNumber1.length<11){
+                                                                    errors.emergencyContactNumber1='Please enter 11 digits mobile number'
+                                                                }
 														return errors;
 													}}
                                                     validationSchema={Yup.object().shape({
@@ -514,7 +576,9 @@ class UpdateEmployeePersonal extends React.Component {
                                                             // city: Yup.string()
                                                             // .required("City is required"),
                                                             gender: Yup.string()
-                                                            .required("Gender is required"),
+                                                            .required("Gender is required"),                                                                            
+                                                            maritalStatus: Yup.string()
+                                                            .required('Marital status is required') ,
                                                         // active: Yup.string()
                                                         //     .required('status is required'),
                                                         employeeDesignationId: Yup.string()
@@ -524,9 +588,9 @@ class UpdateEmployeePersonal extends React.Component {
                                                             mobileNumber: Yup.string()
 															.required('Mobile number is required'),
                                                             emergencyContactName1: Yup.string()
-                                                           .required('Contact name 1 is required') ,
+                                                           .required('Contact name is required') ,
                                                             emergencyContactNumber1:Yup.string()
-                                                           .required("Contact number 1 is required"),
+                                                           .required("Contact number is required"),
                                                             emergencyContactRelationship1: Yup.string()
                                                            .required('Relationship 1 is required') ,
                                                                           
@@ -539,33 +603,42 @@ class UpdateEmployeePersonal extends React.Component {
                                                             <Row>
                                                                 <Col xs="4" md="4" lg={2}>
                                                                                         <FormGroup className="mb-3 text-center">
-                                                                                            <ImageUploader
-                                                                                                // withIcon={true}
-                                                                                                buttonText="Choose images"
-                                                                                                onChange={this.uploadImage}
-                                                                                                imgExtension={['jpg', 'gif', 'png', 'jpeg']}
-                                                                                                maxFileSize={11048576}
-                                                                                                withPreview={true}
-                                                                                                singleImage={true}
-                                                                                                withIcon={this.state.showIcon}
-                                                                                                // buttonText="Choose Profile Image"
-                                                                                                flipHeight={
-                                                                                                    this.state.userPhoto.length > 0
-                                                                                                        ? { height: 'inherit' }
-                                                                                                        : {}
-                                                                                                }
-                                                                                                label="'Max file size: 1mb"
-                                                                                                labelClass={
-                                                                                                    this.state.userPhoto.length > 0
-                                                                                                        ? 'hideLabel'
-                                                                                                        : 'showLabel'
-                                                                                                }
-                                                                                                buttonClassName={
-                                                                                                    this.state.userPhoto.length > 0
-                                                                                                        ? 'hideButton'
-                                                                                                        : 'showButton'
-                                                                                                }
-                                                                                            />
+                                                                                        <ImageUploader
+																			// withIcon={true}
+																			buttonText="Choose images"
+																			onChange={(picture, file)=>{
+																				this.uploadImage(picture, file);
+																				props.handleChange("photo")(picture);
+																			}}
+																			imgExtension={[
+																				'jpg',
+																				'png',
+																				'jpeg',
+																			]}
+																			maxFileSize={40000}
+																			withPreview={true}
+																			singleImage={true}
+																			withIcon={this.state.showIcon}
+																			// buttonText="Choose Profile Image"
+																			flipHeight={
+																				this.state.userPhoto.length > 0
+																					? { height: 'inherit' }
+																					: {}
+																			}
+																			label="'Max file size: 40kb"
+																			labelClass={
+																				this.state.userPhoto.length > 0
+																					? 'hideLabel'
+																					: 'showLabel'
+																			}
+																			buttonClassName={
+																				this.state.userPhoto.length > 0
+																					? 'hideButton'
+																					: 'showButton'
+																			}
+																			defaultImages={this.state.userPhoto}
+																			imageState={this.state.imageState}
+																		/>
                                                                                         </FormGroup>
                                                                                     </Col>
 
@@ -703,12 +776,15 @@ class UpdateEmployeePersonal extends React.Component {
                                                                             <FormGroup>
                                                                                 <Label htmlFor="select"><span className="text-danger">* </span>{strings.Email}</Label>
                                                                                 <Input
-                                                                                    type="text"
+                                                                                    type="email"
                                                                                     id="email"
                                                                                     name="email"
                                                                                     value={props.values.email}
                                                                                     placeholder={strings.Enter + strings.EmailAddress}
-                                                                                    onChange={(value) => { props.handleChange('email')(value) }}
+                                                                                    onChange={(option) => {
+                                                                                         props.handleChange('email')(option);
+                                                                                         this.emailvalidationCheck(option.target.value);
+                                                                                }}
                                                                                     className={props.errors.email && props.touched.email ? "is-invalid" : ""}
                                                                                 />
                                                                                 {props.errors.email && props.touched.email && (
@@ -775,7 +851,12 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                     selected={this.selectedDate(props) }
                                                                                     value={props.values.dob}
                                                                                     onChange={(value) => {
-                                                                                        props.handleChange("dob")(moment(value).format("DD-MM-YYYY"))
+                                                                                        if(value){
+                                                                                            props.handleChange("dob")(moment(value).format("DD-MM-YYYY"))
+                                                                                        }else{
+                                                                                            props.handleChange("dob")('')
+
+                                                                                        }
                                                                                     }}
                                                                                 />
                                                                                 {props.errors.dob && 
@@ -830,6 +911,48 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                 )}
                                                                             </FormGroup>
                                                                         </Col>
+
+                                                                        <Col md="4">
+                                                                                                <FormGroup>
+                                                                                                    <Label htmlFor="maritalStatus"><span className="text-danger">* </span>{strings.maritalStatus}</Label>
+                                                                                                    <Select
+
+                                                                                                        options={
+                                                                                                            this.maritalStatus
+                                                                                                                ? selectOptionsFactory.renderOptions(
+                                                                                                                    'label',
+                                                                                                                    'value',
+                                                                                                                    this.maritalStatus,
+                                                                                                                    'Marital Status',
+                                                                                                                )
+                                                                                                                : []
+                                                                                                        }
+                                                                                                        id="maritalStatus"
+                                                                                                        name="maritalStatus"
+                                                                                                        placeholder={strings.Select+strings.maritalStatus}
+                                                                                                        value={this.maritalStatus &&
+                                                                                                            this.maritalStatus.find(
+                                                                                                                (option) =>
+                                                                                                                    option.value === props.values.maritalStatus,
+                                                                                                            )
+                                                                                                        }
+                                                                                                        onChange={(option) => {
+                                                                                                            props.handleChange('maritalStatus')(option);
+                                                                                                            this.setState({maritalStatus:option.value})
+                                                                                                        }}
+                                                                                                        className={`${props.errors.maritalStatus && props.touched.maritalStatus
+                                                                                                            ? 'is-invalid'
+                                                                                                            : ''
+                                                                                                            }`}
+                                                                                                    />
+                                                                                                    {props.errors.maritalStatus && props.touched.maritalStatus && (
+                                                                                                        <div className="invalid-feedback">
+                                                                                                            {props.errors.maritalStatus}
+                                                                                                        </div>
+                                                                                                    )}
+                                                                                                </FormGroup>
+                                                                                            </Col>
+
                                                                         {/* <Col md="4">
                                                                             <FormGroup>
                                                                                 <Label htmlFor="bloodGroup">{strings.BloodGroup}</Label>
@@ -1078,7 +1201,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                               
                                                                         </Col>
 
-                                                                        {props.values.countryId == 229 || props.values.countryId.value == 229 ? 
+                                                                        {props.values.countryId === 229 || props.values.countryId.value === 229 ? 
 														 	<Col md="4" >
 																 <FormGroup>
 															 {/* <Label htmlFor="select">{strings.POBoxNumber}</Label> */}
@@ -1204,10 +1327,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                             props.handleChange('countryId')('');
                                                                                             this.getStateList(option.value);
                                                                                         }
-                                                                                        props.handleChange('stateId')({
-                                                                                            label: 'Select State',
-                                                                                            value: '',
-                                                                                        });
+                                                                                       
                                                                                     }}
                                                                                     placeholder={strings.Select + strings.Country}
                                                                                     id="countryId"
@@ -1239,7 +1359,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                                 'label',
                                                                                                 'value',
                                                                                                 state_list,
-                                                                                                'State',
+                                                                                                props.values.countryId.value === 229 ? strings.Emirate: strings.StateRegion,
                                                                                             )
                                                                                             : []
                                                                                     }
@@ -1249,7 +1369,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                                 'label',
                                                                                                 'value',
                                                                                                 state_list,
-                                                                                                'State',
+                                                                                                props.values.countryId.value === 229 ? strings.Emirate: strings.StateRegion,
                                                                                             )
                                                                                             .find(
                                                                                                 (option) =>
@@ -1416,8 +1536,8 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                                 <FormGroup>
                                                                                                     <Label htmlFor="emergencyContactNumber1"><span className="text-danger">* </span>{strings.ContactNumber1} </Label>
                                                                                                     <div 	className={
-																		                            props.errors.mobileNumber &&
-																		                            props.touched.mobileNumber
+																		                            props.errors.emergencyContactNumber1 &&
+																		                            props.touched.emergencyContactNumber1
 																		                        	? ' is-invalidMobile '
 																			                        : ''
 												                                                    }>
@@ -1590,8 +1710,8 @@ class UpdateEmployeePersonal extends React.Component {
                                                                         onClick={() => {
                                                                             //	added validation popup	msg
                                                                             props.handleBlur();
-                                                                            if(props.errors &&  Object.keys(props.errors).length != 0)
-                                                                            this.props.commonActions.fillManDatoryDetails();
+                                                                            if(props.errors &&  Object.keys(props.errors).length != 0){
+                                                                            this.props.commonActions.fillManDatoryDetails();}
                                                                     }}
                                                                     >
                                                                         <i className="fa fa-dot-circle-o"></i>{' '}

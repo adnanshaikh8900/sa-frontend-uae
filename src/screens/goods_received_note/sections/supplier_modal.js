@@ -350,7 +350,7 @@ errors.mobileNumber =
 														<span className="text-danger">* </span>{strings.Email}
 													</Label>
 													<Input
-														type="text"
+														type="email"
 														maxLength="80"
 														id="email"
 														name="email"

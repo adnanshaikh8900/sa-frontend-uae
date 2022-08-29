@@ -11,7 +11,8 @@ import {
     FormGroup,
     Label,
     Row,
-    Col
+    Col,
+    UncontrolledTooltip
 } from 'reactstrap'
 import { Loader, LeavePage } from 'components'
 import { CommonActions } from 'services/global'
@@ -69,7 +70,9 @@ class UpdateEmployeeEmployment extends React.Component {
                     this.props.createPayrollEmployeeActions.getSalaryRolesForDropdown();
                     this.setState({
                         loading: false,
-                        current_employee_id: this.props.location.state.id,
+                        current_employee_id: this.props.location.state.id,           
+                        employeeChildActivitiesPresentOrNot:res.data.employeeChildActivitiesPresentOrNot,
+                        
                         initValue: {
                             id: res.data.id ? res.data.id : '',
                             employmentId: res.data.employmentId ? res.data.employmentId : '',
@@ -220,9 +223,33 @@ class UpdateEmployeeEmployment extends React.Component {
             }
         });
 };
+laborCardIdValidationCheck = (value) => {
+    const data = {
+        moduleType: 23,
+        name: value,
+    };
+    this.props.createPayrollEmployeeActions
+        .checkValidation(data)
+        .then((response) => {
+            if (response.data === 'Labour Card Id Already Exists') {
+                this.setState(
+                    {
+                        laborCardIdexist: true,
+                    },
+                    
+                    () => {},
+                );
+            
+            } else {
+                this.setState({
+                    laborCardIdexist: false,
+                });
+            }
+        });
+};
     render() {
         strings.setLanguage(this.state.language);
-        const { loading, initValue, dialog,exist,loadingMsg } = this.state
+        const { loading, initValue, dialog,exist,laborCardIdexist,loadingMsg } = this.state
         const { salary_role_dropdown } = this.props
 
         return (
@@ -255,7 +282,8 @@ class UpdateEmployeeEmployment extends React.Component {
                                                     validationSchema={Yup.object().shape({
                                                         employeeCode: Yup.string()
                                                             .required("Employee unique id is required"),
-                                                                                                  
+                                                        labourCard : Yup.string()
+                                                            .required("Labour card id is required"),                                         
                                                         dateOfJoining: Yup.date()
                                                             .required('Date of joining is required')                   
                                                     })}
@@ -272,6 +300,10 @@ class UpdateEmployeeEmployment extends React.Component {
                                                             errors.employeeCode =
                                                             'Employee unique id already exists';
                                                         }
+                                                        if (laborCardIdexist === true  && values.employeeCode!="") {
+                                                            errors.labourCard =
+                                                            'Labour card id already exists';
+                                                        }
                                                         return errors;
 
                                                     }}
@@ -287,7 +319,18 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                     <Row  >
                                                                         <Col md="4">
                                                                             <FormGroup>
-                                                                            <Label htmlFor="select"><span className="text-danger">* </span> {strings.EmployeeCode}  </Label>
+                                                                            <Label htmlFor="select"><span className="text-danger">* </span> {strings.EmployeeCode}
+                                                                            <i	id="employeeCodeTooltip"
+                                                                                                            className="fa fa-question-circle ml-1"
+                                                                                                        ></i> <UncontrolledTooltip
+                                                                                                            placement="right"
+                                                                                                            target="employeeCodeTooltip"
+                                                                                                        >
+                                                                                                        Employee Unique Id system is designed by the organization 
+                                                                                                        to identify the employee from a group of employees and his work details.
+                                                                                                        i.e. Its Internal ID designed for Identifying Employee.
+                                                                                                        </UncontrolledTooltip>
+                                                                              </Label>
                                                                             <Input
                                                                                 type="text"
                                                                                 maxLength="14"
@@ -311,16 +354,36 @@ class UpdateEmployeeEmployment extends React.Component {
 
                                                                         <Col md="4">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="labourCard">{strings.LabourCardId}</Label>
+                                                                                <Label htmlFor="labourCard"><span className="text-danger">* </span> {strings.LabourCardId}
+                                                                                                      <i	id="labourCardTooltip"
+                                                                                                            className="fa fa-question-circle ml-1"
+                                                                                                        ></i>
+                                                                                                        <UncontrolledTooltip
+                                                                                                            placement="right"
+                                                                                                            target="labourCardTooltip"
+                                                                                                        >
+                                                                                                          Labour Card Id (LIN) is a unique identification number issued to
+                                                                                                           employers to simplifying business regulations and
+                                                                                                            bringing in transparency and accountability in 
+                                                                                                            labor inspections by various agencies and 
+                                                                                                            bodies under the administrative control of Labour Ministry.
+                                                                                                          It will be available in SIF-file.
+                                                                                                        </UncontrolledTooltip>
+                                                                                </Label>
                                                                                 <Input
                                                                                     type="text"
                                                                                     maxLength="14"
                                                                                     id="labourCard"
                                                                                     name="labourCard"
+                                                                                    autoComplete='off'
                                                                                     value={props.values.labourCard}
                                                                                     placeholder={strings.Enter+strings.LabourCardId}
                                                                                     onChange={(option) => {
-                                                                                        if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('labourCard')(option) }
+                                                                                        if (option.target.value === '' || this.regExBoth.test(option.target.value)) 
+                                                                                        { 
+                                                                                            props.handleChange('labourCard')(option) 
+                                                                                            this.laborCardIdValidationCheck(option.target.value);
+                                                                                       }
                                                                                     }}
                                                                                     className={props.errors.labourCard && props.touched.labourCard ? "is-invalid" : ""}
                                                                                 />
@@ -363,6 +426,7 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                             <FormGroup className="mb-3">
                                                                                 <Label htmlFor="dateOfJoining"><span className="text-danger">* </span> {strings.DateOfJoining}</Label>
                                                                                 <DatePicker
+                                                                                 disabled={this.state.employeeChildActivitiesPresentOrNot?true:false}
                                                                                     className={`form-control ${props.errors.dateOfJoining && props.touched.dateOfJoining ? "is-invalid" : ""}`}
                                                                                     id="dateOfJoining"
                                                                                     name="dateOfJoining"

@@ -2,20 +2,16 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Button, Row, Col, Table, Card } from 'reactstrap';
-
 import * as SupplierInvoiceDetailActions from './actions';
 import * as SupplierInvoiceActions from '../../actions';
 import ReactToPrint from 'react-to-print';
-
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import { Currency } from 'components';
 import './style.scss';
 import { PDFExport } from '@progress/kendo-react-pdf';
-
 import './style.scss';
 import { InvoiceTemplate } from './sections';
-
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 
@@ -79,8 +75,8 @@ class ViewCreditNote extends React.Component {
 				});
 		if (this.props.location.state && this.props.location.state.id) {
 
-			if(this.props.location.state.isCNWithoutProduct == true)
-			{this.props.supplierInvoiceDetailActions
+			// if(this.props.location.state.isCNWithoutProduct === true)
+			this.props.supplierInvoiceDetailActions
 				.getCreditNoteById(this.props.location.state.id,this.props.location.state.isCNWithoutProduct)
 				.then((res) => {
 					let val = 0;
@@ -128,59 +124,8 @@ class ViewCreditNote extends React.Component {
 							},
 						);
 					}
-				});}
-			else
-			{this.props.supplierInvoiceDetailActions
-				.getInvoiceById(this.props.location.state.id)
-				.then((res) => {
-					let val = 0;
-					if (res.status === 200) {
-						res.data.invoiceLineItems &&
-							res.data.invoiceLineItems.map((item) => {
-								val = val + item.subTotal;
-								return item;
-							});
-						this.setState(
-							{
-								invoiceData: res.data,
-								totalNet: val,
-								id: this.props.location.state.id,
-							},
-							() => {
-								if (this.state.invoiceData.currencyCode) {
-									this.props.supplierInvoiceActions
-										.getCurrencyList()
-										.then((res) => {
-											if (res.status === 200) {
-												const temp = res.data.filter(
-													(item) =>
-														item.currencyCode ===
-														this.state.invoiceData.currencyCode,
-												);
-												this.setState({
-													currencyData: temp,
-												});
-											}
-										});
-								}
-								if(this.state.invoiceData.contactId)
-						     {	
-							this.props.supplierInvoiceDetailActions
-							.getContactById(this.state.invoiceData.contactId)
-							.then((res) => {
-								if (res.status === 200) {									
-									this.setState({
-										contactData: res.data,
-									});
-								}
-							});
-							}
-							},
-						);
-					}
-				});}
-
-//
+				});
+			
 this.props.supplierInvoiceDetailActions
 .getInvoicesForCNById(this.props.location.state.id)
 .then((res) => {
@@ -209,7 +154,6 @@ this.props.supplierInvoiceDetailActions
 		strings.setLanguage(this.state.language);
 		const { invoiceData, currencyData,InvoiceDataList,contactData  } = this.state;
 		const { profile } = this.props;
-
 		return (
 			<div className="view-invoice-screen">
 				<div className="animated fadeIn">
@@ -259,8 +203,9 @@ this.props.supplierInvoiceDetailActions
 									ref={(component) => (this.pdfExportComponent = component)}
 									scale={0.8}
 									paperSize="A3"
-									fileName={invoiceData.referenceNumber + ".pdf"}
+									fileName={this.state.invoiceData.creditNoteNumber + ".pdf"}
 								>
+									
 									<InvoiceTemplate
 										invoiceData={invoiceData}
 										currencyData={currencyData}

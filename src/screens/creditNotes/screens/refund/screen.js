@@ -12,7 +12,6 @@ import {
 	FormGroup,
 	Input,
 	Label,
-	NavLink,
 } from 'reactstrap';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
@@ -20,21 +19,18 @@ import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import * as CustomerRecordPaymentActions from './actions';
 import * as CnActions from '../../actions';
-
 import { CustomerModal } from '../../sections';
 import { Loader, ConfirmDeleteModal } from 'components';
-
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
-
 import './style.scss';
 import moment from 'moment';
-import API_ROOT_URL from '../../../../constants/config';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { TextareaAutosize } from '@material-ui/core';
+
 const mapStateToProps = (state) => {
 	return {
 		contact_list: state.customer_invoice.contact_list,
@@ -69,6 +65,7 @@ const customStyles = {
 let strings = new LocalizedStrings(data);
 class Refund extends React.Component {
 	constructor(props) {
+
 		super(props);
 		this.state = {
 			language: window['localStorage'].getItem('language'),
@@ -134,6 +131,7 @@ class Refund extends React.Component {
 			'application/vnd.ms-excel',
 			'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 		];
+		debugger
 	}
 
 	componentDidMount = () => {
@@ -256,20 +254,16 @@ class Refund extends React.Component {
 		return(
 			this.state.showInvoiceNumber &&(
 			<Col lg={4}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="project">
-																			
-																			 {strings.InvoiceNumber}
-																		</Label>
-																		<Input
-																			
-																			disabled
-																			id="invoiceNumber"
-																			name="invoiceNumber"
-																			value={this.state.invoiceNumber}
-																		/>
-																	</FormGroup>
-																</Col>)
+				<FormGroup className="mb-3">
+				<Label htmlFor="project">{strings.InvoiceNumber}</Label>
+					<Input
+						disabled
+						id="invoiceNumber"
+						name="invoiceNumber"
+						value={this.state.invoiceNumber}
+			/>
+				</FormGroup>
+			</Col>)
 		)
 	}
 	handleSubmit = (data) => {
@@ -289,7 +283,7 @@ class Refund extends React.Component {
 		let formData = new FormData();
 	if(this.state.isCNWithoutProduct ==true)
 	{	
-		formData.append('isCNWithoutProduct', this.state.isCNWithoutProduct);
+		// formData.append('isCNWithoutProduct', this.state.isCNWithoutProduct);
 		formData.append('creditNoteId', this.props.location.state.id.id);
 		formData.append('amountReceived', amount !== null ? amount : '');
 		formData.append('notes', notes !== null ? notes : '');
@@ -310,7 +304,7 @@ class Refund extends React.Component {
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data ? res.data.message : 'Credit Refund Successfully',
+					res.data ? res.data.message : 'Credits applied to the invoice successfully',
 				);
 				this.props.history.push('/admin/income/credit-notes');
 				this.setState({ loading:false,});
@@ -323,24 +317,24 @@ class Refund extends React.Component {
 			});
 		}//
 	else
-	{	formData.append('receiptNo', receiptNo !== null ? receiptNo : '');
-		formData.append(
-			'receiptDate',
-			typeof receiptDate === 'string'
-				? moment(receiptDate, 'DD-MM-YYYY').toDate()
-				: receiptDate,
-		);
-		formData.append(
-			'paidInvoiceListStr',
-			JSON.stringify(this.state.initValue.paidInvoiceListStr),
-		);
-		formData.append('amount', amount !== null ? amount : '');
+	{
+		formData.append('isCNWithoutProduct',false);
+		formData.append('creditNoteId', this.props.location.state.id.id);
+		formData.append('amountReceived', amount !== null ? amount : '');
 		formData.append('notes', notes !== null ? notes : '');
+		formData.append('type', '7');
+		formData.append('invoiceId',this.state.invoiceId)
+		formData.append('depositTo', depositeTo !== null ? depositeTo.value : '');
+		formData.append('payMode', payMode !== null ? payMode.value : '');
+		if (contactId) {
+			formData.append('contactId', contactId);
+		}
 		formData.append(
-			'referenceCode',
-			referenceCode !== null ? referenceCode : '',
-			);
-			formData.append('depositeTo', depositeTo !== null ? depositeTo.value : '');
+			'paymentDate',
+			typeof receiptDate === 'string'
+				? moment(receiptDate, 'DD/MM/YYYY').toDate()
+				: receiptDate,
+		);		
 			formData.append('payMode', payMode !== null ? payMode.value : '');
 		if (contactId) {
 			formData.append('contactId', contactId);
@@ -348,14 +342,6 @@ class Refund extends React.Component {
 		if (this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
-		formData.append(
-			'invoiceNumber',
-			this.props.location.state.id.invoiceNumber?this.props.location.state.id.invoiceNumber :"Invoice-00000",
-		);
-		formData.append(
-			'invoiceAmount',
-			this.props.location.state.id.invoiceAmount ?this.props.location.state.id.invoiceAmount :"00000",
-		);
 		this.setState({ loading:true, loadingMsg:" Payment Refunding..."});
 		this.props.CustomerRecordPaymentActions.recordPayment(formData)
 			.then((res) => {
@@ -499,16 +485,22 @@ class Refund extends React.Component {
 														let errors = {};
 														 if (values.amount == 0) {
 														  errors.amount =
-														'Amount Cannot be recorded zero';
+														'Amount cannot be empty or 0';
+													 }else if(this.state.amount<parseFloat(values.amount)){ 
+														errors.amount =
+														'Amount cannot More than the Invoice Amount';
+													 }
+													 if(!values.receiptDate){
+														errors.receiptDate='Payment date is required';
 													 }
 													 return errors
 													 }}
 													validationSchema={Yup.object().shape({
 														depositeTo: Yup.string().required(
-															'Deposit To is Required',
+															'Deposit to is required',
 														),
 														payMode: Yup.string().required(
-															'Payment mode is Required',
+															'Payment mode is required',
 														),
 														attachmentFile: Yup.mixed()
 															.test(
@@ -630,9 +622,10 @@ class Refund extends React.Component {
 																			 {strings.AmountPaid}
 																		</Label>
 																		<Input
-																			type="number"
+																			type="text"
+																			min={0}
+																			maxLength="14,2"
 																			max={this.state.amount}
-																			min="0"
 																			id="amount"
 																			name="amount"
 																			value={props.values.amount}
@@ -652,6 +645,7 @@ class Refund extends React.Component {
 																					: ''
 																			}
 																		/>
+																		
 																		{props.errors.amount &&
 																			props.touched.amount && (
 																				<div className="invalid-feedback">
@@ -916,6 +910,7 @@ class Refund extends React.Component {
 																	lg={12}
 																	className="mt-5 d-flex flex-wrap align-items-center justify-content-between"
 															>
+																{console.log( this.props.location.state.id.dueAmount,this.state.amount,props.values.amount,props.errors)}
 																<FormGroup className="text-right w-100">
 																		<Button
 																			type="submit"

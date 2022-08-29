@@ -319,7 +319,7 @@ class SupplierModal extends React.Component {
                             <span className="text-danger">* </span>{strings.Email}
                           </Label>
                           <Input
-                            type="text"
+                            type="email"
                             id="email"
                             name="email"
                             onChange={(value) => {

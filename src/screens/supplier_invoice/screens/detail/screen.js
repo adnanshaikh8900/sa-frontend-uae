@@ -695,7 +695,7 @@ class DetailSupplierInvoice extends React.Component {
                                );
 
                        }}
-                       placeholder={strings.discount}
+                       placeholder={strings.Discount}
                        className={`form-control
            ${
                            props.errors.lineItemsString &&
@@ -1815,7 +1815,7 @@ class DetailSupplierInvoice extends React.Component {
 															'Supplier is required',
 														),
 														term: Yup.string().required('Term is required'),
-														// placeOfSupplyId: Yup.string().required('Place of Supply is required'),
+														placeOfSupplyId: Yup.string().required('Place of Supply is required'),
 														invoiceDate: Yup.string().required(
 															'Invoice date is required',
 														),
@@ -2032,13 +2032,13 @@ class DetailSupplierInvoice extends React.Component {
 																<Col lg={3}>
 																{this.state.customer_taxTreatment_des!="NON GCC" &&(	<FormGroup className="mb-3">
 																		<Label htmlFor="placeOfSupplyId">
-																			{/* <span className="text-danger">* </span> */}
-																		{this.state.customer_taxTreatment_des &&
+																			<span className="text-danger">* </span>
+																		{/* {this.state.customer_taxTreatment_des &&
 																		(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
 																		||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
 																		||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED") && (
 																			<span className="text-danger">* </span>
-																		)}
+																		)} */}
 																			 {strings.PlaceofSupply}
 																		</Label>
 																		<Select
@@ -2929,7 +2929,7 @@ class DetailSupplierInvoice extends React.Component {
 																				);
 																			}}
 																		>
-																			<i className="fa fa-ban"></i>{this.state.disabled1
+																			<i className="fa fa-ban"></i> {this.state.disabled1
 																			? 'Deleting...'
 																			: strings.Cancel }
 																		</Button>

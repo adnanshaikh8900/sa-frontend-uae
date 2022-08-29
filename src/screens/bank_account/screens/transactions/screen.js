@@ -32,6 +32,9 @@ import { ExplainTrasactionDetail } from './sections';
 import './style.scss';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import * as transactionDetailActions from '../transactions/screens/detail/actions';
+import { Suspense, lazy } from 'react';
+import Getbyid from './sections/transactiondetails';
 
 const mapStateToProps = (state) => {
 	return {
@@ -45,6 +48,10 @@ const mapDispatchToProps = (dispatch) => {
 		transactionsActions: bindActionCreators(TransactionsActions, dispatch),
 		detailBankAccountActions: bindActionCreators(
 			detailBankAccountActions,
+			dispatch,
+		),
+		transactionDetailActions: bindActionCreators(
+			transactionDetailActions,
 			dispatch,
 		),
 		commonActions: bindActionCreators(CommonActions, dispatch),
@@ -97,13 +104,15 @@ class BankTransactions extends React.Component {
 			bankAccountCurrencySymbol:'',
 			bankAccountCurrencyIsoCode:'',
 			accounName: '',
-			expanded: [],
+			expanded: false,
 			page: 1,
 			activeTab: new Array(3).fill('all'),
 			transactionType: 'all',
 			nonexpand: [],
 			selected_id_list: [],
 			transation_data: '',
+			res:[],
+			showExpandedRow:true
 		};
 
 		this.options = {
@@ -204,6 +213,52 @@ class BankTransactions extends React.Component {
 	// 		this.props.history.push('/admin/banking/bank-account');
 	// 	}
 	// };
+
+	getnewbackdetils = () => {
+		if (this.props.location.state && this.props.location.state.bankAccountId) {
+		this.props.detailBankAccountActions
+			.getBankAccountByID(this.props.location.state.bankAccountId ||  localStorage.getItem('bankId'))
+			.then((res) => {
+				this.setState({
+					bankAccountCurrencySymbol:res.bankAccountCurrencySymbol,
+					bankAccountCurrencyIsoCode: res.bankAccountCurrencyIsoCode,
+					currentBalance: res.currentBalance,
+					closingBalance: res.closingBalance,
+					openingBalance:res.openingBalance,
+					accounName: res.bankAccountName,
+					transactionCount: res.transactionCount
+				});
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+				this.props.history.push('/admin/banking/bank-account');
+			});
+		this.toggle(0, 'all');
+		//.this.initializeData();
+		if (this.props.location.state !== undefined) {
+					localStorage.setItem(
+						'bankId',
+						localStorage.getItem('bankId') !==
+							this.props.location.state.bankAccountId
+							? this.props.location.state.bankAccountId
+							: localStorage.getItem('bankId'),
+					);
+				} else {
+					localStorage.setItem('bankId', localStorage.getItem('bankId'));
+					this.props.location.state =  {}
+					this.props.location.state.bankAccountId = localStorage.getItem('bankId')
+					console.log('props', this.props.location)
+		
+				}
+		this.props.transactionsActions.getTransactionTypeList();
+		this.initializeData();
+		
+	}};
+
+
 	componentDidMount = () => {
 		if (this.props.location.state && this.props.location.state.bankAccountId) {
 		this.props.detailBankAccountActions
@@ -274,7 +329,7 @@ class BankTransactions extends React.Component {
 							if (item.creationMode === 'POTENTIAL_DUPLICATE') {
 								array.push(item.id)
 							}
-							this.setState({ nonexpand: array })
+							this.setState({ nonexpand: array})
 						});
 					}
 				})
@@ -537,35 +592,36 @@ class BankTransactions extends React.Component {
 	};
 
 	closeExplainTransactionModal = (res) => {
-		console.log(res)
-		this.componentDidMount();
-		if (!this.state.expanded.includes(res)) {
+
+		 this.initializeData();
+	const array = []
 			this.setState(() => ({
-				expanded: [...this.state.expanded, res],
-			}));
-		} else {
-			this.setState(() => ({
-				expanded: this.state.expanded.filter((x) => x !== res),
-			}));
-		}
+				expanded: array	
+	})
+			)	
 	};
 
-	handleOnExpand = (row) => {
-		this.setState(() => ({
-			expanded: [...this.state.expanded, row.id],
-		}));
-	};
+	// handleOnExpand = (row,exapandRow) => {
+		
+	// 	let data  = this.getbyid(row)
+	// 	alert(data)
+	// 	this.setState(() => ({
+	// 		expanded: [...this.state.expanded, row.id],
+	// 	}));
+	// };
 
 	isExpandableRow(row) {
 		if (row.id) return true;
 		else return false;
 	}
 	expandComponent(row) {
+		
 		//console.log(row);
 		return <div className="transition">{row.id}</div>;
 	}
 
 	handleTableChange = (type, { page, sizePerPage }) => {
+	
 		this.setState(
 			{
 				page,
@@ -679,6 +735,42 @@ class BankTransactions extends React.Component {
 		}
 	};
 
+	getbyid =(row) => {
+		
+		
+		return <>
+		
+			<>{
+		this.state.response?.data?.length>0 && 
+			this.state.response?.data?.map((i,inx)=>{
+				 	return < ExplainTrasactionDetail
+				closeExplainTransactionModal={(e) => {
+						this.closeExplainTransactionModal(e);
+					}
+					}
+					bankId={this.props.location.state.bankAccountId}
+					creationMode={row.creationMode}
+					selectedData={row}
+					data={i}
+				/>
+			})}</>
+		<>
+	{row.explanationIds.length > 0 || row.explinationStatusEnum === 'PARTIAL'   &&   
+	< ExplainTrasactionDetail
+			closeExplainTransactionModal={(e) => {
+					this.closeExplainTransactionModal(e);
+				}
+				}
+				bankId={this.props.location.state.bankAccountId}
+				creationMode={row.creationMode}
+				selectedData={row}
+				data={{}}
+			/>
+	}
+			</>
+			</>	
+}
+
 	render() {
 		strings.setLanguage(this.state.language);
 		const {
@@ -689,6 +781,7 @@ class BankTransactions extends React.Component {
 			csvData,
 			view,
 			nonexpand,
+			expanded
 		} = this.state;
 		const {
 			bank_transaction_list,
@@ -732,23 +825,23 @@ class BankTransactions extends React.Component {
 			},
 		];
 		const expandRow = {
+          
 			onlyOneExpanding: true,
-			renderer: (row) => (
-				< ExplainTrasactionDetail
-				closeExplainTransactionModal={(e) => {
-						this.closeExplainTransactionModal(e);
-					}
-					}
-					bankId={this.props.location.state.bankAccountId}
-					creationMode={row.creationMode}
-					selectedData={row}
-				/>
-			),
-
-			expanded: [],
+			renderer: (row) => (<Getbyid row={row}  
+				getbankdetls={this.getnewbackdetils}
+			closeExplainTransactionModal={(e) => {
+				this.closeExplainTransactionModal(e);
+			}}
+			bankAccountId={this.props.location.state.bankAccountId}
+			transactionDetailActions={this.props.transactionDetailActions}
+			/>),
+			expanded: expanded ,
 			nonExpandable: nonexpand,
-			showExpandColumn: true,
+			showExpandColumn: this.state.showExpandedRow,
+			showExpandRow: this.state.showExpandedRow,
 		};
+
+		
 
 		return (
 			<div className="bank-transaction-screen transaction">
@@ -1036,14 +1129,19 @@ class BankTransactions extends React.Component {
 										</div>
 										<div>
 											<BootstrapTable
+											id="myTable"
 												keyField="id"
+												
 												data={
 													bank_transaction_list.data
 														? bank_transaction_list.data
 														: []
-												}
+												}	
+												
+																				
 												columns={columns}
 												expandRow={expandRow}
+												
 												noDataIndication="There is no data to display"
 												remote
 												fetchInfo={{
@@ -1057,6 +1155,8 @@ class BankTransactions extends React.Component {
 													sizePerPage: this.options.sizePerPage,
 													totalSize: bank_transaction_list.count,
 												})}
+
+												
 											/>
 										</div>
 									</Col>
@@ -1069,6 +1169,7 @@ class BankTransactions extends React.Component {
 			</div>
 		);
 	}
+
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(BankTransactions);

@@ -17,23 +17,17 @@ import {
 	DropdownMenu,
 	DropdownItem,
 } from 'reactstrap';
-import Select from 'react-select';
 import DatePicker from 'react-datepicker';
-import { Formik, Field } from 'formik';
+import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { CommonActions } from 'services/global';
-import { selectOptionsFactory } from 'utils';
-
 import moment from 'moment';
-import { Loader, ConfirmDeleteModal } from 'components';
-
+import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
 import * as transactionReconcileActions from './actions';
 import * as transactionActions from '../../actions';
-
 import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
-import API_ROOT_URL from '../../../../../../constants/config';
 import { ViewBankAccount } from './sections';
 import {data}  from '../../../../../Language/index'
 import LocalizedStrings from 'react-localization';
@@ -75,6 +69,8 @@ class ReconcileTransaction extends React.Component {
 			dialog: null,
 			view: false,
 			disabled: false,
+			loadingMsg:"Loading...",
+			disableLeavePage:false, 
 		};
 		this.options = {
 			page: 1,
@@ -142,7 +138,7 @@ class ReconcileTransaction extends React.Component {
 	};
 
 	handleSubmit = (data, resetForm) => {
-			this.setState({ disabled: true });
+		this.setState({ disabled: true, loading:true, disableLeavePage:true, loadingMsg:"Reconciling..." });
 		const bankAccountId = this.props.location.state.bankAccountId;
 		const { closingBalance, date } = data;
 		let formData = new FormData();
@@ -499,6 +495,7 @@ min="0"
 						</Col>
 					</Row>
 				</div>
+			{this.state.disableLeavePage ?"":<LeavePage/>}
 			</div>
 		);
 	}

@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-
 import {
 	Button,
 	Row,
@@ -18,7 +17,6 @@ import {
 import { Formik, Field } from 'formik';
 import Select from 'react-select';
 import * as Yup from 'yup';
-import { Editor } from 'react-draft-wysiwyg';
 import { EditorState } from 'draft-js';
 import { selectOptionsFactory } from 'utils';
 import DatePicker from 'react-datepicker';
@@ -32,8 +30,7 @@ import * as CurrencyConvertActions from '../../currencyConvert/actions';
 import { toast } from 'react-toastify';
 import {data}  from '../../Language/index'
 import LocalizedStrings from 'react-localization';
-import Switch from "react-switch";
-
+import { TextareaAutosize } from '@material-ui/core';
 
 const mapStateToProps = (state) => {
 
@@ -88,6 +85,10 @@ class CreateCreditNoteModal extends React.Component {
 		this.state = {
 			language: window['localStorage'].getItem('language'),
 			loading: false,
+			discountOptions: [
+				{ value: 'FIXED', label: 'Fixed' },
+				{ value: 'PERCENTAGE', label: 'Percentage' },
+			],
             data: [
 				{
 					id: 0,
@@ -95,16 +96,27 @@ class CreateCreditNoteModal extends React.Component {
 					quantity: 1,
 					unitPrice: '',
 					vatCategoryId: '',
+					exciseTaxId:'',
+					exciseAmount:'',
+					vatCategoryId: '',
 					subTotal: 0,
+					vatAmount:0,
 					productId: '',
-					
-					
+					discount: 0,
+					unitType:'',
+					unitTypeId:''					
 				},
 			],
 			initValue: {
 				creditNoteDate: new Date(),
 				poReceiveDate: new Date(new Date().setMonth(new Date().getMonth() + 1)),
 				supplierId: '',
+				invoiceNumber:'',
+				receiptAttachmentDescription: '',
+				receiptNumber: '',
+				contact_po_number: '',
+				currency: '',
+				contactId: '',
 				invoiceLineItems: [
 					{
 						id: 0,
@@ -113,18 +125,24 @@ class CreateCreditNoteModal extends React.Component {
 						unitPrice: '',
 						vatCategoryId: '',
 						subTotal: 0,
-						productId: '',
-					
+						productId: '',					
 					},
 				],
-			
+				creditNoteNumber: '',
 				total_net: 0,
+				invoiceVATAmount: 0,
+				totalVatAmount: 0,
 				term: '',
 				totalAmount: 0,
 				notes: '',
 				type: 4,
-
+				discount: 0,
+				discountPercentage: '',
+				discountType: 'FIXED',
+				creditAmount:0,
+				total_excise: 0,
 			},
+			total_excise: 0,
 			prefixData:'',
 			state_list: [],
 			editorState: EditorState.createEmpty(),
@@ -184,16 +202,34 @@ class CreateCreditNoteModal extends React.Component {
 
 	
     static getDerivedStateFromProps(nextProps, prevState) {
+
         if (prevState.selectedData !== nextProps.selectedData || prevState.totalAmount !== nextProps.totalAmount ||
 			prevState.totalVatAmount != nextProps.totalVatAmount  ) {
+				let netVal=0
+				let totalvat=0
+				let totalexcise=0
+				
 			console.log('getDerivedStateFromProps state changed',nextProps.selectedData.invoiceLineItems);
-		
+			if(nextProps.selectedData &&nextProps.selectedData.invoiceLineItems){
+				nextProps.selectedData.invoiceLineItems.map((item)=>{
+					totalvat+=item.vatAmount
+					totalexcise+=item.exciseAmount
+					return  netVal+=item.subTotal
+		  })
+	
+		 
+			}
+			debugger
 		 return { prefixData : nextProps.prefixData,
 		 	selectedData :nextProps.selectedData,
-			 totalAmount :nextProps.totalAmount,
+			 totalAmount :netVal,
+			 initdata:prevState.data,
+			 totalExciseAmount:nextProps.totalExciseAmount,
 			 totalVatAmount :nextProps.totalVatAmount,
 			 invoiceNumber :nextProps.invoiceNumber,
-			 id:nextProps.id
+			 id:nextProps.id,
+			 total_net:netVal-parseFloat(totalvat)-parseFloat(totalexcise)
+
 		};
         }
 		// else if(prevState.totalAmount !== nextProps.totalAmount)
@@ -327,16 +363,19 @@ class CreateCreditNoteModal extends React.Component {
 							// disabled
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
-								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
-									this.selectItem(
-										e.target.value,
-										row,
-										'quantity',
-										form,
-										field,
-										props,
-									);
-								}
+								
+									if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+										this.selectItem(
+											e.target.value,
+											row,
+											'quantity',
+											form,
+											field,
+											props,
+										);
+									}
+							
+							
 							}}
 							placeholder={strings.Quantity}
 							className={`form-control w-50${
@@ -539,7 +578,7 @@ class CreateCreditNoteModal extends React.Component {
 								.find((option) => option.value === +row.exciseTaxId)
 						}
 						id="exciseTaxId"
-						placeholder={strings.Select+strings.VAT}
+						placeholder={strings.Select+strings.excise}
 						onChange={(e) => {
 							this.selectItem(
 								e.value,
@@ -566,6 +605,105 @@ class CreateCreditNoteModal extends React.Component {
 			/>
 		);
 	}
+
+	renderDiscount = (cell, row, props) => {
+		const { discountOptions } = this.state;
+	   let idx;
+	   this.state.data.map((obj, index) => {
+		   if (obj.id === row.id) {
+			   idx = index;
+		   }
+		   return obj;
+	   });
+	
+	   return (
+		   <Field
+				name={`lineItemsString.${idx}.discountType`}
+			   render={({ field, form }) => (
+			   <div>
+			   <div  class="input-group">
+				   <Input
+						disabled
+						type="text"
+						min="0"
+						maxLength="14,2"
+						value={row['discount'] !== 0 ? row['discount'] : 0}
+						onChange={(e) => {
+						   if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+							   this.selectItem(
+								   e.target.value,
+								   row,
+								   'discount',
+								   form,
+								   field,
+								   props,
+							   );
+						   }
+					   
+							   this.updateAmount(
+								   this.state.data,
+								   props,
+							   );
+					   
+					   }}
+					   placeholder={strings.discount}
+					   className={`form-control 
+		   ${
+						   props.errors.lineItemsString &&
+						   props.errors.lineItemsString[parseInt(idx, 10)] &&
+						   props.errors.lineItemsString[parseInt(idx, 10)].discount &&
+						   Object.keys(props.touched).length > 0 &&
+						   props.touched.lineItemsString &&
+						   props.touched.lineItemsString[parseInt(idx, 10)] &&
+						   props.touched.lineItemsString[parseInt(idx, 10)].discount
+							   ? 'is-invalid'
+							   : ''
+					   }`}
+	
+	/>
+	<div class="dropdown open input-group-append">
+	
+		<div 	style={{width:'100px'}}>
+		<Select
+			isDisabled={true}
+			options={discountOptions}
+			id="discountType"
+			name="discountType"
+			value={ discountOptions &&
+					selectOptionsFactory
+					.renderOptions('label', 'value', discountOptions, 'discount')
+					.find((option) => option.value == row.discountType)
+				}
+			onChange={(e) => {
+						this.selectItem(
+						e.value,
+						row,
+						'discountType',
+						form,
+						field,
+						props,
+					);
+					this.updateAmount(this.state.data,props,);
+					}}
+					/>
+			 </div>
+			  </div>
+			  </div>
+			   </div>
+	
+				   )}
+	
+		   />
+	   );
+	}
+
+	discountType = (row) =>{
+	
+		return this.state.discountOptions &&
+		selectOptionsFactory
+			.renderOptions('label', 'value', this.state.discountOptions, 'discount')
+			.find((option) => option.value === +row.discountType)
+}
 
 	renderSubTotal = (cell, row,extraData) => {
 		// return row.subTotal ? (
@@ -778,74 +916,109 @@ class CreateCreditNoteModal extends React.Component {
 
 
 	  }
-	updateAmount = (data, props) => {
-		const { vat_list } = this.props;
+	  updateAmount = (data, props) => {
+		const { vat_list , excise_list} = this.props;
+		const { discountPercentage, discountAmount } = this.state;
+	
 		let total_net = 0;
+		let total_excise = 0;
 		let total = 0;
 		let total_vat = 0;
-		const { discountPercentage, discountAmount } = this.state;
+		let net_value = 0;
+		let discount = 0;
 
+		const totalnetamount=(a)=>{
+			total_net=total_net+a
+		}
+		const totalexcise=(a)=>{
+			total_excise=total_excise+a
+		}
+		const totalvalt=(a)=>{
+			total_vat=total_vat+a
+		}
+		const totalamount=(a)=>{
+			total=total+a
+		}
+		const discountamount=(a)=>{
+			discount=discount+a
+		}
 		data.map((obj) => {
+			
 			const index =
 				obj.vatCategoryId !== ''
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
-			// let val = (((+obj.unitPrice) * vat) / 100)
-			if (props.values.discountType === 'PERCENTAGE') {
-				var val =
-					((+obj.unitPrice -
-						+((obj.unitPrice * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2 })) *
-						vat *
-						obj.quantity) /
-					100;
-			} else if (props.values.discountType === 'FIXED') {
-				var val =
-					(obj.unitPrice * obj.quantity - discountAmount / data.length) *
-					(vat / 100);
+
+			if(obj.taxType){
+			const totalwithouttax= parseFloat(obj.unitPrice) * parseInt(obj.quantity)
+			const discounvalue=obj.discountType === 'PERCENTAGE'?
+			(totalwithouttax*obj.discount)/100:
+			obj.discountType === 'FIXED' && obj.discount
+			const totalAfterdiscount= totalwithouttax-discounvalue
+			
+			const excisevalue=obj.exciseTaxId === 1?totalAfterdiscount/2:obj.exciseTaxId===2?totalAfterdiscount:0
+			const totalwithexcise=excisevalue+totalAfterdiscount
+			const vatvalue=(totalwithexcise*vat)/100
+
+			const finaltotalamount=totalwithexcise+vatvalue
+			totalnetamount(totalwithouttax)
+			totalexcise(excisevalue)
+			totalvalt(vatvalue)
+			totalamount(finaltotalamount)
+			discountamount(discounvalue)
+			obj.subTotal=totalwithouttax+vatvalue+excisevalue-discounvalue
+			obj.vatAmount=vatvalue
+			obj.exciseAmount=excisevalue
 			} else {
-				var val = (+obj.unitPrice * vat * obj.quantity) / 100;
+				const totalwithtaxandexcise= parseFloat(obj.unitPrice) * parseInt(obj.quantity)
+				const discounvalue=obj.discountType === 'PERCENTAGE'?
+			(totalwithtaxandexcise*obj.discount)/100:
+			obj.discountType === 'FIXED' && obj.discount
+			const totalwitoutdiscount= totalwithtaxandexcise-discounvalue
+			const vatvalue=(totalwitoutdiscount*vat)/(100+vat)
+			const totalwithoutvat=totalwitoutdiscount-vatvalue
+			const excisevalue=obj.exciseTaxId === 1?totalwithoutvat/3:obj.exciseTaxId===2?totalwithoutvat/2:0
+			const finaltotalamount=totalwithoutvat-excisevalue
+			totalnetamount(totalwithtaxandexcise-(discounvalue+excisevalue+vatvalue))
+		
+			totalexcise(excisevalue)
+			totalvalt(vatvalue)
+			totalamount(totalwitoutdiscount)
+			discountamount(discounvalue)	
+			obj.subTotal=totalwitoutdiscount
+			obj.vatAmount=vatvalue
+			obj.exciseAmount=excisevalue
 			}
-			obj.subTotal =
-				obj.unitPrice && obj.vatCategoryId ? +obj.unitPrice * obj.quantity : 0;
-			total_net = +(total_net + +obj.unitPrice * obj.quantity);
-			total_vat = +(total_vat + val);
-			total = total_vat + total_net;
+			
+			
+			
 			return obj;
 		});
-		console.log(total_net,"total_net")
-		console.log(total_vat,"total_vat")
-		console.log(total,"total")
-		const discount =
-			props.values.discountType === 'PERCENTAGE'
-				? +((total_net * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2 })
-				: discountAmount;
+
+		// const discount =
+		// 	props.values.discountType.value === 'PERCENTAGE'
+		// 		? +((total_net * discountPercentage) / 100)
+		// 		: discountAmount;
+		debugger
 		this.setState(
 			{
 				data,
-				initValue: {
-					...this.state.initValue,
 					...{
-						total_net: discount ? total_net - discount : total_net,
+						total_net,
 						totalVatAmount: total_vat,
-						discount: total_net > discount ? discount : 0,
-						totalAmount: total_net > discount ? total - discount : total,
+ 						totalAmount: total,
+						 totalExciseAmount: total_excise,	
+						 discount
 					},
-				},
-				
+
 			},
-					() => {
-				if (props.values.discountType === 'PERCENTAGE') {
-					this.formRef.current.setFieldValue('discount', discount);
-					
-				}
-			},
+
 		);
-	
-	this.props.updateParentAmount(total,total_vat)
-	console.log("selectData total_vat ***",total_vat)
-	console.log("selectDa tatotal ***",total)
+		this.props.updateParentAmount(total_net,total_vat,total_excise)
+			console.log(this.state)
 	};
+
 
     addRow = () => {
 		const data = [...this.state.data];
@@ -1077,7 +1250,7 @@ class CreateCreditNoteModal extends React.Component {
 	render() {
 		strings.setLanguage(this.state.language);
 		const { openModal, closeModal, id, supplier_list,rfqReceiveDate,prefixData ,selectedData,invoiceNumber} = this.props;
-		const { initValue, contentState,data,supplierId } = this.state;
+		const { initValue, contentState,data,supplierId ,total_net,totalExciseAmount,totalAmount,totalVatAmount,discount} = this.state;
  console.log(this.state.prefixData,"prefixData")
 		let tmpSupplier_list = []
 
@@ -1116,7 +1289,7 @@ class CreateCreditNoteModal extends React.Component {
 							//  creditNoteNumber: Yup.string().required(
                             // 							 	'credit Note Number Number is required',
                             // 							 ),
-							creditNoteDate: Yup.date().required("credit note date is required"),							
+							creditNoteDate: Yup.date().required("Tax credit note date is required"),							
 						}
 						)
 					}
@@ -1144,7 +1317,7 @@ class CreateCreditNoteModal extends React.Component {
 								
 
 						
-            {console.log("in modal ",this.state.selectedData)}
+            {console.log("in modal ",this.state)}
            
             
 									<Row>
@@ -1189,6 +1362,7 @@ class CreateCreditNoteModal extends React.Component {
 																		 {strings.CreditNoteNumber}
 																	</Label>
 																	<Input
+																		maxLength="50"
 																		type="text"
 																		id="creditNoteNumber"
 																		name="creditNoteNumber"
@@ -1269,7 +1443,7 @@ class CreateCreditNoteModal extends React.Component {
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="taxTreatmentid">
-																		Tax Treatment
+																	{strings.TaxTreatment}
 																	</Label>
 																	<Input
 																	disabled
@@ -1351,6 +1525,7 @@ class CreateCreditNoteModal extends React.Component {
 																		showMonthDropdown
 																		showYearDropdown
 																		dateFormat="dd-MM-yyyy"
+																		minDate={new Date()}
 																		dropdownMode="select"
 																		value={props.values.creditNoteDate}
 																		selected={props.values.creditNoteDate}
@@ -1376,7 +1551,7 @@ class CreateCreditNoteModal extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="remainingInvoiceAmount">
 																
-																	Remaining Invoice Amount
+																	{strings.RemainingInvoiceAmount}
 																	</Label>
 																	<Input
 																		type="text"
@@ -1512,6 +1687,19 @@ class CreateCreditNoteModal extends React.Component {
 																	>
 																		 {strings.QUANTITY}
 																	</TableHeaderColumn>
+																	{/* <TableHeaderColumn
+																			width="5%"
+																			dataField="unitType"
+																     	>{strings.Unit}
+																			 	<i
+																		 id="unitTooltip"
+																		 className="fa fa-question-circle"
+																	 /> <UncontrolledTooltip
+																		 placement="right"
+																		 target="unitTooltip"
+																	 >
+																		Units / Measurements</UncontrolledTooltip>
+																		</TableHeaderColumn> */}
 																	<TableHeaderColumn
 																		dataField="unitPrice"
 																		dataFormat={(cell, rows) =>
@@ -1531,14 +1719,26 @@ class CreateCreditNoteModal extends React.Component {
 																			service
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn>
-																	{initValue.total_excise != 0 &&
+
 																	<TableHeaderColumn
-																		dataField="vat"
+																		width="12%"
+																		dataField="discount"
+																		dataFormat={(cell, rows) =>
+																			this.renderDiscount(cell, rows, props)
+																		}
+																	>
+																{strings.DisCount}
+																	</TableHeaderColumn>
+
+																	{selectedData.total_excise != 0 &&
+																	<TableHeaderColumn
+																	width="10%"
+																		dataField="exciseTaxId"
 																		dataFormat={(cell, rows) =>
 																			this.renderExcise(cell, rows, props)
 																		}
 																	>
-																	{strings.Excise}
+																	{strings.Excises}
 																	<i
 																			id="ExiseTooltip"
 																			className="fa fa-question-circle ml-1"
@@ -1549,7 +1749,7 @@ class CreateCreditNoteModal extends React.Component {
 																		>
 																			Excise dropdown will be enabled only for the excise products
 																		</UncontrolledTooltip>
-																	</TableHeaderColumn>}
+																	</TableHeaderColumn> }
 																	
 																	<TableHeaderColumn
 																		dataField="vat"
@@ -1602,145 +1802,257 @@ class CreateCreditNoteModal extends React.Component {
 														</Row> */}
 														<hr />
 													
-														{this.state.selectedData.invoiceLineItems &&this.state.selectedData.invoiceLineItems.length > 0 && (
-																<Row>
-																		<Col lg={8}>
-																	<FormGroup className="py-2">
-																		<Label htmlFor="notes">{strings.Notes}</Label>
-																		<Input
+														{this.state.data.length > 0 ? (
+															<Row>
+																<Col lg={8}>
+																<FormGroup className="py-2">
+																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
+																		<TextareaAutosize
 																			type="textarea"
+																			style={{width: "700px"}}
+																			className="textarea"
 																			maxLength="255"
 																			name="notes"
 																			id="notes"
-																			rows="6"
-																			placeholder={strings.Notes}
+																			rows="2"
+																			placeholder={strings.DeliveryNotes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
 																			}
 																			value={props.values.notes}
 																		/>
 																	</FormGroup>
-																
+																	<Row>
+																		<Col lg={6}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="receiptNumber">
+																					 {strings.ReferenceNumber}
+																				</Label>
+																				<Input
+																					type="text"
+																					maxLength="100"
+																					id="receiptNumber"
+																					name="receiptNumber"
+																					value={props.values.receiptNumber}
+																					placeholder={strings.ReceiptNumber}
+																					onChange={(value) => {
+																						props.handleChange('receiptNumber')(value);
+
+																					}}
+																					className={props.errors.receiptNumber && props.touched.receiptNumber ? "is-invalid" : " "}
+																				/>
+																				{props.errors.receiptNumber && props.touched.receiptNumber && (
+																					<div className="invalid-feedback">{props.errors.receiptNumber}</div>
+																				)}
+																				{/* <Input
+																					type="text"
+																					maxLength="100"
+																					id="receiptNumber"
+																					name="receiptNumber"
+																					placeholder={strings.ReceiptNumber}
+																					onChange={(option) => {
+																						if (
+																							option.target.value === '' ||
+																							this.regExBoth.test(
+																								option.target.value,
+																							)
+																						) {
+																							props.handleChange(
+																								'receiptNumber',
+																							)(option);
+																						}
+																					}}
+																					value={props.values.receiptNumber}
+																				/> */}
+																			</FormGroup>
+																		</Col>
+																		<Col lg={6}>
+																			<FormGroup className="mb-3">
+																				<Field
+																					name="attachmentFile"
+																					render={({ field, form }) => (
+																						<div>
+																							<Label>{strings.ReceiptAttachment}</Label>{' '}
+																							<br />
+																							<Button
+																								color="primary"
+																								onClick={() => {
+																									document
+																										.getElementById('fileInput')
+																										.click();
+																								}}
+																								className="btn-square mr-3"
+																							>
+																								<i className="fa fa-upload"></i>{' '}
+																								{strings.upload}
+																							</Button>
+																							<input
+																								id="fileInput"
+																								ref={(ref) => {
+																									this.uploadFile = ref;
+																								}}
+																								type="file"
+																								style={{ display: 'none' }}
+																								onChange={(e) => {
+																									this.handleFileChange(
+																										e,
+																										props,
+																									);
+																								}}
+																							/>
+																							{this.state.fileName && (
+																								<div>
+																									<i
+																										className="fa fa-close"
+																										onClick={() =>
+																											this.setState({
+																												fileName: '',
+																											})
+																										}
+																									></i>{' '}
+																									{this.state.fileName}
+																								</div>
+																							)}
+																						</div>
+																					)}
+																				/>
+																				{props.errors.attachmentFile &&
+																					props.touched.attachmentFile && (
+																						<div className="invalid-file">
+																							{props.errors.attachmentFile}
+																						</div>
+																					)}
+																			</FormGroup>
+																		</Col>
+																	</Row>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="receiptAttachmentDescription">
+																			{strings.AttachmentDescription}
+																		</Label><br/>
+																		<TextareaAutosize
+																			type="textarea"
+																			className="textarea"
+																			maxLength="250"
+																			style={{width: "700px"}}
+																			name="receiptAttachmentDescription"
+																			id="receiptAttachmentDescription"
+																			rows="2"
+																			placeholder={strings.ReceiptAttachmentDescription}
+																			onChange={(option) =>
+																				props.handleChange(
+																					'receiptAttachmentDescription',
+																				)(option)
+																			}
+																			value={
+																				props.values
+																					.receiptAttachmentDescription
+																			}
+																		/>
+																	</FormGroup>
 																</Col>
-																	<Col lg={4}>
+																
+																<Col lg={4}>
 																		<div className="">
-																		{initValue.total_excise > 0 ?	
-																		<div className="total-item p-2">
+																		{ totalExciseAmount>0 ?(<div className="total-item p-2" >
+																			<Row>
+																				<Col lg={6}>
+																					<h5 className="mb-0 text-right">
+																				{strings.TotalExcise}
+																					</h5>
+																				</Col>
+																				<Col lg={6} className="text-right">
+																					<label className="mb-0">
+																						{this.state.customer_currency_symbol} &nbsp;
+																							{totalExciseAmount>0 && (totalExciseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }))}
+																					</label>
+																				</Col>
+																			</Row>
+																		</div>): ''}
+																		
+																		{ discount>0 &&( <div className="total-item p-2">
 																				<Row>
-																					<Col lg={6}>
-																						<h5 className="mb-0 text-right">
-																							 {strings.TotalExcise}
-																						</h5>
-																					</Col>
-																					<Col lg={6} className="text-right">
-																						<label className="mb-0">
-																					            {this.state.selectedData.currencyIsoCode}  &nbsp;
-																								{this.state.selectedData.totalExciseAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
-																						
-																						</label>
-																					</Col>
-																				</Row>
-																			</div> : ''}
-																			{this.state.discountEnabled == true ?
+																				<Col lg={6}>
+																					<h5 className="mb-0 text-right">
+																						 {strings.Discount}
+																					</h5>
+																				</Col>
+																				<Col lg={6} className="text-right">
+																					<label className="mb-0">
+																						{this.state.customer_currency_symbol} &nbsp;
+																							{discount!=0 && (discount?.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }))}
+																					</label>
+																				</Col>
+																			</Row>
+																			</div>)}
+
+																			{/* {selectedData.total_net && selectedData.total_net!=0 && (<div className="total-item p-2">
+																			<Row>
+																				<Col lg={6}>
+																					<h5 className="mb-0 text-right">
+																						 {strings.TotalNet}
+																					</h5>
+																				</Col>
+																				<Col lg={6} className="text-right">
+																					<label className="mb-0">
+																						{this.state.customer_currency_symbol} &nbsp;
+																							{selectedData.total_net!=0 && (selectedData.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }))}
+																					</label>
+																				</Col>
+																			</Row>
+																		</div>)} */}
+																		
 																		<div className="total-item p-2">
-																				<Row>
-																					<Col lg={6}>
-																						<h5 className="mb-0 text-right">
-																						Discount
-																						</h5>
-																					</Col>
-																					<Col lg={6} className="text-right">
-																						<label className="mb-0">
+																			<Row>
+																				<Col lg={6}>
+																					<h5 className="mb-0 text-right">
+																						 {strings.TotalNet}
+																					</h5>
+																				</Col>
+																				<Col lg={6} className="text-right">
+																					<label className="mb-0">
+																						{this.state.customer_currency_symbol} &nbsp;
+																							{total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
 																					
-																								{this.state.selectedData.currencyIsoCode}  &nbsp;
-																								{this.state.selectedData.discount ? this.state.selectedData.discount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 }):"0"}
-																							
-																						</label>
-																					</Col>
-																				</Row>
-																			</div> : ''}
-																			<div className="total-item p-2">
-																				<Row>
-																					<Col lg={6}>
-																						<h5 className="mb-0 text-right">
-																							 {strings.TotalNet}
-																						</h5>
-																					</Col>
-																					<Col lg={6} className="text-right">
-																						<label className="mb-0">
-																						{/* {universal_currency_list[0] && (
-																						<Currency
-																						value=	{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																						currencySymbol={
-																						universal_currency_list[0]
-																						? universal_currency_list[0].currencyIsoCode
-																						: 'USD'
-																							}
-																							/>
-																							)} */}
-																								{this.state.selectedData.currencyIsoCode}  &nbsp;
-																								{(this.state.selectedData.totalAmount-this.state.selectedData.totalVatAmount).toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
-																							{/* {this.getTotalNet()} */}
-																						</label>
-																					</Col>
-																				</Row>
-																			</div>
-																			<div className="total-item p-2">
-																				<Row>
-																					<Col lg={6}>
-																						<h5 className="mb-0 text-right">
-																							 {strings.TotalVat}
-																						</h5>
-																					</Col>
-																					<Col lg={6} className="text-right">
-																						<label className="mb-0">
-																						{/* {universal_currency_list[0] && (
-																						<Currency
-																						value=	{initValue.invoiceVATAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																						currencySymbol={
-																						universal_currency_list[0]
-																						? universal_currency_list[0].currencyIsoCode
-																						: 'USD'
-																							}
-																							/>
-																							)} */}
-																							{/* {this.state.totalVatAmount}  */}
-																							{this.state.selectedData.currencyIsoCode}  &nbsp;
-																							{this.state.totalVatAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
-																						</label>
-																					</Col>
-																				</Row>
-																			</div>
-																			<div className="total-item p-2">
-																				<Row>
-																					<Col lg={6}>
-																						<h5 className="mb-0 text-right">
-																							{strings.Total}
-																						</h5>
-																					</Col>
-																					<Col lg={6} className="text-right">
-																						<label className="mb-0">
-																						{/* {universal_currency_list[0] && (
-																						<Currency
-																						value=	{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																						currencySymbol={
-																						universal_currency_list[0]
-																						? universal_currency_list[0].currencyIsoCode
-																						: 'USD'
-																							}
-																							/>
-																							)} */}
-																						 {/* {this.state.totalAmount} */}
-																							{this.state.selectedData.currencyIsoCode} &nbsp;
-																							{this.state.totalAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
-																						</label>
-																					</Col>
-																				</Row>
-																			</div>
+																					</label>
+																				</Col>
+																			</Row>
+																		</div>
+
+																		{totalVatAmount && totalVatAmount!=0 && (<div className="total-item p-2">
+																			<Row>
+																				<Col lg={6}>
+																					<h5 className="mb-0 text-right">
+																					{strings.TotalVat}
+																					</h5>
+																				</Col>
+																				<Col lg={6} className="text-right">
+																					<label className="mb-0">
+																						{this.state.customer_currency_symbol} &nbsp;
+																							{totalVatAmount!=0 && (totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }))}
+																					</label>
+																				</Col>
+																			</Row>
+																		</div>)}
+
+																		{totalAmount && totalAmount!=0 && (<div className="total-item p-2">
+																			<Row>
+																				<Col lg={6}>
+																					<h5 className="mb-0 text-right">
+																						 {strings.Total}
+																					</h5>
+																				</Col>
+																				<Col lg={6} className="text-right">
+																					<label className="mb-0">
+																						{this.state.customer_currency_symbol} &nbsp;
+																							{totalAmount!=0 && (totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }))}
+																					</label>
+																				</Col>
+																			</Row>
+																		</div>)}
 																		</div>
 																	</Col>
 																</Row>
-															)}
+															) : null}
 									</ModalBody>
 									<ModalFooter>
 										<Button

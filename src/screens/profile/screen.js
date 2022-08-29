@@ -920,6 +920,7 @@ class Profile extends React.Component {
 																								type="text"
 																								id="firstName"
 																								name="firstName"
+																								placeholder='First Name'
 																								onChange={(option) => {
 																									if (
 																										option.target.value === '' ||
@@ -959,6 +960,7 @@ class Profile extends React.Component {
 																								type="text"
 																								id="lastName"
 																								name="lastName"
+																								placeholder='Last Name'
 																								onChange={(option) => {
 																									if (
 																										option.target.value === '' ||
@@ -997,7 +999,7 @@ class Profile extends React.Component {
 																							</span> {strings.EmailID}
 																						</Label>
 																							<Input
-																								type="text"
+																								type="email"
 																								id="email"
 																								name="email"
 																								placeholder={strings.Enter+strings.EmailID}
@@ -1333,7 +1335,7 @@ class Profile extends React.Component {
 																							'png',
 																							'jpeg',
 																						]}
-																						maxFileSize={110000}
+																						maxFileSize={40000}
 																						withPreview={true}
 																						singleImage={true}
 																						// withIcon={this.state.showIcon}
@@ -1344,7 +1346,7 @@ class Profile extends React.Component {
 																								? { height: 'inherit' }
 																								: {}
 																						}
-																						label="'Max file size: 100KB"
+																						label="'Max file size: 40KB"
 																						labelClass={
 																							this.state.userPhoto.length > 0
 																								? 'hideLabel'
@@ -1488,7 +1490,7 @@ class Profile extends React.Component {
 																)
 																.nullable(),
 																companyStateCode: Yup.string().required(
-																	'State is required',
+																	'Emirate is required',
 																),
 																// companyCity: Yup.string().required(
 																// 	'City is required',
@@ -1538,7 +1540,7 @@ class Profile extends React.Component {
 																							'png',
 																							'jpeg',
 																						]}
-																						maxFileSize={110000}
+																						maxFileSize={40000}
 																						withPreview={true}
 																						singleImage={true}
 																						// withIcon={this.state.showIcon}
@@ -1549,7 +1551,7 @@ class Profile extends React.Component {
 																								? { height: 'inherit' }
 																								: {}
 																						}
-																						label="'Max file size: 100KB"
+																						label="'Max file size: 40kb"
 																						labelClass={
 																							this.state.companyLogo.length > 0
 																								? 'hideLabel'
@@ -1573,7 +1575,6 @@ class Profile extends React.Component {
 																							<span className="text-danger">* </span> {strings.CompanyName}
 																						</Label>
 																							<Input
-																								maxLength={150}
 																								type="text"
 																								maxLength='100'
 																								id="companyName"
@@ -1592,7 +1593,7 @@ class Profile extends React.Component {
 																										)(option);
 																									}
 																								}}
-																								value={props.values.companyName}
+																								//value={props.values.companyName}
 																								className={
 																									props.errors.companyName &&
 																									props.touched.companyName
@@ -1634,7 +1635,7 @@ class Profile extends React.Component {
 																									} 
 																								}
 																							}
-																							value={props.values.companyRegistrationNumber}
+																							//value={props.values.companyRegistrationNumber}
 																								className={
 																									props.errors.companyRegistrationNumber &&
 																									props.touched.companyRegistrationNumber
@@ -1712,7 +1713,6 @@ class Profile extends React.Component {
 																							{strings.EmailAddress}
 																						</Label>
 																							<Input
-																								maxLength={80}
 																								type="text"
 																								maxLength='80'
 																								id="emailAddress"
@@ -1850,7 +1850,7 @@ class Profile extends React.Component {
 																								)(option);
 																							}
 																						}}
-																						value={props.values.telephoneNumber}
+																						//value={props.values.telephoneNumber}
 																						className={
 																							props.errors.telephoneNumber &&
 																							props.touched.telephoneNumber
@@ -2003,7 +2003,7 @@ class Profile extends React.Component {
 																								'companyAddressLine1',
 																							)(option);
 																						}}
-																						value={props.values.companyAddressLine1}
+																						//value={props.values.companyAddressLine1}
 																						className={
 																							props.errors.companyAddressLine1 &&
 																							props.touched.companyAddressLine1
@@ -2044,7 +2044,7 @@ class Profile extends React.Component {
 																								'companyAddressLine2',
 																							)(option);
 																						}}
-																						value={props.values.companyAddressLine2}
+																						//value={props.values.companyAddressLine2}
 																						className={
 																							props.errors.companyAddressLine2 &&
 																							props.touched.companyAddressLine2
@@ -2249,7 +2249,7 @@ class Profile extends React.Component {
 																					{props.errors.companyStateCode &&
 																						props.touched.companyStateCode && (
 																							<div className="invalid-feedback">
-																								{props.errors.companyStateRegion}
+																								{props.errors.companyStateCode}
 																							</div>
 																						)}
 																				</FormGroup>
@@ -2282,7 +2282,7 @@ class Profile extends React.Component {
 																								props.handleChange('companyCity')(option);
 																							}
 																						}}
-																						value={props.values.companyCity}
+																						//value={props.values.companyCity}
 																						className={
 																							props.errors.companyCity &&
 																							props.touched.companyCity
@@ -2334,7 +2334,7 @@ class Profile extends React.Component {
 																								)(option);
 																							}
 																						}}
-																						value={props.values.companyPoBoxNumber}
+																						//value={props.values.companyPoBoxNumber}
 																						className={
 																							props.errors.companyPoBoxNumber &&
 																							props.touched.companyPoBoxNumber
@@ -2471,7 +2471,7 @@ class Profile extends React.Component {
 																									} 
 																								}
 																							}
-																							value={props.values.vatRegistrationNumber}
+																							//value={props.values.vatRegistrationNumber}
 																								className={
 																									props.errors.vatRegistrationNumber &&
 																									props.touched.vatRegistrationNumber
@@ -3740,7 +3740,7 @@ class Profile extends React.Component {
 																							// onpaste="return false"
 																								minLength={8}
 																								maxLength={255}
-																								type="password"
+																								//type="password"
 																								id="password"
 																								name="password"
 																								autoComplete="new-password"

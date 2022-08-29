@@ -318,7 +318,7 @@ class DetailBankAccount extends React.Component {
 		this.props.detailBankAccountActions
 			.checkValidation(data)
 			.then((response) => {
-				if (response.data === 'Bank account already exists') {
+				if (response.data === 'Bank Account Already Exists') {
 					this.setState({
 						exist: true,
 					});

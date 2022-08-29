@@ -363,7 +363,7 @@ export const creditNoteposting = (obj) => {
 	return (dispatch) => {
 		let data = {
 			method: 'post',
-			url: '/rest/creditNote/creditNoteposting',
+			url: '/rest/creditNote/creditNotePosting',
 			data: obj,
 		};
 		return authApi(data)

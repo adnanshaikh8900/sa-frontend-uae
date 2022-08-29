@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-
+import moment from 'moment'
 import {
 	Card,
 	CardHeader,
@@ -229,7 +229,7 @@ class CreditNotes extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data ? res.data.message : 'Credit Note Posted Successfully'
+						res.data= 'Credit Note Posted Successfully'
 					);
 					this.setState({
 						loading: false,
@@ -249,6 +249,8 @@ class CreditNotes extends React.Component {
 			});
 	};
 
+	
+
 	unPostInvoice = (row) => {
 		this.setState({
 			loading: true,
@@ -256,15 +258,20 @@ class CreditNotes extends React.Component {
 		const postingRequestModel = {
 			amount: row.invoiceAmount,
 			postingRefId: row.id,
-			postingRefType: 'INVOICE',
+			postingRefType: 'CREDIT_NOTE',
+			isCNWithoutProduct :row.isCNWithoutProduct==true?true:false ,
+			amountInWords:upperCase(row.currencyName + " " +(toWords.convert(row.invoiceAmount))+" ONLY" ).replace("POINT","AND"),
+			vatInWords:row.totalVatAmount ? upperCase(row.currencyName + " " +(toWords.convert(row.totalVatAmount))+" ONLY" ).replace("POINT","AND") :"-",
+			markAsSent:false
 		};
-		this.props.customerInvoiceActions
+	
+		this.props.creditNotesActions
 			.unPostInvoice(postingRequestModel)
 			.then((res) => {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data ? res.data.message : 'Invoice Unposted Successfully'
+						"Credit Note Moved To Draft Successfully " 
 					);
 					this.setState({
 						loading: false,
@@ -417,7 +424,7 @@ class CreditNotes extends React.Component {
 									<i className="fas fa-edit" /> {strings.Edit}
 								</div>
 							</DropdownItem>
-						)}	{row.statusEnum !== 'Closed' && row.statusEnum !== 'Draft' && row.cnCreatedOnPaidInvoice !==true && row.isCNWithoutProduct !==true &&   (
+						)}	{row.statusEnum !== 'Closed' && row.statusEnum !== 'Draft' && row.cnCreatedOnPaidInvoice !==true  &&   (
 							<DropdownItem>
 								<div
 									onClick={() => {
@@ -475,6 +482,13 @@ class CreditNotes extends React.Component {
 						>
 							<i className="fas fa-eye" />  {strings.View}
 						</DropdownItem>
+						{row.statusEnum === 'Open' && <DropdownItem
+							onClick={() =>
+								this.unPostInvoice(row)
+							}
+						>
+							<i className="fas fa-file" />  {strings.Draft}
+						</DropdownItem>}
 					</DropdownMenu>
 				</ButtonDropdown>
 			</div>
@@ -737,17 +751,19 @@ class CreditNotes extends React.Component {
 			customer_invoice_list,
 			universal_currency_list,
 		} = this.props;
+		
 		const customer_invoice_data =
-		this.props.customer_invoice_list && this.props.customer_invoice_list.data
-			? this.props.customer_invoice_list.data.map((customer) => ({
+		this.props.customer_invoice_list
+			? this.props.customer_invoice_list.map((customer) => ({
 						id: customer.id,
 						status: customer.status,
 						statusEnum: customer.statusEnum,
-						customerName: customer.name,
+						customerName: customer.customerName,
 						dueAmount:customer.dueAmount ? customer.dueAmount : 0,
 						contactId: customer.contactId,
-						invoiceNumber: customer.referenceNumber,
-						invoiceDate: customer.invoiceDate ? customer.invoiceDate : '',
+						invoiceNumber: customer.invNumber,
+						creditNoteNumber: customer.creditNoteNumber,
+						invoiceDate: customer.creditNoteDate ? customer.creditNoteDate : '',
 						invoiceDueDate: customer.invoiceDueDate
 							? customer.invoiceDueDate
 							: '',
@@ -1068,12 +1084,12 @@ class CreditNotes extends React.Component {
 										<i className="fas fa-plus mr-1" />
 									        {strings.AddCreditNote}
 									</Button></div></Row>
-								
+								{console.log("Asdasdas",customer_invoice_data)}
 										<BootstrapTable
 											selectRow={this.selectRowProp}
 											search={false}
 											options={this.options}
-											data={customer_invoice_data ? customer_invoice_data : []}
+											data={customer_invoice_data ? customer_invoice_data.sort((a,b)=>new Date(a.creditNoteDate)-new Date(b.creditNoteDate)) : []}
 											version="4"
 											hover
 											responsive
@@ -1098,7 +1114,7 @@ class CreditNotes extends React.Component {
 											}}
 										>
 												<TableHeaderColumn
-												dataField="invoiceNumber"
+												dataField="creditNoteNumber"
 												// dataFormat={this.renderInvoiceNumber}
 												dataSort
 												//	width="7%"

@@ -321,6 +321,7 @@ class Expense extends React.Component {
 	handleChange = (val, name) => {
 		this.setState({
 			filterData: Object.assign(this.state.filterData, {
+
 				[name]: val,
 			}),
 		});

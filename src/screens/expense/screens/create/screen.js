@@ -31,6 +31,7 @@ import LocalizedStrings from 'react-localization';
 import { Checkbox } from '@material-ui/core';
 import Switch from "react-switch";
 import { TextareaAutosize } from '@material-ui/core';
+import currency from 'screens/currency';
 
 const mapStateToProps = (state) => {
 	return {
@@ -58,6 +59,7 @@ const mapDispatchToProps = (dispatch) => {
 
 let strings = new LocalizedStrings(data);
 class CreateExpense extends React.Component {
+	_isMounted = false;
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -79,6 +81,7 @@ class CreateExpense extends React.Component {
 				attachmentFile: '',
 				employee: '',
 				receiptAttachmentDescription: '',
+				notes: '',
 				vatCategoryId: '',
 				payMode: '',
 				bankAccountId: '',
@@ -118,6 +121,7 @@ class CreateExpense extends React.Component {
 		};
 
 		this.regEx = /^[0-9\b]+$/;
+		this.regExInvNum = /[a-zA-Z0-9-/]+$/;
 		this.regExAlpha = /^[a-zA-Z0-9!@#$&()-\\`.+,/\"]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
@@ -192,6 +196,9 @@ class CreateExpense extends React.Component {
 									isReverseChargeEnabled:res.data.isReverseChargeEnabled ?res.data.isReverseChargeEnabled:false,
 									placeOfSupplyId:res.data.placeOfSupplyId ?res.data.placeOfSupplyId:'',
 									taxTreatmentId:res.data.taxTreatmentId ?res.data.taxTreatmentId:'',
+									notes: res.data.notes 
+										? res.data.notes 
+										: '',
 									
 								},
 								payee:res.data.payee ? res.data.payee :'', 
@@ -243,8 +250,7 @@ class CreateExpense extends React.Component {
 
 								this.formRef.current.setFieldValue('expenseDate', new Date(res.data.expenseDate), true);
 
-
-								let currency=	selectCurrencyFactory.renderOptions('currencyName','currencyCode',this.props.currency_convert_list,'Currency',)
+								let currency= selectCurrencyFactory.renderOptions('currencyName','currencyCode',this.props.currency_convert_list,'Currency',)
 																	.find(
 																		(option) =>
 																			option.value ==res.data.currencyCode,
@@ -268,6 +274,7 @@ class CreateExpense extends React.Component {
 								this.formRef.current.setFieldValue('expenseDescription',  res.data.expenseDescription, true);
 								this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
 								this.formRef.current.setFieldValue('receiptAttachmentDescription', res.data.receiptAttachmentDescription, true);
+								this.formRef.current.setFieldValue('notes',  res.data.notes, true);
 
 								let payee=	selectOptionsFactory.renderOptions(	'label','value',	this.props.pay_to_list,	'Payee',)
 								.find((option) => 	option.label == res.data.payee)
@@ -285,13 +292,23 @@ class CreateExpense extends React.Component {
 
 
 	componentDidMount = () => {
+		this._isMounted = true;
 		this.initializeData();
 		this.getExpenseNumber();
 		// this.savestate()
 		if(this.props.location.state && this.props.location.state.parentId )
 		this.getParentExpenseDetails(this.props.location.state.parentId);
+		this.getDefaultNotes()
 	};
-
+	getDefaultNotes=()=>{
+		this.props.commonActions.getNoteSettingsInfo().then((res)=>{
+			if(res.status===200){
+				this.formRef.current.setFieldValue('notes',res.data.defaultNotes, true);
+				this.formRef.current.setFieldValue('footNote',  res.data.defaultFootNotes, true);
+				
+			}
+		})
+	}
 	initializeData = () => {
 		this.props.expenseCreateActions.getPaytoList();
 		this.props.expenseActions.getVatList();
@@ -307,12 +324,12 @@ class CreateExpense extends React.Component {
 					},
 				},
 			});
-			if(response.data && response.data[0]&& response.data[0].currencyCode && this.formRef.current)
-			this.formRef.current.setFieldValue(
-				'currency',
-				response.data[0].currencyCode,
-				true,
-			);
+			// if(response.data && response.data[0]&& response.data[0].currencyCode && this.formRef.current)
+			// this.formRef.current.setFieldValue(
+			// 	'currency',
+			// 	response.data[0].currencyCode,
+			// 	true,
+			// );
 		});
 		// this.props.expenseCreateActions.checkAuthStatus().then((response) => {
 		// 	this.setState({
@@ -342,7 +359,7 @@ class CreateExpense extends React.Component {
 				isDesignatedZone:isDesignatedZone})
 	
 	});
-}
+	}
 	getTaxTreatmentList=()=>{
 		this.props.expenseActions
 			.getTaxTreatment()
@@ -385,13 +402,17 @@ class CreateExpense extends React.Component {
 			exclusiveVat,
 			taxTreatmentId,
 			expenseType,
+			notes,
+			footNote
 		} = data;
 		let formData = new FormData();
 		
 		formData.append('expenseType',  this.state.expenseType );
+		formData.append('delivaryNotes',notes);
+		formData.append('footNote',footNote? footNote : '')
 		formData.append('expenseNumber', expenseNumber ? expenseNumber : '');
 		if(payee)
-		formData.append('payee', payee.value ? payee.value : payee);
+		formData.append('payee', payee.value ? payee.value : '');
 		formData.append('expenseDate', expenseDate !== null ? expenseDate : '');
 		formData.append('expenseDescription', expenseDescription);
 		formData.append('receiptNumber', receiptNumber);
@@ -423,6 +444,7 @@ class CreateExpense extends React.Component {
 		if (currency) {
 			formData.append('currencyCode', currency.value);
 		}
+
 		if (vatCategoryId && vatCategoryId.value) {
 			formData.append('vatCategoryId', vatCategoryId.value);
 			 
@@ -457,6 +479,7 @@ class CreateExpense extends React.Component {
 							createMore: false,
 							loading:false,
 						});
+						this.getExpenseNumber()
 					} else {
 						this.props.history.push('/admin/expense/expense');
 						this.setState({ loading:false,});
@@ -535,7 +558,6 @@ class CreateExpense extends React.Component {
 			}
 		});
 	
-	console.log(this.state.employeeCode)
 	}
 	
 	
@@ -550,7 +572,10 @@ class CreateExpense extends React.Component {
 				if (response.data === 'Expense Number Already Exists') {
 					this.setState({
 						exist: true,
-					});
+					},
+						
+					() => {},
+					);
 				} else {
 					this.setState({
 					    exist: false,
@@ -637,59 +662,81 @@ class CreateExpense extends React.Component {
 	}
 
 	ReverseChargeSetting=(option,props)=>{
-		if(this.state.isDesignatedZone==true)
-			switch(option.value){
-
-				case 1: 
-				case 2: 
-				case 3: 
-				case 4: 
-				case 8: 
+		if(this.state.isDesignatedZone==true){
+			if((option>=1 && option<=4)|| option===8){
 				this.setState({
 					showReverseCharge:false,
 				})
-				break;
-
-				case 5: 
-				case 6: 
-				case 7: 
+			}
+			else{
 				this.setState({
 					showReverseCharge:true,
 				})
-				break;
+			}
+		}
+			// switch(option){
+
+			// 	case 1: 
+			// 	case 2: 
+			// 	case 3: 
+			// 	case 4: 
+			// 	case 8: 
+			// 	this.setState({
+			// 		showReverseCharge:false,
+			// 	})
+			// 	break;
+
+			// 	case 5: 
+			// 	case 6: 
+			// 	case 7: 
+			// 	this.setState({
+			// 		showReverseCharge:true,
+			// 	})
+			// 	break;
 				
 			
-			}
-		else
+			// }
+		else{
 //Not Designated Zone		
-			if(this.state.isDesignatedZone==false)
-			switch(option.value){
+			if(this.state.isDesignatedZone==false){
+				if(option===3 || option===8){
+					this.setState({
+						showReverseCharge:false,
+					})
+				}
+				else{
+					this.setState({
+						showReverseCharge:true,
+					})
+				}
+			// switch(option.value){
 
-				case 1: 
-				case 2: 
-				case 4: 
-				case 5: 
-				case 6: 
-				case 7: 
-				this.setState({
-					showReverseCharge:true,
-				})
-						break;
+			// 	case 1: 
+			// 	case 2: 
+			// 	case 4: 
+			// 	case 5: 
+			// 	case 6: 
+			// 	case 7: 
+			// 	this.setState({
+			// 		showReverseCharge:true,
+			// 	})
+			// 			break;
 
-				case 3: 
-				case 8: 
-				this.setState({
-					showReverseCharge:false,
-				})
-						break;
-			}
+			// 	case 3: 
+			// 	case 8: 
+			// 	this.setState({
+			// 		showReverseCharge:false,
+			// 	})
+			// 			break;
+			}}
+
 	}
 
 	renderVat=(props)=>{
 		let vat_list=[]
 		let vatIds=[]
-		if(this.state.isDesignatedZone && this.state.isDesignatedZone !=null&&this.state.isDesignatedZone==true){
-			switch(props.values.taxTreatmentId && props.values.taxTreatmentId.value ?props.values.taxTreatmentId.value:''){
+		if(this.state.isDesignatedZone && this.state.isDesignatedZone != null && this.state.isDesignatedZone == true){
+			switch(props.values.taxTreatmentId && props.values.taxTreatmentId.value ? props.values.taxTreatmentId.value:''){
 
 				case 1: 
 				case 3: 
@@ -825,6 +872,18 @@ class CreateExpense extends React.Component {
 
 		return array;
 	}
+	handleChangeCurrency=(event)=>{
+		var initValue = this.state.initValue;
+		initValue.currency = event;
+		this.setState({initValue});
+		alert(event);
+	}
+
+//added by mudassar to unmount the asyn call 
+componentWillUnmount() {
+    this._isMounted = false;
+  }
+
 	render() {
 		strings.setLanguage(this.state.language);
 		const { initValue, payMode ,exist,taxTreatmentList,placelist,vat_list,loading,loadingMsg} = this.state;
@@ -849,7 +908,6 @@ class CreateExpense extends React.Component {
 				},
 			}),
 		};
-		console.log(this.state.payee)
 		return (
 			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 			<div>
@@ -893,7 +951,6 @@ class CreateExpense extends React.Component {
 													// })
 												}}
 												validate={(values) => {
-													
 													let errors = {};
 													// if (
 													// 	values.payMode.value === 'BANK' &&
@@ -901,18 +958,27 @@ class CreateExpense extends React.Component {
 													// ) {
 													// 	errors.bankAccountId = 'Bank account is required';
 													// }
-													// if(values.payee.value === 'Company'){
+													if(values.payee.value === 'Company Expense' ){
+														if(values.payMode.value != "CASH"){
+															errors.payMode = 'Pay through is required'
+														}
+														
+													}
+													// if(values.payMode.value === "CASH"){
 													// 	errors.payMode = 'Pay through is required'
 													// }
 													if (exist === true) {
 														errors.expenseNumber =
-															'Expense number already exists';
+															'Expense number already exists'
 													}
-													if(values.currency ==='' ){
-														errors.currency="Currency is required "
+													if (values.expenseNumber==='') {
+														errors.expenseNumber = 'Expense number is required';
 													}
-													if(this.state.showPlacelist===true && values.placeOfSupplyId ===''){
-														errors.placeOfSupplyId="Place of supply is required"
+													if(this.state.currency===true && values.currency === '' ){
+														errors.currency = 'Currency is required';
+													}
+													if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
+														errors.placeOfSupplyId = 'Place of supply is required';
 													}
 
 													return errors;
@@ -930,9 +996,11 @@ class CreateExpense extends React.Component {
 													expenseDate: Yup.date().required(
 														'Expense date is required',
 													),
-													
 													currency: Yup.string().required(
 														'Currency is required',
+													),
+													placeOfSupplyId: Yup.string().required(
+														'Place of supply is required',
 													),
 													payee: Yup.string().required(
 														'Paid by is required',
@@ -957,9 +1025,9 @@ class CreateExpense extends React.Component {
 													vatCategoryId: Yup.string().required(
 														'VAT is required',
 													),
-													// payMode: Yup.string().required(
-													// 	'Pay Through is required',
-													// ),
+													payMode: Yup.string().required(
+														'Pay through is required',
+													),
 													attachmentFile: Yup.mixed()
 														.test(
 															'fileType',
@@ -1025,7 +1093,7 @@ class CreateExpense extends React.Component {
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
-																					this.regExBoth.test(
+																					this.regExInvNum.test(
 																						option.target.value,
 																					)
 																				) {
@@ -1089,7 +1157,7 @@ class CreateExpense extends React.Component {
 																					//placelist Setup
 																					this.placelistSetting(option,props)
 																					// ReverseCharge setup
-																					this.ReverseChargeSetting(option,props)
+																					this.ReverseChargeSetting(option.value,props)
 																					this.setState({isReverseChargeEnabled:false,exclusiveVat:false})
 																																																													
 																				} else {
@@ -1151,9 +1219,12 @@ class CreateExpense extends React.Component {
 																				: ''
 																		}
 																		onChange={(option) =>
-																			props.handleChange('placeOfSupplyId')(
-																				option,
-																			)
+																			{
+																				if(option.value !='')
+																				props.handleChange('placeOfSupplyId')(option);
+																				else
+																				props.handleChange('placeOfSupplyId')('');
+																			}
 																		}
 																	/>
 																	{props.errors.placeOfSupplyId &&
@@ -1282,7 +1353,7 @@ class CreateExpense extends React.Component {
 																	{props.errors.expenseDate &&
 																		props.touched.expenseDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.expenseDate}
+																				{props.errors.expenseDate.includes("final value was:") ? "Expense date is required" :props.errors.expenseDate}
 																			</div>
 																		)}
 																</FormGroup>
@@ -1293,52 +1364,46 @@ class CreateExpense extends React.Component {
 																	<Label htmlFor="payee">
 																		<span className="text-danger">* </span>{strings.PaidBy}
 																	</Label>
-																
-																		<Select
-																	
-																		options={
-																			pay_to_list
-																				? selectOptionsFactory.renderOptions(
-																						'label',
-																						'value',
-																						pay_to_list,
-																						'Payee',
-																				  )
-																				: []
-																		}
-																		value={props.values.payee}
-																		onChange={(option) => {
-																			if (option && option.value) {
-																				props.handleChange('payee')(
-																					option,
-																				);
-																			this.setState({
-																				payee: option ? option : option.value
-																			})
-																			} else {
-																				props.handleChange('payee')('');
+																		<Select																	
+																			options={
+																				pay_to_list
+																					? selectOptionsFactory.renderOptions(
+																							'label',
+																							'value',
+																							pay_to_list,
+																							'Payee',
+																					)
+																					: []
 																			}
-																		}}
-																		placeholder={strings.Select+strings.Payee}
-																		id="payee"
-																		name="payee"
-																		className={
-																			props.errors.payee && props.touched.payee
-																				? 'is-invalid'
-																				: ''
-																		}
-																	/>
-																		{props.errors.payee &&
-																		props.touched.payee && (
-																			<div className="invalid-feedback">
-																				{props.errors.payee}
-																			</div>
-																	)}
-																		
-																		
+																			value={props.values.payee}
+																			onChange={(option) => {
+																				if (option && option.value) {
+																					props.handleChange('payee')(
+																						option,
+																					);
+																				this.setState({
+																					payee: option ? option : option.value
+																				})
+																				} else {
+																					props.handleChange('payee')('');
+																				}
+																			}}
+																			placeholder={strings.Select+strings.Payee}
+																			id="payee"
+																			name="payee"
+																			className={
+																				props.errors.payee && props.touched.payee
+																					? 'is-invalid'
+																					: ''
+																			}
+																		/>
+																			{props.errors.payee &&
+																			props.touched.payee && (
+																				<div className="invalid-feedback">
+																					{props.errors.payee}
+																				</div>
+																		)}
 																</FormGroup>
-															  
-                                    
 															</Col>
 														
 															<Col>
@@ -1354,10 +1419,10 @@ class CreateExpense extends React.Component {
                                                             >
                                                                 <i className="fas fa-plus mr-1" />
                                          {strings.NewEmployee}
-									</Button></Col>
-														
-															
-														</Row>
+										
+										</Button>
+												</Col>
+													</Row>
 														<Row>
 															<Col lg={3}>
 																<FormGroup className="mb-3">
@@ -1448,25 +1513,25 @@ class CreateExpense extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currency">
 																		<span className="text-danger">* </span>
-																		{strings.Currency}  
+																		{strings.Currency} 
 																	</Label>
 																	<Select
 																		id="currency"
 																		name="currency"
+																		// styles={customStyles}
 																		options={
 																			currency_convert_list
 																				? selectCurrencyFactory.renderOptions(
 																						'currencyName',
 																						'currencyCode',
 																						currency_convert_list,
-																						'currency',
+																						'Currency',
 																				  )
 																				: []
 																		}
 																		placeholder={strings.Select+strings.Currency}
-																		value={props.values.currencyCode}
 																		onChange={(option) => {
-																			if(option.label!=="Select currency")
+																			if(option.value!="")
 																			{
 																			props.handleChange('currency')(option);
 																			this.setExchange(option.value);
@@ -1482,13 +1547,13 @@ class CreateExpense extends React.Component {
 																	/>
 																	{props.errors.currency &&
 																		props.touched.currency && (
-																			<div className='invalid-feedback'>
+																			<div className="invalid-feedback">
 																				{props.errors.currency}
 																			</div>
 																		)}
 																</FormGroup>
 															</Col>
-																{this.state.payee  && this.state.payee.value === 'Company Expense' || this.state.payee === 'Company Expense' ? 
+																{/* {this.state.payee  && this.state.payee.value === 'Company Expense' || this.state.payee === 'Company Expense' ?  */}
 															<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="payMode"><span className="text-danger">* </span> {strings.PayThrough}</Label>
@@ -1531,7 +1596,8 @@ class CreateExpense extends React.Component {
 																				</div>
 																			)}
 																	</FormGroup>
-																</Col>:''}
+																</Col>
+																{/* :''} */}
 														</Row>
 														{/* {props.values.vatCategoryId !=='' && props.values.vatCategoryId.label !=='Select Vat' &&
 														(
@@ -1596,9 +1662,8 @@ class CreateExpense extends React.Component {
 																	<Col></Col></Row>
 														)
 														} 
-														
-													{this.state.showReverseCharge==true &&(	<Row>
-														<Col >
+														<Row>
+													{this.state.showReverseCharge==true &&(<Col>
 															{/* <Input
 															type="checkbox"
 															id="isReverseChargeEnabled"
@@ -1618,8 +1683,8 @@ class CreateExpense extends React.Component {
 																}}
 															/>
 															<Label>Reverse Charge</Label>
-															</Col>
-														</Row>)}
+															</Col>)}
+															</Row>
 														<hr />
 														<Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
 																<Col>
@@ -1670,11 +1735,11 @@ class CreateExpense extends React.Component {
 																	<div>
 																		<Input
 																			type="number"
-min="0"
+																			min="0"
 																			className="form-control"
 																			id="exchangeRate"
 																			name="exchangeRate"
-																			
+																			maxLength="20"
 																			value={props.values.exchangeRate}
 																			onChange={(value) => {
 																				props.handleChange('exchangeRate')(
@@ -1864,7 +1929,7 @@ min="0"
 																			props.handleBlur();
 																			if(props.errors &&  Object.keys(props.errors).length != 0)
 																			this.props.commonActions.fillManDatoryDetails();
-
+																			console.log(props.errors,"errors")
 																			this.setState(
 																				{ createMore: false },
 																				() => {

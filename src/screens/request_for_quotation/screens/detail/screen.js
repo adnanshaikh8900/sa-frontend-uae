@@ -121,7 +121,9 @@ class DetailRequestForQuotation extends React.Component {
 			dateChanged: false,
 			dateChanged1: false,
 			loadingMsg:"Loading...",
-			disableLeavePage:false
+			disableLeavePage:false,
+			textValue:'xjnjxndjnjcnjdnkjcnkjdnvkjndkjnvjdvnkdjnkv',
+
 		};
 
 		// this.options = {
@@ -1199,6 +1201,7 @@ class DetailRequestForQuotation extends React.Component {
 		);
 	};
 	handleSubmit = (data) => {
+		debugger
 		this.setState({ disabled: true });
 		const { current_rfq_id, term } = this.state;
 		const {
@@ -1264,9 +1267,9 @@ debugger
         if(placeOfSupplyId){
 		formData.append('placeOfSupplyId' , placeOfSupplyId.value ? placeOfSupplyId.value : placeOfSupplyId);}
 
-		if (supplierId) {
-			formData.append('supplierId', supplierId);
-		}
+	
+			formData.append('supplierId',supplierId.value ? supplierId.value : supplierId );
+		
 		// if (this.uploadFile.files[0]) {
 		// 	formData.append('attachmentFile', this.uploadFile.files[0]);
 		// }
@@ -1373,6 +1376,7 @@ setDate1= (props, value) => {
 	const values2 = value ? value
 	: props.values.rfqExpiryDate1	
 	if ( values2) {
+
 		this.setState({
 			rfqExpiryDate: moment(values2),
 		});
@@ -1592,7 +1596,8 @@ setDate1= (props, value) => {
 														supplierId: Yup.string().required(
 															'Supplier is required',
 														),
-														// placeOfSupplyId: Yup.string().required('Place of supply is required'),
+														placeOfSupplyId: Yup.string().required(
+															'Place of supply is required'),
 														
 														rfqReceiveDate: Yup.string().required(
 															'Order date is required',
@@ -1806,15 +1811,16 @@ setDate1= (props, value) => {
 																</FormGroup>
 															</Col>
 																<Col lg={3}>
-																{this.state.customer_taxTreatment_des!="NON GCC" &&(		<FormGroup className="mb-3">
+																{/* {this.state.customer_taxTreatment_des!="NON GCC" &&(		 */}
+																	<FormGroup className="mb-3">
 																		<Label htmlFor="placeOfSupplyId">
-																			{/* <span className="text-danger">* </span> */}
-																		{this.state.customer_taxTreatment_des &&
+																			<span className="text-danger">* </span>
+																		{/* {this.state.customer_taxTreatment_des &&
 																		(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
 																		||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
 																		||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED") && (
 																			<span className="text-danger">* </span>
-																		)}
+																		)} */}
 																			{strings.PlaceofSupply}
 																		</Label>
 																		<Select
@@ -1868,7 +1874,8 @@ setDate1= (props, value) => {
 																					{props.errors.placeOfSupplyId}
 																				</div>
 																			)}
-																	</FormGroup>)}
+																	</FormGroup>
+																	{/* )} */}
 																</Col>
 															
 																
@@ -1909,7 +1916,7 @@ setDate1= (props, value) => {
 																		{props.errors.rfqReceiveDate &&
 																			props.touched.rfqReceiveDate && (
 																				<div className="invalid-feedback">
-																					{props.errors.rfqReceiveDate.includes("nullable()") ? "Order date is required" :props.errors.rfqReceiveDate}
+																					{props.errors.rfqReceiveDate.includes("nullable()") ? "RFQ date is required" :props.errors.rfqReceiveDate}
 																				</div>
 																			)}
 																	</FormGroup>
@@ -1917,13 +1924,13 @@ setDate1= (props, value) => {
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="due_date">
-																	   {strings.RFQDueDate}
+																	   {strings.RFQExpiryDate}
 																		</Label>
 																		<div>
 																			<DatePicker
 																				id="rfqExpiryDate"
 																				name="rfqExpiryDate"
-																				placeholderText={strings.DueDate}
+																				placeholderText={strings.RFQExpiryDate}
 																				value={props.values.rfqExpiryDate}
 																				showMonthDropdown
 																				showYearDropdown
@@ -1945,7 +1952,8 @@ setDate1= (props, value) => {
 																			{props.errors.rfqExpiryDate &&
 																				props.touched.rfqExpiryDate && (
 																					<div className="invalid-feedback">
-																						{props.errors.rfqExpiryDate}
+																						{/* {props.errors.rfqExpiryDate} */}
+																					{props.errors.rfqExpiryDate.includes("nullable()") ? "Expiry date is required" :props.errors.rfqExpiryDate}
 																					</div>
 																				)}
 																		</div>
@@ -2226,7 +2234,7 @@ setDate1= (props, value) => {
 																		<TextareaAutosize
 																			type="textarea"
 																			className="textarea"
-																			maxLength="250"
+																			maxLength="255"
 																			style={{width: "700px"}}
 																			name="notes"
 																			id="notes"
@@ -2333,7 +2341,7 @@ setDate1= (props, value) => {
 																		<TextareaAutosize
 																			type="textarea"
 																			className="textarea"
-																			maxLength="250"
+																			maxLength="255"
 																			style={{width: "700px"}}
 																			name="receiptAttachmentDescription"
 																			id="receiptAttachmentDescription"
@@ -2345,8 +2353,7 @@ setDate1= (props, value) => {
 																				)(option)
 																			}
 																			value={
-																				props.values
-																					.receiptAttachmentDescription
+																				props.values.textValue
 																			}
 																		/>
 																	</FormGroup>
@@ -2366,7 +2373,7 @@ setDate1= (props, value) => {
 																				<label className="mb-0">
 
 																						{this.state.supplier_currency_symbol} &nbsp;
-																						{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																						{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>
@@ -2391,7 +2398,7 @@ setDate1= (props, value) => {
 																							/>
 																							)} */}
 																								{this.state.supplier_currency_symbol} &nbsp;
-																							{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																							{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>
@@ -2416,7 +2423,7 @@ setDate1= (props, value) => {
 																							/>
 																							)} */}
 																								{this.state.supplier_currency_symbol} &nbsp;
-																							{initValue.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																							{initValue.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>
@@ -2441,7 +2448,7 @@ setDate1= (props, value) => {
 																							/>
 																							)} */}
 																								{this.state.supplier_currency_symbol} &nbsp;
-																							{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																							{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>
@@ -2507,7 +2514,7 @@ setDate1= (props, value) => {
 																				);
 																			}}
 																		>
-																			<i className="fa fa-ban"></i>{this.state.disabled1
+																			<i className="fa fa-ban"></i> {this.state.disabled1
 																			? 'Deleting...'
 																			: strings.Cancel }
 																		</Button>

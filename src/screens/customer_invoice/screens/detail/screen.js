@@ -159,6 +159,7 @@ class DetailCustomerInvoice extends React.Component {
 		this.regExAlpha = /^[a-zA-Z0-9!@#$&()-\\`.+,/\"]+$/;
 		this.regExTelephone = /^[0-9-]+$/;
 		this.regExAddress = /^[a-zA-Z0-9\s\D,'-/]+$/;
+		this.regExCity = /^[a-zA-Z ]+$/;
 
 		this.file_size = 1024000;
 		this.supported_format = [
@@ -470,7 +471,7 @@ class DetailCustomerInvoice extends React.Component {
 							);
 					
 					}}
-					placeholder={strings.discount}
+					placeholder={strings.Discount}
 					className={`form-control 
 		${
 						props.errors.lineItemsString &&
@@ -617,7 +618,8 @@ class DetailCustomerInvoice extends React.Component {
 							}}
 							
 							placeholder={strings.Quantity}
-							className={`form-control w-50${
+							className={`form-control w-50
+							${
 								props.errors.lineItemsString &&
 								props.errors.lineItemsString[parseInt(idx, 10)] &&
 								props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
@@ -640,7 +642,7 @@ class DetailCustomerInvoice extends React.Component {
 							props.touched.lineItemsString &&
 							props.touched.lineItemsString[parseInt(idx, 10)] &&
 							props.touched.lineItemsString[parseInt(idx, 10)].quantity && (
-								<div className="invalid-feedback">
+								<div className="invalid-feedback" style={{display:"block", whiteSpace: "normal"}}>
 									{props.errors.lineItemsString[parseInt(idx, 10)].quantity}
 								</div>
 							)}
@@ -1788,12 +1790,14 @@ class DetailCustomerInvoice extends React.Component {
 															if (values.shippingCountryId == 229 || values.shippingCountryId.value == 229) {
 																if (values.shippingPostZipCode == '')
 																	errors.shippingPostZipCode = 'PO box number is required';
+																else if (values.shippingPostZipCode.length < 3)
+																		errors.shippingPostZipCode = "Please enter atleast 3 digit postal zip code"
 															} else {
 																if (values.shippingPostZipCode == '')
 																	errors.shippingPostZipCode = 'Postal code is required';
 																else
-																	if (values.shippingPostZipCode.length != 6)
-																		errors.shippingPostZipCode = "Please enter 6 digit postal zip code"
+																	if (values.shippingPostZipCode.length < 3)
+																		errors.shippingPostZipCode = "Please enter atleast 3 digit postal zip code"
 															}}
 															return errors;
 													}}
@@ -1805,7 +1809,9 @@ class DetailCustomerInvoice extends React.Component {
 															'Supplier is required',
 														),
 														term: Yup.string().required('Term is required'),
-													//	placeOfSupplyId: Yup.string().required('Place of supply is required'),
+														placeOfSupplyId: Yup.string().required(
+															'Place of supply is required',
+														),
 														invoiceDate: Yup.string().required(
 															'Invoice date is required',
 														),
@@ -2047,12 +2053,13 @@ class DetailCustomerInvoice extends React.Component {
 																<Col lg={3}>
 																{this.state.customer_taxTreatment_des!="NON GCC" &&(	<FormGroup className="mb-3">
 																		<Label htmlFor="placeOfSupplyId">
-																		{this.state.customer_taxTreatment_des &&
+																		<span className="text-danger">* </span>
+																		{/* {this.state.customer_taxTreatment_des &&
 																		(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
 																		||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
 																		||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED") && (
 																			<span className="text-danger">* </span>
-																		)}
+																		)} */}
 																			{strings.PlaceofSupply}
 																		</Label>
 																		<Select
@@ -2275,7 +2282,8 @@ class DetailCustomerInvoice extends React.Component {
 																			{props.errors.invoiceDueDate &&
 																				props.touched.invoiceDueDate && (
 																					<div className="invalid-feedback">
-																						{props.errors.invoiceDate.includes("nullable()") ? "Invoice date is required" :props.errors.invoiceDate}																							</div>
+																						{props.errors.invoiceDate.includes("nullable()") ? "Invoice date is required" :props.errors.invoiceDate}
+																					</div>
 																				)}
 																		</div>
 																	</FormGroup>
@@ -2532,13 +2540,12 @@ class DetailCustomerInvoice extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="shippingCity"><span className="text-danger"></span>{strings.City}</Label>
 																	<Input
-																
 																		// options={city ? selectOptionsFactory.renderOptions('cityName', 'cityCode', cityRegion) : ''}
 																		value={props.values.shippingCity}
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||
-																				this.regExAlpha.test(
+																				this.regExCity.test(
 																					option.target.value,
 																				)
 																			) {
@@ -2564,8 +2571,6 @@ class DetailCustomerInvoice extends React.Component {
 																	)}
 																</FormGroup>
 															</Col>
-
-															
 																			<Col md="4" ><FormGroup>
 																			
 																					{props.values.shippingCountryId == 229 || props.values.shippingCountryId.value == 229 ?
@@ -3315,19 +3320,25 @@ class DetailCustomerInvoice extends React.Component {
 																			onClick={() => {
 																				if(this.state.data.length === 1)
 																					{
-																					console.log(props.errors,"ERRORs")
-																					//	added validation popup	msg
-																			props.handleBlur();
-																			if(props.errors &&  Object.keys(props.errors).length != 0)
-																			this.props.commonActions.fillManDatoryDetails();
+																						console.log(props.errors,"ERRORs")
+																								//	added validation popup	msg
+																						props.handleBlur();
+																						if(props.errors &&  Object.keys(props.errors).length != 0)
+																							this.props.commonActions.fillManDatoryDetails();
 																					}
 																					else
-																					{ let newData=[]
-																					const data = this.state.data;
-																					newData = data.filter((obj) => obj.productId !== "");
-																					props.setFieldValue('lineItemsString', newData, true);
-																					this.updateAmount(newData, props);
-																					}}}
+																					{ 
+																						let newData=[]
+																						const data = this.state.data;
+																						newData = data.filter((obj) => obj.productId !== "");
+																						props.setFieldValue('lineItemsString', newData, true);
+																						this.updateAmount(newData, props);
+																						props.handleBlur();
+																						if(props.errors &&  Object.keys(props.errors).length != 0)
+																							this.props.commonActions.fillManDatoryDetails();
+																					}
+																				}
+																			}
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
 																			{this.state.disabled
@@ -3343,7 +3354,7 @@ class DetailCustomerInvoice extends React.Component {
 																				);
 																			}}
 																		>
-																			<i className="fa fa-ban"></i>{this.state.disabled1
+																			<i className="fa fa-ban"></i> {this.state.disabled1
 																			? 'Deleting...'
 																			: strings.Cancel }
 																		</Button>

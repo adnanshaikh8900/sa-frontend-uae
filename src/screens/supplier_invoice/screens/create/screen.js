@@ -582,6 +582,9 @@ class CreateSupplierInvoice extends React.Component {
 						taxType : res.data.taxType 
 							? true 
 							: false,
+							discountEnabled : res.data.discount > 0 
+							? true 
+							: false,
 						selectedContact: res.data.contactId 
 							? res.data.contactId 
 							: '',
@@ -691,7 +694,7 @@ class CreateSupplierInvoice extends React.Component {
 																		receiptNumber:	 res.data.rfqNumber
 																		? res.data.rfqNumber
 																		: '',
-		
+																		taxType:res.data.taxType
 																},
 																invoiceDateNoChange: res.data.rfqExpiryDate
 																		? moment(res.data.rfqExpiryDate)
@@ -700,15 +703,17 @@ class CreateSupplierInvoice extends React.Component {
 																		? res.data.rfqExpiryDate
 																		: '',
 																customer_taxTreatment_des : res.data.taxtreatment ? res.data.taxtreatment : '',
-																// placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+																placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 																total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
 																data: res.data.poQuatationLineItemRequestModelList
 																	? res.data.poQuatationLineItemRequestModelList
 																	: [],
-		
+																	taxType:res.data.taxType,
 		
 																//
-		
+																discountEnabled : res.data.discount > 0 
+																? true 
+																: false,
 																discountAmount: res.data.discount ? res.data.discount : 0,
 																discountPercentage: res.data.discountPercentage
 																	? res.data.discountPercentage
@@ -838,7 +843,9 @@ class CreateSupplierInvoice extends React.Component {
 																		customer_taxTreatment_des : res.data.taxtreatment 
 																			? res.data.taxtreatment 
 																			: '',
-																		// placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+																		placeOfSupplyId: res.data.placeOfSupplyId
+																			? res.data.placeOfSupplyId 
+																			: '',
 																		total_excise: res.data.totalExciseAmount 
 																			? res.data.totalExciseAmount 
 																			: '',
@@ -1117,7 +1124,7 @@ class CreateSupplierInvoice extends React.Component {
 									);
 
 								}}
-								placeholder={strings.discount}
+								placeholder={strings.Discount}
 								className={`form-control 
             ${props.errors.lineItemsString &&
 										props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -1976,6 +1983,7 @@ class CreateSupplierInvoice extends React.Component {
 									discountType: '',
 									discount: 0,
 									discountPercentage: '',
+									total_excise: 0,
 								},
 							},
 						},
@@ -2328,9 +2336,9 @@ class CreateSupplierInvoice extends React.Component {
 													if (values.invoice_number === '') {
 														errors.invoice_number = 'Invoice number is required';
 													}
-													// if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
-													// 	errors.placeOfSupplyId = 'Place of Supply is required';
-													// }
+													if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
+														errors.placeOfSupplyId = 'Place of supply is required';
+													}
 													if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
 													||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
 													||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
@@ -2362,7 +2370,7 @@ class CreateSupplierInvoice extends React.Component {
 													contactId: Yup.string().required(
 														'Supplier is required',
 													),
-													// placeOfSupplyId: Yup.string().required('Place of Supply is required'),
+													placeOfSupplyId: Yup.string().required('Place of supply is required'),
 													term: Yup.string().required('Term is required'),
 													invoiceDate: Yup.string().required(
 														'Invoice Date is required',
@@ -2639,13 +2647,13 @@ class CreateSupplierInvoice extends React.Component {
 															<Col lg={3}>
 															{this.state.customer_taxTreatment_des!="NON GCC" &&(<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">
-																		{/* <span className="text-danger">* </span> */}
-																		{this.state.customer_taxTreatment_des &&
+																		<span className="text-danger">* </span>
+																		{/* {this.state.customer_taxTreatment_des &&
 																		(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
 																		||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
 																		||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED") && (
 																			<span className="text-danger">* </span>
-																		)}
+																		)} */}
 																		{strings.PlaceofSupply}
 																	</Label>
 																	<Select
@@ -3587,23 +3595,22 @@ class CreateSupplierInvoice extends React.Component {
 																		className="btn-square mr-3"
 																		disabled={this.state.disabled}
 																		onClick={() => {
-																				
-																			if(this.state.data.length === 1)
-																			{
-																			console.log(props.errors,"ERRORs")
-																				//	added validation popup	msg
-																				props.handleBlur();
-																				if(props.errors &&  Object.keys(props.errors).length != 0)
-																				this.props.commonActions.fillManDatoryDetails();
-																			}
-																			else
-																			{ let newData=[]
-																			const data = this.state.data;
-																			newData = data.filter((obj) => obj.productId !== "");
-																			props.setFieldValue('lineItemsString', newData, true);
-																			this.updateAmount(newData, props);
-																			}
-																		
+                                                                            if(this.state.data.length === 1)
+                                                                                {
+                                                                                console.log(props.errors,"ERRORs")
+                                                                                //  added validation popup  msg
+                                                                            props.handleBlur();
+                                                                            if(props.errors &&  Object.keys(props.errors).length != 0)
+                                                                            this.props.commonActions.fillManDatoryDetails();
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                let newData=[]
+                                                                                const data = this.state.data;
+                                                                                newData = data.filter((obj) => obj.productId !== "");
+                                                                                props.setFieldValue('lineItemsString', newData, true);
+                                                                                this.updateAmount(newData, props);
+                                                                                }
 																			this.setState(
 																				{ createMore: true },
 																				() => {

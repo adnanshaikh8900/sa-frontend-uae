@@ -1745,7 +1745,7 @@ debugger
 															</Col>
 																</Row>
 																
-															<Row>
+															{/* <Row>
 																<Col lg={12} className="mb-3">
 																	<Button
 																		color="primary"
@@ -1763,7 +1763,8 @@ debugger
 																		<i className="fa fa-plus"></i> {strings.Addmore}
 																	</Button>
 																</Col>
-															</Row>
+															</Row> */}
+															
 															<Row>
 																<Col lg={8}>
 																	{props.errors.lineItemsString &&
@@ -1954,7 +1955,7 @@ debugger
 																					id="grnRemarks"
 																					name="grnRemarks"
 																					value={props.values.grnRemarks}
-																					placeholder={strings.grnRemarks}
+																					placeholder={strings.GRNREMARKS}
 																					onChange={(value) => {
 																						props.handleChange('grnRemarks')(value);
 
@@ -2111,7 +2112,7 @@ debugger
 																				);
 																			}}
 																		>
-																			<i className="fa fa-ban"></i>{this.state.disabled1
+																			<i className="fa fa-ban"></i> {this.state.disabled1
 																			? 'Deleting...'
 																			: strings.Cancel }
 																		</Button>

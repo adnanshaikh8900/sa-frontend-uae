@@ -258,9 +258,9 @@ class ViewPurchaseOrder extends React.Component {
 				{/* <th className="center" style={{ padding: '0.5rem' }}>
 					Po Expiry Date
 				</th> */}
-				<th style={{ padding: '0.5rem', textAlign: 'right' }}>
+				{/* <th style={{ padding: '0.5rem', textAlign: 'right' }}>
 			    {strings.Total+" "+strings.Amount }
-				</th>
+				</th> */}
 				{/* <th style={{ padding: '0.5rem', textAlign: 'left' }}>
 				TOTAL VAT Amount
 				</th> */}
@@ -284,9 +284,8 @@ class ViewPurchaseOrder extends React.Component {
 				{/* <td>{moment(item.poReceiveDate).format(
 				'DD MMM YYYY',
 			)}</td> */}
-							<td align="right">{POData.currencyIsoCode+" "+item.totalAmount}</td>
-							{/* <td>{item.totalVatAmount}</td> */}
-						
+							{/* <td align="right">{POData.currencyIsoCode+" "+item.totalAmount}</td> */}
+							
 						</tr>
 					);
 				})}

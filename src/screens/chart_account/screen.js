@@ -531,14 +531,14 @@ class ChartAccount extends React.Component {
 											</ButtonGroup>
 										</div>)}
 										{	this.state.hideForPrint==false&&(<div className="py-3">
-											{/* <h5>{strings.Filter}: </h5> */}
+											<h5>{strings.Filter}: </h5>
 											<form>
 												<Row>
 													<Col lg={3} className="mb-1">
 														<Input
 														maxLength="25"
 															type="text"
-															placeholder={strings.Code}
+															placeholder={strings.AccountCode}
 															value={filterData.transactionCategoryCode}
 															onChange={(e) => {
 																this.handleChange(
@@ -552,7 +552,7 @@ class ChartAccount extends React.Component {
 														<Input
 														maxLength="30"
 															type="text"
-															placeholder={strings.Name}
+															placeholder={strings.AccountName}
 															value={filterData.transactionCategoryName}
 															onChange={(e) => {
 																this.handleChange(

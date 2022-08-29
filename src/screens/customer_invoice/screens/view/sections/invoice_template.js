@@ -448,8 +448,8 @@ class InvoiceTemplate extends Component {
 												{invoiceData.discount > 0 && (<><td style={{ textAlign: 'right' }}>
 													{item.discountType == "PERCENTAGE" ? item.discount + "  %" :
 													(currencyData[0]
-														? currencyData[0].currencyIsoCode +" "+ invoiceData.discount 
-														: 'AED'+" "+ invoiceData.discount )
+														? currencyData[0].currencyIsoCode +" "+ item.discount.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})
+														: 'AED'+" "+ item.discount.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2}) )
 													}
 												</td>
 												</>)}
@@ -574,7 +574,7 @@ class InvoiceTemplate extends Component {
 												>
 													<span style={{ marginLeft: '2rem' }}></span>
 													<span>
-													{invoiceData.totalVatAmount ? invoiceData.currencyIsoCode + " " + invoiceData.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : 0 }
+													{invoiceData.totalVatAmount ? invoiceData.currencyIsoCode + " " + invoiceData.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) :invoiceData.currencyIsoCode + " " + ZERO.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits:2 }) }
 													</span>
 												</td>
 											</tr>

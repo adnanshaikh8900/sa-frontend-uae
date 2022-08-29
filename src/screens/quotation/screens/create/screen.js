@@ -239,6 +239,7 @@ class CreateQuotation extends React.Component {
 		];
 		this.regEx = /^[0-9\b]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
+		this.regExInvNum = /[a-zA-Z0-9,-/ ]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 	}
 
@@ -311,7 +312,7 @@ class CreateQuotation extends React.Component {
 				render={({ field, form }) => (
 					<Select
 						styles={customStyles}
-						isDisabled={row.exciseTaxId === 0 || row.isExciseTaxExclusive === false}
+						isDisabled={row.exciseTaxId === 0 || row.isExciseTaxExclusive === true}
 						
 						options={
 							excise_list
@@ -397,7 +398,8 @@ class CreateQuotation extends React.Component {
 								}
 							}}
 							placeholder={strings.Quantity}
-							className={`form-control w-50${ 
+							className={`form-control w-50 
+							${ 
 							props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
@@ -419,7 +421,7 @@ class CreateQuotation extends React.Component {
 							props.touched.lineItemsString &&
 							props.touched.lineItemsString[parseInt(idx, 10)] &&
 							props.touched.lineItemsString[parseInt(idx, 10)].quantity && (
-								<div className="invalid-feedback">
+								<div className="invalid-feedback" style={{display:"block", whiteSpace: "normal"}}>
 									{props.errors.lineItemsString[parseInt(idx, 10)].quantity}
 								</div>
 							)}
@@ -567,7 +569,7 @@ class CreateQuotation extends React.Component {
 										discountType: res.data.discountType
 											? res.data.discountType
 											: '',
-
+										taxType : res.data.taxType
 								},
 								quotaionExpirationNotChanged: res.data.quotaionExpiration
 										? moment(res.data.quotaionExpiration)
@@ -589,7 +591,9 @@ class CreateQuotation extends React.Component {
 								discountPercentage: res.data.discountPercentage
 									? res.data.discountPercentage
 									: 0,
+									taxType : res.data.taxType,
 								loading: false,
+								discountEnabled : res.data.discount > 0 ? true : false,
 							},
 							() => {
 								if (this.state.data.length > 0) {
@@ -842,7 +846,7 @@ class CreateQuotation extends React.Component {
 							   );
 					   
 					   }}
-					   placeholder={strings.discount}
+					   placeholder={strings.Discount}
 					   className={`form-control 
 		   ${
 						   props.errors.lineItemsString &&
@@ -1723,7 +1727,6 @@ discountType = (row) =>
 							unitType:res.data[0].unitType,
 							unitTypeId:res.data[0].unitTypeId,
 							vatAmount:res.data[0].vatAmount ?res.data[0].vatAmount:0,
-							discountType: res.data[0].discountType,							
 					}),
 					idCount: this.state.idCount + 1,
 				},
@@ -1795,7 +1798,7 @@ discountType = (row) =>
 		this.props.quotationCreateAction
 			.checkValidation(data)
 			.then((response) => {
-				if (response.data === 'Quotation number already exists') {
+				if (response.data === 'Quotation Number Already Exists') {
 					this.setState(
 						{
 							exist: true,
@@ -1929,13 +1932,13 @@ discountType = (row) =>
 														customerId: Yup.string().required(
 														'Customer is required',
 													),
-														// placeOfSupplyId: Yup.string().required('Place of supply is required'),
+														placeOfSupplyId: Yup.string().required('Place of supply is required'),
 													
 													// poApproveDate: Yup.string().required(
 													// 	'Order date is required',
 													// ),
 													quotaionExpiration: Yup.string().required(
-														'Order due date is required'
+														'Expiry date is required'
 													),
 													lineItemsString: Yup.array()
 														.required(
@@ -2034,9 +2037,16 @@ discountType = (row) =>
 																		value={props.values.quotation_Number}
 																		onBlur={props.handleBlur('quotation_Number')}
 																		onChange={(option) => {
+																			if (
+																				option.target.value === '' ||
+																				this.regExInvNum.test(
+																					option.target.value,
+																				)
+																			) {
 																			props.handleChange('quotation_Number')(
 																				option,
 																			);
+																		}
 																			this.validationCheck(option.target.value)
 																		}}
 																		className={
@@ -2169,15 +2179,16 @@ discountType = (row) =>
 																</FormGroup>
 															</Col>: ''}
 									<Col lg={3}>
-									{this.state.customer_taxTreatment_des!="NON GCC" &&(			<FormGroup className="mb-3">
+									{this.state.customer_taxTreatment_des!="NON GCC" &&(<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">
-																		{/* <span className="text-danger">* </span> */}
-																		{this.state.customer_taxTreatment_des &&
+																		<span className="text-danger">* </span>
+																		{/* {this.state.customer_taxTreatment_des &&
 																		(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
 																		||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
-																		||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED") && (
+																		||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED")
+																		 && (
 																			<span className="text-danger">* </span>
-																		)}
+																		)} */}
 																		{strings.PlaceofSupply}
 																	</Label>
 																	<Select
@@ -2288,7 +2299,7 @@ discountType = (row) =>
 																				? 'is-invalid'
 																				: ''
 																		}`}
-																		placeholderText={strings.OrderDueDate}
+																		placeholderText={strings.ExpirationDate}
 																		 selected={props.values.quotaionExpiration ?new Date(props.values.quotaionExpiration):props.values.quotaionExpiration}
 																		showMonthDropdown
 																		showYearDropdown
@@ -2303,7 +2314,7 @@ discountType = (row) =>
 																		props.touched.quotaionExpiration && (
 																			<div className="invalid-feedback">
 																				{/* {props.errors.quotaionExpiration} */}
-																				{props.errors.quotaionExpiration.includes("nullable()") ? "Date is required" :props.errors.quotaionExpiration}
+																				{props.errors.quotaionExpiration.includes("nullable()") ? "Expiry date is required" :props.errors.quotaionExpiration}
 																			</div>
 																		)}
 																	
@@ -2814,9 +2825,7 @@ discountType = (row) =>
 																							/>
 																						)} */}
 																						{this.state.supplier_currency_symbol}&nbsp;
-																						{initValue.total_net.toFixed(
-																									2,
-																								)}
+																						{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>
@@ -2844,9 +2853,7 @@ discountType = (row) =>
 																							/>
 																						)} */}
 																						{this.state.supplier_currency_symbol}&nbsp;
-																						{initValue.invoiceVATAmount.toFixed(
-																									2,
-																								)}
+																						{initValue.invoiceVATAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>
@@ -2874,9 +2881,7 @@ discountType = (row) =>
 																							/>
 																						)} */}
 																						{this.state.supplier_currency_symbol}&nbsp;
-																						{initValue.totalAmount.toFixed(
-																									2,
-																								)}
+																						{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>

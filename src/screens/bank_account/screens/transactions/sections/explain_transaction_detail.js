@@ -26,7 +26,7 @@ import './style.scss';
 import { Loader, ConfirmDeleteModal } from 'components';
 import moment from 'moment';
 import { selectOptionsFactory, selectCurrencyFactory } from 'utils';
-import {data}  from '../../../../Language/index'
+import { data } from '../../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import Switch from "react-switch";
 import IconButton from '@material-ui/core/IconButton';
@@ -41,7 +41,7 @@ const mapStateToProps = (state) => {
 		vendor_list: state.bank_account.vendor_list,
 		vat_list: state.bank_account.vat_list,
 		currency_convert_list: state.currencyConvert.currency_convert_list,
-		UnPaidPayrolls_List:state.bank_account.UnPaidPayrolls_List
+		UnPaidPayrolls_List: state.bank_account.UnPaidPayrolls_List
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -91,11 +91,12 @@ class ExplainTrasactionDetail extends React.Component {
 			unexplainCust: [],
 			customer_invoice_list_state: [],
 			supplier_invoice_list_state: [],
-			moneyCategoryList:[],
-			count:0,
-			payrollListIds:'',
-			expenseType:true,
-			showMore:false,
+			moneyCategoryList: [],
+			count: 0,
+			payrollListIds: '',
+			expenseType: true,
+			showMore: false,
+			res: []
 		};
 
 		this.file_size = 1024000;
@@ -113,8 +114,8 @@ class ExplainTrasactionDetail extends React.Component {
 
 		this.formRef = React.createRef();
 	}
-
 	componentDidMount = () => {
+
 		if (this.props.selectedData) {
 			this.props.transactionDetailActions.getUnPaidPayrollsList();
 			this.initializeData();
@@ -122,10 +123,10 @@ class ExplainTrasactionDetail extends React.Component {
 	};
 
 	initializeData = () => {
-		const { selectedData } = this.props;
+		const { selectedData, data } = this.props;
 		const { bankId } = this.props;
-		
-			
+
+
 		this.setState({ loading: true, id: selectedData.id });
 		this.getCompanyCurrency();
 		this.props.currencyConvertActions.getCurrencyConversionList().then((response) => {
@@ -142,153 +143,192 @@ class ExplainTrasactionDetail extends React.Component {
 
 		});
 		this.props.detailBankAccountActions
-				.getBankAccountByID(bankId)
-				.then((res) => {
-					this.setState({
-						bankAccountCurrency: res.bankAccountCurrency,
-					});
-				})
-				.catch((err) => {
-					this.props.commonActions.tostifyAlert(
-						'error',
-						err && err.data ? err.data.message : 'Something Went Wrong',
-					);
-					this.props.history.push('/admin/banking/bank-account');
-				});
-		this.props.transactionDetailActions
-			.getTransactionDetail(selectedData.id)
+			.getBankAccountByID(bankId)
 			.then((res) => {
-				this.getChartOfAccountCategoryList(selectedData.debitCreditFlag);
-				this.setState(
-					{
-						loading: false,
-						creationMode: this.props.creationMode,
-						initValue: {
-							bankId: bankId,
-							amount: res.data.amount ? res.data.amount : '',
-							dueAmount:res.data.dueAmount ? res.data.dueAmount : '',
-							date: res.data.date1
-								? res.data.date1
-								: '',
-							description: res.data.description ? res.data.description : '',
-							transactionCategoryId: res.data.transactionCategoryId
-								? parseInt(res.data.transactionCategoryId)
-								: '',
-							transactionId: selectedData.id,
-							vatId: res.data.vatId ? res.data.vatId : '',
-							vendorId: res.data.vendorId ? res.data.vendorId : '',
-							customerId: res.data.customerId ? res.data.customerId : '',
-							employeeId: res.data.employeeId ? res.data.employeeId : '',
-							explinationStatusEnum: res.data.explinationStatusEnum,
-							reference: res.data.reference ? res.data.reference : '',
-							exchangeRate: res.data.exchangeRate ? res.data.exchangeRate : '',
-							//currencyName: res.data.currencyName ? res.data.currencyName : '',
-							coaCategoryId: res.data.coaCategoryId
-								? parseInt(res.data.coaCategoryId)
-								: '',
-							explainParamList: res.data.explainParamList
-								? res.data.explainParamList
-								: [],
-							transactionCategoryLabel: res.data.transactionCategoryLabel
-								? res.data.transactionCategoryLabel
-								: '',
-							invoiceError: '',
-							expenseCategory: res.data.expenseCategory,
-							currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
-							payrollListIds:res.data.payrollDropdownList?res.data.payrollDropdownList:[],
-							expenseType: res.data.expenseType ? true : false,
-						},
-						unexplainValue: {
-							bankId: bankId,
-							amount: res.data.amount ? res.data.amount : '',
-							date: res.data.date1
-								? res.data.date1
-								: '',
-							description: res.data.description ? res.data.description : '',
-							transactionCategoryId: res.data.transactionCategoryId
-								? parseInt(res.data.transactionCategoryId)
-								: '',
-							transactionId: selectedData.id,
-							vatId: res.data.vatId ? res.data.vatId : '',
-							vendorId: res.data.vendorId ? res.data.vendorId : '',
-							customerId: res.data.customerId ? res.data.customerId : '',
-							explinationStatusEnum: res.data.explinationStatusEnum,
-							reference: res.data.reference ? res.data.reference : '',
-							coaCategoryId: res.data.coaCategoryId
-								? res.data.coaCategoryId
-								: '',
-							explainParamList: res.data.explainParamList
-								? res.data.explainParamList
-								: [],
-							transactionCategoryLabel: res.data.transactionCategoryLabel
-								? res.data.transactionCategoryLabel
-								: '',
-							invoiceError: '',
-							expenseCategory: res.data.expenseCategory
-								? parseInt(res.data.expenseCategory)
-								: '',
-							currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
-						},
-						date: res.data.date1
-								? res.data.date1
-								: '',
-						amount: res.data.amount ? res.data.amount : '',
-						currencySymbol:res.data.curruncySymbol?res.data.curruncySymbol: '',
-						expenseType: res.data.expenseType ? true : false,
-						transactionCategoryLabel:res.data.transactionCategoryLabel,
-						transactionCategoryId:res.data.transactionCategoryId,
-						currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
-					},
-					
-					() => {
-						
-						if(selectedData.debitCreditFlag=== 'D'){
-							this.getCurrency(this.state.initValue.vendorId)
-							 this.setCurrency(this.state.currencyCode)
-						}else{
-							this.getCurrency(this.state.initValue.customerId)	
-							this.setCurrency(this.state.currencyCode)
-						}
-						if (
-							
-							this.state.initValue.coaCategoryId === 10 &&
-							Object.keys(this.state.initValue.explainParamList).length !== 0
-						) {
-							this.setState(
-								{
-									initValue: {
-										...this.state.initValue,
-										...{
-											coaCategoryId: 100,
-										},
-									},
-								},
-								() => { },
-							);
-							
-						}
-						if (this.state.initValue.customerId) {
-							this.getCustomerExplainedInvoiceList(
-								this.state.initValue.customerId,
-								this.state.initValue.amount,
-							);
-						}
-						if (this.state.initValue.vendorId) {
-							this.getVendorExplainedInvoiceList(
-								this.state.initValue.vendorId,
-								this.state.initValue.amount,
-							);
-						}
-					},
-				);
+
+				this.setState({
+					bankAccountCurrency: res.bankAccountCurrency,
+				});
 			})
 			.catch((err) => {
-				console.log(err);
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+				this.props.history.push('/admin/banking/bank-account');
 			});
+
+		this.getChartOfAccountCategoryList(selectedData.debitCreditFlag);
+
+
+		this.getData()
+
+
+	};
+
+	getData = () => {
+		debugger
+		const { selectedData, data, bankId } = this.props;
+		if (data) {
+			const res = { data: data }
+
+			this.setState(
+				{
+					loading: false,
+					creationMode: this.props.creationMode,
+					initValue: {
+						bankId: bankId,
+						amount: res.data.amount ? res.data.amount : 0,
+						dueAmount: res.data.dueAmount ? res.data.dueAmount : '',
+						date: res.data.date1
+							? res.data.date1
+							: '',
+						description: res.data.description ? res.data.description : '',
+						transactionCategoryId: res.data.transactionCategoryId
+							? parseInt(res.data.transactionCategoryId)
+							: '',
+						transactionId: selectedData.id,
+						vatId: res.data.vatId ? res.data.vatId : '',
+						vendorId: res.data.vendorId ? res.data.vendorId : '',
+						customerId: res.data.customerId ? res.data.customerId : '',
+						employeeId: res.data.employeeId ? res.data.employeeId : '',
+						explinationStatusEnum: res.data.explinationStatusEnum,
+						reference: res.data.reference ? res.data.reference : '',
+						exchangeRate: res.data.exchangeRate ? res.data.exchangeRate : '',
+						//currencyName: res.data.currencyName ? res.data.currencyName : '',
+						coaCategoryId: res.data.coaCategoryId
+							? parseInt(res.data.coaCategoryId)
+							: '',
+						explainParamList: res.data.explainParamList
+							? res.data.explainParamList
+							: [],
+						transactionCategoryLabel: res.data.transactionCategoryLabel
+							? res.data.transactionCategoryLabel
+							: '',
+						invoiceError: '',
+						expenseCategory: res.data.expenseCategory,
+						currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
+						payrollListIds: res.data.payrollDropdownList ? res.data.payrollDropdownList : [],
+						expenseType: res.data.expenseType ? true : false,
+						explanationId: res.data.explanationId ? res.data.explanationId : '',
+					},
+					unexplainValue: {
+						bankId: bankId,
+						amount: res.data.amount ? res.data.amount : 0,
+						date: res.data.date1
+							? res.data.date1
+							: '',
+						description: res.data.description ? res.data.description : '',
+						transactionCategoryId: res.data.transactionCategoryId
+							? parseInt(res.data.transactionCategoryId)
+							: '',
+						transactionId: selectedData.id,
+						explanationId: res.data.explanationId ? res.data.explanationId : '',
+						vatId: res.data.vatId ? res.data.vatId : '',
+						vendorId: res.data.vendorId ? res.data.vendorId : '',
+						customerId: res.data.customerId ? res.data.customerId : '',
+						explinationStatusEnum: res.data.explinationStatusEnum,
+						reference: res.data.reference ? res.data.reference : '',
+						coaCategoryId: res.data.coaCategoryId
+							? res.data.coaCategoryId
+							: '',
+						explainParamList: res.data.explainParamList
+							? res.data.explainParamList
+							: [],
+						transactionCategoryLabel: res.data.transactionCategoryLabel
+							? res.data.transactionCategoryLabel
+							: '',
+						invoiceError: '',
+						expenseCategory: res.data.expenseCategory
+							? parseInt(res.data.expenseCategory)
+							: '',
+						currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
+					},
+					transactionId: selectedData.id,
+					date: res.data.date1
+						? res.data.date1
+						: '',
+					amount: res.data.amount ? res.data.amount : '',
+					currencySymbol: res.data.curruncySymbol ? res.data.curruncySymbol : '',
+					expenseType: res.data.expenseType ? true : false,
+					transactionCategoryLabel: res.data.transactionCategoryLabel,
+					transactionCategoryId: res.data.transactionCategoryId,
+					currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
+					explanationId: res.data.explanationId ? res.data.explanationId : '',
+				},
+				() => {
+
+					if (selectedData.debitCreditFlag === 'D') {
+						this.getCurrency(this.state.initValue.vendorId)
+						this.setCurrency(this.state.currencyCode)
+					} else {
+						this.getCurrency(this.state.initValue.customerId)
+						this.setCurrency(this.state.currencyCode)
+					}
+					if (
+
+						this.state.initValue.coaCategoryId === 10 &&
+						Object.keys(this.state.initValue.explainParamList).length !== 0
+					) {
+						this.setState(
+							{
+								initValue: {
+									...this.state.initValue,
+									...{
+										coaCategoryId: 100,
+									},
+								},
+							},
+							() => { },
+						);
+
+					}
+					if (res.data.customerId) {
+						this.getInvoiceCurrency(
+							res.data.customerId,
+							res.data.amount,
+
+						)
+						this.getCustomerExplainedInvoiceList(
+							res.data.customerId,
+							res.data.amount,
+
+						);
+
+					}
+					if (res.data.vendorId) {
+						this.getVendorInvoiceCurrency(
+							res.data.vendorId,
+							res.data.amount,
+						)
+						this.getVendorExplainedInvoiceList(
+							res.data.vendorId,
+							res.data.amount,
+						);
+					}
+				}
+
+			)
+
+			this.formRef.current.setFieldValue('amount', res.data.amount ? res.data.amount : 0, true);
+			this.formRef.current.setFieldValue('date', res.data.date1, true);
+			this.formRef.current.setFieldValue('coaCategoryId', res.data.coaCategoryId ? res.data.coaCategoryId : '', true);
+			this.formRef.current.setFieldValue('expenseCategory', res.data.transactionCategoryId, true);
+			this.formRef.current.setFieldValue('vatId', res.data.vatId ? res.data.vatId : '', true);
+			this.formRef.current.setFieldValue('vendorId', res.data.vendorId ? res.data.vendorId : '', true);
+			this.formRef.current.setFieldValue('explainParamList', res.data.explainParamList ? res.data.explainParamList : '', true);
+			this.formRef.current.setFieldValue('customerId', res.data.customerId ? res.data.customerId : '', true);
+			this.formRef.current.setFieldValue('exchangeRate', res.data.exchangeRate, true);
+			this.formRef.current.setFieldValue('payrollListIds', res.data.payrollListIds, true);
+			this.formRef.current.setFieldValue('employeeId', res.data.employeeId ? res.data.employeeId : '', true);
+			this.formRef.current.setFieldValue('expenseType', res.data.expenseType, true)
+
+		}
 	};
 
 	getChartOfAccountCategoryList = (type) => {
 		this.setState({ loading: true });
+
 		this.props.transactionsActions.getChartOfCategoryList(type).then((res) => {
 			if (res.status === 200) {
 				this.setState(
@@ -297,16 +337,19 @@ class ExplainTrasactionDetail extends React.Component {
 						loading: false,
 					},
 					() => {
-						
+
 						if (
 							this.props.selectedData.explinationStatusEnum === 'FULL' ||
-							this.props.selectedData.explinationStatusEnum === 'RECONCILED'||
+							this.props.selectedData.explinationStatusEnum === 'RECONCILED' ||
 							this.props.selectedData.explinationStatusEnum === 'PARTIAL'
 						) {
 							const id = this.state.chartOfAccountCategoryList[0].options.find(
 								(option) => option.value === this.state.initValue.coaCategoryId,
 							);
-							this.getTransactionCategoryList(id);
+
+							if (id != null) {
+								this.getTransactionCategoryList(id);
+							}
 						}
 						if (this.state.initValue.expenseCategory) {
 							this.props.transactionsActions.getExpensesCategoriesList();
@@ -324,11 +367,12 @@ class ExplainTrasactionDetail extends React.Component {
 		}));
 	};
 	getCompanyCurrency = () => {
+
 		this.props.currencyConvertActions
 			.getCompanyCurrency()
 			.then((res) => {
 				if (res.status === 200) {
-					this.setState({ basecurrency: res.data });
+					this.setState({ basecurrency: res.data.currencyName });
 				}
 			})
 			.catch((err) => {
@@ -350,21 +394,22 @@ class ExplainTrasactionDetail extends React.Component {
 		let result = this.props.currency_convert_list.filter((obj) => {
 			return obj.currencyCode === value;
 		});
-		if(result[0] && result[0].currencyName){
-		this.formRef.current.setFieldValue('curreancyname', result[0].currencyName, true);
-	}
+		if (result[0] && result[0].currencyName) {
+			this.formRef.current.setFieldValue('curreancyname', result[0].currencyName, true);
+		}
 	};
 
 
 	getTransactionCategoryList = (type) => {
-		this.formRef.current.setFieldValue('coaCategoryId', type, true);
+		debugger
+		this.formRef.current.setFieldValue('coaCategoryId', type.value, true);
 		this.setValue(null);
-		if (type.value === 100) {
+		if (type && type.value && type.value === 100) {
 			this.getVendorList();
 		} else {
 			this.props.transactionsActions
 				.getTransactionCategoryListForExplain(
-					type.value ,
+					type.value,
 					this.state.initValue.bankId,
 				)
 				.then((res) => {
@@ -379,12 +424,14 @@ class ExplainTrasactionDetail extends React.Component {
 						);
 					}
 				});
-			}	
+		}
 	};
-	getSuggestionInvoicesFotCust = (option, amount) => {
+	getSuggestionInvoicesFotCust = (option, amount, invoice_list) => {
+
 		const data = {
 			amount: amount,
 			id: option,
+			currency: this.state.custInvoiceCurrency && invoice_list != null ? this.state.custInvoiceCurrency : 0,
 			bankId: this.props.bankId,
 		};
 		this.props.transactionsActions.getCustomerInvoiceList(data).then((res) => {
@@ -392,12 +439,18 @@ class ExplainTrasactionDetail extends React.Component {
 				customer_invoice_list_state: res.data,
 			});
 		});
+		if (invoice_list === null) {
+			this.formRef.current.setFieldValue('curreancyname', "", true);
+			this.formRef.current.setFieldValue('exchangeRate', "", true);
+			this.formRef.current.setFieldValue('currencyCode', "", true);
+		}
 	};
 
 	getCustomerExplainedInvoiceList = (option, amount) => {
 		const data = {
 			amount: amount,
 			id: option,
+			currency: this.state.custInvoiceCurrency ? this.state.custInvoiceCurrency : 0,
 			bankId: this.props.bankId,
 		};
 		this.props.transactionsActions
@@ -406,7 +459,7 @@ class ExplainTrasactionDetail extends React.Component {
 				this.setState({
 					customer_invoice_list_state: res.data,
 				});
-				this.getSuggestionInvoicesFotCust(option,amount)
+				this.getSuggestionInvoicesFotCust(option, amount, 0)
 			});
 	};
 
@@ -414,6 +467,7 @@ class ExplainTrasactionDetail extends React.Component {
 		const data = {
 			amount: amount,
 			id: option,
+			currency: this.state.invoiceCurrency,
 			bankId: this.props.bankId,
 		};
 		this.props.transactionsActions
@@ -422,14 +476,15 @@ class ExplainTrasactionDetail extends React.Component {
 				this.setState({
 					supplier_invoice_list_state: res.data,
 				});
-				this.getSuggestionInvoicesFotVend(option,amount)
+				this.getSuggestionInvoicesFotVend(option, amount, 0)
 			});
 	};
 
-	getSuggestionInvoicesFotVend = (option, amount) => {
+	getSuggestionInvoicesFotVend = (option, amount, invoice_list) => {
 		const data = {
 			amount: amount,
 			id: option,
+			currency: this.state.invoiceCurrency && invoice_list != null ? this.state.invoiceCurrency : 0,
 			bankId: this.props.bankId,
 		};
 		this.props.transactionsActions.getVendorInvoiceList(data).then((res) => {
@@ -437,8 +492,62 @@ class ExplainTrasactionDetail extends React.Component {
 				supplier_invoice_list_state: res.data,
 			});
 		});
-	};
+		if (invoice_list === null) {
 
+			this.formRef.current.setFieldValue('curreancyname', "", true);
+			this.formRef.current.setFieldValue('exchangeRate', "", true);
+			this.formRef.current.setFieldValue('currencyCode', "", true);
+		}
+	};
+	getInvoiceCurrency = (opt, props) => {
+
+		const {
+			customer_invoice_list_state,
+		} = this.state;
+		customer_invoice_list_state.map(item => {
+			if (item.value === opt.value) {
+				this.setState({
+					custInvoiceCurrency: item.currencyCode
+				}, () => {
+					this.getSuggestionInvoicesFotCust(
+						opt && opt.value,
+						props
+					);
+					this.formRef.current.setFieldValue('currencyCode', this.state.custInvoiceCurrency, true);
+					this.setCurrency(this.state.custInvoiceCurrency);
+					this.setExchange(this.state.custInvoiceCurrency);
+				})
+			}
+		})
+
+	}
+	getVendorInvoiceCurrency = (opt, props) => {
+
+		const {
+			supplier_invoice_list_state,
+		} = this.state;
+		supplier_invoice_list_state.map(item => {
+			if (item.value === opt.value) {
+				this.setState({
+					invoiceCurrency: item.currencyCode
+				}, () => {
+					this.getSuggestionInvoicesFotVend(
+						props.values.vendorId.value,
+						this.state.initValue.amount,
+						0
+					);
+
+					// this.formRef.current.setFieldValue('currencyCode', this.getCurrency(props.values.vendorId.value), true);
+					// this.setExchange( this.getCurrency(option.value) );
+					this.formRef.current.setFieldValue('currencyCode', this.state.invoiceCurrency, true);
+					this.setCurrency(this.state.invoiceCurrency);
+					this.setExchange(this.state.invoiceCurrency);
+				})
+			}
+		})
+
+
+	}
 	getUserList = () => {
 		this.props.transactionsActions.getUserForDropdown();
 	};
@@ -452,7 +561,7 @@ class ExplainTrasactionDetail extends React.Component {
 							{
 								moneyCategoryList: res.data,
 							},
-							() => {},
+							() => { },
 						);
 					}
 				});
@@ -480,8 +589,8 @@ class ExplainTrasactionDetail extends React.Component {
 			// 	true,
 			// );
 		});
-	// this.props.transactionsActions.getUserForDropdown();
-			this.props.transactionsActions.getVatList();
+		// this.props.transactionsActions.getUserForDropdown();
+		this.props.transactionsActions.getVatList();
 	};
 
 	getVendorList = () => {
@@ -521,7 +630,7 @@ class ExplainTrasactionDetail extends React.Component {
 			expenseCategory,
 			payrollListIds,
 		} = data;
-
+debugger
 		const expenseType = this.state.selectedStatus;
 
 		if (
@@ -539,12 +648,12 @@ class ExplainTrasactionDetail extends React.Component {
 			payrollListIds &&
 			expenseCategory &&
 			expenseCategory === 34
-		 ) {
+		) {
 			var result1 = payrollListIds.map((o) => ({
-			   payrollId: o.value,
+				payrollId: o.value,
 			}));
 			console.log(result1);
-		 }
+		}
 		let id;
 		if (coaCategoryId && coaCategoryId.value === 100) {
 			id = 10;
@@ -552,24 +661,28 @@ class ExplainTrasactionDetail extends React.Component {
 			id = coaCategoryId.value;
 		}
 		let formData = new FormData();
-		formData.append('expenseType',  this.state.expenseType);
-		formData.append('transactionId', transactionId ? transactionId : '');
-		formData.append('bankId ', bankId ? bankId : '');
+		formData.append('expenseType', this.state.expenseType);
+		formData.append('transactionId', this.state.transactionId ? this.state.transactionId : '');
+		formData.append('explanationId', this.state.explanationId ? this.state.explanationId : '')
+		formData.append('bankId ', this.props.bankId ? this.props.bankId : '');
 		formData.append(
 			'date',
 			this.state.date
-			? moment(this.state.date)
-			: date,
+				? moment(this.state.date)
+				: date,
 		);
-		formData.append(
-			'exchangeRate',
-			exchangeRate !== null ? exchangeRate : '',
-		);
+		if(exchangeRate != null){
+			formData.append(
+				'exchangeRate',
+				exchangeRate ? exchangeRate : 1,
+			);
+		}
+		
 		formData.append('description', description ? description : '');
 		formData.append('amount', amount ? amount : '');
 		formData.append('dueAmount', dueAmount ? dueAmount : 0);
 		formData.append('coaCategoryId', coaCategoryId ? id : '');
-		if (this.state.transactionCategoryId ) {
+		if (this.state.transactionCategoryId) {
 			formData.append(
 				'transactionCategoryId',
 				this.state.transactionCategoryId && this.state.transactionCategoryId.value !== undefined ? this.state.transactionCategoryId.value : this.state.transactionCategoryId,
@@ -587,12 +700,12 @@ class ExplainTrasactionDetail extends React.Component {
 		// 		coaCategoryId.label === 'Admin Expense' ||
 		// 		coaCategoryId.label === 'Other Expense' ||
 		// 		coaCategoryId.label === 'Cost Of Goods Sold'
-			
+
 		// 	)
 		// ) {
 		// 	formData.append('currencyCode', currencyCode.value);
 		// }
-		
+
 		// if (
 		// 	currencyCode &&
 		// 	(
@@ -603,16 +716,15 @@ class ExplainTrasactionDetail extends React.Component {
 		// }
 		if (
 			currencyCode && currencyCode.value
-			
+
 		) {
 			formData.append('currencyCode', currencyCode.value);
-		}else 
-		{
-			if(currencyCode){
+		} else {
+			if (currencyCode) {
 				formData.append('currencyCode', currencyCode);
 			}
 		}
-		
+
 		if (
 			expenseCategory &&
 			(coaCategoryId.label === 'Expense' ||
@@ -631,10 +743,10 @@ class ExplainTrasactionDetail extends React.Component {
 		) {
 			formData.append('vatId', vatId ? vatId : '');
 		}
-		
-		if (employeeId !== null && employeeId.value !== undefined) {
+
+		if (employeeId !== null) {
 			formData.append('employeeId', employeeId ? employeeId.value : '');
-		}else if(employeeId !== null){
+		} else if (employeeId !== null) {
 			formData.append('employeeId', employeeId ? employeeId : '');
 		}
 		if (
@@ -654,13 +766,13 @@ class ExplainTrasactionDetail extends React.Component {
 			payrollListIds &&
 			expenseCategory &&
 			expenseCategory === 34
-		 ) {
-			
+		) {
+
 			formData.append(
-			   'payrollListIds',
-			   payrollListIds ? JSON.stringify(result1) : '',
+				'payrollListIds',
+				payrollListIds ? JSON.stringify(result1) : '',
 			);
-		 }
+		}
 		this.props.transactionDetailActions
 			.updateTransaction(formData)
 			.then((res) => {
@@ -691,6 +803,7 @@ class ExplainTrasactionDetail extends React.Component {
 			props.setFieldValue('attachmentFile', file, true);
 		}
 	};
+
 	closeTransaction = (id) => {
 		this.setState({
 			dialog: (
@@ -705,47 +818,48 @@ class ExplainTrasactionDetail extends React.Component {
 	};
 	payrollList = (option) => {
 		this.setState({
-		   initValue: {
-			  ...this.state.initValue,
-			  ...{
-				 payrollListIds: option,
-			  },
-		   },
+			initValue: {
+				...this.state.initValue,
+				...{
+					payrollListIds: option,
+				},
+			},
 		});
 		this.formRef.current.setFieldValue('payrollListIds', option, true);
-	 };
-	 getPayrollList=(UnPaidPayrolls_List,props)=>{   
-		return(<Col lg={3}>
-		   <FormGroup className="mb-3">
-			  <Label htmlFor="payrollListIds">
-				 Payolls
-			  </Label>
-			  <Select
-				 styles={customStyles}
-				 isMulti
-				 value={props.values.payrollListIds}
-				 className="select-default-width"
-				 options={
-					UnPaidPayrolls_List &&
-					UnPaidPayrolls_List
-					   ? UnPaidPayrolls_List
-					   : []
-				 }
-				 id="payrollListIds"
-				 onChange={(option) => {
-					props.handleChange('payrollListIds')(
-					   option,
-					);
-					this.payrollList(option);
-				 }}/>
-		   </FormGroup>
+	};
+	getPayrollList = (UnPaidPayrolls_List, props) => {
+		return (<Col lg={3}>
+			<FormGroup className="mb-3">
+				<Label htmlFor="payrollListIds">
+					Payolls
+				</Label>
+				<Select
+					styles={customStyles}
+					isMulti
+					value={props.values.payrollListIds}
+					className="select-default-width"
+					options={
+						UnPaidPayrolls_List &&
+							UnPaidPayrolls_List
+							? UnPaidPayrolls_List
+							: []
+					}
+					id="payrollListIds"
+					onChange={(option) => {
+						props.handleChange('payrollListIds')(
+							option,
+						);
+						this.payrollList(option);
+					}} />
+			</FormGroup>
 		</Col>);
-	 }
+	}
 	UnexplainTransaction = (id) => {
 		let formData = new FormData();
 		for (var key in this.state.unexplainValue) {
 			formData.append(key, this.state.unexplainValue[key]);
-			formData.set('date',moment(this.state.unexplainValue['date']));
+			formData.set('date', moment(this.state.unexplainValue['date']));
+
 			if (
 				Object.keys(this.state.unexplainValue['explainParamList']).length > 0
 			) {
@@ -767,6 +881,7 @@ class ExplainTrasactionDetail extends React.Component {
 						'Transaction Detail Updated Successfully.',
 					);
 					this.props.closeExplainTransactionModal(this.state.id);
+					this.props.getbankdetails()
 				}
 			})
 			.catch((err) => {
@@ -792,6 +907,7 @@ class ExplainTrasactionDetail extends React.Component {
 		);
 		this.formRef.current.setFieldValue('invoiceIdList', option, true);
 	};
+
 	removeTransaction = (id) => {
 		this.removeDialog();
 		this.props.transactionsActions
@@ -802,6 +918,7 @@ class ExplainTrasactionDetail extends React.Component {
 					'Transaction Deleted Successfully',
 				);
 				this.props.closeExplainTransactionModal(this.state.id);
+				this.props.getbankdetails()
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
@@ -810,6 +927,7 @@ class ExplainTrasactionDetail extends React.Component {
 				);
 			});
 	};
+
 
 	removeDialog = () => {
 		this.setState({
@@ -821,7 +939,7 @@ class ExplainTrasactionDetail extends React.Component {
 		let supplier_currencyCode = 0;
 
 		this.props.vendor_list.map(item => {
-			if(item.label.contactId == opt) {
+			if (item.label.contactId == opt) {
 				this.setState({
 					supplier_currency: item.label.currency.currencyCode,
 					supplier_currency_des: item.label.currency.currencyName
@@ -831,14 +949,15 @@ class ExplainTrasactionDetail extends React.Component {
 			}
 		})
 
-		console.log('supplier_currencyCode' ,supplier_currencyCode)
+		console.log('supplier_currencyCode', supplier_currencyCode)
 
-		if(supplier_currencyCode !=0){
+		if (supplier_currencyCode != 0) {
 			return supplier_currencyCode;
-		}else{
-			return this.state.unexplainValue && this.state.unexplainValue.currencyCode ? this.state.unexplainValue.currencyCode :0;
-		}		
+		} else {
+			return this.state.unexplainValue && this.state.unexplainValue.currencyCode ? this.state.unexplainValue.currencyCode : 0;
+		}
 	}
+
 	handleFileChange = (e, props) => {
 		e.preventDefault();
 		let reader = new FileReader();
@@ -849,49 +968,51 @@ class ExplainTrasactionDetail extends React.Component {
 			props.setFieldValue('attachment', file, true);
 		}
 	};
- getValueForCategory=(option)=>{
-	
-	if (option && option.label === 'Salaries and Employee Wages' && this.state.count===0) {
+	getValueForCategory = (option) => {
 
-		this.getMoneyPaidToUserlist(option);		this.setState({count:1})
+		if (option && option.label === 'Salaries and Employee Wages' && this.state.count === 0) {
+
+			this.getMoneyPaidToUserlist(option); this.setState({ count: 1 })
+		}
+		if (option && option.label === 'Owners Drawing' && this.state.count === 0
+		) {
+			this.getMoneyPaidToUserlist(option); this.setState({ count: 1 })
+		}
+		if (option && option.label === 'Dividend' && this.state.count === 0
+		) {
+			this.getMoneyPaidToUserlist(option); this.setState({ count: 1 })
+		}
+		if (option && option.label === 'Owners Current Account' && this.state.count === 0
+		) {
+			this.getMoneyPaidToUserlist(option); this.setState({ count: 1 })
+		}
+		if (option && option.label === 'Share Premium' && this.state.count === 0
+		) {
+			this.getMoneyPaidToUserlist(option); this.setState({ count: 1 })
+		}
+		if (option && option.label === 'Employee Advance' && this.state.count === 0
+		) {
+			this.getMoneyPaidToUserlist(option); this.setState({ count: 1 })
+		}
+		if (option && option.label === 'Employee Reimbursements' && this.state.count === 0
+		) {
+			this.getMoneyPaidToUserlist(option); this.setState({ count: 1 })
+		}
+		if (option && option.label === 'Director Loan Account' && this.state.count === 0
+		) {
+			this.getMoneyPaidToUserlist(option); this.setState({ count: 1 })
+		}
+		if (option && option.label === 'Owners Equity' && this.state.count === 0
+		) {
+			this.getMoneyPaidToUserlist(option); this.setState({ count: 1 })
+		}
+
+
+		return option
 	}
-	if (option && option.label === 'Owners Drawing' && this.state.count===0
-																							) {
-																								this.getMoneyPaidToUserlist(option);this.setState({count:1})
-																							}
-																							if (option && option.label === 'Dividend' && this.state.count===0
-																							) {
-																								this.getMoneyPaidToUserlist(option);this.setState({count:1})
-																							}
-																							if (option && option.label === 'Owners Current Account' && this.state.count===0 
-																							) {
-																								this.getMoneyPaidToUserlist(option);this.setState({count:1})
-																							}
-																							if (option && option.label === 'Share Premium' && this.state.count===0
-																							) {
-																								this.getMoneyPaidToUserlist(option);this.setState({count:1})
-																							}
-																							if (option && option.label === 'Employee Advance' && this.state.count===0
-																							) {
-																								this.getMoneyPaidToUserlist(option);this.setState({count:1})
-																							}
-																							if (option && option.label === 'Employee Reimbursements' && this.state.count===0
-																							) {
-																								this.getMoneyPaidToUserlist(option);this.setState({count:1})
-																							}
-																							if (option && option.label === 'Director Loan Account' && this.state.count===0
-																							) {
-																								this.getMoneyPaidToUserlist(option);this.setState({count:1})
-																							}
-																							if (option && option.label === 'Owners Equity' && this.state.count===0
-																							) {
-																								this.getMoneyPaidToUserlist(option);this.setState({count:1})
-																							}
-																							
-																						
-	return option
- }
+
 	render() {
+
 		strings.setLanguage(this.state.language);
 		const {
 			initValue,
@@ -915,23 +1036,23 @@ class ExplainTrasactionDetail extends React.Component {
 		let tmpSupplier_list = []
 
 		vendor_list.map(item => {
-			let obj = {label: item.label.contactName, value: item.value}
+			let obj = { label: item.label.contactName, value: item.value }
 			tmpSupplier_list.push(obj)
 		})
 
 		let transactionCategoryValue = {
-			label:'Select Category'
-		} 
+			label: 'Select Category'
+		}
 
 
-		if(this.state.transactionCategoryList && this.state.transactionCategoryList.categoriesList) {
+		if (this.state.transactionCategoryList && this.state.transactionCategoryList.categoriesList) {
 
 			let allCategories = [];
 
-			this.state.transactionCategoryList.categoriesList.forEach((cat)=>{
+			this.state.transactionCategoryList.categoriesList.forEach((cat) => {
 
-				if(cat.options && Array.isArray(cat.options)) {
-					cat.options.forEach((opt)=>{
+				if (cat.options && Array.isArray(cat.options)) {
+					cat.options.forEach((opt) => {
 
 						allCategories.push(opt)
 
@@ -940,16 +1061,16 @@ class ExplainTrasactionDetail extends React.Component {
 			});
 
 
-			if(this.state.transactionCategoryId) {
-				let labelObj = allCategories.find((ac)=>{
+			if (this.state.transactionCategoryId) {
+				let labelObj = allCategories.find((ac) => {
 					return ac.value == this.state.transactionCategoryId
 				})
 
-				if(labelObj) {
+				if (labelObj) {
 					transactionCategoryValue.label = labelObj.label
 					transactionCategoryValue.value = labelObj.value
 				}
-			}	
+			}
 		}
 
 		return (
@@ -961,137 +1082,139 @@ class ExplainTrasactionDetail extends React.Component {
 							{loading ? (
 								<Loader />
 							) : (
-									<Card>
-										<CardHeader>
-											<Row>
-												<Col lg={12}>
-													<div className="h4 mb-0 d-flex align-items-center">
-														<i className="icon-doc" />
-														<span className="ml-2">
+								<Card>
+									<CardHeader>
+										<Row>
+											<Col lg={12}>
+												<div className="h4 mb-0 d-flex align-items-center">
+													<i className="icon-doc" />
+													<span className="ml-2">
 
 														{
 															this.props.selectedData.debitCreditFlag === 'D' ?
-															 strings.Explain+" "+strings.Transaction+" "+strings.For+" "+strings.WithdrawalAmount+" "+this.state.currencySymbol+" "+this.state.amount :
-															 strings.Explain+" "+strings.Transaction+" "+strings.For+" "+strings.DepositAmount+" "+this.state.currencySymbol+" "+this.state.amount
+																strings.Explain + " " + strings.Transaction + " " + strings.For + " " + strings.WithdrawalAmount + " " + this.state.currencySymbol + " " + this.state.amount :
+																strings.Explain + " " + strings.Transaction + " " + strings.For + " " + strings.DepositAmount + " " + this.state.currencySymbol + " " + this.state.amount
 														}
-												
-														</span>
-													</div>
-												</Col>
-											</Row>
-										</CardHeader>
-										<CardBody>
-											<Row>
-												<Col lg={12}>
-													<Formik
-														initialValues={initValue}
-														ref={this.formRef}
-														onSubmit={(values, { resetForm }) => {
-															this.handleSubmit(values, resetForm);
-														}}
-														validate={(values) => {
-															let errors = {};
-															if (
-																(values.coaCategoryId.label ===
-																	'Supplier Invoice' ||
-																	values.coaCategoryId.label === 'Sales') &&
-																!values.invoiceIdList
-															) {
-																errors.invoiceIdList = 'Invoice is  required';
-															}
-															if (
-																values.coaCategoryId.label === 'Sales' &&
-																!values.customerId
-															) {
-																errors.customerId = 'Customer is  required';
-															}
-															// if (
-															// 	values.coaCategoryId.label !==
-															// 	'Supplier Invoice' &&
-															// 	values.coaCategoryId.label !== 'Sales' &&
-															// 	values.coaCategoryId.label !== 'Expense' &&
-															// 	!values.transactionCategoryId
-															// ) {
-															// 	errors.transactionCategoryId =
-															// 		'Transaction Category is Required';
-															// }
-															if(
-																(values.coaCategoryId.value === 12 ||
+
+													</span>
+												</div>
+											</Col>
+										</Row>
+									</CardHeader>
+									<CardBody>
+										<Row>
+											<Col lg={12}>
+												<Formik
+													initialValues={this.state.initValue}
+													ref={this.formRef}
+													onSubmit={(values, { resetForm }) => {
+														this.handleSubmit(values, resetForm);
+													}}
+													validate={(values) => {
+														let errors = {};
+														if (
+															(values.coaCategoryId.label ===
+																'Supplier Invoice' ||
+																values.coaCategoryId.label === 'Sales') &&
+															!values.invoiceIdList
+														) {
+															errors.invoiceIdList = 'Invoice is  required';
+														}
+														if (
+															values.coaCategoryId.label === 'Sales' &&
+															!values.customerId
+														) {
+															errors.customerId = 'Customer is  required';
+														}
+														// if (
+														// 	values.coaCategoryId.label !==
+														// 	'Supplier Invoice' &&
+														// 	values.coaCategoryId.label !== 'Sales' &&
+														// 	values.coaCategoryId.label !== 'Expense' &&
+														// 	!values.transactionCategoryId
+														// ) {
+														// 	errors.transactionCategoryId =
+														// 		'Transaction Category is Required';
+														// }
+														if (
+															(values.coaCategoryId.value === 12 ||
 																values.coaCategoryId.value === 6) &&
-																!values.employeeId
-															){
-																errors.employeeId = 'User is Required'
-															}
-															return errors;
-														}}
-														validationSchema={Yup.object().shape({
-															date: Yup.string().required(
-																'Transaction Date is Required',
+															!values.employeeId
+														) {
+															errors.employeeId = 'User is Required'
+														}
+														return errors;
+													}}
+													validationSchema={Yup.object().shape({
+														date: Yup.string().required(
+															'Transaction Date is Required',
+														),
+														amount: Yup.string()
+															.required('Transaction Amount is Required')
+															.test(
+																'amount',
+																'Transaction Amount Must Be Greater Than 0',
+																(value) => value > 0,
 															),
-															amount: Yup.string()
-																.required('Transaction Amount is Required')
-																.test(
-																	'amount',
-																	'Transaction Amount Must Be Greater Than 0',
-																	(value) => value > 0,
-																),
-															coaCategoryId: Yup.object().required(
-																'Transaction Type is Required',
+														coaCategoryId: Yup.object().required(
+															'Transaction Type is Required',
+														),
+														// employeeId: Yup.object().required(
+														// 	'Employee Type is Required',
+														// ),
+														attachment: Yup.mixed()
+															.test(
+																'fileType',
+																'*Unsupported File Format',
+																(value) => {
+																	value &&
+																		this.setState({
+																			fileName: value.name,
+																		});
+																	if (
+																		!value ||
+																		(value &&
+																			this.supported_format.includes(
+																				value.type,
+																			)) ||
+																		!value
+																	) {
+																		return true;
+																	} else {
+																		return false;
+																	}
+																},
+															)
+															.test(
+																'fileSize',
+																'*File Size is too large',
+																(value) => {
+																	if (
+																		!value ||
+																		(value && value.size <= this.file_size) ||
+																		!value
+																	) {
+																		return true;
+																	} else {
+																		return false;
+																	}
+																},
 															),
-															// employeeId: Yup.object().required(
-															// 	'Employee Type is Required',
-															// ),
-															attachment: Yup.mixed()
-																.test(
-																	'fileType',
-																	'*Unsupported File Format',
-																	(value) => {
-																		value &&
-																			this.setState({
-																				fileName: value.name,
-																			});
-																		if (
-																			!value ||
-																			(value &&
-																				this.supported_format.includes(
-																					value.type,
-																				)) ||
-																			!value
-																		) {
-																			return true;
-																		} else {
-																			return false;
-																		}
-																	},
-																)
-																.test(
-																	'fileSize',
-																	'*File Size is too large',
-																	(value) => {
-																		if (
-																			!value ||
-																			(value && value.size <= this.file_size) ||
-																			!value
-																		) {
-																			return true;
-																		} else {
-																			return false;
-																		}
-																	},
-																),
-														})}
-													>
-														{(props) => (
-															<Form onSubmit={props.handleSubmit}>
-																<Row>
-																	<Col lg={3}>
-																		<FormGroup className="mb-3">
-																			<Label htmlFor="chartOfAccountId">
-																				<span className="text-danger">* </span>
-																			     {strings.TransactionType}
+													})}
+												>
+													{(props) => (
+														<Form onSubmit={props.handleSubmit}>
+															{console.log(props, this.state)}
+
+															<Row>
+																<Col lg={3}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="chartOfAccountId">
+																			<span className="text-danger">* </span>
+																			{strings.TransactionType}
 																		</Label>
 																			<Select
-																				styles={customStyles}
+																				// styles={customStyles}
 																				options={
 																					chartOfAccountCategoryList
 																						? chartOfAccountCategoryList
@@ -1100,10 +1223,12 @@ class ExplainTrasactionDetail extends React.Component {
 																				value={
 																					chartOfAccountCategoryList[0] &&
 																					chartOfAccountCategoryList[0].options.find(
-																						(option) =>
-																							option.value ===
-																							+props.values.coaCategoryId.value,
-																					)
+																						(option) =>{
+																							debugger
+																						return	option.value ===
+																							typeof props.values.coaCategoryId==='object' ?props.values.coaCategoryId.value : props.values.coaCategoryId 
+																						}
+																							)
 																				}
 																				onChange={(option) => {
 																					if (option && option.value) {
@@ -1199,45 +1324,45 @@ class ExplainTrasactionDetail extends React.Component {
 																				<span className="text-danger">* </span>
 																			{strings.Amount}
 																		</Label>
-																			<Input
-																				type="number"
-																				min="0"
-																				id="amount"
-																				name="amount"
-																				placeholder={strings.Amount}
-																				readOnly={
-																					this.state.creationMode === 'MANUAL'
-																						? false
-																						: true
+																		<Input
+																			type="number"
+																			min="0"
+																			id="amount"
+																			name="amount"
+																			placeholder={strings.Amount}
+																			readOnly={
+																				this.state.creationMode === 'MANUAL'
+																					? false
+																					: true
+																			}
+																			onChange={(option) => {
+																				if (
+																					option.target.value === '' ||
+																					this.regEx.test(option.target.value)
+																				) {
+																					props.handleChange('amount')(
+																						option.target.value,
+																					);
 																				}
-																				onChange={(option) => {
-																					if (
-																						option.target.value === '' ||
-																						this.regEx.test(option.target.value)
-																					) {
-																						props.handleChange('amount')(
-																							option.target.value,
-																						);
-																					}
-																				}}
-																				value={props.values.amount}
-																				className={
-																					props.errors.amount &&
-																						props.touched.amount
-																						? 'is-invalid'
-																						: ''
-																				}
-																			/>
-																			{props.errors.amount &&
-																				props.touched.amount && (
-																					<div className="invalid-feedback">
-																						{props.errors.amount}
-																					</div>
-																				)}
-																		</FormGroup>
-																	</Col>
-																</Row>
-																{/* {transactionCategoryList.dataList &&
+																			}}
+																			value={props.values.amount}
+																			className={
+																				props.errors.amount &&
+																					props.touched.amount
+																					? 'is-invalid'
+																					: ''
+																			}
+																		/>
+																		{props.errors.amount &&
+																			props.touched.amount && (
+																				<div className="invalid-feedback">
+																					{props.errors.amount}
+																				</div>
+																			)}
+																	</FormGroup>
+																</Col>
+															</Row>
+															{/* {transactionCategoryList.dataList &&
 																props.values.coaCategoryId === 10 && (
 																	<Row>
 																		<Col lg={12}>
@@ -1305,285 +1430,295 @@ class ExplainTrasactionDetail extends React.Component {
 																		</Col>
 																	</Row>
 																)} */}
-																{props.values.coaCategoryId &&
-																	props.values.coaCategoryId.label ===
-																	'Expense' && (
-																		<Row>
-																			<Col lg={3}>
-																				<FormGroup className="mb-3">
-																					<Label htmlFor="expenseCategory">
-																						<span className="text-danger">* </span>
-																					  {strings.ExpenseCategory}
+															{props.values.coaCategoryId &&
+																props.values.coaCategoryId.label ===
+																'Expense' && (
+																	<Row>
+																		<Col lg={3}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="expenseCategory">
+																					<span className="text-danger">* </span>
+																					{strings.ExpenseCategory}
 																				</Label>
-																					<Select
-																						styles={customStyles}
-																						options={
-																							expense_categories_list
-																								? selectOptionsFactory.renderOptions(
-																									'transactionCategoryName',
-																									'transactionCategoryId',
-																									expense_categories_list,
-																									'Expense Category',
-																								)
-																								: []
-																						}
-																						value={
-																							expense_categories_list &&
-																							selectOptionsFactory
-																								.renderOptions(
-																									'transactionCategoryName',
-																									'transactionCategoryId',
-																									expense_categories_list,
-																									'Expense Category',
-																								)
-																								.find(
-																									(option) =>
-																										option.value ===
-																										+props.values.expenseCategory,
-																								)
-																						}
-																						// value={props.values.expenseCategory}
-																						onChange={(option) => {
-																							props.handleChange(
-																								'expenseCategory',
-																							)(option.value);
-																						}}
-																						id="expenseCategory"
-																						name="expenseCategory"
-																						className={
-																							props.errors.expenseCategory &&
-																								props.touched.expenseCategory
-																								? 'is-invalid'
-																								: ''
-																						}
-																					/>
-																					{props.errors.expenseCategory &&
-																						props.touched.expenseCategory && (
-																							<div className="invalid-feedback">
-																								{props.errors.expenseCategory}
-																							</div>
-																						)}
-																				</FormGroup>
-																			</Col>
-																		
-																			{props.values.expenseCategory  && props.values.expenseCategory==34 &&
-																				(
-																				this.getPayrollList(UnPaidPayrolls_List,props)
-																				)}
-																			{props.values.coaCategoryId &&
-																				props.values.coaCategoryId.label ===
-																				'Expense' &&  props.values.expenseCategory !==34 &&(
-																					<Col lg={3}>
-																						<FormGroup className="mb-3">
-																							<Label htmlFor="vatId">{strings.VAT}</Label>
-																							<Select
-																								options={
-																									vat_list
-																										? selectOptionsFactory.renderOptions(
-																											'name',
-																											'id',
-																											vat_list,
-																											'Tax',
-																										)
-																										: []
-																								}
-																								value={
-																									vat_list &&
-																									selectOptionsFactory
-																										.renderOptions(
-																											'name',
-																											'id',
-																											vat_list,
-																											'Tax',
-																										)
-																										.find(
-																											(option) =>
-																												option.value ===
-																												props.values.vatId,
-																										)
-																								}
-																								onChange={(option) => {
-																									if (option && option.value) {
-																										props.handleChange('vatId')(
-																											option.value,
-																										);
-																									} else {
-																										props.handleChange('vatId')(
-																											'',
-																										);
-																									}
-																								}}
-																								placeholder={strings.Select+strings.Type}
-																								id="vatId"
-																								name="vatId"
-																								className={
-																									props.errors.vatId &&
-																										props.touched.vatId
-																										? 'is-invalid'
-																										: ''
-																								}
-																							/>
-																						</FormGroup>
-																					</Col>
-																				)}
-																				<Col className='mb-3' lg={3}>
-															<Label htmlFor="inline-radio3"><span className="text-danger">* </span>{strings.ExpenseType}</Label>
-															<div style={{display:"flex"}}>
-																{this.state.expenseType === false ?
-																	<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Claimable}</b></span> :
-																	<span className='mr-4'>{strings.Claimable}</span>}
-
-																<Switch
-																	checked={this.state.expenseType}
-																	onChange={(expenseType) => {
-																		props.handleChange('expenseType')(expenseType);
-																		this.setState({ expenseType, }, () => { },);
-																	}}
-																	onColor="#2064d8"
-																	onHandleColor="#2693e6"
-																	handleDiameter={25}
-																	uncheckedIcon={false}
-																	checkedIcon={false}
-																	boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-																	activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-																	height={20}
-																	width={48}
-																	className="react-switch "
-																/>
-
-																{this.state.expenseType === true ?
-																	<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.NonClaimable}</b></span>
-																	: <span className='ml-4'>{strings.NonClaimable}</span>
-																}
-																</div>
-
-															</Col>
-
-																		</Row>
-																	)}
-																{props.values.coaCategoryId &&
-																	props.values.coaCategoryId.label ===
-																	'Supplier Invoice' && (
-																		<Row>
-																			<Col lg={4}>
-																				<FormGroup className="mb-3">
-																					<Label htmlFor="vendorId">
-																						<span className="text-danger">* </span>
-																					 {strings.Vendor}
-																				</Label>
-																					<Select
-																						styles={customStyles}
-																						options={
-																							tmpSupplier_list
-																								? selectOptionsFactory.renderOptions(
-																										'label',
-																										'value',
-																										tmpSupplier_list,
-																										'Supplier Name',
-																								  )
-																								: []
-																						}
-																						onChange={(option) => {
-																							if (option && option.value) {
-																								this.formRef.current.setFieldValue('currencyCode', this.getCurrency(option.value), true);
-																								this.setExchange( this.getCurrency(option.value) );
-																								props.handleChange('vendorId')(option);
-																							} else {
-				
-																								props.handleChange('vendorId')('');
-																							}
-																							this.getSuggestionInvoicesFotVend(
-																								option.value,
-																								props.values.amount,
-																							);
-																						}}
-																						value={
-																							tmpSupplier_list &&
-																							tmpSupplier_list.find(
+																				<Select
+																					styles={customStyles}
+																					options={
+																						expense_categories_list
+																							? selectOptionsFactory.renderOptions(
+																								'transactionCategoryName',
+																								'transactionCategoryId',
+																								expense_categories_list,
+																								'Expense Category',
+																							)
+																							: []
+																					}
+																					value={
+																						expense_categories_list &&
+																						selectOptionsFactory
+																							.renderOptions(
+																								'transactionCategoryName',
+																								'transactionCategoryId',
+																								expense_categories_list,
+																								'Expense Category',
+																							)
+																							.find(
 																								(option) =>
 																									option.value ===
-																									+props.values.vendorId,
+																									+props.values.expenseCategory,
 																							)
-																							
+																					}
+																					// value={props.values.expenseCategory}
+																					onChange={(option) => {
+																						props.handleChange(
+																							'expenseCategory',
+																						)(option.value);
+																					}}
+																					id="expenseCategory"
+																					name="expenseCategory"
+																					className={
+																						props.errors.expenseCategory &&
+																							props.touched.expenseCategory
+																							? 'is-invalid'
+																							: ''
+																					}
+																				/>
+																				{props.errors.expenseCategory &&
+																					props.touched.expenseCategory && (
+																						<div className="invalid-feedback">
+																							{props.errors.expenseCategory}
+																						</div>
+																					)}
+																			</FormGroup>
+																		</Col>
+
+																		{props.values.expenseCategory && props.values.expenseCategory == 34 &&
+																			(
+																				this.getPayrollList(UnPaidPayrolls_List, props)
+																			)}
+																		{props.values.coaCategoryId &&
+																			props.values.coaCategoryId.label ===
+																			'Expense' && props.values.expenseCategory !== 34 && (
+																				<Col lg={3}>
+																					<FormGroup className="mb-3">
+																						<Label htmlFor="vatId">{strings.VAT}</Label>
+																						<Select
+																							options={
+																								vat_list
+																									? selectOptionsFactory.renderOptions(
+																										'name',
+																										'id',
+																										vat_list,
+																										'Tax',
+																									)
+																									: []
+																							}
+																							value={
+																								vat_list &&
+																								selectOptionsFactory
+																									.renderOptions(
+																										'name',
+																										'id',
+																										vat_list,
+																										'Tax',
+																									)
+																									.find(
+																										(option) =>
+																											option.value ===
+																											props.values.vatId,
+																									)
+																							}
+																							onChange={(option) => {
+																								if (option && option.value) {
+																									props.handleChange('vatId')(
+																										option.value,
+																									);
+																								} else {
+																									props.handleChange('vatId')(
+																										'',
+																									);
+																								}
+																							}}
+																							placeholder={strings.Select + strings.Type}
+																							id="vatId"
+																							name="vatId"
+																							className={
+																								props.errors.vatId &&
+																									props.touched.vatId
+																									? 'is-invalid'
+																									: ''
+																							}
+																						/>
+																					</FormGroup>
+																				</Col>
+																			)}
+																		<Col className='mb-3' lg={3}>
+																			<Label htmlFor="inline-radio3"><span className="text-danger">* </span>{strings.ExpenseType}</Label>
+																			<div style={{ display: "flex" }}>
+																				{this.state.expenseType === false ?
+																					<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Claimable}</b></span> :
+																					<span className='mr-4'>{strings.Claimable}</span>}
+
+																				<Switch
+																					checked={this.state.expenseType}
+																					onChange={(expenseType) => {
+																						props.handleChange('expenseType')(expenseType);
+																						this.setState({ expenseType, }, () => { },);
+																					}}
+																					onColor="#2064d8"
+																					onHandleColor="#2693e6"
+																					handleDiameter={25}
+																					uncheckedIcon={false}
+																					checkedIcon={false}
+																					boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+																					activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+																					height={20}
+																					width={48}
+																					className="react-switch "
+																				/>
+
+																				{this.state.expenseType === true ?
+																					<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.NonClaimable}</b></span>
+																					: <span className='ml-4'>{strings.NonClaimable}</span>
+																				}
+																			</div>
+
+																		</Col>
+
+																	</Row>
+																)}
+															{props.values.coaCategoryId &&
+																props.values.coaCategoryId.label ===
+																'Supplier Invoice' && (
+																	<Row>
+																		<Col lg={4}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="vendorId">
+																					<span className="text-danger">* </span>
+																					{strings.Vendor}
+																				</Label>
+																				<Select
+																					styles={customStyles}
+																					options={
+																						tmpSupplier_list
+																							? selectOptionsFactory.renderOptions(
+																								'label',
+																								'value',
+																								tmpSupplier_list,
+																								'Supplier Name',
+																							)
+																							: []
+																					}
+																					onChange={(option) => {
+																						if (option && option.value) {
+
+																							props.handleChange('vendorId')(option);
+																						} else {
+
+																							props.handleChange('vendorId')('');
 																						}
-																						placeholder={strings.Select+strings.Type}
-																						id="vendorId"
-																						name="vendorId"
-																						className={
-																							props.errors.vendorId &&
-																								props.touched.vendorId
-																								? 'is-invalid'
-																								: ''
-																						}
-																					/>
-																				</FormGroup>
-																			</Col>
-																			{props.values.coaCategoryId &&
-																				props.values.coaCategoryId.label ===
-																				'Supplier Invoice' &&
-																				props.values.vendorId && (
-																					<Col lg={4}>
-																						<FormGroup className="mb-3">
-																							<Label htmlFor="invoiceIdList">
-																								<span className="text-danger">
-																									*
+																						this.getSuggestionInvoicesFotVend(
+																							option.value,
+																							props.values.amount,
+
+																						);
+																					}}
+																					value={
+																						tmpSupplier_list &&
+																						tmpSupplier_list.find(
+																							(option) =>
+																								option.value ===
+																								+props.values.vendorId,
+																						)
+
+																					}
+																					placeholder={strings.Select + strings.Type}
+																					id="vendorId"
+																					name="vendorId"
+																					className={
+																						props.errors.vendorId &&
+																							props.touched.vendorId
+																							? 'is-invalid'
+																							: ''
+																					}
+																				/>
+																			</FormGroup>
+																		</Col>
+																		{props.values.coaCategoryId &&
+																			props.values.coaCategoryId.label ===
+																			'Supplier Invoice' &&
+																			props.values.vendorId && (
+																				<Col lg={4}>
+																					<FormGroup className="mb-3">
+																						<Label htmlFor="invoiceIdList">
+																							<span className="text-danger">
+																								*
 																							</span>
 																							{strings.Invoice}
 																						</Label>
-																							<Select
-																								styles={customStyles}
-																								isMulti
-																								options={
-																									supplier_invoice_list_state
-																										? supplier_invoice_list_state
-																										: []
+																						<Select
+																							styles={customStyles}
+																							isMulti
+																							options={
+																								supplier_invoice_list_state
+																									? supplier_invoice_list_state
+																									: []
+																							}
+																							onChange={(option) => {
+																								if (option === null) {
+																									this.getSuggestionInvoicesFotVend(
+																										props.values.vendorId.value,
+																										props.values.amount,
+																										option
+																									);
 																								}
-																								onChange={(option) => {
-																									props.handleChange(
-																										'explainParamList',
-																									)(option);
-																									this.invoiceIdList(option);
-																								}}
-																								value={
-																									supplier_invoice_list_state &&
-																										props.values.explainParamList &&
-																										supplier_invoice_list_state.find(
-																											(option) =>
-																												option.value ===
-																												+props.values.explainParamList.map(
-																													(item) => item.id,
-																												),
-																										)
-																										? supplier_invoice_list_state.find(
-																											(option) =>
-																												option.value ===
-																												+props.values.explainParamList.map(
-																													(item) => item.id,
-																												),
-																										)
-																										: props.values
-																											.explainParamList
+																								props.handleChange(
+																									'explainParamList',
+																								)(option);
+																								this.invoiceIdList(option);
+																								if (option != null) {
+																									this.getVendorInvoiceCurrency(option[0], props);
 																								}
-																								placeholder={strings.Select+strings.Type}
-																								id="invoiceIdList"
-																								name="invoiceIdList"
-																								className={
-																									props.errors.invoiceIdList &&
-																										props.touched.invoiceIdList
-																										? 'is-invalid'
-																										: ''
-																								}
-																							/>
-																							{props.errors.invoiceIdList &&
-																								props.touched.invoiceIdList && (
-																									<div className="invalid-feedback">
-																										{props.errors.invoiceIdList}
-																									</div>
-																								)}
-																							{/* {this.state.initValue
+																							}}
+																							value={
+																								supplier_invoice_list_state &&
+																									props.values.explainParamList &&
+																									supplier_invoice_list_state.find(
+																										(option) =>
+																											option.value ===
+																											+props.values.explainParamList.map(
+																												(item) => item.id,
+																											),
+																									)
+																									? supplier_invoice_list_state.find(
+																										(option) =>
+																											option.value ===
+																											+props.values.explainParamList.map(
+																												(item) => item.id,
+																											),
+																									)
+																									: props.values
+																										.explainParamList
+																							}
+																							placeholder={strings.Select + strings.Type}
+																							id="invoiceIdList"
+																							name="invoiceIdList"
+																							className={
+																								props.errors.invoiceIdList &&
+																									props.touched.invoiceIdList
+																									? 'is-invalid'
+																									: ''
+																							}
+																						/>
+																						{props.errors.invoiceIdList &&
+																							props.touched.invoiceIdList && (
+																								<div className="invalid-feedback">
+																									{props.errors.invoiceIdList}
+																								</div>
+																							)}
+																						{/* {this.state.initValue
 																							.invoiceIdList &&
 																							this.state.initValue.invoiceIdList.reduce(
-																								(totalAmount, invoice) =>
+																								(totalAmount, invoice) => 
 																									totalAmount + invoice.amount,
 																								0,
 																							) !== props.values.amount && (
@@ -1611,133 +1746,142 @@ class ExplainTrasactionDetail extends React.Component {
 																									</div>
 																								</div>
 																							)} */}
-																						</FormGroup>
-																					</Col>
-																				)}
-																		</Row>
-																	)}
-																<Row>
-																	{transactionCategoryList.dataList &&
-																		props.values.coaCategoryId.value === 2 && (
-																			<Col lg={4}>
-																				<FormGroup className="mb-3">
-																					<Label htmlFor="customerId">
-																						<span className="text-danger">* </span>
-																					   {strings.Customer}
+																					</FormGroup>
+																				</Col>
+																			)}
+																	</Row>
+																)}
+															<Row>
+																{transactionCategoryList.dataList &&
+																	props.values.coaCategoryId.value === 2 && (
+																		<Col lg={4}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="customerId">
+																					<span className="text-danger">* </span>
+																					{strings.Customer}
 																				</Label>
-																					<Select
-																						styles={customStyles}
-																						options={
-																							transactionCategoryList.dataList[0]
-																								? transactionCategoryList
-																									.dataList[0].options
-																								: []
-																						}
-																						onChange={(option) => {
-																							if (option && option.value) {
-																								this.formRef.current.setFieldValue('currencyCode', this.getCurrency(option.value), true);
-																								 
-																								this.setExchange( this.getCurrency(option.value) );
-																								props.handleChange('customerId')(
-																									option.value,
-																								);
-																							} else {
-																								props.handleChange('customerId')(
-																									'',
-																								);
-																							}
-																							this.getSuggestionInvoicesFotCust(
+																				<Select
+																					styles={customStyles}
+																					options={
+																						transactionCategoryList.dataList[0]
+																							? transactionCategoryList
+																								.dataList[0].options
+																							: []
+																					}
+																					onChange={(option) => {
+																						if (option && option.value) {
+																							props.handleChange('customerId')(
 																								option.value,
-																								props.values.amount,
 																							);
-																						}}
-																						value={
-																							transactionCategoryList
-																								.dataList[0] &&
-																							transactionCategoryList.dataList[0].options.find(
-																								(option) =>
-																									option.value ===
-																									+props.values.customerId,
-																							)
+																						} else {
+																							props.handleChange('customerId')(
+																								'',
+																							);
 																						}
-																						placeholder={strings.Select+strings.Type}
-																						id="customerId"
-																						name="customerId"
-																						className={
-																							props.errors.customerId &&
-																								props.touched.customerId
-																								? 'is-invalid'
-																								: ''
-																						}
-																					/>
-																					{props.errors.customerId &&
-																						props.touched.customerId && (
-																							<div className="invalid-feedback">
-																								{props.errors.customerId}
-																							</div>
-																						)}
-																				</FormGroup>
-																			</Col>
-																		)}
-																	{transactionCategoryList.dataList &&
-																		props.values.coaCategoryId.value === 2 &&
-																		props.values.customerId && (
-																			<Col lg={4}>
-																				<FormGroup className="mb-3">
-																					<Label htmlFor="invoiceIdList">
-																						<span className="text-danger">* </span>
+																						this.getSuggestionInvoicesFotCust(
+																							option.value,
+																							props.values.amount,
+																						);
+																					}}
+																					value={
+																						transactionCategoryList
+																							.dataList[0] &&
+																						transactionCategoryList.dataList[0].options.find(
+																							(option) =>
+																								option.value ===
+																								+props.values.customerId,
+																						)
+																					}
+																					placeholder={strings.Select + strings.Type}
+																					id="customerId"
+																					name="customerId"
+																					className={
+																						props.errors.customerId &&
+																							props.touched.customerId
+																							? 'is-invalid'
+																							: ''
+																					}
+																				/>
+																				{props.errors.customerId &&
+																					props.touched.customerId && (
+																						<div className="invalid-feedback">
+																							{props.errors.customerId}
+																						</div>
+																					)}
+																			</FormGroup>
+																		</Col>
+																	)}
+																{transactionCategoryList.dataList &&
+																	props.values.coaCategoryId.value === 2 &&
+																	props.values.customerId && (
+																		<Col lg={4}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="invoiceIdList">
+																					<span className="text-danger">* </span>
 																					{strings.Invoice}
 																				</Label>
-																					<Select
-																						styles={customStyles}
-																						isMulti
-																						options={
-																							customer_invoice_list_state
-																								? customer_invoice_list_state
-																								:[]
+																				<Select
+																					styles={customStyles}
+																					isMulti
+																					options={
+																						customer_invoice_list_state
+																							? customer_invoice_list_state
+																							: []
+																					}
+																					onChange={(option) => {
+																						if (option === null) {
+																							this.getSuggestionInvoicesFotCust(
+																								props.values.vendorId.value,
+																								props.values.amount,
+																								option
+																							);
 																						}
-																						onChange={(option) => {
-																							props.handleChange(
-																								'explainParamList',
-																							)(option);
-																							this.invoiceIdList(option);
-																						}}
-																						value={
-																							customer_invoice_list_state &&
-																								props.values.explainParamList &&
-																								customer_invoice_list_state.find(
-																									(option) =>
-																										option.value ===
-																										+props.values.explainParamList.map(
-																											(item) => item.id,
-																										),
-																								)
-																								? customer_invoice_list_state.find(
-																									(option) =>
-																										option.value ===
-																										+props.values.explainParamList.map(
-																											(item) => item.id,
-																										),
-																								)
-																								: props.values.explainParamList
+																						props.handleChange(
+																							'explainParamList',
+																						)(option);
+																						this.invoiceIdList(option);
+
+																						if (option != null) {
+																							this.getInvoiceCurrency(option[0], props);
 																						}
-																						placeholder={strings.Select+strings.Type}
-																						id="invoiceIdList"
-																						name="invoiceIdList"
-																						className={
-																							props.errors.invoiceIdList &&
-																								props.touched.invoiceIdList
-																								? 'is-invalid'
-																								: ''
-																						}
-																					/>
-																					{props.errors.invoiceIdList &&
-																						props.touched.invoiceIdList && (
-																							<div className="invalid-feedback">
-																								{props.errors.invoiceIdList}
-																							</div>
-																						)}
-																					{/* { this.state.initValue.invoiceIdList &&
+																					}}
+																					value={
+
+																						customer_invoice_list_state &&
+																							props.values.explainParamList &&
+																							customer_invoice_list_state.find(
+																								(option) =>
+																									option.value ===
+																									+props.values.explainParamList.map(
+																										(item) => item.id,
+																									),
+																							)
+																							? customer_invoice_list_state.find(
+																								(option) =>
+																									option.value ===
+																									+props.values.explainParamList.map(
+																										(item) => item.id,
+																									),
+																							)
+																							: props.values.explainParamList
+																					}
+																					placeholder={strings.Select + strings.Type}
+																					id="invoiceIdList"
+																					name="invoiceIdList"
+																					className={
+																						props.errors.invoiceIdList &&
+																							props.touched.invoiceIdList
+																							? 'is-invalid'
+																							: ''
+																					}
+																				/>
+																				{props.errors.invoiceIdList &&
+																					props.touched.invoiceIdList && (
+																						<div className="invalid-feedback">
+																							{props.errors.invoiceIdList}
+																						</div>
+																					)}
+																				{/* { this.state.initValue.invoiceIdList &&
 																					this.state.initValue.invoiceIdList.reduce(
 																						(totalAmount, invoice) =>
 																							parseInt(
@@ -1768,174 +1912,174 @@ class ExplainTrasactionDetail extends React.Component {
 																							</div>
 																						</div>
 																					)}  */}
-																				</FormGroup>
-																			</Col>
-																		)}
-																	{props.values.coaCategoryId &&
-																		props.values.coaCategoryId.label !==
-																		'Expense' &&
-																		props.values.coaCategoryId.label !==
-																		'Supplier Invoice' &&
-																		props.values.coaCategoryId.label !==
-																		'Sales' && (
-																			<Col lg={4}>
-																				<FormGroup className="mb-3">
-																					<Label htmlFor="transactionCategoryId">
-																						<span className="text-danger">* </span>
+																			</FormGroup>
+																		</Col>
+																	)}
+																{props.values.coaCategoryId &&
+																	props.values.coaCategoryId.label !==
+																	'Expense' &&
+																	props.values.coaCategoryId.label !==
+																	'Supplier Invoice' &&
+																	props.values.coaCategoryId.label !==
+																	'Sales' && (
+																		<Col lg={4}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="transactionCategoryId">
+																					<span className="text-danger">* </span>
 																					{strings.Category}
 																				</Label>
-																					<Select
-																						styles={customStyles}
-																						options={
-																							transactionCategoryList
-																								? transactionCategoryList.categoriesList
-																								: []
-																						}
-																						value={this.getValueForCategory(transactionCategoryValue)}
-																						onChange={(option) => {
-																						
-																							this.setState({
-																								transactionCategoryId:option.value
-																							})
-																							if (option.label !== 'Salaries and Employee Wages' &&
-																							 option.label !== 'Owners Drawing' &&  
+																				<Select
+																					styles={customStyles}
+																					options={
+																						transactionCategoryList
+																							? transactionCategoryList.categoriesList
+																							: []
+																					}
+																					value={this.getValueForCategory(transactionCategoryValue)}
+																					onChange={(option) => {
+
+																						this.setState({
+																							transactionCategoryId: option.value
+																						})
+																						if (option.label !== 'Salaries and Employee Wages' &&
+																							option.label !== 'Owners Drawing' &&
 																							option.label !== 'Dividend' &&
 																							option.label !== 'Owners Current Account' &&
 																							option.label !== 'Share Premium' &&
 																							option.label !== 'Employee Advance' &&
 																							option.label !== 'Employee Reimbursements' &&
 																							option.label !== 'Director Loan Account' &&
-																							option.label !== 'Owners Equity' 
-																							) {	}
-																						
-																							if ( option.label === 'Salaries and Employee Wages' 
-																							) {
-																								this.getMoneyPaidToUserlist(option);
-																							}
-																							if ( option.label === 'Owners Drawing' 
-																							) {
-																								this.getMoneyPaidToUserlist(option);
-																							}
-																							if (option.label === 'Dividend'
-																							) {
-																								this.getMoneyPaidToUserlist(option);
-																							}
-																							if (option.label === 'Owners Current Account' 
-																							) {
-																								this.getMoneyPaidToUserlist(option);
-																							}
-																							if ( option.label === 'Share Premium'
-																							) {
-																								this.getMoneyPaidToUserlist(option);
-																							}
-																							if ( option.label === 'Employee Advance'
-																							) {
-																								this.getMoneyPaidToUserlist(option);
-																							}
-																							if (option.label === 'Employee Reimbursements'
-																							) {
-																								this.getMoneyPaidToUserlist(option);
-																							}
-																							if ( option.label === 'Director Loan Account'
-																							) {
-																								this.getMoneyPaidToUserlist(option);
-																							}
-																							if ( option.label === 'Owners Equity' 
-																							) {
-																								this.getMoneyPaidToUserlist(option);
-																							}
-																						}}
-																						// value={
-																						// 	transactionCategoryList &&
-																						// 		props.values
-																						// 			.transactionCategoryLabel
-																						// 		? transactionCategoryList.categoriesList
-																						// 			.find(
-																						// 				(item) =>
-																						// 					item.label ===
-																						// 					props.values
-																						// 						.transactionCategoryLabel,
-																						// 			)
-																						// 			.options.find(
-																						// 				(item) =>
-																						// 					item.value ===
-																						// 					+props.values
-																						// 						.transactionCategoryId,
-																						// 			)
-																						// 		: console.log('')
-																						// }
-																					
-																						
-																						placeholder={strings.Select+strings.Category}
-																						id="transactionCategoryId"
-																						name="transactionCategoryId"
-																						className={
-																							!transactionCategoryValue.label
-																								? 'is-invalid'
-																								: ''
+																							option.label !== 'Owners Equity'
+																						) { }
+
+																						if (option.label === 'Salaries and Employee Wages'
+																						) {
+																							this.getMoneyPaidToUserlist(option);
 																						}
-																					/>
-																						{
-																							!transactionCategoryValue.label ?
-																					''	: (
+																						if (option.label === 'Owners Drawing'
+																						) {
+																							this.getMoneyPaidToUserlist(option);
+																						}
+																						if (option.label === 'Dividend'
+																						) {
+																							this.getMoneyPaidToUserlist(option);
+																						}
+																						if (option.label === 'Owners Current Account'
+																						) {
+																							this.getMoneyPaidToUserlist(option);
+																						}
+																						if (option.label === 'Share Premium'
+																						) {
+																							this.getMoneyPaidToUserlist(option);
+																						}
+																						if (option.label === 'Employee Advance'
+																						) {
+																							this.getMoneyPaidToUserlist(option);
+																						}
+																						if (option.label === 'Employee Reimbursements'
+																						) {
+																							this.getMoneyPaidToUserlist(option);
+																						}
+																						if (option.label === 'Director Loan Account'
+																						) {
+																							this.getMoneyPaidToUserlist(option);
+																						}
+																						if (option.label === 'Owners Equity'
+																						) {
+																							this.getMoneyPaidToUserlist(option);
+																						}
+																					}}
+																					// value={
+																					// 	transactionCategoryList &&
+																					// 		props.values
+																					// 			.transactionCategoryLabel
+																					// 		? transactionCategoryList.categoriesList
+																					// 			.find(
+																					// 				(item) =>
+																					// 					item.label ===
+																					// 					props.values
+																					// 						.transactionCategoryLabel,
+																					// 			)
+																					// 			.options.find(
+																					// 				(item) =>
+																					// 					item.value ===
+																					// 					+props.values
+																					// 						.transactionCategoryId,
+																					// 			)
+																					// 		: console.log('')
+																					// }
+
+
+																					placeholder={strings.Select + strings.Category}
+																					id="transactionCategoryId"
+																					name="transactionCategoryId"
+																					className={
+																						!transactionCategoryValue.label
+																							? 'is-invalid'
+																							: ''
+																					}
+																				/>
+																				{
+																					!transactionCategoryValue.label ?
+																						'' : (
 																							<div className="invalid-feedback">
 																								{
 																									"Transaction Category is Required"
 																								}
 																							</div>
 																						)}
-																				</FormGroup>
-																			</Col>
-																		)}
-																	{transactionCategoryList.dataList &&
-																		(props.values.coaCategoryId.value === 6 ||
+																			</FormGroup>
+																		</Col>
+																	)}
+																{transactionCategoryList.dataList &&
+																	(props.values.coaCategoryId.value === 6 ||
 																		props.values.coaCategoryId.value === 12)
-																		&&   
-																		 (
-																			<Col lg={4}>
-																				<FormGroup className="mb-3">
+																	&&
+																	(
+																		<Col lg={4}>
+																			<FormGroup className="mb-3">
 																				<span className="text-danger">* </span>
-																					<Label htmlFor="employeeId">User</Label>
-																					<Select
-																						styles={customStyles}
-																						options={
-																							moneyCategoryList ?
+																				<Label htmlFor="employeeId">User</Label>
+																				<Select
+																					styles={customStyles}
+																					options={
+																						moneyCategoryList ?
 																							moneyCategoryList : []
+																					}
+																					value={
+																						moneyCategoryList &&
+																						moneyCategoryList.find(
+																							(option) =>
+																								option.value ===
+																								+props.values.employeeId,
+																						)
+																					}
+																					onChange={(option) => {
+																						if (option && option.value) {
+																							props.handleChange('employeeId')(
+																								option,
+																							);
+																						} else {
+																							props.handleChange('employeeId')(
+																								'',
+																							);
 																						}
-																						value={
-																							moneyCategoryList &&
-																							moneyCategoryList.find(
-																								(option) =>
-																									option.value ===
-																									+props.values.employeeId,
-																							)
-																						}
-																						onChange={(option) => {
-																							if (option && option.value) {
-																								props.handleChange('employeeId')(
-																									option,
-																								);
-																							} else {
-																								props.handleChange('employeeId')(
-																									'',
-																								);
-																							}
-																						}}
-																						placeholder={strings.Select+strings.User}
-																						id="employeeId"
-																						name="employeeId"
-																						className={
-																							props.errors.employeeId &&
-																								props.touched.employeeId
-																								? 'is-invalid'
-																								: ''
-																						}
-																					/>
-																				</FormGroup>
-																			</Col>
-																		)}
-																</Row>
-																{/* {props.values.coaCategoryId &&
+																					}}
+																					placeholder={strings.Select + strings.User}
+																					id="employeeId"
+																					name="employeeId"
+																					className={
+																						props.errors.employeeId &&
+																							props.touched.employeeId
+																							? 'is-invalid'
+																							: ''
+																					}
+																				/>
+																			</FormGroup>
+																		</Col>
+																	)}
+															</Row>
+															{/* {props.values.coaCategoryId &&
 																	props.values.coaCategoryId.label ===
 																	'Expense' &&  (
 																		<Row style={{display: this.state.bankAccountCurrency === this.state.basecurrency.currencyCode ? 'none': ''}}>
@@ -2060,17 +2204,19 @@ class ExplainTrasactionDetail extends React.Component {
 																			</Col>
 																		</Row>
 																	)} */}
-																{/* {props.values.coaCategoryId &&
-																	props.values.coaCategoryId.label ===
-																	'Sales' && 
-																
-																	(
-																		<Row style={{display: this.state.bankAccountCurrency === this.state.basecurrency.currencyCode ? 'none': ''}}>
+															{
+																props.values.coaCategoryId &&
+																props.values.coaCategoryId.label ===
+																'Sales' &&
+
+																(
+																	this.state.custInvoiceCurrency != this.state.bankAccountCurrency ? (
+																		<Row >
 																			<Col lg={3}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="currencyCode">
 																						{strings.Currency}
-																						</Label>
+																					</Label>
 																					<Select
 																						styles={customStyles}
 																						id="currencyCode"
@@ -2098,7 +2244,7 @@ class ExplainTrasactionDetail extends React.Component {
 																								.find(
 																									(option) =>
 																										option.value ===
-																										+props.values.currencyCode,
+																										+this.state.custInvoiceCurrency,
 																								)
 																						}
 																						onChange={(option) => {
@@ -2130,81 +2276,82 @@ class ExplainTrasactionDetail extends React.Component {
 																				</FormGroup>
 																			</Col>
 																		</Row>
-																	)}
-																{props.values.coaCategoryId &&
-																	props.values.coaCategoryId.label ===
-																	'Sales' && (
-																		<Row  style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
-																			<Col lg={2}>
-																				<Input
-																					disabled
-																					id="1"
-																					name="1"
-																					value={
-																						1}
+																	) : '')}
+															{props.values.coaCategoryId &&
+																props.values.coaCategoryId.label ===
+																'Sales' && (
+																	<Row style={{ display: props.values.exchangeRate === 1 ? 'none' : '' }}>
+																		<Col lg={2}>
+																			<Input
+																				disabled
+																				id="1"
+																				name="1"
+																				value={
+																					1}
 
-																				/>
-																			</Col>
-																			<Col lg={2}>
-																				<FormGroup className="mb-3">
-																					<div>
-																						<Input
-																							disabled
-																							className="form-control"
-																							id="curreancyname"
-																							name="curreancyname"
+																			/>
+																		</Col>
+																		<Col lg={2}>
+																			<FormGroup className="mb-3">
+																				<div>
+																					<Input
+																						disabled
+																						className="form-control"
+																						id="curreancyname"
+																						name="curreancyname"
 
-																							value={props.values.curreancyname}
-																							onChange={(value) => {
-																								props.handleChange('curreancyname')(
-																									value,
-																								);
-																							}}
-																						/>
-																					</div>
-																				</FormGroup>
-																			</Col>
-																			<FormGroup className="mt-2"><label><b>=</b></label>	</FormGroup>
-																			<Col lg={2}>
-																				<FormGroup className="mb-3">
-																					<div>
-																						<Input
-																							className="form-control"
-																							id="exchangeRate"
-																							name="exchangeRate"
+																						value={props.values.curreancyname}
+																						onChange={(value) => {
+																							props.handleChange('curreancyname')(
+																								value,
+																							);
+																						}}
+																					/>
+																				</div>
+																			</FormGroup>
+																		</Col>
+																		<FormGroup className="mt-2"><label><b>=</b></label>	</FormGroup>
+																		<Col lg={2}>
+																			<FormGroup className="mb-3">
+																				<div>
+																					<Input
+																						className="form-control"
+																						id="exchangeRate"
+																						name="exchangeRate"
 
-																							value={props.values.exchangeRate}
-																							onChange={(value) => {
-																								props.handleChange('exchangeRate')(
-																									value,
-																								);
-																							}}
-																						/>
-																					</div>
-																				</FormGroup>
-																			</Col>
-																			<Col lg={2}>
-																				<Input
-																					disabled
-																					id="currencyName"
-																					name="currencyName"
-																					value={
-																						this.state.basecurrency.currencyName}
+																						value={props.values.exchangeRate}
+																						onChange={(value) => {
+																							props.handleChange('exchangeRate')(
+																								value,
+																							);
+																						}}
+																					/>
+																				</div>
+																			</FormGroup>
+																		</Col>
+																		<Col lg={2}>
+																			<Input
+																				disabled
+																				id="currencyName"
+																				name="currencyName"
+																				value={
+																					this.state.basecurrency}
 
-																				/>
-																			</Col>
-																		</Row>
-																	)} */}
-																{/* {props.values.coaCategoryId &&
-																	props.values.coaCategoryId.label ===
-																	'Supplier Invoice' &&
-																	(
-																		<Row style={{display: this.state.bankAccountCurrency === this.state.basecurrency.currencyCode ? 'none': ''}}>
+																			/>
+																		</Col>
+																	</Row>
+																)}
+															{props.values.coaCategoryId &&
+																props.values.coaCategoryId.label ===
+																'Supplier Invoice' &&
+																(
+																	this.state.custInvoiceCurrency != this.state.bankAccountCurrency ? (
+																		<Row >
 																			<Col lg={3}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="currencyCode">
 																						{strings.Currency}
-																						</Label>
+																					</Label>
 																					<Select
 																						styles={customStyles}
 																						id="currencyCode"
@@ -2231,7 +2378,7 @@ class ExplainTrasactionDetail extends React.Component {
 																								.find(
 																									(option) =>
 																										option.value ===
-																										 +this.state.supplier_currency,
+																										+this.state.invoiceCurrency,
 																								)
 																						}
 																						isDisabled={true}
@@ -2239,7 +2386,7 @@ class ExplainTrasactionDetail extends React.Component {
 																							props.handleChange('currencyCode')(option);
 																							this.setExchange(option.value);
 																							this.setCurrency(option.value)
-																						   }}
+																						}}
 																					/>
 																					{props.errors.currencyCode &&
 																						props.touched.currencyCode && (
@@ -2250,127 +2397,127 @@ class ExplainTrasactionDetail extends React.Component {
 																				</FormGroup>
 																			</Col>
 																		</Row>
-																	)}
-																{props.values.coaCategoryId &&
-																	props.values.coaCategoryId.label ===
-																	'Supplier Invoice' && 
-																
+																	) : '')}
+															{props.values.coaCategoryId &&
+																props.values.coaCategoryId.label ===
+																'Supplier Invoice' &&
+
 																(
-																		<Row  style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
-																			<Col lg={2}>
-																				<Input
-																					disabled
-																					id="1"
-																					name="1"
-																					value={
-																						1}
+																	<Row style={{ display: props.values.exchangeRate === 1 ? 'none' : '' }}>
+																		<Col lg={2}>
+																			<Input
+																				disabled
+																				id="1"
+																				name="1"
+																				value={
+																					1}
 
-																				/>
-																			</Col>
-																			<Col lg={2}>
-																				<FormGroup className="mb-3">
-																				
-																					<div>
-																						<Input
-																							disabled
-																							className="form-control"
-																							id="curreancyname"
-																							name="curreancyname"
-																							value={this.state.supplier_currency_des}
-																							onChange={(value) => {
-																								props.handleChange('curreancyname')(
-																									value,
-																								);
-																							}}
-																						/>
-																					</div>
-																				</FormGroup>
-																			</Col>
-																			<FormGroup className="mt-2"><label><b>=</b></label>	</FormGroup>
-																			<Col lg={2}>
-																				<FormGroup className="mb-3">
-																				
-																					<div>
-																						<Input
-																							className="form-control"
-																							id="exchangeRate"
-																							name="exchangeRate"
+																			/>
+																		</Col>
+																		<Col lg={2}>
+																			<FormGroup className="mb-3">
 
-																							value={props.values.exchangeRate}
-																							onChange={(value) => {
-																								props.handleChange('exchangeRate')(
-																									value,
-																								);
-																							}}
-																						/>
-																					</div>
-																				</FormGroup>
-																			</Col>
+																				<div>
+																					<Input
+																						disabled
+																						className="form-control"
+																						id="curreancyname"
+																						name="curreancyname"
+																						value={this.state.supplier_currency_des}
+																						onChange={(value) => {
+																							props.handleChange('curreancyname')(
+																								value,
+																							);
+																						}}
+																					/>
+																				</div>
+																			</FormGroup>
+																		</Col>
+																		<FormGroup className="mt-2"><label><b>=</b></label>	</FormGroup>
+																		<Col lg={2}>
+																			<FormGroup className="mb-3">
 
-																			<Col lg={2}>
-																				<Input
-																					disabled
-																					id="currencyName"
-																					name="currencyName"
-																					value={
-																						this.state.basecurrency.currencyName}
+																				<div>
+																					<Input
+																						className="form-control"
+																						id="exchangeRate"
+																						name="exchangeRate"
 
-																				/>
-																			</Col>
-																		</Row>
-																	)} */}
-																	<Row>
-																		{props.values.coaCategoryId === 12 ||
-																			(props.values.coaCategoryId === 6 && (
-																				<Col lg={4}>
-																					<FormGroup className="mb-3">
-																						<Label htmlFor="employeeId">
-																							{strings.User}
-																					</Label>
-																						<Select
-																							styles={customStyles}
-																							options={
-																								transactionCategoryList.dataList
-																									? transactionCategoryList
-																										.dataList[0].options
-																									: []
-																							}
-																							value={
-																								transactionCategoryList.dataList &&
-																								transactionCategoryList.dataList[0].options.find(
-																									(option) =>
-																										option.value ===
-																										+props.values.employeeId,
-																								)
-																							}
-																							onChange={(option) => {
-																								if (option && option.value) {
-																									props.handleChange(
-																										'employeeId',
-																									)(option);
-																								} else {
-																									props.handleChange(
-																										'employeeId',
-																									)('');
-																								}
-																							}}
-																							placeholder={strings.Select+strings.Contact}
-																							id="employeeId"
-																							name="employeeId"
-																							className={
-																								props.errors.employeeId &&
-																									props.touched.employeeId
-																									? 'is-invalid'
-																									: ''
-																							}
-																						/>
-																					</FormGroup>
-																				</Col>
-																			))}
+																						value={props.values.exchangeRate}
+																						onChange={(value) => {
+																							props.handleChange('exchangeRate')(
+																								value,
+																							);
+																						}}
+																					/>
+																				</div>
+																			</FormGroup>
+																		</Col>
+
+																		<Col lg={2}>
+																			<Input
+																				disabled
+																				id="currencyName"
+																				name="currencyName"
+																				value={
+																					this.state.basecurrency}
+
+																			/>
+																		</Col>
 																	</Row>
-																	<Row className='mt-2 mb-2'>
-																		<Col>
-																		{/* <Button onClick={()=>{
+																)}
+															<Row>
+																{props.values.coaCategoryId === 12 ||
+																	(props.values.coaCategoryId === 6 && (
+																		<Col lg={4}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="employeeId">
+																					{strings.User}
+																				</Label>
+																				<Select
+																					styles={customStyles}
+																					options={
+																						transactionCategoryList.dataList
+																							? transactionCategoryList
+																								.dataList[0].options
+																							: []
+																					}
+																					value={
+																						transactionCategoryList.dataList &&
+																						transactionCategoryList.dataList[0].options.find(
+																							(option) =>
+																								option.value ===
+																								+props.values.employeeId,
+																						)
+																					}
+																					onChange={(option) => {
+																						if (option && option.value) {
+																							props.handleChange(
+																								'employeeId',
+																							)(option);
+																						} else {
+																							props.handleChange(
+																								'employeeId',
+																							)('');
+																						}
+																					}}
+																					placeholder={strings.Select + strings.Contact}
+																					id="employeeId"
+																					name="employeeId"
+																					className={
+																						props.errors.employeeId &&
+																							props.touched.employeeId
+																							? 'is-invalid'
+																							: ''
+																					}
+																				/>
+																			</FormGroup>
+																		</Col>
+																	))}
+															</Row>
+															<Row className='mt-2 mb-2'>
+																<Col>
+																	{/* <Button onClick={()=>{
 																			this.setState({showMore:!this.state.showMore})
 																		}} >
 																		{this.state.showMore==true ?
@@ -2378,193 +2525,199 @@ class ExplainTrasactionDetail extends React.Component {
 																		 :
 																		(<><i class="fas fa-angle-double-down mr-1"/> Show More</>)}
 																		</Button> */}
-																	<IconButton 
-																	style={{    fontSize: "14.1px",color: "#2064d8"}}
-																			aria-label="delete"
-																			size="medium" 
-																			onClick={()=>this.setState({showMore:!this.state.showMore})}
+																	<IconButton
+																		style={{ fontSize: "14.1px", color: "#2064d8" }}
+																		aria-label="delete"
+																		size="medium"
+																		onClick={() => this.setState({ showMore: !this.state.showMore })}
 																	>
-																		{this.state.showMore==true ?
-																		 (<><ArrowUpwardIcon fontSize="inherit" /> Show Less</>)
-																		 :
-																		(<><ArrowDownwardIcon fontSize="inherit" /> Show More</>)}
+																		{this.state.showMore == true ?
+																			(<><ArrowUpwardIcon fontSize="inherit" /> Show Less</>)
+																			:
+																			(<><ArrowDownwardIcon fontSize="inherit" /> Show More</>)}
 																	</IconButton>
-																	
+
+																</Col>
+															</Row>
+															{this.state.showMore == true && (
+																<>
+																	<Row>
+																		<Col lg={8}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="description">
+																					{strings.Description}
+																				</Label>
+																				<Input
+																					type="textarea"
+																					name="description"
+																					id="description"
+																					rows="6"
+																					placeholder={strings.Description}
+																					onChange={(option) => {
+
+																						if (!option.target.value.includes("="))
+																							props.handleChange('description')(
+																								option,
+																							)
+																					}
+																					}
+																					value={props.values.description}
+																				/>
+																			</FormGroup>
 																		</Col>
 																	</Row>
-														{this.state.showMore==true&&(
-															<>
-																<Row>
-																	<Col lg={8}>
-																		<FormGroup className="mb-3">
-																			<Label htmlFor="description">
-																				{strings.Description}
-																		</Label>
-																			<Input
-																				type="textarea"
-																				name="description"
-																				id="description"
-																				rows="6"
-																				placeholder={strings.Description}
-																				onChange={(option) =>{
-																					
-																					if(!option.target.value.includes("="))
-																					props.handleChange('description')(
-																						option,
-																					)}
-																				}
-																				value={props.values.description}
-																			/>
-																		</FormGroup>
-																	</Col>
-																</Row>
-																<Row>
-																	<Col lg={4}>
-																		<Row>
-																			<Col lg={12}>
-																				<FormGroup className="mb-3">
-																					<Field
-																						name="attachment"
-																						render={({ field, form }) => (
+																	<Row>
+																		<Col lg={4}>
+																			<Row>
+																				<Col lg={12}>
+																					<FormGroup className="mb-3">
+																						<Field
+																							name="attachment"
+																							render={({ field, form }) => (
+																								<div>
+																									<Label>{strings.Attachment}</Label> <br />
+																									<Button
+																										color="primary"
+																										onClick={() => {
+																											document
+																												.getElementById('fileInput')
+																												.click();
+																										}}
+																										className="btn-square mr-3"
+																									>
+																										<i className="fa fa-upload"></i>{' '}
+																										{strings.upload}
+																									</Button>
+																									<input
+																										id="fileInput"
+																										ref={(ref) => {
+																											this.uploadFile = ref;
+																										}}
+																										type="file"
+																										style={{ display: 'none' }}
+																										onChange={(e) => {
+																											this.handleFileChange(
+																												e,
+																												props,
+																											);
+																										}}
+																									/>
+																								</div>
+																							)}
+																						/>
+																						{this.state.fileName && (
 																							<div>
-																								<Label>{strings.Attachment}</Label> <br />
-																								<Button
-																									color="primary"
-																									onClick={() => {
-																										document
-																											.getElementById('fileInput')
-																											.click();
-																									}}
-																									className="btn-square mr-3"
-																								>
-																									<i className="fa fa-upload"></i>{' '}
-																								{strings.upload}
-																							</Button>
-																								<input
-																									id="fileInput"
-																									ref={(ref) => {
-																										this.uploadFile = ref;
-																									}}
-																									type="file"
-																									style={{ display: 'none' }}
-																									onChange={(e) => {
-																										this.handleFileChange(
-																											e,
-																											props,
-																										);
-																									}}
-																								/>
+																								<i
+																									className="fa fa-close"
+																									onClick={() =>
+																										this.setState({
+																											fileName: '',
+																										})
+																									}
+																								></i>{' '}
+																								{this.state.fileName}
 																							</div>
 																						)}
-																					/>
-																					{this.state.fileName && (
-																						<div>
-																							<i
-																								className="fa fa-close"
-																								onClick={() =>
-																									this.setState({
-																										fileName: '',
-																									})
-																								}
-																							></i>{' '}
-																							{this.state.fileName}
-																						</div>
-																					)}
-																					{props.errors.attachment &&
-																						props.touched.attachment && (
-																							<div className="invalid-file">
-																								{props.errors.attachment}
-																							</div>
-																						)}
-																				</FormGroup>
-																			</Col>
-																		</Row>
-																		<Row>
-																			
-																		</Row>
-																	</Col>
-																</Row>
-																<Row>
-																	<Col lg={4}>
-																		<Row>
-																			<Col lg={12}>
-																				<FormGroup className="mb-3">
-																					<Label htmlFor="reference">
-																						{strings.ReferenceNumber}
-																				</Label>
-																					<Input
-																						type="text"
-																						id="reference"
-																						name="reference"
-																						placeholder={strings.ReceiptNumber}
-																						onChange={(option) => {
-																							if (
-																								option.target.value === '' ||
-																								this.regExBoth.test(
-																									option.target.value,
-																								)
-																							) {
-																								props.handleChange('reference')(
-																									option,
-																								);
-																							}
-																						}}
-																						value={props.values.reference}
-																					/>
-																				</FormGroup>
-																			</Col>
-																		</Row>
-																	</Col>
-																</Row>
-																
-																</>)
-																	}	
+																						{props.errors.attachment &&
+																							props.touched.attachment && (
+																								<div className="invalid-file">
+																									{props.errors.attachment}
+																								</div>
+																							)}
+																					</FormGroup>
+																				</Col>
+																			</Row>
+																			<Row>
 
-																<Row>
-																	{props.values.explinationStatusEnum !==
-																		'RECONCILED' && (
-																			<Col lg={12} className="mt-5">
-																				<FormGroup className="text-left">
-																					{props.values.explinationStatusEnum !==
-																						'FULL' && props.values.explinationStatusEnum !==
-																						'PARTIAL' ? (
-																							<div>
-																								<Button
-																									type="button"
-																									color="primary"
-																									className="btn-square mr-3"
-																									onClick={props.handleSubmit}
-																								>
-																									<i className="fa fa-dot-circle-o"></i>{' '}
-																						         {strings.Explain}
-																					</Button>
-																						{props.values.explinationStatusEnum !== "PARTIAL"&&	(<Button
-																									color="secondary"
-																									className="btn-square"
-																									onClick={() =>
-																										this.closeTransaction(
-																											props.values.transactionId,
-																										)
-																									}
-																								>
-																									<i className="fa fa-ban"></i> {strings.Delete}
-																					</Button>)}
-																							</div>
-																						) : (
-																							<div>
-																								<Button
-																									type="button"
-																									color="primary"
-																									className="btn-square mr-3"
-																									onClick={() =>
-																										this.UnexplainTransaction(
-																											props.values.transactionId,
-																										)
-																									}
-																								>
-																									<i className="fa fa-dot-circle-o"></i>{' '}
-																						          {strings.Unexplain}
-																					</Button>
+																			</Row>
+																		</Col>
+																	</Row>
+																	<Row>
+																		<Col lg={4}>
+																			<Row>
+																				<Col lg={12}>
+																					<FormGroup className="mb-3">
+																						<Label htmlFor="reference">
+																							{strings.ReferenceNumber}
+																						</Label>
+																						<Input
+																							type="text"
+																							id="reference"
+																							name="reference"
+																							placeholder={strings.ReceiptNumber}
+																							onChange={(option) => {
+																								if (
+																									option.target.value === '' ||
+																									this.regExBoth.test(
+																										option.target.value,
+																									)
+																								) {
+																									props.handleChange('reference')(
+																										option,
+																									);
+																								}
+																							}}
+																							value={props.values.reference}
+																						/>
+																					</FormGroup>
+																				</Col>
+																			</Row>
+																		</Col>
+																	</Row>
+
+																</>)
+															}
+
+															<Row>
+																{this.state.initValue.explinationStatusEnum !==
+																	'RECONCILED' && (
+
+																		<Col lg={12} className="mt-5">
+																			<FormGroup className="text-left">
+																				{this.state.initValue.explinationStatusEnum !==
+																					'FULL' && this.state.initValue.explinationStatusEnum !==
+																					'PARTIAL' ? (
+																					<div>
+																						<Button
+																							type="button"
+																							color="primary"
+																							className="btn-square mr-3"
+																							onClick={props.handleSubmit}
+																						>
+																							<i className="fa fa-dot-circle-o"></i>{' '}
+																							{strings.Explain}
+																						</Button>
+
+																						{this.state.initValue.explinationStatusEnum == + "NOT_EXPLAIN" || this.state.initValue.explinationStatusEnum !== null
+																							? (<Button
+																								color="secondary"
+																								className="btn-square"
+																								onClick={() =>
+																									this.closeTransaction(
+																										this.state.initValue.transactionId,
+																									)
+																								}
+																							>
+																								<i className="fa fa-ban"></i> {strings.Delete}
+																							</Button>) : ''}
+																					</div>
+																				) : (
+																					<div>
+																						<Button
+																							type="button"
+																							color="primary"
+																							className="btn-square mr-3"
+																							onClick={() =>
+																								this.UnexplainTransaction(
+																									this.state.initValue.transactionId,
+																								)
+																							}
+																						>
+																							<i className="fa fa-dot-circle-o"></i>{' '}
+																							{strings.Unexplain}
+																						</Button>
+																						{/* {this.state.initValue.explinationStatusEnum !== "PARTIAL"&&	this.state.initValue.explinationStatusEnum !== null
+																						&&(
 																								<Button
 																									color="secondary"
 																									className="btn-square"
@@ -2572,21 +2725,21 @@ class ExplainTrasactionDetail extends React.Component {
 																								>
 																									<i className="fa fa-dot-circle-o"></i>{' '}
 																						{strings.Update}
-																					</Button>
-																							</div>
-																						)}
-																				</FormGroup>
-																			</Col>
-																		)}
-																</Row>
-															</Form>
-														)}
-													</Formik>
-												</Col>
-											</Row>
-										</CardBody>
-									</Card>
-								)}
+																					</Button>)} */}
+																					</div>
+																				)}
+																			</FormGroup>
+																		</Col>
+																	)}
+															</Row>
+														</Form>
+													)}
+												</Formik>
+											</Col>
+										</Row>
+									</CardBody>
+								</Card>
+							)}
 						</Col>
 					</Row>
 				</div>

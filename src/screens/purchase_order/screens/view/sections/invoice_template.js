@@ -402,7 +402,7 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													{POData ?POData.currencyIsoCode+ " " +this.renderVat(POData).toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0 }
+													{POData ?POData.currencyIsoCode+ " " +this.renderVat(POData).toLocaleString(navigator.language, { minimumFractionDigits: 2 }):POData.currencyIsoCode + " " + ZERO.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits:2 }) }
 												</span>
 											</td>
 										</tr>

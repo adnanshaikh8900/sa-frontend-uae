@@ -209,8 +209,7 @@ class DetailExpense extends React.Component {
 									expenseDescription: res.data.expenseDescription,
 									receiptNumber: res.data.receiptNumber,
 									attachmentFile: res.data.attachmentFile,
-									receiptAttachmentDescription:
-										res.data.receiptAttachmentDescription,
+									receiptAttachmentDescription: res.data.receiptAttachmentDescription,
 									fileName: res.data.fileName ? res.data.fileName : '',
 									filePath: res.data.receiptAttachmentPath
 										? res.data.receiptAttachmentPath
@@ -218,6 +217,7 @@ class DetailExpense extends React.Component {
 									isReverseChargeEnabled:res.data.isReverseChargeEnabled ?res.data.isReverseChargeEnabled:false,
 									placeOfSupplyId:res.data.placeOfSupplyId ?res.data.placeOfSupplyId:'',
 									taxTreatmentId:res.data.taxTreatmentId ?res.data.taxTreatmentId:'',
+									notes:res.data.delivaryNotes
 									
 								},
 								payee: res.data.payee ? res.data.payee : '',
@@ -268,26 +268,27 @@ class DetailExpense extends React.Component {
 			exchangeRate,
 			receiptNumber,
 			receiptAttachmentDescription,
+			DeliveryNotes,
 			vatCategoryId,
 			payMode,
 			bankAccountId,
 			placeOfSupplyId,
 			taxTreatmentId,
+			notes
 		} = data;
 		const exclusiveVat = this.state.selectedStatus;
 		const expenseType = this.state.selectedStatus;
 		let formData = new FormData();
 		formData.append('expenseType',  this.state.expenseType);
+		formData.append('delivaryNotes',notes);
 		formData.append('expenseNumber', expenseNumber);
 		formData.append('expenseId', current_expense_id);
 		formData.append('payee', payee ? payee.value : '');
 		formData.append('expenseDate',expenseDate !== null ? moment(expenseDate) : '');
 		formData.append('expenseDescription', expenseDescription);
 		formData.append('receiptNumber', receiptNumber);
-		formData.append(
-			'receiptAttachmentDescription',
-			receiptAttachmentDescription,
-		);
+		formData.append('receiptAttachmentDescription',	receiptAttachmentDescription,);
+		formData.append('delieryNote',	DeliveryNotes,);
 		formData.append('expenseAmount', expenseAmount);
 		if (payMode) {
 			formData.append('payMode', payMode.value ?payMode.value :payMode);
@@ -645,7 +646,7 @@ class DetailExpense extends React.Component {
 				<FormGroup className="mb-3">
 					<Label htmlFor="vatCategoryId"><span className="text-danger">* </span>{strings.Tax}</Label>
 					<Select
-						className="select-default-width"
+						// className="select-default-width"
 						id="vatCategoryId"
 						name="vatCategoryId"
 						options={
@@ -674,12 +675,32 @@ class DetailExpense extends React.Component {
 							// 	)		
 							props.values.vatCategoryId	
 						}
+						// onChange={(option) =>
+						// 	props.handleChange('vatCategoryId')(
+						// 		option,
+						// 	)
+						// }
 						onChange={(option) =>
-							props.handleChange('vatCategoryId')(
-								option,
-							)
+							{
+								if(option.value !='')
+								props.handleChange('vatCategoryId')(option);
+								else
+								props.handleChange('vatCategoryId')('');
+							}
+						}
+						className={
+							props.errors.vatCategoryId &&
+							props.touched.vatCategoryId
+								? 'is-invalid'
+								: ''
 						}
 					/>
+					{props.errors.vatCategoryId &&
+						props.touched.vatCategoryId && (
+							<div className="invalid-feedback">
+								{props.errors.vatCategoryId}
+							</div>
+						)}
 				</FormGroup>
 			</Col>
 			
@@ -797,12 +818,29 @@ class DetailExpense extends React.Component {
 														payMode: Yup.string().required(
 															'Pay through is required',
 														),
+														payee: Yup.string().required(
+															'Paid by is required',
+														),
+														vatCategoryId: Yup.string().required(
+															'VAT is required',
+														),
 														expenseAmount: Yup.string()
-															.required('Amount is required')
-															.matches(
-																/^[0-9][0-9]*[.]?[0-9]{0,2}$$/,
-																'Enter a valid amount',
-															),
+														.required('Amount is required')
+														.matches(
+															 /^[0-9][0-9]*[.]?[0-9]{0,2}$$/,
+															'Enter a valid amount',
+														)
+														.test(
+															'Expense Amount',
+															'Expense amount should be greater than 1',
+															(value) => {
+																if (value > 0) {
+																	return true;
+																} else {
+																	return false;
+																}
+															},
+														),
 														attachmentFile: Yup.mixed()
 															.test(
 																'fileType',
@@ -1018,9 +1056,12 @@ class DetailExpense extends React.Component {
 																				: ''
 																		}
 																		onChange={(option) =>
-																			props.handleChange('placeOfSupplyId')(
-																				option,
-																			)
+																			{
+																				if(option.value !='')
+																				props.handleChange('placeOfSupplyId')(option);
+																				else
+																				props.handleChange('placeOfSupplyId')('');
+																			}
 																		}
 																	/>
 																	{props.errors.placeOfSupplyId &&
@@ -1109,11 +1150,15 @@ class DetailExpense extends React.Component {
 																					? 'is-invalid'
 																					: ''
 																			}
-																			onChange={(option) =>
-																				props.handleChange('expenseCategory')(
-																					option,
-																				)
-																			}
+																			onChange={(option) => {
+																				if (option && option.value) {
+																					props.handleChange('expenseCategory')(
+																						option,
+																					);
+																				} else {
+																					props.handleChange('expenseCategory')('');
+																				}
+																			}}
 																		/>
 																		{props.errors.expenseCategory &&
 																			props.touched.expenseCategory && (
@@ -1149,15 +1194,13 @@ class DetailExpense extends React.Component {
 																			dateFormat="dd-MM-yyyy"
 																			//minDate={new Date()}
 																			onChange={(value) => {
-																				props.handleChange('expenseDate')(
-																					value,
-																				);
-																			}}
+																			props.handleChange('expenseDate')(value);
+																		}}
 																		/>
 																		{props.errors.expenseDate &&
 																			props.touched.expenseDate && (
 																				<div className="invalid-feedback">
-																					{props.errors.expenseDate}
+																					{props.errors.expenseDate.includes("final value was:") ? "Expense date is required" :props.errors.expenseDate}
 																				</div>
 																			)}
 																	</FormGroup>
@@ -1209,6 +1252,12 @@ class DetailExpense extends React.Component {
 																					: ''
 																			}
 																		/>
+																			{props.errors.payee &&
+																			props.touched.payee && (
+																				<div className="invalid-feedback">
+																					{props.errors.payee}
+																				</div>
+																		)}
 																	</FormGroup>
 																</Col>
 															</Row>
@@ -1221,7 +1270,7 @@ class DetailExpense extends React.Component {
 																		</Label>
 																		<Input
 																			type="text"
-																			// min="0"
+																			min="0"
 																			name="expenseAmount"
 																			maxLength="14,2"
 																			id="expenseAmount"
@@ -1245,6 +1294,7 @@ class DetailExpense extends React.Component {
 																				}
 																			}}
 																			value={props.values.expenseAmount}
+																			placeholder={strings.Amount}
 																		/>
 																		{props.errors.expenseAmount &&
 																			props.touched.expenseAmount && (
@@ -1262,8 +1312,8 @@ class DetailExpense extends React.Component {
 																			{strings.Currency}
 																		</Label>
 																		<Select
-																			id="currencyCode"
-																			name="currencyCode"
+																			id="currency"
+																			name="currency"
 																			options={
 																				currency_convert_list
 																					? selectCurrencyFactory.renderOptions(
@@ -1274,6 +1324,7 @@ class DetailExpense extends React.Component {
 																					  )
 																					: []
 																			}
+																			placeholder={strings.Select+strings.Currency}
 																			value={
 																				currency_convert_list &&
 																				selectCurrencyFactory
@@ -1290,8 +1341,13 @@ class DetailExpense extends React.Component {
 																					)
 																			}
 																			onChange={(option) => {
+																				if(option.value!=""){
 																				props.handleChange('currency')(option);
-																			   }}
+																			   	}
+																				else{
+																				props.handleChange('currency')('');
+																			   	}
+																			}}
 																			className={
 																				props.errors.currency &&
 																				props.touched.currency
@@ -1307,7 +1363,7 @@ class DetailExpense extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
-																{this.state.payee === 'Company Expense' ? 
+																{/* {this.state.payee === 'Company Expense' ?  */}
 																	<Col lg={3}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="pay_through"><span className="text-danger">* </span>
@@ -1362,7 +1418,7 @@ class DetailExpense extends React.Component {
 																				)}
 																		</FormGroup>
 																	</Col>
-																	:''}
+																	{/* :''} */}
 																{/* {!props.values.payee &&
 																	props.values.payMode === 'BANK' && (
 																		<Col lg={3}>
@@ -1585,17 +1641,23 @@ class DetailExpense extends React.Component {
 																	</Label> */}
 																	<div>
 																		<Input
-																			type="number"
-
+																			type="text"
 																			className="form-control"
 																			id="exchangeRate"
 																			name="exchangeRate"
-																			
+																			maxLength='20'																			
 																			value={props.values.exchangeRate}
-																			onChange={(value) => {
-																				props.handleChange('exchangeRate')(
-																					value,
-																				);
+																			onChange={(option) => {
+																				if (
+																					option.target.value === '' ||
+																					this.regDecimal.test(
+																						option.target.value,
+																					)
+																				) {
+																					props.handleChange('exchangeRate')(
+																						option,
+																					);
+																				}
 																			}}
 																		/>
 																	</div>
@@ -1612,6 +1674,29 @@ class DetailExpense extends React.Component {
 																				
 																			/>
 														</Col>
+														</Row>
+														<Row>
+															<Col lg={8}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="expenseDescription">
+																	{strings.Description}  
+																	</Label>
+																	<Input
+																		type="textarea"
+																		maxLength="250"
+																		name="expenseDescription"
+																		id="expenseDescription"
+																		rows="5"
+																		placeholder={strings.Expense+" "+strings.Description}
+																		onChange={(option) =>
+																			props.handleChange('expenseDescription')(
+																				option,
+																			)
+																		}
+																		value={props.values.expenseDescription}
+																	/>
+																</FormGroup>
+															</Col>
 														</Row>
 														<Row>
 																<Col lg={8}>
@@ -1792,7 +1877,7 @@ class DetailExpense extends React.Component {
 																				);
 																			}}
 																		>
-																			<i className="fa fa-ban"></i>{this.state.disabled1
+																			<i className="fa fa-ban"></i> {this.state.disabled1
 																			? 'Deleting...'
 																			: strings.Cancel }
 																		</Button>

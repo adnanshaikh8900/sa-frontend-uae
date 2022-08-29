@@ -417,9 +417,12 @@ class RecordSupplierPayment extends React.Component {
 													}}
 													validate={(values) => {
 														let errors = {};
-														 if (values.amount < 0) {
+														if (values.amount <= 0) {
 														  errors.amount ='Amount cannot be Less than 0';
-													 }
+													 	}
+														if(!values.paymentDate){
+															errors.paymentDate='Payment date is required';
+														}
 													 return errors
 													 }}
 													validationSchema={Yup.object().shape({

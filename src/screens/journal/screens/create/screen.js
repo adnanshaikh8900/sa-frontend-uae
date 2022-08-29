@@ -186,7 +186,7 @@ class CreateJournal extends React.Component {
 			.checkValidation(data)
 			.then((response) => {
 				
-				if (response.data === 'Journal reference number already exists') {
+				if (response.data === 'Journal Reference Number Already Exists') {
 					this.setState(
 						{
 							exist: true,
@@ -883,9 +883,9 @@ class CreateJournal extends React.Component {
 																		maxLength='50'
 																		id="journalReferenceNo"
 																		name="journalReferenceNo"
-																		placeholder={strings.journalReferenceNo}
+																		placeholder={strings.JournalReferenceNo}
 																		value={props.values.journalReferenceNo}
-																		 onBlur={props.handleBlur('journalReferenceNo')}
+																		//  onBlur={props.handleBlur('journalReferenceNo')}
 																		onChange={(option) => {
 																				props.handleChange(
 																					'journalReferenceNo',

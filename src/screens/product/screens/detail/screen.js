@@ -887,7 +887,7 @@ renderName=(cell,row)=>{
 																	if (this.state.count >0 && this.state.selectedStatus===false) {
 																		this.props.commonActions.tostifyAlert(
 																			'error',
-																			'You need to delete invoices to delete the Product',
+																			'Deletion of this product is possible only after deleting all the invoices created with this product',
 																		);
 																	}else{
 																		this.handleSubmit(values);

@@ -1325,12 +1325,12 @@ this.state.data.map((obj, index) => {
 					res.data ? res.data.message : 'Goods Received Note Created Successfully'
 				);
 				if (this.state.createMore) {
-					
 					resetForm(this.state.initValue);
 					this.setState(
 						{
 							createMore: false,
 							selectedContact: '',
+							supplier_currency:'',
 							term: '',
 							data: [
 								{
@@ -1362,6 +1362,7 @@ this.state.data.map((obj, index) => {
 									totalAmount: 0,
 									discountType: '',
 									discount: 0,
+									currencyCode: '',
 									discountPercentage: '',
 									
 								},
@@ -1399,6 +1400,7 @@ this.state.data.map((obj, index) => {
 							);
 						},
 					);
+					
 				} else {
 					this.props.history.push('/admin/expense/goods-received-note');
 					this.setState({ loading:false,});
@@ -2208,7 +2210,7 @@ console.log(this.state.data)
 																</FormGroup>
 															</Col> */}
 
-{props.values.supplierReferenceNumber ? (				
+							{props.values.supplierReferenceNumber ? (				
 					  	<Col lg={3} >
 						  <FormGroup className="mb-3">
 							  <Label htmlFor="supplierReferenceNumber">
@@ -2448,7 +2450,7 @@ console.log(this.state.data)
 																					id="grnRemarks"
 																					name="grnRemarks"
 																					value={props.values.grnRemarks}
-																					placeholder={strings.grnRemarks}
+																					placeholder={strings.GRNREMARKS}
 																					onChange={(value) => {
 																						props.handleChange('grnRemarks')(value);
 
@@ -2630,7 +2632,7 @@ console.log(this.state.data)
 																			);
 																		}}
 																	>
-																		<i className="fa fa-ban"></i>{strings.Cancel}
+																		<i className="fa fa-ban"></i> {strings.Cancel}
 																	</Button>
 																</FormGroup>
 															</Col>

@@ -317,7 +317,7 @@ class ContactModal extends React.Component {
                       <FormGroup>
                         <Label htmlFor="categoryName"><span className="text-danger">* </span>Email</Label>
                         <Input
-                          type="text"
+                          type="email"
                           id="email"
                           name="email"
                           onChange={props.handleChange}

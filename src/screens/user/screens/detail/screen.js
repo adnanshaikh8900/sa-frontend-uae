@@ -438,13 +438,16 @@ class DetailUser extends React.Component {
 																		<ImageUploader
 																			// withIcon={true}
 																			buttonText="Choose images"
-																			onChange={this.uploadImage}
+																			onChange={(picture, file)=>{
+																				this.uploadImage(picture, file);
+																				props.handleChange("photo")(picture);
+																			}}
 																			imgExtension={[
 																				'jpg',
 																				'png',
 																				'jpeg',
 																			]}
-																			maxFileSize={1048576}
+																			maxFileSize={40000}
 																			withPreview={true}
 																			singleImage={true}
 																			withIcon={this.state.showIcon}
@@ -454,7 +457,7 @@ class DetailUser extends React.Component {
 																					? { height: 'inherit' }
 																					: {}
 																			}
-																			label="'Max file size: 1mb"
+																			label="'Max file size: 40kb"
 																			labelClass={
 																				this.state.userPhoto.length > 0
 																					? 'hideLabel'
@@ -559,7 +562,7 @@ class DetailUser extends React.Component {
 																					 {strings.EmailID}
 																				</Label>
 																				<Input
-																					type="text"
+																					type="email"
 																					id="email"
 																					name="email"
 																					placeholder={strings.Enter+strings.EmailID}
@@ -950,7 +953,7 @@ class DetailUser extends React.Component {
 																				);
 																			}}
 																		>
-																			<i className="fa fa-ban"></i>{this.state.disabled1
+																			<i className="fa fa-ban"></i> {this.state.disabled1
 																			? 'Deleting...'
 																			: strings.Cancel }
 																		</Button>

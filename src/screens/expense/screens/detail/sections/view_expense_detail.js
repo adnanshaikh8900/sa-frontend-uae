@@ -102,7 +102,7 @@ class ViewExpenseDetails extends React.Component {
                                     <Col lg={4}>
                                         <FormGroup className="mb-3">
                                             <Label className="label" htmlFor="bank_name">Amount</Label>
-                                            <p>{initialVals.expenseAmount ? (initialVals.expenseAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '-'}</p>
+                                            <p>{initialVals.expenseAmount ? (initialVals.expenseAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '-'}</p>
                                         </FormGroup>
                                     </Col>
                                     <Col lg={4}>

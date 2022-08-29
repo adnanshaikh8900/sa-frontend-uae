@@ -3,7 +3,7 @@ import { authApi } from 'utils';
 import moment from 'moment';
 
 export const getQuotationList = (postObj) => {
-	let supplierId = postObj.supplierId ? postObj.supplierId.value : '';
+	let customerId = postObj.customerId ? postObj.customerId.value : '';
 	let poReceiveDate = postObj.poExpiryDate ? postObj.poExpiryDate : '';
 	let poExpiryDate = postObj.poExpiryDate ? postObj.poExpiryDate : '';
 	let quatationNumber = postObj.quatationNumber ? postObj.quatationNumber : '';
@@ -17,7 +17,7 @@ export const getQuotationList = (postObj) => {
 		: false;
 
 	return (dispatch) => {
-		let param = `/rest/poquatation/getListForQuatation?supplierId=${supplierId}&quatationNumber=${quatationNumber}&status=${status}&type=6&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`;
+		let param = `/rest/poquatation/getListForQuatation?supplierId=${customerId}&quatationNumber=${quatationNumber}&status=${status}&type=6&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`;
 		
 		let data = {
 			method: 'get',

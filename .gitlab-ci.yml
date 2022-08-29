@@ -265,18 +265,18 @@ prod-build-job:   # This job runs in the test stage.
     - NEXT_VERSION=$(($SA_VERSION+1))
     - apk add curl
     - curl --request PUT --header "PRIVATE-TOKEN:$GITLAB_API_TOKEN" "https://gitlab.datainn.io/api/v4/projects/5/variables/SA_VERSION" --form "value="$NEXT_VERSION
-    - TAG=$PROD_VERSION_PREFIX.$SA_VERSION
+    - PROD_TAG=$PROD_VERSION_PREFIX.$SA_VERSION
   dependencies:
     - "npm-build-job"
   script:
     - echo "Docker build and push..."
-    - docker build -t $REGISTRY_URL/$IMAGE:$TAG .
+    - docker tag $REGISTRY_URL/$IMAGE:$TAG $REGISTRY_URL/$IMAGE:$PROD_TAG
     - echo "$REGISTRY_PASS" | docker login $REGISTRY_URL --username $REGISTRY_USER --password-stdin
-    - docker push $REGISTRY_URL/$IMAGE:$TAG
+    - docker push $REGISTRY_URL/$IMAGE:$PROD_TAG
     - echo "Docker image pushed"
   after_script:
-    - echo $TAG > ./tag.txt
-    - echo $TAG
+    - echo $PROD_TAG > ./tag.txt
+    - echo $PROD_TAG
   allow_failure: false
   artifacts:
     paths:
@@ -298,8 +298,8 @@ prod-build-job:   # This job runs in the test stage.
 prod-deploy-job:      # This job runs in the deploy stage.
   stage: prod-deploy  # It only runs when *both* jobs in the test stage complete successfully.
   before_script:
-    - TAG=$(< ./tag.txt)
-    - echo $TAG
+    - PROD_TAG=$(< ./tag.txt)
+    - echo $PROD_TAG
   dependencies:
     - "prod-build-job"
   script:

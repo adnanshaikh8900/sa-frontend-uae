@@ -1809,9 +1809,9 @@ class DetailCustomerInvoice extends React.Component {
 															'Supplier is required',
 														),
 														term: Yup.string().required('Term is required'),
-														placeOfSupplyId: Yup.string().required(
-															'Place of supply is required',
-														),
+														// placeOfSupplyId: Yup.string().required(
+														// 	'Place of supply is required',
+														// ),
 														invoiceDate: Yup.string().required(
 															'Invoice date is required',
 														),
@@ -3038,7 +3038,7 @@ class DetailCustomerInvoice extends React.Component {
 																				</Label>
 																				<Input
 																					type="text"
-																					maxLength="100"
+																					maxLength="20"
 																					id="receiptNumber"
 																					name="receiptNumber"
 																					value={props.values.receiptNumber}

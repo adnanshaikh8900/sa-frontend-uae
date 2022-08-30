@@ -2220,9 +2220,9 @@ if(changeShippingAddress && changeShippingAddress==true)
 														errors.discount =
 															'Discount amount cannot be greater than invoice total amount';
 													}
-													if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
-														errors.placeOfSupplyId = 'Place of supply is required';
-													}
+													// if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
+													// 	errors.placeOfSupplyId = 'Place of supply is required';
+													// }
 													if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
 													||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
 													||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
@@ -2281,7 +2281,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 													contactId: Yup.string().required(
 														'Customer is required',
 													),
-													placeOfSupplyId: Yup.string().required('Place of supply is required'),
+													// placeOfSupplyId: Yup.string().required('Place of supply is required'),
 													term: Yup.string().required('Term is required'),
 													currency: Yup.string().required(
 														'Currency is required',
@@ -3844,10 +3844,10 @@ if(changeShippingAddress && changeShippingAddress==true)
 																				props.setFieldValue('lineItemsString', newData, true);
 																				this.updateAmount(newData, props);
 																				//	added validation popup	msg
-																				props.handleBlur();
-																				if(props.errors &&  Object.keys(props.errors).length != 0){
-																					this.props.commonActions.fillManDatoryDetails();
-																				}
+																				// props.handleBlur();
+																				// if(props.errors &&  Object.keys(props.errors).length != 0){
+																				// 	this.props.commonActions.fillManDatoryDetails();
+																				// }
 																			}
 																			this.setState(
 																				{ createMore: false },

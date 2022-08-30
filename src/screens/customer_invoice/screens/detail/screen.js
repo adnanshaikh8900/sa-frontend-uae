@@ -1795,8 +1795,7 @@ class DetailCustomerInvoice extends React.Component {
 															} else {
 																if (values.shippingPostZipCode == '')
 																	errors.shippingPostZipCode = 'Postal code is required';
-																else
-																	if (values.shippingPostZipCode.length < 3)
+																else if (values.shippingPostZipCode.length < 3)
 																		errors.shippingPostZipCode = 'Please enter 6 digit postal zip code';
 															}}
 															return errors;

@@ -1791,13 +1791,13 @@ class DetailCustomerInvoice extends React.Component {
 																if (values.shippingPostZipCode == '')
 																	errors.shippingPostZipCode = 'PO box number is required';
 																else if (values.shippingPostZipCode.length < 3)
-																		errors.shippingPostZipCode = "Please enter atleast 3 digit postal zip code"
+																	errors.shippingPostZipCode = 'Please enter 3 to 6 digit PO box number';
 															} else {
 																if (values.shippingPostZipCode == '')
 																	errors.shippingPostZipCode = 'Postal code is required';
 																else
 																	if (values.shippingPostZipCode.length < 3)
-																		errors.shippingPostZipCode = "Please enter atleast 3 digit postal zip code"
+																		errors.shippingPostZipCode = 'Please enter 6 digit postal zip code';
 															}}
 															return errors;
 													}}

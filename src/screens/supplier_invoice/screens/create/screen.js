@@ -1564,7 +1564,7 @@ class CreateSupplierInvoice extends React.Component {
 			}
 			return obj;
 		});
-
+		debugger
 		return (
 			<Field
 				name={`lineItemsString.${idx}.transactionCategoryId`}
@@ -1594,6 +1594,7 @@ class CreateSupplierInvoice extends React.Component {
 									)
 								: row.transactionCategoryId
 						}
+						isDisabled={row.transactionCategoryId===150}
 						placeholder={strings.Select + strings.Account}
 						className={`${props.errors.lineItemsString &&
 								props.errors.lineItemsString[parseInt(idx, 10)] &&

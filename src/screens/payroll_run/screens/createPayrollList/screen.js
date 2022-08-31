@@ -91,7 +91,7 @@ class CreatePayrollList extends React.Component {
 				onSelectAll: this.onSelectAll,
 			},
 			payrollSubject:'',
-			userId:'',
+			payrollApprover:'',
 			payrollDate: new Date(),
 			 startDate: moment(new Date(date.getFullYear(), date.getMonth(), 1)),
 			 endDate:  moment(new Date(date.getFullYear(), date.getMonth() + 1, 0)),
@@ -146,9 +146,9 @@ calculatePayperioad=(startDate,endDate)=>{
 	
     this.setState({paidDays:diffDays});
 	this.getAllPayrollEmployee(endDate)
-	// console.log(diffTime + " milliseconds");
-    // console.log(diffDays + " days");
-	// console.log(this.state.paidDays,"paid-Days",diffDays)
+	console.log(diffTime + " milliseconds");
+    console.log(diffDays + " days");
+	console.log(this.state.paidDays,"paid-Days",diffDays)
 }
 
 	tableApiCallsOnStatus = () => {
@@ -228,7 +228,7 @@ calculatePayperioad=(startDate,endDate)=>{
 		const {
 			payrollSubject,
 			payrollDate,
-			userId,
+			payrollApprover,
 			startDate,
 			endDate
 		} = data;
@@ -247,10 +247,10 @@ calculatePayperioad=(startDate,endDate)=>{
 		formData.append('payPeriod', this.state.payPeriod)
 		formData.append('employeeListIds', employeeListIds)
 		
-		if(userId === undefined)
-		{formData.append('approverId', this.state.userId ?this.state.userId :null)}
-		else if(userId!=="")
-		{formData.append('approverId',  parseInt(userId) )}
+		if(payrollApprover === undefined)
+		{formData.append('approverId', this.state.payrollApprover ?this.state.payrollApprover :null)}
+		else if(payrollApprover!=="")
+		{formData.append('approverId',  parseInt(payrollApprover) )}
 
 		formData.append('generatePayrollString', JSON.stringify(this.state.selectedRows1));
 		formData.append('salaryDate',payrollDate)
@@ -345,6 +345,7 @@ calculatePayperioad=(startDate,endDate)=>{
 						
 					return data
 				})
+				console.log(newData)
 
 				this.setState({
 					allPayrollEmployee: newData
@@ -440,14 +441,15 @@ calculatePayperioad=(startDate,endDate)=>{
 												className="spinboxDisable"
 												type="number"
 												min={0}
+												step="0.5"
 												max={this.state.paidDays}
 												id="lopDay"
 												name="lopDay"
 												value={cell || 0}
 												
 												onChange={(evt) => {
-													
-													let value = parseInt(evt.target.value ==="" ? "0":evt.target.value) ;
+													debugger
+													let value = parseFloat(evt.target.value ==="" ? "0":evt.target.value) ;
 
 													if (value > 30 || value < 0) {
 														return;
@@ -702,6 +704,7 @@ showTotal=()=>{
 
 		const { employee_list, approver_dropdown_list } = this.props
 		const { loading, initValue,loadingMsg } = this.state
+		console.log(employee_list.data, "employee_list.data")
 		var today = new Date();
 		return (
 			loading ==true? <Loader loadingMsg={loadingMsg}/> :
@@ -779,10 +782,6 @@ showTotal=()=>{
 													}else
 													if (!this.state.endDate) {
 														errors.startDate = 'End date is required';
-													}
-													
-													if(!values.userId){
-														errors.userId='Approver is required';
 													}
 												
 													return errors;
@@ -872,7 +871,7 @@ showTotal=()=>{
 																				startDate={this.state.startDate}
 																				startDateId="startDate"
 																				/>																			
-																			{props.errors.startDate &&
+																				{props.errors.startDate &&
 																				 (
 																					<div className="invalid-feedback">
 																						{props.errors.startDate}
@@ -892,7 +891,8 @@ showTotal=()=>{
 																		<FormGroup>
 																			
 																			<Select
-	
+																			
+																				styles={customStyles}
 																				id="userId"
 																				name="userId"
 																				placeholder={strings.select_approver}
@@ -909,35 +909,21 @@ showTotal=()=>{
 
 																				onChange={(option) => {
 																					if (option && option.value) {
-																						props.handleChange('userId')(option.value);
+																						props.handleChange('payrollApprover')(option.value);
 																						this.setState({
 																							 userId: option.value ,
 																							 submitButton:false
 																						})	
 																					}
 																					else{
-																						props.handleChange('userId')('');
+																						props.handleChange('payrollApprover')('');
 																						this.setState({
 																							 userId: '' ,
 																							 submitButton:true
 																						})
 																					}
 																				}}
-																				className={
-																					`${
-																						props.errors.userId &&
-																						props.touched.userId
-																							? 'is-invalid'
-																							: ''
-																					}`																				}
-
 																			/>
-																			{props.errors.userId &&
-																				 (
-																					<div className="invalid-feedback">
-																						{props.errors.userId}
-																					</div>
-																				)}
 
 																		</FormGroup>
 																	</Col>
@@ -1025,21 +1011,17 @@ showTotal=()=>{
 																				//  added validation popup  msg                                                                
 																				props.handleBlur();
 																				if(props.errors &&  Object.keys(props.errors).length != 0)
-																					this.props.commonActions.fillManDatoryDetails();
+																				this.props.commonActions.fillManDatoryDetails();
 
-																			if(this.state.submitButton){
+																			if(this.state.submitButton)
 																				toast.error(` Please select approver for payroll submission !`)
-																				props.handleSubmit()
-																			}
 																			else
 																			if(!this.state.submitButton && this.state.selectedRows && this.state.selectedRows.length !=0)
-																				{this.setState({apiSelector:"createAndSubmitPayroll"})
+																			{this.setState({apiSelector:"createAndSubmitPayroll"})
 																				props.handleSubmit()}
 																			else	
-																				{toast.error(` Please select at least one employee for payroll creation !`)	
-																				props.handleSubmit()
-																			}	
-																			}}
+																				toast.error(` Please select at least one employee for payroll creation !`)		
+																				}}
 																																				
 																	        // disabled={!this.state.submitButton && this.state.selectedRows && this.state.selectedRows.length !=0 ? false :true}
 																			title={
@@ -1053,23 +1035,20 @@ showTotal=()=>{
 																		<i class="fas fa-check-double  mr-1"></i> {strings.create_submit}
 																	</Button>
 																	<Button type="button" color="primary" className="btn-square pull-right "														
-																    	onClick={() => {
-																			console.log(props.touched,"touched");
-																		//  added validation popup  msg                                                                
-																			props.handleBlur();
-																			if(props.errors &&  Object.keys(props.errors).length != 0)
+																    	onClick={
+																			() => {
+																						//  added validation popup  msg                                                                
+																				props.handleBlur();
+																				if(props.errors &&  Object.keys(props.errors).length != 0)
 																				this.props.commonActions.fillManDatoryDetails();
-																			if(this.state.selectedRows && this.state.selectedRows.length !=0)
-																			{	
-																				this.setState({apiSelector:"createPayroll"})
-																				props.handleSubmit()
-																			}
-																			else{
-																			props.handleSubmit()
-
+																				if(this.state.selectedRows && this.state.selectedRows.length !=0)
+																			{	this.setState({apiSelector:"createPayroll"})
+																				props.handleSubmit()}
+																				else
 																				toast.error(` Please select at least one employee for payroll creation !`)		
+																			
+																				}
 																			}
-																		}}
 																							
 																		// disabled={this.state.selectedRows && this.state.selectedRows.length !=0 ? false :true}
 																		title={

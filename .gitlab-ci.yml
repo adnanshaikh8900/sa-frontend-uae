@@ -29,7 +29,7 @@ test-kube-job:      # This job runs in the deploy stage.
     entrypoint: ['']
   before_script:
     - kubectl config get-contexts
-    - kubectl config use-context k8s-dev
+    - kubectl config use-context datainn/simpleaccounts/simpleaccounts-frontend:k8s-dev
   script:
     - echo "Deploying application to following cluster..."
     - kubectl cluster-info

@@ -100,6 +100,14 @@ docker-build-job:   # This job runs in the test stage.
     - echo "$REGISTRY_PASS" | docker login $REGISTRY_URL --username $REGISTRY_USER --password-stdin
     - docker push $REGISTRY_URL/$IMAGE:$TAG
     - echo "Docker image pushed"
+  after_script:
+    - echo $TAG > ./tag.txt
+    - echo $TAG
+  allow_failure: false
+  artifacts:
+    paths:
+      - "./tag.txt"
+    when: on_success
   rules:
     - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
       when: on_success
@@ -117,8 +125,12 @@ dev-deploy-job:      # This job runs in the deploy stage.
   # image:
   #   name: bitnami/kubectl:latest
   #   entrypoint: ['']
+  dependencies:
+    - "docker-build-job"
   before_script:
     - kubectl config use-context datainn/simpleaccounts/simpleaccounts-frontend:k8s-dev
+    - TAG=$(< ./tag.txt)
+    - echo $TAG
   script:
     - echo "Deploying application to following cluster..."
     - kubectl cluster-info 
@@ -168,8 +180,12 @@ sit1-deploy-job:      # This job runs in the deploy stage.
   # image:
   #   name: bitnami/kubectl:latest
   #   entrypoint: ['']
+  dependencies:
+    - "docker-build-job"
   before_script:
     - kubectl config use-context datainn/simpleaccounts/simpleaccounts-frontend:k8s-dev
+    - TAG=$(< ./tag.txt)
+    - echo $TAG
   script:
     - echo "Deploying application to following cluster..."
     - kubectl cluster-info 
@@ -201,8 +217,12 @@ sit2-deploy-job:      # This job runs in the deploy stage.
   # image:
   #   name: bitnami/kubectl:latest
   #   entrypoint: ['']
+  dependencies:
+    - "docker-build-job"
   before_script:
     - kubectl config use-context datainn/simpleaccounts/simpleaccounts-frontend:k8s-dev
+    - TAG=$(< ./tag.txt)
+    - echo $TAG
   script:
     - echo "Deploying application to following cluster..."
     - kubectl cluster-info 
@@ -234,8 +254,12 @@ sit-reports-deploy-job:      # This job runs in the deploy stage.
   # image:
   #   name: bitnami/kubectl:latest
   #   entrypoint: ['']
+  dependencies:
+    - "docker-build-job"
   before_script:
     - kubectl config use-context datainn/simpleaccounts/simpleaccounts-frontend:k8s-dev
+    - TAG=$(< ./tag.txt)
+    - echo $TAG
   script:
     - echo "Deploying application to following cluster..."
     - kubectl cluster-info 
@@ -290,7 +314,11 @@ prod-build-job:   # This job runs in the test stage.
     DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
   services:
     - docker:20.10.16-dind
+  dependencies:
+    - "docker-build-job"
   before_script:
+    - TAG=$(< ./tag.txt)
+    - echo $TAG
     - echo "Waiting for docker to initialise..."
     - i=0; while [ "$i" -lt 12 ]; do docker info && break; sleep 5; i=$(( i + 1 )) ; done
     - echo "Docker running"
@@ -332,12 +360,12 @@ prod-deploy-job:      # This job runs in the deploy stage.
   # image:
   #   name: bitnami/kubectl:latest
   #   entrypoint: ['']
+  dependencies:
+    - "prod-build-job"
   before_script:
     - kubectl config use-context datainn/simpleaccounts/simpleaccounts-frontend:k8s-prod
     - PROD_TAG=$(< ./tag.txt)
     - echo $PROD_TAG
-  dependencies:
-    - "prod-build-job"
   script:
     - echo "Deploying application to following cluster..."
     - kubectl cluster-info

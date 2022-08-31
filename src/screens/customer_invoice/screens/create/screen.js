@@ -1966,7 +1966,9 @@ if(changeShippingAddress && changeShippingAddress==true)
 			customer_taxTreatment_des:data.taxTreatment?data.taxTreatment:""
 		});
 		this.formRef.current.setFieldValue('contactId', option, true);
-
+		this.setState({
+			contactId:option.value
+		})
 		if(result[0] && result[0].currencyCode)
 		this.formRef.current.setFieldValue('currency',result[0].currencyCode, true);
 
@@ -2262,15 +2264,13 @@ if(changeShippingAddress && changeShippingAddress==true)
 														if (values.shippingCountryId == 229 || values.shippingCountryId.value == 229) {
 															if (values.shippingPostZipCode == '')
 																errors.shippingPostZipCode = 'PO box number is required';
-															else
-																if (values.shippingPostZipCode.length < 3)
-																	errors.shippingPostZipCode = 'Please enter atleast 3 digit postal zip code';
+															else if (values.shippingPostZipCode.length < 3)
+																errors.shippingPostZipCode = 'Please enter 3 to 6 digit PO box number';
 														} else {
 															if (values.shippingPostZipCode == '')
 																errors.shippingPostZipCode = 'Postal code is required';
-															else
-																if (values.shippingPostZipCode.length < 3)
-																	errors.shippingPostZipCode = 'Please enter atleast 3 digit postal zip code';
+															else if (values.shippingPostZipCode.length !== 6 )
+																errors.shippingPostZipCode = 'Please enter 6 digit postal zip code';
 														}}
 														return errors;
 												}}

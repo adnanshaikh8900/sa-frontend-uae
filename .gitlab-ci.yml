@@ -11,6 +11,9 @@ stages:          # List of stages for jobs, and their order of execution
 variables: 
   IMAGE: datainn/simpleaccounts/simpleaccounts-frontend
   TAG: $VERSION_PREFIX.$CI_PIPELINE_ID
+  REGISTRY_URL: $CI_REGISTRY
+  REGISTRY_USER: $CI_REGISTRY_USER
+  REGISTRY_PASS: $CI_REGISTRY_PASSWORD
 
 # Cache modules in between jobs
 cache:
@@ -22,6 +25,7 @@ npm-compile-job:       # This job runs in the build stage, which runs first.
   stage: npm-compile
   script:
     - CI="false"
+    - - export
     - echo "Compiling the code...!"
     - npm ci --cache .npm --prefer-offline
     # - npm ci --loglevel verbose
@@ -32,7 +36,7 @@ npm-compile-job:       # This job runs in the build stage, which runs first.
       - "./node_modules"
     when: on_success
   rules:
-    - if: $CI_COMMIT_BRANCH == 'develop'
+    - if: $CI_COMMIT_BRANCH != 'master'
       when: on_success
     - when: never
   retry:
@@ -61,7 +65,7 @@ npm-build-job:       # This job runs in the build stage, which runs first.
       - "./build"
     when: on_success
   rules:
-    - if: $CI_COMMIT_BRANCH == 'develop'
+    - if: $CI_COMMIT_BRANCH != 'master'
       when: on_success
     - when: never
   retry:
@@ -91,6 +95,7 @@ docker-build-job:   # This job runs in the test stage.
     - "npm-build-job"
   script:
     - echo "Docker build and push..."
+    - echo "Building $REGISTRY_URL/$IMAGE:$TAG"
     - docker build -t $REGISTRY_URL/$IMAGE:$TAG .
     - echo "$REGISTRY_PASS" | docker login $REGISTRY_URL --username $REGISTRY_USER --password-stdin
     - docker push $REGISTRY_URL/$IMAGE:$TAG
@@ -276,6 +281,7 @@ prod-build-job:   # This job runs in the test stage.
     - PROD_TAG=$PROD_VERSION_PREFIX.$SA_VERSION
   script:
     - echo "Docker build and push..."
+    - docker pull $REGISTRY_URL/$IMAGE:$TAG
     - docker tag $REGISTRY_URL/$IMAGE:$TAG $REGISTRY_URL/$IMAGE:$PROD_TAG
     - echo "$REGISTRY_PASS" | docker login $REGISTRY_URL --username $REGISTRY_USER --password-stdin
     - docker push $REGISTRY_URL/$IMAGE:$PROD_TAG

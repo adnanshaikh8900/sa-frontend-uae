@@ -83,6 +83,7 @@ class RecordCustomerPayment extends React.Component {
 				receiptDate: new Date(),
 				contactId: this.props.location.state.id.contactId,
 				amount: this.props.location.state.id.dueAmount,
+				issuedate:this.props.location.state.id.invoiceDate,
 				payMode: '',
 				notes: '',
 				depositeTo: '',
@@ -103,8 +104,7 @@ class RecordCustomerPayment extends React.Component {
 			loadingMsg:"Loading...",
 			disableLeavePage:false
 		};
-
-		// this.options = {
+	// this.options = {
 		//   paginationPosition: 'top'
 		// }
 		this.formRef = React.createRef();
@@ -422,10 +422,10 @@ class RecordCustomerPayment extends React.Component {
                                                       errors.amount ='Amount cannot be empty or 0';
 												 	}
 													if(!values.receiptDate){
+														alert(this.props.location.state.id.invoiceDate);
 														errors.receiptDate='Payment date is required';
 													}
 
-												 console.log("rec date: "+values.receiptDate);
                                                  return errors
 												 }}
 													validationSchema={Yup.object().shape({
@@ -621,6 +621,8 @@ class RecordCustomerPayment extends React.Component {
 																			showYearDropdown
 																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
+																			minDate={new Date(this.props.location.state.id.invoiceDate.substring(3,5)+" "+this.props.location.state.id.invoiceDate.substring(0,2)+" "+this.props.location.state.id.invoiceDate.substring(6))}
+																			maxDate={new Date()}
 																			value={props.values.receiptDate}
 																			selected={props.values.receiptDate}
 																			onChange={(value) => {

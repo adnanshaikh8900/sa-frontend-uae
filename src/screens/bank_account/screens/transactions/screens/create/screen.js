@@ -1099,6 +1099,7 @@ class CreateBankTransaction extends React.Component {
                                 errors.invoiceIdList="Expain Amount Cannot Be Zero"  
                               }
                             }
+
                           }
 
 

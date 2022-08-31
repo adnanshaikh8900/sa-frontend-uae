@@ -11,7 +11,9 @@ stages:          # List of stages for jobs, and their order of execution
 variables: 
   IMAGE: datainn/simpleaccounts/simpleaccounts-frontend
   TAG: $VERSION_PREFIX.$CI_PIPELINE_ID
-  REGISTRY_URL: registry.datainn.io
+  REGISTRY_URL: $CI_REGISTRY
+  REGISTRY_USER: $CI_REGISTRY_USER
+  REGISTRY_PASS: $CI_REGISTRY_PASSWORD
 
 # Cache modules in between jobs
 cache:

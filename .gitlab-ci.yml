@@ -34,6 +34,8 @@ test-kube-job:      # This job runs in the deploy stage.
     - echo "Deploying application to following cluster..."
     - kubectl cluster-info
     - kubectl get ns
+    - kubectl config use-context datainn/simpleaccounts/simpleaccounts-frontend:k8s-prod
+    - kubectl get ns
 
 npm-compile-job:       # This job runs in the build stage, which runs first.
   stage: npm-compile

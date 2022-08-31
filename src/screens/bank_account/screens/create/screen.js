@@ -311,6 +311,9 @@ class CreateBankAccount extends React.Component {
 														errors.account_number =
 															'Account number already exists';
 													}
+													if(!values.openingDate){
+														errors.openingDate='Opening date is required';
+													}
 													return errors;
 												}}
 												validationSchema={Yup.object().shape({

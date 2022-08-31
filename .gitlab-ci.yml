@@ -114,9 +114,9 @@ docker-build-job:   # This job runs in the test stage.
 
 dev-deploy-job:      # This job runs in the deploy stage.
   stage: dev-deploy  # It only runs when *both* jobs in the test stage complete successfully.
-  image:
-    name: bitnami/kubectl:latest
-    entrypoint: ['']
+  # image:
+  #   name: bitnami/kubectl:latest
+  #   entrypoint: ['']
   before_script:
     - kubectl config use-context datainn/simpleaccounts/simpleaccounts-frontend:k8s-dev
   script:
@@ -165,9 +165,9 @@ approve-sit-deployment:
 
 sit1-deploy-job:      # This job runs in the deploy stage.
   stage: sit-deploy  # It only runs when *both* jobs in the test stage complete successfully.
-  image:
-    name: bitnami/kubectl:latest
-    entrypoint: ['']
+  # image:
+  #   name: bitnami/kubectl:latest
+  #   entrypoint: ['']
   before_script:
     - kubectl config use-context datainn/simpleaccounts/simpleaccounts-frontend:k8s-dev
   script:
@@ -198,9 +198,9 @@ sit1-deploy-job:      # This job runs in the deploy stage.
 
 sit2-deploy-job:      # This job runs in the deploy stage.
   stage: sit-deploy  # It only runs when *both* jobs in the test stage complete successfully.
-  image:
-    name: bitnami/kubectl:latest
-    entrypoint: ['']
+  # image:
+  #   name: bitnami/kubectl:latest
+  #   entrypoint: ['']
   before_script:
     - kubectl config use-context datainn/simpleaccounts/simpleaccounts-frontend:k8s-dev
   script:
@@ -231,9 +231,9 @@ sit2-deploy-job:      # This job runs in the deploy stage.
 
 sit-reports-deploy-job:      # This job runs in the deploy stage.
   stage: sit-deploy  # It only runs when *both* jobs in the test stage complete successfully.
-  image:
-    name: bitnami/kubectl:latest
-    entrypoint: ['']
+  # image:
+  #   name: bitnami/kubectl:latest
+  #   entrypoint: ['']
   before_script:
     - kubectl config use-context datainn/simpleaccounts/simpleaccounts-frontend:k8s-dev
   script:
@@ -329,9 +329,9 @@ prod-build-job:   # This job runs in the test stage.
 
 prod-deploy-job:      # This job runs in the deploy stage.
   stage: prod-deploy  # It only runs when *both* jobs in the test stage complete successfully.
-  image:
-    name: bitnami/kubectl:latest
-    entrypoint: ['']
+  # image:
+  #   name: bitnami/kubectl:latest
+  #   entrypoint: ['']
   before_script:
     - kubectl config use-context datainn/simpleaccounts/simpleaccounts-frontend:k8s-prod
     - PROD_TAG=$(< ./tag.txt)

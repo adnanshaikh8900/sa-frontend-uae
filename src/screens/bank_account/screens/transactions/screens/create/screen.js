@@ -409,7 +409,6 @@ class CreateBankTransaction extends React.Component {
           partiallyPaid:i.pp
          } })) : []
       );
-
     
       formData.append(
         "exchangeGainOrLossId",this.setexcessorshortamount().data<0?103:this.setexcessorshortamount().data>0?79:0
@@ -1044,9 +1043,6 @@ class CreateBankTransaction extends React.Component {
       tmpSupplier_list.push(obj);
     });
 
-
-
-
     return (
       <div className="create-bank-transaction-screen">
         <div className="animated fadeIn">
@@ -1152,7 +1148,6 @@ class CreateBankTransaction extends React.Component {
                           //   )
                           //     errors.transactionAmount = `Transaction Amount Must be Equal to Invoice Total(  ${this.state.totalInvoiceAmount}  )`;
                           // }
-
                       
                           return errors;
                         }}

@@ -225,7 +225,7 @@ class CreateRequestForQuotation extends React.Component {
 		];
 		this.regEx = /^[0-9\b]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
-		this.regExInvNum = /[a-zA-Z0-9'-/]+$/;
+		this.regExInvNum = /[a-zA-Z0-9-/]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 	}
 	
@@ -646,7 +646,6 @@ class CreateRequestForQuotation extends React.Component {
 										? res.data.poQuatationLineItemRequestModelList
 										: [],
 									fileName: res.data.fileName ? res.data.fileName : '',
-										
 									placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 									total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : 0,
 									taxType : res.data.taxType ? true : false,
@@ -659,7 +658,6 @@ class CreateRequestForQuotation extends React.Component {
 										rfqReceiveDateNoChange: res.data.rfqReceiveDate
 										? moment(res.data.rfqReceiveDate)
 										: '',
-									
 										rfqReceiveDate: res.data.rfqReceiveDate
 										? res.data.rfqReceiveDate
 										: '',	
@@ -2165,21 +2163,20 @@ class CreateRequestForQuotation extends React.Component {
 																				  )
 																				: []
 																		}
-																		value={props.values.placeOfSupplyId}
-																		// 	this.placelist &&
-																		// 	selectOptionsFactory.renderOptions(
-																		// 		'label',
-																		// 		'value',
-																		// 		this.placelist,
-																		// 		'Place of Supply',
-																		//   ).find(
-																		// 			(option) =>
-																		// 			option.value ==
-																		// 			((this.state.quotationId||this.state.parentId) ? this.state.placeOfSupplyId:props.values
-																		// 			.placeOfSupplyId.toString())
-																		// 		)
-																		// 	}
-						
+																		// value={props.values.placeOfSupplyId}
+																		value={
+																			this.placelist &&
+																			selectOptionsFactory.renderOptions(
+																				'label',
+																				'value',
+																				this.placelist,
+																				'Place of Supply',
+																		  ).find(
+																					(option) =>
+																					option.value ==
+																					(this.state.parentId ? this.state.placeOfSupplyId:props.values.placeOfSupplyId.toString())
+																				)
+																			}						
 																		className={
 																			props.errors.placeOfSupplyId &&
 																			props.touched.placeOfSupplyId

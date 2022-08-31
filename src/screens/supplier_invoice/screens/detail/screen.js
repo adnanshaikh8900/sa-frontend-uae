@@ -1815,7 +1815,7 @@ class DetailSupplierInvoice extends React.Component {
 															'Supplier is required',
 														),
 														term: Yup.string().required('Term is required'),
-														placeOfSupplyId: Yup.string().required('Place of Supply is required'),
+														// placeOfSupplyId: Yup.string().required('Place of Supply is required'),
 														invoiceDate: Yup.string().required(
 															'Invoice date is required',
 														),

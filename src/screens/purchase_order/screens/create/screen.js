@@ -129,7 +129,7 @@ class CreatePurchaseOrder extends React.Component {
 				contact_po_number: '',
 				currencyCode: '',
 				poApproveDate: new Date(),
-				poReceiveDate: new Date(),
+				poReceiveDate: new Date(new Date().setMonth(new Date().getMonth()+1)),
 				supplierId: '',
                 rfqNumber:'',
 				supplierReferenceNumber: '',
@@ -237,7 +237,7 @@ class CreatePurchaseOrder extends React.Component {
 		this.regEx = /^[0-9\b]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
-		this.regExInvNum = /[a-zA-Z0-9'-/]+$/;
+		this.regExInvNum = /[a-zA-Z0-9-/]+$/;
 	}
 
 	renderProductName = (cell, row) => {

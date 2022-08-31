@@ -408,7 +408,6 @@ class CreateBankTransaction extends React.Component {
           partiallyPaid:i.pp
          } })) : []
       );
-
     
       formData.append(
         "exchangeGainOrLossId",this.setexcessorshortamount().data<0?103:this.setexcessorshortamount().data>0?79:0
@@ -1053,9 +1052,6 @@ class CreateBankTransaction extends React.Component {
       tmpSupplier_list.push(obj);
     });
 
-
-
-
     return (
       <div className="create-bank-transaction-screen">
         <div className="animated fadeIn">
@@ -1101,7 +1097,6 @@ class CreateBankTransaction extends React.Component {
                             if (values.invoiceIdList.length === 0) {
 
                               errors.invoiceIdList = "Please Select Invoice"
-
                             }else {
                               let isExplainAmountZero=false
                               values.invoiceIdList.map((i)=>{
@@ -1145,7 +1140,6 @@ class CreateBankTransaction extends React.Component {
                             errors.currencyCode = " Currency is Required";
                           }
 
-
                           if (
                             this.state.totalInvoiceAmount==="" &&
                             this.state.totalInvoiceAmount === 0
@@ -1164,7 +1158,6 @@ class CreateBankTransaction extends React.Component {
                           //   )
                           //     errors.transactionAmount = `Transaction Amount Must be Equal to Invoice Total(  ${this.state.totalInvoiceAmount}  )`;
                           // }
-
                       
                           return errors;
                         }}
@@ -2140,7 +2133,6 @@ class CreateBankTransaction extends React.Component {
                                                   value={
                                                     i.exchangeRate}
                                                   onChange={(value) => {
-                                                  
                                                     let local2 = [...props.values?.invoiceIdList]
                                                     local2[invindex].exchnageRate = value.target.value
 

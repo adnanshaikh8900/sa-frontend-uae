@@ -248,7 +248,7 @@ class CreateCustomerInvoice extends React.Component {
 		this.regEx = /^[0-9\d]+$/;
 		this.regExFax = /^[0-9]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
-		this.regExInvNum = /[a-zA-Z0-9'-/]+$/;
+		this.regExInvNum = /[a-zA-Z0-9-/]+$/;
 		this.regExTelephone = /^[0-9-]+$/;
 		this.regExAddress = /^[a-zA-Z0-9\s\D,'-/]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;

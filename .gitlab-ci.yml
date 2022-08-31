@@ -32,7 +32,7 @@ npm-compile-job:       # This job runs in the build stage, which runs first.
       - "./node_modules"
     when: on_success
   rules:
-    - if: $CI_COMMIT_BRANCH == 'develop'
+    - if: $CI_COMMIT_BRANCH != 'master'
       when: on_success
     - when: never
   retry:
@@ -61,7 +61,7 @@ npm-build-job:       # This job runs in the build stage, which runs first.
       - "./build"
     when: on_success
   rules:
-    - if: $CI_COMMIT_BRANCH == 'develop'
+    - if: $CI_COMMIT_BRANCH != 'master'
       when: on_success
     - when: never
   retry:

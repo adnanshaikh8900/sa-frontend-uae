@@ -242,6 +242,7 @@ class CreateGoodsReceivedNote extends React.Component {
 		];
 		this.regEx = /^[0-9\b]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
+		this.regExInvNum = /[a-zA-Z0-9-/]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 	}
 
@@ -1969,10 +1970,17 @@ console.log(this.state.data)
 																		value={props.values.grn_Number}
 																		onBlur={props.handleBlur('grn_Number')}
 																		onChange={(option) => {
+																			if (
+																				option.target.value === '' ||
+																				this.regExInvNum.test(
+																					option.target.value,
+																				)
+																			) {
 																			props.handleChange('grn_Number')(
 																				option,
 																			);
-																			this.validationCheck(option.target.value)
+																		}
+																			this.validationCheck(option.target.value);
 																		}}
 																		className={
 																			props.errors.grn_Number &&

@@ -30,6 +30,7 @@ import moment from 'moment';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { TextareaAutosize } from '@material-ui/core';
+import xtype from 'xtypejs'
 
 const mapStateToProps = (state) => {
 	return {

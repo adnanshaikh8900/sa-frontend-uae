@@ -1966,7 +1966,9 @@ if(changeShippingAddress && changeShippingAddress==true)
 			customer_taxTreatment_des:data.taxTreatment?data.taxTreatment:""
 		});
 		this.formRef.current.setFieldValue('contactId', option, true);
-
+		this.setState({
+			contactId:option.value
+		})
 		if(result[0] && result[0].currencyCode)
 		this.formRef.current.setFieldValue('currency',result[0].currencyCode, true);
 

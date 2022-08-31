@@ -167,7 +167,7 @@ class ExplainTrasactionDetail extends React.Component {
 	};
 
 	getData = () => {
-		debugger
+		
 		const { selectedData, data, bankId } = this.props;
 		if (data) {
 			const res = { data: data }
@@ -309,10 +309,9 @@ class ExplainTrasactionDetail extends React.Component {
 				}
 
 			)
-
 			this.formRef.current.setFieldValue('amount', res.data.amount ? res.data.amount : 0, true);
 			this.formRef.current.setFieldValue('date', res.data.date1, true);
-			this.formRef.current.setFieldValue('coaCategoryId', res.data.coaCategoryId ? res.data.coaCategoryId : '', true);
+			this.formRef.current.setFieldValue('coaCategoryId', res.data.coaCategoryId ?res.data.coaCategoryId : '', true);
 			this.formRef.current.setFieldValue('expenseCategory', res.data.transactionCategoryId, true);
 			this.formRef.current.setFieldValue('vatId', res.data.vatId ? res.data.vatId : '', true);
 			this.formRef.current.setFieldValue('vendorId', res.data.vendorId ? res.data.vendorId : '', true);
@@ -402,7 +401,7 @@ class ExplainTrasactionDetail extends React.Component {
 
 	getTransactionCategoryList = (type) => {
 		debugger
-		this.formRef.current.setFieldValue('coaCategoryId', type.value, true);
+		this.formRef.current.setFieldValue('coaCategoryId', type, true);
 		this.setValue(null);
 		if (type && type.value && type.value === 100) {
 			this.getVendorList();
@@ -1225,8 +1224,7 @@ debugger
 																					chartOfAccountCategoryList[0].options.find(
 																						(option) =>{
 																							debugger
-																						return	option.value ===
-																							typeof props.values.coaCategoryId==='object' ?props.values.coaCategoryId.value : props.values.coaCategoryId 
+																						return	option.value ===props.values.coaCategoryId.value 
 																						}
 																							)
 																				}

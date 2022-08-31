@@ -2370,7 +2370,7 @@ class CreateSupplierInvoice extends React.Component {
 													contactId: Yup.string().required(
 														'Supplier is required',
 													),
-													placeOfSupplyId: Yup.string().required('Place of supply is required'),
+													// placeOfSupplyId: Yup.string().required('Place of supply is required'),
 													term: Yup.string().required('Term is required'),
 													invoiceDate: Yup.string().required(
 														'Invoice Date is required',

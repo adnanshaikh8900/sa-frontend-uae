@@ -1225,8 +1225,7 @@ debugger
 																					chartOfAccountCategoryList[0].options.find(
 																						(option) =>{
 																							debugger
-																						return	option.value ===
-																							typeof props.values.coaCategoryId==='object' ?props.values.coaCategoryId.value : props.values.coaCategoryId 
+																						return	option.value === props.values.coaCategoryId 
 																						}
 																							)
 																				}

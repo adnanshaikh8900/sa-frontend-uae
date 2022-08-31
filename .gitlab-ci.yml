@@ -301,9 +301,9 @@ prod-build-job:   # This job runs in the test stage.
     - PROD_TAG=$PROD_VERSION_PREFIX.$SA_VERSION
   script:
     - echo "Docker build and push..."
+    - echo "$REGISTRY_PASS" | docker login $REGISTRY_URL --username $REGISTRY_USER --password-stdin
     - docker pull $REGISTRY_URL/$IMAGE:$TAG
     - docker tag $REGISTRY_URL/$IMAGE:$TAG $REGISTRY_URL/$IMAGE:$PROD_TAG
-    - echo "$REGISTRY_PASS" | docker login $REGISTRY_URL --username $REGISTRY_USER --password-stdin
     - docker push $REGISTRY_URL/$IMAGE:$PROD_TAG
     - echo "Docker image pushed"
   after_script:

@@ -2057,7 +2057,9 @@ class CreateSupplierInvoice extends React.Component {
 		});
 
 		this.formRef.current.setFieldValue('contactId', option, true);
-
+		this.setState({
+			contactId:option.value
+		})
 		if(result[0] && result[0].currencyCode)
 		this.formRef.current.setFieldValue('currency',result[0].currencyCode, true);
 
@@ -2131,6 +2133,7 @@ class CreateSupplierInvoice extends React.Component {
 						values: this.state.initValue,
 					};
 					this.updateAmount(this.state.data, values);
+					this.addRow();
 				},
 			);
 			this.formRef.current.setFieldValue(

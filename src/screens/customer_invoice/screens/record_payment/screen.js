@@ -32,6 +32,7 @@ import LocalizedStrings from 'react-localization';
 import { TextareaAutosize } from '@material-ui/core';
 import xtype from 'xtypejs'
 
+
 const mapStateToProps = (state) => {
 	return {
 		contact_list: state.customer_invoice.contact_list,

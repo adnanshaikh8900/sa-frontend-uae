@@ -172,6 +172,7 @@ class CreateExpense extends React.Component {
 									payee:res.data.payee ? res.data.payee :'', 
 									expenseDate: res.data.expenseDate ? res.data.expenseDate : '',
 									currency: res.data.currencyCode ? res.data.currencyCode : '',
+									currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
 									currencyName:res.data.currencyName ? res.data.currencyName : '',
 									expenseCategory: res.data.expenseCategory
 										? res.data.expenseCategory

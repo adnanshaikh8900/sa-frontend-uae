@@ -31,6 +31,10 @@ npm-compile-job:       # This job runs in the build stage, which runs first.
     paths:
       - "./node_modules"
     when: on_success
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'develop'
+      when: on_success
+    - when: never
   retry:
     max: 2
     when:
@@ -56,6 +60,10 @@ npm-build-job:       # This job runs in the build stage, which runs first.
     paths:
       - "./build"
     when: on_success
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'develop'
+      when: on_success
+    - when: never
   retry:
     max: 2
     when:
@@ -265,18 +273,16 @@ prod-build-job:   # This job runs in the test stage.
     - NEXT_VERSION=$(($SA_VERSION+1))
     - apk add curl
     - curl --request PUT --header "PRIVATE-TOKEN:$GITLAB_API_TOKEN" "https://gitlab.datainn.io/api/v4/projects/5/variables/SA_VERSION" --form "value="$NEXT_VERSION
-    - TAG=$PROD_VERSION_PREFIX.$SA_VERSION
-  dependencies:
-    - "npm-build-job"
+    - PROD_TAG=$PROD_VERSION_PREFIX.$SA_VERSION
   script:
     - echo "Docker build and push..."
-    - docker build -t $REGISTRY_URL/$IMAGE:$TAG .
+    - docker tag $REGISTRY_URL/$IMAGE:$TAG $REGISTRY_URL/$IMAGE:$PROD_TAG
     - echo "$REGISTRY_PASS" | docker login $REGISTRY_URL --username $REGISTRY_USER --password-stdin
-    - docker push $REGISTRY_URL/$IMAGE:$TAG
+    - docker push $REGISTRY_URL/$IMAGE:$PROD_TAG
     - echo "Docker image pushed"
   after_script:
-    - echo $TAG > ./tag.txt
-    - echo $TAG
+    - echo $PROD_TAG > ./tag.txt
+    - echo $PROD_TAG
   allow_failure: false
   artifacts:
     paths:
@@ -298,13 +304,13 @@ prod-build-job:   # This job runs in the test stage.
 prod-deploy-job:      # This job runs in the deploy stage.
   stage: prod-deploy  # It only runs when *both* jobs in the test stage complete successfully.
   before_script:
-    - TAG=$(< ./tag.txt)
-    - echo $TAG
+    - PROD_TAG=$(< ./tag.txt)
+    - echo $PROD_TAG
   dependencies:
     - "prod-build-job"
   script:
     - echo "Deploying application to following cluster..."
-    - kubectl cluster-info
+    # - kubectl cluster-info
     - echo "Test deployment scripts..."
     # - helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=$REGISTRY_URL/$IMAGE,maindomain=sit-reports.app.simpleaccounts.io,simpleVatHost=https://sit-reports-api.app.simpleaccounts.io,fullnameOverride=sit-reports-frontend,serviceAccount.name=sit-reports-deploy-robot-frontend,ingress.hosts[0].host=sit-reports.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=sit-reports-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=sit-reports-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=sit-reports.app.simpleaccounts.io --wait --dry-run --debug --namespace sit-reports --create-namespace sit-reports-frontend ./simpleaccounts-frontend --kubeconfig="$KUBECONFIG_DEV"
     - echo "Deployment started scripts..."

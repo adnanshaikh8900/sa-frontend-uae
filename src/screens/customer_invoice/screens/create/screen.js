@@ -592,7 +592,6 @@ renderVatAmount = (cell, row,extraData) => {
 																customer_taxTreatment_des : res.data.taxtreatment 
 																	? res.data.taxtreatment 
 																	: '',
-																// placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 																total_excise: res.data.totalExciseAmount 
 																	? res.data.totalExciseAmount 
 																	: '',
@@ -1207,7 +1206,7 @@ discountType = (row) =>
 				render={({ field, form }) => (
 					<Select
 						styles={customStyles}
-						 isDisabled={row.exciseTaxId === 0}
+					  isDisabled={row.exciseTaxId === 0}
 						options={
 							excise_list
 								? selectOptionsFactory.renderOptions(
@@ -1219,7 +1218,6 @@ discountType = (row) =>
 								: []
 						}
 						value={
-
 							excise_list &&
 							selectOptionsFactory
 								.renderOptions('name', 'id', excise_list, 'Excise')
@@ -1228,20 +1226,26 @@ discountType = (row) =>
 						id="exciseTaxId"
 						placeholder={strings.Select_Excise}
 						onChange={(e) => {
-							this.selectItem(
-								e.value,
-								row,
-								'exciseTaxId',
-								form,
-								field,
-								props,
-							);
-
-							this.updateAmount(
-								this.state.data,
-								props,
-							);
+							if (e.value === '') {
+								props.setFieldValue(
+									'exciseTaxId',
+									'',
+								);
+							} else {
+								this.selectItem(
+									e.value,
+									row,
+									'exciseTaxId',
+									form,
+									field,
+									props,
+								);
+								this.updateAmount(
+									this.state.data,
+									props,
+								);
 						}}
+					}
 						className={`${
 							props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -1847,7 +1851,9 @@ if(changeShippingAddress && changeShippingAddress==true)
 									quantity: 1,
 									unitPrice: '',
 									vatCategoryId: '',
+									taxtreatment: '',
 									subTotal: 0,
+									discount: 0,
 									vatAmount:0,
 									productId: '',
 								},
@@ -3905,9 +3911,9 @@ if(changeShippingAddress && changeShippingAddress==true)
 																				props.handleBlur();
 																				if(props.errors &&  Object.keys(props.errors).length != 0)
 																				this.props.commonActions.fillManDatoryDetails();
-                                                                            }
-                                                                            else
-                                                                            {
+																				}
+																				else
+																				{
                                                                                 let newData=[]
                                                                                 const data = this.state.data;
                                                                                 newData = data.filter((obj) => obj.productId !== "");

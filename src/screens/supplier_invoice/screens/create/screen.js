@@ -633,7 +633,6 @@ class CreateSupplierInvoice extends React.Component {
 							this.formRef.current.setFieldValue('notes',  res.data.notes, true);
 							this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
 							this.formRef.current.setFieldValue('receiptAttachmentDescription',  res.data.receiptAttachmentDescription, true);
-						debugger
 							const val = term ? term.value.split('_') : '';
 							const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 							const values = moment( moment( res.data.invoiceDate).format('DD-MM-YYYY'), 'DD-MM-YYYY').toDate();							
@@ -1299,7 +1298,7 @@ class CreateSupplierInvoice extends React.Component {
 				render={({ field, form }) => (
 					<Select
 						styles={customStyles}
-						isDisabled={row.exciseTaxId === 0 || row.isExciseTaxExclusive === false}
+						isDisabled={row.exciseTaxId === 0}
 						options={
 							excise_list
 								? selectOptionsFactory.renderOptions(
@@ -1318,22 +1317,28 @@ class CreateSupplierInvoice extends React.Component {
 								.find((option) => option.value === +row.exciseTaxId)
 						}
 						id="exciseTaxId"
-						placeholder={"Select Excise"}
+						placeholder={strings.Select_Excise}
 						onChange={(e) => {
-							this.selectItem(
-								e.value,
-								row,
-								'exciseTaxId',
-								form,
-								field,
-								props,
-							);
-
-							this.updateAmount(
-								this.state.data,
-								props,
-							);
+							if (e.value === '') {
+								props.setFieldValue(
+									'exciseTaxId',
+									'',
+								);
+							} else {
+								this.selectItem(
+									e.value,
+									row,
+									'exciseTaxId',
+									form,
+									field,
+									props,
+								);
+								this.updateAmount(
+									this.state.data,
+									props,
+								);
 						}}
+					}
 						className={`${props.errors.lineItemsString &&
 								props.errors.lineItemsString[parseInt(idx, 10)] &&
 								props.errors.lineItemsString[parseInt(idx, 10)].exciseTaxId &&
@@ -2807,16 +2812,16 @@ class CreateSupplierInvoice extends React.Component {
 																						term: option,
 																					},
 																					() => {
-																						this.setDate(props, '');
+																						this.setDate(props, props.values.invoiceDate1);
 																					},
 																				);
 																			}
 																		}}
-																		className={
+																		className={`${
 																			props.errors.term && props.touched.term
 																				? 'is-invalid'
 																				: ''
-																		}
+																		}`}
 																	/>
 																	{props.errors.term && props.touched.term && (
 																		<div className="invalid-feedback">
@@ -3206,7 +3211,7 @@ class CreateSupplierInvoice extends React.Component {
 																			this.renderDiscount(cell, rows, props)
 																		}
 																	>
-																		Discount Type
+																	{strings.DisCount}
 																	</TableHeaderColumn>}
 																	{initValue.total_excise != 0 &&
 																	<TableHeaderColumn
@@ -3215,8 +3220,8 @@ class CreateSupplierInvoice extends React.Component {
 																		dataFormat={(cell, rows) =>
 																			this.renderExcise(cell, rows, props)
 																		}
-																	>
-																		Excise
+																		>
+																		{strings.Excises}
 																		<i
 																			id="ExiseTooltip"
 																			className="fa fa-question-circle ml-1"
@@ -3430,7 +3435,7 @@ class CreateSupplierInvoice extends React.Component {
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
-																						Total Excise
+																					{strings.Excises}
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-right">

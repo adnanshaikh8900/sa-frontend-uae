@@ -422,7 +422,6 @@ class DetailSupplierInvoice extends React.Component {
 					<Select
 						styles={customStyles}
 						isDisabled={row.exciseTaxId === 0 }
-						
 						options={
 							excise_list
 								? selectOptionsFactory.renderOptions(
@@ -434,29 +433,34 @@ class DetailSupplierInvoice extends React.Component {
 								: []
 						}
 						value={
-
 							excise_list &&
 							selectOptionsFactory
 								.renderOptions('name', 'id', excise_list, 'Excise')
 								.find((option) => option.value === +row.exciseTaxId)
 						}
 						id="exciseTaxId"
-						placeholder={strings.Select+strings.VAT}
+						placeholder={strings.Select_Excise}
 						onChange={(e) => {
-							this.selectItem(
-								e.value,
-								row,
-								'exciseTaxId',
-								form,
-								field,
-								props,
-							);
-
-							this.updateAmount(
-								this.state.data,
-								props,
-							);
+							if (e.value === '') {
+								props.setFieldValue(
+									'exciseTaxId',
+									'',
+								);
+							} else {
+								this.selectItem(
+									e.value,
+									row,
+									'exciseTaxId',
+									form,
+									field,
+									props,
+								);
+								this.updateAmount(
+									this.state.data,
+									props,
+								);
 						}}
+					}
 						className={`${
 							props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -2543,7 +2547,7 @@ class DetailSupplierInvoice extends React.Component {
 																			this.renderExcise(cell, rows, props)
 																		}
 																	>
-																{strings.Excise}
+																	{strings.Excise}
 																	<i
 																			id="ExiseTooltip"
 																			className="fa fa-question-circle ml-1"
@@ -2555,8 +2559,6 @@ class DetailSupplierInvoice extends React.Component {
 																			Excise dropdown will be enabled only for the excise products
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn>}
-																
-
 																	<TableHeaderColumn
 																		width="12%"
 																		dataField="vat"
@@ -2596,7 +2598,7 @@ class DetailSupplierInvoice extends React.Component {
                                                                 id="isReverseChargeEnabled"
                                                                 checked={this.state.isReverseChargeEnabled}
                                                                 onChange={(option)=>{
-                                                                        this.setState({isReverseChargeEnabled:!this.state.isReverseChargeEnabled})
+                                                                    this.setState({isReverseChargeEnabled:!this.state.isReverseChargeEnabled})
                                                                 }}
                                                             />
                                                             <Label>{strings.IsReverseCharge}</Label>
@@ -2639,7 +2641,6 @@ class DetailSupplierInvoice extends React.Component {
 																			value={props.values.notes}
 																		/>
 																	</FormGroup>
-
 																	<Row>
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
@@ -2648,7 +2649,7 @@ class DetailSupplierInvoice extends React.Component {
 																				</Label>
 																				<Input
 																					type="text"
-																					maxLength="100"
+																					maxLength="20"
 																					id="receiptNumber"
 																					name="receiptNumber"
 																					placeholder={strings.ReceiptNumber}
@@ -2734,7 +2735,7 @@ class DetailSupplierInvoice extends React.Component {
 																		<TextareaAutosize
 																			type="textarea"
 																			className="textarea"
-																			maxLength="250"
+																			maxLength="255"
 																			style={{width: "700px"}}
 																			name="receiptAttachmentDescription"
 																			id="receiptAttachmentDescription"
@@ -2759,7 +2760,7 @@ class DetailSupplierInvoice extends React.Component {
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
-																					Total Excise
+																					{strings.Total_Excise}
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-right">
@@ -2782,10 +2783,7 @@ class DetailSupplierInvoice extends React.Component {
 																					<Col lg={6} className="text-right">
 																						<label className="mb-0">
 																						{this.state.supplier_currency_symbol} &nbsp;
-																							{this.state.initValue.discount  ? initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })
-																							
-																						}
-																						
+																							{this.state.initValue.discount  ? initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>
@@ -2799,16 +2797,6 @@ class DetailSupplierInvoice extends React.Component {
 																					</Col>
 																					<Col lg={6} className="text-right">
 																						<label className="mb-0">
-																						{/* {universal_currency_list[0] && (
-																						<Currency
-																						value=	{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																						currencySymbol={
-																						universal_currency_list[0]
-																						? universal_currency_list[0].currencyIsoCode
-																						: 'USD'
-																							}
-																							/>
-																							)} */}
 																							{this.state.supplier_currency_symbol} &nbsp;
 																							{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																						</label>
@@ -2825,16 +2813,6 @@ class DetailSupplierInvoice extends React.Component {
 																					</Col>
 																					<Col lg={6} className="text-right">
 																						<label className="mb-0">
-																						{/* {universal_currency_list[0] && (
-																						<Currency
-																						value=	{initValue.invoiceVATAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																						currencySymbol={
-																						universal_currency_list[0]
-																						? universal_currency_list[0].currencyIsoCode
-																						: 'USD'
-																							}
-																							/>
-																							)} */}
 																							{this.state.supplier_currency_symbol} &nbsp;
 																							{initValue.invoiceVATAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																						</label>

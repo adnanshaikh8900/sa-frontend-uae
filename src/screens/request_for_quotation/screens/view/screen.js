@@ -265,8 +265,8 @@ class ViewRequestForQuotation extends React.Component {
 									<td>{moment(item.poReceiveDate).format(
 									'DD MMM YYYY',
 								)}</td>
-												<td align="right">{item.totalAmount}</td>
-												<td align="right">{item.totalVatAmount}</td>
+												<td align="right">AED {item.totalAmount}</td>
+												<td align="right">AED {item.totalVatAmount}</td>
 											
 											</tr>
 										);

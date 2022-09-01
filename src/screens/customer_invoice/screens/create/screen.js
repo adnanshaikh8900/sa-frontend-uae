@@ -325,6 +325,11 @@ class CreateCustomerInvoice extends React.Component {
 		});
 		var { product_list } = this.props;
 		const product = product_list.find((i)=>row['productId']===i.id)
+		let addedproducts=[]
+		if(product)
+		addedproducts=props.values.lineItemsString.filter((i)=>(i.productId===product.id && row.id!==i.id))
+		let totalquantityleft= addedproducts.length>0 && product?.stockOnHand!==null ?product?.stockOnHand-addedproducts.reduce((a,c)=>a+parseInt(c.quantity===""?0:c.quantity),0):product?.stockOnHand
+		totalquantityleft=totalquantityleft-parseInt(row.quantity)
 	
 		return (
 			<Field
@@ -333,7 +338,6 @@ class CreateCustomerInvoice extends React.Component {
 					<div>
 					<div class="input-group">
 						<Input
-							type="text"
 							min="0"
 							maxLength="10"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
@@ -349,8 +353,10 @@ class CreateCustomerInvoice extends React.Component {
 									);
 								}
 							}}
+							type="number"
 							placeholder={strings.Quantity}
 							className={`form-control w-50
+						
             ${props.errors.lineItemsString &&
 									props.errors.lineItemsString[parseInt(idx, 10)] &&
 									props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
@@ -366,23 +372,10 @@ class CreateCustomerInvoice extends React.Component {
 						 {row['productId'] != '' ? 
 						<Input value={row['unitType'] }  disabled/> : ''}
 						</div>
-						{props.errors.lineItemsString &&
-							props.errors.lineItemsString[parseInt(idx, 10)] &&
-							props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
-							Object.keys(props.touched).length > 0 &&
-							props.touched.lineItemsString &&
-							props.touched.lineItemsString[parseInt(idx, 10)] &&
-							props.touched.lineItemsString[parseInt(idx, 10)].quantity && (
-								<div className="invalid-feedback">
-									{props.errors.lineItemsString[parseInt(idx, 10)].quantity}
-								</div>
-							)}
+						{totalquantityleft<0 && <div style={{color:'red',fontSize:'0.8rem'}} >
+									Out of Stock
+								</div>} 
 							
-						<div className="invalid-feedback" style={{display:"block", whiteSpace: "normal"}}>
-									{product?.stockOnHand  && (product?.stockOnHand-row['quantity']<0 && <div>Out of Stock</div>)}
-								</div>
-							
-						
 					</div>
 				)}
 			/>
@@ -2292,17 +2285,22 @@ if(changeShippingAddress && changeShippingAddress==true)
 
 													
 													values.lineItemsString.map((c,i)=>{
-														if(c.quantity>0 && c.productId ){ 
-															let product=this.props.product_list.find((o)=>c.productId===o.id)
+														if(c.quantity>0 && c.productId!=="" ){ 
 
-														if( product.stockOnHand!==null &&product.stockOnHand-c.quantity<0 ) 
+															let product=this.props.product_list.find((o)=>c.productId===o.id)
+															let stockinhand=product.stockOnHand-values.lineItemsString.reduce((a,c)=>{
+																 return c.productId===product.id ? a+parseInt(c.quantity):a+0
+															},0)
+
+														if( product.stockOnHand!==null &&stockinhand<0 ) 
 														isoutoftock=isoutoftock+1
 														else isoutoftock=isoutoftock+0 
+													
 														} else 
 														isoutoftock=isoutoftock+0
 														
 													})
-													
+												
 													if(isoutoftock>0){
 														errors.outofstock="Some Prod"
 													}

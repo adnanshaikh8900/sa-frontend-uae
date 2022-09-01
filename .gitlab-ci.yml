@@ -318,6 +318,7 @@ prod-build-job:   # This job runs in the test stage.
     - "npm-build-job"
   before_script:
     - echo "Waiting for docker to initialise..."
+    - export
     - i=0; while [ "$i" -lt 12 ]; do docker info && break; sleep 5; i=$(( i + 1 )) ; done
     - echo "Docker running"
     - echo "update version to $TAG"

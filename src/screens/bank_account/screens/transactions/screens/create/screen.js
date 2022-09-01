@@ -104,6 +104,7 @@ class CreateBankTransaction extends React.Component {
         vendorId: "",
         employeeId: "",
         currencyCode: "",
+        expenseCategory:"",
         exchangeRate: [],
       },
       expenseType: false,
@@ -342,12 +343,12 @@ class CreateBankTransaction extends React.Component {
         transactionCategoryId ? transactionCategoryId.value : ""
       );
     }
-    if (expenseCategory && coaCategoryId.label === "Expense") {
+   if (expenseCategory && coaCategoryId.label === "Expense") {
       formData.append(
         "expenseCategory",
         expenseCategory ? expenseCategory.value : ""
       );
-    }
+   }
     if (
       (vatId && coaCategoryId.value === 10) ||
       (vatId && coaCategoryId.label === "Expense")
@@ -656,7 +657,7 @@ class CreateBankTransaction extends React.Component {
         <FormGroup className="mb-3">
           <Label htmlFor="payrollListIds">Payolls</Label>
           <Select
-            styles={customStyles}
+            style={customStyles}
             isMulti
             className="select-default-width"
             options={
@@ -1071,7 +1072,7 @@ class CreateBankTransaction extends React.Component {
                           this.handleSubmit(values, resetForm);
                         }}
                         validate={(values) => {
-
+                          console.log(values);
                           const date = moment(values.transactionDate).format(
                             "MM/DD/YYYY"
                           );
@@ -1110,13 +1111,10 @@ class CreateBankTransaction extends React.Component {
                             errors.transactionDate =
                               "Transaction Date cannot be before Bank Account Opening Date or after Current Date.";
                           }
-                          // if (
-                          // 	values.coaCategoryId.value !== 10 &&
-                          // 	!values.transactionCategoryId
-                          // ) {
-                          // 	errors.transactionCategoryId =
-                          // 		'Transaction Category is Required';
-                          // }
+                          if (values.coaCategoryId.value !== 10 &&	!values.transactionCategoryId
+                          ) {
+                          	errors.transactionCategoryId ='Category is Required';
+                          }
                           if (
                             (values.coaCategoryId.value === 12 ||
                               values.coaCategoryId.value === 6) &&
@@ -1129,6 +1127,12 @@ class CreateBankTransaction extends React.Component {
                             !values.currencyCode
                           ) {
                             errors.currencyCode = " Currency is Required";
+                          }
+                          if (
+                            values.coaCategoryId.label === "Expense" &&
+                            !values.expenseCategory
+                          ) {
+                            errors.expenseCategory = "Expense Category is Required";
                           }
 
                           if (
@@ -1357,7 +1361,7 @@ class CreateBankTransaction extends React.Component {
                                         Expense Category
                                       </Label>
                                       <Select
-                                        styles={customStyles}
+                                        style={customStyles}
                                         options={
                                           expense_categories_list
                                             ? selectOptionsFactory.renderOptions(
@@ -1408,7 +1412,7 @@ class CreateBankTransaction extends React.Component {
                                         <FormGroup className="mb-3">
                                           <Label htmlFor="vatId">VAT</Label>
                                           <Select
-                                            styles={customStyles}
+                                            style={customStyles}
                                             options={
                                               vat_list
                                                 ? selectOptionsFactory.renderOptions(
@@ -1451,6 +1455,12 @@ class CreateBankTransaction extends React.Component {
                                                 : ""
                                             }
                                           />
+                                          {props.errors.vatId &&
+                                        props.touched.vatId && (
+                                          <div className="invalid-feedback">
+                                            {props.errors.vatId}
+                                          </div>
+                                        )}
                                         </FormGroup>
                                       </Col>
                                     )}
@@ -1526,7 +1536,7 @@ class CreateBankTransaction extends React.Component {
                                         Vendor
                                       </Label>
                                       <Select
-                                        styles={customStyles}
+                                       // style={customStyles}
                                         options={
                                           tmpSupplier_list
                                             ? selectOptionsFactory.renderOptions(
@@ -1574,7 +1584,15 @@ class CreateBankTransaction extends React.Component {
                                             ? "is-invalid"
                                             : ""
                                         }
+                                        
                                       />
+                                      
+                                      {props.errors.vendorId &&
+                                        props.touched.vendorId && (
+                                          <div className="invalid-feedback">
+                                            {props.errors.vendorId}
+                                          </div>
+                                        )}
                                     </FormGroup>
                                   </Col>
                                   {props.values.coaCategoryId &&
@@ -1590,7 +1608,7 @@ class CreateBankTransaction extends React.Component {
                                             Invoice
                                           </Label>
                                           <Select
-                                            styles={customStyles}
+                                            style={customStyles}
                                             isMulti
                                             options={
                                               vendor_invoice_list
@@ -1681,7 +1699,7 @@ class CreateBankTransaction extends React.Component {
                                         Category
                                       </Label>
                                       <Select
-                                        styles={customStyles}
+                                        style={customStyles}
                                         // className="select-default-width"
                                         options={
                                           transactionCategoryList
@@ -1769,12 +1787,11 @@ class CreateBankTransaction extends React.Component {
                                             this.getMoneyPaidToUserlist(option);
                                           }
                                         }}
-                                        className={
-                                          props.errors.transactionCategoryId &&
-                                            props.touched.transactionCategoryId
-                                            ? "is-invalid"
-                                            : ""
-                                        }
+                                        className={`${props.errors.transactionCategoryId &&
+                                          props.touched.transactionCategoryId
+                                          ? "is-invalid"
+                                          : ""
+                                        }`}
                                       />
                                       {props.errors.transactionCategoryId &&
                                         props.touched.transactionCategoryId && (
@@ -1796,8 +1813,8 @@ class CreateBankTransaction extends React.Component {
                                         User
                                       </Label>
                                       <Select
-                                        styles={customStyles}
-                                        className="select-default-width"
+                                        style={customStyles}
+                                        //className="select-default-width"
                                         options={
                                           moneyCategoryList
                                             ? moneyCategoryList
@@ -1810,6 +1827,11 @@ class CreateBankTransaction extends React.Component {
                                             option
                                           );
                                         }}
+                                        className={`${props.errors.employeeId &&
+                                          props.touched.employeeId
+                                          ? "is-invalid"
+                                          : ""
+                                        }`}
                                       />
                                       {props.errors.employeeId &&
                                         props.touched.employeeId && (
@@ -1828,8 +1850,8 @@ class CreateBankTransaction extends React.Component {
                                         User
                                       </Label>
                                       <Select
-                                        styles={customStyles}
-                                        className="select-default-width"
+                                        style={customStyles}
+                                        //className="select-default-width"
                                         // options={
                                         // 	transactionCategoryList.dataList[0]
                                         // 		? transactionCategoryList
@@ -1848,6 +1870,11 @@ class CreateBankTransaction extends React.Component {
                                             option
                                           );
                                         }}
+                                        className={`${props.errors.employeeId &&
+                                          props.touched.employeeId
+                                          ? "is-invalid"
+                                          : ""
+                                        }`}
                                       />
                                       {props.errors.employeeId &&
                                         props.touched.employeeId && (
@@ -1869,7 +1896,7 @@ class CreateBankTransaction extends React.Component {
                                           Customer
                                         </Label>
                                         <Select
-                                          styles={customStyles}
+                                          style={customStyles}
                                           className="select-default-width"
                                           options={
                                             transactionCategoryList &&
@@ -1915,7 +1942,7 @@ class CreateBankTransaction extends React.Component {
                                         Invoice
                                       </Label>
                                       <Select
-                                        styles={customStyles}
+                                        style={customStyles}
                                         isMulti
                                         className="select-default-width"
                                         options={
@@ -1974,7 +2001,7 @@ class CreateBankTransaction extends React.Component {
 																						{strings.Currency}
 																						</Label>
 																					<Select
-																						styles={customStyles}
+																						style={customStyles}
 																						id="currencyCode"
 																						name="currencyCode"
 																						options={
@@ -2312,7 +2339,7 @@ class CreateBankTransaction extends React.Component {
                                         {strings.Currency}
                                       </Label>
                                       <Select
-                                        styles={customStyles}
+                                        style={customStyles}
                                         id="currencyCode"
                                         name="currencyCode"
                                         options={
@@ -2440,7 +2467,7 @@ class CreateBankTransaction extends React.Component {
 																						Currency
 																					</Label>
 																					<Select	
-																					styles={customStyles}
+																					style={customStyles}
 																						id="currencyCode"
 																						name="currencyCode"
 																						options={
@@ -2684,6 +2711,7 @@ class CreateBankTransaction extends React.Component {
                                     disabled={this.state.disabled}
                                     onClick={() => {
                                       //	added validation popup	msg
+                                      console.log(props.errors,"EERRROR");
                                       props.handleBlur();
                                       if (
                                         props.errors &&

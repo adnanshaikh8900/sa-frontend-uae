@@ -1890,10 +1890,10 @@ class CreateRequestForQuotation extends React.Component {
 													),
 													
 													rfqReceiveDate: Yup.string().required(
-														'Order date is required',
+														'Issue date is required',
 													),
 													rfqExpiryDate: Yup.string().required(
-														'Order due date is required'
+														'Expiry date is required'
 													),
 													attachmentFile: Yup.mixed()
 													.test(
@@ -2233,7 +2233,7 @@ class CreateRequestForQuotation extends React.Component {
 																	{props.errors.rfqReceiveDate &&
 																		props.touched.rfqReceiveDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.rfqReceiveDate.includes("nullable()") ? "Order date is required" :props.errors.rfqReceiveDate}		
+																				{props.errors.rfqReceiveDate.includes("nullable()") ? "Issue date is required" :props.errors.rfqReceiveDate}		
 
 																			</div>
 																		)}
@@ -2268,7 +2268,7 @@ class CreateRequestForQuotation extends React.Component {
 																	{props.errors.rfqExpiryDate &&
 																		props.touched.rfqExpiryDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.rfqExpiryDate.includes("nullable()") ? "Order due date is required" :props.errors.rfqExpiryDate}
+																				{props.errors.rfqExpiryDate.includes("nullable()") ? "Expiry date is required" :props.errors.rfqExpiryDate}
 																			</div>
 																		)}
 																	

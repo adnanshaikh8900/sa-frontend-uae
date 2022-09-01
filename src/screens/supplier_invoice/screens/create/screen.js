@@ -309,6 +309,10 @@ class CreateSupplierInvoice extends React.Component {
 		});
 		var { product_list } = this.props;
 		const product = product_list.find((i)=>row['productId']===i.id)
+		let addedproducts=[]
+		if(product)
+		addedproducts=props.values.lineItemsString.filter((i)=>(i.productId===product.id && row.id!==i.id))
+		const totalquantityleft= addedproducts.length>0 && product?.stockOnHand!==null ?product?.stockOnHand-addedproducts.reduce((a,c)=>a+parseInt(c.quantity===""?0:c.quantity),0):product?.stockOnHand
 	
 		return (
 			<Field
@@ -361,10 +365,10 @@ class CreateSupplierInvoice extends React.Component {
 									{props.errors.lineItemsString[parseInt(idx, 10)].quantity}
 								</div>
 							)}
-
-<div className="invalid-feedback" style={{display:"block", whiteSpace: "normal"}}>
-									{product?.stockOnHand  && (product?.stockOnHand-row['quantity']<0 && <div>Out of Stock</div>)}
+	<div className="invalid-feedback" style={{display:"block", whiteSpace: "normal"}}>
+									{totalquantityleft  && (totalquantityleft-row['quantity']<0 && <div>Out of Stock</div>)}
 								</div>
+							
 					</div>
 				)}
 			/>
@@ -2373,17 +2377,22 @@ class CreateSupplierInvoice extends React.Component {
 													}
 													let isoutoftock=0
 													values.lineItemsString.map((c,i)=>{
-														if(c.quantity>0 && c.productId ){ 
-															let product=this.props.product_list.find((o)=>c.productId===o.id)
+														if(c.quantity>0 && c.productId!=="" ){ 
 
-														if( product.stockOnHand!==null &&product.stockOnHand-c.quantity<0 ) 
+															let product=this.props.product_list.find((o)=>c.productId===o.id)
+															let stockinhand=product.stockOnHand-values.lineItemsString.reduce((a,c)=>{
+																 return c.productId===product.id ? a+parseInt(c.quantity):a+0
+															},0)
+
+														if( product.stockOnHand!==null &&stockinhand<0 ) 
 														isoutoftock=isoutoftock+1
 														else isoutoftock=isoutoftock+0 
+													
 														} else 
 														isoutoftock=isoutoftock+0
 														
 													})
-													
+												
 													if(isoutoftock>0){
 														errors.outofstock="Some Prod"
 													}

@@ -9,11 +9,13 @@ stages:          # List of stages for jobs, and their order of execution
   - prod-build
   - prod-deploy
 variables: 
-  IMAGE: datainn/simpleaccounts/simpleaccounts-frontend
-  TAG: $VERSION_PREFIX.$CI_PIPELINE_ID
   REGISTRY_URL: $CI_REGISTRY
   REGISTRY_USER: $CI_REGISTRY_USER
   REGISTRY_PASS: $CI_REGISTRY_PASSWORD
+  # PROD_VERSION_PREFIX: $PROD_VERSION_PREFIX
+  # VERSION_PREFIX: $VERSION_PREFIX
+  IMAGE: datainn/simpleaccounts/simpleaccounts-frontend
+  TAG: $VERSION_PREFIX.$CI_PIPELINE_ID
 
 # Cache modules in between jobs
 cache:
@@ -315,11 +317,12 @@ prod-build-job:   # This job runs in the test stage.
   services:
     - docker:20.10.16-dind
   dependencies:
-    - "docker-build-job"
+    - "npm-build-job"
   before_script:
     - TAG=$(< ./tag.txt)
     - echo $TAG
     - echo "Waiting for docker to initialise..."
+    - export
     - i=0; while [ "$i" -lt 12 ]; do docker info && break; sleep 5; i=$(( i + 1 )) ; done
     - echo "Docker running"
     - echo "update version to $TAG"

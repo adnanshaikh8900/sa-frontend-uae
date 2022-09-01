@@ -312,8 +312,8 @@ class CreateSupplierInvoice extends React.Component {
 		let addedproducts=[]
 		if(product)
 		addedproducts=props.values.lineItemsString.filter((i)=>(i.productId===product.id && row.id!==i.id))
-		const totalquantityleft= addedproducts.length>0 && product?.stockOnHand!==null ?product?.stockOnHand-addedproducts.reduce((a,c)=>a+parseInt(c.quantity===""?0:c.quantity),0):product?.stockOnHand
-	
+		let totalquantityleft= addedproducts.length>0 && product?.stockOnHand!==null ?product?.stockOnHand-addedproducts.reduce((a,c)=>a+parseInt(c.quantity===""?0:c.quantity),0):product?.stockOnHand
+		totalquantityleft=totalquantityleft-row.quantity
 		return (
 			<Field
 				name={`lineItemsString.${idx}.quantity`}
@@ -354,17 +354,9 @@ class CreateSupplierInvoice extends React.Component {
 						<Input value={row['unitType'] }  disabled/> : ''}
 						</div>
 						
-						{props.errors.lineItemsString &&
-							props.errors.lineItemsString[parseInt(idx, 10)] &&
-							props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
-							Object.keys(props.touched).length > 0 &&
-							props.touched.lineItemsString &&
-							props.touched.lineItemsString[parseInt(idx, 10)] &&
-							props.touched.lineItemsString[parseInt(idx, 10)].quantity && (
-								<div className="invalid-feedback">
-									{props.errors.lineItemsString[parseInt(idx, 10)].quantity}
-								</div>
-							)}
+						{totalquantityleft<0 && <div style={{color:'red',fontSize:'0.8rem'}} >
+								Out of Stock
+							</div>} 
 					</div>
 				)}
 			/>

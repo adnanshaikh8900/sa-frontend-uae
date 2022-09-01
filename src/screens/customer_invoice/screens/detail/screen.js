@@ -583,7 +583,14 @@ class DetailCustomerInvoice extends React.Component {
 			}
 			return obj;
 		});
-
+		var { product_list } = this.props;
+		const product = product_list.find((i)=>row['productId']===i.id)
+		let addedproducts=[]
+		if(product)
+		addedproducts=props.values.lineItemsString.filter((i)=>(i.productId===product.id && row.id!==i.id))
+		let totalquantityleft= addedproducts.length>0 && product?.stockOnHand!==null ?product?.stockOnHand-addedproducts.reduce((a,c)=>a+parseInt(c.quantity===""?0:c.quantity),0):product?.stockOnHand
+		totalquantityleft=totalquantityleft-parseInt(row.quantity)
+	
 		return (
 			<Field
 				name={`lineItemsString.${idx}.quantity`}
@@ -597,15 +604,6 @@ class DetailCustomerInvoice extends React.Component {
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
 								if (e.target.value === '' || this.regEx.test(e.target.value)) {
-									var { product_list } = this.props;
-									product_list=product_list.filter((obj)=>obj.id == row.productId)
-									
-									if(parseInt(e.target.value) >product_list[0].stockOnHand && product_list[0].isInventoryEnabled==true)
-									this.props.commonActions.tostifyAlert(
-										'error',
-										 `Quantity (${e.target.value}) Must not be greater than stock on hand  (${product_list[0].stockOnHand})`,
-									);
-									else
 									this.selectItem(
 										e.target.value,
 										row,
@@ -635,17 +633,9 @@ class DetailCustomerInvoice extends React.Component {
 						 {row['productId'] != '' ? 
 						<Input value={row['unitType'] }  disabled/> : ''}
 						</div>
-						{props.errors.lineItemsString &&
-							props.errors.lineItemsString[parseInt(idx, 10)] &&
-							props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
-							Object.keys(props.touched).length > 0 &&
-							props.touched.lineItemsString &&
-							props.touched.lineItemsString[parseInt(idx, 10)] &&
-							props.touched.lineItemsString[parseInt(idx, 10)].quantity && (
-								<div className="invalid-feedback" style={{display:"block", whiteSpace: "normal"}}>
-									{props.errors.lineItemsString[parseInt(idx, 10)].quantity}
-								</div>
-							)}
+						{totalquantityleft<0 && <div style={{color:'red',fontSize:'0.8rem'}} >
+									Out of Stock
+								</div>} 
 						
 					</div>
 				)}
@@ -1800,6 +1790,30 @@ class DetailCustomerInvoice extends React.Component {
 																else if (values.shippingPostZipCode.length !== 6)
 																		errors.shippingPostZipCode = 'Please enter 6 digit postal zip code';
 															}}
+															let isoutoftock=0
+
+													
+													values.lineItemsString.map((c,i)=>{
+														if(c.quantity>0 && c.productId!=="" ){ 
+
+															let product=this.props.product_list.find((o)=>c.productId===o.id)
+															let stockinhand=product.stockOnHand-values.lineItemsString.reduce((a,c)=>{
+																 return c.productId===product.id ? a+parseInt(c.quantity):a+0
+															},0)
+
+														if( product.stockOnHand!==null &&stockinhand<0 ) 
+														isoutoftock=isoutoftock+1
+														else isoutoftock=isoutoftock+0 
+													
+														} else 
+														isoutoftock=isoutoftock+0
+														
+													})
+												
+													if(isoutoftock>0){
+														errors.outofstock="Some Prod"
+													}
+
 															return errors;
 													}}
 													validationSchema={Yup.object().shape({

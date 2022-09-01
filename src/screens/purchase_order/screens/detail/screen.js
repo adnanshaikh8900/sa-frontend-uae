@@ -1773,10 +1773,10 @@ class DetailPurchaseOrder extends React.Component {
 															'Place of supply is required'
 														),
 														poApproveDate: Yup.string().required(
-															'Order date is required',
+															'Issue date is required',
 														),
 														poReceiveDate: Yup.string().required(
-															'Order due date is required'
+															'Expiry date is required'
 														),
 														attachmentFile: Yup.mixed()
 														.test(

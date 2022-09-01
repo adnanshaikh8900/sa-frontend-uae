@@ -1783,7 +1783,9 @@ class DetailCustomerInvoice extends React.Component {
 														}
 	
 														if(values.changeShippingAddress==true){
-															if(values.shippingStateId =="")  errors.shippingStateId ='State is required';
+															if(values.shippingStateId == "")
+															 { 
+																errors.shippingStateId ='State is required';}
 														}
 
 														if(values.changeShippingAddress==true){
@@ -1791,13 +1793,12 @@ class DetailCustomerInvoice extends React.Component {
 																if (values.shippingPostZipCode == '')
 																	errors.shippingPostZipCode = 'PO box number is required';
 																else if (values.shippingPostZipCode.length < 3)
-																		errors.shippingPostZipCode = "Please enter atleast 3 digit postal zip code"
+																	errors.shippingPostZipCode = 'Please enter 3 to 6 digit PO box number';
 															} else {
 																if (values.shippingPostZipCode == '')
 																	errors.shippingPostZipCode = 'Postal code is required';
-																else
-																	if (values.shippingPostZipCode.length < 3)
-																		errors.shippingPostZipCode = "Please enter atleast 3 digit postal zip code"
+																else if (values.shippingPostZipCode.length < 3)
+																		errors.shippingPostZipCode = 'Please enter 6 digit postal zip code';
 															}}
 															return errors;
 													}}
@@ -2458,6 +2459,7 @@ class DetailCustomerInvoice extends React.Component {
 																			if (option && option.value) {
 																				props.handleChange('shippingCountryId')(option);
 																				this.getStateListForShippingAddress(option.value);
+																				props.handleChange('shippingStateId')('');
 																			} else {
 																				props.handleChange('shippingCountryId')('');
 																				// this.getStateListForShippingAddress("");
@@ -3320,8 +3322,6 @@ class DetailCustomerInvoice extends React.Component {
 																			onClick={() => {
 																				if(this.state.data.length === 1)
 																					{
-																						console.log(props.errors,"ERRORs")
-																								//	added validation popup	msg
 																						props.handleBlur();
 																						if(props.errors &&  Object.keys(props.errors).length != 0)
 																							this.props.commonActions.fillManDatoryDetails();
@@ -3335,7 +3335,8 @@ class DetailCustomerInvoice extends React.Component {
 																						this.updateAmount(newData, props);
 																						props.handleBlur();
 																						if(props.errors &&  Object.keys(props.errors).length != 0)
-																							this.props.commonActions.fillManDatoryDetails();
+																							{
+																							this.props.commonActions.fillManDatoryDetails();}
 																					}
 																				}
 																			}

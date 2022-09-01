@@ -379,7 +379,7 @@ const en = {
       Importstatement:"Import statement",		
       reconcile:"Reconcile",		
       EditAccount:"Edit Account",		
-      AddnewTransaction:"Add new Transaction",		
+      AddnewTransaction:"Add New Transaction",		
       All:"All",		
       NotExplained:"Not Explained",		
       PotentialDuplicate:"Potential Duplicate",						
@@ -698,7 +698,7 @@ const en = {
       InvoicingAddressLine3:"Invoicing Address Line 3",
       CountryCode:"Country",
       CompanyAddress:"Company Address",
-      Register:"Rigester",
+      Register:"Register",
 
 // CompanyAddressIsSameAsInvoicingAddress:"Company Address Is Same As Invoicing Address",
       CompanyVatRegistered:"Company VAT Registered?",

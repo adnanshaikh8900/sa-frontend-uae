@@ -315,10 +315,8 @@ prod-build-job:   # This job runs in the test stage.
   services:
     - docker:20.10.16-dind
   dependencies:
-    - "docker-build-job"
+    - "npm-build-job"
   before_script:
-    - TAG=$(< ./tag.txt)
-    - echo $TAG
     - echo "Waiting for docker to initialise..."
     - i=0; while [ "$i" -lt 12 ]; do docker info && break; sleep 5; i=$(( i + 1 )) ; done
     - echo "Docker running"

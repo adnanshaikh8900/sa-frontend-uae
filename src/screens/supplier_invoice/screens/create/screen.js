@@ -365,10 +365,6 @@ class CreateSupplierInvoice extends React.Component {
 									{props.errors.lineItemsString[parseInt(idx, 10)].quantity}
 								</div>
 							)}
-	<div className="invalid-feedback" style={{display:"block", whiteSpace: "normal"}}>
-									{totalquantityleft  && (totalquantityleft-row['quantity']<0 && <div>Out of Stock</div>)}
-								</div>
-							
 					</div>
 				)}
 			/>

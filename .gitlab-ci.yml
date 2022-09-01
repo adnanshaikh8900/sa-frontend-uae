@@ -13,8 +13,6 @@ variables:
   REGISTRY_URL: $CI_REGISTRY
   REGISTRY_USER: $CI_REGISTRY_USER
   REGISTRY_PASS: $CI_REGISTRY_PASSWORD
-  # PROD_VERSION_PREFIX: $PROD_VERSION_PREFIX
-  # VERSION_PREFIX: $VERSION_PREFIX
   IMAGE: datainn/simpleaccounts/simpleaccounts-frontend
   TAG: $VERSION_PREFIX.$CI_PIPELINE_ID
 
@@ -31,17 +29,12 @@ npm-compile-job:       # This job runs in the build stage, which runs first.
     - - export
     - echo "Compiling the code...!"
     - npm ci --cache .npm --prefer-offline
-    # - npm ci --loglevel verbose
     - echo "Compile completed."
   allow_failure: false
   artifacts:
     paths:
       - "./node_modules"
     when: on_success
-  # rules:
-  #   - if: $CI_COMMIT_BRANCH != 'master'
-  #     when: on_success
-  #   - when: never
   retry:
     max: 2
     when:
@@ -67,10 +60,6 @@ npm-build-job:       # This job runs in the build stage, which runs first.
     paths:
       - "./build"
     when: on_success
-  # rules:
-  #   - if: $CI_COMMIT_BRANCH != 'master'
-  #     when: on_success
-  #   - when: never
   retry:
     max: 2
     when:
@@ -126,9 +115,6 @@ docker-build-job:   # This job runs in the test stage.
 
 dev-deploy-job:      # This job runs in the deploy stage.
   stage: dev-deploy  # It only runs when *both* jobs in the test stage complete successfully.
-  # image:
-  #   name: bitnami/kubectl:latest
-  #   entrypoint: ['']
   dependencies:
     - "docker-build-job"
   before_script:
@@ -181,9 +167,6 @@ approve-sit-deployment:
 
 sit1-deploy-job:      # This job runs in the deploy stage.
   stage: sit-deploy  # It only runs when *both* jobs in the test stage complete successfully.
-  # image:
-  #   name: bitnami/kubectl:latest
-  #   entrypoint: ['']
   dependencies:
     - "docker-build-job"
   before_script:
@@ -218,9 +201,6 @@ sit1-deploy-job:      # This job runs in the deploy stage.
 
 sit2-deploy-job:      # This job runs in the deploy stage.
   stage: sit-deploy  # It only runs when *both* jobs in the test stage complete successfully.
-  # image:
-  #   name: bitnami/kubectl:latest
-  #   entrypoint: ['']
   dependencies:
     - "docker-build-job"
   before_script:
@@ -255,9 +235,6 @@ sit2-deploy-job:      # This job runs in the deploy stage.
 
 sit-reports-deploy-job:      # This job runs in the deploy stage.
   stage: sit-deploy  # It only runs when *both* jobs in the test stage complete successfully.
-  # image:
-  #   name: bitnami/kubectl:latest
-  #   entrypoint: ['']
   dependencies:
     - "docker-build-job"
   before_script:
@@ -382,9 +359,6 @@ prod-build-job:   # This job runs in the test stage.
 
 prod-deploy-job:      # This job runs in the deploy stage.
   stage: prod-deploy  # It only runs when *both* jobs in the test stage complete successfully.
-  # image:
-  #   name: bitnami/kubectl:latest
-  #   entrypoint: ['']
   dependencies:
     - "prod-build-job"
   before_script:

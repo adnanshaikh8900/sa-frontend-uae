@@ -119,7 +119,7 @@ dev-deploy-job:      # This job runs in the deploy stage.
   dependencies:
     - "docker-build-job"
   before_script:
-    - kubectl config use-context datainn/simpleaccounts/simpleaccounts-frontend:k8s-dev
+    - kubectl config use-context datainn/k8s:k8s-dev
     - TAG=$(< ./tag.txt)
     - echo $TAG
   script:
@@ -171,7 +171,7 @@ sit1-deploy-job:      # This job runs in the deploy stage.
   dependencies:
     - "docker-build-job"
   before_script:
-    - kubectl config use-context datainn/simpleaccounts/simpleaccounts-frontend:k8s-dev
+    - kubectl config use-context datainn/k8s:k8s-dev
     - TAG=$(< ./tag.txt)
     - echo $TAG
   script:
@@ -205,7 +205,7 @@ sit2-deploy-job:      # This job runs in the deploy stage.
   dependencies:
     - "docker-build-job"
   before_script:
-    - kubectl config use-context datainn/simpleaccounts/simpleaccounts-frontend:k8s-dev
+    - kubectl config use-context datainn/k8s:k8s-dev
     - TAG=$(< ./tag.txt)
     - echo $TAG
   script:
@@ -239,7 +239,7 @@ sit-reports-deploy-job:      # This job runs in the deploy stage.
   dependencies:
     - "docker-build-job"
   before_script:
-    - kubectl config use-context datainn/simpleaccounts/simpleaccounts-frontend:k8s-dev
+    - kubectl config use-context datainn/k8s:k8s-dev
     - TAG=$(< ./tag.txt)
     - echo $TAG
   script:
@@ -363,7 +363,7 @@ prod-deploy-job:      # This job runs in the deploy stage.
   dependencies:
     - "prod-build-job"
   before_script:
-    - kubectl config use-context datainn/simpleaccounts/simpleaccounts-frontend:k8s-prod
+    - kubectl config use-context datainn/k8s:k8s-prod
     - PROD_TAG=$(< ./tag.txt)
     - echo $PROD_TAG
   script:

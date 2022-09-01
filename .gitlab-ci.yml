@@ -9,11 +9,13 @@ stages:          # List of stages for jobs, and their order of execution
   - prod-build
   - prod-deploy
 variables: 
-  IMAGE: datainn/simpleaccounts/simpleaccounts-frontend
-  TAG: $VERSION_PREFIX.$CI_PIPELINE_ID
   REGISTRY_URL: $CI_REGISTRY
   REGISTRY_USER: $CI_REGISTRY_USER
   REGISTRY_PASS: $CI_REGISTRY_PASSWORD
+  PROD_VERSION_PREFIX: $PROD_VERSION_PREFIX
+  VERSION_PREFIX: $VERSION_PREFIX
+  IMAGE: datainn/simpleaccounts/simpleaccounts-frontend
+  TAG: $VERSION_PREFIX.$CI_PIPELINE_ID
 
 # Cache modules in between jobs
 cache:

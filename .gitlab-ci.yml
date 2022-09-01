@@ -95,6 +95,7 @@ docker-build-job:   # This job runs in the test stage.
   after_script:
     - echo $TAG > ./tag.txt
     - echo $TAG
+    - apt-get install curl -y
     - curl --request POST --header "PRIVATE-TOKEN:$GITLAB_API_TOKEN" "https://gitlab.datainn.io/api/v4/projects/5/repository/tags?tag_name={$TAG}&ref=develop&message=Version+{$TAG}"
   allow_failure: false
   artifacts:
@@ -272,7 +273,7 @@ approve-prod-release:
   script:
     - echo "Approve PROD Release"
   after_script:
-    - curl --header 'Content-Type:application/json' --header "PRIVATE-TOKEN:$GITLAB_API_TOKEN" --data '{ "name":"SimpleAccounts Frontend Release $TAG", "tag_name":"$TAG", "description":"SimpleAccounts frontend new release with version $TAG", "milestones":["$TAG", "{$TAG}-rc"], "assets":{ "links":[{ "name":"hoge", "url":"https://google.com", "filepath":"/binaries/linux-amd64", "link_type":"other" }] } }' --request POST "https://gitlab.datainn.io/api/v4/projects/5/releases"
+    - curl --header 'Content-Type:application/json' --header "PRIVATE-TOKEN:$GITLAB_API_TOKEN" --data '{ "name":"SimpleAccounts Frontend Release $TAG", "tag_name":"$TAG", "description":"SimpleAccounts frontend new release with version $TAG", "assets":{ "links":[{ "name":"hoge", "url":"https://google.com", "filepath":"/binaries/linux-amd64", "link_type":"other" }] } }' --request POST "https://gitlab.datainn.io/api/v4/projects/5/releases"
   resource_group: prod-release
   allow_failure: false
   rules:

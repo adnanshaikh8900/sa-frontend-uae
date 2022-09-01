@@ -379,7 +379,7 @@ const en = {
       Importstatement:"Import statement",		
       reconcile:"Reconcile",		
       EditAccount:"Edit Account",		
-      AddnewTransaction:"Add new Transaction",		
+      AddnewTransaction:"Add New Transaction",		
       All:"All",		
       NotExplained:"Not Explained",		
       PotentialDuplicate:"Potential Duplicate",						

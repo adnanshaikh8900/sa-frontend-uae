@@ -31,7 +31,6 @@ import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { TextareaAutosize } from '@material-ui/core';
 
-
 const mapStateToProps = (state) => {
 	return {
 		contact_list: state.customer_invoice.contact_list,

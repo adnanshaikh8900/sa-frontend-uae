@@ -306,7 +306,7 @@ class ReconcileTransaction extends React.Component {
 													validationSchema={Yup.object().shape({
 														date: Yup.date().required('Date is Required'),
 														closingBalance: Yup.string().required(
-															'Closing Banlance is Required',
+															'Closing Balance is Required',
 														),
 													})}
 												>

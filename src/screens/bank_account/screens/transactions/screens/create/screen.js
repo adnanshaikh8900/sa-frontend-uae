@@ -1132,7 +1132,6 @@ class CreateBankTransaction extends React.Component {
                             values.coaCategoryId.label === "Expense" &&
                             !values.expenseCategory
                           ) {
-                            alert("hek")
                             errors.expenseCategory = "Expense Category is Required";
                           }
 

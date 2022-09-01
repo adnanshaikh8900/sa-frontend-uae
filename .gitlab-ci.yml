@@ -103,6 +103,8 @@ docker-build-job:   # This job runs in the test stage.
     - docker push $REGISTRY_URL/$IMAGE:$TAG
     - echo "Docker image pushed"
   after_script:
+    - git tag -a $TAG -m 'Version $TAG'
+    - git push origin --tags
     - echo $TAG > ./tag.txt
     - echo $TAG
   allow_failure: false

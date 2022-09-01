@@ -1023,7 +1023,7 @@ setConfigurations=(configurationList)=>{
 																	/>
 																	{this.state.error &&
 																		this.state.error.name && (
-																			<div className="is-invalid">
+																			<div className="invalid-feedback">
 																				{this.state.error.name}
 																			</div>
 																		)}
@@ -1322,9 +1322,10 @@ setConfigurations=(configurationList)=>{
 																					rows="6"
 																					placeholder={strings.DateFormat}
 																				/>
+																				
 																				{this.state.error &&
 																					this.state.error.dateFormatId && (
-																						<div className="is-invalid">
+																						<div className="invalid-feedback" style={{display:"block", whiteSpace: "normal"}}> 
 																							{
 																								this.state.error
 																									.dateFormatId
@@ -1421,7 +1422,7 @@ setConfigurations=(configurationList)=>{
 																					</FormGroup>
 																					{this.state.error &&
 																						this.state.error.file && (
-																							<div className="is-invalid">
+																							<div className="invalid-feedback">
 																								{this.state.error.file}
 																							</div>
 																						)}

@@ -2942,13 +2942,13 @@ class DetailCustomerInvoice extends React.Component {
 																		</TableHeaderColumn>
 																		{this.state.discountEnabled == true &&
 																	<TableHeaderColumn
-																	width="12%"
+																		width="12%"
 																		dataField="discount"
 																		dataFormat={(cell, rows) =>
 																			this.renderDiscount(cell, rows, props)
 																		}
 																	>
-																		{strings.DISCOUNT_TYPE}
+																		{strings.Discount}
 																	</TableHeaderColumn>}
 																		{initValue.total_excise != 0 &&
 																		<TableHeaderColumn

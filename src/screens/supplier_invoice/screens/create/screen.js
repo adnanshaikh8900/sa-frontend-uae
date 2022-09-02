@@ -245,6 +245,7 @@ class CreateSupplierInvoice extends React.Component {
 		this.regExBoth = /[a-zA-Z0-9 /D]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 		this.regDec1 = /^\d{1,2}\.\d{1,2}$|^\d{1,2}$/;
+		this.regExInvNum = /[a-zA-Z0-9-/]+$/;
 	}
 
 	renderProductName = (cell, row) => {
@@ -618,9 +619,9 @@ class CreateSupplierInvoice extends React.Component {
 							this.formRef.current.setFieldValue('currency', this.getCurrency(res.data.contactId), true);
 							this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(res.data.contactId), true);
 							this.formRef.current.setFieldValue('term', term, true);
-							this.formRef.current.setFieldValue('notes',  res.data.notes, true);
-							this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
-							this.formRef.current.setFieldValue('receiptAttachmentDescription',  res.data.receiptAttachmentDescription, true);
+							// this.formRef.current.setFieldValue('notes',  res.data.notes, true);
+							// this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
+							// this.formRef.current.setFieldValue('receiptAttachmentDescription',  res.data.receiptAttachmentDescription, true);
 							const val = term ? term.value.split('_') : '';
 							const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 							const values = moment( moment( res.data.invoiceDate).format('DD-MM-YYYY'), 'DD-MM-YYYY').toDate();							
@@ -845,10 +846,7 @@ class CreateSupplierInvoice extends React.Component {
 																		data: res.data.poQuatationLineItemRequestModelList
 																			? res.data.poQuatationLineItemRequestModelList
 																			: [],
-				
-				
-																		//
-				
+
 																		discountAmount: res.data.discount 
 																			? res.data.discount 
 																			: 0,
@@ -887,7 +885,7 @@ class CreateSupplierInvoice extends React.Component {
 																		this.formRef.current.setFieldValue('placeOfSupplyId', res.data.placeOfSupplyId, true);
 																		this.formRef.current.setFieldValue('currency', this.getCurrency(res.data.supplierId), true);
 																		this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(res.data.supplierId), true);
-																		this.formRef.current.setFieldValue('receiptNumber', res.data.poNumber, true);
+																		// this.formRef.current.setFieldValue('receiptNumber', res.data.poNumber, true);
 																	   this.setExchange( this.getCurrency(res.data.supplierId) );
 																		} else {
 																			this.setState({
@@ -1888,31 +1886,15 @@ class CreateSupplierInvoice extends React.Component {
 		let formData = new FormData();
 		formData.append('quotationId',this.state.poId ? this.state.poId : '')
 		formData.append('taxType', this.state.taxType)
-		formData.append(
-			'referenceNumber',
-			invoice_number ? this.state.prefix + invoice_number : '',
-		);
-		formData.append(
-			'invoiceDueDate',
-			invoiceDueDate ? this.state.date : null,
-		);
-		formData.append(
-			'invoiceDate',
-			invoiceDate
-				? invoiceDate
+		formData.append('referenceNumber',invoice_number ? this.state.prefix + invoice_number : '');
+		formData.append('invoiceDueDate',invoiceDueDate ? this.state.date : null);
+		formData.append('invoiceDate',invoiceDate? invoiceDate
 				// moment(invoiceDate,'DD-MM-YYYY')
 				// .toDate()
-				: null,
-		);
+				: null);
 		formData.append('receiptNumber', receiptNumber ? receiptNumber : '');
-		formData.append(
-			'contactPoNumber',
-			contact_po_number ? contact_po_number : '',
-		);
-		formData.append(
-			'receiptAttachmentDescription',
-			receiptAttachmentDescription ? receiptAttachmentDescription : '',
-		);
+		formData.append('contactPoNumber', contact_po_number ? contact_po_number : '');
+		formData.append('receiptAttachmentDescription',	receiptAttachmentDescription ? receiptAttachmentDescription : '');
 		formData.append('notes', notes ? notes : '');
 		formData.append('type', 1);
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
@@ -1927,8 +1909,6 @@ class CreateSupplierInvoice extends React.Component {
 		if (term && term.value) {
 			formData.append('term', term.value);
 		}
-
-
 		if (placeOfSupplyId ) {
 			formData.append('placeOfSupplyId', placeOfSupplyId.value ?placeOfSupplyId.value:placeOfSupplyId);
 		}
@@ -2480,10 +2460,19 @@ class CreateSupplierInvoice extends React.Component {
 																		value={props.values.invoice_number}
 																		onBlur={props.handleBlur('invoice_number')}
 																		onChange={(option) => {
-																			props.handleChange('invoice_number')(
-																				option,
+																			if(
+																				option.target.value === '' ||
+																				this.regExInvNum.test(
+																					option.target.value,
+																				)
+																			) {
+																				props.handleChange('invoice_number')(
+																					option,
+																				);
+																				}
+																			this.validationCheck(
+																				option.target.value
 																			);
-																			this.validationCheck(option.target.value);
 																		}}
 																		className={
 																			props.errors.invoice_number &&

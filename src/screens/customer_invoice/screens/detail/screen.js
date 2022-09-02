@@ -590,7 +590,7 @@ class DetailCustomerInvoice extends React.Component {
 		addedproducts=props.values.lineItemsString.filter((i)=>(i.productId===product.id && row.id!==i.id))
 		let totalquantityleft= addedproducts.length>0 && product?.stockOnHand!==null ?product?.stockOnHand-addedproducts.reduce((a,c)=>a+parseInt(c.quantity===""?0:c.quantity),0):product?.stockOnHand
 		totalquantityleft=totalquantityleft-parseInt(row.quantity)
-	
+		
 		return (
 			<Field
 				name={`lineItemsString.${idx}.quantity`}
@@ -633,7 +633,7 @@ class DetailCustomerInvoice extends React.Component {
 						 {row['productId'] != '' ? 
 						<Input value={row['unitType'] }  disabled/> : ''}
 						</div>
-						{totalquantityleft<0 && <div style={{color:'red',fontSize:'0.8rem'}} >
+						{(totalquantityleft<0 && product?.stockOnHand) && <div style={{color:'red',fontSize:'0.8rem'}} >
 									Out of Stock
 								</div>} 
 						
@@ -1813,7 +1813,7 @@ class DetailCustomerInvoice extends React.Component {
 													if(isoutoftock>0){
 														errors.outofstock="Some Prod"
 													}
-
+												
 															return errors;
 													}}
 													validationSchema={Yup.object().shape({
@@ -1851,7 +1851,7 @@ class DetailCustomerInvoice extends React.Component {
 																			'quantity',
 																			'Quantity should be greater than 0',
 																			(value) => {
-																				if (value > 0) {
+																				if (value > 0 ) {
 																					return true;
 																				} else {
 																					return false;
@@ -3347,9 +3347,12 @@ class DetailCustomerInvoice extends React.Component {
 																						newData = data.filter((obj) => obj.productId !== "");
 																						props.setFieldValue('lineItemsString', newData, true);
 																						this.updateAmount(newData, props);
+													
 																						props.handleBlur();
-																						if(props.errors &&  Object.keys(props.errors).length != 0)
-																							{
+																						const errors={...props.errors}
+																						delete errors.lineItemsString
+																						if(errors &&  Object.keys(errors).length != 0)
+																							{ debugger
 																							this.props.commonActions.fillManDatoryDetails();}
 																					}
 																				}

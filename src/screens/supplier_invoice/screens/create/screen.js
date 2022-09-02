@@ -354,9 +354,9 @@ class CreateSupplierInvoice extends React.Component {
 						<Input value={row['unitType'] }  disabled/> : ''}
 						</div>
 						
-						{totalquantityleft<0 && <div style={{color:'red',fontSize:'0.8rem'}} >
+						{/* {totalquantityleft<0 && <div style={{color:'red',fontSize:'0.8rem'}} >
 								Out of Stock
-							</div>} 
+							</div>}  */}
 					</div>
 				)}
 			/>
@@ -2363,27 +2363,7 @@ class CreateSupplierInvoice extends React.Component {
 														errors.discount =
 															'Discount amount cannot be greater than invoice Total Amount';
 													}
-													let isoutoftock=0
-													values.lineItemsString.map((c,i)=>{
-														if(c.quantity>0 && c.productId!=="" ){ 
-
-															let product=this.props.product_list.find((o)=>c.productId===o.id)
-															let stockinhand=product.stockOnHand-values.lineItemsString.reduce((a,c)=>{
-																 return c.productId===product.id ? a+parseInt(c.quantity):a+0
-															},0)
-
-														if( product.stockOnHand!==null &&stockinhand<0 ) 
-														isoutoftock=isoutoftock+1
-														else isoutoftock=isoutoftock+0 
-													
-														} else 
-														isoutoftock=isoutoftock+0
-														
-													})
 												
-													if(isoutoftock>0){
-														errors.outofstock="Some Prod"
-													}
 													
 													return errors;
 												}}

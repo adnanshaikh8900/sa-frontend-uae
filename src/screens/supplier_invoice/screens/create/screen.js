@@ -2044,11 +2044,11 @@ class CreateSupplierInvoice extends React.Component {
 			option = data;
 		} else {
 			option = {
-				label: `${data.fullName}`,
+				label: `${data.organization!==""?data.organization : data.fullName}`,
 				value: data.id,
 			};
 		}
-
+		debugger
 		let result = this.props.currency_convert_list.filter((obj) => {
 			return obj.currencyCode === data.currencyCode;
 		});

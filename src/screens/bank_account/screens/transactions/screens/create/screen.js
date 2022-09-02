@@ -104,7 +104,6 @@ class CreateBankTransaction extends React.Component {
         vendorId: "",
         employeeId: "",
         currencyCode: "",
-        expenseCategory:"",
         exchangeRate: [],
       },
       expenseType: false,

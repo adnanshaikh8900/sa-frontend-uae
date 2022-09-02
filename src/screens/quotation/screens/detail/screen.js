@@ -508,8 +508,8 @@ class DetailQuotation extends React.Component {
 				name={`lineItemsString.${idx}.exciseTaxId`}
 				render={({ field, form }) => (
 					<Select
-						style={customStyles}
-						isDisabled={!row.exciseTaxId}
+						styles={customStyles}
+						isDisabled={row.exciseTaxId === 0}
 						options={
 							excise_list
 								? selectOptionsFactory.renderOptions(

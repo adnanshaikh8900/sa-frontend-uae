@@ -422,7 +422,6 @@ class DetailSupplierInvoice extends React.Component {
 					<Select
 						styles={customStyles}
 						isDisabled={row.exciseTaxId === 0 }
-						
 						options={
 							excise_list
 								? selectOptionsFactory.renderOptions(
@@ -434,29 +433,34 @@ class DetailSupplierInvoice extends React.Component {
 								: []
 						}
 						value={
-
 							excise_list &&
 							selectOptionsFactory
 								.renderOptions('name', 'id', excise_list, 'Excise')
 								.find((option) => option.value === +row.exciseTaxId)
 						}
 						id="exciseTaxId"
-						placeholder={strings.Select+strings.VAT}
+						placeholder={strings.Select_Excise}
 						onChange={(e) => {
-							this.selectItem(
-								e.value,
-								row,
-								'exciseTaxId',
-								form,
-								field,
-								props,
-							);
-
-							this.updateAmount(
-								this.state.data,
-								props,
-							);
+							if (e.value === '') {
+								props.setFieldValue(
+									'exciseTaxId',
+									'',
+								);
+							} else {
+								this.selectItem(
+									e.value,
+									row,
+									'exciseTaxId',
+									form,
+									field,
+									props,
+								);
+								this.updateAmount(
+									this.state.data,
+									props,
+								);
 						}}
+					}
 						className={`${
 							props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -528,6 +532,13 @@ class DetailSupplierInvoice extends React.Component {
 			}
 			return obj;
 		});
+		var { product_list } = this.props;
+		const product = product_list.find((i)=>row['productId']===i.id)
+		let addedproducts=[]
+		if(product)
+		addedproducts=props.values.lineItemsString.filter((i)=>(i.productId===product.id && row.id!==i.id))
+		let totalquantityleft= addedproducts.length>0 && product?.stockOnHand!==null ?product?.stockOnHand-addedproducts.reduce((a,c)=>a+parseInt(c.quantity===""?0:c.quantity),0):product?.stockOnHand
+		totalquantityleft=totalquantityleft-row.quantity
 
 		return (
 			<Field
@@ -571,17 +582,9 @@ class DetailSupplierInvoice extends React.Component {
 							 {row['productId'] != '' ? 
 						<Input value={row['unitType'] }  disabled/> : ''}
 						</div>
-						{props.errors.lineItemsString &&
-							props.errors.lineItemsString[parseInt(idx, 10)] &&
-							props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
-							Object.keys(props.touched).length > 0 &&
-							props.touched.lineItemsString &&
-							props.touched.lineItemsString[parseInt(idx, 10)] &&
-							props.touched.lineItemsString[parseInt(idx, 10)].quantity && (
-								<div className="invalid-feedback">
-									{props.errors.lineItemsString[parseInt(idx, 10)].quantity}
-								</div>
-							)}
+						{totalquantityleft<0 && <div style={{color:'red',fontSize:'0.8rem'}} >
+								Out of Stock
+							</div>} 
 							
 					</div>
 				)}
@@ -1805,6 +1808,27 @@ class DetailSupplierInvoice extends React.Component {
 													         errors.placeOfSupplyId ='Place of supply is required';
 													
 												   }
+												   let isoutoftock=0
+													values.lineItemsString.map((c,i)=>{
+														if(c.quantity>0 && c.productId!=="" ){ 
+
+															let product=this.props.product_list.find((o)=>c.productId===o.id)
+															let stockinhand=product.stockOnHand-values.lineItemsString.reduce((a,c)=>{
+																 return c.productId===product.id ? a+parseInt(c.quantity):a+0
+															},0)
+
+														if( product.stockOnHand!==null &&stockinhand<0 ) 
+														isoutoftock=isoutoftock+1
+														else isoutoftock=isoutoftock+0 
+													
+														} else 
+														isoutoftock=isoutoftock+0
+														
+													})
+												
+													if(isoutoftock>0){
+														errors.outofstock="Some Prod"
+													}
 														return errors;
 													}}
 													validationSchema={Yup.object().shape({
@@ -2543,7 +2567,7 @@ class DetailSupplierInvoice extends React.Component {
 																			this.renderExcise(cell, rows, props)
 																		}
 																	>
-																{strings.Excise}
+																	{strings.Excise}
 																	<i
 																			id="ExiseTooltip"
 																			className="fa fa-question-circle ml-1"
@@ -2555,8 +2579,6 @@ class DetailSupplierInvoice extends React.Component {
 																			Excise dropdown will be enabled only for the excise products
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn>}
-																
-
 																	<TableHeaderColumn
 																		width="12%"
 																		dataField="vat"
@@ -2596,7 +2618,7 @@ class DetailSupplierInvoice extends React.Component {
                                                                 id="isReverseChargeEnabled"
                                                                 checked={this.state.isReverseChargeEnabled}
                                                                 onChange={(option)=>{
-                                                                        this.setState({isReverseChargeEnabled:!this.state.isReverseChargeEnabled})
+                                                                    this.setState({isReverseChargeEnabled:!this.state.isReverseChargeEnabled})
                                                                 }}
                                                             />
                                                             <Label>{strings.IsReverseCharge}</Label>
@@ -2639,7 +2661,6 @@ class DetailSupplierInvoice extends React.Component {
 																			value={props.values.notes}
 																		/>
 																	</FormGroup>
-
 																	<Row>
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
@@ -2648,7 +2669,7 @@ class DetailSupplierInvoice extends React.Component {
 																				</Label>
 																				<Input
 																					type="text"
-																					maxLength="100"
+																					maxLength="20"
 																					id="receiptNumber"
 																					name="receiptNumber"
 																					placeholder={strings.ReceiptNumber}
@@ -2734,7 +2755,7 @@ class DetailSupplierInvoice extends React.Component {
 																		<TextareaAutosize
 																			type="textarea"
 																			className="textarea"
-																			maxLength="250"
+																			maxLength="255"
 																			style={{width: "700px"}}
 																			name="receiptAttachmentDescription"
 																			id="receiptAttachmentDescription"
@@ -2759,7 +2780,7 @@ class DetailSupplierInvoice extends React.Component {
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
-																					Total Excise
+																					{strings.Total_Excise}
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-right">
@@ -2782,10 +2803,7 @@ class DetailSupplierInvoice extends React.Component {
 																					<Col lg={6} className="text-right">
 																						<label className="mb-0">
 																						{this.state.supplier_currency_symbol} &nbsp;
-																							{this.state.initValue.discount  ? initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })
-																							
-																						}
-																						
+																							{this.state.initValue.discount  ? initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>
@@ -2799,16 +2817,6 @@ class DetailSupplierInvoice extends React.Component {
 																					</Col>
 																					<Col lg={6} className="text-right">
 																						<label className="mb-0">
-																						{/* {universal_currency_list[0] && (
-																						<Currency
-																						value=	{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																						currencySymbol={
-																						universal_currency_list[0]
-																						? universal_currency_list[0].currencyIsoCode
-																						: 'USD'
-																							}
-																							/>
-																							)} */}
 																							{this.state.supplier_currency_symbol} &nbsp;
 																							{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																						</label>
@@ -2825,16 +2833,6 @@ class DetailSupplierInvoice extends React.Component {
 																					</Col>
 																					<Col lg={6} className="text-right">
 																						<label className="mb-0">
-																						{/* {universal_currency_list[0] && (
-																						<Currency
-																						value=	{initValue.invoiceVATAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																						currencySymbol={
-																						universal_currency_list[0]
-																						? universal_currency_list[0].currencyIsoCode
-																						: 'USD'
-																							}
-																							/>
-																							)} */}
 																							{this.state.supplier_currency_symbol} &nbsp;
 																							{initValue.invoiceVATAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																						</label>

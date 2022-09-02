@@ -5,15 +5,16 @@ stages:          # List of stages for jobs, and their order of execution
   - dev-deploy
   - sit-approval
   - sit-deploy
-  - prod-approval
+  - prod-release-approval
+  - prod-deployment-approval
   - prod-build
   - prod-deploy
 variables: 
-  IMAGE: datainn/simpleaccounts/simpleaccounts-frontend
-  TAG: $VERSION_PREFIX.$CI_PIPELINE_ID
   REGISTRY_URL: $CI_REGISTRY
   REGISTRY_USER: $CI_REGISTRY_USER
   REGISTRY_PASS: $CI_REGISTRY_PASSWORD
+  IMAGE: datainn/simpleaccounts/simpleaccounts-frontend
+  TAG: $VERSION_PREFIX.$CI_PIPELINE_ID
 
 # Cache modules in between jobs
 cache:
@@ -24,21 +25,17 @@ cache:
 npm-compile-job:       # This job runs in the build stage, which runs first.
   stage: npm-compile
   script:
+    - echo "Pipeline Source:$CI_PIPELINE_SOURCE"
     - CI="false"
     - - export
     - echo "Compiling the code...!"
     - npm ci --cache .npm --prefer-offline
-    # - npm ci --loglevel verbose
     - echo "Compile completed."
   allow_failure: false
   artifacts:
     paths:
       - "./node_modules"
     when: on_success
-  rules:
-    - if: $CI_COMMIT_BRANCH != 'master'
-      when: on_success
-    - when: never
   retry:
     max: 2
     when:
@@ -55,6 +52,7 @@ npm-build-job:       # This job runs in the build stage, which runs first.
   dependencies:
     - "npm-compile-job"
   script:
+    - echo "Pipeline Source:$CI_PIPELINE_SOURCE"
     - CI="false"
     - echo "building the code...!"
     - npm run build
@@ -64,10 +62,6 @@ npm-build-job:       # This job runs in the build stage, which runs first.
     paths:
       - "./build"
     when: on_success
-  rules:
-    - if: $CI_COMMIT_BRANCH != 'master'
-      when: on_success
-    - when: never
   retry:
     max: 2
     when:
@@ -87,6 +81,7 @@ docker-build-job:   # This job runs in the test stage.
   services:
     - docker:20.10.16-dind
   before_script:
+    - echo "Pipeline Source:$CI_PIPELINE_SOURCE"
     - echo "Waiting for docker to initialise..."
     - i=0; while [ "$i" -lt 12 ]; do docker info && break; sleep 5; i=$(( i + 1 )) ; done
     - echo "Docker running"
@@ -100,6 +95,16 @@ docker-build-job:   # This job runs in the test stage.
     - echo "$REGISTRY_PASS" | docker login $REGISTRY_URL --username $REGISTRY_USER --password-stdin
     - docker push $REGISTRY_URL/$IMAGE:$TAG
     - echo "Docker image pushed"
+  after_script:
+    - echo $TAG > ./tag.txt
+    - echo $TAG
+    - apk --no-cache add curl
+    - curl --request POST --header "PRIVATE-TOKEN:$GITLAB_API_TOKEN" "https://gitlab.datainn.io/api/v4/projects/5/repository/tags?tag_name={$TAG}&ref=develop&message=Version+{$TAG}"
+  allow_failure: false
+  artifacts:
+    paths:
+      - "./tag.txt"
+    when: on_success
   rules:
     - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
       when: on_success
@@ -114,11 +119,13 @@ docker-build-job:   # This job runs in the test stage.
 
 dev-deploy-job:      # This job runs in the deploy stage.
   stage: dev-deploy  # It only runs when *both* jobs in the test stage complete successfully.
-  # image:
-  #   name: bitnami/kubectl:latest
-  #   entrypoint: ['']
+  dependencies:
+    - "docker-build-job"
   before_script:
-    - kubectl config use-context datainn/simpleaccounts/simpleaccounts-frontend:k8s-dev
+    - echo "Pipeline Source:$CI_PIPELINE_SOURCE"
+    - kubectl config use-context datainn/k8s:k8s-dev
+    - TAG=$(< ./tag.txt)
+    - echo $TAG
   script:
     - echo "Deploying application to following cluster..."
     - kubectl cluster-info 
@@ -148,6 +155,7 @@ dev-deploy-job:      # This job runs in the deploy stage.
 approve-sit-deployment:
   stage: sit-approval
   script:
+    - echo "Pipeline Source:$CI_PIPELINE_SOURCE"
     - echo "Approve SIT Deployment"
   resource_group: test
   allow_failure: false
@@ -165,11 +173,13 @@ approve-sit-deployment:
 
 sit1-deploy-job:      # This job runs in the deploy stage.
   stage: sit-deploy  # It only runs when *both* jobs in the test stage complete successfully.
-  # image:
-  #   name: bitnami/kubectl:latest
-  #   entrypoint: ['']
+  dependencies:
+    - "docker-build-job"
   before_script:
-    - kubectl config use-context datainn/simpleaccounts/simpleaccounts-frontend:k8s-dev
+    - echo "Pipeline Source:$CI_PIPELINE_SOURCE"
+    - kubectl config use-context datainn/k8s:k8s-dev
+    - TAG=$(< ./tag.txt)
+    - echo $TAG
   script:
     - echo "Deploying application to following cluster..."
     - kubectl cluster-info 
@@ -198,11 +208,13 @@ sit1-deploy-job:      # This job runs in the deploy stage.
 
 sit2-deploy-job:      # This job runs in the deploy stage.
   stage: sit-deploy  # It only runs when *both* jobs in the test stage complete successfully.
-  # image:
-  #   name: bitnami/kubectl:latest
-  #   entrypoint: ['']
+  dependencies:
+    - "docker-build-job"
   before_script:
-    - kubectl config use-context datainn/simpleaccounts/simpleaccounts-frontend:k8s-dev
+    - echo "Pipeline Source:$CI_PIPELINE_SOURCE"
+    - kubectl config use-context datainn/k8s:k8s-dev
+    - TAG=$(< ./tag.txt)
+    - echo $TAG
   script:
     - echo "Deploying application to following cluster..."
     - kubectl cluster-info 
@@ -231,11 +243,13 @@ sit2-deploy-job:      # This job runs in the deploy stage.
 
 sit-reports-deploy-job:      # This job runs in the deploy stage.
   stage: sit-deploy  # It only runs when *both* jobs in the test stage complete successfully.
-  # image:
-  #   name: bitnami/kubectl:latest
-  #   entrypoint: ['']
+  dependencies:
+    - "docker-build-job"
   before_script:
-    - kubectl config use-context datainn/simpleaccounts/simpleaccounts-frontend:k8s-dev
+    - echo "Pipeline Source:$CI_PIPELINE_SOURCE"
+    - kubectl config use-context datainn/k8s:k8s-dev
+    - TAG=$(< ./tag.txt)
+    - echo $TAG
   script:
     - echo "Deploying application to following cluster..."
     - kubectl cluster-info 
@@ -262,9 +276,31 @@ sit-reports-deploy-job:      # This job runs in the deploy stage.
       - unknown_failure
       - job_execution_timeout
 
-approve-prod-deployment:
-  stage: prod-approval
+approve-prod-release:
+  stage: prod-release-approval
   script:
+    - echo "Pipeline Source:$CI_PIPELINE_SOURCE"
+    - echo "Approve PROD Release"
+  after_script:
+    - curl --header 'Content-Type:application/json' --header "PRIVATE-TOKEN:$GITLAB_API_TOKEN" --data "{ \"name\":\"SimpleAccounts Frontend Release $TAG\", \"tag_name\":\"$TAG\", \"description\":\"SimpleAccounts frontend new release with version $TAG\", \"assets\":{ \"links\":[{ \"name\":\"hoge\", \"url\":\"https://google.com\", \"filepath\":\"/binaries/linux-amd64\", \"link_type\":\"other\" }] } }" --request POST "https://gitlab.datainn.io/api/v4/projects/5/releases"
+  resource_group: prod-release
+  allow_failure: false
+  rules:
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
+      when: manual
+    - when: never
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+      - unknown_failure
+      - job_execution_timeout
+
+approve-prod-deployment:
+  stage: prod-deployment-approval
+  script:
+    - echo "Pipeline Source:$CI_PIPELINE_SOURCE"
     - echo "Approve PROD Deployment"
   resource_group: prod
   allow_failure: false
@@ -290,8 +326,14 @@ prod-build-job:   # This job runs in the test stage.
     DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
   services:
     - docker:20.10.16-dind
+  dependencies:
+    - "npm-build-job"
   before_script:
+    - echo "Pipeline Source:$CI_PIPELINE_SOURCE"
+    - TAG=$(< ./tag.txt)
+    - echo $TAG
     - echo "Waiting for docker to initialise..."
+    - export
     - i=0; while [ "$i" -lt 12 ]; do docker info && break; sleep 5; i=$(( i + 1 )) ; done
     - echo "Docker running"
     - echo "update version to $TAG"
@@ -301,9 +343,9 @@ prod-build-job:   # This job runs in the test stage.
     - PROD_TAG=$PROD_VERSION_PREFIX.$SA_VERSION
   script:
     - echo "Docker build and push..."
+    - echo "Building $REGISTRY_URL/$IMAGE:$PROD_TAG"
+    - docker build -t $REGISTRY_URL/$IMAGE:$PROD_TAG .
     - echo "$REGISTRY_PASS" | docker login $REGISTRY_URL --username $REGISTRY_USER --password-stdin
-    - docker pull $REGISTRY_URL/$IMAGE:$TAG
-    - docker tag $REGISTRY_URL/$IMAGE:$TAG $REGISTRY_URL/$IMAGE:$PROD_TAG
     - docker push $REGISTRY_URL/$IMAGE:$PROD_TAG
     - echo "Docker image pushed"
   after_script:
@@ -329,15 +371,13 @@ prod-build-job:   # This job runs in the test stage.
 
 prod-deploy-job:      # This job runs in the deploy stage.
   stage: prod-deploy  # It only runs when *both* jobs in the test stage complete successfully.
-  # image:
-  #   name: bitnami/kubectl:latest
-  #   entrypoint: ['']
-  before_script:
-    - kubectl config use-context datainn/simpleaccounts/simpleaccounts-frontend:k8s-prod
-    - PROD_TAG=$(< ./tag.txt)
-    - echo $PROD_TAG
   dependencies:
     - "prod-build-job"
+  before_script:
+    - echo "Pipeline Source:$CI_PIPELINE_SOURCE"
+    - kubectl config use-context datainn/k8s:k8s-prod
+    - PROD_TAG=$(< ./tag.txt)
+    - echo $PROD_TAG
   script:
     - echo "Deploying application to following cluster..."
     - kubectl cluster-info

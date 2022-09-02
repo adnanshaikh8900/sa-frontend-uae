@@ -636,9 +636,9 @@ class CreateQuotation extends React.Component {
 									  ).find((option)=>option.value==res.data.customerId)
 									this.formRef.current.setFieldValue('customerId', customer, true);
 									this.formRef.current.setFieldValue('placeOfSupplyId', res.data.placeOfSupplyId, true);
-									this.formRef.current.setFieldValue('receiptNumber', res.data.quotationNumber, true);
-									this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
-									this.formRef.current.setFieldValue('receiptAttachmentDescription',  res.data.receiptAttachmentDescription, true);
+									// this.formRef.current.setFieldValue('quotationNumber', res.data.quotationNumber, true);
+									// this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
+									// this.formRef.current.setFieldValue('receiptAttachmentDescription',  res.data.receiptAttachmentDescription, true);
 									const { data } = this.state;
 									const idCount =
 										data.length > 0

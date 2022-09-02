@@ -582,9 +582,17 @@ class DetailSupplierInvoice extends React.Component {
 							 {row['productId'] != '' ? 
 						<Input value={row['unitType'] }  disabled/> : ''}
 						</div>
-						{totalquantityleft<0 && <div style={{color:'red',fontSize:'0.8rem'}} >
-								Out of Stock
-							</div>} 
+						{props.errors.lineItemsString &&
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)].quantity && (
+								<div className="invalid-feedback">
+									{props.errors.lineItemsString[parseInt(idx, 10)].quantity}
+								</div>
+							)}
 							
 					</div>
 				)}
@@ -1144,6 +1152,7 @@ class DetailSupplierInvoice extends React.Component {
 								props,
 							);
 						}}
+						isDisabled={row.transactionCategoryId===150}
 						value={
 							purchaseCategory.length > 0 && row.transactionCategoryLabel
 								? purchaseCategory
@@ -1808,27 +1817,7 @@ class DetailSupplierInvoice extends React.Component {
 													         errors.placeOfSupplyId ='Place of supply is required';
 													
 												   }
-												   let isoutoftock=0
-													values.lineItemsString.map((c,i)=>{
-														if(c.quantity>0 && c.productId!=="" ){ 
-
-															let product=this.props.product_list.find((o)=>c.productId===o.id)
-															let stockinhand=product.stockOnHand-values.lineItemsString.reduce((a,c)=>{
-																 return c.productId===product.id ? a+parseInt(c.quantity):a+0
-															},0)
-
-														if( product.stockOnHand!==null &&stockinhand<0 ) 
-														isoutoftock=isoutoftock+1
-														else isoutoftock=isoutoftock+0 
-													
-														} else 
-														isoutoftock=isoutoftock+0
-														
-													})
-												
-													if(isoutoftock>0){
-														errors.outofstock="Some Prod"
-													}
+												  
 														return errors;
 													}}
 													validationSchema={Yup.object().shape({

@@ -309,11 +309,7 @@ class CreateSupplierInvoice extends React.Component {
 		});
 		var { product_list } = this.props;
 		const product = product_list.find((i)=>row['productId']===i.id)
-		let addedproducts=[]
-		if(product)
-		addedproducts=props.values.lineItemsString.filter((i)=>(i.productId===product.id && row.id!==i.id))
-		let totalquantityleft= addedproducts.length>0 && product?.stockOnHand!==null ?product?.stockOnHand-addedproducts.reduce((a,c)=>a+parseInt(c.quantity===""?0:c.quantity),0):product?.stockOnHand
-		totalquantityleft=totalquantityleft-row.quantity
+	
 		return (
 			<Field
 				name={`lineItemsString.${idx}.quantity`}
@@ -354,9 +350,9 @@ class CreateSupplierInvoice extends React.Component {
 						<Input value={row['unitType'] }  disabled/> : ''}
 						</div>
 						
-						{totalquantityleft<0 && <div style={{color:'red',fontSize:'0.8rem'}} >
+						{/* {totalquantityleft<0 && <div style={{color:'red',fontSize:'0.8rem'}} >
 								Out of Stock
-							</div>} 
+							</div>}  */}
 					</div>
 				)}
 			/>
@@ -2044,7 +2040,7 @@ class CreateSupplierInvoice extends React.Component {
 			option = data;
 		} else {
 			option = {
-				label: `${data.organization!==""?data.organization : data.fullName}`,
+				label: `${data.organization!==""?data.organization : data.organization!==""?data.organization : data.fullName}`,
 				value: data.id,
 			};
 		}
@@ -2368,27 +2364,7 @@ class CreateSupplierInvoice extends React.Component {
 														errors.discount =
 															'Discount amount cannot be greater than invoice Total Amount';
 													}
-													let isoutoftock=0
-													values.lineItemsString.map((c,i)=>{
-														if(c.quantity>0 && c.productId!=="" ){ 
-
-															let product=this.props.product_list.find((o)=>c.productId===o.id)
-															let stockinhand=product.stockOnHand-values.lineItemsString.reduce((a,c)=>{
-																 return c.productId===product.id ? a+parseInt(c.quantity):a+0
-															},0)
-
-														if( product.stockOnHand!==null &&stockinhand<0 ) 
-														isoutoftock=isoutoftock+1
-														else isoutoftock=isoutoftock+0 
-													
-														} else 
-														isoutoftock=isoutoftock+0
-														
-													})
 												
-													if(isoutoftock>0){
-														errors.outofstock="Some Prod"
-													}
 													
 													return errors;
 												}}

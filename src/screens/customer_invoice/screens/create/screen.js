@@ -329,7 +329,7 @@ class CreateCustomerInvoice extends React.Component {
 		addedproducts=props.values.lineItemsString.filter((i)=>(i.productId===product.id && row.id!==i.id))
 		let totalquantityleft= addedproducts.length>0 && product?.stockOnHand!==null ?product?.stockOnHand-addedproducts.reduce((a,c)=>a+parseInt(c.quantity===""?0:c.quantity),0):product?.stockOnHand
 		totalquantityleft=totalquantityleft-parseInt(row.quantity)
-	
+		debugger
 		return (
 			<Field
 				name={`lineItemsString.${idx}.quantity`}
@@ -353,8 +353,10 @@ class CreateCustomerInvoice extends React.Component {
 								}
 							}}
 							type="number"
+							type="number"
 							placeholder={strings.Quantity}
 							className={`form-control w-50
+						
 						
             ${props.errors.lineItemsString &&
 									props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -371,7 +373,7 @@ class CreateCustomerInvoice extends React.Component {
 						 {row['productId'] != '' ? 
 						<Input value={row['unitType'] }  disabled/> : ''}
 						</div>
-						{totalquantityleft<0 && <div style={{color:'red',fontSize:'0.8rem'}} >
+						{(totalquantityleft<0 && product?.stockOnHand) && <div style={{color:'red',fontSize:'0.8rem'}} >
 									Out of Stock
 								</div>} 
 							
@@ -2228,7 +2230,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 													this.handleSubmit(values, resetForm);
 												}}
 												validate={(values) => {
-													debugger
+												
 													let errors = {};
 													
 													

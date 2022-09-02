@@ -36,7 +36,6 @@ import moment from 'moment';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { TextareaAutosize } from '@material-ui/core';
-import { string } from 'prop-types';
 
 const mapStateToProps = (state) => {
 	return {
@@ -1868,6 +1867,12 @@ if(changeShippingAddress && changeShippingAddress==true)
 						() => {
 							resetForm(this.state.initValue);
 							this.setState({
+								contactId:'',
+								customer_taxTreatment_des:'',
+								placeOfSupplyId:'',
+								customer_currency:null,
+								customer_currency_des:'',
+								currency:'',
 								initValue: {
 								...this.state.initValue,
 								...{
@@ -1886,6 +1891,13 @@ if(changeShippingAddress && changeShippingAddress==true)
 								this.state.data,
 								false,
 							);
+
+							this.formRef.current.setFieldValue('contactId', '', true);
+							this.formRef.current.setFieldValue('placeOfSupplyId', '', true);
+							this.formRef.current.setFieldValue('currency', null, true);
+							this.formRef.current.setFieldValue('taxTreatmentid','', true);
+							this.formRef.current.setFieldValue('term', term, true);
+						
 						},
 					);
 				} else {
@@ -2836,7 +2848,8 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		id="currency"
 																		name="currency"
 																		value={
-																	 	currency_convert_list &&
+																			(this.state.customer_currency!=null?
+																				currency_convert_list &&
 																			selectCurrencyFactory
 																			.renderOptions(
 																					'currencyName',
@@ -2849,6 +2862,8 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		 				option.value ===
 																	 				+this.state.customer_currency,
 																	 		)
+																				:'')
+																	 	
 																		}
 																		className={
 																			props.errors.currency &&

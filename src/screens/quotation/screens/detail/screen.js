@@ -188,6 +188,7 @@ class DetailQuotation extends React.Component {
 			this.props.quotationDetailsAction
 				.getQuotationById(this.props.location.state.id)
 				.then((res) => {
+					console.log(res,"DATA");
 					if (res.status === 200) {
 						this.getCompanyCurrency();
 					
@@ -502,7 +503,6 @@ class DetailQuotation extends React.Component {
 			}
 			return obj;
 		});
-
 		return (
 			<Field
 				name={`lineItemsString.${idx}.exciseTaxId`}

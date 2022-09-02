@@ -313,7 +313,7 @@ class CreateQuotation extends React.Component {
 				render={({ field, form }) => (
 					<Select
 						styles={customStyles}
-						isDisabled={row.exciseTaxId === 0}
+						isDisabled={!row.exciseTaxId}
 						options={
 							excise_list
 								? selectOptionsFactory.renderOptions(
@@ -549,24 +549,24 @@ class CreateQuotation extends React.Component {
 									quotaionExpiration1: res.data.quotaionExpiration
 										? res.data.quotaionExpiration
 										: '',
-									customerId: res.data.customerId 
-										? res.data.customerId 
+									customerId: res.data.customerId
+										? res.data.customerId
 										: '',
 									quotationNumber: res.data.quotationNumber
 										? res.data.quotationNumber
 										: '',
 									receiptNumber: res.data.receiptNumber
 										? res.data.receiptNumber
-										: '',	
+										: '',
 									totalVatAmount: res.data.totalVatAmount
 										? res.data.totalVatAmount
 										: 0,
-									totalAmount: res.data.totalAmount 
-										? res.data.totalAmount 
+									totalAmount: res.data.totalAmount
+										? res.data.totalAmount
 										: 0,
 									total_net: 0,
-									notes: res.data.notes 
-										? res.data.notes 
+									notes: res.data.notes
+										? res.data.notes
 										: '',
 									invoiceVATAmount:res.data.totalVatAmount
 										? res.data.totalVatAmount
@@ -574,13 +574,13 @@ class CreateQuotation extends React.Component {
 									lineItemsString: res.data.poQuatationLineItemRequestModelList
 										? res.data.poQuatationLineItemRequestModelList
 										: [],
-									placeOfSupplyId: res.data.placeOfSupplyId 
-										? res.data.placeOfSupplyId 
+									placeOfSupplyId: res.data.placeOfSupplyId
+										? res.data.placeOfSupplyId
 											: '',
-									total_excise: res.data.totalExciseAmount 
-										? res.data.totalExciseAmount 
+									total_excise: res.data.totalExciseAmount
+										? res.data.totalExciseAmount
 										: '',
-									discount: res.data.discount 
+									discount: res.data.discount
 										? res.data.discount
 										: 0,
 									discountPercentage: res.data.discountPercentage
@@ -591,7 +591,7 @@ class CreateQuotation extends React.Component {
 										: '',
 									receiptNumber:res.data.quotationNumber
 										?res.data.quotationNumber
-										:'',	
+										:'',
 									taxType : res.data.taxType
 								},
 									quotaionExpirationNotChanged: res.data.quotaionExpiration
@@ -1935,7 +1935,7 @@ discountType = (row) =>
 													||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
 													||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
 											    	{
-													if (!values.placeOfSupplyId) 
+													if (!values.placeOfSupplyId)
 														errors.placeOfSupplyId ='Place of supply is required';
 												 	if (values.placeOfSupplyId &&
 														(values.placeOfSupplyId=="" ||

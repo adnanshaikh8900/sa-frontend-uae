@@ -2,17 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Button, Row, Col } from 'reactstrap';
-
 import * as SupplierInvoiceDetailActions from './actions';
 import * as SupplierInvoiceActions from '../../actions';
 import ReactToPrint from 'react-to-print';
-
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
-
 import './style.scss';
 import { PDFExport } from '@progress/kendo-react-pdf';
-
 import './style.scss';
 import { InvoiceTemplate } from './sections';
 
@@ -203,10 +199,9 @@ class ViewCustomerInvoice extends React.Component {
 									fileName={invoiceData.referenceNumber + ".pdf"}
 								>
 									<InvoiceTemplate
-									
 										invoiceData={invoiceData}
 										contactData={contactData}
-									     isBillingAndShippingAddressSame={isBillingAndShippingAddressSame}
+									    isBillingAndShippingAddressSame={isBillingAndShippingAddressSame}
 									    status={this.props.location.state.status}
 										currencyData={currencyData}
 										ref={(el) => (this.componentRef = el)}

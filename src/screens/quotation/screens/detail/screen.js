@@ -116,6 +116,7 @@ class DetailQuotation extends React.Component {
 			purchaseCategory: [],
 			basecurrency:[],
 			supplier_currency: '',
+			disabled:false,
 			disabled1:false,
 			dateChanged: false,
 			vat_list:[],
@@ -175,7 +176,6 @@ class DetailQuotation extends React.Component {
 
 	componentDidMount = () => {
 		this.props.requestForQuotationAction.getVatList().then((res)=>{
-			debugger
 			if(res.status===200)
 			this.setState({vat_list:res.data})
 			
@@ -188,6 +188,7 @@ class DetailQuotation extends React.Component {
 			this.props.quotationDetailsAction
 				.getQuotationById(this.props.location.state.id)
 				.then((res) => {
+					console.log(res,"DATA");
 					if (res.status === 200) {
 						this.getCompanyCurrency();
 					
@@ -209,17 +210,23 @@ class DetailQuotation extends React.Component {
 										quotaionExpiration1: res.data.quotaionExpiration
 										? res.data.quotaionExpiration
 										: '',
+										receiptAttachmentDescription: res.data.receiptAttachmentDescription
+										? res.data.receiptAttachmentDescription
+										: '',
 										customerId: res.data.customerId ? res.data.customerId : '',
 										quotationNumber: res.data.quotationNumber
 										? res.data.quotationNumber
+										: '',
+										receiptNumber: res.data.receiptNumber
+										? res.data.receiptNumber
 										: '',
 										totalVatAmount: res.data.totalVatAmount
 										? res.data.totalVatAmount
 										: 0,
 										totalAmount: res.data.totalAmount ? res.data.totalAmount : 0,
 										total_net: 0,
-									notes: res.data.notes ? res.data.notes : '',
-									lineItemsString: res.data.poQuatationLineItemRequestModelList
+										notes: res.data.notes ? res.data.notes : '',
+										lineItemsString: res.data.poQuatationLineItemRequestModelList
 										? res.data.poQuatationLineItemRequestModelList
 										: [],
 										placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
@@ -267,7 +274,6 @@ class DetailQuotation extends React.Component {
 													}),
 											  )
 											: 0;
-											debugger
 									this.setState({
 										idCount:idCount,
 									});
@@ -341,7 +347,6 @@ class DetailQuotation extends React.Component {
 			newData = data.filter((obj) => obj.productId !== "");
 			// props.setFieldValue('lineItemsString', newData, true);
 			// this.updateAmount(newData, props);
-			debugger
 			const idCount =
 							this.state.idCount?
 									this.state.idCount:
@@ -498,14 +503,13 @@ class DetailQuotation extends React.Component {
 			}
 			return obj;
 		});
-
 		return (
 			<Field
 				name={`lineItemsString.${idx}.exciseTaxId`}
 				render={({ field, form }) => (
 					<Select
 						styles={customStyles}
-						isDisabled={row.exciseTaxId === 0 || row.isExciseTaxExclusive === true}
+						isDisabled={row.exciseTaxId === 0}
 						options={
 							excise_list
 								? selectOptionsFactory.renderOptions(
@@ -526,21 +530,26 @@ class DetailQuotation extends React.Component {
 						id="exciseTaxId"
 						placeholder={"Select Excise"}
 						onChange={(e) => {
-							debugger
-							this.selectItem(
-								e.value,
-								row,
-								'exciseTaxId',
-								form,
-								field,
-								props,
-							);
-							
-							this.updateAmount(
-								this.state.data,
-								props,
-							);
+							if (e.value === '') {
+								props.setFieldValue(
+									'exciseTaxId',
+									'',
+								);
+							} else {
+								this.selectItem(
+									e.value,
+									row,
+									'exciseTaxId',
+									form,
+									field,
+									props,
+								);
+								this.updateAmount(
+									this.state.data,
+									props,
+								);
 						}}
+					}
 						className={`${
 							props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -1356,7 +1365,6 @@ class DetailQuotation extends React.Component {
 		);
 	};
 	handleSubmit = (data) => {
-		debugger
 		this.setState({ disabled: true, disableLeavePage:true, });
 		const { current_po_id, term } = this.state;
 		const {
@@ -1371,6 +1379,8 @@ class DetailQuotation extends React.Component {
 			totalVatAmount,
 			totalAmount,
 			currency,
+			receiptAttachmentDescription,
+			receiptNumber,
 			placeOfSupplyId
 		} = data;
 
@@ -1402,8 +1412,11 @@ class DetailQuotation extends React.Component {
 		formData.append('totalAmount', this.state.initValue.totalAmount);
 		formData.append('totalExciseAmount', this.state.initValue.total_excise);
 		formData.append('discount',this.state.initValue.discount);
+		formData.append('receiptNumber',receiptNumber !== null ? receiptNumber : '',);
+		// formData.append('footNote',footNote? footNote : '');
+		formData.append('receiptAttachmentDescription',receiptAttachmentDescription !== null ? receiptAttachmentDescription : '',);
         if(placeOfSupplyId){
-		formData.append('placeOfSupplyId' , placeOfSupplyId.value ? placeOfSupplyId.value : placeOfSupplyId);}
+			formData.append('placeOfSupplyId' , placeOfSupplyId.value ? placeOfSupplyId.value : placeOfSupplyId);}
 		// formData.append('exciseType', this.state.checked);
 		if(customerId){
 			formData.append('customerId', customerId.value ? customerId.value : customerId);}
@@ -1488,7 +1501,6 @@ class DetailQuotation extends React.Component {
 		this.setState({ openProductModal: false });
 	};
 	setDate = (props, value) => {
-        debugger
         this.setState({
             dateChanged: true,
         });
@@ -1946,13 +1958,13 @@ console.log(this.state.supplier_currency)
 																<Col lg={3}>
 																{this.state.customer_taxTreatment_des!="NON GCC" &&(		<FormGroup className="mb-3">
 																		<Label htmlFor="placeOfSupplyId">
-																			{/* <span className="text-danger">* </span> */}
-																		{this.state.customer_taxTreatment_des &&
+																			<span className="text-danger">* </span>
+																		{/* {this.state.customer_taxTreatment_des &&
 																		(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
 																		||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
 																		||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED") && (
 																			<span className="text-danger">* </span>
-																		)}
+																		)} */}
 																			{strings.PlaceofSupply}
 																		</Label>
 																		<Select
@@ -2008,9 +2020,6 @@ console.log(this.state.supplier_currency)
 																			)}
 																	</FormGroup>)}
 																</Col>
-															
-																
-																	
 															</Row>
 															<hr />
 															<Row>

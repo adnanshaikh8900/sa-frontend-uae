@@ -1960,9 +1960,10 @@ class CreateCreditNoteModal extends React.Component {
 																				{strings.TotalExcise}
 																					</h5>
 																				</Col>
+																				{console.log("dsddd",this.state)}
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
-																						{this.state.customer_currency_symbol} &nbsp;
+																						{this.state.selectedData.currencyIsoCode} &nbsp;
 																							{totalExciseAmount>0 && (totalExciseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }))}
 																					</label>
 																				</Col>
@@ -1978,7 +1979,7 @@ class CreateCreditNoteModal extends React.Component {
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
-																						{this.state.customer_currency_symbol} &nbsp;
+																					{this.state.selectedData.currencyIsoCode} &nbsp;
 																							{discount!=0 && (discount?.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }))}
 																					</label>
 																				</Col>
@@ -2010,7 +2011,7 @@ class CreateCreditNoteModal extends React.Component {
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
-																						{this.state.customer_currency_symbol} &nbsp;
+																					{this.state.selectedData.currencyIsoCode} &nbsp;
 																							{total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
 																					
 																					</label>
@@ -2027,7 +2028,7 @@ class CreateCreditNoteModal extends React.Component {
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
-																						{this.state.customer_currency_symbol} &nbsp;
+																					{this.state.selectedData.currencyIsoCode} &nbsp;
 																							{totalVatAmount!=0 && (totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }))}
 																					</label>
 																				</Col>
@@ -2043,7 +2044,7 @@ class CreateCreditNoteModal extends React.Component {
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
-																						{this.state.customer_currency_symbol} &nbsp;
+																					{this.state.selectedData.currencyIsoCode} &nbsp;
 																							{totalAmount!=0 && (totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }))}
 																					</label>
 																				</Col>

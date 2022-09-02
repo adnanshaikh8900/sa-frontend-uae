@@ -222,8 +222,7 @@ class DetailCustomerInvoice extends React.Component {
 							{
 								current_customer_id: this.props.location.state.id,
 								initValue: {
-									receiptAttachmentDescription: res.data
-										.receiptAttachmentDescription
+									receiptAttachmentDescription: res.data.receiptAttachmentDescription
 										? res.data.receiptAttachmentDescription
 										: '',
 									receiptNumber: res.data.receiptNumber
@@ -232,7 +231,7 @@ class DetailCustomerInvoice extends React.Component {
 									contact_po_number: res.data.contactPoNumber
 										? res.data.contactPoNumber
 										: '',
-										currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
+									currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
 									exchangeRate:res.data.exchangeRate ? res.data.exchangeRate : '',
 									currencyName:res.data.currencyName ? res.data.currencyName : '',
 									invoiceDueDate: res.data.invoiceDueDate
@@ -378,7 +377,7 @@ class DetailCustomerInvoice extends React.Component {
 				render={({ field, form }) => (
 					<Select
 						styles={customStyles}
-						isDisabled={row.exciseTaxId === 0 || row.isExciseTaxExclusive=== false}
+						isDisabled={row.exciseTaxId === 0 }
 						options={
 							excise_list
 								? selectOptionsFactory.renderOptions(
@@ -390,30 +389,34 @@ class DetailCustomerInvoice extends React.Component {
 								: []
 						}
 						value={
-				
 							excise_list &&
 							selectOptionsFactory
 								.renderOptions('name', 'id', excise_list, 'Excise')
 								.find((option) => option.value === +row.exciseTaxId)
 						}
 						id="exciseTaxId"
-						placeholder={"Select Excise"}
+						placeholder={strings.Select_Excise}
 						onChange={(e) => {
-							
-							this.selectItem(
-								e.value,
-								row,
-								'exciseTaxId',
-								form,
-								field,
-								props,
-							);
-							
-							this.updateAmount(
-								this.state.data,
-								props,
-							);
+							if (e.value === '') {
+								props.setFieldValue(
+									'exciseTaxId',
+									'',
+								);
+							} else {
+								this.selectItem(
+									e.value,
+									row,
+									'exciseTaxId',
+									form,
+									field,
+									props,
+								);
+								this.updateAmount(
+									this.state.data,
+									props,
+								);
 						}}
+					}
 						className={`${
 							props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -1335,12 +1338,7 @@ class DetailCustomerInvoice extends React.Component {
 		formData.append('type', 2);
 		formData.append('taxType', this.state.taxType)
 		formData.append('invoiceId', current_customer_id);
-		formData.append(
-			'referenceNumber',
-			invoice_number !== null ? invoice_number : '',
-		);
-
-		
+		formData.append('referenceNumber',invoice_number !== null ? invoice_number : '',);		
 		if(changeShippingAddress && changeShippingAddress==true)
 		{
 			formData.append(
@@ -1420,12 +1418,11 @@ class DetailCustomerInvoice extends React.Component {
 			receiptAttachmentDescription !== null ? receiptAttachmentDescription : '',
 		);
 		formData.append('notes', notes !== null ? notes : '');
-		formData.append('footNote',footNote? footNote : '')
+		formData.append('footNote',footNote? footNote : '');
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
 		formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
 		formData.append('totalAmount', this.state.initValue.totalAmount);
 		formData.append('discount',this.state.initValue.discount);
-	
 		formData.append('totalExciseAmount', this.state.initValue.total_excise);
 		// formData.append('exciseType', this.state.checked);
 		formData.append('term', term);
@@ -1773,9 +1770,7 @@ class DetailCustomerInvoice extends React.Component {
 														}
 	
 														if(values.changeShippingAddress==true){
-															if(values.shippingStateId == "")
-															 { 
-																errors.shippingStateId ='State is required';}
+															if(values.shippingStateId =="")  errors.shippingStateId ='State is required';
 														}
 
 														if(values.changeShippingAddress==true){
@@ -2183,6 +2178,7 @@ class DetailCustomerInvoice extends React.Component {
 																			}
 																			id="term"
 																			name="term"
+																			placeholder={strings.Select+strings.Terms} 
 																			value={
 																				this.termList &&
 																				this.termList.find(
@@ -2190,26 +2186,24 @@ class DetailCustomerInvoice extends React.Component {
 																						option.value === props.values.term,
 																				)
 																			}
-																			onChange={(option) => {
-																				props.handleChange('term')(
-																					option.value,
-																				);
-																				if (option.value === '') {
-																					this.setState({
-																						term: option.value,
-																					});
+																			onChange={(e) => {
+																				if (e.value === '') {
+																					
 																					props.setFieldValue(
-																						'invoiceDueDate',
+																						'term',
 																						'',
 																					);
 																				} else {
 																					this.setState(
 																						{
-																							term: option.value,
+																							term: e.value,
 																						},
 																						() => {
 																							this.setDate(props, '');
 																						},
+																					);
+																					props.handleChange('term')(
+																						e.value,
 																					);
 																				}
 																			}}
@@ -2297,7 +2291,8 @@ class DetailCustomerInvoice extends React.Component {
 																			{props.errors.invoiceDueDate &&
 																				props.touched.invoiceDueDate && (
 																					<div className="invalid-feedback">
-																						{props.errors.invoiceDate.includes("nullable()") ? "Invoice date is required" :props.errors.invoiceDate}
+																					{props.errors.invoiceDueDate}
+																						{/* {props.errors.invoiceDate.includes("nullable()") ? "Invoice date is required" :props.errors.invoiceDate} */}
 																					</div>
 																				)}
 																		</div>
@@ -2473,7 +2468,6 @@ class DetailCustomerInvoice extends React.Component {
 																			if (option && option.value) {
 																				props.handleChange('shippingCountryId')(option);
 																				this.getStateListForShippingAddress(option.value);
-																				props.handleChange('shippingStateId')('');
 																			} else {
 																				props.handleChange('shippingCountryId')('');
 																				// this.getStateListForShippingAddress("");
@@ -2976,9 +2970,7 @@ class DetailCustomerInvoice extends React.Component {
 																			Excise dropdown will be enabled only for the excise products
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn> }
-																	
-
-																		<TableHeaderColumn
+																	<TableHeaderColumn
 																			dataField="vat"
 																			dataFormat={(cell, rows) =>
 																				this.renderVat(cell, rows, props)
@@ -3034,7 +3026,7 @@ class DetailCustomerInvoice extends React.Component {
 																		<TextareaAutosize
 																			type="textarea"
 																			className="textarea"
-																			maxLength="250"
+																			maxLength="255"
 																			style={{width: "700px"}}
 																			name="notes"
 																			id="notes"
@@ -3141,7 +3133,7 @@ class DetailCustomerInvoice extends React.Component {
 																		<TextareaAutosize
 																			type="textarea"
 																			className="textarea"
-																			maxLength="250"
+																			maxLength="255"
 																			style={{width: "700px"}}
 																			name="receiptAttachmentDescription"
 																			id="receiptAttachmentDescription"
@@ -3213,16 +3205,6 @@ class DetailCustomerInvoice extends React.Component {
 																					</Col>
 																					<Col lg={6} className="text-right">
 																						<label className="mb-0">
-																							{/* {universal_currency_list[0] && (
-																						<Currency
-																						value=		{this.state.initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																						currencySymbol={
-																							universal_currency_list[0]
-																						? universal_currency_list[0].currencyIsoCode
-																						: 'USD'
-																							}
-																							/>
-																							)} */}
 																							{this.state.customer_currency_symbol} &nbsp;
 																							{initValue.discount ? initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : initValue.discount.toLocaleString(navigator.language, {minimumFractionDigits: 2, maximumFractionDigits: 2 })}
 																						</label>
@@ -3238,16 +3220,6 @@ class DetailCustomerInvoice extends React.Component {
 																					</Col>
 																					<Col lg={6} className="text-right">
 																						<label className="mb-0">
-																						{/* {universal_currency_list[0] && (
-																						<Currency
-																						value=	{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																						currencySymbol={
-																							universal_currency_list[0]
-																						? universal_currency_list[0].currencyIsoCode
-																						: 'USD'
-																							}
-																							/>
-																							)} */}
 																							{this.state.customer_currency_symbol} &nbsp;
 																							{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
 																						</label>
@@ -3263,16 +3235,6 @@ class DetailCustomerInvoice extends React.Component {
 																					</Col>
 																					<Col lg={6} className="text-right">
 																						<label className="mb-0">
-																						{/* {universal_currency_list[0] && (
-																						<Currency
-																						value={initValue.invoiceVATAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																						currencySymbol={
-																							universal_currency_list[0]
-																						? universal_currency_list[0].currencyIsoCode
-																						: 'USD'
-																							}
-																							/>
-																							)} */}
 																							{this.state.customer_currency_symbol} &nbsp;
 																							{initValue.invoiceVATAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
 																						</label>
@@ -3300,7 +3262,7 @@ class DetailCustomerInvoice extends React.Component {
 																							/>
 																							)} */}
 																							{this.state.customer_currency_symbol} &nbsp;
-																								{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+																							{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>
@@ -3336,6 +3298,8 @@ class DetailCustomerInvoice extends React.Component {
 																			onClick={() => {
 																				if(this.state.data.length === 1)
 																					{
+																						console.log(props.errors,"ERRORs")
+																						//	added validation popup	msg
 																						props.handleBlur();
 																						if(props.errors &&  Object.keys(props.errors).length != 0)
 																							this.props.commonActions.fillManDatoryDetails();

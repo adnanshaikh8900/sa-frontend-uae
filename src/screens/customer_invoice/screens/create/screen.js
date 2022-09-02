@@ -36,7 +36,6 @@ import moment from 'moment';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { TextareaAutosize } from '@material-ui/core';
-import { string } from 'prop-types';
 
 const mapStateToProps = (state) => {
 	return {
@@ -354,8 +353,10 @@ class CreateCustomerInvoice extends React.Component {
 								}
 							}}
 							type="number"
+							type="number"
 							placeholder={strings.Quantity}
 							className={`form-control w-50
+						
 						
             ${props.errors.lineItemsString &&
 									props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -585,7 +586,6 @@ renderVatAmount = (cell, row,extraData) => {
 																customer_taxTreatment_des : res.data.taxtreatment 
 																	? res.data.taxtreatment 
 																	: '',
-																// placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 																total_excise: res.data.totalExciseAmount 
 																	? res.data.totalExciseAmount 
 																	: '',
@@ -1201,7 +1201,7 @@ discountType = (row) =>
 				render={({ field, form }) => (
 					<Select
 						styles={customStyles}
-						 isDisabled={row.exciseTaxId === 0}
+					  isDisabled={row.exciseTaxId === 0}
 						options={
 							excise_list
 								? selectOptionsFactory.renderOptions(
@@ -1213,7 +1213,6 @@ discountType = (row) =>
 								: []
 						}
 						value={
-
 							excise_list &&
 							selectOptionsFactory
 								.renderOptions('name', 'id', excise_list, 'Excise')
@@ -1222,20 +1221,26 @@ discountType = (row) =>
 						id="exciseTaxId"
 						placeholder={strings.Select_Excise}
 						onChange={(e) => {
-							this.selectItem(
-								e.value,
-								row,
-								'exciseTaxId',
-								form,
-								field,
-								props,
-							);
-
-							this.updateAmount(
-								this.state.data,
-								props,
-							);
+							if (e.value === '') {
+								props.setFieldValue(
+									'exciseTaxId',
+									'',
+								);
+							} else {
+								this.selectItem(
+									e.value,
+									row,
+									'exciseTaxId',
+									form,
+									field,
+									props,
+								);
+								this.updateAmount(
+									this.state.data,
+									props,
+								);
 						}}
+					}
 						className={`${
 							props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -1841,7 +1846,9 @@ if(changeShippingAddress && changeShippingAddress==true)
 									quantity: 1,
 									unitPrice: '',
 									vatCategoryId: '',
+									taxtreatment: '',
 									subTotal: 0,
+									discount: 0,
 									vatAmount:0,
 									productId: '',
 								},
@@ -1862,6 +1869,12 @@ if(changeShippingAddress && changeShippingAddress==true)
 						() => {
 							resetForm(this.state.initValue);
 							this.setState({
+								contactId:'',
+								customer_taxTreatment_des:'',
+								placeOfSupplyId:'',
+								customer_currency:null,
+								customer_currency_des:'',
+								currency:'',
 								initValue: {
 								...this.state.initValue,
 								...{
@@ -1880,6 +1893,13 @@ if(changeShippingAddress && changeShippingAddress==true)
 								this.state.data,
 								false,
 							);
+
+							this.formRef.current.setFieldValue('contactId', '', true);
+							this.formRef.current.setFieldValue('placeOfSupplyId', '', true);
+							this.formRef.current.setFieldValue('currency', null, true);
+							this.formRef.current.setFieldValue('taxTreatmentid','', true);
+							this.formRef.current.setFieldValue('term', term, true);
+						
 						},
 					);
 				} else {
@@ -2830,7 +2850,8 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		id="currency"
 																		name="currency"
 																		value={
-																	 	currency_convert_list &&
+																			(this.state.customer_currency!=null?
+																				currency_convert_list &&
 																			selectCurrencyFactory
 																			.renderOptions(
 																					'currencyName',
@@ -2843,6 +2864,8 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		 				option.value ===
 																	 				+this.state.customer_currency,
 																	 		)
+																				:'')
+																	 	
 																		}
 																		className={
 																			props.errors.currency &&
@@ -3904,9 +3927,9 @@ if(changeShippingAddress && changeShippingAddress==true)
 																				props.handleBlur();
 																				if(props.errors &&  Object.keys(props.errors).length != 0)
 																				this.props.commonActions.fillManDatoryDetails();
-                                                                            }
-                                                                            else
-                                                                            {
+																				}
+																				else
+																				{
                                                                                 let newData=[]
                                                                                 const data = this.state.data;
                                                                                 newData = data.filter((obj) => obj.productId !== "");

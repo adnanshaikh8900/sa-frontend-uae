@@ -1735,6 +1735,7 @@ discountType = (row) =>
 						values: this.state.initValue,
 					};
 					this.updateAmount(this.state.data, values);
+					this.addRow()
 				},
 			);
 			this.formRef.current.setFieldValue(

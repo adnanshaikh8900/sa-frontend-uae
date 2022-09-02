@@ -539,13 +539,6 @@ class DetailSupplierInvoice extends React.Component {
 		addedproducts=props.values.lineItemsString.filter((i)=>(i.productId===product.id && row.id!==i.id))
 		let totalquantityleft= addedproducts.length>0 && product?.stockOnHand!==null ?product?.stockOnHand-addedproducts.reduce((a,c)=>a+parseInt(c.quantity===""?0:c.quantity),0):product?.stockOnHand
 		totalquantityleft=totalquantityleft-row.quantity
-		var { product_list } = this.props;
-		const product = product_list.find((i)=>row['productId']===i.id)
-		let addedproducts=[]
-		if(product)
-		addedproducts=props.values.lineItemsString.filter((i)=>(i.productId===product.id && row.id!==i.id))
-		let totalquantityleft= addedproducts.length>0 && product?.stockOnHand!==null ?product?.stockOnHand-addedproducts.reduce((a,c)=>a+parseInt(c.quantity===""?0:c.quantity),0):product?.stockOnHand
-		totalquantityleft=totalquantityleft-row.quantity
 
 		return (
 			<Field

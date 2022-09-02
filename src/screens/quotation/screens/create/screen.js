@@ -313,7 +313,7 @@ class CreateQuotation extends React.Component {
 				render={({ field, form }) => (
 					<Select
 						styles={customStyles}
-						isDisabled={row.exciseTaxId === 0}
+						isDisabled={!row.exciseTaxId}
 						options={
 							excise_list
 								? selectOptionsFactory.renderOptions(

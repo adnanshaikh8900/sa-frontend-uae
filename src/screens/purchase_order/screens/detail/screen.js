@@ -2536,7 +2536,7 @@ class DetailPurchaseOrder extends React.Component {
 																		<Label htmlFor="notes">{strings.TermsAndConditions}</Label><br/>
 																		<TextareaAutosize
 																			type="textarea"
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="250"
 																			style={{width: "700px"}}
 																			name="notes"
@@ -2643,7 +2643,7 @@ class DetailPurchaseOrder extends React.Component {
 																		<br/>
 																		<TextareaAutosize
 																			type="textarea"
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="250"
 																			style={{width: "700px"}}
 																			name="receiptAttachmentDescription"

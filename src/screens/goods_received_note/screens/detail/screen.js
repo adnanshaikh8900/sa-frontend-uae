@@ -1904,7 +1904,7 @@ debugger
 																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
 																		<TextareaAutosize
 																			type="textarea"
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="250"
 																			style={{width: "700px"}}
 																			name="notes"
@@ -2034,7 +2034,7 @@ debugger
 																		<br/>
 																		<TextareaAutosize
 																			type="textarea"
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="250"
 																			style={{width: "700px"}}
 																			name="receiptAttachmentDescription"

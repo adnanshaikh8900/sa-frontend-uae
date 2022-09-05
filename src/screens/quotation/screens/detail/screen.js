@@ -210,8 +210,8 @@ class DetailQuotation extends React.Component {
 										quotaionExpiration1: res.data.quotaionExpiration
 										? res.data.quotaionExpiration
 										: '',
-										receiptAttachmentDescription: res.data.receiptAttachmentDescription
-										? res.data.receiptAttachmentDescription
+										attachmentDescription: res.data.attachmentDescription
+										? res.data.attachmentDescription
 										: '',
 										customerId: res.data.customerId ? res.data.customerId : '',
 										quotationNumber: res.data.quotationNumber
@@ -1377,7 +1377,7 @@ class DetailQuotation extends React.Component {
 			totalVatAmount,
 			totalAmount,
 			currency,
-			receiptAttachmentDescription,
+			attachmentDescription,
 			receiptNumber,
 			placeOfSupplyId
 		} = data;
@@ -1412,7 +1412,7 @@ class DetailQuotation extends React.Component {
 		formData.append('discount',this.state.initValue.discount);
 		formData.append('receiptNumber',receiptNumber !== null ? receiptNumber : '',);
 		// formData.append('footNote',footNote? footNote : '');
-		formData.append('receiptAttachmentDescription',receiptAttachmentDescription !== null ? receiptAttachmentDescription : '',);
+		formData.append('attachmentDescription',attachmentDescription !== null ? attachmentDescription : '',);
         if(placeOfSupplyId){
 			formData.append('placeOfSupplyId' , placeOfSupplyId.value ? placeOfSupplyId.value : placeOfSupplyId);}
 		// formData.append('exciseType', this.state.checked);
@@ -2489,7 +2489,7 @@ console.log(this.state.supplier_currency)
 																		</Col>
 																	</Row>
 																	<FormGroup className="mb-3">
-																		<Label htmlFor="receiptAttachmentDescription">
+																		<Label htmlFor="attachmentDescription">
 																			{strings.AttachmentDescription}
 																		</Label><br/>
 																		<TextareaAutosize
@@ -2497,18 +2497,18 @@ console.log(this.state.supplier_currency)
 																			className="textarea"
 																			maxLength="250"
 																			style={{width: "700px"}}
-																			name="receiptAttachmentDescription"
-																			id="receiptAttachmentDescription"
+																			name="attachmentDescription"
+																			id="attachmentDescription"
 																			rows="2"
 																			placeholder={strings.ReceiptAttachmentDescription}
 																			onChange={(option) =>
 																				props.handleChange(
-																					'receiptAttachmentDescription',
+																					'attachmentDescription',
 																				)(option)
 																			}
 																			value={
 																				props.values
-																					.receiptAttachmentDescription
+																					.attachmentDescription
 																			}
 																		/>
 																	</FormGroup>

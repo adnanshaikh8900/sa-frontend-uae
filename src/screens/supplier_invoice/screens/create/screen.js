@@ -1687,6 +1687,7 @@ class CreateSupplierInvoice extends React.Component {
 	};
 
 	updateAmount = (data, props) => {
+		debugger
 		const { vat_list } = this.props;
 		let total_net = 0;
 		let total_excise = 0;
@@ -1695,6 +1696,8 @@ class CreateSupplierInvoice extends React.Component {
 		let net_value = 0; 
 		let discount_total = 0;
 		data.map((obj) => {
+			if(obj.unitprice==="") obj.unitPrice=0
+			if(obj.quantity==="") obj.quantity=0
 			const index =
 				obj.vatCategoryId !== ''
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
@@ -1835,6 +1838,7 @@ class CreateSupplierInvoice extends React.Component {
 			
 			total_excise = +(total_excise + obj.exciseAmount)
 			total = total_vat + total_net;
+			debugger
 			return obj;
 		});
 
@@ -1969,9 +1973,13 @@ class CreateSupplierInvoice extends React.Component {
 									unitPrice: '',
 									vatCategoryId: '',
 									subTotal: 0,
+									exciseTaxId: '',
+									discountType: 'FIXED',
+									vatAmount: 0,
+									discount: 0,
 									productId: '',
-									transactionCategoryId: '',
-									transactionCategoryLabel: '',
+									unitType:'',
+									unitTypeId:''
 								},
 							],
 							initValue: {
@@ -1990,6 +1998,8 @@ class CreateSupplierInvoice extends React.Component {
 						() => {
 							resetForm(this.state.initValue);
 							this.getInvoiceNo();
+							debugger
+							this.updateAmount(this.state.data);
 							this.formRef.current.setFieldValue(
 								'lineItemsString',
 								this.state.data,

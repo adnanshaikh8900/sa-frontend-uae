@@ -2384,7 +2384,7 @@ min="0"
 																		<TextareaAutosize
 																			type="textarea"
 																			style={{width: "700px"}}
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="255"
 																			name="notes"
 																			id="notes"
@@ -2506,7 +2506,7 @@ min="0"
 																		</Label><br/>
 																		<TextareaAutosize
 																			type="textarea"
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="250"
 																			style={{width: "700px"}}
 																			name="receiptAttachmentDescription"

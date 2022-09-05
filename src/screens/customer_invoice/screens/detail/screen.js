@@ -3025,7 +3025,7 @@ class DetailCustomerInvoice extends React.Component {
 																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
 																		<TextareaAutosize
 																			type="textarea"
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="255"
 																			style={{width: "700px"}}
 																			name="notes"
@@ -3132,7 +3132,7 @@ class DetailCustomerInvoice extends React.Component {
 																		<br/>
 																		<TextareaAutosize
 																			type="textarea"
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="255"
 																			style={{width: "700px"}}
 																			name="receiptAttachmentDescription"
@@ -3157,7 +3157,7 @@ class DetailCustomerInvoice extends React.Component {
 																		<br/>
 																		<TextareaAutosize
 																			type="textarea"
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="255"
 																			style={{width: "700px"}}
 																			name="footNote"

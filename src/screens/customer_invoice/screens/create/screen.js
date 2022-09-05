@@ -3566,7 +3566,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		<TextareaAutosize
 																			type="textarea"
 																			style={{width: "700px"}}
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="255"
 																			name="notes"
 																			id="notes"
@@ -3667,7 +3667,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		</Label><br/>
 																		<TextareaAutosize
 																			type="textarea"
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="250"
 																			style={{width: "700px"}}
 																			name="receiptAttachmentDescription"
@@ -3692,7 +3692,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		<br/>
 																		<TextareaAutosize
 																			type="textarea"
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="255"
 																			style={{width: "700px"}}
 																			name="footNote"

@@ -135,7 +135,7 @@ docker-build-job:   # This job runs in the test stage.
     - echo "Docker running"
     - TAG=$CI_BUILD_TAG
   dependencies:
-    - "maven-compile-job"
+    - "npm-build-job"
   script:
     - echo "Docker build and push..."
     - docker build -t $REGISTRY_URL/$IMAGE:$TAG .

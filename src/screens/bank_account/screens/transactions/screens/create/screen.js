@@ -101,6 +101,7 @@ class CreateBankTransaction extends React.Component {
         invoiceIdList: [],
         payrollListIds: "",
         vatId: "",
+        expenseCategory:"",
         vendorId: "",
         employeeId: "",
         currencyCode: "",
@@ -1112,7 +1113,7 @@ class CreateBankTransaction extends React.Component {
                               "Transaction Date cannot be before Bank Account Opening Date or after Current Date.";
                           }
                           
-                          if (values.coaCategoryId.value !== 10 &&	values.transactionCategoryId===undefined
+                          if (values.coaCategoryId.value !== 10 &&	!values.transactionCategoryId
                           ) {
                           	errors.transactionCategoryId ='Category is Required';
                           }

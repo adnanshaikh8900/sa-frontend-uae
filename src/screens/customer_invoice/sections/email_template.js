@@ -12,7 +12,6 @@ import {
 	ModalBody,
 	ModalFooter,
 } from 'reactstrap';
-
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Editor } from 'react-draft-wysiwyg';

@@ -553,7 +553,7 @@ class CreateExpense extends React.Component {
 					},
 				});
 				if( res.data && res.data!=null)
-				this.formRef.current.setFieldValue('expenseNumber', res.data, true,true
+				this.formRef.current.setFieldValue('expenseNumber', res.data, true,this.expenseValidationCheck(res.data)
 				// this.validationCheck(res.data)
 				);
 			}
@@ -1794,7 +1794,7 @@ componentWillUnmount() {
 																		<TextareaAutosize
 																			type="textarea"
 																			style={{width: "870px"}}
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="255"
 																			name="notes"
 																			id="notes"
@@ -1896,7 +1896,7 @@ componentWillUnmount() {
 																		</Label><br/>
 																		<TextareaAutosize
 																			type="textarea"
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="250"
 																			style={{width: "870px"}}
 																			name="receiptAttachmentDescription"

@@ -129,6 +129,7 @@ class CreateQuotation extends React.Component {
 			initValue: {
 				total_excise: 0,
 				contact_po_number: '',
+				receiptNumber: '',
 				currencyCode: '',
 				poApproveDate: new Date(),
 				quotaionExpiration: new Date(new Date().setMonth(new Date().getMonth() + 1)),
@@ -312,8 +313,7 @@ class CreateQuotation extends React.Component {
 				render={({ field, form }) => (
 					<Select
 						styles={customStyles}
-						isDisabled={row.exciseTaxId === 0 || row.isExciseTaxExclusive === true}
-						
+						isDisabled={!row.exciseTaxId}
 						options={
 							excise_list
 								? selectOptionsFactory.renderOptions(
@@ -334,21 +334,26 @@ class CreateQuotation extends React.Component {
 						id="exciseTaxId"
 						placeholder={strings.Select+strings.excise}
 						onChange={(e) => {
-							 
-							this.selectItem(
-								e.value,
-								row,
-								'exciseTaxId',
-								form,
-								field,
-								props,
-							);
-							
-							this.updateAmount(
-								this.state.data,
-								props,
-							);
+							if (e.value === '') {
+								props.setFieldValue(
+									'exciseTaxId',
+									'',
+								);
+							} else {
+								this.selectItem(
+									e.value,
+									row,
+									'exciseTaxId',
+									form,
+									field,
+									props,
+								);
+								this.updateAmount(
+									this.state.data,
+									props,
+								);
 						}}
+					}
 						className={`${
 							props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -541,37 +546,55 @@ class CreateQuotation extends React.Component {
 									quotaionExpiration: res.data.quotaionExpiration
 										? moment(res.data.quotaionExpiration).format('DD-MM-YYYY')
 										: '',
-										quotaionExpiration1: res.data.quotaionExpiration
+									quotaionExpiration1: res.data.quotaionExpiration
 										? res.data.quotaionExpiration
 										: '',
-										customerId: res.data.customerId ? res.data.customerId : '',
-										quotationNumber: res.data.quotationNumber
+									customerId: res.data.customerId
+										? res.data.customerId
+										: '',
+									quotationNumber: res.data.quotationNumber
 										? res.data.quotationNumber
 										: '',
-										totalVatAmount: res.data.totalVatAmount
+									receiptNumber: res.data.receiptNumber
+										? res.data.receiptNumber
+										: '',
+									totalVatAmount: res.data.totalVatAmount
 										? res.data.totalVatAmount
 										: 0,
-										totalAmount: res.data.totalAmount ? res.data.totalAmount : 0,
-										total_net: 0,
-									notes: res.data.notes ? res.data.notes : '',
+									totalAmount: res.data.totalAmount
+										? res.data.totalAmount
+										: 0,
+									total_net: 0,
+									notes: res.data.notes
+										? res.data.notes
+										: '',
 									invoiceVATAmount:res.data.totalVatAmount
-									? res.data.totalVatAmount
-									: 0,
+										? res.data.totalVatAmount
+										: 0,
 									lineItemsString: res.data.poQuatationLineItemRequestModelList
 										? res.data.poQuatationLineItemRequestModelList
 										: [],
-										placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
-										total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
-										discount: res.data.discount ? res.data.discount : 0,
-										discountPercentage: res.data.discountPercentage
-											? res.data.discountPercentage
-											: 0,
-										discountType: res.data.discountType
-											? res.data.discountType
+									placeOfSupplyId: res.data.placeOfSupplyId
+										? res.data.placeOfSupplyId
 											: '',
-										taxType : res.data.taxType
+									total_excise: res.data.totalExciseAmount
+										? res.data.totalExciseAmount
+										: '',
+									discount: res.data.discount
+										? res.data.discount
+										: 0,
+									discountPercentage: res.data.discountPercentage
+										? res.data.discountPercentage
+										: 0,
+									discountType: res.data.discountType
+										? res.data.discountType
+										: '',
+									receiptNumber:res.data.quotationNumber
+										?res.data.quotationNumber
+										:'',
+									taxType : res.data.taxType
 								},
-								quotaionExpirationNotChanged: res.data.quotaionExpiration
+									quotaionExpirationNotChanged: res.data.quotaionExpiration
 										? moment(res.data.quotaionExpiration)
 										: '',
 										quotaionExpiration: res.data.quotaionExpiration
@@ -613,6 +636,9 @@ class CreateQuotation extends React.Component {
 									  ).find((option)=>option.value==res.data.customerId)
 									this.formRef.current.setFieldValue('customerId', customer, true);
 									this.formRef.current.setFieldValue('placeOfSupplyId', res.data.placeOfSupplyId, true);
+									// this.formRef.current.setFieldValue('quotationNumber', res.data.quotationNumber, true);
+									// this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
+									// this.formRef.current.setFieldValue('attachmentDescription',  res.data.attachmentDescription, true);
 									const { data } = this.state;
 									const idCount =
 										data.length > 0
@@ -1452,6 +1478,8 @@ discountType = (row) =>
 	handleSubmit = (data, resetForm) => {
 		this.setState({ disabled: true, disableLeavePage:true });
 		const {
+			attachmentDescription,
+			receiptNumber,
 			quotaionExpiration,
 			currency,
 			customerId,
@@ -1468,20 +1496,16 @@ discountType = (row) =>
 
 		let formData = new FormData();
 		formData.append('taxType', this.state.taxType)
-		formData.append(
-			'quotationNumber',
-			quotation_Number !== null ? this.state.prefix + quotation_Number : '',
-		);
-		formData.append(
-			'quotaionExpiration',
-			quotaionExpiration ? quotaionExpiration : '',
-		);
+		formData.append('quotationNumber',quotation_Number !== null ? this.state.prefix + quotation_Number : '',);
+		formData.append('quotaionExpiration',quotaionExpiration ? quotaionExpiration : '',);
 		formData.append('totalExciseAmount', this.state.initValue.total_excise);
 		if (placeOfSupplyId) {
 			formData.append('placeOfSupplyId', placeOfSupplyId.value ? placeOfSupplyId.value : placeOfSupplyId);
 		};
 		formData.append('exciseType', this.state.checked);
 		formData.append('notes', notes ? notes : '');
+		formData.append('receiptNumber',receiptNumber !== null ? receiptNumber : '');
+		formData.append('attachmentDescription',attachmentDescription !== null ? attachmentDescription : '',);
 		formData.append('type', 6);
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
 		formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
@@ -1500,7 +1524,6 @@ discountType = (row) =>
 		if (this.uploadFile && this.uploadFile.files && this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
-		debugger
 		this.setState({ loading:true, loadingMsg:"Creating Quotation..."});
 		this.props.quotationCreateAction
 			.createQuotation(formData)
@@ -1544,10 +1567,12 @@ discountType = (row) =>
 									totalAmount: 0,
 									discountType: '',
 									discount: 0,
+									total_excise: 0,
 									discountPercentage: '',
 								},
 
 							},
+							customer_taxTreatment_des:''
 						},
 						() => {
 							resetForm(this.state.initValue);
@@ -1570,6 +1595,7 @@ discountType = (row) =>
 									unitTypeId:''
 								},
 							],
+							customer_taxTreatment_des:'',
 						loading:false
 						})
 							this.getInvoiceNo();
@@ -1735,6 +1761,7 @@ discountType = (row) =>
 						values: this.state.initValue,
 					};
 					this.updateAmount(this.state.data, values);
+					this.addRow()
 				},
 			);
 			this.formRef.current.setFieldValue(
@@ -1904,20 +1931,24 @@ discountType = (row) =>
 													if (values.quotation_Number==='') {
 														errors.quotation_Number = 'Quotation number is required';
 													}
-													if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
-													||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
-													||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
-											    	{
-														if (!values.placeOfSupplyId) 
-														errors.placeOfSupplyId ='Place of supply is required';
-												 if (values.placeOfSupplyId &&
-													 (values.placeOfSupplyId=="" ||
-													 (values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select place of supply")
-													 )
-													) 
-													  errors.placeOfSupplyId ='Place of supply is required';
-													
-												   }
+												// 	if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
+												// 	||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
+												// 	||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
+											    // 	{
+												// 	if (!values.placeOfSupplyId)
+												// 		errors.placeOfSupplyId ='Place of supply is required';
+												//  	if (values.placeOfSupplyId &&
+												// 		(values.placeOfSupplyId=="" ||
+												// 		(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select place of supply")
+												// 	 )
+												// 	) 
+												// 	  errors.placeOfSupplyId ='Place of supply is required';
+												//    }
+													if(this.state.customer_taxTreatment_des!="Non GCC")
+													{
+													if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
+														errors.placeOfSupplyId = 'Place of supply is required';
+													}}
 													if (param === true) {
 														errors.discount =
 															'Discount amount Cannot be greater than invoice total amount';
@@ -1932,12 +1963,12 @@ discountType = (row) =>
 														customerId: Yup.string().required(
 														'Customer is required',
 													),
-														placeOfSupplyId: Yup.string().required('Place of supply is required'),
+														// placeOfSupplyId: Yup.string().required('Place of supply is required'),
 													
-													// poApproveDate: Yup.string().required(
+													//  poApproveDate: Yup.string().required(
 													// 	'Order date is required',
 													// ),
-													quotaionExpiration: Yup.string().required(
+														quotaionExpiration: Yup.string().required(
 														'Expiry date is required'
 													),
 													lineItemsString: Yup.array()
@@ -2178,8 +2209,8 @@ discountType = (row) =>
 																		)}
 																</FormGroup>
 															</Col>: ''}
-									<Col lg={3}>
-									{this.state.customer_taxTreatment_des!="NON GCC" &&(<FormGroup className="mb-3">
+															<Col lg={3}>
+															{this.state.customer_taxTreatment_des!="NON GCC" &&(<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">
 																		<span className="text-danger">* </span>
 																		{/* {this.state.customer_taxTreatment_des &&
@@ -2630,8 +2661,7 @@ discountType = (row) =>
 																		<TextareaAutosize
 																			type="textarea"
 																			style={{width: "700px"}}
-																			className="textarea"
-																	
+																			className="textarea form-control"
 																			maxLength="250"
 																			name="notes"
 																			id="notes"
@@ -2658,7 +2688,6 @@ discountType = (row) =>
 																					placeholder={strings.ReceiptNumber}
 																					onChange={(value) => {
 																						props.handleChange('receiptNumber')(value);
-
 																					}}
 																					className={props.errors.receiptNumber && props.touched.receiptNumber ? "is-invalid" : ""}
 																				/>
@@ -2727,26 +2756,26 @@ discountType = (row) =>
 																		</Col>
 																	</Row>
 																	<FormGroup className="mb-3">
-																		<Label htmlFor="receiptAttachmentDescription">
+																		<Label htmlFor="attachmentDescription">
 																			{strings.AttachmentDescription}
 																		</Label><br/>
 																		<TextareaAutosize
 																			type="textarea"
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="250"
 																			style={{width: "700px"}}
-																			name="receiptAttachmentDescription"
-																			id="receiptAttachmentDescription"
+																			name="attachmentDescription"
+																			id="attachmentDescription"
 																			rows="2"
 																			placeholder={strings.ReceiptAttachmentDescription}
 																			onChange={(option) =>
 																				props.handleChange(
-																					'receiptAttachmentDescription',
+																					'attachmentDescription',
 																				)(option)
 																			}
 																			value={
 																				props.values
-																					.receiptAttachmentDescription
+																					.attachmentDescription
 																			}
 																		/>
 																	</FormGroup>
@@ -2899,7 +2928,6 @@ discountType = (row) =>
 																		className="btn-square mr-3"
 																		disabled={this.state.disabled}
 																		onClick={() => {
-																			debugger
 																			if(this.state.data.length === 1)
 																				{
 																				console.log(props.errors,"ERRORs")

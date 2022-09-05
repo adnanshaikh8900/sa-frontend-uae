@@ -664,7 +664,6 @@ this.props.customerInvoiceActions
 		});
 		this.props.customerInvoiceDetailActions
 		.getInvoiceById(id).then((res) => {
-			debugger
 			this.setState({		
 				// current_rfq_id: this.props.location.state.id,
 				openModal:true, rowId : id,

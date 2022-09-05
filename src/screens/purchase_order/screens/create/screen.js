@@ -2847,7 +2847,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																		<TextareaAutosize
 																			type="textarea"
 																			style={{width: "700px"}}
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="255"
 																			name="notes"
 																			id="notes"
@@ -2949,7 +2949,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																		</Label><br/>
 																		<TextareaAutosize
 																			type="textarea"
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="250"
 																			style={{width: "700px"}}
 																			name="receiptAttachmentDescription"

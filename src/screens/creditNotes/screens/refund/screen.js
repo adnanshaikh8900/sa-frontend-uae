@@ -784,7 +784,7 @@ class Refund extends React.Component {
 																		<TextareaAutosize
 																			type="textarea"
 																			style={{width: "870px"}}
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="255"
 																			name="notes"
 																			id="notes"
@@ -886,7 +886,7 @@ class Refund extends React.Component {
 																		</Label><br/>
 																		<TextareaAutosize
 																			type="textarea"
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="250"
 																			style={{width: "870px"}}
 																			name="receiptAttachmentDescription"

@@ -372,7 +372,7 @@ class CreateCustomerInvoice extends React.Component {
 						<Input value={row['unitType'] }  disabled/> : ''}
 						</div>
 						{(totalquantityleft<0 && product?.stockOnHand) && <div style={{color:'red',fontSize:'0.8rem'}} >
-									Stock In Hand-{product?.stockOnHand}
+									Stock In Hand:{product?.stockOnHand}
 								</div>} 
 							
 					</div>
@@ -1489,15 +1489,18 @@ discountType = (row) =>
 	checkedRow = () => {
 		if (this.state.data.length > 0) {
 			let length = this.state.data.length - 1;
-			let temp = Object.values(this.state.data[`${length}`]).indexOf('');
+			let temp = this.state.data?.[length].productId!==""?
+			this.state.data?.[length].productId:-2
 			if (temp > -1) {
-				return true;
-			} else {
 				return false;
+			} else {
+				return true;
 			}
+
 		} else {
 			return false;
 		}
+
 	};
 
 	updateAmount = (data, props) => {
@@ -2613,8 +2616,8 @@ if(changeShippingAddress && changeShippingAddress==true)
 																	<Label htmlFor="placeOfSupplyId">
 																		<span className="text-danger">* </span>
 																	{/* {this.state.customer_taxTreatment_des &&
-																		(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
-																		||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
+																		(this.state.customer_taxTreatment_des=="VAT REGISTERED"
+																		||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE"
 																		||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED") && (
 																			<span className="text-danger">* </span>
 																		)} */}
@@ -3567,7 +3570,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		<TextareaAutosize
 																			type="textarea"
 																			style={{width: "700px"}}
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="255"
 																			name="notes"
 																			id="notes"
@@ -3668,7 +3671,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		</Label><br/>
 																		<TextareaAutosize
 																			type="textarea"
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="250"
 																			style={{width: "700px"}}
 																			name="receiptAttachmentDescription"
@@ -3693,7 +3696,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		<br/>
 																		<TextareaAutosize
 																			type="textarea"
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="255"
 																			style={{width: "700px"}}
 																			name="footNote"

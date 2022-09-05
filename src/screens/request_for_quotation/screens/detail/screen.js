@@ -2232,7 +2232,7 @@ setDate1= (props, value) => {
 																		<Label htmlFor="notes">{strings.TermsAndConditions}</Label><br/>
 																		<TextareaAutosize
 																			type="textarea"
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="255"
 																			style={{width: "700px"}}
 																			name="notes"
@@ -2339,7 +2339,7 @@ setDate1= (props, value) => {
 																		<br/>
 																		<TextareaAutosize
 																			type="textarea"
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="255"
 																			style={{width: "700px"}}
 																			name="receiptAttachmentDescription"

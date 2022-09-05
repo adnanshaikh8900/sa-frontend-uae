@@ -1638,15 +1638,18 @@ class CreateSupplierInvoice extends React.Component {
 	checkedRow = () => {
 		if (this.state.data.length > 0) {
 			let length = this.state.data.length - 1;
-			let temp = Object.values(this.state.data[`${length}`]).indexOf('');
+			let temp = this.state.data?.[length].productId!==""?
+			this.state.data?.[length].productId:-2
 			if (temp > -1) {
-				return true;
-			} else {
 				return false;
+			} else {
+				return true;
 			}
+			
 		} else {
 			return false;
 		}
+		
 	};
 
 	setDate = (props, value) => {
@@ -3270,7 +3273,7 @@ class CreateSupplierInvoice extends React.Component {
 																		<TextareaAutosize
 																			type="textarea"
 																			style={{width: "700px"}}
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="255"
 																			name="notes"
 																			id="notes"
@@ -3372,7 +3375,7 @@ class CreateSupplierInvoice extends React.Component {
 																		</Label><br/>
 																		<TextareaAutosize
 																			type="textarea"
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="250"
 																			style={{width: "700px"}}
 																			name="receiptAttachmentDescription"

@@ -2661,7 +2661,7 @@ discountType = (row) =>
 																		<TextareaAutosize
 																			type="textarea"
 																			style={{width: "700px"}}
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="250"
 																			name="notes"
 																			id="notes"
@@ -2761,7 +2761,7 @@ discountType = (row) =>
 																		</Label><br/>
 																		<TextareaAutosize
 																			type="textarea"
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="250"
 																			style={{width: "700px"}}
 																			name="attachmentDescription"

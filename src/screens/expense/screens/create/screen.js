@@ -553,7 +553,7 @@ class CreateExpense extends React.Component {
 					},
 				});
 				if( res.data && res.data!=null)
-				this.formRef.current.setFieldValue('expenseNumber', res.data, true,true
+				this.formRef.current.setFieldValue('expenseNumber', res.data, true,this.expenseValidationCheck(res.data)
 				// this.validationCheck(res.data)
 				);
 			}

@@ -2242,26 +2242,24 @@ if(changeShippingAddress && changeShippingAddress==true)
 														errors.discount =
 															'Discount amount cannot be greater than invoice total amount';
 													}
-													if(this.state.customer_taxTreatment_des!="Non GCC")
-													{
-													if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
-														errors.placeOfSupplyId = 'Place of supply is required';
-													}}
-												// 	if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
-												// 	||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
-												// 	||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
-											    // 	{
+													// if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
+													// 	errors.placeOfSupplyId = 'Place of supply is required';
+													// }
+													if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
+													||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
+													||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
+											    	{
 
-												// 		if (!values.placeOfSupplyId) 
-												// 	       	errors.placeOfSupplyId ='Place of supply is required';
-												// 		if (values.placeOfSupplyId &&
-												// 			(values.placeOfSupplyId=="" ||
-												// 			(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select place of supply")
-												// 			)
-												// 		   ) 
-												// 	         errors.placeOfSupplyId ='Place of supply is required';
+														if (!values.placeOfSupplyId) 
+													       	errors.placeOfSupplyId ='Place of supply is required';
+														if (values.placeOfSupplyId &&
+															(values.placeOfSupplyId=="" ||
+															(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select place of supply")
+															)
+														   ) 
+													         errors.placeOfSupplyId ='Place of supply is required';
 													
-												//    }
+												   }
 													if (values.term && values.term.label && values.term.label === "Select Terms") {
 														errors.term =
 														'Term is required';
@@ -2611,9 +2609,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		<span className="text-danger">* </span>
 																	{/* {this.state.customer_taxTreatment_des &&
 																		(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
-																		||this.state.customer_taxTreatment_des=="Non VAT REGISTERED DESIGNATED ZONE" 
 																		||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
-																		||this.state.customer_taxTreatment_des=="Non VAT REGISTERED DESIGNATED ZONE" 
 																		||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED") && (
 																			<span className="text-danger">* </span>
 																		)} */}

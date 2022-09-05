@@ -372,7 +372,7 @@ class CreateCustomerInvoice extends React.Component {
 						<Input value={row['unitType'] }  disabled/> : ''}
 						</div>
 						{(totalquantityleft<0 && product?.stockOnHand) && <div style={{color:'red',fontSize:'0.8rem'}} >
-									Stock In Hand-{product?.stockOnHand}
+									Stock In Hand:{product?.stockOnHand}
 								</div>} 
 							
 					</div>
@@ -1489,15 +1489,18 @@ discountType = (row) =>
 	checkedRow = () => {
 		if (this.state.data.length > 0) {
 			let length = this.state.data.length - 1;
-			let temp = Object.values(this.state.data[`${length}`]).indexOf('');
+			let temp = this.state.data?.[length].productId!==""?
+			this.state.data?.[length].productId:-2
 			if (temp > -1) {
-				return true;
-			} else {
 				return false;
+			} else {
+				return true;
 			}
+			
 		} else {
 			return false;
 		}
+		
 	};
 
 	updateAmount = (data, props) => {

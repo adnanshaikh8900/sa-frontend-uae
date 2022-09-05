@@ -409,21 +409,28 @@ class InvoiceTemplate extends Component {
 									<th className="text-center" style={{ padding: '0.5rem' }}>
 										{strings.Quantity}
 									</th>
-									
+									<th className="text-center" style={{ padding: '0.5rem' }}>
+										{strings.UnitType}
+									</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
 										{strings.UnitCost}
 									</th>
-									{invoiceData.discount > 0 && (<>
+									 <>
 										<th style={{ padding: '0.5rem', textAlign: 'right' }}>
 											{strings.Discount }
 										</th>
 										{/* <th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.DiscountType}</th> */}
-									</>)}
-									{ invoiceData.totalExciseAmount > 0 && (<>
+									</>
+									<>
+
+										{/* <th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.Excise}</th> */}
+										<th style={{ padding: '0.5rem', textAlign: 'right',width:"10%" }}>{strings.Excise}</th>
+									</>
+									<>
 
 										{/* <th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.Excise}</th> */}
 										<th style={{ padding: '0.5rem', textAlign: 'right',width:"10%" }}>{strings.ExciseAmount}</th>
-									</>)}
+									</>
 									{/* <th style={{ padding: '0.5rem', textAlign: 'right' ,width:"5%" }}>{strings.VAT}</th> */}
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.VatAmount}</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.SubTotal}</th>
@@ -439,26 +446,35 @@ class InvoiceTemplate extends Component {
 												<td><b>{item.productName}</b><br/><br />{item.description}</td>
 
 												<td  style={{ textAlign: 'center' }}>{item.quantity}<br/><br/>
-											     <b style={{fontSize:"10.5px"}}>{item.unitType}</b>	
+											    
+												</td>
+												<td  style={{ textAlign: 'center' }}>{item.unitType}<br/><br/>
+		
 												</td>
 												<td style={{ textAlign: 'right', width: '10%' }}>
 												{invoiceData.currencyIsoCode + " " +item.unitPrice.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
 												</td>
 							
-												{invoiceData.discount > 0 && (<><td style={{ textAlign: 'right' }}>
+												<><td style={{ textAlign: 'right' }}>
 													{item.discountType == "PERCENTAGE" ? item.discount + "  %" :
 													(currencyData[0]
 														? currencyData[0].currencyIsoCode +" "+ item.discount.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})
 														: 'AED'+" "+ item.discount.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2}) )
 													}
 												</td>
-												</>)}
-												{ invoiceData.totalExciseAmount > 0 && (<>
+												</>
+												<>
+													{/* <td style={{ textAlign: 'right' }}>{item.exciseTaxId ? this.renderExcise(item) : "-"}</td> */}
+													<td style={{ textAlign: 'right' }}>
+													{item.exciseTaxId ? this.renderExcise(item) : "--"}
+													</td>
+												</>
+												<>
 													{/* <td style={{ textAlign: 'right' }}>{item.exciseTaxId ? this.renderExcise(item) : "-"}</td> */}
 													<td style={{ textAlign: 'right' }}>
 														{	invoiceData.currencyIsoCode + " " +item.exciseAmount.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
 													</td>
-												</>)}
+												</>
 												{/* <td
 													style={{ textAlign: 'right' }}
 												>{`${item.vatPercentage}%`}</td> */}

@@ -372,7 +372,7 @@ class CreateCustomerInvoice extends React.Component {
 						<Input value={row['unitType'] }  disabled/> : ''}
 						</div>
 						{(totalquantityleft<0 && product?.stockOnHand) && <div style={{color:'red',fontSize:'0.8rem'}} >
-									Stock In Hand-{product?.stockOnHand}
+									Stock In Hand:{product?.stockOnHand}
 								</div>} 
 							
 					</div>

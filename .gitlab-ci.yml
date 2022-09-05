@@ -119,7 +119,7 @@ merge-request-job:       # This job runs in the build stage, which runs first.
       - job_execution_timeout
 
 docker-build-job:   # This job runs in the test stage.
-  stage: build    # It only starts when the job in the build stage completes successfully.
+  stage: docker-build    # It only starts when the job in the build stage completes successfully.
   image: docker:20.10.16
   variables:
     DOCKER_HOST: "tcp://docker:2376"

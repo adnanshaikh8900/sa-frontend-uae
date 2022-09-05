@@ -370,7 +370,7 @@ class CreateCustomerInvoice extends React.Component {
 						<Input value={row['unitType'] }  disabled/> : ''}
 						</div>
 						{(totalquantityleft<0 && product?.stockOnHand) && <div style={{color:'red',fontSize:'0.8rem'}} >
-									Stock In Hand-{product?.stockOnHand}
+									Stock In Hand:{product?.stockOnHand}
 								</div>} 
 						{props.errors.lineItemsString &&
 						props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -1499,15 +1499,18 @@ discountType = (row) =>
 	checkedRow = () => {
 		if (this.state.data.length > 0) {
 			let length = this.state.data.length - 1;
-			let temp = Object.values(this.state.data[`${length}`]).indexOf('');
+			let temp = this.state.data?.[length].productId!==""?
+			this.state.data?.[length].productId:-2
 			if (temp > -1) {
-				return true;
-			} else {
 				return false;
+			} else {
+				return true;
 			}
+
 		} else {
 			return false;
 		}
+
 	};
 
 	updateAmount = (data, props) => {
@@ -2252,11 +2255,9 @@ if(changeShippingAddress && changeShippingAddress==true)
 														errors.discount =
 															'Discount amount cannot be greater than invoice total amount';
 													}
-													if(this.state.customer_taxTreatment_des!="Non GCC")
-													{
-													if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
-														errors.placeOfSupplyId = 'Place of supply is required';
-													}}
+													// if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
+													// 	errors.placeOfSupplyId = 'Place of supply is required';
+													// }
 												// 	if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
 												// 	||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
 												// 	||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
@@ -2272,6 +2273,11 @@ if(changeShippingAddress && changeShippingAddress==true)
 												// 	         errors.placeOfSupplyId ='Place of supply is required';
 													
 												//    }
+												if(this.state.customer_taxTreatment_des!="Non GCC")
+													{
+													if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
+														errors.placeOfSupplyId = 'Place of supply is required';
+													}}
 													if (values.term && values.term.label && values.term.label === "Select Terms") {
 														errors.term =
 														'Term is required';
@@ -2620,10 +2626,8 @@ if(changeShippingAddress && changeShippingAddress==true)
 																	<Label htmlFor="placeOfSupplyId">
 																		<span className="text-danger">* </span>
 																	{/* {this.state.customer_taxTreatment_des &&
-																		(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
-																		||this.state.customer_taxTreatment_des=="Non VAT REGISTERED DESIGNATED ZONE" 
-																		||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
-																		||this.state.customer_taxTreatment_des=="Non VAT REGISTERED DESIGNATED ZONE" 
+																		(this.state.customer_taxTreatment_des=="VAT REGISTERED"
+																		||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE"
 																		||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED") && (
 																			<span className="text-danger">* </span>
 																		)} */}

@@ -637,7 +637,7 @@ class DetailCustomerInvoice extends React.Component {
 						<Input value={row['unitType'] }  disabled/> : ''}
 						</div>
 						{(totalquantityleft<0 && product?.stockOnHand) && <div style={{color:'red',fontSize:'0.8rem'}} >
-									Out of Stock
+									Stock in Hand:{product?.stockOnHand}
 								</div>} 
 								{props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&

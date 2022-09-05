@@ -165,7 +165,7 @@ dev-deploy-job:      # This job runs in the deploy stage.
   before_script:
     - echo "Pipeline Source:$CI_PIPELINE_SOURCE"
     - kubectl config use-context datainn/k8s:k8s-dev
-    - TAG=$(< ./tag.txt)
+    # - TAG=$(< ./tag.txt)
     - echo $TAG
   script:
     - echo "Deploying application to following cluster..."
@@ -219,7 +219,7 @@ sit1-deploy-job:      # This job runs in the deploy stage.
   before_script:
     - echo "Pipeline Source:$CI_PIPELINE_SOURCE"
     - kubectl config use-context datainn/k8s:k8s-dev
-    - TAG=$(< ./tag.txt)
+    # - TAG=$(< ./tag.txt)
     - echo $TAG
   script:
     - echo "Deploying application to following cluster..."
@@ -254,7 +254,7 @@ sit2-deploy-job:      # This job runs in the deploy stage.
   before_script:
     - echo "Pipeline Source:$CI_PIPELINE_SOURCE"
     - kubectl config use-context datainn/k8s:k8s-dev
-    - TAG=$(< ./tag.txt)
+    # - TAG=$(< ./tag.txt)
     - echo $TAG
   script:
     - echo "Deploying application to following cluster..."
@@ -289,7 +289,7 @@ sit-reports-deploy-job:      # This job runs in the deploy stage.
   before_script:
     - echo "Pipeline Source:$CI_PIPELINE_SOURCE"
     - kubectl config use-context datainn/k8s:k8s-dev
-    - TAG=$(< ./tag.txt)
+    # - TAG=$(< ./tag.txt)
     - echo $TAG
   script:
     - echo "Deploying application to following cluster..."

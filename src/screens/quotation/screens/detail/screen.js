@@ -1332,11 +1332,9 @@ class DetailQuotation extends React.Component {
 			obj.vatAmount = vat_amount
 			obj.subTotal =
 			net_value && obj.vatCategoryId ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
-
 			discount_total = +discount_total +discount
 			total_net = +(total_net + parseFloat(net_value));
 			total_vat = +(total_vat + vat_amount);
-			
 			total_excise = +(total_excise + obj.exciseAmount)
 			total = total_vat + total_net;
 			return obj;
@@ -1670,9 +1668,9 @@ console.log(this.state.supplier_currency)
 														||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
 														||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
 														{
-															if (!values.placeOfSupplyId) 
-																   errors.placeOfSupplyId ='Place of supply is required';
-															if (values.placeOfSupplyId &&
+														if (!values.placeOfSupplyId) 
+														    errors.placeOfSupplyId ='Place of supply is required';
+														if (values.placeOfSupplyId &&
 																(values.placeOfSupplyId=="" ||
 																(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select place of supply")
 																)

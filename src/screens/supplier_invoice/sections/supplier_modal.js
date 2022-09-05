@@ -1,31 +1,11 @@
 import React from 'react';
-import {
-	Button,
-	Row,
-	Col,
-	Form,
-	FormGroup,
-	Input,
-	Label,
-	Modal,
-	CardHeader,
-	ModalBody,
-	ModalFooter,
-} from 'reactstrap';
-import Select from 'react-select';
-
-import { Formik } from 'formik';
-import * as Yup from 'yup';
-
-import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
+import { Modal } from 'reactstrap';
 import { toast } from 'react-toastify';
-import PhoneInput  from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css'
-import IconButton from '@material-ui/core/IconButton';
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import {data}  from '../../Language/index'
 import LocalizedStrings from 'react-localization';
 import  CreateContact from '../../contact/screens/create/screen';
+
 let strings = new LocalizedStrings(data);
 class SupplierModal extends React.Component {
 	constructor(props) {

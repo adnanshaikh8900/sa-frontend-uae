@@ -1,13 +1,15 @@
 stages:          # List of stages for jobs, and their order of execution
   - npm-compile
   - npm-build
+  - merge-develop
   - docker-build
   - dev-deploy
   - sit-approval
   - sit-deploy
   - prod-release-approval
+  - prod-merge
+  - create-prod-release
   - prod-deployment-approval
-  - prod-build
   - prod-deploy
 variables: 
   REGISTRY_URL: $CI_REGISTRY
@@ -27,7 +29,7 @@ npm-compile-job:       # This job runs in the build stage, which runs first.
   script:
     - echo "Pipeline Source:$CI_PIPELINE_SOURCE"
     - CI="false"
-    - - export
+    - export
     - echo "Compiling the code...!"
     - npm ci --cache .npm --prefer-offline
     - echo "Compile completed."
@@ -37,9 +39,15 @@ npm-compile-job:       # This job runs in the build stage, which runs first.
       - "./node_modules"
     when: on_success
   rules:
-    - if: '$CI_COMMIT_BRANCH !~ /^1.0.0-alpha.*/'
-      when: on_success
-    - when: never
+    - if: $CI_PROJECT_NAMESPACE != 'datainn/simpleaccounts' && $CI_BUILD_TAG != null
+      when: never
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: never
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
+      when: never
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'master'
+      when: never
+    - when: on_success
   retry:
     max: 2
     when:
@@ -67,7 +75,13 @@ npm-build-job:       # This job runs in the build stage, which runs first.
       - "./build"
     when: on_success
   rules:
-    - if: '$CI_COMMIT_BRANCH =~ /1.0.0-alpha.*/i'
+    - if: $CI_PROJECT_NAMESPACE != 'datainn/simpleaccounts' && $CI_BUILD_TAG != null
+      when: never
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: never
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
+      when: never
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'master'
       when: never
     - when: on_success
   retry:
@@ -78,10 +92,36 @@ npm-build-job:       # This job runs in the build stage, which runs first.
       - unknown_failure
       - job_execution_timeout
 
+merge-request-job:       # This job runs in the build stage, which runs first.
+  stage: merge-develop
+  script:
+  - echo "Accepted merge request"
+  - echo "Create a git tag on branch"
+  - curl --request POST --header "PRIVATE-TOKEN:$GITLAB_API_TOKEN" "https://gitlab.datainn.io/api/v4/projects/${CI_PROJECT_ID}/repository/tags?tag_name={$TAG}&ref=develop&message=Version+{$TAG}"
+  - echo "Created Tag $TAG"
+  allow_failure: false
+  artifacts:
+    paths:
+      - "./target"
+    when: on_success
+  rules:
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
+      when: on_success
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_BUILD_TAG =~ '/red.sea.*/'
+      when: never
+    - when: never
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+      - unknown_failure
+      - job_execution_timeout
+
 docker-build-job:   # This job runs in the test stage.
-  stage: docker-build    # It only starts when the job in the build stage completes successfully.
+  stage: build    # It only starts when the job in the build stage completes successfully.
   image: docker:20.10.16
-  variables: 
+  variables:
     DOCKER_HOST: "tcp://docker:2376"
     DOCKER_TLS_CERTDIR: "/certs"
     DOCKER_TLS_VERIFY: 1
@@ -93,28 +133,21 @@ docker-build-job:   # This job runs in the test stage.
     - echo "Waiting for docker to initialise..."
     - i=0; while [ "$i" -lt 12 ]; do docker info && break; sleep 5; i=$(( i + 1 )) ; done
     - echo "Docker running"
-    - echo "update version to $TAG"
+    - TAG=$CI_BUILD_TAG
   dependencies:
-    - "npm-build-job"
+    - "maven-compile-job"
   script:
     - echo "Docker build and push..."
-    - echo "Building $REGISTRY_URL/$IMAGE:$TAG"
     - docker build -t $REGISTRY_URL/$IMAGE:$TAG .
     - echo "$REGISTRY_PASS" | docker login $REGISTRY_URL --username $REGISTRY_USER --password-stdin
     - docker push $REGISTRY_URL/$IMAGE:$TAG
     - echo "Docker image pushed"
-  after_script:
-    - echo $TAG > ./tag.txt
     - echo $TAG
-    - apk --no-cache add curl
-    - curl --request POST --header "PRIVATE-TOKEN:$GITLAB_API_TOKEN" "https://gitlab.datainn.io/api/v4/projects/5/repository/tags?tag_name={$TAG}&ref=develop&message=Version+{$TAG}"
   allow_failure: false
-  artifacts:
-    paths:
-      - "./tag.txt"
-    when: on_success
   rules:
-    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_BUILD_TAG != null
+      when: on_success
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_BUILD_TAG =~ '/red.sea.*/'
       when: on_success
     - when: never
   retry:
@@ -149,7 +182,7 @@ dev-deploy-job:      # This job runs in the deploy stage.
     action: start
   allow_failure: false
   rules:
-    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_BUILD_TAG =~ '/1.0.0-alpha.*/'
       when: on_success
     - when: never
   retry:
@@ -160,7 +193,7 @@ dev-deploy-job:      # This job runs in the deploy stage.
       - unknown_failure
       - job_execution_timeout
 
-approve-sit-deployment:
+approve-sit-deployment-job:
   stage: sit-approval
   script:
     - echo "Pipeline Source:$CI_PIPELINE_SOURCE"
@@ -168,7 +201,7 @@ approve-sit-deployment:
   resource_group: test
   allow_failure: false
   rules:
-    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_BUILD_TAG =~ '/1.0.0-alpha.*/'
       when: manual
     - when: never
   retry:
@@ -203,7 +236,7 @@ sit1-deploy-job:      # This job runs in the deploy stage.
     action: start
   allow_failure: false
   rules:
-    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_BUILD_TAG =~ '/1.0.0-alpha.*/'
       when: on_success
     - when: never
   retry:
@@ -238,7 +271,7 @@ sit2-deploy-job:      # This job runs in the deploy stage.
     action: start
   allow_failure: false
   rules:
-    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_BUILD_TAG =~ '/1.0.0-alpha.*/'
       when: on_success
     - when: never
   retry:
@@ -273,7 +306,7 @@ sit-reports-deploy-job:      # This job runs in the deploy stage.
     action: start
   allow_failure: false
   rules:
-    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_BUILD_TAG =~ '/1.0.0-alpha.*/'
       when: on_success
     - when: never
   retry:
@@ -284,17 +317,18 @@ sit-reports-deploy-job:      # This job runs in the deploy stage.
       - unknown_failure
       - job_execution_timeout
 
-approve-prod-release:
+approve-prod-release-job:
   stage: prod-release-approval
+  dependencies:
+    - "docker-build-job"
   script:
+    - export
     - echo "Pipeline Source:$CI_PIPELINE_SOURCE"
     - echo "Approve PROD Release"
-  after_script:
-    - curl --header 'Content-Type:application/json' --header "PRIVATE-TOKEN:$GITLAB_API_TOKEN" --data "{ \"name\":\"SimpleAccounts Frontend Release $TAG\", \"tag_name\":\"$TAG\", \"description\":\"SimpleAccounts frontend new release with version $TAG\", \"assets\":{ \"links\":[{ \"name\":\"hoge\", \"url\":\"https://google.com\", \"filepath\":\"/binaries/linux-amd64\", \"link_type\":\"other\" }] } }" --request POST "https://gitlab.datainn.io/api/v4/projects/5/releases"
   resource_group: prod-release
   allow_failure: false
   rules:
-    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_BUILD_TAG =~ '/1.0.0-alpha.*/'
       when: manual
     - when: never
   retry:
@@ -305,7 +339,57 @@ approve-prod-release:
       - unknown_failure
       - job_execution_timeout
 
-approve-prod-deployment:
+prod-merge-job:
+  stage: prod-merge
+  dependencies:
+    - "docker-build-job"
+  script:
+    - export
+    - echo "Pipeline Source:$CI_PIPELINE_SOURCE"
+    - echo "Merge a $TAG to master branch"
+    - TAG=$CI_BUILD_TAG
+    - echo $TAG
+    - curl --request POST --header "PRIVATE-TOKEN:$GITLAB_API_TOKEN" "https://gitlab.datainn.io/api/v4/projects/${CI_PROJECT_ID}/repository/branches?branch=${CI_COMMIT_REF_NAME}&ref=${CI_COMMIT_SHA}"
+    - curl --header "Content-Type:application/json" --header "PRIVATE-TOKEN:$GITLAB_API_TOKEN" --data "{ \"id\":${CI_PROJECT_ID}, \"source_branch\":\"${CI_COMMIT_REF_NAME}\", \"target_project_id\":${CI_PROJECT_ID}, \"target_branch\":\"master\", \"squash\":true, \"remove_source_branch\":true, \"title\":\"Simple Accounts Production Release ${CI_COMMIT_REF_NAME}\", \"assignee_id\":\"${GITLAB_USER_ID}\" }" --request POST "https://gitlab.datainn.io/api/v4/projects/${CI_PROJECT_ID}/merge_requests" 
+  resource_group: prod-release
+  allow_failure: false
+  rules:
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_BUILD_TAG =~ '/1.0.0-alpha.*/'
+      when: on_success
+    - when: never
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+      - unknown_failure
+      - job_execution_timeout
+
+create-prod-release-job:
+  stage: create-prod-release
+  script:
+    - export
+    - echo "Pipeline Source:$CI_PIPELINE_SOURCE"
+    - echo "Approve PROD Deployment"
+    - NEXT_VERSION=$(($SA_VERSION+1))
+    - curl --request PUT --header "PRIVATE-TOKEN:$GITLAB_API_TOKEN" "https://gitlab.datainn.io/api/v4/projects/${CI_PROJECT_ID}/variables/SA_VERSION" --form "value="$NEXT_VERSION
+    - PROD_TAG=$PROD_VERSION_PREFIX.$SA_VERSION
+    - curl --header 'Content-Type:application/json' --header "PRIVATE-TOKEN:$GITLAB_API_TOKEN" --data "{ \"name\":\"SimpleAccounts Backend Release Prod:$PROD_TAG\", \"tag_name\":\"$PROD_TAG\", \"ref\":\"$CI_COMMIT_SHA\", \"description\":\"SimpleAccounts backend new release with Production Version:$PROD_TAG and Corresponding Development/Test Version:$TAG\", \"assets\":{ \"links\":[{ \"name\":\"hoge\", \"url\":\"https://google.com\", \"filepath\":\"/binaries/linux-amd64\", \"link_type\":\"other\" }] } }" --request POST "https://gitlab.datainn.io/api/v4/projects/${CI_PROJECT_ID}/releases"
+  resource_group: prod
+  allow_failure: false
+  rules:
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'master'
+      when: on_success
+    - when: never
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+      - unknown_failure
+      - job_execution_timeout
+
+approve-prod-deployment-job:
   stage: prod-deployment-approval
   script:
     - echo "Pipeline Source:$CI_PIPELINE_SOURCE"
@@ -313,62 +397,9 @@ approve-prod-deployment:
   resource_group: prod
   allow_failure: false
   rules:
-    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'master'
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_BUILD_TAG =~ '/red.sea.*/'
       when: manual
     - when: never
-  retry:
-    max: 2
-    when:
-      - runner_system_failure
-      - stuck_or_timeout_failure
-      - unknown_failure
-      - job_execution_timeout
-
-prod-build-job:   # This job runs in the test stage.
-  stage: prod-build    # It only starts when the job in the build stage completes successfully.
-  image: docker:20.10.16
-  variables: 
-    DOCKER_HOST: "tcp://docker:2376"
-    DOCKER_TLS_CERTDIR: "/certs"
-    DOCKER_TLS_VERIFY: 1
-    DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
-  services:
-    - docker:20.10.16-dind
-  dependencies:
-    - "npm-build-job"
-  before_script:
-    - echo "Pipeline Source:$CI_PIPELINE_SOURCE"
-    - TAG=$(< ./tag.txt)
-    - echo $TAG
-    - echo "Waiting for docker to initialise..."
-    - export
-    - i=0; while [ "$i" -lt 12 ]; do docker info && break; sleep 5; i=$(( i + 1 )) ; done
-    - echo "Docker running"
-    - echo "update version to $TAG"
-    - NEXT_VERSION=$(($SA_VERSION+1))
-    - apk add curl
-    - curl --request PUT --header "PRIVATE-TOKEN:$GITLAB_API_TOKEN" "https://gitlab.datainn.io/api/v4/projects/5/variables/SA_VERSION" --form "value="$NEXT_VERSION
-    - PROD_TAG=$PROD_VERSION_PREFIX.$SA_VERSION
-  script:
-    - echo "Docker build and push..."
-    - echo "Building $REGISTRY_URL/$IMAGE:$PROD_TAG"
-    - docker build -t $REGISTRY_URL/$IMAGE:$PROD_TAG .
-    - echo "$REGISTRY_PASS" | docker login $REGISTRY_URL --username $REGISTRY_USER --password-stdin
-    - docker push $REGISTRY_URL/$IMAGE:$PROD_TAG
-    - echo "Docker image pushed"
-  after_script:
-    - echo $PROD_TAG > ./tag.txt
-    - echo $PROD_TAG
-  allow_failure: false
-  artifacts:
-    paths:
-      - "./tag.txt"
-    when: on_success
-  rules:
-    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'master'
-      when: on_success
-    - when: never
-  resource_group: prod
   retry:
     max: 2
     when:
@@ -380,19 +411,20 @@ prod-build-job:   # This job runs in the test stage.
 prod-deploy-job:      # This job runs in the deploy stage.
   stage: prod-deploy  # It only runs when *both* jobs in the test stage complete successfully.
   dependencies:
-    - "prod-build-job"
+    - "docker-build-job"
   before_script:
+    - export
     - echo "Pipeline Source:$CI_PIPELINE_SOURCE"
     - kubectl config use-context datainn/k8s:k8s-prod
-    - PROD_TAG=$(< ./tag.txt)
-    - echo $PROD_TAG
+    - TAG=$CI_BUILD_TAG
+    - echo $TAG
   script:
     - echo "Deploying application to following cluster..."
     - kubectl cluster-info
     - echo "Test deployment scripts..."
-    # - helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=$REGISTRY_URL/$IMAGE,maindomain=sit-reports.app.simpleaccounts.io,simpleVatHost=https://sit-reports-api.app.simpleaccounts.io,fullnameOverride=sit-reports-frontend,serviceAccount.name=sit-reports-deploy-robot-frontend,ingress.hosts[0].host=sit-reports.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=sit-reports-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=sit-reports-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=sit-reports.app.simpleaccounts.io --wait --dry-run --debug --namespace sit-reports --create-namespace sit-reports-frontend ./simpleaccounts-frontend 
+    # - helm upgrade --install --values ./simpleaccounts-backend/values.yaml --set simpleVatBackendRelease=$TAG,image.repository.backend.tag=$TAG,image.repository.backend.imageName=$REGISTRY_URL/$IMAGE,maindomain=sandbox.ae.simpleaccounts.io,simpleVatHost=https://sandbox-api.ae.simpleaccounts.io,database.simpleVatDB=sa_sandbox_db,fullnameOverride=sandbox-backend,serviceAccount.name=sandbox-deploy-robot-backend,ingress.hosts[0].host=sandbox-api.ae.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=sandbox.ae.simpleaccounts.io-tls,ingress.tls[0].hosts[0]=sandbox.ae.simpleaccounts.io,ingress.tls[0].hosts[1]=sandbox-api.ae.simpleaccounts.io,data.username=c2Ffc2FuZGJveF9kYl91c2Vy,data.password=dHpjQjNIeVE5TnJuR0drRWhOckpmc2tL,data.dbhost=cHJvZGRiZGF0YS5wb3N0Z3Jlcy5kYXRhYmFzZS5henVyZS5jb20=,resources.limits.cpu=1,resources.limits.memory=2Gi --wait --dry-run --debug --namespace sandbox --create-namespace sandbox-backend ./simpleaccounts-backend 
     - echo "Deployment started scripts..."
-    # - helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=$REGISTRY_URL/$IMAGE,maindomain=sit-reports.app.simpleaccounts.io,simpleVatHost=https://sit-reports-api.app.simpleaccounts.io,fullnameOverride=sit-reports-frontend,serviceAccount.name=sit-reports-deploy-robot-frontend,ingress.hosts[0].host=sit-reports.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=sit-reports-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=sit-reports-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=sit-reports.app.simpleaccounts.io --wait --namespace sit-reports --create-namespace sit-reports-frontend ./simpleaccounts-frontend 
+    # - helm upgrade --install --values ./simpleaccounts-backend/values.yaml --set simpleVatBackendRelease=$TAG,image.repository.backend.tag=$TAG,image.repository.backend.imageName=$REGISTRY_URL/$IMAGE,maindomain=sandbox.ae.simpleaccounts.io,simpleVatHost=https://sandbox-api.ae.simpleaccounts.io,database.simpleVatDB=sa_sandbox_db,fullnameOverride=sandbox-backend,serviceAccount.name=sandbox-deploy-robot-backend,ingress.hosts[0].host=sandbox-api.ae.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=sandbox.ae.simpleaccounts.io-tls,ingress.tls[0].hosts[0]=sandbox.ae.simpleaccounts.io,ingress.tls[0].hosts[1]=sandbox-api.ae.simpleaccounts.io,data.username=c2Ffc2FuZGJveF9kYl91c2Vy,data.password=dHpjQjNIeVE5TnJuR0drRWhOckpmc2tL,data.dbhost=cHJvZGRiZGF0YS5wb3N0Z3Jlcy5kYXRhYmFzZS5henVyZS5jb20=,resources.limits.cpu=1,resources.limits.memory=2Gi --wait --namespace sandbox --create-namespace sandbox-backend ./simpleaccounts-backend 
     - echo "Application successfully deployed."
   resource_group: prod
   environment:
@@ -401,7 +433,7 @@ prod-deploy-job:      # This job runs in the deploy stage.
     action: start
   allow_failure: false
   rules:
-    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'master'
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_BUILD_TAG =~ '/red.sea.*/'
       when: on_success
     - when: never
   retry:

@@ -503,6 +503,7 @@ class DetailQuotation extends React.Component {
 			}
 			return obj;
 		});
+		console.log(row.exciseTaxId ,"ROW");
 		return (
 			<Field
 				name={`lineItemsString.${idx}.exciseTaxId`}
@@ -2393,7 +2394,7 @@ console.log(this.state.supplier_currency)
 																		<TextareaAutosize
 																			type="textarea"
 																			style={{width: "700px"}}
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="255"
 																			name="notes"
 																			id="notes"
@@ -2494,7 +2495,7 @@ console.log(this.state.supplier_currency)
 																		</Label><br/>
 																		<TextareaAutosize
 																			type="textarea"
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="250"
 																			style={{width: "700px"}}
 																			name="receiptAttachmentDescription"

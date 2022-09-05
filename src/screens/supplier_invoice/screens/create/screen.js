@@ -350,6 +350,17 @@ class CreateSupplierInvoice extends React.Component {
 							 {row['productId'] != '' ? 
 						<Input value={row['unitType'] }  disabled/> : ''}
 						</div>
+						{props.errors.lineItemsString &&
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)].quantity && (
+								<div className="invalid-feedback" style={{display:"block", whiteSpace: "normal"}}>
+									{props.errors.lineItemsString[parseInt(idx, 10)].quantity}
+								</div>
+							)}
 						
 						{/* {totalquantityleft<0 && <div style={{color:'red',fontSize:'0.8rem'}} >
 								Out of Stock

@@ -329,7 +329,6 @@ class CreateCustomerInvoice extends React.Component {
 		addedproducts=props.values.lineItemsString.filter((i)=>(i.productId===product.id && row.id!==i.id))
 		let totalquantityleft= addedproducts.length>0 && product?.stockOnHand!==null ?product?.stockOnHand-addedproducts.reduce((a,c)=>a+parseInt(c.quantity===""?0:c.quantity),0):product?.stockOnHand
 		totalquantityleft=totalquantityleft-parseInt(row.quantity)
-	
 		return (
 			<Field
 				name={`lineItemsString.${idx}.quantity`}
@@ -356,6 +355,7 @@ class CreateCustomerInvoice extends React.Component {
 							placeholder={strings.Quantity}
 							className={`form-control w-50
 						
+						
             ${props.errors.lineItemsString &&
 									props.errors.lineItemsString[parseInt(idx, 10)] &&
 									props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
@@ -371,8 +371,8 @@ class CreateCustomerInvoice extends React.Component {
 						 {row['productId'] != '' ? 
 						<Input value={row['unitType'] }  disabled/> : ''}
 						</div>
-						{totalquantityleft<0 && <div style={{color:'red',fontSize:'0.8rem'}} >
-									Out of Stock
+						{(totalquantityleft<0 && product?.stockOnHand) && <div style={{color:'red',fontSize:'0.8rem'}} >
+									Stock In Hand-{product?.stockOnHand}
 								</div>} 
 							
 					</div>
@@ -443,14 +443,14 @@ class CreateCustomerInvoice extends React.Component {
 		);
 	};
 
-		renderSubTotal = (cell, row,extraData) => {
-			return row.subTotal === 0 ? this.state.customer_currency_symbol +" "+  row.subTotal.toLocaleString(navigator.language,{ minimumFractionDigits: 2, maximumFractionDigits: 2 }): this.state.customer_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language,{ minimumFractionDigits: 2, maximumFractionDigits: 2 });
-
+renderSubTotal = (cell, row,extraData) => {
+	return row.subTotal === 0 ? this.state.customer_currency_symbol +" "+  row.subTotal.toLocaleString(navigator.language,{ minimumFractionDigits: 2, maximumFractionDigits: 2 }): this.state.customer_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language,{ minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
+
 renderVatAmount = (cell, row,extraData) => {
 	return row.vatAmount === 0 ? this.state.customer_currency_symbol +" "+  row.vatAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2, maximumFractionDigits: 2 }): this.state.customer_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2, maximumFractionDigits: 2 });
-
 }
+
 	setDate = (props, value) => {
 		const { term } = this.state;
 		const val = term ? term.value.split('_') : '';
@@ -794,9 +794,9 @@ renderVatAmount = (cell, row,extraData) => {
 							this.formRef.current.setFieldValue('currency', this.getCurrency(res.data.contactId), true);
 							this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(res.data.contactId), true);
 							this.formRef.current.setFieldValue('term', term, true);
-							this.formRef.current.setFieldValue('notes',  res.data.notes, true);
-							this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
-							this.formRef.current.setFieldValue('receiptAttachmentDescription',  res.data.receiptAttachmentDescription, true);
+							// this.formRef.current.setFieldValue('notes',  res.data.notes, true);
+							// this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
+							// this.formRef.current.setFieldValue('receiptAttachmentDescription',  res.data.receiptAttachmentDescription, true);
 							// this.setDate(undefined, '');
 							const val = term ? term.value.split('_') : '';
 							const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
@@ -1740,6 +1740,10 @@ discountType = (row) =>
 			receiptNumber !== null ? receiptNumber : '',
 		);
 		formData.append(
+			'receiptAttachmentDescription',
+			receiptAttachmentDescription !== null ? receiptAttachmentDescription : '',
+		);
+		formData.append(
 			'exchangeRate',
 			exchangeRate !== null ? exchangeRate : '',
 		);
@@ -1747,11 +1751,6 @@ discountType = (row) =>
 			'contactPoNumber',
 			contact_po_number !== null ? contact_po_number : '',
 		);
-		formData.append(
-			'receiptAttachmentDescription',
-			receiptAttachmentDescription !== null ? receiptAttachmentDescription : '',
-		);
-		
 if(changeShippingAddress && changeShippingAddress==true)
 		{
 			formData.append(
@@ -2228,7 +2227,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 													this.handleSubmit(values, resetForm);
 												}}
 												validate={(values) => {
-													debugger
+												
 													let errors = {};
 													
 													
@@ -2243,24 +2242,26 @@ if(changeShippingAddress && changeShippingAddress==true)
 														errors.discount =
 															'Discount amount cannot be greater than invoice total amount';
 													}
-													// if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
-													// 	errors.placeOfSupplyId = 'Place of supply is required';
-													// }
-													if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
-													||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
-													||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
-											    	{
+													if(this.state.customer_taxTreatment_des!="Non GCC")
+													{
+													if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
+														errors.placeOfSupplyId = 'Place of supply is required';
+													}}
+												// 	if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
+												// 	||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
+												// 	||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
+											    // 	{
 
-														if (!values.placeOfSupplyId) 
-													       	errors.placeOfSupplyId ='Place of supply is required';
-														if (values.placeOfSupplyId &&
-															(values.placeOfSupplyId=="" ||
-															(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select place of supply")
-															)
-														   ) 
-													         errors.placeOfSupplyId ='Place of supply is required';
+												// 		if (!values.placeOfSupplyId) 
+												// 	       	errors.placeOfSupplyId ='Place of supply is required';
+												// 		if (values.placeOfSupplyId &&
+												// 			(values.placeOfSupplyId=="" ||
+												// 			(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select place of supply")
+												// 			)
+												// 		   ) 
+												// 	         errors.placeOfSupplyId ='Place of supply is required';
 													
-												   }
+												//    }
 													if (values.term && values.term.label && values.term.label === "Select Terms") {
 														errors.term =
 														'Term is required';
@@ -2610,7 +2611,9 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		<span className="text-danger">* </span>
 																	{/* {this.state.customer_taxTreatment_des &&
 																		(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
+																		||this.state.customer_taxTreatment_des=="Non VAT REGISTERED DESIGNATED ZONE" 
 																		||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
+																		||this.state.customer_taxTreatment_des=="Non VAT REGISTERED DESIGNATED ZONE" 
 																		||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED") && (
 																			<span className="text-danger">* </span>
 																		)} */}

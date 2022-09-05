@@ -245,6 +245,7 @@ class CreateSupplierInvoice extends React.Component {
 		this.regExBoth = /[a-zA-Z0-9 /D]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 		this.regDec1 = /^\d{1,2}\.\d{1,2}$|^\d{1,2}$/;
+		this.regExInvNum = /[a-zA-Z0-9-/]+$/;
 	}
 
 	renderProductName = (cell, row) => {
@@ -309,11 +310,7 @@ class CreateSupplierInvoice extends React.Component {
 		});
 		var { product_list } = this.props;
 		const product = product_list.find((i)=>row['productId']===i.id)
-		let addedproducts=[]
-		if(product)
-		addedproducts=props.values.lineItemsString.filter((i)=>(i.productId===product.id && row.id!==i.id))
-		let totalquantityleft= addedproducts.length>0 && product?.stockOnHand!==null ?product?.stockOnHand-addedproducts.reduce((a,c)=>a+parseInt(c.quantity===""?0:c.quantity),0):product?.stockOnHand
-		totalquantityleft=totalquantityleft-row.quantity
+	
 		return (
 			<Field
 				name={`lineItemsString.${idx}.quantity`}
@@ -354,9 +351,9 @@ class CreateSupplierInvoice extends React.Component {
 						<Input value={row['unitType'] }  disabled/> : ''}
 						</div>
 						
-						{totalquantityleft<0 && <div style={{color:'red',fontSize:'0.8rem'}} >
+						{/* {totalquantityleft<0 && <div style={{color:'red',fontSize:'0.8rem'}} >
 								Out of Stock
-							</div>} 
+							</div>}  */}
 					</div>
 				)}
 			/>
@@ -622,9 +619,9 @@ class CreateSupplierInvoice extends React.Component {
 							this.formRef.current.setFieldValue('currency', this.getCurrency(res.data.contactId), true);
 							this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(res.data.contactId), true);
 							this.formRef.current.setFieldValue('term', term, true);
-							this.formRef.current.setFieldValue('notes',  res.data.notes, true);
-							this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
-							this.formRef.current.setFieldValue('receiptAttachmentDescription',  res.data.receiptAttachmentDescription, true);
+							// this.formRef.current.setFieldValue('notes',  res.data.notes, true);
+							// this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
+							// this.formRef.current.setFieldValue('receiptAttachmentDescription',  res.data.receiptAttachmentDescription, true);
 							const val = term ? term.value.split('_') : '';
 							const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 							const values = moment( moment( res.data.invoiceDate).format('DD-MM-YYYY'), 'DD-MM-YYYY').toDate();							
@@ -849,10 +846,7 @@ class CreateSupplierInvoice extends React.Component {
 																		data: res.data.poQuatationLineItemRequestModelList
 																			? res.data.poQuatationLineItemRequestModelList
 																			: [],
-				
-				
-																		//
-				
+
 																		discountAmount: res.data.discount 
 																			? res.data.discount 
 																			: 0,
@@ -891,7 +885,7 @@ class CreateSupplierInvoice extends React.Component {
 																		this.formRef.current.setFieldValue('placeOfSupplyId', res.data.placeOfSupplyId, true);
 																		this.formRef.current.setFieldValue('currency', this.getCurrency(res.data.supplierId), true);
 																		this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(res.data.supplierId), true);
-																		this.formRef.current.setFieldValue('receiptNumber', res.data.poNumber, true);
+																		// this.formRef.current.setFieldValue('receiptNumber', res.data.poNumber, true);
 																	   this.setExchange( this.getCurrency(res.data.supplierId) );
 																		} else {
 																			this.setState({
@@ -1567,7 +1561,6 @@ class CreateSupplierInvoice extends React.Component {
 			}
 			return obj;
 		});
-		debugger
 		return (
 			<Field
 				name={`lineItemsString.${idx}.transactionCategoryId`}
@@ -1892,31 +1885,15 @@ class CreateSupplierInvoice extends React.Component {
 		let formData = new FormData();
 		formData.append('quotationId',this.state.poId ? this.state.poId : '')
 		formData.append('taxType', this.state.taxType)
-		formData.append(
-			'referenceNumber',
-			invoice_number ? this.state.prefix + invoice_number : '',
-		);
-		formData.append(
-			'invoiceDueDate',
-			invoiceDueDate ? this.state.date : null,
-		);
-		formData.append(
-			'invoiceDate',
-			invoiceDate
-				? invoiceDate
+		formData.append('referenceNumber',invoice_number ? this.state.prefix + invoice_number : '');
+		formData.append('invoiceDueDate',invoiceDueDate ? this.state.date : null);
+		formData.append('invoiceDate',invoiceDate? invoiceDate
 				// moment(invoiceDate,'DD-MM-YYYY')
 				// .toDate()
-				: null,
-		);
+				: null);
 		formData.append('receiptNumber', receiptNumber ? receiptNumber : '');
-		formData.append(
-			'contactPoNumber',
-			contact_po_number ? contact_po_number : '',
-		);
-		formData.append(
-			'receiptAttachmentDescription',
-			receiptAttachmentDescription ? receiptAttachmentDescription : '',
-		);
+		formData.append('contactPoNumber', contact_po_number ? contact_po_number : '');
+		formData.append('receiptAttachmentDescription',	receiptAttachmentDescription ? receiptAttachmentDescription : '');
 		formData.append('notes', notes ? notes : '');
 		formData.append('type', 1);
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
@@ -1931,8 +1908,6 @@ class CreateSupplierInvoice extends React.Component {
 		if (term && term.value) {
 			formData.append('term', term.value);
 		}
-
-
 		if (placeOfSupplyId ) {
 			formData.append('placeOfSupplyId', placeOfSupplyId.value ?placeOfSupplyId.value:placeOfSupplyId);
 		}
@@ -2044,11 +2019,10 @@ class CreateSupplierInvoice extends React.Component {
 			option = data;
 		} else {
 			option = {
-				label: `${data.organization!==""?data.organization : data.fullName}`,
+				label: `${data.organization!==""?data.organization : data.organization!==""?data.organization : data.fullName}`,
 				value: data.id,
 			};
 		}
-		debugger
 		let result = this.props.currency_convert_list.filter((obj) => {
 			return obj.currencyCode === data.currencyCode;
 		});
@@ -2343,24 +2317,28 @@ class CreateSupplierInvoice extends React.Component {
 													if (values.invoice_number === '') {
 														errors.invoice_number = 'Invoice number is required';
 													}
+												// 	if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
+												// 		errors.placeOfSupplyId = 'Place of supply is required';
+												// 	}
+												// 	if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
+												// 	||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
+												// 	||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
+											    // 	{
+												// 	if (!values.placeOfSupplyId) 
+												// 	      	errors.placeOfSupplyId ='Place of supply is required';
+												// 	if (values.placeOfSupplyId &&
+												// 		(values.placeOfSupplyId=="" ||
+												// 		(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select place of supply")
+												// 		)
+												// 	   ) 
+												// 	         errors.placeOfSupplyId ='Place of supply is required';
+													
+												//    }
+													if(this.state.customer_taxTreatment_des!="Non GCC")
+													{
 													if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
 														errors.placeOfSupplyId = 'Place of supply is required';
-													}
-													if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
-													||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
-													||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
-											    	{
-
-														if (!values.placeOfSupplyId) 
-													       	errors.placeOfSupplyId ='Place of supply is required';
-														if (values.placeOfSupplyId &&
-															(values.placeOfSupplyId=="" ||
-															(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select place of supply")
-															)
-														   ) 
-													         errors.placeOfSupplyId ='Place of supply is required';
-													
-												   }
+													}}
 													if (values.term && values.term.label && values.term.label === "Select Terms") {
 														errors.term = 'Term is required';
 													}
@@ -2368,27 +2346,7 @@ class CreateSupplierInvoice extends React.Component {
 														errors.discount =
 															'Discount amount cannot be greater than invoice Total Amount';
 													}
-													let isoutoftock=0
-													values.lineItemsString.map((c,i)=>{
-														if(c.quantity>0 && c.productId!=="" ){ 
-
-															let product=this.props.product_list.find((o)=>c.productId===o.id)
-															let stockinhand=product.stockOnHand-values.lineItemsString.reduce((a,c)=>{
-																 return c.productId===product.id ? a+parseInt(c.quantity):a+0
-															},0)
-
-														if( product.stockOnHand!==null &&stockinhand<0 ) 
-														isoutoftock=isoutoftock+1
-														else isoutoftock=isoutoftock+0 
-													
-														} else 
-														isoutoftock=isoutoftock+0
-														
-													})
 												
-													if(isoutoftock>0){
-														errors.outofstock="Some Prod"
-													}
 													
 													return errors;
 												}}
@@ -2504,10 +2462,19 @@ class CreateSupplierInvoice extends React.Component {
 																		value={props.values.invoice_number}
 																		onBlur={props.handleBlur('invoice_number')}
 																		onChange={(option) => {
-																			props.handleChange('invoice_number')(
-																				option,
+																			if(
+																				option.target.value === '' ||
+																				this.regExInvNum.test(
+																					option.target.value,
+																				)
+																			) {
+																				props.handleChange('invoice_number')(
+																					option,
+																				);
+																				}
+																			this.validationCheck(
+																				option.target.value
 																			);
-																			this.validationCheck(option.target.value);
 																		}}
 																		className={
 																			props.errors.invoice_number &&
@@ -2708,7 +2675,7 @@ class CreateSupplierInvoice extends React.Component {
 																				'value',
 																				this.placelist,
 																				'Place of Supply',
-																		  ).find(
+																		    ).find(
 																									(option) =>
 																										option.value ==
 																										((this.state.rfqId || this.state.poId || 

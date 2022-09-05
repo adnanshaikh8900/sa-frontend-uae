@@ -1,28 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import {
-	Button,
-	Row,
-	Col,
-	Form,
-	FormGroup,
-	Input,
-	Label,
-	Modal,
-	CardHeader,
-	ModalBody,
-	ModalFooter,
-	UncontrolledTooltip,
-} from 'reactstrap';
-import Select from 'react-select';
+import { Modal } from 'reactstrap';
 import * as ProductActions from '../../product/actions';
-import { Formik } from 'formik';
-import * as Yup from 'yup';
-
 import '../../product/screens/create/style.scss';
 import { toast } from 'react-toastify';
-import { selectOptionsFactory } from 'utils';
 import {data}  from '../../Language/index'
 import LocalizedStrings from 'react-localization';
 import  CreateProduct  from '../../product/screens/create/screen';

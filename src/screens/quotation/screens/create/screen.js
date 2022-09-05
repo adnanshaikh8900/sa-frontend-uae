@@ -549,24 +549,24 @@ class CreateQuotation extends React.Component {
 									quotaionExpiration1: res.data.quotaionExpiration
 										? res.data.quotaionExpiration
 										: '',
-									customerId: res.data.customerId 
-										? res.data.customerId 
+									customerId: res.data.customerId
+										? res.data.customerId
 										: '',
 									quotationNumber: res.data.quotationNumber
 										? res.data.quotationNumber
 										: '',
 									receiptNumber: res.data.receiptNumber
 										? res.data.receiptNumber
-										: '',	
+										: '',
 									totalVatAmount: res.data.totalVatAmount
 										? res.data.totalVatAmount
 										: 0,
-									totalAmount: res.data.totalAmount 
-										? res.data.totalAmount 
+									totalAmount: res.data.totalAmount
+										? res.data.totalAmount
 										: 0,
 									total_net: 0,
-									notes: res.data.notes 
-										? res.data.notes 
+									notes: res.data.notes
+										? res.data.notes
 										: '',
 									invoiceVATAmount:res.data.totalVatAmount
 										? res.data.totalVatAmount
@@ -574,13 +574,13 @@ class CreateQuotation extends React.Component {
 									lineItemsString: res.data.poQuatationLineItemRequestModelList
 										? res.data.poQuatationLineItemRequestModelList
 										: [],
-									placeOfSupplyId: res.data.placeOfSupplyId 
-										? res.data.placeOfSupplyId 
+									placeOfSupplyId: res.data.placeOfSupplyId
+										? res.data.placeOfSupplyId
 											: '',
-									total_excise: res.data.totalExciseAmount 
-										? res.data.totalExciseAmount 
+									total_excise: res.data.totalExciseAmount
+										? res.data.totalExciseAmount
 										: '',
-									discount: res.data.discount 
+									discount: res.data.discount
 										? res.data.discount
 										: 0,
 									discountPercentage: res.data.discountPercentage
@@ -591,7 +591,7 @@ class CreateQuotation extends React.Component {
 										: '',
 									receiptNumber:res.data.quotationNumber
 										?res.data.quotationNumber
-										:'',	
+										:'',
 									taxType : res.data.taxType
 								},
 									quotaionExpirationNotChanged: res.data.quotaionExpiration
@@ -636,9 +636,9 @@ class CreateQuotation extends React.Component {
 									  ).find((option)=>option.value==res.data.customerId)
 									this.formRef.current.setFieldValue('customerId', customer, true);
 									this.formRef.current.setFieldValue('placeOfSupplyId', res.data.placeOfSupplyId, true);
-									this.formRef.current.setFieldValue('receiptNumber', res.data.quotationNumber, true);
-									this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
-									this.formRef.current.setFieldValue('receiptAttachmentDescription',  res.data.receiptAttachmentDescription, true);
+									// this.formRef.current.setFieldValue('quotationNumber', res.data.quotationNumber, true);
+									// this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
+									// this.formRef.current.setFieldValue('receiptAttachmentDescription',  res.data.receiptAttachmentDescription, true);
 									const { data } = this.state;
 									const idCount =
 										data.length > 0
@@ -1931,20 +1931,24 @@ discountType = (row) =>
 													if (values.quotation_Number==='') {
 														errors.quotation_Number = 'Quotation number is required';
 													}
-													if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
-													||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
-													||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
-											    	{
-													if (!values.placeOfSupplyId) 
-														errors.placeOfSupplyId ='Place of supply is required';
-												 	if (values.placeOfSupplyId &&
-														(values.placeOfSupplyId=="" ||
-														(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select place of supply")
-													 )
-													) 
-													  errors.placeOfSupplyId ='Place of supply is required';
-													
-												   }
+												// 	if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
+												// 	||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
+												// 	||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
+											    // 	{
+												// 	if (!values.placeOfSupplyId)
+												// 		errors.placeOfSupplyId ='Place of supply is required';
+												//  	if (values.placeOfSupplyId &&
+												// 		(values.placeOfSupplyId=="" ||
+												// 		(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select place of supply")
+												// 	 )
+												// 	) 
+												// 	  errors.placeOfSupplyId ='Place of supply is required';
+												//    }
+													if(this.state.customer_taxTreatment_des!="Non GCC")
+													{
+													if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
+														errors.placeOfSupplyId = 'Place of supply is required';
+													}}
 													if (param === true) {
 														errors.discount =
 															'Discount amount Cannot be greater than invoice total amount';
@@ -1961,10 +1965,10 @@ discountType = (row) =>
 													),
 														// placeOfSupplyId: Yup.string().required('Place of supply is required'),
 													
-													// poApproveDate: Yup.string().required(
+													//  poApproveDate: Yup.string().required(
 													// 	'Order date is required',
 													// ),
-													quotaionExpiration: Yup.string().required(
+														quotaionExpiration: Yup.string().required(
 														'Expiry date is required'
 													),
 													lineItemsString: Yup.array()

@@ -116,6 +116,7 @@ class DetailQuotation extends React.Component {
 			purchaseCategory: [],
 			basecurrency:[],
 			supplier_currency: '',
+			disabled:false,
 			disabled1:false,
 			dateChanged: false,
 			vat_list:[],
@@ -175,7 +176,6 @@ class DetailQuotation extends React.Component {
 
 	componentDidMount = () => {
 		this.props.requestForQuotationAction.getVatList().then((res)=>{
-			debugger
 			if(res.status===200)
 			this.setState({vat_list:res.data})
 			
@@ -188,6 +188,7 @@ class DetailQuotation extends React.Component {
 			this.props.quotationDetailsAction
 				.getQuotationById(this.props.location.state.id)
 				.then((res) => {
+					console.log(res,"DATA");
 					if (res.status === 200) {
 						this.getCompanyCurrency();
 					
@@ -209,17 +210,23 @@ class DetailQuotation extends React.Component {
 										quotaionExpiration1: res.data.quotaionExpiration
 										? res.data.quotaionExpiration
 										: '',
+										attachmentDescription: res.data.attachmentDescription
+										? res.data.attachmentDescription
+										: '',
 										customerId: res.data.customerId ? res.data.customerId : '',
 										quotationNumber: res.data.quotationNumber
 										? res.data.quotationNumber
+										: '',
+										receiptNumber: res.data.receiptNumber
+										? res.data.receiptNumber
 										: '',
 										totalVatAmount: res.data.totalVatAmount
 										? res.data.totalVatAmount
 										: 0,
 										totalAmount: res.data.totalAmount ? res.data.totalAmount : 0,
 										total_net: 0,
-									notes: res.data.notes ? res.data.notes : '',
-									lineItemsString: res.data.poQuatationLineItemRequestModelList
+										notes: res.data.notes ? res.data.notes : '',
+										lineItemsString: res.data.poQuatationLineItemRequestModelList
 										? res.data.poQuatationLineItemRequestModelList
 										: [],
 										placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
@@ -267,7 +274,6 @@ class DetailQuotation extends React.Component {
 													}),
 											  )
 											: 0;
-											debugger
 									this.setState({
 										idCount:idCount,
 									});
@@ -341,7 +347,6 @@ class DetailQuotation extends React.Component {
 			newData = data.filter((obj) => obj.productId !== "");
 			// props.setFieldValue('lineItemsString', newData, true);
 			// this.updateAmount(newData, props);
-			debugger
 			const idCount =
 							this.state.idCount?
 									this.state.idCount:
@@ -498,14 +503,14 @@ class DetailQuotation extends React.Component {
 			}
 			return obj;
 		});
-
+		console.log(row.exciseTaxId ,"ROW");
 		return (
 			<Field
 				name={`lineItemsString.${idx}.exciseTaxId`}
 				render={({ field, form }) => (
 					<Select
-						styles={customStyles}
-						isDisabled={row.exciseTaxId === 0 || row.isExciseTaxExclusive === true}
+						style={customStyles}
+						isDisabled={!row.exciseTaxId}
 						options={
 							excise_list
 								? selectOptionsFactory.renderOptions(
@@ -526,21 +531,26 @@ class DetailQuotation extends React.Component {
 						id="exciseTaxId"
 						placeholder={"Select Excise"}
 						onChange={(e) => {
-							debugger
-							this.selectItem(
-								e.value,
-								row,
-								'exciseTaxId',
-								form,
-								field,
-								props,
-							);
-							
-							this.updateAmount(
-								this.state.data,
-								props,
-							);
+							if (e.value === '') {
+								props.setFieldValue(
+									'exciseTaxId',
+									'',
+								);
+							} else {
+								this.selectItem(
+									e.value,
+									row,
+									'exciseTaxId',
+									form,
+									field,
+									props,
+								);
+								this.updateAmount(
+									this.state.data,
+									props,
+								);
 						}}
+					}
 						className={`${
 							props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -1323,11 +1333,9 @@ class DetailQuotation extends React.Component {
 			obj.vatAmount = vat_amount
 			obj.subTotal =
 			net_value && obj.vatCategoryId ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
-
 			discount_total = +discount_total +discount
 			total_net = +(total_net + parseFloat(net_value));
 			total_vat = +(total_vat + vat_amount);
-			
 			total_excise = +(total_excise + obj.exciseAmount)
 			total = total_vat + total_net;
 			return obj;
@@ -1356,7 +1364,6 @@ class DetailQuotation extends React.Component {
 		);
 	};
 	handleSubmit = (data) => {
-		debugger
 		this.setState({ disabled: true, disableLeavePage:true, });
 		const { current_po_id, term } = this.state;
 		const {
@@ -1371,6 +1378,8 @@ class DetailQuotation extends React.Component {
 			totalVatAmount,
 			totalAmount,
 			currency,
+			attachmentDescription,
+			receiptNumber,
 			placeOfSupplyId
 		} = data;
 
@@ -1402,8 +1411,11 @@ class DetailQuotation extends React.Component {
 		formData.append('totalAmount', this.state.initValue.totalAmount);
 		formData.append('totalExciseAmount', this.state.initValue.total_excise);
 		formData.append('discount',this.state.initValue.discount);
+		formData.append('receiptNumber',receiptNumber !== null ? receiptNumber : '',);
+		// formData.append('footNote',footNote? footNote : '');
+		formData.append('attachmentDescription',attachmentDescription !== null ? attachmentDescription : '',);
         if(placeOfSupplyId){
-		formData.append('placeOfSupplyId' , placeOfSupplyId.value ? placeOfSupplyId.value : placeOfSupplyId);}
+			formData.append('placeOfSupplyId' , placeOfSupplyId.value ? placeOfSupplyId.value : placeOfSupplyId);}
 		// formData.append('exciseType', this.state.checked);
 		if(customerId){
 			formData.append('customerId', customerId.value ? customerId.value : customerId);}
@@ -1488,7 +1500,6 @@ class DetailQuotation extends React.Component {
 		this.setState({ openProductModal: false });
 	};
 	setDate = (props, value) => {
-        debugger
         this.setState({
             dateChanged: true,
         });
@@ -1658,9 +1669,9 @@ console.log(this.state.supplier_currency)
 														||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
 														||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
 														{
-															if (!values.placeOfSupplyId) 
-																   errors.placeOfSupplyId ='Place of supply is required';
-															if (values.placeOfSupplyId &&
+														if (!values.placeOfSupplyId) 
+														    errors.placeOfSupplyId ='Place of supply is required';
+														if (values.placeOfSupplyId &&
 																(values.placeOfSupplyId=="" ||
 																(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select place of supply")
 																)
@@ -1946,13 +1957,13 @@ console.log(this.state.supplier_currency)
 																<Col lg={3}>
 																{this.state.customer_taxTreatment_des!="NON GCC" &&(		<FormGroup className="mb-3">
 																		<Label htmlFor="placeOfSupplyId">
-																			{/* <span className="text-danger">* </span> */}
-																		{this.state.customer_taxTreatment_des &&
+																			<span className="text-danger">* </span>
+																		{/* {this.state.customer_taxTreatment_des &&
 																		(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
 																		||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
 																		||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED") && (
 																			<span className="text-danger">* </span>
-																		)}
+																		)} */}
 																			{strings.PlaceofSupply}
 																		</Label>
 																		<Select
@@ -2008,9 +2019,6 @@ console.log(this.state.supplier_currency)
 																			)}
 																	</FormGroup>)}
 																</Col>
-															
-																
-																	
 															</Row>
 															<hr />
 															<Row>
@@ -2386,7 +2394,7 @@ console.log(this.state.supplier_currency)
 																		<TextareaAutosize
 																			type="textarea"
 																			style={{width: "700px"}}
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="255"
 																			name="notes"
 																			id="notes"
@@ -2482,26 +2490,26 @@ console.log(this.state.supplier_currency)
 																		</Col>
 																	</Row>
 																	<FormGroup className="mb-3">
-																		<Label htmlFor="receiptAttachmentDescription">
+																		<Label htmlFor="attachmentDescription">
 																			{strings.AttachmentDescription}
 																		</Label><br/>
 																		<TextareaAutosize
 																			type="textarea"
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="250"
 																			style={{width: "700px"}}
-																			name="receiptAttachmentDescription"
-																			id="receiptAttachmentDescription"
+																			name="attachmentDescription"
+																			id="attachmentDescription"
 																			rows="2"
 																			placeholder={strings.ReceiptAttachmentDescription}
 																			onChange={(option) =>
 																				props.handleChange(
-																					'receiptAttachmentDescription',
+																					'attachmentDescription',
 																				)(option)
 																			}
 																			value={
 																				props.values
-																					.receiptAttachmentDescription
+																					.attachmentDescription
 																			}
 																		/>
 																	</FormGroup>

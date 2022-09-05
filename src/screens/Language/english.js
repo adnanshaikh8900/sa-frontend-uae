@@ -698,7 +698,7 @@ const en = {
       InvoicingAddressLine3:"Invoicing Address Line 3",
       CountryCode:"Country",
       CompanyAddress:"Company Address",
-      Register:"Rigester",
+      Register:"Register",
 
 // CompanyAddressIsSameAsInvoicingAddress:"Company Address Is Same As Invoicing Address",
       CompanyVatRegistered:"Company VAT Registered?",

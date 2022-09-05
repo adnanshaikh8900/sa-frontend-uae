@@ -1600,10 +1600,10 @@ setDate1= (props, value) => {
 															'Place of supply is required'),
 														
 														rfqReceiveDate: Yup.string().required(
-															'Order date is required',
+															'Issue date is required',
 														),
 														rfqExpiryDate: Yup.string().required(
-															'Order due date is required'
+															'Expiry due date is required'
 														),
 														attachmentFile: Yup.mixed()
 															.test(
@@ -1898,8 +1898,7 @@ setDate1= (props, value) => {
 																			dateFormat="dd-MM-yyyy"
 																			minDate={new Date()}
 																			dropdownMode="select"
-																			value={props.values.rfqReceiveDate}
-																			selected={new Date(props.values.rfqReceiveDate1)} 
+																			selected={props.values.rfqReceiveDate ? new Date(props.values.rfqReceiveDate1) : props.values.rfqReceiveDate} 
 																			onChange={(value) => {
 																				props.handleChange('rfqReceiveDate')(
 																					value,
@@ -1916,7 +1915,7 @@ setDate1= (props, value) => {
 																		{props.errors.rfqReceiveDate &&
 																			props.touched.rfqReceiveDate && (
 																				<div className="invalid-feedback">
-																					{props.errors.rfqReceiveDate.includes("nullable()") ? "RFQ date is required" :props.errors.rfqReceiveDate}
+																					{props.errors.rfqReceiveDate.includes("nullable()") ? "Issue date is required" :props.errors.rfqReceiveDate}
 																				</div>
 																			)}
 																	</FormGroup>
@@ -1937,7 +1936,7 @@ setDate1= (props, value) => {
 																				dateFormat="dd-MM-yyyy"
 																				minDate={new Date()}
 																				dropdownMode="select"
-																				selected={new Date(props.values.rfqExpiryDate1)}
+																				selected={props.values.rfqExpiryDate ? new Date(props.values.rfqExpiryDate1) : props.values.rfqExpiryDate}
 																				onChange={(value) => {
 																					props.handleChange('rfqExpiryDate')(value);
 																					this.setDate1(props,value)
@@ -2233,7 +2232,7 @@ setDate1= (props, value) => {
 																		<Label htmlFor="notes">{strings.TermsAndConditions}</Label><br/>
 																		<TextareaAutosize
 																			type="textarea"
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="255"
 																			style={{width: "700px"}}
 																			name="notes"
@@ -2340,7 +2339,7 @@ setDate1= (props, value) => {
 																		<br/>
 																		<TextareaAutosize
 																			type="textarea"
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="255"
 																			style={{width: "700px"}}
 																			name="receiptAttachmentDescription"

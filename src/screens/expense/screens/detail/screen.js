@@ -644,7 +644,7 @@ class DetailExpense extends React.Component {
 			
 				<Col lg={3}>
 				<FormGroup className="mb-3">
-					<Label htmlFor="vatCategoryId"><span className="text-danger">* </span>{strings.Tax}</Label>
+					<Label htmlFor="vatCategoryId"><span className="text-danger">* </span>{strings.VAT}</Label>
 					<Select
 						// className="select-default-width"
 						id="vatCategoryId"
@@ -1705,7 +1705,7 @@ class DetailExpense extends React.Component {
 																		<TextareaAutosize
 																			type="textarea"
 																			style={{width: "870px"}}
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="255"
 																			name="notes"
 																			id="notes"
@@ -1807,7 +1807,7 @@ class DetailExpense extends React.Component {
 																		</Label><br/>
 																		<TextareaAutosize
 																			type="textarea"
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="250"
 																			style={{width: "870px"}}
 																			name="receiptAttachmentDescription"

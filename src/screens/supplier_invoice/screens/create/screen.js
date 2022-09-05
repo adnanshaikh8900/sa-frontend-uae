@@ -1561,7 +1561,6 @@ class CreateSupplierInvoice extends React.Component {
 			}
 			return obj;
 		});
-		debugger
 		return (
 			<Field
 				name={`lineItemsString.${idx}.transactionCategoryId`}
@@ -1685,7 +1684,6 @@ class CreateSupplierInvoice extends React.Component {
 	};
 
 	updateAmount = (data, props) => {
-		debugger
 		const { vat_list } = this.props;
 		let total_net = 0;
 		let total_excise = 0;
@@ -1694,8 +1692,6 @@ class CreateSupplierInvoice extends React.Component {
 		let net_value = 0; 
 		let discount_total = 0;
 		data.map((obj) => {
-			if(obj.unitprice==="") obj.unitPrice=0
-			if(obj.quantity==="") obj.quantity=0
 			const index =
 				obj.vatCategoryId !== ''
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
@@ -1836,7 +1832,6 @@ class CreateSupplierInvoice extends React.Component {
 			
 			total_excise = +(total_excise + obj.exciseAmount)
 			total = total_vat + total_net;
-			debugger
 			return obj;
 		});
 
@@ -1953,13 +1948,9 @@ class CreateSupplierInvoice extends React.Component {
 									unitPrice: '',
 									vatCategoryId: '',
 									subTotal: 0,
-									exciseTaxId: '',
-									discountType: 'FIXED',
-									vatAmount: 0,
-									discount: 0,
 									productId: '',
-									unitType:'',
-									unitTypeId:''
+									transactionCategoryId: '',
+									transactionCategoryLabel: '',
 								},
 							],
 							initValue: {
@@ -1978,8 +1969,6 @@ class CreateSupplierInvoice extends React.Component {
 						() => {
 							resetForm(this.state.initValue);
 							this.getInvoiceNo();
-							debugger
-							this.updateAmount(this.state.data);
 							this.formRef.current.setFieldValue(
 								'lineItemsString',
 								this.state.data,
@@ -2034,7 +2023,6 @@ class CreateSupplierInvoice extends React.Component {
 				value: data.id,
 			};
 		}
-		debugger
 		let result = this.props.currency_convert_list.filter((obj) => {
 			return obj.currencyCode === data.currencyCode;
 		});
@@ -2329,24 +2317,28 @@ class CreateSupplierInvoice extends React.Component {
 													if (values.invoice_number === '') {
 														errors.invoice_number = 'Invoice number is required';
 													}
+												// 	if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
+												// 		errors.placeOfSupplyId = 'Place of supply is required';
+												// 	}
+												// 	if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
+												// 	||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
+												// 	||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
+											    // 	{
+												// 	if (!values.placeOfSupplyId) 
+												// 	      	errors.placeOfSupplyId ='Place of supply is required';
+												// 	if (values.placeOfSupplyId &&
+												// 		(values.placeOfSupplyId=="" ||
+												// 		(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select place of supply")
+												// 		)
+												// 	   ) 
+												// 	         errors.placeOfSupplyId ='Place of supply is required';
+													
+												//    }
+													if(this.state.customer_taxTreatment_des!="Non GCC")
+													{
 													if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
 														errors.placeOfSupplyId = 'Place of supply is required';
-													}
-													if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
-													||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
-													||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
-											    	{
-
-														if (!values.placeOfSupplyId) 
-													       	errors.placeOfSupplyId ='Place of supply is required';
-														if (values.placeOfSupplyId &&
-															(values.placeOfSupplyId=="" ||
-															(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select place of supply")
-															)
-														   ) 
-													         errors.placeOfSupplyId ='Place of supply is required';
-													
-												   }
+													}}
 													if (values.term && values.term.label && values.term.label === "Select Terms") {
 														errors.term = 'Term is required';
 													}
@@ -2683,7 +2675,7 @@ class CreateSupplierInvoice extends React.Component {
 																				'value',
 																				this.placelist,
 																				'Place of Supply',
-																		  ).find(
+																		    ).find(
 																									(option) =>
 																										option.value ==
 																										((this.state.rfqId || this.state.poId || 

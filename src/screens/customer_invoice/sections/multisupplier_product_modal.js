@@ -10,7 +10,6 @@ import {
 	ModalBody,
 	ModalFooter,
 } from 'reactstrap';
-
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { Formik } from 'formik';
 import * as Yup from 'yup';

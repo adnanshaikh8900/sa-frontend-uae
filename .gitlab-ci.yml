@@ -163,6 +163,7 @@ dev-deploy-job:      # This job runs in the deploy stage.
   dependencies:
     - "docker-build-job"
   before_script:
+    - export
     - echo "Pipeline Source:$CI_PIPELINE_SOURCE"
     - kubectl config use-context datainn/k8s:k8s-dev
     - TAG=$CI_BUILD_TAG

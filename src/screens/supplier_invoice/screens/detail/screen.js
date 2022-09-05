@@ -1803,9 +1803,9 @@ class DetailSupplierInvoice extends React.Component {
 																'Discount amount Cannot be greater than Invoice Total Amount';
 														}
 														if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
-													||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
-													||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
-											    	{
+															||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
+															||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
+											    		{
 
 														if (!values.placeOfSupplyId) 
 													       	errors.placeOfSupplyId ='Place of supply is required';
@@ -1828,7 +1828,7 @@ class DetailSupplierInvoice extends React.Component {
 															'Supplier is required',
 														),
 														term: Yup.string().required('Term is required'),
-														placeOfSupplyId: Yup.string().required('Place of Supply is required'),
+														// placeOfSupplyId: Yup.string().required('Place of Supply is required'),
 														invoiceDate: Yup.string().required(
 															'Invoice date is required',
 														),
@@ -2530,7 +2530,7 @@ class DetailSupplierInvoice extends React.Component {
 																	 </UncontrolledTooltip>
 																 </TableHeaderColumn>  */}
 																	<TableHeaderColumn
-																	width="10%"
+																		width="10%"
 																		dataField="unitPrice"
 																		dataFormat={(cell, rows) =>
 																			this.renderUnitPrice(cell, rows, props)
@@ -2540,17 +2540,17 @@ class DetailSupplierInvoice extends React.Component {
 																	</TableHeaderColumn>
 																	{this.state.discountEnabled == true &&
 																	<TableHeaderColumn
-																	width="12%"
+																		width="12%"
 																		dataField="discount"
 																		dataFormat={(cell, rows) =>
 																			this.renderDiscount(cell, rows, props)
 																		}
 																	>
-																	Discount Type
+																	{strings.Discount}
 																	</TableHeaderColumn>}
 																	{initValue.total_excise != 0 &&
 																	<TableHeaderColumn
-																	width="10%"
+																		width="10%"
 																		dataField="exciseTaxId"
 																		dataFormat={(cell, rows) =>
 																			this.renderExcise(cell, rows, props)

@@ -13,13 +13,9 @@ import {
 	CardHeader,
 	ModalBody,
 	ModalFooter,
-	UncontrolledTooltip,
 } from 'reactstrap';
-import Select from 'react-select';
 import * as CustomerInvoiceActions from '../../customer_invoice/actions';
 import { Formik } from 'formik';
-import * as Yup from 'yup';
-
 import '../../product/screens/create/style.scss';
 import { toast } from 'react-toastify';
 

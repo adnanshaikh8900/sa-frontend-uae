@@ -1931,20 +1931,24 @@ discountType = (row) =>
 													if (values.quotation_Number==='') {
 														errors.quotation_Number = 'Quotation number is required';
 													}
-													if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
-													||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
-													||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
-											    	{
-													if (!values.placeOfSupplyId)
-														errors.placeOfSupplyId ='Place of supply is required';
-												 	if (values.placeOfSupplyId &&
-														(values.placeOfSupplyId=="" ||
-														(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select place of supply")
-													 )
-													) 
-													  errors.placeOfSupplyId ='Place of supply is required';
-													
-												   }
+												// 	if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
+												// 	||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
+												// 	||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
+											    // 	{
+												// 	if (!values.placeOfSupplyId)
+												// 		errors.placeOfSupplyId ='Place of supply is required';
+												//  	if (values.placeOfSupplyId &&
+												// 		(values.placeOfSupplyId=="" ||
+												// 		(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select place of supply")
+												// 	 )
+												// 	) 
+												// 	  errors.placeOfSupplyId ='Place of supply is required';
+												//    }
+													if(this.state.customer_taxTreatment_des!="Non GCC")
+													{
+													if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
+														errors.placeOfSupplyId = 'Place of supply is required';
+													}}
 													if (param === true) {
 														errors.discount =
 															'Discount amount Cannot be greater than invoice total amount';
@@ -1961,10 +1965,10 @@ discountType = (row) =>
 													),
 														// placeOfSupplyId: Yup.string().required('Place of supply is required'),
 													
-													// poApproveDate: Yup.string().required(
+													//  poApproveDate: Yup.string().required(
 													// 	'Order date is required',
 													// ),
-													quotaionExpiration: Yup.string().required(
+														quotaionExpiration: Yup.string().required(
 														'Expiry date is required'
 													),
 													lineItemsString: Yup.array()

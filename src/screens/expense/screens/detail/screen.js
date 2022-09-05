@@ -644,7 +644,7 @@ class DetailExpense extends React.Component {
 			
 				<Col lg={3}>
 				<FormGroup className="mb-3">
-					<Label htmlFor="vatCategoryId"><span className="text-danger">* </span>{strings.Tax}</Label>
+					<Label htmlFor="vatCategoryId"><span className="text-danger">* </span>{strings.VAT}</Label>
 					<Select
 						// className="select-default-width"
 						id="vatCategoryId"

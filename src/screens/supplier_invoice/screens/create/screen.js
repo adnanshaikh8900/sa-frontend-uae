@@ -1561,7 +1561,6 @@ class CreateSupplierInvoice extends React.Component {
 			}
 			return obj;
 		});
-		debugger
 		return (
 			<Field
 				name={`lineItemsString.${idx}.transactionCategoryId`}
@@ -1639,15 +1638,18 @@ class CreateSupplierInvoice extends React.Component {
 	checkedRow = () => {
 		if (this.state.data.length > 0) {
 			let length = this.state.data.length - 1;
-			let temp = Object.values(this.state.data[`${length}`]).indexOf('');
+			let temp = this.state.data?.[length].productId!==""?
+			this.state.data?.[length].productId:-2
 			if (temp > -1) {
-				return true;
-			} else {
 				return false;
+			} else {
+				return true;
 			}
+			
 		} else {
 			return false;
 		}
+		
 	};
 
 	setDate = (props, value) => {
@@ -2024,7 +2026,6 @@ class CreateSupplierInvoice extends React.Component {
 				value: data.id,
 			};
 		}
-		debugger
 		let result = this.props.currency_convert_list.filter((obj) => {
 			return obj.currencyCode === data.currencyCode;
 		});
@@ -2319,24 +2320,28 @@ class CreateSupplierInvoice extends React.Component {
 													if (values.invoice_number === '') {
 														errors.invoice_number = 'Invoice number is required';
 													}
+												// 	if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
+												// 		errors.placeOfSupplyId = 'Place of supply is required';
+												// 	}
+												// 	if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
+												// 	||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
+												// 	||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
+											    // 	{
+												// 	if (!values.placeOfSupplyId) 
+												// 	      	errors.placeOfSupplyId ='Place of supply is required';
+												// 	if (values.placeOfSupplyId &&
+												// 		(values.placeOfSupplyId=="" ||
+												// 		(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select place of supply")
+												// 		)
+												// 	   ) 
+												// 	         errors.placeOfSupplyId ='Place of supply is required';
+													
+												//    }
+													if(this.state.customer_taxTreatment_des!="Non GCC")
+													{
 													if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
 														errors.placeOfSupplyId = 'Place of supply is required';
-													}
-													if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
-													||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
-													||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
-											    	{
-
-														if (!values.placeOfSupplyId) 
-													       	errors.placeOfSupplyId ='Place of supply is required';
-														if (values.placeOfSupplyId &&
-															(values.placeOfSupplyId=="" ||
-															(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select place of supply")
-															)
-														   ) 
-													         errors.placeOfSupplyId ='Place of supply is required';
-													
-												   }
+													}}
 													if (values.term && values.term.label && values.term.label === "Select Terms") {
 														errors.term = 'Term is required';
 													}
@@ -2673,7 +2678,7 @@ class CreateSupplierInvoice extends React.Component {
 																				'value',
 																				this.placelist,
 																				'Place of Supply',
-																		  ).find(
+																		    ).find(
 																									(option) =>
 																										option.value ==
 																										((this.state.rfqId || this.state.poId || 
@@ -3268,7 +3273,7 @@ class CreateSupplierInvoice extends React.Component {
 																		<TextareaAutosize
 																			type="textarea"
 																			style={{width: "700px"}}
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="255"
 																			name="notes"
 																			id="notes"
@@ -3370,7 +3375,7 @@ class CreateSupplierInvoice extends React.Component {
 																		</Label><br/>
 																		<TextareaAutosize
 																			type="textarea"
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="250"
 																			style={{width: "700px"}}
 																			name="receiptAttachmentDescription"

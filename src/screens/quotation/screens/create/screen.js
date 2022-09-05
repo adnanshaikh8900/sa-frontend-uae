@@ -638,7 +638,7 @@ class CreateQuotation extends React.Component {
 									this.formRef.current.setFieldValue('placeOfSupplyId', res.data.placeOfSupplyId, true);
 									// this.formRef.current.setFieldValue('quotationNumber', res.data.quotationNumber, true);
 									// this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
-									// this.formRef.current.setFieldValue('receiptAttachmentDescription',  res.data.receiptAttachmentDescription, true);
+									// this.formRef.current.setFieldValue('attachmentDescription',  res.data.attachmentDescription, true);
 									const { data } = this.state;
 									const idCount =
 										data.length > 0
@@ -1478,7 +1478,7 @@ discountType = (row) =>
 	handleSubmit = (data, resetForm) => {
 		this.setState({ disabled: true, disableLeavePage:true });
 		const {
-			receiptAttachmentDescription,
+			attachmentDescription,
 			receiptNumber,
 			quotaionExpiration,
 			currency,
@@ -1505,7 +1505,7 @@ discountType = (row) =>
 		formData.append('exciseType', this.state.checked);
 		formData.append('notes', notes ? notes : '');
 		formData.append('receiptNumber',receiptNumber !== null ? receiptNumber : '');
-		formData.append('receiptAttachmentDescription',receiptAttachmentDescription !== null ? receiptAttachmentDescription : '',);
+		formData.append('attachmentDescription',attachmentDescription !== null ? attachmentDescription : '',);
 		formData.append('type', 6);
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
 		formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
@@ -1931,20 +1931,24 @@ discountType = (row) =>
 													if (values.quotation_Number==='') {
 														errors.quotation_Number = 'Quotation number is required';
 													}
-													if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
-													||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
-													||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
-											    	{
-													if (!values.placeOfSupplyId)
-														errors.placeOfSupplyId ='Place of supply is required';
-												 	if (values.placeOfSupplyId &&
-														(values.placeOfSupplyId=="" ||
-														(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select place of supply")
-													 )
-													) 
-													  errors.placeOfSupplyId ='Place of supply is required';
-													
-												   }
+												// 	if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
+												// 	||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
+												// 	||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
+											    // 	{
+												// 	if (!values.placeOfSupplyId)
+												// 		errors.placeOfSupplyId ='Place of supply is required';
+												//  	if (values.placeOfSupplyId &&
+												// 		(values.placeOfSupplyId=="" ||
+												// 		(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select place of supply")
+												// 	 )
+												// 	) 
+												// 	  errors.placeOfSupplyId ='Place of supply is required';
+												//    }
+													if(this.state.customer_taxTreatment_des!="Non GCC")
+													{
+													if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
+														errors.placeOfSupplyId = 'Place of supply is required';
+													}}
 													if (param === true) {
 														errors.discount =
 															'Discount amount Cannot be greater than invoice total amount';
@@ -1961,10 +1965,10 @@ discountType = (row) =>
 													),
 														// placeOfSupplyId: Yup.string().required('Place of supply is required'),
 													
-													// poApproveDate: Yup.string().required(
+													//  poApproveDate: Yup.string().required(
 													// 	'Order date is required',
 													// ),
-													quotaionExpiration: Yup.string().required(
+														quotaionExpiration: Yup.string().required(
 														'Expiry date is required'
 													),
 													lineItemsString: Yup.array()
@@ -2657,7 +2661,7 @@ discountType = (row) =>
 																		<TextareaAutosize
 																			type="textarea"
 																			style={{width: "700px"}}
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="250"
 																			name="notes"
 																			id="notes"
@@ -2752,26 +2756,26 @@ discountType = (row) =>
 																		</Col>
 																	</Row>
 																	<FormGroup className="mb-3">
-																		<Label htmlFor="receiptAttachmentDescription">
+																		<Label htmlFor="attachmentDescription">
 																			{strings.AttachmentDescription}
 																		</Label><br/>
 																		<TextareaAutosize
 																			type="textarea"
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="250"
 																			style={{width: "700px"}}
-																			name="receiptAttachmentDescription"
-																			id="receiptAttachmentDescription"
+																			name="attachmentDescription"
+																			id="attachmentDescription"
 																			rows="2"
 																			placeholder={strings.ReceiptAttachmentDescription}
 																			onChange={(option) =>
 																				props.handleChange(
-																					'receiptAttachmentDescription',
+																					'attachmentDescription',
 																				)(option)
 																			}
 																			value={
 																				props.values
-																					.receiptAttachmentDescription
+																					.attachmentDescription
 																			}
 																		/>
 																	</FormGroup>

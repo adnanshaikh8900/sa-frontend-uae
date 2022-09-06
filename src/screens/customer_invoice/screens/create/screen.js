@@ -353,10 +353,8 @@ class CreateCustomerInvoice extends React.Component {
 							}}
 							type="number"
 							placeholder={strings.Quantity}
-							className={`form-control w-50
-						
-						
-            ${props.errors.lineItemsString &&
+							className={`form-control w-50						
+            						${props.errors.lineItemsString &&
 									props.errors.lineItemsString[parseInt(idx, 10)] &&
 									props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
 									Object.keys(props.touched).length > 0 &&
@@ -374,6 +372,18 @@ class CreateCustomerInvoice extends React.Component {
 						{(totalquantityleft<0 && product?.stockOnHand) && <div style={{color:'red',fontSize:'0.8rem'}} >
 									Stock In Hand:{product?.stockOnHand}
 								</div>} 
+						{props.errors.lineItemsString &&
+						props.errors.lineItemsString[parseInt(idx, 10)] &&
+						props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
+						Object.keys(props.touched).length > 0 &&
+						props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)].quantity && 
+						(
+					   <div className='invalid-feedback'style={{display:"block", whiteSpace: "normal"}}>
+					   		{props.errors.lineItemsString[parseInt(idx, 10)].quantity}
+					   </div>
+						 )}
 							
 					</div>
 				)}
@@ -2233,7 +2243,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 												
 													let errors = {};
 													
-													
+													console.log(values,"Values");
 													if (exist === true) {
 														errors.invoice_number =
 															'Invoice number already exists';

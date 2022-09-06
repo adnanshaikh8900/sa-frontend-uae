@@ -828,9 +828,6 @@ class CreateSupplierInvoice extends React.Component {
 																				discountEnabled : res.data.discount > 0 
 																					? true 
 																					: false,
-									                                            discount:res.data.discount
-																					? res.data.discount
-																					: 0
 				
 																		},
 																		discountEnabled : res.data.discount > 0 
@@ -857,7 +854,6 @@ class CreateSupplierInvoice extends React.Component {
 																		data: res.data.poQuatationLineItemRequestModelList
 																			? res.data.poQuatationLineItemRequestModelList
 																			: [],
-
 																		discountAmount: res.data.discount 
 																			? res.data.discount 
 																			: 0,
@@ -867,8 +863,6 @@ class CreateSupplierInvoice extends React.Component {
 				
 																		selectedContact: res.data.supplierId ? res.data.supplierId : '',
 																		// term: res.data.term ? res.data.term : '',
-																		placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
-																		loading: false,
 				
 																	},
 																	() => {
@@ -1240,16 +1234,37 @@ class CreateSupplierInvoice extends React.Component {
 						}
 						id="vatCategoryId"
 						placeholder={strings.Select + strings.VAT}
+						// onChange={(e) => {
+						// 	this.selectItem(
+						// 		e.value,
+						// 		row,
+						// 		'vatCategoryId',
+						// 		form,
+						// 		field,
+						// 		props,
+						// 	);
+						// }}
 						onChange={(e) => {
-							this.selectItem(
-								e.value,
-								row,
-								'vatCategoryId',
-								form,
-								field,
-								props,
-							);
+							if (e.value === '') {
+								props.setFieldValue(
+									'vatCategoryId',
+									'',
+								);
+							} else {
+								this.selectItem(
+									e.value,
+									row,
+									'vatCategoryId',
+									form,
+									field,
+									props,
+								);
+								this.updateAmount(
+									this.state.data,
+									props,
+								);
 						}}
+					}
 						className={`${props.errors.lineItemsString &&
 								props.errors.lineItemsString[parseInt(idx, 10)] &&
 								props.errors.lineItemsString[parseInt(idx, 10)].vatCategoryId &&
@@ -1295,7 +1310,7 @@ class CreateSupplierInvoice extends React.Component {
 				render={({ field, form }) => (
 					<Select
 						styles={customStyles}
-						isDisabled={row.exciseTaxId === 0}
+						isDisabled={row.exciseTaxId === 0 || row.exciseTaxId === null }
 						options={
 							excise_list
 								? selectOptionsFactory.renderOptions(
@@ -1735,6 +1750,7 @@ class CreateSupplierInvoice extends React.Component {
 					obj.exciseAmount = 0
 				}
 					var vat_amount =
+					vat === 0 ? 0 :
 					((+net_value  * vat ) / 100);
 				}else{
 					 net_value =
@@ -1756,6 +1772,7 @@ class CreateSupplierInvoice extends React.Component {
 							obj.exciseAmount = 0
 						}
 						var vat_amount =
+						vat === 0 ? 0 :
 						((+net_value  * vat ) / 100);
 			}
 
@@ -1775,6 +1792,7 @@ class CreateSupplierInvoice extends React.Component {
 
 				//vat amount
 				var vat_amount =
+				vat === 0 ? 0 :
 				(+net_value  * (vat/ (100 + vat)*100)) / 100; 
 
 				//net value after removing vat for inclusive
@@ -1790,7 +1808,7 @@ class CreateSupplierInvoice extends React.Component {
 				else if (obj.exciseTaxId === 2){
 					const value = net_value / 2
 					obj.exciseAmount = parseFloat(value);
-				net_value = net_value}
+					net_value = net_value}
 				
 						}
 						else{
@@ -1810,6 +1828,7 @@ class CreateSupplierInvoice extends React.Component {
 						
 				//vat amount
 				var vat_amount =
+				vat === 0 ? 0 :
 				(+net_value  * (vat/ (100 + vat)*100)) / 100; ;
 
 				//net value after removing vat for inclusive
@@ -1825,25 +1844,21 @@ class CreateSupplierInvoice extends React.Component {
 					else if (obj.exciseTaxId === 2){
 						const value = net_value / 2
 						obj.exciseAmount = parseFloat(value);
-					net_value = net_value}
+						net_value = net_value}
 					
 							}
 							else{
 								obj.exciseAmount = 0
 							}
 					}
-
 			}
-			
 			
 			obj.vatAmount = vat_amount
 			obj.subTotal =
-			net_value && obj.vatCategoryId ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
-
+			net_value ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
 			discount_total = +discount_total +discount
 			total_net = +(total_net + parseFloat(net_value));
 			total_vat = +(total_vat + vat_amount);
-			
 			total_excise = +(total_excise + obj.exciseAmount)
 			total = total_vat + total_net;
 			return obj;
@@ -1954,6 +1969,7 @@ class CreateSupplierInvoice extends React.Component {
 							createMore: false,
 							selectedContact: '',
 							term: '',
+							exchangeRate:'',
 							data: [
 								{
 									id: 0,
@@ -1961,7 +1977,9 @@ class CreateSupplierInvoice extends React.Component {
 									quantity: 1,
 									unitPrice: '',
 									vatCategoryId: '',
+									taxtreatment: '',
 									subTotal: 0,
+									discount: 0,
 									productId: '',
 									transactionCategoryId: '',
 									transactionCategoryLabel: '',
@@ -1982,6 +2000,25 @@ class CreateSupplierInvoice extends React.Component {
 						},
 						() => {
 							resetForm(this.state.initValue);
+							this.setState({
+								contactId:'',
+								customer_taxTreatment_des:'',
+								placeOfSupplyId:'',
+								customer_currency:null,
+								customer_currency_des:'',
+								currency:'',
+								initValue: {
+								...this.state.initValue,
+								...{
+									total_net: 0,
+									invoiceVATAmount: 0,
+									totalAmount: 0,
+									discountType: '',
+									discount: 0,
+									discountPercentage: '',
+									changeShippingAddress:false
+								},}
+							});
 							this.getInvoiceNo();
 							this.formRef.current.setFieldValue(
 								'lineItemsString',
@@ -2095,10 +2132,10 @@ class CreateSupplierInvoice extends React.Component {
 	getCurrentProduct = () => {
 		this.props.supplierInvoiceActions.getProductList().then((res) => {
 			let newData=[]
-																			const data = this.state.data;
-																			newData = data.filter((obj) => obj.productId !== "");
-																			// props.setFieldValue('lineItemsString', newData, true);
-																			// this.updateAmount(newData, props);
+						const data = this.state.data;
+						newData = data.filter((obj) => obj.productId !== "");
+						// props.setFieldValue('lineItemsString', newData, true);
+						// this.updateAmount(newData, props);
 			this.setState(
 				{
 					data: newData.concat({
@@ -2348,11 +2385,17 @@ class CreateSupplierInvoice extends React.Component {
 												// 	         errors.placeOfSupplyId ='Place of supply is required';
 													
 												//    }
-													if(this.state.customer_taxTreatment_des!="Non GCC")
+												if(this.state.customer_taxTreatment_des!="NON GCC")
 													{
-													if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
-														errors.placeOfSupplyId = 'Place of supply is required';
-													}}
+														if (!values.placeOfSupplyId) 
+															       	errors.placeOfSupplyId ='Place of supply is required';
+														if (values.placeOfSupplyId &&
+																	(values.placeOfSupplyId=="" ||
+																	(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")
+																	)
+																   ) 
+															         errors.placeOfSupplyId ='Place of supply is required';
+													}
 													if (values.term && values.term.label && values.term.label === "Select Terms") {
 														errors.term = 'Term is required';
 													}
@@ -2360,9 +2403,7 @@ class CreateSupplierInvoice extends React.Component {
 														errors.discount =
 															'Discount amount cannot be greater than invoice Total Amount';
 													}
-												
-													
-													return errors;
+														return errors;
 												}}
 												validationSchema={Yup.object().shape({
 													invoice_number: Yup.string().required(
@@ -3305,7 +3346,7 @@ class CreateSupplierInvoice extends React.Component {
 																				</Label>
 																				<Input
 																					type="text"
-																					maxLength="100"
+																					maxLength="20"
 																					id="receiptNumber"
 																					name="receiptNumber"
 																					value={props.values.receiptNumber}

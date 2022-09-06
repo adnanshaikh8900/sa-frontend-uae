@@ -313,7 +313,7 @@ class CreateQuotation extends React.Component {
 				render={({ field, form }) => (
 					<Select
 						styles={customStyles}
-						isDisabled={!row.exciseTaxId}
+						isDisabled={row.exciseTaxId === 0 || row.exciseTaxId === null }
 						options={
 							excise_list
 								? selectOptionsFactory.renderOptions(
@@ -589,9 +589,6 @@ class CreateQuotation extends React.Component {
 									discountType: res.data.discountType
 										? res.data.discountType
 										: '',
-									receiptNumber:res.data.quotationNumber
-										?res.data.quotationNumber
-										:'',
 									taxType : res.data.taxType
 								},
 									quotaionExpirationNotChanged: res.data.quotaionExpiration
@@ -1327,6 +1324,7 @@ discountType = (row) =>
 					obj.exciseAmount = 0
 				}
 					var vat_amount =
+					vat === 0 ? 0 :
 					((+net_value  * vat ) / 100);
 				}else{
 					 net_value =
@@ -1348,6 +1346,7 @@ discountType = (row) =>
 							obj.exciseAmount = 0
 						}
 						var vat_amount =
+						vat === 0 ? 0 :
 						((+net_value  * vat ) / 100);
 			}
 
@@ -1367,6 +1366,7 @@ discountType = (row) =>
 
 				//vat amount
 				var vat_amount =
+				vat === 0 ? 0 :
 				(+net_value  * (vat/ (100 + vat)*100)) / 100;
 
 				//net value after removing vat for inclusive
@@ -1382,7 +1382,7 @@ discountType = (row) =>
 				else if (obj.exciseTaxId === 2){
 					const value = net_value / 2
 					obj.exciseAmount = parseFloat(value);
-				net_value = net_value}
+					net_value = net_value}
 			
 						}
 						else{
@@ -1402,6 +1402,7 @@ discountType = (row) =>
 
 				//vat amount
 				var vat_amount =
+				vat === 0 ? 0 :
 				(+net_value  * (vat/ (100 + vat)*100)) / 100; ;
 
 				//net value after removing vat for inclusive
@@ -1430,12 +1431,10 @@ discountType = (row) =>
 
 			obj.vatAmount = vat_amount
 			obj.subTotal =
-			net_value && obj.vatCategoryId ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
-
+			net_value ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
 			discount_total = +discount_total +discount
 			total_net = +(total_net + parseFloat(net_value));
 			total_vat = +(total_vat + vat_amount);
-
 			total_excise = +(total_excise + obj.exciseAmount)
 			total = total_vat + total_net;
 			return obj;
@@ -2681,7 +2680,7 @@ discountType = (row) =>
 																				</Label>
 																				<Input
 																					type="text"
-																					maxLength="100"
+																					maxLength="20"
 																					id="receiptNumber"
 																					name="receiptNumber"
 																					value={props.values.receiptNumber}

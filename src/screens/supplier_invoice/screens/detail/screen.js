@@ -421,7 +421,7 @@ class DetailSupplierInvoice extends React.Component {
 				render={({ field, form }) => (
 					<Select
 						styles={customStyles}
-						isDisabled={row.exciseTaxId === 0 }
+						isDisabled={row.exciseTaxId === 0 || row.exciseTaxId === null }
 						options={
 							excise_list
 								? selectOptionsFactory.renderOptions(
@@ -1259,6 +1259,7 @@ class DetailSupplierInvoice extends React.Component {
 					obj.exciseAmount = 0
 				}
 					var vat_amount =
+					vat === 0 ? 0 :
 					((+net_value  * vat ) / 100);
 				}else{
 					 net_value =
@@ -1280,6 +1281,7 @@ class DetailSupplierInvoice extends React.Component {
 							obj.exciseAmount = 0
 						}
 						var vat_amount =
+						vat === 0 ? 0 :
 						((+net_value  * vat ) / 100);
 			}
 
@@ -1299,6 +1301,7 @@ class DetailSupplierInvoice extends React.Component {
 
 				//vat amount
 				var vat_amount =
+				vat === 0 ? 0 :
 				(+net_value  * (vat/ (100 + vat)*100)) / 100; 
 
 				//net value after removing vat for inclusive
@@ -1314,7 +1317,7 @@ class DetailSupplierInvoice extends React.Component {
 				else if (obj.exciseTaxId === 2){
 					const value = net_value / 2
 					obj.exciseAmount = parseFloat(value);
-				net_value = net_value}
+					net_value = net_value}
 				
 						}
 						else{
@@ -1334,6 +1337,7 @@ class DetailSupplierInvoice extends React.Component {
 						
 				//vat amount
 				var vat_amount =
+				vat === 0 ? 0 :
 				(+net_value  * (vat/ (100 + vat)*100)) / 100; ;
 
 				//net value after removing vat for inclusive
@@ -1349,25 +1353,21 @@ class DetailSupplierInvoice extends React.Component {
 					else if (obj.exciseTaxId === 2){
 						const value = net_value / 2
 						obj.exciseAmount = parseFloat(value);
-					net_value = net_value}
+						net_value = net_value}
 				
 							}
 							else{
 								obj.exciseAmount = 0
 							}
 					}
-
 			}
-			
-			
+						
 			obj.vatAmount = vat_amount
 			obj.subTotal =
-			net_value && obj.vatCategoryId ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
-
+			net_value ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
 			discount_total = +discount_total +discount
 			total_net = +(total_net + parseFloat(net_value));
 			total_vat = +(total_vat + vat_amount);
-			
 			total_excise = +(total_excise + obj.exciseAmount)
 			total = total_vat + total_net;
 			return obj;

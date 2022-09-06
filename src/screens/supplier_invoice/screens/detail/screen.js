@@ -919,16 +919,37 @@ class DetailSupplierInvoice extends React.Component {
 						}
 						id="vatCategoryId"
 						placeholder={strings.Select+strings.VAT}
+						// onChange={(e) => {
+						// 	this.selectItem(
+						// 		e.value,
+						// 		row,
+						// 		'vatCategoryId',
+						// 		form,
+						// 		field,
+						// 		props,
+						// 	);
+						// }}
 						onChange={(e) => {
-							this.selectItem(
-								e.value,
-								row,
-								'vatCategoryId',
-								form,
-								field,
-								props,
-							);
+							if (e.value === '') {
+								props.setFieldValue(
+									'vatCategoryId',
+									'',
+								);
+							} else {
+								this.selectItem(
+									e.value,
+									row,
+									'vatCategoryId',
+									form,
+									field,
+									props,
+								);
+								this.updateAmount(
+									this.state.data,
+									props,
+								);
 						}}
+					}
 						className={`${
 							props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -1798,25 +1819,17 @@ class DetailSupplierInvoice extends React.Component {
 													}}
 													validate={(values) => {
 														let errors = {};
-														if (param === true) {
-															errors.discount =
-																'Discount amount Cannot be greater than Invoice Total Amount';
-														}
-														if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
-															||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
-															||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
-											    		{
-
+														if(this.state.customer_taxTreatment_des!="NON GCC")
+													{
 														if (!values.placeOfSupplyId) 
-													       	errors.placeOfSupplyId ='Place of supply is required';
+															       	errors.placeOfSupplyId ='Place of supply is required';
 														if (values.placeOfSupplyId &&
-															(values.placeOfSupplyId=="" ||
-															(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select place of supply")
-															)
-														   ) 
-													         errors.placeOfSupplyId ='Place of supply is required';
-													
-												   }
+																	(values.placeOfSupplyId=="" ||
+																	(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")
+																	)
+																   ) 
+															         errors.placeOfSupplyId ='Place of supply is required';
+													}
 												  
 														return errors;
 													}}

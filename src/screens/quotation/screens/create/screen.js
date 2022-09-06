@@ -967,16 +967,37 @@ discountType = (row) =>
 						}
 						id="vatCategoryId"
 						placeholder={strings.Select+strings.VAT}
+						// onChange={(e) => {
+						// 	this.selectItem(
+						// 		e.value,
+						// 		row,
+						// 		'vatCategoryId',
+						// 		form,
+						// 		field,
+						// 		props,
+						// 	);
+						// }}
 						onChange={(e) => {
-							this.selectItem(
-								e.value,
-								row,
-								'vatCategoryId',
-								form,
-								field,
-								props,
-							);
+							if (e.value === '') {
+								props.setFieldValue(
+									'vatCategoryId',
+									'',
+								);
+							} else {
+								this.selectItem(
+									e.value,
+									row,
+									'vatCategoryId',
+									form,
+									field,
+									props,
+								);
+								this.updateAmount(
+									this.state.data,
+									props,
+								);
 						}}
+					}
 						className={`${
 							props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -1943,11 +1964,17 @@ discountType = (row) =>
 												// 	) 
 												// 	  errors.placeOfSupplyId ='Place of supply is required';
 												//    }
-													if(this.state.customer_taxTreatment_des!="Non GCC")
-													{
-													if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
-														errors.placeOfSupplyId = 'Place of supply is required';
-													}}
+												if(this.state.customer_taxTreatment_des!="NON GCC")
+												{
+													if (!values.placeOfSupplyId) 
+																   errors.placeOfSupplyId ='Place of supply is required';
+													if (values.placeOfSupplyId &&
+																(values.placeOfSupplyId=="" ||
+																(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")
+																)
+															   ) 
+																 errors.placeOfSupplyId ='Place of supply is required';
+												}
 													if (param === true) {
 														errors.discount =
 															'Discount amount Cannot be greater than invoice total amount';

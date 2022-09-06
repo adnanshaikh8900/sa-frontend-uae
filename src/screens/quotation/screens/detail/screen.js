@@ -510,7 +510,7 @@ class DetailQuotation extends React.Component {
 				render={({ field, form }) => (
 					<Select
 						style={customStyles}
-						isDisabled={!row.exciseTaxId}
+						isDisabled={row.exciseTaxId === 0 || row.exciseTaxId === null }
 						options={
 							excise_list
 								? selectOptionsFactory.renderOptions(
@@ -1229,6 +1229,7 @@ class DetailQuotation extends React.Component {
 					obj.exciseAmount = 0
 				}
 					var vat_amount =
+					vat === 0 ? 0 :
 					((+net_value  * vat ) / 100);
 				}else{
 					 net_value =
@@ -1250,6 +1251,7 @@ class DetailQuotation extends React.Component {
 							obj.exciseAmount = 0
 						}
 						var vat_amount =
+						vat === 0 ? 0 :
 						((+net_value  * vat) / 100);
 			}
 
@@ -1269,6 +1271,7 @@ class DetailQuotation extends React.Component {
 
 				//vat amount
 				var vat_amount =
+				vat === 0 ? 0 :
 				(+net_value  * (vat/ (100 + vat)*100)) / 100; 
 
 				//net value after removing vat for inclusive
@@ -1304,6 +1307,7 @@ class DetailQuotation extends React.Component {
 						
 				//vat amount
 				var vat_amount =
+				vat === 0 ? 0 :
 				(+net_value  * (vat/ (100 + vat)*100)) / 100; ;
 
 				//net value after removing vat for inclusive
@@ -1332,7 +1336,7 @@ class DetailQuotation extends React.Component {
 			
 			obj.vatAmount = vat_amount
 			obj.subTotal =
-			net_value && obj.vatCategoryId ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
+			net_value ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
 			discount_total = +discount_total +discount
 			total_net = +(total_net + parseFloat(net_value));
 			total_vat = +(total_vat + vat_amount);
@@ -2414,7 +2418,7 @@ console.log(this.state.supplier_currency)
 																				</Label>
 																				<Input
 																					type="text"
-																					maxLength="100"
+																					maxLength="20"
 																					id="receiptNumber"
 																					name="receiptNumber"
 																					value={props.values.receiptNumber}

@@ -642,7 +642,7 @@ renderVatAmount = (cell, row,extraData) => {
 														this.formRef.current.setFieldValue('currency', this.getCurrency(res.data.customerId), true);
 														this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(res.data.customerId), true);
 														this.formRef.current.setFieldValue('receiptNumber', res.data.quotationNumber, true);
-													   this.setExchange( this.getCurrency(res.data.customerId) );
+													    this.setExchange( this.getCurrency(res.data.customerId) );
 														} else {
 															this.setState({
 																idCount: 0,
@@ -677,7 +677,7 @@ renderVatAmount = (cell, row,extraData) => {
 							contact_po_number: res.data.contactPoNumber
 								? res.data.contactPoNumber
 								: '',
-								currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
+							currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
 							exchangeRate:res.data.exchangeRate ? res.data.exchangeRate : '',
 							currencyName:res.data.currencyName ? res.data.currencyName : '',
 							invoiceDueDate: res.data.invoiceDueDate
@@ -1157,16 +1157,38 @@ discountType = (row) =>
 						}
 						id="vatCategoryId"
 						placeholder={strings.Select+strings.VAT}
+						// onChange={(e) => {
+						// 	this.selectItem(
+						// 		e.value,
+						// 		row,
+						// 		'vatCategoryId',
+						// 		form,
+						// 		field,
+						// 		props,
+						// 	);
+						// }}
 						onChange={(e) => {
-							this.selectItem(
-								e.value,
-								row,
-								'vatCategoryId',
-								form,
-								field,
-								props,
-							);
+							if (e.value === '') {
+								props.setFieldValue(
+									'vatCategoryId',
+									'',
+								);
+							} else {
+								this.selectItem(
+									e.value,
+									row,
+									'vatCategoryId',
+									form,
+									field,
+									props,
+								);
+								this.updateAmount(
+									this.state.data,
+									props,
+								);
 						}}
+					}
+
 						className={`${
 							props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -1607,7 +1629,7 @@ discountType = (row) =>
 				else if (obj.exciseTaxId === 2){
 					const value = net_value / 2
 					obj.exciseAmount = parseFloat(value);
-				net_value = net_value}
+					net_value = net_value}
 			
 						}
 						else{
@@ -2254,14 +2276,21 @@ if(changeShippingAddress && changeShippingAddress==true)
 														errors.discount =
 															'Discount amount cannot be greater than invoice total amount';
 													}
-													// if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
-													// 	errors.placeOfSupplyId = 'Place of supply is required';
-													// }
+													if(this.state.customer_taxTreatment_des!="NON GCC")
+													{
+														if (!values.placeOfSupplyId) 
+															       	errors.placeOfSupplyId ='Place of supply is required';
+														if (values.placeOfSupplyId &&
+																	(values.placeOfSupplyId=="" ||
+																	(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")
+																	)
+																   ) 
+															         errors.placeOfSupplyId ='Place of supply is required';
+													}
 												// 	if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
 												// 	||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
 												// 	||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
 											    // 	{
-
 												// 		if (!values.placeOfSupplyId) 
 												// 	       	errors.placeOfSupplyId ='Place of supply is required';
 												// 		if (values.placeOfSupplyId &&
@@ -2270,13 +2299,8 @@ if(changeShippingAddress && changeShippingAddress==true)
 												// 			)
 												// 		   ) 
 												// 	         errors.placeOfSupplyId ='Place of supply is required';
-													
-												//    }
-												if(this.state.customer_taxTreatment_des!="Non GCC")
-													{
-													if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
-														errors.placeOfSupplyId = 'Place of supply is required';
-													}}
+												//  }
+												
 													if (values.term && values.term.label && values.term.label === "Select Terms") {
 														errors.term =
 														'Term is required';
@@ -2644,7 +2668,6 @@ if(changeShippingAddress && changeShippingAddress==true)
 																						'value',
 																						this.placelist,
 																						'Place of Supply',
-																						
 																				  )
 																				: []
 																		}

@@ -3164,7 +3164,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																					)}
 																			</FormGroup>
 																			</Col>
-															<Col md="4">
+															{/* <Col md="4">
 																<FormGroup>
 																	<Label htmlFor="shippingTelephone">{strings.Telephone}</Label>
 																	<Input
@@ -3223,9 +3223,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																					this.setState({ showshippingFaxErrorMsg: false })}
 																			}
 																			this.handleFax(option)
-
 																		}}
-
 																		value={this.state.initValue.shippingAddress }
 																		className={
 																			props.errors.shippingFax &&
@@ -3241,7 +3239,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																			</div>
 																		)}
 																</FormGroup>
-															</Col>
+															</Col> */}
 									
 														</Row>
 														<hr />

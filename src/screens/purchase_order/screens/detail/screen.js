@@ -1768,10 +1768,10 @@ class DetailPurchaseOrder extends React.Component {
 																   ) 
 															         errors.placeOfSupplyId ='Place of supply is required';
 													}
-															if(values.poApproveDate && values.poReceiveDate && (values.poApproveDate > values.poReceiveDate)){
-																errors.poReceiveDate='Expiry date should be later than the issue date';
-																errors.poApproveDate='Issue date should be earlier than the expiration date';
-															}
+													if(values.poApproveDate && values.poReceiveDate && (new Date(moment(values.poApproveDate1).format('MM DD YYYY')) > new Date(moment(values.poReceiveDate1).format('MM DD YYYY')))){
+														errors.poReceiveDate='Expiry date should be later than the issue date';
+														errors.poApproveDate='Issue date should be earlier than the expiration date';
+													}
 														return errors;
 													}}
 													validationSchema={Yup.object().shape(

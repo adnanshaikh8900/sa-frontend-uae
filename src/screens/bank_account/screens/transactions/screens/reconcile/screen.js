@@ -356,7 +356,8 @@ class ReconcileTransaction extends React.Component {
 																		</Label>
 																		<Input
 																			type="number"
-min="0"
+																			maxLength="14,2"
+																			min="0"
 																			id="closingBalance"
 																			name="closingBalance"
 																			placeholder={strings.Amount}

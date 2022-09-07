@@ -1704,7 +1704,7 @@ class DetailContact extends React.Component {
 																					</Label>
 																					<Input
 																						type="text"
-																						maxLength="8"
+																						maxLength="15"
 																						id="billingFax"
 																						name="billingFax"
 																						placeholder={strings.Enter + strings.Fax}
@@ -2112,7 +2112,7 @@ class DetailContact extends React.Component {
 																					<Input
 
 																						type="text"
-																						maxLength="8"
+																						maxLength="15"
 																						id="shippingFax"
 																						name="shippingFax"
 																						value={props.values.shippingFax}

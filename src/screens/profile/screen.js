@@ -2358,7 +2358,7 @@ class Profile extends React.Component {
 																					{strings.Fax}
 																				</Label>
 																					<Input
-																						maxLength={8}
+																						maxLength={15}
 																						type="text"
 																						id="fax"
 																						name="fax"

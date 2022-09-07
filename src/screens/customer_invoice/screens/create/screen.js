@@ -351,12 +351,10 @@ class CreateCustomerInvoice extends React.Component {
 									);
 								}
 							}}
-							type="number"
+							type="text"
 							placeholder={strings.Quantity}
 							className={`form-control w-50
-						
-						
-            ${props.errors.lineItemsString &&
+						${props.errors.lineItemsString &&
 									props.errors.lineItemsString[parseInt(idx, 10)] &&
 									props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
 									Object.keys(props.touched).length > 0 &&
@@ -374,7 +372,19 @@ class CreateCustomerInvoice extends React.Component {
 						{(totalquantityleft<0 && product?.stockOnHand) && <div style={{color:'red',fontSize:'0.8rem'}} >
 									Stock In Hand:{product?.stockOnHand}
 								</div>} 
-							
+						{props.errors.lineItemsString &&
+						props.errors.lineItemsString[parseInt(idx, 10)] &&
+						props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
+						Object.keys(props.touched).length > 0 &&
+						props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)].quantity &&
+						(
+					   <div className='invalid-feedback'style={{display:"block", whiteSpace: "normal"}}>
+					   		{props.errors.lineItemsString[parseInt(idx, 10)].quantity}
+					   </div>
+						 )}
+
 					</div>
 				)}
 			/>
@@ -1199,7 +1209,7 @@ discountType = (row) =>
 				render={({ field, form }) => (
 					<Select
 						styles={customStyles}
-					  isDisabled={row.exciseTaxId === 0}
+						isDisabled={row.exciseTaxId === 0 || row.exciseTaxId === null }
 						options={
 							excise_list
 								? selectOptionsFactory.renderOptions(
@@ -1540,6 +1550,7 @@ discountType = (row) =>
 					obj.exciseAmount = 0
 				}
 					var vat_amount =
+					vat === 0 ? 0 :
 					((+net_value  * vat ) / 100);
 				}else{
 					 net_value =
@@ -1560,6 +1571,7 @@ discountType = (row) =>
 							obj.exciseAmount = 0
 						}
 						var vat_amount =
+						vat === 0 ? 0 :
 						((+net_value  * vat ) / 100);
 			}
 
@@ -1579,7 +1591,8 @@ discountType = (row) =>
 
 				//vat amount
 				var vat_amount =
-				(+net_value  * (vat/ (100 + vat)*100)) / 100; 
+				(vat === 0 ? 0:
+				((+net_value  * (vat/ (100 + vat)*100)) / 100));
 
 				//net value after removing vat for inclusive
 				net_value = net_value - vat_amount
@@ -1608,13 +1621,13 @@ discountType = (row) =>
 				 net_value =
 				((obj.unitPrice * obj.quantity) - obj.discount)
 
-
 				//discount amount
 				var discount =  (obj.unitPrice * obj.quantity) - net_value
 						
 				//vat amount
 				var vat_amount =
-				(+net_value  * (vat/ (100 + vat)*100)) / 100; ;
+				(vat===0 ? 0 :
+				((+net_value  * (vat/ (100 + vat)*100)) / 100));
 
 				//net value after removing vat for inclusive
 				net_value = net_value - vat_amount
@@ -1636,18 +1649,14 @@ discountType = (row) =>
 								obj.exciseAmount = 0
 							}
 					}
-
 			}
-			
 			
 			obj.vatAmount = vat_amount
 			obj.subTotal =
-			net_value && obj.vatCategoryId ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
-
+			net_value ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
 			discount_total = +discount_total +discount
 			total_net = +(total_net + parseFloat(net_value));
 			total_vat = +(total_vat + vat_amount);
-			
 			total_excise = +(total_excise + obj.exciseAmount)
 			total = total_vat + total_net;
 			return obj;
@@ -2233,7 +2242,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 												
 													let errors = {};
 													
-													
+													console.log(values,"Values");
 													if (exist === true) {
 														errors.invoice_number =
 															'Invoice number already exists';

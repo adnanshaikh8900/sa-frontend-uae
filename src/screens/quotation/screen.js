@@ -29,6 +29,18 @@ import { selectOptionsFactory } from 'utils';
 import './style.scss';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
+import { upperCase } from 'lodash';
+
+const { ToWords } = require('to-words');
+const toWords = new ToWords({
+	localeCode: 'en-IN',
+	converterOptions: {
+	//   currency: true,
+	  ignoreDecimal: false,
+	  ignoreZeroCurrency: false,
+	  doNotAddOnly: false,
+	}
+  });
 
 const mapStateToProps = (state) => {
 	return {
@@ -196,6 +208,7 @@ class Quatation extends React.Component {
 	};
 
 	renderrfqAmount = (cell, row, extraData) => {
+		 
 		return(
 			<div>
 					<div>
@@ -262,6 +275,7 @@ class Quatation extends React.Component {
 	};
 
 	renderActions = (cell, row) => {
+		 
 		return (
 			<div>
 				<ButtonDropdown
@@ -290,7 +304,7 @@ class Quatation extends React.Component {
 							{row.status === 'Draft' && (
 							<DropdownItem
 								onClick={() => {
-									this.sendMail(row.id);
+									this.sendMail(row);
 								}}
 							>
 								<i className="fas fa-send" />  {strings.Send}
@@ -310,7 +324,7 @@ class Quatation extends React.Component {
 							{row.status === 'Draft' && (
                             <DropdownItem
 								onClick={() => {
-									this.sendMail(row.id);
+									this.sendMail(row);
 								}}
 							>
 							<i className="fas fa-send"></i>{strings.Mark_As_Sent}
@@ -318,7 +332,7 @@ class Quatation extends React.Component {
 							{row.status === 'Sent' && (
 							<DropdownItem
 							onClick={() => {
-								this.sendMail(row.id);
+								this.sendMail(row);
 							}}
 							>
 								<i className="fas fa-send" />{strings.SendAgain}
@@ -431,28 +445,81 @@ class Quatation extends React.Component {
 
 }
 
-	sendMail = (id,status) => {
-		this.props.quotationAction
-			.sendMail(id)
-			.then((res) => {
-				if (res.status === 200) {
-					this.props.commonActions.tostifyAlert(
-						'success',
-						res.data ? res.data.message : 'Email Send Successfully'
-					);
-					this.setState({
-						loading: false,
-					});
-					this.initializeData();
-				}
-			})
-			.catch((err) => {
-				this.props.commonActions.tostifyAlert(
-					'error',
-					err.data ? err.data.message : 'Email Send Unsuccessfully'
-				);
-			});
+
+
+sendMail = (row) => {
+	 
+	console.log(row);
+	this.setState({
+		loading: true,
+	});
+	const postingRequestModel = {
+	
+		postingRefId: row.id,
+	
+		amountInWords:upperCase(row.currencyIsoCode + " " +(toWords.convert(row.totalAmount)) ).replace("POINT","AND"),
+			vatInWords:row.totalVatAmount ? upperCase(row.currencyIsoCode + " " +(toWords.convert(row.totalVatAmount)) ).replace("POINT","AND") :"-"
 	};
+	 
+	
+	this.props.quotationAction
+		.sendMail(postingRequestModel)
+		.then((res) => {
+			if (res.status === 200) {
+				this.props.commonActions.tostifyAlert(
+					'success',
+					res.data ? res.data.message : 'Quotation Posted Successfully'
+				);
+				this.setState({
+					loading: false,
+				});
+				this.initializeData();
+			}
+		})
+		.catch((err) => {
+			this.props.commonActions.tostifyAlert(
+				'error',
+				err.data ? err.data.message : 'Purchase Order Posted Unsuccessfully'
+			);
+			this.setState({
+				loading: false,
+			});
+			this.initializeData();
+		});
+};
+
+	// sendMail = (id,status) => {
+	// 	this.setState({
+	// 		loading: true,
+	// 	});
+	// 	const postingRequestModel = {
+		
+	// 		postingRefId: row.id,
+		
+	// 		amountInWords:upperCase(row.currencyName + " " +(toWords.convert(row.totalAmount)) ).replace("POINT","AND"),
+	// 		vatInWords:row.totalVatAmount ? upperCase(row.currencyName + " " +(toWords.convert(row.totalVatAmount)) ).replace("POINT","AND") :"-"
+	// 	};
+	// 	this.props.quotationAction
+	// 		.sendMail(id)
+	// 		.then((res) => {
+	// 			if (res.status === 200) {
+	// 				this.props.commonActions.tostifyAlert(
+	// 					'success',
+	// 					res.data ? res.data.message : 'Email Send Successfully'
+	// 				);
+	// 				this.setState({
+	// 					loading: false,
+	// 				});
+	// 				this.initializeData();
+	// 			}
+	// 		})
+	// 		.catch((err) => {
+	// 			this.props.commonActions.tostifyAlert(
+	// 				'error',
+	// 				err.data ? err.data.message : 'Email Send Unsuccessfully'
+	// 			);
+	// 		});
+	// };
 	// 	postQuotation = (id) => {
 	// 	this.props.goodsReceivedNoteAction
 	// 		.postQUOTATION(id)
@@ -618,6 +685,7 @@ class Quatation extends React.Component {
 	};
 
 	postInvoice = (row) => {
+		 
 		this.setState({
 			loading: true,
 		});
@@ -1058,11 +1126,11 @@ class Quatation extends React.Component {
 											}
 											remote
 
-											fetchInfo={{
-												dataTotalSize: quotation_list && quotation_list && quotation_list.data && quotation_list.data.count
-													? quotation_list.data.count
-													: 0,
-											}}
+											// fetchInfo={{
+											// 	dataTotalSize: quotation_list && quotation_list && quotation_list.data && quotation_list.data.count
+											// 		? quotation_list.data.count
+											// 		: 0,
+											// }}
 											className="customer-invoice-table"
 											ref={(node) => (this.table = node)}
 										>

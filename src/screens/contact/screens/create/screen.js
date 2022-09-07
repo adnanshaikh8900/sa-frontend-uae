@@ -1386,7 +1386,7 @@ class CreateContact extends React.Component {
 																				</Label>
 																				<Input
 																					type="text"
-																					maxLength="8"
+																					maxLength="15"
 																					id="billingFax"
 																					name="billingFax"
 																					autoComplete="Off"
@@ -1802,7 +1802,7 @@ class CreateContact extends React.Component {
 																				</Label>
 																				<Input
 																					type="text"
-																					maxLength="8"
+																					maxLength="15"
 																					id="shippingFax"
 																					name="shippingFax"
 																					autoComplete="Off"

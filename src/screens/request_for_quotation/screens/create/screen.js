@@ -923,16 +923,37 @@ class CreateRequestForQuotation extends React.Component {
 						}
 						id="vatCategoryId"
 						placeholder={strings.Select+strings.VAT}
+						// onChange={(e) => {
+						// 	this.selectItem(
+						// 		e.value,
+						// 		row,
+						// 		'vatCategoryId',
+						// 		form,
+						// 		field,
+						// 		props,
+						// 	);
+						// }}
 						onChange={(e) => {
-							this.selectItem(
-								e.value,
-								row,
-								'vatCategoryId',
-								form,
-								field,
-								props,
-							);
+							if (e.value === '') {
+								props.setFieldValue(
+									'vatCategoryId',
+									'',
+								);
+							} else {
+								this.selectItem(
+									e.value,
+									row,
+									'vatCategoryId',
+									form,
+									field,
+									props,
+								);
+								this.updateAmount(
+									this.state.data,
+									props,
+								);
 						}}
+					}
 						className={`${
 							props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -1858,20 +1879,25 @@ class CreateRequestForQuotation extends React.Component {
 														errors.rfq_number =
 															'RFQ number already exists';
 													}
-													if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
-													||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
-													||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
+													// if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
+													// ||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
+													// ||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
+													if(this.state.customer_taxTreatment_des!="NON GCC")
 													{
 														if (!values.placeOfSupplyId) 
-															   errors.placeOfSupplyId ='Place of supply is required';
+															       	errors.placeOfSupplyId ='Place of supply is required';
 														if (values.placeOfSupplyId &&
-															(values.placeOfSupplyId=="" ||
-															(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select place of supply")
-															)
-														   ) 
-															 errors.placeOfSupplyId ='Place of supply is required';
-													
-												   }
+																	(values.placeOfSupplyId=="" ||
+																	(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")
+																	)
+																   ) 
+															         errors.placeOfSupplyId ='Place of supply is required';
+													}
+													// if(this.state.customer_taxTreatment_des!="Non GCC")
+													// 	{
+													// 	if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
+													// 		errors.placeOfSupplyId = 'Place of supply is required';
+													// 	}}
 													if (values.rfq_number==='') {
 														errors.rfq_number = 'RFQ number is required';
 													}
@@ -1885,9 +1911,9 @@ class CreateRequestForQuotation extends React.Component {
 													supplierId: Yup.string().required(
 														'Supplier is required',
 													),
-													placeOfSupplyId: Yup.string().required(
-														'Place of Supply is required'
-													),
+													// placeOfSupplyId: Yup.string().required(
+													// 	'Place of Supply is required'
+													// ),
 													
 													rfqReceiveDate: Yup.string().required(
 														'Issue date is required',
@@ -2135,8 +2161,8 @@ class CreateRequestForQuotation extends React.Component {
 																		)}
 																</FormGroup>
 															</Col>: ''}
-									<Col lg={3}>
-									{/* {this.state.customer_taxTreatment_des!="NON GCC" &&(		 */}
+															<Col lg={3}>
+															{this.state.customer_taxTreatment_des!="NON GCC" &&(		
 																	<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">
 																		{/* <span className="text-danger">* </span> */}
@@ -2196,10 +2222,8 @@ class CreateRequestForQuotation extends React.Component {
 																			</div>
 																		)}
 																</FormGroup>
-																{/* )} */}
+																)}
 															</Col>
-															
-														
 														</Row>
 													
 														<Row>
@@ -2581,7 +2605,7 @@ class CreateRequestForQuotation extends React.Component {
 																		<TextareaAutosize
 																			type="textarea"
 																			style={{width: "700px"}}
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="255"
 																			name="notes"
 																			id="notes"
@@ -2682,7 +2706,7 @@ class CreateRequestForQuotation extends React.Component {
 																		</Label><br/>
 																		<TextareaAutosize
 																			type="textarea"
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="255"
 																			style={{width: "700px"}}
 																			name="receiptAttachmentDescription"

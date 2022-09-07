@@ -67,6 +67,7 @@ let strings = new LocalizedStrings(data);
 class RecordSupplierPayment extends React.Component {
 	constructor(props) {
 		super(props);
+		console.log(props,"PROPS");
 		this.state = {
 			language: window['localStorage'].getItem('language'),
 			loading: false,
@@ -611,6 +612,8 @@ class RecordSupplierPayment extends React.Component {
 																			showYearDropdown
 																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
+																			minDate={new Date(this.props.location.state.id.invoiceDate.substring(3,5)+" "+this.props.location.state.id.invoiceDate.substring(0,2)+" "+this.props.location.state.id.invoiceDate.substring(6))}
+																			maxDate={new Date()}
 																			value={props.values.paymentDate}
 																			selected={props.values.paymentDate}
 																			onChange={(value) => {
@@ -724,7 +727,7 @@ class RecordSupplierPayment extends React.Component {
 																		<TextareaAutosize
 																			type="textarea"
 																			style={{width: "870px"}}
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="255"
 																			name="notes"
 																			id="notes"
@@ -826,7 +829,7 @@ class RecordSupplierPayment extends React.Component {
 																		</Label><br/>
 																		<TextareaAutosize
 																			type="textarea"
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="250"
 																			style={{width: "870px"}}
 																			name="receiptAttachmentDescription"

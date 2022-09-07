@@ -401,11 +401,12 @@ export const getStateList = (countryCode) => {
 	};
 };
 
-export const sendMail = (id) => {
+export const sendMail = (obj) => {
 	return (dispatch) => {
 		let data = {
 			method: 'post',
-			url: `/rest/poquatation/sendQuotation?id=${id}`,
+			url: `/rest/poquatation/sendQuotation`,
+			data:obj
 		};
 		return authApi(data)
 			.then((res) => {

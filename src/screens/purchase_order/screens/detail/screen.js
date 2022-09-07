@@ -896,32 +896,30 @@ class DetailPurchaseOrder extends React.Component {
 
 		<div 	style={{width:'100px'}}>
 		<Select
-
-
-																						   options={discountOptions}
-																						   id="discountType"
-																						   name="discountType"
-																						   value={
-																						discountOptions &&
-																							selectOptionsFactory
-																								.renderOptions('label', 'value', discountOptions, 'discount')
-																								.find((option) => option.value == row.discountType)
-																						   }
-																						   onChange={(e) => {
-																							   this.selectItem(
-																								   e.value,
-																								   row,
-																								   'discountType',
-																								   form,
-																								   field,
-																								   props,
-																							   );
-																							   this.updateAmount(
-																								   this.state.data,
-																								   props,
-																							   );
-																						   }}
-																					   />
+				options={discountOptions}
+				id="discountType"
+				name="discountType"
+				value={
+						discountOptions &&
+						selectOptionsFactory
+						.renderOptions('label', 'value', discountOptions, 'discount')
+						.find((option) => option.value == row.discountType)
+						 }
+				onChange={(e) => {
+									this.selectItem(
+									e.value,
+									row,
+									'discountType',
+									form,
+									field,
+									props,
+									);
+								this.updateAmount(
+								this.state.data,
+								props,
+							);
+						 }}
+					/>
 			 </div>
 			  </div>
 			  </div>
@@ -969,16 +967,39 @@ class DetailPurchaseOrder extends React.Component {
 						}
 						id="vatCategoryId"
 						placeholder={strings.Select+strings.VAT}
+						// onChange={(e) => {
+						// 	this.selectItem(
+						// 		e.value,
+						// 		row,
+						// 		'vatCategoryId',
+						// 		form,
+						// 		field,
+						// 		props,
+						// 	);
+						// }}
+
 						onChange={(e) => {
-							this.selectItem(
-								e.value,
-								row,
-								'vatCategoryId',
-								form,
-								field,
-								props,
-							);
+							if (e.value === '') {
+								props.setFieldValue(
+									'vatCategoryId',
+									'',
+								);
+							} else {
+								this.selectItem(
+									e.value,
+									row,
+									'vatCategoryId',
+									form,
+									field,
+									props,
+								);
+								this.updateAmount(
+									this.state.data,
+									props,
+								);
 						}}
+					}
+					
 						className={`${
 							props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -1547,7 +1568,7 @@ class DetailPurchaseOrder extends React.Component {
 		// : props.values.poReceiveDate1	
 		if ( values2) {
 			this.setState({
-				poReceiveDate: moment(values2),
+				poReceiveDate: values2,
 			});
 			props.setFieldValue('poReceiveDate1', values2, true);
 		
@@ -1736,26 +1757,21 @@ class DetailPurchaseOrder extends React.Component {
 													}}
 													validate={(values)=>{
 														let errors={}
-														if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
-														||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
-														||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
-														{
-	
-															if (!values.placeOfSupplyId) 
-																   errors.placeOfSupplyId ='Place of supply is required';
-															if (values.placeOfSupplyId &&
-																(values.placeOfSupplyId=="" ||
-																(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select place of supply")
-																)
-															   ) 
-																 errors.placeOfSupplyId ='Place of supply is required';
-															
-														
-													   }
-															if(values.poApproveDate && values.poReceiveDate && (values.poApproveDate > values.poReceiveDate)){
-																errors.poReceiveDate='Expiry date should be later than the issue date';
-																errors.poApproveDate='Issue date should be earlier than the expiration date';
-															}
+														if(this.state.customer_taxTreatment_des!="NON GCC")
+													{
+														if (!values.placeOfSupplyId) 
+															       	errors.placeOfSupplyId ='Place of supply is required';
+														if (values.placeOfSupplyId &&
+																	(values.placeOfSupplyId=="" ||
+																	(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")
+																	)
+																   ) 
+															         errors.placeOfSupplyId ='Place of supply is required';
+													}
+													if(values.poApproveDate && values.poReceiveDate && (new Date(moment(values.poApproveDate1).format('MM DD YYYY')) > new Date(moment(values.poReceiveDate1).format('MM DD YYYY')))){
+														errors.poReceiveDate='Expiry date should be later than the issue date';
+														errors.poApproveDate='Issue date should be earlier than the expiration date';
+													}
 														return errors;
 													}}
 													validationSchema={Yup.object().shape(
@@ -1769,9 +1785,9 @@ class DetailPurchaseOrder extends React.Component {
 														// rfqNumber: Yup.string().required(
 														// 	'Rfq number is required',
 														// ),
-														placeOfSupplyId: Yup.string().required(
-															'Place of supply is required'
-														),
+														// placeOfSupplyId: Yup.string().required(
+														// 	'Place of supply is required'
+														// ),
 														poApproveDate: Yup.string().required(
 															'Issue date is required',
 														),
@@ -2020,7 +2036,7 @@ class DetailPurchaseOrder extends React.Component {
 																</FormGroup>
 															</Col>
 																<Col lg={3}>
-																{/* {this.state.customer_taxTreatment_des!="NON GCC" &&(	 */}
+																{this.state.customer_taxTreatment_des!="NON GCC" &&(	
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="placeOfSupplyId">
 																			<span className="text-danger">* </span>
@@ -2084,11 +2100,8 @@ class DetailPurchaseOrder extends React.Component {
 																				</div>
 																			)}
 																	</FormGroup>
-																	{/* )} */}
+																	)}
 																</Col>
-															
-																
-																
 															
 															</Row>
 															<hr />
@@ -2536,7 +2549,7 @@ class DetailPurchaseOrder extends React.Component {
 																		<Label htmlFor="notes">{strings.TermsAndConditions}</Label><br/>
 																		<TextareaAutosize
 																			type="textarea"
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="250"
 																			style={{width: "700px"}}
 																			name="notes"
@@ -2643,7 +2656,7 @@ class DetailPurchaseOrder extends React.Component {
 																		<br/>
 																		<TextareaAutosize
 																			type="textarea"
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="250"
 																			style={{width: "700px"}}
 																			name="receiptAttachmentDescription"

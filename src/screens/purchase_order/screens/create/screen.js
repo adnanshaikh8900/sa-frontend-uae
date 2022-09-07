@@ -1009,16 +1009,38 @@ class CreatePurchaseOrder extends React.Component {
 						}
 						id="vatCategoryId"
 						placeholder={strings.Select+strings.VAT}
+						// onChange={(e) => {
+						// 	this.selectItem(
+						// 		e.value,
+						// 		row,
+						// 		'vatCategoryId',
+						// 		form,
+						// 		field,
+						// 		props,
+						// 	);
+						// }}
 						onChange={(e) => {
-							this.selectItem(
-								e.value,
-								row,
-								'vatCategoryId',
-								form,
-								field,
-								props,
-							);
+							if (e.value === '') {
+								props.setFieldValue(
+									'vatCategoryId',
+									'',
+								);
+							} else {
+								this.selectItem(
+									e.value,
+									row,
+									'vatCategoryId',
+									form,
+									field,
+									props,
+								);
+								this.updateAmount(
+									this.state.data,
+									props,
+								);
 						}}
+					}
+					
 						className={`${
 							props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -1998,24 +2020,17 @@ getrfqDetails = (e, row, props,form,field) => {
 														errors.po_number =
 															'PO number already exists';
 													}
-													if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
-														errors.placeOfSupplyId = 'Place of supply is required';
-													}
-													if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
-													||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
-													||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
-											    	{
-
+													if(this.state.customer_taxTreatment_des!="NON GCC")
+													{
 														if (!values.placeOfSupplyId) 
-													       	errors.placeOfSupplyId ='Place of supply is required';
+															       	errors.placeOfSupplyId ='Place of supply is required';
 														if (values.placeOfSupplyId &&
-															(values.placeOfSupplyId=="" ||
-															(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select place of supply")
-															)
-														   ) 
-													         errors.placeOfSupplyId ='Place of supply is required';
-													
-												   }
+																	(values.placeOfSupplyId=="" ||
+																	(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")
+																	)
+																   ) 
+															         errors.placeOfSupplyId ='Place of supply is required';
+													}
 													if (values.po_number==='') {
 														errors.po_number = 'PO number is required';
 													}
@@ -2035,11 +2050,7 @@ getrfqDetails = (e, row, props,form,field) => {
 													),
                                                     // rfqNumber: Yup.string().required(
 													// 	'Rfq number is required',
-													// ),
-													placeOfSupplyId: Yup.string().required(
-														'Place of supply is required'
-													),
-													
+													// ),													
 													poApproveDate: Yup.string().required(
 														'Order date is required',
 													),
@@ -2366,7 +2377,7 @@ getrfqDetails = (e, row, props,form,field) => {
 															</Col>: ''}
 
 									<Col lg={3}>
-									{/* {this.state.customer_taxTreatment_des!="NON GCC" &&(		 */}
+									{this.state.customer_taxTreatment_des!="NON GCC" &&(		
 																<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">
 																		<span className="text-danger">* </span>
@@ -2426,11 +2437,9 @@ getrfqDetails = (e, row, props,form,field) => {
 																			</div>
 																		)}
 																</FormGroup>
-																{/* )} */}
+																)}
 															</Col>
-															
-													
-															
+																													
 														</Row>
 														<hr />
 														<Row>
@@ -2847,7 +2856,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																		<TextareaAutosize
 																			type="textarea"
 																			style={{width: "700px"}}
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="255"
 																			name="notes"
 																			id="notes"
@@ -2949,7 +2958,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																		</Label><br/>
 																		<TextareaAutosize
 																			type="textarea"
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="250"
 																			style={{width: "700px"}}
 																			name="receiptAttachmentDescription"

@@ -351,12 +351,10 @@ class CreateCustomerInvoice extends React.Component {
 									);
 								}
 							}}
-							type="number"
+							type="text"
 							placeholder={strings.Quantity}
 							className={`form-control w-50
-						
-						
-            ${props.errors.lineItemsString &&
+						${props.errors.lineItemsString &&
 									props.errors.lineItemsString[parseInt(idx, 10)] &&
 									props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
 									Object.keys(props.touched).length > 0 &&
@@ -374,7 +372,19 @@ class CreateCustomerInvoice extends React.Component {
 						{(totalquantityleft<0 && product?.stockOnHand) && <div style={{color:'red',fontSize:'0.8rem'}} >
 									Stock In Hand:{product?.stockOnHand}
 								</div>} 
-							
+						{props.errors.lineItemsString &&
+						props.errors.lineItemsString[parseInt(idx, 10)] &&
+						props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
+						Object.keys(props.touched).length > 0 &&
+						props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)].quantity &&
+						(
+					   <div className='invalid-feedback'style={{display:"block", whiteSpace: "normal"}}>
+					   		{props.errors.lineItemsString[parseInt(idx, 10)].quantity}
+					   </div>
+						 )}
+
 					</div>
 				)}
 			/>
@@ -632,7 +642,7 @@ renderVatAmount = (cell, row,extraData) => {
 														this.formRef.current.setFieldValue('currency', this.getCurrency(res.data.customerId), true);
 														this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(res.data.customerId), true);
 														this.formRef.current.setFieldValue('receiptNumber', res.data.quotationNumber, true);
-													   this.setExchange( this.getCurrency(res.data.customerId) );
+													    this.setExchange( this.getCurrency(res.data.customerId) );
 														} else {
 															this.setState({
 																idCount: 0,
@@ -667,7 +677,7 @@ renderVatAmount = (cell, row,extraData) => {
 							contact_po_number: res.data.contactPoNumber
 								? res.data.contactPoNumber
 								: '',
-								currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
+							currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
 							exchangeRate:res.data.exchangeRate ? res.data.exchangeRate : '',
 							currencyName:res.data.currencyName ? res.data.currencyName : '',
 							invoiceDueDate: res.data.invoiceDueDate
@@ -1147,16 +1157,38 @@ discountType = (row) =>
 						}
 						id="vatCategoryId"
 						placeholder={strings.Select+strings.VAT}
+						// onChange={(e) => {
+						// 	this.selectItem(
+						// 		e.value,
+						// 		row,
+						// 		'vatCategoryId',
+						// 		form,
+						// 		field,
+						// 		props,
+						// 	);
+						// }}
 						onChange={(e) => {
-							this.selectItem(
-								e.value,
-								row,
-								'vatCategoryId',
-								form,
-								field,
-								props,
-							);
+							if (e.value === '') {
+								props.setFieldValue(
+									'vatCategoryId',
+									'',
+								);
+							} else {
+								this.selectItem(
+									e.value,
+									row,
+									'vatCategoryId',
+									form,
+									field,
+									props,
+								);
+								this.updateAmount(
+									this.state.data,
+									props,
+								);
 						}}
+					}
+
 						className={`${
 							props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -1199,7 +1231,7 @@ discountType = (row) =>
 				render={({ field, form }) => (
 					<Select
 						styles={customStyles}
-					  isDisabled={row.exciseTaxId === 0}
+						isDisabled={row.exciseTaxId === 0 || row.exciseTaxId === null }
 						options={
 							excise_list
 								? selectOptionsFactory.renderOptions(
@@ -1492,15 +1524,13 @@ discountType = (row) =>
 			let temp = this.state.data?.[length].productId!==""?
 			this.state.data?.[length].productId:-2
 			if (temp > -1) {
-				return false;
-			} else {
 				return true;
+			} else {
+				return false;
 			}
-			
 		} else {
 			return false;
 		}
-		
 	};
 
 	updateAmount = (data, props) => {
@@ -1540,6 +1570,7 @@ discountType = (row) =>
 					obj.exciseAmount = 0
 				}
 					var vat_amount =
+					vat === 0 ? 0 :
 					((+net_value  * vat ) / 100);
 				}else{
 					 net_value =
@@ -1560,6 +1591,7 @@ discountType = (row) =>
 							obj.exciseAmount = 0
 						}
 						var vat_amount =
+						vat === 0 ? 0 :
 						((+net_value  * vat ) / 100);
 			}
 
@@ -1579,7 +1611,8 @@ discountType = (row) =>
 
 				//vat amount
 				var vat_amount =
-				(+net_value  * (vat/ (100 + vat)*100)) / 100; 
+				(vat === 0 ? 0:
+				((+net_value  * (vat/ (100 + vat)*100)) / 100));
 
 				//net value after removing vat for inclusive
 				net_value = net_value - vat_amount
@@ -1594,7 +1627,7 @@ discountType = (row) =>
 				else if (obj.exciseTaxId === 2){
 					const value = net_value / 2
 					obj.exciseAmount = parseFloat(value);
-				net_value = net_value}
+					net_value = net_value}
 			
 						}
 						else{
@@ -1608,13 +1641,13 @@ discountType = (row) =>
 				 net_value =
 				((obj.unitPrice * obj.quantity) - obj.discount)
 
-
 				//discount amount
 				var discount =  (obj.unitPrice * obj.quantity) - net_value
 						
 				//vat amount
 				var vat_amount =
-				(+net_value  * (vat/ (100 + vat)*100)) / 100; ;
+				(vat===0 ? 0 :
+				((+net_value  * (vat/ (100 + vat)*100)) / 100));
 
 				//net value after removing vat for inclusive
 				net_value = net_value - vat_amount
@@ -1636,18 +1669,14 @@ discountType = (row) =>
 								obj.exciseAmount = 0
 							}
 					}
-
 			}
-			
 			
 			obj.vatAmount = vat_amount
 			obj.subTotal =
-			net_value && obj.vatCategoryId ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
-
+			net_value ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
 			discount_total = +discount_total +discount
 			total_net = +(total_net + parseFloat(net_value));
 			total_vat = +(total_vat + vat_amount);
-			
 			total_excise = +(total_excise + obj.exciseAmount)
 			total = total_vat + total_net;
 			return obj;
@@ -2233,7 +2262,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 												
 													let errors = {};
 													
-													
+													console.log(values,"Values");
 													if (exist === true) {
 														errors.invoice_number =
 															'Invoice number already exists';
@@ -2245,16 +2274,21 @@ if(changeShippingAddress && changeShippingAddress==true)
 														errors.discount =
 															'Discount amount cannot be greater than invoice total amount';
 													}
-													if(this.state.customer_taxTreatment_des!="Non GCC")
+													if(this.state.customer_taxTreatment_des!="NON GCC")
 													{
-													if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
-														errors.placeOfSupplyId = 'Place of supply is required';
-													}}
+														if (!values.placeOfSupplyId) 
+															       	errors.placeOfSupplyId ='Place of supply is required';
+														if (values.placeOfSupplyId &&
+																	(values.placeOfSupplyId=="" ||
+																	(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")
+																	)
+																   ) 
+															         errors.placeOfSupplyId ='Place of supply is required';
+													}
 												// 	if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
 												// 	||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
 												// 	||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
 											    // 	{
-
 												// 		if (!values.placeOfSupplyId) 
 												// 	       	errors.placeOfSupplyId ='Place of supply is required';
 												// 		if (values.placeOfSupplyId &&
@@ -2263,8 +2297,8 @@ if(changeShippingAddress && changeShippingAddress==true)
 												// 			)
 												// 		   ) 
 												// 	         errors.placeOfSupplyId ='Place of supply is required';
-													
-												//    }
+												//  }
+												
 													if (values.term && values.term.label && values.term.label === "Select Terms") {
 														errors.term =
 														'Term is required';
@@ -2613,10 +2647,8 @@ if(changeShippingAddress && changeShippingAddress==true)
 																	<Label htmlFor="placeOfSupplyId">
 																		<span className="text-danger">* </span>
 																	{/* {this.state.customer_taxTreatment_des &&
-																		(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
-																		||this.state.customer_taxTreatment_des=="Non VAT REGISTERED DESIGNATED ZONE" 
-																		||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
-																		||this.state.customer_taxTreatment_des=="Non VAT REGISTERED DESIGNATED ZONE" 
+																		(this.state.customer_taxTreatment_des=="VAT REGISTERED"
+																		||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE"
 																		||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED") && (
 																			<span className="text-danger">* </span>
 																		)} */}
@@ -2634,7 +2666,6 @@ if(changeShippingAddress && changeShippingAddress==true)
 																						'value',
 																						this.placelist,
 																						'Place of Supply',
-																						
 																				  )
 																				: []
 																		}
@@ -3154,7 +3185,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																					)}
 																			</FormGroup>
 																			</Col>
-															<Col md="4">
+															{/* <Col md="4">
 																<FormGroup>
 																	<Label htmlFor="shippingTelephone">{strings.Telephone}</Label>
 																	<Input
@@ -3213,9 +3244,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																					this.setState({ showshippingFaxErrorMsg: false })}
 																			}
 																			this.handleFax(option)
-
 																		}}
-
 																		value={this.state.initValue.shippingAddress }
 																		className={
 																			props.errors.shippingFax &&
@@ -3231,7 +3260,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																			</div>
 																		)}
 																</FormGroup>
-															</Col>
+															</Col> */}
 									
 														</Row>
 														<hr />
@@ -3569,7 +3598,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		<TextareaAutosize
 																			type="textarea"
 																			style={{width: "700px"}}
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="255"
 																			name="notes"
 																			id="notes"
@@ -3670,7 +3699,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		</Label><br/>
 																		<TextareaAutosize
 																			type="textarea"
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="250"
 																			style={{width: "700px"}}
 																			name="receiptAttachmentDescription"
@@ -3695,7 +3724,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		<br/>
 																		<TextareaAutosize
 																			type="textarea"
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="255"
 																			style={{width: "700px"}}
 																			name="footNote"

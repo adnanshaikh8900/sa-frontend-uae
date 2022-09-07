@@ -377,7 +377,7 @@ class DetailCustomerInvoice extends React.Component {
 				render={({ field, form }) => (
 					<Select
 						styles={customStyles}
-						isDisabled={row.exciseTaxId === 0 }
+						isDisabled={row.exciseTaxId === 0 || row.exciseTaxId === null }
 						options={
 							excise_list
 								? selectOptionsFactory.renderOptions(
@@ -639,6 +639,17 @@ class DetailCustomerInvoice extends React.Component {
 						{(totalquantityleft<0 && product?.stockOnHand) && <div style={{color:'red',fontSize:'0.8rem'}} >
 									Stock in Hand:{product?.stockOnHand}
 								</div>} 
+								{props.errors.lineItemsString &&
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)].quantity && (
+								<div className="invalid-feedback" style={{display:"block", whiteSpace: "normal"}}>
+									{props.errors.lineItemsString[parseInt(idx, 10)].quantity}
+								</div>
+							)}
 						
 					</div>
 				)}
@@ -849,16 +860,38 @@ class DetailCustomerInvoice extends React.Component {
 						}
 						id="vatCategoryId"
 						placeholder={strings.Select+strings.VAT}
+						// onChange={(e) => {
+						// 	this.selectItem(
+						// 		e.value,
+						// 		row,
+						// 		'vatCategoryId',
+						// 		form,
+						// 		field,
+						// 		props,
+						// 	);
+						// }}
 						onChange={(e) => {
-							this.selectItem(
-								e.value,
-								row,
-								'vatCategoryId',
-								form,
-								field,
-								props,
-							);
+							if (e.value === '') {
+								props.setFieldValue(
+									'vatCategoryId',
+									'',
+								);
+							} else {
+								this.selectItem(
+									e.value,
+									row,
+									'vatCategoryId',
+									form,
+									field,
+									props,
+								);
+								this.updateAmount(
+									this.state.data,
+									props,
+								);
 						}}
+					}
+					
 						className={`${
 							props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -1132,6 +1165,7 @@ class DetailCustomerInvoice extends React.Component {
 					obj.exciseAmount = 0
 				}
 					var vat_amount =
+					vat === 0 ? 0 :
 					((+net_value  * vat ) / 100);
 				}else{
 					 net_value =
@@ -1153,6 +1187,7 @@ class DetailCustomerInvoice extends React.Component {
 							obj.exciseAmount = 0
 						}
 						var vat_amount =
+						vat === 0 ? 0 :
 						((+net_value  * vat) / 100);
 			}
 
@@ -1172,6 +1207,7 @@ class DetailCustomerInvoice extends React.Component {
 
 				//vat amount
 				var vat_amount =
+				vat === 0 ? 0 :
 				(+net_value  * (vat/ (100 + vat)*100)) / 100; 
 
 				//net value after removing vat for inclusive
@@ -1207,6 +1243,7 @@ class DetailCustomerInvoice extends React.Component {
 						
 				//vat amount
 				var vat_amount =
+				vat === 0 ? 0 :
 				(+net_value  * (vat/ (100 + vat)*100)) / 100; ;
 
 				//net value after removing vat for inclusive
@@ -1235,7 +1272,7 @@ class DetailCustomerInvoice extends React.Component {
 			
 			obj.vatAmount = vat_amount
 			obj.subTotal =
-			net_value && obj.vatCategoryId ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
+			net_value ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
 
 			discount_total = +discount_total +discount
 			total_net = +(total_net + parseFloat(net_value));
@@ -1746,9 +1783,9 @@ class DetailCustomerInvoice extends React.Component {
 													       	errors.placeOfSupplyId ='Place of supply is required';
 														if (values.placeOfSupplyId &&
 															(values.placeOfSupplyId=="" ||
-															(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select place of supply")
+															(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")
 															)
-														   ) 
+														   )
 													         errors.placeOfSupplyId ='Place of supply is required';
 														
 													   }
@@ -2624,7 +2661,7 @@ class DetailCustomerInvoice extends React.Component {
 																			</FormGroup>
 																			</Col>
 
-															<Col md="4">
+															{/* <Col md="4">
 																<FormGroup>
 																	<Label htmlFor="shippingTelephone">{strings.Telephone}</Label>
 																	<Input
@@ -2702,7 +2739,7 @@ class DetailCustomerInvoice extends React.Component {
 																			</div>
 																		)}
 																</FormGroup>
-															</Col>
+															</Col> */}
 									
 														</Row>
 																<hr />
@@ -3025,7 +3062,7 @@ class DetailCustomerInvoice extends React.Component {
 																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
 																		<TextareaAutosize
 																			type="textarea"
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="255"
 																			style={{width: "700px"}}
 																			name="notes"
@@ -3132,7 +3169,7 @@ class DetailCustomerInvoice extends React.Component {
 																		<br/>
 																		<TextareaAutosize
 																			type="textarea"
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="255"
 																			style={{width: "700px"}}
 																			name="receiptAttachmentDescription"
@@ -3157,7 +3194,7 @@ class DetailCustomerInvoice extends React.Component {
 																		<br/>
 																		<TextareaAutosize
 																			type="textarea"
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="255"
 																			style={{width: "700px"}}
 																			name="footNote"
@@ -3316,8 +3353,9 @@ class DetailCustomerInvoice extends React.Component {
 																						const errors={...props.errors}
 																						delete errors.lineItemsString
 																						if(errors &&  Object.keys(errors).length != 0)
-																							{ debugger
-																							this.props.commonActions.fillManDatoryDetails();}
+																							{
+																							this.props.commonActions.fillManDatoryDetails();
+																						}
 																					}
 																				}
 																			}

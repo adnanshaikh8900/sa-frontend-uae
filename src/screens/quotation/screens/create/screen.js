@@ -313,7 +313,7 @@ class CreateQuotation extends React.Component {
 				render={({ field, form }) => (
 					<Select
 						styles={customStyles}
-						isDisabled={!row.exciseTaxId}
+						isDisabled={row.exciseTaxId === 0 || row.exciseTaxId === null }
 						options={
 							excise_list
 								? selectOptionsFactory.renderOptions(
@@ -589,9 +589,6 @@ class CreateQuotation extends React.Component {
 									discountType: res.data.discountType
 										? res.data.discountType
 										: '',
-									receiptNumber:res.data.quotationNumber
-										?res.data.quotationNumber
-										:'',
 									taxType : res.data.taxType
 								},
 									quotaionExpirationNotChanged: res.data.quotaionExpiration
@@ -638,7 +635,7 @@ class CreateQuotation extends React.Component {
 									this.formRef.current.setFieldValue('placeOfSupplyId', res.data.placeOfSupplyId, true);
 									// this.formRef.current.setFieldValue('quotationNumber', res.data.quotationNumber, true);
 									// this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
-									// this.formRef.current.setFieldValue('receiptAttachmentDescription',  res.data.receiptAttachmentDescription, true);
+									// this.formRef.current.setFieldValue('attachmentDescription',  res.data.attachmentDescription, true);
 									const { data } = this.state;
 									const idCount =
 										data.length > 0
@@ -970,16 +967,37 @@ discountType = (row) =>
 						}
 						id="vatCategoryId"
 						placeholder={strings.Select+strings.VAT}
+						// onChange={(e) => {
+						// 	this.selectItem(
+						// 		e.value,
+						// 		row,
+						// 		'vatCategoryId',
+						// 		form,
+						// 		field,
+						// 		props,
+						// 	);
+						// }}
 						onChange={(e) => {
-							this.selectItem(
-								e.value,
-								row,
-								'vatCategoryId',
-								form,
-								field,
-								props,
-							);
+							if (e.value === '') {
+								props.setFieldValue(
+									'vatCategoryId',
+									'',
+								);
+							} else {
+								this.selectItem(
+									e.value,
+									row,
+									'vatCategoryId',
+									form,
+									field,
+									props,
+								);
+								this.updateAmount(
+									this.state.data,
+									props,
+								);
 						}}
+					}
 						className={`${
 							props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -1327,6 +1345,7 @@ discountType = (row) =>
 					obj.exciseAmount = 0
 				}
 					var vat_amount =
+					vat === 0 ? 0 :
 					((+net_value  * vat ) / 100);
 				}else{
 					 net_value =
@@ -1348,6 +1367,7 @@ discountType = (row) =>
 							obj.exciseAmount = 0
 						}
 						var vat_amount =
+						vat === 0 ? 0 :
 						((+net_value  * vat ) / 100);
 			}
 
@@ -1367,6 +1387,7 @@ discountType = (row) =>
 
 				//vat amount
 				var vat_amount =
+				vat === 0 ? 0 :
 				(+net_value  * (vat/ (100 + vat)*100)) / 100;
 
 				//net value after removing vat for inclusive
@@ -1382,7 +1403,7 @@ discountType = (row) =>
 				else if (obj.exciseTaxId === 2){
 					const value = net_value / 2
 					obj.exciseAmount = parseFloat(value);
-				net_value = net_value}
+					net_value = net_value}
 			
 						}
 						else{
@@ -1402,6 +1423,7 @@ discountType = (row) =>
 
 				//vat amount
 				var vat_amount =
+				vat === 0 ? 0 :
 				(+net_value  * (vat/ (100 + vat)*100)) / 100; ;
 
 				//net value after removing vat for inclusive
@@ -1430,12 +1452,10 @@ discountType = (row) =>
 
 			obj.vatAmount = vat_amount
 			obj.subTotal =
-			net_value && obj.vatCategoryId ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
-
+			net_value ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
 			discount_total = +discount_total +discount
 			total_net = +(total_net + parseFloat(net_value));
 			total_vat = +(total_vat + vat_amount);
-
 			total_excise = +(total_excise + obj.exciseAmount)
 			total = total_vat + total_net;
 			return obj;
@@ -1478,7 +1498,7 @@ discountType = (row) =>
 	handleSubmit = (data, resetForm) => {
 		this.setState({ disabled: true, disableLeavePage:true });
 		const {
-			receiptAttachmentDescription,
+			attachmentDescription,
 			receiptNumber,
 			quotaionExpiration,
 			currency,
@@ -1505,7 +1525,7 @@ discountType = (row) =>
 		formData.append('exciseType', this.state.checked);
 		formData.append('notes', notes ? notes : '');
 		formData.append('receiptNumber',receiptNumber !== null ? receiptNumber : '');
-		formData.append('receiptAttachmentDescription',receiptAttachmentDescription !== null ? receiptAttachmentDescription : '',);
+		formData.append('attachmentDescription',attachmentDescription !== null ? attachmentDescription : '',);
 		formData.append('type', 6);
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
 		formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
@@ -1944,11 +1964,17 @@ discountType = (row) =>
 												// 	) 
 												// 	  errors.placeOfSupplyId ='Place of supply is required';
 												//    }
-													if(this.state.customer_taxTreatment_des!="Non GCC")
-													{
-													if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
-														errors.placeOfSupplyId = 'Place of supply is required';
-													}}
+												if(this.state.customer_taxTreatment_des!="NON GCC")
+												{
+													if (!values.placeOfSupplyId) 
+																   errors.placeOfSupplyId ='Place of supply is required';
+													if (values.placeOfSupplyId &&
+																(values.placeOfSupplyId=="" ||
+																(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")
+																)
+															   ) 
+																 errors.placeOfSupplyId ='Place of supply is required';
+												}
 													if (param === true) {
 														errors.discount =
 															'Discount amount Cannot be greater than invoice total amount';
@@ -2661,7 +2687,7 @@ discountType = (row) =>
 																		<TextareaAutosize
 																			type="textarea"
 																			style={{width: "700px"}}
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="250"
 																			name="notes"
 																			id="notes"
@@ -2681,7 +2707,7 @@ discountType = (row) =>
 																				</Label>
 																				<Input
 																					type="text"
-																					maxLength="100"
+																					maxLength="20"
 																					id="receiptNumber"
 																					name="receiptNumber"
 																					value={props.values.receiptNumber}
@@ -2756,26 +2782,26 @@ discountType = (row) =>
 																		</Col>
 																	</Row>
 																	<FormGroup className="mb-3">
-																		<Label htmlFor="receiptAttachmentDescription">
+																		<Label htmlFor="attachmentDescription">
 																			{strings.AttachmentDescription}
 																		</Label><br/>
 																		<TextareaAutosize
 																			type="textarea"
-																			className="textarea"
+																			className="textarea form-control"
 																			maxLength="250"
 																			style={{width: "700px"}}
-																			name="receiptAttachmentDescription"
-																			id="receiptAttachmentDescription"
+																			name="attachmentDescription"
+																			id="attachmentDescription"
 																			rows="2"
 																			placeholder={strings.ReceiptAttachmentDescription}
 																			onChange={(option) =>
 																				props.handleChange(
-																					'receiptAttachmentDescription',
+																					'attachmentDescription',
 																				)(option)
 																			}
 																			value={
 																				props.values
-																					.receiptAttachmentDescription
+																					.attachmentDescription
 																			}
 																		/>
 																	</FormGroup>

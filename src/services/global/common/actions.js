@@ -99,9 +99,10 @@ export const getRoleList = (id) => {
 			method: 'GET',
 			url: `/rest/roleModule/getModuleListByRoleCode?roleCode=${id}`,
 		};
-
+	
 		return authApi(data)
 			.then((res) => {
+				
 				dispatch({
 					type: COMMON.USER_ROLE_LIST,
 					payload: res.data,

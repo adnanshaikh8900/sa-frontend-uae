@@ -20,7 +20,7 @@ import {
 } from 'reactstrap';
 import { ToastContainer } from 'react-toastify';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-
+import config from '../../constants/config'
 import Select from 'react-select';
 
 import { Loader } from 'components';
@@ -192,7 +192,7 @@ class UsersRoles extends React.Component {
 											</Row>
 										</div> */}
 										
-										<Button
+										{config.ADD_ROLES && <Button
 											color="primary"
 											style={{ marginBottom: '10px' }}
 											className="btn-square pull-right"
@@ -204,7 +204,7 @@ class UsersRoles extends React.Component {
 										>
 											<i className="fas fa-plus mr-1" />
 											 {strings.AddNewRole}
-										</Button>
+										</Button> }
 										<BootstrapTable
 											data={role_list}
 											hover

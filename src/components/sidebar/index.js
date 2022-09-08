@@ -1,6 +1,5 @@
 import React from 'react'
 import Sidebar from "react-sidebar";
-
 import './style.scss'
 
 class SidebarComponent extends React.Component {

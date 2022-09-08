@@ -860,16 +860,38 @@ class DetailCustomerInvoice extends React.Component {
 						}
 						id="vatCategoryId"
 						placeholder={strings.Select+strings.VAT}
+						// onChange={(e) => {
+						// 	this.selectItem(
+						// 		e.value,
+						// 		row,
+						// 		'vatCategoryId',
+						// 		form,
+						// 		field,
+						// 		props,
+						// 	);
+						// }}
 						onChange={(e) => {
-							this.selectItem(
-								e.value,
-								row,
-								'vatCategoryId',
-								form,
-								field,
-								props,
-							);
+							if (e.value === '') {
+								props.setFieldValue(
+									'vatCategoryId',
+									'',
+								);
+							} else {
+								this.selectItem(
+									e.value,
+									row,
+									'vatCategoryId',
+									form,
+									field,
+									props,
+								);
+								this.updateAmount(
+									this.state.data,
+									props,
+								);
 						}}
+					}
+					
 						className={`${
 							props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -1761,9 +1783,9 @@ class DetailCustomerInvoice extends React.Component {
 													       	errors.placeOfSupplyId ='Place of supply is required';
 														if (values.placeOfSupplyId &&
 															(values.placeOfSupplyId=="" ||
-															(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select place of supply")
+															(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")
 															)
-														   ) 
+														   )
 													         errors.placeOfSupplyId ='Place of supply is required';
 														
 													   }
@@ -2639,7 +2661,7 @@ class DetailCustomerInvoice extends React.Component {
 																			</FormGroup>
 																			</Col>
 
-															<Col md="4">
+															{/* <Col md="4">
 																<FormGroup>
 																	<Label htmlFor="shippingTelephone">{strings.Telephone}</Label>
 																	<Input
@@ -2717,7 +2739,7 @@ class DetailCustomerInvoice extends React.Component {
 																			</div>
 																		)}
 																</FormGroup>
-															</Col>
+															</Col> */}
 									
 														</Row>
 																<hr />

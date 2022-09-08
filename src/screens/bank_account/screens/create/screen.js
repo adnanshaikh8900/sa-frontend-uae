@@ -691,7 +691,7 @@ class CreateBankAccount extends React.Component {
 																	</Label>
 																	<Input
 																		type="text"
-																		maxLength="100"
+																		maxLength="25"
 																		id="account_number"
 																		autoComplete="Off"
 																		name="account_number"

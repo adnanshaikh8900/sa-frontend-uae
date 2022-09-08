@@ -199,6 +199,9 @@ approve-sit-deployment-job:
   script:
     - echo "Pipeline Source:$CI_PIPELINE_SOURCE"
     - echo "Approve SIT Deployment"
+    - FRONTEND_VERSION="\"$TAG\""
+    - BACKEND_VERSION=$(curl --header "Content-Type:application/json" --header "Authorization:Bearer $STRAPI_API_TOKEN" --request GET "https://strapi-api-dev.app.simpleaccounts.io/version" | jq .backend )
+    - curl --header "Content-Type:application/json" --header "Authorization:Bearer $STRAPI_API_TOKEN" --data "{\"frontend\":$FRONTEND_VERSION,\"backend\":$BACKEND_VERSION}" --request PUT "https://strapi-api-dev.app.simpleaccounts.io/version"
   resource_group: test
   allow_failure: false
   rules:
@@ -395,6 +398,10 @@ approve-prod-deployment-job:
   script:
     - echo "Pipeline Source:$CI_PIPELINE_SOURCE"
     - echo "Approve PROD Deployment"
+    - TAG=$CI_BUILD_TAG
+    - FRONTEND_VERSION="\"$TAG\""
+    - BACKEND_VERSION=$(curl --header "Content-Type:application/json" --header "Authorization:Bearer $PROD_STRAPI_API_TOKEN" --request GET "https://strapi-api.ae.simpleaccounts.io/version" | jq .backend )
+    - curl --header "Content-Type:application/json" --header "Authorization:Bearer $PROD_STRAPI_API_TOKEN" --data "{\"frontend\":$FRONTEND_VERSION,\"backend\":$BACKEND_VERSION}" --request PUT "https://strapi-api.ae.simpleaccounts.io/version"
   resource_group: prod
   allow_failure: false
   rules:

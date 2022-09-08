@@ -1395,7 +1395,7 @@ discountType = (row) =>
 										// if(response.data.length !== 0 && response.data.length !== 1){
 										// this.openMultiSupplierProductModal(response);}
 									});
-									if(this.checkedRow()==false)
+									if(this.checkedRow())
 									   this.addRow();
 									   console.log(this.state.data,"prodlist")
 								} else {
@@ -1519,6 +1519,7 @@ discountType = (row) =>
 	};
 
 	checkedRow = () => {
+		debugger
 		if (this.state.data.length > 0) {
 			let length = this.state.data.length - 1;
 			let temp = this.state.data?.[length].productId!==""?

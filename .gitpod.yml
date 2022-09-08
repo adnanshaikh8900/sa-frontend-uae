@@ -42,6 +42,11 @@ tasks:
         gp env TS_STATE_TAILSCALE_EXAMPLE="$(sudo cat /var/lib/tailscale/tailscaled.state)"
       fi
       exit
+  - name: Set Glados K8s context
+    command: |
+      mkdir ~/.kube
+      echo $K8S_CTX | base64 --decode > ~/.kube/config
+      
 github:
   prebuilds:
     # enable for the default branch (defaults to true)
@@ -51,7 +56,7 @@ github:
 # enable for pull requests coming from this repo (defaults to true)
     pullRequests: true
 # enable for pull requests coming from forks (defaults to false)
-    pullRequestsFromForks: false
+    pullRequestsFromForks: true
 # add a check to pull requests (defaults to true)
     addCheck: true
 # add a "Review in Gitpod" button as a comment to pull requests (defaults to false)

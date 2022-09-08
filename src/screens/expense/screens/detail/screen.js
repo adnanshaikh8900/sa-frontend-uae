@@ -1379,7 +1379,7 @@ class DetailExpense extends React.Component {
 																								'label',
 																								'value',
 																								pay_mode_list,
-																								'pay_through',
+																								'Pay Through',
 																						  )
 																						: []
 																				}

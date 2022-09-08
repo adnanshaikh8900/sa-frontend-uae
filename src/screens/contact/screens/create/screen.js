@@ -67,7 +67,7 @@ class CreateContact extends React.Component {
 				city: '',
 				contactType: this.props.contactType ? this.props.contactType : '',
 				countryId: '',
-				currencyCode: { label: "UAE Dirham - AED", value: 150 },
+				currencyCode: 150,
 				email: '',
 				firstName: '',
 				shippingAddress: '',
@@ -166,7 +166,7 @@ class CreateContact extends React.Component {
 					...this.state.initValue,
 					...{
 						currencyCode: response.data
-							? parseInt(response.data[0].currencyCode)
+							? parseInt(response.data[1].currencyCode)
 							: '',
 					},
 				},
@@ -807,7 +807,7 @@ class CreateContact extends React.Component {
 																							.find(
 																								(option) =>
 																									option.value ===
-																									+props.values.currencyCode.value,
+																									+props.values.currencyCode,
 																							)
 																					}
 																					onChange={(option) => {
@@ -1386,7 +1386,7 @@ class CreateContact extends React.Component {
 																				</Label>
 																				<Input
 																					type="text"
-																					maxLength="8"
+																					maxLength="15"
 																					id="billingFax"
 																					name="billingFax"
 																					autoComplete="Off"
@@ -1802,7 +1802,7 @@ class CreateContact extends React.Component {
 																				</Label>
 																				<Input
 																					type="text"
-																					maxLength="8"
+																					maxLength="15"
 																					id="shippingFax"
 																					name="shippingFax"
 																					autoComplete="Off"

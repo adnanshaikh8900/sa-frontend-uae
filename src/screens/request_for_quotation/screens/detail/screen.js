@@ -664,7 +664,7 @@ class DetailRequestForQuotation extends React.Component {
 		// ) : (
 		// 	''
 		// );
-		 return row.subTotal === 0 ? this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		 return row.subTotal === 0 ? this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 });
 		// return row.subTotal === 0 ? row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) :  row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
 	};
 	addRow = () => {
@@ -719,7 +719,7 @@ class DetailRequestForQuotation extends React.Component {
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// );
-		return row.vatAmount === 0 ? this.state.supplier_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.vatAmount === 0 ? this.state.supplier_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 });
 	};
 
 	selectItem = (e, row, name, form, field, props) => {
@@ -793,16 +793,37 @@ class DetailRequestForQuotation extends React.Component {
 						}
 						id="vatCategoryId"
 						placeholder={strings.Select+strings.VAT}
+						// onChange={(e) => {
+						// 	this.selectItem(
+						// 		e.value,
+						// 		row,
+						// 		'vatCategoryId',
+						// 		form,
+						// 		field,
+						// 		props,
+						// 	);
+						// }}
 						onChange={(e) => {
-							this.selectItem(
-								e.value,
-								row,
-								'vatCategoryId',
-								form,
-								field,
-								props,
-							);
+							if (e.value === '') {
+								props.setFieldValue(
+									'vatCategoryId',
+									'',
+								);
+							} else {
+								this.selectItem(
+									e.value,
+									row,
+									'vatCategoryId',
+									form,
+									field,
+									props,
+								);
+								this.updateAmount(
+									this.state.data,
+									props,
+								);
 						}}
+					}
 						className={`${
 							props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -1572,20 +1593,17 @@ setDate1= (props, value) => {
 													validate={(values)=>{
 														let errors={}
 
-														if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
-														||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
-														||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
-														{
-															if (!values.placeOfSupplyId) 
-																   errors.placeOfSupplyId ='Place of supply is required';
-															if (values.placeOfSupplyId &&
-																(values.placeOfSupplyId=="" ||
-																(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select place of supply")
-																)
-															   ) 
-																 errors.placeOfSupplyId ='Place of supply is required';
-														
-													   }
+														if(this.state.customer_taxTreatment_des!="NON GCC")
+													{
+														if (!values.placeOfSupplyId) 
+															       	errors.placeOfSupplyId ='Place of supply is required';
+														if (values.placeOfSupplyId &&
+																	(values.placeOfSupplyId=="" ||
+																	(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")
+																	)
+																   ) 
+															         errors.placeOfSupplyId ='Place of supply is required';
+													}
 													   return errors
 													}}
 													validationSchema={Yup.object().shape(
@@ -1596,9 +1614,6 @@ setDate1= (props, value) => {
 														supplierId: Yup.string().required(
 															'Supplier is required',
 														),
-														placeOfSupplyId: Yup.string().required(
-															'Place of supply is required'),
-														
 														rfqReceiveDate: Yup.string().required(
 															'Issue date is required',
 														),
@@ -1811,7 +1826,7 @@ setDate1= (props, value) => {
 																</FormGroup>
 															</Col>
 																<Col lg={3}>
-																{/* {this.state.customer_taxTreatment_des!="NON GCC" &&(		 */}
+																{this.state.customer_taxTreatment_des!="NON GCC" &&(		
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="placeOfSupplyId">
 																			<span className="text-danger">* </span>
@@ -1875,10 +1890,8 @@ setDate1= (props, value) => {
 																				</div>
 																			)}
 																	</FormGroup>
-																	{/* )} */}
+																	 )}
 																</Col>
-															
-																
 															</Row>
 															
 															<Row>

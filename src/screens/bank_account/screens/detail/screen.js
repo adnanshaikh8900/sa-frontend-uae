@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-
 import {
 	Card,
 	CardHeader,
@@ -25,7 +24,6 @@ import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
 import { CommonActions } from 'services/global';
 import * as detailBankAccountActions from './actions';
 import * as BankAccountActions from '../../actions';
-
 import './style.scss';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
@@ -113,7 +111,7 @@ class DetailBankAccount extends React.Component {
 			bankList:[]
 		};
 
-		this.regExAlpha = /^[a-zA-Z]+$/;
+		this.regExAlpha = /^[a-zA-Z_ ]+$/;
 		this.regEx = /^[0-9\d]+$/;
 		this.regExBoth = /[a-zA-Z0-9_ ]+$/;
 		this.ifscCode = /[a-zA-Z0-9]+$/;
@@ -437,7 +435,9 @@ class DetailBankAccount extends React.Component {
 																	onChange={(option) => {
 																		if (
 																			option.target.value === '' ||
-																			this.regExAlpha.test(option.target.value)
+																			this.regExAlpha.test(
+																				option.target.value
+																			)
 																		) {
 																			props.handleChange('account_name')(
 																				option,
@@ -765,6 +765,7 @@ class DetailBankAccount extends React.Component {
 																</Label>
 																<Input
 																	type="text"
+																	maxLength="25"
 																	id="account_number"
 																	autoComplete="Off"
 																	name="account_number"

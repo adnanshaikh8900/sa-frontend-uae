@@ -30,7 +30,7 @@ import { Aside, Header, Footer, Loading } from 'components';
 import './style.scss';
 import {data}  from '../../screens/Language/index'
 import LocalizedStrings from 'react-localization';
-
+import config from '../../constants/config'
 const mapStateToProps = (state) => {
 	return {
 		user_list: state.user.user_list,
@@ -44,7 +44,8 @@ const mapDispatchToProps = (dispatch) => {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
-
+console.log(adminRoutes)
+debugger
 let strings = new LocalizedStrings(data);
 if(localStorage.getItem('language')==null)
 	{
@@ -143,21 +144,21 @@ class AdminLayout extends React.Component {
 			 			}
 			 		}
 			 	}
-			 	if (moduleName === 'Dashboard' && item.name === strings.Dashboard) {
+			 	if (moduleName === 'Dashboard' && item.name === strings.Dashboard && config.DASHBOARD) {
 					arr.items.push({
 			 			name: item.name,
 			 			url: item.url,
 			 			icon: item.icon,
 			 		});
 				 }
-				 if (moduleName === 'Report' && item.name === strings.Report) {
+				 if (moduleName === 'Report' && item.name === strings.Report && config.REPORTS_MODULE ) {
 					arr.items.push({
 			 			name: item.name,
 			 			url: item.url,
 			 			icon: item.icon,
 			 		});
 				 }
-				 if (moduleName === 'Inventory Summary' && item.name === strings.Inventory) {
+				 if (moduleName === 'Inventory Summary' && item.name === strings.Inventory ) {
 					arr.items.push({
 			 			name: item.name,
 			 			url: item.url,
@@ -219,12 +220,12 @@ class AdminLayout extends React.Component {
             							draggable
 									/>
 									<Switch>
-										{adminRoutes.map((prop, key) => {
-											if (prop.redirect){
+										{adminRoutes?.map((prop, key) => {
+											if (prop?.redirect){
 												return (
 													<Redirect
-														from={prop.path}
-														to={prop.pathTo}
+														from={prop?.path}
+														to={prop?.pathTo}
 														key={key}
 													/>
 												);

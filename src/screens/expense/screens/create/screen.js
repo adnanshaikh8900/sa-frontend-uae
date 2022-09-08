@@ -1565,7 +1565,7 @@ componentWillUnmount() {
 																							'label',
 																							'value',
 																							pay_mode_list,
-																							'',
+																							'Pay Through',
 																					  )
 																					: []
 																			}

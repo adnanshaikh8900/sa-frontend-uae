@@ -1519,7 +1519,6 @@ discountType = (row) =>
 	};
 
 	checkedRow = () => {
-		debugger
 		if (this.state.data.length > 0) {
 			let length = this.state.data.length - 1;
 			let temp = this.state.data?.[length].productId!==""?

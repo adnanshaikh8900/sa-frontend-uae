@@ -1464,7 +1464,7 @@ class CreateSupplierInvoice extends React.Component {
 							if (e && e.label !== 'Select Product') {
 								this.selectItem(e.value, row, 'productId', form, field, props);
 								this.prductValue(e.value, row, 'productId', form, field, props);
-								if(this.checkedRow()==false)
+								if(this.checkedRow())
 								this.addRow();
 							} else {
 								form.setFieldValue(
@@ -1667,15 +1667,13 @@ class CreateSupplierInvoice extends React.Component {
 			let temp = this.state.data?.[length].productId!==""?
 			this.state.data?.[length].productId:-2
 			if (temp > -1) {
-				return false;
-			} else {
 				return true;
+			} else {
+				return false;
 			}
-			
 		} else {
-			return false;
+			return true;
 		}
-		
 	};
 
 	setDate = (props, value) => {

@@ -165,9 +165,7 @@ class CreateContact extends React.Component {
 				initValue: {
 					...this.state.initValue,
 					...{
-						currencyCode: response.data
-							? parseInt(response.data[1].currencyCode)
-							: '',
+						currencyCode: 150,
 					},
 				},
 

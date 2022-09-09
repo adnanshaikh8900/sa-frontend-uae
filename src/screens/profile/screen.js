@@ -139,6 +139,7 @@ class Profile extends React.Component {
 				companyPostZipCode: '',
 				companyPoBoxNumber: '',
 				companyCountryCode: 229,
+				fax:'',
 				loadingMsg:"Loading...",
 				disableLeavePage:false
 			},
@@ -429,6 +430,7 @@ class Profile extends React.Component {
 									companyExpenseBudget: res.data.companyExpenseBudget
 										? res.data.companyExpenseBudget
 										: '',
+									fax: res.data.fax ? res.data.fax : '',
 									companyRevenueBudget: res.data.companyRevenueBudget
 										? res.data.companyRevenueBudget
 										: '',
@@ -484,6 +486,7 @@ class Profile extends React.Component {
 											companyCountryCode: res.data.invoicingCountryCode
 												? res.data.invoicingCountryCode
 												: '',
+											fax: res.data.fax ? res.data.fax : '',
 										},
 									});
 								}
@@ -1378,7 +1381,7 @@ class Profile extends React.Component {
 																							//	added validation popup	msg	
 																							props.handleBlur();
 																							if(props.errors &&  Object.keys(props.errors).length != 0)
-																							this.props.commonActions.fillManDatoryDetails();
+																								this.props.commonActions.fillManDatoryDetails();
 																					 }}
 																					>
 																						<i className="fa fa-dot-circle-o"></i>{' '}
@@ -2372,11 +2375,11 @@ class Profile extends React.Component {
 																									option.target.value,
 																								)
 																							) {
-																								option = upperFirst(option.target.value)
+																								
 																								props.handleChange('fax')(option);
 																							}
 																						}}
-																						value={props.values.fax}
+																						value={ props.values.fax}
 																				
 																					/>
 																				

@@ -398,11 +398,11 @@ class CreateContact extends React.Component {
 																}
 
 																if (this.state.showbillingFaxErrorMsg == true)
-																	errors.billingFax = "Please enter 8 digit Fax"
+																	errors.billingFax = "Please enter 15 digit Fax"
 
 
 																if (this.state.showshippingFaxErrorMsg == true)
-																	errors.shippingFax = "Please enter 8 digit Fax"
+																	errors.shippingFax = "Please enter 15 digit Fax"
 
 																if (this.state.showpoBoxNumberErrorMsg == true)
 																	errors.poBoxNumber = "Please enter 3 To 6 digit po box number"
@@ -1394,7 +1394,7 @@ class CreateContact extends React.Component {
 																							option.target.value === '' ||
 																							this.regEx.test(option.target.value)
 																						) {
-																							if (option.target.value.length != 8 && option.target.value != "")
+																							if (option.target.value.length != 15 && option.target.value != "")
 																								this.setState({ showbillingFaxErrorMsg: true })
 																							else
 																								this.setState({ showbillingFaxErrorMsg: false })
@@ -1448,7 +1448,7 @@ class CreateContact extends React.Component {
 																								props.handleChange('shippingPoBoxNumber')(props.values.billingPostZipCode);
 																								props.handleChange('shippingPoBoxNumber')(props.values.billingPoBoxNumber);
 																								props.handleChange('shippingFax')(props.values.billingFax);
-																								if (props.values.billingFax.length != 8 && props.values.billingFax != "")
+																								if (props.values.billingFax.length != 15 && props.values.billingFax != "")
 																									this.setState({ showshippingFaxErrorMsg: true })
 																								else
 																									this.setState({ showshippingFaxErrorMsg: false })
@@ -1464,6 +1464,7 @@ class CreateContact extends React.Component {
 																								props.handleChange('shippingPostZipCode')("");
 																								props.handleChange('shippingFax')("");
 																							}
+
 																						}}
 																						type="checkbox"
 																						id="inline-radio1"
@@ -1810,7 +1811,7 @@ class CreateContact extends React.Component {
 																							option.target.value === '' ||
 																							this.regEx.test(option.target.value)
 																						) {
-																							if (option.target.value.length != 8 && option.target.value != "")
+																							if (option.target.value.length != 15 && option.target.value != "")
 																								this.setState({ showshippingFaxErrorMsg: true })
 																							else
 																								this.setState({ showshippingFaxErrorMsg: false })

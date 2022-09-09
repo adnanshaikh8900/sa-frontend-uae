@@ -2632,7 +2632,8 @@ class DetailCustomerInvoice extends React.Component {
 																					id="shippingPostZipCode"
 																					name="shippingPostZipCode"
 																					autoComplete="Off"
-																					placeholder={strings.Enter + strings.PostZipCode}
+																					placeholder={props.values.shippingCountryId &&( props.values.shippingCountryId == 229 || props.values.shippingCountryId.value == 229) ?
+																						strings.Enter + strings.POBoxNumber : strings.Enter + strings.PostZipCode}
 																					onChange={(option) => {
 																						if (
 																							option.target.value === '' ||

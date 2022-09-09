@@ -1395,7 +1395,7 @@ discountType = (row) =>
 										// if(response.data.length !== 0 && response.data.length !== 1){
 										// this.openMultiSupplierProductModal(response);}
 									});
-									if(this.checkedRow()==false)
+									if(this.checkedRow())
 									   this.addRow();
 									   console.log(this.state.data,"prodlist")
 								} else {
@@ -1529,7 +1529,7 @@ discountType = (row) =>
 				return false;
 			}
 		} else {
-			return false;
+			return true;
 		}
 	};
 
@@ -3157,7 +3157,8 @@ if(changeShippingAddress && changeShippingAddress==true)
 																					id="shippingPostZipCode"
 																					name="shippingPostZipCode"
 																					autoComplete="Off"
-																					placeholder={strings.Enter + strings.PoBoxZip}
+																					placeholder={props.values.shippingCountryId &&( props.values.shippingCountryId == 229 || props.values.shippingCountryId.value == 229) ?
+																									strings.Enter + strings.POBoxNumber : strings.Enter + strings.PostZipCode}
 																					onChange={(option) => {
 																						if (
 																							option.target.value === '' ||

@@ -1209,6 +1209,7 @@ class CreateSupplierInvoice extends React.Component {
 			}
 			return obj;
 		});
+		console.log(row.vatCategoryId,"row wali id");
 
 		return (
 			<Field
@@ -1230,7 +1231,7 @@ class CreateSupplierInvoice extends React.Component {
 							vat_list &&
 							selectOptionsFactory
 								.renderOptions('name', 'id', vat_list, 'VAT')
-								.find((option) => option.value === +row.vatCategoryId)
+								.find((option) => option.value === row.vatCategoryId)
 						}
 						id="vatCategoryId"
 						placeholder={strings.Select + strings.VAT}
@@ -1464,7 +1465,7 @@ class CreateSupplierInvoice extends React.Component {
 							if (e && e.label !== 'Select Product') {
 								this.selectItem(e.value, row, 'productId', form, field, props);
 								this.prductValue(e.value, row, 'productId', form, field, props);
-								if(this.checkedRow()==false)
+								if(this.checkedRow())
 								this.addRow();
 							} else {
 								form.setFieldValue(
@@ -1667,15 +1668,13 @@ class CreateSupplierInvoice extends React.Component {
 			let temp = this.state.data?.[length].productId!==""?
 			this.state.data?.[length].productId:-2
 			if (temp > -1) {
-				return false;
-			} else {
 				return true;
+			} else {
+				return false;
 			}
-			
 		} else {
-			return false;
+			return true;
 		}
-		
 	};
 
 	setDate = (props, value) => {
@@ -2020,6 +2019,7 @@ class CreateSupplierInvoice extends React.Component {
 								},}
 							});
 							this.getInvoiceNo();
+							console.log(this.state.data,"State Data");
 							this.formRef.current.setFieldValue(
 								'lineItemsString',
 								this.state.data,
@@ -3252,7 +3252,6 @@ class CreateSupplierInvoice extends React.Component {
 																			Excise dropdown will be enabled only for the excise products
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn>}
-																	
 																	<TableHeaderColumn
 																		width="10%"
 																		dataField="vat"

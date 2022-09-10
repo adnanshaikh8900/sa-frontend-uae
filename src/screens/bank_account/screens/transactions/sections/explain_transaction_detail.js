@@ -936,7 +936,7 @@ class ExplainTrasactionDetail extends React.Component {
 		  0
 		)
 	
-		const transactionAmount = this.formRef.current.state.values.transactionAmount
+		const transactionAmount = this.formRef.current.state.values.amount
 		const isppselected = this.formRef.current.state.values?.invoiceIdList?.reduce((a, c, i) => a + (c.pp ? 1 : 0), 0)
 	
 		let final = 0
@@ -986,7 +986,7 @@ class ExplainTrasactionDetail extends React.Component {
 	
 	  setexchnagedamount = (option, amount) => {
 		if (option?.length > 0) {
-		  const transactionAmount = amount || this.formRef.current.state.values.transactionAmount
+		  const transactionAmount = amount || this.formRef.current.state.values.amount
 		  const exchangerate = this.formRef.current.state.values?.exchangeRate
 		  const invoicelist = [...option]
 		  const total = invoicelist.reduce((accu, curr, index) => curr.amount * exchangerate[index])
@@ -1014,9 +1014,9 @@ class ExplainTrasactionDetail extends React.Component {
 			  invoiceId: i.value,
 			  invoiceAmount: i.amount,
 			  convertedInvoiceAmount: i.amount * localexe,
-			  explainedAmount: finalcredit,
+			  explainedAmount: i.amount * localexe,
 			  exchangeRate: localexe,
-			  pp: i.pp !== undefined ? i.pp : false
+			  pp: false
 			}
 		  })
 		  this.formRef.current.setFieldValue('invoiceIdList', finaldata)
@@ -1037,13 +1037,14 @@ class ExplainTrasactionDetail extends React.Component {
 	
 		//how many are clicked
 		const howManyAreClicked = finaldata.reduce((a, c, i) => a + (c.pp ? 1 : 0), 0)
-		const transactionAmount = this.formRef.current.state.values.transactionAmount
+		const transactionAmount = this.formRef.current.state.values.amount
 		const total = finaldata.reduce((accu, curr, index) => accu + curr.convertedInvoiceAmount, 0)
 		const shortAmount = transactionAmount - total
 		let remainingcredit = transactionAmount
 		let updatedfinaldata = []
 		let temp=finaldata.reduce((a,c,i)=>c.convertedInvoiceAmount>=transactionAmount?a+1:a+0,0)
 		let amountislessthanallinvoice= temp===finaldata.length
+		debugger
 		let tempdata
 		if(amountislessthanallinvoice) {
 		if(value){
@@ -1056,34 +1057,31 @@ class ExplainTrasactionDetail extends React.Component {
 			return {...i,pp:value}
 		  })
 		  tempdata=this.setexchnagedamount(temp)
+		  debugger
 		}
 		finaldata=[...tempdata]
 		if(transactionAmount>0 && transactionAmount!=="")
 		this.formRef.current.setFieldValue('invoiceIdList', finaldata)
 	   } else {
+		let currentshort=shortAmount
 		finaldata.map((i, inx) => {
 		  const local = { ...i }
-	
+				
 		  if (i.pp) {
-			local.explainedAmount = local.convertedInvoiceAmount + (shortAmount / howManyAreClicked)
-			remainingcredit = remainingcredit - local.explainedAmount
-		  } else {
-			let localremainamount = remainingcredit
-			let finalcredit
-	
-			if (remainingcredit > 0) {
-			  localremainamount = remainingcredit - (i.convertedInvoiceAmount)
-	
-			  if (localremainamount >= 0) {
-				finalcredit = (i.convertedInvoiceAmount)
-			  }
-			  if (localremainamount < 0) {
-				finalcredit = (i.convertedInvoiceAmount) + localremainamount
-			  }
-			  remainingcredit = localremainamount
+				let iio= local.convertedInvoiceAmount +(currentshort/howManyAreClicked)
+				if(iio<0){
+					local.explainedAmount= 0
+					
+				} else {
+					local.explainedAmount=iio
+				}
 			}
-			local.explainedAmount = finalcredit
-		  }
+			 else {
+				local.explainedAmount=local.convertedInvoiceAmount
+			}	
+			
+			
+		  
 		  updatedfinaldata.push(local)
 		})
 		this.formRef.current.setFieldValue('invoiceIdList', updatedfinaldata)
@@ -2468,7 +2466,7 @@ class ExplainTrasactionDetail extends React.Component {
                                                 <Input
                                                   className="form-control"
                                                   id="exchangeRate"
-												  disabled={(this.state.initValue.explinationStatusEnum ==='PARTIAL')}
+												  disabled={(this.state.initValue.explinationStatusEnum ==='PARTIAL' || this.state.initValue.explinationStatusEnum==="FUll")}
                                                   name="exchangeRate"
                                                   type="number"
                                                   value={
@@ -2511,7 +2509,7 @@ class ExplainTrasactionDetail extends React.Component {
                                             <FormGroup className="mb-3" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
                                               <div>
                                                 <Input
-                                                  disabled={props.values?.transactionAmount -
+                                                  disabled={props.values?.amount -
                                                     props.values?.invoiceIdList?.reduce(
                                                       (accu, curr, index) =>
                                                         accu +
@@ -2524,7 +2522,7 @@ class ExplainTrasactionDetail extends React.Component {
                                                   checked={i.pp !== undefined ? i.pp : false}
 
                                                   onChange={(e) => {
-													if(this.state.initValue.explinationStatusEnum ==='PARTIAL')
+													if(this.state.initValue.explinationStatusEnum ==='PARTIAL'|| this.state.initValue.explinationStatusEnum==="FUll")
                                                     this.onppclick(e.target.checked, invindex)
                                                   }}
                                                 />

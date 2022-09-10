@@ -1112,8 +1112,8 @@ class CreateBankTransaction extends React.Component {
                             errors.transactionDate =
                               "Transaction Date cannot be before Bank Account Opening Date or after Current Date.";
                           }
-                          
-                          if (values.coaCategoryId.value !== 10 &&	!values.transactionCategoryId
+                         
+                          if (values.coaCategoryId.value !== 10 &&	(!values.transactionCategoryId && values.transactionCategoryId!=="")
                           ) {
                           	errors.transactionCategoryId ='Category is Required';
                           }
@@ -2197,7 +2197,7 @@ class CreateBankTransaction extends React.Component {
                                                         curr.amount * curr.exchangeRate
                                                       ,
                                                       0
-                                                    ) > 0}
+                                                    ) >= 0}
                                                   type="checkbox"
 
                                                   checked={i.pp !== undefined ? i.pp : false}

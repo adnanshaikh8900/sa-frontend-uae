@@ -1675,7 +1675,7 @@ discountType = (row) =>
 			option = data;
 		} else {
 			option = {
-				label: `${data.fullName}`,
+				label: `${data.organization!==""?data.organization : data.fullName}`,
 				value: data.id,
 			};
 		}

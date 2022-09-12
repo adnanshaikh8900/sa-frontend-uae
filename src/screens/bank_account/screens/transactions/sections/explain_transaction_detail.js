@@ -897,6 +897,7 @@ class ExplainTrasactionDetail extends React.Component {
 				}
 			})
 			.catch((err) => {
+				debugger
 				console.log(err);
 				this.props.commonActions.tostifyAlert(
 					'error',

@@ -865,7 +865,8 @@ renderVatAmount = (cell, row,extraData) => {
 							// this.setDate(undefined, '');
 							const val = term ? term.value.split('_') : '';
 							const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
-							const values =  res.data.invoiceDate	
+							// const values =  res.data.invoiceDate	
+							const values =  new Date();	
 								this.setState({
 									date: moment(values).add(temp, 'days'),
 									invoiceDate1: moment(values),

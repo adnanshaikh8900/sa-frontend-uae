@@ -2059,7 +2059,7 @@ class CreateBankTransaction extends React.Component {
 																			</Col>
 																		</Row>
 																	:'')} */}
-
+                            {console.log("laaaaaaa",props.values.coaCategoryId)}
                             {props.values.coaCategoryId &&
                               (props.values.coaCategoryId.label === "Sales" ||
                                 props.values.coaCategoryId.label ===

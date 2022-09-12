@@ -2432,10 +2432,11 @@ class ExplainTrasactionDetail extends React.Component {
                                   }
                                   {props.values?.invoiceIdList?.map(
                                     (i, invindex) => {
+										
                                       return (
                                         <Row>
                                            <Col lg={1}>
-                                            <span>INV-{i.id}</span>
+                                            <span>INV-{i.id || i.value}</span>
                                           </Col>
                                           <Col lg={2}>
                                             <Input

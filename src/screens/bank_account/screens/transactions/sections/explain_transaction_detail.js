@@ -2460,14 +2460,15 @@ class ExplainTrasactionDetail extends React.Component {
                                               <b></b>
                                             </label>{" "}
                                           </FormGroup>
-
                                           <Col lg={2}>
                                             <FormGroup className="mb-3">
                                               <div>
                                                 <Input
                                                   className="form-control"
                                                   id="exchangeRate"
-												  disabled={(this.state.initValue.explinationStatusEnum ==='PARTIAL' || this.state.initValue.explinationStatusEnum==="FUll")}
+
+												  disabled={this.state.initValue.explinationStatusEnum ==='PARTIAL' || this.state.initValue.explinationStatusEnum==="FULL"}
+
                                                   name="exchangeRate"
                                                   type="number"
                                                   value={

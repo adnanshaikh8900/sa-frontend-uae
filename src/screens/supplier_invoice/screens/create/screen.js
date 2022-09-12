@@ -1205,8 +1205,6 @@ class CreateSupplierInvoice extends React.Component {
 			}
 			return obj;
 		});
-		console.log(row.vatCategoryId,"row wali id");
-debugger
 		return (
 			<Field
 				name={`lineItemsString.${idx}.vatCategoryId`}

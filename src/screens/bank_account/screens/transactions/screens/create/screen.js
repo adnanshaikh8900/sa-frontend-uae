@@ -808,9 +808,9 @@ class CreateBankTransaction extends React.Component {
           invoiceId: i.value,
           invoiceAmount: i.amount,
           convertedInvoiceAmount: i.amount * localexe,
-          explainedAmount: finalcredit,
+          explainedAmount:  i.amount * localexe,
           exchangeRate: localexe,
-          pp: i.pp !== undefined ? i.pp : false
+          pp: false
         }
       })
       this.formRef.current.setFieldValue('invoiceIdList', finaldata)
@@ -825,64 +825,60 @@ class CreateBankTransaction extends React.Component {
   }
 
   onppclick = (value, indexofinvoce) => {
-    const local2 = [...this.formRef.current.state.values.invoiceIdList]
-    local2[indexofinvoce].pp = value
-    let finaldata = [...(local2)]
+		
+		const local2 = [...this.formRef.current.state.values.invoiceIdList]
+		local2[indexofinvoce].pp = value
+		let finaldata = [...(local2)]
+		//how many are clicked
+		const howManyAreClicked = finaldata.reduce((a, c, i) => a + (c.pp ? 1 : 0), 0)
+		const transactionAmount = this.formRef.current.state.values.transactionAmount
+		const total = finaldata.reduce((accu, curr, index) => accu + curr.convertedInvoiceAmount, 0)
+		const shortAmount = transactionAmount - total
+		let remainingcredit = transactionAmount
+		let updatedfinaldata = []
+		let temp=finaldata.reduce((a,c,i)=>c.convertedInvoiceAmount>=transactionAmount?a+1:a+0,0)
+		let amountislessthanallinvoice= temp===finaldata.length
+		let tempdata
+		if(amountislessthanallinvoice) {
+		if(value){
+		  tempdata=finaldata.map((i)=>
+		  {return {...i,pp:value,explainedAmount:transactionAmount/finaldata.length}
+		 })
+		}
+		else {
+		  const temp=finaldata.map((i)=>{
+			return {...i,pp:value}
+		  })
+		  tempdata=this.setexchnagedamount(temp)
+		  debugger
+		}
+		finaldata=[...tempdata]
+		if(transactionAmount>0 && transactionAmount!=="")
+		this.formRef.current.setFieldValue('invoiceIdList', finaldata)
+	   } else {
+		let currentshort=shortAmount
+		finaldata.map((i, inx) => {
+		  const local = { ...i }
+				
+		  if (i.pp) {
+				let iio= local.convertedInvoiceAmount +(currentshort/howManyAreClicked)
+				if(iio<0){
+					local.explainedAmount= 0
+					
+				} else {
+					local.explainedAmount=iio
+				}
+			}
+			 else {
+				local.explainedAmount=local.convertedInvoiceAmount
+			}	 
+		  updatedfinaldata.push(local)
+		})
+		this.formRef.current.setFieldValue('invoiceIdList', updatedfinaldata)
+	  }
+	}
 
-    //how many are clicked
-    const howManyAreClicked = finaldata.reduce((a, c, i) => a + (c.pp ? 1 : 0), 0)
-    const transactionAmount = this.formRef.current.state.values.transactionAmount
-    const total = finaldata.reduce((accu, curr, index) => accu + curr.convertedInvoiceAmount, 0)
-    const shortAmount = transactionAmount - total
-    let remainingcredit = transactionAmount
-    let updatedfinaldata = []
-    let temp=finaldata.reduce((a,c,i)=>c.convertedInvoiceAmount>=transactionAmount?a+1:a+0,0)
-    let amountislessthanallinvoice= temp===finaldata.length
-    let tempdata
-    if(amountislessthanallinvoice) {
-    if(value){
-      tempdata=finaldata.map((i)=>
-      {return {...i,pp:value,explainedAmount:transactionAmount/finaldata.length}
-     })
-    }
-    else {
-      const temp=finaldata.map((i)=>{
-        return {...i,pp:value}
-      })
-      tempdata=this.setexchnagedamount(temp)
-    }
-    finaldata=[...tempdata]
-    if(transactionAmount>0 && transactionAmount!=="")
-    this.formRef.current.setFieldValue('invoiceIdList', finaldata)
-   } else {
-    finaldata.map((i, inx) => {
-      const local = { ...i }
 
-      if (i.pp) {
-        local.explainedAmount = local.convertedInvoiceAmount + (shortAmount / howManyAreClicked)
-        remainingcredit = remainingcredit - local.explainedAmount
-      } else {
-        let localremainamount = remainingcredit
-        let finalcredit
-
-        if (remainingcredit > 0) {
-          localremainamount = remainingcredit - (i.convertedInvoiceAmount)
-
-          if (localremainamount >= 0) {
-            finalcredit = (i.convertedInvoiceAmount)
-          }
-          if (localremainamount < 0) {
-            finalcredit = (i.convertedInvoiceAmount) + localremainamount
-          }
-          remainingcredit = localremainamount
-        }
-        local.explainedAmount = finalcredit
-      }
-      updatedfinaldata.push(local)
-    })
-    this.formRef.current.setFieldValue('invoiceIdList', updatedfinaldata)
-  }
-}
 
   getCurrency = (opt) => {
     let supplier_currencyCode = 0;
@@ -1112,8 +1108,8 @@ class CreateBankTransaction extends React.Component {
                             errors.transactionDate =
                               "Transaction Date cannot be before Bank Account Opening Date or after Current Date.";
                           }
-                          
-                          if (values.coaCategoryId.value !== 10 &&	!values.transactionCategoryId
+                         
+                          if (values.coaCategoryId.value !== 10 &&	(!values.transactionCategoryId && values.transactionCategoryId!=="")
                           ) {
                           	errors.transactionCategoryId ='Category is Required';
                           }
@@ -2197,7 +2193,7 @@ class CreateBankTransaction extends React.Component {
                                                         curr.amount * curr.exchangeRate
                                                       ,
                                                       0
-                                                    ) > 0}
+                                                    ) >= 0}
                                                   type="checkbox"
 
                                                   checked={i.pp !== undefined ? i.pp : false}

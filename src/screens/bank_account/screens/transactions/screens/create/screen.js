@@ -162,10 +162,10 @@ class CreateBankTransaction extends React.Component {
               value: 5,
               label: "Interest Received",
             },
-            {
-              value: 6,
-              label: "Money Received From User",
-            },
+            // {
+            //   value: 6,
+            //   label: "Money Received From User",
+            // },
             {
               value: 7,
               label: "Disposal Of Capital Asset",
@@ -2059,7 +2059,7 @@ class CreateBankTransaction extends React.Component {
 																			</Col>
 																		</Row>
 																	:'')} */}
-
+                            {console.log("laaaaaaa",props.values.coaCategoryId)}
                             {props.values.coaCategoryId &&
                               (props.values.coaCategoryId.label === "Sales" ||
                                 props.values.coaCategoryId.label ===

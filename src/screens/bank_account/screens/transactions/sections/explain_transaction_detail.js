@@ -1392,11 +1392,13 @@ class ExplainTrasactionDetail extends React.Component {
 																			<span className="text-danger">* </span>
 																			{strings.TransactionType}
 																		</Label>
+																		{console.log("sdsdfsdf",chartOfAccountCategoryList)}
 																			<Select
 																				// styles={customStyles}
 																				options={
 																					chartOfAccountCategoryList
-																						? chartOfAccountCategoryList
+																						? [{...chartOfAccountCategoryList[0],
+																							options:chartOfAccountCategoryList[0]?.options?.filter((i)=>(i.value!==6 && chartOfAccountCategoryList[0].label==='Money Received'))}]
 																						: ''
 																				}
 																				value={

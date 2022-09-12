@@ -810,7 +810,7 @@ class CreateBankTransaction extends React.Component {
           convertedInvoiceAmount: i.amount * localexe,
           explainedAmount:  i.amount * localexe,
           exchangeRate: localexe,
-          pp: i.pp !== undefined ? i.pp : false
+          pp: false
         }
       })
       this.formRef.current.setFieldValue('invoiceIdList', finaldata)

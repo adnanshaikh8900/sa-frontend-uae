@@ -994,6 +994,10 @@ class CreateContact extends React.Component {
 																								'',
 																							);
 																						}
+																						props.handleChange('vatRegistrationNumber')(
+																							'',
+																						);
+
 																					}}
 																					className={
 																						props.errors.taxTreatmentId &&

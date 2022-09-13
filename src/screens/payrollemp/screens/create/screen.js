@@ -1328,9 +1328,14 @@ existForAccountNumber = (value) => {
                                                                             //     errors.stateId =
                                                                             //     'State is required';
                                                                             // }
-                                                                            if( values.stateId.label && values.stateId.label ==='Select State'){
-                                                                                errors.stateId =
-                                                                                'State is required';
+                                                                            
+                                                                            if (values.countryId == 229 || values.countryId.value == 229) {
+                                                                                if(values.stateId =="")  
+                                                                                    errors.stateId ='Emirate is required';
+                                                                            } else {
+                                                                                if(values.stateId =="")  
+                                                                                    errors.stateId ='State is required';
+            
                                                                             }
                                                                             
                                                                             // if (param === true) {
@@ -2130,6 +2135,7 @@ existForAccountNumber = (value) => {
                                                                                                                 props.handleChange('countryId')('');
                                                                                                                 this.getStateList('');
                                                                                                             }
+                                                                                                            props.handleChange('stateId')('');
                                                                                                         }}
                                                                                                         placeholder={strings.Select+strings.Country}
                                                                                                         id="countryId"

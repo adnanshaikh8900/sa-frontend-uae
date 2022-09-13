@@ -639,23 +639,32 @@ class DetailContact extends React.Component {
 																	if (values.billingcountryId == 229 || values.billingcountryId.value == 229) {
 																		if (values.billingPoBoxNumber === '')
 																			errors.poBoxNumber = 'Billing PO Box Number is Required';
+																		if(values.billingStateProvince =="")  
+																			errors.billingStateProvince ='Emirate is required';
 																	} else {
 																		if (values.billingPostZipCode == '')
 																			errors.billingPostZipCode = 'Postal Code is Required';
 																		else
 																			if (values.billingPostZipCode.length != 6)
 																				errors.billingPostZipCode = "Please Enter 6 Digit Postal Zip Code"
+																		if(values.billingStateProvince =="")  
+																			errors.billingStateProvince ='Billing state is required';
+		
 
 																	}
 																	if (values.shippingCountryId == 229 || values.shippingCountryId.value == 229) {
 																		if (values.shippingPoBoxNumber === '')
 																			errors.poBoxNumber = 'Shipping PO Box Number is Required';
+																		if(values.shippingStateId =="")  
+																			errors.shippingStateId ='Emirate is required';
 																	} else {
 																		if (values.shippingPostZipCode == '')
 																			errors.shippingPostZipCode = 'Postal Code is Required';
 																		else
 																			if (values.shippingPostZipCode.length != 6)
 																				errors.shippingPostZipCode = "Please Enter 6 Digit Postal Zip Code"
+																		if(values.shippingStateId =="")  
+																				errors.shippingStateId ='Shipping state is required';
 
 																	}
 																	if (this.state.showbillingFaxErrorMsg == true)
@@ -1426,10 +1435,7 @@ class DetailContact extends React.Component {
 																								this.getStateList('');
 
 																							}
-																							props.handleChange('stateId')({
-																								label: 'Select State',
-																								value: '',
-																							});
+																							props.handleChange('billingStateProvince')('');
 																							// props.handleChange('billingStateProvince')({
 																							// 	label: 'Select State',
 																							// 	value: '',
@@ -1875,10 +1881,7 @@ class DetailContact extends React.Component {
 																								props.handleChange('shippingCountryId')('');
 																								// this.getStateListForShippingAddress('');
 																							}
-																							props.handleChange('shippingStateId')({
-																								label: 'Select State',
-																								value: '',
-																							});
+																							props.handleChange('shippingStateId')('');
 																						}}
 																						placeholder={strings.Select + strings.Country}
 																						id="shippingCountryId"
@@ -2177,7 +2180,7 @@ class DetailContact extends React.Component {
 																							//	added validation popup	msg
 																							props.handleBlur();
 																							if(props.errors &&  Object.keys(props.errors).length != 0)
-																							this.props.commonActions.fillManDatoryDetails();
+																							 	this.props.commonActions.fillManDatoryDetails();
 																						}}
 																					>
 																						<i className="fa fa-dot-circle-o"></i>{' '}

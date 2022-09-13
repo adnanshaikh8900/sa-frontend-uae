@@ -377,23 +377,31 @@ class CreateContact extends React.Component {
 																if (values.billingcountryId == 229 || values.billingcountryId.value == 229) {
 																	if (values.billingPoBoxNumber === '')
 																		errors.poBoxNumber = 'Billing PO box number is required';
+																	if(values.billingStateProvince =="")  
+																		errors.billingStateProvince ='Emirate is required';
 																} else {
 																	if (values.billingPostZipCode == '')
 																		errors.billingPostZipCode = 'Postal code is required';
 																	else
 																		if (values.billingPostZipCode.length != 6)
 																			errors.billingPostZipCode = "Please enter 6 digit postal zip code"
+																	if(values.billingStateProvince =="")  
+																		errors.billingStateProvince ='Billing state is required';
 
 																}
 																if (values.shippingCountryId == 229 || values.shippingCountryId.value == 229) {
 																	if (values.shippingPoBoxNumber === '')
 																		errors.poBoxNumber = 'Shipping PO box number is required';
+																	if(values.shippingStateId =="")  
+																		errors.shippingStateId ='Emirate is required';
 																} else {
 																	if (values.shippingPostZipCode == '')
 																		errors.shippingPostZipCode = 'Postal Code is required';
 																	else
 																		if (values.shippingPostZipCode.length != 6)
 																			errors.shippingPostZipCode = "Please enter 6 digit Postal Zip Code"
+																	if(values.shippingStateId =="")  
+																		errors.shippingStateId ='Shipping state is required';
 
 																}
 

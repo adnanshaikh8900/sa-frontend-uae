@@ -552,6 +552,14 @@ emailvalidationCheck = (value) => {
                                                                 if(values.emergencyContactNumber1 && values.emergencyContactNumber1.length !== 12){
                                                                     errors.emergencyContactNumber1='Invalid mobile number'
                                                                 }
+                                                                if (values.countryId == 229 || values.countryId.value == 229) {
+                                                                    if(values.stateId =="")  
+                                                                        errors.stateId ='Emirate is required';
+                                                                } else {
+                                                                    if(values.stateId =="")  
+                                                                        errors.stateId ='State is required';
+
+                                                                }
 														return errors;
 													}}
                                                     validationSchema={Yup.object().shape({
@@ -1327,6 +1335,7 @@ emailvalidationCheck = (value) => {
                                                                                             props.handleChange('countryId')('');
                                                                                             this.getStateList(option.value);
                                                                                         }
+                                                                                        props.handleChange('stateId')('');
                                                                                        
                                                                                     }}
                                                                                     placeholder={strings.Select + strings.Country}

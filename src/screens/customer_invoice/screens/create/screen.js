@@ -667,8 +667,7 @@ renderVatAmount = (cell, row,extraData) => {
 					{
 						parentInvoiceId:parentInvoiceId,
 						initValue: {
-							receiptAttachmentDescription: res.data
-								.receiptAttachmentDescription
+							receiptAttachmentDescription: res.data.receiptAttachmentDescription
 								? res.data.receiptAttachmentDescription
 								: '',
 							receiptNumber: res.data.receiptNumber
@@ -677,20 +676,30 @@ renderVatAmount = (cell, row,extraData) => {
 							contact_po_number: res.data.contactPoNumber
 								? res.data.contactPoNumber
 								: '',
-							currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
-							exchangeRate:res.data.exchangeRate ? res.data.exchangeRate : '',
-							currencyName:res.data.currencyName ? res.data.currencyName : '',
+							currencyCode: res.data.currencyCode 
+								? res.data.currencyCode 
+								: '',
+							exchangeRate:res.data.exchangeRate 
+								? res.data.exchangeRate 
+								: '',
+							currencyName:res.data.currencyName 
+								? res.data.currencyName 
+								: '',
 							invoiceDueDate: res.data.invoiceDueDate
 								? moment(res.data.invoiceDueDate).format('DD-MM-YYYY')
 								: '',
 							invoiceDate: res.data.invoiceDate
 								? moment(res.data.invoiceDate).format('DD-MM-YYYY')
 								: '',
-								invoiceDate1: res.data.invoiceDate
+							invoiceDate1: res.data.invoiceDate
 								? res.data.invoiceDate
 								: '',
-							contactId: res.data.contactId ? res.data.contactId : '',
-							project: res.data.projectId ? res.data.projectId : '',
+							contactId: res.data.contactId 
+								? res.data.contactId 
+								: '',
+							project: res.data.projectId 
+								? res.data.projectId 
+								: '',
 							invoice_number: res.data.referenceNumber
 								? res.data.referenceNumber
 								: '',
@@ -698,58 +707,105 @@ renderVatAmount = (cell, row,extraData) => {
 							invoiceVATAmount: res.data.totalVatAmount
 								? res.data.totalVatAmount
 								: 0,
-							totalAmount: res.data.totalAmount ? res.data.totalAmount : 0,
-							notes: res.data.notes ? res.data.notes : '',
-							changeShippingAddress: res.data.changeShippingAddress ? res.data.changeShippingAddress : '',
-							shippingAddress: res.data.shippingAddress ? res.data.shippingAddress : '',
-							shippingCountryId: res.data.shippingCountry ? res.data.shippingCountry : '',
-							shippingStateId: res.data.shippingState ? res.data.shippingState : '',
-							shippingCity: res.data.shippingCity ? res.data.shippingCity : '',
-							shippingPostZipCode: res.data.shippingPostZipCode ? res.data.shippingPostZipCode : '',
-							shippingTelephone: res.data.shippingTelephone ? res.data.shippingTelephone : '',
-							shippingFax: res.data.shippingFax ? res.data.shippingFax : '',
+							totalAmount: res.data.totalAmount 
+								? res.data.totalAmount 
+								: 0,
+							notes: res.data.notes 
+								? res.data.notes 
+								: '',
+							changeShippingAddress: res.data.changeShippingAddress 
+								? res.data.changeShippingAddress 
+								: '',
+							shippingAddress: res.data.shippingAddress 
+								? res.data.shippingAddress 
+								: '',
+							shippingCountryId: res.data.shippingCountry 
+								? res.data.shippingCountry 
+								: '',
+							shippingStateId: res.data.shippingState 
+								? res.data.shippingState 
+								: '',
+							shippingCity: res.data.shippingCity 
+								? res.data.shippingCity 
+								: '',
+							shippingPostZipCode: res.data.shippingPostZipCode 
+								? res.data.shippingPostZipCode 
+								: '',
+							shippingTelephone: res.data.shippingTelephone 
+								? res.data.shippingTelephone 
+								: '',
+							shippingFax: res.data.shippingFax 
+								? res.data.shippingFax 
+								: '',
 							lineItemsString: res.data.invoiceLineItems
 								? res.data.invoiceLineItems
 								: [],
-							discount: res.data.discount ? res.data.discount : 0,
-
-
+							discount: res.data.discount 
+								? res.data.discount 
+								: 0,
 							term: term,
-							placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
-							fileName: res.data.fileName ? res.data.fileName : '',
-							filePath: res.data.filePath ? res.data.filePath : '',
-							total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : 0,
-							taxType : res.data.taxType ? true : false,
+							placeOfSupplyId: res.data.placeOfSupplyId 
+								? res.data.placeOfSupplyId 
+								: '',
+							fileName: res.data.fileName 
+								? res.data.fileName 
+								: '',
+							filePath: res.data.filePath 
+								? res.data.filePath 
+								: '',
+							total_excise: res.data.totalExciseAmount 
+								? res.data.totalExciseAmount 
+								: 0,
+							taxType: res.data.taxType 
+								? true 
+								: false,
 						 },
-						customer_taxTreatment_des : res.data.taxTreatment ? res.data.taxTreatment : '',
-						invoiceDateNoChange :res.data.invoiceDate
-						? moment(res.data.invoiceDate)
-						: '',
-						taxType : res.data.taxType ? true : false,
-						invoiceDueDateNoChange : res.data.invoiceDueDate ?
-						moment(res.data.invoiceDueDate) : '',
-						invoiceDate: res.data.invoiceDate
+							customer_taxTreatment_des: res.data.taxTreatment 
+								? res.data.taxTreatment 
+								: '',
+							invoiceDateNoChange :res.data.invoiceDate
+								? moment(res.data.invoiceDate)
+								: '',
+							taxType: res.data.taxType 
+								? true 
+								: false,
+							invoiceDueDateNoChange : res.data.invoiceDueDate 
+								? moment(res.data.invoiceDueDate) 
+								: '',
+							invoiceDate: res.data.invoiceDate
 								? res.data.invoiceDate
 								: '',
-						invoiceDueDate: res.data.invoiceDueDate
-							? res.data.invoiceDueDate
-							: '',
-						discountAmount: res.data.discount ? res.data.discount : 0,
-						discountPercentage: res.data.discountPercentage
-							? res.data.discountPercentage
-							: '',
+							invoiceDueDate: res.data.invoiceDueDate
+								? res.data.invoiceDueDate
+								: '',
+							discountAmount: res.data.discount 
+								? res.data.discount 
+								: 0,
+							discountPercentage: res.data.discountPercentage
+								? res.data.discountPercentage
+								: '',
 							invoiceDate1: res.data.invoiceDate
 								? res.data.invoiceDate
 								: '',
-						data: res.data.invoiceLineItems
-							? res.data.invoiceLineItems
-							: [],
-						selectedContact: res.data.contactId ? res.data.contactId : '',
-						contactId: res.data.contactId ? res.data.contactId : '',
-						term: term,
-						discountEnabled : res.data.discount > 0 ? true : false,
-						placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
-						loading: false,
+							data: res.data.invoiceLineItems
+								? res.data.invoiceLineItems
+								: [],
+							selectedContact: res.data.contactId 
+								? res.data.contactId 
+								: '',
+							contactId: res.data.contactId 
+								? res.data.contactId 
+								: '',
+							term: term
+								? term
+								: '',
+							discountEnabled: res.data.discount > 0 
+								? true 
+								: false,
+							placeOfSupplyId: res.data.placeOfSupplyId 
+								? res.data.placeOfSupplyId 
+								: '',
+							loading: false,
 					},
 					() => {
 						if(this.state.initValue && this.state.initValue.changeShippingAddress && this.state.initValue.shippingCountryId)
@@ -782,7 +838,6 @@ renderVatAmount = (cell, row,extraData) => {
 							this.formRef.current.setFieldValue('shippingTelephone', this.state.initValue.shippingTelephone , true);
 				            this.formRef.current.setFieldValue('shippingFax', this.state.initValue.shippingFax , true);	
 
-
 						}
 						if (this.state.data.length > 0) {
 							this.updateAmount(this.state.data);
@@ -810,7 +865,8 @@ renderVatAmount = (cell, row,extraData) => {
 							// this.setDate(undefined, '');
 							const val = term ? term.value.split('_') : '';
 							const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
-							const values =  res.data.invoiceDate	
+							// const values =  res.data.invoiceDate	
+							const values =  new Date();	
 								this.setState({
 									date: moment(values).add(temp, 'days'),
 									invoiceDate1: moment(values),
@@ -819,8 +875,8 @@ renderVatAmount = (cell, row,extraData) => {
 								this.formRef.current.setFieldValue('invoiceDate1',values, true);
 								this.formRef.current.setFieldValue('invoiceDueDate',date1, true);
 								// this.formRef.current.setFieldValue('invoiceDate1',values, true);
-							this.setExchange( this.getCurrency(res.data.contactId) );
-							this.addRow();
+								this.setExchange( this.getCurrency(res.data.contactId) );
+								this.addRow();
 						} else {
 							this.setState({
 								idCount: 0,
@@ -842,7 +898,6 @@ renderVatAmount = (cell, row,extraData) => {
 	  }
 	  if(this.props.location.state && this.props.location.state.parentInvoiceId )
 	  this.getParentInvoiceDetails(this.props.location.state.parentInvoiceId);
-
 	  this.getDefaultNotes()
 	};
 
@@ -1037,7 +1092,6 @@ renderVatAmount = (cell, row,extraData) => {
 	 					type="text"
 				   	    min="0"
 					    maxLength="14,2"
-
 					    value={row['discount'] !== 0 ? row['discount'] : 0}
 					    onChange={(e) => {
 						   if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -1050,7 +1104,6 @@ renderVatAmount = (cell, row,extraData) => {
 								   props,
 							   );
 						   }
-					   
 							   this.updateAmount(
 								   this.state.data,
 								   props,
@@ -1075,39 +1128,35 @@ renderVatAmount = (cell, row,extraData) => {
 
 		<div 	style={{width:'100px'}}>
 		<Select
-
-
-																						   options={discountOptions}
-																						   id="discountType"
-																						   name="discountType"
-																						   value={
-																						discountOptions &&
-																							selectOptionsFactory
-																								.renderOptions('label', 'value', discountOptions, 'discount')
-																								.find((option) => option.value == row.discountType)
-																						   }
-																						   onChange={(e) => {
-																							   this.selectItem(
-																								   e.value,
-																								   row,
-																								   'discountType',
-																								   form,
-																								   field,
-																								   props,
-																							   );
-																							   this.updateAmount(
-																								   this.state.data,
-																								   props,
-																							   );
-																						   }}
-																					   />
+				options={discountOptions}
+				id="discountType"
+				name="discountType"
+				value={
+						discountOptions &&
+						selectOptionsFactory
+						.renderOptions('label', 'value', discountOptions, 'discount')
+						.find((option) => option.value == row.discountType)
+						}
+				onChange={(e) => {
+									this.selectItem(
+									e.value,
+									row,
+									'discountType',
+									form,
+									field,
+									props,
+								 );
+						this.updateAmount(
+									this.state.data,
+										props,
+										);
+								 }}
+						 />
 			 </div>
 			  </div>
 			  </div>
 			   </div>
-
 				   )}
-
 		   />
 	   );
    }
@@ -1663,7 +1712,6 @@ discountType = (row) =>
 						const value = net_value / 2
 						obj.exciseAmount = parseFloat(value);
 					net_value = net_value}
-					
 							}
 							else{
 								obj.exciseAmount = 0
@@ -1748,84 +1796,37 @@ discountType = (row) =>
 		const { term } = this.state;
 		const formData = new FormData();
 		formData.append('taxType', this.state.taxType)
-		formData.append(
-			'quotationId',this.state.quotationId ? this.state.quotationId : ''
-		)
-		formData.append(
-			'referenceNumber',
-			invoice_number !== null ? this.state.prefix + invoice_number : '',
-		);
-		formData.append(
-			'invoiceDueDate',
-			invoiceDueDate ? this.state.date : null,
-		);
-		formData.append(
-			'invoiceDate',
-			invoiceDate
-				?invoiceDate
+		formData.append('quotationId', this.state.quotationId ? this.state.quotationId : '')
+		formData.append('referenceNumber', invoice_number !== null ? this.state.prefix + invoice_number : '');
+		formData.append('invoiceDueDate', invoiceDueDate ? this.state.date : null);
+		formData.append('invoiceDate', invoiceDate?invoiceDate
 						// moment(invoiceDate,'DD-MM-YYYY')
 						// .toDate()
 				: null,
 		);
-		formData.append(
-			'receiptNumber',
-			receiptNumber !== null ? receiptNumber : '',
-		);
-		formData.append(
-			'receiptAttachmentDescription',
-			receiptAttachmentDescription !== null ? receiptAttachmentDescription : '',
-		);
-		formData.append(
-			'exchangeRate',
-			exchangeRate !== null ? exchangeRate : '',
-		);
-		formData.append(
-			'contactPoNumber',
-			contact_po_number !== null ? contact_po_number : '',
-		);
+		formData.append('receiptNumber', receiptNumber !== null ? receiptNumber : '');
+		formData.append('receiptAttachmentDescription', receiptAttachmentDescription !== null ? receiptAttachmentDescription : '',);
+		formData.append('exchangeRate', exchangeRate !== null ? exchangeRate : '');
+		formData.append('contactPoNumber', contact_po_number !== null ? contact_po_number : '');
 if(changeShippingAddress && changeShippingAddress==true)
 		{
-			formData.append(
-				'changeShippingAddress',
-				changeShippingAddress !== null ? changeShippingAddress : '',
-			);
-			formData.append(
-			'shippingAddress',
-			shippingAddress !== null ? shippingAddress : '',
-		);
-		formData.append(
-			'shippingCountry',
-			shippingCountryId.value  ? shippingCountryId.value : shippingCountryId,
-		);
-		formData.append(
-			'shippingState',
-			shippingStateId.value !== null ? shippingStateId.value : shippingStateId,
-		);
-		formData.append(
-			'shippingCity',
-			shippingCity  ? shippingCity : '',
-		);
-		formData.append(
-			'shippingPostZipCode',
-			shippingPostZipCode  ? shippingPostZipCode : '',
-		);
-		formData.append(
-			'shippingTelephone',
-			shippingTelephone  ? shippingTelephone : '',
-		);
-		formData.append(
-			'shippingFax',
-			shippingFax ? shippingFax : '',
-		);
-	}//
-		formData.append('notes', notes !== null ? notes : '');
-		formData.append('footNote',footNote? footNote : '')
-		formData.append('type', 2);
-		formData.append('lineItemsString', JSON.stringify(this.state.data));
-		formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
-		formData.append('totalAmount', this.state.initValue.totalAmount);
-		formData.append('totalExciseAmount', this.state.initValue.total_excise);
-		formData.append('discount',this.state.initValue.discount);
+			formData.append('changeShippingAddress', changeShippingAddress !== null ? changeShippingAddress : '');
+			formData.append('shippingAddress', shippingAddress !== null ? shippingAddress : '');
+			formData.append('shippingCountry', shippingCountryId.value  ? shippingCountryId.value : shippingCountryId);
+			formData.append('shippingState', shippingStateId.value !== null ? shippingStateId.value : shippingStateId);
+			formData.append('shippingCity',	shippingCity  ? shippingCity : '');
+			formData.append('shippingPostZipCode', shippingPostZipCode  ? shippingPostZipCode : '');
+			formData.append('shippingTelephone',shippingTelephone  ? shippingTelephone : '');
+			formData.append('shippingFax',shippingFax ? shippingFax : '');
+		}
+			formData.append('notes', notes !== null ? notes : '');
+			formData.append('footNote',footNote? footNote : '')
+			formData.append('type', 2);
+			formData.append('lineItemsString', JSON.stringify(this.state.data));
+			formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
+			formData.append('totalAmount', this.state.initValue.totalAmount);
+			formData.append('totalExciseAmount', this.state.initValue.total_excise);
+			formData.append('discount',this.state.initValue.discount);
 		
 		if (term && term.value) {
 			formData.append('term', term.value);
@@ -1922,13 +1923,11 @@ if(changeShippingAddress && changeShippingAddress==true)
 								this.state.data,
 								false,
 							);
-
 							this.formRef.current.setFieldValue('contactId', '', true);
 							this.formRef.current.setFieldValue('placeOfSupplyId', '', true);
 							this.formRef.current.setFieldValue('currency', null, true);
 							this.formRef.current.setFieldValue('taxTreatmentid','', true);
 							this.formRef.current.setFieldValue('term', term, true);
-						
 						},
 					);
 				} else {
@@ -2171,20 +2170,16 @@ if(changeShippingAddress && changeShippingAddress==true)
 					customer_taxTreatment_des: item.label.taxTreatment.taxTreatment,
 					// customer_currency_symbol: item.label.currency.currencyIsoCode,
 				});
-
 				customer_taxTreatmentId = item.label.taxTreatment.id;
 				customer_item_taxTreatment = item.label.currency
 			}
 		})
-	
 		return customer_taxTreatmentId;
 	}
 
 	rendertotalexcise=()=>{
 		const {initValue}= this.state
-		
 		let val=initValue.total_excise.toLocaleString(navigator.language, {minimumFractionDigits: 2, maximumFractionDigits: 2})
-		
 		return parseFloat(val).toFixed(2)
 	}
 
@@ -2202,14 +2197,13 @@ if(changeShippingAddress && changeShippingAddress==true)
 		const { loading, loadingMsg } = this.state
 		const { data, discountOptions, initValue, exist, param,prefix ,tax_treatment_list,state_list_for_shipping} = this.state;
 		const {
-			customer_list,
-			country_list,
-			universal_currency_list,
-			currency_convert_list,
-		} = this.props;
+				customer_list,
+				country_list,
+				universal_currency_list,
+				currency_convert_list,
+			} = this.props;
 		
 		let tmpCustomer_list = []
-
 		customer_list.map(item => {
 			let obj = {label: item.label.contactName, value: item.value}
 			tmpCustomer_list.push(obj)
@@ -2259,9 +2253,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 													this.handleSubmit(values, resetForm);
 												}}
 												validate={(values) => {
-												
 													let errors = {};
-													
 													console.log(values,"Values");
 													if (exist === true) {
 														errors.invoice_number =
@@ -2334,7 +2326,6 @@ if(changeShippingAddress && changeShippingAddress==true)
 
 													let isoutoftock=0
 
-													
 													values.lineItemsString.map((c,i)=>{
 														if(c.quantity>0 && c.productId!=="" ){ 
 
@@ -2412,8 +2403,6 @@ if(changeShippingAddress && changeShippingAddress==true)
 																productId: Yup.string().required(
 																	'Product is required',
 																),
-																
-
 															}),
 														),
 													attachmentFile: Yup.mixed()
@@ -2630,9 +2619,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		}
 																		onChange={(option) => {
 																		props.handleChange('taxTreatmentid')(option);
-
 																	    }}
-
 																	/>
 																	{props.errors.taxTreatmentid &&
 																		props.touched.taxTreatmentid && (
@@ -2677,11 +2664,10 @@ if(changeShippingAddress && changeShippingAddress==true)
 																				this.placelist,
 																				'Place of Supply',
 																		  ).find(
-																									(option) =>
-																										option.value ==
-																										((this.state.quotationId||this.state.parentInvoiceId) ? this.state.placeOfSupplyId:props.values
-																											.placeOfSupplyId.toString())
-
+																				(option) =>
+																					option.value ==
+																					((this.state.quotationId||this.state.parentInvoiceId) ? this.state.placeOfSupplyId:props.values
+																						.placeOfSupplyId.toString())
 																								)
 																						}
 																		className={
@@ -2777,7 +2763,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																						term: option,
 																					},
 																					() => {
-																						this.setDate(props, props.values.invoiceDate1);
+																						this.setDate(props, props.values.invoiceDate);
 																					},
 																				);
 																			}
@@ -2810,10 +2796,10 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		dateFormat="dd-MM-yyyy"
 																		//minDate={new Date()}
 																		dropdownMode="select"
-																		value={props.values.invoiceDate1 ?new Date(props.values.invoiceDate1):props.values.invoiceDate}
-																		selected={props.values.invoiceDate1 ?new Date(props.values.invoiceDate1):props.values.invoiceDate} 
+																		value={props.values.invoiceDate ?new Date(props.values.invoiceDate):props.values.invoiceDate}
+																		// value={props.values.invoiceDate}
+																		selected={props.values.invoiceDate ?new Date(props.values.invoiceDate):props.values.invoiceDate} 
 																		onChange={(value) => {
-																		
 																			props.handleChange('invoiceDate')(value);
 																			this.setDate(props, value);
 																		}}
@@ -2927,7 +2913,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 														<hr/>
 														<Row>
 															<Col>
-															<FormGroup check inline className="mb-3">
+																<FormGroup check inline className="mb-3">
 																					<div>
 																						<Input
 																							// className="custom-control-input"
@@ -2951,9 +2937,8 @@ if(changeShippingAddress && changeShippingAddress==true)
 																					{strings.noteforchangeaddress}
 																					</label>
 																					</div>
-																				</FormGroup>
-														
-                                                                    </Col>
+																</FormGroup>
+                                                            </Col>
 														</Row>
 														
 														<Row style={{display: props.values.changeShippingAddress === true ? '' : 'none'}}>
@@ -3109,7 +3094,6 @@ if(changeShippingAddress && changeShippingAddress==true)
 																<FormGroup>
 																	<Label htmlFor="shippingCity"><span className="text-danger"></span>{strings.City}</Label>
 																	<Input
-																
 																		// options={city ? selectOptionsFactory.renderOptions('cityName', 'cityCode', cityRegion) : ''}
 																		value={props.values.shippingCity}
 																		onChange={(option) => {
@@ -3119,7 +3103,6 @@ if(changeShippingAddress && changeShippingAddress==true)
 																					option.target.value,
 																				)
 																			) {
-																				
 																				props.handleChange('shippingCity')(option);
 																			}
 																		}}
@@ -3141,16 +3124,15 @@ if(changeShippingAddress && changeShippingAddress==true)
 																	)}
 																</FormGroup>
 															</Col>
-
-													
-																			<Col md="4" >
-																				<FormGroup>
-																					{props.values.shippingCountryId &&( props.values.shippingCountryId == 229 || props.values.shippingCountryId.value == 229) ?
-																					<Label htmlFor="POBoxNumber">
-																						<span className="text-danger">* </span>{strings.POBoxNumber}
-																					</Label>:
-																					<Label htmlFor="PostZipCode"><span className="text-danger">* </span>{strings.PostZipCode}</Label>
-																						}
+															
+															<Col md="4" >
+																		<FormGroup>
+																			{props.values.shippingCountryId &&( props.values.shippingCountryId == 229 || props.values.shippingCountryId.value == 229) ?
+																				<Label htmlFor="POBoxNumber">
+																					<span className="text-danger">* </span>{strings.POBoxNumber}
+																				</Label>:
+																				<Label htmlFor="PostZipCode"><span className="text-danger">* </span>{strings.PostZipCode}</Label>
+																					}
 																				<Input
 																					type="text"
 																					maxLength="6"
@@ -3295,7 +3277,6 @@ if(changeShippingAddress && changeShippingAddress==true)
 																			className="form-control"
 																			id="curreancyname"
 																			name="curreancyname"
-																			
 																			value={this.state.customer_currency_des}
 																			onChange={(value) => {
 																				props.handleChange('curreancyname')(
@@ -3318,7 +3299,6 @@ if(changeShippingAddress && changeShippingAddress==true)
 																			className="form-control"
 																			id="exchangeRate"
 																			name="exchangeRate"
-																			
 																			value={props.values.exchangeRate}
 																			onChange={(value) => {
 																				props.handleChange('exchangeRate')(
@@ -3380,16 +3360,13 @@ if(changeShippingAddress && changeShippingAddress==true)
 																	value={props.values.taxType}
 																	checked={this.state.taxType}
 																	onChange={(taxType) => {
-
-																		props.handleChange('taxType')(taxType);
-																		this.setState({ taxType }, () => {
-																			this.updateAmount(
-																				this.state.data,
-																				props
-																			)
-																		});
-
-
+																				props.handleChange('taxType')(taxType);
+																				this.setState({ taxType }, () => {
+																					this.updateAmount(
+																						this.state.data,
+																						props
+																					)
+																				});
 																	}}
 
 																	onColor="#2064d8"
@@ -3636,7 +3613,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																			</FormGroup>
 																		</Col>
 																		<Col lg={6}>
-																			<FormGroup className="mb-3">
+																			<FormGroup className="mb-3 hideAttachment" >
 																				<Field
 																					name="attachmentFile"
 																					render={({ field, form }) => (
@@ -3694,7 +3671,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																			</FormGroup>
 																		</Col>
 																	</Row>
-																	<FormGroup className="mb-3">
+																	<FormGroup className="mb-3 hideAttachment">
 																		<Label htmlFor="receiptAttachmentDescription">
 																			{strings.AttachmentDescription}
 																		</Label><br/>
@@ -3947,7 +3924,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																			? 'Creating...'
 																			: strings.Create }
 																	</Button>
-																	{this.state.quotationId ? "": (<Button
+																	{this.state.quotationId || this.props.location.state && this.props.location.state.parentInvoiceId ? "": (<Button
 																		type="button"
 																		color="primary"
 																		className="btn-square mr-3"

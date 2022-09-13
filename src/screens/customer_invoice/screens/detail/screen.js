@@ -2632,7 +2632,8 @@ class DetailCustomerInvoice extends React.Component {
 																					id="shippingPostZipCode"
 																					name="shippingPostZipCode"
 																					autoComplete="Off"
-																					placeholder={strings.Enter + strings.PostZipCode}
+																					placeholder={props.values.shippingCountryId &&( props.values.shippingCountryId == 229 || props.values.shippingCountryId.value == 229) ?
+																						strings.Enter + strings.POBoxNumber : strings.Enter + strings.PostZipCode}
 																					onChange={(option) => {
 																						if (
 																							option.target.value === '' ||
@@ -3103,7 +3104,7 @@ class DetailCustomerInvoice extends React.Component {
 																			</FormGroup>
 																		</Col>
 																		<Col lg={6}>
-																			<FormGroup className="mb-3">
+																			<FormGroup className="mb-3 hideAttachment">
 																				<Field
 																					name="attachmentFile"
 																					render={({ field, form }) => (
@@ -3162,7 +3163,7 @@ class DetailCustomerInvoice extends React.Component {
 																			</FormGroup>
 																		</Col>
 																	</Row>
-																	<FormGroup className="mb-3">
+																	<FormGroup className="mb-3 hideAttachment">
 																		<Label htmlFor="receiptAttachmentDescription">
 																			{strings.AttachmentDescription}
 																		</Label>

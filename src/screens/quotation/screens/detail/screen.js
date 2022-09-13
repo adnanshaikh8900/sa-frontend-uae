@@ -2453,7 +2453,7 @@ console.log(this.state.supplier_currency)
 																			</FormGroup>
 																		</Col>
 																		<Col lg={6}>
-																			<FormGroup className="mb-3">
+																			<FormGroup className="mb-3 hideAttachment">
 																				<Field
 																					name="attachmentFile"
 																					render={({ field, form }) => (
@@ -2511,7 +2511,7 @@ console.log(this.state.supplier_currency)
 																			</FormGroup>
 																		</Col>
 																	</Row>
-																	<FormGroup className="mb-3">
+																	<FormGroup className="mb-3 hideAttachment">
 																		<Label htmlFor="attachmentDescription">
 																			{strings.AttachmentDescription}
 																		</Label><br/>

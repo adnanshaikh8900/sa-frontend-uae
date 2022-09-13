@@ -865,7 +865,8 @@ renderVatAmount = (cell, row,extraData) => {
 							// this.setDate(undefined, '');
 							const val = term ? term.value.split('_') : '';
 							const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
-							const values =  res.data.invoiceDate	
+							// const values =  res.data.invoiceDate	
+							const values =  new Date();	
 								this.setState({
 									date: moment(values).add(temp, 'days'),
 									invoiceDate1: moment(values),
@@ -3612,7 +3613,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																			</FormGroup>
 																		</Col>
 																		<Col lg={6}>
-																			<FormGroup className="mb-3">
+																			<FormGroup className="mb-3 hideAttachment" >
 																				<Field
 																					name="attachmentFile"
 																					render={({ field, form }) => (
@@ -3670,7 +3671,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 																			</FormGroup>
 																		</Col>
 																	</Row>
-																	<FormGroup className="mb-3">
+																	<FormGroup className="mb-3 hideAttachment">
 																		<Label htmlFor="receiptAttachmentDescription">
 																			{strings.AttachmentDescription}
 																		</Label><br/>

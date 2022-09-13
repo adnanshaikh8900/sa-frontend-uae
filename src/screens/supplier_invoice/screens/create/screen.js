@@ -634,7 +634,8 @@ class CreateSupplierInvoice extends React.Component {
 							// this.formRef.current.setFieldValue('receiptAttachmentDescription',  res.data.receiptAttachmentDescription, true);
 							const val = term ? term.value.split('_') : '';
 							const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
-							const values = moment( moment( res.data.invoiceDate).format('DD-MM-YYYY'), 'DD-MM-YYYY').toDate();							
+							// const values = moment( moment( res.data.invoiceDate).format('DD-MM-YYYY'), 'DD-MM-YYYY').toDate();	
+							const values =  new Date();						
 								this.setState({
 									date: moment(values).add(temp, 'days'),
 									invoiceDate: moment(values),
@@ -1204,8 +1205,6 @@ class CreateSupplierInvoice extends React.Component {
 			}
 			return obj;
 		});
-		console.log(row.vatCategoryId,"row wali id");
-
 		return (
 			<Field
 				name={`lineItemsString.${idx}.vatCategoryId`}
@@ -1226,7 +1225,7 @@ class CreateSupplierInvoice extends React.Component {
 							vat_list &&
 							selectOptionsFactory
 								.renderOptions('name', 'id', vat_list, 'VAT')
-								.find((option) => option.value === row.vatCategoryId)
+								.find((option) => option.value == row.vatCategoryId)
 						}
 						id="vatCategoryId"
 						placeholder={strings.Select + strings.VAT}

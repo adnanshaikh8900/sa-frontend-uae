@@ -624,7 +624,8 @@ setConfigurations=(configurationList)=>{
 				return item;
 			});
 			let postData = { ...this.state.initValue };
-			postData.skipColumns = this.state.initValue.skipColumns.length >= 1  ? this.state.initValue.skipColumns : ''
+			debugger
+			postData.skipColumns = this.state.initValue?.skipColumns?.length >= 1  ? this.state.initValue?.skipColumns : ''
 			postData.indexMap = a;
 		let formData={
 			indexMap:a,
@@ -689,7 +690,7 @@ setConfigurations=(configurationList)=>{
 				return item;
 			});
 			let postData = { ...this.state.initValue };
-			postData.skipColumns = this.state.initValue.skipColumns.length >= 1  ? this.state.initValue.skipColumns : ''
+			postData.skipColumns = this.state.initValue?.skipColumns?.length >= 1  ? this.state.initValue?.skipColumns : ''
 			postData.indexMap = a;
 		this.props.importTransactionActions
 			.parseCsvFile(postData)

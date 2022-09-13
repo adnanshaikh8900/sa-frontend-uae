@@ -959,7 +959,7 @@ class ExplainTrasactionDetail extends React.Component {
 	setcustomexchnage = (customerinvoice) => {
 		let exchange;
 		let result = this.props.currency_convert_list.filter((obj) => {
-		  return obj.currencyCode === customerinvoice;
+		  return obj.currencyCode === this.state.bankCurrency.bankAccountCurrency;;
 		});
 		// this.state.invoiceCurrency
 		// this.state.bankCurrency.bankAccountCurrency

@@ -1014,6 +1014,8 @@ const en = {
       BalanceDue:"Balance Due",	
       BillTo:"Bill To",	
       CreditTo:"Credit To",
+      ReceivedFrom:"Received From",
+      PurchaseFrom:"Purchase From",
       TaxCreditDate:"Tax Credit Date",
       Company:"Company",	
       AmountInWords:"Amount In Words",	

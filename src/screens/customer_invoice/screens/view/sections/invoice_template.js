@@ -201,7 +201,6 @@ class InvoiceTemplate extends Component {
 				shippingCountry = contactData.shippingCountryName ? contactData.shippingCountryName : "";
 		}
 
-
 		return shippingCountry;
 	}
 
@@ -310,15 +309,13 @@ class InvoiceTemplate extends Component {
 										<div className="mb-1 ml-2" style={{fontSize:"22px"}}><b>{companyData.companyName}</b></div>
 										<div className="mb-1 ml-2">{companyData.companyAddressLine1}</div>
 										<div className="mb-1 ml-2">{companyData.companyAddressLine2}</div>
-										{companyData.companyCountryCode==229 ?
-																	strings.POBox:
-																	""} : {companyData.companyPoBoxNumber} ,&nbsp;
+										{companyData.companyCountryCode==229 ? strings.POBox: ""}: {companyData.companyPoBoxNumber} ,&nbsp;
 										{companyData &&(companyData.companyStateName ? companyData.companyStateName + " , " : "")}
 										{companyData &&(companyData.companyCountryName ? companyData.companyCountryName : "")}
-										{companyData.companyRegistrationNumber && (<div className="mb-1 ml-2">{strings.CompanyRegistrationNo} : {companyData.companyRegistrationNumber}</div>)}
-										{companyData.isRegisteredVat==true&&(<div className="mb-1 ml-2">{strings.VATRegistrationNo} : {companyData.vatRegistrationNumber}</div>)}
-										<div className="mb-1 ml-2">{strings.MobileNumber} : {this.companyMobileNumber(companyData.phoneNumber ? "+" + companyData.phoneNumber : '')}</div>
-										{companyData.emailAddress&&(<div className="mb-1 ml-2">Email : {companyData.emailAddress}</div>)}
+										{companyData.companyRegistrationNumber && (<div className="mb-1 ml-2">{strings.CompanyRegistrationNo}: {companyData.companyRegistrationNumber}</div>)}
+										{companyData.isRegisteredVat==true&&(<div className="mb-1 ml-2">{strings.VATRegistrationNo}: {companyData.vatRegistrationNumber}</div>)}
+										<div className="mb-1 ml-2">{strings.MobileNumber}: {this.companyMobileNumber(companyData.phoneNumber ? "+" + companyData.phoneNumber : '')}</div>
+										{companyData.emailAddress&&(<div className="mb-1 ml-2">Email: {companyData.emailAddress}</div>)}
 									</div>
 		
 
@@ -349,22 +346,22 @@ class InvoiceTemplate extends Component {
 											? companyData.company.companyName
 											: ''}</b></h4> */}
 									<br />
-									<h6 className="mb-1 ml-2"><b>{strings.BillTo} ,</b></h6><br />
+									<h6 className="mb-1 ml-2"><b>{strings.BillTo},</b></h6><br />
 									<div className="mb-1 ml-2"><b>{invoiceData.organisationName ? invoiceData.organisationName : invoiceData.name}</b></div>
 									{contactData && contactData.addressLine1 && (<div className="mb-1 ml-2">{contactData.addressLine1}</div>)}
 
 									<div className="mb-1 ml-2">
 									{invoiceData && contactData && (
 											contactData.countryId==229 ?
-											contactData.poBoxNumber ?(strings.POBox +" : " +contactData.poBoxNumber ): ""
+											contactData.poBoxNumber ?(strings.POBox +": " +contactData.poBoxNumber ): ""
 											:contactData.postZipCode ? contactData.postZipCode : ""
 											)} ,&nbsp;
 									    {invoiceData && contactData && (contactData.billingStateName ? contactData.billingStateName + " , " : "")}
 										{invoiceData && contactData && (contactData.billingCountryName ? contactData.billingCountryName : "")}
 									</div>
-									{invoiceData && invoiceData.taxTreatment&& invoiceData.taxTreatment.includes("NON")==false &&(<div className="mb-1 ml-2">{strings.VATRegistrationNo} :  {invoiceData.taxRegistrationNo}</div>)}
-									{contactData && contactData.mobileNumber && (<div className="mb-1 ml-2">{strings.MobileNumber} :+{contactData.mobileNumber}</div>)}
-									{contactData && contactData.billingEmail && (<div className="mb-1 ml-2">{strings.Email} : {contactData.billingEmail}</div>)}
+									{invoiceData && invoiceData.taxTreatment&& invoiceData.taxTreatment.includes("NON")==false &&(<div className="mb-1 ml-2">{strings.VATRegistrationNo}: {invoiceData.taxRegistrationNo}</div>)}
+									{contactData && contactData.mobileNumber && (<div className="mb-1 ml-2">{strings.MobileNumber}:+{contactData.mobileNumber}</div>)}
+									{contactData && contactData.billingEmail && (<div className="mb-1 ml-2">{strings.Email}: {contactData.billingEmail}</div>)}
 									{/* <span className="mb-1 ml-2"><b>{strings.Status} : </b> {this.renderInvoiceStatus(invoiceData.status)}</span> */}
 
 								</div>
@@ -373,22 +370,19 @@ class InvoiceTemplate extends Component {
 								<div style={{ width: '27%' }}>
 
 									<br />
-									<div className="mb-1 ml-2"><b>{strings.InvoiceNo} : </b> # {invoiceData.referenceNumber}</div>
-									{invoiceData.receiptNumber&&(<div className="mb-1 ml-2"><b>{strings.ReferenceNo} : </b>{invoiceData.receiptNumber}</div>)}
-									<div className="mb-1 ml-2"><b>{strings.InvoiceDate} : </b>{' '}
-										{moment(invoiceData.invoiceDate).format(
-											'DD MMM YYYY',
-										)}</div>
-										<div className="mb-1 ml-2"><b>{strings.DueDate} : </b>{moment(invoiceData.invoiceDueDate).format(
-										'DD MMM YYYY',
-									)}</div>
-									<div className="mb-1 ml-2"><b>{strings.Terms} : </b>{this.getTerms(invoiceData.term)}</div>
-									<div className="mb-1 ml-2"><b>{strings.Status} : </b>{this.renderInvoiceStatus(invoiceData.status)}</div><br />
-										
+									<div className="mb-1 ml-2"><b>{strings.InvoiceNo}: </b> # {invoiceData.referenceNumber}</div>
+									{invoiceData.receiptNumber&&(<div className="mb-1 ml-2"><b>{strings.ReferenceNo}: </b>{invoiceData.receiptNumber}</div>)}
+									<div className="mb-1 ml-2"><b>{strings.InvoiceDate}: </b>{' '}
+										{moment(invoiceData.invoiceDate).format( 'DD MMM YYYY')}</div>
+									<div className="mb-1 ml-2"><b>{strings.DueDate}: </b>
+										{moment(invoiceData.invoiceDueDate).format('DD MMM YYYY')}</div>
+									<div className="mb-1 ml-2"><b>{strings.Terms}: </b>{this.getTerms(invoiceData.term)}</div>
+									<div className="mb-1 ml-2"><b>{strings.Status}: </b>{this.renderInvoiceStatus(invoiceData.status)}</div>
+									<br />
 									<br />
 									<div className="mb-1 ml-2" >
 
-                                        <strong style={{ padding: '0.5rem', background: '#f2f2f2'}}>{strings.BalanceDue} :  {invoiceData.dueAmount ?
+                                        <strong style={{ padding: '0.5rem', background: '#f2f2f2'}}>{strings.BalanceDue}: {invoiceData.dueAmount ?
 
                                         invoiceData.currencyIsoCode + " " +invoiceData.dueAmount.toLocaleString(navigator.language, {minimumFractionDigits: 2, maximumFractionDigits: 2}) :
 
@@ -678,14 +672,14 @@ class InvoiceTemplate extends Component {
 						<hr />
 						{/* {invoiceData.footNote} */}
 						<TextareaAutosize
-																			type="textarea"
-																			disabled
-																			className="textarea viewFootNote"
-																			maxLength="250"
-																			style={{width: "1100px"}}
-																			// rows="5"
-																			value={invoiceData.footNote}
-																		/>
+								type="textarea"
+								disabled
+								className="textarea viewFootNote"
+								maxLength="250"
+								style={{width: "1100px"}}
+								// rows="5"
+								value={invoiceData.footNote}
+							/>
 						<br /><br/><br/>
 						</CardBody>
 					<img className='footer' src={footer} style={{ height: "65px", width: "100%" }}></img>

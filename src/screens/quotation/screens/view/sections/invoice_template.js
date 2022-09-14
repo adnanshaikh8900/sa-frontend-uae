@@ -140,15 +140,13 @@ class RFQTemplate extends Component {
 									<div className="mb-1 ml-2"  style={{fontSize:"22px"}}><b>{companyData.companyName}</b></div>
 									<div className="mb-1 ml-2">{companyData.companyAddressLine1}</div>
 									<div className="mb-1 ml-2">{companyData.companyAddressLine2}</div>
-									{companyData.companyCountryCode==229 ?
-																	strings.POBox:
-																	""} : {companyData.companyPoBoxNumber} ,&nbsp;
+										{companyData.companyCountryCode==229 ? strings.POBox :""}: {companyData.companyPoBoxNumber} ,&nbsp;
 										{companyData &&(companyData.companyStateName ? companyData.companyStateName + " , " : "")}
 										{companyData &&(companyData.companyCountryName ? companyData.companyCountryName : "")}
-										{companyData.companyRegistrationNumber && (<div className="mb-1 ml-2">{strings.CompanyRegistrationNo} : {companyData.companyRegistrationNumber}</div>)}
-										{companyData.isRegisteredVat==true&&(<div className="mb-1 ml-2">{strings.VATRegistrationNo} : {companyData.vatRegistrationNumber}</div>)}
-										<div className="mb-1 ml-2">{strings.MobileNumber} : {this.companyMobileNumber(companyData.phoneNumber ? "+" + companyData.phoneNumber : '')}</div>
-										{companyData.emailAddress&&(<div className="mb-1 ml-2">Email : {companyData.emailAddress}</div>)}
+										{companyData.companyRegistrationNumber && (<div className="mb-1 ml-2">{strings.CompanyRegistrationNo}: {companyData.companyRegistrationNumber}</div>)}
+										{companyData.isRegisteredVat==true&&(<div className="mb-1 ml-2">{strings.VATRegistrationNo}: {companyData.vatRegistrationNumber}</div>)}
+										<div className="mb-1 ml-2">{strings.MobileNumber}: {this.companyMobileNumber(companyData.phoneNumber ? "+" + companyData.phoneNumber : '')}</div>
+										{companyData.emailAddress&&(<div className="mb-1 ml-2">Email: {companyData.emailAddress}</div>)}
 								</div>
 							</div>
 							</div>
@@ -182,15 +180,15 @@ class RFQTemplate extends Component {
 						<div className="mb-1 ml-2">
 									{QuotationData && contactData && (
 											contactData.countryId==229 ?
-											contactData.poBoxNumber ?(strings.POBox +" : " +contactData.poBoxNumber ): ""
+											contactData.poBoxNumber ?(strings.POBox +": " +contactData.poBoxNumber ): ""
 											:contactData.postZipCode ? contactData.postZipCode : ""
-											)} ,&nbsp;
-									    {QuotationData && contactData && (contactData.billingStateName ? contactData.billingStateName + " , " : "")}
+											)},&nbsp;
+									    {QuotationData && contactData && (contactData.billingStateName ? contactData.billingStateName + ", " : "")}
 										{QuotationData && contactData && (contactData.billingCountryName ? contactData.billingCountryName : "")}
 									</div>
-								{QuotationData && QuotationData.taxtreatment&& QuotationData.taxtreatment.includes("NON")==false &&(<div className="mb-1 ml-2">{strings.VATRegistrationNo} :  {QuotationData.vatRegistrationNumber}</div>)}	
-								{contactData&&contactData.mobileNumber&&(<div className="mb-1 ml-2">{strings.MobileNumber} :+{contactData.mobileNumber}</div>)}
-								{contactData && contactData.billingEmail && (<div className="mb-1 ml-2">{strings.Email} : {contactData.billingEmail}</div>)}
+								{QuotationData && QuotationData.taxtreatment&& QuotationData.taxtreatment.includes("NON")==false &&(<div className="mb-1 ml-2">{strings.VATRegistrationNo}:  {QuotationData.vatRegistrationNumber}</div>)}	
+								{contactData&&contactData.mobileNumber&&(<div className="mb-1 ml-2">{strings.MobileNumber}:+{contactData.mobileNumber}</div>)}
+								{contactData && contactData.billingEmail && (<div className="mb-1 ml-2">{strings.Email}: {contactData.billingEmail}</div>)}
 													
 
 													{/* <div
@@ -206,16 +204,13 @@ class RFQTemplate extends Component {
 							<div style={{ width: '27%' }}>
 
 <br />
-<div className="mb-1 ml-2"><b>{strings.QuotationNo} : </b> # {QuotationData.quotationNumber}</div>
-{QuotationData.receiptNumber&&(<div className="mb-1 ml-2"><b>{strings.ReferenceNo} : </b>{QuotationData.receiptNumber}</div>)}
-<div className="mb-1 ml-2"><b>{strings.Created_Date} : </b>{' '}
-	{moment(QuotationData.createdDate).format(
-		'DD MMM YYYY',
-	)}</div>
-	<div className="mb-1 ml-2"><b>{strings.ExpirationDate } : </b>{moment(QuotationData.quotaionExpiration).format(
-	'DD MMM YYYY',
-)}</div>
-<div className="mb-1 ml-2"><b>{strings.Status} : </b>{this.renderQuotationStatus(QuotationData.status)}</div><br />
+<div className="mb-1 ml-2"><b>{strings.QuotationNo}: </b> # {QuotationData.quotationNumber}</div>
+{QuotationData.receiptNumber&&(<div className="mb-1 ml-2"><b>{strings.ReferenceNo}: </b>{QuotationData.receiptNumber}</div>)}
+<div className="mb-1 ml-2"><b>{strings.Created_Date}: </b>{' '}
+	{moment(QuotationData.createdDate).format('DD MMM YYYY')}</div>
+<div className="mb-1 ml-2"><b>{strings.ExpirationDate }: </b>
+	{moment(QuotationData.quotaionExpiration).format('DD MMM YYYY')}</div>
+<div className="mb-1 ml-2"><b>{strings.Status}: </b>{this.renderQuotationStatus(QuotationData.status)}</div><br />
 
 </div>
 </div>
@@ -498,14 +493,14 @@ class RFQTemplate extends Component {
 						</div>
 						<hr/>
 						<TextareaAutosize
-																			type="textarea"
-																			disabled
-																			className="textarea viewFootNote"
-																			maxLength="250"
-																			style={{width: "1100px"}}
-																			// rows="5"
-																			value={QuotationData.footNote}
-																		/>
+								type="textarea"
+								disabled
+								className="textarea viewFootNote"
+								maxLength="250"
+								style={{width: "1100px"}}
+								// rows="5"
+								value={QuotationData.footNote}
+							/>
 						<br /><br/><br/>				
 					</CardBody>
 					<img className='footer' src={footer} style={{ height: "65px", width: "100%" }}></img>

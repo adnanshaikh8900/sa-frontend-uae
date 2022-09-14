@@ -752,7 +752,7 @@ class CreateBankTransaction extends React.Component {
 
     let exchange;
     let result = this.props.currency_convert_list.filter((obj) => {
-      return obj.currencyCode === customerinvoice;
+      return obj.currencyCode === this.state.bankCurrency.bankAccountCurrency;
     });
     // this.state.invoiceCurrency
     // this.state.bankCurrency.bankAccountCurrency
@@ -774,7 +774,7 @@ class CreateBankTransaction extends React.Component {
         exchange = 1 / result[0].exchangeRate;
       }
     }
-
+debugger
     return exchange
   }
 
@@ -782,11 +782,13 @@ class CreateBankTransaction extends React.Component {
     if (option?.length > 0) {
       const transactionAmount = amount || this.formRef.current.state.values.transactionAmount
       const exchangerate = this.formRef.current.state.values?.exchangeRate
+     debugger
       const invoicelist = [...option]
       const total = invoicelist.reduce((accu, curr, index) => curr.amount * exchangerate[index])
       let remainingcredit = transactionAmount
       const finaldata = invoicelist?.map((i, ind) => {
         let localexe = 0
+        debugger
         if (i.exchnageRate === undefined) localexe = this.setcustomexchnage(i.currencyCode)
         else localexe = i.exchnageRate
         let finalcredit = 0

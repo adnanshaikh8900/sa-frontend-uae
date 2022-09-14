@@ -430,7 +430,7 @@ class RecordCustomerPayment extends React.Component {
 												 }}
 													validationSchema={Yup.object().shape({
 														depositeTo: Yup.string().required(
-															'Deposit to is required',
+															'Received through is required',
 														),
 														// receiptDate: Yup.date().required(
 														// 	'Payment date is required',

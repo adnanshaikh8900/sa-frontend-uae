@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import moment from 'moment'
 import {
 	Card,
 	CardHeader,
@@ -18,21 +17,14 @@ import {
 } from 'reactstrap';
 import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import DatePicker from 'react-datepicker';
-import { CSVLink } from 'react-csv';
-
-import { Loader, ConfirmDeleteModal, Currency } from 'components';
-
+import { Loader, ConfirmDeleteModal } from 'components';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'react-datepicker/dist/react-datepicker.css';
-
 import EmailModal from './sections/email_template';
-
 import * as CreditNotesActions from './actions';
 import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
-
 import './style.scss';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
@@ -261,7 +253,7 @@ class CreditNotes extends React.Component {
 			postingRefType: 'CREDIT_NOTE',
 			isCNWithoutProduct :row.isCNWithoutProduct==true?true:false ,
 			amountInWords:upperCase(row.currencyName + " " +(toWords.convert(row.invoiceAmount))+" ONLY" ).replace("POINT","AND"),
-			vatInWords:row.totalVatAmount ? upperCase(row.currencyName + " " +(toWords.convert(row.totalVatAmount))+" ONLY" ).replace("POINT","AND") :"-",
+			vatInWords:row.totalVatAmount ? upperCase(row.currencyName + " " +(toWords.convert(row.totalVatAmount))+" ONLY" ).replace("POINT","AND"):"-",
 			markAsSent:false
 		};
 	
@@ -341,22 +333,22 @@ class CreditNotes extends React.Component {
 	return(
 		<div>
 		<div>
-					<label className="font-weight-bold mr-2 ">{strings.Amount} : </label>
+					<label className="font-weight-bold mr-2 ">{strings.Amount}: </label>
 					<label>
-					{row.invoiceAmount === 0  ? row.currencyName +" "+ row.invoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyName+" "+ row.invoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+					{row.invoiceAmount === 0  ? row.currencyName +" "+ row.invoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 }) : row.currencyName+" "+ row.invoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })}
 					</label>
 				</div>
 				<div>
-					<label className="font-weight-bold mr-2 ">{strings.RemainingCredits} : </label>
+					<label className="font-weight-bold mr-2 ">{strings.RemainingCredits}: </label>
 					<label>
-					{row.dueAmount === 0  ? row.currencyName+" " + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyName+" "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+					{row.dueAmount === 0  ? row.currencyName+" " + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2}) : row.currencyName+" "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })}
 					</label>
 				</div>
 			
 			
 				{/* <div style={{display: row.dueAmount === 0 ? 'none' : ''}}>
 					<label className="font-weight-bold mr-2">Due Amount : </label>
-					<label>{row.dueAmount === 0  ? row.currencySymbol + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencySymbol + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
+					<label>{row.dueAmount === 0  ? row.currencySymbol + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 }) : row.currencySymbol + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })}</label>
 				</div> */}
 				
 		</div>);
@@ -389,11 +381,11 @@ class CreditNotes extends React.Component {
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// );
-		return row.totalVatAmount === 0  ? row.currencyName +" "+ row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyName +" "+ row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.totalVatAmount === 0  ? row.currencyName +" "+ row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 }) : row.currencyName +" "+ row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 });
 	};
 
 	renderDueAmount =(cell,row,extraData) => {
-		return row.dueAmount === 0  ? row.currencyName +" "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyName +" "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.dueAmount === 0  ? row.currencyName +" "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 }) : row.currencyName +" "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 });
 	}
 	renderActions = (cell, row) => {
 		return (
@@ -966,7 +958,7 @@ class CreditNotes extends React.Component {
 										</ButtonGroup>
 									</div>
 									<div className="py-3">
-										<h5>{strings.Filter} : </h5>
+										<h5>{strings.Filter}: </h5>
 										<Row>
 											<Col lg={2} className="mb-1">
 												<Select

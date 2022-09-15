@@ -12,25 +12,18 @@ import {
 	Row,
 	Col,
 	ButtonGroup,
-	Input,
 	ButtonDropdown,
 	DropdownToggle,
 	DropdownMenu,
 	DropdownItem,
 } from 'reactstrap';
 import Select from 'react-select';
-// import { ToastContainer, toast } from 'react-toastify'
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import DatePicker from 'react-datepicker';
-import { CSVLink } from 'react-csv';
-
 import CreatePurchaseOrder from './sections/createPo'
-import { Loader, ConfirmDeleteModal, Currency } from 'components';
-
+import { Loader, ConfirmDeleteModal } from 'components';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'react-datepicker/dist/react-datepicker.css';
-
 import * as RequestForQuotationDetailsAction from './screens/detail/actions';
 import * as RequestForQuotationCreateAction from './screens/create/actions';
 import * as RequestForQuotationAction from '../request_for_quotation/actions';
@@ -38,11 +31,9 @@ import * as PurchaseOrderCreateAction from '../purchase_order/screens/create/act
 import * as PurchaseOrderAction from '../purchase_order/actions'
 import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
-
 import './style.scss';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
-import { Create } from '@material-ui/icons';
 import moment from 'moment';
 import { upperCase } from 'lodash';
 
@@ -346,14 +337,14 @@ class RequestForQuotation extends React.Component {
 		return(
 			<div>
 								<div>
-						<label className="font-weight-bold mr-2 ">{strings.RFQAmount} : </label>
+						<label className="font-weight-bold mr-2 ">{strings.RFQAmount}: </label>
 						<label>
-							{row.totalAmount  === 0 ? row.currencyCode +" "+ row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) :  row.currencyCode +" "+ row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+							{row.totalAmount  === 0 ? row.currencyCode +" "+ row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 }) :  row.currencyCode +" "+ row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })}
 						</label>
 					</div>
 					<div style={{display: row.totalVatAmount === 0 ? 'none' : ''}}>
 					<label className="font-weight-bold mr-2">{strings.VatAmount} : </label>
-					<label>{row.totalVatAmount === 0  ?   row.currencyCode +" "+ row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) :   row.currencyCode +" "+ row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
+					<label>{row.totalVatAmount === 0  ?   row.currencyCode +" "+ row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 }) :   row.currencyCode +" "+ row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })}</label>
 					</div>
 					
 					
@@ -366,11 +357,11 @@ class RequestForQuotation extends React.Component {
 
 
 	renderDueAmount =(cell,row,extraData) => {
-		return row.dueAmount === 0  ? row.currencySymbol+" "+row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencySymbol+" "+row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.dueAmount === 0  ? row.currencySymbol+" "+row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 }) : row.currencySymbol+" "+row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 });
 	}
 
 	renderVatAmount = (cell, row, extraData) => {
-		return row.vatAmount === 0 ? row.currencySymbol +" "+row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencySymbol+" "+row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.vatAmount === 0 ? row.currencySymbol +" "+row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 }) : row.currencySymbol+" "+row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 });
 	};
 	renderCurrency = (cell, row) => {
 		if (row.currencyName) {
@@ -383,10 +374,10 @@ class RequestForQuotation extends React.Component {
 	};
 
 	rfqDueDate = (cell, row) => {
-		return row.rfqExpiryDate ? row.rfqExpiryDate : '';
+		return row.rfqExpiryDate ? row.rfqExpiryDate: '';
 	};
 	orderDate = (cell, row) => {
-		return row.rfqReceiveDate ? row.rfqReceiveDate : '';
+		return row.rfqReceiveDate ? row.rfqReceiveDate: '';
 	};
 
 	toggleActionButton = (index) => {
@@ -1078,7 +1069,7 @@ class RequestForQuotation extends React.Component {
 										</ButtonGroup>
 									</div>
 									<div className="py-3">
-										<h5>{strings.Filter} : </h5>
+										<h5>{strings.Filter}: </h5>
 										<Row>
 											<Col lg={2} className="mb-1">
 												<Select

@@ -133,12 +133,12 @@ class InvoiceTemplate extends Component {
 									<div className="mb-1 ml-2" style={{fontSize:"22px"}}><b>{companyData.companyName}</b></div>
 									<div className="mb-1 ml-2">{companyData.companyAddressLine1}</div>
 										<div className="mb-1 ml-2">{companyData.companyAddressLine2}</div>
-										{companyData.companyCountryCode==229 ? strings.POBox: ""}: {companyData.companyPoBoxNumber} ,&nbsp;
-										{companyData &&(companyData.companyStateName ? companyData.companyStateName + " , " : "")}
+										{companyData.companyCountryCode==229 ? strings.POBox: ""}: {companyData.companyPoBoxNumber},&nbsp;
+										{companyData &&(companyData.companyStateName ? companyData.companyStateName + ", " : "")}
 										{companyData &&(companyData.companyCountryName ? companyData.companyCountryName : "")}
 										{companyData.companyRegistrationNumber && (<div className="mb-1 ml-2">{strings.CompanyRegistrationNo}: {companyData.companyRegistrationNumber}</div>)}
 										{companyData.isRegisteredVat==true&&(<div className="mb-1 ml-2">{strings.VATRegistrationNo}: {companyData.vatRegistrationNumber}</div>)}
-									<div className="mb-1 ml-2">{strings.MobileNumber} : {this.companyMobileNumber(companyData.phoneNumber?"+"+companyData.phoneNumber:'')}</div>
+									<div className="mb-1 ml-2">{strings.MobileNumber}: {this.companyMobileNumber(companyData.phoneNumber?"+"+companyData.phoneNumber:'')}</div>
 									{companyData.emailAddress&&(<div className="mb-1 ml-2">Email: {companyData.emailAddress}</div>)}
 								</div>
 							</div>
@@ -177,22 +177,20 @@ class InvoiceTemplate extends Component {
 											contactData.countryId==229 ?
 											contactData.poBoxNumber ?(strings.POBox +" : " +contactData.poBoxNumber ): ""
 											:contactData.postZipCode ? contactData.postZipCode : ""
-											)} ,&nbsp;
-									    {invoiceData && contactData && (contactData.billingStateName ? contactData.billingStateName + " , " : "")}
+											)},&nbsp;
+									    {invoiceData && contactData && (contactData.billingStateName ? contactData.billingStateName + ", " : "")}
 										{invoiceData && contactData && (contactData.billingCountryName ? contactData.billingCountryName : "")}
 									</div>
 									{console.log(invoiceData.taxTreatment,"invoiceData.taxTreatment")}
-									{invoiceData && invoiceData.taxTreatment&& invoiceData.taxTreatment.includes("NON")==false &&(<div className="mb-1 ml-2">{strings.VATRegistrationNo}:  {contactData &&contactData.vatRegistrationNumber&&(contactData.vatRegistrationNumber)}</div>)}
-								{contactData&&contactData.mobileNumber&&(   <div className="mb-1 ml-2">{strings.MobileNumber}: +{contactData.mobileNumber}</div>)}
+									{invoiceData && invoiceData.taxTreatment&& invoiceData.taxTreatment.includes("NON")==false &&(<div className="mb-1 ml-2">{strings.VATRegistrationNo}: {contactData &&contactData.vatRegistrationNumber&&(contactData.vatRegistrationNumber)}</div>)}
+								{contactData&&contactData.mobileNumber&&(<div className="mb-1 ml-2">{strings.MobileNumber}: +{contactData.mobileNumber}</div>)}
 								{contactData && contactData.billingEmail && (<div className="mb-1 ml-2">{strings.Email}: {contactData.billingEmail}</div>)}
 								</div>
 								<div style={{ width: '27%' }}>
 									<br/>
 								<div className="mb-1 ml-2"><b>{strings.CreditNote}: </b> # {invoiceData.creditNoteNumber}</div>
 								<div className="mb-1 ml-2"><b>{strings.TaxCreditDate}: </b>{' '}
-										{moment(invoiceData.invoiceDate).format(
-											'DD MMM YYYY',
-										)}</div>
+										{moment(invoiceData.invoiceDate).format('DD MMM YYYY')}</div>
 											<div className="mb-1 ml-2"><b>{strings.Status}: </b>{this.renderInvoiceStatus(status)}</div>
 								</div>
 								</div>

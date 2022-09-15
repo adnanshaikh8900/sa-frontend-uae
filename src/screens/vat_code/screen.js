@@ -430,7 +430,7 @@ class VatCode extends React.Component {
 										</Button> */}
 										</div>
 										{/* <div className="py-3">
-											<h5>{strings.Filter} : </h5>
+											<h5>{strings.Filter}: </h5>
 											<Row>
 												<Col lg={4} className="mb-1">
 													<TextField

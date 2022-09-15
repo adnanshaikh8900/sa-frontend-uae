@@ -212,7 +212,7 @@ class Quatation extends React.Component {
 		return(
 			<div>
 					<div>
-						<label className="font-weight-bold mr-2">{strings.QuotationAmount} : </label>
+						<label className="font-weight-bold mr-2">{strings.QuotationAmount}: </label>
 						<label>
 							{row.totalAmount  === 0 ? row.currencyIsoCode +" "+ row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) :  row.currencyIsoCode +" "+ row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 						</label>
@@ -220,7 +220,7 @@ class Quatation extends React.Component {
 				
 					<div style={{display: row.totalVatAmount === 0 ? 'none' : ''}}>
 
-						<label className="font-weight-bold mr-2">{strings.VatAmount} : </label>
+						<label className="font-weight-bold mr-2">{strings.VatAmount}: </label>
 						<label>
 							{row.totalVatAmount === 0  ?  row.currencyIsoCode +" "+ row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) :   row.currencyIsoCode +" "+ row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 						</label>
@@ -983,7 +983,7 @@ sendMail = (row) => {
 										</ButtonGroup>
 									</div>
 									<div className="py-3">
-										<h5>{strings.Filter} : </h5>
+										<h5>{strings.Filter}: </h5>
 										<Row>
 										<Col lg={2} className="mb-1">
 												<Select

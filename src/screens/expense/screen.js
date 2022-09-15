@@ -10,7 +10,6 @@ import {
 	Col,
 	ButtonGroup,
 	FormGroup,
-	Input,
 	ButtonDropdown,
 	DropdownToggle,
 	DropdownMenu,
@@ -19,25 +18,16 @@ import {
 import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import DatePicker from 'react-datepicker';
-
 import 'react-datepicker/dist/react-datepicker.css';
-
-import { Loader, ConfirmDeleteModal, Currency } from 'components';
-
+import { Loader, ConfirmDeleteModal } from 'components';
 import { selectOptionsFactory } from 'utils';
-
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'bootstrap-daterangepicker/daterangepicker.css';
-
 import { CommonActions } from 'services/global';
 import * as ExpenseActions from './actions';
-
 import moment from 'moment';
-import { CSVLink } from 'react-csv';
-
 import './style.scss';
-import { DriveEtaOutlined } from '@material-ui/icons';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
 
@@ -359,7 +349,7 @@ class Expense extends React.Component {
 		return(
 		<div>
 			<div>
-					<label className="font-weight-bold mr-2 ">{strings.ActualExpenseAmount} : </label>
+					<label className="font-weight-bold mr-2 ">{strings.ActualExpenseAmount}: </label>
 					<label>
 						
 						{row.exclusiveVat != true ? row.currencyName +" "+ (row.expenseAmount-row.expenseVatAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2}): row.currencyName +" "+ (row.expenseAmount+row.expenseVatAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -368,7 +358,7 @@ class Expense extends React.Component {
 			</div>
 		{row.expenseVatAmount !=null &&(
 			<div style={{ display: row.expenseVatAmount === 0 ? 'none' : '' }}>
-			    <label className="font-weight-bold mr-2">{strings.VatAmount} : </label>
+			    <label className="font-weight-bold mr-2">{strings.VatAmount}: </label>
 				<label>{row.expenseVatAmount === 0 ?
 				 row.currencyName  +" "+ row.expenseVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2}) 
 				 :
@@ -376,7 +366,7 @@ class Expense extends React.Component {
 			</div>
 		)}
 			<div style={{ display: row.expenseAmount === 0 ? 'none' : '' }}>
-					<label className="font-weight-bold mr-2">{strings.ExpenseAmount} : </label>
+					<label className="font-weight-bold mr-2">{strings.ExpenseAmount}: </label>
 					<label>{row.expenseAmount === 0 ? row.currencyName  +" "+row.expenseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2}): row.currencyName  +" "+row.expenseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2})}</label>
 			</div>
 		</div>

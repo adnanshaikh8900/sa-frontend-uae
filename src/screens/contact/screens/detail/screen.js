@@ -650,9 +650,6 @@ class DetailContact extends React.Component {
 																		else
 																			if (values.billingPostZipCode.length != 6)
 																				errors.billingPostZipCode = "Please Enter 6 Digit Postal Zip Code"
-																		if(values.billingStateProvince =="")  
-																			errors.billingStateProvince ='Billing state is required';
-		
 
 																	}
 																	if (values.shippingCountryId == 229 || values.shippingCountryId.value == 229) {
@@ -1442,8 +1439,11 @@ class DetailContact extends React.Component {
 
 																							}
 																							props.handleChange('billingStateProvince')('');
+<<<<<<< HEAD
 																							props.handleChange('billingPoBoxNumber')('');
 																							props.handleChange('billingPostZipCode')('');
+=======
+>>>>>>> upstream/develop
 																							// props.handleChange('billingStateProvince')({
 																							// 	label: 'Select State',
 																							// 	value: '',
@@ -1890,8 +1890,11 @@ class DetailContact extends React.Component {
 																								// this.getStateListForShippingAddress('');
 																							}
 																							props.handleChange('shippingStateId')('');
+<<<<<<< HEAD
 																							props.handleChange('shippingPoBoxNumber')('');
 																							props.handleChange('shippingPostZipCode')('');
+=======
+>>>>>>> upstream/develop
 																						}}
 																						placeholder={strings.Select + strings.Country}
 																						id="shippingCountryId"

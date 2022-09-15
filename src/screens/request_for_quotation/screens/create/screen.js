@@ -253,8 +253,7 @@ class CreateRequestForQuotation extends React.Component {
 				render={({ field, form }) => (
 					<Select
 						styles={customStyles}
-						isDisabled={row.exciseTaxId === 0 }
-						
+						isDisabled={row.exciseTaxId === 0 || row.exciseTaxId === null }
 						options={
 							excise_list
 								? selectOptionsFactory.renderOptions(
@@ -266,7 +265,6 @@ class CreateRequestForQuotation extends React.Component {
 								: []
 						}
 						value={
-				
 							excise_list &&
 							selectOptionsFactory
 								.renderOptions('name', 'id', excise_list, 'Excise')
@@ -275,21 +273,26 @@ class CreateRequestForQuotation extends React.Component {
 						id="exciseTaxId"
 						placeholder={"Select Excise"}
 						onChange={(e) => {
-							 
-							this.selectItem(
-								e.value,
-								row,
-								'exciseTaxId',
-								form,
-								field,
-								props,
-							);
-							
-							this.updateAmount(
-								this.state.data,
-								props,
-							);
+							if (e.value === '') {
+								props.setFieldValue(
+									'exciseTaxId',
+									'',
+								);
+							} else {
+								this.selectItem(
+									e.value,
+									row,
+									'exciseTaxId',
+									form,
+									field,
+									props,
+								);
+								this.updateAmount(
+									this.state.data,
+									props,
+								);
 						}}
+					}
 						className={`${
 							props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&

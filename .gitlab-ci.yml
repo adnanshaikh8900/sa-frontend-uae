@@ -35,6 +35,7 @@ npm-compile-job:       # This job runs in the build stage, which runs first.
     - echo "Compile completed."
   allow_failure: false
   artifacts:
+    expire_in: 1 day
     paths:
       - "./node_modules"
     when: on_success
@@ -71,6 +72,7 @@ npm-build-job:       # This job runs in the build stage, which runs first.
     - echo "build completed."
   allow_failure: false
   artifacts:
+    expire_in: 1 day
     paths:
       - "./build"
     when: on_success
@@ -101,6 +103,7 @@ merge-request-job:       # This job runs in the build stage, which runs first.
   - echo "Created Tag $TAG"
   allow_failure: false
   artifacts:
+    expire_in: 1 day
     paths:
       - "./target"
     when: on_success

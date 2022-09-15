@@ -624,7 +624,8 @@ setConfigurations=(configurationList)=>{
 				return item;
 			});
 			let postData = { ...this.state.initValue };
-			postData.skipColumns = this.state.initValue.skipColumns.length >= 1  ? this.state.initValue.skipColumns : ''
+			debugger
+			postData.skipColumns = this.state.initValue?.skipColumns?.length >= 1  ? this.state.initValue?.skipColumns : ''
 			postData.indexMap = a;
 		let formData={
 			indexMap:a,
@@ -689,7 +690,7 @@ setConfigurations=(configurationList)=>{
 				return item;
 			});
 			let postData = { ...this.state.initValue };
-			postData.skipColumns = this.state.initValue.skipColumns.length >= 1  ? this.state.initValue.skipColumns : ''
+			postData.skipColumns = this.state.initValue?.skipColumns?.length >= 1  ? this.state.initValue?.skipColumns : ''
 			postData.indexMap = a;
 		this.props.importTransactionActions
 			.parseCsvFile(postData)
@@ -1475,7 +1476,16 @@ setConfigurations=(configurationList)=>{
 													</Form>
 													{/* )
                             }
-                          </Formik> */}
+                          </Formik> */}{console.log(
+																			selectOptionsFactory.renderOptions(
+																				'label',
+																				'value',
+																				this.state.tableHeader,
+																				'',
+																			).filter((i)=>{
+																				debugger
+																				return !this.state?.selectedValueDropdown?.find((i2)=>i.value===i2.value)
+																			}))}
 													<Row>
 														{loading ? (
 															<Loader />
@@ -1486,6 +1496,7 @@ setConfigurations=(configurationList)=>{
 																		style={{
 																			width: `calc(100% / ${this.state.tableDataKey.length})`,
 																			margin: '20px 0',
+																			maxWidth:200
 																		}}
 																	>
 																		<FormGroup
@@ -1499,6 +1510,7 @@ setConfigurations=(configurationList)=>{
 																		// 		? 'invalid-select'
 																		// 		: ''
 																		// }`}
+																		
 																		>
 																			<Select
 																				type=""
@@ -1509,7 +1521,10 @@ setConfigurations=(configurationList)=>{
 																							'value',
 																							this.state.tableHeader,
 																							'',
-																						)
+																						).filter((i)=>{
+																							if(i.value==="") return true
+ 																							return !this.state?.selectedValueDropdown?.find((i2)=>i.value===i2.value)
+																						})
 																						: []
 																				}
 																				name={index}
@@ -1554,6 +1569,8 @@ setConfigurations=(configurationList)=>{
 																			dataField={name}
 																			dataAlign="center"
 																			iskey={index}
+																			tdStyle={{overflowX:'auto'}}
+																			
 																			columnClassName={this.columnClassNameFormat}
 																		>
 																			{name}

@@ -29,6 +29,7 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { InventoryHistoryModal} from './sections';
+import config from 'constants/config';
 
 const mapStateToProps = (state) => {
 	return {
@@ -1929,7 +1930,7 @@ renderName=(cell,row)=>{
 																			?'' : 'none'
 
 																			}}>
-															
+															{config.INVENTORY_MODULE &&
 																	<Col lg={8} style={{display: props.values.isInventoryEnabled != true ? 'none' : ''}}>
 																	<FormGroup check inline className="mb-3">
 																		<Label
@@ -2288,7 +2289,7 @@ min="0"
 										</div>
 										</Row>
 																	
-																</Col>
+																</Col>}
 															</Row>
 															
 															<Row>

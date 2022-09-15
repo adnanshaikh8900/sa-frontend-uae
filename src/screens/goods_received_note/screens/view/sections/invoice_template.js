@@ -3,12 +3,9 @@ import { Card, CardBody, Row, Col, Table } from 'reactstrap';
 import moment from 'moment';
 import '../style.scss';
 import logo from 'assets/images/brand/logo.png';
-import { Currency } from 'components';
-import { toInteger, upperCase } from 'lodash';
 import {data}  from '../../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { TextareaAutosize } from '@material-ui/core';
-
 
 const { ToWords } = require('to-words');
 const toWords = new ToWords({
@@ -57,7 +54,7 @@ class RFQTemplate extends Component {
 		}
 getVatNo=(contactData,RFQData)=>{
 	if(contactData.taxTreatmentId!=2 &&contactData.taxTreatmentId!=4 && contactData.taxTreatmentId!=6 &&  contactData.taxTreatmentId!=7 )
-	return <div className="mb-1 ml-2">{strings.VATRegistrationNo} :  {RFQData.vatRegistrationNumber}</div>
+	return <div className="mb-1 ml-2">{strings.VATRegistrationNo}: {RFQData.vatRegistrationNumber}</div>
 	else
 	return ""
 }
@@ -119,15 +116,13 @@ getVatNo=(contactData,RFQData)=>{
 									<div className="mb-1 ml-2" style={{fontSize:"22px"}}><b>{companyData.companyName}</b></div>
 									<div className="mb-1 ml-2">{companyData.companyAddressLine1}</div>
 										<div className="mb-1 ml-2">{companyData.companyAddressLine2}</div>
-										{companyData.companyCountryCode==229 ?
-																	strings.POBox:
-																	""} : {companyData.companyPoBoxNumber} ,&nbsp;
-										{companyData &&(companyData.companyStateName ? companyData.companyStateName + " , " : "")}
+										{companyData.companyCountryCode==229 ? strings.POBox: ""}: {companyData.companyPoBoxNumber},&nbsp;
+										{companyData &&(companyData.companyStateName ? companyData.companyStateName + ", " : "")}
 										{companyData &&(companyData.companyCountryName ? companyData.companyCountryName : "")}
-										{companyData.companyRegistrationNumber && (<div className="mb-1 ml-2">{strings.CompanyRegistrationNo} : {companyData.companyRegistrationNumber}</div>)}
-										{companyData.isRegisteredVat==true&&(<div className="mb-1 ml-2">{strings.VATRegistrationNo} : {companyData.vatRegistrationNumber}</div>)}
-							    <div className="mb-1 ml-2">{strings.MobileNumber} : {this.companyMobileNumber(companyData.phoneNumber?"+"+companyData.phoneNumber:'')}</div>
-								{companyData.emailAddress&&(<div className="mb-1 ml-2">Email : {companyData.emailAddress}</div>)}
+										{companyData.companyRegistrationNumber && (<div className="mb-1 ml-2">{strings.CompanyRegistrationNo}: {companyData.companyRegistrationNumber}</div>)}
+										{companyData.isRegisteredVat==true&&(<div className="mb-1 ml-2">{strings.VATRegistrationNo}: {companyData.vatRegistrationNumber}</div>)}
+							    <div className="mb-1 ml-2">{strings.MobileNumber}: {this.companyMobileNumber(companyData.phoneNumber?"+"+companyData.phoneNumber:'')}</div>
+								{companyData.emailAddress&&(<div className="mb-1 ml-2">Email: {companyData.emailAddress}</div>)}
 								</div>
 							</div>
 							</div></div><hr/>
@@ -154,21 +149,21 @@ getVatNo=(contactData,RFQData)=>{
 											? companyData.company.companyName
 											: ''}</b></h4> */}
 								
-								<h6 className="mb-1 ml-2"><b>Received From,</b></h6><br/>
-								<h6 className="mb-1 ml-2"><b>{RFQData.organisationName ? RFQData.organisationName : RFQData.supplierName}</b></h6>
+								<h6 className="mb-1 ml-2"><b>{strings.ReceivedFrom},</b></h6><br/>
+								<h6 className="mb-1 ml-2"><b>{RFQData.organisationName ? RFQData.organisationName: RFQData.supplierName}</b></h6>
 								{contactData && contactData.addressLine1 &&(<div className="mb-1 ml-2">{contactData.addressLine1}</div>)}
 								<div className="mb-1 ml-2">
 									{RFQData && contactData && (
 											contactData.countryId==229 ?
-											contactData.poBoxNumber ?(strings.POBox +" : " +contactData.poBoxNumber ): ""
+											contactData.poBoxNumber ?(strings.POBox +": " +contactData.poBoxNumber ): ""
 											:contactData.postZipCode ? contactData.postZipCode : ""
-											)} ,&nbsp;
-									    {RFQData && contactData && (contactData.billingStateName ? contactData.billingStateName + " , " : "")}
+											)},&nbsp;
+									    {RFQData && contactData && (contactData.billingStateName ? contactData.billingStateName + ", " : "")}
 										{RFQData && contactData && (contactData.billingCountryName ? contactData.billingCountryName : "")}
 									</div>
 									{contactData &&(this.getVatNo(contactData,RFQData))}
-								{contactData&&contactData.mobileNumber&&(<div className="mb-1 ml-2">{strings.MobileNumber} : +{contactData.mobileNumber}</div>)}
-								{contactData && contactData.billingEmail && (<div className="mb-1 ml-2">{strings.Email} : {contactData.billingEmail}</div>)}
+								{contactData&&contactData.mobileNumber&&(<div className="mb-1 ml-2">{strings.MobileNumber}: +{contactData.mobileNumber}</div>)}
+								{contactData && contactData.billingEmail && (<div className="mb-1 ml-2">{strings.Email}: {contactData.billingEmail}</div>)}
 
 													{/* <div
 														className={`ribbon ${this.getRibbonColor(
@@ -180,12 +175,10 @@ getVatNo=(contactData,RFQData)=>{
 								</div>
 								<div style={{ width: '27%' }}>
 									<br/>
-									<div className="mb-1 ml-2"><b>{strings.GRNNo} : </b> # {RFQData.grnNumber}</div>
-								<div className="mb-1 ml-2"><b>{strings.ReceiveDate } : </b>{' '}
-										{moment(RFQData.grnReceiveDate).format(
-											'DD MMM YYYY',
-										)}</div>		
-								<div className="mb-1 ml-2"><b>{strings.Status} : </b>{this.renderRFQStatus(status)}</div><br />
+									<div className="mb-1 ml-2"><b>{strings.GRNNo}: </b> # {RFQData.grnNumber}</div>
+								<div className="mb-1 ml-2"><b>{strings.ReceiveDate }: </b>{' '}
+										{moment(RFQData.grnReceiveDate).format('DD MMM YYYY')}</div>		
+								<div className="mb-1 ml-2"><b>{strings.Status}: </b>{this.renderRFQStatus(status)}</div><br />
                                 </div>
 								</div>
 							</div>
@@ -279,7 +272,7 @@ getVatNo=(contactData,RFQData)=>{
 						
 							{RFQData.notes&& (<>
 								<h6 className="mb-0 pt-2">
-									<b>{strings.GRNREMARKS }:</b>
+									<b>{strings.GRNREMARKS}:</b>
 								</h6>
 								<h6 className="mb-0">{RFQData.notes}</h6><br/>
 								{/* <h6 className="mb-0 pt-2">
@@ -293,14 +286,14 @@ getVatNo=(contactData,RFQData)=>{
 						
 						</div><hr/>	
 						<TextareaAutosize
-																			type="textarea"
-																			disabled
-																			className="textarea viewFootNote"
-																			maxLength="250"
-																			style={{width: "1100px"}}
-																			// rows="5"
-																			value={RFQData.footNote}
-																		/>
+								type="textarea"
+								disabled
+								className="textarea viewFootNote"
+								maxLength="250"
+								style={{width: "1100px"}}
+								// rows="5"
+								value={RFQData.footNote}
+							/>
 						<br /><br/><br/>											
 					</CardBody>
 					<img className='footer' src={footer} style={{ height: "65px", width: "100%" }}></img>

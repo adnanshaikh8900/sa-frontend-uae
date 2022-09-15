@@ -1110,6 +1110,15 @@ debugger
                             errors.transactionAmount=`Amount cannot be grater than ${totalexpaled}`
                            
                           }
+                          const isppselected=values?.invoiceIdList.reduce((a,c)=>c.pp?a+1:a+0,0)
+                          if( values.transactionAmount<totalexpaled &&
+                            this.state?.bankCurrency?.bankAccountCurrency===values?.invoiceIdList?.[0]?.currencyCode
+                            && isppselected===0
+                            )
+                         {
+                          errors.transactionAmount=`Amount is less select partial payment on invoice `
+                         
+                        }
                           }
 
 

@@ -366,7 +366,7 @@ class Expense extends React.Component {
 			</div>
 		)}
 			<div style={{ display: row.expenseAmount === 0 ? 'none' : '' }}>
-					<label className="font-weight-bold mr-2">{strings.ExpenseAmount} : </label>
+					<label className="font-weight-bold mr-2">{strings.ExpenseAmount}: </label>
 					<label>{row.expenseAmount === 0 ? row.currencyName  +" "+row.expenseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2}): row.currencyName  +" "+row.expenseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2})}</label>
 			</div>
 		</div>

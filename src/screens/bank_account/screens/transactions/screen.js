@@ -995,7 +995,7 @@ class BankTransactions extends React.Component {
 										)}
 										</div>
 										<div className="py-3">
-											<h6>{strings.Filter} : </h6>
+											<h6>{strings.Filter}: </h6>
 											<Row>
 												{/* <Col lg={3} className="mb-1">
 													<Select

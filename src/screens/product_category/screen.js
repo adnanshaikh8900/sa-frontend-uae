@@ -423,7 +423,7 @@ class ProductCategory extends React.Component {
 										</Button>
 										</div>
 										{/* <div className="py-3">
-											<h5>{strings.Filter} : </h5>
+											<h5>{strings.Filter}: </h5>
 											<form onSubmit={this.handleSubmit}>
 												<Row>
 													<Col lg={4} className="mb-1">

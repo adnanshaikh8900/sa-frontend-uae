@@ -190,8 +190,8 @@ class RFQTemplate extends Component {
 								<div style={{ width: '27%' }}>
 
 									<br />
-									<div className="mb-1 ml-2"><b>{strings.RFQNUMBER} : </b> # {RFQData.rfqNumber} </div>
-									{RFQData.receiptNumber&&(<div className="mb-1 ml-2"><b>{strings.ReferenceNumber} : </b>{RFQData.receiptNumber}</div>)}
+									<div className="mb-1 ml-2"><b>{strings.RFQNUMBER}: </b> # {RFQData.rfqNumber} </div>
+									{RFQData.receiptNumber&&(<div className="mb-1 ml-2"><b>{strings.ReferenceNumber}: </b>{RFQData.receiptNumber}</div>)}
 									<div className="mb-1 ml-2"><b>{strings.RFQDate}: </b>{' '}
 										{moment(RFQData.RFQDATE).format('DD MMM YYYY')}</div>
 									<div className="mb-1 ml-2"><b>{strings.ExpiryDate}: </b>

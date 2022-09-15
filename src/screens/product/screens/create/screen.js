@@ -26,6 +26,7 @@ import * as SupplierInvoiceActions from '../../../supplier_invoice/actions';
 import { CommonActions } from 'services/global';
 import { WareHouseModal } from '../../sections';
 import { selectOptionsFactory } from 'utils';
+import config from '../../../../constants/config'
 
 const mapStateToProps = (state) => {
 	return {
@@ -1623,7 +1624,8 @@ try {
 																			}}
 																		
 																			>
-																<Col lg={8}>
+																{ config.INVENTORY_MODULE &&
+																	<Col lg={8}>
 																	<FormGroup check inline className="mb-3">
 																		<Label
 																			className="form-check-label"
@@ -1931,6 +1933,7 @@ try {
 																	</Row>
 																
 																</Col>
+																}
 															</Row>
 															
 															<Row>

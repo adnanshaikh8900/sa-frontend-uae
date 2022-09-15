@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { Card, CardBody, Row, Col, Table, CardFooter } from 'reactstrap';
+import { Card, CardBody, Table } from 'reactstrap';
 import moment from 'moment';
 import '../style.scss';
 import logo from 'assets/images/brand/logo.png';
-import { Currency } from 'components';
 import {data}  from '../../../../Language/index'
 import LocalizedStrings from 'react-localization';
 
@@ -26,7 +25,6 @@ class ExpenseTemplate extends Component {
 			return 'saved-color';
 		}
 	};
-	
 
 	render() {
 		strings.setLanguage(this.state.language);
@@ -85,7 +83,7 @@ class ExpenseTemplate extends Component {
 												<b>{strings.Expense}</b>
 											</h2>	
 											<div className="mb-1 ml-2" style={{fontSize:"22px"}}><b> {expenseData.payee} </b></div>
-									<div className="mb-1 ml-2"><b>{strings.ExpenseDate}</b> : {moment(expenseData.expenseDate ).format('DD-MM-YYYY')}</div> 
+									<div className="mb-1 ml-2"><b>{strings.ExpenseDate}</b>: {moment(expenseData.expenseDate ).format('DD-MM-YYYY')}</div> 
 											</div>
 											</div>
 					</div><br/><br/>
@@ -100,20 +98,20 @@ class ExpenseTemplate extends Component {
 
 <Table  striped>
 <tbody  >
-<tr>      <td className="ml-3" style={{width:'245px'}}>	<b>{strings.Expense+" "+strings.Number}</b> :</td> 
+<tr>      <td className="ml-3" style={{width:'245px'}}>	<b>{strings.Expense+" "+strings.Number}</b>:</td> 
 	           <td> {expenseData.expenseNumber ?expenseData.expenseNumber :"-" }</td>
 	</tr>
-    <tr>      <td className="ml-3" style={{width:'245px'}}>	<b>{strings.PaidBy}</b> :</td> 
+    <tr>      <td className="ml-3" style={{width:'245px'}}>	<b>{strings.PaidBy}</b>:</td> 
 	           <td> {expenseData.payee}</td>
 	</tr>
 
-	<tr>      <td className="ml-3" style={{width:'245px'}} >	<b>{strings.ExpenseCategory}</b> :</td>
+	<tr>      <td className="ml-3" style={{width:'245px'}} >	<b>{strings.ExpenseCategory}</b>:</td>
 	           <td> {expenseData.transactionCategoryName}</td>
 	</tr>
 
-	<tr>      <td className="ml-3" style={{width:'245px'}}>  <b>{strings.ExpenseAmount }</b> :	</td> 
+	<tr>      <td className="ml-3" style={{width:'245px'}}>  <b>{strings.ExpenseAmount }</b>:	</td> 
 						<td>	
-							{expenseData.expenseAmount? expenseData.currencyName + " " +expenseData.expenseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):expenseData.currencyName + " " +ZERO.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}  
+							{expenseData.expenseAmount? expenseData.currencyName + " " +expenseData.expenseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }):expenseData.currencyName + " " +ZERO.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}  
 						</td>
 						
 	           {/* <td>{expenseData.expenseAmount}</td> */}
@@ -123,24 +121,24 @@ class ExpenseTemplate extends Component {
 			  <td>{expenseData.expenseId}</td>
 	</tr> */}
 
-	<tr>      <td className="ml-3" style={{width:'245px'}}>	<b>{strings.VAT+" "+strings.Type }</b> : </td>  
+	<tr>      <td className="ml-3" style={{width:'245px'}}>	<b>{strings.VAT+" "+strings.Type }</b>: </td>  
 	          <td>{expenseData.vatCategoryName} </td>
 	</tr>
 	
-	<tr>      <td className="ml-3" style={{width:'245px'}}>	<b>{strings.ReceiptNumber }</b> : </td>  
+	<tr>      <td className="ml-3" style={{width:'245px'}}>	<b>{strings.ReceiptNumber }</b>: </td>  
 	          <td>{expenseData.receiptNumber} </td>
 	</tr>
 	
 	
-	<tr>      <td className="ml-3" style={{width:'245px'}}>	<b>{strings.Expense+" "+strings.Description }</b> : </td>  
+	<tr>      <td className="ml-3" style={{width:'245px'}}>	<b>{strings.Expense+" "+strings.Description }</b>: </td>  
 	          <td>{expenseData.expenseDescription} </td>
 	</tr>
 
-	<tr>      <td className="ml-3" style={{width:'245px'}}>	<b>{strings.Receipt+" "+strings.Description }</b> : </td>  
+	<tr>      <td className="ml-3" style={{width:'245px'}}>	<b>{strings.Receipt+" "+strings.Description }</b>: </td>  
 	          <td>{expenseData.receiptAttachmentDescription} </td>
 	</tr>
 
-	<tr>      <td className="ml-3" style={{width:'245px'}}>	<b>{strings.PostedDate }</b> : </td> 
+	<tr>      <td className="ml-3" style={{width:'245px'}}>	<b>{strings.PostedDate }</b>: </td> 
 	          <td>
 			  {expenseData.expenseStatus === "Posted" ?    
 				  moment(expenseData.lastUpdateDate).format('DD-MM-YYYY')

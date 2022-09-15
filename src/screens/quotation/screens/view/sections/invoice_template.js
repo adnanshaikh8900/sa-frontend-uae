@@ -140,13 +140,13 @@ class RFQTemplate extends Component {
 									<div className="mb-1 ml-2"  style={{fontSize:"22px"}}><b>{companyData.companyName}</b></div>
 									<div className="mb-1 ml-2">{companyData.companyAddressLine1}</div>
 									<div className="mb-1 ml-2">{companyData.companyAddressLine2}</div>
-										{companyData.companyCountryCode==229 ? strings.POBox :""}: {companyData.companyPoBoxNumber} ,&nbsp;
-										{companyData &&(companyData.companyStateName ? companyData.companyStateName + " , " : "")}
+										{companyData.companyCountryCode==229 ? strings.POBox :""}: {companyData.companyPoBoxNumber},&nbsp;
+										{companyData &&(companyData.companyStateName ? companyData.companyStateName + ", " : "")}
 										{companyData &&(companyData.companyCountryName ? companyData.companyCountryName : "")}
 										{companyData.companyRegistrationNumber && (<div className="mb-1 ml-2">{strings.CompanyRegistrationNo}: {companyData.companyRegistrationNumber}</div>)}
 										{companyData.isRegisteredVat==true&&(<div className="mb-1 ml-2">{strings.VATRegistrationNo}: {companyData.vatRegistrationNumber}</div>)}
 										<div className="mb-1 ml-2">{strings.MobileNumber}: {this.companyMobileNumber(companyData.phoneNumber ? "+" + companyData.phoneNumber : '')}</div>
-										{companyData.emailAddress&&(<div className="mb-1 ml-2">Email: {companyData.emailAddress}</div>)}
+										{companyData.emailAddress&&(<div className="mb-1 ml-2">{strings.Email}: {companyData.emailAddress}</div>)}
 								</div>
 							</div>
 							</div>

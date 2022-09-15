@@ -26,6 +26,7 @@ import { CSVLink } from 'react-csv';
 import { stubArray } from 'lodash';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
+import config from 'constants/config';
 // import { AgGridReact,AgGridColumn } from 'ag-grid-react/lib/agGridReact';
 // import 'ag-grid-community/dist/styles/ag-grid.css';
 // import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
@@ -441,7 +442,8 @@ class CurrencyConvert extends React.Component {
 								<Loader></Loader>
 							) : (
 								<Row>
-									<Col lg={12}>
+									{
+										<Col lg={12}>
 										<div className="d-flex justify-content-end">
 											<ButtonGroup className="toolbar" size="sm">
 												{/* <Button
@@ -471,7 +473,7 @@ class CurrencyConvert extends React.Component {
 													Bulk Delete
 												</Button> */}
 											</ButtonGroup>
-											<Button
+											{ config.ADD_CURRENCY && <Button
 											color="primary"
 											className="btn-square pull-right"
 											style={{ marginBottom: '10px' }}
@@ -483,7 +485,7 @@ class CurrencyConvert extends React.Component {
 										>
 											<i className="fas fa-plus mr-1" />
 											 {strings.AddNewCurrencyConversion}
-										</Button>
+										</Button>}
 										</div>
 										{/* <div className="py-3">
 											<h5>Filter : </h5>
@@ -680,7 +682,7 @@ class CurrencyConvert extends React.Component {
 					</select>
 		</div>										 */}
 
-									</Col>
+									</Col>}
 								</Row>
 							)}
 						</CardBody>

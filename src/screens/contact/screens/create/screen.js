@@ -350,12 +350,12 @@ class CreateContact extends React.Component {
 															}}
 															validate={(values) => {
 																let errors = {};
-
-																if (checkmobileNumberParam === true) {
-																	errors.mobileNumber =
-																		'Invalid mobile number';
+																if(!(this.props.isParentComponentPresent && this.props.isParentComponentPresent == true)){
+																	if (checkmobileNumberParam === true) {
+																		errors.mobileNumber =
+																			'Invalid mobile number';
+																	}
 																}
-
 																if (values.stateId === '') {
 																	errors.stateId = 'State is required';
 																}

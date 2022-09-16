@@ -1575,13 +1575,15 @@ discountType = (row) =>
 			let temp = this.state.data?.[length].productId!==""?
 			this.state.data?.[length].productId:-2
 			if (temp > -1) {
-				return true;
-			} else {
 				return false;
+			} else {
+				return true;
 			}
+
 		} else {
 			return true;
 		}
+
 	};
 
 	updateAmount = (data, props) => {
@@ -2261,6 +2263,7 @@ discountType = (row) =>
 													this.handleSubmit(values, resetForm);
 												}}
 												validate={(values) => {
+												
 													let errors = {};
 													console.log(values,"Values");
 													if (exist === true) {

@@ -866,9 +866,11 @@ renderVatAmount = (cell, row,extraData) => {
 							const val = term ? term.value.split('_') : '';
 							const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 							// const values =  res.data.invoiceDate	
-							const values =  new Date();	
+							const values =  new Date();
+		
+							debugger	
 								this.setState({
-									date: moment(values).add(temp, 'days'),
+									date: moment(values).add(parseInt(temp), 'days'),
 									invoiceDate1: moment(values),
 								});
 								const date1 = moment(values).add(temp, 'days').format('DD-MM-YYYY')
@@ -1801,6 +1803,7 @@ discountType = (row) =>
 		formData.append('quotationId', this.state.quotationId ? this.state.quotationId : '')
 		formData.append('referenceNumber', invoice_number !== null ? this.state.prefix + invoice_number : '');
 		formData.append('invoiceDueDate', invoiceDueDate ? this.state.date : null);
+		debugger
 		formData.append('invoiceDate', invoiceDate?invoiceDate
 						// moment(invoiceDate,'DD-MM-YYYY')
 						// .toDate()
@@ -1810,7 +1813,9 @@ discountType = (row) =>
 		formData.append('receiptAttachmentDescription', receiptAttachmentDescription !== null ? receiptAttachmentDescription : '',);
 		formData.append('exchangeRate', exchangeRate !== null ? exchangeRate : '');
 		formData.append('contactPoNumber', contact_po_number !== null ? contact_po_number : '');
-if(changeShippingAddress && changeShippingAddress==true)
+
+			debugger
+		if(changeShippingAddress && changeShippingAddress==true)
 		{
 			formData.append('changeShippingAddress', changeShippingAddress !== null ? changeShippingAddress : '');
 			formData.append('shippingAddress', shippingAddress !== null ? shippingAddress : '');
@@ -1858,6 +1863,7 @@ if(changeShippingAddress && changeShippingAddress==true)
 		this.props.customerInvoiceCreateActions
 			.createInvoice(formData)
 			.then((res) => {
+				debugger
 				this.setState({ disabled: false });
 				this.setState({ loading:false});
 				this.props.commonActions.tostifyAlert(
@@ -1933,8 +1939,10 @@ if(changeShippingAddress && changeShippingAddress==true)
 						},
 					);
 				} else {
+					debugger
 					this.props.history.push('/admin/income/customer-invoice');
 					this.setState({ loading:false,});
+					debugger
 				}
 			})
 			.catch((err) => {
@@ -2800,10 +2808,11 @@ if(changeShippingAddress && changeShippingAddress==true)
 																		dateFormat="dd-MM-yyyy"
 																		//minDate={new Date()}
 																		dropdownMode="select"
-																		value={props.values.invoiceDate ?new Date(props.values.invoiceDate):props.values.invoiceDate}
+																		value={props.values.invoiceDate1 ?new Date(props.values.invoiceDate1):props.values.invoiceDate}
 																		// value={props.values.invoiceDate}
-																		selected={props.values.invoiceDate ?new Date(props.values.invoiceDate):props.values.invoiceDate} 
+																		selected={props.values.invoiceDate1 ?new Date(props.values.invoiceDate1):props.values.invoiceDate} 
 																		onChange={(value) => {
+																			debugger
 																			props.handleChange('invoiceDate')(value);
 																			this.setDate(props, value);
 																		}}
@@ -3950,9 +3959,9 @@ if(changeShippingAddress && changeShippingAddress==true)
                                                                                 newData = data.filter((obj) => obj.productId !== "");
                                                                                 props.setFieldValue('lineItemsString', newData, true);
                                                                                 this.updateAmount(newData, props);
-																				props.handleBlur();
-                                                                            	if(props.errors &&  Object.keys(props.errors).length != 0)
-                                                                            		this.props.commonActions.fillManDatoryDetails();
+																				// props.handleBlur();
+                                                                            	// if(props.errors &&  Object.keys(props.errors).length != 0)
+                                                                            	// 	this.props.commonActions.fillManDatoryDetails();
                                                                             }
 																			this.setState(
 																				{

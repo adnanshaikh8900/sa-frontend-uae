@@ -765,6 +765,28 @@ class ExplainTrasactionDetail extends React.Component {
 				invoiceIdList ? JSON.stringify(result) : '',
 			);
 		}
+		debugger
+		formData.append(
+			"explainedInvoiceListString",
+			invoiceIdList ?JSON.stringify(invoiceIdList.map((i)=>{
+	
+			 return {
+			  invoiceId:i.value,
+			  invoiceAmount:i.amount,
+			  convertedInvoiceAmount:i.convertedInvoiceAmount,
+			  explainedAmount:i.explainedAmount,
+			  exchangeRate:i.exchangeRate,
+			  partiallyPaid:i.pp
+			 } })) : []
+		  );
+		
+		  formData.append(
+			"exchangeGainOrLossId",this.setexcessorshortamount().data<0?103:this.setexcessorshortamount().data>0?79:0
+		  );
+		  formData.append(
+			"exchangeGainOrLoss",this.setexcessorshortamount().data
+		  );
+
 		formData.append('reference', reference ? reference : '');
 		if (this.uploadFile && this.uploadFile.files && this.uploadFile.files[0]) {
 			formData.append('attachment', this.uploadFile.files[0]);
@@ -1322,6 +1344,15 @@ class ExplainTrasactionDetail extends React.Component {
 															errors.transactionAmount=`Amount cannot be grater than ${totalexpaled}`
 														   
 														  }
+														  const isppselected=values?.invoiceIdList.reduce((a,c)=>c.pp?a+1:a+0,0)
+                          if( values.transactionAmount<totalexpaled &&
+                            this.state?.bankCurrency?.bankAccountCurrency===values?.invoiceIdList?.[0]?.currencyCode
+                            && isppselected===0
+                            )
+                         {
+                          errors.transactionAmount=`Amount is less select partial payment on invoice `
+                         
+                        }
 														  }
 								
 														if (

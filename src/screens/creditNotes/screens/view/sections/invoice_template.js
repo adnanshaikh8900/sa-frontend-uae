@@ -8,7 +8,6 @@ import {data}  from '../../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { TextareaAutosize } from '@material-ui/core';
 
-
 const { ToWords } = require('to-words');
 const toWords = new ToWords({
 	localeCode: 'en-IN',
@@ -134,15 +133,13 @@ class InvoiceTemplate extends Component {
 									<div className="mb-1 ml-2" style={{fontSize:"22px"}}><b>{companyData.companyName}</b></div>
 									<div className="mb-1 ml-2">{companyData.companyAddressLine1}</div>
 										<div className="mb-1 ml-2">{companyData.companyAddressLine2}</div>
-										{companyData.companyCountryCode==229 ?
-																	strings.POBox:
-																	""} : {companyData.companyPoBoxNumber} ,&nbsp;
-										{companyData &&(companyData.companyStateName ? companyData.companyStateName + " , " : "")}
+										{companyData.companyCountryCode==229 ? strings.POBox: ""}: {companyData.companyPoBoxNumber},&nbsp;
+										{companyData &&(companyData.companyStateName ? companyData.companyStateName + ", " : "")}
 										{companyData &&(companyData.companyCountryName ? companyData.companyCountryName : "")}
-										{companyData.companyRegistrationNumber && (<div className="mb-1 ml-2">{strings.CompanyRegistrationNo} : {companyData.companyRegistrationNumber}</div>)}
-										{companyData.isRegisteredVat==true&&(<div className="mb-1 ml-2">{strings.VATRegistrationNo} : {companyData.vatRegistrationNumber}</div>)}
-									<div className="mb-1 ml-2">{strings.MobileNumber} : {this.companyMobileNumber(companyData.phoneNumber?"+"+companyData.phoneNumber:'')}</div>
-									{companyData.emailAddress&&(<div className="mb-1 ml-2">Email : {companyData.emailAddress}</div>)}
+										{companyData.companyRegistrationNumber && (<div className="mb-1 ml-2">{strings.CompanyRegistrationNo}: {companyData.companyRegistrationNumber}</div>)}
+										{companyData.isRegisteredVat==true&&(<div className="mb-1 ml-2">{strings.VATRegistrationNo}: {companyData.vatRegistrationNumber}</div>)}
+									<div className="mb-1 ml-2">{strings.MobileNumber}: {this.companyMobileNumber(companyData.phoneNumber?"+"+companyData.phoneNumber:'')}</div>
+									{companyData.emailAddress&&(<div className="mb-1 ml-2">Email: {companyData.emailAddress}</div>)}
 								</div>
 							</div>
 							</div>
@@ -171,7 +168,7 @@ class InvoiceTemplate extends Component {
 											? companyData.company.companyName
 											: ''}</b></h4> */}
 											<br/>
-								<h6 className="mb-1 ml-2"><b>{strings.CreditTo} ,</b></h6><br/>
+								<h6 className="mb-1 ml-2"><b>{strings.CreditTo},</b></h6><br/>
 								{contactData  &&(<div className="mb-1 ml-2"><b>{contactData.organization ? contactData.organization:( contactData.firstName+" "+contactData.lastName)}</b></div>)}
 								{contactData && contactData.addressLine1 && (<div className="mb-1 ml-2">{contactData.addressLine1}</div>)}
 
@@ -180,23 +177,21 @@ class InvoiceTemplate extends Component {
 											contactData.countryId==229 ?
 											contactData.poBoxNumber ?(strings.POBox +" : " +contactData.poBoxNumber ): ""
 											:contactData.postZipCode ? contactData.postZipCode : ""
-											)} ,&nbsp;
-									    {invoiceData && contactData && (contactData.billingStateName ? contactData.billingStateName + " , " : "")}
+											)},&nbsp;
+									    {invoiceData && contactData && (contactData.billingStateName ? contactData.billingStateName + ", " : "")}
 										{invoiceData && contactData && (contactData.billingCountryName ? contactData.billingCountryName : "")}
 									</div>
 									{console.log(invoiceData.taxTreatment,"invoiceData.taxTreatment")}
-									{invoiceData && invoiceData.taxTreatment&& invoiceData.taxTreatment.includes("NON")==false &&(<div className="mb-1 ml-2">{strings.VATRegistrationNo} :  {contactData &&contactData.vatRegistrationNumber&&(contactData.vatRegistrationNumber)}</div>)}
-								{contactData&&contactData.mobileNumber&&(   <div className="mb-1 ml-2">{strings.MobileNumber} : +{contactData.mobileNumber}</div>)}
-								{contactData && contactData.billingEmail && (<div className="mb-1 ml-2">{strings.Email} : {contactData.billingEmail}</div>)}
+									{invoiceData && invoiceData.taxTreatment&& invoiceData.taxTreatment.includes("NON")==false &&(<div className="mb-1 ml-2">{strings.VATRegistrationNo}: {contactData &&contactData.vatRegistrationNumber&&(contactData.vatRegistrationNumber)}</div>)}
+								{contactData&&contactData.mobileNumber&&(<div className="mb-1 ml-2">{strings.MobileNumber}: +{contactData.mobileNumber}</div>)}
+								{contactData && contactData.billingEmail && (<div className="mb-1 ml-2">{strings.Email}: {contactData.billingEmail}</div>)}
 								</div>
 								<div style={{ width: '27%' }}>
 									<br/>
-								<div className="mb-1 ml-2"><b>{strings.CreditNote} : </b> # {invoiceData.creditNoteNumber}</div>
-								<div className="mb-1 ml-2"><b>{strings.TaxCreditDate} : </b>{' '}
-										{moment(invoiceData.invoiceDate).format(
-											'DD MMM YYYY',
-										)}</div>
-											<div className="mb-1 ml-2"><b>{strings.Status} : </b>{this.renderInvoiceStatus(status)}</div>
+								<div className="mb-1 ml-2"><b>{strings.CreditNote}: </b> # {invoiceData.creditNoteNumber}</div>
+								<div className="mb-1 ml-2"><b>{strings.TaxCreditDate}: </b>{' '}
+										{moment(invoiceData.invoiceDate).format('DD MMM YYYY')}</div>
+											<div className="mb-1 ml-2"><b>{strings.Status}: </b>{this.renderInvoiceStatus(status)}</div>
 								</div>
 								</div>
 							</div>
@@ -649,14 +644,14 @@ class InvoiceTemplate extends Component {
 							</div>
 						</div><hr/>
 						<TextareaAutosize
-																			type="textarea"
-																			disabled
-																			className="textarea viewFootNote"
-																			maxLength="250"
-																			style={{width: "1100px"}}
-																			// rows="5"
-																			value={invoiceData.footNote}
-																		/>
+								type="textarea"
+								disabled
+								className="textarea viewFootNote"
+								maxLength="250"
+								style={{width: "1100px"}}
+								// rows="5"
+								value={invoiceData.footNote}
+							/>
 						<br /><br/><br/>											
 					</CardBody>
 					<img className='footer' src={footer} style={{ height: "65px", width: "100%" }}></img>

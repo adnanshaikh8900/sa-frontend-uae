@@ -10,7 +10,6 @@ import {
 	Row,
 	Col,
 	ButtonGroup,
-	Input,
 	ButtonDropdown,
 	DropdownToggle,
 	DropdownMenu,
@@ -19,24 +18,15 @@ import {
 import Select from 'react-select';
 // import { ToastContainer, toast } from 'react-toastify'
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import DatePicker from 'react-datepicker';
-import { CSVLink } from 'react-csv';
-
-import EmailModal from '../customer_invoice/sections/email_template';
-
-import { Loader, ConfirmDeleteModal, Currency } from 'components';
-
+import { Loader, ConfirmDeleteModal } from 'components';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'react-datepicker/dist/react-datepicker.css';
-
-
 import * as PurchaseOrderAction from '../purchase_order/actions';
 import * as PurchaseOrderDetailsAction from './screens/detail/actions';
 import * as GoodsReceivedNoteCreateAction from '../goods_received_note/screens/create/actions'
 import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
-import moment from 'moment';
 import './style.scss';
 import CreateGoodsReceivedNote from './sections/createGRN';
 import {data}  from '../Language/index'
@@ -264,14 +254,14 @@ class PurchaseOrder extends React.Component {
 		return(
 			<div>
 								<div>
-						<label className="font-weight-bold mr-2" dataAlign="right">{strings.PurchaseOrder+" "+strings.Amount} : </label>
+						<label className="font-weight-bold mr-2" dataAlign="right">{strings.PurchaseOrder+" "+strings.Amount}: </label>
 						<label dataAlign="right">
-							{row.totalAmount  === 0 ? row.currencyCode +" "+ row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyCode +" "+ row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+							{row.totalAmount  === 0 ? row.currencyCode +" "+ row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 }) : row.currencyCode +" "+ row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })}
 						</label>
 					</div>
 					<div style={{display: row.totalVatAmount === 0 ? 'none' : ''}}>
-					<label className="font-weight-bold mr-2" dataAlign="right">{strings.VatAmount} : </label>
-					<label dataAlign="right">{row.totalVatAmount === 0  ? row.currencyCode +" "+ row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyCode +" "+ row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
+					<label className="font-weight-bold mr-2" dataAlign="right">{strings.VatAmount}: </label>
+					<label dataAlign="right">{row.totalVatAmount === 0  ? row.currencyCode +" "+ row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 }) : row.currencyCode +" "+ row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 })}</label>
 					</div>
 					
 					
@@ -279,11 +269,11 @@ class PurchaseOrder extends React.Component {
 		};
 
 	renderDueAmount =(cell,row,extraData) => {
-		return row.dueAmount === 0  ? row.currencySymbol +" "+row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencySymbol +" "+row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.dueAmount === 0  ? row.currencySymbol +" "+row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 }) : row.currencySymbol +" "+row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 });
 	}
 
 	renderVatAmount = (cell, row, extraData) => {
-		return row.vatAmount === 0 ? row.currencySymbol +" "+row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencySymbol +" "+row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.vatAmount === 0 ? row.currencySymbol +" "+row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 }) : row.currencySymbol +" "+row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2 });
 	};
 	renderCurrency = (cell, row) => {
 		if (row.currencyName) {

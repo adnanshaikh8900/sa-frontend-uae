@@ -555,6 +555,7 @@ class CreateExpense extends React.Component {
 						...{ expenseNumber: res.data },
 					},
 				});
+				alert("my check")
 				console.log(res.data)
 				if( res.data && res.data!=null)
 				this.formRef.current.setFieldValue('expenseNumber', res.data, true,true);

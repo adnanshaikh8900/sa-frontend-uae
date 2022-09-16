@@ -3,7 +3,6 @@ import { Card, CardBody, Table } from 'reactstrap';
 import moment from 'moment';
 import '../style.scss';
 import logo from 'assets/images/brand/logo.png';
-import { Currency } from 'components';
 import {data}  from '../../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { TextareaAutosize } from '@material-ui/core';
@@ -130,15 +129,13 @@ class RFQTemplate extends Component {
 										<div className="mb-1 ml-2" style={{fontSize:"22px"}}><b>{companyData.companyName}</b></div>
 										<div className="mb-1 ml-2">{companyData.companyAddressLine1}</div>
 										<div className="mb-1 ml-2">{companyData.companyAddressLine2}</div>
-										{companyData.companyCountryCode==229 ?
-																	strings.POBox:
-																	""} : {companyData.companyPoBoxNumber} ,&nbsp;
-										{companyData &&(companyData.companyStateName ? companyData.companyStateName + " , " : "")}
+										{companyData.companyCountryCode==229 ? strings.POBox: ""}: {companyData.companyPoBoxNumber},&nbsp;
+										{companyData &&(companyData.companyStateName ? companyData.companyStateName + ", " : "")}
 										{companyData &&(companyData.companyCountryName ? companyData.companyCountryName : "")}
-										{companyData.companyRegistrationNumber && (<div className="mb-1 ml-2">{strings.CompanyRegistrationNo} : {companyData.companyRegistrationNumber}</div>)}
-										{companyData.isRegisteredVat==true&&(<div className="mb-1 ml-2">{strings.VATRegistrationNo} : {companyData.vatRegistrationNumber}</div>)}
-										<div className="mb-1 ml-2">{strings.MobileNumber} : {this.companyMobileNumber(companyData.phoneNumber ? "+" + companyData.phoneNumber : '')}</div>
-										{companyData.emailAddress&&(<div className="mb-1 ml-2">Email : {companyData.emailAddress}</div>)}
+										{companyData.companyRegistrationNumber && (<div className="mb-1 ml-2">{strings.CompanyRegistrationNo}: {companyData.companyRegistrationNumber}</div>)}
+										{companyData.isRegisteredVat==true&&(<div className="mb-1 ml-2">{strings.VATRegistrationNo}: {companyData.vatRegistrationNumber}</div>)}
+										<div className="mb-1 ml-2">{strings.MobileNumber}: {this.companyMobileNumber(companyData.phoneNumber ? "+" + companyData.phoneNumber : '')}</div>
+										{companyData.emailAddress&&(<div className="mb-1 ml-2">Email: {companyData.emailAddress}</div>)}
 									</div>
 		
 
@@ -169,22 +166,22 @@ class RFQTemplate extends Component {
 											? companyData.company.companyName
 											: ''}</b></h4> */}
 									<br />
-									<h6 className="mb-1 ml-2"><b>{strings.BillTo} ,</b></h6><br />
+									<h6 className="mb-1 ml-2"><b>{strings.BillTo},</b></h6><br />
 									<div className="mb-1 ml-2"><b>{ RFQData.organisationName ?  RFQData.organisationName: RFQData.supplierName}</b></div>
 									{contactData && contactData.addressLine1 && (<div className="mb-1 ml-2">{contactData.addressLine1}</div>)}
 
 									<div className="mb-1 ml-2">
 									{RFQData && contactData && (
 											contactData.countryId==229 ?
-											contactData.poBoxNumber ?(strings.POBox +" : " +contactData.poBoxNumber ): ""
+											contactData.poBoxNumber ?(strings.POBox +": " +contactData.poBoxNumber ): ""
 											:contactData.postZipCode ? contactData.postZipCode : ""
-											)} ,&nbsp;
-									    {RFQData && contactData && (contactData.billingStateName ? contactData.billingStateName + " , " : "")}
+											)},&nbsp;
+									    {RFQData && contactData && (contactData.billingStateName ? contactData.billingStateName + ", " : "")}
 										{RFQData && contactData && (contactData.billingCountryName ? contactData.billingCountryName : "")}
 									</div>
-									{RFQData && RFQData.taxtreatment&& RFQData.taxtreatment.includes("NON")==false &&(<div className="mb-1 ml-2">{strings.VATRegistrationNo} :  {companyData.vatRegistrationNumber}</div>)}
-									{contactData && contactData.mobileNumber && (<div className="mb-1 ml-2">{strings.MobileNumber} :+{contactData.mobileNumber}</div>)}
-									{contactData && contactData.billingEmail && (<div className="mb-1 ml-2">{strings.Email} : {contactData.billingEmail}</div>)}
+									{RFQData && RFQData.taxtreatment&& RFQData.taxtreatment.includes("NON")==false &&(<div className="mb-1 ml-2">{strings.VATRegistrationNo}: {companyData.vatRegistrationNumber}</div>)}
+									{contactData && contactData.mobileNumber && (<div className="mb-1 ml-2">{strings.MobileNumber}:+{contactData.mobileNumber}</div>)}
+									{contactData && contactData.billingEmail && (<div className="mb-1 ml-2">{strings.Email}: {contactData.billingEmail}</div>)}
 									{/* <span className="mb-1 ml-2"><b>{strings.Status} : </b> {this.renderInvoiceStatus(RFQData.status)}</span> */}
 
 								</div>
@@ -193,16 +190,13 @@ class RFQTemplate extends Component {
 								<div style={{ width: '27%' }}>
 
 									<br />
-									<div className="mb-1 ml-2"><b>{strings.RFQNUMBER}  : </b> # {RFQData.rfqNumber} </div>
-									{RFQData.receiptNumber&&(<div className="mb-1 ml-2"><b>{strings.ReferenceNumber} : </b>{RFQData.receiptNumber}</div>)}
-									<div className="mb-1 ml-2"><b>{strings.RFQDate} : </b>{' '}
-										{moment(RFQData.RFQDATE).format(
-											'DD MMM YYYY',
-										)}</div>
-										<div className="mb-1 ml-2"><b>{strings.ExpiryDate} : </b>{moment(RFQData.rfqExpiryDate).format(
-										'DD MMM YYYY',
-									)}</div>
-									<div className="mb-1 ml-2"><b>{strings.Status} : </b>{this.renderRFQStatus(RFQData.status)}</div><br />
+									<div className="mb-1 ml-2"><b>{strings.RFQNUMBER}: </b> # {RFQData.rfqNumber} </div>
+									{RFQData.receiptNumber&&(<div className="mb-1 ml-2"><b>{strings.ReferenceNumber}: </b>{RFQData.receiptNumber}</div>)}
+									<div className="mb-1 ml-2"><b>{strings.RFQDate}: </b>{' '}
+										{moment(RFQData.RFQDATE).format('DD MMM YYYY')}</div>
+									<div className="mb-1 ml-2"><b>{strings.ExpiryDate}: </b>
+										{moment(RFQData.rfqExpiryDate).format('DD MMM YYYY')}</div>
+									<div className="mb-1 ml-2"><b>{strings.Status}: </b>{this.renderRFQStatus(RFQData.status)}</div><br />
 										
 									<br />
 									{/* <div className="mb-1 ml-2" >
@@ -442,14 +436,14 @@ class RFQTemplate extends Component {
 						<hr />
 						{/* {RFQData.footNote} */}
 						<TextareaAutosize
-																			type="textarea"
-																			disabled
-																			className="textarea viewFootNote"
-																			maxLength="250"
-																			style={{width: "1100px"}}
-																			// rows="5"
-																			value={RFQData.footNote}
-																		/>
+								type="textarea"
+								disabled
+								className="textarea viewFootNote"
+								maxLength="250"
+								style={{width: "1100px"}}
+								// rows="5"
+								value={RFQData.footNote}
+							/>
 						<br /><br/><br/>
 						</CardBody>
 					<img className='footer' src={footer} style={{ height: "65px", width: "100%" }}></img>

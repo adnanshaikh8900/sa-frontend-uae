@@ -8,45 +8,46 @@ export default {
     FRONTEND_RELEASE: window._env_.SIMPLEVAT_RELEASE,
   
   
-  DASHBOARD:true,
+  DASHBOARD:false,
   INCOME_MODULE:true,
   EXPENSE_MODULE:true,
-  BANKING_MODULE:true,
+  BANKING_MODULE:false,
   ACCOUNTANT_MODULE:true,
-  REPORTS_MODULE:true,
+  REPORTS_MODULE:false,
   MASTER_MODULE:true,
-  INVENTORY_MODULE:true,
+  INVENTORY_MODULE:false,
   PAYROLL_MODULE:true,
 
-  EXPENSE_EXPENSES:true,
+  EXPENSE_EXPENSES:false,
   EXPENSE_SI:true,
   EXPENSE_PR:true,
-  EXPENSE_RFQ:true,
-  EXPENSE_PO:true,
-  EXPENSE_GRN:true,
+  EXPENSE_RFQ:false,
+  EXPENSE_PO:false,
+  EXPENSE_GRN:false,
 
   INCOME_CI:true,
   INCOME_IR:true,
   INCOME_Q:true,
-  INCOME_TCN:true,
+  INCOME_TCN:false,
 
-  BANKING_BA:true,
+  BANKING_BA:false,
 
   ACCOUNTANT_OB:true,
   ACCOUNTANT_JOURNALS:true,
 
-  MASTER_COA:true,
+  MASTER_COA:false,
   MASTER_CONTACT:true,
   MASTER_PRODUCTS:true,
   MASTER_PC:true,
   MASTER_VAT:true,
   MASTER_CR:true,
-  MASTER_EMPLOYEE:true,
+  MASTER_EMPLOYEE:false,
 
-  PAYROLL_PR:true,
-  PAYROLL_PC:true,
+  PAYROLL_PR:false,
+  PAYROLL_PC:false,
 
-  ADD_ROLES:true,
+  ADD_ROLES:false,
+  ADD_CURRENCY:false,
 
   SETTING_THEME:false,
   SETTING_IMPORT:false

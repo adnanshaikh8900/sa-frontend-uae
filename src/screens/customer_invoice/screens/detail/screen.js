@@ -1807,7 +1807,6 @@ class DetailCustomerInvoice extends React.Component {
 														}
 	
 														if(values.changeShippingAddress==true){
-															if(values.shippingStateId =="")  errors.shippingStateId ='State is required';
 														}
 
 														if(values.changeShippingAddress==true){
@@ -1816,11 +1815,15 @@ class DetailCustomerInvoice extends React.Component {
 																	errors.shippingPostZipCode = 'PO box number is required';
 																else if (values.shippingPostZipCode.length < 3)
 																	errors.shippingPostZipCode = 'Please enter 3 to 6 digit PO box number';
+																if(values.shippingStateId =="")  errors.shippingStateId ='Emirate is required';
+																
 															} else {
 																if (values.shippingPostZipCode == '')
 																	errors.shippingPostZipCode = 'Postal code is required';
 																else if (values.shippingPostZipCode.length !== 6)
 																		errors.shippingPostZipCode = 'Please enter 6 digit postal zip code';
+																if(values.shippingStateId =="")  errors.shippingStateId ='State is required';
+																
 															}}
 															let isoutoftock=0
 

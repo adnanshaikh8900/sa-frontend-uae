@@ -111,7 +111,7 @@ class DetailBankAccount extends React.Component {
 			bankList:[]
 		};
 
-		this.regExAlpha = /^[a-zA-Z_ ]+$/;
+		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regEx = /^[0-9\d]+$/;
 		this.regExBoth = /[a-zA-Z0-9_ ]+$/;
 		this.ifscCode = /[a-zA-Z0-9]+$/;
@@ -436,18 +436,14 @@ class DetailBankAccount extends React.Component {
 																		if (
 																			option.target.value === '' ||
 																			this.regExAlpha.test(
-																				option.target.value
+																				option.target.value,
 																			)
 																		) {
 																			props.handleChange('account_name')(
 																				option,
 																			);
-																		} else {
-																			props.handleChange('account_name')(
-																				option,
-																			);
+																		}
 																	}}
-																}
 																	className={
 																		props.errors.account_name &&
 																			props.touched.account_name

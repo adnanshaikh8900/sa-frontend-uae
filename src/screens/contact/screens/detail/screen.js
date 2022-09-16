@@ -650,6 +650,9 @@ class DetailContact extends React.Component {
 																		else
 																			if (values.billingPostZipCode.length != 6)
 																				errors.billingPostZipCode = "Please Enter 6 Digit Postal Zip Code"
+																		if(values.billingStateProvince =="")  
+																			errors.billingStateProvince ='Billing state is required';
+		
 
 																	}
 																	if (values.shippingCountryId == 229 || values.shippingCountryId.value == 229) {

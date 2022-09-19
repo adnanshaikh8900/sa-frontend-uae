@@ -100,6 +100,7 @@ class Quatation extends React.Component {
 			selectedId: '',
 			csvData: [],
 			view: false,
+			MarkAsSent:false,
 			overDueAmountDetails: {
 				overDueAmount: '',
 				overDueAmountWeekly: '',
@@ -304,7 +305,7 @@ class Quatation extends React.Component {
 							{row.status === 'Draft' && (
 							<DropdownItem
 								onClick={() => {
-									this.sendMail(row);
+									this.sendMail(row,false);
 								}}
 							>
 								<i className="fas fa-send" />  {strings.Send}
@@ -324,7 +325,7 @@ class Quatation extends React.Component {
 							{row.status === 'Draft' && (
                             <DropdownItem
 								onClick={() => {
-									this.sendMail(row);
+									this.sendMail(row,true);
 								}}
 							>
 							<i className="fas fa-send"></i>{strings.Mark_As_Sent}
@@ -332,7 +333,7 @@ class Quatation extends React.Component {
 							{row.status === 'Sent' && (
 							<DropdownItem
 							onClick={() => {
-								this.sendMail(row);
+								this.sendMail(row,false);
 							}}
 							>
 								<i className="fas fa-send" />{strings.SendAgain}
@@ -447,7 +448,7 @@ class Quatation extends React.Component {
 
 
 
-sendMail = (row) => {
+sendMail = (row,MarkAsSent) => {
 	 
 	console.log(row);
 	this.setState({
@@ -456,7 +457,7 @@ sendMail = (row) => {
 	const postingRequestModel = {
 	
 		postingRefId: row.id,
-	
+		MarkAsSent:MarkAsSent,
 		amountInWords:upperCase(row.currencyIsoCode + " " +(toWords.convert(row.totalAmount)) ).replace("POINT","AND"),
 			vatInWords:row.totalVatAmount ? upperCase(row.currencyIsoCode + " " +(toWords.convert(row.totalVatAmount)) ).replace("POINT","AND") :"-"
 	};

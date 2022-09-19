@@ -1238,7 +1238,7 @@ class DetailSupplierInvoice extends React.Component {
 				return false;
 			}
 		} else {
-			return false;
+			return true;
 		}
 	};
 

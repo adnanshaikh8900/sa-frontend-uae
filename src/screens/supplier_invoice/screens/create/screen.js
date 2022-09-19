@@ -1662,9 +1662,9 @@ class CreateSupplierInvoice extends React.Component {
 			let temp = this.state.data?.[length].productId!==""?
 			this.state.data?.[length].productId:-2
 			if (temp > -1) {
-				return false;
-			} else {
 				return true;
+			} else {
+				return false;
 			}
 			
 		} else {

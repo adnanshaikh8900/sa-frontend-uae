@@ -376,6 +376,7 @@ class DetailContact extends React.Component {
 	};
 
 	getData = (data) => {
+
 		let temp = {};
 		const { isSame } = this.state;
 		for (let item in data) {
@@ -398,7 +399,9 @@ class DetailContact extends React.Component {
 		temp[`city`] = data[`billingCity`];
 		temp[`fax`] = data[`billingFax`];
 		temp[`billingTelephone`] = data[`billingPhoneNumber`];
-
+		temp[`shippingPostZipCode`]=data[`shippingPostZipCode`]
+		temp[`shippingPoBoxNumber`]=data[`shippingPoBoxNumber`]
+		
 		temp[`addressLine2`] = data[`shippingAddress`];
 		// temp[`shippingCountryId`] = isSame ? this.state.billingAddress.billingcountryId :  data[`shippingCountryId`].value;
 		// temp[`shippingStateId`] = isSame ? this.state.billingAddress.billingStateProvince :  data[`shippingStateId`].value;
@@ -722,12 +725,12 @@ class DetailContact extends React.Component {
 																	// 	is: (val) => (val ? true : false),
 																	// 	then: Yup.string().required('State is Required'),
 																	// }),
-																	// shippingAddress: Yup.string().required(
-																	// 	'Shipping Address is Required',
-																	// ),
-																	// billingAddress: Yup.string().required(
-																	// 	'Billing Address is Required',
-																	// ),
+																	shippingAddress: Yup.string().required(
+																		'Shipping Address is Required',
+																	),
+																	billingAddress: Yup.string().required(
+																		'Billing Address is Required',
+																	),
 																	// postZipCode: Yup.string().required(
 																	// 	'Postal Code is Required',
 																	// ),
@@ -1439,6 +1442,8 @@ class DetailContact extends React.Component {
 
 																							}
 																							props.handleChange('billingStateProvince')('');
+																							props.handleChange('billingPoBoxNumber')('');
+																							props.handleChange('billingPostZipCode')('');
 																							// props.handleChange('billingStateProvince')({
 																							// 	label: 'Select State',
 																							// 	value: '',
@@ -1778,7 +1783,7 @@ class DetailContact extends React.Component {
 																									props.handleChange('shippingStateId')(props.values.billingStateProvince.value ? props.values.billingStateProvince.value : props.values.billingStateProvince);
 																									props.handleChange('shippingTelephone')(props.values.billingPhoneNumber);
 																									props.handleChange('shippingPostZipCode')(props.values.billingPostZipCode);
-																									props.handleChange('shippingPoBoxNumber')(props.values.billingPostZipCode);
+																									props.handleChange('shippingPoBoxNumber')(props.values.billingPoBoxNumber);
 																									props.handleChange('shippingPoBoxNumber')(props.values.billingPoBoxNumber);
 																									props.handleChange('shippingFax')(props.values.billingFax);
 																								} else {
@@ -1885,6 +1890,8 @@ class DetailContact extends React.Component {
 																								// this.getStateListForShippingAddress('');
 																							}
 																							props.handleChange('shippingStateId')('');
+																							props.handleChange('shippingPoBoxNumber')('');
+																							props.handleChange('shippingPostZipCode')('');
 																						}}
 																						placeholder={strings.Select + strings.Country}
 																						id="shippingCountryId"
@@ -2014,6 +2021,7 @@ class DetailContact extends React.Component {
 																										this.setState({ showpoBoxNumberErrorMsg: true })
 																									else
 																										this.setState({ showpoBoxNumberErrorMsg: false })
+																									
 																									props.handleChange('shippingPoBoxNumber')(
 																										option,
 																									);

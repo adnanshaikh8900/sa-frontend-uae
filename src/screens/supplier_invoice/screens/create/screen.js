@@ -1666,9 +1666,11 @@ class CreateSupplierInvoice extends React.Component {
 			} else {
 				return false;
 			}
+			
 		} else {
 			return true;
 		}
+		
 	};
 
 	setDate = (props, value) => {

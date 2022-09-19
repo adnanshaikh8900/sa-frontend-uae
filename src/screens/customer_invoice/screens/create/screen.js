@@ -2314,7 +2314,7 @@ discountType = (row) =>
 
 													if(values.changeShippingAddress==true){
 														if(values.shippingCountryId =="")  
-														errors.shippingCountryId ='Shipping country is required';
+														errors.shippingCountryId ='Country is required';
 													}
 																								
 													if(values.changeShippingAddress==true){

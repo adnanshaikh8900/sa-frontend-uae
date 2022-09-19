@@ -436,7 +436,7 @@ class CreateContact extends React.Component {
 																// 	.required('Mobile number is required')
 																// ,
 																billingAddress: Yup.string().required(
-																	'Address is required',
+																	'Billing address is required',
 																),
 																billingcountryId: Yup.string().required(
 																	'Country is required',
@@ -445,7 +445,7 @@ class CreateContact extends React.Component {
 																	'State is required',
 																),
 																shippingAddress: Yup.string().required(
-																	'Address is required',
+																	'Shipping address is required',
 																),
 																shippingCountryId: Yup.string().required(
 																	'Country is required',

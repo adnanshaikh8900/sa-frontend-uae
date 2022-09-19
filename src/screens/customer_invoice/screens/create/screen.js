@@ -1829,7 +1829,9 @@ discountType = (row) =>
 			formData.append('notes', notes !== null ? notes : '');
 			formData.append('footNote',footNote? footNote : '')
 			formData.append('type', 2);
-			formData.append('lineItemsString', JSON.stringify(this.state.data));
+			const local=[...this.state.data.map(({taxtreatment,...rest})=>rest)]
+			
+			formData.append('lineItemsString', JSON.stringify(local));
 			formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
 			formData.append('totalAmount', this.state.initValue.totalAmount);
 			formData.append('totalExciseAmount', this.state.initValue.total_excise);

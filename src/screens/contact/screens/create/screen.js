@@ -192,9 +192,7 @@ class CreateContact extends React.Component {
 		// isActive:this.state.isActive
 
 		temp[`isActive`] = this.state.isActive;
-
 		temp[`isBillingAndShippingAddressSame`] = isSame;
-
 		temp[`addressLine1`] = data[`billingAddress`];
 		temp[`countryId`] = data[`billingcountryId`].value;
 		temp[`stateId`] = data[`billingStateProvince`].value;
@@ -203,7 +201,6 @@ class CreateContact extends React.Component {
 		temp[`fax`] = data[`billingFax`];
 		temp[`billingTelephone`] = data[`billingPhoneNumber`];
 		temp[`shippingPostZipCode`] = data[`shippingPostZipCode`];
-
 		temp[`addressLine2`] = data[`shippingAddress`];
 		// temp[`shippingCountryId`] = isSame ? this.state.billingAddress.billingcountryId :  data[`shippingCountryId`].value;
 		// temp[`shippingStateId`] = isSame ? this.state.billingAddress.billingStateProvince :  data[`shippingStateId`].value;
@@ -370,13 +367,12 @@ class CreateContact extends React.Component {
 																		errors.vatRegistrationNumber = 'Tax registration number already exists';
 																	}
 																}
-
 																if (this.state.emailExist == true) {
 																	errors.email = 'Email already exists';
 																}
 																if (values.billingcountryId == 229 || values.billingcountryId.value == 229) {
 																	if (values.billingPoBoxNumber === '')
-																		errors.poBoxNumber = 'Billing PO box number is required';
+																		errors.poBoxNumber = 'PO box number is required';
 																	if(values.billingStateProvince =="")  
 																		errors.billingStateProvince ='Emirate is required';
 																} else {
@@ -386,35 +382,32 @@ class CreateContact extends React.Component {
 																		if (values.billingPostZipCode.length != 6)
 																			errors.billingPostZipCode = "Please enter 6 digit postal zip code"
 																	if(values.billingStateProvince =="")  
-																		errors.billingStateProvince ='Billing state is required';
+																		errors.billingStateProvince ='State is required';
 
 																}
 																if (values.shippingCountryId == 229 || values.shippingCountryId.value == 229) {
 																	if (values.shippingPoBoxNumber === '')
-																		errors.poBoxNumber = 'Shipping PO box number is required';
+																		errors.poBoxNumber = 'PO box number is required';
 																	if(values.shippingStateId =="")  
 																		errors.shippingStateId ='Emirate is required';
 																} else {
-																	if (values.shippingPostZipCode == '')
-																		errors.shippingPostZipCode = 'Postal Code is required';
+																		if (values.shippingPostZipCode == '')
+																			errors.shippingPostZipCode = 'Postal Code is required';
 																	else
 																		if (values.shippingPostZipCode.length != 6)
 																			errors.shippingPostZipCode = "Please enter 6 digit Postal Zip Code"
 																	if(values.shippingStateId =="")  
-																		errors.shippingStateId ='Shipping state is required';
+																		errors.shippingStateId ='State is required';
 
 																}
-
 																if (this.state.showbillingFaxErrorMsg == true)
 																	errors.billingFax = "Please enter 15 digit Fax"
-
 
 																if (this.state.showshippingFaxErrorMsg == true)
 																	errors.shippingFax = "Please enter 15 digit Fax"
 
 																if (this.state.showpoBoxNumberErrorMsg == true)
 																	errors.poBoxNumber = "Please enter 3 To 6 digit po box number"
-
 
 																return errors;
 
@@ -443,23 +436,22 @@ class CreateContact extends React.Component {
 																// 	.required('Mobile number is required')
 																// ,
 																billingAddress: Yup.string().required(
-																	'Billing address is required',
+																	'Address is required',
 																),
 																billingcountryId: Yup.string().required(
-																	'Billing country is required',
+																	'Country is required',
 																),
 																billingStateProvince: Yup.string().required(
-																	'Billing state is required',
+																	'State is required',
 																),
-																
 																shippingAddress: Yup.string().required(
-																	'Shipping address is required',
+																	'Address is required',
 																),
 																shippingCountryId: Yup.string().required(
-																	'Shipping country is required',
+																	'Country is required',
 																),
 																shippingStateId: Yup.string().required(
-																	'Shipping state is required',
+																	'State is required',
 																),
 																
 															})}

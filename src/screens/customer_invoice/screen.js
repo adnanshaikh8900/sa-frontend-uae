@@ -34,6 +34,7 @@ import './style.scss';
 import { CreateCreditNoteModal } from './sections';
 import moment from 'moment';
 import { upperCase } from 'lodash';
+import config from 'constants/config';
 
 const { ToWords } = require('to-words');
 const toWords = new ToWords({
@@ -526,7 +527,7 @@ this.props.customerInvoiceActions
 								<i className="fa fa-send" /> Send Custom Email
 							</DropdownItem>
 						)} */}
-							 {row.statusEnum === 'Paid'  && row.remainingInvoiceAmount !==true && ( 
+							 {(row.statusEnum === 'Paid'  && row.remainingInvoiceAmount !==true && config.INCOME_TCN)&& ( 
 							<DropdownItem
 							onClick={() => {
 							this.renderActionForState(row.id);
@@ -1416,11 +1417,11 @@ this.props.customerInvoiceActions
 												Due Amount
 											</TableHeaderColumn> */}
 										<TableHeaderColumn
-											className="text-right"
+											className="text-right table-header-bg"
 											columnClassName="text-right"
 												width="5%"
 											dataFormat={this.renderActions}
-											className="table-header-bg"
+											
 										></TableHeaderColumn>
 									</BootstrapTable>
 								</Col>

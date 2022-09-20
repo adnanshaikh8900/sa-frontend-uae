@@ -381,7 +381,7 @@ create-prod-release-job:
     - NEXT_VERSION=$(($SA_VERSION+1))
     - curl --request PUT --header "PRIVATE-TOKEN:$GITLAB_API_TOKEN" "https://gitlab.datainn.io/api/v4/projects/${CI_PROJECT_ID}/variables/SA_VERSION" --form "value="$NEXT_VERSION
     - PROD_TAG=$PROD_VERSION_PREFIX.$SA_VERSION
-    - curl --header 'Content-Type:application/json' --header "PRIVATE-TOKEN:$GITLAB_API_TOKEN" --data "{ \"name\":\"SimpleAccounts Backend Release Prod:$PROD_TAG\", \"tag_name\":\"$PROD_TAG\", \"ref\":\"$CI_COMMIT_SHA\", \"description\":\"SimpleAccounts backend new release with Production Version:$PROD_TAG and Corresponding Development/Test Version:$TAG\", \"assets\":{ \"links\":[{ \"name\":\"hoge\", \"url\":\"https://google.com\", \"filepath\":\"/binaries/linux-amd64\", \"link_type\":\"other\" }] } }" --request POST "https://gitlab.datainn.io/api/v4/projects/${CI_PROJECT_ID}/releases"
+    - curl --header 'Content-Type:application/json' --header "PRIVATE-TOKEN:$GITLAB_API_TOKEN" --data "{ \"name\":\"SimpleAccounts Frontend Release Prod:$PROD_TAG\", \"tag_name\":\"$PROD_TAG\", \"ref\":\"$CI_COMMIT_SHA\", \"description\":\"SimpleAccounts frontend new release with Production Version:$PROD_TAG and Corresponding Development/Test Version:$TAG\", \"assets\":{ \"links\":[{ \"name\":\"hoge\", \"url\":\"https://google.com\", \"filepath\":\"/binaries/linux-amd64\", \"link_type\":\"other\" }] } }" --request POST "https://gitlab.datainn.io/api/v4/projects/${CI_PROJECT_ID}/releases"
   resource_group: prod
   allow_failure: false
   rules:

@@ -1031,6 +1031,13 @@ min="0"
 																		<Label htmlFor="currencyCode">
 																			 {strings.Currency}
 																		</Label>
+																		{console.log(currency_list,selectCurrencyFactory
+																					.renderOptions(
+																						'currencyName',
+																						'currencyCode',
+																						currency_list,
+																						'Currency',
+																					)?.[1])}
 																		<Select
 																			styles={customStyles}
 																			className="select-default-width"
@@ -1060,12 +1067,8 @@ min="0"
 																						'currencyCode',
 																						currency_list,
 																						'Currency',
-																					)
-																					.find(
-																						(option) =>
-																							option.value ===
-																							+props.values.currencyCode,
-																					)
+																					)?.[1]
+																					
 																			}
 																			onChange={(option) => {
 																				if (option && option.value) {

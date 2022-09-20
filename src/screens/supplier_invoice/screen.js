@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-
 import {
 	Card,
 	CardHeader,
@@ -17,25 +16,16 @@ import {
 	DropdownItem,
 } from 'reactstrap';
 import Select from 'react-select';
-// import { ToastContainer, toast } from 'react-toastify'
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import DatePicker from 'react-datepicker';
-import { CSVLink } from 'react-csv';
-
 import EmailModal from '../customer_invoice/sections/email_template';
-
 import { Loader, ConfirmDeleteModal, Currency } from 'components';
-
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'react-datepicker/dist/react-datepicker.css';
-
-import moment from 'moment';
-
 import * as SupplierInvoiceActions from './actions';
 import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
-
 import './style.scss';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
@@ -241,17 +231,17 @@ class SupplierInvoice extends React.Component {
 		return(
 			<div>
 								<div>
-						<label className="font-weight-bold mr-2 ">{strings.InvoiceAmount} : </label>
+						<label className="font-weight-bold mr-2 ">{strings.InvoiceAmount}: </label>
 						<label>
 					{row.invoiceAmount  === 0 ? row.currencySymbol +" "+ row.invoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : row.currencySymbol +" "+ row.invoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 						</label>
 					</div>
 					<div style={{display: row.vatAmount === 0 ? 'none' : ''}}>
-					<label className="font-weight-bold mr-2">{strings.VatAmount} : </label>
+					<label className="font-weight-bold mr-2">{strings.VatAmount}: </label>
 					<label>{row.vatAmount === 0  ?  row.currencySymbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) :  row.currencySymbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}</label>
 					</div>
 					<div style={{display: row.dueAmount === 0 ? 'none' : ''}}>
-						<label className="font-weight-bold mr-2">{strings.DueAmount} : </label>
+						<label className="font-weight-bold mr-2">{strings.DueAmount}: </label>
 						<label>{row.dueAmount === 0  ?  row.currencySymbol +" "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) :  row.currencySymbol +" "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}</label>
 					</div>
 					
@@ -979,7 +969,7 @@ console.log(supplier_invoice_list)
 										</ButtonGroup>
 									</div>
 									<div className="py-3">
-										<h5>{strings.Filter} : </h5>
+										<h5>{strings.Filter}: </h5>
 										<Row>
 											<Col lg={2} className="mb-1">
 												<Select

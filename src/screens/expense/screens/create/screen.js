@@ -149,6 +149,8 @@ class CreateExpense extends React.Component {
 					if (res.status === 200) {
 						this.getCompanyCurrency();					
 						const {vat_list}=this.props
+						debugger
+						console.log("in degugger"+res.data)
 					let vatCategoryId=
 						vat_list ?
 							selectOptionsFactory
@@ -165,6 +167,7 @@ class CreateExpense extends React.Component {
 								)	:""
 						this.setState(
 							{
+								
 								loading: false,
 								current_expense_id: this.props.location.state.expenseId,
 								initValue: {
@@ -552,10 +555,12 @@ class CreateExpense extends React.Component {
 						...{ expenseNumber: res.data },
 					},
 				});
+				alert("my check")
+				console.log(res.data)
 				if( res.data && res.data!=null)
-				this.formRef.current.setFieldValue('expenseNumber', res.data, true,this.expenseValidationCheck(res.data)
+				this.formRef.current.setFieldValue('expenseNumber', res.data, true,true);
 				// this.validationCheck(res.data)
-				);
+				
 			}
 		});
 	
@@ -1565,7 +1570,7 @@ componentWillUnmount() {
 																							'label',
 																							'value',
 																							pay_mode_list,
-																							'',
+																							'Pay Through',
 																					  )
 																					: []
 																			}

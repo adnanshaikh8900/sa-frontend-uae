@@ -6,6 +6,7 @@ import logo from 'assets/images/brand/logo.png';
 import {data}  from '../../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { TextareaAutosize } from '@material-ui/core';
+import { string } from 'prop-types';
 
 const { ToWords } = require('to-words');
 const ZERO=0.00
@@ -158,15 +159,13 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 									<div className="mb-1 ml-2" style={{fontSize:"22px"}}><b>{companyData.companyName}</b></div>
 									<div className="mb-1 ml-2">{companyData.companyAddressLine1}</div>
 										<div className="mb-1 ml-2">{companyData.companyAddressLine2}</div>
-										{companyData.companyCountryCode==229 ?
-																	strings.POBox:
-																	""} : {companyData.companyPoBoxNumber} ,&nbsp;
-										{companyData &&(companyData.companyStateName ? companyData.companyStateName + " , " : "")}
+										{companyData.companyCountryCode==229 ? strings.POBox : ""}: {companyData.companyPoBoxNumber},&nbsp;
+										{companyData &&(companyData.companyStateName ? companyData.companyStateName + ", " : "")}
 										{companyData &&(companyData.companyCountryName ? companyData.companyCountryName : "")}
-										{companyData.companyRegistrationNumber && (<div className="mb-1 ml-2">{strings.CompanyRegistrationNo} : {companyData.companyRegistrationNumber}</div>)}
-										{companyData.isRegisteredVat==true&&(<div className="mb-1 ml-2">{strings.VATRegistrationNo} : {companyData.vatRegistrationNumber}</div>)}
-									<div className="mb-1 ml-2">{strings.MobileNumber} : {this.companyMobileNumber(companyData.phoneNumber?"+"+companyData.phoneNumber:'')}</div>
-									{companyData.emailAddress&&(<div className="mb-1 ml-2">Email : {companyData.emailAddress}</div>)}
+										{companyData.companyRegistrationNumber && (<div className="mb-1 ml-2">{strings.CompanyRegistrationNo}: {companyData.companyRegistrationNumber}</div>)}
+										{companyData.isRegisteredVat==true&&(<div className="mb-1 ml-2">{strings.VATRegistrationNo}: {companyData.vatRegistrationNumber}</div>)}
+									<div className="mb-1 ml-2">{strings.MobileNumber}: {this.companyMobileNumber(companyData.phoneNumber?"+"+companyData.phoneNumber:'')}</div>
+									{companyData.emailAddress&&(<div className="mb-1 ml-2">Email: {companyData.emailAddress}</div>)}
 								</div>
 							</div>
 							</div>
@@ -192,37 +191,34 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 							>
 								<div>
 								
-								<h6 className="mb-1 ml-2"><b>Purchase From,</b></h6><br/>
+								<h6 className="mb-1 ml-2"><b>{strings.PurchaseFrom},</b></h6><br/>
 								<div className="mb-1 ml-2"><b>{POData.organisationName ? POData.organisationName : POData.supplierName}</b></div>
 								{contactData && contactData.addressLine1 && (<div className="mb-1 ml-2">{contactData.addressLine1}</div>)}
 
 <div className="mb-1 ml-2">
 {POData && contactData && (
 		contactData.countryId==229 ?
-		contactData.poBoxNumber ?(strings.POBox +" : " +contactData.poBoxNumber ): ""
+		contactData.poBoxNumber ?(strings.POBox +": " +contactData.poBoxNumber ): ""
 		:contactData.postZipCode ? contactData.postZipCode : ""
-		)} ,&nbsp;
-	{POData && contactData && (contactData.billingStateName ? contactData.billingStateName + " , " : "")}
+		)},&nbsp;
+	{POData && contactData && (contactData.billingStateName ? contactData.billingStateName + ", " : "")}
 	{POData && contactData && (contactData.billingCountryName ? contactData.billingCountryName : "")}
 </div>
-{POData && POData.taxtreatment&& POData.taxtreatment.includes("NON")==false &&(<div className="mb-1 ml-2">{strings.VATRegistrationNo} :  {POData.vatRegistrationNumber}</div>)}
-								{contactData&&contactData.mobileNumber&&(<div className="mb-1 ml-2">{strings.MobileNumber} :+{contactData.mobileNumber}</div>)}
-								{contactData && contactData.billingEmail && (<div className="mb-1 ml-2">{strings.Email} : {contactData.billingEmail}</div>)}
+{POData && POData.taxtreatment&& POData.taxtreatment.includes("NON")==false &&(<div className="mb-1 ml-2">{strings.VATRegistrationNo}: {POData.vatRegistrationNumber}</div>)}
+								{contactData&&contactData.mobileNumber&&(<div className="mb-1 ml-2">{strings.MobileNumber}:+{contactData.mobileNumber}</div>)}
+								{contactData && contactData.billingEmail && (<div className="mb-1 ml-2">{strings.Email}: {contactData.billingEmail}</div>)}
 						
 								</div>
 								<div style={{ width: '27%' }}>
 
 									<br />
-									<div className="mb-1 ml-2"><b>{strings.PONo} : </b> # {POData.poNumber}</div>
-									{POData.receiptNumber&&(<div className="mb-1 ml-2"><b>{strings.ReferenceNo} : </b>{POData.receiptNumber}</div>)}
-									<div className="mb-1 ml-2"><b>{strings.Approve+" "+strings.Date } : </b>{' '}
-										{moment(POData.poApproveDate).format(
-											'DD MMM YYYY',
-										)}</div>
-										<div className="mb-1 ml-2"><b>{strings.ReceiveDate } : </b>{moment(POData.poReceiveDate).format(
-										'DD MMM YYYY',
-									)}</div>
-									<div className="mb-1 ml-2"><b>{strings.Status} : </b>{this.renderRFQStatus(status)}</div>
+									<div className="mb-1 ml-2"><b>{strings.PONo}: </b> # {POData.poNumber}</div>
+									{POData.receiptNumber&&(<div className="mb-1 ml-2"><b>{strings.ReferenceNo}: </b>{POData.receiptNumber}</div>)}
+									<div className="mb-1 ml-2"><b>{strings.Approve+" "+strings.Date }: </b>{' '}
+										{moment(POData.poApproveDate).format('DD MMM YYYY')}</div>
+									<div className="mb-1 ml-2"><b>{strings.ReceiveDate }: </b>
+										{moment(POData.poReceiveDate).format('DD MMM YYYY')}</div>
+									<div className="mb-1 ml-2"><b>{strings.Status}: </b>{this.renderRFQStatus(status)}</div>
 
 								</div>
 							</div>
@@ -430,14 +426,14 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 						</div>	
 						<hr/>	
 						<TextareaAutosize
-																			type="textarea"
-																			disabled
-																			className="textarea viewFootNote"
-																			maxLength="250"
-																			style={{width: "1100px"}}
-																			// rows="5"
-																			value={POData.footNote}
-																		/>
+								type="textarea"
+								disabled
+								className="textarea viewFootNote"
+								maxLength="250"
+								style={{width: "1100px"}}
+								// rows="5"
+								value={POData.footNote}
+							/>
 						<br /><br/><br/>										
 					</CardBody>
 					<img className='footer' src={footer} style={{ height: "65px", width: "100%" }}></img>

@@ -67,7 +67,7 @@ class CreateContact extends React.Component {
 				city: '',
 				contactType: this.props.contactType ? this.props.contactType : '',
 				countryId: '',
-				currencyCode: { label: "UAE Dirham - AED", value: 150 },
+				currencyCode: 150,
 				email: '',
 				firstName: '',
 				shippingAddress: '',
@@ -165,9 +165,7 @@ class CreateContact extends React.Component {
 				initValue: {
 					...this.state.initValue,
 					...{
-						currencyCode: response.data
-							? parseInt(response.data[0].currencyCode)
-							: '',
+						currencyCode: 150,
 					},
 				},
 
@@ -194,9 +192,7 @@ class CreateContact extends React.Component {
 		// isActive:this.state.isActive
 
 		temp[`isActive`] = this.state.isActive;
-
 		temp[`isBillingAndShippingAddressSame`] = isSame;
-
 		temp[`addressLine1`] = data[`billingAddress`];
 		temp[`countryId`] = data[`billingcountryId`].value;
 		temp[`stateId`] = data[`billingStateProvince`].value;
@@ -205,7 +201,6 @@ class CreateContact extends React.Component {
 		temp[`fax`] = data[`billingFax`];
 		temp[`billingTelephone`] = data[`billingPhoneNumber`];
 		temp[`shippingPostZipCode`] = data[`shippingPostZipCode`];
-
 		temp[`addressLine2`] = data[`shippingAddress`];
 		// temp[`shippingCountryId`] = isSame ? this.state.billingAddress.billingcountryId :  data[`shippingCountryId`].value;
 		// temp[`shippingStateId`] = isSame ? this.state.billingAddress.billingStateProvince :  data[`shippingStateId`].value;
@@ -352,12 +347,12 @@ class CreateContact extends React.Component {
 															}}
 															validate={(values) => {
 																let errors = {};
-
-																if (checkmobileNumberParam === true) {
-																	errors.mobileNumber =
-																		'Invalid mobile number';
+																if(!(this.props.isParentComponentPresent && this.props.isParentComponentPresent == true)){
+																	if (checkmobileNumberParam === true) {
+																		errors.mobileNumber =
+																			'Invalid mobile number';
+																	}
 																}
-
 																if (values.stateId === '') {
 																	errors.stateId = 'State is required';
 																}
@@ -372,43 +367,47 @@ class CreateContact extends React.Component {
 																		errors.vatRegistrationNumber = 'Tax registration number already exists';
 																	}
 																}
-
 																if (this.state.emailExist == true) {
 																	errors.email = 'Email already exists';
 																}
 																if (values.billingcountryId == 229 || values.billingcountryId.value == 229) {
 																	if (values.billingPoBoxNumber === '')
-																		errors.poBoxNumber = 'Billing PO box number is required';
+																		errors.poBoxNumber = 'PO box number is required';
+																	if(values.billingStateProvince =="")  
+																		errors.billingStateProvince ='Emirate is required';
 																} else {
 																	if (values.billingPostZipCode == '')
 																		errors.billingPostZipCode = 'Postal code is required';
 																	else
 																		if (values.billingPostZipCode.length != 6)
 																			errors.billingPostZipCode = "Please enter 6 digit postal zip code"
+																	if(values.billingStateProvince =="")  
+																		errors.billingStateProvince ='State is required';
 
 																}
 																if (values.shippingCountryId == 229 || values.shippingCountryId.value == 229) {
 																	if (values.shippingPoBoxNumber === '')
-																		errors.poBoxNumber = 'Shipping PO box number is required';
+																		errors.poBoxNumber = 'PO box number is required';
+																	if(values.shippingStateId =="")  
+																		errors.shippingStateId ='Emirate is required';
 																} else {
-																	if (values.shippingPostZipCode == '')
-																		errors.shippingPostZipCode = 'Postal Code is required';
+																		if (values.shippingPostZipCode == '')
+																			errors.shippingPostZipCode = 'Postal Code is required';
 																	else
 																		if (values.shippingPostZipCode.length != 6)
 																			errors.shippingPostZipCode = "Please enter 6 digit Postal Zip Code"
+																	if(values.shippingStateId =="")  
+																		errors.shippingStateId ='State is required';
 
 																}
-
 																if (this.state.showbillingFaxErrorMsg == true)
-																	errors.billingFax = "Please enter 8 digit Fax"
-
+																	errors.billingFax = "Please enter 15 digit Fax"
 
 																if (this.state.showshippingFaxErrorMsg == true)
-																	errors.shippingFax = "Please enter 8 digit Fax"
+																	errors.shippingFax = "Please enter 15 digit Fax"
 
 																if (this.state.showpoBoxNumberErrorMsg == true)
 																	errors.poBoxNumber = "Please enter 3 To 6 digit po box number"
-
 
 																return errors;
 
@@ -440,20 +439,19 @@ class CreateContact extends React.Component {
 																	'Billing address is required',
 																),
 																billingcountryId: Yup.string().required(
-																	'Billing country is required',
+																	'Country is required',
 																),
 																billingStateProvince: Yup.string().required(
-																	'Billing state is required',
+																	'State is required',
 																),
-																
 																shippingAddress: Yup.string().required(
 																	'Shipping address is required',
 																),
 																shippingCountryId: Yup.string().required(
-																	'Shipping country is required',
+																	'Country is required',
 																),
 																shippingStateId: Yup.string().required(
-																	'Shipping state is required',
+																	'State is required',
 																),
 																
 															})}
@@ -807,7 +805,7 @@ class CreateContact extends React.Component {
 																							.find(
 																								(option) =>
 																									option.value ===
-																									+props.values.currencyCode.value,
+																									+props.values.currencyCode,
 																							)
 																					}
 																					onChange={(option) => {
@@ -988,6 +986,10 @@ class CreateContact extends React.Component {
 																								'',
 																							);
 																						}
+																						props.handleChange('vatRegistrationNumber')(
+																							'',
+																						);
+
 																					}}
 																					className={
 																						props.errors.taxTreatmentId &&
@@ -1396,7 +1398,7 @@ class CreateContact extends React.Component {
 																							option.target.value === '' ||
 																							this.regEx.test(option.target.value)
 																						) {
-																							if (option.target.value.length != 8 && option.target.value != "")
+																							if (option.target.value.length != 15 && option.target.value != "")
 																								this.setState({ showbillingFaxErrorMsg: true })
 																							else
 																								this.setState({ showbillingFaxErrorMsg: false })
@@ -1450,7 +1452,7 @@ class CreateContact extends React.Component {
 																								props.handleChange('shippingPoBoxNumber')(props.values.billingPostZipCode);
 																								props.handleChange('shippingPoBoxNumber')(props.values.billingPoBoxNumber);
 																								props.handleChange('shippingFax')(props.values.billingFax);
-																								if (props.values.billingFax.length != 8 && props.values.billingFax != "")
+																								if (props.values.billingFax.length != 15 && props.values.billingFax != "")
 																									this.setState({ showshippingFaxErrorMsg: true })
 																								else
 																									this.setState({ showshippingFaxErrorMsg: false })
@@ -1466,6 +1468,7 @@ class CreateContact extends React.Component {
 																								props.handleChange('shippingPostZipCode')("");
 																								props.handleChange('shippingFax')("");
 																							}
+
 																						}}
 																						type="checkbox"
 																						id="inline-radio1"
@@ -1812,7 +1815,7 @@ class CreateContact extends React.Component {
 																							option.target.value === '' ||
 																							this.regEx.test(option.target.value)
 																						) {
-																							if (option.target.value.length != 8 && option.target.value != "")
+																							if (option.target.value.length != 15 && option.target.value != "")
 																								this.setState({ showshippingFaxErrorMsg: true })
 																							else
 																								this.setState({ showshippingFaxErrorMsg: false })

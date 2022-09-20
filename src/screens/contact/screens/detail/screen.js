@@ -376,6 +376,7 @@ class DetailContact extends React.Component {
 	};
 
 	getData = (data) => {
+
 		let temp = {};
 		const { isSame } = this.state;
 		for (let item in data) {
@@ -398,7 +399,9 @@ class DetailContact extends React.Component {
 		temp[`city`] = data[`billingCity`];
 		temp[`fax`] = data[`billingFax`];
 		temp[`billingTelephone`] = data[`billingPhoneNumber`];
-
+		temp[`shippingPostZipCode`]=data[`shippingPostZipCode`]
+		temp[`shippingPoBoxNumber`]=data[`shippingPoBoxNumber`]
+		
 		temp[`addressLine2`] = data[`shippingAddress`];
 		// temp[`shippingCountryId`] = isSame ? this.state.billingAddress.billingcountryId :  data[`shippingCountryId`].value;
 		// temp[`shippingStateId`] = isSame ? this.state.billingAddress.billingStateProvince :  data[`shippingStateId`].value;
@@ -638,24 +641,33 @@ class DetailContact extends React.Component {
 
 																	if (values.billingcountryId == 229 || values.billingcountryId.value == 229) {
 																		if (values.billingPoBoxNumber === '')
-																			errors.poBoxNumber = 'Billing PO Box Number is Required';
+																			errors.poBoxNumber = 'PO Box Number is Required';
+																		if(values.billingStateProvince =="")  
+																			errors.billingStateProvince ='Emirate is required';
 																	} else {
 																		if (values.billingPostZipCode == '')
 																			errors.billingPostZipCode = 'Postal Code is Required';
 																		else
 																			if (values.billingPostZipCode.length != 6)
 																				errors.billingPostZipCode = "Please Enter 6 Digit Postal Zip Code"
+																		if(values.billingStateProvince =="")  
+																			errors.billingStateProvince ='State is required';
+		
 
 																	}
 																	if (values.shippingCountryId == 229 || values.shippingCountryId.value == 229) {
 																		if (values.shippingPoBoxNumber === '')
-																			errors.poBoxNumber = 'Shipping PO Box Number is Required';
+																			errors.poBoxNumber = 'PO Box Number is Required';
+																		if(values.shippingStateId =="")  
+																			errors.shippingStateId ='Emirate is required';
 																	} else {
 																		if (values.shippingPostZipCode == '')
 																			errors.shippingPostZipCode = 'Postal Code is Required';
 																		else
 																			if (values.shippingPostZipCode.length != 6)
 																				errors.shippingPostZipCode = "Please Enter 6 Digit Postal Zip Code"
+																		if(values.shippingStateId =="")  
+																				errors.shippingStateId ='State is required';
 
 																	}
 																	if (this.state.showbillingFaxErrorMsg == true)
@@ -713,12 +725,12 @@ class DetailContact extends React.Component {
 																	// 	is: (val) => (val ? true : false),
 																	// 	then: Yup.string().required('State is Required'),
 																	// }),
-																	// shippingAddress: Yup.string().required(
-																	// 	'Shipping Address is Required',
-																	// ),
-																	// billingAddress: Yup.string().required(
-																	// 	'Billing Address is Required',
-																	// ),
+																	shippingAddress: Yup.string().required(
+																		'Shipping Address is Required',
+																	),
+																	billingAddress: Yup.string().required(
+																		'Billing Address is Required',
+																	),
 																	// postZipCode: Yup.string().required(
 																	// 	'Postal Code is Required',
 																	// ),
@@ -1283,6 +1295,9 @@ class DetailContact extends React.Component {
 																									'',
 																								);
 																							}
+																							props.handleChange('vatRegistrationNumber')(
+																								'',
+																							);
 																						}}
 																						className={
 																							props.errors.taxTreatmentId &&
@@ -1426,10 +1441,9 @@ class DetailContact extends React.Component {
 																								this.getStateList('');
 
 																							}
-																							props.handleChange('stateId')({
-																								label: 'Select State',
-																								value: '',
-																							});
+																							props.handleChange('billingStateProvince')('');
+																							props.handleChange('billingPoBoxNumber')('');
+																							props.handleChange('billingPostZipCode')('');
 																							// props.handleChange('billingStateProvince')({
 																							// 	label: 'Select State',
 																							// 	value: '',
@@ -1769,7 +1783,7 @@ class DetailContact extends React.Component {
 																									props.handleChange('shippingStateId')(props.values.billingStateProvince.value ? props.values.billingStateProvince.value : props.values.billingStateProvince);
 																									props.handleChange('shippingTelephone')(props.values.billingPhoneNumber);
 																									props.handleChange('shippingPostZipCode')(props.values.billingPostZipCode);
-																									props.handleChange('shippingPoBoxNumber')(props.values.billingPostZipCode);
+																									props.handleChange('shippingPoBoxNumber')(props.values.billingPoBoxNumber);
 																									props.handleChange('shippingPoBoxNumber')(props.values.billingPoBoxNumber);
 																									props.handleChange('shippingFax')(props.values.billingFax);
 																								} else {
@@ -1875,10 +1889,9 @@ class DetailContact extends React.Component {
 																								props.handleChange('shippingCountryId')('');
 																								// this.getStateListForShippingAddress('');
 																							}
-																							props.handleChange('shippingStateId')({
-																								label: 'Select State',
-																								value: '',
-																							});
+																							props.handleChange('shippingStateId')('');
+																							props.handleChange('shippingPoBoxNumber')('');
+																							props.handleChange('shippingPostZipCode')('');
 																						}}
 																						placeholder={strings.Select + strings.Country}
 																						id="shippingCountryId"
@@ -2008,6 +2021,7 @@ class DetailContact extends React.Component {
 																										this.setState({ showpoBoxNumberErrorMsg: true })
 																									else
 																										this.setState({ showpoBoxNumberErrorMsg: false })
+																									
 																									props.handleChange('shippingPoBoxNumber')(
 																										option,
 																									);
@@ -2177,7 +2191,7 @@ class DetailContact extends React.Component {
 																							//	added validation popup	msg
 																							props.handleBlur();
 																							if(props.errors &&  Object.keys(props.errors).length != 0)
-																							this.props.commonActions.fillManDatoryDetails();
+																							 	this.props.commonActions.fillManDatoryDetails();
 																						}}
 																					>
 																						<i className="fa fa-dot-circle-o"></i>{' '}

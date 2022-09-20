@@ -828,7 +828,7 @@ class BankTransactions extends React.Component {
           
 			onlyOneExpanding: true,
 			renderer: (row) => (<Getbyid row={row}  
-				getbankdetls={this.getnewbackdetils}
+				getbankdetails={this.getnewbackdetils}
 			closeExplainTransactionModal={(e) => {
 				this.closeExplainTransactionModal(e);
 			}}
@@ -995,7 +995,7 @@ class BankTransactions extends React.Component {
 										)}
 										</div>
 										<div className="py-3">
-											<h6>{strings.Filter} : </h6>
+											<h6>{strings.Filter}: </h6>
 											<Row>
 												{/* <Col lg={3} className="mb-1">
 													<Select

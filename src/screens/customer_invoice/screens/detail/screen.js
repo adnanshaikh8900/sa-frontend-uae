@@ -1807,7 +1807,6 @@ class DetailCustomerInvoice extends React.Component {
 														}
 	
 														if(values.changeShippingAddress==true){
-															if(values.shippingStateId =="")  errors.shippingStateId ='State is required';
 														}
 
 														if(values.changeShippingAddress==true){
@@ -1816,11 +1815,15 @@ class DetailCustomerInvoice extends React.Component {
 																	errors.shippingPostZipCode = 'PO box number is required';
 																else if (values.shippingPostZipCode.length < 3)
 																	errors.shippingPostZipCode = 'Please enter 3 to 6 digit PO box number';
+																if(values.shippingStateId =="")  errors.shippingStateId ='Emirate is required';
+																
 															} else {
 																if (values.shippingPostZipCode == '')
 																	errors.shippingPostZipCode = 'Postal code is required';
 																else if (values.shippingPostZipCode.length !== 6)
 																		errors.shippingPostZipCode = 'Please enter 6 digit postal zip code';
+																if(values.shippingStateId =="")  errors.shippingStateId ='State is required';
+																
 															}}
 															let isoutoftock=0
 
@@ -2632,7 +2635,8 @@ class DetailCustomerInvoice extends React.Component {
 																					id="shippingPostZipCode"
 																					name="shippingPostZipCode"
 																					autoComplete="Off"
-																					placeholder={strings.Enter + strings.PostZipCode}
+																					placeholder={props.values.shippingCountryId &&( props.values.shippingCountryId == 229 || props.values.shippingCountryId.value == 229) ?
+																						strings.Enter + strings.POBoxNumber : strings.Enter + strings.PostZipCode}
 																					onChange={(option) => {
 																						if (
 																							option.target.value === '' ||
@@ -3103,7 +3107,7 @@ class DetailCustomerInvoice extends React.Component {
 																			</FormGroup>
 																		</Col>
 																		<Col lg={6}>
-																			<FormGroup className="mb-3">
+																			<FormGroup className="mb-3 hideAttachment">
 																				<Field
 																					name="attachmentFile"
 																					render={({ field, form }) => (
@@ -3162,7 +3166,7 @@ class DetailCustomerInvoice extends React.Component {
 																			</FormGroup>
 																		</Col>
 																	</Row>
-																	<FormGroup className="mb-3">
+																	<FormGroup className="mb-3 hideAttachment">
 																		<Label htmlFor="receiptAttachmentDescription">
 																			{strings.AttachmentDescription}
 																		</Label>

@@ -100,6 +100,7 @@ class Quatation extends React.Component {
 			selectedId: '',
 			csvData: [],
 			view: false,
+			MarkAsSent:false,
 			overDueAmountDetails: {
 				overDueAmount: '',
 				overDueAmountWeekly: '',
@@ -212,7 +213,7 @@ class Quatation extends React.Component {
 		return(
 			<div>
 					<div>
-						<label className="font-weight-bold mr-2">{strings.QuotationAmount} : </label>
+						<label className="font-weight-bold mr-2">{strings.QuotationAmount}: </label>
 						<label>
 							{row.totalAmount  === 0 ? row.currencyIsoCode +" "+ row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) :  row.currencyIsoCode +" "+ row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 						</label>
@@ -220,7 +221,7 @@ class Quatation extends React.Component {
 				
 					<div style={{display: row.totalVatAmount === 0 ? 'none' : ''}}>
 
-						<label className="font-weight-bold mr-2">{strings.VatAmount} : </label>
+						<label className="font-weight-bold mr-2">{strings.VatAmount}: </label>
 						<label>
 							{row.totalVatAmount === 0  ?  row.currencyIsoCode +" "+ row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) :   row.currencyIsoCode +" "+ row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 						</label>
@@ -304,7 +305,7 @@ class Quatation extends React.Component {
 							{row.status === 'Draft' && (
 							<DropdownItem
 								onClick={() => {
-									this.sendMail(row);
+									this.sendMail(row,false);
 								}}
 							>
 								<i className="fas fa-send" />  {strings.Send}
@@ -324,7 +325,7 @@ class Quatation extends React.Component {
 							{row.status === 'Draft' && (
                             <DropdownItem
 								onClick={() => {
-									this.sendMail(row);
+									this.sendMail(row,true);
 								}}
 							>
 							<i className="fas fa-send"></i>{strings.Mark_As_Sent}
@@ -332,7 +333,7 @@ class Quatation extends React.Component {
 							{row.status === 'Sent' && (
 							<DropdownItem
 							onClick={() => {
-								this.sendMail(row);
+								this.sendMail(row,false);
 							}}
 							>
 								<i className="fas fa-send" />{strings.SendAgain}
@@ -447,7 +448,7 @@ class Quatation extends React.Component {
 
 
 
-sendMail = (row) => {
+sendMail = (row,MarkAsSent) => {
 	 
 	console.log(row);
 	this.setState({
@@ -456,7 +457,7 @@ sendMail = (row) => {
 	const postingRequestModel = {
 	
 		postingRefId: row.id,
-	
+		MarkAsSent:MarkAsSent,
 		amountInWords:upperCase(row.currencyIsoCode + " " +(toWords.convert(row.totalAmount)) ).replace("POINT","AND"),
 			vatInWords:row.totalVatAmount ? upperCase(row.currencyIsoCode + " " +(toWords.convert(row.totalVatAmount)) ).replace("POINT","AND") :"-"
 	};
@@ -983,7 +984,7 @@ sendMail = (row) => {
 										</ButtonGroup>
 									</div>
 									<div className="py-3">
-										<h5>{strings.Filter} : </h5>
+										<h5>{strings.Filter}: </h5>
 										<Row>
 										<Col lg={2} className="mb-1">
 												<Select
@@ -1201,11 +1202,10 @@ sendMail = (row) => {
 											</TableHeaderColumn>
 										
 											<TableHeaderColumn
-												className="text-right"
+												className="text-right table-header-bg"
 												columnClassName="text-right"
 												//width="5%"
 												dataFormat={this.renderActions}
-												className="table-header-bg"
 											></TableHeaderColumn>
 										</BootstrapTable>
 								

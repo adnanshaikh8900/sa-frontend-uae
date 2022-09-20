@@ -27,7 +27,7 @@ import avatar from 'assets/images/avatars/default-avatar.jpg';
 import {data}  from '../../screens/Language/index'
 import LocalizedStrings from 'react-localization';
 // import avatar from 'assets/images/avatars/6.jpg'
-
+import config from '../../constants/config'
 const propTypes = {
 	children: PropTypes.node,
 };
@@ -137,25 +137,25 @@ class Header extends Component {
 							>
 								<i className="fas fa-users"></i> {strings.Role}
 							</DropdownItem>
-							<DropdownItem
+							{config.SETTING_THEME && <DropdownItem
                                 onClick={() =>
                                     this.props.history.push('/admin/settings/template')
                                 }
                             >
                              <i class="fas fa-palette"></i> {strings.MailThemes}
-                            </DropdownItem>
+                            </DropdownItem>}
 							<DropdownItem
 								onClick={() => this.props.history.push('/admin/settings/notesSettings')}
 							>
 								<i className="fas fa-info-circle"></i> {strings.Notes_Settings}
 							</DropdownItem>
-							<DropdownItem
+							{config.SETTING_IMPORT && <DropdownItem
                                 onClick={() =>
                                     this.props.history.push('/admin/settings/import')
                                 }
                             >
                              <i class="fas fa-palette"></i>{strings.Import}
-                            </DropdownItem>
+                            </DropdownItem>}
 							{/* <DropdownItem
 								onClick={() =>
 									this.props.history.push('/admin/settings/notification')

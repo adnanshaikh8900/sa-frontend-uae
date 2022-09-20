@@ -145,9 +145,9 @@ class ExplainTrasactionDetail extends React.Component {
 		this.props.detailBankAccountActions
 			.getBankAccountByID(bankId)
 			.then((res) => {
-
+					debugger
 				this.setState({
-					bankAccountCurrency: res.bankAccountCurrency,
+					bankCurrency: res,
 				});
 			})
 			.catch((err) => {
@@ -199,8 +199,8 @@ class ExplainTrasactionDetail extends React.Component {
 						coaCategoryId: res.data.coaCategoryId
 							? parseInt(res.data.coaCategoryId)
 							: '',
-						explainParamList: res.data.explainParamList
-							? res.data.explainParamList
+							invoiceIdList: (res.data.explainParamList && res.data.explainedInvoiceList)
+							? res.data.explainParamList.map((i,inc)=>{return {...i,...res.data.explainedInvoiceList[inc],pp:res.data.explainedInvoiceList[inc].partiallyPaid}})
 							: [],
 						transactionCategoryLabel: res.data.transactionCategoryLabel
 							? res.data.transactionCategoryLabel
@@ -268,7 +268,7 @@ class ExplainTrasactionDetail extends React.Component {
 					if (
 
 						this.state.initValue.coaCategoryId === 10 &&
-						Object.keys(this.state.initValue.explainParamList).length !== 0
+						Object.keys(this.state.initValue.invoiceIdList).length !== 0
 					) {
 						this.setState(
 							{
@@ -315,13 +315,15 @@ class ExplainTrasactionDetail extends React.Component {
 			this.formRef.current.setFieldValue('expenseCategory', res.data.transactionCategoryId, true);
 			this.formRef.current.setFieldValue('vatId', res.data.vatId ? res.data.vatId : '', true);
 			this.formRef.current.setFieldValue('vendorId', res.data.vendorId ? res.data.vendorId : '', true);
-			this.formRef.current.setFieldValue('explainParamList', res.data.explainParamList ? res.data.explainParamList : '', true);
+			this.formRef.current.setFieldValue('invoiceIdList', (res.data.explainParamList && res.data.explainedInvoiceList)
+			? res.data.explainParamList.map((i,inc)=>{return {...i,...res.data.explainedInvoiceList[inc],pp:res.data.explainedInvoiceList[inc].partiallyPaid}})
+			: [], true);
 			this.formRef.current.setFieldValue('customerId', res.data.customerId ? res.data.customerId : '', true);
 			this.formRef.current.setFieldValue('exchangeRate', res.data.exchangeRate, true);
 			this.formRef.current.setFieldValue('payrollListIds', res.data.payrollListIds, true);
 			this.formRef.current.setFieldValue('employeeId', res.data.employeeId ? res.data.employeeId : '', true);
 			this.formRef.current.setFieldValue('expenseType', res.data.expenseType, true)
-
+				debugger
 		}
 	};
 
@@ -330,6 +332,7 @@ class ExplainTrasactionDetail extends React.Component {
 
 		this.props.transactionsActions.getChartOfCategoryList(type).then((res) => {
 			if (res.status === 200) {
+			debugger
 				this.setState(
 					{
 						chartOfAccountCategoryList: res.data,
@@ -360,10 +363,13 @@ class ExplainTrasactionDetail extends React.Component {
 		});
 	};
 	setValue = (value) => {
-		this.setState((prevState) => ({
+		debugger
+		this.setState((prevState) => {
+		debugger
+			return {
 			...prevState,
 			transactionCategoryList: [],
-		}));
+		}});
 	};
 	getCompanyCurrency = () => {
 
@@ -393,14 +399,15 @@ class ExplainTrasactionDetail extends React.Component {
 		let result = this.props.currency_convert_list.filter((obj) => {
 			return obj.currencyCode === value;
 		});
-		if (result[0] && result[0].currencyName) {
-			this.formRef.current.setFieldValue('curreancyname', result[0].currencyName, true);
+		if (result[0] && result[0].currencyIsoCode) {
+			debugger
+			this.formRef.current.setFieldValue('curreancyname', result[0].currencyIsoCode, true);
 		}
 	};
 
 
 	getTransactionCategoryList = (type) => {
-		debugger
+	
 		this.formRef.current.setFieldValue('coaCategoryId', type, true);
 		this.setValue(null);
 		if (type && type.value && type.value === 100) {
@@ -593,6 +600,7 @@ class ExplainTrasactionDetail extends React.Component {
 	};
 
 	getVendorList = () => {
+		debugger
 		this.props.transactionsActions.getVendorList(this.state.initValue.bankId);
 	};
 
@@ -629,7 +637,7 @@ class ExplainTrasactionDetail extends React.Component {
 			expenseCategory,
 			payrollListIds,
 		} = data;
-debugger
+
 		const expenseType = this.state.selectedStatus;
 
 		if (
@@ -757,6 +765,28 @@ debugger
 				invoiceIdList ? JSON.stringify(result) : '',
 			);
 		}
+		debugger
+		formData.append(
+			"explainedInvoiceListString",
+			invoiceIdList ?JSON.stringify(invoiceIdList.map((i)=>{
+	
+			 return {
+			  invoiceId:i.value,
+			  invoiceAmount:i.amount,
+			  convertedInvoiceAmount:i.convertedInvoiceAmount,
+			  explainedAmount:i.explainedAmount,
+			  exchangeRate:i.exchangeRate,
+			  partiallyPaid:i.pp
+			 } })) : []
+		  );
+		
+		  formData.append(
+			"exchangeGainOrLossId",this.setexcessorshortamount().data<0?103:this.setexcessorshortamount().data>0?79:0
+		  );
+		  formData.append(
+			"exchangeGainOrLoss",this.setexcessorshortamount().data
+		  );
+
 		formData.append('reference', reference ? reference : '');
 		if (this.uploadFile && this.uploadFile.files && this.uploadFile.files[0]) {
 			formData.append('attachment', this.uploadFile.files[0]);
@@ -815,6 +845,8 @@ debugger
 			),
 		});
 	};
+
+
 	payrollList = (option) => {
 		this.setState({
 			initValue: {
@@ -853,24 +885,28 @@ debugger
 			</FormGroup>
 		</Col>);
 	}
+
 	UnexplainTransaction = (id) => {
+		debugger
 		let formData = new FormData();
 		for (var key in this.state.unexplainValue) {
 			formData.append(key, this.state.unexplainValue[key]);
 			formData.set('date', moment(this.state.unexplainValue['date']));
-
+			console.log(this.state.unexplainValue['explainParamList'])
+			formData.set('explainParamListStr', JSON.stringify(this.state.unexplainValue['explainParamList']));
 			if (
-				Object.keys(this.state.unexplainValue['explainParamList']).length > 0
+				Object.keys(this.state.unexplainValue['invoiceIdList'] || {}).length > 0
 			) {
-				formData.delete('explainParamList');
+				formData.delete('invoiceIdList');
 				formData.set(
 					'explainParamListStr',
-					JSON.stringify(this.state.unexplainValue['explainParamList']),
+					JSON.stringify(this.state.unexplainValue['invoiceIdList']),
 				);
 			} else {
-				formData.delete('explainParamList');
+				formData.delete('invoiceIdList');
 			}
 		}
+		formData.delete('explainParamList')
 		this.props.transactionDetailActions
 			.UnexplainTransaction(formData)
 			.then((res) => {
@@ -884,6 +920,7 @@ debugger
 				}
 			})
 			.catch((err) => {
+				debugger
 				console.log(err);
 				this.props.commonActions.tostifyAlert(
 					'error',
@@ -906,7 +943,174 @@ debugger
 		);
 		this.formRef.current.setFieldValue('invoiceIdList', option, true);
 	};
+	setexcessorshortamount = () => {
+		const totalexpainedamount = this.formRef.current.state.values?.invoiceIdList?.reduce(
+		  (accu, curr, index) =>
+			accu +
+			(curr.explainedAmount)
+		  ,
+		  0
+		)
+	
+		const totalconvetedamount = this.formRef.current.state.values?.invoiceIdList?.reduce(
+		  (accu, curr, index) =>
+			accu +
+			(curr.convertedInvoiceAmount)
+		  ,
+		  0
+		)
+	
+		const transactionAmount = this.formRef.current.state.values.amount
+		const isppselected = this.formRef.current.state.values?.invoiceIdList?.reduce((a, c, i) => a + (c.pp ? 1 : 0), 0)
+	
+		let final = 0
+		const totalshort = totalexpainedamount - totalconvetedamount
+		if (isppselected > 0) {
+		  final = 0
+		} else if (totalshort < 0) {
+		  final = totalshort
+		} else if (totalshort >= 0) {
+		  final = transactionAmount - totalconvetedamount
+		}
+		return {value:`${this.state.bankCurrency
+			?.bankAccountCurrencyIsoCode
+		  } ${final.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+		  }  `,data:final}
+	
+	  }
 
+	setcustomexchnage = (customerinvoice) => {
+		let exchange;
+		let result = this.props.currency_convert_list.filter((obj) => {
+		  return obj.currencyCode === this.state.bankCurrency.bankAccountCurrency;;
+		});
+		// this.state.invoiceCurrency
+		// this.state.bankCurrency.bankAccountCurrency
+		// this.state.basecurrency.currencyCode
+		// if(this.state.bankCurrency.bankAccountCurrency=== this.state.invoiceCurrency )
+		//  return this.formRef.current.setFieldValue('exchangeRate',1/result[0].exchangeRate, true);
+	
+		if (
+		  customerinvoice === this.state.bankCurrency?.bankAccountCurrency
+		) {
+		  exchange = 1;
+		  //this.formRef.current.setFieldValue('exchangeRate', 1, true);
+		} else if (
+		  customerinvoice !== this.state.bankCurrency?.bankAccountCurrency
+		) {
+		  if (customerinvoice !== this.state.basecurrency.currencyCode) {
+			exchange = result[0].exchangeRate;
+		  } else {
+			exchange = 1 / result[0].exchangeRate;
+		  }
+		}
+	
+		return exchange
+	  }
+	
+	  setexchnagedamount = (option, amount) => {
+		if (option?.length > 0) {
+		  const transactionAmount = amount || this.formRef.current.state.values.amount
+		  const exchangerate = this.formRef.current.state.values?.exchangeRate
+		  const invoicelist = [...option]
+		  const total = invoicelist.reduce((accu, curr, index) => curr.amount * exchangerate[index])
+		  let remainingcredit = transactionAmount
+		  const finaldata = invoicelist?.map((i, ind) => {
+			let localexe = 0
+			if (i.exchnageRate === undefined) localexe = this.setcustomexchnage(i.currencyCode)
+			else localexe = i.exchnageRate
+			let finalcredit = 0
+			let localremainamount = remainingcredit
+			if (remainingcredit > 0) {
+			  localremainamount = remainingcredit - (i.amount * localexe)
+	
+			  if (localremainamount >= 0) {
+				finalcredit = (i.amount * localexe)
+			  }
+			  if (localremainamount < 0) {
+				finalcredit = (i.amount * localexe) + localremainamount
+			  }
+			  remainingcredit = localremainamount
+			}
+			return {
+			  ...i,
+	
+			  invoiceId: i.value,
+			  invoiceAmount: i.amount,
+			  convertedInvoiceAmount: i.amount * localexe,
+			  explainedAmount: i.amount * localexe,
+			  exchangeRate: localexe,
+			  pp: false
+			}
+		  })
+		  this.formRef.current.setFieldValue('invoiceIdList', finaldata)
+		  return finaldata
+		}
+		else {
+		  this.formRef.current.setFieldValue('invoiceIdList', [])
+		  return []
+		}
+	
+	
+	  }
+	  onppclick = (value, indexofinvoce) => {
+		
+		const local2 = [...this.formRef.current.state.values.invoiceIdList]
+		local2[indexofinvoce].pp = value
+		let finaldata = [...(local2)]
+	
+		//how many are clicked
+		const howManyAreClicked = finaldata.reduce((a, c, i) => a + (c.pp ? 1 : 0), 0)
+		const transactionAmount = this.formRef.current.state.values.amount
+		const total = finaldata.reduce((accu, curr, index) => accu + curr.convertedInvoiceAmount, 0)
+		const shortAmount = transactionAmount - total
+		let remainingcredit = transactionAmount
+		let updatedfinaldata = []
+		let temp=finaldata.reduce((a,c,i)=>c.convertedInvoiceAmount>=transactionAmount?a+1:a+0,0)
+		let amountislessthanallinvoice= temp===finaldata.length
+		debugger
+		let tempdata
+		if(amountislessthanallinvoice) {
+		if(value){
+		  tempdata=finaldata.map((i)=>
+		  {return {...i,pp:value,explainedAmount:transactionAmount/finaldata.length}
+		 })
+		}
+		else {
+		  const temp=finaldata.map((i)=>{
+			return {...i,pp:value}
+		  })
+		  tempdata=this.setexchnagedamount(temp)
+		  debugger
+		}
+		finaldata=[...tempdata]
+		if(transactionAmount>0 && transactionAmount!=="")
+		this.formRef.current.setFieldValue('invoiceIdList', finaldata)
+	   } else {
+		let currentshort=shortAmount
+		finaldata.map((i, inx) => {
+		  const local = { ...i }
+				
+		  if (i.pp) {
+				let iio= local.convertedInvoiceAmount +(currentshort/howManyAreClicked)
+				if(iio<0){
+					local.explainedAmount= 0
+					
+				} else {
+					local.explainedAmount=iio
+				}
+			}
+			 else {
+				local.explainedAmount=local.convertedInvoiceAmount
+			}	
+			
+			
+		  
+		  updatedfinaldata.push(local)
+		})
+		this.formRef.current.setFieldValue('invoiceIdList', updatedfinaldata)
+	  }
+	}
 	removeTransaction = (id) => {
 		this.removeDialog();
 		this.props.transactionsActions
@@ -1111,6 +1315,46 @@ debugger
 													}}
 													validate={(values) => {
 														let errors = {};
+														const totalexpaled=values?.invoiceIdList.reduce((a,c)=>a+c.explainedAmount,0)
+														if ((values.coaCategoryId?.value === 2 || values.coaCategoryId?.value === 100)) {
+															if (!values.vendorId?.value && values.coaCategoryId?.value === 100) {
+															  errors.vendorId = "Please select the Vendor"
+															} else if (!values.customerId?.value && values.coaCategoryId?.value === 2) {
+															  errors.customerId = "Please select the Customer"
+								
+															}
+															if (values.invoiceIdList.length === 0) {
+								
+															  errors.invoiceIdList = "Please Select Invoice"
+															}else {
+															  let isExplainAmountZero=false
+															  values.invoiceIdList.map((i)=>{
+																  if(i.explainedAmount===0){
+																	isExplainAmountZero=true 
+																  }
+															  })
+															  if(isExplainAmountZero){
+																errors.invoiceIdList="Expain Amount Cannot Be Zero"  
+															  }
+															}
+											
+															if( values.transactionAmount>totalexpaled &&
+															  this.state?.bankCurrency?.bankAccountCurrency===values?.invoiceIdList?.[0]?.currencyCode)
+														   {
+															errors.transactionAmount=`Amount cannot be grater than ${totalexpaled}`
+														   
+														  }
+														  const isppselected=values?.invoiceIdList.reduce((a,c)=>c.pp?a+1:a+0,0)
+                          if( values.transactionAmount<totalexpaled &&
+                            this.state?.bankCurrency?.bankAccountCurrency===values?.invoiceIdList?.[0]?.currencyCode
+                            && isppselected===0
+                            )
+                         {
+                          errors.transactionAmount=`Amount is less select partial payment on invoice `
+                         
+                        }
+														  }
+								
 														if (
 															(values.coaCategoryId.label ===
 																'Supplier Invoice' ||
@@ -1212,18 +1456,20 @@ debugger
 																			<span className="text-danger">* </span>
 																			{strings.TransactionType}
 																		</Label>
+																		{console.log("sdsdfsdf",chartOfAccountCategoryList)}
 																			<Select
 																				// styles={customStyles}
 																				options={
 																					chartOfAccountCategoryList
-																						? chartOfAccountCategoryList
+																						? [{...chartOfAccountCategoryList[0],
+																							options:chartOfAccountCategoryList[0]?.options?.filter((i)=>i.value!==6)}]
 																						: ''
 																				}
 																				value={
 																					chartOfAccountCategoryList[0] &&
 																					chartOfAccountCategoryList[0].options.find(
 																						(option) =>{
-																							debugger
+										
 																						return	option.value === props.values.coaCategoryId.value 
 																						}
 																							)
@@ -1259,7 +1505,7 @@ debugger
 																						'',
 																						true,
 																					);
-																					this.setValue(null);
+																				
 																				}}
 																				placeholder={strings.Select+strings.Type}
 																				id="coaCategoryId"
@@ -1342,6 +1588,7 @@ debugger
 																						option.target.value,
 																					);
 																				}
+																				this.setexchnagedamount(props.values.invoiceIdList, option.target.value)
 																			}}
 																			value={props.values.amount}
 																			className={
@@ -1619,6 +1866,7 @@ debugger
 																							props.values.amount,
 
 																						);
+																						props.handleChange('invoiceIdList')([])
 																					}}
 																					value={
 																						tmpSupplier_list &&
@@ -1670,32 +1918,32 @@ debugger
 																									);
 																								}
 																								props.handleChange(
-																									'explainParamList',
+																									'invoiceIdList',
 																								)(option);
-																								this.invoiceIdList(option);
+																								this.setexchnagedamount(option);
 																								if (option != null) {
 																									this.getVendorInvoiceCurrency(option[0], props);
 																								}
 																							}}
 																							value={
 																								supplier_invoice_list_state &&
-																									props.values.explainParamList &&
+																									props.values.invoiceIdList &&
 																									supplier_invoice_list_state.find(
 																										(option) =>
 																											option.value ===
-																											+props.values.explainParamList.map(
+																											+props.values.invoiceIdList.map(
 																												(item) => item.id,
 																											),
 																									)
 																									? supplier_invoice_list_state.find(
 																										(option) =>
 																											option.value ===
-																											+props.values.explainParamList.map(
+																											+props.values.invoiceIdList.map(
 																												(item) => item.id,
 																											),
 																									)
 																									: props.values
-																										.explainParamList
+																										.invoiceIdList
 																							}
 																							placeholder={strings.Select + strings.Type}
 																							id="invoiceIdList"
@@ -1834,10 +2082,8 @@ debugger
 																								option
 																							);
 																						}
-																						props.handleChange(
-																							'explainParamList',
-																						)(option);
-																						this.invoiceIdList(option);
+								
+																						this.setexchnagedamount(option);
 
 																						if (option != null) {
 																							this.getInvoiceCurrency(option[0], props);
@@ -1846,22 +2092,22 @@ debugger
 																					value={
 
 																						customer_invoice_list_state &&
-																							props.values.explainParamList &&
+																							props.values.invoiceIdList &&
 																							customer_invoice_list_state.find(
 																								(option) =>
 																									option.value ===
-																									+props.values.explainParamList.map(
+																									+props.values.invoiceIdList.map(
 																										(item) => item.id,
 																									),
 																							)
 																							? customer_invoice_list_state.find(
 																								(option) =>
 																									option.value ===
-																									+props.values.explainParamList.map(
+																									+props.values.invoiceIdList.map(
 																										(item) => item.id,
 																									),
 																							)
-																							: props.values.explainParamList
+																							: props.values.invoiceIdList
 																					}
 																					placeholder={strings.Select + strings.Type}
 																					id="invoiceIdList"
@@ -2202,79 +2448,277 @@ debugger
 																			</Col>
 																		</Row>
 																	)} */}
-															{
-																props.values.coaCategoryId &&
-																props.values.coaCategoryId.label ===
-																'Sales' &&
+																	  {props.values.coaCategoryId &&
+                              (props.values.coaCategoryId.label === "Sales" ||
+                                props.values.coaCategoryId.label ===
+                                "Supplier Invoice") && (
+                                <>
+                                  {props.values?.invoiceIdList.length > 0 &&
+                                    <Row className="border-bottom mb-3" style={{display:'flex',justifyContent:'space-evenly'}}>
+                                      <Col lg={1}>
+                                        <span className="font-weight-bold"> Invoice</span>
+                                      </Col>
+                                      <Col lg={2}>
+                                        <span className="font-weight-bold"> Invoice Date</span>
+                                      </Col>
+                                      <Col lg={2}>
+                                        <span className="font-weight-bold">Invoice Amount</span>
+                                      </Col>
+									  { this.state?.bankCurrency?.bankAccountCurrencyIsoCode!==props.values.curreancyname &&
+                                      <Col lg={2}>
+                                        <FormGroup className="mb-3">
+                                          <div>
+                                            <span className="font-weight-bold">Currency Rate</span>
+                                          </div>
+                                        </FormGroup>
+                                      </Col>
+                                      }
+                                       { this.state?.bankCurrency?.bankAccountCurrencyIsoCode!==props.values.curreancyname &&
+                                      <Col lg={2}>
+                                        <FormGroup className="mb-3">
+                                          <div>
+                                            <span className="font-weight-bold">Amount</span>
+                                          </div>
+                                        </FormGroup>
+                                      </Col>
+  }
+                                      <Col lg={1} >
+                                        <FormGroup className="font-weight-bold " style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
 
-																(
-																	this.state.custInvoiceCurrency != this.state.bankAccountCurrency ? (
-																		<Row >
-																			<Col lg={3}>
-																				<FormGroup className="mb-3">
-																					<Label htmlFor="currencyCode">
-																						{strings.Currency}
-																					</Label>
-																					<Select
-																						styles={customStyles}
-																						id="currencyCode"
-																						name="currencyCode"
-																						options={
-																							currency_convert_list
-																								? selectCurrencyFactory.renderOptions(
-																									'currencyName',
-																									'currencyCode',
-																									currency_convert_list,
-																									'Currency',
-																								)
-																								: []
-																						}
-																						isDisabled={true}
-																						value={
-																							currency_convert_list &&
-																							selectCurrencyFactory
-																								.renderOptions(
-																									'currencyName',
-																									'currencyCode',
-																									currency_convert_list,
-																									'Currency',
-																								)
-																								.find(
-																									(option) =>
-																										option.value ===
-																										+this.state.custInvoiceCurrency,
-																								)
-																						}
-																						onChange={(option) => {
-																							if (option && option.value) {
-																								props.handleChange(
-																									'currencyCode',
-																								)(option.value);
-																							} else {
-																								props.handleChange(
-																									'currencyCode',
-																								)('');
-																							}
-																							this.setExchange(option.value);
-																							this.setCurrency(option.value)
-																						}}
-																						className={
-																							props.errors.currencyCode &&
-																								props.touched.currencyCode
-																								? 'is-invalid'
-																								: ''
-																						}
-																					/>
-																					{props.errors.currencyCode &&
-																						props.touched.currencyCode && (
-																							<div className="invalid-feedback">
-																								{props.errors.currencyCode}
-																							</div>
-																						)}
-																				</FormGroup>
-																			</Col>
-																		</Row>
-																	) : '')}
+                                          <div>
+                                            Partially Paid
+                                          </div>
+                                        </FormGroup>
+                                      </Col>
+
+                                      <Col lg={2}>
+                                        <FormGroup className="font-weight-bold">
+                                          <div>
+                                            <span>Explained Amount</span>
+                                          </div>
+                                        </FormGroup>
+                                      </Col>
+                                    </Row>
+                                  }
+                                  {props.values?.invoiceIdList?.map(
+                                    (i, invindex) => {
+										
+                                      return (
+                                        <Row style={{display:'flex',justifyContent:'space-evenly'}}>
+                                           <Col lg={1}>
+                                            <span>{i.invoiceNumber}</span>
+                                          </Col>
+                                          <Col lg={2}>
+                                            <Input
+                                              disabled
+                                              id="1"
+                                              name="1"
+                                              value={i.invoiceDate}
+                                            />
+                                          </Col>
+                                          <Col lg={2}>
+                                            <Input
+                                              disabled
+                                              id="1"
+                                              name="1"
+                                              value={`${i.convertedInvoiceAmount/i.exchangeRate} ${props.values.curreancyname}`}
+                                            />
+                                          </Col>
+											
+                                       { this.state?.bankCurrency?.bankAccountCurrencyIsoCode!==props.values.curreancyname &&
+									 <Col lg={2}>
+                                            <FormGroup className="mb-3">
+                                              <div>
+                                                <Input
+                                                  className="form-control"
+                                                  id="exchangeRate"
+
+												  disabled={this.state.initValue.explinationStatusEnum ==='PARTIAL' || this.state.initValue.explinationStatusEnum==="FULL"}
+
+                                                  name="exchangeRate"
+                                                  type="number"
+                                                  value={
+                                                    i.exchangeRate}
+                                                  onChange={(value) => {
+                                                    let local2 = [...props.values?.invoiceIdList]
+                                                    local2[invindex].exchnageRate = value.target.value
+
+                                                    this.setexchnagedamount(local2)
+                                                  }}
+                                                />
+                                              </div>
+                                            </FormGroup>
+                                          </Col>
+									}
+                                            { this.state?.bankCurrency?.bankAccountCurrencyIsoCode!==props.values.curreancyname &&
+                                          <Col lg={2}>
+                                            <FormGroup className="mb-3">
+                                              <div>
+                                                <Input
+                                                  className="form-control"
+                                                  id="exchangeRate"
+                                                  name="exchangeRate"
+                                                  disabled
+                                                  value={`${this.state.bankCurrency
+                                                    ?.bankAccountCurrencyIsoCode} ${i.convertedInvoiceAmount?.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} `
+                                                  }
+                                                  onChange={(value) => {
+
+                                                  }}
+                                                />
+                                              </div>
+                                            </FormGroup>
+                                          </Col>
+									}
+                                          <Col lg={1} >
+                                            <FormGroup className="mb-3" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
+                                              <div>
+                                                <Input
+                                                  disabled={props.values?.amount -
+                                                    props.values?.invoiceIdList?.reduce(
+                                                      (accu, curr, index) =>
+                                                        accu +
+                                                        curr.amount * curr.exchangeRate
+                                                      ,
+                                                      0
+                                                    ) >= 0}
+                                                  type="checkbox"
+
+                                                  checked={i.pp !== undefined ? i.pp : false}
+
+                                                  onChange={(e) => {
+													if(this.state.initValue.explinationStatusEnum ==='PARTIAL'|| this.state.initValue.explinationStatusEnum==="FUll")
+                                                    this.onppclick(e.target.checked, invindex)
+                                                  }}
+                                                />
+                                              </div>
+                                            </FormGroup>
+                                          </Col>
+
+                                          <Col lg={2}>
+                                            <FormGroup className="mb-3">
+                                              <div>
+                                                <Input
+                                                  className="form-control"
+                                                  id="exchangeRate"
+                                                  name="exchangeRate"
+                                                  disabled
+                                                  value={`${this.state.bankCurrency
+                                                    ?.bankAccountCurrencyIsoCode} ${i.explainedAmount?.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} `
+
+                                                  }
+                                                  onChange={(value) => {
+
+                                                  }}
+                                                />
+                                                {i.explainedAmount===0 && <div
+                                                style={{color:'red',fontSize:'9px'}}
+                                                >Expain Amount Cannot be Zero</div>}
+                                              </div>
+                                            </FormGroup>
+                                          </Col>
+                                        </Row>
+                                      );
+                                    }
+                                  )}
+
+
+
+									{console.log(props.values?.invoiceIdList)}
+                                  {props.values?.invoiceIdList?.length > 0 && (
+                                    <>
+                                      <Row
+                                        style={{
+                                          display: "flex",
+                                          justifyContent: "flex-end",
+                                          marginLeft: "20px",
+                                        }}
+                                      >
+                                        <Col lg={3}>
+                                          <Input
+                                            disabled
+                                            id="total"
+                                            name="total"
+                                            value={"Total Explained Amount"}
+                                          />
+                                        </Col>
+                                        <FormGroup className="mt-2">
+                                          <label>
+                                            <b>=</b>
+                                          </label>{" "}
+                                        </FormGroup>
+                                        <Col lg={2}>
+                                          <Input
+                                            disabled
+                                            id="total"
+                                            name="total"
+                                            value={`${this.state.bankCurrency
+                                                ?.bankAccountCurrencyIsoCode
+                                              } ${(props.values?.invoiceIdList?.reduce(
+                                              (accu, curr, index) =>
+                                                accu +
+                                                curr.explainedAmount
+                                              ,
+                                              0
+                                            )).toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                                              }  `
+                                            }
+                                          />
+                                        </Col>
+
+
+                                      </Row>
+                                      { (this.setexcessorshortamount().data!== 0
+                                    && 
+                                    this.state?.bankCurrency?.bankAccountCurrencyIsoCode!==props.values.curreancyname 
+                                    ) && <Row
+                                        style={{
+                                          display: "flex",
+                                          justifyContent: "flex-end",
+                                          marginLeft: "20px",
+                                        }}
+                                      >
+                                        
+                                         { <Col lg={5}>
+                                        <Select
+                                     options={[{label:'Currency Gain ',value:79},
+                                        {label:'Currency Loss',value:103}    
+                                      ]}
+                                      isDisabled={true}
+                                      value={this.setexcessorshortamount().data<0
+                                      ?{label:'Currency Loss',value:103}:{label:'Currency Gain ',value:103}
+                                      }
+                                        />
+                                        </Col>}
+
+                                        <Col lg={3}>
+                                          <Input
+                                            disabled
+                                            id="total"
+                                            name="total"
+                                            value={"Total Excess/Short Amount"}
+                                          />
+                                        </Col>
+                                        <FormGroup className="mt-2">
+                                          <label>
+                                            <b>=</b>
+                                          </label>{" "}
+                                        </FormGroup>
+                                        <Col lg={2}>
+                                          <Input
+                                            disabled
+                                            id="total"
+                                            name="total"
+                                            value={this.setexcessorshortamount().value}
+                                          />
+                                        </Col>
+                                      </Row>}
+									  
+                                    </>
+                                  )}
+                                </>
+                              )}
+									
 															{props.values.coaCategoryId &&
 																props.values.coaCategoryId.label ===
 																'Sales' && (
@@ -2339,63 +2783,7 @@ debugger
 																		</Col>
 																	</Row>
 																)}
-															{props.values.coaCategoryId &&
-																props.values.coaCategoryId.label ===
-																'Supplier Invoice' &&
-																(
-																	this.state.custInvoiceCurrency != this.state.bankAccountCurrency ? (
-																		<Row >
-																			<Col lg={3}>
-																				<FormGroup className="mb-3">
-																					<Label htmlFor="currencyCode">
-																						{strings.Currency}
-																					</Label>
-																					<Select
-																						styles={customStyles}
-																						id="currencyCode"
-																						name="currencyCode"
-																						options={
-																							currency_convert_list
-																								? selectCurrencyFactory.renderOptions(
-																									'currencyName',
-																									'currencyCode',
-																									currency_convert_list,
-																									'Currency',
-																								)
-																								: []
-																						}
-																						value={
-																							currency_convert_list &&
-																							selectCurrencyFactory
-																								.renderOptions(
-																									'currencyName',
-																									'currencyCode',
-																									currency_convert_list,
-																									'Currency',
-																								)
-																								.find(
-																									(option) =>
-																										option.value ===
-																										+this.state.invoiceCurrency,
-																								)
-																						}
-																						isDisabled={true}
-																						onChange={(option) => {
-																							props.handleChange('currencyCode')(option);
-																							this.setExchange(option.value);
-																							this.setCurrency(option.value)
-																						}}
-																					/>
-																					{props.errors.currencyCode &&
-																						props.touched.currencyCode && (
-																							<div className="invalid-feedback">
-																								{props.errors.currencyCode}
-																							</div>
-																						)}
-																				</FormGroup>
-																			</Col>
-																		</Row>
-																	) : '')}
+															
 															{props.values.coaCategoryId &&
 																props.values.coaCategoryId.label ===
 																'Supplier Invoice' &&

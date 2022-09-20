@@ -1565,11 +1565,11 @@ class DetailQuotation extends React.Component {
 
 	getCurrentUser = (data) => {
 		let option;
-		if (data && (data.label || data.value)) {
+		if (data.label || data.value) {
 			option = data;
 		} else {
 			option = {
-				label: `${data.fullName}`,
+				label: `${data.organization!==""?data.organization : data.fullName}`,
 				value: data.id,
 			};
 		}
@@ -2453,7 +2453,7 @@ console.log(this.state.supplier_currency)
 																			</FormGroup>
 																		</Col>
 																		<Col lg={6}>
-																			<FormGroup className="mb-3">
+																			<FormGroup className="mb-3 hideAttachment">
 																				<Field
 																					name="attachmentFile"
 																					render={({ field, form }) => (
@@ -2511,7 +2511,7 @@ console.log(this.state.supplier_currency)
 																			</FormGroup>
 																		</Col>
 																	</Row>
-																	<FormGroup className="mb-3">
+																	<FormGroup className="mb-3 hideAttachment">
 																		<Label htmlFor="attachmentDescription">
 																			{strings.AttachmentDescription}
 																		</Label><br/>

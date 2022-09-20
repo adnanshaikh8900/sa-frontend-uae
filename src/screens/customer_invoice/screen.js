@@ -34,6 +34,7 @@ import './style.scss';
 import { CreateCreditNoteModal } from './sections';
 import moment from 'moment';
 import { upperCase } from 'lodash';
+import config from 'constants/config';
 
 const { ToWords } = require('to-words');
 const toWords = new ToWords({
@@ -241,7 +242,7 @@ this.props.customerInvoiceActions
 
 
 
-	postInvoice  = (row,markAsSent) => {
+	postInvoice = (row,markAsSent) => {
 	
 		const postingRequestModel = {
 			amount: row.invoiceAmount,
@@ -377,18 +378,18 @@ this.props.customerInvoiceActions
 		return (
 			<div>
 				<div>
-					<label className="font-weight-bold mr-2 ">{strings.InvoiceAmount} : </label>
+					<label className="font-weight-bold mr-2 ">{strings.InvoiceAmount}: </label>
 					<label>
 						{row.invoiceAmount === 0 ? row.currencySymbol +" "+ row.invoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }): row.currencySymbol +" "+ row.invoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 					
 					</label>
 				</div>
 				<div style={{ display: row.vatAmount === 0 ? 'none' : '' }}>
-					<label className="font-weight-bold mr-2">{strings.VatAmount} : </label>
+					<label className="font-weight-bold mr-2">{strings.VatAmount}: </label>
 					<label>{row.vatAmount === 0 ? row.currencySymbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }): row.currencySymbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}</label>
 				</div>
 				<div style={{ display: row.dueAmount === 0 ? 'none' : '' }}>
-					<label className="font-weight-bold mr-2">{strings.DueAmount} : </label>
+					<label className="font-weight-bold mr-2">{strings.DueAmount}: </label>
 					<label>{row.dueAmount === 0 ? row.currencySymbol +" "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : row.currencySymbol +" "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}</label>
 				</div>
 
@@ -526,7 +527,7 @@ this.props.customerInvoiceActions
 								<i className="fa fa-send" /> Send Custom Email
 							</DropdownItem>
 						)} */}
-							 {row.statusEnum === 'Paid'  && row.remainingInvoiceAmount !==true && ( 
+							 {(row.statusEnum === 'Paid'  && row.remainingInvoiceAmount !==true && config.INCOME_TCN)&& ( 
 							<DropdownItem
 							onClick={() => {
 							this.renderActionForState(row.id);
@@ -1174,7 +1175,7 @@ this.props.customerInvoiceActions
 										</ButtonGroup>
 									</div>
 									<div className="py-3">
-										<h5>{strings.Filter} : </h5>
+										<h5>{strings.Filter}: </h5>
 										<Row>
 											<Col lg={2} className="mb-1">
 												<Select
@@ -1416,11 +1417,11 @@ this.props.customerInvoiceActions
 												Due Amount
 											</TableHeaderColumn> */}
 										<TableHeaderColumn
-											className="text-right"
+											className="text-right table-header-bg"
 											columnClassName="text-right"
 												width="5%"
 											dataFormat={this.renderActions}
-											className="table-header-bg"
+											
 										></TableHeaderColumn>
 									</BootstrapTable>
 								</Col>

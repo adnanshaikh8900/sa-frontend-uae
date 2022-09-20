@@ -428,7 +428,7 @@ class RecordSupplierPayment extends React.Component {
 													 }}
 													validationSchema={Yup.object().shape({
 														depositeTo: Yup.string().required(
-															'Deposit to is required',
+															'Paid through is required',
 														),
 														payMode: Yup.string().required(
 															'Payment mode is required',

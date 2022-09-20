@@ -120,7 +120,7 @@ class CreateBankAccount extends React.Component {
 			disableLeavePage:false, 
 		};
 		this.formRef = React.createRef();
-		this.regExAlpha = /^[a-zA-Z_ ]+$/;
+		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regEx = /^[0-9\d]+$/;
 		this.regExBoth = /[a-zA-Z0-9_ ]+$/;
 		this.ifscCode = /[a-zA-Z0-9]+$/;

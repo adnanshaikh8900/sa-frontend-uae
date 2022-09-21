@@ -1122,16 +1122,14 @@ sendMail = (row,MarkAsSent) => {
 											version="4"
 											hover
 											keyField="id"
-											pagination={
-											true
-											}
+											pagination
 											remote
 
-											// fetchInfo={{
-											// 	dataTotalSize: quotation_list && quotation_list && quotation_list.data && quotation_list.data.count
-											// 		? quotation_list.data.count
-											// 		: 0,
-											// }}
+											fetchInfo={{
+												dataTotalSize: quotation_list && quotation_list && quotation_list.data && quotation_list.data.count
+													? quotation_list.data.count
+													: 0,
+											}}
 											className="customer-invoice-table"
 											ref={(node) => (this.table = node)}
 										>

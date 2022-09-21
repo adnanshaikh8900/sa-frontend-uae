@@ -457,11 +457,11 @@ sendMail = (row,MarkAsSent) => {
 	const postingRequestModel = {
 	
 		postingRefId: row.id,
-		MarkAsSent:MarkAsSent,
+		markAsSent:MarkAsSent,
 		amountInWords:upperCase(row.currencyIsoCode + " " +(toWords.convert(row.totalAmount)) ).replace("POINT","AND"),
 			vatInWords:row.totalVatAmount ? upperCase(row.currencyIsoCode + " " +(toWords.convert(row.totalVatAmount)) ).replace("POINT","AND") :"-"
 	};
-	 
+	 debugger
 	
 	this.props.quotationAction
 		.sendMail(postingRequestModel)

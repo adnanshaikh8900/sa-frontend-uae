@@ -197,6 +197,42 @@ dev-deploy-job:      # This job runs in the deploy stage.
       - unknown_failure
       - job_execution_timeout
 
+devbox-deploy-job:      # This job runs in the deploy stage.
+  stage: dev-deploy  # It only runs when *both* jobs in the test stage complete successfully.
+  dependencies:
+    - "docker-build-job"
+  before_script:
+    - export
+    - echo "Pipeline Source:$CI_PIPELINE_SOURCE"
+    - kubectl config use-context datainn/k8s:k8s-dev
+    - TAG=$CI_BUILD_TAG
+    - echo $TAG
+  script:
+    - echo "Deploying application to following cluster..."
+    - kubectl cluster-info 
+    - echo "Test deployment scripts..."
+    - helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=$REGISTRY_URL/$IMAGE,maindomain=devbox.app.simpleaccounts.io,simpleVatHost=https://devbox-api.app.simpleaccounts.io,fullnameOverride=devbox-frontend,serviceAccount.name=devbox-deploy-robot-frontend,ingress.hosts[0].host=devbox.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=devbox-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=devbox-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=devbox.app.simpleaccounts.io --wait --dry-run --debug --namespace devbox --create-namespace devbox-frontend ./simpleaccounts-frontend 
+    - echo "Deployment started scripts..."
+    - helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=$REGISTRY_URL/$IMAGE,maindomain=devbox.app.simpleaccounts.io,simpleVatHost=https://devbox-api.app.simpleaccounts.io,fullnameOverride=devbox-frontend,serviceAccount.name=devbox-deploy-robot-frontend,ingress.hosts[0].host=devbox.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=devbox-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=devbox-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=devbox.app.simpleaccounts.io --wait --namespace devbox --create-namespace devbox-frontend ./simpleaccounts-frontend 
+    - echo "Application successfully deployed."
+  resource_group: dev
+  environment:
+    name: Development
+    url: https://dev.app.simpleaccounts.io
+    action: start
+  allow_failure: false
+  rules:
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_BUILD_TAG =~ '/1.0.0-alpha.*/'
+      when: on_success
+    - when: never
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+      - unknown_failure
+      - job_execution_timeout
+
 approve-sit-deployment-job:
   stage: sit-approval
   script:
@@ -381,7 +417,7 @@ create-prod-release-job:
     - NEXT_VERSION=$(($SA_VERSION+1))
     - curl --request PUT --header "PRIVATE-TOKEN:$GITLAB_API_TOKEN" "https://gitlab.datainn.io/api/v4/projects/${CI_PROJECT_ID}/variables/SA_VERSION" --form "value="$NEXT_VERSION
     - PROD_TAG=$PROD_VERSION_PREFIX.$SA_VERSION
-    - curl --header 'Content-Type:application/json' --header "PRIVATE-TOKEN:$GITLAB_API_TOKEN" --data "{ \"name\":\"SimpleAccounts Backend Release Prod:$PROD_TAG\", \"tag_name\":\"$PROD_TAG\", \"ref\":\"$CI_COMMIT_SHA\", \"description\":\"SimpleAccounts backend new release with Production Version:$PROD_TAG and Corresponding Development/Test Version:$TAG\", \"assets\":{ \"links\":[{ \"name\":\"hoge\", \"url\":\"https://google.com\", \"filepath\":\"/binaries/linux-amd64\", \"link_type\":\"other\" }] } }" --request POST "https://gitlab.datainn.io/api/v4/projects/${CI_PROJECT_ID}/releases"
+    - curl --header 'Content-Type:application/json' --header "PRIVATE-TOKEN:$GITLAB_API_TOKEN" --data "{ \"name\":\"SimpleAccounts Frontend Release Prod:$PROD_TAG\", \"tag_name\":\"$PROD_TAG\", \"ref\":\"$CI_COMMIT_SHA\", \"description\":\"SimpleAccounts frontend new release with Production Version:$PROD_TAG and Corresponding Development/Test Version:$TAG\", \"assets\":{ \"links\":[{ \"name\":\"hoge\", \"url\":\"https://google.com\", \"filepath\":\"/binaries/linux-amd64\", \"link_type\":\"other\" }] } }" --request POST "https://gitlab.datainn.io/api/v4/projects/${CI_PROJECT_ID}/releases"
   resource_group: prod
   allow_failure: false
   rules:

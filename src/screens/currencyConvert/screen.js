@@ -66,7 +66,7 @@ class CurrencyConvert extends React.Component {
 		};
 
 		this.options = {
-			onRowClick: this.goToDetail,
+			onRowClick: config.ADD_CURRENCY ? this.goToDetail :()=>{},
 			
 		};
 

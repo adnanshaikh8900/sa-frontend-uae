@@ -11,28 +11,22 @@ import {
 	Label,
 	Row,
 	Col,
-	UncontrolledTooltip,
 } from 'reactstrap';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import _ from 'lodash';
 import { Loader ,LeavePage} from 'components';
-
 import moment from 'moment';
 import { AuthActions,CommonActions } from 'services/global';
 import * as OpeningBalanceActions from '../../actions';
 import 'react-datepicker/dist/react-datepicker.css';
-
 import 'react-toastify/dist/ReactToastify.css';
 import './style.scss';
-
 import * as CreateOpeningBalancesActions from './actions';
 import { selectOptionsFactory } from 'utils';
-
 import { Formik } from 'formik';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-
 
 const mapStateToProps = (state) => {
 	return {
@@ -299,7 +293,7 @@ class CreateOpeningBalance extends React.Component {
 																		<span className="text-danger">* </span>{strings.Amount}
 																	</Label>
 																	<Input
-																		type="number"
+																		type="text"
 																		maxLength="14,2"
 																		name="openingBalance"
 																		id="openingBalance"

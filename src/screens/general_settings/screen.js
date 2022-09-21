@@ -93,7 +93,7 @@ class GeneralSettings extends React.Component {
 			
 		
 	testMail = () => {
-		this.props.generalSettingActions.getTestUserMailById(this.state.userId ? this.state.userId:1)	.then((res) => {
+		this.props.generalSettingActions.getTestUserMailById(this.state.userId ? this.state.userId:1).then((res) => {
 			if (res.status === 200) {
 				this.props.commonActions.tostifyAlert(
 					'success',

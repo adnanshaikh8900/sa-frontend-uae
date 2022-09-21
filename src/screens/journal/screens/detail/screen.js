@@ -17,20 +17,16 @@ import {
 import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import DatePicker from 'react-datepicker';
-
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import moment from 'moment';
-
 import { CommonActions } from 'services/global';
 import { selectCurrencyFactory } from 'utils';
 import * as JournalActions from '../../actions';
 import * as JournalDetailActions from './actions';
 import { Loader, LeavePage,ConfirmDeleteModal, Currency } from 'components';
-
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
-
 import './style.scss';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
@@ -1014,7 +1010,7 @@ min="0"
 																					? false
 																					: true
 																			}
-																			placeholder={strings.DeliveryNotes}
+																			// placeholder={strings.DeliveryNotes}
 																			value={props.values.description}
 																			onChange={(value) => {
 																				props.handleChange('description')(
@@ -1031,6 +1027,13 @@ min="0"
 																		<Label htmlFor="currencyCode">
 																			 {strings.Currency}
 																		</Label>
+																		{console.log(currency_list,selectCurrencyFactory
+																					.renderOptions(
+																						'currencyName',
+																						'currencyCode',
+																						currency_list,
+																						'Currency',
+																					)?.[1])}
 																		<Select
 																			styles={customStyles}
 																			className="select-default-width"
@@ -1060,12 +1063,8 @@ min="0"
 																						'currencyCode',
 																						currency_list,
 																						'Currency',
-																					)
-																					.find(
-																						(option) =>
-																							option.value ===
-																							+props.values.currencyCode,
-																					)
+																					)?.[1]
+																					
 																			}
 																			onChange={(option) => {
 																				if (option && option.value) {

@@ -1,7 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-
 import {
   Card,
   CardHeader,
@@ -14,26 +13,18 @@ import {
   Row,
   Col
 } from 'reactstrap'
-import { Loader ,LeavePage, ConfirmDeleteModal} from 'components'
+import { Loader, LeavePage} from 'components'
 import Select from 'react-select';
-
 import { selectOptionsFactory } from 'utils';
 import DatePicker from 'react-datepicker';
-
-import {
-  CommonActions,AuthActions
-} from 'services/global'
-
+import { CommonActions,AuthActions } from 'services/global'
 import 'react-toastify/dist/ReactToastify.css'
 import './style.scss'
-
 import * as DetailOpeningBalancesAction from './actions'
 import * as OpeningBalanceActions from '../../actions';
-
 import { Formik } from 'formik';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-
 
 const mapStateToProps = (state) => {
   return ({
@@ -280,7 +271,7 @@ class DetailOpeningBalance extends React.Component {
 																		<span className="text-danger">* </span>{strings.Amount}
 																	</Label>
 																	<Input
-																		type="number"
+																		type="text"
                                     min="0"
 																		maxLength="14,2"
 																		name="openingBalance"

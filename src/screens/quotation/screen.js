@@ -328,7 +328,7 @@ class Quatation extends React.Component {
 									this.sendMail(row,true);
 								}}
 							>
-							<i className="fas fa-send"></i>{strings.Mark_As_Sent}
+							<i className="far fa-arrow-alt-circle-right"></i>{strings.Mark_As_Sent}
 							</DropdownItem>)}
 							{row.status === 'Sent' && (
 							<DropdownItem

@@ -8,22 +8,16 @@ import {
 	Button,
 	Row,
 	Col,
-	Input,
 	ButtonGroup,
 } from 'reactstrap';
 import { toast } from 'react-toastify';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { CommonActions } from 'services/global';
-
 import { Loader, ConfirmDeleteModal } from 'components';
-
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
-
 import * as CurrencyConvertActions from './actions';
-import { CSVLink } from 'react-csv';
-import { stubArray } from 'lodash';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
 import config from 'constants/config';
@@ -66,7 +60,7 @@ class CurrencyConvert extends React.Component {
 		};
 
 		this.options = {
-			onRowClick: this.goToDetail,
+			onRowClick: config.ADD_CURRENCY ? this.goToDetail :()=>{},
 			
 		};
 
@@ -109,10 +103,10 @@ class CurrencyConvert extends React.Component {
 	//--------------------------
 
 	goToDetail = (row) => {
-		{row.currencyConversionId === 1 ? (	
+		{row.currencyConversionId === 10000 ? (	
 			this.props.commonActions.tostifyAlert(
 			'error',
-			'Cannot edit Base Currency'
+			'Cannot Edit Base Currency'
 		)) : (
 				this.props.history.push(`/admin/master/currencyConvert/detail`, {
 			id: row.currencyConversionId,
@@ -128,7 +122,7 @@ class CurrencyConvert extends React.Component {
 		{currencyId === 1 ? (	
 			this.props.commonActions.tostifyAlert(
 			'error',
-			'Cannot edit Base Currency'
+			'Cannot Edit Base Currency'
 		)) : (
 				this.props.history.push(`/admin/master/currencyConvert/detail`, {
 			id: currencyId,

@@ -26,7 +26,6 @@ import { Formik } from 'formik';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 
-
 const mapStateToProps = (state) => {
   return ({
     currencyList: state.currencyConvert.currency_list,
@@ -436,7 +435,7 @@ class DetailCurrencyConvert extends React.Component {
 																			option.target.value === '' ||
 																			this.regDecimal.test(option.target.value)
 																		) {
-                                      props.handleChange('exchangeRate')(
+                                      										props.handleChange('exchangeRate')(
 																				option,
 																			);
 																		}
@@ -475,24 +474,24 @@ class DetailCurrencyConvert extends React.Component {
 															</Row>
                                 <Row>
                                   <Col lg={10} className="mt-5 d-flex flex-wrap align-items-center justify-content-between">
-                                  {this.state.current_currency_convert_id !== 1 &&
+                                  {this.state.current_currency_convert_id !== 10000 &&
 																	  (
                                   <FormGroup className="text-right">
                                   <Button
-																			type="button"
-																			name="button"
-																			color="danger"
-																			className="btn-square"
-                                      disabled1={this.state.disabled1}
-																			onClick={this.deleteCurrencyConvert}
-																		>
-																			<i className="fa fa-trash"></i> {this.state.disabled1
-																			? 'Deleting...'
-																			: strings.Delete }
-																		</Button>
-																	</FormGroup>)}
+										type="button"
+										name="button"
+										color="danger"
+										className="btn-square"
+                                      	disabled1={this.state.disabled1}
+										onClick={this.deleteCurrencyConvert}
+									>
+										<i className="fa fa-trash"></i> {this.state.disabled1
+											? 'Deleting...'
+											: strings.Delete }
+									</Button>
+									</FormGroup>)}
                                      <FormGroup className="text-right">
-                                     {this.state.current_currency_convert_id !== 1 &&
+                                     {this.state.current_currency_convert_id !== 10000 &&
 																	  (
                                       <Button type="submit" name="submit" color="primary" className="btn-square mr-3" disabled={this.state.disabled}
 									  onClick={() => {

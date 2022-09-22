@@ -106,6 +106,7 @@ class CreateCurrencyConvert extends React.Component {
 				this.setState({ loading: false });
 			});
 	};	
+	
 	// Save Updated Field's Value to State	
 	handleChange = (e, name) => {
 		this.setState({
@@ -116,13 +117,6 @@ class CreateCurrencyConvert extends React.Component {
 			),
 		});
 	};
-
-	// Show Success Toast
-	// success() {
-	//   toast.success('Product Category Created successfully... ', {
-	//     position: toast.POSITION.TOP_RIGHT
-	//   })
-	// }
 
 	// Create or Edit Currency conversion
 	handleSubmit = (data, resetForm) => {

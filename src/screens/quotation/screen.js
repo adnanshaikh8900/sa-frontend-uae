@@ -449,8 +449,6 @@ class Quatation extends React.Component {
 
 
 sendMail = (row,MarkAsSent) => {
-	 
-	console.log(row);
 	this.setState({
 		loading: true,
 	});
@@ -461,7 +459,6 @@ sendMail = (row,MarkAsSent) => {
 		amountInWords:upperCase(row.currencyIsoCode + " " +(toWords.convert(row.totalAmount)) ).replace("POINT","AND"),
 			vatInWords:row.totalVatAmount ? upperCase(row.currencyIsoCode + " " +(toWords.convert(row.totalVatAmount)) ).replace("POINT","AND") :"-"
 	};
-	 debugger
 	
 	this.props.quotationAction
 		.sendMail(postingRequestModel)

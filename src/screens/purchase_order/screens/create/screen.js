@@ -716,7 +716,6 @@ class CreatePurchaseOrder extends React.Component {
 									this.formRef.current.setFieldValue('notes',  res.data.notes, true);
 								let rfq=selectOptionsFactory.renderOptions('label','value',this.props.rfq_list.data,'RFQ Number',)
 									        .find((option) => option.label == res.data.rfqNumber)
-											debugger
 									this.formRef.current.setFieldValue('rfqNumber',rfq, true);
 									this.formRef.current.setFieldValue('supplierReferenceNumber',  res.data.supplierReferenceNumber, true);
 									this.addRow();

@@ -328,7 +328,7 @@ class Quatation extends React.Component {
 									this.sendMail(row,true);
 								}}
 							>
-							<i className="fas fa-send"></i>{strings.Mark_As_Sent}
+							<i className="far fa-arrow-alt-circle-right"></i>{strings.Mark_As_Sent}
 							</DropdownItem>)}
 							{row.status === 'Sent' && (
 							<DropdownItem
@@ -449,19 +449,16 @@ class Quatation extends React.Component {
 
 
 sendMail = (row,MarkAsSent) => {
-	 
-	console.log(row);
 	this.setState({
 		loading: true,
 	});
 	const postingRequestModel = {
 	
 		postingRefId: row.id,
-		MarkAsSent:MarkAsSent,
+		markAsSent:MarkAsSent,
 		amountInWords:upperCase(row.currencyIsoCode + " " +(toWords.convert(row.totalAmount)) ).replace("POINT","AND"),
 			vatInWords:row.totalVatAmount ? upperCase(row.currencyIsoCode + " " +(toWords.convert(row.totalVatAmount)) ).replace("POINT","AND") :"-"
 	};
-	 
 	
 	this.props.quotationAction
 		.sendMail(postingRequestModel)
@@ -1122,16 +1119,14 @@ sendMail = (row,MarkAsSent) => {
 											version="4"
 											hover
 											keyField="id"
-											pagination={
-											true
-											}
+											pagination
 											remote
 
-											// fetchInfo={{
-											// 	dataTotalSize: quotation_list && quotation_list && quotation_list.data && quotation_list.data.count
-											// 		? quotation_list.data.count
-											// 		: 0,
-											// }}
+											fetchInfo={{
+												dataTotalSize: quotation_list && quotation_list && quotation_list.data && quotation_list.data.count
+													? quotation_list.data.count
+													: 0,
+											}}
 											className="customer-invoice-table"
 											ref={(node) => (this.table = node)}
 										>

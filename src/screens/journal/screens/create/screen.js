@@ -17,19 +17,15 @@ import {
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
-
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
-
 import { Currency ,LeavePage, Loader} from 'components';
 import { CommonActions } from 'services/global';
 import { selectCurrencyFactory } from 'utils';
 import * as JournalActions from '../../actions';
 import * as JournalCreateActions from './actions';
-
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
-
 import './style.scss';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';

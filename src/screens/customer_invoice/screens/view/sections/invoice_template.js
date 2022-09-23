@@ -100,7 +100,7 @@ class InvoiceTemplate extends Component {
 	    return		(<div>
 
 			   <br />
-			   <h6 className="mb-1 ml-2"><b>{strings.ShipTo} ,</b></h6><br/>
+			   <h6 className="mb-1 ml-2"><b>{strings.ShipTo},</b></h6><br/>
 			   <div className="mb-1 ml-2"><b>{invoiceData.organisationName ? invoiceData.organisationName : invoiceData.name}</b></div>
 			   {/* {contactData && contactData.addressLine1 &&(<div className="mb-1 ml-2"><b>{strings.BillingAddress} : </b> {contactData.addressLine1}</div>)} */}
 			   {invoiceData && contactData && (this.renderShippingAddress())}
@@ -164,7 +164,6 @@ class InvoiceTemplate extends Component {
 		}
 		}
 
-
 		return shippingPostZipCode+", ";
 	}
 
@@ -181,7 +180,6 @@ class InvoiceTemplate extends Component {
 			else
 				shippingCity = contactData.shippingCity ? contactData.shippingCity : "";
 		}
-
 
 		return (<div className="mb-1 ml-2"><b>{strings.City} : </b>{shippingCity}</div>);
 	}
@@ -219,7 +217,7 @@ class InvoiceTemplate extends Component {
 		}
 
 
-		return shippingState + " , ";
+		return shippingState + ", ";
 	}
 	getTerms = (term) => {
 
@@ -309,8 +307,8 @@ class InvoiceTemplate extends Component {
 										<div className="mb-1 ml-2" style={{fontSize:"22px"}}><b>{companyData.companyName}</b></div>
 										<div className="mb-1 ml-2">{companyData.companyAddressLine1}</div>
 										<div className="mb-1 ml-2">{companyData.companyAddressLine2}</div>
-										{companyData.companyCountryCode==229 ? strings.POBox: ""}: {companyData.companyPoBoxNumber} ,&nbsp;
-										{companyData &&(companyData.companyStateName ? companyData.companyStateName + " , " : "")}
+										{companyData.companyCountryCode==229 ? strings.POBox: ""}: {companyData.companyPoBoxNumber},&nbsp;
+										{companyData &&(companyData.companyStateName ? companyData.companyStateName + ", " : "")}
 										{companyData &&(companyData.companyCountryName ? companyData.companyCountryName : "")}
 										{companyData.companyRegistrationNumber && (<div className="mb-1 ml-2">{strings.CompanyRegistrationNo}: {companyData.companyRegistrationNumber}</div>)}
 										{companyData.isRegisteredVat==true&&(<div className="mb-1 ml-2">{strings.VATRegistrationNo}: {companyData.vatRegistrationNumber}</div>)}
@@ -355,8 +353,8 @@ class InvoiceTemplate extends Component {
 											contactData.countryId==229 ?
 											contactData.poBoxNumber ?(strings.POBox +": " +contactData.poBoxNumber ): ""
 											:contactData.postZipCode ? contactData.postZipCode : ""
-											)} ,&nbsp;
-									    {invoiceData && contactData && (contactData.billingStateName ? contactData.billingStateName + " , " : "")}
+											)},&nbsp;
+									    {invoiceData && contactData && (contactData.billingStateName ? contactData.billingStateName + ", " : "")}
 										{invoiceData && contactData && (contactData.billingCountryName ? contactData.billingCountryName : "")}
 									</div>
 									{invoiceData && invoiceData.taxTreatment&& invoiceData.taxTreatment.includes("NON")==false &&(<div className="mb-1 ml-2">{strings.VATRegistrationNo}: {invoiceData.taxRegistrationNo}</div>)}

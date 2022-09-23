@@ -1225,7 +1225,6 @@ class DetailRequestForQuotation extends React.Component {
 		);
 	};
 	handleSubmit = (data) => {
-		debugger
 		this.setState({ disabled: true });
 		const { current_rfq_id, term } = this.state;
 		const {
@@ -1240,7 +1239,6 @@ class DetailRequestForQuotation extends React.Component {
 			currency,
 			placeOfSupplyId
 		} = data;
-debugger
 		let formData = new FormData();
 		formData.append('taxType', this.state.taxType)
 		formData.append('type', 3);
@@ -1377,7 +1375,6 @@ debugger
 		this.setState({ openProductModal: false });
 	};
 	setDate = (props, value) => {
-		debugger
 		this.setState({
 			dateChanged: true,
 		});
@@ -1392,7 +1389,6 @@ debugger
 		}
 	};
 setDate1= (props, value) => {
-	debugger
 	this.setState({
 		dateChanged1: true,
 	});

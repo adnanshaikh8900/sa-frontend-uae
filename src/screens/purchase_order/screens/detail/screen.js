@@ -1550,7 +1550,6 @@ class DetailPurchaseOrder extends React.Component {
 		this.setState({ openProductModal: false });
 	};
 	setDate = (props, value) => {
-		debugger
 		this.setState({
 			dateChanged: true,
 		});
@@ -1563,7 +1562,6 @@ class DetailPurchaseOrder extends React.Component {
 		 }
 	};
 	setDate1= (props, value) => {
-		debugger
 		this.setState({
 			dateChanged1: true,
 		});
@@ -2535,7 +2533,6 @@ class DetailPurchaseOrder extends React.Component {
 																	id="discountEnabled"
 																	checked={this.state.discountEnabled}
 																	onChange={(option) => {
-																		debugger
 																		if(initValue.discount > 0){
 																			this.setState({ discountEnabled: true })
 																		}else{

@@ -867,8 +867,6 @@ renderVatAmount = (cell, row,extraData) => {
 							const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 							// const values =  res.data.invoiceDate	
 							const values =  new Date();
-		
-							debugger	
 								this.setState({
 									date: moment(values).add(parseInt(temp), 'days'),
 									invoiceDate1: moment(values),
@@ -1570,7 +1568,6 @@ discountType = (row) =>
 	};
 
 	checkedRow = () => {
-		debugger
 		if (this.state.data.length > 0) {
 			let length = this.state.data.length - 1;
 			let temp = this.state.data?.[length].productId!==""?
@@ -1803,7 +1800,6 @@ discountType = (row) =>
 		formData.append('quotationId', this.state.quotationId ? this.state.quotationId : '')
 		formData.append('referenceNumber', invoice_number !== null ? this.state.prefix + invoice_number : '');
 		formData.append('invoiceDueDate', invoiceDueDate ? this.state.date : null);
-		debugger
 		formData.append('invoiceDate', invoiceDate?invoiceDate
 						// moment(invoiceDate,'DD-MM-YYYY')
 						// .toDate()
@@ -1813,8 +1809,6 @@ discountType = (row) =>
 		formData.append('receiptAttachmentDescription', receiptAttachmentDescription !== null ? receiptAttachmentDescription : '',);
 		formData.append('exchangeRate', exchangeRate !== null ? exchangeRate : '');
 		formData.append('contactPoNumber', contact_po_number !== null ? contact_po_number : '');
-
-			debugger
 		if(changeShippingAddress && changeShippingAddress==true)
 		{
 			formData.append('changeShippingAddress', changeShippingAddress !== null ? changeShippingAddress : '');
@@ -1865,7 +1859,6 @@ discountType = (row) =>
 		this.props.customerInvoiceCreateActions
 			.createInvoice(formData)
 			.then((res) => {
-				debugger
 				this.setState({ disabled: false });
 				this.setState({ loading:false});
 				this.props.commonActions.tostifyAlert(
@@ -1941,10 +1934,8 @@ discountType = (row) =>
 						},
 					);
 				} else {
-					debugger
 					this.props.history.push('/admin/income/customer-invoice');
 					this.setState({ loading:false,});
-					debugger
 				}
 			})
 			.catch((err) => {
@@ -2814,7 +2805,6 @@ discountType = (row) =>
 																		// value={props.values.invoiceDate}
 																		selected={props.values.invoiceDate1 ?new Date(props.values.invoiceDate1):props.values.invoiceDate} 
 																		onChange={(value) => {
-																			debugger
 																			props.handleChange('invoiceDate')(value);
 																			this.setDate(props, value);
 																		}}

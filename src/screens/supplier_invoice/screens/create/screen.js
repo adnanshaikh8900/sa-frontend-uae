@@ -1921,7 +1921,6 @@ class CreateSupplierInvoice extends React.Component {
 		formData.append('notes', notes ? notes : '');
 		formData.append('type', 1);
 		const local=[...this.state.data.map(({taxtreatment,...rest})=>rest)]
-		debugger
 		formData.append('lineItemsString', JSON.stringify(local));
 		formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
 		formData.append('totalAmount', this.state.initValue.totalAmount);

@@ -445,6 +445,7 @@ class CreateBankTransaction extends React.Component {
           if (this.state.createMore) {
             this.setState({
               createMore: false,
+              disabled:false
             });
           } else {
             this.props.history.push("/admin/banking/bank-account/transaction", {

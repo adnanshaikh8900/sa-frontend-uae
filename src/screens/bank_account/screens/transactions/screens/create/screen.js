@@ -1180,7 +1180,7 @@ debugger
                           transactionDate: Yup.date().required(
                             "Transaction Date is Required"
                           ),
-                          reference:Yup.number().max(20),
+                          reference:Yup.string().max(20),
                           transactionAmount: Yup.string()
                             .required("Transaction Amount is Required")
                             .test(

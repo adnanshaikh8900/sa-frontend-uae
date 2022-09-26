@@ -1083,6 +1083,15 @@ debugger
                           const date1 = new Date(date);
                           const date2 = new Date(this.state.date);
                           
+                          if(values.coaCategoryId.label !== "Expense" &&
+                          values.coaCategoryId.label !==
+                          "Supplier Invoice" &&
+                          values.coaCategoryId.label !== "Sales"){
+                            if(!values.transactionCategoryId || values.transactionCategoryId===""){
+                              errors.transactionCategoryId="Category is required"
+                            }
+                          }
+
                           if ((values.coaCategoryId?.value === 2 || values.coaCategoryId?.value === 100)) {
                             if (!values.vendorId?.value && values.coaCategoryId?.value === 100) {
                               errors.vendorId = "Please select the Vendor"

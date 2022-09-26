@@ -2689,7 +2689,7 @@ debugger
                               <Col lg={4}>
                                 <Row>
                                   <Col lg={12}>
-                                    <FormGroup className="mb-3">
+                                    <FormGroup className="mb-3 hideAttachment">
                                       <Field
                                         name="attachment"
                                         render={({ field, form }) => (

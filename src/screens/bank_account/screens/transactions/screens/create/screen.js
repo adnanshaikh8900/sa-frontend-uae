@@ -1180,6 +1180,7 @@ debugger
                           transactionDate: Yup.date().required(
                             "Transaction Date is Required"
                           ),
+                          reference:Yup.number().max(20),
                           transactionAmount: Yup.string()
                             .required("Transaction Amount is Required")
                             .test(
@@ -2666,6 +2667,12 @@ debugger
                                         }}
                                         value={props.values.reference}
                                       />
+                                       {props.errors.reference &&
+                                        props.touched.reference && (
+                                          <div className="invalid-file" style={{color:"red"}}>
+                                            {props.errors.reference}
+                                          </div>
+                                        )}
                                     </FormGroup>
                                   </Col>
                                 </Row>

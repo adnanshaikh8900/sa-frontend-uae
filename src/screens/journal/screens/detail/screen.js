@@ -147,7 +147,6 @@ class DetailJournal extends React.Component {
 								});
 							},
 						);
-						debugger
 					}
 				})
 				.catch((err) => {
@@ -198,13 +197,10 @@ class DetailJournal extends React.Component {
 		// const getoptions=()=>{
 		// const tit=transactionCategoryList.find(
 		// 		(item) =>{
-		// 			debugger
 		// 			item.label === row.journalTransactionCategoryLabel
 		// 		})
-		// 	debugger	
 				
 		// 		?.options?.find((i)=>{
-		// 			debugger
 		// 			i.value===row.transactionCategoryId
 		// 		})?.label
 		// }

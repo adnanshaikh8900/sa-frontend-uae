@@ -436,7 +436,7 @@ class DetailRequestForQuotation extends React.Component {
 							excise_list &&
 							selectOptionsFactory
 								.renderOptions('name', 'id', excise_list, 'Excise')
-								.find((option) => option.value === +row.exciseTaxId)
+								.find((option) => row.exciseTaxId ? option.value === +row.exciseTaxId : "Select Exise")
 						}
 						id="exciseTaxId"
 						placeholder={"Select Excise"}

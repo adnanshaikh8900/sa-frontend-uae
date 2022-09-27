@@ -145,7 +145,7 @@ class RFQTemplate extends Component {
 										{companyData &&(companyData.companyCountryName ? companyData.companyCountryName : "")}
 										{companyData.companyRegistrationNumber && (<div className="mb-1 ml-2">{strings.CompanyRegistrationNo}: {companyData.companyRegistrationNumber}</div>)}
 										{companyData.isRegisteredVat==true&&(<div className="mb-1 ml-2">{strings.VATRegistrationNo}: {companyData.vatRegistrationNumber}</div>)}
-										<div className="mb-1 ml-2">{strings.MobileNumber}: {this.companyMobileNumber(companyData.phoneNumber ? "+" + companyData.phoneNumber : '')}</div>
+										<div className="mb-1 ml-2">{strings.MobileNumber}: {this.companyMobileNumber(companyData.phoneNumber ? "+" + companyData.phoneNumber: '')}</div>
 										{companyData.emailAddress&&(<div className="mb-1 ml-2">{strings.Email}: {companyData.emailAddress}</div>)}
 								</div>
 							</div>
@@ -204,7 +204,7 @@ class RFQTemplate extends Component {
 							<div style={{ width: '27%' }}>
 
 <br />
-<div className="mb-1 ml-2"><b>{strings.QuotationNo}: </b> # {QuotationData.quotationNumber}</div>
+<div className="mb-1 ml-2"><b>{strings.QuotationNo}:</b> {QuotationData.quotationNumber}</div>
 {QuotationData.receiptNumber&&(<div className="mb-1 ml-2"><b>{strings.ReferenceNo}: </b>{QuotationData.receiptNumber}</div>)}
 <div className="mb-1 ml-2"><b>{strings.Created_Date}: </b>{' '}
 	{moment(QuotationData.createdDate).format('DD MMM YYYY')}</div>

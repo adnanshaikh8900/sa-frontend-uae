@@ -132,23 +132,23 @@ class Help extends React.Component {
 											</p> */}
 											{/* <Link to="https://www.simplevat.com/faqs/">Go to FAQ</Link> */}
 							{/* <b>	<a target="_blank" href="https://www.simplevat.com/faqs/" style={{ color: '#2266d8' }}>Go to FAQ</a></b> */}
-							<div className="d-flex justify-content-center">
+							<div className="mb-0">
 												{/* <button className="btn-pill btn btn-primary btn-lg">
 													<i className="icon-phone icons font-2xl d-block"></i>
 												</button>
 												<button className="btn-pill btn btn-primary btn-lg">
 													<i className="cui-comment-square icons font-2xl d-block"></i>
 												</button> */}
-												<button className="btn-pill btn btn-primary btn-lg"
-												>
-											
+												{/* <button className="btn-pill btn btn-primary btn-lg"
+													>
+												
 													<i
 														className="cui-envelope-closed icons font-2xl d-block"
 														style={{ marginTop: -5 }}
 													></i>
 												
-												</button>
-												<p>support@simpleaccounts.io</p>
+												</button> */}
+												<h6><p>Email: support@simpleaccounts.io</p></h6>
 											</div>
 
 											</div>

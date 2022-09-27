@@ -436,7 +436,7 @@ class DetailRequestForQuotation extends React.Component {
 							excise_list &&
 							selectOptionsFactory
 								.renderOptions('name', 'id', excise_list, 'Excise')
-								.find((option) => option.value === +row.exciseTaxId)
+								.find((option) => row.exciseTaxId ? option.value === +row.exciseTaxId : "Select Exise")
 						}
 						id="exciseTaxId"
 						placeholder={"Select Excise"}
@@ -1603,6 +1603,11 @@ setDate1= (props, value) => {
 																   ) 
 															         errors.placeOfSupplyId ='Place of supply is required';
 													}
+
+													if(values.rfqReceiveDate && values.rfqExpiryDate && (new Date(moment(values.rfqReceiveDate1).format('MM DD YYYY')) > new Date(moment(values.rfqExpiryDate1).format('MM DD YYYY')))){
+														errors.rfqExpiryDate='Expiry date should be later than the issue date';
+														errors.rfqReceiveDate='Issue date should be earlier than the expiration date';
+													}
 													   return errors
 													}}
 													validationSchema={Yup.object().shape(
@@ -1899,16 +1904,15 @@ setDate1= (props, value) => {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="date">
 																			<span className="text-danger">* </span>
-																			 {strings.RFQDate}
+																			 {strings.IssueDate}
 																		</Label>
 																		<DatePicker
 																			id="rfqReceiveDate"
 																			name="rfqReceiveDate"
-																			placeholderText={strings.RFQDate}
+																			placeholderText={strings.IssueDate}
 																			showMonthDropdown
 																			showYearDropdown
 																			dateFormat="dd-MM-yyyy"
-																			minDate={new Date()}
 																			dropdownMode="select"
 																			selected={props.values.rfqReceiveDate ? new Date(props.values.rfqReceiveDate1) : props.values.rfqReceiveDate} 
 																			onChange={(value) => {
@@ -1935,13 +1939,13 @@ setDate1= (props, value) => {
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="due_date">
-																	   {strings.RFQExpiryDate}
+																	   {strings.ExpiryDate}
 																		</Label>
 																		<div>
 																			<DatePicker
 																				id="rfqExpiryDate"
 																				name="rfqExpiryDate"
-																				placeholderText={strings.RFQExpiryDate}
+																				placeholderText={strings.ExpiryDate}
 																				value={props.values.rfqExpiryDate}
 																				showMonthDropdown
 																				showYearDropdown

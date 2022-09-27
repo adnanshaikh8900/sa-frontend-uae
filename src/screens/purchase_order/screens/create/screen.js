@@ -129,7 +129,8 @@ class CreatePurchaseOrder extends React.Component {
 				contact_po_number: '',
 				currencyCode: '',
 				poApproveDate: new Date(),
-				poReceiveDate: new Date(new Date().setMonth(new Date().getMonth()+1)),
+				// poReceiveDate: new Date(new Date().setMonth(new Date().getMonth()+1)),
+				poReceiveDate: new Date(),
 				supplierId: '',
                 rfqNumber:'',
 				supplierReferenceNumber: '',
@@ -2449,7 +2450,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="date">
 																		<span className="text-danger">* </span>
-																		{strings.PODate}
+																		{strings.IssueDate}
 																	</Label>
 																	<DatePicker
 																		id="date"
@@ -2484,7 +2485,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="due_date">
 																	<span className="text-danger">* </span>
-																	{strings.PODueDate}
+																	{strings.ExpiryDate}
 																	</Label>
 																	<DatePicker
 																		id="date"
@@ -2495,7 +2496,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																				? 'is-invalid'
 																				: ''
 																		}`}
-																		placeholderText={strings.ExpirationDate}
+																		placeholderText={strings.ExpiryDate}
 																		selected={props.values.poReceiveDate ?new Date(props.values.poReceiveDate):props.values.poReceiveDate} 
 																		showMonthDropdown
 																		showYearDropdown

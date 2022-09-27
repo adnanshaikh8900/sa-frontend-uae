@@ -114,7 +114,8 @@ class CreateRequestForQuotation extends React.Component {
 				contact_po_number: '',
 				currencyCode: '',
 				rfqReceiveDate: new Date(),
-				rfqExpiryDate: new Date(new Date().setMonth(new Date().getMonth()+1)),
+				//rfqExpiryDate: new Date(new Date().setMonth(new Date().getMonth()+1)),
+				rfqExpiryDate: new Date(),
 				supplierId: '',
 				placeOfSupplyId: '',
 				project: '',
@@ -268,7 +269,7 @@ class CreateRequestForQuotation extends React.Component {
 							excise_list &&
 							selectOptionsFactory
 								.renderOptions('name', 'id', excise_list, 'Excise')
-								.find((option) => option.value === +row.exciseTaxId)
+								.find((option) => row.exciseTaxId ? option.value === +row.exciseTaxId : "Select Exise")
 						}
 						id="exciseTaxId"
 						placeholder={"Select Excise"}
@@ -1888,13 +1889,9 @@ class CreateRequestForQuotation extends React.Component {
 													if(this.state.customer_taxTreatment_des!="NON GCC")
 													{
 														if (!values.placeOfSupplyId) 
-															       	errors.placeOfSupplyId ='Place of supply is required';
-														if (values.placeOfSupplyId &&
-																	(values.placeOfSupplyId=="" ||
-																	(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")
-																	)
-																   ) 
-															         errors.placeOfSupplyId ='Place of supply is required';
+															errors.placeOfSupplyId ='Place of supply is required';
+														if (values.placeOfSupplyId && (values.placeOfSupplyId=="" || (values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply"))) 
+															errors.placeOfSupplyId ='Place of supply is required';
 													}
 													// if(this.state.customer_taxTreatment_des!="Non GCC")
 													// 	{
@@ -1903,6 +1900,10 @@ class CreateRequestForQuotation extends React.Component {
 													// 	}}
 													if (values.rfq_number==='') {
 														errors.rfq_number = 'RFQ number is required';
+													}
+													if(values.rfqReceiveDate && values.rfqExpiryDate && (values.rfqReceiveDate > values.rfqExpiryDate)){
+														errors.rfqExpiryDate='Expiry date should be later than the issue date';
+														errors.rfqReceiveDate='Issue date should be earlier than the expiration date';
 													}
 													return errors;
 												}}
@@ -2245,13 +2246,12 @@ class CreateRequestForQuotation extends React.Component {
 																				? 'is-invalid'
 																				: ''
 																		}`}
-																		placeholderText={strings.RFQDate}
+																		placeholderText={strings.IssueDate}
 																		selected={props.values.rfqReceiveDate ?new Date(props.values.rfqReceiveDate):props.values.rfqReceiveDate} 
 																		showMonthDropdown
 																		showYearDropdown
 																		dropdownMode="select"
 																		dateFormat="dd-MM-yyyy"
-																		minDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('rfqReceiveDate')(value);
 																		

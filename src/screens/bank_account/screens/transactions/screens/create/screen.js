@@ -1083,6 +1083,15 @@ debugger
                           const date1 = new Date(date);
                           const date2 = new Date(this.state.date);
                           
+                          if(values.coaCategoryId.label !== "Expense" &&
+                          values.coaCategoryId.label !==
+                          "Supplier Invoice" &&
+                          values.coaCategoryId.label !== "Sales"){
+                            if(!values.transactionCategoryId || values.transactionCategoryId===""){
+                              errors.transactionCategoryId="Category is required"
+                            }
+                          }
+
                           if ((values.coaCategoryId?.value === 2 || values.coaCategoryId?.value === 100)) {
                             if (!values.vendorId?.value && values.coaCategoryId?.value === 100) {
                               errors.vendorId = "Please select the Vendor"
@@ -1180,6 +1189,7 @@ debugger
                           transactionDate: Yup.date().required(
                             "Transaction Date is Required"
                           ),
+                          reference:Yup.string().max(20),
                           transactionAmount: Yup.string()
                             .required("Transaction Amount is Required")
                             .test(
@@ -2666,6 +2676,12 @@ debugger
                                         }}
                                         value={props.values.reference}
                                       />
+                                       {props.errors.reference &&
+                                        props.touched.reference && (
+                                          <div className="invalid-file" style={{color:"red"}}>
+                                            {props.errors.reference}
+                                          </div>
+                                        )}
                                     </FormGroup>
                                   </Col>
                                 </Row>
@@ -2673,7 +2689,7 @@ debugger
                               <Col lg={4}>
                                 <Row>
                                   <Col lg={12}>
-                                    <FormGroup className="mb-3">
+                                    <FormGroup className="mb-3 hideAttachment">
                                       <Field
                                         name="attachment"
                                         render={({ field, form }) => (

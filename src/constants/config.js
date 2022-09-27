@@ -1,5 +1,5 @@
 export default {
-   //API_ROOT_URL: 'https://dev-api.app.simpleaccounts.io',
+  //API_ROOT_URL: 'https://dev-api.app.simpleaccounts.io',
     // API_ROOT_URL: 'https://k8s-api.dev.simplevat.com',
    // API_ROOT_URL: 'http://localhost:8080',
     //  API_ROOT_URL: 'http://192.168.2.105:8080',
@@ -21,8 +21,8 @@ export default {
   EXPENSE_EXPENSES:false,
   EXPENSE_SI:true,
   EXPENSE_PR:true,
-  EXPENSE_RFQ:true,
-  EXPENSE_PO:true,
+  EXPENSE_RFQ:false,
+  EXPENSE_PO:false,
   EXPENSE_GRN:false,
 
   INCOME_CI:true,
@@ -47,7 +47,7 @@ export default {
   PAYROLL_PC:false,
 
   ADD_ROLES:false,
-  ADD_CURRENCY:false,
+  ADD_CURRENCY:true,
 
   SETTING_THEME:false,
   SETTING_IMPORT:false

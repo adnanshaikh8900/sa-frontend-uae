@@ -485,7 +485,6 @@ renderVatAmount = (cell, row,extraData) => {
 		let result = this.props.currency_convert_list.filter((obj) => {
 		return obj.currencyCode === value;
 		});
-		console.log('currency result', result)
 		if(result &&result[0]&&  result[0].exchangeRate)
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
 		};
@@ -1295,7 +1294,7 @@ discountType = (row) =>
 							excise_list &&
 							selectOptionsFactory
 								.renderOptions('name', 'id', excise_list, 'Excise')
-								.find((option) => option.value === +row.exciseTaxId)
+								.find((option) => row.exciseTaxId ? option.value === +row.exciseTaxId : "Select Exise")
 						}
 						id="exciseTaxId"
 						placeholder={strings.Select_Excise}
@@ -1343,7 +1342,6 @@ discountType = (row) =>
 		let idx;
 		data.map((obj, index) => {
 			if (obj.id === row.id) {
-				console.log(result);
 				obj['unitPrice'] = result.unitPrice;
 				obj['vatCategoryId'] = result.vatCategoryId;
 				obj['description'] = result.description;
@@ -1446,7 +1444,6 @@ discountType = (row) =>
 									});
 									if(this.checkedRow())
 									   this.addRow();
-									   console.log(this.state.data,"prodlist")
 								} else {
 									form.setFieldValue(
 										`lineItemsString.${idx}.productId`,
@@ -1830,7 +1827,6 @@ discountType = (row) =>
 			formData.append('totalAmount', this.state.initValue.totalAmount);
 			formData.append('totalExciseAmount', this.state.initValue.total_excise);
 			formData.append('discount',this.state.initValue.discount);
-		
 		if (term && term.value) {
 			formData.append('term', term.value);
 		}
@@ -1870,7 +1866,6 @@ discountType = (row) =>
 						{
 							createMore: false,
 							selectedContact: '',
-							term: '',
 							exchangeRate:'',
 							data: [
 								{
@@ -1930,7 +1925,7 @@ discountType = (row) =>
 							this.formRef.current.setFieldValue('placeOfSupplyId', '', true);
 							this.formRef.current.setFieldValue('currency', null, true);
 							this.formRef.current.setFieldValue('taxTreatmentid','', true);
-							this.formRef.current.setFieldValue('term', term, true);
+							this.formRef.current.setFieldValue('term', '', true);
 						},
 					);
 				} else {
@@ -2258,7 +2253,6 @@ discountType = (row) =>
 												validate={(values) => {
 												
 													let errors = {};
-													console.log(values,"Values");
 													if (exist === true) {
 														errors.invoice_number =
 															'Invoice number already exists';
@@ -2751,7 +2745,22 @@ discountType = (row) =>
 																		id="term"
 																		name="term"
 																		placeholder={strings.Select+strings.Terms} 
-																		value={this.state.term}
+																		value={
+																			(this.state.quotationId || this.state.parentInvoiceId) ?
+
+																			this.termList &&
+																			selectOptionsFactory.renderOptions(
+																				'label',
+																				'value',
+																				this.termList,
+																				'Terms',
+																		  ).find((option) => option.value == this.state.term)
+																			
+																		  :
+																		  
+																		  props.values.term
+																			}
+																		//value={this.state.term}
 																		onChange={(option) => {
 																			props.handleChange('term')(option);
 																			if (option.value === '') {

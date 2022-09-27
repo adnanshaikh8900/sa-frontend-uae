@@ -323,6 +323,8 @@ class ExplainTrasactionDetail extends React.Component {
 			this.formRef.current.setFieldValue('payrollListIds', res.data.payrollListIds, true);
 			this.formRef.current.setFieldValue('employeeId', res.data.employeeId ? res.data.employeeId : '', true);
 			this.formRef.current.setFieldValue('expenseType', res.data.expenseType, true)
+			this.formRef.current.setFieldValue('description', res.data.description, true)
+			this.formRef.current.setFieldValue('reference', res.data.reference, true)
 				debugger
 		}
 	};
@@ -1449,6 +1451,7 @@ class ExplainTrasactionDetail extends React.Component {
 																		{console.log("sdsdfsdf",chartOfAccountCategoryList)}
 																			<Select
 																				// styles={customStyles}
+																				isDisabled={this.state.initValue.explinationStatusEnum ==='PARTIAL' || this.state.initValue.explinationStatusEnum==="FULL"}
 																				options={
 																					chartOfAccountCategoryList
 																						? [{...chartOfAccountCategoryList[0],
@@ -1833,6 +1836,7 @@ class ExplainTrasactionDetail extends React.Component {
 																				</Label>
 																				<Select
 																					styles={customStyles}
+																					isDisabled={this.state.initValue.explinationStatusEnum ==='PARTIAL' || this.state.initValue.explinationStatusEnum==="FULL"}
 																					options={
 																						tmpSupplier_list
 																							? selectOptionsFactory.renderOptions(
@@ -1892,6 +1896,7 @@ class ExplainTrasactionDetail extends React.Component {
 																							{strings.Invoice}
 																						</Label>
 																						<Select
+																						isDisabled={this.state.initValue.explinationStatusEnum ==='PARTIAL' || this.state.initValue.explinationStatusEnum==="FULL"}
 																							styles={customStyles}
 																							isMulti
 																							options={
@@ -2059,6 +2064,7 @@ class ExplainTrasactionDetail extends React.Component {
 																				</Label>
 																				<Select
 																					styles={customStyles}
+																					isDisabled={this.state.initValue.explinationStatusEnum ==='PARTIAL' || this.state.initValue.explinationStatusEnum==="FULL"}
 																					isMulti
 																					options={
 																						customer_invoice_list_state

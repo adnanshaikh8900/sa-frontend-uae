@@ -1317,7 +1317,7 @@ class ExplainTrasactionDetail extends React.Component {
 													validate={(values) => {
 														let errors = {};
 														const totalexpaled=values?.invoiceIdList.reduce((a,c)=>a+c.explainedAmount,0)
-														
+														debugger
 														if ((values.coaCategoryId?.value === 2 || values.coaCategoryId?.value === 100)) {
 															if (!values.vendorId?.value && values.coaCategoryId?.value === 100) {
 															  errors.vendorId = "Please select the Vendor"
@@ -1346,13 +1346,14 @@ class ExplainTrasactionDetail extends React.Component {
 															errors.transactionAmount=`Amount cannot be grater than ${totalexpaled}`
 														   
 														  }
+														  debugger
 														  const isppselected=values?.invoiceIdList.reduce((a,c)=>c.pp?a+1:a+0,0)
-                          if( values.transactionAmount<totalexpaled &&
+                          if( values.amount<totalexpaled &&
                             this.state?.bankCurrency?.bankAccountCurrency===values?.invoiceIdList?.[0]?.currencyCode
                             && isppselected===0
                             )
                          {
-                          errors.transactionAmount=`Amount is less select partial payment on invoice `
+                          errors.amount=`Amount is less select partial payment on invoice `
                          
                         }
 														  }
@@ -2577,7 +2578,8 @@ class ExplainTrasactionDetail extends React.Component {
                                                   checked={i.pp !== undefined ? i.pp : false}
 
                                                   onChange={(e) => {
-													if(this.state.initValue.explinationStatusEnum ==='PARTIAL'|| this.state.initValue.explinationStatusEnum==="FUll")
+													debugger
+													if(this.state.initValue.explinationStatusEnum !=='PARTIAL' && this.state.initValue.explinationStatusEnum!=="FULL")
                                                     this.onppclick(e.target.checked, invindex)
                                                   }}
                                                 />

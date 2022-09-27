@@ -307,7 +307,6 @@ class DetailUser extends React.Component {
 	sendInviteMail = (event) => {
 		const { current_user_id } = this.state;
 		this.props.userDetailActions.getUserInviteEmail( current_user_id,window.location.origin).then((response) => {
-			debugger
 			if (response.status === 200) {
 			toast.success("Mail Sent Successfully !")
 			} else {

@@ -108,13 +108,13 @@ class ViewBankAccount extends React.Component {
                         </FormGroup>
                       </Col>
                       <Col lg={4}>
-                        <FormGroup className="mb-3">
+                        <FormGroup className="mb-3 hideAttachment">
                           <Label className="label" htmlFor="swift_code">Attachment Description</Label>
                           <p>{attachementDescription}</p>
                         </FormGroup>
                       </Col>
                       <Col lg={4}>
-                        <FormGroup className="mb-3">
+                        <FormGroup className="mb-3 hideAttachment">
                           <Label className="label" htmlFor="country">Reciept Attachment</Label>
                           <NavLink download={fileName} href={`${API_ROOT_URL.API_ROOT_URL}${filePath}`} style={{ fontSize: '0.875rem' }} target="_blank" >{fileName}</NavLink>
                         </FormGroup>

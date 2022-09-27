@@ -650,7 +650,7 @@ min="0"
                                   </Row>
                                   <Row>
                                     <Col lg={12}>
-                                      <FormGroup className="mb-3">
+                                      <FormGroup className="mb-3 hideAttachment">
                                         <Label htmlFor="attachementDescription">
                                         {strings.AttachmentDescription}
                                         </Label>
@@ -676,7 +676,7 @@ min="0"
                                 <Col lg={4}>
                                   <Row>
                                     <Col lg={12}>
-                                      <FormGroup className="mb-3">
+                                      <FormGroup className="mb-3 hideAttachment">
                                         <Field
                                           name="attachment"
                                           render={({ field, form }) => (

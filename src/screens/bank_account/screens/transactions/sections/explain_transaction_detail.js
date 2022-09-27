@@ -323,6 +323,8 @@ class ExplainTrasactionDetail extends React.Component {
 			this.formRef.current.setFieldValue('payrollListIds', res.data.payrollListIds, true);
 			this.formRef.current.setFieldValue('employeeId', res.data.employeeId ? res.data.employeeId : '', true);
 			this.formRef.current.setFieldValue('expenseType', res.data.expenseType, true)
+			this.formRef.current.setFieldValue('description', res.data.description, true)
+			this.formRef.current.setFieldValue('reference', res.data.reference, true)
 				debugger
 		}
 	};
@@ -1317,7 +1319,7 @@ class ExplainTrasactionDetail extends React.Component {
 													validate={(values) => {
 														let errors = {};
 														const totalexpaled=values?.invoiceIdList.reduce((a,c)=>a+c.explainedAmount,0)
-														
+														debugger
 														if ((values.coaCategoryId?.value === 2 || values.coaCategoryId?.value === 100)) {
 															if (!values.vendorId?.value && values.coaCategoryId?.value === 100) {
 															  errors.vendorId = "Please select the Vendor"
@@ -1346,13 +1348,14 @@ class ExplainTrasactionDetail extends React.Component {
 															errors.transactionAmount=`Amount cannot be grater than ${totalexpaled}`
 														   
 														  }
+														  debugger
 														  const isppselected=values?.invoiceIdList.reduce((a,c)=>c.pp?a+1:a+0,0)
-                          if( values.transactionAmount<totalexpaled &&
+                          if( values.amount<totalexpaled &&
                             this.state?.bankCurrency?.bankAccountCurrency===values?.invoiceIdList?.[0]?.currencyCode
                             && isppselected===0
                             )
                          {
-                          errors.transactionAmount=`Amount is less select partial payment on invoice `
+                          errors.amount=`Amount is less select partial payment on invoice `
                          
                         }
 														  }
@@ -1448,6 +1451,7 @@ class ExplainTrasactionDetail extends React.Component {
 																		{console.log("sdsdfsdf",chartOfAccountCategoryList)}
 																			<Select
 																				// styles={customStyles}
+																				isDisabled={this.state.initValue.explinationStatusEnum ==='PARTIAL' || this.state.initValue.explinationStatusEnum==="FULL"}
 																				options={
 																					chartOfAccountCategoryList
 																						? [{...chartOfAccountCategoryList[0],
@@ -1832,6 +1836,7 @@ class ExplainTrasactionDetail extends React.Component {
 																				</Label>
 																				<Select
 																					styles={customStyles}
+																					isDisabled={this.state.initValue.explinationStatusEnum ==='PARTIAL' || this.state.initValue.explinationStatusEnum==="FULL"}
 																					options={
 																						tmpSupplier_list
 																							? selectOptionsFactory.renderOptions(
@@ -1891,6 +1896,7 @@ class ExplainTrasactionDetail extends React.Component {
 																							{strings.Invoice}
 																						</Label>
 																						<Select
+																						isDisabled={this.state.initValue.explinationStatusEnum ==='PARTIAL' || this.state.initValue.explinationStatusEnum==="FULL"}
 																							styles={customStyles}
 																							isMulti
 																							options={
@@ -2058,6 +2064,7 @@ class ExplainTrasactionDetail extends React.Component {
 																				</Label>
 																				<Select
 																					styles={customStyles}
+																					isDisabled={this.state.initValue.explinationStatusEnum ==='PARTIAL' || this.state.initValue.explinationStatusEnum==="FULL"}
 																					isMulti
 																					options={
 																						customer_invoice_list_state
@@ -2577,7 +2584,8 @@ class ExplainTrasactionDetail extends React.Component {
                                                   checked={i.pp !== undefined ? i.pp : false}
 
                                                   onChange={(e) => {
-													if(this.state.initValue.explinationStatusEnum ==='PARTIAL'|| this.state.initValue.explinationStatusEnum==="FUll")
+													debugger
+													if(this.state.initValue.explinationStatusEnum !=='PARTIAL' && this.state.initValue.explinationStatusEnum!=="FULL")
                                                     this.onppclick(e.target.checked, invindex)
                                                   }}
                                                 />

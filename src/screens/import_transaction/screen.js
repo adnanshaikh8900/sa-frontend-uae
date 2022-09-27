@@ -135,7 +135,7 @@ class ImportTransaction extends React.Component {
 		this.initializeData();	
 	};
 setConfigurations=(configurationList)=>{
-	
+	debugger
 	let data = configurationList.filter(
 		(item) => item.id == this.state.selectedConfiguration,
 	);
@@ -268,7 +268,7 @@ setConfigurations=(configurationList)=>{
 	};
 
 	handleApply = (value, resetForm) => {
-		debugger
+	
 		if (this.validateForm()) {
 			const { initValue } = this.state;
 			initValue['delimiter'] = this.state.selectedDelimiter;
@@ -595,7 +595,7 @@ setConfigurations=(configurationList)=>{
 			});
 	};
 	validateWithoutTemplate = () => {
-		debugger
+		
 		// const data ={
 		// 	data : this.state.csv,
 		// 	id : this.state.templateId
@@ -624,7 +624,7 @@ setConfigurations=(configurationList)=>{
 				return item;
 			});
 			let postData = { ...this.state.initValue };
-			debugger
+		
 			postData.skipColumns = this.state.initValue?.skipColumns?.length >= 1  ? this.state.initValue?.skipColumns : ''
 			postData.indexMap = a;
 		let formData={
@@ -751,7 +751,7 @@ setConfigurations=(configurationList)=>{
 	};
 
 	processData = dataString => {
-	 debugger
+	
 		 let parse = Papa.parse(dataString, this.state.config)
 		// let parse = dataString
 		const skipColumns = this.state.initValue.skipColumns
@@ -936,13 +936,19 @@ setConfigurations=(configurationList)=>{
 																					'name',
 																					'id',
 																					configurationList,
-																					'Tax',
+																					'Configuration',
 																				)
 																				.find(
 																					(option) =>
 																						option.value ===
 																						+this.state.selectedConfiguration,
-																				)
+																				) || selectOptionsFactory
+																				.renderOptions(
+																					'name',
+																					'id',
+																					configurationList,
+																					'Configuration',
+																				)?.[0]
 																		}
 																		options={
 																			configurationList
@@ -958,7 +964,18 @@ setConfigurations=(configurationList)=>{
 																			let data = configurationList.filter(
 																				(item) => item.id === e.value,
 																			);
-																			
+																			debugger
+																			let local=[...this.state.selectedValueDropdown]
+																			Object.keys(data[0].indexMap).map((i)=>{
+																				const data2 =selectOptionsFactory.renderOptions(
+																					'label',
+																					'value',
+																					this.state.tableHeader,
+																					'',
+																				).find((val)=>val.value==i)
+																				local[data[0].indexMap?.[`${i}`]]=data2
+																			})
+																			debugger
 																			if (data.length > 0) {
 																				this.setState({
 																					initValue: {
@@ -970,8 +987,9 @@ setConfigurations=(configurationList)=>{
 																						// dateFormatId: data[0].dateFormatId,
 																						otherDilimiterStr:
 																							data[0].otherDilimiterStr,
-																						
+																						indexMap:data[0].indexMap
 																					},
+																					selectedValueDropdown:[...local],
 																					selectedConfiguration: e.value,
 																					selectedDateFormat:
 																						data[0].dateFormatId,
@@ -980,10 +998,15 @@ setConfigurations=(configurationList)=>{
 																						...this.state.error,
 																						...{ dateFormatId: '' },
 																					},
-																				});
+																					templateId:e.value
+																				
+																				}
+																				
+																				);
 																			} else {
 																				this.setState({
 																					selectedConfiguration: e.value,
+																					templateId:e.value
 																				});
 																			}
 																		}}
@@ -1100,7 +1123,7 @@ setConfigurations=(configurationList)=>{
 																					// 	'OTHER'
 																					// }
 																					onChange={(e) => {
-																					debugger
+																				
 																						this.handleInputChange(
 																							'otherDilimiterStr',
 																							e.target.value,
@@ -1336,7 +1359,7 @@ setConfigurations=(configurationList)=>{
 																			</FormGroup>
 																		</Col>
 																		<Col>
-																			<FormGroup>
+																			{/* <FormGroup>
 																				<Button
 																					type="button"
 																					color="primary"
@@ -1354,7 +1377,7 @@ setConfigurations=(configurationList)=>{
 																					{strings.Apply}
 																				</Button>
 																			</FormGroup>
-																		
+																		 */}
 																		
 																		</Col>
 																	</Row>
@@ -1435,7 +1458,7 @@ setConfigurations=(configurationList)=>{
 																</fieldset>
 															</Col>
 														</Row>
-														<Row>
+														{/* <Row>
 															<Col>
 														<FormGroup>
 																				<Button
@@ -1459,7 +1482,7 @@ setConfigurations=(configurationList)=>{
 																				</Button>
 																			</FormGroup> 
 																			</Col>
-														</Row>
+														</Row> */}
 														{/* <Row className="mt-5"> */}
 														{/* </Row> */}
 														<div
@@ -1476,17 +1499,8 @@ setConfigurations=(configurationList)=>{
 													</Form>
 													{/* )
                             }
-                          </Formik> */}{console.log(
-																			selectOptionsFactory.renderOptions(
-																				'label',
-																				'value',
-																				this.state.tableHeader,
-																				'',
-																			).filter((i)=>{
-																				debugger
-																				return !this.state?.selectedValueDropdown?.find((i2)=>i.value===i2.value)
-																			}))}
-													<Row>
+                          </Formik> */}
+													<Row style={{display:'flex', justifyContent:'space-evenly'}}>
 														{loading ? (
 															<Loader />
 														) : this.state.tableDataKey && this.state.tableDataKey.length > 0 && this.state.isDateFormatAndFileDateFormatSame == true ? (
@@ -1536,7 +1550,9 @@ setConfigurations=(configurationList)=>{
 																					]
 																				}
 																				onChange={(e) => {
+																					
 																					this.handleChange(e, index);
+																				debugger
 																				}}
 																			// className={}
 																			/>
@@ -1605,7 +1621,7 @@ setConfigurations=(configurationList)=>{
 																					className="btn-square mr-4"
 																					// disabled={this.state.fileName ? false : true}
 																					onClick={() => {
-
+																						debugger
 																						 if(this.state.templateId){
 
 																						this.validate()

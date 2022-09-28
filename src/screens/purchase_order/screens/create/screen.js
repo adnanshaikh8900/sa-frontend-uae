@@ -2880,7 +2880,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																				</Label>
 																				<Input
 																					type="text"
-																					maxLength="100"
+																					maxLength="20"
 																					id="receiptNumber"
 																					name="receiptNumber"
 																					value={props.values.receiptNumber}

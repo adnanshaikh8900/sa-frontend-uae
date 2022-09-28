@@ -3071,6 +3071,7 @@ class ExplainTrasactionDetail extends React.Component {
 																						</Label>
 																						<Input
 																							type="text"
+																							maxLength="20"
 																							id="reference"
 																							name="reference"
 																							placeholder={strings.ReceiptNumber}

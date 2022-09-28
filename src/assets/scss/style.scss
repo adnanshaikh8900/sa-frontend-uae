@@ -138,7 +138,13 @@ $spinkit-spinner-color: $body-color;
 	box-shadow: none !important;
 }
 .textarea:focus{
-	border: 1px solid #2064d8 !important;
+	border-color: #2064d8 !important;
+	outline: 1px solid #2064d8 !important;
+}
+.card-body .textarea:focus {
+	border-color: #2064d8 !important;
+	outline: 1px solid #2064d8 !important;
+    box-shadow: none !important;
 }
 .invoice-detail {
 	font-weight: 600;

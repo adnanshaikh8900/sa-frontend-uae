@@ -156,7 +156,6 @@ class CreateSupplierInvoice extends React.Component {
 
 			},
 			discountEnabled: false,
-			discountType: "FIXED",
 			taxType: false,
 			currentData: {},
 			contactType: 1,
@@ -1089,7 +1088,7 @@ class CreateSupplierInvoice extends React.Component {
 
 		return (
 			<Field
-				// name={`lineItemsString.${idx}.vatCategoryId`}
+			name={`lineItemsString.${idx}.discountType`}
 				render={({ field, form }) => (
 					<div>
 						<div class="input-group">
@@ -1134,8 +1133,6 @@ class CreateSupplierInvoice extends React.Component {
 
 								<div style={{ width: '100px' }}>
 									<Select
-
-
 										options={discountOptions}
 										id="discountType"
 										name="discountType"
@@ -1195,6 +1192,14 @@ class CreateSupplierInvoice extends React.Component {
 		);
 	}
 
+	discountType = (row) =>
+
+	{
+		return this.state.discountOptions &&
+			selectOptionsFactory
+				.renderOptions('label', 'value', this.state.discountOptions, 'discount')
+				.find((option) => option.value === +row.discountType)
+	}
 
 	renderVat = (cell, row, props) => {
 		const { vat_list } = this.props;
@@ -1372,6 +1377,7 @@ class CreateSupplierInvoice extends React.Component {
 				obj['vatCategoryId'] = result.vatCategoryId;
 				obj['exciseTaxId'] = result.exciseTaxId;
 				obj['description'] = result.description;
+				obj['discountType'] = result.discountType;
 				obj['transactionCategoryId'] = result.transactionCategoryId;
 				obj['transactionCategoryLabel'] = result.transactionCategoryLabel;
 				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive;
@@ -1411,8 +1417,14 @@ class CreateSupplierInvoice extends React.Component {
 			result.transactionCategoryLabel,
 			true,
 		);
+		form.setFieldValue(
+			`lineItemsString.${idx}.discountType`,
+			result.discountType,
+			true,
+		);
 		this.updateAmount(data, props);
 	};
+
 	renderAddProduct = (cell, rows, props) => {
 		return (
 			<Button
@@ -2169,6 +2181,16 @@ class CreateSupplierInvoice extends React.Component {
 			);
 			this.formRef.current.setFieldValue(
 				`lineItemsString.${0}.quantity`,
+				1,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.discount`,
+				1,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.discountType`,
 				1,
 				true,
 			);

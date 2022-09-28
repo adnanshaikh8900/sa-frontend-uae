@@ -30,6 +30,7 @@ import { Loader } from 'components';
 import { Formik } from 'formik';
 import { ThreeSixty } from '@material-ui/icons';
 
+
 const mapStateToProps = (state) => {
 	return {
 		date_format_list: state.import_transaction.date_format_list,
@@ -522,12 +523,40 @@ setConfigurations=(configurationList)=>{
 
 	Import = () => {
 		const { templateId, tableData, id } = this.state;
+		const mappedvalues=[]
+			this.state.selectedValueDropdown.map((item, index) => {
+				if(item.value==="") mappedvalues.push(index)
+			})
+			const finaldata=[]
+			tableData.map((i)=>{
+				let local
+				local={...i}
+				mappedvalues.map((i2)=>{
+					const allvales=Object.keys(i)?.[i2]
+					delete local?.[`${allvales}`]
+					
+				})
+				finaldata.push(local)
+				
+			})
+
+			const fdata=finaldata.map((i)=>{
+				let local={...i}
+					Object.keys(i).map((i3)=>{
+						if(local?.[`${i3}`]==="" || local?.[`${i3}`]===null || local?.[`${i3}`]===undefined) 
+						{
+						local={...local,[i3]:"-"}
+						}
+					})
+					return local
+			})
+
 		const postData = {
 			bankId: this.props.location.state.bankAccountId
 				? this.props.location.state.bankAccountId
 				: '',
 			templateId: templateId ? +templateId : '',
-			importDataMap: tableData,
+			importDataMap: fdata,
 		};
 		this.props.importBankStatementActions
 			.importTransaction(postData)
@@ -689,34 +718,39 @@ setConfigurations=(configurationList)=>{
 				}
 				return item;
 			});
+			
+
 			let postData = { ...this.state.initValue };
 			postData.skipColumns = this.state.initValue?.skipColumns?.length >= 1  ? this.state.initValue?.skipColumns : ''
 			postData.indexMap = a;
-		this.props.importTransactionActions
-			.parseCsvFile(postData)
-			.then((res) => {
-				console.log(res);
-				this.setState({
-					tableData: res.data['data'],
-					tableDataKey: res.data.data[0] ? Object.keys(res.data.data[0]) : [],
-					errorIndexList: res.data.error ? res.data.error : [],
-				});
-				this.props.commonActions.tostifyAlert(
-					'Success',
-					'Validatation complete',
-				);
-				console.log('tableDataKey', this.state.tableDataKey);
-				// })
+			debugger
+			this.Import()
+		// this.props.importTransactionActions
+		// 	.parseCsvFile(postData)
+		// 	.then((res) => {
+		// 		console.log(res);
+		// 		this.setState({
+		// 			tableData: res.data['data'],
+		// 			tableDataKey: res.data.data[0] ? Object.keys(res.data.data[0]) : [],
+		// 			errorIndexList: res.data.error ? res.data.error : [],
+		// 		});
+		// 		this.props.commonActions.tostifyAlert(
+		// 			'Success',
+		// 			'Validatation complete',
+		// 		);
+		// 		console.log('tableDataKey', this.state.tableDataKey);
+		// 		// })
 					
-				if(this.state.errorIndexList.length <= 0){
-					this.Import()
-				}
-			})
+		// 		if(this.state.errorIndexList.length <= 0){
+		// 			this.Import()
+		// 		}
+		// 	})
 			
-			.catch((err) => {
-				// this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
-				// this.setState({ loading: false })
-			});}
+		// 	.catch((err) => {
+		// 		// this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
+		// 		// this.setState({ loading: false })
+		// 	});
+	}
 	}
 	handleSubmit = (data) => {
 		

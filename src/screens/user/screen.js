@@ -444,7 +444,7 @@ class User extends React.Component {
 														}}
 													/>
 												</Col> */}
-												<Col lg={2} className="mb-1">
+												{/* <Col lg={2} className="mb-1">
 													<Select
 														styles={customStyles}
 														className="select-default-width"
@@ -470,7 +470,7 @@ class User extends React.Component {
 															}
 														}}
 													/>
-												</Col>
+												</Col> */}
 												<Col lg={2} className="mb-1">
 													<Select
 														styles={customStyles}

@@ -2099,7 +2099,7 @@ debugger
                                 <>
                                   {props.values?.invoiceIdList.length > 0 &&
                                     <Row className="border-bottom mb-3"
-                                    style={{display:'flex',justifyContent:'space-evenly'}}
+                                    style={{display:'flex',justifyContent:'space-between'}}
                                     >
                                       <Col lg={1}>
                                         <span className="font-weight-bold"> Invoice</span>
@@ -2150,7 +2150,7 @@ debugger
                                     (i, invindex) => {
                                       return (
                                         <Row
-                                        style={{display:'flex',justifyContent:'space-evenly'}}
+                                        style={{display:'flex',justifyContent:'space-between'}}
                                         >
                                            <Col lg={1}>
                                             <span>{i.invoiceNumber}</span>
@@ -2160,11 +2160,12 @@ debugger
                                               disabled
                                               id="1"
                                               name="1"
-                                              value={i.invoiceDate}
+                                              value={moment(i.invoiceDate).format('DD-MM-YYYY')}
                                             />
                                           </Col>
                                           <Col lg={2}>
                                             <Input
+                                            style={{textAlign:'right'}}
                                               disabled
                                               id="1"
                                               name="1"
@@ -2172,22 +2173,18 @@ debugger
                                             />
                                           </Col>
 
-                                          <FormGroup className="mt-2">
-                                            <label>
-                                              <b></b>
-                                            </label>{" "}
-                                          </FormGroup>
-
                                           { this.state.bankCurrency.bankAccountCurrencyIsoCode!==props.values.curreancyname &&
                                           <Col lg={2}>
                                           
                                                     <FormGroup className="mb-3">
                                               <div>
                                                 <Input
+                                                 
                                                   className="form-control"
-                                                  id="exchangeRate"
-                                                  name="exchangeRate"
+                                                  id="exchangeamount"
+                                                  name="exchangeamount"
                                                   type="number"
+                                                  style={{textAlign:'right'}}
                                                   value={
                                                     i.exchangeRate}
                                                   onChange={(value) => {
@@ -2208,6 +2205,7 @@ debugger
                                                 <Input
                                                   className="form-control"
                                                   id="exchangeRate"
+                                                  style={{textAlign:'right'}}
                                                   name="exchangeRate"
                                                   disabled
                                                   value={`${this.state.bankCurrency.bankAccountCurrencyIsoCode} ${i.convertedInvoiceAmount?.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} `
@@ -2223,6 +2221,7 @@ debugger
                                             <FormGroup className="mb-3" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
                                               <div>
                                                 <Input
+                                                
                                                   disabled={props.values?.transactionAmount -
                                                     props.values?.invoiceIdList?.reduce(
                                                       (accu, curr, index) =>
@@ -2252,6 +2251,7 @@ debugger
                                                   id="exchangeRate"
                                                   name="exchangeRate"
                                                   disabled
+                                                  style={{textAlign:'right'}}
                                                   value={`${this.state.bankCurrency.bankAccountCurrencyIsoCode} ${i.explainedAmount?.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} `
 
                                                   }
@@ -2278,26 +2278,20 @@ debugger
                                       <Row
                                         style={{
                                           display: "flex",
-                                          justifyContent: "flex-end",
-                                          marginLeft: "20px",
+                                          flexDirection:'row-reverse',
+                                          justifyContent: "flex-start",
+                                       
+                                         
                                         }}
                                       >
-                                        <Col lg={3}>
+                                        
+                                        
+                                        <Col lg={2} 
+                                        style={{float:'right'}}
+                                        >
                                           <Input
                                             disabled
-                                            id="total"
-                                            name="total"
-                                            value={"Total Explained Amount"}
-                                          />
-                                        </Col>
-                                        <FormGroup className="mt-2">
-                                          <label>
-                                            <b>=</b>
-                                          </label>{" "}
-                                        </FormGroup>
-                                        <Col lg={2}>
-                                          <Input
-                                            disabled
+                                            style={{textAlign:'right'}}
                                             id="total"
                                             name="total"
                                             value={`${this.state.bankCurrency
@@ -2313,8 +2307,15 @@ debugger
                                             }
                                           />
                                         </Col>
-
-
+                                        <Col lg={3}>
+                                          <Input
+                                          style={{textAlign:'right'}}
+                                            disabled
+                                            id="total"
+                                            name="total"
+                                            value={"Total Explained Amount ="}
+                                          />
+                                        </Col>
                                       </Row>
                                     { (this.setexcessorshortamount().data!== 0
                                     && 
@@ -2323,7 +2324,8 @@ debugger
                                         style={{
                                           display: "flex",
                                           justifyContent: "flex-end",
-                                          marginLeft: "20px",
+                                         
+                                          marginTop:10
                                         }}
                                       >
                                         
@@ -2341,19 +2343,17 @@ debugger
 
                                         <Col lg={3}>
                                           <Input
+                                          style={{textAlign:'right'}}
                                             disabled
                                             id="total"
                                             name="total"
-                                            value={"Total Excess/Short Amount"}
+                                            value={"Total Excess/Short Amount = "}
                                           />
                                         </Col>
-                                        <FormGroup className="mt-2">
-                                          <label>
-                                            <b>=</b>
-                                          </label>{" "}
-                                        </FormGroup>
+                                        
                                         <Col lg={2}>
                                           <Input
+                                          style={{textAlign:'right'}}
                                             disabled
                                             id="total"
                                             name="total"

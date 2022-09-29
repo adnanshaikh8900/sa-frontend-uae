@@ -143,7 +143,6 @@ class CreateUser extends React.Component {
 		this.setState({ isPasswordShown: !isPasswordShown });
 	};
 	handleSubmit = (data, resetForm) => {
-		debugger
 		this.setState({ createDisabled: true, disableLeavePage:true	});
 		const {
 			firstName,
@@ -711,8 +710,7 @@ class CreateUser extends React.Component {
 																						)
 																				}
 																				isDisabled={true}
-																				onChange={(option) => {	
-																					debugger
+																				onChange={(option) => {
 																					if (option && option.value) {
 																						props.handleChange('roleId')(
 																							option,

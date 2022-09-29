@@ -1342,13 +1342,13 @@ class ExplainTrasactionDetail extends React.Component {
 															  }
 															}
 											
-															if( values.transactionAmount>totalexpaled &&
+															if( values.amount>totalexpaled &&
 															  this.state?.bankCurrency?.bankAccountCurrency===values?.invoiceIdList?.[0]?.currencyCode)
 														   {
-															errors.transactionAmount=`Amount cannot be grater than ${totalexpaled}`
+															errors.amount=`Amount cannot be grater than ${totalexpaled}`
 														   
 														  }
-														  debugger
+														 
 														  const isppselected=values?.invoiceIdList.reduce((a,c)=>c.pp?a+1:a+0,0)
                           if( values.amount<totalexpaled &&
                             this.state?.bankCurrency?.bankAccountCurrency===values?.invoiceIdList?.[0]?.currencyCode
@@ -2451,7 +2451,7 @@ class ExplainTrasactionDetail extends React.Component {
                                 "Supplier Invoice") && (
                                 <>
                                   {props.values?.invoiceIdList.length > 0 &&
-                                    <Row className="border-bottom mb-3" style={{display:'flex',justifyContent:'space-evenly'}}>
+                                    <Row className="border-bottom mb-3" style={{display:'flex',justifyContent:'space-between'}}>
                                       <Col lg={1}>
                                         <span className="font-weight-bold"> Invoice</span>
                                       </Col>
@@ -2501,7 +2501,7 @@ class ExplainTrasactionDetail extends React.Component {
                                     (i, invindex) => {
 										
                                       return (
-                                        <Row style={{display:'flex',justifyContent:'space-evenly'}}>
+                                        <Row style={{display:'flex',justifyContent:'space-between'}}>
                                            <Col lg={1}>
                                             <span>{i.invoiceNumber}</span>
                                           </Col>
@@ -2515,6 +2515,7 @@ class ExplainTrasactionDetail extends React.Component {
                                           </Col>
                                           <Col lg={2}>
                                             <Input
+											style={{textAlign:'right'}}
                                               disabled
                                               id="1"
                                               name="1"
@@ -2529,7 +2530,7 @@ class ExplainTrasactionDetail extends React.Component {
                                                 <Input
                                                   className="form-control"
                                                   id="exchangeRate"
-
+												  style={{textAlign:'right'}}
 												  disabled={this.state.initValue.explinationStatusEnum ==='PARTIAL' || this.state.initValue.explinationStatusEnum==="FULL"}
 
                                                   name="exchangeRate"
@@ -2554,6 +2555,7 @@ class ExplainTrasactionDetail extends React.Component {
                                                 <Input
                                                   className="form-control"
                                                   id="exchangeRate"
+												  style={{textAlign:'right'}}
                                                   name="exchangeRate"
                                                   disabled
                                                   value={`${this.state.bankCurrency
@@ -2599,6 +2601,7 @@ class ExplainTrasactionDetail extends React.Component {
                                                 <Input
                                                   className="form-control"
                                                   id="exchangeRate"
+												  style={{textAlign:'right'}}
                                                   name="exchangeRate"
                                                   disabled
                                                   value={`${this.state.bankCurrency
@@ -2632,24 +2635,22 @@ class ExplainTrasactionDetail extends React.Component {
                                           marginLeft: "20px",
                                         }}
                                       >
-                                        <Col lg={3}>
+                                        <Col lg={4}>
                                           <Input
                                             disabled
                                             id="total"
                                             name="total"
-                                            value={"Total Explained Amount"}
+											style={{textAlign:'right'}}
+                                            value={"Total Explained Amount ="}
                                           />
                                         </Col>
-                                        <FormGroup className="mt-2">
-                                          <label>
-                                            <b>=</b>
-                                          </label>{" "}
-                                        </FormGroup>
+    
                                         <Col lg={2}>
                                           <Input
                                             disabled
                                             id="total"
                                             name="total"
+											style={{textAlign:'right'}}
                                             value={`${this.state.bankCurrency
                                                 ?.bankAccountCurrencyIsoCode
                                               } ${(props.values?.invoiceIdList?.reduce(

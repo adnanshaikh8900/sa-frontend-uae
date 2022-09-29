@@ -2510,7 +2510,7 @@ class ExplainTrasactionDetail extends React.Component {
                                               disabled
                                               id="1"
                                               name="1"
-                                              value={i.invoiceDate}
+                                              value={moment(i.invoiceDate).format('DD-MM-YYYY')}
                                             />
                                           </Col>
                                           <Col lg={2}>
@@ -2518,7 +2518,7 @@ class ExplainTrasactionDetail extends React.Component {
                                               disabled
                                               id="1"
                                               name="1"
-                                              value={`${i.convertedInvoiceAmount/i.exchangeRate} ${props.values.curreancyname}`}
+                                              value={`${props.values.curreancyname} ${i.convertedInvoiceAmount/i.exchangeRate} `}
                                             />
                                           </Col>
 											
@@ -2584,7 +2584,7 @@ class ExplainTrasactionDetail extends React.Component {
                                                   checked={i.pp !== undefined ? i.pp : false}
 
                                                   onChange={(e) => {
-													debugger
+												
 													if(this.state.initValue.explinationStatusEnum !=='PARTIAL' && this.state.initValue.explinationStatusEnum!=="FULL")
                                                     this.onppclick(e.target.checked, invindex)
                                                   }}
@@ -2711,51 +2711,7 @@ class ExplainTrasactionDetail extends React.Component {
                                           />
                                         </Col>
                                       </Row>}
-									  { ((props.values?.invoiceIdList?.[0].exchangeGainOrLossAmount!==0)
-                                    && 
-                                    this.state?.bankCurrency?.bankAccountCurrencyIsoCode!==props.values.curreancyname 
-                                    ) && <Row
-                                        style={{
-                                          display: "flex",
-                                          justifyContent: "flex-end",
-                                          marginLeft: "20px",
-                                        }}
-                                      >
-                                        
-                                         { <Col lg={5}>
-                                        <Select
-                                     options={[{label:'Currency Gain ',value:79},
-                                        {label:'Currency Loss',value:103}    
-                                      ]}
-                                      isDisabled={true}
-                                      value={props.values?.invoiceIdList?.[0].exchangeGainOrLossAmount<0
-                                      ?{label:'Currency Loss',value:103}:{label:'Currency Gain ',value:103}
-                                      }
-                                        />
-                                        </Col>}
-
-                                        <Col lg={3}>
-                                          <Input
-                                            disabled
-                                            id="total"
-                                            name="total"
-                                            value={"Total Excess/Short Amount"}
-                                          />
-                                        </Col>
-                                        <FormGroup className="mt-2">
-                                          <label>
-                                            <b>=</b>
-                                          </label>{" "}
-                                        </FormGroup>
-                                        <Col lg={2}>
-                                          <Input
-                                            disabled
-                                            id="total"
-                                            name="total"
-                                            value={props.values?.invoiceIdList?.[0].exchangeGainOrLossAmount}
-                                          />
-                                        </Col>
-                                      </Row>}
+								
 									
                                     </>
                                   )}

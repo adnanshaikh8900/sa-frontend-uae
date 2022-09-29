@@ -77,7 +77,7 @@ class CreateUser extends React.Component {
 				dob: '',
 				active: 'true',
 				confirmPassword: '',
-				roleId: '',
+				roleId: 1,
 				timezone: '',
 				designationId: '',
 				employeeId: '',
@@ -179,7 +179,7 @@ class CreateUser extends React.Component {
 		// 		: null,
 		// );
 		//formData.append('dob', dob ? dob : '');
-		formData.append('roleId', roleId ? roleId.value : '');
+		formData.append('roleId', roleId );
 		formData.append('active', this.state.useractive);
 		// formData.append('password', password ? password : '');
 		formData.append('timeZone', timezone ? timezone.value : '');
@@ -692,8 +692,24 @@ class CreateUser extends React.Component {
 																							'Role',
 																						)
 																						: []
+																						}
+																				// value={props.values.roleId}
+																				value={
+																					active_roles_list &&
+																					selectOptionsFactory
+																						.renderOptions(
+																							'roleName',
+																							'roleCode',
+																							active_roles_list,
+																							'Role',
+																						)
+																						.find(
+																							(option) =>
+																								option.value ===
+																								+props.values.roleId,
+																						)
 																				}
-																				value={props.values.roleId}
+																				isDisabled={true}
 																				onChange={(option) => {
 																					if (option && option.value) {
 																						props.handleChange('roleId')(

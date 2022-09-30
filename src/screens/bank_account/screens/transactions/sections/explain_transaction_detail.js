@@ -1012,6 +1012,7 @@ class ExplainTrasactionDetail extends React.Component {
 	  }
 	
 	  setexchnagedamount = (option, amount) => {
+		debugger
 		if (option?.length > 0) {
 		  const transactionAmount = amount || this.formRef.current.state.values.amount
 		  const exchangerate = this.formRef.current.state.values?.exchangeRate
@@ -1035,6 +1036,7 @@ class ExplainTrasactionDetail extends React.Component {
 			  }
 			  remainingcredit = localremainamount
 			}
+			if(this.state.initValue.explinationStatusEnum ==='PARTIAL' || this.state.initValue.explinationStatusEnum==="FULL")
 			return {
 			  ...i,
 	
@@ -1045,7 +1047,21 @@ class ExplainTrasactionDetail extends React.Component {
 			  exchangeRate: localexe,
 			  pp: false
 			}
+			else 
+			return {
+				...i,
+	  
+				invoiceId: i.value,
+				invoiceAmount: i.dueAmount,
+				convertedInvoiceAmount: i.dueAmount * localexe,
+				explainedAmount: i.dueAmount * localexe,
+				exchangeRate: localexe,
+				pp: false
+			  }
 		  })
+		   
+
+		
 		  this.formRef.current.setFieldValue('invoiceIdList', finaldata)
 		  return finaldata
 		}
@@ -2010,6 +2026,7 @@ class ExplainTrasactionDetail extends React.Component {
 																								.dataList[0].options
 																							: []
 																					}
+																					isDisabled={this.state.initValue.explinationStatusEnum ==='PARTIAL' ||  this.state.initValue.explinationStatusEnum==="FULL"}
 																					onChange={(option) => {
 																						if (option && option.value) {
 																							props.handleChange('customerId')(

@@ -1007,12 +1007,11 @@ class ExplainTrasactionDetail extends React.Component {
 			exchange = 1 / result[0].exchangeRate;
 		  }
 		}
-	debugger
+
 		return exchange
 	  }
 	
 	  setexchnagedamount = (option, amount) => {
-		debugger
 		if (option?.length > 0) {
 		  const transactionAmount = amount || this.formRef.current.state.values.amount
 		  const exchangerate = this.formRef.current.state.values?.exchangeRate
@@ -1335,7 +1334,7 @@ class ExplainTrasactionDetail extends React.Component {
 													validate={(values) => {
 														let errors = {};
 														const totalexpaled=values?.invoiceIdList.reduce((a,c)=>a+c.explainedAmount,0)
-														debugger
+													
 														if ((values.coaCategoryId?.value === 2 || values.coaCategoryId?.value === 100)) {
 															if (!values.vendorId?.value && values.coaCategoryId?.value === 100) {
 															  errors.vendorId = "Please select the Vendor"
@@ -2736,7 +2735,7 @@ class ExplainTrasactionDetail extends React.Component {
                                 </>
                               )}
 									
-															{props.values.coaCategoryId &&
+															{/* {props.values.coaCategoryId &&
 																props.values.coaCategoryId.label ===
 																'Sales' && (
 																	<Row style={{ display: props.values.exchangeRate === 1 ? 'none' : '' }}>
@@ -2769,7 +2768,7 @@ class ExplainTrasactionDetail extends React.Component {
 																				</div>
 																			</FormGroup>
 																		</Col>
-																		<FormGroup className="mt-2"><label><b>=</b></label>	</FormGroup>
+																		
 																		<Col lg={2}>
 																			<FormGroup className="mb-3">
 																				<div>
@@ -2868,7 +2867,7 @@ class ExplainTrasactionDetail extends React.Component {
 																			/>
 																		</Col>
 																	</Row>
-																)}
+																)} */}
 															<Row>
 																{props.values.coaCategoryId === 12 ||
 																	(props.values.coaCategoryId === 6 && (

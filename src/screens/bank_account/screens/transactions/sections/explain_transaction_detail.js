@@ -1012,6 +1012,7 @@ class ExplainTrasactionDetail extends React.Component {
 	  }
 	
 	  setexchnagedamount = (option, amount) => {
+		debugger
 		if (option?.length > 0) {
 		  const transactionAmount = amount || this.formRef.current.state.values.amount
 		  const exchangerate = this.formRef.current.state.values?.exchangeRate

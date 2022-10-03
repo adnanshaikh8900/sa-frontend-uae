@@ -753,7 +753,7 @@ class CreateBankTransaction extends React.Component {
 
     let exchange;
     let result = this.props.currency_convert_list.filter((obj) => {
-      return obj.currencyCode === this.state.bankCurrency.bankAccountCurrency;
+      return obj.currencyCode === customerinvoice;
     });
     // this.state.invoiceCurrency
     // this.state.bankCurrency.bankAccountCurrency

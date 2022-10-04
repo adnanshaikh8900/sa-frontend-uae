@@ -136,7 +136,7 @@ class ImportTransaction extends React.Component {
 		this.initializeData();	
 	};
 setConfigurations=(configurationList)=>{
-	debugger
+	
 	let data = configurationList.filter(
 		(item) => item.id == this.state.selectedConfiguration,
 	);
@@ -525,31 +525,54 @@ setConfigurations=(configurationList)=>{
 		const { templateId, tableData, id } = this.state;
 		const mappedvalues=[]
 			this.state.selectedValueDropdown.map((item, index) => {
-				if(item.value==="") mappedvalues.push(index)
+				if(item.value!=="") mappedvalues.push({inx:index,val:item.value})
 			})
 			const finaldata=[]
 			tableData.map((i)=>{
 				let local
+				let local2={}
 				local={...i}
 				mappedvalues.map((i2)=>{
-					const allvales=Object.keys(i)?.[i2]
-					delete local?.[`${allvales}`]
+					const allvales=Object.keys(i)?.[i2.inx]
 					
+					local2[i2.val]=local?.[`${allvales}`]
 				})
-				finaldata.push(local)
+				finaldata.push(local2)
 				
 			})
-
+			debugger
 			const fdata=finaldata.map((i)=>{
 				let local={...i}
 					Object.keys(i).map((i3)=>{
+						
 						if(local?.[`${i3}`]==="" || local?.[`${i3}`]===null || local?.[`${i3}`]===undefined) 
 						{
 						local={...local,[i3]:"-"}
 						}
+						if(i3==="TRANSACTION_DATE"){
+
+                            debugger
+
+                            local={...local,"TRANSACTION_DATE":moment(local["TRANSACTION_DATE"]).format('DD/MM/YYYY')}
+
+                        }
+						if(i3==="CR_AMOUNT" || i3==="DR_AMOUNT")
+						{
+							local={...local,"CR_AMOUNT":local["CR_AMOUNT"]?.replace(",",''),
+							"DR_AMOUNT":local["DR_AMOUNT"]?.replace(",",''),
+						}
+						}
 					})
 					return local
 			})
+
+			// const ldata=fdata.map((i)=>{
+			// 	return {
+			// 		{
+			// 			"Transection Date"
+			// 		}
+			// 	}
+			// })
 
 		const postData = {
 			bankId: this.props.location.state.bankAccountId
@@ -558,6 +581,8 @@ setConfigurations=(configurationList)=>{
 			templateId: templateId ? +templateId : '',
 			importDataMap: fdata,
 		};
+
+
 		this.props.importBankStatementActions
 			.importTransaction(postData)
 			.then((res) => {
@@ -1009,7 +1034,7 @@ setConfigurations=(configurationList)=>{
 																				).find((val)=>val.value==i)
 																				local[data[0].indexMap?.[`${i}`]]=data2
 																			})
-																			debugger
+																			
 																			if (data.length > 0) {
 																				this.setState({
 																					initValue: {
@@ -1586,7 +1611,7 @@ setConfigurations=(configurationList)=>{
 																				onChange={(e) => {
 																					
 																					this.handleChange(e, index);
-																				debugger
+																			
 																				}}
 																			// className={}
 																			/>
@@ -1655,7 +1680,7 @@ setConfigurations=(configurationList)=>{
 																					className="btn-square mr-4"
 																					// disabled={this.state.fileName ? false : true}
 																					onClick={() => {
-																						debugger
+																					
 																						 if(this.state.templateId){
 
 																						this.validate()

@@ -1371,7 +1371,7 @@ class ExplainTrasactionDetail extends React.Component {
                             && isppselected===0
                             )
                          {
-                          errors.amount=`Amount is less select partial payment on invoice `
+                          errors.amount=`The transaction amount is less than the invoice amount. To partially pay the invoice, please select the checkbox `
                          
                         }
 														  }

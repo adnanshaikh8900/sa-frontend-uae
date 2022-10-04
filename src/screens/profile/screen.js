@@ -1425,8 +1425,11 @@ class Profile extends React.Component {
 															// })}
 															validate={(values) => {
 																let errors = {};
-			
-																if (checkmobileNumberParam == true) {
+																if (!values.phoneNumber) {
+																	errors.phoneNumber =
+																		'Mobile number is required';
+																}
+																if (values.phoneNumber && checkmobileNumberParam == true) {
 																	errors.phoneNumber =
 																		'Invalid mobile number';
 																}
@@ -1893,7 +1896,7 @@ class Profile extends React.Component {
 																							/></div>
 																							{props.errors.phoneNumber &&
 																								props.touched.phoneNumber && (
-																									<div style={{color:"red"}}>
+																									<div className="invalid-feedback" style={{color:"red",display:"block"}}>
 																										{props.errors.phoneNumber}
 																									</div>
 																								)}

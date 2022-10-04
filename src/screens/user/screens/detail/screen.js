@@ -260,7 +260,8 @@ class DetailUser extends React.Component {
 		if (this.state.userPhotoFile.length > 0) {
 			formData.append('profilePic', userPhotoFile[0]);
 		}
-		if (this.state.initValue !== data) {
+		//if (this.state.initValue !== data)
+		 {
 			this.setState({ disabled: true });
 			{this.setState({ loading:true, loadingMsg:"Updating User"})} 
 			this.props.userDetailActions

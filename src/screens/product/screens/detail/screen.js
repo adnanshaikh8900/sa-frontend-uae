@@ -970,7 +970,7 @@ renderName=(cell,row)=>{
 															'Product code is required',
 														),
 														vatCategoryId: Yup.string()
-															.required('VAT category is required')
+															.required('TAX category is required')
 															.nullable(),
 													})}
 												>
@@ -1237,7 +1237,7 @@ renderName=(cell,row)=>{
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="vatCategoryId">
 																			<span className="text-danger">* </span>
-																			{strings.VAT+" "+strings.Type}
+																			{"Tax"+" "+strings.Type}
 																		</Label>
 																		<Select
 																		 isDisabled={this.state.companyDetails && !this.state.companyDetails.isRegisteredVat}

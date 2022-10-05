@@ -482,7 +482,7 @@ setConfigurations=(configurationList)=>{
 			this.state.selectedValueDropdown.map((item, index) => {
 				if (item.value != '') {
 					val = item.value;
-					obj[val] = index;``
+					obj[val] = index;
 					a = { ...a, ...obj };
 				}
 				return item;

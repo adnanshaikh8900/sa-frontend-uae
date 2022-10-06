@@ -203,6 +203,7 @@ dev-deploy-job:      # This job runs in the deploy stage.
       - unknown_failure
       - job_execution_timeout
 
+# Deploy canada branch
 dev-ca-deploy-job:      # This job runs in the deploy stage.
   stage: dev-deploy  # It only runs when *both* jobs in the test stage complete successfully.
   dependencies:

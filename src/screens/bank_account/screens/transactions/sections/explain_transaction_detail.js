@@ -767,7 +767,6 @@ class ExplainTrasactionDetail extends React.Component {
 				invoiceIdList ? JSON.stringify(result) : '',
 			);
 		}
-		debugger
 		formData.append(
 			"explainedInvoiceListString",
 			invoiceIdList ?JSON.stringify(invoiceIdList.map((i)=>{
@@ -814,6 +813,7 @@ class ExplainTrasactionDetail extends React.Component {
 						'Transaction Detail Explained Successfully.',
 					);
 					this.props.closeExplainTransactionModal(this.state.id);
+					this.props.getbankdetails()
 				}
 			})
 			.catch((err) => {

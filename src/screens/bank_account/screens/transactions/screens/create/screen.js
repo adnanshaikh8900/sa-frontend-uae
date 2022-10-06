@@ -752,8 +752,10 @@ class CreateBankTransaction extends React.Component {
 
 
     let exchange;
+    let convertor=this.state.bankCurrency.bankAccountCurrency===this.state.basecurrency.currencyCode
+    ?customerinvoice:this.state.bankCurrency.bankAccountCurrency
     let result = this.props.currency_convert_list.filter((obj) => {
-      return obj.currencyCode === customerinvoice;
+      return obj.currencyCode === convertor;
     });
     // this.state.invoiceCurrency
     // this.state.bankCurrency.bankAccountCurrency
@@ -767,15 +769,14 @@ class CreateBankTransaction extends React.Component {
       exchange = 1;
       //this.formRef.current.setFieldValue('exchangeRate', 1, true);
     } else if (
-      customerinvoice !== this.state.bankCurrency.bankAccountCurrency
+      customerinvoice === this.state.basecurrency.currencyCode
     ) {
-      if (customerinvoice !== this.state.basecurrency.currencyCode) {
         exchange = result[0].exchangeRate;
       } else {
         exchange = 1 / result[0].exchangeRate;
       }
-    }
-debugger
+    
+
     return exchange
   }
 
@@ -1077,7 +1078,7 @@ debugger
                           this.handleSubmit(values, resetForm);
                         }}
                         validate={(values) => {
-                          console.log(values);
+                          
                           let errors = {};
                           const totalexpaled=values?.invoiceIdList.reduce((a,c)=>a+c.explainedAmount,0)
                          
@@ -1133,6 +1134,7 @@ debugger
                           errors.transactionAmount=`The transaction amount is less than the invoice amount. To partially pay the invoice, please select the checkbox `
                          
                         }
+                        
                           }
 
 

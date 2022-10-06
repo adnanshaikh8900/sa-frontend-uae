@@ -1041,7 +1041,11 @@ debugger
     let tmpSupplier_list = [];
 
     vendor_list.map((item) => {
+
       let obj = { label: item.label.contactName, value: item.value };
+      if(item.label.currency.currencyCode===this.state.basecurrency.currencyCode || 
+        this.state.basecurrency.currencyCode===this.state.bankCurrency.bankAccountCurrency
+        )
       tmpSupplier_list.push(obj);
     });
 
@@ -2226,7 +2230,7 @@ debugger
                                                     props.values?.invoiceIdList?.reduce(
                                                       (accu, curr, index) =>
                                                         accu +
-                                                        curr.amount * curr.exchangeRate
+                                                        curr.dueAmount * curr.exchangeRate
                                                       ,
                                                       0
                                                     ) >= 0}

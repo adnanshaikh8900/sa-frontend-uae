@@ -2594,10 +2594,13 @@ class ExplainTrasactionDetail extends React.Component {
                                                     props.values?.invoiceIdList?.reduce(
                                                       (accu, curr, index) =>
                                                         accu +
-                                                        curr.amount * curr.exchangeRate
+                                                        (this.state.initValue.explinationStatusEnum !=='PARTIAL' && this.state.initValue.explinationStatusEnum!=="FULL"
+														?curr.dueAmount:curr.amount)
+														
+														* curr.exchangeRate
                                                       ,
                                                       0
-                                                    ) >= 0}
+                                                    ) >= 0  }
                                                   type="checkbox"
 
                                                   checked={i.pp !== undefined ? i.pp : false}

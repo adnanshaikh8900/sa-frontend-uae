@@ -192,7 +192,7 @@ dev-deploy-job:      # This job runs in the deploy stage.
     action: start
   allow_failure: false
   rules:
-    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_BUILD_TAG =~ '/1.0.0-alpha.*/'
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_BUILD_TAG =~ '/1.0.0-alpha.[0-9]*/'
       when: on_success
     - when: never
   retry:
@@ -229,7 +229,7 @@ dev-ca-deploy-job:      # This job runs in the deploy stage.
     action: start
   allow_failure: false
   rules:
-    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_BUILD_TAG =~ '/1.0.0-alpha-develop-ca.*/'
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_BUILD_TAG =~ '/1.0.0-alpha-develop-ca.[0-9]*/'
       when: on_success
     - when: never
   retry:
@@ -265,7 +265,7 @@ devbox-deploy-job:      # This job runs in the deploy stage.
     action: start
   allow_failure: false
   rules:
-    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_BUILD_TAG =~ '/1.0.0-alpha.*/'
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_BUILD_TAG =~ '/1.0.0-alpha.[0-9]*/'
       when: on_success
     - when: never
   retry:
@@ -287,7 +287,7 @@ approve-sit-deployment-job:
   resource_group: test
   allow_failure: false
   rules:
-    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_BUILD_TAG =~ '/1.0.0-alpha.*/'
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_BUILD_TAG =~ '/1.0.0-alpha.[0-9]*/'
       when: manual
     - when: never
   retry:
@@ -322,7 +322,7 @@ sit1-deploy-job:      # This job runs in the deploy stage.
     action: start
   allow_failure: false
   rules:
-    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_BUILD_TAG =~ '/1.0.0-alpha.*/'
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_BUILD_TAG =~ '/1.0.0-alpha.[0-9]*/'
       when: on_success
     - when: never
   retry:
@@ -357,7 +357,7 @@ sit2-deploy-job:      # This job runs in the deploy stage.
     action: start
   allow_failure: false
   rules:
-    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_BUILD_TAG =~ '/1.0.0-alpha.*/'
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_BUILD_TAG =~ '/1.0.0-alpha.[0-9]*/'
       when: on_success
     - when: never
   retry:
@@ -392,7 +392,7 @@ sit-reports-deploy-job:      # This job runs in the deploy stage.
     action: start
   allow_failure: false
   rules:
-    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_BUILD_TAG =~ '/1.0.0-alpha.*/'
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_BUILD_TAG =~ '/1.0.0-alpha.[0-9]*/'
       when: on_success
     - when: never
   retry:
@@ -414,7 +414,7 @@ approve-prod-release-job:
   resource_group: prod-release
   allow_failure: false
   rules:
-    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_BUILD_TAG =~ '/1.0.0-alpha.*/'
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_BUILD_TAG =~ '/1.0.0-alpha.[0-9]*/'
       when: manual
     - when: never
   retry:
@@ -440,7 +440,7 @@ prod-merge-job:
   resource_group: prod-release
   allow_failure: false
   rules:
-    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_BUILD_TAG =~ '/1.0.0-alpha.*/'
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_BUILD_TAG =~ '/1.0.0-alpha.[0-9]*/'
       when: on_success
     - when: never
   retry:

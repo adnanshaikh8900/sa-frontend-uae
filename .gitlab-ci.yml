@@ -194,6 +194,8 @@ dev-deploy-job:      # This job runs in the deploy stage.
   rules:
     - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_BUILD_TAG =~ '/1.0.0-alpha.[0-9]*/'
       when: on_success
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_BUILD_TAG =~ '/1.0.0-alpha-develop-ca.[0-9]*/'
+      when: never
     - when: never
   retry:
     max: 2
@@ -225,7 +227,7 @@ dev-ca-deploy-job:      # This job runs in the deploy stage.
   resource_group: dev
   environment:
     name: Development
-    url: https://dev.app.simpleaccounts.io
+    url: https://dev-ca.app.simpleaccounts.io
     action: start
   allow_failure: false
   rules:
@@ -267,6 +269,8 @@ devbox-deploy-job:      # This job runs in the deploy stage.
   rules:
     - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_BUILD_TAG =~ '/1.0.0-alpha.[0-9]*/'
       when: on_success
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_BUILD_TAG =~ '/1.0.0-alpha-develop-ca.[0-9]*/'
+      when: never
     - when: never
   retry:
     max: 2
@@ -289,6 +293,8 @@ approve-sit-deployment-job:
   rules:
     - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_BUILD_TAG =~ '/1.0.0-alpha.[0-9]*/'
       when: manual
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_BUILD_TAG =~ '/1.0.0-alpha-develop-ca.[0-9]*/'
+      when: never
     - when: never
   retry:
     max: 2

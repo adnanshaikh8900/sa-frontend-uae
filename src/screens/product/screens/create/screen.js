@@ -600,7 +600,7 @@ try {
 														'Product code is required',
 													),
 													vatCategoryId: Yup.string()
-														.required('Tax category is required')
+														.required('VAT category is required')
 														.nullable(),
 												})}
 											>
@@ -897,7 +897,7 @@ try {
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="vatCategoryId">
-																			<span className="text-danger">* </span>{"Tax"+" "+strings.Type}
+																			<span className="text-danger">* </span>{"VAT" +" "+strings.Type}
 																		</Label>
 																		<Select
 																	    	 isDisabled={this.state.companyDetails && !this.state.companyDetails.isRegisteredVat}

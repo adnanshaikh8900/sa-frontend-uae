@@ -88,7 +88,6 @@ class Profile extends React.Component {
 				password: "",
 				confirmPassword: '',
 				currentPassword: '',
-			
 			  },
 			email:'',
 			showmessage: false,
@@ -189,9 +188,7 @@ class Profile extends React.Component {
 						'error',
 						err && err.data ? err.data.message : 'Something Went Wrong',
 					);
-					
 				});
-		
 	};
 
 	uploadUserImage = (picture, file) => {
@@ -524,8 +521,7 @@ class Profile extends React.Component {
 	};
 
 	resetPassword = (email) => {
-		 
-		
+
 			let data = {
 			  method: 'post',
 			  url: '/public/forgotPassword',
@@ -908,16 +904,13 @@ class Profile extends React.Component {
 																		onSubmit={props.handleSubmit}
 																		encType="multipart/form-data"
 																	>
-
 																		<Row>
 																			<Col lg={10}>
 																				<Row>
 																					<Col lg={6}>
 																						<FormGroup>
 																							<Label htmlFor="select">
-																								<span className="text-danger">
-																									*
-																							</span> {strings.FirstName}
+																								<span className="text-danger">*</span> {strings.FirstName}
 																						</Label>
 																							<Input
 																								type="text"
@@ -927,7 +920,7 @@ class Profile extends React.Component {
 																								onChange={(option) => {
 																									if (
 																										option.target.value === '' ||
-																										this.regExAlpha.test(
+																										this.regExAlpha1.test(
 																											option.target.value,
 																										)
 																									) {
@@ -955,9 +948,7 @@ class Profile extends React.Component {
 																					<Col lg={6}>
 																						<FormGroup>
 																							<Label htmlFor="select">
-																								<span className="text-danger">
-																									*
-																							</span> {strings.LastName}
+																								<span className="text-danger">*</span> {strings.LastName}
 																						</Label>
 																							<Input
 																								type="text"
@@ -967,7 +958,7 @@ class Profile extends React.Component {
 																								onChange={(option) => {
 																									if (
 																										option.target.value === '' ||
-																										this.regExAlpha.test(
+																										this.regExAlpha1.test(
 																											option.target.value,
 																										)
 																									) {
@@ -1434,8 +1425,11 @@ class Profile extends React.Component {
 															// })}
 															validate={(values) => {
 																let errors = {};
-			
-																if (checkmobileNumberParam == true) {
+																if (!values.phoneNumber) {
+																	errors.phoneNumber =
+																		'Mobile number is required';
+																}
+																if (values.phoneNumber && checkmobileNumberParam == true) {
 																	errors.phoneNumber =
 																		'Invalid mobile number';
 																}
@@ -1902,7 +1896,7 @@ class Profile extends React.Component {
 																							/></div>
 																							{props.errors.phoneNumber &&
 																								props.touched.phoneNumber && (
-																									<div style={{color:"red"}}>
+																									<div className="invalid-feedback" style={{color:"red",display:"block"}}>
 																										{props.errors.phoneNumber}
 																									</div>
 																								)}

@@ -260,7 +260,8 @@ class DetailUser extends React.Component {
 		if (this.state.userPhotoFile.length > 0) {
 			formData.append('profilePic', userPhotoFile[0]);
 		}
-		if (this.state.initValue !== data) {
+		//if (this.state.initValue !== data)
+		 {
 			this.setState({ disabled: true });
 			{this.setState({ loading:true, loadingMsg:"Updating User"})} 
 			this.props.userDetailActions
@@ -307,7 +308,6 @@ class DetailUser extends React.Component {
 	sendInviteMail = (event) => {
 		const { current_user_id } = this.state;
 		this.props.userDetailActions.getUserInviteEmail( current_user_id,window.location.origin).then((response) => {
-			debugger
 			if (response.status === 200) {
 			toast.success("Mail Sent Successfully !")
 			} else {
@@ -787,6 +787,7 @@ class DetailUser extends React.Component {
 																						props.handleChange('roleId')(option)
 																					}
 																					placeholder={strings.Select+strings.Role}
+																					isDisabled
 																					id="roleId"
 																					name="roleId"
 																					className={

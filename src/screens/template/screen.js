@@ -6,21 +6,16 @@ import {
 	CardHeader,
 	CardBody,
 	Row,
-	Col,
-	
+	Col,	
 } from 'reactstrap';
-
 import { InvoiceTemplate } from 'components'
 import Theme1 from 'assets/images/invoice-template/Theme1.png';
 import Theme2 from 'assets/images/invoice-template/Theme2.png';
-
 import * as TemplateActions from './actions';
 // import { Templates } from './sections';
 import { bindActionCreators } from 'redux';
-
 // import 'react-select/dist/react-select.css'
 import './style.scss';
-import { StringStream } from 'codemirror';
 import {data}  from '../Language/index'
 
 const mapStateToProps = (state) => {
@@ -45,16 +40,14 @@ class Template extends React.Component {
 		};
 	}
 
-	componentDidMount=()=>{
-		
+	componentDidMount=()=>{		
 		this.props.templateActions
 		.getTemplateList()
 		.then((res) => {
 			if (res.status === 200) {
 				// this.props.userActions.getCompanyTypeList()
 				for(let i=0;i<2;i++)
-				{
-					
+				{					
 					switch(res.data[i].templateId) {
 						case 1:
 							this.setState({enable1:res.data[i].enable});
@@ -72,19 +65,13 @@ class Template extends React.Component {
 				});
 			}
 		})
-		.catch((err) => {
-		
-	
-		});
-
-		
+		.catch((err) => {	
+		});		
 	}
-
 	
 	render() {
 		const {selectedData}=this.state;
 		strings.setLanguage(this.state.language);
-		console.log(selectedData,"suraj")
 		return (
 			<div className="financial-report-screen">
 				<div className="animated fadeIn">
@@ -101,15 +88,14 @@ class Template extends React.Component {
 						</CardHeader>
 					
 						<CardBody>
-							<InvoiceTemplate templateId="1" enable={this.state.enable1}  templateTitle={strings.Theme1} templateImg={Theme1}></InvoiceTemplate>
+							<InvoiceTemplate templateId="1" enable={this.state.enable1} templateTitle={strings.Theme1} templateImg={Theme1}></InvoiceTemplate>
 							<InvoiceTemplate templateId="2" enable={this.state.enable2} templateTitle={strings.Theme2} templateImg={Theme2}></InvoiceTemplate>
 						{/* <InvoiceTemplate templateId="3" templateTitle="Horizon" templateImg={horizon}></InvoiceTemplate>
 							<InvoiceTemplate templateId="4" templateTitle="Elliot Jay stocks" templateImg={ejs}></InvoiceTemplate>
 							<InvoiceTemplate templateId="5" templateTitle="Union" templateImg={union}></InvoiceTemplate>
 							<InvoiceTemplate templateId="6" templateTitle="Lola" templateImg={lola}></InvoiceTemplate>
 							<InvoiceTemplate templateId="7" templateTitle="Tranquility" templateImg={tranquility}></InvoiceTemplate>
-							<InvoiceTemplate templateId="7" templateTitle="Modernist" templateImg={modernist}></InvoiceTemplate> */}
-							
+							<InvoiceTemplate templateId="7" templateTitle="Modernist" templateImg={modernist}></InvoiceTemplate> */}						
 						</CardBody>
 					</Card>
 				</div>

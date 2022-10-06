@@ -539,7 +539,7 @@ console.log(journal_list_data,"journal_list_data")
 												</Col>
 												<Col lg={2} className="mb-1">
 													<Input
-													maxLength="20"
+														maxLength="20"
 														type="text"
 														placeholder={strings.ReferenceNumber}
 														value={filterData.journalReferenceNo}

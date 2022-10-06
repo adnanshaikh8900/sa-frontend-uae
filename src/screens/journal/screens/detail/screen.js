@@ -17,20 +17,16 @@ import {
 import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import DatePicker from 'react-datepicker';
-
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import moment from 'moment';
-
 import { CommonActions } from 'services/global';
 import { selectCurrencyFactory } from 'utils';
 import * as JournalActions from '../../actions';
 import * as JournalDetailActions from './actions';
 import { Loader, LeavePage,ConfirmDeleteModal, Currency } from 'components';
-
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
-
 import './style.scss';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
@@ -151,7 +147,6 @@ class DetailJournal extends React.Component {
 								});
 							},
 						);
-						debugger
 					}
 				})
 				.catch((err) => {
@@ -202,13 +197,10 @@ class DetailJournal extends React.Component {
 		// const getoptions=()=>{
 		// const tit=transactionCategoryList.find(
 		// 		(item) =>{
-		// 			debugger
 		// 			item.label === row.journalTransactionCategoryLabel
 		// 		})
-		// 	debugger	
 				
 		// 		?.options?.find((i)=>{
-		// 			debugger
 		// 			i.value===row.transactionCategoryId
 		// 		})?.label
 		// }
@@ -1014,7 +1006,7 @@ min="0"
 																					? false
 																					: true
 																			}
-																			placeholder={strings.DeliveryNotes}
+																			// placeholder={strings.DeliveryNotes}
 																			value={props.values.description}
 																			onChange={(value) => {
 																				props.handleChange('description')(

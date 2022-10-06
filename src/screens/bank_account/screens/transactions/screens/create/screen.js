@@ -445,6 +445,7 @@ class CreateBankTransaction extends React.Component {
           if (this.state.createMore) {
             this.setState({
               createMore: false,
+              disabled:false
             });
           } else {
             this.props.history.push("/admin/banking/bank-account/transaction", {
@@ -752,7 +753,7 @@ class CreateBankTransaction extends React.Component {
 
     let exchange;
     let result = this.props.currency_convert_list.filter((obj) => {
-      return obj.currencyCode === this.state.bankCurrency.bankAccountCurrency;
+      return obj.currencyCode === customerinvoice;
     });
     // this.state.invoiceCurrency
     // this.state.bankCurrency.bankAccountCurrency
@@ -1082,6 +1083,15 @@ debugger
                           const date1 = new Date(date);
                           const date2 = new Date(this.state.date);
                           
+                          if(values.coaCategoryId.label !== "Expense" &&
+                          values.coaCategoryId.label !==
+                          "Supplier Invoice" &&
+                          values.coaCategoryId.label !== "Sales"){
+                            if(!values.transactionCategoryId || values.transactionCategoryId===""){
+                              errors.transactionCategoryId="Category is required"
+                            }
+                          }
+
                           if ((values.coaCategoryId?.value === 2 || values.coaCategoryId?.value === 100)) {
                             if (!values.vendorId?.value && values.coaCategoryId?.value === 100) {
                               errors.vendorId = "Please select the Vendor"
@@ -1116,7 +1126,7 @@ debugger
                             && isppselected===0
                             )
                          {
-                          errors.transactionAmount=`Amount is less select partial payment on invoice `
+                          errors.transactionAmount=`The transaction amount is less than the invoice amount. To partially pay the invoice, please select the checkbox `
                          
                         }
                           }
@@ -1179,6 +1189,7 @@ debugger
                           transactionDate: Yup.date().required(
                             "Transaction Date is Required"
                           ),
+                          reference:Yup.string().max(20),
                           transactionAmount: Yup.string()
                             .required("Transaction Amount is Required")
                             .test(
@@ -2088,7 +2099,7 @@ debugger
                                 <>
                                   {props.values?.invoiceIdList.length > 0 &&
                                     <Row className="border-bottom mb-3"
-                                    style={{display:'flex',justifyContent:'space-evenly'}}
+                                    style={{display:'flex',justifyContent:'space-between'}}
                                     >
                                       <Col lg={1}>
                                         <span className="font-weight-bold"> Invoice</span>
@@ -2139,7 +2150,7 @@ debugger
                                     (i, invindex) => {
                                       return (
                                         <Row
-                                        style={{display:'flex',justifyContent:'space-evenly'}}
+                                        style={{display:'flex',justifyContent:'space-between'}}
                                         >
                                            <Col lg={1}>
                                             <span>{i.invoiceNumber}</span>
@@ -2149,11 +2160,12 @@ debugger
                                               disabled
                                               id="1"
                                               name="1"
-                                              value={i.invoiceDate}
+                                              value={moment(i.invoiceDate).format('DD-MM-YYYY')}
                                             />
                                           </Col>
                                           <Col lg={2}>
                                             <Input
+                                            style={{textAlign:'right'}}
                                               disabled
                                               id="1"
                                               name="1"
@@ -2161,22 +2173,18 @@ debugger
                                             />
                                           </Col>
 
-                                          <FormGroup className="mt-2">
-                                            <label>
-                                              <b></b>
-                                            </label>{" "}
-                                          </FormGroup>
-
                                           { this.state.bankCurrency.bankAccountCurrencyIsoCode!==props.values.curreancyname &&
                                           <Col lg={2}>
                                           
                                                     <FormGroup className="mb-3">
                                               <div>
                                                 <Input
+                                                 
                                                   className="form-control"
-                                                  id="exchangeRate"
-                                                  name="exchangeRate"
+                                                  id="exchangeamount"
+                                                  name="exchangeamount"
                                                   type="number"
+                                                  style={{textAlign:'right'}}
                                                   value={
                                                     i.exchangeRate}
                                                   onChange={(value) => {
@@ -2197,6 +2205,7 @@ debugger
                                                 <Input
                                                   className="form-control"
                                                   id="exchangeRate"
+                                                  style={{textAlign:'right'}}
                                                   name="exchangeRate"
                                                   disabled
                                                   value={`${this.state.bankCurrency.bankAccountCurrencyIsoCode} ${i.convertedInvoiceAmount?.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} `
@@ -2212,6 +2221,7 @@ debugger
                                             <FormGroup className="mb-3" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
                                               <div>
                                                 <Input
+                                                
                                                   disabled={props.values?.transactionAmount -
                                                     props.values?.invoiceIdList?.reduce(
                                                       (accu, curr, index) =>
@@ -2241,6 +2251,7 @@ debugger
                                                   id="exchangeRate"
                                                   name="exchangeRate"
                                                   disabled
+                                                  style={{textAlign:'right'}}
                                                   value={`${this.state.bankCurrency.bankAccountCurrencyIsoCode} ${i.explainedAmount?.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} `
 
                                                   }
@@ -2267,26 +2278,20 @@ debugger
                                       <Row
                                         style={{
                                           display: "flex",
-                                          justifyContent: "flex-end",
-                                          marginLeft: "20px",
+                                          flexDirection:'row-reverse',
+                                          justifyContent: "flex-start",
+                                       
+                                         
                                         }}
                                       >
-                                        <Col lg={3}>
+                                        
+                                        
+                                        <Col lg={2} 
+                                        style={{float:'right'}}
+                                        >
                                           <Input
                                             disabled
-                                            id="total"
-                                            name="total"
-                                            value={"Total Explained Amount"}
-                                          />
-                                        </Col>
-                                        <FormGroup className="mt-2">
-                                          <label>
-                                            <b>=</b>
-                                          </label>{" "}
-                                        </FormGroup>
-                                        <Col lg={2}>
-                                          <Input
-                                            disabled
+                                            style={{textAlign:'right'}}
                                             id="total"
                                             name="total"
                                             value={`${this.state.bankCurrency
@@ -2302,8 +2307,15 @@ debugger
                                             }
                                           />
                                         </Col>
-
-
+                                        <Col lg={3}>
+                                          <Input
+                                          style={{textAlign:'right'}}
+                                            disabled
+                                            id="total"
+                                            name="total"
+                                            value={"Total Explained Amount ="}
+                                          />
+                                        </Col>
                                       </Row>
                                     { (this.setexcessorshortamount().data!== 0
                                     && 
@@ -2312,7 +2324,8 @@ debugger
                                         style={{
                                           display: "flex",
                                           justifyContent: "flex-end",
-                                          marginLeft: "20px",
+                                         
+                                          marginTop:10
                                         }}
                                       >
                                         
@@ -2330,19 +2343,17 @@ debugger
 
                                         <Col lg={3}>
                                           <Input
+                                          style={{textAlign:'right'}}
                                             disabled
                                             id="total"
                                             name="total"
-                                            value={"Total Excess/Short Amount"}
+                                            value={"Total Excess/Short Amount = "}
                                           />
                                         </Col>
-                                        <FormGroup className="mt-2">
-                                          <label>
-                                            <b>=</b>
-                                          </label>{" "}
-                                        </FormGroup>
+                                        
                                         <Col lg={2}>
                                           <Input
+                                          style={{textAlign:'right'}}
                                             disabled
                                             id="total"
                                             name="total"
@@ -2648,6 +2659,7 @@ debugger
                                       </Label>
                                       <Input
                                         type="text"
+                                        maxLength="20"
                                         id="reference"
                                         name="reference"
                                         placeholder={strings.ReceiptNumber}
@@ -2665,6 +2677,12 @@ debugger
                                         }}
                                         value={props.values.reference}
                                       />
+                                       {props.errors.reference &&
+                                        props.touched.reference && (
+                                          <div className="invalid-file" style={{color:"red"}}>
+                                            {props.errors.reference}
+                                          </div>
+                                        )}
                                     </FormGroup>
                                   </Col>
                                 </Row>
@@ -2672,7 +2690,7 @@ debugger
                               <Col lg={4}>
                                 <Row>
                                   <Col lg={12}>
-                                    <FormGroup className="mb-3">
+                                    <FormGroup className="mb-3 hideAttachment">
                                       <Field
                                         name="attachment"
                                         render={({ field, form }) => (

@@ -485,7 +485,6 @@ renderVatAmount = (cell, row,extraData) => {
 		let result = this.props.currency_convert_list.filter((obj) => {
 		return obj.currencyCode === value;
 		});
-		console.log('currency result', result)
 		if(result &&result[0]&&  result[0].exchangeRate)
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
 		};
@@ -867,8 +866,6 @@ renderVatAmount = (cell, row,extraData) => {
 							const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 							// const values =  res.data.invoiceDate	
 							const values =  new Date();
-		
-							debugger	
 								this.setState({
 									date: moment(values).add(parseInt(temp), 'days'),
 									invoiceDate1: moment(values),
@@ -1297,7 +1294,7 @@ discountType = (row) =>
 							excise_list &&
 							selectOptionsFactory
 								.renderOptions('name', 'id', excise_list, 'Excise')
-								.find((option) => option.value === +row.exciseTaxId)
+								.find((option) => row.exciseTaxId ? option.value === +row.exciseTaxId : "Select Exise")
 						}
 						id="exciseTaxId"
 						placeholder={strings.Select_Excise}
@@ -1345,7 +1342,6 @@ discountType = (row) =>
 		let idx;
 		data.map((obj, index) => {
 			if (obj.id === row.id) {
-				console.log(result);
 				obj['unitPrice'] = result.unitPrice;
 				obj['vatCategoryId'] = result.vatCategoryId;
 				obj['description'] = result.description;
@@ -1448,7 +1444,6 @@ discountType = (row) =>
 									});
 									if(this.checkedRow())
 									   this.addRow();
-									   console.log(this.state.data,"prodlist")
 								} else {
 									form.setFieldValue(
 										`lineItemsString.${idx}.productId`,
@@ -1570,7 +1565,6 @@ discountType = (row) =>
 	};
 
 	checkedRow = () => {
-		debugger
 		if (this.state.data.length > 0) {
 			let length = this.state.data.length - 1;
 			let temp = this.state.data?.[length].productId!==""?
@@ -1803,7 +1797,6 @@ discountType = (row) =>
 		formData.append('quotationId', this.state.quotationId ? this.state.quotationId : '')
 		formData.append('referenceNumber', invoice_number !== null ? this.state.prefix + invoice_number : '');
 		formData.append('invoiceDueDate', invoiceDueDate ? this.state.date : null);
-		debugger
 		formData.append('invoiceDate', invoiceDate?invoiceDate
 						// moment(invoiceDate,'DD-MM-YYYY')
 						// .toDate()
@@ -1813,8 +1806,6 @@ discountType = (row) =>
 		formData.append('receiptAttachmentDescription', receiptAttachmentDescription !== null ? receiptAttachmentDescription : '',);
 		formData.append('exchangeRate', exchangeRate !== null ? exchangeRate : '');
 		formData.append('contactPoNumber', contact_po_number !== null ? contact_po_number : '');
-
-			debugger
 		if(changeShippingAddress && changeShippingAddress==true)
 		{
 			formData.append('changeShippingAddress', changeShippingAddress !== null ? changeShippingAddress : '');
@@ -1836,7 +1827,6 @@ discountType = (row) =>
 			formData.append('totalAmount', this.state.initValue.totalAmount);
 			formData.append('totalExciseAmount', this.state.initValue.total_excise);
 			formData.append('discount',this.state.initValue.discount);
-		
 		if (term && term.value) {
 			formData.append('term', term.value);
 		}
@@ -1865,7 +1855,6 @@ discountType = (row) =>
 		this.props.customerInvoiceCreateActions
 			.createInvoice(formData)
 			.then((res) => {
-				debugger
 				this.setState({ disabled: false });
 				this.setState({ loading:false});
 				this.props.commonActions.tostifyAlert(
@@ -1877,7 +1866,6 @@ discountType = (row) =>
 						{
 							createMore: false,
 							selectedContact: '',
-							term: '',
 							exchangeRate:'',
 							data: [
 								{
@@ -1889,6 +1877,7 @@ discountType = (row) =>
 									taxtreatment: '',
 									subTotal: 0,
 									discount: 0,
+									discountType: 'FIXED',
 									vatAmount:0,
 									productId: '',
 								},
@@ -1899,7 +1888,7 @@ discountType = (row) =>
 									total_net: 0,
 									invoiceVATAmount: 0,
 									totalAmount: 0,
-									discountType: '',
+									discountType: 'FIXED',
 									discount: 0,
 									discountPercentage: '',
 									total_excise: 0,
@@ -1921,7 +1910,7 @@ discountType = (row) =>
 									total_net: 0,
 									invoiceVATAmount: 0,
 									totalAmount: 0,
-									discountType: '',
+									discountType: 'FIXED',
 									discount: 0,
 									discountPercentage: '',
 									changeShippingAddress:false
@@ -1937,14 +1926,12 @@ discountType = (row) =>
 							this.formRef.current.setFieldValue('placeOfSupplyId', '', true);
 							this.formRef.current.setFieldValue('currency', null, true);
 							this.formRef.current.setFieldValue('taxTreatmentid','', true);
-							this.formRef.current.setFieldValue('term', term, true);
+							this.formRef.current.setFieldValue('term', '', true);
 						},
 					);
 				} else {
-					debugger
 					this.props.history.push('/admin/income/customer-invoice');
 					this.setState({ loading:false,});
-					debugger
 				}
 			})
 			.catch((err) => {
@@ -2267,7 +2254,6 @@ discountType = (row) =>
 												validate={(values) => {
 												
 													let errors = {};
-													console.log(values,"Values");
 													if (exist === true) {
 														errors.invoice_number =
 															'Invoice number already exists';
@@ -2760,7 +2746,22 @@ discountType = (row) =>
 																		id="term"
 																		name="term"
 																		placeholder={strings.Select+strings.Terms} 
-																		value={this.state.term}
+																		value={
+																			(this.state.quotationId || this.state.parentInvoiceId) ?
+
+																			this.termList &&
+																			selectOptionsFactory.renderOptions(
+																				'label',
+																				'value',
+																				this.termList,
+																				'Terms',
+																		  ).find((option) => option.value == this.state.term)
+																			
+																		  :
+																		  
+																		  props.values.term
+																			}
+																		//value={this.state.term}
 																		onChange={(option) => {
 																			props.handleChange('term')(option);
 																			if (option.value === '') {
@@ -2814,7 +2815,6 @@ discountType = (row) =>
 																		// value={props.values.invoiceDate}
 																		selected={props.values.invoiceDate1 ?new Date(props.values.invoiceDate1):props.values.invoiceDate} 
 																		onChange={(value) => {
-																			debugger
 																			props.handleChange('invoiceDate')(value);
 																			this.setDate(props, value);
 																		}}

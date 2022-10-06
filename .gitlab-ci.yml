@@ -16,7 +16,7 @@ variables:
   REGISTRY_USER: $CI_REGISTRY_USER
   REGISTRY_PASS: $CI_REGISTRY_PASSWORD
   IMAGE: datainn/simpleaccounts/simpleaccounts-frontend
-  TAG: $VERSION_PREFIX.$CI_PIPELINE_ID
+  TAG: $VERSION_PREFIX-$CI_COMMIT_BRANCH.$CI_PIPELINE_ID
 
 # Cache modules in between jobs
 cache:
@@ -47,6 +47,8 @@ npm-compile-job:       # This job runs in the build stage, which runs first.
     - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
       when: never
     - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'master'
+      when: never
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop-ca'
       when: never
     - when: on_success
   retry:
@@ -85,6 +87,8 @@ npm-build-job:       # This job runs in the build stage, which runs first.
       when: never
     - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'master'
       when: never
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop-ca'
+      when: never
     - when: on_success
   retry:
     max: 2
@@ -99,7 +103,7 @@ merge-request-job:       # This job runs in the build stage, which runs first.
   script:
   - echo "Accepted merge request"
   - echo "Create a git tag on branch"
-  - curl --request POST --header "PRIVATE-TOKEN:$GITLAB_API_TOKEN" "https://gitlab.datainn.io/api/v4/projects/${CI_PROJECT_ID}/repository/tags?tag_name={$TAG}&ref=develop&message=Version+{$TAG}"
+  - curl --request POST --header "PRIVATE-TOKEN:$GITLAB_API_TOKEN" "https://gitlab.datainn.io/api/v4/projects/${CI_PROJECT_ID}/repository/tags?tag_name={$TAG}&ref=${CI_COMMIT_BRANCH}&message=Version+{$TAG}"
   - echo "Created Tag $TAG"
   allow_failure: false
   artifacts:
@@ -109,6 +113,8 @@ merge-request-job:       # This job runs in the build stage, which runs first.
     when: on_success
   rules:
     - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop'
+      when: on_success
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_COMMIT_BRANCH == 'develop-ca'
       when: on_success
     - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_BUILD_TAG =~ '/red.sea.*/'
       when: never
@@ -187,6 +193,42 @@ dev-deploy-job:      # This job runs in the deploy stage.
   allow_failure: false
   rules:
     - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_BUILD_TAG =~ '/1.0.0-alpha.*/'
+      when: on_success
+    - when: never
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+      - unknown_failure
+      - job_execution_timeout
+
+dev-ca-deploy-job:      # This job runs in the deploy stage.
+  stage: dev-deploy  # It only runs when *both* jobs in the test stage complete successfully.
+  dependencies:
+    - "docker-build-job"
+  before_script:
+    - export
+    - echo "Pipeline Source:$CI_PIPELINE_SOURCE"
+    - kubectl config use-context datainn/k8s:k8s-dev
+    - TAG=$CI_BUILD_TAG
+    - echo $TAG
+  script:
+    - echo "Deploying application to following cluster..."
+    - kubectl cluster-info 
+    - echo "Test deployment scripts..."
+    - helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=$REGISTRY_URL/$IMAGE,maindomain=dev-ca.app.simpleaccounts.io,simpleVatHost=https://dev-ca-api.app.simpleaccounts.io,fullnameOverride=dev-ca-frontend,serviceAccount.name=dev-ca-deploy-robot-frontend,ingress.hosts[0].host=dev-ca.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=dev-ca-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=dev-ca-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=dev-ca.app.simpleaccounts.io --wait --dry-run --debug --namespace dev-ca --create-namespace dev-frontend ./simpleaccounts-frontend 
+    - echo "Deployment started scripts..."
+    - helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=$REGISTRY_URL/$IMAGE,maindomain=dev-ca.app.simpleaccounts.io,simpleVatHost=https://dev-ca-api.app.simpleaccounts.io,fullnameOverride=dev-ca-frontend,serviceAccount.name=dev-ca-deploy-robot-frontend,ingress.hosts[0].host=dev-ca.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=dev-ca-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=dev-ca-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=dev-ca.app.simpleaccounts.io --wait --namespace dev-ca --create-namespace dev-frontend ./simpleaccounts-frontend 
+    - echo "Application successfully deployed."
+  resource_group: dev
+  environment:
+    name: Development
+    url: https://dev.app.simpleaccounts.io
+    action: start
+  allow_failure: false
+  rules:
+    - if: $CI_PROJECT_NAMESPACE == 'datainn/simpleaccounts' && $CI_BUILD_TAG =~ '/1.0.0-alpha-develop-ca.*/'
       when: on_success
     - when: never
   retry:

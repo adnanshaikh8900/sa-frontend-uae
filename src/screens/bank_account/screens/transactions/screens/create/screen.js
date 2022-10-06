@@ -750,8 +750,8 @@ class CreateBankTransaction extends React.Component {
 
   setcustomexchnage = (customerinvoice) => {
 
-
-    let exchange;
+   
+      let exchange;
     let convertor=this.state.bankCurrency.bankAccountCurrency===this.state.basecurrency.currencyCode
     ?customerinvoice:this.state.bankCurrency.bankAccountCurrency
     let result = this.props.currency_convert_list.filter((obj) => {
@@ -784,13 +784,13 @@ class CreateBankTransaction extends React.Component {
     if (option?.length > 0) {
       const transactionAmount = amount || this.formRef.current.state.values.transactionAmount
       const exchangerate = this.formRef.current.state.values?.exchangeRate
-     debugger
+    
       const invoicelist = [...option]
       const total = invoicelist.reduce((accu, curr, index) => curr.dueAmount * exchangerate[index])
       let remainingcredit = transactionAmount
       const finaldata = invoicelist?.map((i, ind) => {
         let localexe = 0
-        debugger
+      
         if (i.exchnageRate === undefined) localexe = this.setcustomexchnage(i.currencyCode)
         else localexe = i.exchnageRate
         let finalcredit = 0
@@ -817,8 +817,9 @@ class CreateBankTransaction extends React.Component {
           pp: false
         }
       })
-      debugger
+     
       this.formRef.current.setFieldValue('invoiceIdList', finaldata)
+    
       return finaldata
     }
     else {
@@ -855,7 +856,7 @@ class CreateBankTransaction extends React.Component {
 			return {...i,pp:value}
 		  })
 		  tempdata=this.setexchnagedamount(temp)
-		  debugger
+		
 		}
 		finaldata=[...tempdata]
 		if(transactionAmount>0 && transactionAmount!=="")
@@ -932,7 +933,7 @@ class CreateBankTransaction extends React.Component {
           this.props.location.state.bankAccountId
         )
         .then((res) => {
-          debugger
+         
           if (res.status === 200) {
             this.setState(
               {
@@ -1114,9 +1115,15 @@ class CreateBankTransaction extends React.Component {
                                     isExplainAmountZero=true 
                                   }
                               })
+
                               if(isExplainAmountZero){
                                 errors.invoiceIdList="Expain Amount Cannot Be Zero"  
                               }
+                              if(this.state.bankCurrency.bankAccountCurrency!==this.state.basecurrency.currencyCode
+                                && this.state.basecurrency.currencyCode!==values.invoiceIdList?.[values.invoiceIdList?.length-1].currencyCode
+                                )
+                                errors.invoiceIdList="the current selected invoice does not have supported currency conversions"
+                               
                             }
             
                             if( values.transactionAmount>totalexpaled &&
@@ -1188,7 +1195,7 @@ class CreateBankTransaction extends React.Component {
                           //   )
                           //     errors.transactionAmount = `Transaction Amount Must be Equal to Invoice Total(  ${this.state.totalInvoiceAmount}  )`;
                           // }
-                      debugger
+                    
                           return errors;
                         }}
                         validationSchema={Yup.object().shape({

@@ -1119,15 +1119,7 @@ class CreateBankTransaction extends React.Component {
                               if(isExplainAmountZero){
                                 errors.invoiceIdList="Expain Amount Cannot Be Zero"  
                               }
-                              values.invoiceIdList.map((ii)=>{
-                                if(this.state.bankCurrency.bankAccountCurrency!==this.state.basecurrency.currencyCode
-                                  && this.state.basecurrency.currencyCode!==ii.currencyCode
-                                  )
-                                  errors.invoiceIdList="the current selected invoice does not have supported currency conversions"
-                                 
-                              }
-                              )
-                              
+                            }
             
                             if( values.transactionAmount>totalexpaled &&
                               this.state?.bankCurrency?.bankAccountCurrency===values?.invoiceIdList?.[0]?.currencyCode)

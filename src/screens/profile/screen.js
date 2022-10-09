@@ -1433,6 +1433,9 @@ class Profile extends React.Component {
 																	errors.phoneNumber =
 																		'Invalid mobile number';
 																}
+																if(!values.vatRegistrationDate){
+																	errors.vatRegistrationDate="VAT Registered Date is required"
+																}
 																return errors;
 															}}
 			
@@ -3611,10 +3614,10 @@ class Profile extends React.Component {
 															//     .required("Last Name is required"),
 															// })}
 															validate={(values)=>{
-																
 																let errors={};
 																	if(this.state.currentPasswordMatched==false)
 																	errors.currentPassword="Please enter the correct password"
+																	
 																return errors;
 
 															}}

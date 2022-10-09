@@ -243,13 +243,11 @@ class ImportBankStatement extends React.Component {
 			});
 	};
 	handleFileUpload = e => {
-		debugger
 		const file = this.uploadFile.files[0];
 		const reader = new FileReader();
 		reader.onload = (evt) => {
 		  const bstr = evt.target.result;
 		  this.setState({dataString: bstr},()=> this.CreateNewTemplate())
-
 		};
 		reader.readAsBinaryString(file);
 		

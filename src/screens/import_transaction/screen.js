@@ -29,6 +29,7 @@ import moment from 'moment';
 import { Loader } from 'components';
 import { Formik } from 'formik';
 import { ThreeSixty } from '@material-ui/icons';
+import { ThemeProvider } from '@material-ui/core';
 
 
 const mapStateToProps = (state) => {
@@ -61,6 +62,7 @@ class ImportTransaction extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			templateId:'',
 			language: window['localStorage'].getItem('language'),
 			initialloading: true,
 			initValue: {
@@ -136,7 +138,7 @@ class ImportTransaction extends React.Component {
 		this.initializeData();	
 	};
 setConfigurations=(configurationList)=>{
-	debugger
+	
 	let data = configurationList.filter(
 		(item) => item.id == this.state.selectedConfiguration,
 	);
@@ -253,14 +255,15 @@ setConfigurations=(configurationList)=>{
 				if (val === 'name' && !initValue['name']) {
 					temp['name'] = '*Template name is required';
 				}
-				if (val === 'dateFormatId' && !initValue['dateFormatId']) {
-					temp['dateFormatId'] = '*Date format is required';
-				}
+				// if (val === 'dateFormatId' && !initValue['dateFormatId']) {
+				// 	temp['dateFormatId'] = '*Date format is required';
+				// }
 			}
 		}
 		this.setState({
 			error: temp,
 		});
+		debugger
 		if (Object.keys(temp).length) {
 			return false;
 		} else {
@@ -364,6 +367,7 @@ setConfigurations=(configurationList)=>{
 					this.setState({ loading: false });
 				});
 		}
+		
 	};
 
 	handleChange = (e, index) => {
@@ -458,6 +462,7 @@ setConfigurations=(configurationList)=>{
 	// 		return true
 	// }
 	handleSave = () => {
+		debugger
 		if (this.validateForm()) {
 		let optionErr = [...this.state.selectError];
 		let item = -1;
@@ -483,7 +488,8 @@ setConfigurations=(configurationList)=>{
 				return item;
 			});
 			let postData = { ...this.state.initValue };
-			postData.skipColumns = this.state.initValue.skipColumns.length >= 1  ? this.state.initValue.skipColumns : ''
+			debugger
+			postData.skipColumns = this.state.initValue.skipColumns?.length >= 1  ? this.state.initValue.skipColumns : ''
 			postData.indexMap = a;
 			this.props.importTransactionActions
 				.createConfiguration(postData)
@@ -499,7 +505,15 @@ setConfigurations=(configurationList)=>{
 					// 	bankAccountId: this.props.location.state.bankAccountId,
 					// });
 					
-					this.setState({ templateId: res.data.id });
+					this.props.importTransactionActions.getConfigurationList().then((res2) => {
+						this.setState({
+							templateId: res.data.id,
+							configurationList: res2.data,
+						},()=>{
+							this.Import()
+						});
+				
+				})
 					this.processData(this.props.location.state.dataString)
 					// this.validate();
 				})
@@ -515,6 +529,9 @@ setConfigurations=(configurationList)=>{
 			});
 		}
 	};}
+
+
+
 	columnClassNameFormat = (fieldValue, row, rowIdx, colIdx) => {
 		 
 		const index = `${rowIdx.toString()},${colIdx.toString()}`;
@@ -525,31 +542,54 @@ setConfigurations=(configurationList)=>{
 		const { templateId, tableData, id } = this.state;
 		const mappedvalues=[]
 			this.state.selectedValueDropdown.map((item, index) => {
-				if(item.value==="") mappedvalues.push(index)
+				if(item.value!=="") mappedvalues.push({inx:index,val:item.value})
 			})
 			const finaldata=[]
 			tableData.map((i)=>{
 				let local
+				let local2={}
 				local={...i}
 				mappedvalues.map((i2)=>{
-					const allvales=Object.keys(i)?.[i2]
-					delete local?.[`${allvales}`]
+					const allvales=Object.keys(i)?.[i2.inx]
 					
+					local2[i2.val]=local?.[`${allvales}`]
 				})
-				finaldata.push(local)
+				finaldata.push(local2)
 				
 			})
-
+			debugger
 			const fdata=finaldata.map((i)=>{
 				let local={...i}
 					Object.keys(i).map((i3)=>{
+						
 						if(local?.[`${i3}`]==="" || local?.[`${i3}`]===null || local?.[`${i3}`]===undefined) 
 						{
 						local={...local,[i3]:"-"}
 						}
+						if(i3==="TRANSACTION_DATE"){
+
+                            debugger
+
+                            local={...local,"TRANSACTION_DATE":moment(local["TRANSACTION_DATE"]).format('DD/MM/YYYY')}
+
+                        }
+						if(i3==="CR_AMOUNT" || i3==="DR_AMOUNT")
+						{
+							local={...local,"CR_AMOUNT":local["CR_AMOUNT"]?.replace(",",''),
+							"DR_AMOUNT":local["DR_AMOUNT"]?.replace(",",''),
+						}
+						}
 					})
 					return local
 			})
+
+			// const ldata=fdata.map((i)=>{
+			// 	return {
+			// 		{
+			// 			"Transection Date"
+			// 		}
+			// 	}
+			// })
 
 		const postData = {
 			bankId: this.props.location.state.bankAccountId
@@ -558,6 +598,8 @@ setConfigurations=(configurationList)=>{
 			templateId: templateId ? +templateId : '',
 			importDataMap: fdata,
 		};
+
+
 		this.props.importBankStatementActions
 			.importTransaction(postData)
 			.then((res) => {
@@ -695,36 +737,47 @@ setConfigurations=(configurationList)=>{
 	};
 
 	validate = () => {
-		let optionErr = [...this.state.selectError];
-		let item = -1;
-		this.state.selectedValueDropdown
-			.map((item, index) => {
-				if (item.value === '') {
-					optionErr[`${index}`] = true;
-				}
-				return item.value;
-			})
-			.indexOf('');
+		// let optionErr = [...this.state.selectError];
+		// let item = -1;
+		// this.state.selectedValueDropdown
+		// 	.map((item, index) => {
+		// 		if (item.value === '') {
+		// 			optionErr[`${index}`] = true;
+		// 		}
+		// 		return item.value;
+		// 	})
+		// 	.indexOf('');
 
-		if (item === -1) {
-			let a = {};
-			let val;
-			let obj = {};
-			this.state.selectedValueDropdown.map((item, index) => {
-				if (item.value != '') {
-					val = item.value;
-					obj[val] = index;
-					a = { ...a, ...obj };
-				}
-				return item;
-			});
+		// if (item === -1) {
+		// 	let a = {};
+		// 	let val;
+		// 	let obj = {};
+		// 	this.state.selectedValueDropdown.map((item, index) => {
+		// 		if (item.value != '') {
+		// 			val = item.value;
+		// 			obj[val] = index;
+		// 			a = { ...a, ...obj };
+		// 		}
+		// 		return item;
+		// 	});
 			
+		const mappedvalues=[]
+			this.state.selectedValueDropdown.map((item, index) => {
+				if(item.value!=="") mappedvalues.push({inx:index,val:item.value})
+			})
 
-			let postData = { ...this.state.initValue };
-			postData.skipColumns = this.state.initValue?.skipColumns?.length >= 1  ? this.state.initValue?.skipColumns : ''
-			postData.indexMap = a;
-			debugger
-			this.Import()
+
+			// let postData = { ...this.state.initValue };
+			// postData.skipColumns = this.state.initValue?.skipColumns?.length >= 1  ? this.state.initValue?.skipColumns : ''
+			// postData.indexMap = a;
+			
+			if(mappedvalues.length===4 && this.state.templateId===""){
+				this.handleSave()
+			} else if(this.state.templateId!==""){
+				this.Import()
+			}
+			
+			//this.Import()
 		// this.props.importTransactionActions
 		// 	.parseCsvFile(postData)
 		// 	.then((res) => {
@@ -751,7 +804,7 @@ setConfigurations=(configurationList)=>{
 		// 		// this.setState({ loading: false })
 		// 	});
 	}
-	}
+	
 	handleSubmit = (data) => {
 		
 		const { selectedTemplate } = this.state;
@@ -787,16 +840,21 @@ setConfigurations=(configurationList)=>{
 	processData = dataString => {
 	
 		 let parse = Papa.parse(dataString, this.state.config)
+		 let isheaderisrow=this.state.isHeaderRow
 		// let parse = dataString
 		const skipColumns = this.state.initValue.skipColumns
 		let newString=''
 		if(skipColumns && skipColumns.length > 0 )
+
 		{let skipColumnsList=skipColumns.split(',')
 		skipColumnsList.map((row)=>{
 			newString+=(parseInt(row)-1)+","
 		})
 		}
-		const dataStringLines = this.state.skipRows  ? parse.data.slice(this.state.skipRows) : parse.data;
+		const dataStringLines=[...parse.data]
+		const local = this.state.skipRows  ? dataStringLines.splice(isheaderisrow?1:0,
+			isheaderisrow?parseInt(this.state.skipRows)+1:this.state.skipRows) :dataStringLines;
+			debugger
 		const header = dataStringLines[0]
 		console.log(parse,"parse")
 		let headers = header
@@ -955,11 +1013,12 @@ setConfigurations=(configurationList)=>{
                             {
                               (props) => ( */}
 													<Form>
-														<Row lg={8}>
-															<Col lg={2}>
-																<Label>Parsing Template </Label>
-															</Col>
-															<Col lg={3}>
+														<Row lg={8} >
+															<Col lg={12} className="d-flex flex justify-content-center">
+																<Col lg={3} className="d-flex flex justify-content-end" >
+																<Label> Select Parsing Template </Label>
+																</Col >
+																<Col lg={3} >
 																<FormGroup>
 																	<Select
 																		placeholder="New Template"
@@ -999,7 +1058,8 @@ setConfigurations=(configurationList)=>{
 																				(item) => item.id === e.value,
 																			);
 																			debugger
-																			let local=[...this.state.selectedValueDropdown]
+																			if (data.length > 0) {
+																				let local=[...this.state.selectedValueDropdown]
 																			Object.keys(data[0].indexMap).map((i)=>{
 																				const data2 =selectOptionsFactory.renderOptions(
 																					'label',
@@ -1009,8 +1069,6 @@ setConfigurations=(configurationList)=>{
 																				).find((val)=>val.value==i)
 																				local[data[0].indexMap?.[`${i}`]]=data2
 																			})
-																			debugger
-																			if (data.length > 0) {
 																				this.setState({
 																					initValue: {
 																						name: this.state.initValue.name,
@@ -1046,18 +1104,22 @@ setConfigurations=(configurationList)=>{
 																		}}
 																	/>
 																</FormGroup>
+																</Col>
 															</Col>
-															<Col lg={1}>
+															<Col lg={12} className="d-flex flex justify-content-center my-3 font-weight-bold"> Or Create New Template</Col>
+															<Col lg={12} className="d-flex flex justify-content-center">
+																<Col lg={3} className="d-flex flex justify-content-end">
 																<Label>
-																	<span className="text-danger">* </span>{strings.Name}
+																	<span className="text-danger">* </span>New Template Name
 																</Label>
-															</Col>
-															<Col lg={3}>
+																</Col>
+																<Col lg={3}>
 																<FormGroup>
 																	<Input
 																		type="text"
 																		id="name"
 																		name="name"
+																		disabled={this.state.templateId!=="" }
 																		placeholder={strings.Enter + " " + strings.Name}
 																		value={this.state.initValue.name}
 																		onChange={(e) => {
@@ -1087,8 +1149,10 @@ setConfigurations=(configurationList)=>{
 																		)}
 																</FormGroup>
 															</Col>
+															</Col>
+														
 
-															<Col>
+															{/* <Col>
 																<Button
 																	type="button"
 																	color="primary"
@@ -1098,7 +1162,7 @@ setConfigurations=(configurationList)=>{
 																	<i className="fa fa-dot-circle-o"></i>{' '}
 																	Save Template
 																</Button>
-															</Col>
+															</Col> */}
 														</Row>
 
 														<Row>
@@ -1147,6 +1211,7 @@ setConfigurations=(configurationList)=>{
 																				<Input
 																					className="ml-3"
 																					type="text"
+																					
 																					placeholder='Delimiter'
 																					value={
 																						this.state.initValue.otherDilimiterStr ||''
@@ -1157,14 +1222,10 @@ setConfigurations=(configurationList)=>{
 																					// 	'OTHER'
 																					// }
 																					onChange={(e) => {
-																				
-																						this.handleInputChange(
-																							'otherDilimiterStr',
-																							e.target.value,
-																						);
+
 																						this.setState({
 
-																							initValue: { ...this.state.initValue,...{otherDilimiterStr: e.target.value} }
+																							initValue: { ...this.state.initValue,otherDilimiterStr: e.target.value }
 																						}
 																							, () => {
 																								this.processData(this.props.location.state.dataString)
@@ -1305,14 +1366,16 @@ setConfigurations=(configurationList)=>{
 																	id="isHeaderRow"
 																	checked={this.state.isHeaderRow}
 																	onChange={(option) => {
-																	
-																		this.setState({ isHeaderRow: !this.state.isHeaderRow })}
+
+																		this.setState({ isHeaderRow: !this.state.isHeaderRow },()=>{
+																			this.processData(this.props.location.state.dataString)
+																		})}
 																	}
 																/>
 																<Label>Is Header Row</Label>
 																</FormGroup>
 															</Col>
-																		<Col>
+																		{/* <Col>
 																			<FormGroup>
 																				<Label htmlFor="description">
 																					<span className="text-danger">
@@ -1391,9 +1454,9 @@ setConfigurations=(configurationList)=>{
 																						</div>
 																					)}
 																			</FormGroup>
-																		</Col>
-																		<Col>
-																			{/* <FormGroup>
+																		</Col> */}
+																		{/* <Col>
+																			<FormGroup>
 																				<Button
 																					type="button"
 																					color="primary"
@@ -1411,9 +1474,9 @@ setConfigurations=(configurationList)=>{
 																					{strings.Apply}
 																				</Button>
 																			</FormGroup>
-																		 */}
 																		
-																		</Col>
+																		
+																		</Col> */}
 																	</Row>
 																	{/* <Row>
 
@@ -1562,6 +1625,7 @@ setConfigurations=(configurationList)=>{
 																		>
 																			<Select
 																				type=""
+																				// isDisabled={this.state.templateId!=="" }
 																				options={
 																					this.state.tableHeader
 																						? selectOptionsFactory.renderOptions(
@@ -1586,7 +1650,7 @@ setConfigurations=(configurationList)=>{
 																				onChange={(e) => {
 																					
 																					this.handleChange(e, index);
-																				debugger
+																			
 																				}}
 																			// className={}
 																			/>
@@ -1654,16 +1718,8 @@ setConfigurations=(configurationList)=>{
 																					color="primary"
 																					className="btn-square mr-4"
 																					// disabled={this.state.fileName ? false : true}
-																					onClick={() => {
-																						debugger
-																						 if(this.state.templateId){
-
-																						this.validate()
-																					}else{
-																						this.validateWithoutTemplate()
-																					}
-																					}
-																				}	
+																					onClick={() =>this.validate()}
+																				
 																				>
 																					<i className="fa fa-dot-circle-o"></i>{' '}
 																					Validate and Save

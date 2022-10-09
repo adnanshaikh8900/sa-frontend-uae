@@ -750,10 +750,12 @@ class CreateBankTransaction extends React.Component {
 
   setcustomexchnage = (customerinvoice) => {
 
-
-    let exchange;
+   
+      let exchange;
+    let convertor=this.state.bankCurrency.bankAccountCurrency===this.state.basecurrency.currencyCode
+    ?customerinvoice:this.state.bankCurrency.bankAccountCurrency
     let result = this.props.currency_convert_list.filter((obj) => {
-      return obj.currencyCode === customerinvoice;
+      return obj.currencyCode === convertor;
     });
     // this.state.invoiceCurrency
     // this.state.bankCurrency.bankAccountCurrency
@@ -767,15 +769,14 @@ class CreateBankTransaction extends React.Component {
       exchange = 1;
       //this.formRef.current.setFieldValue('exchangeRate', 1, true);
     } else if (
-      customerinvoice !== this.state.bankCurrency.bankAccountCurrency
+      customerinvoice === this.state.basecurrency.currencyCode
     ) {
-      if (customerinvoice !== this.state.basecurrency.currencyCode) {
         exchange = result[0].exchangeRate;
       } else {
         exchange = 1 / result[0].exchangeRate;
       }
-    }
-debugger
+    
+
     return exchange
   }
 
@@ -783,13 +784,13 @@ debugger
     if (option?.length > 0) {
       const transactionAmount = amount || this.formRef.current.state.values.transactionAmount
       const exchangerate = this.formRef.current.state.values?.exchangeRate
-     debugger
+    
       const invoicelist = [...option]
       const total = invoicelist.reduce((accu, curr, index) => curr.dueAmount * exchangerate[index])
       let remainingcredit = transactionAmount
       const finaldata = invoicelist?.map((i, ind) => {
         let localexe = 0
-        debugger
+      
         if (i.exchnageRate === undefined) localexe = this.setcustomexchnage(i.currencyCode)
         else localexe = i.exchnageRate
         let finalcredit = 0
@@ -816,8 +817,9 @@ debugger
           pp: false
         }
       })
-      debugger
+     
       this.formRef.current.setFieldValue('invoiceIdList', finaldata)
+    
       return finaldata
     }
     else {
@@ -854,7 +856,7 @@ debugger
 			return {...i,pp:value}
 		  })
 		  tempdata=this.setexchnagedamount(temp)
-		  debugger
+		
 		}
 		finaldata=[...tempdata]
 		if(transactionAmount>0 && transactionAmount!=="")
@@ -931,7 +933,7 @@ debugger
           this.props.location.state.bankAccountId
         )
         .then((res) => {
-          debugger
+         
           if (res.status === 200) {
             this.setState(
               {
@@ -1041,7 +1043,11 @@ debugger
     let tmpSupplier_list = [];
 
     vendor_list.map((item) => {
+
       let obj = { label: item.label.contactName, value: item.value };
+      if(item.label.currency.currencyCode===this.state.basecurrency.currencyCode || 
+        this.state.basecurrency.currencyCode===this.state.bankCurrency.bankAccountCurrency
+        )
       tmpSupplier_list.push(obj);
     });
 
@@ -1073,7 +1079,7 @@ debugger
                           this.handleSubmit(values, resetForm);
                         }}
                         validate={(values) => {
-                          console.log(values);
+                          
                           let errors = {};
                           const totalexpaled=values?.invoiceIdList.reduce((a,c)=>a+c.explainedAmount,0)
                          
@@ -1109,10 +1115,20 @@ debugger
                                     isExplainAmountZero=true 
                                   }
                               })
+
                               if(isExplainAmountZero){
                                 errors.invoiceIdList="Expain Amount Cannot Be Zero"  
                               }
-                            }
+
+                              values.invoiceIdList.map((ii)=>{
+                                if(this.state.bankCurrency.bankAccountCurrency!==this.state.basecurrency.currencyCode
+                                  && this.state.basecurrency.currencyCode!==ii.currencyCode
+                                  )
+                                  errors.invoiceIdList="the current selected invoice does not have supported currency conversions"
+                                 
+                              }
+                              )
+                              
             
                             if( values.transactionAmount>totalexpaled &&
                               this.state?.bankCurrency?.bankAccountCurrency===values?.invoiceIdList?.[0]?.currencyCode)
@@ -1126,9 +1142,10 @@ debugger
                             && isppselected===0
                             )
                          {
-                          errors.transactionAmount=`Amount is less select partial payment on invoice `
+                          errors.transactionAmount=`The transaction amount is less than the invoice amount. To partially pay the invoice, please select the checkbox `
                          
                         }
+                        
                           }
 
 
@@ -1182,9 +1199,9 @@ debugger
                           //   )
                           //     errors.transactionAmount = `Transaction Amount Must be Equal to Invoice Total(  ${this.state.totalInvoiceAmount}  )`;
                           // }
-                      debugger
+                    
                           return errors;
-                        }}
+                        }}}
                         validationSchema={Yup.object().shape({
                           transactionDate: Yup.date().required(
                             "Transaction Date is Required"
@@ -2226,7 +2243,7 @@ debugger
                                                     props.values?.invoiceIdList?.reduce(
                                                       (accu, curr, index) =>
                                                         accu +
-                                                        curr.amount * curr.exchangeRate
+                                                        curr.dueAmount * curr.exchangeRate
                                                       ,
                                                       0
                                                     ) >= 0}

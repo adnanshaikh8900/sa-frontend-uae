@@ -769,7 +769,9 @@ class CreateBankTransaction extends React.Component {
       exchange = 1;
       //this.formRef.current.setFieldValue('exchangeRate', 1, true);
     } else {
-      exchange= result[0].exchangeRate
+      if(this.state.basecurrency.currencyCode===customerinvoice)
+      exchange= 1/result[0].exchangeRate
+      else exchange= result[0].exchangeRate
     }
     
 

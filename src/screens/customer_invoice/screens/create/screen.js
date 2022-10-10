@@ -1342,7 +1342,7 @@ discountType = (row) =>
 		let idx;
 		data.map((obj, index) => {
 			if (obj.id === row.id) {
-				obj['unitPrice'] = result.unitPrice;
+				obj['unitPrice'] = result.unitPrice*(this.formRef.current?.state?.values?.exchangeRate || 1);
 				obj['vatCategoryId'] = result.vatCategoryId;
 				obj['description'] = result.description;
 				obj['exciseTaxId'] = result.exciseTaxId;
@@ -3319,6 +3319,7 @@ discountType = (row) =>
 																				props.handleChange('exchangeRate')(
 																					value,
 																				);
+																				
 																			}}
 																		/>
 																	</div>

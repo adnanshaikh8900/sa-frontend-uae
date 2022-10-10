@@ -1344,7 +1344,6 @@ discountType = (row) =>
 			&& this.formRef.current?.state?.values?.exchangeRate!=="" ?
 			this.formRef.current?.state?.values?.exchangeRate:1
 		data.map((obj, index) => {
-			debugger
 			if (obj.id === row.id) {
 				obj['unitPrice'] = parseFloat(result.unitPrice)*(1/exchangeRate);
 				obj['vatCategoryId'] = result.vatCategoryId;

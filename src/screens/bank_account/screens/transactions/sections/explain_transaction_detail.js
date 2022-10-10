@@ -1065,6 +1065,7 @@ class ExplainTrasactionDetail extends React.Component {
 		
 		  this.formRef.current.setFieldValue('invoiceIdList', finaldata)
 		  
+		  
 		  return finaldata
 		}
 		else {

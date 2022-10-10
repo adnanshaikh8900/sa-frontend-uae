@@ -1340,10 +1340,13 @@ discountType = (row) =>
 		let data = this.state.data;
 		const result = product_list.find((item) => item.id === parseInt(e));
 		let idx;
+		let exchangeRate=this.formRef.current?.state?.values?.exchangeRate>0 
+			&& this.formRef.current?.state?.values?.exchangeRate!=="" ?
+			this.formRef.current?.state?.values?.exchangeRate:1
 		data.map((obj, index) => {
 			debugger
 			if (obj.id === row.id) {
-				obj['unitPrice'] = result.unitPrice*(1/this.formRef.current?.state?.values?.exchangeRate || 1);
+				obj['unitPrice'] = parseFloat(result.unitPrice)*(1/exchangeRate);
 				obj['vatCategoryId'] = result.vatCategoryId;
 				obj['description'] = result.description;
 				obj['exciseTaxId'] = result.exciseTaxId;
@@ -1590,11 +1593,9 @@ discountType = (row) =>
 		let total_vat = 0;
 		let net_value = 0; 
 		let discount_total = 0;
-		let exchangeRate=this.formRef.current?.state?.values?.exchangeRate>0 
-			&& this.formRef.current?.state?.values?.exchangeRate!=="" ?
-			this.formRef.current?.state?.values?.exchangeRate:1
+		
 		data.map((obj) => {
-			let unitprice=obj.unitPrice*(exchangeRate)
+			let unitprice=obj.unitPrice
 			const index =
 				obj.vatCategoryId !== ''
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)

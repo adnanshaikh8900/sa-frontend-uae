@@ -156,6 +156,7 @@ class ReconcileTransaction extends React.Component {
 						this.initializeData();
 					} else {
 						this.props.commonActions.tostifyAlert('error', res.data.message);
+						this.setState({ disabled: false, loading:false, disableLeavePage:true, loadingMsg:"" });
 					}
 				}
 			})

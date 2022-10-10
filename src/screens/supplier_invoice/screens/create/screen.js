@@ -171,7 +171,7 @@ class CreateSupplierInvoice extends React.Component {
 			discountPercentage: '',
 			discountAmount: 0,
 			purchaseCategory: [],
-			exchangeRate: '',
+			exchangeRate:"" ,
 			basecurrency: [],
 			language: window['localStorage'].getItem('language'),
 			param: false,
@@ -1373,7 +1373,7 @@ class CreateSupplierInvoice extends React.Component {
 		let idx;
 		data.map((obj, index) => {
 			if (obj.id === row.id) {
-				obj['unitPrice'] = result.unitPrice;
+				obj['unitPrice'] = result.unitPrice
 				obj['vatCategoryId'] = result.vatCategoryId;
 				obj['exciseTaxId'] = result.exciseTaxId;
 				obj['description'] = result.description;
@@ -1721,6 +1721,9 @@ class CreateSupplierInvoice extends React.Component {
 
 	updateAmount = (data, props) => {
 		const { vat_list } = this.props;
+		let exchangeRate=this.formRef.current?.state?.values?.exchangeRate>0 
+			&& this.formRef.current?.state?.values?.exchangeRate!=="" ?
+			this.formRef.current?.state?.values?.exchangeRate:1
 		let total_net = 0;
 		let total_excise = 0;
 		let total = 0;
@@ -1728,6 +1731,7 @@ class CreateSupplierInvoice extends React.Component {
 		let net_value = 0; 
 		let discount_total = 0;
 		data.map((obj) => {
+			let unitprice=obj.unitPrice*(exchangeRate)
 			const index =
 				obj.vatCategoryId !== ''
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
@@ -1738,9 +1742,9 @@ class CreateSupplierInvoice extends React.Component {
 			if(this.state.taxType === false){
 				if (obj.discountType === 'PERCENTAGE') {	
 					 net_value =
-						((+obj.unitPrice -
-							(+((obj.unitPrice * obj.discount)) / 100)) * obj.quantity);
-					var discount =  (obj.unitPrice * obj.quantity) - net_value
+						((+unitprice -
+							(+((unitprice * obj.discount)) / 100)) * obj.quantity);
+					var discount =  (unitprice * obj.quantity) - net_value
 				if(obj.exciseTaxId !=  0){
 					if(obj.exciseTaxId === 1){
 						const value = +(net_value) / 2 ;
@@ -1761,8 +1765,8 @@ class CreateSupplierInvoice extends React.Component {
 					((+net_value  * vat ) / 100);
 				}else{
 					 net_value =
-						((obj.unitPrice * obj.quantity) - obj.discount)
-					var discount =  (obj.unitPrice * obj.quantity) - net_value
+						((unitprice * obj.quantity) - obj.discount)
+					var discount =  (unitprice * obj.quantity) - net_value
 						if(obj.exciseTaxId !=  0){
 							if(obj.exciseTaxId === 1){
 								const value = +(net_value) / 2 ;
@@ -1791,11 +1795,11 @@ class CreateSupplierInvoice extends React.Component {
 
 					//net value after removing discount
 					 net_value =
-					((+obj.unitPrice -
-						(+((obj.unitPrice * obj.discount)) / 100)) * obj.quantity);
+					((+unitprice -
+						(+((unitprice * obj.discount)) / 100)) * obj.quantity);
 
 				//discount amount
-				var discount =  (obj.unitPrice* obj.quantity) - net_value
+				var discount =  (unitprice* obj.quantity) - net_value
 
 				//vat amount
 				var vat_amount =
@@ -1827,11 +1831,11 @@ class CreateSupplierInvoice extends React.Component {
 						{
 				//net value after removing discount
 				 net_value =
-				((obj.unitPrice * obj.quantity) - obj.discount)
+				((unitprice * obj.quantity) - obj.discount)
 
 
 				//discount amount
-				var discount =  (obj.unitPrice * obj.quantity) - net_value
+				var discount =  (unitprice * obj.quantity) - net_value
 						
 				//vat amount
 				var vat_amount =
@@ -1859,7 +1863,7 @@ class CreateSupplierInvoice extends React.Component {
 							}
 					}
 			}
-			
+			obj.unitPrice=unitprice
 			obj.vatAmount = vat_amount
 			obj.subTotal =
 			net_value ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
@@ -3054,12 +3058,13 @@ class CreateSupplierInvoice extends React.Component {
 																			className="form-control"
 																			id="exchangeRate"
 																			name="exchangeRate"
-
+																			disabled={this.state?.data?.length>0 && this.state?.data?.[0]?.productId}
 																			value={props.values.exchangeRate}
 																			onChange={(value) => {
 																				props.handleChange('exchangeRate')(
 																					value,
 																				);
+																				
 																			}}
 																		/>
 																	</div>
@@ -3076,7 +3081,13 @@ class CreateSupplierInvoice extends React.Component {
 
 																/>
 															</Col>
+															
 														</Row>
+														<span style={{color:'blue',fontSize:10}}> 
+																{(this.state?.data?.length>0 && this.state?.data?.[0]?.productId) &&
+																'Exchange Rate Can Only be edited if No Product is Selected'
+																}
+															</span>
 														<hr style={{ display: props.values.exchangeRate === 1 ? 'none' : '' }} />
 														<Row className="mb-3">
 															<Col lg={8} className="mb-3">

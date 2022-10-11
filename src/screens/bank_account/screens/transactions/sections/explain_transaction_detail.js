@@ -777,7 +777,9 @@ class ExplainTrasactionDetail extends React.Component {
 			  convertedInvoiceAmount:i.convertedInvoiceAmount,
 			  explainedAmount:i.explainedAmount,
 			  exchangeRate:i.exchangeRate,
-			  partiallyPaid:i.pp
+			  partiallyPaid:i.pp,
+			  nonConvertedInvoiceAmount:i.explainedAmount/i.exchangeRate,
+          	convertedToBaseCurrencyAmount:i.convertedToBaseCurrencyAmount
 			 } })) : []
 		  );
 		
@@ -1011,6 +1013,15 @@ class ExplainTrasactionDetail extends React.Component {
 		return exchange
 	  }
 	
+	  basecurrencyconvertor=(customerinvoice)=>{
+		let exchange;
+		let result = this.props.currency_convert_list.filter((obj) => {
+		  return obj.currencyCode === customerinvoice;
+		});
+		exchange= result[0].exchangeRate
+		return exchange
+	  }
+	  
 	
 	  setexchnagedamount = (option, amount) => {
 		
@@ -1037,6 +1048,7 @@ class ExplainTrasactionDetail extends React.Component {
 			  }
 			  remainingcredit = localremainamount
 			}
+			const basecurrency=this.basecurrencyconvertor(i.currencyCode)
 			if(this.state.initValue.explinationStatusEnum ==='PARTIAL' || this.state.initValue.explinationStatusEnum==="FULL")
 			return {
 			  ...i,
@@ -1046,7 +1058,8 @@ class ExplainTrasactionDetail extends React.Component {
 			  convertedInvoiceAmount: i.amount * localexe,
 			  explainedAmount: i.amount * localexe,
 			  exchangeRate: localexe,
-			  pp: false
+			  pp: false,
+			  convertedToBaseCurrencyAmount:i.dueAmount*basecurrency
 			}
 			else 
 			return {
@@ -1057,7 +1070,9 @@ class ExplainTrasactionDetail extends React.Component {
 				convertedInvoiceAmount: i.dueAmount * localexe,
 				explainedAmount: i.dueAmount * localexe,
 				exchangeRate: localexe,
-				pp: false
+				pp: false,
+				convertedToBaseCurrencyAmount:i.dueAmount*basecurrency
+			
 			  }
 		  })
 		   
@@ -1130,6 +1145,12 @@ class ExplainTrasactionDetail extends React.Component {
 		  
 		  updatedfinaldata.push(local)
 		})
+		updatedfinaldata=updatedfinaldata.map((i)=>{
+			const basecurrency=this.basecurrencyconvertor(i.currencyCode)
+			return {...i,
+			  convertedToBaseCurrencyAmount:i.explainedAmount*basecurrency
+			}
+		  })
 		this.formRef.current.setFieldValue('invoiceIdList', updatedfinaldata)
 	  }
 	}

@@ -1059,7 +1059,7 @@ class ExplainTrasactionDetail extends React.Component {
 			  explainedAmount: i.amount * localexe,
 			  exchangeRate: localexe,
 			  pp: false,
-			  convertedToBaseCurrencyAmount:i.dueAmount*basecurrency
+			  convertedToBaseCurrencyAmount:(i.amount * localexe)*basecurrency
 			}
 			else 
 			return {
@@ -1071,7 +1071,7 @@ class ExplainTrasactionDetail extends React.Component {
 				explainedAmount: i.dueAmount * localexe,
 				exchangeRate: localexe,
 				pp: false,
-				convertedToBaseCurrencyAmount:i.dueAmount*basecurrency
+				convertedToBaseCurrencyAmount:(i.dueAmount * localexe)*basecurrency
 			
 			  }
 		  })

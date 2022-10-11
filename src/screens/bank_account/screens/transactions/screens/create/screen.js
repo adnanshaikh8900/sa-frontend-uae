@@ -826,7 +826,7 @@ class CreateBankTransaction extends React.Component {
           explainedAmount:  i.dueAmount * localexe,
           exchangeRate: localexe,
           pp: false,
-          convertedToBaseCurrencyAmount:i.dueAmount*basecurrency
+          convertedToBaseCurrencyAmount:(i.dueAmount * localexe)*basecurrency
         }
       })
      

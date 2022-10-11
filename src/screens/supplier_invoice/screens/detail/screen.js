@@ -1423,6 +1423,7 @@ class DetailSupplierInvoice extends React.Component {
 		);
 	};
 
+
 	handleSubmit = (data) => {
 		this.setState({ disabled: true, disableLeavePage:true });
 		const { current_supplier_id, term } = this.state;

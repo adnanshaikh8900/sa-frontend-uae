@@ -396,12 +396,13 @@ class CreateBankTransaction extends React.Component {
         "explainParamListStr",
         invoiceIdList ? JSON.stringify(result) : ""
       );
-      
+            
+     
      
       formData.append(
         "explainedInvoiceListString",
         invoiceIdList ?JSON.stringify(invoiceIdList.map((i)=>{
-         
+                  
          return {
           invoiceId:i.value,
           invoiceAmount:i.dueAmount,
@@ -409,6 +410,8 @@ class CreateBankTransaction extends React.Component {
           explainedAmount:i.explainedAmount,
           exchangeRate:i.exchangeRate,
           partiallyPaid:i.pp,
+          nonConvertedInvoiceAmount:i.explainedAmount/i.exchangeRate,
+          convertedToBaseCurrencyAmount:i.convertedToBaseCurrencyAmount,
           nonConvertedInvoiceAmount:i.explainedAmount/i.exchangeRate,
           convertedToBaseCurrencyAmount:i.convertedToBaseCurrencyAmount
          } })) : []
@@ -789,6 +792,14 @@ class CreateBankTransaction extends React.Component {
     exchange= result[0].exchangeRate
     return exchange
   }
+  basecurrencyconvertor=(customerinvoice)=>{
+    let exchange;
+    let result = this.props.currency_convert_list.filter((obj) => {
+      return obj.currencyCode === customerinvoice;
+    });
+    exchange= result[0].exchangeRate
+    return exchange
+  }
   setexchnagedamount = (option, amount) => {
     if (option?.length > 0) {
       const transactionAmount = amount || this.formRef.current.state.values.transactionAmount
@@ -892,6 +903,12 @@ class CreateBankTransaction extends React.Component {
 			}	 
 		  updatedfinaldata.push(local)
 		})
+    updatedfinaldata=updatedfinaldata.map((i)=>{
+      const basecurrency=this.basecurrencyconvertor(i.currencyCode)
+      return {...i,
+        convertedToBaseCurrencyAmount:i.explainedAmount*basecurrency
+      }
+    })
     updatedfinaldata=updatedfinaldata.map((i)=>{
       const basecurrency=this.basecurrencyconvertor(i.currencyCode)
       return {...i,

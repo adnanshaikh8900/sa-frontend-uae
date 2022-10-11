@@ -1398,6 +1398,16 @@ class ExplainTrasactionDetail extends React.Component {
                           errors.amount=`The transaction amount is less than the invoice amount. To partially pay the invoice, please select the checkbox `
                          
                         }
+
+						values.invoiceIdList.map((ii)=>{
+							if((this.state.bankCurrency.bankAccountCurrency!==this.state.basecurrency.currencyCode
+							  && this.state.basecurrency.currencyCode!==ii.currencyCode) && this.state.bankCurrency.bankAccountCurrency!==ii.currencyCode)
+							  
+							  errors.invoiceIdList="the current selected invoice does not have supported currency conversions"
+							 
+						  }
+						  )
+						  
 														  }
 								
 														

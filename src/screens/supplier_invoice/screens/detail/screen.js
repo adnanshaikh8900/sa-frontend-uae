@@ -2400,12 +2400,15 @@ class DetailSupplierInvoice extends React.Component {
 																				
 																			/>
 														</Col>
-														</Row>
+														<Col sm={12}>
 														<span style={{color:'blue',fontSize:10}}> 
 																{(this.state?.data?.length>0 && this.state?.data?.[0]?.productId) &&
 																'Exchange Rate Can Only be edited if No Product is Selected'
 																}
 															</span>
+														</Col>
+														</Row>
+														
 															<hr style={{display: props.values.exchangeRate === 1 ? 'none' : ''}} />
 															<Row>
 																<Col lg={8} className="mb-3">

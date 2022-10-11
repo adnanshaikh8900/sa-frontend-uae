@@ -334,7 +334,7 @@ class ExplainTrasactionDetail extends React.Component {
 
 		this.props.transactionsActions.getChartOfCategoryList(type).then((res) => {
 			if (res.status === 200) {
-			debugger
+			
 				this.setState(
 					{
 						chartOfAccountCategoryList: res.data,
@@ -777,7 +777,9 @@ class ExplainTrasactionDetail extends React.Component {
 			  convertedInvoiceAmount:i.convertedInvoiceAmount,
 			  explainedAmount:i.explainedAmount,
 			  exchangeRate:i.exchangeRate,
-			  partiallyPaid:i.pp
+			  partiallyPaid:i.pp,
+			  nonConvertedInvoiceAmount:i.explainedAmount/i.exchangeRate,
+          	convertedToBaseCurrencyAmount:i.convertedToBaseCurrencyAmount
 			 } })) : []
 		  );
 		
@@ -996,25 +998,33 @@ class ExplainTrasactionDetail extends React.Component {
 		//  return this.formRef.current.setFieldValue('exchangeRate',1/result[0].exchangeRate, true);
 	
 		if (
-		  customerinvoice === this.state.bankCurrency.bankAccountCurrency
-		) {
-		  exchange = 1;
-		  //this.formRef.current.setFieldValue('exchangeRate', 1, true);
-		} else if (
-		  customerinvoice === this.state.basecurrency.currencyCode
-		) {
-			exchange = result[0].exchangeRate;
+			customerinvoice === this.state.bankCurrency.bankAccountCurrency
+		  ) {
+			exchange = 1;
+			//this.formRef.current.setFieldValue('exchangeRate', 1, true);
 		  } else {
-			exchange = 1 / result[0].exchangeRate;
+			if(this.state.basecurrency.currencyCode===customerinvoice)
+			exchange= 1/result[0].exchangeRate
+			else exchange= result[0].exchangeRate
 		  }
+		  
 		
 	
 		return exchange
 	  }
 	
+	  basecurrencyconvertor=(customerinvoice)=>{
+		let exchange;
+		let result = this.props.currency_convert_list.filter((obj) => {
+		  return obj.currencyCode === customerinvoice;
+		});
+		exchange= result[0].exchangeRate
+		return exchange
+	  }
+	  
 	
 	  setexchnagedamount = (option, amount) => {
-		debugger
+		
 		if (option?.length > 0) {
 		  const transactionAmount = amount || this.formRef.current.state.values.amount
 		  const exchangerate = this.formRef.current.state.values?.exchangeRate
@@ -1038,6 +1048,7 @@ class ExplainTrasactionDetail extends React.Component {
 			  }
 			  remainingcredit = localremainamount
 			}
+			const basecurrency=this.basecurrencyconvertor(i.currencyCode)
 			if(this.state.initValue.explinationStatusEnum ==='PARTIAL' || this.state.initValue.explinationStatusEnum==="FULL")
 			return {
 			  ...i,
@@ -1047,7 +1058,8 @@ class ExplainTrasactionDetail extends React.Component {
 			  convertedInvoiceAmount: i.amount * localexe,
 			  explainedAmount: i.amount * localexe,
 			  exchangeRate: localexe,
-			  pp: false
+			  pp: false,
+			  convertedToBaseCurrencyAmount:i.dueAmount*basecurrency
 			}
 			else 
 			return {
@@ -1058,13 +1070,17 @@ class ExplainTrasactionDetail extends React.Component {
 				convertedInvoiceAmount: i.dueAmount * localexe,
 				explainedAmount: i.dueAmount * localexe,
 				exchangeRate: localexe,
-				pp: false
+				pp: false,
+				convertedToBaseCurrencyAmount:i.dueAmount*basecurrency
+			
 			  }
 		  })
 		   
 
 		
 		  this.formRef.current.setFieldValue('invoiceIdList', finaldata)
+		  
+		  
 		  return finaldata
 		}
 		else {
@@ -1129,6 +1145,12 @@ class ExplainTrasactionDetail extends React.Component {
 		  
 		  updatedfinaldata.push(local)
 		})
+		updatedfinaldata=updatedfinaldata.map((i)=>{
+			const basecurrency=this.basecurrencyconvertor(i.currencyCode)
+			return {...i,
+			  convertedToBaseCurrencyAmount:i.explainedAmount*basecurrency
+			}
+		  })
 		this.formRef.current.setFieldValue('invoiceIdList', updatedfinaldata)
 	  }
 	}
@@ -1313,11 +1335,11 @@ class ExplainTrasactionDetail extends React.Component {
 												<div className="h4 mb-0 d-flex align-items-center">
 													<i className="icon-doc" />
 													<span className="ml-2">
-
+													
 														{
 															this.props.selectedData.debitCreditFlag === 'D' ?
-																strings.Explain + " " + strings.Transaction + " " + strings.For + " " + strings.WithdrawalAmount + " " + this.state.currencySymbol + " " + this.state.amount :
-																strings.Explain + " " + strings.Transaction + " " + strings.For + " " + strings.DepositAmount + " " + this.state.currencySymbol + " " + this.state.amount
+																strings.Explain + " " + strings.Transaction + " " + strings.For + " " + strings.WithdrawalAmount + " " + this.state.bankCurrency?.bankAccountCurrencyIsoCode + " " + this.state.amount :
+																strings.Explain + " " + strings.Transaction + " " + strings.For + " " + strings.DepositAmount + " " + this.state.bankCurrency?.bankAccountCurrencyIsoCode + " " + this.state.amount
 														}
 
 													</span>

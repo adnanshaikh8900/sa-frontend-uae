@@ -386,7 +386,14 @@ class InvoiceTemplate extends Component {
 
                                         invoiceData.currencyIsoCode + " " +ZERO.toLocaleString(navigator.language, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
 
-                                    </strong></div>
+                                    </strong>
+									
+									</div>
+									<div className="mb-1 ml-2 mt-1 w-100" >
+									{(invoiceData.exchangeRate && invoiceData.exchangeRate!==1 ) && <strong style={{ padding: '0.5rem', background: '#f2f2f2'}}>Exchange Rate: {invoiceData.exchangeRate }
+
+</strong>}
+</div>
 								</div>
 							</div>
 						</div>

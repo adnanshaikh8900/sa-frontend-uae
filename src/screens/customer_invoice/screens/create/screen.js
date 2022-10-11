@@ -487,6 +487,7 @@ renderVatAmount = (cell, row,extraData) => {
 		});
 		if(result &&result[0]&&  result[0].exchangeRate)
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
+		this.exchangeRaterevalidate(result[0].exchangeRate)
 		};
 
 	setCurrency = (value) => {
@@ -1335,6 +1336,27 @@ discountType = (row) =>
 			/>
 		);
 	};
+
+	exchangeRaterevalidate=(exc)=>{
+	debugger
+		let local=[...this.state.data]
+		var { product_list } = this.props;
+		
+		let local2=local.map((obj, index) => {
+
+			const result = product_list.find((item) => item.id === obj.productId);
+			debugger
+			return {
+				...obj,unitPrice:result?
+				(parseFloat(result.unitPrice)*(1/exc)).toFixed(2):0
+			}
+			
+		});
+		
+		this.setState({data:local2},()=>{
+			this.updateAmount(local2);
+		})
+	}
 	prductValue = (e, row, name, form, field, props) => {
 		const { product_list } = this.props;
 		let data = this.state.data;
@@ -1345,7 +1367,7 @@ discountType = (row) =>
 			this.formRef.current?.state?.values?.exchangeRate:1
 		data.map((obj, index) => {
 			if (obj.id === row.id) {
-				obj['unitPrice'] = parseFloat(result.unitPrice)*(1/exchangeRate);
+				obj['unitPrice'] = (parseFloat(result.unitPrice)*(1/exchangeRate)).toFixed(2);
 				obj['vatCategoryId'] = result.vatCategoryId;
 				obj['description'] = result.description;
 				obj['exciseTaxId'] = result.exciseTaxId;
@@ -3319,14 +3341,14 @@ discountType = (row) =>
 																			type="number"
 																			className="form-control"
 																			id="exchangeRate"
-																			disabled={this.state?.data?.length>0 && this.state?.data?.[0]?.productId}
+																
 																			name="exchangeRate"
 																			value={props.values.exchangeRate}
 																			onChange={(value) => {
 																				props.handleChange('exchangeRate')(
 																					value,
 																				);
-																				
+																				this.exchangeRaterevalidate(parseFloat(value.target.value))
 																			}}
 																		/>
 																	</div>
@@ -3344,13 +3366,7 @@ discountType = (row) =>
 																				
 																			/>
 														</Col>
-														<Col sm={12}>
-														<span style={{color:'blue',fontSize:10}}> 
-																{(this.state?.data?.length>0 && this.state?.data?.[0]?.productId) &&
-																'Exchange Rate Can Only be edited if No Product is Selected'
-																}
-															</span>
-														</Col>
+														
 														
 														</Row>
 														

@@ -779,6 +779,8 @@ class ExplainTrasactionDetail extends React.Component {
 			  exchangeRate:i.exchangeRate,
 			  partiallyPaid:i.pp,
 			  nonConvertedInvoiceAmount:i.explainedAmount/i.exchangeRate,
+          	convertedToBaseCurrencyAmount:i.convertedToBaseCurrencyAmount,
+			  nonConvertedInvoiceAmount:i.explainedAmount/i.exchangeRate,
           	convertedToBaseCurrencyAmount:i.convertedToBaseCurrencyAmount
 			 } })) : []
 		  );
@@ -1022,6 +1024,15 @@ class ExplainTrasactionDetail extends React.Component {
 		return exchange
 	  }
 	  
+	  basecurrencyconvertor=(customerinvoice)=>{
+		let exchange;
+		let result = this.props.currency_convert_list.filter((obj) => {
+		  return obj.currencyCode === customerinvoice;
+		});
+		exchange= result[0].exchangeRate
+		return exchange
+	  }
+	  
 	
 	  setexchnagedamount = (option, amount) => {
 		
@@ -1058,8 +1069,7 @@ class ExplainTrasactionDetail extends React.Component {
 			  convertedInvoiceAmount: i.amount * localexe,
 			  explainedAmount: i.amount * localexe,
 			  exchangeRate: localexe,
-			  pp: false,
-			  convertedToBaseCurrencyAmount:i.dueAmount*basecurrency
+			  pp: false
 			}
 			else 
 			return {
@@ -1070,9 +1080,7 @@ class ExplainTrasactionDetail extends React.Component {
 				convertedInvoiceAmount: i.dueAmount * localexe,
 				explainedAmount: i.dueAmount * localexe,
 				exchangeRate: localexe,
-				pp: false,
-				convertedToBaseCurrencyAmount:i.dueAmount*basecurrency
-			
+				pp: false
 			  }
 		  })
 		   
@@ -1145,6 +1153,12 @@ class ExplainTrasactionDetail extends React.Component {
 		  
 		  updatedfinaldata.push(local)
 		})
+		updatedfinaldata=updatedfinaldata.map((i)=>{
+			const basecurrency=this.basecurrencyconvertor(i.currencyCode)
+			return {...i,
+			  convertedToBaseCurrencyAmount:i.explainedAmount*basecurrency
+			}
+		  })
 		updatedfinaldata=updatedfinaldata.map((i)=>{
 			const basecurrency=this.basecurrencyconvertor(i.currencyCode)
 			return {...i,

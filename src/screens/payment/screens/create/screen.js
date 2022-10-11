@@ -675,6 +675,7 @@ min="0" value="0.00" />;
 																						</Label>
 																						<Input
 																							type="text"
+																							maxLength="20"
 																							id="referenceCode"
 																							name="referenceCode"
 																							placeholder={strings.Enter+strings.ReceiptNumber}

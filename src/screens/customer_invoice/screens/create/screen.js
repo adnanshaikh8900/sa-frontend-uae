@@ -485,7 +485,6 @@ renderVatAmount = (cell, row,extraData) => {
 		let result = this.props.currency_convert_list.filter((obj) => {
 		return obj.currencyCode === value;
 		});
-		console.log('currency result', result)
 		if(result &&result[0]&&  result[0].exchangeRate)
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
 		};
@@ -1295,7 +1294,7 @@ discountType = (row) =>
 							excise_list &&
 							selectOptionsFactory
 								.renderOptions('name', 'id', excise_list, 'Excise')
-								.find((option) => option.value === +row.exciseTaxId)
+								.find((option) => row.exciseTaxId ? option.value === +row.exciseTaxId : "Select Exise")
 						}
 						id="exciseTaxId"
 						placeholder={strings.Select_Excise}
@@ -1341,10 +1340,12 @@ discountType = (row) =>
 		let data = this.state.data;
 		const result = product_list.find((item) => item.id === parseInt(e));
 		let idx;
+		let exchangeRate=this.formRef.current?.state?.values?.exchangeRate>0 
+			&& this.formRef.current?.state?.values?.exchangeRate!=="" ?
+			this.formRef.current?.state?.values?.exchangeRate:1
 		data.map((obj, index) => {
 			if (obj.id === row.id) {
-				console.log(result);
-				obj['unitPrice'] = result.unitPrice;
+				obj['unitPrice'] = parseFloat(result.unitPrice)*(1/exchangeRate);
 				obj['vatCategoryId'] = result.vatCategoryId;
 				obj['description'] = result.description;
 				obj['exciseTaxId'] = result.exciseTaxId;
@@ -1430,6 +1431,7 @@ discountType = (row) =>
 										field,
 										props,
 									);
+									debugger
 									this.prductValue(
 										e.value,
 										row,
@@ -1446,7 +1448,6 @@ discountType = (row) =>
 									});
 									if(this.checkedRow())
 									   this.addRow();
-									   console.log(this.state.data,"prodlist")
 								} else {
 									form.setFieldValue(
 										`lineItemsString.${idx}.productId`,
@@ -1591,7 +1592,9 @@ discountType = (row) =>
 		let total_vat = 0;
 		let net_value = 0; 
 		let discount_total = 0;
+		
 		data.map((obj) => {
+			let unitprice=obj.unitPrice
 			const index =
 				obj.vatCategoryId !== ''
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
@@ -1602,9 +1605,9 @@ discountType = (row) =>
 			if(this.state.taxType === false){
 				if (obj.discountType === 'PERCENTAGE') {	
 					 net_value =
-						((+obj.unitPrice -
-							(+((obj.unitPrice * obj.discount)) / 100)) * obj.quantity);
-					var discount =  (obj.unitPrice * obj.quantity) - net_value
+						((+unitprice -
+							(+((unitprice * obj.discount)) / 100)) * obj.quantity);
+					var discount =  (unitprice * obj.quantity) - net_value
 				if(obj.exciseTaxId !=  0){
 					if(obj.exciseTaxId === 1){
 						const value = +(net_value) / 2 ;
@@ -1624,8 +1627,8 @@ discountType = (row) =>
 					((+net_value  * vat ) / 100);
 				}else{
 					 net_value =
-						((obj.unitPrice * obj.quantity) - obj.discount)
-					var discount =  (obj.unitPrice * obj.quantity) - net_value
+						((unitprice * obj.quantity) - obj.discount)
+					var discount =  (unitprice * obj.quantity) - net_value
 						if(obj.exciseTaxId !=  0){
 							if(obj.exciseTaxId === 1){
 								const value = +(net_value) / 2 ;
@@ -1653,11 +1656,11 @@ discountType = (row) =>
 
 					//net value after removing discount
 					 net_value =
-					((+obj.unitPrice -
-						(+((obj.unitPrice * obj.discount)) / 100)) * obj.quantity);
+					((+unitprice -
+						(+((unitprice * obj.discount)) / 100)) * obj.quantity);
 
 				//discount amount
-				var discount =  (obj.unitPrice* obj.quantity) - net_value
+				var discount =  (unitprice* obj.quantity) - net_value
 
 				//vat amount
 				var vat_amount =
@@ -1689,10 +1692,10 @@ discountType = (row) =>
 						{
 				//net value after removing discount
 				 net_value =
-				((obj.unitPrice * obj.quantity) - obj.discount)
+				((unitprice * obj.quantity) - obj.discount)
 
 				//discount amount
-				var discount =  (obj.unitPrice * obj.quantity) - net_value
+				var discount =  (unitprice * obj.quantity) - net_value
 						
 				//vat amount
 				var vat_amount =
@@ -1719,7 +1722,7 @@ discountType = (row) =>
 							}
 					}
 			}
-			
+			obj.unitPrice=unitprice
 			obj.vatAmount = vat_amount
 			obj.subTotal =
 			net_value ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
@@ -1830,7 +1833,6 @@ discountType = (row) =>
 			formData.append('totalAmount', this.state.initValue.totalAmount);
 			formData.append('totalExciseAmount', this.state.initValue.total_excise);
 			formData.append('discount',this.state.initValue.discount);
-		
 		if (term && term.value) {
 			formData.append('term', term.value);
 		}
@@ -1870,7 +1872,6 @@ discountType = (row) =>
 						{
 							createMore: false,
 							selectedContact: '',
-							term: '',
 							exchangeRate:'',
 							data: [
 								{
@@ -1882,6 +1883,7 @@ discountType = (row) =>
 									taxtreatment: '',
 									subTotal: 0,
 									discount: 0,
+									discountType: 'FIXED',
 									vatAmount:0,
 									productId: '',
 								},
@@ -1892,7 +1894,7 @@ discountType = (row) =>
 									total_net: 0,
 									invoiceVATAmount: 0,
 									totalAmount: 0,
-									discountType: '',
+									discountType: 'FIXED',
 									discount: 0,
 									discountPercentage: '',
 									total_excise: 0,
@@ -1914,7 +1916,7 @@ discountType = (row) =>
 									total_net: 0,
 									invoiceVATAmount: 0,
 									totalAmount: 0,
-									discountType: '',
+									discountType: 'FIXED',
 									discount: 0,
 									discountPercentage: '',
 									changeShippingAddress:false
@@ -1930,7 +1932,7 @@ discountType = (row) =>
 							this.formRef.current.setFieldValue('placeOfSupplyId', '', true);
 							this.formRef.current.setFieldValue('currency', null, true);
 							this.formRef.current.setFieldValue('taxTreatmentid','', true);
-							this.formRef.current.setFieldValue('term', term, true);
+							this.formRef.current.setFieldValue('term', '', true);
 						},
 					);
 				} else {
@@ -2258,7 +2260,6 @@ discountType = (row) =>
 												validate={(values) => {
 												
 													let errors = {};
-													console.log(values,"Values");
 													if (exist === true) {
 														errors.invoice_number =
 															'Invoice number already exists';
@@ -2751,7 +2752,22 @@ discountType = (row) =>
 																		id="term"
 																		name="term"
 																		placeholder={strings.Select+strings.Terms} 
-																		value={this.state.term}
+																		value={
+																			(this.state.quotationId || this.state.parentInvoiceId) ?
+
+																			this.termList &&
+																			selectOptionsFactory.renderOptions(
+																				'label',
+																				'value',
+																				this.termList,
+																				'Terms',
+																		  ).find((option) => option.value == this.state.term)
+																			
+																		  :
+																		  
+																		  props.values.term
+																			}
+																		//value={this.state.term}
 																		onChange={(option) => {
 																			props.handleChange('term')(option);
 																			if (option.value === '') {
@@ -3303,12 +3319,14 @@ discountType = (row) =>
 																			type="number"
 																			className="form-control"
 																			id="exchangeRate"
+																			disabled={this.state?.data?.length>0 && this.state?.data?.[0]?.productId}
 																			name="exchangeRate"
 																			value={props.values.exchangeRate}
 																			onChange={(value) => {
 																				props.handleChange('exchangeRate')(
 																					value,
 																				);
+																				
 																			}}
 																		/>
 																	</div>
@@ -3327,6 +3345,11 @@ discountType = (row) =>
 																			/>
 														</Col>
 														</Row>
+														<span style={{color:'blue',fontSize:10}}> 
+																{(this.state?.data?.length>0 && this.state?.data?.[0]?.productId) &&
+																'Exchange Rate Can Only be edited if No Product is Selected'
+																}
+															</span>
 														<hr style={{display: props.values.exchangeRate === 1 ? 'none' : ''}} />
 														<Row className="mb-3">
 														<Col lg={8} className="mb-3">

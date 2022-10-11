@@ -88,7 +88,6 @@ class Profile extends React.Component {
 				password: "",
 				confirmPassword: '',
 				currentPassword: '',
-			
 			  },
 			email:'',
 			showmessage: false,
@@ -189,9 +188,7 @@ class Profile extends React.Component {
 						'error',
 						err && err.data ? err.data.message : 'Something Went Wrong',
 					);
-					
 				});
-		
 	};
 
 	uploadUserImage = (picture, file) => {
@@ -524,8 +521,7 @@ class Profile extends React.Component {
 	};
 
 	resetPassword = (email) => {
-		 
-		
+
 			let data = {
 			  method: 'post',
 			  url: '/public/forgotPassword',
@@ -908,16 +904,13 @@ class Profile extends React.Component {
 																		onSubmit={props.handleSubmit}
 																		encType="multipart/form-data"
 																	>
-
 																		<Row>
 																			<Col lg={10}>
 																				<Row>
 																					<Col lg={6}>
 																						<FormGroup>
 																							<Label htmlFor="select">
-																								<span className="text-danger">
-																									*
-																							</span> {strings.FirstName}
+																								<span className="text-danger">*</span> {strings.FirstName}
 																						</Label>
 																							<Input
 																								type="text"
@@ -927,7 +920,7 @@ class Profile extends React.Component {
 																								onChange={(option) => {
 																									if (
 																										option.target.value === '' ||
-																										this.regExAlpha.test(
+																										this.regExAlpha1.test(
 																											option.target.value,
 																										)
 																									) {
@@ -955,9 +948,7 @@ class Profile extends React.Component {
 																					<Col lg={6}>
 																						<FormGroup>
 																							<Label htmlFor="select">
-																								<span className="text-danger">
-																									*
-																							</span> {strings.LastName}
+																								<span className="text-danger">*</span> {strings.LastName}
 																						</Label>
 																							<Input
 																								type="text"
@@ -967,7 +958,7 @@ class Profile extends React.Component {
 																								onChange={(option) => {
 																									if (
 																										option.target.value === '' ||
-																										this.regExAlpha.test(
+																										this.regExAlpha1.test(
 																											option.target.value,
 																										)
 																									) {
@@ -1434,10 +1425,16 @@ class Profile extends React.Component {
 															// })}
 															validate={(values) => {
 																let errors = {};
-			
-																if (checkmobileNumberParam == true) {
+																if (!values.phoneNumber) {
+																	errors.phoneNumber =
+																		'Mobile number is required';
+																}
+																if (values.phoneNumber && checkmobileNumberParam == true) {
 																	errors.phoneNumber =
 																		'Invalid mobile number';
+																}
+																if(!values.vatRegistrationDate){
+																	errors.vatRegistrationDate="VAT Registered Date is required"
 																}
 																return errors;
 															}}
@@ -1902,7 +1899,7 @@ class Profile extends React.Component {
 																							/></div>
 																							{props.errors.phoneNumber &&
 																								props.touched.phoneNumber && (
-																									<div style={{color:"red"}}>
+																									<div className="invalid-feedback" style={{color:"red",display:"block"}}>
 																										{props.errors.phoneNumber}
 																									</div>
 																								)}
@@ -2501,28 +2498,27 @@ class Profile extends React.Component {
 																		</Label>
 																		<DatePicker
 																			id="date"
-																			minDate={new Date("01/01/2018")}
 																			name="vatRegistrationDate"
+																			placeholderText='Enter VAT Registered Date.'
+																			showMonthDropdown
+																			showYearDropdown
+																			dateFormat="dd-MM-yyyy"
+																			dropdownMode="select"
+																			minDate={new Date("01/01/2018")}
+																		 	maxDate={new Date()}
+																			value={props.values.vatRegistrationDate ?moment(
+																				props.values.vatRegistrationDate,
+																			).format('DD-MM-YYYY'):""}
+																			selected={props.values.vatRegistrationDate ? new Date (moment(props.values.vatRegistrationDate).format('MM DD YYYY')) : new Date()}
+																			onChange={(value) => {
+																				props.handleChange('vatRegistrationDate')(value);
+																			}}
 																			className={`form-control ${
 																				props.errors.vatRegistrationDate &&
 																				props.touched.vatRegistrationDate
 																					? 'is-invalid'
 																					: ''
 																			}`}
-																			
-																			value={props.values.vatRegistrationDate ?moment(
-																				props.values.vatRegistrationDate,
-																			).format('DD-MM-YYYY'):""}
-																			showMonthDropdown
-																			showYearDropdown
-																			dropdownMode="select"
-																			dateFormat="dd-MM-yyyy"
-																		 maxDate={new Date()}
-																			onChange={(value) => {
-																				props.handleChange('vatRegistrationDate')(
-																					value,
-																				);
-																			}}
 																		/>
 																		{props.errors.vatRegistrationDate &&
 																			props.touched.vatRegistrationDate && (
@@ -3618,10 +3614,10 @@ class Profile extends React.Component {
 															//     .required("Last Name is required"),
 															// })}
 															validate={(values)=>{
-																
 																let errors={};
 																	if(this.state.currentPasswordMatched==false)
 																	errors.currentPassword="Please enter the correct password"
+																	
 																return errors;
 
 															}}

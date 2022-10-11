@@ -1131,7 +1131,7 @@ class CreateBankTransaction extends React.Component {
                             if( values.transactionAmount>totalexpaled &&
                               this.state?.bankCurrency?.bankAccountCurrency===values?.invoiceIdList?.[0]?.currencyCode)
                            {
-                            errors.transactionAmount=`Amount cannot be grater than ${totalexpaled}`
+                            errors.transactionAmount=`The transaction amount cannot be greater than the invoice amount.`
                            
                           }
                           const isppselected=values?.invoiceIdList.reduce((a,c)=>c.pp?a+1:a+0,0)

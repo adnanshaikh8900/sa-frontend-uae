@@ -412,8 +412,6 @@ class CreateBankTransaction extends React.Component {
           partiallyPaid:i.pp,
           nonConvertedInvoiceAmount:i.explainedAmount/i.exchangeRate,
           convertedToBaseCurrencyAmount:i.convertedToBaseCurrencyAmount,
-          nonConvertedInvoiceAmount:i.explainedAmount/i.exchangeRate,
-          convertedToBaseCurrencyAmount:i.convertedToBaseCurrencyAmount
          } })) : []
       );
     
@@ -871,7 +869,10 @@ class CreateBankTransaction extends React.Component {
 		if(amountislessthanallinvoice) {
 		if(value){
 		  tempdata=finaldata.map((i)=>
-		  {return {...i,pp:value,explainedAmount:transactionAmount/finaldata.length}
+		  {const basecurrency=this.basecurrencyconvertor(i.currencyCode)
+        return {...i,pp:value,explainedAmount:transactionAmount/finaldata.length,
+      convertedToBaseCurrencyAmount:(transactionAmount/finaldata.length)*basecurrency
+    }
 		 })
 		}
 		else {
@@ -884,6 +885,7 @@ class CreateBankTransaction extends React.Component {
 		finaldata=[...tempdata]
 		if(transactionAmount>0 && transactionAmount!=="")
 		this.formRef.current.setFieldValue('invoiceIdList', finaldata)
+    debugger
 	   } else {
 		let currentshort=shortAmount
 		finaldata.map((i, inx) => {
@@ -903,19 +905,15 @@ class CreateBankTransaction extends React.Component {
 			}	 
 		  updatedfinaldata.push(local)
 		})
-    updatedfinaldata=updatedfinaldata.map((i)=>{
+    let updatedfinaldata2=updatedfinaldata.map((i)=>{
       const basecurrency=this.basecurrencyconvertor(i.currencyCode)
       return {...i,
         convertedToBaseCurrencyAmount:i.explainedAmount*basecurrency
       }
     })
-    updatedfinaldata=updatedfinaldata.map((i)=>{
-      const basecurrency=this.basecurrencyconvertor(i.currencyCode)
-      return {...i,
-        convertedToBaseCurrencyAmount:i.explainedAmount*basecurrency
-      }
-    })
-		this.formRef.current.setFieldValue('invoiceIdList', updatedfinaldata)
+    debugger
+   
+		this.formRef.current.setFieldValue('invoiceIdList', updatedfinaldata2)
 	  }
 	}
 

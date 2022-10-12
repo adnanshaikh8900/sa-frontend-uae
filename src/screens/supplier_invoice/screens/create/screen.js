@@ -1757,7 +1757,7 @@ class CreateSupplierInvoice extends React.Component {
 			let unitprice=obj.unitPrice
 			const index =
 				obj.vatCategoryId !== ''
-					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
+					? vat_list?.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
 

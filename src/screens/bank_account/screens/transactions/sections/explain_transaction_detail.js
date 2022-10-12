@@ -780,8 +780,6 @@ class ExplainTrasactionDetail extends React.Component {
 			  partiallyPaid:i.pp,
 			  nonConvertedInvoiceAmount:i.explainedAmount/i.exchangeRate,
           	convertedToBaseCurrencyAmount:i.convertedToBaseCurrencyAmount,
-			  nonConvertedInvoiceAmount:i.explainedAmount/i.exchangeRate,
-          	convertedToBaseCurrencyAmount:i.convertedToBaseCurrencyAmount
 			 } })) : []
 		  );
 		
@@ -1015,14 +1013,6 @@ class ExplainTrasactionDetail extends React.Component {
 		return exchange
 	  }
 	
-	  basecurrencyconvertor=(customerinvoice)=>{
-		let exchange;
-		let result = this.props.currency_convert_list.filter((obj) => {
-		  return obj.currencyCode === customerinvoice;
-		});
-		exchange= result[0].exchangeRate
-		return exchange
-	  }
 	  
 	  basecurrencyconvertor=(customerinvoice)=>{
 		let exchange;
@@ -1069,7 +1059,8 @@ class ExplainTrasactionDetail extends React.Component {
 			  convertedInvoiceAmount: i.amount * localexe,
 			  explainedAmount: i.amount * localexe,
 			  exchangeRate: localexe,
-			  pp: false
+			  pp: false,
+			  convertedToBaseCurrencyAmount:(i.amount * localexe)*basecurrency
 			}
 			else 
 			return {
@@ -1080,7 +1071,8 @@ class ExplainTrasactionDetail extends React.Component {
 				convertedInvoiceAmount: i.dueAmount * localexe,
 				explainedAmount: i.dueAmount * localexe,
 				exchangeRate: localexe,
-				pp: false
+				pp: false,
+				convertedToBaseCurrencyAmount:(i.dueAmount * localexe)*basecurrency
 			  }
 		  })
 		   
@@ -1118,7 +1110,10 @@ class ExplainTrasactionDetail extends React.Component {
 		if(amountislessthanallinvoice) {
 		if(value){
 		  tempdata=finaldata.map((i)=>
-		  {return {...i,pp:value,explainedAmount:transactionAmount/finaldata.length}
+		  {const basecurrency=this.basecurrencyconvertor(i.currencyCode)
+			return {...i,pp:value,explainedAmount:transactionAmount/finaldata.length,
+		  convertedToBaseCurrencyAmount:(transactionAmount/finaldata.length)*basecurrency
+		}
 		 })
 		}
 		else {
@@ -1153,12 +1148,7 @@ class ExplainTrasactionDetail extends React.Component {
 		  
 		  updatedfinaldata.push(local)
 		})
-		updatedfinaldata=updatedfinaldata.map((i)=>{
-			const basecurrency=this.basecurrencyconvertor(i.currencyCode)
-			return {...i,
-			  convertedToBaseCurrencyAmount:i.explainedAmount*basecurrency
-			}
-		  })
+		
 		updatedfinaldata=updatedfinaldata.map((i)=>{
 			const basecurrency=this.basecurrencyconvertor(i.currencyCode)
 			return {...i,

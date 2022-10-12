@@ -1267,6 +1267,7 @@ class DetailSupplierInvoice extends React.Component {
 
 	updateAmount = (data, props) => {
 		const { vat_list } = this.state;
+		
 		let total_net = 0;
 		let total_excise = 0;
 		let total = 0;
@@ -1276,7 +1277,7 @@ class DetailSupplierInvoice extends React.Component {
 		data.map((obj) => {
 			const index =
 				obj.vatCategoryId !== ''
-					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
+					? vat_list?.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
 

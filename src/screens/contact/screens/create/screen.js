@@ -98,7 +98,7 @@ class CreateContact extends React.Component {
 				shippingCity: '',
 				shippingFax: '',
 				shippingPoBoxNumber: '',
-				taxTreatmentId: '',
+				taxTreatmentId: 8,
 			},
 			state_list_for_shipping: [],
 			createMore: false,
@@ -356,17 +356,16 @@ class CreateContact extends React.Component {
 																if (values.stateId === '') {
 																	errors.stateId = 'State is required';
 																}
-																if (this.state.isRegisteredForVat == true) {
-																	if (values.vatRegistrationNumber == "")
-																		errors.vatRegistrationNumber = 'Tax registration number is required';
-
-																	if (values.vatRegistrationNumber.length != 15) {
-																		errors.vatRegistrationNumber = "Please enter 15 digit Tax registration number"
-																	}
-																	if (this.state.trnExist == true) {
-																		errors.vatRegistrationNumber = 'Tax registration number already exists';
-																	}
-																}
+																// if (this.state.isRegisteredForVat == true) {
+																// 	if (values.vatRegistrationNumber == "")
+																// 		errors.vatRegistrationNumber = 'Tax registration number is required';
+																// 	if (values.vatRegistrationNumber.length != 15) {
+																// 		errors.vatRegistrationNumber = "Please enter 15 digit Tax registration number"
+																// 	}
+																// 	if (this.state.trnExist == true) {
+																// 		errors.vatRegistrationNumber = 'Tax registration number already exists';
+																// 	}
+																// }
 																if (this.state.emailExist == true) {
 																	errors.email = 'Email already exists';
 																}
@@ -425,9 +424,9 @@ class CreateContact extends React.Component {
 																contactType: Yup.string().required(
 																	'Contact type is required',
 																),
-																taxTreatmentId: Yup.string().required(
-																	'Tax treatment is required',
-																),
+																// taxTreatmentId: Yup.string().required(
+																// 	'Tax treatment is required',
+																// ),
 																email: Yup.string()
 																	.required('Email is required')
 																	.email('Invalid Email')
@@ -949,9 +948,9 @@ class CreateContact extends React.Component {
 																			</FormGroup>
 																		</Col>
 																		<Col lg={4}>
-																			<FormGroup className="mb-3">
+																			<FormGroup className="mb-3 hideTax">
 																				<Label htmlFor="taxTreatmentId">
-																					<span className="text-danger">* </span>{strings.TaxTreatment}
+																					<span className="text-danger"> </span>{strings.TaxTreatment}
 																				</Label>
 																				<Select
 																					options={
@@ -1008,7 +1007,7 @@ class CreateContact extends React.Component {
 																		</Col>
 																		{props.values.taxTreatmentId && props.values.taxTreatmentId.value && (<Col md="4" style={{ display: props.values.taxTreatmentId.value === 1 || props.values.taxTreatmentId.value === 3 || props.values.taxTreatmentId.value === 5 ? '' : 'none' }}>
 																			<FormGroup>
-																				<Label htmlFor="vatRegistrationNumber"><span className="text-danger">* </span>
+																				<Label htmlFor="vatRegistrationNumber"><span className="text-danger"> </span>
 																					{strings.TaxRegistrationNumber}
 																				</Label>
 																				<Input

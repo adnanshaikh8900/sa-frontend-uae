@@ -970,7 +970,7 @@ renderName=(cell,row)=>{
 															'Product code is required',
 														),
 														vatCategoryId: Yup.string()
-															.required('VAT category is required')
+															.required('Tax category is required')
 															.nullable(),
 													})}
 												>
@@ -1237,7 +1237,7 @@ renderName=(cell,row)=>{
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="vatCategoryId">
 																			<span className="text-danger">* </span>
-																			{"VAT"+" "+strings.Type}
+																			{"Tax"+" "+strings.Type}
 																		</Label>
 																		<Select
 																		 isDisabled={this.state.companyDetails && !this.state.companyDetails.isRegisteredVat}
@@ -1370,7 +1370,8 @@ renderName=(cell,row)=>{
 																	</FormGroup>
 																</Col>
 															</Row> */}
-															<Row style={{display: props.values.productType !='SERVICE'   ?'' : 'none'}}		>
+												{/* Hidden by shoaib for multi country */}
+															{/* <Row style={{display: props.values.productType !='SERVICE'   ?'' : 'none'}}		>
 																{this.state.companyDetails && this.state.companyDetails.isRegisteredVat===true &&(<Col lg={4}>
 																<FormGroup check inline className="mb-3">
 																		<Label
@@ -1382,17 +1383,6 @@ renderName=(cell,row)=>{
 																				type="checkbox"
 																				id="exciseTaxCheck"
 																				name="exciseTaxCheck"
-																				// onChange={(event) => {
-																				// let edit=props.values.exciseTaxId!='' ?true:false
-																				// 	if(!edit)
-																				// 	{
-																				// 	if (this.state.exciseTaxCheck===true)
-																				// 	 	this.setState({exciseTaxCheck:false})
-																				// 	else 
-																				// 		this.setState({exciseTaxCheck:true})
-																				// 	}
-																				
-																				// }}
 																				onChange={(event) => {
 																					if (
 																						this.state.exciseTaxCheck===true
@@ -1413,7 +1403,7 @@ renderName=(cell,row)=>{
 																		</Label>
 																	</FormGroup>
 																</Col>)}
-																</Row>
+																</Row> */}
 																<Row>
 																{this.state.exciseTaxCheck===true&&(	
 															

@@ -1390,22 +1390,32 @@ class ExplainTrasactionDetail extends React.Component {
 															  }
 															}
 											
-															if( values.amount>totalexpaled &&
-															  this.state?.bankCurrency?.bankAccountCurrency===values?.invoiceIdList?.[0]?.currencyCode)
-														   {
-															errors.amount=`Amount cannot be grater than ${totalexpaled}`
-														   
+															
+														  values.invoiceIdList.map((ii)=>{
+															if((this.state.bankCurrency.bankAccountCurrency!==this.state.basecurrency.currencyCode
+															  && this.state.basecurrency.currencyCode!==ii.currencyCode) && this.state.bankCurrency.bankAccountCurrency!==ii.currencyCode)
+															  
+															  errors.invoiceIdList="the current selected invoice does not have supported currency conversions"
+															 
 														  }
-														 
+														  )
+														  
+										
+														if( values.transactionAmount>totalexpaled &&
+														  this.state?.bankCurrency?.bankAccountCurrency===values?.invoiceIdList?.[0]?.currencyCode)
+													   {
+														errors.transactionAmount=`The transaction amount cannot be greater than the invoice amount.`
+													   
+													  }
 														  const isppselected=values?.invoiceIdList.reduce((a,c)=>c.pp?a+1:a+0,0)
                           if( values.amount<totalexpaled &&
                             this.state?.bankCurrency?.bankAccountCurrency===values?.invoiceIdList?.[0]?.currencyCode
                             && isppselected===0
                             )
-                         {
+                         		{
                           errors.amount=`The transaction amount is less than the invoice amount. To partially pay the invoice, please select the checkbox `
                          
-                        }
+                       			 }
 														  }
 								
 														

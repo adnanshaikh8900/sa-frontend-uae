@@ -188,7 +188,7 @@ class VatCode extends React.Component {
 
 	// Show Success Toast
 	success = () => {
-		return toast.success('Tax Category Deleted Successfully... ', {
+		return toast.success('VAT Category Deleted Successfully... ', {
 			position: toast.POSITION.TOP_RIGHT,
 		});
 	};
@@ -235,9 +235,9 @@ class VatCode extends React.Component {
 				} else {
 		const message1 =
         <text>
-        <b>Delete Tax Category?</b>
+        <b>Delete VAT Category?</b>
         </text>
-        const message = 'This Tax Category will be deleted permanently and cannot be recovered. ';
+        const message = 'This VAT Category will be deleted permanently and cannot be recovered. ';
 		if (selectedRows.length > 0) {
 			this.setState({
 				dialog: (
@@ -355,7 +355,7 @@ class VatCode extends React.Component {
 		var vat_list_data =[];
 
 		for(let i=0;i<vat_list.count;i++){
-			if(vat_list.data[i].id ==1 || vat_list.data[i].id==2 || vat_list.data[i].id==4)
+			if(vat_list.data[i].id ==3 || vat_list.data[i].id==4 || vat_list.data[i].id==10)
 				continue;
 				vat_list_data.push(vat_list.data[i])
 		}
@@ -368,7 +368,7 @@ class VatCode extends React.Component {
 						<CardHeader>
 							<div className="h4 mb-0 d-flex align-items-center">
 								<i className="nav-icon icon-briefcase" />
-								<span className="ml-2">Tax Category</span>
+								<span className="ml-2">VAT Category</span>
 							</div>
 						</CardHeader>
 						<CardBody>
@@ -503,7 +503,7 @@ class VatCode extends React.Component {
 											}
 										>
 											<i className="fas fa-plus mr-1" />
-											Add New Tax
+											{strings.AddNewVat}
 										</Button>)}
 										<BootstrapTable
 											data={
@@ -532,7 +532,7 @@ class VatCode extends React.Component {
 											}}
 										>
 											<TableHeaderColumn isKey dataField="name" dataSort className="table-header-bg">
-												Tax Name
+												{strings.VATNAME}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="vat"
@@ -540,7 +540,7 @@ class VatCode extends React.Component {
 												dataSort			
 												className="table-header-bg"
 											>
-												Tax Percentage
+												{strings.VATPERCENTAGE}
 											</TableHeaderColumn>
 										</BootstrapTable>
 

@@ -1916,7 +1916,9 @@ class CreateSupplierInvoice extends React.Component {
 					},
 
 				},
-			},
+			},()=>{
+				if(this.checkedRow()) this.addRow()
+			}
 
 		);
 	};

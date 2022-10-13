@@ -93,7 +93,7 @@ class DetailContact extends React.Component {
 				shippingPostZipCode: '',
 				shippingPoBoxNumber: '',
 				shippingCity: '',
-				taxTreatmentId: 8,
+				taxTreatmentId: '',
 			},
 			state_list_for_shipping: [],
 			currentData: {},
@@ -697,9 +697,9 @@ class DetailContact extends React.Component {
 																	contactType: Yup.string().required(
 																		'Contact Type is Required',
 																	),
-																	// taxTreatmentId: Yup.string().required(
-																	// 	'Tax Treatment is Required',
-																	// ),
+																	taxTreatmentId: Yup.string().required(
+																		'Tax Treatment is Required',
+																	),
 																	//       organization: Yup.string()
 																	//       .required("Organization Name is Required"),
 																	// poBoxNumber: Yup.number()
@@ -1245,7 +1245,7 @@ class DetailContact extends React.Component {
 																				</FormGroup>
 																			</Col>
 																			<Col lg={4}>
-																				<FormGroup className="mb-3 hideTax">
+																				<FormGroup className="mb-3">
 																					<Label htmlFor="taxTreatmentId">
 																						<span className="text-danger">* </span>{strings.TaxTreatment}
 																					</Label>

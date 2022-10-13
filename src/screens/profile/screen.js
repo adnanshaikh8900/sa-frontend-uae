@@ -1416,7 +1416,7 @@ class Profile extends React.Component {
 																)
 																.nullable(),
 																companyStateCode: Yup.string().required(
-																	'State is required',
+																	'Emirate is required',
 																),
 																// companyCity: Yup.string().required(
 																// 	'City is required',
@@ -1429,7 +1429,7 @@ class Profile extends React.Component {
 																// ),
 																							
 														    	vatRegistrationDate: Yup.string().when(
-																'isRegisteredVat',
+																	'isRegisteredVat',
 																{
 																	is: (value) => value === true,
 																	then: Yup.string().required(
@@ -2041,7 +2041,7 @@ class Profile extends React.Component {
 																			{/* </Col> */}
 																				</Label>
 																					<Select
-																						// isDisabled
+																						isDisabled
 																						options={
 																							country_list
 																								? selectOptionsFactory.renderOptions(
@@ -2134,7 +2134,7 @@ class Profile extends React.Component {
 																							isSame
 																								? invoicing_state_list
 																								: company_state_list,
-																								props.values.companyCountryCode.value === 229 ? strings.Emirate : strings.StateRegion,
+																								'Emirate',
 																						)}
 																						value={
 																							isSame
@@ -2162,20 +2162,20 @@ class Profile extends React.Component {
 																								)('');
 																							}
 																						}}
-																						placeholder={strings.Select + props.values.companyCountryCode === 229 || props.values.companyCountryCode.value === 229 ? strings.Emirate : strings.StateRegion}
+																						placeholder={strings.Select + strings.Emirate}
 																						id="companyStateCode"
 																						name="companyStateCode"
 																						className={
-																							props.errors.companyStateRegion &&
-																								props.touched.companyStateRegion
+																							props.errors.companyStateCode &&
+																								props.touched.companyStateCode
 																								? 'is-invalid'
 																								: ''
 																						}
 																					/>
-																					{props.errors.companyStateRegion &&
-																						props.touched.companyStateRegion && (
+																					{props.errors.companyStateCode &&
+																						props.touched.companyStateCode && (
 																							<div className="invalid-feedback">
-																								{props.errors.companyStateRegion}
+																								{props.errors.companyStateCode}
 																							</div>
 																						)}
 																				</FormGroup>
@@ -2229,7 +2229,7 @@ class Profile extends React.Component {
 																		
 																		<Row>
 
-																			{/* <Col lg={4}>
+																			<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="companyPoBoxNumber">
 																					<span className="text-danger">* </span>
@@ -2275,7 +2275,7 @@ class Profile extends React.Component {
 																						</div>
 																					)}
 																				</FormGroup>
-																			</Col> */}
+																			</Col>
 																			{props.values.companyCountryCode == 229 || props.values.companyCountryCode.value == 229 ?
 																			<Col lg={4}>
 																			<FormGroup className="mb-3">
@@ -2394,7 +2394,7 @@ class Profile extends React.Component {
 																		</Row>
 
 {/* Hidden by shoaib for multi country */}
-																		{/* <Row className={"mt-3"}>
+																		<Row className={"mt-3"}>
 																			<Col lg={4}>
 																				<FormGroup className="mb-3" check inline >
 																					<div>
@@ -2537,7 +2537,7 @@ class Profile extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
-																</Row> */}
+																</Row>
 																			</Col>
 																		</Row>
 

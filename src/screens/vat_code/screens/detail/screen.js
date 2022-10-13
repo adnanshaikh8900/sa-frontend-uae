@@ -12,21 +12,46 @@ import {
 	Label,
 	Row,
 	Col,
+	UncontrolledTooltip,
 } from 'reactstrap';
 import { Loader, ConfirmDeleteModal } from 'components';
-
 import { CommonActions } from 'services/global';
-
 import 'react-toastify/dist/ReactToastify.css';
 import './style.scss';
-
 import * as VatDetailActions from './actions';
 import * as VatActions from '../../actions'
-
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import NumberFormat from "react-number-format";
+import PropTypes from "prop-types";
+import TextField from "@material-ui/core/TextField";
+
+function NumberFormatCustom(props) {
+	const { inputRef, onChange, ...other } = props;
+  
+	return (
+	  <NumberFormat
+		{...other}
+		getInputRef={inputRef}
+		onValueChange={values => {
+		  onChange({
+			target: {
+			  value: values.value
+			}
+		  });
+		}}
+		thousandSeparator
+		suffix="%"
+	  />
+	);
+  }
+
+  NumberFormatCustom.propTypes = {
+	inputRef: PropTypes.func.isRequired,
+	onChange: PropTypes.func.isRequired
+  };
 
 const mapStateToProps = (state) => {
 	return {
@@ -58,6 +83,7 @@ class DetailVatCode extends React.Component {
 		this.saveAndContinue = false;
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regEx = /^[0-9\d]+$/;
+		this.regExPercentage =/^(100(\.00?)?|[1-9]?\d(\.\d\d?)?)$/;
 		this.vatCode = /[a-zA-Z0-9 ]+$/;
 	}
 
@@ -111,14 +137,14 @@ class DetailVatCode extends React.Component {
 			if (res.data > 0) {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					'This VAT catogery is in use ,Cannot delete this VAT Catogery',
+					'This Tax catogery is in use ,Cannot delete this Tax Catogery',
 				);
 			} else {
 		const message1 =
         <text>
-        <b>Delete VAT Category?</b>
+        <b>Delete Tax Category?</b>
         </text>
-        const message = 'This VAT Category will be deleted permanently and cannot be recovered. ';
+        const message = 'This Tax Category will be deleted permanently and cannot be recovered. ';
 		this.setState({
 			dialog: (
 				<ConfirmDeleteModal
@@ -178,7 +204,7 @@ class DetailVatCode extends React.Component {
 								<CardHeader>
 									<div className="h4 mb-0 d-flex align-items-center">
 										<i className="nav-icon icon-briefcase" />
-										<span className="ml-2"> {strings.UpdateVatCategory} </span>
+										<span className="ml-2">Update Tax Category</span>
 									</div>
 								</CardHeader>
 								<CardBody>
@@ -208,67 +234,102 @@ class DetailVatCode extends React.Component {
 															name="simpleForm"
 														>
 															<FormGroup>
-																<Label htmlFor="name">
-																	<span className="text-danger">* </span>
-																	{strings.VatCategoryName}
-																</Label>
-																<Input
-																	type="text"
-																	id="name"
-																	name="name"
-																	placeholder={strings.Enter+strings.VatCategoryName}
-																	onChange={(option) => {
-																		if (
-																			option.target.value === '' ||
-																			this.vatCode.test(option.target.value)
-																		) {
-																			props.handleChange('name')(option);
-																		}
-																	}}
-																	value={props.values.name}
-																	className={
-																		props.errors.name && props.touched.name
-																			? 'is-invalid'
-																			: ''
+															<Label htmlFor="name">
+																<span className="text-danger">* </span>
+																 {/* {strings.VatCategoryName} */}
+																	Tax Category Name
+																<i
+																	id="VatCodeTooltip"
+																	className="fa fa-question-circle ml-1"
+																></i>
+																<UncontrolledTooltip
+																	placement="right"
+																	target="VatCodeTooltip"
+																>
+																	Tax Category Name – Unique identifier Tax category
+																	name
+																</UncontrolledTooltip>
+															</Label>
+															<Input
+																type="text"
+																maxLength="30"
+																id="name"
+																name="name"
+																placeholder="Enter Tax Category Name"
+																onBlur={props.handleBlur}
+																onChange={(option) => {
+																	if (
+																		option.target.value === '' ||
+																		this.vatCode.test(option.target.value)
+																	) {
+																		props.handleChange('name')(option);
 																	}
-																/>
-																{props.errors.name && props.touched.name && (
-																	<div className="invalid-feedback">
-																		{props.errors.name}
-																	</div>
-																)}
-															</FormGroup>
+																}}
+																// validate={this.validateCode}
+																value={props.values.name}
+																className={
+																	props.errors.name && props.touched.name
+																		? 'is-invalid'
+																		: ''
+																}
+															/>
+															{props.errors.name && props.touched.name && (
+																<div className="invalid-feedback">
+																	{props.errors.name}
+																</div>
+															)}
+														</FormGroup>
 															<FormGroup>
-																<Label htmlFor="name">
-																	<span className="text-danger">* </span>
-																 {strings.Percentage}
-																</Label>
-																<Input
-																	type="text"
-																	id="vat"
-																	name="vat"
-																	placeholder={strings.Enter+strings.Percentage}
-																	onChange={(option) => {
-																		if (
-																			option.target.value === '' ||
-																			this.regEx.test(option.target.value)
-																		) {
-																			props.handleChange('vat')(option);
-																		}
-																	}}
-																	value={props.values.vat}
-																	className={
-																		props.errors.vat && props.touched.vat
-																			? 'is-invalid'
-																			: ''
+															<Label htmlFor="name">
+																<span className="text-danger">* </span>
+																{/* {strings.Percentage} */}
+																	Percentage %
+																<i
+																	id="VatPercentTooltip"
+																	className="fa fa-question-circle ml-1"
+																></i>
+																<UncontrolledTooltip
+																	placement="right"
+																	target="VatPercentTooltip"
+																>
+																	Percentage – Tx percentage charged by your
+																	country
+																</UncontrolledTooltip>
+															</Label>
+															<TextField
+																type="text"
+																size="small"
+																fullWidth
+																variant="outlined"
+																// maxLength="5"
+																inputProps={{maxLength:5}}
+																id="vat"
+																name="vat"
+																placeholder="Enter Tax Percentage"
+																onChange={(option) => {
+																	if (
+																		option.target.value === '' ||
+																		this.regExPercentage.test(option.target.value)
+																	) {
+																		props.handleChange('vat')(option);
 																	}
-																/>
-																{props.errors.vat && props.touched.vat && (
-																	<div className="invalid-feedback">
-																		{props.errors.vat}
-																	</div>
-																)}
-															</FormGroup>
+																}}
+																value={props.values.vat}
+																className={
+																	props.errors.vat && props.touched.vat
+																		? 'is-invalid'
+																		: ''
+																}
+																InputProps={{
+																	inputComponent: NumberFormatCustom
+																  }}
+															/>
+															{props.errors.vat && props.touched.vat && (
+																<div className="invalid-feedback">
+																	{props.errors.vat}
+																</div>
+															)}
+														</FormGroup>
 															<Row>
 																<Col
 																	lg={12}

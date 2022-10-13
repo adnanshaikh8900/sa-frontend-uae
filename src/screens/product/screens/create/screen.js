@@ -600,7 +600,7 @@ try {
 														'Product code is required',
 													),
 													vatCategoryId: Yup.string()
-														.required('VAT category is required')
+														.required('Tax category is required')
 														.nullable(),
 												})}
 											>
@@ -897,7 +897,7 @@ try {
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="vatCategoryId">
-																			<span className="text-danger">* </span>{"VAT" +" "+strings.Type}
+																			<span className="text-danger">* </span>{"Tax" +" "+strings.Type}
 																		</Label>
 																		<Select
 																	    	 isDisabled={this.state.companyDetails && !this.state.companyDetails.isRegisteredVat}
@@ -911,10 +911,9 @@ try {
 																					  )
 																					: []
 																			}
-																			
 																			id="vatCategoryId"
 																			name="vatCategoryId"
-																			placeholder={strings.Select+strings.VATCategory}
+																			placeholder={strings.Select+"Tax Type"}
 																			value={props.values.vatCategoryId}
 																			onChange={(option) => {
 																				// this.setState({
@@ -983,7 +982,8 @@ try {
 																	</FormGroup>
 																</Col>
 															</Row>
-															<Row style={{display: props.values.productType !='SERVICE'   ?'' : 'none'}}		>
+												{/* Hidden by shoaib for multi country */}
+															{/* <Row style={{display: props.values.productType !='SERVICE'   ?'' : 'none'}}		>
 																{this.state.companyDetails && this.state.companyDetails.isRegisteredVat===true &&(<Col lg={4}>
 																<FormGroup check inline className="mb-3">
 																		<Label
@@ -1015,7 +1015,7 @@ try {
 																		</Label>										
 																	</FormGroup>
 																</Col>)}
-																</Row>
+																</Row> */}
 																<Row>
 																{this.state.exciseTaxCheck===true&&(	
 												

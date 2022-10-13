@@ -227,7 +227,7 @@ export default {
 				//   icon: 'fas fa-project-diagram',
 				// },
 				...(config.MASTER_VAT ?[{
-					name: strings.VATCategory,
+					name: "Tax Category",
 					url: '/admin/master/vat-category',
 					icon: 'fas fa-briefcase',
 					path: 'Vat Category',

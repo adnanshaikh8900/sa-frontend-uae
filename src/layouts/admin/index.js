@@ -2,7 +2,6 @@ import React, { Suspense } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-
 import { Container } from 'reactstrap';
 import {
 	AppAside,
@@ -17,20 +16,16 @@ import {
 	AppSidebarNav,
 } from '@coreui/react';
 import { ToastContainer, toast } from 'react-toastify';
-
 import { adminRoutes } from 'routes';
 import { AuthActions, CommonActions } from 'services/global';
-
 import PrivateRoute from '../private';
-
 import navigation from 'constants/navigation';
-
 import { Aside, Header, Footer, Loading } from 'components';
-
 import './style.scss';
 import {data}  from '../../screens/Language/index'
 import LocalizedStrings from 'react-localization';
 import config from '../../constants/config'
+
 const mapStateToProps = (state) => {
 	return {
 		user_list: state.user.user_list,
@@ -45,7 +40,6 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 console.log(adminRoutes)
-debugger
 let strings = new LocalizedStrings(data);
 if(localStorage.getItem('language')==null)
 	{

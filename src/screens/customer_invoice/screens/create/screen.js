@@ -1355,6 +1355,7 @@ discountType = (row) =>
 		
 		this.setState({data:local2},()=>{
 			this.updateAmount(local2);
+			if(this.checkedRow()) this.addRow()
 		})
 	}
 	prductValue = (e, row, name, form, field, props) => {
@@ -1760,6 +1761,7 @@ discountType = (row) =>
 		// 	props.values.discountType.value === 'PERCENTAGE'
 		// 		? +((total_net * discountPercentage) / 100)
 		// 		: discountAmount;
+		
 		this.setState(
 			{
 				data,
@@ -1774,7 +1776,9 @@ discountType = (row) =>
 					},
 
 				},
-			},
+			},()=>{
+				if(this.checkedRow()) this.addRow()
+			}
 
 		);
 	};

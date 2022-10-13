@@ -118,7 +118,7 @@ export const getStateList = (countryCode) => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: '/rest/company/getState?countryCode=' + 229,
+			url: '/rest/company/getState?countryCode=' + countryCode,
 		};
 		if (229) {
 			return api(data)

@@ -1390,12 +1390,7 @@ class ExplainTrasactionDetail extends React.Component {
 															  }
 															}
 											
-															if( values.amount>totalexpaled &&
-															  this.state?.bankCurrency?.bankAccountCurrency===values?.invoiceIdList?.[0]?.currencyCode)
-														   {
-															errors.amount=`Amount cannot be grater than ${totalexpaled}`
-														   
-														  }
+															
 														  values.invoiceIdList.map((ii)=>{
 															if((this.state.bankCurrency.bankAccountCurrency!==this.state.basecurrency.currencyCode
 															  && this.state.basecurrency.currencyCode!==ii.currencyCode) && this.state.bankCurrency.bankAccountCurrency!==ii.currencyCode)

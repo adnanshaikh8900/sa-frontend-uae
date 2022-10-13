@@ -466,7 +466,7 @@ setConfigurations=(configurationList)=>{
 	// 		return true
 	// }
 	handleSave = () => {
-		debugger
+		
 		if (this.validateForm()) {
 		let optionErr = [...this.state.selectError];
 		let item = -1;
@@ -495,6 +495,10 @@ setConfigurations=(configurationList)=>{
 			
 			postData.skipColumns = this.state.initValue.skipColumns?.length >= 1  ? this.state.initValue.skipColumns : ''
 			postData.indexMap = a;
+			let obi={...postData}
+			Object.keys(obi).map((i)=>{
+				if(postData[i]===null) postData[i]=""	
+			})
 			this.props.importTransactionActions
 				.createConfiguration(postData)
 				.then((res) => {

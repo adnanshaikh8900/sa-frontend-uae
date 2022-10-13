@@ -17,15 +17,11 @@ import {
 import { toast } from 'react-toastify';
 import _ from 'lodash';
 import { Loader } from 'components';
-
 import { CommonActions } from 'services/global';
-
 import 'react-toastify/dist/ReactToastify.css';
 import './style.scss';
-
 import * as VatCreateActions from './actions';
 import * as VatActions from '../../actions';
-
 import { Formik } from 'formik';
 import NumberFormat from "react-number-format";
 import PropTypes from "prop-types";
@@ -86,6 +82,7 @@ class CreateVatCode extends React.Component {
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regExDecimal = /^[0-9]*(\.[0-9]{0,2})?$/;
+		this.regExPercentage =/^(100(\.00?)?|[1-9]?\d(\.\d\d?)?)$/;
 		this.regEx = /^[0-9\d]+$/;
 		this.vatCode = /[a-zA-Z0-9 ]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
@@ -114,7 +111,7 @@ class CreateVatCode extends React.Component {
 
 	// Show Success Toast
 	success = () => {
-		toast.success('VAT category Updated successfully... ', {
+		toast.success('Tax category Updated successfully... ', {
 			position: toast.POSITION.TOP_RIGHT,
 		});
 	};
@@ -129,7 +126,7 @@ class CreateVatCode extends React.Component {
 					this.setState({ disabled: false });
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'New VAT category Created Successfully!',
+						'New Tax category Created Successfully!',
 					);
 					resetForm();
 					if (this.state.createMore) {
@@ -167,7 +164,7 @@ class CreateVatCode extends React.Component {
 								<CardHeader>
 									<div className="h4 mb-0 d-flex align-items-center">
 										<i className="nav-icon icon-briefcase" />
-										<span className="ml-2">{strings.NewVatCategory}</span>
+										<span className="ml-2">New Tax Category</span>
 									</div>
 								</CardHeader>
 								<CardBody>
@@ -194,7 +191,7 @@ class CreateVatCode extends React.Component {
 													}
 
 													if (VatList.includes(values.name)) {
-														errors.name = 'VAT category already exists';
+														errors.name = 'Tax category already exists';
 													}
 
 													if (!values.vat) {
@@ -208,7 +205,8 @@ class CreateVatCode extends React.Component {
 														<FormGroup>
 															<Label htmlFor="name">
 																<span className="text-danger">* </span>
-																 {strings.VatCategoryName}
+																 {/* {strings.VatCategoryName} */}
+																	Tax Category Name
 																<i
 																	id="VatCodeTooltip"
 																	className="fa fa-question-circle ml-1"
@@ -217,7 +215,7 @@ class CreateVatCode extends React.Component {
 																	placement="right"
 																	target="VatCodeTooltip"
 																>
-																	VAT Category Name – Unique identifier VAT category
+																	Tax Category Name – Unique identifier Tax category
 																	name
 																</UncontrolledTooltip>
 															</Label>
@@ -226,7 +224,7 @@ class CreateVatCode extends React.Component {
 																maxLength="30"
 																id="name"
 																name="name"
-																placeholder={strings.Enter+strings.VatCategoryName}
+																placeholder="Enter Tax Category Name"
 																onBlur={props.handleBlur}
 																onChange={(option) => {
 																	if (
@@ -252,7 +250,9 @@ class CreateVatCode extends React.Component {
 														</FormGroup>
 														<FormGroup>
 															<Label htmlFor="name">
-																<span className="text-danger">* </span>{strings.Percentage}
+																<span className="text-danger">* </span>
+																{/* {strings.Percentage} */}
+																	Percentage %
 																<i
 																	id="VatPercentTooltip"
 																	className="fa fa-question-circle ml-1"
@@ -261,7 +261,7 @@ class CreateVatCode extends React.Component {
 																	placement="right"
 																	target="VatPercentTooltip"
 																>
-																	Percentage – VAT percentage charged by your
+																	Percentage – Tax percentage charged by your
 																	country
 																</UncontrolledTooltip>
 															</Label>
@@ -270,14 +270,15 @@ class CreateVatCode extends React.Component {
 																size="small"
 																fullWidth
 																variant="outlined"
-																maxLength="5"
+																// maxLength="5"
+																inputProps={{maxLength:5}}
 																id="vat"
 																name="vat"
-																placeholder={strings.Enter+strings.Percentage}
+																placeholder="Enter Tax Percentage"
 																onChange={(option) => {
 																	if (
 																		option.target.value === '' ||
-																		this.regExDecimal.test(option.target.value)
+																		this.regExPercentage.test(option.target.value)
 																	) {
 																		props.handleChange('vat')(option);
 																	}

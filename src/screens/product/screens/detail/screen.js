@@ -970,7 +970,7 @@ renderName=(cell,row)=>{
 															'Product code is required',
 														),
 														vatCategoryId: Yup.string()
-															.required('Tax category is required')
+															.required('VAT category is required')
 															.nullable(),
 													})}
 												>
@@ -1237,7 +1237,7 @@ renderName=(cell,row)=>{
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="vatCategoryId">
 																			<span className="text-danger">* </span>
-																			{"Tax"+" "+strings.Type}
+																			{"VAT"+" "+strings.Type}
 																		</Label>
 																		<Select
 																		 isDisabled={this.state.companyDetails && !this.state.companyDetails.isRegisteredVat}
@@ -1370,8 +1370,7 @@ renderName=(cell,row)=>{
 																	</FormGroup>
 																</Col>
 															</Row> */}
-												{/* Hidden by shoaib for multi country */}
-															{/* <Row style={{display: props.values.productType !='SERVICE'   ?'' : 'none'}}		>
+															<Row style={{display: props.values.productType !='SERVICE'   ?'' : 'none'}}		>
 																{this.state.companyDetails && this.state.companyDetails.isRegisteredVat===true &&(<Col lg={4}>
 																<FormGroup check inline className="mb-3">
 																		<Label
@@ -1403,7 +1402,7 @@ renderName=(cell,row)=>{
 																		</Label>
 																	</FormGroup>
 																</Col>)}
-																</Row> */}
+																</Row>
 																<Row>
 																{this.state.exciseTaxCheck===true&&(	
 															

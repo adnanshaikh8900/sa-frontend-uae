@@ -178,6 +178,7 @@ class ExplainTrasactionDetail extends React.Component {
 					creationMode: this.props.creationMode,
 					initValue: {
 						bankId: bankId,
+						contactName:res.data.contactName?res.data.contactName:'',
 						amount: res.data.amount ? res.data.amount : 0,
 						dueAmount: res.data.dueAmount ? res.data.dueAmount : '',
 						date: res.data.date1
@@ -227,6 +228,7 @@ class ExplainTrasactionDetail extends React.Component {
 						vatId: res.data.vatId ? res.data.vatId : '',
 						vendorId: res.data.vendorId ? res.data.vendorId : '',
 						customerId: res.data.customerId ? res.data.customerId : '',
+						
 						explinationStatusEnum: res.data.explinationStatusEnum,
 						reference: res.data.reference ? res.data.reference : '',
 						coaCategoryId: res.data.coaCategoryId
@@ -1395,7 +1397,7 @@ class ExplainTrasactionDetail extends React.Component {
 															if((this.state.bankCurrency.bankAccountCurrency!==this.state.basecurrency.currencyCode
 															  && this.state.basecurrency.currencyCode!==ii.currencyCode) && this.state.bankCurrency.bankAccountCurrency!==ii.currencyCode)
 															  
-															  errors.invoiceIdList="the current selected invoice does not have supported currency conversions"
+															  errors.invoiceIdList="nvoices created in another FCY cannot be processed by this foreign currency bank account."
 															 
 														  }
 														  )
@@ -1921,6 +1923,10 @@ class ExplainTrasactionDetail extends React.Component {
 																						props.handleChange('invoiceIdList')([])
 																					}}
 																					value={
+																						this.state.initValue.explinationStatusEnum ==='PARTIAL' ||  this.state.initValue.explinationStatusEnum==="FULL" ?
+																						
+																						{value:props.values.vendorId,label:this.state?.initValue?.contactName}
+																						:
 																						tmpSupplier_list &&
 																						tmpSupplier_list.find(
 																							(option) =>
@@ -2085,6 +2091,10 @@ class ExplainTrasactionDetail extends React.Component {
 																						);
 																					}}
 																					value={
+																						this.state.initValue.explinationStatusEnum ==='PARTIAL' ||  this.state.initValue.explinationStatusEnum==="FULL" ?
+																						
+																						{value:props.values.customerId,label:this.state?.initValue?.contactName}
+																						:
 																						transactionCategoryList
 																							.dataList[0] &&
 																						transactionCategoryList.dataList[0].options.find(

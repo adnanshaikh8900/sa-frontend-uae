@@ -1744,7 +1744,7 @@ class CreateSupplierInvoice extends React.Component {
 		this.formRef.current.setFieldValue('curreancyname', result[0].currencyName, true);
 	};
 
-	updateAmount = (data, props) => {
+	updateAmount = (data, props,addrowinfo) => {
 		const { vat_list } = this.props;
 		
 		let total_net = 0;
@@ -1917,7 +1917,7 @@ class CreateSupplierInvoice extends React.Component {
 
 				},
 			},()=>{
-				if(this.checkedRow()) this.addRow()
+				if(this.checkedRow() && !addrowinfo) this.addRow()
 			}
 
 		);
@@ -3677,7 +3677,7 @@ class CreateSupplierInvoice extends React.Component {
 																			const data = this.state.data;
 																			newData = data.filter((obj) => obj.productId !== "");
 																			props.setFieldValue('lineItemsString', newData, true);
-																			this.updateAmount(newData, props);
+																			this.updateAmount(newData, props,true);
 																			}
 																			
 																			this.setState(
@@ -3713,7 +3713,7 @@ class CreateSupplierInvoice extends React.Component {
                                                                                 const data = this.state.data;
                                                                                 newData = data.filter((obj) => obj.productId !== "");
                                                                                 props.setFieldValue('lineItemsString', newData, true);
-                                                                                this.updateAmount(newData, props);
+                                                                                this.updateAmount(newData, props,true);
                                                                                 }
 																			this.setState(
 																				{ createMore: true },

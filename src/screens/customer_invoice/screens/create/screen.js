@@ -1607,7 +1607,7 @@ discountType = (row) =>
 		}
 	};
 
-	updateAmount = (data, props) => {
+	updateAmount = (data, props,addrowinfo) => {
 		const { vat_list } = this.state;
 		let total_net = 0;
 		let total_excise = 0;
@@ -1777,7 +1777,7 @@ discountType = (row) =>
 
 				},
 			},()=>{
-				if(this.checkedRow()) this.addRow()
+				if(this.checkedRow() && !addrowinfo) this.addRow()
 			}
 
 		);
@@ -1795,6 +1795,7 @@ discountType = (row) =>
 	};
 
 	handleSubmit = (data, resetForm) => {
+		debugger
 		this.setState({ disabled: true });
 		const {
 			receiptAttachmentDescription,
@@ -1825,6 +1826,7 @@ discountType = (row) =>
 		} = data;
 		const { term } = this.state;
 		const formData = new FormData();
+		debugger
 		formData.append('taxType', this.state.taxType)
 		formData.append('quotationId', this.state.quotationId ? this.state.quotationId : '')
 		formData.append('referenceNumber', invoice_number !== null ? this.state.prefix + invoice_number : '');
@@ -1882,7 +1884,7 @@ discountType = (row) =>
 		if (this.uploadFile && this.uploadFile.files && this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
-
+		debugger
 		this.setState({ loading:true, disableLeavePage:true, loadingMsg:"Creating Invoice..."});
 		this.props.customerInvoiceCreateActions
 			.createInvoice(formData)
@@ -2378,7 +2380,7 @@ discountType = (row) =>
 													if(isoutoftock>0){
 														errors.outofstock="Some Prod"
 													}
-
+														
 														return errors;
 												}}
 												validationSchema={Yup.object().shape({
@@ -3942,6 +3944,7 @@ discountType = (row) =>
 																		className="btn-square mr-3"
 																		disabled={this.state.disabled}
 																		onClick={() => {
+																			debugger
 																			if(this.state.data.length === 1)
 																				{
 																				//	added validation popup	msg
@@ -3952,11 +3955,12 @@ discountType = (row) =>
 																				}
 																				else
 																				{
+																					debugger
 																			 	let newData=[]
 																				const data = this.state.data;
 																				newData = data.filter((obj) => obj.productId !== "");
 																				props.setFieldValue('lineItemsString', newData, true);
-																				this.updateAmount(newData, props);
+																				this.updateAmount(newData, props,true);
 																				//	added validation popup	msg
 																				// props.handleBlur();
 																				// if(props.errors &&  Object.keys(props.errors).length != 0){
@@ -3997,7 +4001,7 @@ discountType = (row) =>
                                                                                 const data = this.state.data;
                                                                                 newData = data.filter((obj) => obj.productId !== "");
                                                                                 props.setFieldValue('lineItemsString', newData, true);
-                                                                                this.updateAmount(newData, props);
+                                                                                this.updateAmount(newData, props,true);
 																				// props.handleBlur();
                                                                             	// if(props.errors &&  Object.keys(props.errors).length != 0)
                                                                             	// 	this.props.commonActions.fillManDatoryDetails();

@@ -396,12 +396,13 @@ class CreateBankTransaction extends React.Component {
         "explainParamListStr",
         invoiceIdList ? JSON.stringify(result) : ""
       );
-      
+            
+     
      
       formData.append(
         "explainedInvoiceListString",
         invoiceIdList ?JSON.stringify(invoiceIdList.map((i)=>{
-         
+                  
          return {
           invoiceId:i.value,
           invoiceAmount:i.dueAmount,
@@ -410,7 +411,7 @@ class CreateBankTransaction extends React.Component {
           exchangeRate:i.exchangeRate,
           partiallyPaid:i.pp,
           nonConvertedInvoiceAmount:i.explainedAmount/i.exchangeRate,
-          convertedToBaseCurrencyAmount:i.convertedToBaseCurrencyAmount
+          convertedToBaseCurrencyAmount:i.convertedToBaseCurrencyAmount,
          } })) : []
       );
     
@@ -783,10 +784,14 @@ class CreateBankTransaction extends React.Component {
 
   basecurrencyconvertor=(customerinvoice)=>{
     let exchange;
-    let result = this.props.currency_convert_list.filter((obj) => {
+    if(this.state.bankCurrency.bankAccountCurrency!==this.state.basecurrency.currencyCode)
+    {let result = this.props.currency_convert_list.filter((obj) => {
       return obj.currencyCode === customerinvoice;
     });
     exchange= result[0].exchangeRate
+  } else {
+    exchange= 1
+  }
     return exchange
   }
   setexchnagedamount = (option, amount) => {
@@ -826,7 +831,7 @@ class CreateBankTransaction extends React.Component {
           explainedAmount:  i.dueAmount * localexe,
           exchangeRate: localexe,
           pp: false,
-          convertedToBaseCurrencyAmount:i.dueAmount*basecurrency
+          convertedToBaseCurrencyAmount:(i.dueAmount * localexe)*basecurrency
         }
       })
      
@@ -860,7 +865,10 @@ class CreateBankTransaction extends React.Component {
 		if(amountislessthanallinvoice) {
 		if(value){
 		  tempdata=finaldata.map((i)=>
-		  {return {...i,pp:value,explainedAmount:transactionAmount/finaldata.length}
+		  {const basecurrency=this.basecurrencyconvertor(i.currencyCode)
+        return {...i,pp:value,explainedAmount:transactionAmount/finaldata.length,
+      convertedToBaseCurrencyAmount:(transactionAmount/finaldata.length)*basecurrency
+    }
 		 })
 		}
 		else {
@@ -873,6 +881,7 @@ class CreateBankTransaction extends React.Component {
 		finaldata=[...tempdata]
 		if(transactionAmount>0 && transactionAmount!=="")
 		this.formRef.current.setFieldValue('invoiceIdList', finaldata)
+    debugger
 	   } else {
 		let currentshort=shortAmount
 		finaldata.map((i, inx) => {
@@ -892,13 +901,15 @@ class CreateBankTransaction extends React.Component {
 			}	 
 		  updatedfinaldata.push(local)
 		})
-    updatedfinaldata=updatedfinaldata.map((i)=>{
+    let updatedfinaldata2=updatedfinaldata.map((i)=>{
       const basecurrency=this.basecurrencyconvertor(i.currencyCode)
       return {...i,
         convertedToBaseCurrencyAmount:i.explainedAmount*basecurrency
       }
     })
-		this.formRef.current.setFieldValue('invoiceIdList', updatedfinaldata)
+    debugger
+   
+		this.formRef.current.setFieldValue('invoiceIdList', updatedfinaldata2)
 	  }
 	}
 
@@ -1137,10 +1148,10 @@ class CreateBankTransaction extends React.Component {
                               }
 
                               values.invoiceIdList.map((ii)=>{
-                                if(this.state.bankCurrency.bankAccountCurrency!==this.state.basecurrency.currencyCode
-                                  && this.state.basecurrency.currencyCode!==ii.currencyCode
-                                  )
-                                  errors.invoiceIdList="the current selected invoice does not have supported currency conversions"
+                                if((this.state.bankCurrency.bankAccountCurrency!==this.state.basecurrency.currencyCode
+                                  && this.state.basecurrency.currencyCode!==ii.currencyCode) && this.state.bankCurrency.bankAccountCurrency!==ii.currencyCode)
+                                  
+                                  errors.invoiceIdList="nvoices created in another FCY cannot be processed by this foreign currency bank account."
                                  
                               }
                               )

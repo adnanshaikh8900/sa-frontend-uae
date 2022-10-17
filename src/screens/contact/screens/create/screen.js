@@ -359,7 +359,6 @@ class CreateContact extends React.Component {
 																if (this.state.isRegisteredForVat == true) {
 																	if (values.vatRegistrationNumber == "")
 																		errors.vatRegistrationNumber = 'Tax registration number is required';
-
 																	if (values.vatRegistrationNumber.length != 15) {
 																		errors.vatRegistrationNumber = "Please enter 15 digit Tax registration number"
 																	}

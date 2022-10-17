@@ -178,6 +178,7 @@ class ExplainTrasactionDetail extends React.Component {
 					creationMode: this.props.creationMode,
 					initValue: {
 						bankId: bankId,
+						contactName:res.data.contactName?res.data.contactName:'',
 						amount: res.data.amount ? res.data.amount : 0,
 						dueAmount: res.data.dueAmount ? res.data.dueAmount : '',
 						date: res.data.date1
@@ -227,6 +228,7 @@ class ExplainTrasactionDetail extends React.Component {
 						vatId: res.data.vatId ? res.data.vatId : '',
 						vendorId: res.data.vendorId ? res.data.vendorId : '',
 						customerId: res.data.customerId ? res.data.customerId : '',
+						
 						explinationStatusEnum: res.data.explinationStatusEnum,
 						reference: res.data.reference ? res.data.reference : '',
 						coaCategoryId: res.data.coaCategoryId
@@ -779,7 +781,7 @@ class ExplainTrasactionDetail extends React.Component {
 			  exchangeRate:i.exchangeRate,
 			  partiallyPaid:i.pp,
 			  nonConvertedInvoiceAmount:i.explainedAmount/i.exchangeRate,
-          	convertedToBaseCurrencyAmount:i.convertedToBaseCurrencyAmount
+          	convertedToBaseCurrencyAmount:i.convertedToBaseCurrencyAmount,
 			 } })) : []
 		  );
 		
@@ -1013,12 +1015,17 @@ class ExplainTrasactionDetail extends React.Component {
 		return exchange
 	  }
 	
+	  
 	  basecurrencyconvertor=(customerinvoice)=>{
 		let exchange;
-		let result = this.props.currency_convert_list.filter((obj) => {
+		if(this.state.bankCurrency.bankAccountCurrency!==this.state.basecurrency.currencyCode)
+		{let result = this.props.currency_convert_list.filter((obj) => {
 		  return obj.currencyCode === customerinvoice;
 		});
 		exchange= result[0].exchangeRate
+	  } else {
+		exchange= 1
+	  }
 		return exchange
 	  }
 	  
@@ -1059,7 +1066,7 @@ class ExplainTrasactionDetail extends React.Component {
 			  explainedAmount: i.amount * localexe,
 			  exchangeRate: localexe,
 			  pp: false,
-			  convertedToBaseCurrencyAmount:i.dueAmount*basecurrency
+			  convertedToBaseCurrencyAmount:(i.amount * localexe)*basecurrency
 			}
 			else 
 			return {
@@ -1071,8 +1078,7 @@ class ExplainTrasactionDetail extends React.Component {
 				explainedAmount: i.dueAmount * localexe,
 				exchangeRate: localexe,
 				pp: false,
-				convertedToBaseCurrencyAmount:i.dueAmount*basecurrency
-			
+				convertedToBaseCurrencyAmount:(i.dueAmount * localexe)*basecurrency
 			  }
 		  })
 		   
@@ -1110,7 +1116,10 @@ class ExplainTrasactionDetail extends React.Component {
 		if(amountislessthanallinvoice) {
 		if(value){
 		  tempdata=finaldata.map((i)=>
-		  {return {...i,pp:value,explainedAmount:transactionAmount/finaldata.length}
+		  {const basecurrency=this.basecurrencyconvertor(i.currencyCode)
+			return {...i,pp:value,explainedAmount:transactionAmount/finaldata.length,
+		  convertedToBaseCurrencyAmount:(transactionAmount/finaldata.length)*basecurrency
+		}
 		 })
 		}
 		else {
@@ -1145,6 +1154,7 @@ class ExplainTrasactionDetail extends React.Component {
 		  
 		  updatedfinaldata.push(local)
 		})
+		
 		updatedfinaldata=updatedfinaldata.map((i)=>{
 			const basecurrency=this.basecurrencyconvertor(i.currencyCode)
 			return {...i,
@@ -1382,22 +1392,32 @@ class ExplainTrasactionDetail extends React.Component {
 															  }
 															}
 											
-															if( values.amount>totalexpaled &&
-															  this.state?.bankCurrency?.bankAccountCurrency===values?.invoiceIdList?.[0]?.currencyCode)
-														   {
-															errors.amount=`Amount cannot be grater than ${totalexpaled}`
-														   
+															
+														  values.invoiceIdList.map((ii)=>{
+															if((this.state.bankCurrency.bankAccountCurrency!==this.state.basecurrency.currencyCode
+															  && this.state.basecurrency.currencyCode!==ii.currencyCode) && this.state.bankCurrency.bankAccountCurrency!==ii.currencyCode)
+															  
+															  errors.invoiceIdList="nvoices created in another FCY cannot be processed by this foreign currency bank account."
+															 
 														  }
-														 
+														  )
+														  
+										
+														if( values.transactionAmount>totalexpaled &&
+														  this.state?.bankCurrency?.bankAccountCurrency===values?.invoiceIdList?.[0]?.currencyCode)
+													   {
+														errors.transactionAmount=`The transaction amount cannot be greater than the invoice amount.`
+													   
+													  }
 														  const isppselected=values?.invoiceIdList.reduce((a,c)=>c.pp?a+1:a+0,0)
                           if( values.amount<totalexpaled &&
                             this.state?.bankCurrency?.bankAccountCurrency===values?.invoiceIdList?.[0]?.currencyCode
                             && isppselected===0
                             )
-                         {
+                         		{
                           errors.amount=`The transaction amount is less than the invoice amount. To partially pay the invoice, please select the checkbox `
                          
-                        }
+                       			 }
 														  }
 								
 														
@@ -1903,6 +1923,10 @@ class ExplainTrasactionDetail extends React.Component {
 																						props.handleChange('invoiceIdList')([])
 																					}}
 																					value={
+																						this.state.initValue.explinationStatusEnum ==='PARTIAL' ||  this.state.initValue.explinationStatusEnum==="FULL" ?
+																						
+																						{value:props.values.vendorId,label:this.state?.initValue?.contactName}
+																						:
 																						tmpSupplier_list &&
 																						tmpSupplier_list.find(
 																							(option) =>
@@ -2067,6 +2091,10 @@ class ExplainTrasactionDetail extends React.Component {
 																						);
 																					}}
 																					value={
+																						this.state.initValue.explinationStatusEnum ==='PARTIAL' ||  this.state.initValue.explinationStatusEnum==="FULL" ?
+																						
+																						{value:props.values.customerId,label:this.state?.initValue?.contactName}
+																						:
 																						transactionCategoryList
 																							.dataList[0] &&
 																						transactionCategoryList.dataList[0].options.find(

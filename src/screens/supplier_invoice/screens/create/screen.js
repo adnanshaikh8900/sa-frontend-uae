@@ -1366,6 +1366,27 @@ class CreateSupplierInvoice extends React.Component {
 			/>
 		);
 	};
+	exchangeRaterevalidate=(exc)=>{
+		let local=[...this.state.data]
+		var { product_list } = this.props;
+		
+		let local2=local.map((obj, index) => {
+
+			const result = product_list.find((item) => item.id === obj.productId);
+			debugger
+			return {
+				...obj,unitPrice:result?
+				(parseFloat(result.unitPrice)*(1/exc)).toFixed(2):0
+			}
+			
+		});
+		
+		this.setState({data:local2},()=>{
+			this.updateAmount(local2);
+		})
+	}
+
+
 	prductValue = (e, row, name, form, field, props) => {
 		const { product_list } = this.props;
 		let data = this.state.data;
@@ -1376,7 +1397,7 @@ class CreateSupplierInvoice extends React.Component {
 			this.formRef.current?.state?.values?.exchangeRate:1
 		data.map((obj, index) => {
 			if (obj.id === row.id) {
-				obj['unitPrice'] = parseFloat(result.unitPrice)*(1/exchangeRate)
+				obj['unitPrice'] = (parseFloat(result.unitPrice)*(1/exchangeRate)).toFixed(0)
 				obj['vatCategoryId'] = result.vatCategoryId;
 				obj['exciseTaxId'] = result.exciseTaxId;
 				obj['description'] = result.description;
@@ -1712,6 +1733,7 @@ class CreateSupplierInvoice extends React.Component {
 		});
 		if(result &&result[0]&&  result[0].exchangeRate)
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
+		this.exchangeRaterevalidate(result[0].exchangeRate)
 	};
 
 	setCurrency = (value) => {
@@ -1722,7 +1744,7 @@ class CreateSupplierInvoice extends React.Component {
 		this.formRef.current.setFieldValue('curreancyname', result[0].currencyName, true);
 	};
 
-	updateAmount = (data, props) => {
+	updateAmount = (data, props,addrowinfo) => {
 		const { vat_list } = this.props;
 		
 		let total_net = 0;
@@ -1735,7 +1757,7 @@ class CreateSupplierInvoice extends React.Component {
 			let unitprice=obj.unitPrice
 			const index =
 				obj.vatCategoryId !== ''
-					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
+					? vat_list?.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
 
@@ -1894,7 +1916,9 @@ class CreateSupplierInvoice extends React.Component {
 					},
 
 				},
-			},
+			},()=>{
+				if(this.checkedRow() && !addrowinfo) this.addRow()
+			}
 
 		);
 	};
@@ -3059,13 +3083,13 @@ class CreateSupplierInvoice extends React.Component {
 																			className="form-control"
 																			id="exchangeRate"
 																			name="exchangeRate"
-																			disabled={this.state?.data?.length>0 && this.state?.data?.[0]?.productId}
+																			
 																			value={props.values.exchangeRate}
 																			onChange={(value) => {
 																				props.handleChange('exchangeRate')(
 																					value,
 																				);
-																				
+																				this.exchangeRaterevalidate(parseFloat(value.target.value))	
 																			}}
 																		/>
 																	</div>
@@ -3082,13 +3106,11 @@ class CreateSupplierInvoice extends React.Component {
 
 																/>
 															</Col>
-															
+															<Col sm={12}>
+														
+														</Col>
 														</Row>
-														<span style={{color:'blue',fontSize:10}}> 
-																{(this.state?.data?.length>0 && this.state?.data?.[0]?.productId) &&
-																'Exchange Rate Can Only be edited if No Product is Selected'
-																}
-															</span>
+														
 														<hr style={{ display: props.values.exchangeRate === 1 ? 'none' : '' }} />
 														<Row className="mb-3">
 															<Col lg={8} className="mb-3">
@@ -3655,7 +3677,7 @@ class CreateSupplierInvoice extends React.Component {
 																			const data = this.state.data;
 																			newData = data.filter((obj) => obj.productId !== "");
 																			props.setFieldValue('lineItemsString', newData, true);
-																			this.updateAmount(newData, props);
+																			this.updateAmount(newData, props,true);
 																			}
 																			
 																			this.setState(
@@ -3691,7 +3713,7 @@ class CreateSupplierInvoice extends React.Component {
                                                                                 const data = this.state.data;
                                                                                 newData = data.filter((obj) => obj.productId !== "");
                                                                                 props.setFieldValue('lineItemsString', newData, true);
-                                                                                this.updateAmount(newData, props);
+                                                                                this.updateAmount(newData, props,true);
                                                                                 }
 																			this.setState(
 																				{ createMore: true },

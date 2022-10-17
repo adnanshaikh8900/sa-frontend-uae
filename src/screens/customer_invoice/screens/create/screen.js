@@ -487,6 +487,7 @@ renderVatAmount = (cell, row,extraData) => {
 		});
 		if(result &&result[0]&&  result[0].exchangeRate)
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
+		this.exchangeRaterevalidate(result[0].exchangeRate)
 		};
 
 	setCurrency = (value) => {
@@ -1335,6 +1336,28 @@ discountType = (row) =>
 			/>
 		);
 	};
+
+	exchangeRaterevalidate=(exc)=>{
+	debugger
+		let local=[...this.state.data]
+		var { product_list } = this.props;
+		
+		let local2=local.map((obj, index) => {
+
+			const result = product_list.find((item) => item.id === obj.productId);
+			debugger
+			return {
+				...obj,unitPrice:result?
+				(parseFloat(result.unitPrice)*(1/exc)).toFixed(2):0
+			}
+			
+		});
+		
+		this.setState({data:local2},()=>{
+			this.updateAmount(local2);
+			if(this.checkedRow()) this.addRow()
+		})
+	}
 	prductValue = (e, row, name, form, field, props) => {
 		const { product_list } = this.props;
 		let data = this.state.data;
@@ -1345,7 +1368,7 @@ discountType = (row) =>
 			this.formRef.current?.state?.values?.exchangeRate:1
 		data.map((obj, index) => {
 			if (obj.id === row.id) {
-				obj['unitPrice'] = parseFloat(result.unitPrice)*(1/exchangeRate);
+				obj['unitPrice'] = (parseFloat(result.unitPrice)*(1/exchangeRate)).toFixed(2);
 				obj['vatCategoryId'] = result.vatCategoryId;
 				obj['description'] = result.description;
 				obj['exciseTaxId'] = result.exciseTaxId;
@@ -1584,7 +1607,7 @@ discountType = (row) =>
 		}
 	};
 
-	updateAmount = (data, props) => {
+	updateAmount = (data, props,addrowinfo) => {
 		const { vat_list } = this.state;
 		let total_net = 0;
 		let total_excise = 0;
@@ -1738,6 +1761,7 @@ discountType = (row) =>
 		// 	props.values.discountType.value === 'PERCENTAGE'
 		// 		? +((total_net * discountPercentage) / 100)
 		// 		: discountAmount;
+		
 		this.setState(
 			{
 				data,
@@ -1752,7 +1776,9 @@ discountType = (row) =>
 					},
 
 				},
-			},
+			},()=>{
+				if(this.checkedRow() && !addrowinfo) this.addRow()
+			}
 
 		);
 	};
@@ -1769,6 +1795,7 @@ discountType = (row) =>
 	};
 
 	handleSubmit = (data, resetForm) => {
+		debugger
 		this.setState({ disabled: true });
 		const {
 			receiptAttachmentDescription,
@@ -1799,6 +1826,7 @@ discountType = (row) =>
 		} = data;
 		const { term } = this.state;
 		const formData = new FormData();
+		debugger
 		formData.append('taxType', this.state.taxType)
 		formData.append('quotationId', this.state.quotationId ? this.state.quotationId : '')
 		formData.append('referenceNumber', invoice_number !== null ? this.state.prefix + invoice_number : '');
@@ -1856,7 +1884,7 @@ discountType = (row) =>
 		if (this.uploadFile && this.uploadFile.files && this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
-
+		debugger
 		this.setState({ loading:true, disableLeavePage:true, loadingMsg:"Creating Invoice..."});
 		this.props.customerInvoiceCreateActions
 			.createInvoice(formData)
@@ -2352,7 +2380,7 @@ discountType = (row) =>
 													if(isoutoftock>0){
 														errors.outofstock="Some Prod"
 													}
-
+														
 														return errors;
 												}}
 												validationSchema={Yup.object().shape({
@@ -3319,14 +3347,14 @@ discountType = (row) =>
 																			type="number"
 																			className="form-control"
 																			id="exchangeRate"
-																			disabled={this.state?.data?.length>0 && this.state?.data?.[0]?.productId}
+																
 																			name="exchangeRate"
 																			value={props.values.exchangeRate}
 																			onChange={(value) => {
 																				props.handleChange('exchangeRate')(
 																					value,
 																				);
-																				
+																				this.exchangeRaterevalidate(parseFloat(value.target.value))
 																			}}
 																		/>
 																	</div>
@@ -3344,12 +3372,10 @@ discountType = (row) =>
 																				
 																			/>
 														</Col>
+														
+														
 														</Row>
-														<span style={{color:'blue',fontSize:10}}> 
-																{(this.state?.data?.length>0 && this.state?.data?.[0]?.productId) &&
-																'Exchange Rate Can Only be edited if No Product is Selected'
-																}
-															</span>
+														
 														<hr style={{display: props.values.exchangeRate === 1 ? 'none' : ''}} />
 														<Row className="mb-3">
 														<Col lg={8} className="mb-3">
@@ -3918,6 +3944,7 @@ discountType = (row) =>
 																		className="btn-square mr-3"
 																		disabled={this.state.disabled}
 																		onClick={() => {
+																			debugger
 																			if(this.state.data.length === 1)
 																				{
 																				//	added validation popup	msg
@@ -3928,11 +3955,12 @@ discountType = (row) =>
 																				}
 																				else
 																				{
+																					debugger
 																			 	let newData=[]
 																				const data = this.state.data;
 																				newData = data.filter((obj) => obj.productId !== "");
 																				props.setFieldValue('lineItemsString', newData, true);
-																				this.updateAmount(newData, props);
+																				this.updateAmount(newData, props,true);
 																				//	added validation popup	msg
 																				// props.handleBlur();
 																				// if(props.errors &&  Object.keys(props.errors).length != 0){
@@ -3973,7 +4001,7 @@ discountType = (row) =>
                                                                                 const data = this.state.data;
                                                                                 newData = data.filter((obj) => obj.productId !== "");
                                                                                 props.setFieldValue('lineItemsString', newData, true);
-                                                                                this.updateAmount(newData, props);
+                                                                                this.updateAmount(newData, props,true);
 																				// props.handleBlur();
                                                                             	// if(props.errors &&  Object.keys(props.errors).length != 0)
                                                                             	// 	this.props.commonActions.fillManDatoryDetails();

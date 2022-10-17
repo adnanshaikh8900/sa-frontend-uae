@@ -911,10 +911,9 @@ try {
 																					  )
 																					: []
 																			}
-																			
 																			id="vatCategoryId"
 																			name="vatCategoryId"
-																			placeholder={strings.Select+strings.VATCategory}
+																			placeholder={strings.Select+"VAT Type"}
 																			value={props.values.vatCategoryId}
 																			onChange={(option) => {
 																				// this.setState({

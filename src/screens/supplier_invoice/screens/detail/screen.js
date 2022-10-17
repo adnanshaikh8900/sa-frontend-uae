@@ -979,6 +979,25 @@ class DetailSupplierInvoice extends React.Component {
 			/>
 		);
 	};
+	exchangeRaterevalidate=(exc)=>{
+		let local=[...this.state.data]
+		var { product_list } = this.props;
+		
+		let local2=local.map((obj, index) => {
+
+			const result = product_list.find((item) => item.id === obj.productId);
+			debugger
+			return {
+				...obj,unitPrice:result?
+				(parseFloat(result.unitPrice)*(1/exc)).toFixed(2):0
+			}
+			
+		});
+		
+		this.setState({data:local2},()=>{
+			this.updateAmount(local2);
+		})
+	}
 
 	prductValue = (e, row, name, form, field, props) => {
 		const { product_list } = this.props;
@@ -991,7 +1010,7 @@ class DetailSupplierInvoice extends React.Component {
 
 		data.map((obj, index) => {
 			if (obj.id === row.id) {
-				obj['unitPrice'] = parseFloat(result.unitPrice)*(1/exchangeRate);
+				obj['unitPrice'] = (parseFloat(result.unitPrice)*(1/exchangeRate)).toFixed(2);
 				obj['vatCategoryId'] = parseInt(result.vatCategoryId);
 				obj['description'] = result.description;
 				obj['exciseTaxId'] = result.exciseTaxId;
@@ -1247,7 +1266,7 @@ class DetailSupplierInvoice extends React.Component {
 	};
 
 	updateAmount = (data, props) => {
-		const { vat_list } = this.props;
+		const { vat_list } = this.state;
 		
 		let total_net = 0;
 		let total_excise = 0;
@@ -1256,10 +1275,9 @@ class DetailSupplierInvoice extends React.Component {
 		let net_value = 0; 
 		let discount_total = 0;
 		data.map((obj) => {
-			let unitprice=obj.unitPrice
 			const index =
 				obj.vatCategoryId !== ''
-					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
+					? vat_list?.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
 
@@ -1267,18 +1285,18 @@ class DetailSupplierInvoice extends React.Component {
 			if(this.state.taxType === false){
 				if (obj.discountType === 'PERCENTAGE') {	
 					 net_value =
-						((+unitprice -
-							(+((unitprice * obj.discount)) / 100)) * obj.quantity);
-					var discount =  (unitprice * obj.quantity) - net_value
+						((+obj.unitPrice -
+							(+((obj.unitPrice * obj.discount)) / 100)) * obj.quantity);
+					var discount =  (obj.unitPrice * obj.quantity) - net_value
 				if(obj.exciseTaxId !=  0){
 					if(obj.exciseTaxId === 1){
 						const value = +(net_value) / 2 ;
 							net_value = parseFloat(net_value) + parseFloat(value) ;
-							obj.exciseAmount = parseFloat(value) ;
+							obj.exciseAmount = parseFloat(value);
 						}else if (obj.exciseTaxId === 2){
 							const value = net_value;
 							net_value = parseFloat(net_value) +  parseFloat(value) ;
-							obj.exciseAmount = parseFloat(value) ;
+							obj.exciseAmount = parseFloat(value);
 						}
 						
 				}
@@ -1290,8 +1308,8 @@ class DetailSupplierInvoice extends React.Component {
 					((+net_value  * vat ) / 100);
 				}else{
 					 net_value =
-						((unitprice * obj.quantity) - obj.discount)
-					var discount =  (unitprice * obj.quantity) - net_value
+						((obj.unitPrice * obj.quantity) - obj.discount)
+					var discount =  (obj.unitPrice * obj.quantity) - net_value
 						if(obj.exciseTaxId !=  0){
 							if(obj.exciseTaxId === 1){
 								const value = +(net_value) / 2 ;
@@ -1300,7 +1318,7 @@ class DetailSupplierInvoice extends React.Component {
 								}else if (obj.exciseTaxId === 2){
 									const value = net_value;
 									net_value = parseFloat(net_value) +  parseFloat(value) ;
-									obj.exciseAmount = parseFloat(value) ;
+									obj.exciseAmount = parseFloat(value);
 								}
 								
 						}
@@ -1320,11 +1338,11 @@ class DetailSupplierInvoice extends React.Component {
 
 					//net value after removing discount
 					 net_value =
-					((+unitprice -
-						(+((unitprice * obj.discount)) / 100)) * obj.quantity);
+					((+obj.unitPrice -
+						(+((obj.unitPrice * obj.discount)) / 100)) * obj.quantity);
 
 				//discount amount
-				var discount =  (unitprice* obj.quantity) - net_value
+				var discount =  (obj.unitPrice* obj.quantity) - net_value
 
 				//vat amount
 				var vat_amount =
@@ -1356,11 +1374,11 @@ class DetailSupplierInvoice extends React.Component {
 						{
 				//net value after removing discount
 				 net_value =
-				((unitprice * obj.quantity) - obj.discount)
+				((obj.unitPrice * obj.quantity) - obj.discount)
 
 
 				//discount amount
-				var discount =  (unitprice * obj.quantity) - net_value
+				var discount =  (obj.unitPrice * obj.quantity) - net_value
 						
 				//vat amount
 				var vat_amount =
@@ -1381,14 +1399,14 @@ class DetailSupplierInvoice extends React.Component {
 						const value = net_value / 2
 						obj.exciseAmount = parseFloat(value);
 						net_value = net_value}
-					
+				
 							}
 							else{
 								obj.exciseAmount = 0
 							}
 					}
 			}
-			obj.unitPrice=unitprice
+						
 			obj.vatAmount = vat_amount
 			obj.subTotal =
 			net_value ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
@@ -1422,7 +1440,6 @@ class DetailSupplierInvoice extends React.Component {
 
 		);
 	};
-
 
 	handleSubmit = (data) => {
 		this.setState({ disabled: true, disableLeavePage:true });
@@ -1688,6 +1705,7 @@ class DetailSupplierInvoice extends React.Component {
 		return obj.currencyCode === value;
 		});
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
+		this.exchangeRaterevalidate(result[0].exchangeRate)
 		};
 
 	getCurrentUser = (data) => {
@@ -2378,12 +2396,13 @@ class DetailSupplierInvoice extends React.Component {
 																			className="form-control"
 																			id="exchangeRate"
 																			name="exchangeRate"
-																			disabled={this.state?.data?.length>0 && this.state?.data?.[0]?.productId}
+																			
 																			value={props.values.exchangeRate}
 																			onChange={(value) => {
 																				props.handleChange('exchangeRate')(
 																					value,
 																				);
+																				this.exchangeRaterevalidate(parseFloat(value.target.value))
 																			}}
 																		/>
 																	</div>
@@ -2400,12 +2419,9 @@ class DetailSupplierInvoice extends React.Component {
 																				
 																			/>
 														</Col>
+														
 														</Row>
-														<span style={{color:'blue',fontSize:10}}> 
-																{(this.state?.data?.length>0 && this.state?.data?.[0]?.productId) &&
-																'Exchange Rate Can Only be edited if No Product is Selected'
-																}
-															</span>
+														
 															<hr style={{display: props.values.exchangeRate === 1 ? 'none' : ''}} />
 															<Row>
 																<Col lg={8} className="mb-3">

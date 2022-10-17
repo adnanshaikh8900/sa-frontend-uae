@@ -1382,17 +1382,6 @@ renderName=(cell,row)=>{
 																				type="checkbox"
 																				id="exciseTaxCheck"
 																				name="exciseTaxCheck"
-																				// onChange={(event) => {
-																				// let edit=props.values.exciseTaxId!='' ?true:false
-																				// 	if(!edit)
-																				// 	{
-																				// 	if (this.state.exciseTaxCheck===true)
-																				// 	 	this.setState({exciseTaxCheck:false})
-																				// 	else 
-																				// 		this.setState({exciseTaxCheck:true})
-																				// 	}
-																				
-																				// }}
 																				onChange={(event) => {
 																					if (
 																						this.state.exciseTaxCheck===true

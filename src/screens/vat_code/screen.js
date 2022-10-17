@@ -8,31 +8,23 @@ import {
 	Button,
 	Row,
 	Col,
-	Input,
 	ButtonGroup,
 } from 'reactstrap';
 import { toast } from 'react-toastify';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-
 import { Loader, ConfirmDeleteModal } from 'components';
-
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
-
 import * as VatActions from './actions';
-import { CSVLink } from 'react-csv';
-
 import { CommonActions } from 'services/global';
 import NumberFormat from "react-number-format";
 import PropTypes from "prop-types";
-import TextField from "@material-ui/core/TextField";
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
 // import { AgGridReact,AgGridColumn } from 'ag-grid-react/lib/agGridReact';
 // import 'ag-grid-community/dist/styles/ag-grid.css';
 // import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
-
 
 function NumberFormatCustom(props) {
 	const { inputRef, onChange, ...other } = props;
@@ -91,7 +83,7 @@ class VatCode extends React.Component {
 		};
 
 		this.options = {
-			// onRowClick: this.goToDetail,
+			onRowClick: this.goToDetail,
 			page: 1,
 			sizePerPage: 10,
 			onSizePerPageList: this.onSizePerPageList,
@@ -376,7 +368,7 @@ class VatCode extends React.Component {
 						<CardHeader>
 							<div className="h4 mb-0 d-flex align-items-center">
 								<i className="nav-icon icon-briefcase" />
-								<span className="ml-2">{strings.VatCategories}</span>
+								<span className="ml-2">VAT Category</span>
 							</div>
 						</CardHeader>
 						<CardBody>
@@ -499,7 +491,8 @@ class VatCode extends React.Component {
 												</Col>
 											</Row>
 										</div> */}
-										{this.state.companyDetails && this.state.companyDetails.isRegisteredVat!==true &&(<Button
+										{this.state.companyDetails && this.state.companyDetails.isRegisteredVat!==true &&(
+										<Button
 											color="primary"
 											className="btn-square pull-right"
 											style={{ marginBottom: '10px' }}

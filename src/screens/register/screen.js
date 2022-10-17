@@ -60,26 +60,25 @@ class Register extends React.Component {
 		this.state = {
 			isPasswordShown: false,
 			alert: null,
-			currencyList: [
-			],
-			country_list:[
-				{
-					countryCode: 229,
-					countryDescription: '',
-					countryFullName: "United Arab Emirates - (null)",
-					countryName: "United Arab Emirates",
-					createdBy: '',
-					createdDate: '',
-					currencyCode: '',
-					defaltFlag: "Y",
-					deleteFlag: false,
-					isoAlpha3Code: '',
-					lastUpdateBy: '',
-					lastUpdateDate: '',
-					orderSequence: '',
-					versionNumber: 1,
-				}
-			],
+			currencyList: [],
+            country_list:[
+                {
+                    countryCode: 229,
+                    countryDescription: '',
+                    countryFullName: "United Arab Emirates - (null)",
+                    countryName: "United Arab Emirates",
+                    createdBy: '',
+                    createdDate: '',
+                    currencyCode: '',
+                    defaltFlag: "Y",
+                    deleteFlag: false,
+                    isoAlpha3Code: '',
+                    lastUpdateBy: '',
+                    lastUpdateDate: '',
+                    orderSequence: '',
+                    versionNumber: 1,
+                }
+            ],
 			success: false,
 			initValue: {
 				companyName: '',
@@ -91,7 +90,7 @@ class Register extends React.Component {
 				email: '',
 				password: '',
 				confirmPassword: '',  
-				timeZone: {	label: "Asia/Dubai",value: "Asia/Dubai"	},
+				timeZone: {label: "Asia/Dubai", value: "Asia/Dubai"},
 				countryId: 229,
 				stateId: '',
 				IsDesignatedZone:'',
@@ -163,6 +162,7 @@ class Register extends React.Component {
 		const {
 			companyName,
 			currencyCode,
+			countryCode,
 			companyTypeCode,
 			industryTypeCode,
 			firstName,
@@ -171,14 +171,14 @@ class Register extends React.Component {
 			password,
 			timeZone,
 			countryId,
-				stateId,
-				IsDesignatedZone,
-				IsRegistered,
-				TaxRegistrationNumber,
-				phoneNumber,
-				vatRegistrationDate,
-				companyAddress1,
-                companyAddress2
+			stateId,
+			IsDesignatedZone,
+			IsRegistered,
+			TaxRegistrationNumber,
+			phoneNumber,
+			vatRegistrationDate,
+			companyAddress1,
+            companyAddress2
 
 		} = data;
 		
@@ -190,7 +190,7 @@ class Register extends React.Component {
 			firstName: firstName,
 			lastName: lastName,
 			email: email,
-		
+			// countryCode: countryCode ? countryCode : '',
 			countryId:countryId.value,
 			stateId:stateId.value,
 			IsDesignatedZone:IsDesignatedZone,
@@ -208,6 +208,7 @@ class Register extends React.Component {
 		formData.append('lastName', lastName ? lastName :'')
 		formData.append('email', email ? email : '')
 		formData.append('timeZone', 'Asia/Dubai')
+		// formData.append('countryCode',	countryCode ? countryCode.value : '');
 		formData.append('countryId', countryId ? countryId : '229')
 		formData.append('stateId', stateId ? stateId.value : '')
 		formData.append('phoneNumber', phoneNumber ? phoneNumber :'')
@@ -278,7 +279,7 @@ class Register extends React.Component {
 			}),
 		};
 	
-		const { initValue, currencyList, userDetail, timezone,country_list ,loading,loadingMsg,NextloadingMsg} = this.state;
+		const { initValue, currencyList, userDetail, country_list, timezone, loading, loadingMsg, NextloadingMsg} = this.state;
 		const {universal_currency_list,state_list,company_type_list} = this.props;
 		console.log(company_type_list)
 
@@ -447,14 +448,14 @@ class Register extends React.Component {
 																		<Col lg={4}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="currencyCode">
-																				
 																				{strings.Currency}
 																				</Label>
 																				<Select
-																				isDisabled
+																					isDisabled
 																					styles={customStyles}
 																					id="currencyCode"
 																					name="currencyCode"
+																					// placeholder="Select Currency"
 																					options={
 																						universal_currency_list
 																							? selectCurrencyFactory.renderOptions(
@@ -638,7 +639,6 @@ class Register extends React.Component {
 																					value={props.values.timeZone}
 																					onChange={(option) => {
 																						if (option && option.value) {
-																							 
 																							props.handleChange('timeZone')(
 																								option.value,
 																							);
@@ -673,7 +673,6 @@ class Register extends React.Component {
 																		isDisabled
 																		styles={customStyles}
 																		options={
-																			
 																			country_list
 																				? selectOptionsFactory.renderOptions(
 																						'countryName',
@@ -685,21 +684,20 @@ class Register extends React.Component {
 																		}
 																		// value={props.values.countryId}
 																		value={
-																			country_list &&
-																			selectOptionsFactory.renderOptions(
-																				'countryName',
-																				'countryCode',
-																				country_list,
-																				'Country',
-																				)
-																				.find(
-																					(option) =>
-																						option.value ===
-																						+props.values.countryId,
-																				)
-																		}
+                                                                            country_list &&
+                                                                            selectOptionsFactory.renderOptions(
+                                                                                'countryName',
+                                                                                'countryCode',
+                                                                                country_list,
+                                                                                'Country',
+                                                                                )
+                                                                                .find(
+                                                                                    (option) =>
+                                                                                        option.value ===
+                                                                                        +props.values.countryId,
+                                                                                )
+                                                                        }
 																		onChange={(option) => {
-																			 
 																			if (option && option.value) {
 																				props.handleChange('countryId')(option);
 																				this.getStateList(option.value);
@@ -732,8 +730,7 @@ class Register extends React.Component {
 															</Col>
 															<Col lg={4}>
 																<FormGroup>
-																	{/* <Label htmlFor="stateId"> {props.values.countryId.value === 229 ? "Emirates" : "State/Provinces"}</Label> */}
-																	<Label htmlFor="select"><span className="text-danger">* </span>{strings.Emirate}</Label>
+																<Label htmlFor="select"><span className="text-danger">* </span>{strings.Emirate}</Label>
 																	<Select
 																		// styles={customStyles}
 																		options={
@@ -862,7 +859,7 @@ class Register extends React.Component {
 																	</FormGroup>
 																	</Col>
 															</Row>
-															{/* style={{display:props.values.countryId.value === 229 ? '' : 'none'}} */}
+															{/* style={{display:props.values.countryId.value === 229 ? '' : 'none'}}  */}
 															<Row className="mb-4" >
 															<Col lg={5}>
 																<FormGroup check inline className="mt-1">

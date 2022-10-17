@@ -253,18 +253,22 @@ setConfigurations=(configurationList)=>{
 		for (let val in initValue) {
 			if (initValue.hasOwnProperty(val)) {
 				if (val === 'name' && !initValue['name']) {
-					temp['name'] = '*Template name is required';
+					temp['name'] = '*Template name is required or Select existing template';
 				}
-				// if (val === 'dateFormatId' && !initValue['dateFormatId']) {
-				// 	temp['dateFormatId'] = '*Date format is required';
-				// }
+				if (val === 'dateFormatId' && !initValue['dateFormatId']) {
+					temp['dateFormatId'] = '*Date format is required';
+				}
 			}
 		}
 		this.setState({
 			error: temp,
 		});
-		debugger
+		
 		if (Object.keys(temp).length) {
+			Object.values(temp).map((i)=>{
+				this.props.commonActions.tostifyAlert('error', i)
+			})
+		 
 			return false;
 		} else {
 			return true;
@@ -462,7 +466,7 @@ setConfigurations=(configurationList)=>{
 	// 		return true
 	// }
 	handleSave = () => {
-		debugger
+		
 		if (this.validateForm()) {
 		let optionErr = [...this.state.selectError];
 		let item = -1;
@@ -488,9 +492,13 @@ setConfigurations=(configurationList)=>{
 				return item;
 			});
 			let postData = { ...this.state.initValue };
-			debugger
+			
 			postData.skipColumns = this.state.initValue.skipColumns?.length >= 1  ? this.state.initValue.skipColumns : ''
 			postData.indexMap = a;
+			let obi={...postData}
+			Object.keys(obi).map((i)=>{
+				if(postData[i]===null) postData[i]=""	
+			})
 			this.props.importTransactionActions
 				.createConfiguration(postData)
 				.then((res) => {
@@ -765,17 +773,21 @@ setConfigurations=(configurationList)=>{
 			this.state.selectedValueDropdown.map((item, index) => {
 				if(item.value!=="") mappedvalues.push({inx:index,val:item.value})
 			})
-
+			
 
 			// let postData = { ...this.state.initValue };
 			// postData.skipColumns = this.state.initValue?.skipColumns?.length >= 1  ? this.state.initValue?.skipColumns : ''
 			// postData.indexMap = a;
 			
-			if(mappedvalues.length===4 && this.state.templateId===""){
+			if(mappedvalues.length===4){
+			if(this.state.templateId===""){
 				this.handleSave()
 			} else if(this.state.templateId!==""){
 				this.Import()
 			}
+		}else {
+			this.props.commonActions.tostifyAlert('error', 'please select maping column')
+		}
 			
 			//this.Import()
 		// this.props.importTransactionActions
@@ -1375,7 +1387,7 @@ setConfigurations=(configurationList)=>{
 																<Label>Is Header Row</Label>
 																</FormGroup>
 															</Col>
-																		{/* <Col>
+																		<Col>
 																			<FormGroup>
 																				<Label htmlFor="description">
 																					<span className="text-danger">
@@ -1454,7 +1466,7 @@ setConfigurations=(configurationList)=>{
 																						</div>
 																					)}
 																			</FormGroup>
-																		</Col> */}
+																		</Col>
 																		{/* <Col>
 																			<FormGroup>
 																				<Button

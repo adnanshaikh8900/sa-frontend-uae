@@ -1151,7 +1151,7 @@ class CreateBankTransaction extends React.Component {
                                 if((this.state.bankCurrency.bankAccountCurrency!==this.state.basecurrency.currencyCode
                                   && this.state.basecurrency.currencyCode!==ii.currencyCode) && this.state.bankCurrency.bankAccountCurrency!==ii.currencyCode)
                                   
-                                  errors.invoiceIdList="nvoices created in another FCY cannot be processed by this foreign currency bank account."
+                                  errors.invoiceIdList="Invoices created in another FCY cannot be processed by this foreign currency bank account."
                                  
                               }
                               )

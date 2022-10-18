@@ -1648,7 +1648,7 @@ class CreateBankTransaction extends React.Component {
                                           );
                                         }}
                                         placeholder={
-                                          strings.Select + " " + strings.Type
+                                          strings.Select + " Vendor"
                                         }
                                         id="vendorId"
                                         name="vendorId"

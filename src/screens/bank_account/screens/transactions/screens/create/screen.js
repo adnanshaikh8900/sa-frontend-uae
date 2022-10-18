@@ -1712,8 +1712,7 @@ class CreateBankTransaction extends React.Component {
                                             value={props.values.invoiceIdList}
                                             placeholder={
                                               strings.Select +
-                                              " " +
-                                              strings.Type
+                                              " Invoice"
                                             }
                                             id="invoiceIdList"
                                             name="invoiceIdList"

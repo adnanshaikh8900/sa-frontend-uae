@@ -467,6 +467,7 @@ class DetailBankAccount extends React.Component {
 																<Select
 																	id="currency"
 																	name="currency"
+																	isDisabled
 																	options={
 																		currency_list
 																			? selectCurrencyFactory.renderOptions(

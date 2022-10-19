@@ -232,7 +232,8 @@ const en = {
 //Quotation
       Quotation:"Quotation",				
       QUOTATIONNUMBER:"QUOTATION NUMBER",						
-      EXPIRATIONDATE:"EXPIRY DATE",				
+      EXPIRATIONDATE:"EXPIRY DATE",	
+      QuotationDate:"Quotation Date",			
       AddNewRequest:"Add New Quotation",
       CREATED_DATE:"CREATED DATE",
 

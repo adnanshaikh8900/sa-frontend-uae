@@ -119,6 +119,7 @@ class DetailQuotation extends React.Component {
 			disabled:false,
 			disabled1:false,
 			dateChanged: false,
+			dateChanged1: false,
 			vat_list:[],
 			loadingMsg:"Loading",
 			disableLeavePage:false, 
@@ -207,8 +208,14 @@ class DetailQuotation extends React.Component {
 									quotaionExpiration: res.data.quotaionExpiration
 										? moment(res.data.quotaionExpiration).format('DD-MM-YYYY')
 										: '',
-										quotaionExpiration1: res.data.quotaionExpiration
+									quotaionExpiration1: res.data.quotaionExpiration
 										? res.data.quotaionExpiration
+										: '',
+									quotationdate: res.data.quotationdate
+										? moment(res.data.quotationdate).format('DD-MM-YYYY')
+										: '',
+									quotationdate1: res.data.quotationdate
+										? res.data.quotationdate
 										: '',
 										attachmentDescription: res.data.attachmentDescription
 										? res.data.attachmentDescription
@@ -1538,6 +1545,20 @@ class DetailQuotation extends React.Component {
             props.setFieldValue('quotaionExpiration1', values1, true);
         }
     };
+	setDate1 = (props, value) => {
+        this.setState({
+            dateChanged1: true,
+        });
+        const values1 = value
+            ? value
+            : props.values.quotationdate1
+        if (values1 ) {
+            this.setState({
+                quotationdate: moment(values1),
+            });
+            props.setFieldValue('quotationdate1', values1, true);
+        }
+    };
 
 	getCompanyCurrency = (basecurrency) => {
 		this.props.currencyConvertActions
@@ -1705,7 +1726,14 @@ console.log(this.state.supplier_currency)
 																errors.customerId ='Customer name is required';
 															if (values.customerId &&(values.customerId=="" ||(values.customerId.label && values.customerId.label === "Customer Name"))) 
 																 errors.customerId ='Customer name is required';
-														
+														if (!values.quotationdate) 
+														{
+															errors.quotationdate ='Quotation date is required';
+														}
+														if(values.quotationdate && values.quotaionExpiration && (new Date(moment(values.quotationdate1).format('MM DD YYYY')) > new Date(moment(values.quotaionExpiration1).format('MM DD YYYY')))){
+															errors.quotaionExpiration='Expiry date should be later than the quotation date';
+															errors.quotationdate='Quotation date should be earlier than the expiration date';
+														}
 														return errors
 													}}
 													validationSchema={Yup.object().shape({
@@ -2044,7 +2072,45 @@ console.log(this.state.supplier_currency)
 															</Row>
 															<hr />
 															<Row>
-																
+															<Col lg={3}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="date">
+																			<span className="text-danger">* </span>
+																			{strings.QuotationDate}
+																		</Label>
+																		<DatePicker
+																			id="quotationdate"
+																			name="quotationdate"
+																			placeholderText={strings.QuotationDate}
+																			showMonthDropdown
+																			showYearDropdown
+																			dateFormat="dd-MM-yyyy"
+																			minDate={new Date()}
+																			dropdownMode="select"
+																			value={props.values.quotationdate}
+																			selected={props.values.quotationdate1 ? new Date(props.values.quotationdate1) : new Date()}
+																			onChange={(value) => {
+																				props.handleChange('quotationdate')(
+																					value
+																				);
+																				this.setDate1(props, value);
+																			}}
+																			className={`form-control ${
+																				props.errors.quotationdate &&
+																				props.touched.quotationdate
+																					? 'is-invalid'
+																					: ''
+																			}`}
+																		/>
+																		{props.errors.quotationdate &&
+																			props.touched.quotationdate && (
+																				<div className="invalid-feedback">
+																					{/* {props.errors.quotaionExpiration} */}
+																				{props.errors.quotationdate.includes("nullable()") ? "Quotation date is required" :props.errors.quotationdate}
+																				</div>
+																			)}
+																	</FormGroup>
+																</Col>
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="date">

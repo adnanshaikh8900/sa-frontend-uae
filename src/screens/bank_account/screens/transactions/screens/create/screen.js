@@ -1436,6 +1436,7 @@ class CreateBankTransaction extends React.Component {
                                       </Label>
                                       <Select
                                         style={customStyles}
+                                        placeholder={strings.Select +" Expense Category"}
                                         options={
                                           expense_categories_list
                                             ? selectOptionsFactory.renderOptions(
@@ -1517,8 +1518,7 @@ class CreateBankTransaction extends React.Component {
                                             }}
                                             placeholder={
                                               strings.Select +
-                                              " " +
-                                              strings.Type
+                                              " VAT"
                                             }
                                             id="vatId"
                                             name="vatId"
@@ -1648,7 +1648,7 @@ class CreateBankTransaction extends React.Component {
                                           );
                                         }}
                                         placeholder={
-                                          strings.Select + " " + strings.Type
+                                          strings.Select + " Vendor"
                                         }
                                         id="vendorId"
                                         name="vendorId"
@@ -1712,8 +1712,7 @@ class CreateBankTransaction extends React.Component {
                                             value={props.values.invoiceIdList}
                                             placeholder={
                                               strings.Select +
-                                              " " +
-                                              strings.Type
+                                              " Invoice"
                                             }
                                             id="invoiceIdList"
                                             name="invoiceIdList"
@@ -1775,6 +1774,7 @@ class CreateBankTransaction extends React.Component {
                                       <Select
                                         style={customStyles}
                                         // className="select-default-width"
+                                        placeholder={strings.Select+" Category"}
                                         options={
                                           transactionCategoryList
                                             ? transactionCategoryList.categoriesList
@@ -1971,6 +1971,7 @@ class CreateBankTransaction extends React.Component {
                                         </Label>
                                         <Select
                                           style={customStyles}
+                                          placeholder={strings.Select+" Customer"}
                                           className="select-default-width"
                                           options={
                                             transactionCategoryList &&
@@ -2017,6 +2018,7 @@ class CreateBankTransaction extends React.Component {
                                       </Label>
                                       <Select
                                         style={customStyles}
+                                        placeholder={strings.Select+" Invoice"}
                                         isMulti
                                         className="select-default-width"
                                         options={

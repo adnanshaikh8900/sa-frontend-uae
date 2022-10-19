@@ -251,7 +251,7 @@ class ExplainTrasactionDetail extends React.Component {
 						? res.data.date1
 						: '',
 					amount: res.data.amount ?res.data.amount ? res.data.amount
-					+(res.data.explainedInvoiceList[0].exchangeGainOrLossAmount ||0 )
+					+(res.data.explainedInvoiceList?.[0].exchangeGainOrLossAmount ||0 )
 					: 0:0,
 					currencySymbol: res.data.curruncySymbol ? res.data.curruncySymbol : '',
 					expenseType: res.data.expenseType ? true : false,
@@ -314,7 +314,7 @@ class ExplainTrasactionDetail extends React.Component {
 
 			)
 			this.formRef.current.setFieldValue('amount', res.data.amount ? res.data.amount
-			+(res.data.explainedInvoiceList[0].exchangeGainOrLossAmount ||0 )
+			+(res.data.explainedInvoiceList?.[0].exchangeGainOrLossAmount ||0 )
 			: 0, true);
 			this.formRef.current.setFieldValue('date', res.data.date1, true);
 			this.formRef.current.setFieldValue('coaCategoryId', res.data.coaCategoryId ?res.data.coaCategoryId : '', true);

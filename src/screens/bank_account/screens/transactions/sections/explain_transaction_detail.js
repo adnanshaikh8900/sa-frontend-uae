@@ -250,7 +250,9 @@ class ExplainTrasactionDetail extends React.Component {
 					date: res.data.date1
 						? res.data.date1
 						: '',
-					amount: res.data.amount ? res.data.amount : '',
+					amount: res.data.amount ?res.data.amount ? res.data.amount
+					+(res.data.explainedInvoiceList?.[0].exchangeGainOrLossAmount ||0 )
+					: 0:0,
 					currencySymbol: res.data.curruncySymbol ? res.data.curruncySymbol : '',
 					expenseType: res.data.expenseType ? true : false,
 					transactionCategoryLabel: res.data.transactionCategoryLabel,
@@ -311,7 +313,9 @@ class ExplainTrasactionDetail extends React.Component {
 				}
 
 			)
-			this.formRef.current.setFieldValue('amount', res.data.amount ? res.data.amount : 0, true);
+			this.formRef.current.setFieldValue('amount', res.data.amount ? res.data.amount
+			+(res.data.explainedInvoiceList?.[0].exchangeGainOrLossAmount ||0 )
+			: 0, true);
 			this.formRef.current.setFieldValue('date', res.data.date1, true);
 			this.formRef.current.setFieldValue('coaCategoryId', res.data.coaCategoryId ?res.data.coaCategoryId : '', true);
 			this.formRef.current.setFieldValue('expenseCategory', res.data.transactionCategoryId, true);
@@ -978,6 +982,7 @@ class ExplainTrasactionDetail extends React.Component {
 		} else if (totalshort >= 0) {
 		  final = transactionAmount - totalconvetedamount
 		}
+		debugger
 		return {value:`${this.state.bankCurrency
 			?.bankAccountCurrencyIsoCode
 		  } ${final.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
@@ -1403,10 +1408,10 @@ class ExplainTrasactionDetail extends React.Component {
 														  )
 														  
 										
-														if( values.transactionAmount>totalexpaled &&
+														if( values.amount>totalexpaled &&
 														  this.state?.bankCurrency?.bankAccountCurrency===values?.invoiceIdList?.[0]?.currencyCode)
 													   {
-														errors.transactionAmount=`The transaction amount cannot be greater than the invoice amount.`
+														errors.amount=`The transaction amount cannot be greater than the invoice amount.`
 													   
 													  }
 														  const isppselected=values?.invoiceIdList.reduce((a,c)=>c.pp?a+1:a+0,0)

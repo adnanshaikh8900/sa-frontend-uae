@@ -37,6 +37,7 @@ const mapStateToProps = (state) => {
 		transaction_category_list: state.bank_account.transaction_category_list,
 		transaction_type_list: state.bank_account.transaction_type_list,
 		project_list: state.bank_account.project_list,
+		currency_list: state.bank_account.currency_list,
 		reconcile_list: state.bank_account.reconcile_list,
 	};
 };
@@ -104,6 +105,8 @@ class ReconcileTransaction extends React.Component {
 
 	componentDidMount = () => {
 		this.initializeData();
+		console.log(this.props.currency_list)
+		debugger
 	};
 
 	initializeData = () => {
@@ -432,7 +435,10 @@ class ReconcileTransaction extends React.Component {
 										<hr />
 										<Row>
 											<BootstrapTable
-												data={reconcile_list.data ? reconcile_list.data : []}
+												data={reconcile_list.data ? reconcile_list.data.map((i)=>{
+													return {...i,closingBalance:`AED ${i.closingBalance}`
+													}
+												}) : []}
 												// pagination={
 												// 	reconcile_list &&
 												// 	reconcile_list.data &&

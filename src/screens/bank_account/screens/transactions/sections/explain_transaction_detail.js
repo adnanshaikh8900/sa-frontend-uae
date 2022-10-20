@@ -986,7 +986,7 @@ class ExplainTrasactionDetail extends React.Component {
 		return {value:`${this.state.bankCurrency
 			?.bankAccountCurrencyIsoCode
 		  } ${final.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-		  }  `,data:final}
+		  }  `,data:final.toFixed(2)}
 	
 	  }
 	  setcustomexchnage = (customerinvoice) => {
@@ -1078,12 +1078,12 @@ class ExplainTrasactionDetail extends React.Component {
 				...i,
 	  
 				invoiceId: i.value,
-				invoiceAmount: i.dueAmount,
-				convertedInvoiceAmount: i.dueAmount * localexe,
-				explainedAmount: i.dueAmount * localexe,
+				invoiceAmount: (i.dueAmount)?.toFixed(2),
+				convertedInvoiceAmount: (i.dueAmount * localexe)?.toFixed(2),
+				explainedAmount: (i.dueAmount * localexe)?.toFixed(2),
 				exchangeRate: localexe,
 				pp: false,
-				convertedToBaseCurrencyAmount:(i.dueAmount * localexe)*basecurrency
+				convertedToBaseCurrencyAmount:((i.dueAmount * localexe)*basecurrency)?.toFixed(2)
 			  }
 		  })
 		   
@@ -1122,8 +1122,8 @@ class ExplainTrasactionDetail extends React.Component {
 		if(value){
 		  tempdata=finaldata.map((i)=>
 		  {const basecurrency=this.basecurrencyconvertor(i.currencyCode)
-			return {...i,pp:value,explainedAmount:transactionAmount/finaldata.length,
-		  convertedToBaseCurrencyAmount:(transactionAmount/finaldata.length)*basecurrency
+			return {...i,pp:value,explainedAmount:(transactionAmount/finaldata.length)?.toFixed(2),
+		  convertedToBaseCurrencyAmount:((transactionAmount/finaldata.length)*basecurrency)?.toFixed(2)
 		}
 		 })
 		}
@@ -1152,7 +1152,7 @@ class ExplainTrasactionDetail extends React.Component {
 				}
 			}
 			 else {
-				local.explainedAmount=local.convertedInvoiceAmount
+				local.explainedAmount=local.convertedInvoiceAmount?.toFixed(2)
 			}	
 			
 			

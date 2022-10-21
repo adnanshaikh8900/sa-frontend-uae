@@ -718,7 +718,7 @@ class BankTransactions extends React.Component {
 								}}
 								className="dropdown-button-margin"
 							>
-								<i className="fas fa-edit" /> Change Status
+								<i className="fas fa-edit" /> Not a duplicate
 							</DropdownItem>
 							<DropdownItem
 								onClick={() => {

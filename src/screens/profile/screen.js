@@ -2228,54 +2228,6 @@ class Profile extends React.Component {
 																		</Row>
 																		
 																		<Row>
-
-																			<Col lg={4}>
-																				<FormGroup className="mb-3">
-																					<Label htmlFor="companyPoBoxNumber">
-																					<span className="text-danger">* </span>
-																						 {strings.POBoxNumber}
-																				</Label>
-																					<Input
-																						maxLength="6"
-																						minLength="3"
-																						type="text"
-																						id="companyPoBoxNumber"
-																						name="companyPoBoxNumber"
-																						placeholder={strings.Enter+strings.POBoxNumber}
-																						value={
-																							isSame
-																								? this.state.companyAddress
-																									.companyPoBoxNumber
-																								: props.values.companyPoBoxNumber
-																						}
-																						onChange={(option) => {
-																							if (
-																								option.target.value === '' ||
-																								this.regEx.test(
-																									option.target.value,
-																								)
-																							) {
-																								props.handleChange(
-																									'companyPoBoxNumber',
-																								)(option);
-																							}
-																						}}
-																						//value={props.values.companyPoBoxNumber}
-																						className={
-																							props.errors.companyPoBoxNumber &&
-																							props.touched.companyPoBoxNumber
-																							? 'is-invalid'
-																							: ''
-																						}
-																					/>
-																					{props.errors.companyPoBoxNumber &&
-																						props.touched.companyPoBoxNumber && (
-																						<div className="invalid-feedback">
-																							{props.errors.companyPoBoxNumber}
-																						</div>
-																					)}
-																				</FormGroup>
-																			</Col>
 																			{props.values.companyCountryCode == 229 || props.values.companyCountryCode.value == 229 ?
 																			<Col lg={4}>
 																			<FormGroup className="mb-3">

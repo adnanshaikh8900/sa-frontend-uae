@@ -866,8 +866,8 @@ class CreateBankTransaction extends React.Component {
 		if(value){
 		  tempdata=finaldata.map((i)=>
 		  {const basecurrency=this.basecurrencyconvertor(i.currencyCode)
-        return {...i,pp:value,explainedAmount:transactionAmount/finaldata.length,
-      convertedToBaseCurrencyAmount:(transactionAmount/finaldata.length)*basecurrency
+        return {...i,pp:value,explainedAmount:(transactionAmount/finaldata.length)?.toFixed(2),
+      convertedToBaseCurrencyAmount:((transactionAmount/finaldata.length)*basecurrency)?.toFixed(2)
     }
 		 })
 		}
@@ -881,7 +881,6 @@ class CreateBankTransaction extends React.Component {
 		finaldata=[...tempdata]
 		if(transactionAmount>0 && transactionAmount!=="")
 		this.formRef.current.setFieldValue('invoiceIdList', finaldata)
-    debugger
 	   } else {
 		let currentshort=shortAmount
 		finaldata.map((i, inx) => {
@@ -897,18 +896,16 @@ class CreateBankTransaction extends React.Component {
 				}
 			}
 			 else {
-				local.explainedAmount=local.convertedInvoiceAmount
+				local.explainedAmount=(local.convertedInvoiceAmount)?.toFixed(2)
 			}	 
 		  updatedfinaldata.push(local)
 		})
     let updatedfinaldata2=updatedfinaldata.map((i)=>{
-      const basecurrency=this.basecurrencyconvertor(i.currencyCode)
+      const basecurrency=(this.basecurrencyconvertor(i.currencyCode))?.toFixed(2)
       return {...i,
-        convertedToBaseCurrencyAmount:i.explainedAmount*basecurrency
+        convertedToBaseCurrencyAmount:(i.explainedAmount*basecurrency)?.toFixed(2)
       }
     })
-    debugger
-   
 		this.formRef.current.setFieldValue('invoiceIdList', updatedfinaldata2)
 	  }
 	}
@@ -1045,7 +1042,7 @@ class CreateBankTransaction extends React.Component {
     return {value:` ${this.state.bankCurrency
       .bankAccountCurrencyIsoCode
     } ${final.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-      } `,data:final}
+      } `,data:final?.toFixed(2)}
 
   }
 
@@ -1151,7 +1148,7 @@ class CreateBankTransaction extends React.Component {
                                 if((this.state.bankCurrency.bankAccountCurrency!==this.state.basecurrency.currencyCode
                                   && this.state.basecurrency.currencyCode!==ii.currencyCode) && this.state.bankCurrency.bankAccountCurrency!==ii.currencyCode)
                                   
-                                  errors.invoiceIdList="nvoices created in another FCY cannot be processed by this foreign currency bank account."
+                                  errors.invoiceIdList="Invoices created in another FCY cannot be processed by this foreign currency bank account."
                                  
                               }
                               )
@@ -1436,6 +1433,7 @@ class CreateBankTransaction extends React.Component {
                                       </Label>
                                       <Select
                                         style={customStyles}
+                                        placeholder={strings.Select +" Expense Category"}
                                         options={
                                           expense_categories_list
                                             ? selectOptionsFactory.renderOptions(
@@ -1517,8 +1515,7 @@ class CreateBankTransaction extends React.Component {
                                             }}
                                             placeholder={
                                               strings.Select +
-                                              " " +
-                                              strings.Type
+                                              " VAT"
                                             }
                                             id="vatId"
                                             name="vatId"
@@ -1648,7 +1645,7 @@ class CreateBankTransaction extends React.Component {
                                           );
                                         }}
                                         placeholder={
-                                          strings.Select + " " + strings.Type
+                                          strings.Select + " Vendor"
                                         }
                                         id="vendorId"
                                         name="vendorId"
@@ -1712,8 +1709,7 @@ class CreateBankTransaction extends React.Component {
                                             value={props.values.invoiceIdList}
                                             placeholder={
                                               strings.Select +
-                                              " " +
-                                              strings.Type
+                                              " Invoice"
                                             }
                                             id="invoiceIdList"
                                             name="invoiceIdList"
@@ -1775,6 +1771,7 @@ class CreateBankTransaction extends React.Component {
                                       <Select
                                         style={customStyles}
                                         // className="select-default-width"
+                                        placeholder={strings.Select+" Category"}
                                         options={
                                           transactionCategoryList
                                             ? transactionCategoryList.categoriesList
@@ -1971,6 +1968,7 @@ class CreateBankTransaction extends React.Component {
                                         </Label>
                                         <Select
                                           style={customStyles}
+                                          placeholder={strings.Select+" Customer"}
                                           className="select-default-width"
                                           options={
                                             transactionCategoryList &&
@@ -2017,6 +2015,7 @@ class CreateBankTransaction extends React.Component {
                                       </Label>
                                       <Select
                                         style={customStyles}
+                                        placeholder={strings.Select+" Invoice"}
                                         isMulti
                                         className="select-default-width"
                                         options={

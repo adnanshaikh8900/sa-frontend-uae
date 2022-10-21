@@ -483,7 +483,7 @@ class CreateCurrencyConvert extends React.Component {
 																		this.props.commonActions.fillManDatoryDetails();
 																		}}
 																>
-																	<i className="fa fa-dot-circle-o"></i>{this.state.createDisabled
+																	<i className="fa fa-dot-circle-o"></i> {this.state.createDisabled
 																			? 'Creating...'
 																			: strings.Create }
 																</Button>

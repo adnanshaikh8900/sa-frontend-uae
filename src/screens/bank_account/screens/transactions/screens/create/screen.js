@@ -2412,7 +2412,7 @@ class CreateBankTransaction extends React.Component {
                             {props.values.coaCategoryId &&
                               props.values.coaCategoryId.label ===
                               "Supplier Invoice" &&
-                              (this.state.invoiceCurrency !=
+                              (this.state.invoiceCurrency && this.state.invoiceCurrency !=
                                 this.state.bankCurrency.bankAccountCurrency ? (
                                 <Row>
                                   <Col lg={3}>

@@ -897,7 +897,7 @@ class ExplainTrasactionDetail extends React.Component {
 	}
 
 	UnexplainTransaction = (id) => {
-		debugger
+		
 		let formData = new FormData();
 		for (var key in this.state.unexplainValue) {
 			formData.append(key, this.state.unexplainValue[key]);

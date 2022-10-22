@@ -887,7 +887,7 @@ class CreateBankTransaction extends React.Component {
 		  const local = { ...i }
 				
 		  if (i.pp) {
-				let iio= local.convertedInvoiceAmount +(currentshort/howManyAreClicked)
+				let iio= (local.convertedInvoiceAmount +(currentshort/howManyAreClicked))?.toFixed(2)
 				if(iio<0){
 					local.explainedAmount= 0
 					

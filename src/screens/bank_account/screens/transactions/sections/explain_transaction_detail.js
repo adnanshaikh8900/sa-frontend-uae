@@ -1116,13 +1116,13 @@ class ExplainTrasactionDetail extends React.Component {
 		let updatedfinaldata = []
 		let temp=finaldata.reduce((a,c,i)=>c.convertedInvoiceAmount>=transactionAmount?a+1:a+0,0)
 		let amountislessthanallinvoice= temp===finaldata.length
-		debugger
+
 		let tempdata
 		if(amountislessthanallinvoice) {
 		if(value){
 		  tempdata=finaldata.map((i)=>
 		  {const basecurrency=this.basecurrencyconvertor(i.currencyCode)
-			return {...i,pp:value,explainedAmount:(transactionAmount/finaldata.length)?.toFixed(2),
+			return {...i,pp:value,explainedAmount:transactionAmount/finaldata.length,
 		  convertedToBaseCurrencyAmount:((transactionAmount/finaldata.length)*basecurrency)?.toFixed(2)
 		}
 		 })
@@ -1132,7 +1132,7 @@ class ExplainTrasactionDetail extends React.Component {
 			return {...i,pp:value}
 		  })
 		  tempdata=this.setexchnagedamount(temp)
-		  debugger
+		  
 		}
 		finaldata=[...tempdata]
 		if(transactionAmount>0 && transactionAmount!=="")
@@ -1163,7 +1163,7 @@ class ExplainTrasactionDetail extends React.Component {
 		updatedfinaldata=updatedfinaldata.map((i)=>{
 			const basecurrency=this.basecurrencyconvertor(i.currencyCode)
 			return {...i,
-			  convertedToBaseCurrencyAmount:i.explainedAmount*basecurrency
+			  convertedToBaseCurrencyAmount:(i.explainedAmount*basecurrency)?.toFixed(2)
 			}
 		  })
 		this.formRef.current.setFieldValue('invoiceIdList', updatedfinaldata)

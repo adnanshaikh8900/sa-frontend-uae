@@ -887,7 +887,7 @@ class CreateBankTransaction extends React.Component {
 		  const local = { ...i }
 				
 		  if (i.pp) {
-				let iio= (local.convertedInvoiceAmount +(currentshort/howManyAreClicked))?.toFixed(2)
+				let iio= local.convertedInvoiceAmount +(currentshort/howManyAreClicked)
 				if(iio<0){
 					local.explainedAmount= 0
 					
@@ -896,12 +896,12 @@ class CreateBankTransaction extends React.Component {
 				}
 			}
 			 else {
-				local.explainedAmount=(local.convertedInvoiceAmount)?.toFixed(2)
+				local.explainedAmount=local.convertedInvoiceAmount
 			}	 
 		  updatedfinaldata.push(local)
 		})
     let updatedfinaldata2=updatedfinaldata.map((i)=>{
-      const basecurrency=(this.basecurrencyconvertor(i.currencyCode))?.toFixed(2)
+      const basecurrency=this.basecurrencyconvertor(i.currencyCode)
       return {...i,
         convertedToBaseCurrencyAmount:(i.explainedAmount*basecurrency)?.toFixed(2)
       }

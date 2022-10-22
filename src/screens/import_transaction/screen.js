@@ -576,10 +576,10 @@ setConfigurations=(configurationList)=>{
 						}
 						if(i3==="TRANSACTION_DATE"){
 
-                            debugger
+                           
 
-                            local={...local,"TRANSACTION_DATE":moment(local["TRANSACTION_DATE"]).format('DD/MM/YYYY')}
-
+                            local={...local,"TRANSACTION_DATE":moment(local["TRANSACTION_DATE"]).format('DD/MM/YYYY')==="Invalid date"?(local["TRANSACTION_DATE"]).replaceAll('-','/'):moment(local["TRANSACTION_DATE"]).format('DD/MM/YYYY')}
+							debugger
                         }
 						if(i3==="CR_AMOUNT" || i3==="DR_AMOUNT")
 						{
@@ -864,8 +864,10 @@ setConfigurations=(configurationList)=>{
 		})
 		}
 		const dataStringLines=[...parse.data]
-		const local = this.state.skipRows  ? dataStringLines.splice(isheaderisrow?1:0,
-			isheaderisrow?parseInt(this.state.skipRows)+1:this.state.skipRows) :dataStringLines;
+		const local = this.state.skipRows && this.state.skipRows!==""  ? 
+		dataStringLines.splice(isheaderisrow?1:0,
+			parseInt(this.state.skipRows)) 
+			:dataStringLines;
 			debugger
 		const header = dataStringLines[0]
 		console.log(parse,"parse")
@@ -1272,8 +1274,10 @@ setConfigurations=(configurationList)=>{
 																						);
 																						this.setState({
 																							skipRows: e.target.value
+																						},()=>{
+																							this.processData(this.props.location.state.dataString)					
 																						})
-
+																						
 																					}}
 																				/>
 																			</FormGroup>

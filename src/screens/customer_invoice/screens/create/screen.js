@@ -662,7 +662,7 @@ renderVatAmount = (cell, row,extraData) => {
 		.then((res) => {
 			if (res.status === 200) {
 				this.getCompanyCurrency();
-			let term=	this.termList.find((option) =>option.value == res.data.term)
+				let term=	this.termList.find((option) =>option.value == res.data.term)
 				this.setState(
 					{
 						parentInvoiceId:parentInvoiceId,
@@ -796,9 +796,7 @@ renderVatAmount = (cell, row,extraData) => {
 							contactId: res.data.contactId 
 								? res.data.contactId 
 								: '',
-							term: term
-								? term
-								: '',
+							term: term ? term : '',
 							discountEnabled: res.data.discount > 0 
 								? true 
 								: false,
@@ -884,7 +882,7 @@ renderVatAmount = (cell, row,extraData) => {
 						}
 					},
 				);
-				this.getCurrency(res.data.contactId)	
+				this.getCurrency(res.data.contactId);
 			}
 		});
 	}
@@ -2789,7 +2787,7 @@ discountType = (row) =>
 																				'value',
 																				this.termList,
 																				'Terms',
-																		  ).find((option) => option.value == this.state.term)
+																		  ).find((option) => option.value ==  this.state.term.value)
 																			
 																		  :
 																		  

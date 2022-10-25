@@ -1336,14 +1336,12 @@ discountType = (row) =>
 	};
 
 	exchangeRaterevalidate=(exc)=>{
-	debugger
 		let local=[...this.state.data]
 		var { product_list } = this.props;
 		
 		let local2=local.map((obj, index) => {
 
 			const result = product_list.find((item) => item.id === obj.productId);
-			debugger
 			return {
 				...obj,unitPrice:result?
 				(parseFloat(result.unitPrice)*(1/exc)).toFixed(2):0
@@ -1452,7 +1450,6 @@ discountType = (row) =>
 										field,
 										props,
 									);
-									debugger
 									this.prductValue(
 										e.value,
 										row,
@@ -1793,7 +1790,6 @@ discountType = (row) =>
 	};
 
 	handleSubmit = (data, resetForm) => {
-		debugger
 		this.setState({ disabled: true });
 		const {
 			receiptAttachmentDescription,
@@ -1824,7 +1820,6 @@ discountType = (row) =>
 		} = data;
 		const { term } = this.state;
 		const formData = new FormData();
-		debugger
 		formData.append('taxType', this.state.taxType)
 		formData.append('quotationId', this.state.quotationId ? this.state.quotationId : '')
 		formData.append('referenceNumber', invoice_number !== null ? this.state.prefix + invoice_number : '');
@@ -1882,7 +1877,6 @@ discountType = (row) =>
 		if (this.uploadFile && this.uploadFile.files && this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
-		debugger
 		this.setState({ loading:true, disableLeavePage:true, loadingMsg:"Creating Invoice..."});
 		this.props.customerInvoiceCreateActions
 			.createInvoice(formData)
@@ -3942,7 +3936,6 @@ discountType = (row) =>
 																		className="btn-square mr-3"
 																		disabled={this.state.disabled}
 																		onClick={() => {
-																			debugger
 																			if(this.state.data.length === 1)
 																				{
 																				//	added validation popup	msg
@@ -3953,7 +3946,6 @@ discountType = (row) =>
 																				}
 																				else
 																				{
-																					debugger
 																			 	let newData=[]
 																				const data = this.state.data;
 																				newData = data.filter((obj) => obj.productId !== "");

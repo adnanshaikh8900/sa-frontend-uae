@@ -207,7 +207,6 @@ class ViewFtaAuditReport extends React.Component {
 			userId: initValue.userId,
 			taxAgencyId: initValue.taxAgencyId
 		};
-		debugger
 		this.props.financialReportActions
 			.getFtaAuditReport(postData)
 			.then((res) => {

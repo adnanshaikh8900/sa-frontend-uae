@@ -896,12 +896,12 @@ class CreateBankTransaction extends React.Component {
 				}
 			}
 			 else {
-				local.explainedAmount=(local.convertedInvoiceAmount)?.toFixed(2)
+				local.explainedAmount=local.convertedInvoiceAmount
 			}	 
 		  updatedfinaldata.push(local)
 		})
     let updatedfinaldata2=updatedfinaldata.map((i)=>{
-      const basecurrency=(this.basecurrencyconvertor(i.currencyCode))?.toFixed(2)
+      const basecurrency=this.basecurrencyconvertor(i.currencyCode)
       return {...i,
         convertedToBaseCurrencyAmount:(i.explainedAmount*basecurrency)?.toFixed(2)
       }
@@ -1107,30 +1107,36 @@ class CreateBankTransaction extends React.Component {
                           let errors = {};
                           const totalexpaled=values?.invoiceIdList.reduce((a,c)=>a+c.explainedAmount,0)
                          
-                          const date = moment(values.transactionDate).format(
-                            "MM/DD/YYYY"
-                          );
+                          const date = moment(values.transactionDate).format("MM/DD/YYYY");
                           const date1 = new Date(date);
                           const date2 = new Date(this.state.date);
                           
-                          if(values.coaCategoryId.label !== "Expense" &&
-                          values.coaCategoryId.label !==
-                          "Supplier Invoice" &&
-                          values.coaCategoryId.label !== "Sales"){
-                            if(!values.transactionCategoryId || values.transactionCategoryId===""){
-                              errors.transactionCategoryId="Category is required"
-                            }
+                          if(values.coaCategoryId.label !== "Expense" && values.coaCategoryId.label !== "Supplier Invoice" && values.coaCategoryId.label !== "Sales"){
+                              if(!values.transactionCategoryId || values.transactionCategoryId===""){
+                                  errors.transactionCategoryId="Category is required"
+                              }
+                              if (
+                                (values.coaCategoryId.value === 12 ||
+                                  values.coaCategoryId.value === 6) &&
+                                !values.employeeId
+                              ) {
+                                errors.employeeId = "User is Required";
+                              }
+                          }
+                          if ( values.coaCategoryId.label === "Expense" && !values.expenseCategory) {
+                            errors.expenseCategory = "Expense Category is Required";
                           }
 
-                          if ((values.coaCategoryId?.value === 2 || values.coaCategoryId?.value === 100)) {
-                            if (!values.vendorId?.value && values.coaCategoryId?.value === 100) {
-                              errors.vendorId = "Please select the Vendor"
-                            } else if (!values.customerId?.value && values.coaCategoryId?.value === 2) {
-                              errors.customerId = "Please select the Customer"
 
+                          if ((values.coaCategoryId.value === 2 || values.coaCategoryId.value === 100)) 
+                          {
+                            if (!values.vendorId.value && values.coaCategoryId.value === 100) {
+                              errors.vendorId = "Please select the Vendor"
+                            }
+                            if (!values.customerId.value && values.coaCategoryId.value === 2) {
+                              errors.customerId = "Please select the Customer"
                             }
                             if (values.invoiceIdList.length === 0) {
-
                               errors.invoiceIdList = "Please Select Invoice"
                             }else {
                               let isExplainAmountZero=false
@@ -1145,87 +1151,60 @@ class CreateBankTransaction extends React.Component {
                               }
 
                               values.invoiceIdList.map((ii)=>{
-                                if((this.state.bankCurrency.bankAccountCurrency!==this.state.basecurrency.currencyCode
-                                  && this.state.basecurrency.currencyCode!==ii.currencyCode) && this.state.bankCurrency.bankAccountCurrency!==ii.currencyCode)
-                                  
+                                if((this.state.bankCurrency.bankAccountCurrency!==this.state.basecurrency.currencyCode && this.state.basecurrency.currencyCode!==ii.currencyCode) && this.state.bankCurrency.bankAccountCurrency!==ii.currencyCode)
                                   errors.invoiceIdList="Invoices created in another FCY cannot be processed by this foreign currency bank account."
-                                 
-                              }
-                              )
+                              } )
                               
             
-                            if( values.transactionAmount>totalexpaled &&
-                              this.state?.bankCurrency?.bankAccountCurrency===values?.invoiceIdList?.[0]?.currencyCode)
-                           {
-                            errors.transactionAmount=`The transaction amount cannot be greater than the invoice amount.`
-                           
-                          }
-                          const isppselected=values?.invoiceIdList.reduce((a,c)=>c.pp?a+1:a+0,0)
-                          if( values.transactionAmount<totalexpaled &&
-                            this.state?.bankCurrency?.bankAccountCurrency===values?.invoiceIdList?.[0]?.currencyCode
-                            && isppselected===0
-                            )
-                         {
-                          errors.transactionAmount=`The transaction amount is less than the invoice amount. To partially pay the invoice, please select the checkbox `
+                              if( values.transactionAmount>totalexpaled && this.state?.bankCurrency?.bankAccountCurrency===values?.invoiceIdList?.[0]?.currencyCode)
+                              {
+                                errors.transactionAmount=`The transaction amount cannot be greater than the invoice amount.`
+                              }
+                              const isppselected=values?.invoiceIdList.reduce((a,c)=>c.pp?a+1:a+0,0)
+                              if( values.transactionAmount<totalexpaled &&
+                                this.state?.bankCurrency?.bankAccountCurrency===values?.invoiceIdList?.[0]?.currencyCode
+                                && isppselected===0
+                                )
+                              {
+                                errors.transactionAmount=`The transaction amount is less than the invoice amount. To partially pay the invoice, please select the checkbox `
+                              }
+                            }
+                            if (date1 < date2 || date1 < new Date(this.state.reconciledDate))
+                            {
+                                errors.transactionDate = "Transaction Date cannot be before Bank Account Opening Date or after Current Date.";
+                            }
                          
-                        }
-                        
-                          }
+                            
+                            if (
+                              values.coaCategoryId.label === "Expense" &&
+                              !values.currencyCode
+                            ) {
+                              errors.currencyCode = " Currency is Required";
+                            }
+                            
 
+                            if (
+                              this.state.totalInvoiceAmount==="" &&
+                              this.state.totalInvoiceAmount === 0
+                            ) {
+                            
+                                errors.transactionAmount = `Enter Amount`;
+                            }
 
-                          if (
-                            date1 < date2 ||
-                            date1 < new Date(this.state.reconciledDate)
-                          ) {
-                            errors.transactionDate =
-                              "Transaction Date cannot be before Bank Account Opening Date or after Current Date.";
+                            // if (
+                            //   this.state.totalInvoiceAmount &&
+                            //   this.state.totalInvoiceAmount != 0
+                            // ) {
+                            //   if (
+                            //     values.transactionAmount !=
+                            //     this.state.totalInvoiceAmount
+                            //   )
+                            //     errors.transactionAmount = `Transaction Amount Must be Equal to Invoice Total(  ${this.state.totalInvoiceAmount}  )`;
+                            // }
                           }
-                         
-                          if (values.coaCategoryId.value !== 10 &&	(!values.transactionCategoryId && values.transactionCategoryId!=="")
-                          ) {
-                          	errors.transactionCategoryId ='Category is Required';
-                          }
-                          if (
-                            (values.coaCategoryId.value === 12 ||
-                              values.coaCategoryId.value === 6) &&
-                            !values.employeeId
-                          ) {
-                            errors.employeeId = "User is Required";
-                          }
-                          if (
-                            values.coaCategoryId.label === "Expense" &&
-                            !values.currencyCode
-                          ) {
-                            errors.currencyCode = " Currency is Required";
-                          }
-                          if (
-                            values.coaCategoryId.label === "Expense" &&
-                            !values.expenseCategory
-                          ) {
-                            errors.expenseCategory = "Expense Category is Required";
-                          }
-
-                          if (
-                            this.state.totalInvoiceAmount==="" &&
-                            this.state.totalInvoiceAmount === 0
-                          ) {
-                           
-                              errors.transactionAmount = `Enter Amount`;
-                          }
-
-                          // if (
-                          //   this.state.totalInvoiceAmount &&
-                          //   this.state.totalInvoiceAmount != 0
-                          // ) {
-                          //   if (
-                          //     values.transactionAmount !=
-                          //     this.state.totalInvoiceAmount
-                          //   )
-                          //     errors.transactionAmount = `Transaction Amount Must be Equal to Invoice Total(  ${this.state.totalInvoiceAmount}  )`;
-                          // }
-                    
-                          return errors;
-                        }}}
+                        return errors;
+                      }
+                    }
                         validationSchema={Yup.object().shape({
                           transactionDate: Yup.date().required(
                             "Transaction Date is Required"
@@ -1969,7 +1948,11 @@ class CreateBankTransaction extends React.Component {
                                         <Select
                                           style={customStyles}
                                           placeholder={strings.Select+" Customer"}
-                                          className="select-default-width"
+                                          className={`select-default-width , ${props.errors.customerId &&
+                                            props.touched.customerId
+                                            ? "is-invalid"
+                                            : ""
+                                          }`}
                                           options={
                                             transactionCategoryList &&
                                               transactionCategoryList.dataList[1]
@@ -2003,6 +1986,12 @@ class CreateBankTransaction extends React.Component {
                                             );
                                           }}
                                         />
+                                        {props.errors.customerId &&
+                                        props.touched.customerId && (
+                                          <div className="invalid-feedback">
+                                            {props.errors.customerId}
+                                          </div>
+                                        )}
                                       </FormGroup>
                                     </Col>
                                   )}
@@ -2017,7 +2006,11 @@ class CreateBankTransaction extends React.Component {
                                         style={customStyles}
                                         placeholder={strings.Select+" Invoice"}
                                         isMulti
-                                        className="select-default-width"
+                                        className={`select-default-width, ${props.errors.invoiceIdList &&
+                                          props.touched.invoiceIdList
+                                          ? "is-invalid"
+                                          : ""
+                                        }`}
                                         options={
                                           customer_invoice_list &&
                                             customer_invoice_list.data
@@ -2412,7 +2405,7 @@ class CreateBankTransaction extends React.Component {
                             {props.values.coaCategoryId &&
                               props.values.coaCategoryId.label ===
                               "Supplier Invoice" &&
-                              (this.state.invoiceCurrency !=
+                              (this.state.invoiceCurrency && this.state.invoiceCurrency !=
                                 this.state.bankCurrency.bankAccountCurrency ? (
                                 <Row>
                                   <Col lg={3}>

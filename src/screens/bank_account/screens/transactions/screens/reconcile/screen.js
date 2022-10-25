@@ -328,6 +328,7 @@ class ReconcileTransaction extends React.Component {
 																			showYearDropdown
 																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
+																			maxDate={new Date()}
 																			value={
 																				props.values.date
 																					? moment(props.values.date).format(

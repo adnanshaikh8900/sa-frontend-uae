@@ -929,7 +929,6 @@ class DetailCustomerInvoice extends React.Component {
 		let local2=local.map((obj, index) => {
 
 			const result = product_list.find((item) => item.id === obj.productId);
-			debugger
 			return {
 				...obj,unitPrice:result?
 				(parseFloat(result.unitPrice)*(1/exc)).toFixed(2):0

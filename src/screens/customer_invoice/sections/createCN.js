@@ -219,7 +219,6 @@ class CreateCreditNoteModal extends React.Component {
 	
 		 
 			}
-			debugger
 		 return { prefixData : nextProps.prefixData,
 		 	selectedData :nextProps.selectedData,
 			 totalAmount :netVal,
@@ -1000,7 +999,6 @@ class CreateCreditNoteModal extends React.Component {
 		// 	props.values.discountType.value === 'PERCENTAGE'
 		// 		? +((total_net * discountPercentage) / 100)
 		// 		: discountAmount;
-		debugger
 		this.setState(
 			{
 				data,

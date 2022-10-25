@@ -149,7 +149,6 @@ class CreateExpense extends React.Component {
 					if (res.status === 200) {
 						this.getCompanyCurrency();					
 						const {vat_list}=this.props
-						debugger
 						console.log("in degugger"+res.data)
 					let vatCategoryId=
 						vat_list ?

@@ -124,6 +124,7 @@ class Profile extends React.Component {
 				fax:'',
 			},
 			// companyId: '',
+			transaction_first_date:new Date(),
 			imageState: true,
 			flag: true,
 			selectedStatus: false,
@@ -516,6 +517,35 @@ class Profile extends React.Component {
 				this.setState({
 					loading: false,
 				});
+			});
+			this.getTransactionList();
+	};
+	getTransactionList = () => {
+		this.props.profileActions
+			.getTransactionList()
+			.then((res) => {
+				 if (res.status === 200) {
+					var dates = [];
+					for (let i = 0; i < res.data.count; i++) {
+						dates.push(new Date( moment(res.data.data[i].transactionDate, 'DD MM YYYY').toDate()));
+					  }
+					const maxDate = new Date(
+						Math.max(
+						  ...dates.map(element => {
+							return element;
+						  }),
+						),
+					  );
+				 	this.setState(
+				 	{
+						transaction_first_date: maxDate
+					})
+					console.log(this.state.transaction_first_date,"First Transaction Date");
+				}
+				})
+
+			.catch((err) => {
+				console.log(err,"Transaction Error");
 			});
 	};
 
@@ -2466,7 +2496,7 @@ class Profile extends React.Component {
 																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
 																			minDate={new Date("01/01/2018")}
-																		 	maxDate={new Date()}
+																		 	maxDate={this.state.transaction_first_date}
 																			value={props.values.vatRegistrationDate ?moment(
 																				props.values.vatRegistrationDate,
 																			).format('DD-MM-YYYY'):""}

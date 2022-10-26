@@ -484,7 +484,7 @@ setConfigurations=(configurationList)=>{
 			let val;
 			let obj = {};
 			this.state.selectedValueDropdown.map((item, index) => {
-				if (item.value != '') {
+				if (item.value !== '') {
 					val = item.value;
 					obj[val] = index;
 					a = { ...a, ...obj };
@@ -496,9 +496,13 @@ setConfigurations=(configurationList)=>{
 			postData.skipColumns = this.state.initValue.skipColumns?.length >= 1  ? this.state.initValue.skipColumns : ''
 			postData.indexMap = a;
 			let obi={...postData}
+			debugger
 			Object.keys(obi).map((i)=>{
-				if(postData[i]===null) postData[i]=""	
+
+				if(postData[i]===null)  postData[i]=""
+				else postData[i]=obi[i]
 			})
+			
 			this.props.importTransactionActions
 				.createConfiguration(postData)
 				.then((res) => {
@@ -578,7 +582,8 @@ setConfigurations=(configurationList)=>{
 
                            
 
-                            local={...local,"TRANSACTION_DATE":moment(local["TRANSACTION_DATE"]).format('DD/MM/YYYY')==="Invalid date"?(local["TRANSACTION_DATE"]).replaceAll('-','/'):moment(local["TRANSACTION_DATE"]).format('DD/MM/YYYY')}
+                            local={...local,"TRANSACTION_DATE":moment(local["TRANSACTION_DATE"]).format('DD/MM/YYYY')==="Invalid date"?
+							moment(local["TRANSACTION_DATE"].replaceAll('-','/')).format('DD/MM/YYYY'):moment(local["TRANSACTION_DATE"]).format(this.state.dateFormat || 'DD/MM/YYYY')}
 							debugger
                         }
 						if(i3==="CR_AMOUNT" || i3==="DR_AMOUNT")

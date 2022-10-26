@@ -897,7 +897,7 @@ try {
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="vatCategoryId">
-																			<span className="text-danger">* </span>{strings.VAT+" "+strings.Type}
+																			<span className="text-danger">* </span>{"VAT" +" "+strings.Type}
 																		</Label>
 																		<Select
 																	    	 isDisabled={this.state.companyDetails && !this.state.companyDetails.isRegisteredVat}
@@ -911,10 +911,9 @@ try {
 																					  )
 																					: []
 																			}
-																			
 																			id="vatCategoryId"
 																			name="vatCategoryId"
-																			placeholder={strings.Select+strings.VATCategory}
+																			placeholder={strings.Select+"VAT Type"}
 																			value={props.values.vatCategoryId}
 																			onChange={(option) => {
 																				// this.setState({

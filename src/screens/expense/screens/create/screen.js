@@ -149,7 +149,6 @@ class CreateExpense extends React.Component {
 					if (res.status === 200) {
 						this.getCompanyCurrency();					
 						const {vat_list}=this.props
-						debugger
 						console.log("in degugger"+res.data)
 					let vatCategoryId=
 						vat_list ?
@@ -1819,7 +1818,7 @@ componentWillUnmount() {
 																				</Label>
 																				<Input
 																					type="text"
-																					maxLength="100"
+																					maxLength="20"
 																					id="receiptNumber"
 																					name="receiptNumber"
 																					value={props.values.receiptNumber}

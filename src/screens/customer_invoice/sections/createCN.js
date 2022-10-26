@@ -219,7 +219,6 @@ class CreateCreditNoteModal extends React.Component {
 	
 		 
 			}
-			debugger
 		 return { prefixData : nextProps.prefixData,
 		 	selectedData :nextProps.selectedData,
 			 totalAmount :netVal,
@@ -1000,7 +999,6 @@ class CreateCreditNoteModal extends React.Component {
 		// 	props.values.discountType.value === 'PERCENTAGE'
 		// 		? +((total_net * discountPercentage) / 100)
 		// 		: discountAmount;
-		debugger
 		this.setState(
 			{
 				data,
@@ -1830,7 +1828,7 @@ class CreateCreditNoteModal extends React.Component {
 																				</Label>
 																				<Input
 																					type="text"
-																					maxLength="100"
+																					maxLength="20"
 																					id="receiptNumber"
 																					name="receiptNumber"
 																					value={props.values.receiptNumber}

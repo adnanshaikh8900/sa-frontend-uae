@@ -424,8 +424,8 @@ class DetailPurchaseOrder extends React.Component {
 								excise_list &&
 								selectOptionsFactory
 									.renderOptions('name', 'id', excise_list, 'Excise')
-									.find((option) => option.value === +row.exciseTaxId)
-						}
+									.find((option) => row.exciseTaxId ? option.value === +row.exciseTaxId : "Select Exise")
+								}
 						id="exciseTaxId"
 						placeholder={"Select Excise"}
 						onChange={(e) => {
@@ -1550,7 +1550,6 @@ class DetailPurchaseOrder extends React.Component {
 		this.setState({ openProductModal: false });
 	};
 	setDate = (props, value) => {
-		debugger
 		this.setState({
 			dateChanged: true,
 		});
@@ -1563,7 +1562,6 @@ class DetailPurchaseOrder extends React.Component {
 		 }
 	};
 	setDate1= (props, value) => {
-		debugger
 		this.setState({
 			dateChanged1: true,
 		});
@@ -2115,7 +2113,7 @@ class DetailPurchaseOrder extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="date">
 																			<span className="text-danger">* </span>
-																			 {strings.PODate}
+																			 {strings.IssueDate}
 																		</Label>
 																		<DatePicker
 																			id="poApproveDate"
@@ -2160,7 +2158,7 @@ class DetailPurchaseOrder extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="due_date">
 																		<span className="text-danger">* </span>
-																		 {strings.PODueDate}
+																		 {strings.ExpiryDate}
 																		</Label>
 																		<div>
 																			<DatePicker
@@ -2535,7 +2533,6 @@ class DetailPurchaseOrder extends React.Component {
 																	id="discountEnabled"
 																	checked={this.state.discountEnabled}
 																	onChange={(option) => {
-																		debugger
 																		if(initValue.discount > 0){
 																			this.setState({ discountEnabled: true })
 																		}else{
@@ -2574,7 +2571,7 @@ class DetailPurchaseOrder extends React.Component {
 																				</Label>
 																				<Input
 																					type="text"
-																					maxLength="100"
+																					maxLength="20"
 																					id="receiptNumber"
 																					name="receiptNumber"
 																					value={props.values.receiptNumber}

@@ -396,18 +396,22 @@ class CreateBankTransaction extends React.Component {
         "explainParamListStr",
         invoiceIdList ? JSON.stringify(result) : ""
       );
-
+            
+     
+     
       formData.append(
         "explainedInvoiceListString",
         invoiceIdList ?JSON.stringify(invoiceIdList.map((i)=>{
-
+                  
          return {
           invoiceId:i.value,
           invoiceAmount:i.dueAmount,
           convertedInvoiceAmount:i.convertedInvoiceAmount,
           explainedAmount:i.explainedAmount,
           exchangeRate:i.exchangeRate,
-          partiallyPaid:i.pp
+          partiallyPaid:i.pp,
+          nonConvertedInvoiceAmount:i.explainedAmount/i.exchangeRate,
+          convertedToBaseCurrencyAmount:i.convertedToBaseCurrencyAmount,
          } })) : []
       );
     
@@ -445,6 +449,7 @@ class CreateBankTransaction extends React.Component {
           if (this.state.createMore) {
             this.setState({
               createMore: false,
+              disabled:false
             });
           } else {
             this.props.history.push("/admin/banking/bank-account/transaction", {
@@ -749,10 +754,12 @@ class CreateBankTransaction extends React.Component {
 
   setcustomexchnage = (customerinvoice) => {
 
-
-    let exchange;
+   
+      let exchange;
+    let convertor=this.state.bankCurrency.bankAccountCurrency===this.state.basecurrency.currencyCode
+    ?customerinvoice:this.state.bankCurrency.bankAccountCurrency
     let result = this.props.currency_convert_list.filter((obj) => {
-      return obj.currencyCode === this.state.bankCurrency.bankAccountCurrency;
+      return obj.currencyCode === convertor;
     });
     // this.state.invoiceCurrency
     // this.state.bankCurrency.bankAccountCurrency
@@ -765,30 +772,39 @@ class CreateBankTransaction extends React.Component {
     ) {
       exchange = 1;
       //this.formRef.current.setFieldValue('exchangeRate', 1, true);
-    } else if (
-      customerinvoice !== this.state.bankCurrency.bankAccountCurrency
-    ) {
-      if (customerinvoice !== this.state.basecurrency.currencyCode) {
-        exchange = result[0].exchangeRate;
-      } else {
-        exchange = 1 / result[0].exchangeRate;
-      }
+    } else {
+      if(this.state.basecurrency.currencyCode===customerinvoice)
+      exchange= 1/result[0].exchangeRate
+      else exchange= result[0].exchangeRate
     }
-debugger
+    
+
     return exchange
   }
 
+  basecurrencyconvertor=(customerinvoice)=>{
+    let exchange;
+    if(this.state.bankCurrency.bankAccountCurrency!==this.state.basecurrency.currencyCode)
+    {let result = this.props.currency_convert_list.filter((obj) => {
+      return obj.currencyCode === customerinvoice;
+    });
+    exchange= result[0].exchangeRate
+  } else {
+    exchange= 1
+  }
+    return exchange
+  }
   setexchnagedamount = (option, amount) => {
     if (option?.length > 0) {
       const transactionAmount = amount || this.formRef.current.state.values.transactionAmount
       const exchangerate = this.formRef.current.state.values?.exchangeRate
-     debugger
+    
       const invoicelist = [...option]
       const total = invoicelist.reduce((accu, curr, index) => curr.dueAmount * exchangerate[index])
       let remainingcredit = transactionAmount
       const finaldata = invoicelist?.map((i, ind) => {
         let localexe = 0
-        debugger
+      
         if (i.exchnageRate === undefined) localexe = this.setcustomexchnage(i.currencyCode)
         else localexe = i.exchnageRate
         let finalcredit = 0
@@ -804,6 +820,8 @@ debugger
           }
           remainingcredit = localremainamount
         }
+        const basecurrency=this.basecurrencyconvertor(i.currencyCode)
+        debugger
         return {
           ...i,
 
@@ -812,11 +830,13 @@ debugger
           convertedInvoiceAmount: i.dueAmount * localexe,
           explainedAmount:  i.dueAmount * localexe,
           exchangeRate: localexe,
-          pp: false
+          pp: false,
+          convertedToBaseCurrencyAmount:(i.dueAmount * localexe)*basecurrency
         }
       })
-      debugger
+     
       this.formRef.current.setFieldValue('invoiceIdList', finaldata)
+    
       return finaldata
     }
     else {
@@ -845,7 +865,10 @@ debugger
 		if(amountislessthanallinvoice) {
 		if(value){
 		  tempdata=finaldata.map((i)=>
-		  {return {...i,pp:value,explainedAmount:transactionAmount/finaldata.length}
+		  {const basecurrency=this.basecurrencyconvertor(i.currencyCode)
+        return {...i,pp:value,explainedAmount:(transactionAmount/finaldata.length)?.toFixed(2),
+      convertedToBaseCurrencyAmount:((transactionAmount/finaldata.length)*basecurrency)?.toFixed(2)
+    }
 		 })
 		}
 		else {
@@ -853,7 +876,7 @@ debugger
 			return {...i,pp:value}
 		  })
 		  tempdata=this.setexchnagedamount(temp)
-		  debugger
+		
 		}
 		finaldata=[...tempdata]
 		if(transactionAmount>0 && transactionAmount!=="")
@@ -877,7 +900,13 @@ debugger
 			}	 
 		  updatedfinaldata.push(local)
 		})
-		this.formRef.current.setFieldValue('invoiceIdList', updatedfinaldata)
+    let updatedfinaldata2=updatedfinaldata.map((i)=>{
+      const basecurrency=this.basecurrencyconvertor(i.currencyCode)
+      return {...i,
+        convertedToBaseCurrencyAmount:(i.explainedAmount*basecurrency)?.toFixed(2)
+      }
+    })
+		this.formRef.current.setFieldValue('invoiceIdList', updatedfinaldata2)
 	  }
 	}
 
@@ -930,7 +959,7 @@ debugger
           this.props.location.state.bankAccountId
         )
         .then((res) => {
-          debugger
+         
           if (res.status === 200) {
             this.setState(
               {
@@ -1013,7 +1042,7 @@ debugger
     return {value:` ${this.state.bankCurrency
       .bankAccountCurrencyIsoCode
     } ${final.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-      } `,data:final}
+      } `,data:final?.toFixed(2)}
 
   }
 
@@ -1040,7 +1069,9 @@ debugger
     let tmpSupplier_list = [];
 
     vendor_list.map((item) => {
+
       let obj = { label: item.label.contactName, value: item.value };
+     
       tmpSupplier_list.push(obj);
     });
 
@@ -1072,25 +1103,40 @@ debugger
                           this.handleSubmit(values, resetForm);
                         }}
                         validate={(values) => {
-                          console.log(values);
+                          
                           let errors = {};
                           const totalexpaled=values?.invoiceIdList.reduce((a,c)=>a+c.explainedAmount,0)
                          
-                          const date = moment(values.transactionDate).format(
-                            "MM/DD/YYYY"
-                          );
+                          const date = moment(values.transactionDate).format("MM/DD/YYYY");
                           const date1 = new Date(date);
                           const date2 = new Date(this.state.date);
                           
-                          if ((values.coaCategoryId?.value === 2 || values.coaCategoryId?.value === 100)) {
-                            if (!values.vendorId?.value && values.coaCategoryId?.value === 100) {
-                              errors.vendorId = "Please select the Vendor"
-                            } else if (!values.customerId?.value && values.coaCategoryId?.value === 2) {
-                              errors.customerId = "Please select the Customer"
+                          if(values.coaCategoryId.label !== "Expense" && values.coaCategoryId.label !== "Supplier Invoice" && values.coaCategoryId.label !== "Sales"){
+                              if(!values.transactionCategoryId || values.transactionCategoryId===""){
+                                  errors.transactionCategoryId="Category is required"
+                              }
+                              if (
+                                (values.coaCategoryId.value === 12 ||
+                                  values.coaCategoryId.value === 6) &&
+                                !values.employeeId
+                              ) {
+                                errors.employeeId = "User is Required";
+                              }
+                          }
+                          if ( values.coaCategoryId.label === "Expense" && !values.expenseCategory) {
+                            errors.expenseCategory = "Expense Category is Required";
+                          }
 
+
+                          if ((values.coaCategoryId.value === 2 || values.coaCategoryId.value === 100)) 
+                          {
+                            if (!values.vendorId.value && values.coaCategoryId.value === 100) {
+                              errors.vendorId = "Please select the Vendor"
+                            }
+                            if (!values.customerId.value && values.coaCategoryId.value === 2) {
+                              errors.customerId = "Please select the Customer"
                             }
                             if (values.invoiceIdList.length === 0) {
-
                               errors.invoiceIdList = "Please Select Invoice"
                             }else {
                               let isExplainAmountZero=false
@@ -1099,86 +1145,71 @@ debugger
                                     isExplainAmountZero=true 
                                   }
                               })
+
                               if(isExplainAmountZero){
                                 errors.invoiceIdList="Expain Amount Cannot Be Zero"  
                               }
-                            }
+
+                              values.invoiceIdList.map((ii)=>{
+                                if((this.state.bankCurrency.bankAccountCurrency!==this.state.basecurrency.currencyCode && this.state.basecurrency.currencyCode!==ii.currencyCode) && this.state.bankCurrency.bankAccountCurrency!==ii.currencyCode)
+                                  errors.invoiceIdList="Invoices created in another FCY cannot be processed by this foreign currency bank account."
+                              } )
+                              
             
-                            if( values.transactionAmount>totalexpaled &&
-                              this.state?.bankCurrency?.bankAccountCurrency===values?.invoiceIdList?.[0]?.currencyCode)
-                           {
-                            errors.transactionAmount=`Amount cannot be grater than ${totalexpaled}`
-                           
-                          }
-                          const isppselected=values?.invoiceIdList.reduce((a,c)=>c.pp?a+1:a+0,0)
-                          if( values.transactionAmount<totalexpaled &&
-                            this.state?.bankCurrency?.bankAccountCurrency===values?.invoiceIdList?.[0]?.currencyCode
-                            && isppselected===0
-                            )
-                         {
-                          errors.transactionAmount=`Amount is less select partial payment on invoice `
+                              if( values.transactionAmount>totalexpaled && this.state?.bankCurrency?.bankAccountCurrency===values?.invoiceIdList?.[0]?.currencyCode)
+                              {
+                                errors.transactionAmount=`The transaction amount cannot be greater than the invoice amount.`
+                              }
+                              const isppselected=values?.invoiceIdList.reduce((a,c)=>c.pp?a+1:a+0,0)
+                              if( values.transactionAmount<totalexpaled &&
+                                this.state?.bankCurrency?.bankAccountCurrency===values?.invoiceIdList?.[0]?.currencyCode
+                                && isppselected===0
+                                )
+                              {
+                                errors.transactionAmount=`The transaction amount is less than the invoice amount. To partially pay the invoice, please select the checkbox `
+                              }
+                            }
+                            if (date1 < date2 || date1 < new Date(this.state.reconciledDate))
+                            {
+                                errors.transactionDate = "Transaction Date cannot be before Bank Account Opening Date or after Current Date.";
+                            }
                          
-                        }
-                          }
+                            
+                            if (
+                              values.coaCategoryId.label === "Expense" &&
+                              !values.currencyCode
+                            ) {
+                              errors.currencyCode = " Currency is Required";
+                            }
+                            
 
+                            if (
+                              this.state.totalInvoiceAmount==="" &&
+                              this.state.totalInvoiceAmount === 0
+                            ) {
+                            
+                                errors.transactionAmount = `Enter Amount`;
+                            }
 
-                          if (
-                            date1 < date2 ||
-                            date1 < new Date(this.state.reconciledDate)
-                          ) {
-                            errors.transactionDate =
-                              "Transaction Date cannot be before Bank Account Opening Date or after Current Date.";
+                            // if (
+                            //   this.state.totalInvoiceAmount &&
+                            //   this.state.totalInvoiceAmount != 0
+                            // ) {
+                            //   if (
+                            //     values.transactionAmount !=
+                            //     this.state.totalInvoiceAmount
+                            //   )
+                            //     errors.transactionAmount = `Transaction Amount Must be Equal to Invoice Total(  ${this.state.totalInvoiceAmount}  )`;
+                            // }
                           }
-                         
-                          if (values.coaCategoryId.value !== 10 &&	(!values.transactionCategoryId && values.transactionCategoryId!=="")
-                          ) {
-                          	errors.transactionCategoryId ='Category is Required';
-                          }
-                          if (
-                            (values.coaCategoryId.value === 12 ||
-                              values.coaCategoryId.value === 6) &&
-                            !values.employeeId
-                          ) {
-                            errors.employeeId = "User is Required";
-                          }
-                          if (
-                            values.coaCategoryId.label === "Expense" &&
-                            !values.currencyCode
-                          ) {
-                            errors.currencyCode = " Currency is Required";
-                          }
-                          if (
-                            values.coaCategoryId.label === "Expense" &&
-                            !values.expenseCategory
-                          ) {
-                            errors.expenseCategory = "Expense Category is Required";
-                          }
-
-                          if (
-                            this.state.totalInvoiceAmount==="" &&
-                            this.state.totalInvoiceAmount === 0
-                          ) {
-                           
-                              errors.transactionAmount = `Enter Amount`;
-                          }
-
-                          // if (
-                          //   this.state.totalInvoiceAmount &&
-                          //   this.state.totalInvoiceAmount != 0
-                          // ) {
-                          //   if (
-                          //     values.transactionAmount !=
-                          //     this.state.totalInvoiceAmount
-                          //   )
-                          //     errors.transactionAmount = `Transaction Amount Must be Equal to Invoice Total(  ${this.state.totalInvoiceAmount}  )`;
-                          // }
-                      debugger
-                          return errors;
-                        }}
+                        return errors;
+                      }
+                    }
                         validationSchema={Yup.object().shape({
                           transactionDate: Yup.date().required(
                             "Transaction Date is Required"
                           ),
+                          reference:Yup.string().max(20),
                           transactionAmount: Yup.string()
                             .required("Transaction Amount is Required")
                             .test(
@@ -1381,6 +1412,7 @@ debugger
                                       </Label>
                                       <Select
                                         style={customStyles}
+                                        placeholder={strings.Select +" Expense Category"}
                                         options={
                                           expense_categories_list
                                             ? selectOptionsFactory.renderOptions(
@@ -1462,8 +1494,7 @@ debugger
                                             }}
                                             placeholder={
                                               strings.Select +
-                                              " " +
-                                              strings.Type
+                                              " VAT"
                                             }
                                             id="vatId"
                                             name="vatId"
@@ -1593,7 +1624,7 @@ debugger
                                           );
                                         }}
                                         placeholder={
-                                          strings.Select + " " + strings.Type
+                                          strings.Select + " Vendor"
                                         }
                                         id="vendorId"
                                         name="vendorId"
@@ -1657,8 +1688,7 @@ debugger
                                             value={props.values.invoiceIdList}
                                             placeholder={
                                               strings.Select +
-                                              " " +
-                                              strings.Type
+                                              " Invoice"
                                             }
                                             id="invoiceIdList"
                                             name="invoiceIdList"
@@ -1720,6 +1750,7 @@ debugger
                                       <Select
                                         style={customStyles}
                                         // className="select-default-width"
+                                        placeholder={strings.Select+" Category"}
                                         options={
                                           transactionCategoryList
                                             ? transactionCategoryList.categoriesList
@@ -1916,7 +1947,12 @@ debugger
                                         </Label>
                                         <Select
                                           style={customStyles}
-                                          className="select-default-width"
+                                          placeholder={strings.Select+" Customer"}
+                                          className={`select-default-width , ${props.errors.customerId &&
+                                            props.touched.customerId
+                                            ? "is-invalid"
+                                            : ""
+                                          }`}
                                           options={
                                             transactionCategoryList &&
                                               transactionCategoryList.dataList[1]
@@ -1950,6 +1986,12 @@ debugger
                                             );
                                           }}
                                         />
+                                        {props.errors.customerId &&
+                                        props.touched.customerId && (
+                                          <div className="invalid-feedback">
+                                            {props.errors.customerId}
+                                          </div>
+                                        )}
                                       </FormGroup>
                                     </Col>
                                   )}
@@ -1962,8 +2004,13 @@ debugger
                                       </Label>
                                       <Select
                                         style={customStyles}
+                                        placeholder={strings.Select+" Invoice"}
                                         isMulti
-                                        className="select-default-width"
+                                        className={`select-default-width, ${props.errors.invoiceIdList &&
+                                          props.touched.invoiceIdList
+                                          ? "is-invalid"
+                                          : ""
+                                        }`}
                                         options={
                                           customer_invoice_list &&
                                             customer_invoice_list.data
@@ -2088,7 +2135,7 @@ debugger
                                 <>
                                   {props.values?.invoiceIdList.length > 0 &&
                                     <Row className="border-bottom mb-3"
-                                    style={{display:'flex',justifyContent:'space-evenly'}}
+                                    style={{display:'flex',justifyContent:'space-between'}}
                                     >
                                       <Col lg={1}>
                                         <span className="font-weight-bold"> Invoice</span>
@@ -2139,7 +2186,7 @@ debugger
                                     (i, invindex) => {
                                       return (
                                         <Row
-                                        style={{display:'flex',justifyContent:'space-evenly'}}
+                                        style={{display:'flex',justifyContent:'space-between'}}
                                         >
                                            <Col lg={1}>
                                             <span>{i.invoiceNumber}</span>
@@ -2149,11 +2196,12 @@ debugger
                                               disabled
                                               id="1"
                                               name="1"
-                                              value={i.invoiceDate}
+                                              value={moment(i.invoiceDate).format('DD-MM-YYYY')}
                                             />
                                           </Col>
                                           <Col lg={2}>
                                             <Input
+                                            style={{textAlign:'right'}}
                                               disabled
                                               id="1"
                                               name="1"
@@ -2161,22 +2209,18 @@ debugger
                                             />
                                           </Col>
 
-                                          <FormGroup className="mt-2">
-                                            <label>
-                                              <b></b>
-                                            </label>{" "}
-                                          </FormGroup>
-
                                           { this.state.bankCurrency.bankAccountCurrencyIsoCode!==props.values.curreancyname &&
                                           <Col lg={2}>
                                           
                                                     <FormGroup className="mb-3">
                                               <div>
                                                 <Input
+                                                 
                                                   className="form-control"
-                                                  id="exchangeRate"
-                                                  name="exchangeRate"
+                                                  id="exchangeamount"
+                                                  name="exchangeamount"
                                                   type="number"
+                                                  style={{textAlign:'right'}}
                                                   value={
                                                     i.exchangeRate}
                                                   onChange={(value) => {
@@ -2197,6 +2241,7 @@ debugger
                                                 <Input
                                                   className="form-control"
                                                   id="exchangeRate"
+                                                  style={{textAlign:'right'}}
                                                   name="exchangeRate"
                                                   disabled
                                                   value={`${this.state.bankCurrency.bankAccountCurrencyIsoCode} ${i.convertedInvoiceAmount?.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} `
@@ -2212,11 +2257,12 @@ debugger
                                             <FormGroup className="mb-3" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
                                               <div>
                                                 <Input
+                                                
                                                   disabled={props.values?.transactionAmount -
                                                     props.values?.invoiceIdList?.reduce(
                                                       (accu, curr, index) =>
                                                         accu +
-                                                        curr.amount * curr.exchangeRate
+                                                        curr.dueAmount * curr.exchangeRate
                                                       ,
                                                       0
                                                     ) >= 0}
@@ -2241,6 +2287,7 @@ debugger
                                                   id="exchangeRate"
                                                   name="exchangeRate"
                                                   disabled
+                                                  style={{textAlign:'right'}}
                                                   value={`${this.state.bankCurrency.bankAccountCurrencyIsoCode} ${i.explainedAmount?.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} `
 
                                                   }
@@ -2267,26 +2314,20 @@ debugger
                                       <Row
                                         style={{
                                           display: "flex",
-                                          justifyContent: "flex-end",
-                                          marginLeft: "20px",
+                                          flexDirection:'row-reverse',
+                                          justifyContent: "flex-start",
+                                       
+                                         
                                         }}
                                       >
-                                        <Col lg={3}>
+                                        
+                                        
+                                        <Col lg={2} 
+                                        style={{float:'right'}}
+                                        >
                                           <Input
                                             disabled
-                                            id="total"
-                                            name="total"
-                                            value={"Total Explained Amount"}
-                                          />
-                                        </Col>
-                                        <FormGroup className="mt-2">
-                                          <label>
-                                            <b>=</b>
-                                          </label>{" "}
-                                        </FormGroup>
-                                        <Col lg={2}>
-                                          <Input
-                                            disabled
+                                            style={{textAlign:'right'}}
                                             id="total"
                                             name="total"
                                             value={`${this.state.bankCurrency
@@ -2302,8 +2343,15 @@ debugger
                                             }
                                           />
                                         </Col>
-
-
+                                        <Col lg={3}>
+                                          <Input
+                                          style={{textAlign:'right'}}
+                                            disabled
+                                            id="total"
+                                            name="total"
+                                            value={"Total Explained Amount ="}
+                                          />
+                                        </Col>
                                       </Row>
                                     { (this.setexcessorshortamount().data!== 0
                                     && 
@@ -2312,7 +2360,8 @@ debugger
                                         style={{
                                           display: "flex",
                                           justifyContent: "flex-end",
-                                          marginLeft: "20px",
+                                         
+                                          marginTop:10
                                         }}
                                       >
                                         
@@ -2330,19 +2379,17 @@ debugger
 
                                         <Col lg={3}>
                                           <Input
+                                          style={{textAlign:'right'}}
                                             disabled
                                             id="total"
                                             name="total"
-                                            value={"Total Excess/Short Amount"}
+                                            value={"Total Excess/Short Amount = "}
                                           />
                                         </Col>
-                                        <FormGroup className="mt-2">
-                                          <label>
-                                            <b>=</b>
-                                          </label>{" "}
-                                        </FormGroup>
+                                        
                                         <Col lg={2}>
                                           <Input
+                                          style={{textAlign:'right'}}
                                             disabled
                                             id="total"
                                             name="total"
@@ -2358,7 +2405,7 @@ debugger
                             {props.values.coaCategoryId &&
                               props.values.coaCategoryId.label ===
                               "Supplier Invoice" &&
-                              (this.state.invoiceCurrency !=
+                              (this.state.invoiceCurrency && this.state.invoiceCurrency !=
                                 this.state.bankCurrency.bankAccountCurrency ? (
                                 <Row>
                                   <Col lg={3}>
@@ -2648,6 +2695,7 @@ debugger
                                       </Label>
                                       <Input
                                         type="text"
+                                        maxLength="20"
                                         id="reference"
                                         name="reference"
                                         placeholder={strings.ReceiptNumber}
@@ -2665,6 +2713,12 @@ debugger
                                         }}
                                         value={props.values.reference}
                                       />
+                                       {props.errors.reference &&
+                                        props.touched.reference && (
+                                          <div className="invalid-file" style={{color:"red"}}>
+                                            {props.errors.reference}
+                                          </div>
+                                        )}
                                     </FormGroup>
                                   </Col>
                                 </Row>
@@ -2672,7 +2726,7 @@ debugger
                               <Col lg={4}>
                                 <Row>
                                   <Col lg={12}>
-                                    <FormGroup className="mb-3">
+                                    <FormGroup className="mb-3 hideAttachment">
                                       <Field
                                         name="attachment"
                                         render={({ field, form }) => (

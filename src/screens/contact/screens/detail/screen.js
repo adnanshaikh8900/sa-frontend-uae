@@ -1506,7 +1506,7 @@ class DetailContact extends React.Component {
 																								props.handleChange('billingStateProvince')('');
 																							}
 																						}}
-																						placeholder={strings.Select + props.values.billingcountryId === 229 || props.values.billingcountryId.value === 229 ? strings.Emirate : strings.StateRegion}
+																						placeholder={strings.Select + props.values.billingcountryId === 229 || props.values.billingcountryId.value === 229 ? strings.Select + strings.Emirate : strings.Select +strings.StateRegion}
 																						id="billingStateProvince"
 																						name="billingStateProvince"
 																						className={
@@ -1943,7 +1943,7 @@ class DetailContact extends React.Component {
 																								props.handleChange('shippingStateId')('');
 																							}
 																						}}
-																						placeholder={strings.Select + props.values.shippingCountryId === 229 || props.values.shippingCountryId.value === 229 ? strings.Emirate : strings.StateRegion}
+																						placeholder={strings.Select + props.values.shippingCountryId === 229 || props.values.shippingCountryId.value === 229 ? strings.Select +strings.Emirate : strings.Select +strings.StateRegion}
 																						id="shippingStateId"
 																						name="shippingStateId"
 																						className={

@@ -37,6 +37,7 @@ const mapStateToProps = (state) => {
 		transaction_category_list: state.bank_account.transaction_category_list,
 		transaction_type_list: state.bank_account.transaction_type_list,
 		project_list: state.bank_account.project_list,
+		currency_list: state.bank_account.currency_list,
 		reconcile_list: state.bank_account.reconcile_list,
 	};
 };
@@ -104,6 +105,8 @@ class ReconcileTransaction extends React.Component {
 
 	componentDidMount = () => {
 		this.initializeData();
+		console.log(this.props.currency_list)
+		debugger
 	};
 
 	initializeData = () => {
@@ -156,6 +159,7 @@ class ReconcileTransaction extends React.Component {
 						this.initializeData();
 					} else {
 						this.props.commonActions.tostifyAlert('error', res.data.message);
+						this.setState({ disabled: false, loading:false, disableLeavePage:true, loadingMsg:"" });
 					}
 				}
 			})
@@ -324,6 +328,7 @@ class ReconcileTransaction extends React.Component {
 																			showYearDropdown
 																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
+																			maxDate={new Date()}
 																			value={
 																				props.values.date
 																					? moment(props.values.date).format(
@@ -355,7 +360,7 @@ class ReconcileTransaction extends React.Component {
 																			 {strings.ClosingBalance} 
 																		</Label>
 																		<Input
-																			type="number"
+																			type="text"
 																			maxLength="14,2"
 																			min="0"
 																			id="closingBalance"
@@ -431,7 +436,10 @@ class ReconcileTransaction extends React.Component {
 										<hr />
 										<Row>
 											<BootstrapTable
-												data={reconcile_list.data ? reconcile_list.data : []}
+												data={reconcile_list.data ? reconcile_list.data.map((i)=>{
+													return {...i,closingBalance:`AED ${i.closingBalance}`
+													}
+												}) : []}
 												// pagination={
 												// 	reconcile_list &&
 												// 	reconcile_list.data &&

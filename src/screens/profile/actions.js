@@ -1,4 +1,5 @@
-import { PROFILE } from 'constants/types'
+import { BANK_ACCOUNT } from 'constants/types';
+import { PROFILE } from 'constants/types';
 import {
   authApi,
   authFileUploadApi
@@ -211,3 +212,30 @@ export const getCompanyTypeList2 = () => {
     })
   }
 }
+
+
+export const getTransactionList = () => {
+
+	let param = `/rest/transaction/list`;
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: param,
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+						dispatch({
+							type: BANK_ACCOUNT.BANK_TRANSACTION_LIST,
+							payload: {
+								data: res.data,
+							},
+						});
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};

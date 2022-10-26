@@ -88,7 +88,6 @@ class Profile extends React.Component {
 				password: "",
 				confirmPassword: '',
 				currentPassword: '',
-			
 			  },
 			email:'',
 			showmessage: false,
@@ -125,6 +124,7 @@ class Profile extends React.Component {
 				fax:'',
 			},
 			// companyId: '',
+			transaction_first_date:new Date(),
 			imageState: true,
 			flag: true,
 			selectedStatus: false,
@@ -189,9 +189,7 @@ class Profile extends React.Component {
 						'error',
 						err && err.data ? err.data.message : 'Something Went Wrong',
 					);
-					
 				});
-		
 	};
 
 	uploadUserImage = (picture, file) => {
@@ -311,7 +309,6 @@ class Profile extends React.Component {
 		if (password.length > 0) {
 			formData.append('password ', password);
 		}
-		
 		if (currentPassword.length > 0) {
 			formData.append('currentPassword ', currentPassword);
 		}
@@ -521,11 +518,39 @@ class Profile extends React.Component {
 					loading: false,
 				});
 			});
+			this.getTransactionList();
+	};
+	getTransactionList = () => {
+		this.props.profileActions
+			.getTransactionList()
+			.then((res) => {
+				 if (res.status === 200) {
+					var dates = [];
+					for (let i = 0; i < res.data.count; i++) {
+						dates.push(new Date( moment(res.data.data[i].transactionDate, 'DD MM YYYY').toDate()));
+					  }
+					const maxDate = new Date(
+						Math.max(
+						  ...dates.map(element => {
+							return element;
+						  }),
+						),
+					  );
+				 	this.setState(
+				 	{
+						transaction_first_date: maxDate
+					})
+					console.log(this.state.transaction_first_date,"First Transaction Date");
+				}
+				})
+
+			.catch((err) => {
+				console.log(err,"Transaction Error");
+			});
 	};
 
 	resetPassword = (email) => {
-		 
-		
+
 			let data = {
 			  method: 'post',
 			  url: '/public/forgotPassword',
@@ -614,114 +639,41 @@ class Profile extends React.Component {
 		let formData = new FormData();
 		// formData.append("id", companyId);
 		formData.append('companyName', companyName ? companyName : '');
-		formData.append(
-			'companyRegistrationNumber',
-			companyRegistrationNumber ? companyRegistrationNumber : '',
-		);
-		formData.append(
-			'vatRegistrationNumber',
-			vatRegistrationNumber ? vatRegistrationNumber : '',
-		);
+		formData.append('companyRegistrationNumber', companyRegistrationNumber ? companyRegistrationNumber : '');
+		formData.append('vatRegistrationNumber', vatRegistrationNumber ? vatRegistrationNumber : '');
 		formData.append('companyTypeCode', companyTypeCode ? companyTypeCode : '');
-		formData.append(
-			'industryTypeCode',
-			industryTypeCode ? industryTypeCode : '',
-		);
+		formData.append('industryTypeCode',	industryTypeCode ? industryTypeCode : '');
 		formData.append('phoneNumber', phoneNumber ? phoneNumber : '');
 		formData.append('emailAddress', emailAddress ? emailAddress : '');
 		formData.append('website', website ? website : '');
-		formData.append(
-			'companyExpenseBudget',
-			companyExpenseBudget ? companyExpenseBudget : '',
-		);
-		formData.append(
-			'companyRevenueBudget',
-			companyRevenueBudget ? companyRevenueBudget : '',
-		);
-		formData.append(
-			'invoicingAddressLine1',
-			invoicingAddressLine1 ? invoicingAddressLine1 : '',
-		);
-		formData.append(
-			'invoicingAddressLine2',
-			invoicingAddressLine2 ? invoicingAddressLine2 : '',
-		);
-		formData.append(
-			'invoicingAddressLine3',
-			invoicingAddressLine3 ? invoicingAddressLine3 : '',
-		);
+		formData.append('companyExpenseBudget',	companyExpenseBudget ? companyExpenseBudget : '');
+		formData.append('companyRevenueBudget',	companyRevenueBudget ? companyRevenueBudget : '');
+		formData.append('invoicingAddressLine1', invoicingAddressLine1 ? invoicingAddressLine1 : '');
+		formData.append('invoicingAddressLine2', invoicingAddressLine2 ? invoicingAddressLine2 : '');
+		formData.append('invoicingAddressLine3', invoicingAddressLine3 ? invoicingAddressLine3 : '');
 		formData.append('invoicingCity', invoicingCity ? invoicingCity : '');
-		formData.append(
-			'invoicingStateRegion',
-			invoicingStateRegion ? invoicingStateRegion : '',
-		);
-		formData.append(
-			'invoicingPostZipCode',
-			invoicingPostZipCode ? invoicingPostZipCode : '',
-		);
-		formData.append(
-			'invoicingPoBoxNumber',
-			invoicingPoBoxNumber ? invoicingPoBoxNumber : '',
-		);
-		formData.append(
-			'invoicingCountryCode',
-			invoicingCountryCode ? invoicingCountryCode : '',
-		);
-		formData.append(
-			'companyStateCode',
-			companyStateCode ? companyStateCode : '',
-		);
+		formData.append('invoicingStateRegion',	invoicingStateRegion ? invoicingStateRegion : '');
+		formData.append('invoicingPostZipCode',	invoicingPostZipCode ? invoicingPostZipCode : '');
+		formData.append('invoicingPoBoxNumber',	invoicingPoBoxNumber ? invoicingPoBoxNumber : '');
+		formData.append('invoicingCountryCode',	invoicingCountryCode ? invoicingCountryCode : '');
+		formData.append('companyStateCode',	companyStateCode ? companyStateCode : '');
 		formData.append('isDesignatedZone',	isDesignatedZone);
-		formData.append(
-			'isRegisteredVat',
-			isRegisteredVat ? isRegisteredVat : 0,
-		);
+		formData.append('isRegisteredVat', isRegisteredVat ? isRegisteredVat : 0);
 
 		if(vatRegistrationDate && vatRegistrationDate!="Invalid date")
 		formData.append('vatRegistrationDate',vatRegistrationDate !== null ? moment(vatRegistrationDate) : '',);
-
-		formData.append(
-			'fax',
-			fax ? fax : '',
-		);
-		formData.append(
-			'phoneNumber',
-			telephoneNumber ? telephoneNumber : '',
-		);
+		formData.append('fax', fax ? fax : '');
+		formData.append('phoneNumber', telephoneNumber ? telephoneNumber : '');
 		formData.append('currencyCode', currencyCode ? currencyCode : '');
 		formData.append('dateFormat', dateFormat ? dateFormat : '');
-		formData.append(
-			'companyAddressLine1',
-			isSame ? companyAddress.companyAddressLine1 : companyAddressLine1,
-		);
-		formData.append(
-			'companyAddressLine2',
-			isSame ? companyAddress.companyAddressLine2 : companyAddressLine2,
-		);
-		formData.append(
-			'companyAddressLine3',
-			isSame ? companyAddress.companyAddressLine3 : companyAddressLine3,
-		);
-		formData.append(
-			'companyCity',
-			isSame ? companyAddress.companyCity : companyCity,
-		);
-		formData.append(
-			'companyStateRegion',
-			isSame ? companyAddress.companyStateRegion : companyStateRegion,
-		);
-		formData.append(
-			'companyPostZipCode',
-			isSame ? companyAddress.companyPostZipCode : companyPostZipCode,
-		);
-		formData.append(
-			'companyPoBoxNumber',
-			isSame ? companyAddress.companyPoBoxNumber : companyPoBoxNumber,
-		);
-		formData.append(
-			'companyCountryCode',
-			isSame ? companyAddress.companyCountryCode : '229',
-		);
+		formData.append('companyAddressLine1', isSame ? companyAddress.companyAddressLine1 : companyAddressLine1);
+		formData.append('companyAddressLine2', isSame ? companyAddress.companyAddressLine2 : companyAddressLine2);
+		formData.append('companyAddressLine3', isSame ? companyAddress.companyAddressLine3 : companyAddressLine3);
+		formData.append('companyCity', isSame ? companyAddress.companyCity : companyCity);
+		formData.append('companyStateRegion', isSame ? companyAddress.companyStateRegion : companyStateRegion);
+		formData.append('companyPostZipCode', isSame ? companyAddress.companyPostZipCode : companyPostZipCode);
+		formData.append('companyPoBoxNumber', isSame ? companyAddress.companyPoBoxNumber : companyPoBoxNumber);
+		formData.append('companyCountryCode', isSame ? companyAddress.companyCountryCode : '',);
 		// formData.append("isSame", isSame);
 
 		if (this.state.companyLogoFile.length > 0) {
@@ -908,16 +860,13 @@ class Profile extends React.Component {
 																		onSubmit={props.handleSubmit}
 																		encType="multipart/form-data"
 																	>
-
 																		<Row>
 																			<Col lg={10}>
 																				<Row>
 																					<Col lg={6}>
 																						<FormGroup>
 																							<Label htmlFor="select">
-																								<span className="text-danger">
-																									*
-																							</span> {strings.FirstName}
+																								<span className="text-danger">*</span> {strings.FirstName}
 																						</Label>
 																							<Input
 																								type="text"
@@ -927,7 +876,7 @@ class Profile extends React.Component {
 																								onChange={(option) => {
 																									if (
 																										option.target.value === '' ||
-																										this.regExAlpha.test(
+																										this.regExAlpha1.test(
 																											option.target.value,
 																										)
 																									) {
@@ -955,9 +904,7 @@ class Profile extends React.Component {
 																					<Col lg={6}>
 																						<FormGroup>
 																							<Label htmlFor="select">
-																								<span className="text-danger">
-																									*
-																							</span> {strings.LastName}
+																								<span className="text-danger">*</span> {strings.LastName}
 																						</Label>
 																							<Input
 																								type="text"
@@ -967,7 +914,7 @@ class Profile extends React.Component {
 																								onChange={(option) => {
 																									if (
 																										option.target.value === '' ||
-																										this.regExAlpha.test(
+																										this.regExAlpha1.test(
 																											option.target.value,
 																										)
 																									) {
@@ -1434,10 +1381,16 @@ class Profile extends React.Component {
 															// })}
 															validate={(values) => {
 																let errors = {};
-			
-																if (checkmobileNumberParam == true) {
+																if (!values.phoneNumber) {
+																	errors.phoneNumber =
+																		'Mobile number is required';
+																}
+																if (values.phoneNumber && checkmobileNumberParam == true) {
 																	errors.phoneNumber =
 																		'Invalid mobile number';
+																}
+																if(!values.vatRegistrationDate){
+																	errors.vatRegistrationDate="VAT Registered Date is required"
 																}
 																return errors;
 															}}
@@ -1506,7 +1459,7 @@ class Profile extends React.Component {
 																// ),
 																							
 														    	vatRegistrationDate: Yup.string().when(
-																'isRegisteredVat',
+																	'isRegisteredVat',
 																{
 																	is: (value) => value === true,
 																	then: Yup.string().required(
@@ -1902,7 +1855,7 @@ class Profile extends React.Component {
 																							/></div>
 																							{props.errors.phoneNumber &&
 																								props.touched.phoneNumber && (
-																									<div style={{color:"red"}}>
+																									<div className="invalid-feedback" style={{color:"red",display:"block"}}>
 																										{props.errors.phoneNumber}
 																									</div>
 																								)}
@@ -2211,7 +2164,7 @@ class Profile extends React.Component {
 																							isSame
 																								? invoicing_state_list
 																								: company_state_list,
-																							'Emirate',
+																								'Emirate',
 																						)}
 																						value={
 																							isSame
@@ -2239,7 +2192,7 @@ class Profile extends React.Component {
 																								)('');
 																							}
 																						}}
-																						placeholder={strings.Select+strings.Emirate}
+																						placeholder={strings.Select + strings.Emirate}
 																						id="companyStateCode"
 																						name="companyStateCode"
 																						className={
@@ -2305,55 +2258,92 @@ class Profile extends React.Component {
 																		</Row>
 																		
 																		<Row>
-
+																			{props.values.companyCountryCode == 229 || props.values.companyCountryCode.value == 229 ?
 																			<Col lg={4}>
-																				<FormGroup className="mb-3">
-																					<Label htmlFor="companyPoBoxNumber">
-																					<span className="text-danger">* </span>
-																						 {strings.POBoxNumber}
-																				</Label>
-																					<Input
-																						maxLength="6"
-																						minLength="3"
-																						type="text"
-																						id="companyPoBoxNumber"
-																						name="companyPoBoxNumber"
-																						placeholder={strings.Enter+strings.POBoxNumber}
-																						value={
-																							isSame
-																								? this.state.companyAddress
-																									.companyPoBoxNumber
-																								: props.values.companyPoBoxNumber
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="companyPoBoxNumber">
+																				<span className="text-danger">* </span>
+																					 {strings.POBoxNumber}
+																			</Label>
+																				<Input
+																					maxLength="6"
+																					minLength="3"
+																					type="text"
+																					id="companyPoBoxNumber"
+																					name="companyPoBoxNumber"
+																					placeholder={strings.Enter+strings.POBoxNumber}
+																					value={
+																						isSame
+																							? this.state.companyAddress
+																								.companyPoBoxNumber
+																							: props.values.companyPoBoxNumber
+																					}
+																					onChange={(option) => {
+																						if (
+																							option.target.value === '' ||
+																							this.regEx.test(
+																								option.target.value,
+																							)
+																						) {
+																							props.handleChange(
+																								'companyPoBoxNumber',
+																							)(option);
 																						}
-																						onChange={(option) => {
-																							if (
-																								option.target.value === '' ||
-																								this.regEx.test(
-																									option.target.value,
-																								)
-																							) {
-																								props.handleChange(
-																									'companyPoBoxNumber',
-																								)(option);
-																							}
-																						}}
-																						//value={props.values.companyPoBoxNumber}
-																						className={
-																							props.errors.companyPoBoxNumber &&
-																							props.touched.companyPoBoxNumber
+																					}}
+																					//value={props.values.companyPoBoxNumber}
+																					className={
+																						props.errors.companyPoBoxNumber &&
+																						props.touched.companyPoBoxNumber
+																						? 'is-invalid'
+																						: ''
+																					}
+																				/>
+																				{props.errors.companyPoBoxNumber &&
+																					props.touched.companyPoBoxNumber && (
+																					<div className="invalid-feedback">
+																						{props.errors.companyPoBoxNumber}
+																					</div>
+																				)}
+																			</FormGroup>
+																		</Col>
+																			:
+																			<Col md="4" ><FormGroup>
+																				<Label htmlFor="companyPostZipCode"><span className="text-danger">* </span>
+																					{strings.PostZipCode}
+																				</Label>
+																				<Input
+																					type="text"
+																					maxLength="6"
+																					id="companyPostZipCode"
+																					name="companyPostZipCode"
+																					autoComplete="Off"
+																					placeholder={strings.Enter + strings.PostZipCode}
+																					onChange={(option) => {
+																						if (
+																							option.target.value === '' ||
+																							this.regEx.test(option.target.value)
+																						) {
+																							props.handleChange('companyPostZipCode')(
+																								option,
+																							);
+																						}
+																					}}
+																					value={props.values.companyPostZipCode}
+																					className={
+																						props.errors.companyPostZipCode &&
+																							props.touched.companyPostZipCode
 																							? 'is-invalid'
 																							: ''
-																						}
-																					/>
-																					{props.errors.companyPoBoxNumber &&
-																						props.touched.companyPoBoxNumber && (
+																					}
+																				/>
+																				{props.errors.companyPostZipCode &&
+																					props.touched.companyPostZipCode && (
 																						<div className="invalid-feedback">
-																							{props.errors.companyPoBoxNumber}
+																							{props.errors.companyPostZipCode}
 																						</div>
 																					)}
-																				</FormGroup>
-																				
-																			</Col>
+																			</FormGroup>
+																			</Col>}
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="fax">
@@ -2367,15 +2357,13 @@ class Profile extends React.Component {
 																						name="fax"
 																						placeholder={strings.Enter+"Fax"}
 																						rows="5"
-
 																						onChange={(option) => {
 																							if (
 																								option.target.value === '' ||
 																								this.regEx.test(
 																									option.target.value,
 																								)
-																							) {
-																								
+																							) {																								
 																								props.handleChange('fax')(option);
 																							}
 																						}}
@@ -2387,7 +2375,7 @@ class Profile extends React.Component {
 																			</Col>
 																		</Row>
 
-
+{/* Hidden by shoaib for multi country */}
 																		<Row className={"mt-3"}>
 																			<Col lg={4}>
 																				<FormGroup className="mb-3" check inline >
@@ -2501,28 +2489,27 @@ class Profile extends React.Component {
 																		</Label>
 																		<DatePicker
 																			id="date"
-																			minDate={new Date("01/01/2018")}
 																			name="vatRegistrationDate"
+																			placeholderText='Enter VAT Registered Date.'
+																			showMonthDropdown
+																			showYearDropdown
+																			dateFormat="dd-MM-yyyy"
+																			dropdownMode="select"
+																			minDate={new Date("01/01/2018")}
+																		 	maxDate={this.state.transaction_first_date}
+																			value={props.values.vatRegistrationDate ?moment(
+																				props.values.vatRegistrationDate,
+																			).format('DD-MM-YYYY'):""}
+																			selected={props.values.vatRegistrationDate ? new Date (moment(props.values.vatRegistrationDate).format('MM DD YYYY')) : new Date()}
+																			onChange={(value) => {
+																				props.handleChange('vatRegistrationDate')(value);
+																			}}
 																			className={`form-control ${
 																				props.errors.vatRegistrationDate &&
 																				props.touched.vatRegistrationDate
 																					? 'is-invalid'
 																					: ''
 																			}`}
-																			
-																			value={props.values.vatRegistrationDate ?moment(
-																				props.values.vatRegistrationDate,
-																			).format('DD-MM-YYYY'):""}
-																			showMonthDropdown
-																			showYearDropdown
-																			dropdownMode="select"
-																			dateFormat="dd-MM-yyyy"
-																		 maxDate={new Date()}
-																			onChange={(value) => {
-																				props.handleChange('vatRegistrationDate')(
-																					value,
-																				);
-																			}}
 																		/>
 																		{props.errors.vatRegistrationDate &&
 																			props.touched.vatRegistrationDate && (
@@ -2532,51 +2519,7 @@ class Profile extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
-																					{/* <Col lg={3}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="date">
-																			<span className="text-danger">* </span>
-																			VAT Registration Date
-																		</Label>
-																		<DatePicker
-																			id="vatRegistrationDate"
-																			name="vatRegistrationDate"
-																			showMonthDropdown
-																			showYearDropdown
-																			dateFormat="dd-MM-yyyy"
-																			dropdownMode="select"
-																			 value={props.values.vatRegistrationDate}
-																			 selected={new Date(props.values.vatRegistrationDate)} 
-																			
-																			onChange={(value) => {
-																			
-																				props.handleChange('vatRegistrationDate')(
-																					value
-																				);
-																				this.setDate(props, value);
-																			}}
-																			className={`form-control ${
-																				props.errors.vatRegistrationDate &&
-																				props.touched.vatRegistrationDate
-																					? 'is-invalid'
-																					: ''
-																			}`}
-																		/>
-																		{props.errors.vatRegistrationDate &&
-																			props.touched.vatRegistrationDate && (
-																				<div className="invalid-feedback">
-																					{props.errors.vatRegistrationDate}
-																				</div>
-																			)}
-																	</FormGroup>
-																</Col> */}
-																			
-																			
-																		
-																		</Row>
-
-																		
-																		
+																</Row>
 																			</Col>
 																		</Row>
 
@@ -3618,10 +3561,10 @@ class Profile extends React.Component {
 															//     .required("Last Name is required"),
 															// })}
 															validate={(values)=>{
-																
 																let errors={};
 																	if(this.state.currentPasswordMatched==false)
 																	errors.currentPassword="Please enter the correct password"
+																	
 																return errors;
 
 															}}

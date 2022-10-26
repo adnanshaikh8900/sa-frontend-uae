@@ -485,9 +485,9 @@ renderVatAmount = (cell, row,extraData) => {
 		let result = this.props.currency_convert_list.filter((obj) => {
 		return obj.currencyCode === value;
 		});
-		console.log('currency result', result)
 		if(result &&result[0]&&  result[0].exchangeRate)
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
+		this.exchangeRaterevalidate(result[0].exchangeRate)
 		};
 
 	setCurrency = (value) => {
@@ -662,7 +662,7 @@ renderVatAmount = (cell, row,extraData) => {
 		.then((res) => {
 			if (res.status === 200) {
 				this.getCompanyCurrency();
-			let term=	this.termList.find((option) =>option.value == res.data.term)
+				let term=	this.termList.find((option) =>option.value == res.data.term)
 				this.setState(
 					{
 						parentInvoiceId:parentInvoiceId,
@@ -796,9 +796,7 @@ renderVatAmount = (cell, row,extraData) => {
 							contactId: res.data.contactId 
 								? res.data.contactId 
 								: '',
-							term: term
-								? term
-								: '',
+							term: term ? term : '',
 							discountEnabled: res.data.discount > 0 
 								? true 
 								: false,
@@ -867,8 +865,6 @@ renderVatAmount = (cell, row,extraData) => {
 							const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 							// const values =  res.data.invoiceDate	
 							const values =  new Date();
-		
-							debugger	
 								this.setState({
 									date: moment(values).add(parseInt(temp), 'days'),
 									invoiceDate1: moment(values),
@@ -886,7 +882,7 @@ renderVatAmount = (cell, row,extraData) => {
 						}
 					},
 				);
-				this.getCurrency(res.data.contactId)	
+				this.getCurrency(res.data.contactId);
 			}
 		});
 	}
@@ -1297,7 +1293,7 @@ discountType = (row) =>
 							excise_list &&
 							selectOptionsFactory
 								.renderOptions('name', 'id', excise_list, 'Excise')
-								.find((option) => option.value === +row.exciseTaxId)
+								.find((option) => row.exciseTaxId ? option.value === +row.exciseTaxId : "Select Exise")
 						}
 						id="exciseTaxId"
 						placeholder={strings.Select_Excise}
@@ -1338,15 +1334,37 @@ discountType = (row) =>
 			/>
 		);
 	};
+
+	exchangeRaterevalidate=(exc)=>{
+		let local=[...this.state.data]
+		var { product_list } = this.props;
+		
+		let local2=local.map((obj, index) => {
+
+			const result = product_list.find((item) => item.id === obj.productId);
+			return {
+				...obj,unitPrice:result?
+				(parseFloat(result.unitPrice)*(1/exc)).toFixed(2):0
+			}
+			
+		});
+		
+		this.setState({data:local2},()=>{
+			this.updateAmount(local2);
+			if(this.checkedRow()) this.addRow()
+		})
+	}
 	prductValue = (e, row, name, form, field, props) => {
 		const { product_list } = this.props;
 		let data = this.state.data;
 		const result = product_list.find((item) => item.id === parseInt(e));
 		let idx;
+		let exchangeRate=this.formRef.current?.state?.values?.exchangeRate>0 
+			&& this.formRef.current?.state?.values?.exchangeRate!=="" ?
+			this.formRef.current?.state?.values?.exchangeRate:1
 		data.map((obj, index) => {
 			if (obj.id === row.id) {
-				console.log(result);
-				obj['unitPrice'] = result.unitPrice;
+				obj['unitPrice'] = (parseFloat(result.unitPrice)*(1/exchangeRate)).toFixed(2);
 				obj['vatCategoryId'] = result.vatCategoryId;
 				obj['description'] = result.description;
 				obj['exciseTaxId'] = result.exciseTaxId;
@@ -1448,7 +1466,6 @@ discountType = (row) =>
 									});
 									if(this.checkedRow())
 									   this.addRow();
-									   console.log(this.state.data,"prodlist")
 								} else {
 									form.setFieldValue(
 										`lineItemsString.${idx}.productId`,
@@ -1570,7 +1587,6 @@ discountType = (row) =>
 	};
 
 	checkedRow = () => {
-		debugger
 		if (this.state.data.length > 0) {
 			let length = this.state.data.length - 1;
 			let temp = this.state.data?.[length].productId!==""?
@@ -1586,7 +1602,7 @@ discountType = (row) =>
 		}
 	};
 
-	updateAmount = (data, props) => {
+	updateAmount = (data, props,addrowinfo) => {
 		const { vat_list } = this.state;
 		let total_net = 0;
 		let total_excise = 0;
@@ -1594,7 +1610,9 @@ discountType = (row) =>
 		let total_vat = 0;
 		let net_value = 0; 
 		let discount_total = 0;
+		
 		data.map((obj) => {
+			let unitprice=obj.unitPrice
 			const index =
 				obj.vatCategoryId !== ''
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
@@ -1605,9 +1623,9 @@ discountType = (row) =>
 			if(this.state.taxType === false){
 				if (obj.discountType === 'PERCENTAGE') {	
 					 net_value =
-						((+obj.unitPrice -
-							(+((obj.unitPrice * obj.discount)) / 100)) * obj.quantity);
-					var discount =  (obj.unitPrice * obj.quantity) - net_value
+						((+unitprice -
+							(+((unitprice * obj.discount)) / 100)) * obj.quantity);
+					var discount =  (unitprice * obj.quantity) - net_value
 				if(obj.exciseTaxId !=  0){
 					if(obj.exciseTaxId === 1){
 						const value = +(net_value) / 2 ;
@@ -1627,8 +1645,8 @@ discountType = (row) =>
 					((+net_value  * vat ) / 100);
 				}else{
 					 net_value =
-						((obj.unitPrice * obj.quantity) - obj.discount)
-					var discount =  (obj.unitPrice * obj.quantity) - net_value
+						((unitprice * obj.quantity) - obj.discount)
+					var discount =  (unitprice * obj.quantity) - net_value
 						if(obj.exciseTaxId !=  0){
 							if(obj.exciseTaxId === 1){
 								const value = +(net_value) / 2 ;
@@ -1656,11 +1674,11 @@ discountType = (row) =>
 
 					//net value after removing discount
 					 net_value =
-					((+obj.unitPrice -
-						(+((obj.unitPrice * obj.discount)) / 100)) * obj.quantity);
+					((+unitprice -
+						(+((unitprice * obj.discount)) / 100)) * obj.quantity);
 
 				//discount amount
-				var discount =  (obj.unitPrice* obj.quantity) - net_value
+				var discount =  (unitprice* obj.quantity) - net_value
 
 				//vat amount
 				var vat_amount =
@@ -1692,10 +1710,10 @@ discountType = (row) =>
 						{
 				//net value after removing discount
 				 net_value =
-				((obj.unitPrice * obj.quantity) - obj.discount)
+				((unitprice * obj.quantity) - obj.discount)
 
 				//discount amount
-				var discount =  (obj.unitPrice * obj.quantity) - net_value
+				var discount =  (unitprice * obj.quantity) - net_value
 						
 				//vat amount
 				var vat_amount =
@@ -1722,7 +1740,7 @@ discountType = (row) =>
 							}
 					}
 			}
-			
+			obj.unitPrice=unitprice
 			obj.vatAmount = vat_amount
 			obj.subTotal =
 			net_value ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
@@ -1738,6 +1756,7 @@ discountType = (row) =>
 		// 	props.values.discountType.value === 'PERCENTAGE'
 		// 		? +((total_net * discountPercentage) / 100)
 		// 		: discountAmount;
+		
 		this.setState(
 			{
 				data,
@@ -1752,7 +1771,9 @@ discountType = (row) =>
 					},
 
 				},
-			},
+			},()=>{
+				if(this.checkedRow() && !addrowinfo) this.addRow()
+			}
 
 		);
 	};
@@ -1803,7 +1824,6 @@ discountType = (row) =>
 		formData.append('quotationId', this.state.quotationId ? this.state.quotationId : '')
 		formData.append('referenceNumber', invoice_number !== null ? this.state.prefix + invoice_number : '');
 		formData.append('invoiceDueDate', invoiceDueDate ? this.state.date : null);
-		debugger
 		formData.append('invoiceDate', invoiceDate?invoiceDate
 						// moment(invoiceDate,'DD-MM-YYYY')
 						// .toDate()
@@ -1813,8 +1833,6 @@ discountType = (row) =>
 		formData.append('receiptAttachmentDescription', receiptAttachmentDescription !== null ? receiptAttachmentDescription : '',);
 		formData.append('exchangeRate', exchangeRate !== null ? exchangeRate : '');
 		formData.append('contactPoNumber', contact_po_number !== null ? contact_po_number : '');
-
-			debugger
 		if(changeShippingAddress && changeShippingAddress==true)
 		{
 			formData.append('changeShippingAddress', changeShippingAddress !== null ? changeShippingAddress : '');
@@ -1836,7 +1854,6 @@ discountType = (row) =>
 			formData.append('totalAmount', this.state.initValue.totalAmount);
 			formData.append('totalExciseAmount', this.state.initValue.total_excise);
 			formData.append('discount',this.state.initValue.discount);
-		
 		if (term && term.value) {
 			formData.append('term', term.value);
 		}
@@ -1860,12 +1877,10 @@ discountType = (row) =>
 		if (this.uploadFile && this.uploadFile.files && this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
-
 		this.setState({ loading:true, disableLeavePage:true, loadingMsg:"Creating Invoice..."});
 		this.props.customerInvoiceCreateActions
 			.createInvoice(formData)
 			.then((res) => {
-				debugger
 				this.setState({ disabled: false });
 				this.setState({ loading:false});
 				this.props.commonActions.tostifyAlert(
@@ -1877,7 +1892,6 @@ discountType = (row) =>
 						{
 							createMore: false,
 							selectedContact: '',
-							term: '',
 							exchangeRate:'',
 							data: [
 								{
@@ -1889,6 +1903,7 @@ discountType = (row) =>
 									taxtreatment: '',
 									subTotal: 0,
 									discount: 0,
+									discountType: 'FIXED',
 									vatAmount:0,
 									productId: '',
 								},
@@ -1899,7 +1914,7 @@ discountType = (row) =>
 									total_net: 0,
 									invoiceVATAmount: 0,
 									totalAmount: 0,
-									discountType: '',
+									discountType: 'FIXED',
 									discount: 0,
 									discountPercentage: '',
 									total_excise: 0,
@@ -1921,7 +1936,7 @@ discountType = (row) =>
 									total_net: 0,
 									invoiceVATAmount: 0,
 									totalAmount: 0,
-									discountType: '',
+									discountType: 'FIXED',
 									discount: 0,
 									discountPercentage: '',
 									changeShippingAddress:false
@@ -1937,14 +1952,12 @@ discountType = (row) =>
 							this.formRef.current.setFieldValue('placeOfSupplyId', '', true);
 							this.formRef.current.setFieldValue('currency', null, true);
 							this.formRef.current.setFieldValue('taxTreatmentid','', true);
-							this.formRef.current.setFieldValue('term', term, true);
+							this.formRef.current.setFieldValue('term', '', true);
 						},
 					);
 				} else {
-					debugger
 					this.props.history.push('/admin/income/customer-invoice');
 					this.setState({ loading:false,});
-					debugger
 				}
 			})
 			.catch((err) => {
@@ -2267,7 +2280,6 @@ discountType = (row) =>
 												validate={(values) => {
 												
 													let errors = {};
-													console.log(values,"Values");
 													if (exist === true) {
 														errors.invoice_number =
 															'Invoice number already exists';
@@ -2360,7 +2372,7 @@ discountType = (row) =>
 													if(isoutoftock>0){
 														errors.outofstock="Some Prod"
 													}
-
+														
 														return errors;
 												}}
 												validationSchema={Yup.object().shape({
@@ -2760,7 +2772,22 @@ discountType = (row) =>
 																		id="term"
 																		name="term"
 																		placeholder={strings.Select+strings.Terms} 
-																		value={this.state.term}
+																		value={
+																			(this.state.quotationId || this.state.parentInvoiceId) ?
+
+																			this.termList &&
+																			selectOptionsFactory.renderOptions(
+																				'label',
+																				'value',
+																				this.termList,
+																				'Terms',
+																		  ).find((option) => option.value ==  this.state.term.value)
+																			
+																		  :
+																		  
+																		  props.values.term
+																			}
+																		//value={this.state.term}
 																		onChange={(option) => {
 																			props.handleChange('term')(option);
 																			if (option.value === '') {
@@ -2814,7 +2841,6 @@ discountType = (row) =>
 																		// value={props.values.invoiceDate}
 																		selected={props.values.invoiceDate1 ?new Date(props.values.invoiceDate1):props.values.invoiceDate} 
 																		onChange={(value) => {
-																			debugger
 																			props.handleChange('invoiceDate')(value);
 																			this.setDate(props, value);
 																		}}
@@ -3313,12 +3339,14 @@ discountType = (row) =>
 																			type="number"
 																			className="form-control"
 																			id="exchangeRate"
+																
 																			name="exchangeRate"
 																			value={props.values.exchangeRate}
 																			onChange={(value) => {
 																				props.handleChange('exchangeRate')(
 																					value,
 																				);
+																				this.exchangeRaterevalidate(parseFloat(value.target.value))
 																			}}
 																		/>
 																	</div>
@@ -3336,7 +3364,10 @@ discountType = (row) =>
 																				
 																			/>
 														</Col>
+														
+														
 														</Row>
+														
 														<hr style={{display: props.values.exchangeRate === 1 ? 'none' : ''}} />
 														<Row className="mb-3">
 														<Col lg={8} className="mb-3">
@@ -3919,7 +3950,7 @@ discountType = (row) =>
 																				const data = this.state.data;
 																				newData = data.filter((obj) => obj.productId !== "");
 																				props.setFieldValue('lineItemsString', newData, true);
-																				this.updateAmount(newData, props);
+																				this.updateAmount(newData, props,true);
 																				//	added validation popup	msg
 																				// props.handleBlur();
 																				// if(props.errors &&  Object.keys(props.errors).length != 0){
@@ -3960,7 +3991,7 @@ discountType = (row) =>
                                                                                 const data = this.state.data;
                                                                                 newData = data.filter((obj) => obj.productId !== "");
                                                                                 props.setFieldValue('lineItemsString', newData, true);
-                                                                                this.updateAmount(newData, props);
+                                                                                this.updateAmount(newData, props,true);
 																				// props.handleBlur();
                                                                             	// if(props.errors &&  Object.keys(props.errors).length != 0)
                                                                             	// 	this.props.commonActions.fillManDatoryDetails();

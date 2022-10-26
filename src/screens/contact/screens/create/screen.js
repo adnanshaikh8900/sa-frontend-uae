@@ -359,7 +359,6 @@ class CreateContact extends React.Component {
 																if (this.state.isRegisteredForVat == true) {
 																	if (values.vatRegistrationNumber == "")
 																		errors.vatRegistrationNumber = 'Tax registration number is required';
-
 																	if (values.vatRegistrationNumber.length != 15) {
 																		errors.vatRegistrationNumber = "Please enter 15 digit Tax registration number"
 																	}
@@ -1172,7 +1171,7 @@ class CreateContact extends React.Component {
 																							props.handleChange('billingStateProvince')('');
 																						}
 																					}}
-																					placeholder={strings.Select + props.values.billingcountryId === 229 || props.values.billingcountryId.value === 229 ? strings.Emirate : strings.StateRegion}
+																					placeholder={props.values.billingcountryId === 229 || props.values.billingcountryId.value === 229 ? strings.Select +strings.Emirate : strings.Select +strings.StateRegion}
 																					id="stateId"
 																					name="stateId"
 																					className={
@@ -1624,7 +1623,7 @@ class CreateContact extends React.Component {
 																							props.handleChange('shippingStateId')('');
 																						}
 																					}}
-																					placeholder={props.values.shippingCountryId.value === 229 ? strings.Emirate : strings.StateRegion}
+																					placeholder={props.values.shippingCountryId.value === 229 ? strings.Select +strings.Emirate : strings.Select +strings.StateRegion}
 																					id="shippingStateId"
 																					name="shippingStateId"
 																					className={

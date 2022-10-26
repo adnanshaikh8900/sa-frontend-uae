@@ -436,7 +436,7 @@ class DetailSupplierInvoice extends React.Component {
 							excise_list &&
 							selectOptionsFactory
 								.renderOptions('name', 'id', excise_list, 'Excise')
-								.find((option) => option.value === +row.exciseTaxId)
+								.find((option) => row.exciseTaxId ? option.value === +row.exciseTaxId : "Select Exise")
 						}
 						id="exciseTaxId"
 						placeholder={strings.Select_Excise}
@@ -979,15 +979,37 @@ class DetailSupplierInvoice extends React.Component {
 			/>
 		);
 	};
+	exchangeRaterevalidate=(exc)=>{
+		let local=[...this.state.data]
+		var { product_list } = this.props;
+		
+		let local2=local.map((obj, index) => {
+
+			const result = product_list.find((item) => item.id === obj.productId);
+			return {
+				...obj,unitPrice:result?
+				(parseFloat(result.unitPrice)*(1/exc)).toFixed(2):0
+			}
+			
+		});
+		
+		this.setState({data:local2},()=>{
+			this.updateAmount(local2);
+		})
+	}
 
 	prductValue = (e, row, name, form, field, props) => {
 		const { product_list } = this.props;
 		let data = this.state.data;
 		const result = product_list.find((item) => item.id === parseInt(e));
 		let idx;
+		let exchangeRate=this.formRef.current?.state?.values?.exchangeRate>0 
+			&& this.formRef.current?.state?.values?.exchangeRate!=="" ?
+			this.formRef.current?.state?.values?.exchangeRate:1
+
 		data.map((obj, index) => {
 			if (obj.id === row.id) {
-				obj['unitPrice'] = parseInt(result.unitPrice);
+				obj['unitPrice'] = (parseFloat(result.unitPrice)*(1/exchangeRate)).toFixed(2);
 				obj['vatCategoryId'] = parseInt(result.vatCategoryId);
 				obj['description'] = result.description;
 				obj['exciseTaxId'] = result.exciseTaxId;
@@ -1244,6 +1266,7 @@ class DetailSupplierInvoice extends React.Component {
 
 	updateAmount = (data, props) => {
 		const { vat_list } = this.state;
+		
 		let total_net = 0;
 		let total_excise = 0;
 		let total = 0;
@@ -1253,7 +1276,7 @@ class DetailSupplierInvoice extends React.Component {
 		data.map((obj) => {
 			const index =
 				obj.vatCategoryId !== ''
-					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
+					? vat_list?.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
 
@@ -1681,6 +1704,7 @@ class DetailSupplierInvoice extends React.Component {
 		return obj.currencyCode === value;
 		});
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
+		this.exchangeRaterevalidate(result[0].exchangeRate)
 		};
 
 	getCurrentUser = (data) => {
@@ -2377,6 +2401,7 @@ class DetailSupplierInvoice extends React.Component {
 																				props.handleChange('exchangeRate')(
 																					value,
 																				);
+																				this.exchangeRaterevalidate(parseFloat(value.target.value))
 																			}}
 																		/>
 																	</div>
@@ -2393,7 +2418,9 @@ class DetailSupplierInvoice extends React.Component {
 																				
 																			/>
 														</Col>
+														
 														</Row>
+														
 															<hr style={{display: props.values.exchangeRate === 1 ? 'none' : ''}} />
 															<Row>
 																<Col lg={8} className="mb-3">

@@ -223,21 +223,22 @@ class CustomerInvoice extends React.Component {
 
 	
 stockInHandTestForProduct = (row,markAsSent) => {
-this.props.customerInvoiceActions
-	.stockInHandTestForProduct(row.id)
-	.then((res) => {
-	 if (res.status == 200)
-		this.postInvoice(row,markAsSent);
-	})
-	.catch((error)=>{
-		if (error.status == 417)
-		{
-			this.props.commonActions.tostifyAlert(
-				'error',
-				'Invoice Can\'t Posted Because Some Products are Out Of Stock ',
-			);
-		}
-	})		
+	this.postInvoice(row,markAsSent);
+// this.props.customerInvoiceActions
+// 	.stockInHandTestForProduct(row.id)
+// 	.then((res) => {
+// 	 if (res.status == 200)
+// 		this.postInvoice(row,markAsSent);
+// 	})
+// 	.catch((error)=>{
+// 		if (error.status == 417)
+// 		{
+// 			this.props.commonActions.tostifyAlert(
+// 				'error',
+// 				'Invoice Can\'t Posted Because Some Products are Out Of Stock ',
+// 			);
+// 		}
+// 	})		
 }
 
 

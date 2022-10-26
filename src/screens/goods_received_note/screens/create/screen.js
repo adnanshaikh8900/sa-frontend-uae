@@ -2226,6 +2226,7 @@ console.log(this.state.data)
 							  </Label>
 							  <Input
 								  type="text"
+								  maxLength="20"
 								  disabled={true}
 								  id="supplierReferenceNumber"
 								  name="supplierReferenceNumber"

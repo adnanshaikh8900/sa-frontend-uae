@@ -17,15 +17,11 @@ import {
 import { toast } from 'react-toastify';
 import _ from 'lodash';
 import { Loader } from 'components';
-
 import { CommonActions } from 'services/global';
-
 import 'react-toastify/dist/ReactToastify.css';
 import './style.scss';
-
 import * as VatCreateActions from './actions';
 import * as VatActions from '../../actions';
-
 import { Formik } from 'formik';
 import NumberFormat from "react-number-format";
 import PropTypes from "prop-types";
@@ -167,7 +163,7 @@ class CreateVatCode extends React.Component {
 								<CardHeader>
 									<div className="h4 mb-0 d-flex align-items-center">
 										<i className="nav-icon icon-briefcase" />
-										<span className="ml-2">{strings.NewVatCategory}</span>
+										<span className="ml-2">New Tax Category</span>
 									</div>
 								</CardHeader>
 								<CardBody>
@@ -226,7 +222,7 @@ class CreateVatCode extends React.Component {
 																maxLength="30"
 																id="name"
 																name="name"
-																placeholder={strings.Enter+strings.VatCategoryName}
+																placeholder="Enter Tax Category Name"
 																onBlur={props.handleBlur}
 																onChange={(option) => {
 																	if (
@@ -252,7 +248,8 @@ class CreateVatCode extends React.Component {
 														</FormGroup>
 														<FormGroup>
 															<Label htmlFor="name">
-																<span className="text-danger">* </span>{strings.Percentage}
+																<span className="text-danger">* </span>
+																{strings.Percentage}
 																<i
 																	id="VatPercentTooltip"
 																	className="fa fa-question-circle ml-1"
@@ -270,14 +267,15 @@ class CreateVatCode extends React.Component {
 																size="small"
 																fullWidth
 																variant="outlined"
-																maxLength="5"
+																// maxLength="5"
+																inputProps={{maxLength:5}}
 																id="vat"
 																name="vat"
-																placeholder={strings.Enter+strings.Percentage}
+																placeholder="Enter VAT Percentage"
 																onChange={(option) => {
 																	if (
 																		option.target.value === '' ||
-																		this.regExDecimal.test(option.target.value)
+																		this.regExPercentage.test(option.target.value)
 																	) {
 																		props.handleChange('vat')(option);
 																	}

@@ -534,6 +534,9 @@ setConfigurations=(configurationList)=>{
 						'error',
 						err && err.data ? err.data.message : 'Something Went Wrong',
 					);
+					this.props.history.push(
+						'/admin/banking/upload-statement'
+					)
 				});
 		} else {
 			this.setState({
@@ -580,11 +583,21 @@ setConfigurations=(configurationList)=>{
 						}
 						if(i3==="TRANSACTION_DATE"){
 
-                           
-
-                            local={...local,"TRANSACTION_DATE":moment(local["TRANSACTION_DATE"]).format('DD/MM/YYYY')==="Invalid date"?
-							moment(local["TRANSACTION_DATE"].replaceAll('-','/')).format('DD/MM/YYYY'):moment(local["TRANSACTION_DATE"]).format(this.state.dateFormat || 'DD/MM/YYYY')}
+							const localdata=local["TRANSACTION_DATE"]
+							
+							const data=moment(localdata,'DD/MM/YYYY').format('DD/MM/YYYY')
 							debugger
+							if(data==="Invalid date"){
+
+								this.props.commonActions.tostifyAlert(
+									'error',
+									'invalid date format',
+								);
+							} else {
+								local={...local,"TRANSACTION_DATE":data}
+							}
+							
+							
                         }
 						if(i3==="CR_AMOUNT" || i3==="DR_AMOUNT")
 						{
@@ -595,6 +608,7 @@ setConfigurations=(configurationList)=>{
 					})
 					return local
 			})
+			debugger
 
 			// const ldata=fdata.map((i)=>{
 			// 	return {
@@ -634,6 +648,9 @@ setConfigurations=(configurationList)=>{
 				}
 			})
 			.catch((err) => {
+				this.props.history.push(
+					'/admin/banking/upload-statement'
+				)
 				this.props.commonActions.tostifyAlert(
 					'error',
 					err && err.data ? err.data.message : 'Something Went Wrong',
@@ -788,6 +805,7 @@ setConfigurations=(configurationList)=>{
 			if(this.state.templateId===""){
 				this.handleSave()
 			} else if(this.state.templateId!==""){
+				debugger
 				this.Import()
 			}
 		}else {
@@ -1069,16 +1087,16 @@ setConfigurations=(configurationList)=>{
 																					'id',
 																					configurationList,
 																					'Configuration',
-																				)
+																				).filter((i)=>i.value!==1)
 																				: []
 																		}
 																		onChange={(e) => {
 																			let data = configurationList.filter(
 																				(item) => item.id === e.value,
 																			);
-																			debugger
+																			
 																			if (data.length > 0) {
-																				let local=[...this.state.selectedValueDropdown]
+																				let local=[...this.state.selectedValueDropdown.map(()=>{return {label:"Select",value:""}})]
 																			Object.keys(data[0].indexMap).map((i)=>{
 																				const data2 =selectOptionsFactory.renderOptions(
 																					'label',
@@ -1088,6 +1106,7 @@ setConfigurations=(configurationList)=>{
 																				).find((val)=>val.value==i)
 																				local[data[0].indexMap?.[`${i}`]]=data2
 																			})
+																			debugger
 																				this.setState({
 																					initValue: {
 																						name: this.state.initValue.name,

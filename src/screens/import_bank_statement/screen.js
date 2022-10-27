@@ -319,14 +319,14 @@ class ImportBankStatement extends React.Component {
 														
 															<Row >
 																<Col lg={4}></Col>
-																<Col lg={2}>
+																{/* <Col lg={2}>
 																	<label>
 																		 {strings.ParsingTemplate}
 																	</label>
 																	<FormGroup>
 																		<Select
 																		placeholder={strings.Select+" "+strings.Template}
-																			options={templateList ? templateList : []}
+																			options={templateList ? templateList.filter((i)=>i.value!=="1") : []}
 																			value={
 																				templateList &&
 																				templateList.find(
@@ -364,7 +364,7 @@ class ImportBankStatement extends React.Component {
 																				</div>
 																			)}
 																	</FormGroup>
-																</Col>
+																</Col> */}
 																{/* <Col lg={2} className='text-center m-4'>
 																<h6><a className='myClickableThingy' style={{fontWeight:'400',color:'#20a8d8'}}
 																	onClick={() => {

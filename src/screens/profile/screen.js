@@ -526,11 +526,12 @@ class Profile extends React.Component {
 			.then((res) => {
 				 if (res.status === 200) {
 					var dates = [];
-					for (let i = 0; i < res.data.count; i++) {
+					let len= res.data.data.length;
+					for (let i = 0; i < len; i++) {
 						dates.push(new Date( moment(res.data.data[i].transactionDate, 'DD MM YYYY').toDate()));
 					  }
 					const maxDate = new Date(
-						Math.max(
+						Math.min(
 						  ...dates.map(element => {
 							return element;
 						  }),

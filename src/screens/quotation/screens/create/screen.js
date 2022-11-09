@@ -982,8 +982,6 @@ getProductType=(id)=>{
 };
 	renderVat = (cell, row, props) => {
 		const { vat_list } = this.props;
-		if(row.productId){
-		}
 		let idx;
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -1094,7 +1092,6 @@ getProductType=(id)=>{
 				obj['unitType']=result.unitType;
 				obj['unitTypeId']=result.unitTypeId;
 				obj['vatlist']=[];
-
 				idx = index;
 				if(this.state.isRegisteredVat){
 					let product_type='';
@@ -1141,6 +1138,8 @@ getProductType=(id)=>{
 							});
 						}	
 					}
+				}else{
+					obj['vatlist']=vat_list;
 				}
 			}
 			return obj;
@@ -1223,8 +1222,6 @@ getProductType=(id)=>{
 						placeholder={strings.Select+strings.Product}
 						onChange={(e) => {
 							if (e && e.label !== 'Select Product') {
-								//this.getProductType(e.value);
-
 								this.selectItem(e.value, row, 'productId', form, field, props);
 								this.prductValue(e.value, row, 'productId', form, field, props);
 								if(this.checkedRow()==false)

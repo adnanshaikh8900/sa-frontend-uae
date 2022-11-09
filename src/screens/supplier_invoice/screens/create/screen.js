@@ -115,6 +115,7 @@ class CreateSupplierInvoice extends React.Component {
 					productId: '',
 					transactionCategoryId: '',
 					transactionCategoryLabel: '',
+					vatlist:[],
 				},
 			],
 			idCount: 0,
@@ -179,6 +180,9 @@ class CreateSupplierInvoice extends React.Component {
 			loadingMsg:"Loading...",
 			disableLeavePage:false,
 			isSelected:false,
+			isDesignatedZone:false,
+			isRegisteredVat:false,
+			producttype:[],
 			vat_list:[
 				{
 					"id": 1,
@@ -901,6 +905,7 @@ class CreateSupplierInvoice extends React.Component {
 	componentDidMount = () => {
 		this.props.supplierInvoiceActions.getVatList();
 		this.getInitialData();
+		this.getCompanyType();
 		if(this.props.location.state &&this.props.location.state.contactData)
 				this.getCurrentUser(this.props.location.state.contactData);
 		if(this.props.location.state && this.props.location.state.rfqId){
@@ -1023,7 +1028,8 @@ class CreateSupplierInvoice extends React.Component {
 					discount: 0,
 					productId: '',
 					unitType:'',
-					unitTypeId:''
+					unitTypeId:'',
+					vatlist:[],
 				}),
 				idCount: this.state.idCount + 1,
 			},
@@ -1200,7 +1206,39 @@ class CreateSupplierInvoice extends React.Component {
 				.renderOptions('label', 'value', this.state.discountOptions, 'discount')
 				.find((option) => option.value === +row.discountType)
 	}
-
+	getCompanyType = () => {
+		this.props.supplierInvoiceCreateActions
+			.getCompanyById()
+			.then((res) => {
+					if (res.status === 200) {
+						this.setState({
+							isDesignatedZone: res.data.isDesignatedZone,
+						});
+						this.setState({
+							isRegisteredVat: res.data.isRegisteredVat,
+						});
+					}
+				})
+			.catch((err) => {
+				console.log(err,"Get Company Type Error");
+			});
+	};
+	getProductType=(id)=>{
+		this.props.supplierInvoiceCreateActions
+		.getProductById(id)
+		.then((res) => {
+			if (res.status === 200) {
+				let pt=[];
+				pt.push( {"id" :res.data.productID,"type":res.data.productType});
+				this.setState(prevState => ({
+					producttype: [...prevState.producttype, pt]
+				  }));
+			}
+		})
+		.catch((err) => {
+			console.log(err,"Get Product by ID Error");
+		});
+	};
 	renderVat = (cell, row, props) => {
 		const { vat_list } = this.props;
 		let idx;
@@ -1217,19 +1255,19 @@ class CreateSupplierInvoice extends React.Component {
 					<>
 					<Select
 						options={
-							vat_list
+							row.vatlist
 								? selectOptionsFactory.renderOptions(
 									'name',
 									'id',
-									vat_list,
+									row.vatlist,
 									'VAT',
 								)
 								: []
 						}
 						value={
-							vat_list &&
+							row.vatlist &&
 							selectOptionsFactory
-								.renderOptions('name', 'id', vat_list, 'VAT')
+								.renderOptions('name', 'id', row.vatlist, 'VAT')
 								.find((option) => option.value == row.vatCategoryId)
 						}
 						id="vatCategoryId"
@@ -1388,6 +1426,7 @@ class CreateSupplierInvoice extends React.Component {
 
 	prductValue = (e, row, name, form, field, props) => {
 		const { product_list } = this.props;
+		const { vat_list } = this.props;
 		let data = this.state.data;
 		const result = product_list.find((item) => item.id === parseInt(e));
 		let idx;
@@ -1407,6 +1446,55 @@ class CreateSupplierInvoice extends React.Component {
 				obj['unitType']=result.unitType;
 				obj['unitTypeId']=result.unitTypeId;
 				idx = index;
+				obj['vatlist']=[];
+				if(this.state.isRegisteredVat){
+					let product_type='';
+					this.state.producttype.map(element => {
+						if(element[0].id===e){
+							product_type=element[0].type;
+							return product_type;
+						}
+					});
+					if(this.state.isDesignatedZone ){
+						if(product_type=== "GOODS" ){
+							if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+								vat_list.map(element => {
+									if(element.name=='OUT OF SCOPE'){
+										obj['vatlist'].push(element);
+									}
+								});
+							}
+							if(this.state.customer_taxTreatment_des==='NON-VAT REGISTERED'){
+								obj['vatlist']=vat_list;
+							}
+						}
+						else if(product_type === "SERVICE"){
+							if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE'){
+								obj['vatlist']=vat_list;
+							}
+							if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+								vat_list.map(element => {
+									if(element.name=='ZERO RATED TAX (0%)'){
+										obj['vatlist'].push(element);
+									}
+								});
+							}	
+						}
+					}else{
+						if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE'){
+							obj['vatlist']=vat_list;
+						}
+						if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+							vat_list.map(element => {
+								if(element.name=='ZERO RATED TAX (0%)'){
+									obj['vatlist'].push(element);
+								}
+							});
+						}	
+					}
+				}else{
+					obj['vatlist']=vat_list;
+				}
 			}
 			return obj;
 		});
@@ -1464,6 +1552,13 @@ class CreateSupplierInvoice extends React.Component {
 
 	renderProduct = (cell, row, props) => {
 		const { product_list } = this.props;
+		if(product_list.length>0){
+			if(product_list.length > this.state.producttype.length){
+				product_list.map(element => {
+					this.getProductType(element.id);
+				});
+			}
+		}
 		let idx;
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {

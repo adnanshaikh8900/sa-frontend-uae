@@ -121,6 +121,9 @@ class DetailQuotation extends React.Component {
 			dateChanged: false,
 			dateChanged1: false,
 			vat_list:[],
+			isDesignatedZone:false,
+			isRegisteredVat:false,
+			producttype:[],
 			loadingMsg:"Loading",
 			disableLeavePage:false, 
 
@@ -182,6 +185,8 @@ class DetailQuotation extends React.Component {
 			
 		});
 		this.initializeData();
+		this.getCompanyType();
+
 	};
 
 	initializeData = () => {
@@ -381,15 +386,17 @@ class DetailQuotation extends React.Component {
 						discountType: res.data[0].discountType,
 						unitType:res.data[0].unitType,
 						unitTypeId:res.data[0].unitTypeId,
+						vatlist:[],
+
 					}),
-					idCount: this.state.idCount + 1,					
+					idCount: this.state.idCount + 1,	
 				},
 				() => {
 					const values = {
 						values: this.state.initValue,
 					};
 					this.updateAmount(this.state.data, values);
-					this.addRow()
+					this.addRow();
 				},
 			);
 			this.formRef.current.setFieldValue(
@@ -510,7 +517,6 @@ class DetailQuotation extends React.Component {
 			}
 			return obj;
 		});
-		console.log(row.exciseTaxId ,"ROW");
 		return (
 			<Field
 				name={`lineItemsString.${idx}.exciseTaxId`}
@@ -928,8 +934,41 @@ class DetailQuotation extends React.Component {
 			});
 		}
 	};
-
+	getCompanyType = () => {
+		this.props.quotationDetailsAction
+			.getCompanyById()
+			.then((res) => {
+					if (res.status === 200) {
+						this.setState({
+							isDesignatedZone: res.data.isDesignatedZone,
+						});
+						this.setState({
+							isRegisteredVat: res.data.isRegisteredVat,
+						});
+					}
+				})
+			.catch((err) => {
+				console.log(err,"Get Company Type Error");
+			});
+	};
+	getProductType=(id)=>{
+		this.props.quotationDetailsAction
+		.getProductById(id)
+		.then((res) => {
+			if (res.status === 200) {
+				let pt=[];
+				pt.push( {"id" :res.data.productID,"type":res.data.productType});
+				this.setState(prevState => ({
+					producttype: [...prevState.producttype, pt]
+				  }));
+			}
+		})
+		.catch((err) => {
+			console.log(err,"Get Product by ID Error");
+		});
+	};
 	renderVat = (cell, row, props) => {
+		//console.log(row.vatlist);
 		const { vat_list } = this.state;
 		let vatList = vat_list.length
 			? [{ id: '', vat: 'Select VAT' }, ...vat_list]
@@ -949,19 +988,19 @@ class DetailQuotation extends React.Component {
 					<>
 					<Select
 						options={
-							vat_list
+							row.vatlist
 								? selectOptionsFactory.renderOptions(
 										'name',
 										'id',
-										vat_list,
+										row.vatlist,
 										'VAT',
 								  )
 								: []
 						}
 						value={
-							vat_list &&
+							row.vatlist &&
 							selectOptionsFactory
-								.renderOptions('name', 'id', vat_list, 'VAT')
+								.renderOptions('name', 'id', row.vatlist, 'VAT')
 								.find((option) => option.value === +row.vatCategoryId)
 						}
 						id="vatCategoryId"
@@ -1029,6 +1068,10 @@ class DetailQuotation extends React.Component {
 
 	prductValue = (e, row, name, form, field, props) => {
 		const { product_list } = this.props;
+		const { vat_list } = this.state;
+		let vatList = vat_list.length
+			? [{ id: '', vat: 'Select VAT' }, ...vat_list]
+			: vat_list;
 		let data = this.state.data;
 		const result = product_list.find((item) => item.id === parseInt(e));
 		let idx;
@@ -1041,7 +1084,56 @@ class DetailQuotation extends React.Component {
 				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive;
 				obj['unitType']=result.unitType;
 				obj['unitTypeId']=result.unitTypeId;
+				obj['vatlist']=[];
 				idx = index;
+				if(this.state.isRegisteredVat){
+					let product_type='';
+					this.state.producttype.map(element => {
+						if(element[0].id===e){
+							product_type=element[0].type;
+							return product_type;
+						}
+					});
+					if(this.state.isDesignatedZone ){
+						if(product_type=== "GOODS" ){
+							if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+								vat_list.map(element => {
+									if(element.name=='OUT OF SCOPE'){
+										obj['vatlist'].push(element);
+									}
+								});
+							}
+							if(this.state.customer_taxTreatment_des==='NON-VAT REGISTERED'){
+								obj['vatlist']=vat_list;
+							}
+						}
+						else if(product_type === "SERVICE"){
+							if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE'){
+								obj['vatlist']=vat_list;
+							}
+							if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+								vat_list.map(element => {
+									if(element.name=='ZERO RATED TAX (0%)'){
+										obj['vatlist'].push(element);
+									}
+								});
+							}	
+						}
+					}else{
+						if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE'){
+							obj['vatlist']=vat_list;
+						}
+						if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+							vat_list.map(element => {
+								if(element.name=='ZERO RATED TAX (0%)'){
+									obj['vatlist'].push(element);
+								}
+							});
+						}	
+					}
+				}else{
+					obj['vatlist']=vat_list;
+				}
 			}
 			return obj;
 		});
@@ -1086,6 +1178,13 @@ class DetailQuotation extends React.Component {
 		let productList = product_list.length
 			? [{ id: '', name: 'Select Product' }, ...product_list]
 			: product_list;
+		if(product_list.length>0){
+			if(product_list.length > this.state.producttype.length){
+				product_list.map(element => {
+					this.getProductType(element.id);
+				});
+			}
+		}
 		let idx;
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -1677,7 +1776,6 @@ class DetailQuotation extends React.Component {
 			let obj = {label: item.label.contactName, value: item.value}
 			tmpSupplier_list.push(obj)
 		})
-console.log(this.state.supplier_currency)
 		return (
 			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 <div>

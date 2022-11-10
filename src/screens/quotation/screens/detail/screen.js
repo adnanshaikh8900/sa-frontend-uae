@@ -386,6 +386,8 @@ class DetailQuotation extends React.Component {
 						discountType: res.data[0].discountType,
 						unitType:res.data[0].unitType,
 						unitTypeId:res.data[0].unitTypeId,
+						vatlist:[],
+
 					}),
 					idCount: this.state.idCount + 1,	
 				},
@@ -1040,19 +1042,19 @@ class DetailQuotation extends React.Component {
 					<>
 					<Select
 						options={
-							vat_list
+							row.vatlist
 								? selectOptionsFactory.renderOptions(
 										'name',
 										'id',
-										vat_list,
+										row.vatlist,
 										'VAT',
 								  )
 								: []
 						}
 						value={
-							vat_list &&
+							row.vatlist &&
 							selectOptionsFactory
-								.renderOptions('name', 'id', vat_list, 'VAT')
+								.renderOptions('name', 'id', row.vatlist, 'VAT')
 								.find((option) => option.value === +row.vatCategoryId)
 						}
 						id="vatCategoryId"
@@ -1120,6 +1122,10 @@ class DetailQuotation extends React.Component {
 
 	prductValue = (e, row, name, form, field, props) => {
 		const { product_list } = this.props;
+		const { vat_list } = this.state;
+		let vatList = vat_list.length
+			? [{ id: '', vat: 'Select VAT' }, ...vat_list]
+			: vat_list;
 		let data = this.state.data;
 		const result = product_list.find((item) => item.id === parseInt(e));
 		let idx;
@@ -1132,6 +1138,7 @@ class DetailQuotation extends React.Component {
 				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive;
 				obj['unitType']=result.unitType;
 				obj['unitTypeId']=result.unitTypeId;
+				obj['vatlist']=[];
 				idx = index;
 				this.state.producttype.map(element => {
 					if(element.id===e){

@@ -1046,19 +1046,19 @@ getProductType=(id)=>{
 					<>
 					<Select
 						options={
-							vat_list
+							row.vatlist
 								? selectOptionsFactory.renderOptions(
 										'name',
 										'id',
-										vat_list,
+										row.vatlist,
 										'VAT',
 								  )
 								: []
 						}
 						value={
-							vat_list &&
+							row.vatlist &&
 							selectOptionsFactory
-								.renderOptions('name', 'id', vat_list, 'VAT')
+								.renderOptions('name', 'id', row.vatlist, 'VAT')
 								.find((option) => option.value === +row.vatCategoryId)
 						}
 						id="vatCategoryId"
@@ -1126,6 +1126,7 @@ getProductType=(id)=>{
 
 	prductValue = (e, row, name, form, field, props) => {
 		const { product_list } = this.props;
+		const { vat_list } = this.props;
 		let data = this.state.data;
 		const result = product_list.find((item) => item.id === parseInt(e));
 		let idx;
@@ -1139,6 +1140,7 @@ getProductType=(id)=>{
 				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive;
 				obj['unitType']=result.unitType;
 				obj['unitTypeId']=result.unitTypeId;
+				obj['vatlist']=[];
 				idx = index;
 				if(this.state.isRegisteredVat){
 					console.log("vat registered");

@@ -115,7 +115,6 @@ class CreateSupplierInvoice extends React.Component {
 					productId: '',
 					transactionCategoryId: '',
 					transactionCategoryLabel: '',
-					vatlist:[],
 				},
 			],
 			idCount: 0,
@@ -1309,11 +1308,11 @@ class CreateSupplierInvoice extends React.Component {
 					<>
 					<Select
 						options={
-							row.vatlist
+							vat_list
 								? selectOptionsFactory.renderOptions(
 									'name',
 									'id',
-									row.vatlist,
+									vat_list,
 									'VAT',
 								)
 								: []
@@ -1321,7 +1320,7 @@ class CreateSupplierInvoice extends React.Component {
 						value={
 							row.vatlist &&
 							selectOptionsFactory
-								.renderOptions('name', 'id', row.vatlist, 'VAT')
+								.renderOptions('name', 'id', vat_list, 'VAT')
 								.find((option) => option.value == row.vatCategoryId)
 						}
 						id="vatCategoryId"

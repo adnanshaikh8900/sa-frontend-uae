@@ -386,8 +386,6 @@ class DetailQuotation extends React.Component {
 						discountType: res.data[0].discountType,
 						unitType:res.data[0].unitType,
 						unitTypeId:res.data[0].unitTypeId,
-						vatlist:[],
-
 					}),
 					idCount: this.state.idCount + 1,	
 				},
@@ -952,27 +950,81 @@ class DetailQuotation extends React.Component {
 			});
 	};
 	getProductType=(id)=>{
-		this.props.quotationDetailsAction
-		.getProductById(id)
-		.then((res) => {
-			if (res.status === 200) {
-				let pt=[];
-				pt.push( {"id" :res.data.productID,"type":res.data.productType});
-				this.setState(prevState => ({
-					producttype: [...prevState.producttype, pt]
-				  }));
-			}
+		if(this.state.customer_taxTreatment_des){
+			this.props.quotationDetailsAction
+			.getProductById(id)
+			.then((res) => {
+				if (res.status === 200) {
+					var { vat_list } = this.state;
+					let pt={};
+					var vt=[];
+					pt.id=res.data.productID;
+					pt.type=res.data.productType
+					if(this.state.isRegisteredVat){
+						if(this.state.isDesignatedZone ){
+							if(res.data.productType=== "GOODS" ){
+								if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+									vat_list.map(element => {
+										if(element.name=='OUT OF SCOPE'){
+											vt.push(element);
+										}
+									});
+								}
+								if(this.state.customer_taxTreatment_des==='NON-VAT REGISTERED'){
+									vt=vat_list;
+								}
+							}
+							else if(res.data.productType === "SERVICE"){
+								if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE'){
+									vt=vat_list;
+								}
+								if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+									vat_list.map(element => {
+										if(element.name=='ZERO RATED TAX (0%)'){
+											vt.push.push(element);
+										}
+									});
+									
+								}	
+							}
+						}else{
+							if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE'){
+								vt=vat_list;
+							}
+							if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+								vat_list.map(element => {
+									if(element.name=='ZERO RATED TAX (0%)'){
+										vt.push(element);
+									}
+								});
+							}	
+						}
+					}else{
+						vt=vat_list;
+					}
+					pt.vat_list=vt;
+					this.setState(prevState => ({
+						producttype: [...prevState.producttype, pt]
+					}));
+				}
 		})
 		.catch((err) => {
 			console.log(err,"Get Product by ID Error");
 		});
+	}
+	
 	};
 	renderVat = (cell, row, props) => {
-		//console.log(row.vatlist);
-		const { vat_list } = this.state;
-		let vatList = vat_list.length
-			? [{ id: '', vat: 'Select VAT' }, ...vat_list]
-			: vat_list;
+		//console.log(vat_list);
+		// const { vat_list } = this.state;
+		// let vatList = vat_list.length
+		// 	? [{ id: '', vat: 'Select VAT' }, ...vat_list]
+		// 	: vat_list;
+		let vat_list=[];
+		const product = this.state.producttype.find(element => element.id === row.productId);
+		if(product){
+			vat_list=product.vat_list;
+		}
 		let idx;
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -988,19 +1040,19 @@ class DetailQuotation extends React.Component {
 					<>
 					<Select
 						options={
-							row.vatlist
+							vat_list
 								? selectOptionsFactory.renderOptions(
 										'name',
 										'id',
-										row.vatlist,
+										vat_list,
 										'VAT',
 								  )
 								: []
 						}
 						value={
-							row.vatlist &&
+							vat_list &&
 							selectOptionsFactory
-								.renderOptions('name', 'id', row.vatlist, 'VAT')
+								.renderOptions('name', 'id', vat_list, 'VAT')
 								.find((option) => option.value === +row.vatCategoryId)
 						}
 						id="vatCategoryId"
@@ -1068,10 +1120,6 @@ class DetailQuotation extends React.Component {
 
 	prductValue = (e, row, name, form, field, props) => {
 		const { product_list } = this.props;
-		const { vat_list } = this.state;
-		let vatList = vat_list.length
-			? [{ id: '', vat: 'Select VAT' }, ...vat_list]
-			: vat_list;
 		let data = this.state.data;
 		const result = product_list.find((item) => item.id === parseInt(e));
 		let idx;
@@ -1084,56 +1132,16 @@ class DetailQuotation extends React.Component {
 				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive;
 				obj['unitType']=result.unitType;
 				obj['unitTypeId']=result.unitTypeId;
-				obj['vatlist']=[];
 				idx = index;
-				if(this.state.isRegisteredVat){
-					let product_type='';
-					this.state.producttype.map(element => {
-						if(element[0].id===e){
-							product_type=element[0].type;
-							return product_type;
+				this.state.producttype.map(element => {
+					if(element.id===e){
+						const found = element.vat_list.find(element => element.id === result.vatCategoryId);
+						if(!found){
+							obj['vatCategoryId']='';
 						}
-					});
-					if(this.state.isDesignatedZone ){
-						if(product_type=== "GOODS" ){
-							if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
-								vat_list.map(element => {
-									if(element.name=='OUT OF SCOPE'){
-										obj['vatlist'].push(element);
-									}
-								});
-							}
-							if(this.state.customer_taxTreatment_des==='NON-VAT REGISTERED'){
-								obj['vatlist']=vat_list;
-							}
-						}
-						else if(product_type === "SERVICE"){
-							if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE'){
-								obj['vatlist']=vat_list;
-							}
-							if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
-								vat_list.map(element => {
-									if(element.name=='ZERO RATED TAX (0%)'){
-										obj['vatlist'].push(element);
-									}
-								});
-							}	
-						}
-					}else{
-						if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE'){
-							obj['vatlist']=vat_list;
-						}
-						if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
-							vat_list.map(element => {
-								if(element.name=='ZERO RATED TAX (0%)'){
-									obj['vatlist'].push(element);
-								}
-							});
-						}	
+						return found;
 					}
-				}else{
-					obj['vatlist']=vat_list;
-				}
+				});
 			}
 			return obj;
 		});
@@ -1331,7 +1339,7 @@ class DetailQuotation extends React.Component {
 				obj.vatCategoryId !== ''
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
-			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
+					const vat = index !== '' && index >=0 ? vat_list[`${index}`].vat : 0;
 
 			//Exclusive case
 			if(this.state.taxType === false){

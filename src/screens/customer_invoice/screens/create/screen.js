@@ -1516,8 +1516,6 @@ getProductType=(id)=>{
 		product_list=product_list.filter((row)=>row.stockOnHand !=0 );
 		if(product_list.length>0){
 			if(product_list.length > this.state.producttype.length){
-				// console.log(product_list.length,"product_list.length");
-				// console.log(this.state.producttype.length,"this.state.producttype.length");
 				product_list.map(element => {
 					this.getProductType(element.id);
 				});

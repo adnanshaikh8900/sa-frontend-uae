@@ -122,7 +122,6 @@ class CreateQuotation extends React.Component {
 					isExciseTaxExclusive: '',
 					unitType:'',
 					unitTypeId:'',
-					vatlist:[],
 				},
 			],
 			discountEnabled: false,
@@ -791,8 +790,6 @@ class CreateQuotation extends React.Component {
 					productId: '',
 					unitType:'',
 					unitTypeId:'',
-					vatlist:[],
-
 				}),
 				idCount: this.state.idCount + 1,
 			},
@@ -969,11 +966,58 @@ getProductType=(id)=>{
 	.getProductById(id)
 	.then((res) => {
 		if (res.status === 200) {
-			let pt=[];
-			pt.push( {"id" :res.data.productID,"type":res.data.productType});
+			var { vat_list } = this.props;
+			let pt={};
+			var vt=[];
+			pt.id=res.data.productID;
+			pt.type=res.data.productType
+			if(this.state.isRegisteredVat){
+				if(this.state.isDesignatedZone ){
+					if(res.data.productType=== "GOODS" ){
+						if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+							vat_list.map(element => {
+								if(element.name=='OUT OF SCOPE'){
+									vt.push(element);
+								}
+							});
+						}
+						if(this.state.customer_taxTreatment_des==='NON-VAT REGISTERED'){
+							vt=vat_list;
+						}
+					}
+					else if(res.data.productType === "SERVICE"){
+						if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE'){
+							vt=vat_list;
+						}
+						if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+							vat_list.map(element => {
+								if(element.name=='ZERO RATED TAX (0%)'){
+									vt.push.push(element);
+								}
+							});
+							
+						}	
+					}
+				}else{
+					if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE'){
+						vt=vat_list;
+					}
+					if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+						vat_list.map(element => {
+							if(element.name=='ZERO RATED TAX (0%)'){
+								vt.push(element);
+							}
+						});
+						
+					}	
+				}
+			}else{
+				vt=vat_list;
+			}
+			pt.vat_list=vt;
 			this.setState(prevState => ({
 				producttype: [...prevState.producttype, pt]
-			  }));
+			}));
 		}
 	})
 	.catch((err) => {
@@ -981,7 +1025,12 @@ getProductType=(id)=>{
 	});
 };
 	renderVat = (cell, row, props) => {
-		const { vat_list } = this.props;
+		//const { vat_list } = this.props;
+		let vat_list=[];
+		const product = this.state.producttype.find(element => element.id === row.productId);
+		if(product){
+			vat_list=product.vat_list;
+		}
 		let idx;
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -997,19 +1046,19 @@ getProductType=(id)=>{
 					<>
 					<Select
 						options={
-							row.vatlist
+							vat_list
 								? selectOptionsFactory.renderOptions(
 										'name',
 										'id',
-										row.vatlist,
+										vat_list,
 										'VAT',
 								  )
 								: []
 						}
 						value={
-							row.vatlist &&
+							vat_list &&
 							selectOptionsFactory
-								.renderOptions('name', 'id', row.vatlist, 'VAT')
+								.renderOptions('name', 'id', vat_list, 'VAT')
 								.find((option) => option.value === +row.vatCategoryId)
 						}
 						id="vatCategoryId"
@@ -1091,55 +1140,18 @@ getProductType=(id)=>{
 				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive;
 				obj['unitType']=result.unitType;
 				obj['unitTypeId']=result.unitTypeId;
-				obj['vatlist']=[];
 				idx = index;
 				if(this.state.isRegisteredVat){
-					let product_type='';
+					console.log("vat registered");
 					this.state.producttype.map(element => {
-						if(element[0].id===e){
-							product_type=element[0].type;
-							return product_type;
+						if(element.id===e){
+							const found = element.vat_list.find(element => element.id === result.vatCategoryId);
+							if(!found){
+								obj['vatCategoryId']='';
+							}
+							return found;
 						}
 					});
-					if(this.state.isDesignatedZone ){
-						if(product_type=== "GOODS" ){
-							if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
-								vat_list.map(element => {
-									if(element.name=='OUT OF SCOPE'){
-										obj['vatlist'].push(element);
-									}
-								});
-							}
-							if(this.state.customer_taxTreatment_des==='NON-VAT REGISTERED'){
-								obj['vatlist']=vat_list;
-							}
-						}
-						else if(product_type === "SERVICE"){
-							if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE'){
-								obj['vatlist']=vat_list;
-							}
-							if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
-								vat_list.map(element => {
-									if(element.name=='ZERO RATED TAX (0%)'){
-										obj['vatlist'].push(element);
-									}
-								});
-							}	
-						}
-					}else{
-						if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE'){
-							obj['vatlist']=vat_list;
-						}
-						if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
-							vat_list.map(element => {
-								if(element.name=='ZERO RATED TAX (0%)'){
-									obj['vatlist'].push(element);
-								}
-							});
-						}	
-					}
-				}else{
-					obj['vatlist']=vat_list;
 				}
 			}
 			return obj;
@@ -1424,8 +1436,7 @@ getProductType=(id)=>{
 				obj.vatCategoryId !== ''
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
-			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
-
+			const vat = index !== '' && index >=0 ? vat_list[`${index}`].vat : 0;
 			//Excise calculation
 			if(this.state.taxType === false){
 				if (obj.discountType === 'PERCENTAGE') {
@@ -1633,6 +1644,7 @@ getProductType=(id)=>{
 		formData.append('receiptNumber',receiptNumber !== null ? receiptNumber : '');
 		formData.append('attachmentDescription',attachmentDescription !== null ? attachmentDescription : '',);
 		formData.append('type', 6);
+		console.log(JSON.stringify(this.state.data));
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
 		formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
 		formData.append('totalAmount', this.state.initValue.totalAmount);

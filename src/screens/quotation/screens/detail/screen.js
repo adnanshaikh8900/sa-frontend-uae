@@ -981,7 +981,7 @@ class DetailQuotation extends React.Component {
 								if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
 									vat_list.map(element => {
 										if(element.name=='ZERO RATED TAX (0%)'){
-											vt.push.push(element);
+											vt.push(element);
 										}
 									});
 									
@@ -1040,19 +1040,19 @@ class DetailQuotation extends React.Component {
 					<>
 					<Select
 						options={
-							row.vatlist
+							vat_list
 								? selectOptionsFactory.renderOptions(
 										'name',
 										'id',
-										row.vatlist,
+										vat_list,
 										'VAT',
 								  )
 								: []
 						}
 						value={
-							row.vatlist &&
+							vat_list &&
 							selectOptionsFactory
-								.renderOptions('name', 'id', row.vatlist, 'VAT')
+								.renderOptions('name', 'id', vat_list, 'VAT')
 								.find((option) => option.value === +row.vatCategoryId)
 						}
 						id="vatCategoryId"

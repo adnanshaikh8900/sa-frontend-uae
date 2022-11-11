@@ -872,7 +872,7 @@ class DetailCustomerInvoice extends React.Component {
 								if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
 									vat_list.map(element => {
 										if(element.name=='ZERO RATED TAX (0%)'){
-											vt.push.push(element);
+											vt.push(element);
 										}
 									});
 									

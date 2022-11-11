@@ -892,6 +892,7 @@ renderVatAmount = (cell, row,extraData) => {
 		if(this.props.location.state && this.props.location.state.quotationId)
 		this.getQuotationDetails(this.props.location.state.quotationId);
 		this.getInitialData();
+		this.getCompanyType();
 		if(this.props.location.state &&this.props.location.state.contactData){
 		this.getCurrentUser(this.props.location.state.contactData);
 	  }
@@ -1216,7 +1217,7 @@ getProductType=(id)=>{
 							if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
 								vat_list.map(element => {
 									if(element.name=='ZERO RATED TAX (0%)'){
-										vt.push.push(element);
+										vt.push(element);
 									}
 								});
 								
@@ -1232,7 +1233,6 @@ getProductType=(id)=>{
 									vt.push(element);
 								}
 							});
-							
 						}	
 					}
 				}else{
@@ -1458,7 +1458,6 @@ getProductType=(id)=>{
 				obj['unitTypeId']=result.unitTypeId;
 				idx = index;
 				if(this.state.isRegisteredVat){
-					console.log("vat registered");
 					this.state.producttype.map(element => {
 						if(element.id===e){
 							const found = element.vat_list.find(element => element.id === result.vatCategoryId);

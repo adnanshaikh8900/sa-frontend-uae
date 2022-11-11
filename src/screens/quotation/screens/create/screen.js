@@ -1026,6 +1026,7 @@ getProductType=(id)=>{
 };
 	renderVat = (cell, row, props) => {
 		//const { vat_list } = this.props;
+		console.log(this.state.producttype,"PE")
 		let vat_list=[];
 		const product = this.state.producttype.find(element => element.id === row.productId);
 		if(product){

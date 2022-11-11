@@ -386,8 +386,6 @@ class DetailQuotation extends React.Component {
 						discountType: res.data[0].discountType,
 						unitType:res.data[0].unitType,
 						unitTypeId:res.data[0].unitTypeId,
-						vatlist:[],
-
 					}),
 					idCount: this.state.idCount + 1,	
 				},
@@ -1138,7 +1136,6 @@ class DetailQuotation extends React.Component {
 				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive;
 				obj['unitType']=result.unitType;
 				obj['unitTypeId']=result.unitTypeId;
-				obj['vatlist']=[];
 				idx = index;
 				this.state.producttype.map(element => {
 					if(element.id===e){

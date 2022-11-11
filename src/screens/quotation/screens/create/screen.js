@@ -962,6 +962,7 @@ getCompanyType = () => {
 		});
 };
 getProductType=(id)=>{
+	if(this.state.customer_taxTreatment_des){
 	this.props.quotationCreateAction
 	.getProductById(id)
 	.then((res) => {
@@ -992,7 +993,7 @@ getProductType=(id)=>{
 						if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
 							vat_list.map(element => {
 								if(element.name=='ZERO RATED TAX (0%)'){
-									vt.push.push(element);
+									vt.push(element);
 								}
 							});
 							
@@ -1023,10 +1024,10 @@ getProductType=(id)=>{
 	.catch((err) => {
 		console.log(err,"Get Product by ID Error");
 	});
+}
 };
 	renderVat = (cell, row, props) => {
 		//const { vat_list } = this.props;
-		console.log(this.state.producttype,"PE")
 		let vat_list=[];
 		const product = this.state.producttype.find(element => element.id === row.productId);
 		if(product){
@@ -1127,7 +1128,6 @@ getProductType=(id)=>{
 
 	prductValue = (e, row, name, form, field, props) => {
 		const { product_list } = this.props;
-		const { vat_list } = this.props;
 		let data = this.state.data;
 		const result = product_list.find((item) => item.id === parseInt(e));
 		let idx;
@@ -1143,7 +1143,6 @@ getProductType=(id)=>{
 				obj['unitTypeId']=result.unitTypeId;
 				idx = index;
 				if(this.state.isRegisteredVat){
-					console.log("vat registered");
 					this.state.producttype.map(element => {
 						if(element.id===e){
 							const found = element.vat_list.find(element => element.id === result.vatCategoryId);
@@ -1237,8 +1236,8 @@ getProductType=(id)=>{
 							if (e && e.label !== 'Select Product') {
 								this.selectItem(e.value, row, 'productId', form, field, props);
 								this.prductValue(e.value, row, 'productId', form, field, props);
-								if(this.checkedRow()==false)
-								this.addRow();
+								if(this.checkedRow()===false)
+									{this.addRow();}
 								// this.formRef.current.props.handleChange(field.name)(e.value)
 							} else {
 								form.setFieldValue(

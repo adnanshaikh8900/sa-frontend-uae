@@ -39,6 +39,7 @@ import LocalizedStrings from 'react-localization';
 import { TextareaAutosize } from '@material-ui/core';
 import './style.scss';
 import moment from 'moment';
+import { ReorderOutlined } from '@material-ui/icons';
 
 const mapStateToProps = (state) => {
 	return {
@@ -120,7 +121,7 @@ class CreateQuotation extends React.Component {
 					productId: '',
 					isExciseTaxExclusive: '',
 					unitType:'',
-					unitTypeId:''
+					unitTypeId:'',
 				},
 			],
 			discountEnabled: false,
@@ -181,6 +182,9 @@ class CreateQuotation extends React.Component {
 			param:false,
 			loadingMsg:"Loading...",
 			disableLeavePage:false,
+			isDesignatedZone:false,
+			isRegisteredVat:false,
+			producttype:[],
 			vat_list:[
 				{
 					"id": 1,
@@ -672,6 +676,7 @@ class CreateQuotation extends React.Component {
 	componentDidMount = () => {
 		this.props.requestForQuotationAction.getVatList();
 		this.getInitialData();
+		this.getCompanyType();
 
 		if(this.props.location.state &&this.props.location.state.contactData)
 				this.getCurrentUser(this.props.location.state.contactData);
@@ -784,7 +789,7 @@ class CreateQuotation extends React.Component {
 					discount: 0,
 					productId: '',
 					unitType:'',
-					unitTypeId:''
+					unitTypeId:'',
 				}),
 				idCount: this.state.idCount + 1,
 			},
@@ -939,9 +944,95 @@ discountType = (row) =>
 			.renderOptions('label', 'value', this.state.discountOptions, 'discount')
 			.find((option) => option.value === +row.discountType)
 }
-
+getCompanyType = () => {
+	this.props.quotationCreateAction
+		.getCompanyById()
+		.then((res) => {
+				if (res.status === 200) {
+					this.setState({
+						isDesignatedZone: res.data.isDesignatedZone,
+					});
+					this.setState({
+						isRegisteredVat: res.data.isRegisteredVat,
+					});
+				}
+			})
+		.catch((err) => {
+			console.log(err,"Get Company Type Error");
+		});
+};
+getProductType=(id)=>{
+	if(this.state.customer_taxTreatment_des){
+	this.props.quotationCreateAction
+	.getProductById(id)
+	.then((res) => {
+		if (res.status === 200) {
+			var { vat_list } = this.props;
+			let pt={};
+			var vt=[];
+			pt.id=res.data.productID;
+			pt.type=res.data.productType
+			if(this.state.isRegisteredVat){
+				if(this.state.isDesignatedZone ){
+					if(res.data.productType=== "GOODS" ){
+						if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+							vat_list.map(element => {
+								if(element.name=='OUT OF SCOPE'){
+									vt.push(element);
+								}
+							});
+						}
+						if(this.state.customer_taxTreatment_des==='NON-VAT REGISTERED'){
+							vt=vat_list;
+						}
+					}
+					else if(res.data.productType === "SERVICE"){
+						if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE'){
+							vt=vat_list;
+						}
+						if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+							vat_list.map(element => {
+								if(element.name=='ZERO RATED TAX (0%)'){
+									vt.push(element);
+								}
+							});
+							
+						}	
+					}
+				}else{
+					if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE'){
+						vt=vat_list;
+					}
+					if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+						vat_list.map(element => {
+							if(element.name=='ZERO RATED TAX (0%)'){
+								vt.push(element);
+							}
+						});
+						
+					}	
+				}
+			}else{
+				vt=vat_list;
+			}
+			pt.vat_list=vt;
+			this.setState(prevState => ({
+				producttype: [...prevState.producttype, pt]
+			}));
+		}
+	})
+	.catch((err) => {
+		console.log(err,"Get Product by ID Error");
+	});
+}
+};
 	renderVat = (cell, row, props) => {
-		const { vat_list } = this.props;
+		//const { vat_list } = this.props;
+		let vat_list=[];
+		const product = this.state.producttype.find(element => element.id === row.productId);
+		if(product){
+			vat_list=product.vat_list;
+		}
 		let idx;
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -1051,6 +1142,17 @@ discountType = (row) =>
 				obj['unitType']=result.unitType;
 				obj['unitTypeId']=result.unitTypeId;
 				idx = index;
+				if(this.state.isRegisteredVat){
+					this.state.producttype.map(element => {
+						if(element.id===e){
+							const found = element.vat_list.find(element => element.id === result.vatCategoryId);
+							if(!found){
+								obj['vatCategoryId']='';
+							}
+							return found;
+						}
+					});
+				}
 			}
 			return obj;
 		});
@@ -1097,6 +1199,13 @@ discountType = (row) =>
 
 	renderProduct = (cell, row, props) => {
 		const { product_list } = this.props;
+		if(product_list.length>0){
+			if(product_list.length > this.state.producttype.length){
+				product_list.map(element => {
+					this.getProductType(element.id);
+				});
+			}
+		}
 		let idx;
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -1127,8 +1236,8 @@ discountType = (row) =>
 							if (e && e.label !== 'Select Product') {
 								this.selectItem(e.value, row, 'productId', form, field, props);
 								this.prductValue(e.value, row, 'productId', form, field, props);
-								if(this.checkedRow()==false)
-								this.addRow();
+								if(this.checkedRow()===false)
+									{this.addRow();}
 								// this.formRef.current.props.handleChange(field.name)(e.value)
 							} else {
 								form.setFieldValue(
@@ -1327,8 +1436,7 @@ discountType = (row) =>
 				obj.vatCategoryId !== ''
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
-			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
-
+			const vat = index !== '' && index >=0 ? vat_list[`${index}`].vat : 0;
 			//Excise calculation
 			if(this.state.taxType === false){
 				if (obj.discountType === 'PERCENTAGE') {
@@ -1536,6 +1644,7 @@ discountType = (row) =>
 		formData.append('receiptNumber',receiptNumber !== null ? receiptNumber : '');
 		formData.append('attachmentDescription',attachmentDescription !== null ? attachmentDescription : '',);
 		formData.append('type', 6);
+		console.log(JSON.stringify(this.state.data));
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
 		formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
 		formData.append('totalAmount', this.state.initValue.totalAmount);
@@ -1952,7 +2061,6 @@ discountType = (row) =>
 												}}
 												validate={(values) => 
 													{
-														console.log(values,"values")
 													let errors = {};
 													if (this.state.exist === true) {
 														errors.quotation_Number =
@@ -2099,7 +2207,6 @@ discountType = (row) =>
 												{(props) => (
 													<Form onSubmit={props.handleSubmit}>
 														<Row>
-															{console.log(props.error,"props.error")}
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="quotation_Number">

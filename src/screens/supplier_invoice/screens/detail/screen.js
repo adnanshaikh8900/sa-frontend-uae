@@ -884,9 +884,6 @@ class DetailSupplierInvoice extends React.Component {
 
 	renderVat = (cell, row, props) => {
 		const { vat_list } = this.state;
-		let vatList = vat_list.length
-			? [{ id: '', vat: 'Select VAT' }, ...vat_list]
-			: vat_list;
 		let idx;
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -1278,7 +1275,7 @@ class DetailSupplierInvoice extends React.Component {
 				obj.vatCategoryId !== ''
 					? vat_list?.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
-			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
+					const vat = index !== '' && index >=0 ? vat_list[`${index}`].vat : 0;
 
 			//Exclusive case
 			if(this.state.taxType === false){

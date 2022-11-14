@@ -112,8 +112,6 @@ class CreateCustomerInvoice extends React.Component {
 					productId: '',
 					isExciseTaxExclusive: '',
 					unitType:'',
-					unitTypeId:''
-
 				},
 			],
 			discountEnabled: false,
@@ -181,6 +179,9 @@ class CreateCustomerInvoice extends React.Component {
 			param:false,
 			date:'',
 			contactId:'',
+			isDesignatedZone:false,
+			isRegisteredVat:false,
+			producttype:[],
 			isQuotationSelected:false,
 			loadingMsg:"Loading...",
 			disableLeavePage:false, 
@@ -891,6 +892,7 @@ renderVatAmount = (cell, row,extraData) => {
 		if(this.props.location.state && this.props.location.state.quotationId)
 		this.getQuotationDetails(this.props.location.state.quotationId);
 		this.getInitialData();
+		this.getCompanyType();
 		if(this.props.location.state &&this.props.location.state.contactData){
 		this.getCurrentUser(this.props.location.state.contactData);
 	  }
@@ -1166,12 +1168,94 @@ discountType = (row) =>
 			.renderOptions('label', 'value', this.state.discountOptions, 'discount')
 			.find((option) => option.value === +row.discountType)
 }
-
+getCompanyType = () => {
+	this.props.customerInvoiceCreateActions
+		.getCompanyById()
+		.then((res) => {
+				if (res.status === 200) {
+					this.setState({
+						isDesignatedZone: res.data.isDesignatedZone,
+					});
+					this.setState({
+						isRegisteredVat: res.data.isRegisteredVat,
+					});
+				}
+			})
+		.catch((err) => {
+			console.log(err,"Get Company Type Error");
+		});
+};
+getProductType=(id)=>{
+	if(this.state.customer_taxTreatment_des){
+		this.props.customerInvoiceCreateActions
+		.getProductById(id)
+		.then((res) => {
+			if (res.status === 200) {
+				var { vat_list } = this.props;
+				let pt={};
+				var vt=[];
+				pt.id=res.data.productID;
+				pt.type=res.data.productType
+				if(this.state.isRegisteredVat){
+					if(this.state.isDesignatedZone ){
+						if(res.data.productType=== "GOODS" ){
+							if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+								vat_list.map(element => {
+									if(element.name=='OUT OF SCOPE'){
+										vt.push(element);
+									}
+								});
+							}
+							if(this.state.customer_taxTreatment_des==='NON-VAT REGISTERED'){
+								vt=vat_list;
+							}
+						}
+						else if(res.data.productType === "SERVICE"){
+							if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE'){
+								vt=vat_list;
+							}
+							if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+								vat_list.map(element => {
+									if(element.name=='ZERO RATED TAX (0%)'){
+										vt.push(element);
+									}
+								});
+								
+							}	
+						}
+					}else{
+						if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE'){
+							vt=vat_list;
+						}
+						if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+							vat_list.map(element => {
+								if(element.name=='ZERO RATED TAX (0%)'){
+									vt.push(element);
+								}
+							});
+						}	
+					}
+				}else{
+					vt=vat_list;
+				}
+				pt.vat_list=vt;
+				this.setState(prevState => ({
+					producttype: [...prevState.producttype, pt]
+				}));
+			}
+	})
+	.catch((err) => {
+		console.log(err,"Get Product by ID Error");
+	});
+}
+};
 	renderVat = (cell, row, props) => {
-		const { vat_list } = this.props;
-		let vatList = vat_list && vat_list.length
-			? [{ id: '', vat: 'Select VAT' }, ...vat_list]
-			: vat_list;
+	//	const { vat_list } = this.props;
+		let vat_list=[];
+		const product = this.state.producttype.find(element => element.id === row.productId);
+		if(product){
+			vat_list=product.vat_list;
+		}
 		let idx;
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -1373,6 +1457,18 @@ discountType = (row) =>
 				obj['unitType']=result.unitType;
 				obj['unitTypeId']=result.unitTypeId;
 				idx = index;
+				if(this.state.isRegisteredVat){
+					this.state.producttype.map(element => {
+						if(element.id===e){
+							const found = element.vat_list.find(element => element.id === result.vatCategoryId);
+							if(!found){
+								obj['vatCategoryId']='';
+							}
+							return found;
+						}
+					});
+				
+				}
 			}
 			return obj;
 		});
@@ -1414,6 +1510,13 @@ discountType = (row) =>
 	renderProduct = (cell, row, props) => {
 		var { product_list } = this.props;
 		product_list=product_list.filter((row)=>row.stockOnHand !=0 )
+		if(product_list.length>0){
+			if(product_list.length > this.state.producttype.length){
+				product_list.map(element => {
+					this.getProductType(element.id);
+				});
+			}
+		}
 		let idx;
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -1612,12 +1715,12 @@ discountType = (row) =>
 		let discount_total = 0;
 		
 		data.map((obj) => {
-			let unitprice=obj.unitPrice
+			let unitprice=obj.unitPrice;
 			const index =
 				obj.vatCategoryId !== ''
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
-			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
+			const vat = index !== '' && index >=0 ? vat_list[`${index}`].vat : 0;
 
 			//Exclusive case
 			if(this.state.taxType === false){
@@ -1848,7 +1951,7 @@ discountType = (row) =>
 			formData.append('footNote',footNote? footNote : '')
 			formData.append('type', 2);
 			const local=[...this.state.data.map(({taxtreatment,...rest})=>rest)]
-			
+			console.log( JSON.stringify(local),"product data");
 			formData.append('lineItemsString', JSON.stringify(local));
 			formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
 			formData.append('totalAmount', this.state.initValue.totalAmount);
@@ -3936,6 +4039,7 @@ discountType = (row) =>
 																		className="btn-square mr-3"
 																		disabled={this.state.disabled}
 																		onClick={() => {
+																			console.log(this.state,"STATE DATA");
 																			if(this.state.data.length === 1)
 																				{
 																				//	added validation popup	msg

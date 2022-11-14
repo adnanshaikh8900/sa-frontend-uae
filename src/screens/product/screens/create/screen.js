@@ -1008,9 +1008,18 @@ try {
 																					}
 																				}}
 																				checked={this.state.exciseTaxCheck}
-																				
 																			/>
 																		{strings.excise_product}
+																		<i
+																				id="ExciseTooltip"
+																				className="fa fa-question-circle ml-1"
+																			></i>
+																			<UncontrolledTooltip
+																				placement="right"
+																				target="ExciseTooltip"
+																			>
+																				Note: It is not possible to switch from Excise Goods to Non-Excise Goods or vice versa once any document is created using this product.
+																			</UncontrolledTooltip>
 																		</Label>										
 																	</FormGroup>
 																</Col>)}
@@ -1624,6 +1633,7 @@ try {
 																		
 																			>
 																{ config.INVENTORY_MODULE &&
+																
 																	<Col lg={8}>
 																	<FormGroup check inline className="mb-3">
 																		<Label
@@ -1632,6 +1642,7 @@ try {
 																			htmlFor="isInventoryEnabled"
 																		>
 																			<Input
+																			
 																			className="form-check-input"
 																			type="checkbox"
 																			id="is"
@@ -1640,9 +1651,6 @@ try {
 																				props.handleChange('isInventoryEnabled')(value);
 																			}}
 																			checked={props.values.isInventoryEnabled}
-																				
-																			
-																			
 																			/>
 																		 {strings.EnableInventory}
 																			{props.errors.productPriceType &&
@@ -1651,6 +1659,16 @@ try {
 																						{props.errors.productPriceType}
 																					</div>
 																				)}
+																				<i
+																				id="EnventoryTooltip"
+																				className="fa fa-question-circle ml-1"
+																			></i>
+																			<UncontrolledTooltip
+																				placement="right"
+																				target="EnventoryTooltip"
+																			>
+																				Inventory cannot be enabled or disabled once a document has been created using this product.
+																			</UncontrolledTooltip>
 																		</Label>
 																	</FormGroup>
 

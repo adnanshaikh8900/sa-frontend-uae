@@ -783,7 +783,7 @@ class DetailContact extends React.Component {
 																					<FormGroup check inline>
 																						<div className="custom-radio custom-control">
 																							<input
-																							disabled={this.state.childRecordsPresent}
+																							// disabled={this.state.childRecordsPresent}
 																								className="custom-control-input"
 																								type="radio"
 																								id="inline-radio1"
@@ -814,7 +814,7 @@ class DetailContact extends React.Component {
 																					<FormGroup check inline>
 																						<div className="custom-radio custom-control">
 																							<input
-																							disabled={this.state.childRecordsPresent}
+																							// disabled={this.state.childRecordsPresent}
 																								className="custom-control-input"
 																								type="radio"
 																								id="inline-radio2"

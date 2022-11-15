@@ -471,7 +471,7 @@ const fr = {
 //Add Chart of Accounts
       NewChartAccount:"Nouveau compte graphique",		
       Name:"Nom",		
-      Type:"Type",
+      Type:"type de produit",
       Chart_of_Account:"Plan comptable",		
 
 //Contact

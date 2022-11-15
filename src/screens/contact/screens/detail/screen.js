@@ -12,6 +12,7 @@ import {
 	FormGroup,
 	Input,
 	Label,
+	UncontrolledTooltip,
 } from 'reactstrap';
 import Select from 'react-select';
 import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
@@ -1095,6 +1096,16 @@ class DetailContact extends React.Component {
 																					<Label htmlFor="currencyCode">
 																						<span className="text-danger">* </span>
 																						{strings.CurrencyCode}
+																						<i
+																				id="Currencytip"
+																				className="fa fa-question-circle ml-1"
+																			></i>
+																			<UncontrolledTooltip
+																				placement="right"
+																				target="Currencytip"
+																			>
+																				You cannot change the currency once a document is created for this contact.
+																			</UncontrolledTooltip>
 																					</Label>
 																					<Select
 																						options={
@@ -1271,6 +1282,16 @@ class DetailContact extends React.Component {
 																				<FormGroup className="mb-3 hideTRN">
 																					<Label htmlFor="taxTreatmentId">
 																						<span className="text-danger">* </span>{strings.TaxTreatment}
+																						<i
+																				id="TaxTreatmenttip"
+																				className="fa fa-question-circle ml-1"
+																			></i>
+																			<UncontrolledTooltip
+																				placement="right"
+																				target="TaxTreatmenttip"
+																			>
+																				Once any document has been created for this contact, you cannot change the Tax treatment.
+																			</UncontrolledTooltip>
 																					</Label>
 																					<Select
 																						options={
@@ -1381,7 +1402,6 @@ class DetailContact extends React.Component {
 																						<br />
 																						<b>	<a target="_blank" rel="noopener noreferrer" href="https://eservices.tax.gov.ae/en-us/trn-verify" style={{ color: '#2266d8' }}  >{strings.VerifyTRN}</a></b>
 																					</div>
-																					<h5>Note: Once any document has been created for this contact, you cannot change the Tax treatment.</h5>
 																				</FormGroup>
 																			</Col>)}
 																		</Row>

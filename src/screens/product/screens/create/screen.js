@@ -611,7 +611,18 @@ try {
 															<Row>
 																<Col lg={4}>
 																	<FormGroup check inline className="mb-3">
-																		<Label className="productlabel">{strings.Type}</Label>
+																		<Label className="productlabel">{strings.Type}
+																		<i
+																				id="ProductTypetip"
+																				className="fa fa-question-circle ml-1"
+																			></i>
+																			<UncontrolledTooltip
+																				placement="right"
+																				target="ProductTypetip"
+																			>
+																				The product type cannot be changed after any document has been created using this product.
+																			</UncontrolledTooltip>
+																		</Label>
 																		<div className="wrapper">
 																			<Label
 																				className="form-check-label"

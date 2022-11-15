@@ -246,7 +246,7 @@ const en = {
       excise:"Excise",
 
 //Expenses
-      IsReverseCharge:"Is Reverse Charge",
+      IsReverseCharge:"Do you want to apply Reverse Charge to this?",
       ExpenseNumber:"Expense Number",
       InclusiveVAT:"Inclusive VAT",
       ExclusiveVAT:"Exclusive VAT",

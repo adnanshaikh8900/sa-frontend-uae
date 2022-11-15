@@ -278,7 +278,7 @@ const fr = {
       CreateSupplier:"Créer un fournisseur ",		
 
 //Expenses
-      IsReverseCharge:"Est l’autoliquidation",
+      IsReverseCharge:"Souhaitez-vous appliquer l'autoliquidation à cela ?",
       UnitPrice:"PRIX UNITAIRE",
       InclusiveVAT:"TVA incluse",
       ExclusiveVAT:"TVA exclue",

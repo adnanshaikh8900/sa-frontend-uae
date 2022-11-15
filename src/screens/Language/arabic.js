@@ -233,7 +233,7 @@ const ar = {
       CreateSupplier:"إنشاء المورد ",		
 
 //Expenses
-      IsReverseCharge:"هو الشحن العكسي",
+      IsReverseCharge:"هل تريد تطبيق الرسوم العكسية على ذلك؟",
       UnitPrice:"سعر الوحدة",
       InclusiveVAT:"شامل ضريبة القيمة المضافة",
       ExclusiveVAT:"ضريبة القيمة المضافة الحصرية",

@@ -246,7 +246,7 @@ const en = {
       excise:"Excise",
 
 //Expenses
-      IsReverseCharge:"Is Reverse Charge",
+      IsReverseCharge:"Do you want to apply Reverse Charge to this?",
       ExpenseNumber:"Expense Number",
       InclusiveVAT:"Inclusive VAT",
       ExclusiveVAT:"Exclusive VAT",
@@ -437,7 +437,7 @@ const en = {
 //Add Chart of Accounts
       NewChartAccount:"New Chart Account",		
       Name:"Name",		
-      Type:"Type",		
+      Type:"Product Type",		
       Chart_of_Account:"Chart of Account",
 
 //Contact

@@ -963,6 +963,7 @@ class CreateContact extends React.Component {
 																							)
 																							: []
 																					}
+																					isDisabled={this.state.childRecordsPresent}
 																					id="taxTreatmentId"
 																					name="taxTreatmentId"
 																					placeholder={strings.Select + strings.TaxTreatment}
@@ -1047,6 +1048,7 @@ class CreateContact extends React.Component {
 																					<br />
 																					<b>	<a target="_blank" rel="noopener noreferrer" href="https://eservices.tax.gov.ae/en-us/trn-verify" style={{ color: '#2266d8' }}  >{strings.VerifyTRN}</a></b>
 																				</div>
+																				<h5>Note: Once any document has been created for this contact, you cannot change the Tax treatment.</h5>
 																			</FormGroup>
 																		</Col>)}
 																	</Row>

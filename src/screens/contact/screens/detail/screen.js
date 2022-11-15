@@ -105,7 +105,8 @@ class DetailContact extends React.Component {
 			selectedStatus: false,
 			isActive: false,
 			loadingMsg: "Loading",
-			disableLeavePage:false
+			disableLeavePage:false,
+			childRecordsPresent:false
 		};
 
 		this.regEx = /^[0-9\d]+$/;
@@ -139,6 +140,7 @@ class DetailContact extends React.Component {
 					err.data ? err.data.message : 'ERROR',
 				);
 			});
+		
 	};
 
 	initializeData = () => {
@@ -320,6 +322,9 @@ class DetailContact extends React.Component {
 							isSame: res.data.isBillingAndShippingAddressSame
 						},
 						() => {
+							this.checkChildActivitiesForContactId(
+								this.state.current_contact_id
+							);
 							this.props.contactActions.getStateList(
 								this.state.initValue.countryId,
 							);
@@ -452,6 +457,18 @@ class DetailContact extends React.Component {
 		});
 	};
 
+	checkChildActivitiesForContactId = (id) => {
+		this.props.contactActions
+			.getInvoicesCountContact(this.state.current_contact_id)
+			.then((res) => {
+				if (res.data > 0) {
+				this.setState({childRecordsPresent:true})
+				} else {
+            this.setState({childRecordsPresent:false})
+				}
+			});
+	};
+	
 	deleteContact = () => {
 
 		const { current_contact_id } = this.state;
@@ -766,6 +783,7 @@ class DetailContact extends React.Component {
 																					<FormGroup check inline>
 																						<div className="custom-radio custom-control">
 																							<input
+																							// disabled={this.state.childRecordsPresent}
 																								className="custom-control-input"
 																								type="radio"
 																								id="inline-radio1"
@@ -796,6 +814,7 @@ class DetailContact extends React.Component {
 																					<FormGroup check inline>
 																						<div className="custom-radio custom-control">
 																							<input
+																							// disabled={this.state.childRecordsPresent}
 																								className="custom-control-input"
 																								type="radio"
 																								id="inline-radio2"
@@ -982,6 +1001,7 @@ class DetailContact extends React.Component {
 																								props.handleChange('contactType')('');
 																							}
 																						}}
+																						isDisabled={this.state.childRecordsPresent}
 																						placeholder={strings.Select + strings.ContactType}
 																						id="contactType"
 																						name="contactType"
@@ -1113,6 +1133,7 @@ class DetailContact extends React.Component {
 																								);
 																							}
 																						}}
+																						isDisabled={this.state.childRecordsPresent}
 																						placeholder={strings.Select + strings.Currency}
 																						id="currencyCode"
 																						name="currencyCode"
@@ -1182,7 +1203,7 @@ class DetailContact extends React.Component {
 																						<PhoneInput
 																							id="mobileNumber"
 																							name="mobileNumber"
-																							country={"ae"}
+																							// country={"ae"}
 																							enableSearch={true}
 																							value={props.values.mobileNumber}
 																							placeholder={strings.Enter + strings.MobileNumber}
@@ -1193,7 +1214,7 @@ class DetailContact extends React.Component {
 																								);
 																								// option.length !== 12 ? this.setState({ checkmobileNumberParam: true }) : this.setState({ checkmobileNumberParam: false });
 																							}}
-																							isValid
+																							// isValid
 																						// className={
 																						// 	props.errors.mobileNumber &&
 																						// 	props.touched.mobileNumber
@@ -1244,8 +1265,10 @@ class DetailContact extends React.Component {
 
 																				</FormGroup>
 																			</Col>
+																	
+																{/* Hidden by Shoaib for Multi-country */}
 																			<Col lg={4}>
-																				<FormGroup className="mb-3">
+																				<FormGroup className="mb-3 hideTRN">
 																					<Label htmlFor="taxTreatmentId">
 																						<span className="text-danger">* </span>{strings.TaxTreatment}
 																					</Label>
@@ -1260,6 +1283,7 @@ class DetailContact extends React.Component {
 																								)
 																								: []
 																						}
+																						isDisabled={this.state.childRecordsPresent}
 																						id="taxTreatmentId"
 																						name="taxTreatmentId"
 																						placeholder={strings.Select + strings.TaxTreatment}
@@ -1314,6 +1338,7 @@ class DetailContact extends React.Component {
 																						)}
 																				</FormGroup>
 																			</Col>
+																	
 																			{props.values.taxTreatmentId && props.values.taxTreatmentId && (<Col md="4" style={{ display: props.values.taxTreatmentId === 1 || props.values.taxTreatmentId === 3 || props.values.taxTreatmentId === 5 ? '' : 'none' }}>
 																				<FormGroup>
 																					<Label htmlFor="vatRegistrationNumber"><span className="text-danger">* </span>
@@ -1333,7 +1358,6 @@ class DetailContact extends React.Component {
 																								props.handleChange(
 																									'vatRegistrationNumber',
 																								)(option);
-
 																								if (this.state.existingTrn != option.target.value)
 																									this.validationCheck(option.target.value)
 																							}
@@ -1353,9 +1377,11 @@ class DetailContact extends React.Component {
 																							</div>
 																						)}
 																					<div className="VerifyTRN">
+																					
 																						<br />
 																						<b>	<a target="_blank" rel="noopener noreferrer" href="https://eservices.tax.gov.ae/en-us/trn-verify" style={{ color: '#2266d8' }}  >{strings.VerifyTRN}</a></b>
 																					</div>
+																					<h5>Note: Once any document has been created for this contact, you cannot change the Tax treatment.</h5>
 																				</FormGroup>
 																			</Col>)}
 																		</Row>

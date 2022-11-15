@@ -387,7 +387,7 @@ const ar = {
       POSTDATE:"تاريخ النشر",		
       PostDate:"تاريخ النشر",
       JOURNALREFERENCENO:"رقم مرجع دفتر اليومية",		
-      TYPE:"نوع",		
+      TYPE:"نوع المنتج",		
       TRANSACTIONTYPE:"نوع المعاملة",
       NOTES:"تلاحظ",
       ACCOUNT:"حساب",		

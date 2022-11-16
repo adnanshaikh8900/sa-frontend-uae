@@ -1264,7 +1264,6 @@ class CreateSupplierInvoice extends React.Component {
 						pt.id=res.data.productID;
 						pt.type=res.data.productType
 						if(this.state.isRegisteredVat){
-							console.log(this.state.isReverseChargeEnabled,'this.state.isReverseChargeEnabled');
 							if(this.state.isDesignatedZone ){
 								if(this.state.isReverseChargeEnabled){
 									if(res.data.productType=== "GOODS" ){
@@ -1315,7 +1314,7 @@ class CreateSupplierInvoice extends React.Component {
 								}else{
 									if(res.data.productType=== "GOODS" ){
 										if(this.state.customer_taxTreatment_des==='VAT REGISTERED' ){
-											vt=vat_list;
+											vt=vat_list.filter((obj) => obj.id !== 10);
 										}
 										if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE' ||this.state.customer_taxTreatment_des==='NON-VAT REGISTERED'||this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
 											vat_list.map(element => {
@@ -1327,7 +1326,7 @@ class CreateSupplierInvoice extends React.Component {
 									}
 									else if(res.data.productType === "SERVICE"){
 										if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE'){
-											vt=vat_list;
+											vt=vat_list.filter((obj) => obj.id !== 10);
 										}
 										if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
 											vat_list.map(element => {
@@ -1365,7 +1364,7 @@ class CreateSupplierInvoice extends React.Component {
 								}else{
 									if(res.data.productType=== "GOODS" ){
 										if(this.state.customer_taxTreatment_des==='VAT REGISTERED' ){
-											vt=vat_list;
+											vt=vat_list.filter((obj) => obj.id !== 10);
 										}
 										if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE' ||this.state.customer_taxTreatment_des==='NON-VAT REGISTERED'||this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
 											vat_list.map(element => {
@@ -1377,7 +1376,7 @@ class CreateSupplierInvoice extends React.Component {
 									}
 									else if(res.data.productType === "SERVICE"){
 										if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' ){
-											vt=vat_list;
+											vt=vat_list.filter((obj) => obj.id !== 10);
 										}
 										if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE' ||this.state.customer_taxTreatment_des==='NON-VAT REGISTERED'||this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
 											vat_list.map(element => {
@@ -1617,7 +1616,6 @@ class CreateSupplierInvoice extends React.Component {
 				obj['unitTypeId']=result.unitTypeId;
 				idx = index;
 				if(this.state.isRegisteredVat){
-					console.log("vat registered");
 					this.state.producttype.map(element => {
 						if(element.id===e){
 							const found = element.vat_list.find(element => element.id === result.vatCategoryId);
@@ -2282,7 +2280,6 @@ class CreateSupplierInvoice extends React.Component {
 								},}
 							});
 							this.getInvoiceNo();
-							console.log(this.state.data,"State Data");
 							this.formRef.current.setFieldValue(
 								'lineItemsString',
 								this.state.data,
@@ -3564,6 +3561,10 @@ class CreateSupplierInvoice extends React.Component {
 														</Row>
 														<Row className="ml-4">
 															<Col className="ml-4">
+														{ (this.state.isDesignatedZone && this.state.customer_taxTreatment_des !== 'NON-VAT REGISTERED' && this.state.customer_taxTreatment_des !== "NON-VAT REGISTERED DESIGNATED ZONE" && this.state.customer_taxTreatment_des !== "VAT REGISTERED" && this.state.customer_taxTreatment_des !== "VAT REGISTERED DESIGNATED ZONE")
+															|| (!this.state.isDesignatedZone && this.state.customer_taxTreatment_des !== "VAT REGISTERED DESIGNATED ZONE" )
+														 ? <FormGroup className="mb-3">
+
 																<Input
 																	type="checkbox"
 																	id="isReverseChargeEnabled"
@@ -3574,6 +3575,8 @@ class CreateSupplierInvoice extends React.Component {
 																	}}
 																/>
 																<Label>{strings.IsReverseCharge}</Label>
+														</FormGroup>: '' }
+
 															</Col>
 															
 															<Col className=" ml-4">

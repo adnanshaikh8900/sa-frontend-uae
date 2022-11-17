@@ -182,6 +182,8 @@ class CreateSupplierInvoice extends React.Component {
 			isDesignatedZone:false,
 			isRegisteredVat:false,
 			producttype:[],
+			customer_taxTreatment: '',
+			customer_taxTreatment_des:'',
 			vat_list:[
 				{
 					"id": 1,
@@ -1222,70 +1224,184 @@ class CreateSupplierInvoice extends React.Component {
 				console.log(err,"Get Company Type Error");
 			});
 	};
-	getProductType=(id)=>{
+	UpdateProductVatList=()=>{
+		const { product_list } = this.props;
 		if(this.state.customer_taxTreatment_des){
-			this.props.supplierInvoiceCreateActions
-			.getProductById(id)
-			.then((res) => {
-				if (res.status === 200) {
-					var { vat_list } = this.props;
-					let pt={};
-					var vt=[];
-					pt.id=res.data.productID;
-					pt.type=res.data.productType
-					if(this.state.isRegisteredVat){
-						if(this.state.isDesignatedZone ){
-							if(res.data.productType=== "GOODS" ){
-								if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
-									vat_list.map(element => {
-										if(element.name=='OUT OF SCOPE'){
-											vt.push(element);
-										}
-									});
-								}
-								if(this.state.customer_taxTreatment_des==='NON-VAT REGISTERED'){
-									vt=vat_list;
-								}
+			product_list.map(element => {
+				this.props.supplierInvoiceCreateActions
+				.getProductById(element.id)
+				.then((res) => {
+					if (res.status === 200) {
+						var vat_list = [
+							{
+								"id": 1,
+								"vat": 5,
+								"name": "STANDARD RATED TAX (5%) "
+							},
+							{
+								"id": 2,
+								"vat": 0,
+								"name": "ZERO RATED TAX (0%)"
+							},
+							{
+								"id": 3,
+								"vat": 0,
+								"name": "EXEMPT"
+							},
+							{
+								"id": 4,
+								"vat": 0,
+								"name": "OUT OF SCOPE"
+							},
+							{
+								"id": 10,
+								"vat": 0,
+								"name": "N/A"
 							}
-							else if(res.data.productType === "SERVICE"){
-								if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE'){
-									vt=vat_list;
-								}
-								if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
-									vat_list.map(element => {
-										if(element.name=='ZERO RATED TAX (0%)'){
-											vt.push.push(element);
+						]
+						let pt={};
+						var vt=[];
+						pt.id=res.data.productID;
+						pt.type=res.data.productType
+						if(this.state.isRegisteredVat){
+							if(this.state.isDesignatedZone ){
+								if(this.state.isReverseChargeEnabled){
+									if(res.data.productType=== "GOODS" ){
+										if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE' ||this.state.customer_taxTreatment_des==='NON-VAT REGISTERED' ){
+											vat_list.map(element => {
+												if(element.name==='N/A'){
+													vt.push(element);
+												}
+											});
 										}
-									});
-									
-								}	
+										if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED'){
+											vat_list.map(element => {
+												if(element.name=='STANDARD RATED TAX (5%) '){
+													vt.push(element);
+												}
+												if(element.name==='ZERO RATED TAX (0%)'){
+													vt.push(element);
+												}
+											});
+										}
+										if(this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+											vat_list.map(element => {
+												if(element.name==='EXEMPT'){
+													vt.push(element);
+												}
+											});
+										}
+									}
+									else if(res.data.productType === "SERVICE"){
+										if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE' ||this.state.customer_taxTreatment_des==='NON-VAT REGISTERED' ){
+											vat_list.map(element => {
+												if(element.name==='N/A'){
+													vt.push(element);
+												}
+											});
+										}
+										if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+											vat_list.map(element => {
+												if(element.name=='STANDARD RATED TAX (5%) '){
+													vt.push(element);
+												}
+												if(element.name==='ZERO RATED TAX (0%)'){
+													vt.push(element);
+												}
+											});
+										}
+									}
+								}else{
+									if(res.data.productType=== "GOODS" ){
+										if(this.state.customer_taxTreatment_des==='VAT REGISTERED' ){
+											vt=vat_list.filter((obj) => obj.id !== 10);
+										}
+										if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE' ||this.state.customer_taxTreatment_des==='NON-VAT REGISTERED'||this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+											vat_list.map(element => {
+												if(element.name==='OUT OF SCOPE'){
+													vt.push(element);
+												}
+											});
+										}
+									}
+									else if(res.data.productType === "SERVICE"){
+										if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE'){
+											vt=vat_list.filter((obj) => obj.id !== 10);
+										}
+										if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+											vat_list.map(element => {
+												if(element.name==='EXEMPT'){
+													vt.push(element);
+												}
+											});
+										}
+										if(this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED'){
+											vat_list.map(element => {
+												if(element.name==='OUT OF SCOPE'){
+													vt.push(element);
+												}
+											});
+										}
+									}
+
+								}
+							}else{
+								if(this.state.isReverseChargeEnabled){
+									if(this.state.customer_taxTreatment_des==='VAT REGISTERED DESIGNATED ZONE' ){
+										vat_list.map(element => {
+											if(element.name==='N/A'){
+												vt.push(element);
+											}
+										});
+									}
+									if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE' ||this.state.customer_taxTreatment_des==='NON-VAT REGISTERED'||this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+										vat_list.map(element => {
+											if(element.name==='OUT OF SCOPE'){
+												vt.push(element);
+											}
+										});
+									}
+								}else{
+									if(res.data.productType=== "GOODS" ){
+										if(this.state.customer_taxTreatment_des==='VAT REGISTERED' ){
+											vt=vat_list.filter((obj) => obj.id !== 10);
+										}
+										if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE' ||this.state.customer_taxTreatment_des==='NON-VAT REGISTERED'||this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+											vat_list.map(element => {
+												if(element.name==='EXEMPT'){
+													vt.push(element);
+												}
+											});
+										}
+									}
+									else if(res.data.productType === "SERVICE"){
+										if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' ){
+											vt=vat_list.filter((obj) => obj.id !== 10);
+										}
+										if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE' ||this.state.customer_taxTreatment_des==='NON-VAT REGISTERED'||this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+											vat_list.map(element => {
+												if(element.name==='EXEMPT'){
+													vt.push(element);
+												}
+											});
+										}
+									}
+								}
 							}
 						}else{
-							if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE'){
-								vt=vat_list;
-							}
-							if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
-								vat_list.map(element => {
-									if(element.name=='ZERO RATED TAX (0%)'){
-										vt.push(element);
-									}
-								});
-								
-							}	
+							vt=vat_list;
 						}
-					}else{
-						vt=vat_list;
+						pt.vat_list=vt;
+						this.setState(prevState => ({
+							producttype: [...prevState.producttype, pt]
+						}));
 					}
-					pt.vat_list=vt;
-					this.setState(prevState => ({
-						producttype: [...prevState.producttype, pt]
-					}));
-				}
-		})
-		.catch((err) => {
-			console.log(err,"Get Product by ID Error");
-		});
-	}
+				})
+				.catch((err) => {
+					console.log(err,"Get Product by ID Error");
+				});
+			});
+		}
 	};
 	renderVat = (cell, row, props) => {
 		//const { vat_list } = this.props;
@@ -1500,7 +1616,6 @@ class CreateSupplierInvoice extends React.Component {
 				obj['unitTypeId']=result.unitTypeId;
 				idx = index;
 				if(this.state.isRegisteredVat){
-					console.log("vat registered");
 					this.state.producttype.map(element => {
 						if(element.id===e){
 							const found = element.vat_list.find(element => element.id === result.vatCategoryId);
@@ -1568,14 +1683,10 @@ class CreateSupplierInvoice extends React.Component {
 	};
 
 	renderProduct = (cell, row, props) => {
-		const { product_list } = this.props;
-		if(product_list.length>0){
-			if(product_list.length > this.state.producttype.length){
-				product_list.map(element => {
-					this.getProductType(element.id);
-				});
-			}
+		if(this.state.producttype?.length === 0){
+			this.UpdateProductVatList();
 		}
+		const { product_list } = this.props;
 		let idx;
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -2169,7 +2280,6 @@ class CreateSupplierInvoice extends React.Component {
 								},}
 							});
 							this.getInvoiceNo();
-							console.log(this.state.data,"State Data");
 							this.formRef.current.setFieldValue(
 								'lineItemsString',
 								this.state.data,
@@ -2435,14 +2545,11 @@ class CreateSupplierInvoice extends React.Component {
 				this.setState({
 					customer_taxTreatment: item.label.taxTreatment.id,
 					customer_taxTreatment_des: item.label.taxTreatment.taxTreatment,
-					// customer_currency_symbol: item.label.currency.currencyIsoCode,
 				});
-
 				customer_taxTreatmentId = item.label.taxTreatment.id;
-				customer_item_taxTreatment = item.label.currency
+				customer_item_taxTreatment = item.label.currency;
 			}
 		})
-
 		return customer_taxTreatmentId;
 	}
 
@@ -2754,9 +2861,11 @@ class CreateSupplierInvoice extends React.Component {
 																					contactId : option.value
 																				})
 																			} else {
-
 																				props.handleChange('contactId')('');
 																			}
+																			this.setState({
+																				producttype: []
+																			});
 																		}}
 																		className={
 																			props.errors.contactId &&
@@ -2842,6 +2951,7 @@ class CreateSupplierInvoice extends React.Component {
 																					: ''
 																			}
 																			onChange={(option) => {
+																				alert("hj");
 																				props.handleChange('taxTreatmentid')(option);
 
 																			}}
@@ -3451,15 +3561,22 @@ class CreateSupplierInvoice extends React.Component {
 														</Row>
 														<Row className="ml-4">
 															<Col className="ml-4">
+														{ (this.state.isDesignatedZone && this.state.customer_taxTreatment_des !== 'NON-VAT REGISTERED' && this.state.customer_taxTreatment_des !== "NON-VAT REGISTERED DESIGNATED ZONE" && this.state.customer_taxTreatment_des !== "VAT REGISTERED" && this.state.customer_taxTreatment_des !== "VAT REGISTERED DESIGNATED ZONE")
+															|| (!this.state.isDesignatedZone && this.state.customer_taxTreatment_des !== "VAT REGISTERED DESIGNATED ZONE" )
+														 ? <FormGroup className="mb-3">
+
 																<Input
 																	type="checkbox"
 																	id="isReverseChargeEnabled"
 																	checked={this.state.isReverseChargeEnabled}
 																	onChange={(option) => {
 																		this.setState({ isReverseChargeEnabled: !this.state.isReverseChargeEnabled })
+																		this.setState({producttype:[]})
 																	}}
 																/>
 																<Label>{strings.IsReverseCharge}</Label>
+														</FormGroup>: '' }
+
 															</Col>
 															
 															<Col className=" ml-4">

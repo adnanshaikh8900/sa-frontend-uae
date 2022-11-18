@@ -1349,7 +1349,10 @@ class CreateSupplierInvoice extends React.Component {
 									}
 									if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE' ||this.state.customer_taxTreatment_des==='NON-VAT REGISTERED'||this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
 										vat_list.map(element => {
-											if(element.name==='OUT OF SCOPE'){
+											if(element.name=='STANDARD RATED TAX (5%) '){
+												vt.push(element);
+											}
+											if(element.name==='ZERO RATED TAX (0%)'){
 												vt.push(element);
 											}
 										});

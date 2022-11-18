@@ -1274,19 +1274,12 @@ class CreateSupplierInvoice extends React.Component {
 												}
 											});
 										}
-										if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED'){
+										if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
 											vat_list.map(element => {
 												if(element.name=='STANDARD RATED TAX (5%) '){
 													vt.push(element);
 												}
 												if(element.name==='ZERO RATED TAX (0%)'){
-													vt.push(element);
-												}
-											});
-										}
-										if(this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
-											vat_list.map(element => {
-												if(element.name==='EXEMPT'){
 													vt.push(element);
 												}
 											});
@@ -1605,7 +1598,6 @@ class CreateSupplierInvoice extends React.Component {
 		data.map((obj, index) => {
 			if (obj.id === row.id) {
 				obj['unitPrice'] = (parseFloat(result.unitPrice)*(1/exchangeRate)).toFixed(0)
-				obj['vatCategoryId'] = result.vatCategoryId;
 				obj['exciseTaxId'] = result.exciseTaxId;
 				obj['description'] = result.description;
 				obj['discountType'] = result.discountType;
@@ -1621,6 +1613,9 @@ class CreateSupplierInvoice extends React.Component {
 							const found = element.vat_list.find(element => element.id === result.vatCategoryId);
 							if(!found){
 								obj['vatCategoryId']='';
+							}
+							else{
+								obj['vatCategoryId'] = result.vatCategoryId;
 							}
 							return found;
 						}

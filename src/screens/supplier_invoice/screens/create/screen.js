@@ -1427,7 +1427,7 @@ class CreateSupplierInvoice extends React.Component {
 								: []
 						}
 						value={
-							row.vatlist &&
+							vat_list &&
 							selectOptionsFactory
 								.renderOptions('name', 'id', vat_list, 'VAT')
 								.find((option) => option.value == row.vatCategoryId)
@@ -1679,6 +1679,7 @@ class CreateSupplierInvoice extends React.Component {
 
 	renderProduct = (cell, row, props) => {
 		if(this.state.producttype?.length === 0){
+			console.log(this.state.producttype,this.state.producttype?.length,"Render Product change product type");
 			this.UpdateProductVatList();
 		}
 		const { product_list } = this.props;
@@ -2861,6 +2862,7 @@ class CreateSupplierInvoice extends React.Component {
 																			this.setState({
 																				producttype: []
 																			});
+																			console.log(this.state.producttype,"Customer change product type");
 																		}}
 																		className={
 																			props.errors.contactId &&

@@ -37,6 +37,7 @@ import moment from 'moment';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import Switch from "react-switch";
+import { L } from 'react-ladda/dist/constants';
 
 const mapStateToProps = (state) => {
 	return {
@@ -1399,6 +1400,22 @@ class CreateSupplierInvoice extends React.Component {
 			});
 		}
 	};
+	resetVatId = (props) => {
+		this.setState({
+			producttype: [],
+		});
+		let newData = [];
+		const data = this.state.data;
+		data.map((obj,index) => {
+			if(obj.productId){
+				obj['vatCategoryId'] = '' ;
+				newData.push(obj);
+				return obj;
+			}
+		})
+		props.setFieldValue('lineItemsString', newData, true);
+		this.updateAmount(newData, props);
+	};
 	renderVat = (cell, row, props) => {
 		//const { vat_list } = this.props;
 		let vat_list=[];
@@ -1682,7 +1699,6 @@ class CreateSupplierInvoice extends React.Component {
 
 	renderProduct = (cell, row, props) => {
 		if(this.state.producttype?.length === 0){
-			console.log(this.state.producttype,this.state.producttype?.length,"Render Product change product type");
 			this.UpdateProductVatList();
 		}
 		const { product_list } = this.props;
@@ -2862,10 +2878,7 @@ class CreateSupplierInvoice extends React.Component {
 																			} else {
 																				props.handleChange('contactId')('');
 																			}
-																			this.setState({
-																				producttype: []
-																			});
-																			console.log(this.state.producttype,"Customer change product type");
+																			this.resetVatId(props);
 																		}}
 																		className={
 																			props.errors.contactId &&
@@ -3571,7 +3584,7 @@ class CreateSupplierInvoice extends React.Component {
 																	checked={this.state.isReverseChargeEnabled}
 																	onChange={(option) => {
 																		this.setState({ isReverseChargeEnabled: !this.state.isReverseChargeEnabled })
-																		this.setState({producttype:[]})
+																		this.resetVatId(props);
 																	}}
 																/>
 																<Label>{strings.IsReverseCharge}</Label>

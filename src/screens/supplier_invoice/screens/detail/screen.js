@@ -1077,6 +1077,24 @@ class DetailSupplierInvoice extends React.Component {
 			});
 		}
 	};
+	resetVatId = (props) => {
+		this.setState({
+			producttype: [],
+		});
+		let newData = [];
+		const data = this.state.data;
+		console.log(data);
+		let length = data.length;
+		data.map((obj,index) => {
+			if(obj.productId){
+				obj['vatCategoryId'] = '' ;
+				newData.push(obj);
+				return obj;
+			}
+		})
+		props.setFieldValue('lineItemsString', newData, true);
+		this.updateAmount(newData, props);
+	};
 	renderVat = (cell, row, props) => {
 		//const { vat_list } = this.state;
 		let vat_list=[];
@@ -1112,7 +1130,7 @@ class DetailSupplierInvoice extends React.Component {
 							vat_list &&
 							selectOptionsFactory
 								.renderOptions('name', 'id', vat_list, 'VAT')
-								.find((option) => option.value === +row.vatCategoryId)
+								.find((option) => option.value == row.vatCategoryId)
 						}
 						id="vatCategoryId"
 						placeholder={strings.Select+strings.VAT}
@@ -1493,26 +1511,25 @@ class DetailSupplierInvoice extends React.Component {
 				obj.vatCategoryId !== ''
 					? vat_list?.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
-					const vat = index !== '' && index >=0 ? vat_list[`${index}`].vat : 0;
+			const vat = index !== '' && index >=0 ? vat_list[`${index}`].vat : 0;
 
 			//Exclusive case
 			if(this.state.taxType === false){
 				if (obj.discountType === 'PERCENTAGE') {	
-					 net_value =
+					net_value =
 						((+obj.unitPrice -
 							(+((obj.unitPrice * obj.discount)) / 100)) * obj.quantity);
 					var discount =  (obj.unitPrice * obj.quantity) - net_value
 				if(obj.exciseTaxId !=  0){
 					if(obj.exciseTaxId === 1){
 						const value = +(net_value) / 2 ;
-							net_value = parseFloat(net_value) + parseFloat(value) ;
-							obj.exciseAmount = parseFloat(value);
-						}else if (obj.exciseTaxId === 2){
-							const value = net_value;
-							net_value = parseFloat(net_value) +  parseFloat(value) ;
-							obj.exciseAmount = parseFloat(value);
-						}
-						
+						net_value = parseFloat(net_value) + parseFloat(value) ;
+						obj.exciseAmount = parseFloat(value);
+					}else if (obj.exciseTaxId === 2){
+						const value = net_value;
+						net_value = parseFloat(net_value) +  parseFloat(value) ;
+						obj.exciseAmount = parseFloat(value);
+					}					
 				}
 				else{
 					obj.exciseAmount = 0
@@ -1534,7 +1551,6 @@ class DetailSupplierInvoice extends React.Component {
 									net_value = parseFloat(net_value) +  parseFloat(value) ;
 									obj.exciseAmount = parseFloat(value);
 								}
-								
 						}
 						else{
 							obj.exciseAmount = 0
@@ -1621,7 +1637,7 @@ class DetailSupplierInvoice extends React.Component {
 					}
 			}
 						
-			obj.vatAmount = vat_amount
+			obj.vatAmount = vat_amount;
 			obj.subTotal =
 			net_value ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
 			discount_total = +discount_total +discount
@@ -2244,9 +2260,7 @@ class DetailSupplierInvoice extends React.Component {
 																				} else {
 																					props.handleChange('contactId')('');
 																				}
-																				this.setState({
-																					producttype: []
-																				});
+																				this.resetVatId(props);
 																			}}
 																			className={
 																				props.errors.contactId &&
@@ -2869,7 +2883,7 @@ class DetailSupplierInvoice extends React.Component {
                                                                 id="isReverseChargeEnabled"
                                                                 checked={this.state.isReverseChargeEnabled}
                                                                 onChange={(option)=>{
-																		this.setState({producttype:[]})
+																		this.resetVatId(props);
 																		this.setState({isReverseChargeEnabled:!this.state.isReverseChargeEnabled})
                                                                 }}
                                                             /> 

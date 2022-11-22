@@ -1249,6 +1249,22 @@ getProductType=(id)=>{
 	});
 }
 };
+resetVatId = (props) => {
+	this.setState({
+		producttype: [],
+	});
+	let newData = [];
+	const data = this.state.data;
+	data.map((obj,index) => {
+		if(obj.productId){
+			obj['vatCategoryId'] = '' ;
+			newData.push(obj);
+			return obj;
+		}
+	})
+	props.setFieldValue('lineItemsString', newData, true);
+	this.updateAmount(newData, props);
+};
 	renderVat = (cell, row, props) => {
 	//	const { vat_list } = this.props;
 		let vat_list=[];
@@ -1263,6 +1279,10 @@ getProductType=(id)=>{
 			}
 			return obj;
 		});
+		if(row.productId && row.vatCategoryId)
+		{
+			row.vatCategoryId=typeof(row.vatCategoryId) === 'string' ? parseInt(row.vatCategoryId):row.vatCategoryId;
+		}
 
 		return (
 			<Field
@@ -1284,7 +1304,7 @@ getProductType=(id)=>{
 							vat_list &&
 							selectOptionsFactory
 								.renderOptions('name', 'id', vat_list, 'VAT')
-								.find((option) => option.value === +row.vatCategoryId)
+								.find((option) => option.value === row.vatCategoryId)
 						}
 						id="vatCategoryId"
 						placeholder={strings.Select+strings.VAT}
@@ -1951,7 +1971,6 @@ getProductType=(id)=>{
 			formData.append('footNote',footNote? footNote : '')
 			formData.append('type', 2);
 			const local=[...this.state.data.map(({taxtreatment,...rest})=>rest)]
-			console.log( JSON.stringify(local),"product data");
 			formData.append('lineItemsString', JSON.stringify(local));
 			formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
 			formData.append('totalAmount', this.state.initValue.totalAmount);
@@ -2690,6 +2709,7 @@ getProductType=(id)=>{
 																			} else {
 																				props.handleChange('contactId')('');
 																			}
+																			this.resetVatId(props);
 																		}}
 																		className={
 																			props.errors.contactId &&
@@ -4039,7 +4059,6 @@ getProductType=(id)=>{
 																		className="btn-square mr-3"
 																		disabled={this.state.disabled}
 																		onClick={() => {
-																			console.log(this.state,"STATE DATA");
 																			if(this.state.data.length === 1)
 																				{
 																				//	added validation popup	msg

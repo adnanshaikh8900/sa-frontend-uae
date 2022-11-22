@@ -2100,7 +2100,7 @@ resetVatId = (props) => {
 												// 	) 
 												// 	  errors.placeOfSupplyId ='Place of supply is required';
 												//    }
-												if(this.state.customer_taxTreatment_des!="NON GCC")
+												if(this.state.customer_taxTreatment_des!="NON GCC" && this.state.customer_taxTreatment_des!="GCC NON-VAT REGISTERED" && this.state.customer_taxTreatment_des!="GCC VAT REGISTERED")
 												{
 													if (!values.placeOfSupplyId) 
 																   errors.placeOfSupplyId ='Place of supply is required';
@@ -2299,6 +2299,7 @@ resetVatId = (props) => {
 																		// 	}
 																		// }}
 																		onChange={(option) => {
+																			console.log(this.props.supplier_list);
 																			if (option && option.value) {
 																				this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
 																				this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(option.value), true);
@@ -2383,7 +2384,8 @@ resetVatId = (props) => {
 																</FormGroup>
 															</Col>: ''}
 															<Col lg={3}>
-															{this.state.customer_taxTreatment_des!="NON GCC" &&(<FormGroup className="mb-3">
+															{this.state.customer_taxTreatment_des !== "NON GCC" && this.state.customer_taxTreatment_des !== "GCC VAT REGISTERED" && this.state.customer_taxTreatment_des !== "GCC NON-VAT REGISTERED" &&
+																(<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">
 																		<span className="text-danger">* </span>
 																		{/* {this.state.customer_taxTreatment_des &&

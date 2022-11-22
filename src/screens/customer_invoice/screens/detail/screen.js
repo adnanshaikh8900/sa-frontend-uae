@@ -131,7 +131,7 @@ class DetailCustomerInvoice extends React.Component {
 			shippingFax:'',
 			loadingMsg:"Loading",
 			disableLeavePage:false, 
-		datesChanged : false	};
+			datesChanged : false	};
 
 		// this.options = {
 		//   paginationPosition: 'top'
@@ -1257,7 +1257,8 @@ class DetailCustomerInvoice extends React.Component {
 		}
 	};
 	updateAmount = (data, props) => {
-		const { vat_list } = this.state;
+		const { vat_list } = this.state.vat_list;
+		console.log(vat_list);
 		let total_net = 0;
 		let total_excise = 0;
 		let total = 0;
@@ -1270,7 +1271,7 @@ class DetailCustomerInvoice extends React.Component {
 		data.map((obj) => {
 			let unitprice=obj.unitPrice
 			const index =
-				obj.vatCategoryId !== ''
+				obj.vatCategoryId !== '' && vat_list
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
 			const vat = index !== '' && index >= 0? vat_list[`${index}`].vat : 0;

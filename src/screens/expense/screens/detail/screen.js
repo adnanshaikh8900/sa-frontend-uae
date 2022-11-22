@@ -1589,7 +1589,7 @@ class DetailExpense extends React.Component {
 																										props.handleChange('vatCategoryId')('');
 																	}}
 															/>
-															<Label>Reverse Charge</Label>
+															<Label>{strings.IsReverseCharge}</Label>
 															</Col>)}
 														</Row>
 															<hr />

@@ -101,6 +101,7 @@ class CreateContact extends React.Component {
 				shippingPoBoxNumber: '',
 				taxTreatmentId: '',
 			},
+			country_list:[],
 			state_list_for_shipping: [],
 			createMore: false,
 			checkmobileNumberParam: false,
@@ -258,6 +259,47 @@ class CreateContact extends React.Component {
 				);
 			});
 	};
+	resetCountryList= (taxtid ,props) =>{
+		const{country_list}=this.props;
+		let list=[];
+		if(taxtid === 7 || taxtid === 5 || taxtid === 6){
+			country_list.map( (obj) => {
+				if((taxtid === 6 || taxtid === 5) && (obj.countryCode === 229 || obj.countryCode === 191 || obj.countryCode === 178 ||
+					obj.countryCode === 165 || obj.countryCode === 117 || obj.countryCode === 17)){
+					list.push(obj);
+				}
+				if((taxtid === 7) && (obj.countryCode !== 229 && obj.countryCode !== 191 && obj.countryCode !== 178 &&
+					obj.countryCode !== 165 && obj.countryCode !== 117 && obj.countryCode !== 17)){
+					list.push(obj);
+				}
+			});
+			props.handleChange('billingcountryId')('');
+			props.handleChange('shippingCountryId')('');
+			this.getStateList('');
+			props.handleChange('stateId')({
+				label: 'Select State',
+				value: '',
+			});
+		}
+		else{
+			list = country_list;	
+			props.handleChange('billingcountryId')(country_list && selectOptionsFactory.renderOptions(
+				'countryName',
+				'countryCode',
+				country_list,
+				'Country',
+			).find((option) => option.value === 229));
+			props.handleChange('shippingCountryId')(country_list && selectOptionsFactory.renderOptions(
+				'countryName',
+				'countryCode',
+				country_list,
+				'Country',
+			).find((option) => option.value === 229));
+			this.getStateListForShippingAddress(229);
+			this.getStateList(229);
+		}
+		this.setState({country_list : list });
+	};
 	validationCheck = (value) => {
 		const data = {
 			moduleType: 21,
@@ -305,10 +347,10 @@ class CreateContact extends React.Component {
 		strings.setLanguage(this.state.language);
 		const {
 			currency_list,
-			country_list,
 			contact_type_list,
 			state_list,
 		} = this.props;
+		const {country_list} = this.state.country_list;
 		const { initValue, checkmobileNumberParam, taxTreatmentList, isSame, state_list_for_shipping } = this.state;
 		const { loading, loadingMsg } = this.state;
 
@@ -993,6 +1035,7 @@ class CreateContact extends React.Component {
 																						// this.setState({
 																						//   selectedVatCategory: option.value
 																						// })
+																						this.resetCountryList(option.value, props);
 																						if (option && option.value) {
 
 																							props.handleChange('taxTreatmentId')(
@@ -1119,15 +1162,16 @@ class CreateContact extends React.Component {
 																				<Label htmlFor="billingcountryId"><span className="text-danger">* </span>{strings.Country}</Label>
 																				<Select
 																					options={
-																						country_list
+																						this.state.country_list
 																							? selectOptionsFactory.renderOptions(
 																								'countryName',
 																								'countryCode',
-																								country_list,
+																								this.state.country_list,
 																								'Country',
 																							)
 																							: []
 																					}
+																					isDisabled = {props.values.taxTreatmentId.value === 1 || props.values.taxTreatmentId.value === 2 || props.values.taxTreatmentId.value === 3 || props.values.taxTreatmentId.value === 4}
 																					value={props.values.billingcountryId}
 																					onChange={(option) => {
 																						if (option && option.value) {
@@ -1557,22 +1601,22 @@ class CreateContact extends React.Component {
 																				<Label htmlFor="shippingCountryId"><span className="text-danger">* </span>{strings.Country}</Label>
 																				<Select
 																					options={
-																						country_list
+																						this.state.country_list
 																							? selectOptionsFactory.renderOptions(
 																								'countryName',
 																								'countryCode',
-																								country_list,
+																								this.state.country_list,
 																								'Country',
 																							)
 																							: []
 																					}
 																					value={
-																						country_list &&
+																						this.state.country_list &&
 																						selectOptionsFactory
 																							.renderOptions(
 																								'countryName',
 																								'countryCode',
-																								country_list,
+																								this.state.country_list,
 																								'Country',
 																							)
 																							.find(
@@ -1581,6 +1625,7 @@ class CreateContact extends React.Component {
 																									+props.values.shippingCountryId.value,
 																							)
 																					}
+																					isDisabled = {props.values.taxTreatmentId.value === 1 || props.values.taxTreatmentId.value === 2 || props.values.taxTreatmentId.value === 3 || props.values.taxTreatmentId.value === 4}
 																					onChange={(option) => {
 																						if (option && option.value) {
 																							props.handleChange('shippingCountryId')(option);

@@ -115,6 +115,9 @@ class DetailSupplierInvoice extends React.Component {
 			disabled1:false,
 			date:'',
 			datesChanged : false,
+			isDesignatedZone:false,
+			isRegisteredVat:false,
+			producttype:[],
 			loadingMsg:"Loading...",
 			disableLeavePage:false
 		};
@@ -176,6 +179,7 @@ class DetailSupplierInvoice extends React.Component {
 			
 		});
 		this.initializeData();
+		this.getCompanyType();
 	};
 
 	initializeData = () => {
@@ -881,9 +885,223 @@ class DetailSupplierInvoice extends React.Component {
 			});
 		}
 	};
+	getCompanyType = () => {
+		this.props.supplierInvoiceDetailActions
+			.getCompanyById()
+			.then((res) => {
+					if (res.status === 200) {
+						this.setState({
+							isDesignatedZone: res.data.isDesignatedZone,
+						});
+						this.setState({
+							isRegisteredVat: res.data.isRegisteredVat,
+						});
+					}
+				})
+			.catch((err) => {
+				console.log(err,"Get Company Type Error");
+			});
+	};
+	UpdateProductVatList=()=>{
+		const { product_list } = this.props;
+		if(this.state.customer_taxTreatment_des){
+			product_list.map(element => {
+				this.props.supplierInvoiceDetailActions
+				.getProductById(element.id)
+				.then((res) => {
+					if (res.status === 200) {
+						var vat_list = [
+							{
+								"id": 1,
+								"vat": 5,
+								"name": "STANDARD RATED TAX (5%) "
+							},
+							{
+								"id": 2,
+								"vat": 0,
+								"name": "ZERO RATED TAX (0%)"
+							},
+							{
+								"id": 3,
+								"vat": 0,
+								"name": "EXEMPT"
+							},
+							{
+								"id": 4,
+								"vat": 0,
+								"name": "OUT OF SCOPE"
+							},
+							{
+								"id": 10,
+								"vat": 0,
+								"name": "N/A"
+							}
+						]
+						let pt={};
+						var vt=[];
+						pt.id=res.data.productID;
+						pt.type=res.data.productType
+						if(this.state.isRegisteredVat){
+							if(this.state.isDesignatedZone ){
+								if(this.state.isReverseChargeEnabled){
+									if(res.data.productType=== "GOODS" ){
+										if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE' ||this.state.customer_taxTreatment_des==='NON-VAT REGISTERED' ){
+											vat_list.map(element => {
+												if(element.name==='N/A'){
+													vt.push(element);
+												}
+											});
+										}
+										if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+											vat_list.map(element => {
+												if(element.name=='STANDARD RATED TAX (5%) '){
+													vt.push(element);
+												}
+												if(element.name==='ZERO RATED TAX (0%)'){
+													vt.push(element);
+												}
+											});
+										}
+									}
+									else if(res.data.productType === "SERVICE"){
+										if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE' ||this.state.customer_taxTreatment_des==='NON-VAT REGISTERED' ){
+											vat_list.map(element => {
+												if(element.name==='N/A'){
+													vt.push(element);
+												}
+											});
+										}
+										if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+											vat_list.map(element => {
+												if(element.name=='STANDARD RATED TAX (5%) '){
+													vt.push(element);
+												}
+												if(element.name==='ZERO RATED TAX (0%)'){
+													vt.push(element);
+												}
+											});
+										}
+									}
+								}else{
+									if(res.data.productType=== "GOODS" ){
+										if(this.state.customer_taxTreatment_des==='VAT REGISTERED' ){
+											vt=vat_list.filter((obj) => obj.id !== 10);
+										}
+										if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE' ||this.state.customer_taxTreatment_des==='NON-VAT REGISTERED'||this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+											vat_list.map(element => {
+												if(element.name==='OUT OF SCOPE'){
+													vt.push(element);
+												}
+											});
+										}
+									}
+									else if(res.data.productType === "SERVICE"){
+										if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE'){
+											vt=vat_list.filter((obj) => obj.id !== 10);
+										}
+										if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+											vat_list.map(element => {
+												if(element.name==='EXEMPT'){
+													vt.push(element);
+												}
+											});
+										}
+										if(this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED'){
+											vat_list.map(element => {
+												if(element.name==='OUT OF SCOPE'){
+													vt.push(element);
+												}
+											});
+										}
+									}
 
+								}
+							}else{
+								if(this.state.isReverseChargeEnabled){
+									if(this.state.customer_taxTreatment_des==='VAT REGISTERED DESIGNATED ZONE' ){
+										vat_list.map(element => {
+											if(element.name==='N/A'){
+												vt.push(element);
+											}
+										});
+									}
+									if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE' ||this.state.customer_taxTreatment_des==='NON-VAT REGISTERED'||this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+										vat_list.map(element => {
+											if(element.name=='STANDARD RATED TAX (5%) '){
+												vt.push(element);
+											}
+											if(element.name==='ZERO RATED TAX (0%)'){
+												vt.push(element);
+											}
+										});
+									}
+								}else{
+									if(res.data.productType=== "GOODS" ){
+										if(this.state.customer_taxTreatment_des==='VAT REGISTERED' ){
+											vt=vat_list;
+										}
+										if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE' ||this.state.customer_taxTreatment_des==='NON-VAT REGISTERED'||this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+											vat_list.map(element => {
+												if(element.name==='EXEMPT'){
+													vt.push(element);
+												}
+											});
+										}
+									}
+									else if(res.data.productType === "SERVICE"){
+										if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' ){
+											vt=vat_list.filter((obj) => obj.id !== 10);
+										}
+										if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE' ||this.state.customer_taxTreatment_des==='NON-VAT REGISTERED'||this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+											vat_list.map(element => {
+												if(element.name==='EXEMPT'){
+													vt.push(element);
+												}
+											});
+										}
+									}
+								}
+							}
+						}else{
+							vt=vat_list;
+						}
+						pt.vat_list=vt;
+						this.setState(prevState => ({
+							producttype: [...prevState.producttype, pt]
+						}));
+					}
+				})
+				.catch((err) => {
+					console.log(err,"Get Product by ID Error");
+				});
+			});
+		}
+	};
+	resetVatId = (props) => {
+		this.setState({
+			producttype: [],
+		});
+		let newData = [];
+		const data = this.state.data;
+		console.log(data);
+		let length = data.length;
+		data.map((obj,index) => {
+			if(obj.productId){
+				obj['vatCategoryId'] = '' ;
+				newData.push(obj);
+				return obj;
+			}
+		})
+		props.setFieldValue('lineItemsString', newData, true);
+		this.updateAmount(newData, props);
+	};
 	renderVat = (cell, row, props) => {
-		const { vat_list } = this.state;
+		//const { vat_list } = this.state;
+		let vat_list=[];
+		const product = this.state.producttype.find(element => element.id === row.productId);
+		if(product){
+			vat_list=product.vat_list;
+		}
 		let idx;
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -912,7 +1130,7 @@ class DetailSupplierInvoice extends React.Component {
 							vat_list &&
 							selectOptionsFactory
 								.renderOptions('name', 'id', vat_list, 'VAT')
-								.find((option) => option.value === +row.vatCategoryId)
+								.find((option) => option.value == row.vatCategoryId)
 						}
 						id="vatCategoryId"
 						placeholder={strings.Select+strings.VAT}
@@ -1007,7 +1225,7 @@ class DetailSupplierInvoice extends React.Component {
 		data.map((obj, index) => {
 			if (obj.id === row.id) {
 				obj['unitPrice'] = (parseFloat(result.unitPrice)*(1/exchangeRate)).toFixed(2);
-				obj['vatCategoryId'] = parseInt(result.vatCategoryId);
+				obj['vatCategoryId']='';
 				obj['description'] = result.description;
 				obj['exciseTaxId'] = result.exciseTaxId;
 				obj['transactionCategoryId'] = result.transactionCategoryId;
@@ -1016,6 +1234,21 @@ class DetailSupplierInvoice extends React.Component {
 				obj['unitType']=result.unitType;
 				obj['unitTypeId']=result.unitTypeId;
 				idx = index;
+				if(this.state.isRegisteredVat){
+					this.state.producttype.map(element => {
+						if(element.id===e){
+							const found = element.vat_list.find(element => element.id === result.vatCategoryId);
+							if(!found){
+								obj['vatCategoryId']='';
+							}
+							else{
+								obj['vatCategoryId'] = result.vatCategoryId;
+							}
+							return found;
+						}
+					});
+				
+				}
 			}
 			return obj;
 		});
@@ -1066,6 +1299,9 @@ class DetailSupplierInvoice extends React.Component {
 	};
 
 	renderProduct = (cell, row, props) => {
+		if(this.state.producttype?.length === 0){
+			this.UpdateProductVatList();
+		}
 		const { product_list } = this.props;
 		let productList = product_list.length
 			? [{ id: '', name: 'Select Product' }, ...product_list]
@@ -1275,26 +1511,25 @@ class DetailSupplierInvoice extends React.Component {
 				obj.vatCategoryId !== ''
 					? vat_list?.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
-					const vat = index !== '' && index >=0 ? vat_list[`${index}`].vat : 0;
+			const vat = index !== '' && index >=0 ? vat_list[`${index}`].vat : 0;
 
 			//Exclusive case
 			if(this.state.taxType === false){
 				if (obj.discountType === 'PERCENTAGE') {	
-					 net_value =
+					net_value =
 						((+obj.unitPrice -
 							(+((obj.unitPrice * obj.discount)) / 100)) * obj.quantity);
 					var discount =  (obj.unitPrice * obj.quantity) - net_value
 				if(obj.exciseTaxId !=  0){
 					if(obj.exciseTaxId === 1){
 						const value = +(net_value) / 2 ;
-							net_value = parseFloat(net_value) + parseFloat(value) ;
-							obj.exciseAmount = parseFloat(value);
-						}else if (obj.exciseTaxId === 2){
-							const value = net_value;
-							net_value = parseFloat(net_value) +  parseFloat(value) ;
-							obj.exciseAmount = parseFloat(value);
-						}
-						
+						net_value = parseFloat(net_value) + parseFloat(value) ;
+						obj.exciseAmount = parseFloat(value);
+					}else if (obj.exciseTaxId === 2){
+						const value = net_value;
+						net_value = parseFloat(net_value) +  parseFloat(value) ;
+						obj.exciseAmount = parseFloat(value);
+					}					
 				}
 				else{
 					obj.exciseAmount = 0
@@ -1316,7 +1551,6 @@ class DetailSupplierInvoice extends React.Component {
 									net_value = parseFloat(net_value) +  parseFloat(value) ;
 									obj.exciseAmount = parseFloat(value);
 								}
-								
 						}
 						else{
 							obj.exciseAmount = 0
@@ -1403,7 +1637,7 @@ class DetailSupplierInvoice extends React.Component {
 					}
 			}
 						
-			obj.vatAmount = vat_amount
+			obj.vatAmount = vat_amount;
 			obj.subTotal =
 			net_value ? parseFloat(net_value) + parseFloat(vat_amount) : 0;
 			discount_total = +discount_total +discount
@@ -2026,6 +2260,7 @@ class DetailSupplierInvoice extends React.Component {
 																				} else {
 																					props.handleChange('contactId')('');
 																				}
+																				this.resetVatId(props);
 																			}}
 																			className={
 																				props.errors.contactId &&
@@ -2139,7 +2374,8 @@ class DetailSupplierInvoice extends React.Component {
 																					{props.errors.placeOfSupplyId}
 																				</div>
 																			)}
-																	</FormGroup>)}
+																	</FormGroup>
+																)}
 																</Col>							
 															</Row>
 															<hr />
@@ -2639,15 +2875,22 @@ class DetailSupplierInvoice extends React.Component {
 															</Row>
                                                             <Row className="ml-4">
 														<Col className="ml-4">
-                                                            <Input
+														{ (this.state.isDesignatedZone && this.state.customer_taxTreatment_des !== 'NON-VAT REGISTERED' && this.state.customer_taxTreatment_des !== "NON-VAT REGISTERED DESIGNATED ZONE" && this.state.customer_taxTreatment_des !== "VAT REGISTERED" && this.state.customer_taxTreatment_des !== "VAT REGISTERED DESIGNATED ZONE")
+															|| (!this.state.isDesignatedZone && this.state.customer_taxTreatment_des !== "VAT REGISTERED DESIGNATED ZONE" )
+														 ? <FormGroup className="mb-3">
+															<Input
 																type="checkbox"
                                                                 id="isReverseChargeEnabled"
                                                                 checked={this.state.isReverseChargeEnabled}
                                                                 onChange={(option)=>{
-                                                                    this.setState({isReverseChargeEnabled:!this.state.isReverseChargeEnabled})
+																		this.resetVatId(props);
+																		this.setState({isReverseChargeEnabled:!this.state.isReverseChargeEnabled})
                                                                 }}
-                                                            />
+                                                            /> 
                                                             <Label>{strings.IsReverseCharge}</Label>
+														</FormGroup>: '' }
+														 
+                                                            
                                                             </Col>
 															<Col className=" ml-4">
 																<FormGroup className='pull-right'>

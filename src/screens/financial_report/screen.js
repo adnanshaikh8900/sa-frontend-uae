@@ -155,7 +155,7 @@ class FinancialReport extends React.Component {
 									</div>
 										</Col>}
 
-										{/* <Col  className="report-section ml-4">
+										{config.REPORTS_HEAD_VAT && <Col  className="report-section ml-4">
 										<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "37px",width:"350px" }}>
 											<img
 											className="ml-2 mr-2 mt-2 mb-2 "
@@ -163,15 +163,15 @@ class FinancialReport extends React.Component {
 											style={{height:'25px'}}
 											></img>	<h5  className="mb-3 mt-2">{strings.VatReports}</h5></div>
 										<div className="mt-2 ml-4">
-										<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
-									this.props.history.push('/admin/report/vatreports')}>{strings.VatReports}</a></h6>
-										<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
-									this.props.history.push('/admin/report/ftaAuditReports')}>{strings.FTA_Audit_Report}</a></h6>
-									<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
-									this.props.history.push('/admin/report/exciseTaxAuditReports')}>{strings.Excise_Tax_Report}</a></h6>
+										{config.REPORTS_VAT_REPORTS &&<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
+									this.props.history.push('/admin/report/vatreports')}>{strings.VatReports}</a></h6>}
+										{config.REPORTS_FTA_AUDIT && <h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
+									this.props.history.push('/admin/report/ftaAuditReports')}>{strings.FTA_Audit_Report}</a></h6>}
+									{config.REPORTS_EXCISE_TAX && <h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
+									this.props.history.push('/admin/report/exciseTaxAuditReports')}>{strings.Excise_Tax_Report}</a></h6>}
 									
 									</div>
-										</Col> */}
+										</Col>}
 										{config.REPORT_DGL && <Col  className="report-section ml-4">
 										<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "37px",width:"350px" }}>
 											<img

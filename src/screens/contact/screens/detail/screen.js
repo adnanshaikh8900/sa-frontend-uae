@@ -12,6 +12,7 @@ import {
 	FormGroup,
 	Input,
 	Label,
+	UncontrolledTooltip,
 } from 'reactstrap';
 import Select from 'react-select';
 import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
@@ -95,6 +96,7 @@ class DetailContact extends React.Component {
 				shippingCity: '',
 				taxTreatmentId: '',
 			},
+			country_list:[],
 			state_list_for_shipping: [],
 			currentData: {},
 			dialog: null,
@@ -139,7 +141,7 @@ class DetailContact extends React.Component {
 					'error',
 					err.data ? err.data.message : 'ERROR',
 				);
-			});
+			});	
 		
 	};
 
@@ -374,6 +376,7 @@ class DetailContact extends React.Component {
 						err
 					);
 				});
+		
 
 		} else {
 			this.props.history.push('/admin/master/contact');
@@ -544,6 +547,26 @@ class DetailContact extends React.Component {
 				this.setState({ state_list_for_shipping: res })
 			});
 	};
+	resetCountryList= (taxtid ,countrylist) =>{
+	//	console.log(taxtid,countrylist);
+		let list=[];
+		 if(taxtid === 7 || taxtid === 5 || taxtid === 6){
+			countrylist.map( (obj) => {
+				if((taxtid === 6 || taxtid === 5) && (obj.countryCode === 229 || obj.countryCode === 191 || obj.countryCode === 178 ||
+					obj.countryCode === 165 || obj.countryCode === 117 || obj.countryCode === 17)){
+					list.push(obj);
+				}
+				if((taxtid === 7) && (obj.countryCode !== 229 && obj.countryCode !== 191 && obj.countryCode !== 178 &&
+					obj.countryCode !== 165 && obj.countryCode !== 117 && obj.countryCode !== 17)){
+					list.push(obj);
+				}
+			});
+		}
+		else{
+			list = countrylist;	
+		}
+		return list;
+	};
 	validationCheck = (value) => {
 		const data = {
 			moduleType: 21,
@@ -582,13 +605,16 @@ class DetailContact extends React.Component {
 		strings.setLanguage(this.state.language);
 		const {
 			currency_list,
-			country_list,
 			contact_type_list,
 			state_list,
 		} = this.props;
+		let country_list=[];
+		if(this.props.country_list){
+			country_list = this.resetCountryList(this.state.initValue.taxTreatmentId, this.props.country_list);
+			console.log(country_list,"hello");
+		}
 		const { initValue, loading, dialog, checkmobileNumberParam, taxTreatmentList, isSame, state_list_for_shipping } = this.state;
 		const { loadingMsg } = this.state
-
 		return (
 			loading == true ? <Loader loadingMsg={loadingMsg} /> :
 				<div>
@@ -624,9 +650,9 @@ class DetailContact extends React.Component {
 																onSubmit={(values, { resetForm }) => {
 																	this.handleSubmit(values, resetForm);
 																}}
+
 																validate={(values) => {
 																	let errors = {};
-
 																	// if (checkmobileNumberParam === true) {
 																	// 	errors.mobileNumber =
 																	// 		'Invalid mobile number';
@@ -1095,6 +1121,16 @@ class DetailContact extends React.Component {
 																					<Label htmlFor="currencyCode">
 																						<span className="text-danger">* </span>
 																						{strings.CurrencyCode}
+																						<i
+																				id="Currencytip"
+																				className="fa fa-question-circle ml-1"
+																			></i>
+																			<UncontrolledTooltip
+																				placement="right"
+																				target="Currencytip"
+																			>
+																				You cannot change the currency once a document is created for this contact.
+																			</UncontrolledTooltip>
 																					</Label>
 																					<Select
 																						options={
@@ -1271,6 +1307,16 @@ class DetailContact extends React.Component {
 																				<FormGroup className="mb-3 hideTRN">
 																					<Label htmlFor="taxTreatmentId">
 																						<span className="text-danger">* </span>{strings.TaxTreatment}
+																						<i
+																				id="TaxTreatmenttip"
+																				className="fa fa-question-circle ml-1"
+																			></i>
+																			<UncontrolledTooltip
+																				placement="right"
+																				target="TaxTreatmenttip"
+																			>
+																				Once any document has been created for this contact, you cannot change the Tax treatment.
+																			</UncontrolledTooltip>
 																					</Label>
 																					<Select
 																						options={
@@ -1305,6 +1351,7 @@ class DetailContact extends React.Component {
 																							// this.setState({
 																							//   selectedVatCategory: option.value
 																							// })
+																							this.resetCountryList(option.value, props);
 																							if (option && option.value) {
 
 																								props.handleChange('taxTreatmentId')(
@@ -1381,7 +1428,6 @@ class DetailContact extends React.Component {
 																						<br />
 																						<b>	<a target="_blank" rel="noopener noreferrer" href="https://eservices.tax.gov.ae/en-us/trn-verify" style={{ color: '#2266d8' }}  >{strings.VerifyTRN}</a></b>
 																					</div>
-																					<h5>Note: Once any document has been created for this contact, you cannot change the Tax treatment.</h5>
 																				</FormGroup>
 																			</Col>)}
 																		</Row>
@@ -1456,6 +1502,7 @@ class DetailContact extends React.Component {
 																							)
 
 																						}
+																						isDisabled = {this.state.initValue.taxTreatmentId === 1 || this.state.initValue.taxTreatmentId === 2 || this.state.initValue.taxTreatmentId === 3 || this.state.initValue.taxTreatmentId === 4}
 																						onChange={(option) => {
 																							if (option && option.value) {
 																								props.handleChange('billingcountryId')(option);
@@ -1906,6 +1953,7 @@ class DetailContact extends React.Component {
 																										+props.values.shippingCountryId,
 																								)
 																						}
+																						isDisabled = {this.state.initValue.taxTreatmentId === 1 || this.state.initValue.taxTreatmentId === 2 || this.state.initValue.taxTreatmentId === 3 || this.state.initValue.taxTreatmentId === 4}
 																						onChange={(option) => {
 																							if (option && option.value) {
 																								props.handleChange('shippingCountryId')(option);

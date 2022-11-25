@@ -141,8 +141,8 @@ class DetailContact extends React.Component {
 					'error',
 					err.data ? err.data.message : 'ERROR',
 				);
-			});	
-		
+			});
+			
 	};
 
 	initializeData = () => {
@@ -154,7 +154,7 @@ class DetailContact extends React.Component {
 			this.props.detailContactActions
 				.getContactById(this.props.location.state.id)
 				.then((res) => {
-
+console.log(res,this.props.country_list);
 					this.setState(
 						{
 							current_contact_id: this.props.location.state.id,
@@ -368,6 +368,7 @@ class DetailContact extends React.Component {
 							// }
 						},
 					);
+						
 				})
 				.catch((err) => {
 					this.setState({ loading: false });
@@ -547,11 +548,30 @@ class DetailContact extends React.Component {
 				this.setState({ state_list_for_shipping: res })
 			});
 	};
-	resetCountryList= (taxtid ,countrylist) =>{
-	//	console.log(taxtid,countrylist);
+	setCountryList = (taxid,country_list) =>{
 		let list=[];
-		 if(taxtid === 7 || taxtid === 5 || taxtid === 6){
-			countrylist.map( (obj) => {
+		if(taxid === 7 || taxid === 5 || taxid === 6){
+			country_list.map( (obj) => {
+				if((taxid === 6 || taxid === 5) && (obj.countryCode === 229 || obj.countryCode === 191 || obj.countryCode === 178 ||
+					obj.countryCode === 165 || obj.countryCode === 117 || obj.countryCode === 17)){
+					list.push(obj);
+				}
+				if((taxid === 7) && (obj.countryCode !== 229 && obj.countryCode !== 191 && obj.countryCode !== 178 &&
+					obj.countryCode !== 165 && obj.countryCode !== 117 && obj.countryCode !== 17)){
+					list.push(obj);
+				}
+			});
+		}
+		else{
+			list = country_list;
+		}
+		return list;
+	};
+	resetCountryList= (taxtid ,props) =>{
+		const{country_list}=this.props;
+		let list=[];
+		if(taxtid === 7 || taxtid === 5 || taxtid === 6){
+			country_list.map( (obj) => {
 				if((taxtid === 6 || taxtid === 5) && (obj.countryCode === 229 || obj.countryCode === 191 || obj.countryCode === 178 ||
 					obj.countryCode === 165 || obj.countryCode === 117 || obj.countryCode === 17)){
 					list.push(obj);
@@ -561,11 +581,50 @@ class DetailContact extends React.Component {
 					list.push(obj);
 				}
 			});
+			props.handleChange('billingcountryId')('');
+			props.handleChange('shippingCountryId')('');
+			this.getStateList('');
+			props.handleChange('stateId')({
+				label: 'Select State',
+				value: '',
+			});
+			this.setState({ isSame: false, });
+			props.handleChange('shippingStateId')('');
+			props.handleChange('shippingPoBoxNumber')('');
+			props.handleChange('shippingPostZipCode')('');
+			props.handleChange('billingStateProvince')('');
+			props.handleChange('billingPoBoxNumber')('');
+			props.handleChange('billingPostZipCode')('');
 		}
 		else{
-			list = countrylist;	
+			list = country_list;	
+			props.handleChange('billingcountryId')(country_list && selectOptionsFactory.renderOptions(
+				'countryName',
+				'countryCode',
+				country_list,
+				'Country',
+			).find((option) => option.value === 229));
+			props.handleChange('shippingCountryId')(country_list && selectOptionsFactory.renderOptions(
+				'countryName',
+				'countryCode',
+				country_list,
+				'Country',
+			).find((option) => option.value === 229));
+			this.getStateListForShippingAddress(229);
+			this.getStateList(229);
+			props.handleChange('stateId')({
+				label: 'Select State',
+				value: '',
+			});
+			this.setState({ isSame: false, });
+			props.handleChange('shippingStateId')('');
+			props.handleChange('shippingPoBoxNumber')('');
+			props.handleChange('shippingPostZipCode')('');
+			props.handleChange('billingStateProvince')('');
+			props.handleChange('billingPoBoxNumber')('');
+			props.handleChange('billingPostZipCode')('');
 		}
-		return list;
+		this.setState({country_list : list });
 	};
 	validationCheck = (value) => {
 		const data = {
@@ -610,11 +669,12 @@ class DetailContact extends React.Component {
 		} = this.props;
 		let country_list=[];
 		if(this.props.country_list){
-			country_list = this.resetCountryList(this.state.initValue.taxTreatmentId, this.props.country_list);
-			console.log(country_list,"hello");
+			country_list = 	this.setCountryList(this.state.initValue.taxTreatmentId,this.props.country_list);
+			console.log(country_list,this.state.initValue.taxTreatmentId);
 		}
 		const { initValue, loading, dialog, checkmobileNumberParam, taxTreatmentList, isSame, state_list_for_shipping } = this.state;
-		const { loadingMsg } = this.state
+		const { loadingMsg } = this.state;
+		
 		return (
 			loading == true ? <Loader loadingMsg={loadingMsg} /> :
 				<div>
@@ -1478,18 +1538,36 @@ class DetailContact extends React.Component {
 																					<Label htmlFor="billingcountryId"><span className="text-danger">* </span>{strings.Country}</Label>
 																					<Select
 																						options={
-																							country_list
+																							this.state.country_list.length !== 0 ? 
+																								this.state.country_list
+																									? selectOptionsFactory.renderOptions(
+																										'countryName',
+																										'countryCode',
+																										this.state.country_list,
+																										'Country',
+																									): []
+																								: country_list
 																								? selectOptionsFactory.renderOptions(
 																									'countryName',
 																									'countryCode',
 																									country_list,
 																									'Country',
-																								)
-																								: []
+																								): []
 																						}
 																						value={
-
-																							country_list
+																							this.state.country_list.length !== 0 ? 
+																							this.state.country_list
+																							&& selectOptionsFactory.renderOptions(
+																								'countryName',
+																								'countryCode',
+																								this.state.country_list,
+																								'Country',
+																							).find(
+																								(option) =>
+																									option.value ===
+																									+props.values.billingcountryId.value,
+																							)
+																							: country_list
 																							&& selectOptionsFactory.renderOptions(
 																								'countryName',
 																								'countryCode',
@@ -1499,10 +1577,10 @@ class DetailContact extends React.Component {
 																								(option) =>
 																									option.value ===
 																									+props.values.billingcountryId.value,
-																							)
+																							) 
 
 																						}
-																						isDisabled = {this.state.initValue.taxTreatmentId === 1 || this.state.initValue.taxTreatmentId === 2 || this.state.initValue.taxTreatmentId === 3 || this.state.initValue.taxTreatmentId === 4}
+																						isDisabled = {props.values.taxTreatmentId === 1 || props.values.taxTreatmentId === 2 || props.values.taxTreatmentId === 3 || props.values.taxTreatmentId === 4}
 																						onChange={(option) => {
 																							if (option && option.value) {
 																								props.handleChange('billingcountryId')(option);
@@ -1929,17 +2007,41 @@ class DetailContact extends React.Component {
 																					<Label htmlFor="shippingCountryId"><span className="text-danger">* </span>{strings.Country}</Label>
 																					<Select
 																						options={
-																							country_list
+																							this.state.country_list.length !== 0 ? 
+																								this.state.country_list
+																									? selectOptionsFactory.renderOptions(
+																										'countryName',
+																										'countryCode',
+																										this.state.country_list,
+																										'Country',
+																									)
+																									: []
+																								: country_list
 																								? selectOptionsFactory.renderOptions(
 																									'countryName',
 																									'countryCode',
 																									country_list,
 																									'Country',
 																								)
-																								: []
+																								: [] 
+
 																						}
 																						value={
-																							country_list &&
+																							this.state.country_list.length !== 0 ?
+																							this.state.country_list &&
+																							selectOptionsFactory
+																								.renderOptions(
+																									'countryName',
+																									'countryCode',
+																									this.state.country_list,
+																									'Country',
+																								)
+																								.find(
+																									(option) =>
+																										option.value ===
+																										+props.values.shippingCountryId,
+																								)
+																							: country_list &&
 																							selectOptionsFactory
 																								.renderOptions(
 																									'countryName',
@@ -1953,7 +2055,7 @@ class DetailContact extends React.Component {
 																										+props.values.shippingCountryId,
 																								)
 																						}
-																						isDisabled = {this.state.initValue.taxTreatmentId === 1 || this.state.initValue.taxTreatmentId === 2 || this.state.initValue.taxTreatmentId === 3 || this.state.initValue.taxTreatmentId === 4}
+																						isDisabled = {props.values.taxTreatmentId === 1 || props.values.taxTreatmentId === 2 || props.values.taxTreatmentId === 3 || props.values.taxTreatmentId === 4}
 																						onChange={(option) => {
 																							if (option && option.value) {
 																								props.handleChange('shippingCountryId')(option);

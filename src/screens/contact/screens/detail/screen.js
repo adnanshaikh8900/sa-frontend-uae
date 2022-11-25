@@ -29,6 +29,7 @@ import 'react-phone-input-2/lib/style.css'
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { upperFirst } from 'lodash-es';
+import { FormControlUnstyled } from '@mui/base';
 
 const mapStateToProps = (state) => {
 	return {
@@ -154,7 +155,6 @@ class DetailContact extends React.Component {
 			this.props.detailContactActions
 				.getContactById(this.props.location.state.id)
 				.then((res) => {
-console.log(res,this.props.country_list);
 					this.setState(
 						{
 							current_contact_id: this.props.location.state.id,
@@ -582,19 +582,16 @@ console.log(res,this.props.country_list);
 				}
 			});
 			props.handleChange('billingcountryId')('');
-			props.handleChange('shippingCountryId')('');
 			this.getStateList('');
-			props.handleChange('stateId')({
-				label: 'Select State',
-				value: '',
-			});
-			this.setState({ isSame: false, });
-			props.handleChange('shippingStateId')('');
-			props.handleChange('shippingPoBoxNumber')('');
-			props.handleChange('shippingPostZipCode')('');
 			props.handleChange('billingStateProvince')('');
 			props.handleChange('billingPoBoxNumber')('');
 			props.handleChange('billingPostZipCode')('');
+			props.handleChange('shippingCountryId')('');
+			props.handleChange('shippingStateId')('');
+			props.handleChange('shippingPoBoxNumber')('');
+			props.handleChange('shippingPostZipCode')('');
+
+
 		}
 		else{
 			list = country_list;	
@@ -612,10 +609,6 @@ console.log(res,this.props.country_list);
 			).find((option) => option.value === 229));
 			this.getStateListForShippingAddress(229);
 			this.getStateList(229);
-			props.handleChange('stateId')({
-				label: 'Select State',
-				value: '',
-			});
 			this.setState({ isSame: false, });
 			props.handleChange('shippingStateId')('');
 			props.handleChange('shippingPoBoxNumber')('');
@@ -624,7 +617,7 @@ console.log(res,this.props.country_list);
 			props.handleChange('billingPoBoxNumber')('');
 			props.handleChange('billingPostZipCode')('');
 		}
-		this.setState({country_list : list });
+		this.setState({country_list : list ,});
 	};
 	validationCheck = (value) => {
 		const data = {
@@ -670,7 +663,6 @@ console.log(res,this.props.country_list);
 		let country_list=[];
 		if(this.props.country_list){
 			country_list = 	this.setCountryList(this.state.initValue.taxTreatmentId,this.props.country_list);
-			console.log(country_list,this.state.initValue.taxTreatmentId);
 		}
 		const { initValue, loading, dialog, checkmobileNumberParam, taxTreatmentList, isSame, state_list_for_shipping } = this.state;
 		const { loadingMsg } = this.state;
@@ -1564,8 +1556,7 @@ console.log(res,this.props.country_list);
 																								'Country',
 																							).find(
 																								(option) =>
-																									option.value ===
-																									+props.values.billingcountryId.value,
+																									option.value == props.values.billingcountryId.value
 																							)
 																							: country_list
 																							&& selectOptionsFactory.renderOptions(
@@ -1575,13 +1566,13 @@ console.log(res,this.props.country_list);
 																								'Country',
 																							).find(
 																								(option) =>
-																									option.value ===
-																									+props.values.billingcountryId.value,
+																									option.value == props.values.billingcountryId.value
 																							) 
 
 																						}
 																						isDisabled = {props.values.taxTreatmentId === 1 || props.values.taxTreatmentId === 2 || props.values.taxTreatmentId === 3 || props.values.taxTreatmentId === 4}
 																						onChange={(option) => {
+																							console.log(this.state.country_list,props.values.billingcountryId);
 																							if (option && option.value) {
 																								props.handleChange('billingcountryId')(option);
 																								this.getStateList(option.value);
@@ -1645,8 +1636,7 @@ console.log(res,this.props.country_list);
 																								props.values.billingcountryId.value === 229 ? strings.Emirate : strings.StateRegion,
 																							).find(
 																								(option) =>
-																									option.value ===
-																									+props.values.billingStateProvince,
+																									option.value == props.values.billingStateProvince,
 																							)
 																						}
 																						onChange={(option) => {

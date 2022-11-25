@@ -83,7 +83,7 @@ class VatCode extends React.Component {
 		};
 
 		this.options = {
-			// onRowClick: this.goToDetail,
+			onRowClick: this.goToDetail,
 			page: 1,
 			sizePerPage: 10,
 			onSizePerPageList: this.onSizePerPageList,

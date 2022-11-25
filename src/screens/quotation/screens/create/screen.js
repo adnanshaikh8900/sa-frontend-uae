@@ -1027,6 +1027,7 @@ getProductType=(id)=>{
 }
 };
 resetVatId = (props) => {
+	console.log("product Reset")
 	this.setState({
 		producttype: [],
 	});
@@ -1208,6 +1209,7 @@ resetVatId = (props) => {
 				className="btn-twitter btn-brand icon"
 				onClick={(e, props) => {
 					this.openProductModal(props);
+					console.log("ADD PRODUCT")
 				}}
 			>
 				<i className="fas fa-plus"></i>
@@ -1216,7 +1218,9 @@ resetVatId = (props) => {
 	};
 
 	renderProduct = (cell, row, props) => {
+		//this.resetVatId(props);
 		const { product_list } = this.props;
+		//console.log(product_list,"PRoduct List");
 		if(product_list.length>0){
 			if(product_list.length > this.state.producttype.length){
 				product_list.map(element => {
@@ -1254,8 +1258,9 @@ resetVatId = (props) => {
 							if (e && e.label !== 'Select Product') {
 								this.selectItem(e.value, row, 'productId', form, field, props);
 								this.prductValue(e.value, row, 'productId', form, field, props);
-								if(this.checkedRow()===false)
-									{this.addRow();}
+								if(this.checkedRow()===false){
+									this.addRow();
+								}
 								// this.formRef.current.props.handleChange(field.name)(e.value)
 							} else {
 								form.setFieldValue(
@@ -1662,7 +1667,6 @@ resetVatId = (props) => {
 		formData.append('receiptNumber',receiptNumber !== null ? receiptNumber : '');
 		formData.append('attachmentDescription',attachmentDescription !== null ? attachmentDescription : '',);
 		formData.append('type', 6);
-		console.log(JSON.stringify(this.state.data));
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
 		formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
 		formData.append('totalAmount', this.state.initValue.totalAmount);
@@ -1917,7 +1921,8 @@ resetVatId = (props) => {
 						values: this.state.initValue,
 					};
 					this.updateAmount(this.state.data, values);
-					this.addRow()
+					this.addRow();
+					this.getProductType(res.data[0].id);
 				},
 			);
 			this.formRef.current.setFieldValue(
@@ -2299,7 +2304,6 @@ resetVatId = (props) => {
 																		// 	}
 																		// }}
 																		onChange={(option) => {
-																			console.log(this.props.supplier_list);
 																			if (option && option.value) {
 																				this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
 																				this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(option.value), true);
@@ -2641,7 +2645,7 @@ resetVatId = (props) => {
 																	color="primary"
 																	className= "btn-square mr-3"
 																	onClick={(e, props) => {
-																		this.openProductModal()
+																		this.openProductModal();
 																		// this.props.history.push(`/admin/master/product/create`,{gotoParentURL:"/admin/income/quotation/create"})
 																		}}
 													                >
@@ -3140,7 +3144,7 @@ resetVatId = (props) => {
 																		onClick={() => {
 																			if(this.state.data.length === 1)
 																				{
-																				console.log(props.errors,"ERRORs")
+																				//console.log(props.errors,"ERRORs")
 																				//	added validation popup	msg
 																			props.handleBlur();
 																			if(props.errors &&  Object.keys(props.errors).length != 0)
@@ -3248,6 +3252,7 @@ resetVatId = (props) => {
 						this.closeProductModal(e);
 					}}
 					getCurrentProduct={(e) =>{ 
+						console.log(e,"newProduct");
 						this.props.supplierInvoiceActions.getProductList();
 						this.getCurrentProduct(e);
 					}}

@@ -395,6 +395,7 @@ class DetailQuotation extends React.Component {
 					};
 					this.updateAmount(this.state.data, values);
 					this.addRow();
+					this.getProductType(res.data[0].id);
 				},
 			);
 			this.formRef.current.setFieldValue(
@@ -1013,6 +1014,22 @@ class DetailQuotation extends React.Component {
 		});
 	}
 	
+	};
+	resetVatId = (props) => {
+		console.log("product Reset")
+		this.setState({
+			producttype: [],
+		});
+		let newData = [];
+		const data = this.state.data;
+		data.map((obj,index) => {
+				obj['vatCategoryId'] = '' ;
+				newData.push(obj);
+				return obj;
+			
+		})
+		props.setFieldValue('lineItemsString', newData, true);
+		this.updateAmount(newData, props);
 	};
 	renderVat = (cell, row, props) => {
 		//console.log(vat_list);
@@ -2064,6 +2081,7 @@ class DetailQuotation extends React.Component {
 	
 																					props.handleChange('customerId')('');
 																				}
+																				this.resetVatId(props);
 																			}}
 																			className={
 																				props.errors.customerId &&

@@ -456,6 +456,7 @@ const ar = {
       ProductType:"نوع المنتج",
       INVENTORY:"المخزون",
       VATTYPE:"نوع ضريبة القيمة المضافة",
+      VATType:"نوع ضريبة القيمة المضافة",
       excise_slab:"لوح المكوس",
       enabled:"تمكين",
       disabled:"ذوي الاحتياجات الخاصه",

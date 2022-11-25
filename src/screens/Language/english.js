@@ -471,6 +471,7 @@ const en = {
       ProductType:"PRODUCT TYPE",	
       INVENTORY:"INVENTORY",
       VATTYPE:"VAT TYPE",
+      VATType:"VAT Type",
       excise_slab:"EXCISE SLAB",
       enabled:"Enabled",
       disabled:"Disabled",

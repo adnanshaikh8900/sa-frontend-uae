@@ -1268,7 +1268,7 @@ renderName=(cell,row)=>{
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="vatCategoryId">
 																			<span className="text-danger">* </span>
-																			{"Tax"+" "+strings.Type}
+																			{strings.VATType}
 																		</Label>
 																		<Select
 																		 isDisabled={this.state.companyDetails && !this.state.companyDetails.isRegisteredVat}

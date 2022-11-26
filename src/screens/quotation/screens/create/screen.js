@@ -133,8 +133,8 @@ class CreateQuotation extends React.Component {
 				receiptNumber: '',
 				currencyCode: '',
 				poApproveDate: new Date(),
-				quotaionExpiration: new Date(new Date().setMonth(new Date().getMonth() + 1)),
-				// quotaionExpiration: new Date(),
+				//quotaionExpiration: new Date(new Date().setMonth(new Date().getMonth() + 1)),
+				quotaionExpiration: new Date(),
 				quotationdate: new Date(),
 				customerId: '',
 				placeOfSupplyId: '',
@@ -2565,7 +2565,6 @@ resetVatId = (props) => {
 																		showYearDropdown
 																		dropdownMode="select"
 																		dateFormat="dd-MM-yyyy"
-																		minDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('quotaionExpiration')(value);
 																		}}

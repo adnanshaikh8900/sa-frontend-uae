@@ -2233,7 +2233,6 @@ class DetailQuotation extends React.Component {
 																			showMonthDropdown
 																			showYearDropdown
 																			dateFormat="dd-MM-yyyy"
-																			minDate={new Date()}
 																			dropdownMode="select"
 																			value={props.values.quotationdate}
 																			selected={props.values.quotationdate1 ? new Date(props.values.quotationdate1) : new Date()}
@@ -2272,7 +2271,6 @@ class DetailQuotation extends React.Component {
 																			showMonthDropdown
 																			showYearDropdown
 																			dateFormat="dd-MM-yyyy"
-																			minDate={new Date()}
 																			dropdownMode="select"
 																			value={props.values.quotaionExpiration}
 																			selected={new Date(props.values.quotaionExpiration1)}

@@ -504,6 +504,7 @@ const fr = {
       ProductType: "Type de produit",
       Inventory:"INVENTAIRE",
       VATTYPE:"TYPE DE TVA",
+      VATType:"Type de TVA",
       excise_slab:"DALLE D’ACCISE",
       enabled:"Activé",
       disabled:"Handicapé",

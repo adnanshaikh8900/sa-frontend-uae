@@ -944,6 +944,26 @@ discountType = (row) =>
 			.renderOptions('label', 'value', this.state.discountOptions, 'discount')
 			.find((option) => option.value === +row.discountType)
 }
+getCustomerShippingAddress = (cutomerID,taxID,props) =>{
+	if(taxID !== 5 && taxID !== 6 && taxID !== 7){
+		this.props.quotationCreateAction.getCustomerShippingAddressbyID(cutomerID).then((res) => {
+			if(res.status === 200){
+				var PlaceofSupply= this.placelist &&
+					selectOptionsFactory.renderOptions(
+						'label',
+						'value',
+						this.placelist,
+						'Place of Supply',).
+						find((option) => option.label.toUpperCase() === res.data.shippingStateName.toUpperCase())
+					if(PlaceofSupply){
+					props.handleChange('placeOfSupplyId')(PlaceofSupply,);
+					this.setState({placeOfSupplyId : PlaceofSupply});
+					this.formRef.current.setFieldValue('placeOfSupplyId', PlaceofSupply.value, true);
+				}
+			}
+		});
+	}
+};
 getCompanyType = () => {
 	this.props.quotationCreateAction
 		.getCompanyById()
@@ -1027,7 +1047,6 @@ getProductType=(id)=>{
 }
 };
 resetVatId = (props) => {
-	console.log("product Reset")
 	this.setState({
 		producttype: [],
 	});
@@ -1209,7 +1228,6 @@ resetVatId = (props) => {
 				className="btn-twitter btn-brand icon"
 				onClick={(e, props) => {
 					this.openProductModal(props);
-					console.log("ADD PRODUCT")
 				}}
 			>
 				<i className="fas fa-plus"></i>
@@ -1218,9 +1236,7 @@ resetVatId = (props) => {
 	};
 
 	renderProduct = (cell, row, props) => {
-		//this.resetVatId(props);
 		const { product_list } = this.props;
-		//console.log(product_list,"PRoduct List");
 		if(product_list.length>0){
 			if(product_list.length > this.state.producttype.length){
 				product_list.map(element => {
@@ -2314,6 +2330,7 @@ resetVatId = (props) => {
 																				props.handleChange('customerId')('');
 																			}
 																			this.resetVatId(props);
+																			this.getCustomerShippingAddress(option.value,this.getTaxTreatment(option.value),props);
 																		}}
 																		className={
 																			props.errors.customerId &&
@@ -2423,14 +2440,12 @@ resetVatId = (props) => {
 																				'value',
 																				this.placelist,
 																				'Place of Supply',
-																		  ).find(
-																									(option) =>
-																										option.value ==
-																										((this.state.quotationId||this.state.parentId) ? this.state.placeOfSupplyId:props.values
-																											.placeOfSupplyId.toString())
-
-																								)
-																						}
+																		  	).find(
+																				(option) =>
+																					option.value ==
+																					((this.state.quotationId||this.state.parentId) ? this.state.placeOfSupplyId.value ? this.state.placeOfSupplyId.value : this.state.placeOfSupplyId :
+																					 props.values.placeOfSupplyId.toString()))
+																		}
 																		className={
 																			props.errors.placeOfSupplyId &&
 																			props.touched.placeOfSupplyId
@@ -3252,7 +3267,6 @@ resetVatId = (props) => {
 						this.closeProductModal(e);
 					}}
 					getCurrentProduct={(e) =>{ 
-						console.log(e,"newProduct");
 						this.props.supplierInvoiceActions.getProductList();
 						this.getCurrentProduct(e);
 					}}

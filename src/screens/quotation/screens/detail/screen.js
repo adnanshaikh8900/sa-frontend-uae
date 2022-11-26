@@ -194,7 +194,6 @@ class DetailQuotation extends React.Component {
 			this.props.quotationDetailsAction
 				.getQuotationById(this.props.location.state.id)
 				.then((res) => {
-					console.log(res,"DATA");
 					if (res.status === 200) {
 						this.getCompanyCurrency();
 					
@@ -933,6 +932,26 @@ class DetailQuotation extends React.Component {
 			});
 		}
 	};
+	getCustomerShippingAddress = (cutomerID,taxID,props) =>{
+		if(taxID !== 5 && taxID !== 6 && taxID !== 7){
+			this.props.quotationDetailsAction.getCustomerShippingAddressbyID(cutomerID).then((res) => {
+				if(res.status === 200){
+					var PlaceofSupply= this.placelist &&
+						selectOptionsFactory.renderOptions(
+							'label',
+							'value',
+							this.placelist,
+							'Place of Supply',).
+							find((option) => option.label.toUpperCase() === res.data.shippingStateName.toUpperCase())
+						if(PlaceofSupply){
+						props.handleChange('placeOfSupplyId')(PlaceofSupply,);
+						this.setState({placeOfSupplyId : PlaceofSupply});
+						this.formRef.current.setFieldValue('placeOfSupplyId', PlaceofSupply.value, true);
+					}
+				}
+			});
+		}
+	};
 	getCompanyType = () => {
 		this.props.quotationDetailsAction
 			.getCompanyById()
@@ -1016,7 +1035,6 @@ class DetailQuotation extends React.Component {
 	
 	};
 	resetVatId = (props) => {
-		console.log("product Reset")
 		this.setState({
 			producttype: [],
 		});
@@ -2082,6 +2100,7 @@ class DetailQuotation extends React.Component {
 																					props.handleChange('customerId')('');
 																				}
 																				this.resetVatId(props);
+																				this.getCustomerShippingAddress(option.value,this.getTaxTreatment(option.value),props);
 																			}}
 																			className={
 																				props.errors.customerId &&

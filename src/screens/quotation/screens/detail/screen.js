@@ -194,7 +194,6 @@ class DetailQuotation extends React.Component {
 			this.props.quotationDetailsAction
 				.getQuotationById(this.props.location.state.id)
 				.then((res) => {
-					console.log(res,"DATA");
 					if (res.status === 200) {
 						this.getCompanyCurrency();
 					
@@ -395,6 +394,7 @@ class DetailQuotation extends React.Component {
 					};
 					this.updateAmount(this.state.data, values);
 					this.addRow();
+					this.getProductType(res.data[0].id);
 				},
 			);
 			this.formRef.current.setFieldValue(
@@ -932,6 +932,26 @@ class DetailQuotation extends React.Component {
 			});
 		}
 	};
+	getCustomerShippingAddress = (cutomerID,taxID,props) =>{
+		if(taxID !== 5 && taxID !== 6 && taxID !== 7){
+			this.props.quotationDetailsAction.getCustomerShippingAddressbyID(cutomerID).then((res) => {
+				if(res.status === 200){
+					var PlaceofSupply= this.placelist &&
+						selectOptionsFactory.renderOptions(
+							'label',
+							'value',
+							this.placelist,
+							'Place of Supply',).
+							find((option) => option.label.toUpperCase() === res.data.shippingStateName.toUpperCase())
+						if(PlaceofSupply){
+						props.handleChange('placeOfSupplyId')(PlaceofSupply,);
+						this.setState({placeOfSupplyId : PlaceofSupply});
+						this.formRef.current.setFieldValue('placeOfSupplyId', PlaceofSupply.value, true);
+					}
+				}
+			});
+		}
+	};
 	getCompanyType = () => {
 		this.props.quotationDetailsAction
 			.getCompanyById()
@@ -1013,6 +1033,21 @@ class DetailQuotation extends React.Component {
 		});
 	}
 	
+	};
+	resetVatId = (props) => {
+		this.setState({
+			producttype: [],
+		});
+		let newData = [];
+		const data = this.state.data;
+		data.map((obj,index) => {
+				obj['vatCategoryId'] = '' ;
+				newData.push(obj);
+				return obj;
+			
+		})
+		props.setFieldValue('lineItemsString', newData, true);
+		this.updateAmount(newData, props);
 	};
 	renderVat = (cell, row, props) => {
 		//console.log(vat_list);
@@ -1821,7 +1856,7 @@ class DetailQuotation extends React.Component {
 													}}
 													validate={(values)=>{
 														let errors={}
-														if(this.state.customer_taxTreatment_des!="NON GCC")
+														if(this.state.customer_taxTreatment_des!="NON GCC" && this.state.customer_taxTreatment_des!="GCC NON-VAT REGISTERED" && this.state.customer_taxTreatment_des!="GCC VAT REGISTERED")
 													{
 														if (!values.placeOfSupplyId) 
 															       	errors.placeOfSupplyId ='Place of supply is required';
@@ -2064,6 +2099,8 @@ class DetailQuotation extends React.Component {
 	
 																					props.handleChange('customerId')('');
 																				}
+																				this.resetVatId(props);
+																				this.getCustomerShippingAddress(option.value,this.getTaxTreatment(option.value),props);
 																			}}
 																			className={
 																				props.errors.customerId &&
@@ -2115,7 +2152,8 @@ class DetailQuotation extends React.Component {
 																</FormGroup>
 															</Col>
 																<Col lg={3}>
-																{this.state.customer_taxTreatment_des!="NON GCC" &&(		<FormGroup className="mb-3">
+																{this.state.customer_taxTreatment_des !== "NON GCC"  && this.state.customer_taxTreatment_des !== "GCC VAT REGISTERED" && this.state.customer_taxTreatment_des !== "GCC NON-VAT REGISTERED" &&
+																	(<FormGroup className="mb-3">
 																		<Label htmlFor="placeOfSupplyId">
 																			<span className="text-danger">* </span>
 																		{/* {this.state.customer_taxTreatment_des &&
@@ -2195,7 +2233,6 @@ class DetailQuotation extends React.Component {
 																			showMonthDropdown
 																			showYearDropdown
 																			dateFormat="dd-MM-yyyy"
-																			minDate={new Date()}
 																			dropdownMode="select"
 																			value={props.values.quotationdate}
 																			selected={props.values.quotationdate1 ? new Date(props.values.quotationdate1) : new Date()}
@@ -2234,7 +2271,6 @@ class DetailQuotation extends React.Component {
 																			showMonthDropdown
 																			showYearDropdown
 																			dateFormat="dd-MM-yyyy"
-																			minDate={new Date()}
 																			dropdownMode="select"
 																			value={props.values.quotaionExpiration}
 																			selected={new Date(props.values.quotaionExpiration1)}

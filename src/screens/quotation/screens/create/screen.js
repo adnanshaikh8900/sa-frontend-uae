@@ -133,8 +133,8 @@ class CreateQuotation extends React.Component {
 				receiptNumber: '',
 				currencyCode: '',
 				poApproveDate: new Date(),
-				quotaionExpiration: new Date(new Date().setMonth(new Date().getMonth() + 1)),
-				// quotaionExpiration: new Date(),
+				//quotaionExpiration: new Date(new Date().setMonth(new Date().getMonth() + 1)),
+				quotaionExpiration: new Date(),
 				quotationdate: new Date(),
 				customerId: '',
 				placeOfSupplyId: '',
@@ -944,6 +944,26 @@ discountType = (row) =>
 			.renderOptions('label', 'value', this.state.discountOptions, 'discount')
 			.find((option) => option.value === +row.discountType)
 }
+getCustomerShippingAddress = (cutomerID,taxID,props) =>{
+	if(taxID !== 5 && taxID !== 6 && taxID !== 7){
+		this.props.quotationCreateAction.getCustomerShippingAddressbyID(cutomerID).then((res) => {
+			if(res.status === 200){
+				var PlaceofSupply= this.placelist &&
+					selectOptionsFactory.renderOptions(
+						'label',
+						'value',
+						this.placelist,
+						'Place of Supply',).
+						find((option) => option.label.toUpperCase() === res.data.shippingStateName.toUpperCase())
+					if(PlaceofSupply){
+					props.handleChange('placeOfSupplyId')(PlaceofSupply,);
+					this.setState({placeOfSupplyId : PlaceofSupply});
+					this.formRef.current.setFieldValue('placeOfSupplyId', PlaceofSupply.value, true);
+				}
+			}
+		});
+	}
+};
 getCompanyType = () => {
 	this.props.quotationCreateAction
 		.getCompanyById()
@@ -1254,8 +1274,9 @@ resetVatId = (props) => {
 							if (e && e.label !== 'Select Product') {
 								this.selectItem(e.value, row, 'productId', form, field, props);
 								this.prductValue(e.value, row, 'productId', form, field, props);
-								if(this.checkedRow()===false)
-									{this.addRow();}
+								if(this.checkedRow()===false){
+									this.addRow();
+								}
 								// this.formRef.current.props.handleChange(field.name)(e.value)
 							} else {
 								form.setFieldValue(
@@ -1662,7 +1683,6 @@ resetVatId = (props) => {
 		formData.append('receiptNumber',receiptNumber !== null ? receiptNumber : '');
 		formData.append('attachmentDescription',attachmentDescription !== null ? attachmentDescription : '',);
 		formData.append('type', 6);
-		console.log(JSON.stringify(this.state.data));
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
 		formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
 		formData.append('totalAmount', this.state.initValue.totalAmount);
@@ -1917,7 +1937,8 @@ resetVatId = (props) => {
 						values: this.state.initValue,
 					};
 					this.updateAmount(this.state.data, values);
-					this.addRow()
+					this.addRow();
+					this.getProductType(res.data[0].id);
 				},
 			);
 			this.formRef.current.setFieldValue(
@@ -2100,7 +2121,7 @@ resetVatId = (props) => {
 												// 	) 
 												// 	  errors.placeOfSupplyId ='Place of supply is required';
 												//    }
-												if(this.state.customer_taxTreatment_des!="NON GCC")
+												if(this.state.customer_taxTreatment_des!="NON GCC" && this.state.customer_taxTreatment_des!="GCC NON-VAT REGISTERED" && this.state.customer_taxTreatment_des!="GCC VAT REGISTERED")
 												{
 													if (!values.placeOfSupplyId) 
 																   errors.placeOfSupplyId ='Place of supply is required';
@@ -2309,6 +2330,7 @@ resetVatId = (props) => {
 																				props.handleChange('customerId')('');
 																			}
 																			this.resetVatId(props);
+																			this.getCustomerShippingAddress(option.value,this.getTaxTreatment(option.value),props);
 																		}}
 																		className={
 																			props.errors.customerId &&
@@ -2383,7 +2405,8 @@ resetVatId = (props) => {
 																</FormGroup>
 															</Col>: ''}
 															<Col lg={3}>
-															{this.state.customer_taxTreatment_des!="NON GCC" &&(<FormGroup className="mb-3">
+															{this.state.customer_taxTreatment_des !== "NON GCC" && this.state.customer_taxTreatment_des !== "GCC VAT REGISTERED" && this.state.customer_taxTreatment_des !== "GCC NON-VAT REGISTERED" &&
+																(<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">
 																		<span className="text-danger">* </span>
 																		{/* {this.state.customer_taxTreatment_des &&
@@ -2417,14 +2440,12 @@ resetVatId = (props) => {
 																				'value',
 																				this.placelist,
 																				'Place of Supply',
-																		  ).find(
-																									(option) =>
-																										option.value ==
-																										((this.state.quotationId||this.state.parentId) ? this.state.placeOfSupplyId:props.values
-																											.placeOfSupplyId.toString())
-
-																								)
-																						}
+																		  	).find(
+																				(option) =>
+																					option.value ==
+																					((this.state.quotationId||this.state.parentId) ? this.state.placeOfSupplyId.value ? this.state.placeOfSupplyId.value : this.state.placeOfSupplyId :
+																					 props.values.placeOfSupplyId.toString()))
+																		}
 																		className={
 																			props.errors.placeOfSupplyId &&
 																			props.touched.placeOfSupplyId
@@ -2544,7 +2565,6 @@ resetVatId = (props) => {
 																		showYearDropdown
 																		dropdownMode="select"
 																		dateFormat="dd-MM-yyyy"
-																		minDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('quotaionExpiration')(value);
 																		}}
@@ -2639,7 +2659,7 @@ resetVatId = (props) => {
 																	color="primary"
 																	className= "btn-square mr-3"
 																	onClick={(e, props) => {
-																		this.openProductModal()
+																		this.openProductModal();
 																		// this.props.history.push(`/admin/master/product/create`,{gotoParentURL:"/admin/income/quotation/create"})
 																		}}
 													                >
@@ -3138,7 +3158,7 @@ resetVatId = (props) => {
 																		onClick={() => {
 																			if(this.state.data.length === 1)
 																				{
-																				console.log(props.errors,"ERRORs")
+																				//console.log(props.errors,"ERRORs")
 																				//	added validation popup	msg
 																			props.handleBlur();
 																			if(props.errors &&  Object.keys(props.errors).length != 0)

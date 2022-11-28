@@ -37,6 +37,7 @@ import moment from 'moment';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import Switch from "react-switch";
+import { L } from 'react-ladda/dist/constants';
 
 const mapStateToProps = (state) => {
 	return {

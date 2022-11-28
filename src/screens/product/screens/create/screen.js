@@ -445,8 +445,8 @@ try {
 			tmpSupplier_list.push(obj)
 		})
 
-		console.log(this.state.ReOrderLevel)
-		console.log(this.state.PurchaseQuantity)
+		//console.log(this.state.ReOrderLevel)
+		//console.log(this.state.PurchaseQuantity)
 		return (
 			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 			<div>

@@ -1168,6 +1168,26 @@ discountType = (row) =>
 			.renderOptions('label', 'value', this.state.discountOptions, 'discount')
 			.find((option) => option.value === +row.discountType)
 }
+getCustomerShippingAddress = (cutomerID,taxID,props) =>{
+	if(taxID !== 5 && taxID !== 6 && taxID !== 7){
+		this.props.customerInvoiceCreateActions.getCustomerShippingAddressbyID(cutomerID).then((res) => {
+			if(res.status === 200){
+				var PlaceofSupply= this.placelist &&
+					selectOptionsFactory.renderOptions(
+						'label',
+						'value',
+						this.placelist,
+						'Place of Supply',).
+						find((option) => option.label.toUpperCase() === res.data.shippingStateName.toUpperCase())
+					if(PlaceofSupply){
+					props.handleChange('placeOfSupplyId')(PlaceofSupply,);
+					this.setState({placeOfSupplyId : PlaceofSupply});
+					this.formRef.current.setFieldValue('placeOfSupplyId', PlaceofSupply.value, true);
+				}
+			}
+		});
+	}
+};
 getCompanyType = () => {
 	this.props.customerInvoiceCreateActions
 		.getCompanyById()
@@ -2211,7 +2231,8 @@ resetVatId = (props) => {
 						values: this.state.initValue,
 					};
 					this.updateAmount(this.state.data, values);
-					this.addRow()
+					this.addRow();
+					this.getProductType(res.data[0].id);
 				},
 			);
 			this.formRef.current.setFieldValue(
@@ -2710,6 +2731,7 @@ resetVatId = (props) => {
 																				props.handleChange('contactId')('');
 																			}
 																			this.resetVatId(props);
+																			this.getCustomerShippingAddress(option.value,this.getTaxTreatment(option.value),props);
 																		}}
 																		className={
 																			props.errors.contactId &&
@@ -2815,10 +2837,9 @@ resetVatId = (props) => {
 																		  ).find(
 																				(option) =>
 																					option.value ==
-																					((this.state.quotationId||this.state.parentInvoiceId) ? this.state.placeOfSupplyId:props.values
-																						.placeOfSupplyId.toString())
-																								)
-																						}
+																					((this.state.quotationId||this.state.parentInvoiceId) ? this.state.placeOfSupplyId.value ? this.state.placeOfSupplyId.value : this.state.placeOfSupplyId :
+																					props.values.placeOfSupplyId.toString()))
+																			}
 																		className={
 																			props.errors.placeOfSupplyId &&
 																			props.touched.placeOfSupplyId

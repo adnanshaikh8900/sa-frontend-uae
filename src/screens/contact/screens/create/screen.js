@@ -280,6 +280,8 @@ class CreateContact extends React.Component {
 				label: 'Select State',
 				value: '',
 			});
+			props.handleChange('billingStateProvince')('');
+			this.setState({ isSame: false, });
 		}
 		else{
 			list = country_list;	
@@ -297,6 +299,13 @@ class CreateContact extends React.Component {
 			).find((option) => option.value === 229));
 			this.getStateListForShippingAddress(229);
 			this.getStateList(229);
+			props.handleChange('stateId')({
+				label: 'Select State',
+				value: '',
+			});
+			props.handleChange('billingStateProvince')('');
+			props.handleChange('shippingStateId')('');
+			this.setState({ isSame: false, });
 		}
 		this.setState({country_list : list });
 	};
@@ -1186,6 +1195,7 @@ class CreateContact extends React.Component {
 																							label: 'Select State',
 																							value: '',
 																						});
+																						props.handleChange('billingStateProvince')('');
 																					}}
 																					placeholder={strings.Select + strings.Country}
 																					id="billingcountryId"
@@ -1223,13 +1233,7 @@ class CreateContact extends React.Component {
 																							: []
 																					}
 																					// value={props.values.billingStateProvince}
-																					value={
-																						state_list.find(
-																							(option) =>
-																								option.value ===
-																								+props.values.billingStateProvince.value,
-																						)
-																					}
+																					value={props.values.billingStateProvince}
 																					onChange={(option) => {
 																						if (option && option.value) {
 																							props.handleChange('billingStateProvince')(option);
@@ -1635,10 +1639,7 @@ class CreateContact extends React.Component {
 																							props.handleChange('shippingCountryId')('');
 																							// this.getStateListForShippingAddress('');
 																						}
-																						props.handleChange('stateId')({
-																							label: 'Select State',
-																							value: '',
-																						});
+																						props.handleChange('shippingStateId')('');
 																					}}
 																					placeholder={strings.Select + strings.Country}
 																					id="shippingCountryId"
@@ -1675,13 +1676,7 @@ class CreateContact extends React.Component {
 																							)
 																							: []
 																					}
-																					value={
-																						state_list_for_shipping.find(
-																							(option) =>
-																								option.value ===
-																								+props.values.shippingStateId.value,
-																						)
-																					}
+																					value={props.values.shippingStateId}
 																					onChange={(option) => {
 																						if (option && option.value) {
 																							props.handleChange('shippingStateId')(option);
@@ -1919,6 +1914,7 @@ class CreateContact extends React.Component {
 																					className="btn-square mr-3"
 																					disabled={this.state.disabled}
 																					onClick={() => {
+																						console.log(props.errors,"ERROR");
 																						//  added validation popup  msg                                                                
 																						props.handleBlur();
 																						if (props.errors && Object.keys(props.errors).length != 0)

@@ -1038,7 +1038,7 @@ class DetailSupplierInvoice extends React.Component {
 								}else{
 									if(res.data.productType=== "GOODS" ){
 										if(this.state.customer_taxTreatment_des==='VAT REGISTERED' ){
-											vt=vat_list;
+											vt=vat_list.filter((obj) => obj.id !== 10);
 										}
 										if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE' ||this.state.customer_taxTreatment_des==='NON-VAT REGISTERED'||this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
 											vat_list.map(element => {

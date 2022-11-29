@@ -1071,6 +1071,7 @@ renderName=(cell,row)=>{
 																		check
 																	>
 																	<Input
+																		disabled={this.state.childRecordsPresent}
 																		className="form-check-input"
 																		type="radio"
 																		id="inline-radio1"

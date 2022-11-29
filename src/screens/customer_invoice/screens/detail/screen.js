@@ -1257,7 +1257,7 @@ class DetailCustomerInvoice extends React.Component {
 		}
 	};
 	updateAmount = (data, props) => {
-		const { vat_list } = this.state.vat_list;
+		const { vat_list } = this.state;
 		console.log(vat_list);
 		let total_net = 0;
 		let total_excise = 0;
@@ -1900,21 +1900,13 @@ class DetailCustomerInvoice extends React.Component {
 																'Discount amount Cannot be greater than invoice total amount';
 														}
 
-														if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
-														||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
-														||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
+														if(this.state.customer_taxTreatment_des!="NON GCC" && this.state.customer_taxTreatment_des!="GCC NON-VAT REGISTERED" && this.state.customer_taxTreatment_des!="GCC VAT REGISTERED")
 														{
-															
 															if (!values.placeOfSupplyId) 
-													       	errors.placeOfSupplyId ='Place of supply is required';
-														if (values.placeOfSupplyId &&
-															(values.placeOfSupplyId=="" ||
-															(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")
-															)
-														   )
-													         errors.placeOfSupplyId ='Place of supply is required';
-														
-													   }
+													       		errors.placeOfSupplyId ='Place of supply is required';
+															if (values.placeOfSupplyId && (values.placeOfSupplyId=="" || (values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")))
+													         	errors.placeOfSupplyId ='Place of supply is required';
+													   	}
 
 														// if (values.placeOfSupplyId && values.placeOfSupplyId.label &&( values.placeOfSupplyId.label === "Select Place of Supply"))
 														//  {

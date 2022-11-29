@@ -335,10 +335,10 @@ dateLimit=()=>{
 																			{props.errors.vatRegistrationNumber}
 																		</div>
 																	)}
-																<div className="VerifyTRN">
+																{/* <div className="VerifyTRN">
 																	<br />
 																	<b>	<a target="_blank" rel="noopener noreferrer" href="https://eservices.tax.gov.ae/en-us/trn-verify" style={{ color: '#2266d8' }}  >{strings.VerifyTRN}</a></b>
-																</div>
+																</div> */}
 															</FormGroup>
 														</Col>
 														<Col lg={4}>

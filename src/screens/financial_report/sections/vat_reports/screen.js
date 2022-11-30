@@ -56,7 +56,8 @@ class VatReports extends React.Component {
 			coaName: '',
 			vatReportDataList:[],
 			options:[
-				{label:"Montly",value:0},		{label:"Quarterly",value:2},
+				{label:"Montly",value:0},		
+				{label:"Quarterly",value:2},
 			],
 			enbaleReportGeneration:false,
 			monthOption:0,
@@ -123,6 +124,7 @@ class VatReports extends React.Component {
 	onBtnExportexcel = () => {
 		this.gridApi.exportDataAsExcel();
 	};
+
 	componentDidMount = () => {
 		this.getInitialData();
 	};
@@ -550,9 +552,7 @@ class VatReports extends React.Component {
 							)}
 							<Row>
 								<Col lg={12}>
-
-
-									<div
+											<div
 										className="h4 mb-0 d-flex align-items-center"
 										style={{ justifyContent: 'space-between' }}
 									>
@@ -566,7 +566,7 @@ class VatReports extends React.Component {
 												}}
 												onClick={this.viewFilter}
 											>
-												<i className="fa fa-cog mr-2"></i>VAT Report
+												VAT Report
 											</p>
 										</div>
 										<div>

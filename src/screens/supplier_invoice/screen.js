@@ -306,7 +306,7 @@ class SupplierInvoice extends React.Component {
 						)}
 					</DropdownToggle>
 					<DropdownMenu right>
-						{row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && row.statusEnum !== 'Partially Paid' && (
+						{row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && row.statusEnum !== 'Partially Paid' && row.editFlag==true && (
 							<DropdownItem
 								onClick={() =>
 									this.props.history.push(
@@ -1212,11 +1212,10 @@ console.log(supplier_invoice_list)
 												Due Amount
 											</TableHeaderColumn> */}
 											<TableHeaderColumn
-												className="text-right"
+												className="text-right table-header-bg"
 												columnClassName="text-right"
 												width="5%"
 												dataFormat={this.renderActions}
-												className="table-header-bg"
 											></TableHeaderColumn>
 										</BootstrapTable>
 								</Col>

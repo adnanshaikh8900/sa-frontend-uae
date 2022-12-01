@@ -9,18 +9,13 @@ import {
 	CardHeader,
 	CardBody,
 	Row,
-	ButtonDropdown,
-	DropdownToggle,
-	DropdownMenu,
-	DropdownItem,
 } from 'reactstrap';
 import { AuthActions, CommonActions } from 'services/global';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-datepicker/dist/react-datepicker.css'
 import './style.scss';
 import * as Vatreport from './actions';
-import { isDate, upperFirst } from 'lodash-es';
-
+import { upperFirst } from 'lodash-es';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import moment from 'moment';
@@ -28,9 +23,9 @@ import download from 'downloadjs';
 import { DeleteModal, FileTaxReturnModal, GenerateVatReportModal, VatSettingModal } from './sections';
 import { AgGridReact, AgGridColumn } from 'ag-grid-react/lib/agGridReact';
 import { ConfirmDeleteModal, Currency,Loader } from 'components';
-import { selectOptionsFactory } from 'utils';
 import Select from 'react-select';
 import { toast } from 'react-toastify';
+
 const mapStateToProps = (state) => {
 	return {
 		version: state.common.version,
@@ -44,7 +39,6 @@ const mapDispatchToProps = (dispatch) => {
 		vatreport: bindActionCreators(Vatreport, dispatch),
 	};
 };
-
 
 class VatReports extends React.Component {
 	constructor(props) {
@@ -62,7 +56,8 @@ class VatReports extends React.Component {
 			coaName: '',
 			vatReportDataList:[],
 			options:[
-				{label:"Montly",value:0},		{label:"Quarterly",value:2},
+				{label:"Montly",value:0},		
+				{label:"Quarterly",value:2},
 			],
 			enbaleReportGeneration:false,
 			monthOption:0,
@@ -111,10 +106,12 @@ class VatReports extends React.Component {
 			loadingMsg:"Loading..."
 		};
 	}
+
 	onPageSizeChanged = (newPageSize) => {
 		var value = document.getElementById('page-size').value;
 		this.gridApi.paginationSetPageSize(Number(value));
 	};
+
 	onGridReady = (params) => {
 		this.gridApi = params.api;
 		this.gridColumnApi = params.columnApi;
@@ -127,10 +124,10 @@ class VatReports extends React.Component {
 	onBtnExportexcel = () => {
 		this.gridApi.exportDataAsExcel();
 	};
+
 	componentDidMount = () => {
 		this.getInitialData();
 	};
-
 	
 	markItUnfiled=(row)=>{
 		const postingRequestModel = {
@@ -175,7 +172,6 @@ class VatReports extends React.Component {
 			});
 	};
 
-
 	export = (filename) => {
 		this.props.vatreport
 			.downloadcsv(filename)
@@ -192,17 +188,17 @@ class VatReports extends React.Component {
 				);
 			});
 	}
+
 	handleChange = (key, val) => {
 		this.setState({
 			[key]: val,
 		});
 	};
 
-
-
 	closeModal = (res) => {
 		this.setState({ openModal: false });
 	};
+
 	closeVatSettingModal = (res) => {
 		this.setState({ openVatSettingModal: false });
 	};
@@ -210,14 +206,15 @@ class VatReports extends React.Component {
 	closeFileTaxRetrunModal = (res) => {
 		this.setState({ openFileTaxRetrunModal: false });
 	};
+
 	closeDeleteModal = (res) => {
 		this.setState({ deleteModal: false });
 	};
 
-
 	showHeader = (s) => {
 		return upperFirst(s.replace(/([a-z])([A-Z])/g, '$1 $2'));
 	}
+
 	toggleActionButton = (index) => {
 		console.log(index, this.state.actionButtons ," this.state.actionButtons")
 		let temp = Object.assign({}, this.state.actionButtons);
@@ -555,9 +552,7 @@ class VatReports extends React.Component {
 							)}
 							<Row>
 								<Col lg={12}>
-
-
-									<div
+											<div
 										className="h4 mb-0 d-flex align-items-center"
 										style={{ justifyContent: 'space-between' }}
 									>
@@ -571,7 +566,7 @@ class VatReports extends React.Component {
 												}}
 												onClick={this.viewFilter}
 											>
-												<i className="fa fa-cog mr-2"></i>VAT Report
+												VAT Report
 											</p>
 										</div>
 										<div>
@@ -631,19 +626,16 @@ class VatReports extends React.Component {
 												}}>
 												
 												<i class="fas fa-plus"></i> Generate VAT Report
-
-												
 											</Button>
 										<Col lg={3} className=" pull-right ">
 												<Select 
-
-														options={options}
-														id="option"
-														name="option"
-														placeholder="VAT Reporting Period"
-														onChange={(e) => {															
-														this.setState({enbaleReportGeneration:true,monthOption:e.value})														
-														}}
+													options={options}
+													id="option"
+													name="option"
+													placeholder="VAT Reporting Period"
+													onChange={(e) => {															
+													this.setState({enbaleReportGeneration:true,monthOption:e.value})														
+													}}
 														/>
 														</Col>
 											{/* <Button color="primary" className="btn-square  pull-right"
@@ -685,7 +677,7 @@ class VatReports extends React.Component {
 								>
 
 									<AgGridColumn field="taxReturns"
-										headerName="Tax Return"
+										headerName="VAT Return"
 										sortable={true}
 										filter={true}
 										// checkboxSelection={true}
@@ -699,7 +691,7 @@ class VatReports extends React.Component {
 									></AgGridColumn>
 
 									<AgGridColumn field="totalTaxPayable"
-										headerName="Total Tax Payable"
+										headerName="Total VAT Payable"
 										sortable={true}
 										filter={true}
 										enablePivot={true}
@@ -711,7 +703,7 @@ class VatReports extends React.Component {
 									></AgGridColumn>
 
 									<AgGridColumn field="totalTaxReclaimable"
-										headerName="Total Tax Reclaimable"
+										headerName="Total VAT Reclaimable"
 										sortable={true}
 										filter={true}
 										enablePivot={true}

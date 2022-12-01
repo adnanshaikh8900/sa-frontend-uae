@@ -445,7 +445,7 @@ stockInHandTestForProduct = (row,markAsSent) => {
 						)}
 					</DropdownToggle>
 					<DropdownMenu right>
-						{row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && row.statusEnum !== 'Partially Paid' && (
+						{row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && row.statusEnum !== 'Partially Paid' && row.editFlag &&  (
 							<DropdownItem>
 								<div
 									onClick={() => {
@@ -481,7 +481,7 @@ stockInHandTestForProduct = (row,markAsSent) => {
               <i className="fas fa-eye" /> View
             </DropdownItem> */}
 
-						{row.statusEnum === 'Sent' && row.editFlag==true && (
+						{row.statusEnum === 'Sent' && row.editFlag && (
 							<DropdownItem
 								onClick={() => {
 									this.unPostInvoice(row);

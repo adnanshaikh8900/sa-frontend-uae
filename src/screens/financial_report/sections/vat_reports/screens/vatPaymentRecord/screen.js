@@ -9,13 +9,11 @@ import {
 	CardBody,
 	Row,
 } from 'reactstrap';
-
 import { AuthActions, CommonActions } from 'services/global';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-datepicker/dist/react-datepicker.css'
 import './style.scss';
 import * as VatreportAction from './actions';
-
 import logo from 'assets/images/brand/logo.png';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
@@ -23,6 +21,7 @@ import moment from 'moment';
 import * as FinancialReportActions from '../../../../actions';
 import { AgGridReact, AgGridColumn } from 'ag-grid-react/lib/agGridReact';
 import { Currency } from 'components';
+
 const mapStateToProps = (state) => {
 	return {
 		version: state.common.version,
@@ -74,10 +73,12 @@ class VatPaymentRecord extends React.Component {
 			
 		};
 	}
+
     onPageSizeChanged = (newPageSize) => {
         var value = document.getElementById('page-size').value;
         this.gridApi.paginationSetPageSize(Number(value));
       };
+
     onGridReady = (params) => {
         this.gridApi = params.api;
         this.gridColumnApi = params.columnApi;
@@ -90,6 +91,7 @@ class VatPaymentRecord extends React.Component {
     onBtnExportexcel= () => {
         this.gridApi.exportDataAsExcel();
       };
+
 	componentDidMount = () => {
 		this.getInitialData();
 		this.props.financialReportActions.getCompany();
@@ -111,13 +113,13 @@ class VatPaymentRecord extends React.Component {
 			});
 	};
 
-
 	renderDate = (cell, row) => {
 		return cell ? moment(cell)
 			// .format('DD-MM-YYYY') 
 			.format('LL')
 			: '-';
 	};
+
 	renderAmount = (amount, params) => {
 		if (amount != null && amount != 0)
 			return (
@@ -131,12 +133,11 @@ class VatPaymentRecord extends React.Component {
 		else
 			return ("---")
 	}
+
 	renderTaxReturns = (cell, row) => {
 		let dateArr = cell ? cell.split(" ") : [];
-
 		let startDate = moment(dateArr[0]).format('DD-MM-YYYY')
 		let endDate = moment(dateArr[1]).format('DD-MM-YYYY')
-
 		return (<>{dateArr[0].replaceAll("/","-")}</>);
 	};
 
@@ -150,8 +151,6 @@ class VatPaymentRecord extends React.Component {
 						<CardHeader>
 							<Row>
 								<Col lg={12}>
-
-
 									<div
 										className="h4 mb-0 d-flex align-items-center"
 										style={{ justifyContent: 'space-between' }}
@@ -170,8 +169,6 @@ class VatPaymentRecord extends React.Component {
 											</p>
 										</div>
 										<div className="d-flex">
-
-
 
 											<Button
 												className="mr-2 print-btn-cont"
@@ -249,7 +246,7 @@ class VatPaymentRecord extends React.Component {
 								>
 
 									<AgGridColumn field="taxReturns"
-										headerName="Tax Return"
+										headerName="VAT Return"
 										sortable={true}
 										filter={true}
 										// checkboxSelection={true}
@@ -286,7 +283,6 @@ class VatPaymentRecord extends React.Component {
 									></AgGridColumn>
 
 									<AgGridColumn field="amountReclaimed"
-
 										headerName="Amount Reclaimed"
 										sortable={true}
 										enablePivot={true}

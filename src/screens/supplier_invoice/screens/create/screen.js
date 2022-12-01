@@ -2668,17 +2668,17 @@ class CreateSupplierInvoice extends React.Component {
 												// 	         errors.placeOfSupplyId ='Place of supply is required';
 													
 												//    }
-												if(this.state.customer_taxTreatment_des!="NON GCC")
-													{
-														if (!values.placeOfSupplyId) 
-															       	errors.placeOfSupplyId ='Place of supply is required';
-														if (values.placeOfSupplyId &&
-																	(values.placeOfSupplyId=="" ||
-																	(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")
-																	)
-																   ) 
-															         errors.placeOfSupplyId ='Place of supply is required';
-													}
+												// if(this.state.customer_taxTreatment_des!="NON GCC")
+												// 	{
+												// 		if (!values.placeOfSupplyId) 
+												// 			       	errors.placeOfSupplyId ='Place of supply is required';
+												// 		if (values.placeOfSupplyId &&
+												// 					(values.placeOfSupplyId=="" ||
+												// 					(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")
+												// 					)
+												// 				   ) 
+												// 			         errors.placeOfSupplyId ='Place of supply is required';
+												// 	}
 													if (values.term && values.term.label && values.term.label === "Select Terms") {
 														errors.term = 'Term is required';
 													}
@@ -2979,16 +2979,16 @@ class CreateSupplierInvoice extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col> : ''}
-															<Col lg={3}>
+															{/* <Col lg={3}>
 															{this.state.customer_taxTreatment_des!="NON GCC" &&(<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">
 																		<span className="text-danger">* </span>
-																		{/* {this.state.customer_taxTreatment_des &&
+																		/* {this.state.customer_taxTreatment_des &&
 																		(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
 																		||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
 																		||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED") && (
 																			<span className="text-danger">* </span>
-																		)} */}
+																		)} /*
 																		{strings.PlaceofSupply}
 																	</Label>
 																	<Select
@@ -3047,7 +3047,7 @@ class CreateSupplierInvoice extends React.Component {
 																			</div>
 																		)}
 																</FormGroup>)}
-															</Col>
+															</Col> */}
 														</Row>
 														<hr />
 														<Row>

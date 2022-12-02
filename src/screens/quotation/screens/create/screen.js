@@ -1016,7 +1016,6 @@ getProductType=(id)=>{
 									vt.push(element);
 								}
 							});
-							
 						}	
 					}
 				}else{
@@ -1172,7 +1171,6 @@ resetVatId = (props) => {
 		data.map((obj, index) => {
 			if (obj.id === row.id) {
 				obj['unitPrice'] = result.unitPrice;
-				obj['vatCategoryId'] = result.vatCategoryId;
 				obj['description'] = result.description;
 				obj['exciseTaxId'] = result.exciseTaxId;
 				obj['discountType'] = result.discountType;
@@ -1187,7 +1185,9 @@ resetVatId = (props) => {
 							if(!found){
 								obj['vatCategoryId']='';
 							}
-							return found;
+							else{
+								obj['vatCategoryId'] = result.vatCategoryId;
+							}
 						}
 					});
 				}
@@ -1274,7 +1274,7 @@ resetVatId = (props) => {
 							if (e && e.label !== 'Select Product') {
 								this.selectItem(e.value, row, 'productId', form, field, props);
 								this.prductValue(e.value, row, 'productId', form, field, props);
-								if(this.checkedRow()===false){
+								if(this.checkedRow()){
 									this.addRow();
 								}
 								// this.formRef.current.props.handleChange(field.name)(e.value)
@@ -1419,7 +1419,8 @@ resetVatId = (props) => {
 	checkedRow = () => {
 		if (this.state.data.length > 0) {
 			let length = this.state.data.length - 1;
-			let temp = Object.values(this.state.data[`${length}`]).indexOf('');
+			let temp = this.state.data?.[length].productId!==""?
+			this.state.data?.[length].productId:-2
 			if (temp > -1) {
 				return true;
 			} else {

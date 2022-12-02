@@ -1420,7 +1420,7 @@ resetVatId = (props) => {
 		if (this.state.data.length > 0) {
 			let length = this.state.data.length - 1;
 			let temp = this.state.data?.[length].productId!==""?
-			this.state.data?.[length].productId:-2
+			this.state.data?.[length].productId:-2;
 			if (temp > -1) {
 				return true;
 			} else {

@@ -620,7 +620,6 @@ class DetailContact extends React.Component {
 
 		this.setState({country_list : list ,});
 
-		console.log(this.state.country_list,props.values.billingcountryId);
 
 	};
 	validationCheck = (value) => {
@@ -1568,7 +1567,6 @@ class DetailContact extends React.Component {
 																						}
 																						isDisabled = {props.values.taxTreatmentId === 1 || props.values.taxTreatmentId === 2 || props.values.taxTreatmentId === 3 || props.values.taxTreatmentId === 4}
 																						onChange={(option) => {
-																							console.log(this.state.country_list,props.values.billingcountryId);
 																							if (option && option.value) {
 																								props.handleChange('billingcountryId')(option);
 																								this.getStateList(option.value);
@@ -2029,7 +2027,6 @@ class DetailContact extends React.Component {
 																						}
 																						isDisabled = {props.values.taxTreatmentId === 1 || props.values.taxTreatmentId === 2 || props.values.taxTreatmentId === 3 || props.values.taxTreatmentId === 4}
 																						onChange={(option) => {
-																							console.log(this.state.country_list,props.values.shippingCountryId);
 																							if (option && option.value) {
 																								props.handleChange('shippingCountryId')(option);
 																								this.getStateListForShippingAddress(option.value);

@@ -170,17 +170,19 @@ class RecordVatPayment extends React.Component {
 			formData.append('id', reportId);
 			formData.append('vatFiledNumber', reportId);
 		}
-		if (this.uploadFile.files[0]) {
-			formData.append('attachmentFile', this.uploadFile.files[0]);
+		if (this.uploadFile?.files?.[0]) {
+			formData.append('attachmentFile', this.uploadFile?.files?.[0]);
 		}
 		formData.append('isVatReclaimed', false);
 		this.setState({ loading:true, loadingMsg:"Tax Claim Recording..."});
 		this.props.vatreportActions.recordVatPayment(formData)
 			.then((res) => {
+				
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data ? res.data.message : 'Tax Claim Recorded Successfully',
+					 'Tax Claim Recorded Successfully',
 				);
+				
 				this.props.history.push('/admin/report/vatreports');
 				this.setState({ loading:false,});
 			})

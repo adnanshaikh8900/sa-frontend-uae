@@ -145,7 +145,7 @@ class ExplainTrasactionDetail extends React.Component {
 		this.props.detailBankAccountActions
 			.getBankAccountByID(bankId)
 			.then((res) => {
-					debugger
+					
 				this.setState({
 					bankCurrency: res,
 				});
@@ -331,7 +331,7 @@ class ExplainTrasactionDetail extends React.Component {
 			this.formRef.current.setFieldValue('expenseType', res.data.expenseType, true)
 			this.formRef.current.setFieldValue('description', res.data.description, true)
 			this.formRef.current.setFieldValue('reference', res.data.reference, true)
-				debugger
+				
 		}
 	};
 
@@ -371,9 +371,9 @@ class ExplainTrasactionDetail extends React.Component {
 		});
 	};
 	setValue = (value) => {
-		debugger
+		
 		this.setState((prevState) => {
-		debugger
+		
 			return {
 			...prevState,
 			transactionCategoryList: [],
@@ -408,7 +408,7 @@ class ExplainTrasactionDetail extends React.Component {
 			return obj.currencyCode === value;
 		});
 		if (result[0] && result[0].currencyIsoCode) {
-			debugger
+			
 			this.formRef.current.setFieldValue('curreancyname', result[0].currencyIsoCode, true);
 		}
 	};
@@ -608,7 +608,7 @@ class ExplainTrasactionDetail extends React.Component {
 	};
 
 	getVendorList = () => {
-		debugger
+		
 		this.props.transactionsActions.getVendorList(this.state.initValue.bankId);
 	};
 
@@ -797,8 +797,8 @@ class ExplainTrasactionDetail extends React.Component {
 		  );
 
 		formData.append('reference', reference ? reference : '');
-		if (this.uploadFile && this.uploadFile.files && this.uploadFile.files[0]) {
-			formData.append('attachment', this.uploadFile.files[0]);
+		if (this.uploadFile && this.uploadFile.files && this.uploadFile?.files?.[0]) {
+			formData.append('attachment', this.uploadFile?.files?.[0]);
 		}
 		if (
 			payrollListIds &&
@@ -930,7 +930,7 @@ class ExplainTrasactionDetail extends React.Component {
 				}
 			})
 			.catch((err) => {
-				debugger
+				
 				console.log(err);
 				this.props.commonActions.tostifyAlert(
 					'error',
@@ -982,7 +982,7 @@ class ExplainTrasactionDetail extends React.Component {
 		} else if (totalshort >= 0) {
 		  final = transactionAmount - totalconvetedamount
 		}
-		debugger
+		
 		return {value:`${this.state.bankCurrency
 			?.bankAccountCurrencyIsoCode
 		  } ${final.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })

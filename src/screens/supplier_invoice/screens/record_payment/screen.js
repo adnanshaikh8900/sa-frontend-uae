@@ -268,8 +268,8 @@ class RecordSupplierPayment extends React.Component {
 		if (contactId) {
 			formData.append('contactId', contactId);
 		}
-		if (this.uploadFile.files[0]) {
-			formData.append('attachmentFile', this.uploadFile.files[0]);
+		if (this.uploadFile?.files?.[0]) {
+			formData.append('attachmentFile', this.uploadFile?.files?.[0]);
 		}
   		formData.append(
 			'invoiceNumber',

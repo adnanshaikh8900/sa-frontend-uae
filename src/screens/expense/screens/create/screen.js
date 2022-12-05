@@ -461,8 +461,8 @@ class CreateExpense extends React.Component {
 		if (project && project.value) {
 			formData.append('projectId', project.value);
 		}
-		if (this.uploadFile.files[0]) {
-			formData.append('attachmentFile', this.uploadFile.files[0]);
+		if (this.uploadFile?.files?.[0]) {
+			formData.append('attachmentFile', this.uploadFile?.files?.[0]);
 		}
 		this.setState({ loading:true, loadingMsg:"Creating Expense..."});
 		this.props.expenseCreateActions

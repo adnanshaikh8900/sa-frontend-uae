@@ -106,7 +106,7 @@ class ReconcileTransaction extends React.Component {
 	componentDidMount = () => {
 		this.initializeData();
 		console.log(this.props.currency_list)
-		debugger
+		
 	};
 
 	initializeData = () => {

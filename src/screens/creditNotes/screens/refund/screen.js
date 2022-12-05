@@ -131,7 +131,7 @@ class Refund extends React.Component {
 			'application/vnd.ms-excel',
 			'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 		];
-		debugger
+		
 	}
 
 	componentDidMount = () => {
@@ -339,8 +339,8 @@ class Refund extends React.Component {
 		if (contactId) {
 			formData.append('contactId', contactId);
 		}
-		if (this.uploadFile.files[0]) {
-			formData.append('attachmentFile', this.uploadFile.files[0]);
+		if (this.uploadFile?.files?.[0]) {
+			formData.append('attachmentFile', this.uploadFile?.files?.[0]);
 		}
 		this.setState({ loading:true, loadingMsg:" Payment Refunding..."});
 		this.props.CustomerRecordPaymentActions.recordPayment(formData)

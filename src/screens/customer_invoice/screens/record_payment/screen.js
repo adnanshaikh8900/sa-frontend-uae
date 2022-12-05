@@ -275,8 +275,8 @@ class RecordCustomerPayment extends React.Component {
 		if (contactId) {
 			formData.append('contactId', contactId);
 		}
-		if (this.uploadFile.files[0]) {
-			formData.append('attachmentFile', this.uploadFile.files[0]);
+		if (this.uploadFile?.files?.[0]) {
+			formData.append('attachmentFile', this.uploadFile?.files?.[0]);
 		}
 		this.setState({ loading:true, loadingMsg:"Payment Recording..."});
 		this.props.CustomerRecordPaymentActions.recordPayment(formData)

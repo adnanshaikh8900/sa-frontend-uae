@@ -2219,7 +2219,8 @@ class DetailCustomerInvoice extends React.Component {
 																	</Button>
 																</Col> */}
 																<Col lg={3}>
-																{this.state.customer_taxTreatment_des!="NON GCC" &&(	<FormGroup className="mb-3">
+																{this.state.customer_taxTreatment_des !== "NON GCC" && this.state.customer_taxTreatment_des !== "GCC VAT REGISTERED" && this.state.customer_taxTreatment_des !== "GCC NON-VAT REGISTERED" &&
+																	(	<FormGroup className="mb-3">
 																		<Label htmlFor="placeOfSupplyId">
 																		<span className="text-danger">* </span>
 																		{/* {this.state.customer_taxTreatment_des &&

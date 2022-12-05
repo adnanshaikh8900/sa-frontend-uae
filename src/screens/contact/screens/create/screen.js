@@ -281,6 +281,7 @@ class CreateContact extends React.Component {
 				value: '',
 			});
 			props.handleChange('billingStateProvince')('');
+			props.handleChange('shippingStateId')('');
 			this.setState({ isSame: false, });
 		}
 		else{
@@ -1614,21 +1615,7 @@ class CreateContact extends React.Component {
 																							)
 																							: []
 																					}
-																					value={
-																						this.state.country_list &&
-																						selectOptionsFactory
-																							.renderOptions(
-																								'countryName',
-																								'countryCode',
-																								this.state.country_list,
-																								'Country',
-																							)
-																							.find(
-																								(option) =>
-																									option.value ===
-																									+props.values.shippingCountryId.value,
-																							)
-																					}
+																					value={props.values.shippingCountryId}
 																					isDisabled = {props.values.taxTreatmentId.value === 1 || props.values.taxTreatmentId.value === 2 || props.values.taxTreatmentId.value === 3 || props.values.taxTreatmentId.value === 4}
 																					onChange={(option) => {
 																						if (option && option.value) {

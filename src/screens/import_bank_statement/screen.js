@@ -147,8 +147,8 @@ class ImportBankStatement extends React.Component {
 		this.setState({ loading: true });
 		const { selectedTemplate } = this.state;
 		let formData = new FormData();
-		if (this.uploadFile && this.uploadFile.files[0]) {
-			formData.append('file', this.uploadFile.files[0]);
+		if (this.uploadFile && this.uploadFile?.files?.[0]) {
+			formData.append('file', this.uploadFile?.files?.[0]);
 		}
 		formData.append('id', selectedTemplate ? +selectedTemplate : '');
 		formData.append(
@@ -243,7 +243,7 @@ class ImportBankStatement extends React.Component {
 			});
 	};
 	handleFileUpload = e => {
-		const file = this.uploadFile.files[0];
+		const file = this.uploadFile?.files?.[0];
 		const reader = new FileReader();
 		reader.onload = (evt) => {
 		  const bstr = evt.target.result;

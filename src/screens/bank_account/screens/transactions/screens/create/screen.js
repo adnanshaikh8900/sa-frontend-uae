@@ -424,8 +424,8 @@ class CreateBankTransaction extends React.Component {
 
     }
     formData.append("reference", reference ? reference : "");
-    if (this.uploadFile.files[0]) {
-      formData.append("attachmentFile", this.uploadFile.files[0]);
+    if (this.uploadFile?.files?.[0]) {
+      formData.append("attachmentFile", this.uploadFile?.files?.[0]);
     }
     if (
       payrollListIds &&
@@ -821,7 +821,7 @@ class CreateBankTransaction extends React.Component {
           remainingcredit = localremainamount
         }
         const basecurrency=this.basecurrencyconvertor(i.currencyCode)
-        debugger
+        
         return {
           ...i,
 
@@ -2097,7 +2097,7 @@ class CreateBankTransaction extends React.Component {
 																								)
 																						}
 																						onChange={(option) => {
-																							debugger
+																							
 																							if (option && option.value) {
 																								props.handleChange(
 																									'currencyCode',

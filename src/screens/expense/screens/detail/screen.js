@@ -316,8 +316,8 @@ class DetailExpense extends React.Component {
 		if (bankAccountId && bankAccountId.value && payMode === 'BANK') {
 			formData.append('bankAccountId', bankAccountId.value);
 		}
-		if (this.uploadFile.files[0]) {
-			formData.append('attachmentFile', this.uploadFile.files[0]);
+		if (this.uploadFile?.files?.[0]) {
+			formData.append('attachmentFile', this.uploadFile?.files?.[0]);
 		}
 		if (placeOfSupplyId  ) {
 			formData.append('placeOfSupplyId', placeOfSupplyId.value ?placeOfSupplyId.value :placeOfSupplyId);

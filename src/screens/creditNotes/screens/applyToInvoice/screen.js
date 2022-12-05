@@ -845,7 +845,7 @@ min="0"
 				
 					newdata.map((i,ind)=>{
 						const indd=theinvoicelist.findIndex((i)=>i.id===finaldata[ind].id)
-						debugger
+						
 						if(i.creditstaken-i.dueAmount>=0) {
 							finaldata[ind].creditstaken=i.dueAmount
 
@@ -855,11 +855,11 @@ min="0"
 
 						if(indd>-1) theinvoicelist[indd]=finaldata[ind]
 					})
-				debugger
+				
 					delete row.creditstaken	
 					
 				} else {
-					debugger
+					
 		if(newdatatemp.length===finaldata.length )
 					this.setState({
 						cannotsave:false
@@ -983,8 +983,8 @@ min="0"
 	// 	if (project) {
 	// 		formData.append('projectId', project);
 	// 	}
-	// 	if (this.uploadFile.files[0]) {
-	// 		formData.append('attachmentFile', this.uploadFile.files[0]);
+	// 	if (this.uploadFile?.files?.[0]) {
+	// 		formData.append('attachmentFile', this.uploadFile?.files?.[0]);
 	// 	}
 	// 	this.props.customerInvoiceDetailActions
 	// 		.updateInvoice(formData)

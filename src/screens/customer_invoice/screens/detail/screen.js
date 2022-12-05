@@ -1604,8 +1604,8 @@ class DetailCustomerInvoice extends React.Component {
 		if (project) {
 			formData.append('projectId', project);
 		}
-		if (this.uploadFile.files[0]) {
-			formData.append('attachmentFile', this.uploadFile.files[0]);
+		if (this.uploadFile?.files?.[0]) {
+			formData.append('attachmentFile', this.uploadFile?.files?.[0]);
 		}
 		this.setState({ loading:true, disableLeavePage:true, loadingMsg:"Updating Invoice..."});
 		this.props.customerInvoiceDetailActions

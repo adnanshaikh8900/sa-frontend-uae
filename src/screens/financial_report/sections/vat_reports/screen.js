@@ -333,10 +333,10 @@ class VatReports extends React.Component {
 	{/* BUTTON ACTIONS */}
 			{/* View */}
 			<Button
-				className="Ag-gridActionButtons"
+				className="Ag-gridActionButtons btn-sm"
 				title='View'
 				color="secondary"
-				className="btn-sm"
+			
 				onClick={() => {
 					this.setState({current_report_id:params.data.id})
 					let dateArr = params.data.taxReturns ? params.data.taxReturns.split("-") : [];
@@ -420,7 +420,7 @@ class VatReports extends React.Component {
 				{params.value === "UnFiled" ? (<label className="badge label-draft"> {params.value}</label>) : ""}
 				{params.value === "Filed" ? (<label className="badge label-due"> {params.value}</label>) : ""}
 				{params.value === "Partially Paid" ? (<label className="badge label-PartiallyPaid"> {params.value}</label>) : ""}
-				{params.value === "Paid" ? (<label className="badge label-paid"> {params.value}</label>) : ""}
+				{params.value === "Paid" ? (<label className="badge label-paid"> Claimed</label>) : ""}
 				{params.value === "Reclaimed" ? (<label className="badge label-sent"> {params.value}</label>) : ""}
 			</>
 		)
@@ -514,8 +514,8 @@ class VatReports extends React.Component {
 
 	renderDate = (cell, row) => {
 		return cell ? moment(cell)
-			// .format('DD-MM-YYYY') 
-			.format('LL')
+			.format('DD-MM-YYYY') 
+			// .format('LL')
 			: '-';
 	};
 

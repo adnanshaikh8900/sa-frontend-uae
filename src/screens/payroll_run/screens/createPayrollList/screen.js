@@ -448,7 +448,7 @@ calculatePayperioad=(startDate,endDate)=>{
 												value={cell || 0}
 												
 												onChange={(evt) => {
-													debugger
+													
 													let value = parseFloat(evt.target.value ==="" ? "0":evt.target.value) ;
 
 													if (value > 30 || value < 0) {

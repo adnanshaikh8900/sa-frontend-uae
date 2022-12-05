@@ -439,7 +439,7 @@ dateLimit=()=>{
 																	type="text"
 																	name="taxAgentApprovalNumber"
 																	id="taxAgentApprovalNumber"
-																	maxLength="10"
+																	maxLength="8"
 																	autoComplete='off'
 																	placeholder={"Enter Tax Agent Approval Number (TAAN)"}
 																	onChange={(option) => 

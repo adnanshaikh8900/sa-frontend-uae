@@ -115,8 +115,8 @@ class VatPaymentRecord extends React.Component {
 
 	renderDate = (cell, row) => {
 		return cell ? moment(cell)
-			// .format('DD-MM-YYYY') 
-			.format('LL')
+			.format('DD-MM-YYYY') 
+			// .format('LL')
 			: '-';
 	};
 

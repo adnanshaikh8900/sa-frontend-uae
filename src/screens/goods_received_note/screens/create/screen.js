@@ -1305,8 +1305,8 @@ this.state.data.map((obj, index) => {
 		if (supplierId && supplierId.value) {
 			formData.append('supplierId', supplierId.value);
 		}
-		if (this.uploadFile && this.uploadFile.files && this.uploadFile.files[0]) {
-			formData.append('attachmentFile', this.uploadFile.files[0]);
+		if (this.uploadFile && this.uploadFile.files && this.uploadFile?.files?.[0]) {
+			formData.append('attachmentFile', this.uploadFile?.files?.[0]);
 		}
 		if (poNumber && poNumber.value) {
 			formData.append('poId', poNumber.value);

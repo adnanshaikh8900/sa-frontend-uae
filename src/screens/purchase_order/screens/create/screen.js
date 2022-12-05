@@ -1569,8 +1569,8 @@ class CreatePurchaseOrder extends React.Component {
         if (rfqNumber && rfqNumber.value) {
 			formData.append('rfqId', rfqNumber.value);
 		}
-		if (this.uploadFile && this.uploadFile.files && this.uploadFile.files[0]) {
-			formData.append('attachmentFile', this.uploadFile.files[0]);
+		if (this.uploadFile && this.uploadFile.files && this.uploadFile?.files?.[0]) {
+			formData.append('attachmentFile', this.uploadFile?.files?.[0]);
 		}
 		
 			formData.append('currencyCode', this.state.supplier_currency);

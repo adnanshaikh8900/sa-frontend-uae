@@ -147,14 +147,14 @@ class VatReturnsReport extends React.Component {
 		this.columnHeader1 = [
 			{ label: strings1.Box+"#", value: 'Box#', sort: false },
 			{ label: strings1.Description, value: 'Description', sort: false },
-			{ label: strings1.Amount, value: 'Amount', sort: false, },
+			{ label: "Taxable Amount", value: 'Amount', sort: false, },
 			{ label: strings1.VatAmount, value: 'VATAmount', sort: false },
 			{ label: strings1.Adjustment, value: 'Adjustment', sort: false },
 		];
 		this.columnHeader2 = [
 			{ label: strings1.Box+"#", value: 'Box#', sort: false },
 			{ label: strings1.Description, value: 'Description', sort: false },
-			{ label: strings1.Amount, value: 'Amount', sort: false },
+			{ label: "Taxable Amount", value: 'Amount', sort: false },
 			{ label: strings1.Recoverable+" "+strings1.VatAmount, value: 'RecoverableVATAmount', sort: false },
 			{ label: strings1.Adjustment, value: 'Adjustment', sort: false },
 		];

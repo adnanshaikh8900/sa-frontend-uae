@@ -953,7 +953,7 @@ const en = {
       UpdateReceipt:"UpdateReceipt",
       Invoice:"Invoice",
       InvoiceNo:"Invoice No",
-      ReferenceNo:"Reference No",
+      ReferenceNo:"Reference Number",
       Details:"Details",
       SupplierInvoiceDetails:"Supplier Invoice Details",
       ModeTBD:"Mode(TBD)",

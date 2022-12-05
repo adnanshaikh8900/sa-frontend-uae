@@ -305,8 +305,8 @@ setConfigurations=(configurationList)=>{
 				'otherDilimiterStr',
 				initValue.otherDilimiterStr ? initValue.otherDilimiterStr : '',
 			);
-			// if (this.uploadFile.files[0]) {
-			// 	formData.append('file', this.uploadFile.files[0]);
+			// if (this.uploadFile?.files?.[0]) {
+			// 	formData.append('file', this.uploadFile?.files?.[0]);
 			// }
 			this.props.importTransactionActions
 				.parseFile(formData)
@@ -496,7 +496,7 @@ setConfigurations=(configurationList)=>{
 			postData.skipColumns = this.state.initValue.skipColumns?.length >= 1  ? this.state.initValue.skipColumns : ''
 			postData.indexMap = a;
 			let obi={...postData}
-			debugger
+			
 			Object.keys(obi).map((i)=>{
 
 				if(postData[i]===null)  postData[i]=""
@@ -572,7 +572,7 @@ setConfigurations=(configurationList)=>{
 				finaldata.push(local2)
 				
 			})
-			debugger
+			
 			const fdata=finaldata.map((i)=>{
 				let local={...i}
 					Object.keys(i).map((i3)=>{
@@ -586,7 +586,7 @@ setConfigurations=(configurationList)=>{
 							const localdata=local["TRANSACTION_DATE"]
 							
 							const data=moment(localdata,'DD/MM/YYYY').format('DD/MM/YYYY')
-							debugger
+							
 							if(data==="Invalid date"){
 
 								this.props.commonActions.tostifyAlert(
@@ -608,7 +608,7 @@ setConfigurations=(configurationList)=>{
 					})
 					return local
 			})
-			debugger
+			
 
 			// const ldata=fdata.map((i)=>{
 			// 	return {
@@ -805,7 +805,7 @@ setConfigurations=(configurationList)=>{
 			if(this.state.templateId===""){
 				this.handleSave()
 			} else if(this.state.templateId!==""){
-				debugger
+				
 				this.Import()
 			}
 		}else {
@@ -891,7 +891,7 @@ setConfigurations=(configurationList)=>{
 		dataStringLines.splice(isheaderisrow?1:0,
 			parseInt(this.state.skipRows)) 
 			:dataStringLines;
-			debugger
+			
 		const header = dataStringLines[0]
 		console.log(parse,"parse")
 		let headers = header
@@ -971,7 +971,7 @@ setConfigurations=(configurationList)=>{
 
 	handleFileUpload = e => {
 
-		// const file = this.uploadFile.files[0];
+		// const file = this.uploadFile?.files?.[0];
 		// const reader = new FileReader();
 		// reader.onload = (evt) => {
 		// 	/* Parse data */
@@ -1106,7 +1106,7 @@ setConfigurations=(configurationList)=>{
 																				).find((val)=>val.value==i)
 																				local[data[0].indexMap?.[`${i}`]]=data2
 																			})
-																			debugger
+																			
 																				this.setState({
 																					initValue: {
 																						name: this.state.initValue.name,

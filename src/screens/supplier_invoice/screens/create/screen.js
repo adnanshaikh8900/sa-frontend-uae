@@ -2223,8 +2223,8 @@ class CreateSupplierInvoice extends React.Component {
 		if (project !== null && project.value) {
 			formData.append('projectId', project.value);
 		}
-		if (this.uploadFile.files[0]) {
-			formData.append('attachmentFile', this.uploadFile.files[0]);
+		if (this.uploadFile?.files?.[0]) {
+			formData.append('attachmentFile', this.uploadFile?.files?.[0]);
 		}
 
 		this.setState({ loading:true, loadingMsg:"Creating New Invoice..."});

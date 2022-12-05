@@ -1697,8 +1697,8 @@ resetVatId = (props) => {
 		if (placeOfSupplyId ) {
 			formData.append('placeOfSupplyId', placeOfSupplyId.value ?placeOfSupplyId.value:placeOfSupplyId);
 		}
-		if (this.uploadFile && this.uploadFile.files && this.uploadFile.files[0]) {
-			formData.append('attachmentFile', this.uploadFile.files[0]);
+		if (this.uploadFile && this.uploadFile.files && this.uploadFile?.files?.[0]) {
+			formData.append('attachmentFile', this.uploadFile?.files?.[0]);
 		}
 		this.setState({ loading:true, loadingMsg:"Creating Quotation..."});
 		this.props.quotationCreateAction

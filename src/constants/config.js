@@ -20,7 +20,7 @@ export default {
   INVENTORY_MODULE:false,
   PAYROLL_MODULE:true,
 
-  EXPENSE_EXPENSES:false,
+  EXPENSE_EXPENSES:true,
   EXPENSE_SI:true,
   EXPENSE_PR:true,
   EXPENSE_RFQ:false,
@@ -57,7 +57,7 @@ export default {
   REPORTS_HEAD_FI:true,
   REPORTS_PAL:true,
   REPORTS_BS:true,
-  REPORTS_HBS:false,
+  REPORTS_HBS:true,
   REPORTS_TB:true,
 
   REPORTS_HEAD_SALES:false,

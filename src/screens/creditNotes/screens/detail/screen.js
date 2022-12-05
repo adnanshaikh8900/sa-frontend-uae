@@ -297,7 +297,7 @@ class DetailCreditNote extends React.Component {
 							},
 						);
 							this.getCurrency(res.data.contactId)	
-							debugger
+							
 							if(res.data.invoiceId){
 
 								this.props.creditNotesDetailActions
@@ -1036,7 +1036,7 @@ class DetailCreditNote extends React.Component {
 
 	updateAmount = (data, props) => {
 		const { vat_list , excise_list} = this.props;
-		debugger
+		
 		const { discountPercentage, discountAmount } = this.state;
 		
 		let total_net = 0;
@@ -1067,7 +1067,7 @@ class DetailCreditNote extends React.Component {
 				obj.vatCategoryId !== ''
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
-			debugger
+			
 					const vat = index >-1 ? vat_list[`${index}`]?.vat : 0;
 
 			if(!obj.isExciseTaxExclusive){
@@ -1120,7 +1120,7 @@ class DetailCreditNote extends React.Component {
 		// 	props.values.discountType.value === 'PERCENTAGE'
 		// 		? +((total_net * discountPercentage) / 100)
 		// 		: discountAmount;
-	debugger
+	
 		this.setState(
 			{
 				data,
@@ -1259,8 +1259,8 @@ class DetailCreditNote extends React.Component {
 		// if (project) {
 		// 	formData.append('projectId', project);
 		// }
-		// if (this.uploadFile.files[0]) {
-		// 	formData.append('attachmentFile', this.uploadFile.files[0]);
+		// if (this.uploadFile?.files?.[0]) {
+		// 	formData.append('attachmentFile', this.uploadFile?.files?.[0]);
 		// }
 
 		this.setState({ loading:true, loadingMsg:"Updating Credit Note..."});

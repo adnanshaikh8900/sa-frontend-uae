@@ -339,7 +339,7 @@ class VatReports extends React.Component {
 				onClick={() => {
 					this.setState({current_report_id:params.data.id})
 					let dateArr = params.data.taxReturns ? params.data.taxReturns.split("-") : [];
-					this.props.history.push('/admin/report/vatreports/view',{startDate:dateArr[0] ?dateArr[0] :'',endDate:dateArr[1] ?dateArr[1] :''})
+					this.props.history.push(`/admin/report/vatreports/view?id=${params.data.id}`,{startDate:dateArr[0] ?dateArr[0] :'',endDate:dateArr[1] ?dateArr[1] :''})
 				}}
 			>	<i className="fas fa-eye" /> </Button>&nbsp;&nbsp;
 

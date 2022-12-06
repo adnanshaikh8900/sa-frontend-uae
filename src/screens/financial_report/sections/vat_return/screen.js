@@ -12,6 +12,7 @@ import {
 	DropdownToggle,
 	DropdownMenu,
 	DropdownItem,
+	Button,
 } from 'reactstrap';
 
 import { DateRangePicker2 } from 'components';
@@ -21,6 +22,7 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 // import 'react-select/dist/react-select.css'
 import './style.scss';
+import { AuthActions, CommonActions } from 'services/global';
 import { PDFExport } from '@progress/kendo-react-pdf';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
@@ -32,8 +34,9 @@ import FilterComponent2 from '../filterComponet2';
 import logo from 'assets/images/brand/logo.png';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-
-
+import { useLocation, withRouter } from 'react-router-dom';
+import * as Vatreport from '../vat_reports/actions';
+import { FileTaxReturnModal } from '../vat_reports/sections';
 const mapStateToProps = (state) => {
 	return {
 		profile: state.auth.profile,
@@ -47,6 +50,8 @@ const mapDispatchToProps = (dispatch) => {
 			FinancialReportActions,
 			dispatch,
 		),
+		vatreport:bindActionCreators(Vatreport, dispatch),
+		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
 
@@ -181,22 +186,43 @@ class VatReturnsReport extends React.Component {
 		);
 	};
 
+
+	
 	componentDidMount = () => {
 		this.props.financialReportActions.getCompany();
 		this.initializeData();
 	};
 
+
 	initializeData = () => {
 		const { initValue } = this.state;
+		let query = new URLSearchParams(document.location.search)
+		const idofvat=query.get('id')
+		if(!idofvat) this.props.history.push('/admin/report/vatreports')
+		this.props.vatreport
+			.getVatReportList()
+			.then((res) => {
+				
+				if (res.status === 200) {
+					this.setState({ vatReportData: res?.data?.find((i)=>i.id==idofvat) }) // comment for dummy
+				}
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+			});
+			
 		const postData = {
-			startDate:this.props.location.state.startDate,
-			endDate: this.props.location.state.endDate,
+			startDate:this.props?.location?.state?.startDate,
+			endDate: this.props?.location?.state?.endDate,
 		};
 		this.setState(
 			{
 				initValue: {
-					startDate: this.props.location.state.startDate,
-					endDate:this.props.location.state.endDate,
+					startDate: this.props?.location?.state?.startDate,
+					endDate:this.props?.location?.state?.endDate,
 				},
 				loading: true,
 			},
@@ -246,6 +272,34 @@ class VatReturnsReport extends React.Component {
    
 	   }
      
+	   markItUnfiled=(row)=>{
+		const postingRequestModel = {
+			postingRefId: row.id,
+			postingRefType: 'PUBLISH',
+		};
+		this.setState({ loading:true, loadingMsg:"VAT UnFiling..."});
+		this.props.vatreport
+			.markItUnfiled(postingRequestModel)
+			.then((res) => {
+				if (res.status === 200) {
+					this.props.commonActions.tostifyAlert(
+						'success',
+						res.data && res.data.message?res.data.message: 
+						' VAT UnFiled Successfully'
+					);
+					this.initializeData()
+					this.setState({ loading:false,});
+				}
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+			});
+	}
+
+
 
 	toggle = () =>
 		this.setState((prevState) => {
@@ -260,6 +314,9 @@ class VatReturnsReport extends React.Component {
 	exportPDFWithComponent = () => {
 		this.pdfExportComponent.save();
 	};
+	closeFileTaxRetrunModal = (res) => {
+		this.setState({ openFileTaxRetrunModal: false });
+	};
 
 	render() {
 		strings.setLanguage(this.state.language);
@@ -270,6 +327,16 @@ class VatReturnsReport extends React.Component {
 				<div className="animated fadeIn">
 					<Card>
 						<div>
+						<FileTaxReturnModal
+					openModal={this.state.openFileTaxRetrunModal}
+					current_report_id={this.state.current_report_id}
+					endDate={this.state.endDate}
+					taxReturns={this.state.taxReturns}
+					closeModal={(e) => {
+						this.closeFileTaxRetrunModal(e);
+						this.initializeData();
+					}}
+				/>
 							<CardHeader>
 								<Row>
 									<Col lg={12}>
@@ -1392,8 +1459,34 @@ class VatReturnsReport extends React.Component {
 															</tr>
 															<tr className="mainLable">
 																<td className="mainLable ">15</td>
-																<td className="pt-0 pb-0">{strings.DoyouwishtorequestarefundfortheaboveamountofreclaimableVAT}</td>
-																<td className="pt-0 pb-0 " style={{ textAlign: 'right' }}></td>
+																<td className="pt-0 pb-0">
+																
+																	<span>If a VAT refund is due, do you wish to request that the refund is paid to you? <br/>
+																It is necessary for you to file this report first in order to accomplish this.</span>
+																
+																</td>
+																<td className="pt-0 pb-0 " style={{ textAlign: 'right' }}>
+																{(this.state?.vatReportData?.status==='Filed' || this.state?.vatReportData?.status==="UnFiled")
+																	&& <Button color="primary"
+																	onClick={() => {
+																		if(this.state?.vatReportData?.status==='UnFiled' ){
+																		let dateArr = this.state?.vatReportData.taxReturns ? this.state?.vatReportData.taxReturns.split("-") : [];
+																		let endDate = dateArr[1]		
+													
+																		this.setState({ openFileTaxRetrunModal: true,
+																						 current_report_id: this.state?.vatReportData.id ,
+																						endDate:endDate,
+																						taxReturns:this.state?.vatReportData.taxReturns,
+																					});
+																	}else {
+																		this.markItUnfiled(this.state?.vatReportData)
+																	}
+																
+																}
+																}
+																	>{this.state?.vatReportData?.status==='UnFiled' ?'File the report':
+																	'Unfile the report'}
+																	</Button>}</td>
 															</tr>
 
 															</>	
@@ -1408,10 +1501,11 @@ class VatReturnsReport extends React.Component {
 												
 													</tbody>
 												</Table>
+												<span style={{marginTop:'10px',fontWeight:'bold'}}>Note: You cannot unfile the report once the VAT amount has been paid or refunded.</span>
 											</div>
 										</div>
 									)}
-									<div style={{ textAlignLast:'center'}}>{strings.PoweredBy} <b>SimpleAccounts</b></div> 
+									<div style={{ textAlignLast:'center',marginTop:'10px'}}>{strings.PoweredBy} <b>SimpleAccounts</b></div> 
 								</PDFExport>
 							</CardBody>
 						</div>
@@ -1422,4 +1516,4 @@ class VatReturnsReport extends React.Component {
 	}
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(VatReturnsReport);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(VatReturnsReport));

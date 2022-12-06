@@ -200,15 +200,15 @@ dateLimit=()=>{
 						validate={(values) => {
 							let errors = {};
 							if(values.taxablePersonNameInEnglish && this.regExAlpha.test(values.taxablePersonNameInEnglish)!=true)
-							errors.taxablePersonNameInEnglish="Taxable person name must be contains only alphabates ";
+							errors.taxablePersonNameInEnglish="A taxable person's name must contain only alphabets";
 							if(values.taxablePersonNameInArabic && this.regExAlpha.test(values.taxablePersonNameInArabic)!=true)
-							errors.taxablePersonNameInArabic="Taxable person name must be contains only alphabates ";
+							errors.taxablePersonNameInArabic="A taxable person's name must contain only alphabets";
 							if(values.taxAgentName && this.regExAlpha.test(values.taxAgentName)!=true)
-							errors.taxAgentName="Tax agent name must be contains only alphabates ";
+							errors.taxAgentName="Tax agent name must contain only alphabets";
 							if(values.taxAgencyName && this.regExAlpha.test(values.taxAgencyName)!=true)
-							errors.taxAgencyName="Tax agency name must be contains only alphabates ";
+							errors.taxAgencyName="Tax agency name must contain only alphabets";
 							if(values.taxAgentApprovalNumber && this.regExTelephone.test(values.taxAgentApprovalNumber)!=true)
-							errors.taxAgentApprovalNumber="Tax agent approval number must be contains only number ";
+							errors.taxAgentApprovalNumber="Tax agent approval number must contain only numbers";
 							
 							if (this.state.isTANMandetory === true &&( values.taxAgencyNumber=="" ||values.taxAgencyNumber==undefined)) 
 							{

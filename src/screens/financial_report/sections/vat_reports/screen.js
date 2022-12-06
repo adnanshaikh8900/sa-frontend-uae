@@ -336,7 +336,6 @@ class VatReports extends React.Component {
 				className="Ag-gridActionButtons btn-sm"
 				title='View'
 				color="secondary"
-			
 				onClick={() => {
 					this.setState({current_report_id:params.data.id})
 					let dateArr = params.data.taxReturns ? params.data.taxReturns.split("-") : [];

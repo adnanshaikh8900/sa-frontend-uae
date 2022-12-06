@@ -617,7 +617,10 @@ class DetailContact extends React.Component {
 			props.handleChange('billingPoBoxNumber')('');
 			props.handleChange('billingPostZipCode')('');
 		}
+
 		this.setState({country_list : list ,});
+
+
 	};
 	validationCheck = (value) => {
 		const data = {
@@ -1413,6 +1416,7 @@ class DetailContact extends React.Component {
 																									this.setState({ isRegisteredForVat: true })
 																								else
 																									this.setState({ isRegisteredForVat: false })
+																																											
 																							} else {
 																								props.handleChange('taxTreatmentId')(
 																									'',
@@ -1547,18 +1551,9 @@ class DetailContact extends React.Component {
 																								): []
 																						}
 																						value={
-																							this.state.country_list.length !== 0 ? 
-																							this.state.country_list
-																							&& selectOptionsFactory.renderOptions(
-																								'countryName',
-																								'countryCode',
-																								this.state.country_list,
-																								'Country',
-																							).find(
-																								(option) =>
-																									option.value == props.values.billingcountryId.value
-																							)
-																							: country_list
+																							props.values.billingcountryId.label ? props.values.billingcountryId : 
+																							props.values.billingcountryId==='' ? '' : 
+																							country_list
 																							&& selectOptionsFactory.renderOptions(
 																								'countryName',
 																								'countryCode',
@@ -1572,7 +1567,6 @@ class DetailContact extends React.Component {
 																						}
 																						isDisabled = {props.values.taxTreatmentId === 1 || props.values.taxTreatmentId === 2 || props.values.taxTreatmentId === 3 || props.values.taxTreatmentId === 4}
 																						onChange={(option) => {
-																							console.log(this.state.country_list,props.values.billingcountryId);
 																							if (option && option.value) {
 																								props.handleChange('billingcountryId')(option);
 																								this.getStateList(option.value);
@@ -2017,21 +2011,8 @@ class DetailContact extends React.Component {
 
 																						}
 																						value={
-																							this.state.country_list.length !== 0 ?
-																							this.state.country_list &&
-																							selectOptionsFactory
-																								.renderOptions(
-																									'countryName',
-																									'countryCode',
-																									this.state.country_list,
-																									'Country',
-																								)
-																								.find(
-																									(option) =>
-																										option.value ===
-																										+props.values.shippingCountryId,
-																								)
-																							: country_list &&
+																							props.values.shippingCountryId.label ? props.values.shippingCountryId : 
+																							country_list &&
 																							selectOptionsFactory
 																								.renderOptions(
 																									'countryName',
@@ -2041,8 +2022,7 @@ class DetailContact extends React.Component {
 																								)
 																								.find(
 																									(option) =>
-																										option.value ===
-																										+props.values.shippingCountryId,
+																										option.value == props.values.shippingCountryId,
 																								)
 																						}
 																						isDisabled = {props.values.taxTreatmentId === 1 || props.values.taxTreatmentId === 2 || props.values.taxTreatmentId === 3 || props.values.taxTreatmentId === 4}

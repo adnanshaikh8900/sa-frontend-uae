@@ -193,10 +193,9 @@ class ExciseTaxAuditReport extends React.Component {
 	<>	
 	{/* BUTTON ACTIONS */}
 			<Button
-				className="Ag-gridActionButtons"
+				className="Ag-gridActionButtons btn-sm"
 				title='download'
 				color="secondary"
-				className="btn-sm"
 				onClick={() => {
 					this.setState({current_report_id:params.data.id})
 					let dateArr = params.data.taxReturns ? params.data.taxReturns.split("-") : []; 

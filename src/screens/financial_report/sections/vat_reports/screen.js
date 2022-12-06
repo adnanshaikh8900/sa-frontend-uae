@@ -336,7 +336,6 @@ class VatReports extends React.Component {
 				className="Ag-gridActionButtons btn-sm"
 				title='View'
 				color="secondary"
-			
 				onClick={() => {
 					this.setState({current_report_id:params.data.id})
 					let dateArr = params.data.taxReturns ? params.data.taxReturns.split("-") : [];
@@ -345,7 +344,7 @@ class VatReports extends React.Component {
 			>	<i className="fas fa-eye" /> </Button>&nbsp;&nbsp;
 
 			{/* Delete */}
-			{params.data.status === "UnFiled" || params.data.status === "Filed" ? (
+			{params.data.status === "UnFiled"  ? (
 				<Button
 					title='Delete'
 					color="danger"
@@ -420,7 +419,8 @@ class VatReports extends React.Component {
 				{params.value === "UnFiled" ? (<label className="badge label-draft"> {params.value}</label>) : ""}
 				{params.value === "Filed" ? (<label className="badge label-due"> {params.value}</label>) : ""}
 				{params.value === "Partially Paid" ? (<label className="badge label-PartiallyPaid"> {params.value}</label>) : ""}
-				{params.value === "Paid" ? (<label className="badge label-paid"> Claimed</label>) : ""}
+				{params.value === "Paid" ? (<label className="badge label-paid">{params.value}</label>) : ""}
+				{params.value === "claimed" ? (<label className="badge label-paid text-capitalize">{params.value}</label>) : ""}
 				{params.value === "Reclaimed" ? (<label className="badge label-sent"> {params.value}</label>) : ""}
 			</>
 		)

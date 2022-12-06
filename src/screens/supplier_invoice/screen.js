@@ -306,13 +306,19 @@ class SupplierInvoice extends React.Component {
 						)}
 					</DropdownToggle>
 					<DropdownMenu right>
-						{row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && row.statusEnum !== 'Partially Paid' && row.editFlag==true && (
+						{row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && row.statusEnum !== 'Partially Paid'  && (
 							<DropdownItem
-								onClick={() =>
+								onClick={() =>{
+								 if(row.editFlag)
 									this.props.history.push(
 										'/admin/expense/supplier-invoice/detail',
 										{ id: row.id },
 									)
+									else this.props.commonActions.tostifyAlert(
+										'error',
+										'You cannot edit transactions for which VAT is recorded'
+									);
+								}
 								}
 							>
 								<i className="fas fa-edit" />  {strings.Edit}
@@ -347,7 +353,7 @@ class SupplierInvoice extends React.Component {
 					<i className="fas fa-copy" /> {strings.CreateADuplicate}
 				</DropdownItem>
 
-						{row.statusEnum === 'Sent'  && row.editFlag==true&& (
+						{row.statusEnum === 'Sent'  && (
 							<DropdownItem
 								onClick={() => {
 									this.unPostInvoice(row);
@@ -358,11 +364,17 @@ class SupplierInvoice extends React.Component {
 						)}
 						{row.statusEnum !== 'Draft' && row.statusEnum !== 'Paid' && row.exchangeRate == 1 &&  (
 							<DropdownItem
-								onClick={() =>
+								onClick={() =>{
+									if(row.editFlag)
 									this.props.history.push(
 										'/admin/expense/supplier-invoice/record-payment',
 										{ id: row },
-									)
+									) 
+									else this.props.commonActions.tostifyAlert(
+										'error',
+										'You cannot edit transactions for which VAT is recorded'
+									); 
+								}
 								}
 							>
 								<i className="fas fa-university" />  {strings.RecordPayment}

@@ -170,7 +170,7 @@ class GenerateVatReportModal extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { openModal, closeModal,monthOption } = this.props;
+		const { openModal, closeModal,monthOption,setState,state } = this.props;
 		const { initValue, loading } = this.state;
 
 		var lastdayoflastmonth = new Date();
@@ -186,7 +186,9 @@ class GenerateVatReportModal extends React.Component {
 							<Col lg={12}>
 								<div className="h4 mb-0 d-flex align-items-center">
 									<i className="nav-icon fas fa-user-tie" />
-									<span className="ml-2">Report Filing ( <b>{this.props.monthOption==0?"Monthly":"Quarterly"}</b> )</span>
+									<span className="ml-2">Report Filing 
+									{/* ( <b>{this.props.monthOption==0?"Monthly":"Quarterly"}</b> ) */}
+										</span>
 								</div>
 							</Col>
 						</Row>
@@ -206,6 +208,19 @@ class GenerateVatReportModal extends React.Component {
 											{(props) => (
 												<Form>
 													<Row>
+													<Col lg={4} className=" pull-right ">
+													<Label ><span className="text-danger">* </span>Reporting Period</Label>
+												<Select 
+													options={state.options}
+													id="option"
+													name="option"
+													placeholder="VAT Reporting Period"
+													onChange={(e) => {															
+													setState({enbaleReportGeneration:true,monthOption:e.value})														
+													}}
+														/>
+														</Col>
+
 													<Col lg={4}>
 												<FormGroup className="mb-3">
 																<Label htmlFor="startDate"><span className="text-danger">* </span>Select Month</Label>
@@ -263,11 +278,13 @@ class GenerateVatReportModal extends React.Component {
 															}
 														</Col> */}
 													</Row>
-													<Row>
+													<Row style={{marginTop:20}}>
 														<Col lg={4}>
 															<FormGroup className="mb-3">
 																<Label htmlFor="startDate">{strings.StartDate}</Label>
-																<Input value={this.getStartDate()} 	placeholder="Select Month For Start Date" disabled/>	
+																<Input value={this.getStartDate()} 
+																
+																placeholder="Select Month For Start Date" disabled/>	
 																{/* <DatePicker
 																	id="date"
 																	name="startDate"
@@ -354,9 +371,9 @@ class GenerateVatReportModal extends React.Component {
 									color="primary"
 									className="btn-square "
 									title={this.state.monthlyDate ? "" :"Please Select Month"}
-									disabled={this.state.monthlyDate ? false :true}
+									
 									onClick={this.generateReport}
-								// disabled={selectedRows.length === 0}
+									disabled={this.props.monthOption==="" || !this.state.monthlyDate}
 
 								>
 									<i class="fas fa-check-double mr-1"></i>

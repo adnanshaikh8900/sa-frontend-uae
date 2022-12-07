@@ -618,26 +618,14 @@ class VatReports extends React.Component {
 											// disabled={!this.state.enbaleReportGeneration}
 											// title={!this.state.enbaleReportGeneration?"Select VAT Reporting Period":""}
 												onClick={() => {
-													if(!this.state.enbaleReportGeneration)
-													toast.error(" First Select VAT Reporting Period ");
-													else
-												{	this.setState({ openModal: true })
-													}
+													
+												this.setState({ openModal: true })
+													
 												}}>
 												
 												<i class="fas fa-plus"></i> Generate VAT Report
 											</Button>
-										<Col lg={3} className=" pull-right ">
-												<Select 
-													options={options}
-													id="option"
-													name="option"
-													placeholder="VAT Reporting Period"
-													onChange={(e) => {															
-													this.setState({enbaleReportGeneration:true,monthOption:e.value})														
-													}}
-														/>
-														</Col>
+										
 											{/* <Button color="primary" className="btn-square  pull-right"
 												onClick={() => {
 													this.setState({ openVatSettingModal: true })
@@ -783,6 +771,8 @@ class VatReports extends React.Component {
 				</div>
 				<GenerateVatReportModal
 					openModal={this.state.openModal}
+					setState={(e)=>this.setState(e)}
+					state={this.state}
 					monthOption={this.state.monthOption}
 					closeModal={(e) => {
 						this.closeModal(e);

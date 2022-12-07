@@ -445,13 +445,19 @@ stockInHandTestForProduct = (row,markAsSent) => {
 						)}
 					</DropdownToggle>
 					<DropdownMenu right>
-						{row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && row.statusEnum !== 'Partially Paid' && row.editFlag &&  (
+						{row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && row.statusEnum !== 'Partially Paid' &&   (
 							<DropdownItem>
 								<div
 									onClick={() => {
+										debugger
+										if(row.editFlag) 
 										this.props.history.push(
 											'/admin/income/customer-invoice/detail',
 											{ id: row.id },
+										);
+										else this.props.commonActions.tostifyAlert(
+											'error',
+											'You cannot edit transactions for which VAT is recorded'
 										);
 									}}
 								>
@@ -481,10 +487,15 @@ stockInHandTestForProduct = (row,markAsSent) => {
               <i className="fas fa-eye" /> View
             </DropdownItem> */}
 
-						{row.statusEnum === 'Sent' && row.editFlag && (
+						{row.statusEnum === 'Sent' &&  (
 							<DropdownItem
 								onClick={() => {
+									if(row.editFlag)
 									this.unPostInvoice(row);
+									else this.props.commonActions.tostifyAlert(
+										'error',
+										'You cannot edit transactions for which VAT is recorded'
+									);
 								}}
 							>
 								<i className="fas fa-file" /> {strings.Draft}

@@ -9,24 +9,17 @@ import {
 	Row,
 	Col,
 	ButtonGroup,
-	Input,
 	ButtonDropdown,
 	DropdownToggle,
 	DropdownMenu,
 	DropdownItem,
 } from 'reactstrap';
-import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { Loader, ConfirmDeleteModal } from 'components';
-
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
-
 import * as ContactActions from './actions';
 import { CommonActions } from 'services/global';
-import { selectOptionsFactory } from 'utils';
-import { CSVLink } from 'react-csv';
-
 import './style.scss';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';

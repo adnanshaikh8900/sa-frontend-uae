@@ -275,7 +275,7 @@ class VatReturnsReport extends React.Component {
 	   markItUnfiled=(row)=>{
 		const postingRequestModel = {
 			postingRefId: row.id,
-			postingRefType: 'PUBLISH',
+			postingRefType: 'VAT_REPORT_FILED',
 		};
 		this.setState({ loading:true, loadingMsg:"VAT UnFiling..."});
 		this.props.vatreport
@@ -1144,7 +1144,19 @@ class VatReturnsReport extends React.Component {
 																<td className="pt-0 pb-0">{strings.Total}</td>
 																<td className="pt-0 pb-0 " style={{ textAlign: 'right' }}>
 																	
-																			
+																{  (
+																		<Currency
+																			value={this.state.data[
+																				'totalAmount'
+																			] }
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) }		
 																</td>
 																<td className="pt-0 pb-0 " style={{ textAlign: 'right' }}>
 																			{this.state.data[
@@ -1326,7 +1338,21 @@ class VatReturnsReport extends React.Component {
 																<td className="mainLable ">11</td>
 																<td className="pt-0 pb-0">{strings.Total}</td>
 																<td className="pt-0 pb-0 " style={{ textAlign: 'right' }}>
-																		
+																{this.state.data[
+																				'totalAmountVatOnExpensesAndAllOtherInputs'																				
+																			] ?	
+																<Currency
+																			value={this.state.data[
+																				'totalAmountVatOnExpensesAndAllOtherInputs'																				
+																			]  }
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	: '0.00'}
 																</td>
 																<td className="pt-0 pb-0 " style={{ textAlign: 'right' }}>
 																			{this.state.data[

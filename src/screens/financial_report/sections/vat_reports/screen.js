@@ -132,7 +132,7 @@ class VatReports extends React.Component {
 	markItUnfiled=(row)=>{
 		const postingRequestModel = {
 			postingRefId: row.id,
-			postingRefType: 'PUBLISH',
+			postingRefType: 'VAT_REPORT_FILED',
 		};
 		this.setState({ loading:true, loadingMsg:"VAT UnFiling..."});
 		this.props.vatreport

@@ -36,6 +36,7 @@ import moment from 'moment';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { TextareaAutosize } from '@material-ui/core';
+import { formControlClasses } from '@mui/material';
 
 const mapStateToProps = (state) => {
 	return {
@@ -2191,6 +2192,24 @@ resetVatId = (props) => {
 
 		if( result[0] &&  result[0].exchangeRate)
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
+		const taxID = data.taxTreatment?data.taxTreatment:"";
+		if(taxID !== 5 && taxID !== 6 && taxID !== 7){
+			this.props.customerInvoiceCreateActions.getCustomerShippingAddressbyID(option.value).then((res) => {
+				if(res.status === 200){
+					var PlaceofSupply= this.placelist &&
+						selectOptionsFactory.renderOptions(
+							'label',
+							'value',
+							this.placelist,
+							'Place of Supply',).
+							find((option) => option.label.toUpperCase() === res.data.shippingStateName.toUpperCase())
+						if(PlaceofSupply){
+						this.setState({placeOfSupplyId : PlaceofSupply});
+						this.formRef.current.setFieldValue('placeOfSupplyId', PlaceofSupply.value, true);
+					}
+				}
+			});
+		}
 	};
 
 	getCurrentNumber = (data) => {

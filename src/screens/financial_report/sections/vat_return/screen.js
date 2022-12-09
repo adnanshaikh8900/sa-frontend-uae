@@ -1527,7 +1527,9 @@ class VatReturnsReport extends React.Component {
 												
 													</tbody>
 												</Table>
+												{this.state?.vatReportData?.status==='Filed' &&
 												<span style={{marginTop:'10px',fontWeight:'bold'}}>Note: You cannot unfile the report once the VAT amount has been paid or refunded.</span>
+														}
 											</div>
 										</div>
 									)}

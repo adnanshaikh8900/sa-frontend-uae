@@ -117,13 +117,10 @@ class FileTaxReturnModal extends React.Component {
 
 	handleSubmit = (data, resetForm, setSubmitting) => {
 		this.setState({ disabled: true });
-
-
-	let formData = new FormData();
-	for ( var key in data ) {	
-		formData.append(key, data[key]);
-	}
-
+		let formData = new FormData();
+		for ( var key in data ) {	
+			formData.append(key, data[key]);
+		}
 		this.props.vatreportActions
 			.fileVatReport(formData)
 			.then((res) => {
@@ -209,31 +206,15 @@ dateLimit=()=>{
 							errors.taxAgencyName="Tax agency name must contain only alphabets";
 							if(values.taxAgentApprovalNumber && this.regExTelephone.test(values.taxAgentApprovalNumber)!=true)
 							errors.taxAgentApprovalNumber="Tax agent approval number must contain only numbers";
-							
-							if (this.state.isTANMandetory === true &&( values.taxAgencyNumber=="" ||values.taxAgencyNumber==undefined)) 
-							{
-								errors.taxAgencyNumber ='TAN is required';
-								if (values.taxAgentApprovalNumber=="" || values.taxAgentApprovalNumber==undefined)
-								{
-									errors.taxAgentApprovalNumber = 'TAAN is required';
-								}
-								if (values.taxAgentName=="" || values.tax==undefined)
-								{
-									errors.taxAgentName = 'Tax agent name is required';
-								}
-							} 
-							if (this.state.isTAANMandetory === true && (values.taxAgentApprovalNumber=="" || values.taxAgentApprovalNumber==undefined))
-							{
-								errors.taxAgentApprovalNumber = 'TAAN is required';
-							}												
+																		
 							return errors;
 						}}
 						validationSchema={Yup.object().shape({
-							taxablePersonNameInEnglish: Yup.string().required('Taxable person name in english is required'),
+							//taxablePersonNameInEnglish: Yup.string().required('Taxable person name in english is required'),
 							// taxablePersonNameInArabic: Yup.string().required('Taxable Person Name In Arabic is required'),
-							taxAgentName: Yup.string().required('Tax Agent Name is required'),
+							//taxAgentName: Yup.string().required('Tax Agent Name is required'),
 							// taxAgentApprovalNumber: Yup.string().required('TAAN is required'),
-							vatRegistrationNumber: Yup.string().required('Tax registration number is required'),
+							//vatRegistrationNumber: Yup.string().required('Tax registration number is required'),
 							taxFiledOn: Yup.string().required(
 								'Date of filling is required',
 							),
@@ -252,7 +233,7 @@ dateLimit=()=>{
 								<Row className='mb-4'><Col><h4>Once report is filed, you won't be able to edit any transactions for this tax period.</h4></Col></Row>
 													<Row>
 														<Col lg={4}>
-															<FormGroup className="mb-3"><span className="text-danger">* </span>
+															<FormGroup className="mb-3"><span className="text-danger"></span>
 																<Label htmlFor="taxablePersonNameInEnglish">Taxable Person Name (English)</Label>
 																<Input
 																	type="text"
@@ -303,7 +284,7 @@ dateLimit=()=>{
 														</Col>
 														<Col lg="4" >
 															<FormGroup>
-																<Label htmlFor="vatRegistrationNumber"><span className="text-danger">* </span>
+																<Label htmlFor="vatRegistrationNumber"><span className="text-danger"></span>
 																	{strings.TaxRegistrationNumber}
 																</Label>
 																<Input
@@ -320,6 +301,7 @@ dateLimit=()=>{
 																		) {
 																			props.handleChange('vatRegistrationNumber')(option);
 																		}
+																		
 																	}}
 																	value={props.values.vatRegistrationNumber}
 																	className={
@@ -373,7 +355,7 @@ dateLimit=()=>{
 														
 														<Col lg={4}>
 															<FormGroup className="mb-3">
-													{this.state.isTANMandetory === true &&(<span className="text-danger">* </span> )}
+													{this.state.isTANMandetory === true &&(<span className="text-danger"></span> )}
 																<Label htmlFor="taxAgencyNumber">Tax Agency Number (TAN)</Label>
 																<Input
 																	type="text"
@@ -405,7 +387,7 @@ dateLimit=()=>{
 													<Row>
 													<Col lg={4}>
 															<FormGroup className="mb-3">
-															<span className="text-danger">* </span>
+															<span className="text-danger"></span>
 																<Label htmlFor="taxAgentName">Tax Agent Name</Label>
 																<Input
 																	type="text"
@@ -433,7 +415,7 @@ dateLimit=()=>{
 														</Col>
 														<Col lg={4}>
 															<FormGroup className="mb-3">	
-																{(this.state.isTANMandetory === true || this.state.isTAANMandetory) &&(<span className="text-danger">* </span>)}
+																{(this.state.isTANMandetory === true || this.state.isTAANMandetory) &&(<span className="text-danger"></span>)}
 															<Label htmlFor="taxAgentApprovalNumber">Tax Agent Approval Number (TAAN) </Label>
 																<Input
 																	type="text"
@@ -481,6 +463,8 @@ dateLimit=()=>{
 																		selected={props.values.taxFiledOn}
 																		onChange={(value) => {																			
 																			props.handleChange('taxFiledOn')(value);
+																		props.handleChange('vatReportFiling')(current_report_id);
+
 																		}}
 																		className={`form-control ${
 																			props.errors.taxFiledOn &&
@@ -505,7 +489,6 @@ dateLimit=()=>{
 											type="submit"
 											className="btn-square"
 											disabled={this.state.disabled}
-											disabled={isSubmitting}
 											onClick={() => {
 												//	added validation popup	msg
 												props.handleBlur();

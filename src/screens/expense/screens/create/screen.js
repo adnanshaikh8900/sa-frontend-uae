@@ -149,7 +149,6 @@ class CreateExpense extends React.Component {
 					if (res.status === 200) {
 						this.getCompanyCurrency();					
 						const {vat_list}=this.props
-						console.log("in degugger"+res.data)
 					let vatCategoryId=
 						vat_list ?
 							selectOptionsFactory
@@ -555,7 +554,6 @@ class CreateExpense extends React.Component {
 					},
 				});
 				
-				console.log(res.data)
 				if( res.data && res.data!=null)
 				this.formRef.current.setFieldValue('expenseNumber', res.data, true,true);
 				// this.validationCheck(res.data)
@@ -957,6 +955,7 @@ componentWillUnmount() {
 												}}
 												validate={(values) => {
 													let errors = {};
+
 													// if (
 													// 	values.payMode.value === 'BANK' &&
 													// 	!values.bankAccountId
@@ -982,7 +981,7 @@ componentWillUnmount() {
 													if(this.state.currency===true && values.currency === '' ){
 														errors.currency = 'Currency is required';
 													}
-													if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
+													if (!values.placeOfSupplyId && values.taxTreatmentId.value !== 8) {
 														errors.placeOfSupplyId = 'Place of supply is required';
 													}
 
@@ -1003,9 +1002,6 @@ componentWillUnmount() {
 													),
 													currency: Yup.string().required(
 														'Currency is required',
-													),
-													placeOfSupplyId: Yup.string().required(
-														'Place of supply is required',
 													),
 													payee: Yup.string().required(
 														'Paid by is required',

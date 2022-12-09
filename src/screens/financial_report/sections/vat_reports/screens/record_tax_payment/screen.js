@@ -26,6 +26,7 @@ import './style.scss';
 import moment from 'moment';
 import {data}  from '../../../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import { formControlClasses } from '@mui/material';
 
 const mapStateToProps = (state) => {
 	return {
@@ -72,7 +73,7 @@ class RecordVatPayment extends React.Component {
 			headerValue: this.props.location.state.taxReturns ?this.props.location.state.taxReturns :'',
 			initValue: {
 				receiptNo: '',
-				vatPaymentDate: new Date(),
+				vatPaymentDate: '',
 				reportId: this.props.location.state && this.props.location.state.id ?this.props.location.state.id:'',
 				amount: '',
 				totalTaxPayable: this.props.location.state && this.props.location.state.totalTaxPayable ?this.props.location.state.totalTaxPayable: 0.00,
@@ -94,15 +95,37 @@ class RecordVatPayment extends React.Component {
 			discountAmount: 0,
 			fileName: '',
 			disabled: false,
+			reportfilledOn:new Date(),
 			loadingMsg:"Loading..."
 		};
 
+		this.props.vatreportActions
+			.getVatReportList()
+			.then((res) => {
+				if (res.status === 200) {
+					res.data.map(obj => {
+						if(obj.id === this.props.location.state.id){
+							this.setState({ 
+								reportfilledOn: new Date(obj.filedOn),
+								initValue: {
+									vatPaymentDate: new Date(obj.filedOn),
+								},
+							})
+						}
+					})
+				}
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+			}
+		);
 		this.formRef = React.createRef();
-
 		this.regEx = /^[0-9\b]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
-
 		this.file_size = 1024000;
 		this.supported_format = [
 			'image/png',
@@ -121,7 +144,7 @@ class RecordVatPayment extends React.Component {
 
 	initializeData = () => {
 		this.props.vatreportActions.getDepositList().then((res)=>{	
-			this.setState({deposit_list:res})
+			this.setState({deposit_list:res});
 		})
 	};
 
@@ -440,13 +463,14 @@ class RecordVatPayment extends React.Component {
 																		<DatePicker
 																			id="vatPaymentDate"
 																			name="vatPaymentDate"
-																			placeholderText={strings.vatPaymentDate}
+																			placeholderText={'Select '+strings.PaymentDate}
 																			showMonthDropdown
 																			showYearDropdown
 																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
-																			value={props.values.vatPaymentDate}
-																			selected={props.values.vatPaymentDate}
+																			value={props.values.vatPaymentDate ? props.values.vatPaymentDate : this.state.reportfilledOn}
+																			selected={props.values.vatPaymentDate ? props.values.vatPaymentDate : this.state.reportfilledOn}
+																			minDate={this.state.reportfilledOn}
 																			onChange={(value) => {
 																				props.handleChange('vatPaymentDate')(
 																					value,

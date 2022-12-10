@@ -14,29 +14,24 @@ import {
 	DropdownItem,
 	Button,
 } from 'reactstrap';
-
-import { DateRangePicker2 } from 'components';
 import moment from 'moment';
-
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 // import 'react-select/dist/react-select.css'
 import './style.scss';
-import { AuthActions, CommonActions } from 'services/global';
+import { CommonActions } from 'services/global';
 import { PDFExport } from '@progress/kendo-react-pdf';
-import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
-import { CSVLink } from 'react-csv';
 import { Loader, Currency } from 'components';
 import * as FinancialReportActions from '../../actions';
-import FilterComponent from '../filterComponent';
 import FilterComponent2 from '../filterComponet2';
 import logo from 'assets/images/brand/logo.png';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-import { useLocation, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import * as Vatreport from '../vat_reports/actions';
 import { FileTaxReturnModal } from '../vat_reports/sections';
+
 const mapStateToProps = (state) => {
 	return {
 		profile: state.auth.profile,

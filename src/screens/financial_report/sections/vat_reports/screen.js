@@ -656,7 +656,7 @@ class VatReports extends React.Component {
 												}}>
 												<i className="fas fa-history"></i> VAT Payment Record
 											</Button>
-
+											
 											<Button name="button" color="primary" className="btn-square pull-right "
 											// disabled={!this.state.enbaleReportGeneration}
 											// title={!this.state.enbaleReportGeneration?"Select VAT Reporting Period":""}
@@ -668,13 +668,12 @@ class VatReports extends React.Component {
 												
 												<i class="fas fa-plus"></i> Generate VAT Report
 											</Button>
-										
-											{/* <Button color="primary" className="btn-square  pull-right"
+											 <Button color="primary" className="btn-square  pull-right"
 												onClick={() => {
 													this.setState({ openVatSettingModal: true })
 												}}>
-												<i className="fa fa-cog mr-2"></i> VAT Settings
-											</Button> */}
+												<i className="fa fa-cog"></i> VAT Settings
+											</Button> 
 
 										</FormGroup>
 									</div>

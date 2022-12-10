@@ -167,3 +167,21 @@ export const getCompanyDetails = () => {
 			});
 	};
 };
+
+export const VATSetting = (obj) => {
+	console.log(obj)
+	return (dispatch) => {
+		let data = {
+			method: 'post',
+			url: '/rest/vatReport/VATSetting',
+			data: obj,
+		};
+		return authFileUploadApi(data)
+			.then((res) => {
+				return res			
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};

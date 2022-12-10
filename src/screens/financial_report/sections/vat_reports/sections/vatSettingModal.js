@@ -44,6 +44,7 @@ import { Loader } from 'components';
 import * as PayrollEmployeeActions from '../../../../payrollemp/actions'
 import * as CreatePayrollActions from '../actions';
 import { Checkbox } from '@material-ui/core';
+import * as VatreportActions from '../actions';
 
 const mapStateToProps = (state) => {
 
@@ -59,7 +60,7 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 		payrollEmployeeActions: bindActionCreators(PayrollEmployeeActions, dispatch),
-		createPayrollActions: bindActionCreators(CreatePayrollActions, dispatch),
+		vatreportActions: bindActionCreators(VatreportActions, dispatch),
 	};
 };
 const customStyles = {
@@ -82,7 +83,18 @@ class VatSettingModal extends React.Component {
 			loading: false,
 			selectedRows: [],
 			actionButtons: {},
-
+			initValue: {
+				taxablePersonNameInEnglish: '',
+				vatRegistrationNumber: '',
+				taxAgentApprovalNumber: '',
+				taxAgencyNumber: '',
+				taxAgencyName: '',
+				taxAgentName: '',
+				taxablePersonNameInArabic: '',
+			},
+			isTANMandetory:false,
+			isTAANMandetory:false,
+			isTaxAgentName:false,
 			dialog: null,
 			filterData: {
 				name: '',
@@ -91,49 +103,74 @@ class VatSettingModal extends React.Component {
 			reporting_period_list: [{ label: "Custom", value: 1 }],
 			view: false
 		};
+		this.regEx = /^[0-9\d]+$/;
+		// this.regEx = /[a-zA-Z0-9]+$/;
+		this.regExTelephone = /^[0-9-]+$/;
+		this.regExBoth = /[a-zA-Z0-9]+$/;
+		this.regExAlpha = /^[a-zA-Z ]+$/;
+		this.regExAddress = /^[a-zA-Z0-9\s\D,'-/]+$/;
 
-
-
+		this.formikRef = React.createRef();
 	}
 
 
-
-	static getDerivedStateFromProps(nextProps, prevState) {
-		if (prevState.employee_list !== nextProps.employee_list) {
-			console.log('getDerivedStateFromProps state changed', nextProps.selectedData);
-			return {
-				prefixData: nextProps.prefixData,
-				employee_list: nextProps.employee_list,
-			};
+	handleSubmit = (data, resetForm, setSubmitting) => {
+		this.setState({ disabled: true });
+		let formData = new FormData();
+		for ( var key in data ) {	
+			formData.append(key, data[key]);
 		}
+		this.props.vatreportActions
+			.VATSetting(formData)
+			.then((res) => {
+				if (res.status === 200) {
+					this.setState({ disabled: false });
+					this.props.commonActions.tostifyAlert(
+						'success',
+						res.data.message?res.data.message:'VAT Report Filed Successfully',
+					);
+					resetForm();
+					this.setState({isTANMandetory:false})
+					this.setState({isTAANMandetory:false})
+					this.props.closeModal(true);
+				}
+			})
+			.catch((err) => {
+				this.setState({ disabled: false });
+				// this.displayMsg(err);
+				this.formikRef.current.setSubmitting(false);
+			});
+	};
 
-	}
+	displayMsg = (err) => {
+		toast.error(`${err.data.message}`, {
+			position: toast.POSITION.TOP_RIGHT,
+		});
+	};
+	_showDetails = (bool) => {
+		this.setState({
+		  showDetails: bool
+		});
+	  }
 
 
 	componentDidMount = () => {
-		this.initializeData();
+		this.props.vatreportActions.getCompanyDetails().then((res)=>{			
+			if(res.status==200){
+			this.setState({initValue:{vatRegistrationNumber:res.data.vatRegistrationNumber?res.data.vatRegistrationNumber:""}})}
+		});
 	};
-
-	initializeData = () => {
-	};
-	handleChange = (val, name) => {
-		this.setState({
-			filterData: Object.assign(this.state.filterData, {
-				[name]: val
-			})
-		})
-	}
-
-
-	componentWillUnmount = () => {
-		this.setState({
-			selectedRows: []
-		})
-	}
-
+	dateLimit=()=>{
+		const { endDate} = this.props;
+	
+			if(endDate){
+				var datearray = endDate.split("/");
+				return	new Date(parseInt(datearray[2]),parseInt(datearray[1])-1,parseInt(datearray[0])+1)
+			}
+		}
 	render() {
 		strings.setLanguage(this.state.language);
-		const { openModal, closeModal } = this.props;
+		const { openModal, closeModal ,current_report_id,endDate,taxReturns} = this.props;
 		const { initValue, loading, reporting_period_list } = this.state;
 
 		return (
@@ -143,102 +180,123 @@ class VatSettingModal extends React.Component {
 						<Row>
 							<Col lg={12}>
 								<div className="h4 mb-0 d-flex align-items-center">
-									<i className="nav-icon fas fa-user-tie" />
-									<span className="ml-2">Tax Return Settings</span>
+									<i className="nav-icon fa fa-cog" />
+									<span className="ml-2">VAT Settings</span>
 								</div>
 							</Col>
 						</Row>
 					</ModalHeader>
-					<ModalBody style={{ padding: "15px 0px 0px 0px" }}>
-						<div style={{ padding: " 0px 1px" }}>
-							<div >
-								<CardBody>
-									{loading ? (
-										<Row>
-											<Col lg={12}>
-												<Loader />
-											</Col>
-										</Row>
-									) : (
-										<> <Formik initialValues={initValue}>
-											{(props) => (
-												<Form>
-													<Row>
-														
-														<Col lg={4}>
-															<FormGroup className="mb-3"><span className="text-danger">* </span>
-																<Label htmlFor="startDate">{strings.VatRegisteredOn}</Label>
-																<DatePicker
-																	id="date"
-																	name="startDate"
-																	className={`form-control`}
-																	placeholderText="From"
-																	showMonthDropdown
-																	showYearDropdown
-																	autoComplete="off"
-																	maxDate={new Date()}
-																	value={moment(props.values.startDate).format(
-																		'DD-MM-YYYY',
-																	)}
-																	dropdownMode="select"
-																	dateFormat="dd-MM-yyyy"
-																	// onChange={(value) => {
-																	// 	props.handleChange('startDate')(value);
-																	// 	if (moment(value).isBefore(props.values.startDate)) {
-																	// 		props.setFieldValue(
-																	// 			'startDate',
-																	// 			moment(value).add(1, 'M'),
-																	// 		);
-																	// 	}
-																	// }}
 
-																	onChange={(value) => {
-																		props.handleChange('startDate')(value);
-																	}}
+					<Formik
+						ref={this.formikRef}
+						initialValues={initValue}
+						onSubmit={(values, { resetForm, setSubmitting }) => {
+							this.handleSubmit(values, resetForm);
+						}}
+						validate={(values) => {
+							let errors = {};
+							if(values.taxablePersonNameInEnglish && this.regExAlpha.test(values.taxablePersonNameInEnglish)!=true)
+							errors.taxablePersonNameInEnglish="A taxable person's name must contain only alphabets";
+							if(values.taxablePersonNameInArabic && this.regExAlpha.test(values.taxablePersonNameInArabic)!=true)
+							errors.taxablePersonNameInArabic="A taxable person's name must contain only alphabets";
+							if(values.taxAgentName && this.regExAlpha.test(values.taxAgentName)!=true)
+							errors.taxAgentName="Tax agent name must contain only alphabets";
+							if(values.taxAgencyName && this.regExAlpha.test(values.taxAgencyName)!=true)
+							errors.taxAgencyName="Tax agency name must contain only alphabets";
+							if(values.taxAgentApprovalNumber && this.regExTelephone.test(values.taxAgentApprovalNumber)!=true)
+							errors.taxAgentApprovalNumber="Tax agent approval number must contain only numbers";
+							if(this.state.isTANMandetory && !values.taxAgencyNumber ){
+								errors.taxAgencyNumber="TAN is required"
+							}
+							if(values.taxAgencyNumber && this.regExBoth.test(values.taxAgencyNumber)!=true)
+							errors.taxAgencyNumber="TAN must contain only alphanumeric";
+							if(values.taxAgencyNumber && values.taxAgencyNumber.length !== 10){
+								errors.taxAgencyNumber="TAN must contain 10 digits alphanumeric";	
+							}
+							if(values.taxAgentApprovalNumber && values.taxAgentApprovalNumber.length !== 8){
+								errors.taxAgentApprovalNumber="TAAN must contain 8 digits number";	
+							}
+							
+							
+																		
+							return errors;
+						}}
+						validationSchema={Yup.object().shape({
+							taxablePersonNameInEnglish: Yup.string().required('Taxable person name in english is required'),
+							// taxablePersonNameInArabic: Yup.string().required('Taxable Person Name In Arabic is required'),
+							taxAgentName: Yup.string().required('Tax Agent Name is required'),
+							taxAgentApprovalNumber: Yup.string().required('TAAN is required'),
+							//vatRegistrationNumber: Yup.string().required('Tax registration number is required'),
+							
+										})}
+					>
+						{(props) => {
+							const { isSubmitting } = props;
+							return (
+								<Form
+									name="simpleForm"
+									onSubmit={props.handleSubmit}
+									className="create-contact-screen"
+								>
+				
+									<ModalBody>
+													<Row>
+														<Col lg={4}>
+															<FormGroup className="mb-3"><span className="text-danger">* </span>
+																<Label htmlFor="taxablePersonNameInEnglish">Taxable Person Name (English)</Label>
+																<Input
+																	type="text"
+																	name="taxablePersonNameInEnglish"
+																	id="taxablePersonNameInEnglish"
+																	maxLength="100"
+																	placeholder={"Enter Taxable Person Name (English)"}
+																	onChange={(option) => {
+																			option.target.value === '' ||
+																			this.regExAlpha.test(
+																				option.target.value,
+																			)
+																		props.handleChange('taxablePersonNameInEnglish')(option)
+																		}
+																	}
+																	defaultValue={props.values.taxablePersonNameInEnglish}
 																/>
+																	{props.errors.taxablePersonNameInEnglish &&												
+																(
+																		<div className='text-danger' >
+																			{props.errors.taxablePersonNameInEnglish}
+																		</div>
+																	)}
 															</FormGroup>
 														</Col>
 														<Col lg={4}>
 															<FormGroup className="mb-3"><span className="text-danger">* </span>
-																<Label htmlFor="endDate">Generate First Tax Return From</Label>
-																<DatePicker
-																	id="date"
-																	name="endDate"
-																	className={`form-control`}
-																	autoComplete="off"
-																	maxDate={new Date()}
-																	placeholderText="From"
-																	showMonthDropdown
-																	showYearDropdown
-																	value={moment(props.values.endDate).format(
-																		'DD-MM-YYYY',
-																	)}
-																	dropdownMode="select"
-																	dateFormat="dd-MM-yyyy"
-																	// onChange={(value) => {
-																	// 	 
-																	// 	props.handleChange('endDate')(value);
-																	// 	if (moment(value).isBefore(props.values.endDate)) {
-																	// 		props.setFieldValue(
-																	// 			'endDate',
-																	// 			moment(value).subtract(1, 'M'),
-																	// 		);
-																	// 	}
-																	// }}
-																	onChange={(value) => {
-																		props.handleChange('endDate')(value);
-																	}}
+																<Label htmlFor="taxablePersonNameInArabic">Taxable Person Name (Arabic)</Label>
+																<Input
+																	type="text"
+																	name="taxablePersonNameInArabic"
+																	id="taxablePersonNameInArabic"
+																	maxLength="100"
+																	placeholder={"Enter Taxable Person Name (Arabic)"}
+																	onChange={(option) =>
+																		props.handleChange('taxablePersonNameInArabic')(option)
+																	}
+																	defaultValue={props.values.taxablePersonNameInArabic}
 																/>
+																	{props.errors.taxablePersonNameInArabic &&												
+																(
+																		<div className='text-danger' >
+																			{props.errors.taxablePersonNameInArabic}
+																		</div>
+																	)}
 															</FormGroup>
 														</Col>
-													</Row>
-													<Row>
-													<Col lg="4" >
+														<Col lg="4" >
 															<FormGroup>
-																<Label htmlFor="vatRegistrationNumber"><span className="text-danger">* </span>
+																<Label htmlFor="vatRegistrationNumber"><span className="text-danger"></span>
 																	{strings.TaxRegistrationNumber}
 																</Label>
 																<Input
+																disabled
 																	type="text"
 																	maxLength="15"
 																	id="vatRegistrationNumber"
@@ -249,10 +307,9 @@ class VatSettingModal extends React.Component {
 																			option.target.value === '' ||
 																			this.regEx.test(option.target.value)
 																		) {
-																			props.handleChange(
-																				'vatRegistrationNumber',
-																			)(option);
+																			props.handleChange('vatRegistrationNumber')(option);
 																		}
+																		
 																	}}
 																	value={props.values.vatRegistrationNumber}
 																	className={
@@ -268,119 +325,179 @@ class VatSettingModal extends React.Component {
 																			{props.errors.vatRegistrationNumber}
 																		</div>
 																	)}
-																<div className="VerifyTRN">
+																{/* <div className="VerifyTRN">
 																	<br />
 																	<b>	<a target="_blank" rel="noopener noreferrer" href="https://eservices.tax.gov.ae/en-us/trn-verify" style={{ color: '#2266d8' }}  >{strings.VerifyTRN}</a></b>
-																</div>
+																</div> */}
 															</FormGroup>
 														</Col>
 														<Col lg={4}>
 															<FormGroup className="mb-3">
-																<Label htmlFor="reportingPeriod">
-																	Repoting Period
-																</Label>
-																<Select
-																	// isDisabled
-																	styles={customStyles}
-																	id="reportingPeriod"
-																	name="reportingPeriod"
-																	placeholder={strings.Select + strings.PlaceofSupply}
-																	options={
-																		reporting_period_list
-																	}
-																	// value={
-																	// 	reporting_period_list 
-																	// 	&& reporting_period_list.find(
-																	// 		(option) =>
-																	// 			option.value ===
-																	// 			props.values.reportingPeriod,
-																	// 	)
-																	// }
-																	className={
-																		props.errors.reportingPeriod &&
-																			props.touched.reportingPeriod
-																			? 'is-invalid'
-																			: ''
-																	}
-																	onChange={(option) =>
-																		props.handleChange('reportingPeriod')(
-																			option,
-																		)
-																	}
+															<span className="text-danger"></span>
+																<Label htmlFor="taxAgencyName">Tax Agency Name </Label>
+																<Input
+																	type="text"
+																	name="taxAgencyName"
+																	id="taxAgencyName"
+																	maxLength="100"
+																	placeholder={"Enter Tax Agency Name"}
+																	onChange={(option) =>{
+																		props.handleChange('taxAgencyName')(option)
+																			if(option.target.value !==""){
+																				this.setState({isTANMandetory:true})
+																			}
+																			else{
+																			    this.setState({isTANMandetory:false})
+																			}
+																		}}
+																	defaultValue={props.values.taxAgencyName}
 																/>
-																{props.errors.reportingPeriod &&
-																	props.touched.reportingPeriod && (
-																		<div className="invalid-feedback">
-																			{props.errors.reportingPeriod}
+																{props.errors.taxAgencyName &&												
+																(
+																		<div className='text-danger' >
+																			{props.errors.taxAgencyName}
 																		</div>
 																	)}
 															</FormGroup>
 														</Col>
-
-													</Row>
-													<Row>
-														{/* <Col lg={4} >	
-										
-															<Label> International Trade</Label>
-															</Col> */}
-														<Col lg={4} >
-															<Checkbox
-																id="isReverseChargeEnabled"
-																checked={this.state.isReverseChargeEnabled}
-																onChange={(option) => {
-																	this.setState({ isReverseChargeEnabled: !this.state.isReverseChargeEnabled })
-																	// for resetting VAT
-																	props.handleChange('vatCategoryId')('');
-																}}
-															/>
-															<Label> Enable Trade With contacts ouside U.A.E.</Label>
+														
+														<Col lg={4}>
+															<FormGroup className="mb-3">
+													{this.state.isTANMandetory === true &&(<span className="text-danger">* </span> )}
+																<Label htmlFor="taxAgencyNumber">Tax Agency Number (TAN)</Label>
+																<Input
+																	type="text"
+																	name="taxAgencyNumber"
+																	id="taxAgencyNumber"
+																	maxLength="10"
+																	autoComplete='off'
+																	placeholder={"Enter Tax Agency Number (TAN)"}
+																	onChange={(option) =>
+																		{
+																		if (option.target.value === '' ||
+																				this.regExBoth.test(option.target.value)
+																			) {																				
+																				props.handleChange('taxAgencyNumber')(option)
+																			}
+																		}}
+																	value={props.values.taxAgencyNumber}
+																/>
+																	{props.errors.taxAgencyNumber &&												
+																(
+																		<div className='text-danger' >
+																			{props.errors.taxAgencyNumber}
+																		</div>
+																	)}
+															</FormGroup>
 														</Col>
 													</Row>
 
-												</Form>
-											)}
-										</Formik> </>
-									)}
-								</CardBody>
-							</div>
-						</div>
-					</ModalBody>
-					<ModalFooter>
+													<Row>
+													<Col lg={4}>
+															<FormGroup className="mb-3">
+															<span className="text-danger">* </span>
+																<Label htmlFor="taxAgentName">Tax Agent Name</Label>
+																<Input
+																	type="text"
+																	name="taxAgentName"
+																	id="taxAgentName"
+																	maxLength="100"
+																	placeholder={"Enter Agenct Name"}
+																	onChange={(option) =>{
+																		props.handleChange('taxAgentName')(option)
+																		if(option.target.value !=""){
+																			this.setState({isTAANMandetory:true})
+																		}else{
+																			this.setState({isTAANMandetory:false})
+																		}
+																	}}
+																	defaultValue={props.values.taxAgentName}
+																/>
+																	{props.errors.taxAgentName &&												
+																(
+																		<div className='text-danger' >
+																			{props.errors.taxAgentName}
+																		</div>
+																	)}
+															</FormGroup>
+														</Col>
+														<Col lg={4}>
+															<FormGroup className="mb-3">	
+																<span className="text-danger">* </span>
+															<Label htmlFor="taxAgentApprovalNumber">Tax Agent Approval Number (TAAN) </Label>
+																<Input
+																	type="text"
+																	name="taxAgentApprovalNumber"
+																	id="taxAgentApprovalNumber"
+																	maxLength="8"
+																	autoComplete='off'
+																	placeholder={"Enter Tax Agent Approval Number (TAAN)"}
+																	onChange={(option) => 
+																		{
+																		if (
+																			option.target.value === '' ||
+																			this.regExTelephone.test(option.target.value)
+																		) {
+																			props.handleChange('taxAgentApprovalNumber')(option)
+																		}
+																	}}
+																	value={props.values.taxAgentApprovalNumber}
+																/>
+																	{props.errors.taxAgentApprovalNumber &&												
+																		(
+																				<div className='text-danger' >
+																					{props.errors.taxAgentApprovalNumber}
+																				</div>
+																			)}
+															</FormGroup>
+														</Col>
 
-						<Row className="mb-4 ">
+													</Row>
+									</ModalBody>
+									<ModalFooter>
+										<Button
+											color="primary"
+											type="submit"
+											className="btn-square"
+											disabled={this.state.disabled}
+											onClick={() => {
+												//	added validation popup	msg
+												props.handleBlur();
+												if(props.errors &&  Object.keys(props.errors).length != 0)
+												this.props.commonActions.fillManDatoryDetails();
 
-							<Col>
-								<Button
-									color="primary"
-									className="btn-square "
-									onClick={this.addEmployees}
-								// disabled={selectedRows.length === 0}
+										}}
+										>
+											<i className="fa fa-dot-circle-o"></i> 	{this.state.disabled
+																			? 'Saving...'
+																			: strings.Save }
+										</Button>
+										&nbsp;
+										<Button
+											color="secondary"
+											className="btn-square"
+											onClick={() => {											
+												this.setState({isTANMandetory:false})
+												this.setState({isTAANMandetory:false})
+												closeModal(false);
+											}}
+										>
+											<i className="fa fa-ban"></i> {strings.Cancel}
+										</Button>
+									</ModalFooter>
+								</Form>
+							);
+						}}
+					</Formik>
+		
 
-								>
-									<i class="fas fa-check-double mr-1"></i>
-
-									Save
-								</Button>
-								<Button
-									color="secondary"
-									className="btn-square"
-									onClick={() => {
-										closeModal(false);
-									}}
-								>
-									<i className="fa fa-ban"></i> {strings.Cancel}
-								</Button>
-							</Col>
-						</Row>
-
-					</ModalFooter>
 				</Modal>
 
 			</div>
 		);
 	}
 }
-
+													
 
 export default connect(
 	mapStateToProps

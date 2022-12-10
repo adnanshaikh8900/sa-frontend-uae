@@ -1196,7 +1196,7 @@ class CreateContact extends React.Component {
 																							label: 'Select State',
 																							value: '',
 																						});
-																						// props.handleChange('billingStateProvince')('');
+																						props.handleChange('billingStateProvince')('');
 																					}}
 																					placeholder={strings.Select + strings.Country}
 																					id="billingcountryId"

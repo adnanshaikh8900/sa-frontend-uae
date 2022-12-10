@@ -1335,7 +1335,7 @@ class CreateContact extends React.Component {
 																				<FormGroup>
 																					{/* <Label htmlFor="select">{strings.POBoxNumber}</Label> */}
 																					<Label htmlFor="POBoxNumber">
-																						<span className="text-danger">* </span>{strings.BillingPOBoxNumber}
+																						<span className="text-danger">* </span>{strings.POBoxNumber}
 																					</Label>
 																					<Input
 																						type="text"
@@ -1344,7 +1344,7 @@ class CreateContact extends React.Component {
 																						id="poBoxNumber"
 																						name="poBoxNumber"
 																						autoComplete="Off"
-																						placeholder={strings.Enter + strings.BillingPOBoxNumber}
+																						placeholder={strings.Enter + strings.POBoxNumber}
 																						onChange={(option) => {
 																							if (
 																								option.target.value === '' ||
@@ -1733,7 +1733,7 @@ class CreateContact extends React.Component {
 																				<FormGroup>
 																					{/* <Label htmlFor="select">{strings.POBoxNumber}</Label> */}
 																					<Label htmlFor="POBoxNumber">
-																						<span className="text-danger">* </span>{strings.ShippingPOBoxNumber}
+																						<span className="text-danger">* </span>{strings.POBoxNumber}
 																					</Label>
 																					<Input
 																						type="text"
@@ -1742,7 +1742,7 @@ class CreateContact extends React.Component {
 																						id="shippingPoBoxNumber"
 																						name="shippingPoBoxNumber"
 																						autoComplete="Off"
-																						placeholder={strings.Enter + strings.ShippingPOBoxNumber}
+																						placeholder={strings.Enter + strings.POBoxNumber}
 																						onChange={(option) => {
 																							if (
 																								option.target.value === '' ||

@@ -573,15 +573,13 @@ class DetailExpense extends React.Component {
 
 				case 1: 
 				case 3: 
-					if(this.state.isReverseChargeEnabled==false)
 					vatIds=[1,2,3]										
 				break;
 
 				case 2: 
 				case 4:
 				case 8:  
-				if(this.state.isReverseChargeEnabled==false)
-				vatIds=[4]
+					vatIds=[4]
 			
 				break;
 
@@ -594,16 +592,11 @@ class DetailExpense extends React.Component {
 					vatIds=[1,2]
 				break;
 				
-				case 8: 
-				if(this.state.isReverseChargeEnabled==false)
-					vatIds=[4]
-					
-				break;
 			}
 		else
 //Not Designated Zone		
 			if(this.state.isDesignatedZone==false)
-			switch(props.values.taxTreatmentId.value ?props.values.taxTreatmentId.value:''){
+			switch(props.values.taxTreatmentId.value ?props.values.taxTreatmentId.value:props.values.taxTreatmentId){
 
 				case 1: 
 					if(this.state.isReverseChargeEnabled==false)
@@ -613,7 +606,6 @@ class DetailExpense extends React.Component {
 				break;
 
 				case 3: 
-					if(this.state.isReverseChargeEnabled==false)
 					vatIds=[1,2,3]
 					
 				break;
@@ -630,7 +622,6 @@ class DetailExpense extends React.Component {
 				break;
 
 				case 8: 
-				if(this.state.isReverseChargeEnabled==false)
 				vatIds=[4]
 					
 				break;

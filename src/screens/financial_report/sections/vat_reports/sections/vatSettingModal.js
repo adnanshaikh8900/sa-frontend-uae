@@ -180,8 +180,7 @@ class VatSettingModal extends React.Component {
 						<Row>
 							<Col lg={12}>
 								<div className="h4 mb-0 d-flex align-items-center">
-									<i className="nav-icon fa fa-cog" />
-									<span className="ml-2">VAT Settings</span>
+									<i className="nav-icon fa" /><span className="ml-2">Company Details</span>
 								</div>
 							</Col>
 						</Row>

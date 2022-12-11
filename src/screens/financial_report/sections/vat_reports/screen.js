@@ -672,7 +672,7 @@ class VatReports extends React.Component {
 												onClick={() => {
 													this.setState({ openVatSettingModal: true })
 												}}>
-												<i className="fa fa-cog"></i> VAT Settings
+												<i className="fa"></i>Company Details
 											</Button> 
 
 										</FormGroup>

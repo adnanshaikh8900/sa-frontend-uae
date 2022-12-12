@@ -32,6 +32,7 @@ import { Checkbox } from '@material-ui/core';
 import Switch from "react-switch";
 import { TextareaAutosize } from '@material-ui/core';
 import currency from 'screens/currency';
+import { getCustomerInvoicesCountForDelete } from 'screens/customer_invoice/actions';
 
 const mapStateToProps = (state) => {
 	return {
@@ -1531,6 +1532,7 @@ componentWillUnmount() {
 																				: []
 																		}
 																		placeholder={strings.Select+strings.Currency}
+																		value={props.values.currency}
 																		onChange={(option) => {
 																			if(option.value!="")
 																			{

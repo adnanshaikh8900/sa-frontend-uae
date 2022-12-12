@@ -131,10 +131,9 @@ class DetailExpense extends React.Component {
 	}
 
 	componentDidMount = () => {
-		this.getTaxTreatmentList();	
 		this.getcurentCompanyUser();
+		this.getTaxTreatmentList();	
 		this.initializeData();
-	
 	};
 	getTaxTreatmentList=()=>{
 		this.props.expenseActions
@@ -242,7 +241,7 @@ class DetailExpense extends React.Component {
 								}
 							},
 						);
-						this.ReverseChargeSetting(res.data.taxTreatmentId,"")
+						//this.ReverseChargeSetting(res.data.taxTreatmentId,"")
 					}
 
 				})
@@ -440,11 +439,13 @@ class DetailExpense extends React.Component {
 			 
 			let userStateName    = response.data.company.companyStateCode.stateName ?response.data.company.companyStateCode.stateName:'';
 			let isDesignatedZone =response.data.company.isDesignatedZone?response.data.company.isDesignatedZone:false;
-				
 				this.setState({
 					userStateName:userStateName,
 					isDesignatedZone:isDesignatedZone})
 		
+		})
+		.catch((err) => {
+			console.log(err);
 		});
 	}
 	placelistSetting=(option,props)=>{
@@ -519,54 +520,51 @@ class DetailExpense extends React.Component {
 
 	}
 
-	ReverseChargeSetting=(option,props)=>{
+// 	ReverseChargeSetting=(option,props)=>{
+// 		console.log(option,"VAT TAX TREATMEENT");
 		
-		if(this.state.isDesignatedZone==true)
-			switch(option){
+// 		if(this.state.isDesignatedZone==true)
+// 			switch(option){
 
-				case 1: 
-				case 2: 
-				case 3: 
-				case 4: 
-				case 8: 
-				this.setState({
-					showReverseCharge:false,
-				})
-				break;
+// 				case 1: 
+// 				case 2: 
+// 				case 3: 
+// 				case 4: 
+// 				case 8: 
+// 				this.setState({
+// 					showReverseCharge:false,
+// 				})
 
-				case 5: 
-				case 6: 
-				case 7: 
-				this.setState({
-					showReverseCharge:true,
-				})
-				break;		
-			}
-		else
-//Not Designated Zone		
-			if(this.state.isDesignatedZone==false)
-			switch(option){
+// 				break;
 
-				case 1: 
-				case 2: 
-				case 4: 
-				case 5: 
-				case 6: 
-				case 7: 
-				this.setState({
-					showReverseCharge:true,
-				})
-						break;
+// 				case 5: 
+// 				case 6: 
+// 				case 7: 
+// 				this.setState({
+// 					showReverseCharge:true,
+// 				})
+// 				break;		
+// 			}
+// 		else
+// //Not Designated Zone		
+// 			if(this.state.isDesignatedZone==false)
+// 			switch(option){
 
-				case 3: 
-				case 8: 
-				this.setState({
-					showReverseCharge:false,
-				})
-						break;
-			}
-	}
+// 				case 1: 
+// 				case 2: 
+// 				case 4: 
+// 				case 5: 
+// 				case 6: 
+// 				case 7:
+// 					this.setState({showReverseCharge:true,})
+// 					break;
 
+// 				case 3: 
+// 				case 8: 
+// 					this.setState({showReverseCharge:false,})
+// 					break;
+// 			}
+// 	}
 	renderVat=(props)=>{
 		let vat_list=[]
 		let vatIds=[]		
@@ -575,15 +573,13 @@ class DetailExpense extends React.Component {
 
 				case 1: 
 				case 3: 
-					if(this.state.isReverseChargeEnabled==false)
 					vatIds=[1,2,3]										
 				break;
 
 				case 2: 
 				case 4:
 				case 8:  
-				if(this.state.isReverseChargeEnabled==false)
-				vatIds=[4]
+					vatIds=[4]
 			
 				break;
 
@@ -596,16 +592,11 @@ class DetailExpense extends React.Component {
 					vatIds=[1,2]
 				break;
 				
-				case 8: 
-				if(this.state.isReverseChargeEnabled==false)
-					vatIds=[4]
-					
-				break;
 			}
 		else
 //Not Designated Zone		
 			if(this.state.isDesignatedZone==false)
-			switch(props.values.taxTreatmentId.value ?props.values.taxTreatmentId.value:''){
+			switch(props.values.taxTreatmentId.value ?props.values.taxTreatmentId.value:props.values.taxTreatmentId){
 
 				case 1: 
 					if(this.state.isReverseChargeEnabled==false)
@@ -615,7 +606,6 @@ class DetailExpense extends React.Component {
 				break;
 
 				case 3: 
-					if(this.state.isReverseChargeEnabled==false)
 					vatIds=[1,2,3]
 					
 				break;
@@ -632,7 +622,6 @@ class DetailExpense extends React.Component {
 				break;
 
 				case 8: 
-				if(this.state.isReverseChargeEnabled==false)
 				vatIds=[4]
 					
 				break;
@@ -988,7 +977,7 @@ class DetailExpense extends React.Component {
 																					//placelist Setup
 																					this.placelistSetting(option,props)
 																					// ReverseCharge setup
-																					this.ReverseChargeSetting(option.value,props)
+																					//this.ReverseChargeSetting(option.value,props)
 																					this.setState({isReverseChargeEnabled:false,exclusiveVat:false})
 																																
 																				} else {
@@ -1575,23 +1564,26 @@ class DetailExpense extends React.Component {
 																		</FormGroup> */}
 																	</Col>
 																	<Col></Col>
-																	<Col></Col></Row>
-														)
-														}
-																				<Row>
-														{this.state.showReverseCharge==true &&(<Col >
-															<Checkbox
-																id="isReverseChargeEnabled"
-																checked={this.state.isReverseChargeEnabled}
-																onChange={(option)=>{
-																		this.setState({isReverseChargeEnabled:!this.state.isReverseChargeEnabled,exclusiveVat:false})
-																										// for resetting VAT
-																										props.handleChange('vatCategoryId')('');
-																	}}
-															/>
-															<Label>{strings.IsReverseCharge}</Label>
-															</Col>)}
-														</Row>
+																	<Col></Col>
+																</Row>
+																)}
+																<Row>
+																	{((this.state.isDesignatedZone && (props.values.taxTreatmentId.value === 5  || props.values.taxTreatmentId.value === 6 ||props.values.taxTreatmentId.value === 7 ))
+																		|| (!this.state.isDesignatedZone && (props.values.taxTreatmentId.value !== 3  && props.values.taxTreatmentId.value !== 8))
+																	)&& (
+																	<Col>
+																		<Checkbox
+																			id="isReverseChargeEnabled"
+																			checked={this.state.isReverseChargeEnabled}
+																			onChange={(option)=>{
+																				this.setState({isReverseChargeEnabled:!this.state.isReverseChargeEnabled,exclusiveVat:false})
+																				// for resetting VAT
+																				props.handleChange('vatCategoryId')('');
+																			}}
+																		/>
+																		<Label>{strings.IsReverseCharge}</Label>
+																	</Col>)}
+																</Row>
 															<hr />
 															<Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
 																<Col>

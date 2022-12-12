@@ -31,8 +31,6 @@ import LocalizedStrings from 'react-localization';
 import { Checkbox } from '@material-ui/core';
 import Switch from "react-switch";
 import { TextareaAutosize } from '@material-ui/core';
-import currency from 'screens/currency';
-import { getCustomerInvoicesCountForDelete } from 'screens/customer_invoice/actions';
 
 const mapStateToProps = (state) => {
 	return {
@@ -982,9 +980,9 @@ componentWillUnmount() {
 													if(this.state.currency===true && values.currency === '' ){
 														errors.currency = 'Currency is required';
 													}
-													if (!values.placeOfSupplyId && values.taxTreatmentId.value !== 8) {
-														errors.placeOfSupplyId = 'Place of supply is required';
-													}
+													// if (!values.placeOfSupplyId && values.taxTreatmentId.value !== 8) {
+													// 	errors.placeOfSupplyId = 'Place of supply is required';
+													// }
 
 													return errors;
 												}}
@@ -1153,7 +1151,7 @@ componentWillUnmount() {
 																					props.handleChange('taxTreatmentId')(
 																						option,
 																					);
-																					props.handleChange('placeOfSupplyId')('');
+																					// props.handleChange('placeOfSupplyId')('');
 																							// for resetting Vat
 																					props.handleChange('vatCategoryId')('');
 																					//placelist Setup
@@ -1183,7 +1181,7 @@ componentWillUnmount() {
 																			)}
 																	</FormGroup>
 																</Col>
-															{this.state.showPlacelist==true&& (	<Col lg={3}>
+															{/* {this.state.showPlacelist==true&& (	<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">
 																		<span className="text-danger">*</span>
@@ -1236,7 +1234,7 @@ componentWillUnmount() {
 																			</div>
 																		)}
 																</FormGroup>
-															</Col>)}
+															</Col>)} */}
 															<Col className='mb-2' lg={3}>
 																<Label htmlFor="inline-radio3"><span className="text-danger">* </span>{strings.ExpenseType}</Label>
 																<div style={{display:"flex"}}>
@@ -1408,7 +1406,7 @@ componentWillUnmount() {
 																</FormGroup>
 															</Col>
 														
-															<Col>
+															{/* <Col>
 															<Button
                                                                 color="primary"
                                                                 className="btn-square pull-left mb-3 mr-3 mt-4"
@@ -1417,13 +1415,11 @@ componentWillUnmount() {
 																	//  this.props.history.push(`/admin/payroll/employee/create`,{goto:"Expense"})
 																	this.props.history.push(`/admin/master/employee/create`,{goto:"Expense"})
 																	}
-
                                                             >
                                                                 <i className="fas fa-plus mr-1" />
-                                         {strings.NewEmployee}
-										
-										</Button>
-												</Col>
+																{strings.NewEmployee}
+															</Button>
+															</Col> */}
 													</Row>
 														<Row>
 															<Col lg={3}>
@@ -1791,7 +1787,7 @@ componentWillUnmount() {
 														<hr />
 														<Row>
 																<Col lg={8}>
-																<FormGroup className="py-2">
+																{/* <FormGroup className="py-2">
 																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
 																		<TextareaAutosize
 																			type="textarea"
@@ -1807,7 +1803,7 @@ componentWillUnmount() {
 																			}
 																			value={props.values.notes}
 																		/>
-																	</FormGroup>
+																	</FormGroup> */}
 																	<Row>
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
@@ -1833,7 +1829,7 @@ componentWillUnmount() {
 																			
 																			</FormGroup>
 																		</Col>
-																		<Col lg={6}>
+																		{/* <Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Field
 																					name="attachmentFile"
@@ -1890,9 +1886,9 @@ componentWillUnmount() {
 																						</div>
 																					)}
 																			</FormGroup>
-																		</Col>
+																		</Col> */}
 																	</Row>
-																	<FormGroup className="mb-3">
+																	{/* <FormGroup className="mb-3">
 																		<Label htmlFor="receiptAttachmentDescription">
 																			{strings.AttachmentDescription}
 																		</Label><br/>
@@ -1915,7 +1911,7 @@ componentWillUnmount() {
 																					.receiptAttachmentDescription
 																			}
 																		/>
-																	</FormGroup>
+																	</FormGroup> */}
 																</Col>
 																</Row>
 

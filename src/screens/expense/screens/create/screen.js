@@ -1343,6 +1343,7 @@ componentWillUnmount() {
 																		}`}
 																		placeholderText={strings.ExpenseDate}
 																		selected={props.values.expenseDate}
+																		value={props.values.expenseDate}
 																		showMonthDropdown
 																		showYearDropdown
 																		dropdownMode="select"

@@ -1083,7 +1083,6 @@ class DetailSupplierInvoice extends React.Component {
 		});
 		let newData = [];
 		const data = this.state.data;
-		console.log(data);
 		let length = data.length;
 		data.map((obj,index) => {
 			if(obj.productId){
@@ -1091,9 +1090,15 @@ class DetailSupplierInvoice extends React.Component {
 				newData.push(obj);
 				return obj;
 			}
+			else{
+				newData.push(obj);
+				return obj;
+			}
 		})
 		props.setFieldValue('lineItemsString', newData, true);
 		this.updateAmount(newData, props);
+		
+		
 	};
 	renderVat = (cell, row, props) => {
 		//const { vat_list } = this.state;
@@ -1341,7 +1346,7 @@ class DetailSupplierInvoice extends React.Component {
 							if (e && e.label !== 'Select Product') {
 								this.selectItem(e.value, row, 'productId', form, field, props);
 								this.prductValue(e.value, row, 'productId', form, field, props);
-								if(this.checkedRow()==false)
+								if(this.checkedRow())
 								this.addRow();
 							}
 						}}
@@ -1667,7 +1672,6 @@ class DetailSupplierInvoice extends React.Component {
 
 				},
 			},
-
 		);
 	};
 

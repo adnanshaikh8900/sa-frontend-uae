@@ -66,7 +66,7 @@ class ExpenseTemplate extends Component {
 								
 							</div>
 							</div>
-									<div
+							<div
 								style={{
 									width: '70%',
 									display: 'flex',
@@ -77,17 +77,23 @@ class ExpenseTemplate extends Component {
 								<div style={{
 									width: '97%',
 									textAlign: 'right',
-
-								}}>
-									<h2 className="mb-1 ml-2">
-												<b>{strings.Expense}</b>
-											</h2>	
-											<div className="mb-1 ml-2" style={{fontSize:"22px"}}><b> {expenseData.payee} </b></div>
-									<div className="mb-1 ml-2"><b>{strings.ExpenseDate}</b>: {moment(expenseData.expenseDate ).format('DD-MM-YYYY')}</div> 
-											</div>
-											</div>
-					</div><br/><br/>
-<div style={{backgroundColor:'rgb(32 100 216)', height:'45px'}}></div>
+								}}
+								>
+									<h2 className="mb-1 ml-2"><b>{strings.Expense}</b></h2>	
+									<div className="mb-1 ml-2" style={{fontSize:"22px"}}><b> {expenseData.payee} </b></div>
+									<div className="mb-1 ml-2"><b>{strings.ExpenseDate}</b>: {moment(expenseData.expenseDate ).format('DD-MM-YYYY')}
+									</div> 
+								</div>
+							</div>	
+						</div>
+						<div style={{
+									width: '97%',
+									textAlign: 'right',
+								}}
+								>
+									{(expenseData.exchangeRate && expenseData.exchangeRate!==1 ) && <strong>{strings.Exchangerate}: {expenseData.exchangeRate }</strong>}
+						</div><br />
+				<div style={{backgroundColor:'rgb(32 100 216)', height:'45px'}}></div>
 					<div className="card text-start border"
 						style={{
 							width: '100%',
@@ -121,22 +127,21 @@ class ExpenseTemplate extends Component {
 			  <td>{expenseData.expenseId}</td>
 	</tr> */}
 
-	<tr>      <td className="ml-3" style={{width:'245px'}}>	<b>{strings.VAT+" "+strings.Type }</b>: </td>  
+	<tr>      <td className="ml-3" style={{width:'245px'}}>	<b>{strings.VATType }</b>: </td>  
 	          <td>{expenseData.vatCategoryName} </td>
 	</tr>
 	
-	<tr>      <td className="ml-3" style={{width:'245px'}}>	<b>{strings.ReceiptNumber }</b>: </td>  
+	<tr>      <td className="ml-3" style={{width:'245px'}}>	<b>{strings.ReferenceNumber }</b>: </td>  
 	          <td>{expenseData.receiptNumber} </td>
 	</tr>
-	
 	
 	<tr>      <td className="ml-3" style={{width:'245px'}}>	<b>{strings.Expense+" "+strings.Description }</b>: </td>  
 	          <td>{expenseData.expenseDescription} </td>
 	</tr>
 
-	<tr>      <td className="ml-3" style={{width:'245px'}}>	<b>{strings.Receipt+" "+strings.Description }</b>: </td>  
+	{/* <tr>      <td className="ml-3" style={{width:'245px'}}>	<b>{strings.Receipt+" "+strings.Description }</b>: </td>  
 	          <td>{expenseData.receiptAttachmentDescription} </td>
-	</tr>
+	</tr> */}
 
 	<tr>      <td className="ml-3" style={{width:'245px'}}>	<b>{strings.PostedDate }</b>: </td> 
 	          <td>

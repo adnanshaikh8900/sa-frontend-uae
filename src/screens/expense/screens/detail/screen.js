@@ -1001,7 +1001,7 @@ class DetailExpense extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
-															{this.state.showPlacelist==true&& (	<Col lg={3}>
+															{/* {this.state.showPlacelist==true&& (	<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">
 																		<span className="text-danger">*</span>
@@ -1060,7 +1060,7 @@ class DetailExpense extends React.Component {
 																			</div>
 																		)}
 																</FormGroup>
-															</Col>)}
+															</Col>)} */}
 
 															<Col className='mb-4' lg={3}>
 															<Label htmlFor="inline-radio3"><span className="text-danger">* </span>{strings.ExpenseType}</Label>
@@ -1692,7 +1692,7 @@ class DetailExpense extends React.Component {
 														</Row>
 														<Row>
 																<Col lg={8}>
-																<FormGroup className="py-2">
+																{/* <FormGroup className="py-2">
 																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
 																		<TextareaAutosize
 																			type="textarea"
@@ -1708,7 +1708,7 @@ class DetailExpense extends React.Component {
 																			}
 																			value={props.values.notes}
 																		/>
-																	</FormGroup>
+																	</FormGroup> */}
 																	<Row>
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
@@ -1734,7 +1734,7 @@ class DetailExpense extends React.Component {
 																			
 																			</FormGroup>
 																		</Col>
-																		<Col lg={6}>
+																		{/* <Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Field
 																					name="attachmentFile"
@@ -1791,9 +1791,9 @@ class DetailExpense extends React.Component {
 																						</div>
 																					)}
 																			</FormGroup>
-																		</Col>
+																		</Col> */}
 																	</Row>
-																	<FormGroup className="mb-3">
+																	{/* <FormGroup className="mb-3">
 																		<Label htmlFor="receiptAttachmentDescription">
 																			{strings.AttachmentDescription}
 																		</Label><br/>
@@ -1816,7 +1816,7 @@ class DetailExpense extends React.Component {
 																					.receiptAttachmentDescription
 																			}
 																		/>
-																	</FormGroup>
+																	</FormGroup> */}
 																</Col>
 																</Row>
 															<Row>

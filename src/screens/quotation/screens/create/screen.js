@@ -1163,14 +1163,37 @@ resetVatId = (props) => {
 		);
 	};
 
+	exchangeRaterevalidate=(exc)=>{
+		let local=[...this.state.data]
+		var { product_list } = this.props;
+		
+		let local2=local.map((obj, index) => {
+
+			const result = product_list.find((item) => item.id === obj.productId);
+			return {
+				...obj,unitPrice:result?
+				(parseFloat(result.unitPrice)*(1/exc)).toFixed(2):0
+			}
+			
+		});
+		
+		this.setState({data:local2},()=>{
+			this.updateAmount(local2);
+			if(this.checkedRow()) this.addRow()
+		})
+	}
+
 	prductValue = (e, row, name, form, field, props) => {
 		const { product_list } = this.props;
 		let data = this.state.data;
 		const result = product_list.find((item) => item.id === parseInt(e));
 		let idx;
+		let exchangeRate=this.formRef.current?.state?.values?.exchangeRate>0 
+			&& this.formRef.current?.state?.values?.exchangeRate!=="" ?
+			this.formRef.current?.state?.values?.exchangeRate:1
 		data.map((obj, index) => {
 			if (obj.id === row.id) {
-				obj['unitPrice'] = result.unitPrice;
+				obj['unitPrice'] =  (parseFloat(result.unitPrice)*(1/exchangeRate)).toFixed(2);
 				obj['description'] = result.description;
 				obj['exciseTaxId'] = result.exciseTaxId;
 				obj['discountType'] = result.discountType;
@@ -1666,12 +1689,14 @@ resetVatId = (props) => {
 			discountType,
 			discountPercentage,
 			quotationId,
-			footNote
+			footNote,
+			exchangeRate
 		} = data;
 		const { term } = this.state;
 
 		let formData = new FormData();
 		formData.append('taxType', this.state.taxType)
+		formData.append('exchangeRate', exchangeRate !== null ? exchangeRate : '');
 		formData.append('quotationNumber',quotation_Number !== null ? this.state.prefix + quotation_Number : '',);
 		formData.append('quotaionExpiration',quotaionExpiration ? quotaionExpiration : '',);
 		formData.append('quotationdate',quotationdate ? quotationdate : '',);
@@ -1994,6 +2019,7 @@ resetVatId = (props) => {
 			}
 		});
 	};
+
 
 	validationCheck = (value) => {
 		const data = {
@@ -2580,6 +2606,7 @@ resetVatId = (props) => {
 																	
 																</FormGroup>
 															</Col>
+															
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currency">
@@ -2639,6 +2666,89 @@ resetVatId = (props) => {
 															</Col>
 														</Row>
 														<hr style={{display: props.values.exchangeRate === 1 ? 'none' : ''}} />
+														
+																<Row style={{display: props.values.exchangeRate === 1  ? 'none' : ''}}>
+																<Col>
+																<Label >
+																		{strings.CurrencyExchangeRate}
+																	</Label>	
+																</Col>
+																</Row>
+																
+																<Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
+																<Col md={1}>
+																<Input
+																		disabled
+																				id="1"
+																				name="1"
+																				value=	{
+																					1 }
+																				
+																			/>
+																</Col>
+																<Col md={2}>
+																<FormGroup className="mb-3">
+																	{/* <Label htmlFor="exchangeRate">
+																		Exchange rate
+																	</Label> */}
+																	<div>
+																		<Input
+																		disabled	
+																			className="form-control"
+																			id="curreancyname"
+																			name="curreancyname"
+																			value={this.state?.supplier_currency_symbol}
+																			onChange={(value) => {
+																				props.handleChange('curreancyname')(
+																					value,
+																				);
+																			}}
+																		/>
+																	</div>
+																</FormGroup>
+															</Col>
+															<FormGroup className="mt-2"><label><b>=</b></label>	</FormGroup>
+															<Col lg={2}>
+																<FormGroup className="mb-3">
+																	{/* <Label htmlFor="exchangeRate">
+																		Exchange rate
+																	</Label> */}
+																	<div>
+																		<Input
+																			type="number"
+																			className="form-control"
+																			id="exchangeRate"
+																
+																			name="exchangeRate"
+																			value={props.values.exchangeRate}
+																			onChange={(value) => {
+																				props.handleChange('exchangeRate')(
+																					value,
+																				);
+																				this.exchangeRaterevalidate(parseFloat(value.target.value))
+																			}}
+																		/>
+																	</div>
+																</FormGroup>
+															</Col>
+															<Col  lg={2}>
+																	<Input
+																		type="text"
+																		min="0"	
+																		disabled
+																		id="currencyName"
+																		name="currencyName"
+																		value=	{
+																		this.state?.basecurrency?.currencyName }
+																				
+																			/>
+														</Col>
+														
+														
+														</Row>
+														
+														<hr style={{display: props.values.exchangeRate === 1 ? 'none' : ''}} />
+														
 														<Row>
 															<Col lg={8} className="mb-3">
 																{/* <Button

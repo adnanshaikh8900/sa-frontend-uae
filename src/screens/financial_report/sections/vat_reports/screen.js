@@ -66,7 +66,7 @@ class VatReports extends React.Component {
 				{label:"Quarterly",value:2},
 			],
 			enbaleReportGeneration:false,
-			monthOption:0,
+			monthOption:{label:"Montly",value:0},
 			// vatReportDataList: [
 			// 	{
 			// 	id:11,	taxReturns: "30/11/2021-14/12/2021", totalTaxPayable: 3000, totalTaxReclaimable: null, filedOn: "2021-12-23T06:41:37", status: "Paid", balanceDue: null, currency: "AED", currency: "AED", action: true
@@ -309,7 +309,7 @@ class VatReports extends React.Component {
 			
 		{/* delete */}
 			
-			{params.status === "UnFiled" || params.status === "Filed" ? (
+			{params.status === "UnFiled" ? (
 			<DropdownItem
 					onClick={() => {
 						// this.delete(params.id)

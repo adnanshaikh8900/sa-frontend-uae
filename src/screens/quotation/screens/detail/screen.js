@@ -118,7 +118,7 @@ class DetailQuotation extends React.Component {
 			supplier_currency: '',
 			disabled:false,
 			disabled1:false,
-			dateChanged: false,
+			dateChanged: "",
 			dateChanged1: false,
 			vat_list:[],
 			isDesignatedZone:false,
@@ -1162,9 +1162,12 @@ class DetailQuotation extends React.Component {
 		let data = this.state.data;
 		const result = product_list.find((item) => item.id === parseInt(e));
 		let idx;
+		let exchangeRate=this.formRef.current?.state?.values?.exchangeRate>0 
+			&& this.formRef.current?.state?.values?.exchangeRate!=="" ?
+			this.formRef.current?.state?.values?.exchangeRate:1
 		data.map((obj, index) => {
 			if (obj.id === row.id) {
-				obj['unitPrice'] = parseInt(result.unitPrice);
+				obj['unitPrice'] =  (parseFloat(result.unitPrice)*(1/exchangeRate)).toFixed(2);
 				obj['vatCategoryId'] = parseInt(result.vatCategoryId);
 				obj['exciseTaxId'] = result.exciseTaxId;
 				obj['description'] = result.description;
@@ -1551,6 +1554,7 @@ class DetailQuotation extends React.Component {
 			customerId,
 			quotationNumber,
 			notes,
+			exchangeRate,
 			discount,
 			discountType,
 			discountPercentage,
@@ -1563,6 +1567,7 @@ class DetailQuotation extends React.Component {
 		} = data;
 
 		let formData = new FormData();
+		formData.append('exchangeRate', exchangeRate !== null ? exchangeRate : '');
 		formData.append('taxType', this.state.taxType)
 		formData.append('type', 6);
 		formData.append('id', current_po_id);
@@ -2413,6 +2418,90 @@ class DetailQuotation extends React.Component {
 																}
 															</Col>
 															</Row>
+
+															<hr style={{display: props.values.exchangeRate === 1 ? 'none' : ''}} />
+														
+																<Row style={{display: props.values.exchangeRate === 1  ? 'none' : ''}}>
+																<Col>
+																<Label >
+																		{strings.CurrencyExchangeRate}
+																	</Label>	
+																</Col>
+																</Row>
+																
+																<Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
+																<Col md={1}>
+																<Input
+																		disabled
+																				id="1"
+																				name="1"
+																				value=	{
+																					1 }
+																				
+																			/>
+																</Col>
+																<Col md={2}>
+																<FormGroup className="mb-3">
+																	{/* <Label htmlFor="exchangeRate">
+																		Exchange rate
+																	</Label> */}
+																	<div>
+																		<Input
+																		disabled	
+																			className="form-control"
+																			id="curreancyname"
+																			name="curreancyname"
+																			value={this.state?.supplier_currency_symbol}
+																			onChange={(value) => {
+																				props.handleChange('curreancyname')(
+																					value,
+																				);
+																			}}
+																		/>
+																	</div>
+																</FormGroup>
+															</Col>
+															<FormGroup className="mt-2"><label><b>=</b></label>	</FormGroup>
+															<Col lg={2}>
+																<FormGroup className="mb-3">
+																	{/* <Label htmlFor="exchangeRate">
+																		Exchange rate
+																	</Label> */}
+																	<div>
+																		<Input
+																			type="number"
+																			className="form-control"
+																			id="exchangeRate"
+																
+																			name="exchangeRate"
+																			value={props.values.exchangeRate}
+																			onChange={(value) => {
+																				props.handleChange('exchangeRate')(
+																					value,
+																				);
+																				this.exchangeRaterevalidate(parseFloat(value.target.value))
+																			}}
+																		/>
+																	</div>
+																</FormGroup>
+															</Col>
+															<Col  lg={2}>
+																	<Input
+																		type="text"
+																		min="0"	
+																		disabled
+																		id="currencyName"
+																		name="currencyName"
+																		value=	{
+																		this.state?.basecurrency?.currencyName }
+																				
+																			/>
+														</Col>
+														
+														
+														</Row>
+														
+														<hr style={{display: props.values.exchangeRate === 1 ? 'none' : ''}} />
 															<Row>
 															<Col lg={8} className="mb-3">
 																{/* <Button

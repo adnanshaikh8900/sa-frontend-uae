@@ -214,16 +214,18 @@ class GenerateVatReportModal extends React.Component {
 													options={state.options}
 													id="option"
 													name="option"
+													value={state.monthOption}
 													placeholder="VAT Reporting Period"
-													onChange={(e) => {															
-													setState({enbaleReportGeneration:true,monthOption:e.value})														
+													onChange={(e) => {		
+														debugger													
+													setState({enbaleReportGeneration:true,monthOption:e})														
 													}}
 														/>
 														</Col>
 
 													<Col lg={4}>
 												<FormGroup className="mb-3">
-																<Label htmlFor="startDate"><span className="text-danger">* </span>Select Month</Label>
+																<Label htmlFor="startDate"><span className="text-danger">* </span>Generate VAT Report for</Label>
 														<b>	<DatePicker
 																		selected={this.state.monthlyDate}
 																		onChange={(date) =>{

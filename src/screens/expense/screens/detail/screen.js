@@ -783,9 +783,9 @@ class DetailExpense extends React.Component {
 															errors.bankAccountId = 'Bank account is required';
 														}
 
-														if(this.state.showPlacelist===true && values.placeOfSupplyId ===''){
-															errors.placeOfSupplyId="Place of supply is required"
-														}
+														// if(this.state.showPlacelist===true && values.placeOfSupplyId ===''){
+														// 	errors.placeOfSupplyId="Place of supply is required"
+														// }
 														return errors;
 													}}
 													validationSchema={Yup.object().shape({

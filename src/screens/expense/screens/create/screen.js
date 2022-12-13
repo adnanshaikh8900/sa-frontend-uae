@@ -1532,7 +1532,6 @@ componentWillUnmount() {
 																		}
 																		placeholder={strings.Select+strings.Currency}
 																		value={props.values.currency}
-																		value={props.values.currency}
 																		onChange={(option) => {
 																			if(option.value!="")
 																			{

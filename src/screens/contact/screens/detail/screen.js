@@ -1053,6 +1053,16 @@ class DetailContact extends React.Component {
 																					<Label htmlFor="contactType">
 																						<span className="text-danger">* </span>
 																						{strings.ContactType}
+																						<i
+																				id="Contacttyprtip"
+																				className="fa fa-question-circle ml-1"
+																			></i>
+																			<UncontrolledTooltip
+																				placement="right"
+																				target="Contacttyprtip"
+																			>
+																				The contact type cannot be changed once a document has been created for this contact.
+																			</UncontrolledTooltip>
 																					</Label>
 																					<Select
 																						options={

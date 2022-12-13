@@ -382,7 +382,7 @@ class ViewFtaAuditReport extends React.Component {
 									ref={(component) => (this.pdfExportComponent = component)}
 									scale={0.8}
 									paperSize="A3"
-								    fileName="Detailed General Ledger.pdf"
+								    fileName="FTA VAT Audit File.pdf"
 								>
 
 									{loading ? (

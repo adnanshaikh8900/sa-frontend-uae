@@ -317,7 +317,7 @@ class ViewFtaExciseAuditReport extends React.Component {
 													}}
 													onClick={this.viewFilter}
 												>
-													<i className="fa fa-cog mr-2"></i> Excise Tax Report <b>{ this.state.initValue.startDate.replaceAll("/","-") +"  to  "+this.state.initValue.endDate.replaceAll("/","-") }</b>												</p>
+													Excise Tax Report <b>{ this.state.initValue.startDate.replaceAll("/","-") +"  to  "+this.state.initValue.endDate.replaceAll("/","-") }</b>												</p>
 											</div>
 											<div className="d-flex">
 											<Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
@@ -426,7 +426,7 @@ class ViewFtaExciseAuditReport extends React.Component {
 									ref={(component) => (this.pdfExportComponent = component)}
 									scale={0.8}
 									paperSize="A3"
-								    fileName="Detailed General Ledger.pdf"
+								    fileName="FTA Excise Tax Audit File.pdf"
 								>
 
 									{/* <div className="logo-container">

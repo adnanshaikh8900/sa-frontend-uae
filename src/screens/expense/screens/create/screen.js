@@ -250,34 +250,28 @@ class CreateExpense extends React.Component {
 								let expenseCategory= selectOptionsFactory.renderOptions('transactionCategoryName','transactionCategoryId',	this.props.expense_categories_list,	'Expense Category', )
 								                                         .find((option)=>option.value==res.data.expenseCategory);
 								this.formRef.current.setFieldValue('expenseCategory',expenseCategory, true);
-
 								this.formRef.current.setFieldValue('expenseDate', new Date(res.data.expenseDate), true);
-
 								let currency= selectCurrencyFactory.renderOptions('currencyName','currencyCode',this.props.currency_convert_list,'Currency',)
-																	.find(
-																		(option) =>
-																			option.value ==res.data.currencyCode,
-																	)
+																	.find((option) => option.value ==res.data.currencyCode,																	)
 								this.formRef.current.setFieldValue('currency',currency , true);
 								this.formRef.current.setFieldValue('currencyCode',currency , true);
 								this.setExchange(currency && currency.value);
 								this.setCurrency(currency && currency.value);
-							let payMode=	selectOptionsFactory.renderOptions('label',	'value',this.props.pay_mode_list,	'',)
+								let payMode=	selectOptionsFactory.renderOptions('label',	'value',this.props.pay_mode_list,	'',)
 																.find((option)=>option.value==res.data.payMode)
 								this.formRef.current.setFieldValue('payMode',payMode , true);
-								
 								this.formRef.current.setFieldValue('expenseAmount', res.data.expenseAmount, true);
-							let vat=	selectOptionsFactory.renderOptions(
+								let vat=	selectOptionsFactory.renderOptions(
 									'name',
 									'id',
 									this.props.vat_list,
 									'VAT',
 							  ).find((option)=>option.value==res.data.vatCategoryId)
 								this.formRef.current.setFieldValue('vatCategoryId',  vat, true);
-								this.formRef.current.setFieldValue('expenseDescription',  res.data.expenseDescription, true);
-								this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
-								this.formRef.current.setFieldValue('receiptAttachmentDescription', res.data.receiptAttachmentDescription, true);
-								this.formRef.current.setFieldValue('notes',  res.data.notes, true);
+								// this.formRef.current.setFieldValue('expenseDescription',  res.data.expenseDescription, true);
+								// this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
+								// this.formRef.current.setFieldValue('receiptAttachmentDescription', res.data.receiptAttachmentDescription, true);
+								// this.formRef.current.setFieldValue('notes',  res.data.notes, true);
 
 								let payee=	selectOptionsFactory.renderOptions(	'label','value',	this.props.pay_to_list,	'Payee',)
 								.find((option) => 	option.label == res.data.payee)
@@ -419,10 +413,7 @@ class CreateExpense extends React.Component {
 		formData.append('expenseDate', expenseDate !== null ? expenseDate : '');
 		formData.append('expenseDescription', expenseDescription);
 		formData.append('receiptNumber', receiptNumber);
-		formData.append(
-			'receiptAttachmentDescription',
-			receiptAttachmentDescription,
-		);
+		formData.append('receiptAttachmentDescription',	receiptAttachmentDescription,		);
 		formData.append('expenseAmount', expenseAmount);
 		if (payMode && payMode.value) {
 			formData.append('payMode', payMode.value);
@@ -436,7 +427,6 @@ class CreateExpense extends React.Component {
 		if (placeOfSupplyId  ) {
 			formData.append('placeOfSupplyId', placeOfSupplyId.value ?placeOfSupplyId.value :placeOfSupplyId);
 		}
-		
 		if (taxTreatmentId && taxTreatmentId.value) {
 			formData.append('taxTreatmentId', taxTreatmentId.value);
 		}
@@ -447,11 +437,9 @@ class CreateExpense extends React.Component {
 		if (currency) {
 			formData.append('currencyCode', currency.value);
 		}
-
 		if (vatCategoryId && vatCategoryId.value) {
 			formData.append('vatCategoryId', vatCategoryId.value);
-			 
-			if(this.state.exclusiveVat !== undefined){
+		if(this.state.exclusiveVat !== undefined){
 				formData.append('exclusiveVat', this.state.exclusiveVat );
 			}
 		}

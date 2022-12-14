@@ -286,6 +286,7 @@ class CreateProductCategory extends React.Component {
 																		</div>
 																	)}
 															</FormGroup>
+															Note: If the product category is associated with the product, it cannot be deleted.
 															<FormGroup className="text-right mt-5">
 																<Button
 																	type="submit"

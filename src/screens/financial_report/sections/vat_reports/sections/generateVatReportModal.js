@@ -237,7 +237,7 @@ class GenerateVatReportModal extends React.Component {
 																		minDate={new Date("01/01/2018")}
 																		showMonthYearPicker
 																		withPortal
-																		placeholderText={'Month For VAT Report'}
+																		placeholderText={'Select Month'}
     																  portalId="root-portal"
 																	  className={`text-center`}
 																	  Style={{textAlign:"center !important"}}

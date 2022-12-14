@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import logo from 'assets/images/brand/datainnLogo.png';
 import {
 	Button,
 	Row,
@@ -10,40 +9,21 @@ import {
 	Input,
 	Label,
 	Modal,
-	CardHeader,
 	ModalBody,
 	ModalFooter,
-	UncontrolledTooltip,
-	CardBody,
-	Table,
-	Card,
-	ButtonGroup,
 	ModalHeader,
 } from 'reactstrap';
-import { toInteger, upperCase, upperFirst } from 'lodash';
-import { Formik, Field } from 'formik';
-import Select from 'react-select';
+import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { Editor } from 'react-draft-wysiwyg';
-import { EditorState } from 'draft-js';
-import { selectOptionsFactory } from 'utils';
 import DatePicker from 'react-datepicker';
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import moment from 'moment';
 import { bindActionCreators } from 'redux';
 import { CommonActions } from 'services/global';
-
 import { toast } from 'react-toastify';
 import { data } from '../../../../Language/index'
 import LocalizedStrings from 'react-localization';
-
 import '../style.scss';
-import { PDFExport } from '@progress/kendo-react-pdf';
-import ReactToPrint from 'react-to-print';
-import { Loader } from 'components';
 import * as PayrollEmployeeActions from '../../../../payrollemp/actions'
 import * as VatreportActions from '../actions';
-import { Checkbox } from '@material-ui/core';
 
 const mapStateToProps = (state) => {
 
@@ -54,7 +34,6 @@ const mapStateToProps = (state) => {
 
 };
 
-
 const mapDispatchToProps = (dispatch) => {
 	return {
 		commonActions: bindActionCreators(CommonActions, dispatch),
@@ -62,6 +41,7 @@ const mapDispatchToProps = (dispatch) => {
 		vatreportActions: bindActionCreators(VatreportActions, dispatch),
 	};
 };
+
 const customStyles = {
 	control: (base, state) => ({
 		...base,
@@ -206,15 +186,31 @@ dateLimit=()=>{
 							errors.taxAgencyName="Tax agency name must contain only alphabets";
 							if(values.taxAgentApprovalNumber && this.regExTelephone.test(values.taxAgentApprovalNumber)!=true)
 							errors.taxAgentApprovalNumber="Tax agent approval number must contain only numbers";
-																		
+							
+							if (this.state.isTANMandetory === true &&( values.taxAgencyNumber=="" ||values.taxAgencyNumber==undefined)) 
+							{
+								errors.taxAgencyNumber ='TAN is required';
+								if (values.taxAgentApprovalNumber=="" || values.taxAgentApprovalNumber==undefined)
+								{
+									errors.taxAgentApprovalNumber = 'TAAN is required';
+								}
+								if (values.taxAgentName=="" || values.tax==undefined)
+								{
+									errors.taxAgentName = 'Tax agent name is required';
+								}
+							} 
+							if (this.state.isTAANMandetory === true && (values.taxAgentApprovalNumber=="" || values.taxAgentApprovalNumber==undefined))
+							{
+								errors.taxAgentApprovalNumber = 'TAAN is required';
+							}									
 							return errors;
 						}}
 						validationSchema={Yup.object().shape({
-							//taxablePersonNameInEnglish: Yup.string().required('Taxable person name in english is required'),
-							// taxablePersonNameInArabic: Yup.string().required('Taxable Person Name In Arabic is required'),
-							//taxAgentName: Yup.string().required('Tax Agent Name is required'),
-							// taxAgentApprovalNumber: Yup.string().required('TAAN is required'),
-							//vatRegistrationNumber: Yup.string().required('Tax registration number is required'),
+							taxablePersonNameInEnglish: Yup.string().required('Taxable person name in english is required'),
+							taxablePersonNameInArabic: Yup.string().required('Taxable Person Name In Arabic is required'),
+							taxAgentName: Yup.string().required('Tax Agent Name is required'),
+							taxAgentApprovalNumber: Yup.string().required('TAAN is required'),
+							vatRegistrationNumber: Yup.string().required('Tax registration number is required'),
 							taxFiledOn: Yup.string().required(
 								'Date of filling is required',
 							),
@@ -233,7 +229,7 @@ dateLimit=()=>{
 								<Row className='mb-4'><Col><h4>Once report is filed, you won't be able to edit any transactions for this tax period.</h4></Col></Row>
 													<Row>
 														<Col lg={4}>
-															<FormGroup className="mb-3"><span className="text-danger"></span>
+															<FormGroup className="mb-3"><span className="text-danger">* </span>
 																<Label htmlFor="taxablePersonNameInEnglish">Taxable Person Name (English)</Label>
 																<Input
 																	type="text"
@@ -284,7 +280,7 @@ dateLimit=()=>{
 														</Col>
 														<Col lg="4" >
 															<FormGroup>
-																<Label htmlFor="vatRegistrationNumber"><span className="text-danger"></span>
+																<Label htmlFor="vatRegistrationNumber"><span className="text-danger">* </span>
 																	{strings.TaxRegistrationNumber}
 																</Label>
 																<Input
@@ -355,7 +351,7 @@ dateLimit=()=>{
 														
 														<Col lg={4}>
 															<FormGroup className="mb-3">
-													{this.state.isTANMandetory === true &&(<span className="text-danger"></span> )}
+													{this.state.isTANMandetory === true &&(<span className="text-danger">* </span> )}
 																<Label htmlFor="taxAgencyNumber">Tax Agency Number (TAN)</Label>
 																<Input
 																	type="text"
@@ -387,7 +383,7 @@ dateLimit=()=>{
 													<Row>
 													<Col lg={4}>
 															<FormGroup className="mb-3">
-															<span className="text-danger"></span>
+															<span className="text-danger">* </span>
 																<Label htmlFor="taxAgentName">Tax Agent Name</Label>
 																<Input
 																	type="text"
@@ -415,7 +411,7 @@ dateLimit=()=>{
 														</Col>
 														<Col lg={4}>
 															<FormGroup className="mb-3">	
-																{(this.state.isTANMandetory === true || this.state.isTAANMandetory) &&(<span className="text-danger"></span>)}
+																{(this.state.isTANMandetory === true || this.state.isTAANMandetory) &&(<span className="text-danger">* </span>)}
 															<Label htmlFor="taxAgentApprovalNumber">Tax Agent Approval Number (TAAN) </Label>
 																<Input
 																	type="text"
@@ -482,6 +478,72 @@ dateLimit=()=>{
 															</FormGroup>
 														</Col>
 													</Row>
+													{/* <hr/>
+													<Row className='mb-4'><Col><h4>Would you also like to generate the following reports for this period?</h4></Col></Row>
+														<Row>
+															<Col lg={4}>
+																<FormGroup check inline className="mb-3">
+																		<Label
+																			className="form-check-label"
+																			check
+																			htmlFor="exciseTaxCheck"
+																		>
+																			<Input
+																				type="checkbox"
+																				id="exciseTaxCheck"
+																				name="exciseTaxCheck"
+																				onChange={(event) => {
+																					if (
+																						this.state.exciseTaxCheck===true
+																						)
+																					 {
+																						this.setState({exciseTaxCheck:false,exciseType:false})
+																						props.handleChange('exciseTaxCheck')(
+																							'',
+																						);
+																					} else {
+																						this.setState({exciseTaxCheck:true})
+																					}
+																				}}
+																				checked={this.state.exciseTaxCheck}
+																			/>
+																		FTA VAT Audit File
+																		</Label>										
+																</FormGroup>
+															</Col>
+
+															<Col lg={4}>
+																<FormGroup check inline className="mb-3">
+																		<Label
+																			className="form-check-label"
+																			check
+																			htmlFor="exciseTaxCheck"
+																		>
+																			<Input
+																				type="checkbox"
+																				id="exciseTaxCheck"
+																				name="exciseTaxCheck"
+																				onChange={(event) => {
+																					if (
+																						this.state.exciseTaxCheck===true
+																						)
+																					 {
+																						this.setState({exciseTaxCheck:false,exciseType:false})
+																						props.handleChange('exciseTaxCheck')(
+																							'',
+																						);
+																					} else {
+																						this.setState({exciseTaxCheck:true})
+																					}
+																				}}
+																				checked={this.state.exciseTaxCheck}
+																			/>
+																		FTA Excise TAX Audit File
+																		</Label>										
+																</FormGroup>
+															</Col>
+														</Row> */}
+													
 									</ModalBody>
 									<ModalFooter>
 										<Button

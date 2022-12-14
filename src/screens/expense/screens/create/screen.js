@@ -31,6 +31,8 @@ import LocalizedStrings from 'react-localization';
 import { Checkbox } from '@material-ui/core';
 import Switch from "react-switch";
 import { TextareaAutosize } from '@material-ui/core';
+import currency from 'screens/currency';
+import { getCustomerInvoicesCountForDelete } from 'screens/customer_invoice/actions';
 
 const mapStateToProps = (state) => {
 	return {
@@ -1329,6 +1331,7 @@ componentWillUnmount() {
 																		}`}
 																		placeholderText={strings.ExpenseDate}
 																		selected={props.values.expenseDate}
+																		value={props.values.expenseDate}
 																		showMonthDropdown
 																		showYearDropdown
 																		dropdownMode="select"

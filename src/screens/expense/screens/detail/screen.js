@@ -1177,14 +1177,15 @@ class DetailExpense extends React.Component {
 																			value={moment(
 																				props.values.expenseDate,
 																			).format('DD-MM-YYYY')}
+																			selected={new Date(moment(props.values.expenseDate).format('MM DD YYYY'))}
 																			showMonthDropdown
 																			showYearDropdown
 																			dropdownMode="select"
 																			dateFormat="dd-MM-yyyy"
 																			//minDate={new Date()}
 																			onChange={(value) => {
-																			props.handleChange('expenseDate')(value);
-																		}}
+																				props.handleChange('expenseDate')(value);
+																			}}
 																		/>
 																		{props.errors.expenseDate &&
 																			props.touched.expenseDate && (

@@ -2233,7 +2233,6 @@ class DetailSupplierInvoice extends React.Component {
 																		<Select
 																			id="contactId"
 																			name="contactId"
-																			isDisabled
 																			onBlur={props.handlerBlur}
 																			options={
 																				tmpSupplier_list

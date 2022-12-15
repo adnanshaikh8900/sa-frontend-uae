@@ -90,12 +90,14 @@ class DetailExpense extends React.Component {
 			expenseType:true,
 			isVatClaimable:true,
 			isReverseChargeEnabled:false,
+			taxTreatmentId:'',
 			showReverseCharge:false,
 			lockPlacelist:false,
 			isDesignatedZone:true,
 			curreancyname:'',
 			exchangeRate:'',
-			taxTreatmentList:[],count:0,
+			taxTreatmentList:[],
+			count:0,
 			placelist : [
 				{ label: 'Abu Dhabi', value: '1' },
 				{ label: 'Dubai', value: '2' },
@@ -228,8 +230,9 @@ class DetailExpense extends React.Component {
 								payee: res.data.payee ? res.data.payee : '',
 								expenseType: res.data.expenseType ? true : false,
 								isVatClaimable: res.data.expenseType ? false : true,
-								showPlacelist:res.data.taxTreatmentId !=8?true:false,
-								lockPlacelist:res.data.taxTreatmentId ==7?true:false,
+								showPlacelist:res.data.taxTreatmentId !== 8 ? true : false,
+								lockPlacelist:res.data.taxTreatmentId === 7 ? true : false,
+								taxTreatmentId:res.data.taxTreatmentId ? res.data.taxTreatmentId : '',
 								isReverseChargeEnabled:res.data.isReverseChargeEnabled ?res.data.isReverseChargeEnabled:false,
 								exclusiveVat: res.data.exclusiveVat==true ? true : false,
 								view:
@@ -1024,11 +1027,14 @@ class DetailExpense extends React.Component {
 																					// ReverseCharge setup
 																					//this.ReverseChargeSetting(option.value,props)
 																					this.setState({isReverseChargeEnabled:false,exclusiveVat:false})
+																					this.setState({taxTreatmentId:option.value})
 																																
 																				} else {
 																					props.handleChange('taxTreatmentId')(
 																						'',
 																					);
+																					this.setState({taxTreatmentId:''})
+
 																				}
 																			}}
 																			className={
@@ -1621,8 +1627,8 @@ class DetailExpense extends React.Component {
 																</Row>
 																)}
 																<Row>
-																	{((this.state.isDesignatedZone && (props.values.taxTreatmentId.value === 5  || props.values.taxTreatmentId.value === 6 ||props.values.taxTreatmentId.value === 7 ))
-																		|| (!this.state.isDesignatedZone && (props.values.taxTreatmentId.value !== 3  && props.values.taxTreatmentId.value !== 8))
+																	{((this.state.isDesignatedZone && (this.state.taxTreatmentId === 5  || this.state.taxTreatmentId === 6 ||this.state.taxTreatmentId === 7 ))
+																		|| (!this.state.isDesignatedZone && (this.state.taxTreatmentId !== 3  && this.state.taxTreatmentId !== 8))
 																	)&& (
 																	<Col>
 																		<Checkbox

@@ -455,6 +455,7 @@ dateLimit=()=>{
 																		dateFormat="dd-MM-yyyy"
 																		dropdownMode="select"
 																		minDate={this.dateLimit()}
+																		maxDate={new Date()}
 																		value={props.values.taxFiledOn}
 																		selected={props.values.taxFiledOn}
 																		onChange={(value) => {																			

@@ -48,3 +48,17 @@ export const deleteProductCategory = (id) => {
     })
   }
 }
+export const getProductBy = () => {
+	return (dispatch) => {
+	  let data = {
+		method: 'GET',
+		url: `/rest/product/getList`
+	  }
+  
+	  return authApi(data).then((res) => {
+		return res
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }

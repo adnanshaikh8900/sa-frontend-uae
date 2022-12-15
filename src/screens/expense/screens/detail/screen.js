@@ -76,7 +76,9 @@ class DetailExpense extends React.Component {
 		this.state = {
 			language: window['localStorage'].getItem('language'),
 			loading: true,
-			initValue: null,
+			initValue: {
+				curreancyname:'',
+			},
 			current_expense_id: null,
 			fileName: '',
 			payMode: '',
@@ -86,11 +88,16 @@ class DetailExpense extends React.Component {
 			disabled1:false,
 			exclusiveVat:true,
 			expenseType:true,
+			isVatClaimable:true,
 			isReverseChargeEnabled:false,
+			taxTreatmentId:'',
 			showReverseCharge:false,
 			lockPlacelist:false,
 			isDesignatedZone:true,
-			taxTreatmentList:[],count:0,
+			curreancyname:'',
+			exchangeRate:'',
+			taxTreatmentList:[],
+			count:0,
 			placelist : [
 				{ label: 'Abu Dhabi', value: '1' },
 				{ label: 'Dubai', value: '2' },
@@ -219,10 +226,13 @@ class DetailExpense extends React.Component {
 									notes:res.data.delivaryNotes
 									
 								},
+								exchangeRate:res.data.exchangeRate ? res.data.exchangeRate : '',
 								payee: res.data.payee ? res.data.payee : '',
 								expenseType: res.data.expenseType ? true : false,
-								showPlacelist:res.data.taxTreatmentId !=8?true:false,
-								lockPlacelist:res.data.taxTreatmentId ==7?true:false,
+								isVatClaimable: res.data.expenseType ? false : true,
+								showPlacelist:res.data.taxTreatmentId !== 8 ? true : false,
+								lockPlacelist:res.data.taxTreatmentId === 7 ? true : false,
+								taxTreatmentId:res.data.taxTreatmentId ? res.data.taxTreatmentId : '',
 								isReverseChargeEnabled:res.data.isReverseChargeEnabled ?res.data.isReverseChargeEnabled:false,
 								exclusiveVat: res.data.exclusiveVat==true ? true : false,
 								view:
@@ -239,6 +249,13 @@ class DetailExpense extends React.Component {
 								} else {
 									this.setState({ loading: false });
 								}
+								let currency= selectCurrencyFactory.renderOptions('currencyName','currencyCode',this.props.currency_convert_list,'Currency',)
+																	.find((option) => option.value ==res.data.currencyCode,)
+								this.setExchange(currency && currency.value);
+								this.setCurrency(currency && currency.value);
+
+
+								
 							},
 						);
 						//this.ReverseChargeSetting(res.data.taxTreatmentId,"")
@@ -279,6 +296,7 @@ class DetailExpense extends React.Component {
 		const expenseType = this.state.selectedStatus;
 		let formData = new FormData();
 		formData.append('expenseType',  this.state.expenseType);
+		formData.append('isVatClaimable',  this.state.isVatClaimable);
 		formData.append('delivaryNotes',notes);
 		formData.append('expenseNumber', expenseNumber);
 		formData.append('expenseId', current_expense_id);
@@ -295,8 +313,8 @@ class DetailExpense extends React.Component {
 		if (expenseCategory && expenseCategory.value) {
 			formData.append('expenseCategory', expenseCategory.value);
 		}
-		if (exchangeRate && exchangeRate.value) {
-			formData.append('exchangeRate', exchangeRate.value);
+		if (exchangeRate) {
+			formData.append('exchangeRate', exchangeRate);
 		}
 		if (currency && currency.value) {
 			formData.append('currencyCode', currency.value);
@@ -369,6 +387,38 @@ class DetailExpense extends React.Component {
 				/>
 			),
 		});
+	};
+	setExchange = (value,props) => {
+		if(this.props.currency_convert_list){
+		let result = this.props.currency_convert_list.filter((obj) => {
+		return obj.currencyCode === value;
+		});
+		if(result && result[0] &&  result[0].exchangeRate){
+			//this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
+			if (props){
+				props.handleChange('exchangeRate')(result[0].exchangeRate,);
+			}
+			this.setState({exchangeRate:result[0].exchangeRate});
+		}
+	}
+		};
+
+	setCurrency = (value,props) => {
+		if(this.props.currency_convert_list){
+		let result = this.props.currency_convert_list.filter((obj) => {
+		return obj.currencyCode === value;
+		});
+		if(result[0] && result[0].currencyName){
+			//this.formRef.current.setFieldValue('curreancyname',result[0].currencyName , true);
+			if (props){
+				props.handleChange('curreancyname')(
+					result[0].currencyName,
+				);
+			}
+			this.setState({curreancyname:result[0].currencyName});
+		
+		}
+		}
 	};
 
 	getCompanyCurrency = (basecurrency) => {
@@ -521,8 +571,6 @@ class DetailExpense extends React.Component {
 	}
 
 // 	ReverseChargeSetting=(option,props)=>{
-// 		console.log(option,"VAT TAX TREATMEENT");
-		
 // 		if(this.state.isDesignatedZone==true)
 // 			switch(option){
 
@@ -979,11 +1027,14 @@ class DetailExpense extends React.Component {
 																					// ReverseCharge setup
 																					//this.ReverseChargeSetting(option.value,props)
 																					this.setState({isReverseChargeEnabled:false,exclusiveVat:false})
+																					this.setState({taxTreatmentId:option.value})
 																																
 																				} else {
 																					props.handleChange('taxTreatmentId')(
 																						'',
 																					);
+																					this.setState({taxTreatmentId:''})
+
 																				}
 																			}}
 																			className={
@@ -1074,6 +1125,12 @@ class DetailExpense extends React.Component {
 																	onChange={(expenseType) => {
 																		props.handleChange('expenseType')(expenseType);
 																		this.setState({ expenseType, }, () => { },);
+																		if(this.state.isVatClaimable===true){
+																			this.setState({isVatClaimable:false});
+																		}
+																		else{
+																			this.setState({isVatClaimable:true});
+																		}
 																		// if (this.state.expenseType == true)
 																		// 	this.setState({ expenseType: true })
 																	}}
@@ -1225,7 +1282,6 @@ class DetailExpense extends React.Component {
 																					)
 																			}
 																			onChange={(option) => {
-																				console.log(props.values.payee);
 																				if (option && option.value) {
 																					props.handleChange('payee')(option);
 																				} else {
@@ -1332,7 +1388,9 @@ class DetailExpense extends React.Component {
 																			}
 																			onChange={(option) => {
 																				if(option.value!=""){
-																				props.handleChange('currency')(option);
+																					props.handleChange('currency')(option);
+																					this.setExchange(option.value,props);
+																					this.setCurrency(option.value,props);
 																			   	}
 																				else{
 																				props.handleChange('currency')('');
@@ -1569,8 +1627,8 @@ class DetailExpense extends React.Component {
 																</Row>
 																)}
 																<Row>
-																	{((this.state.isDesignatedZone && (props.values.taxTreatmentId.value === 5  || props.values.taxTreatmentId.value === 6 ||props.values.taxTreatmentId.value === 7 ))
-																		|| (!this.state.isDesignatedZone && (props.values.taxTreatmentId.value !== 3  && props.values.taxTreatmentId.value !== 8))
+																	{((this.state.isDesignatedZone && (this.state.taxTreatmentId === 5  || this.state.taxTreatmentId === 6 ||this.state.taxTreatmentId === 7 ))
+																		|| (!this.state.isDesignatedZone && (this.state.taxTreatmentId !== 3  && this.state.taxTreatmentId !== 8))
 																	)&& (
 																	<Col>
 																		<Checkbox
@@ -1586,14 +1644,14 @@ class DetailExpense extends React.Component {
 																	</Col>)}
 																</Row>
 															<hr />
-															<Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
+															{props.values.exchangeRate !== 1 && (<Row>
 																<Col>
 																<Label htmlFor="currency">
 																{strings.CurrencyExchangeRate}  
 																	</Label>	
 																</Col>
-																</Row>
-																<Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
+																</Row>)}
+																{props.values.exchangeRate !== 1 && (<Row>
 																<Col lg={1}>
 																<Input
 																		disabled
@@ -1616,7 +1674,7 @@ class DetailExpense extends React.Component {
 																			id="curreancyname"
 																			name="curreancyname"
 																			
-																			value={props.values.curreancyname}
+																			value={props.values.curreancyname ? props.values.curreancyname :this.state.curreancyname}
 																			onChange={(value) => {
 																				props.handleChange('curreancyname')(
 																					value,
@@ -1667,7 +1725,7 @@ class DetailExpense extends React.Component {
 																				
 																			/>
 														</Col>
-														</Row>
+														</Row>)}
 														<Row>
 															<Col lg={8}>
 																<FormGroup className="mb-3">

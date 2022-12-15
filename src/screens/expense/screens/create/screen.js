@@ -93,6 +93,7 @@ class CreateExpense extends React.Component {
 			},
 			count:0,
 			expenseType:false,
+			isVatClaimable:true,
 			isReverseChargeEnabled:false,
 			currentData: {},
 			fileName: '',
@@ -206,6 +207,7 @@ class CreateExpense extends React.Component {
 								},
 								payee:res.data.payee ? res.data.payee :'', 
 								expenseType: res.data.expenseType ? true : false,
+								isVatClaimable: res.data.isVatClaimable ? false : true,
 								showPlacelist:res.data.taxTreatmentId !=8?true:false,
 								lockPlacelist:res.data.taxTreatmentId ==7?true:false,
 								isReverseChargeEnabled:res.data.isReverseChargeEnabled ?res.data.isReverseChargeEnabled:false,
@@ -403,8 +405,9 @@ class CreateExpense extends React.Component {
 			footNote
 		} = data;
 		let formData = new FormData();
-		
 		formData.append('expenseType',  this.state.expenseType );
+		formData.append('isVatClaimable',  this.state.isVatClaimable );
+
 		formData.append('delivaryNotes',notes);
 		formData.append('footNote',footNote? footNote : '')
 		formData.append('expenseNumber', expenseNumber ? expenseNumber : '');
@@ -1236,7 +1239,14 @@ componentWillUnmount() {
 																		checked={this.state.expenseType}
 																		onChange={(expenseType) => {
 																			props.handleChange('expenseType')(expenseType);
+
 																			this.setState({ expenseType, }, () => { },);
+																			if(this.state.isVatClaimable===true){
+																				this.setState({isVatClaimable:false});
+																			}
+																			else{
+																				this.setState({isVatClaimable:true});
+																			}
 																			// if (this.state.expenseType == true)
 																			// 	this.setState({ expenseType: true })
 																		}}

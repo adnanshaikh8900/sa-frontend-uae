@@ -58,7 +58,8 @@ class DetailProductCategory extends React.Component {
       disabled: false,
       disabled1:false,
       loadingMsg:"Loading",
-			disableLeavePage:false
+			disableLeavePage:false,
+      isAssociatedWithProduct:false,
     }
     this.regExAlpha = /^[a-zA-Z ]+$/;
     this.regExBoth = /^[a-zA-Z0-9\s,'-/()]+$/;
@@ -86,7 +87,9 @@ class DetailProductCategory extends React.Component {
               productCategoryName: res.data.productCategoryName ? res.data.productCategoryName : ''
             }
           })
+          this.getAssociatedProductWithCategory(this.props.location.state.id);
         }
+
       }).catch((err) => {
         this.setState({loading: false})
         this.props.history.push('/admin/master/product-category')
@@ -95,7 +98,26 @@ class DetailProductCategory extends React.Component {
       this.props.history.push('/admin/master/product-category')
     }
   }
+  getAssociatedProductWithCategory = (category_id) =>{
+    console.log(category_id,"ID")
+    this.props.detailProductCategoryAction.getProductBy().then((res) => {
+      if (res.status === 200) {
+        console.log(res,"PRODUCT LIST");
+        res.data.data.map(product => {
+          if(product.productCategoryId === category_id){
+            this.setState({isAssociatedWithProduct : true});
+          }
+          else{
+            this.setState({isAssociatedWithProduct : false});
+          }
+        })
+        
+      }
+    }).catch((err) => {
+      console.log(err);
+    })
 
+  }
   // Create or Edit VAT
   handleSubmit = (data) => {
     this.setState({ disabled: true });
@@ -287,10 +309,13 @@ class DetailProductCategory extends React.Component {
                                     <div className="invalid-feedback">{props.errors.productCategoryName}</div>
                                   )}
                                 </FormGroup>
+                                Note: If the product category is associated with the product, it cannot be deleted.
                                 <Row>
                                   <Col lg={12} className="mt-5 d-flex flex-wrap align-items-center justify-content-between">
                                     <FormGroup>
-                                      <Button type="button" color="danger" className="btn-square" 	disabled1={this.state.disabled1} onClick={this.deleteProductCategory}>
+                                      <Button type="button" color="danger" className="btn-square" 	disabled1={this.state.disabled1}
+                                        style={{display:this.state.isAssociatedWithProduct === true ? 'none' : ''}} 
+                                        onClick={this.deleteProductCategory}>
                                         <i className="fa fa-trash"></i> {this.state.disabled1
 																			? 'Deleting...'
 																			: strings.Delete }

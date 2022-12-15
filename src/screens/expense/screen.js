@@ -103,7 +103,7 @@ class Expense extends React.Component {
 		this.props.expenseActions.getExpenseCategoriesList();
 		this.initializeData();
 		this.props.expenseActions.getVatList();
-		this.props.expenseActions.getPaytoList();
+		//this.props.expenseActions.getPaytoList();
 	};
 
 	initializeData = (search) => {
@@ -134,7 +134,7 @@ class Expense extends React.Component {
 			});
 
 			// added for props issue
-			this.props.expenseActions.getPaytoList();
+			//this.props.expenseActions.getPaytoList();
 			this.props.expenseActions.getVatList();
 			this.props.expenseActions.getExpenseCategoriesList();
 			this.props.expenseActions.getBankList();

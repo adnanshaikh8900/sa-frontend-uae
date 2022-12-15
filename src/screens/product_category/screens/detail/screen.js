@@ -99,16 +99,12 @@ class DetailProductCategory extends React.Component {
     }
   }
   getAssociatedProductWithCategory = (category_id) =>{
-    console.log(category_id,"ID")
     this.props.detailProductCategoryAction.getProductBy().then((res) => {
       if (res.status === 200) {
-        console.log(res,"PRODUCT LIST");
         res.data.data.map(product => {
           if(product.productCategoryId === category_id){
-            this.setState({isAssociatedWithProduct : true});
-          }
-          else{
-            this.setState({isAssociatedWithProduct : false});
+            this.setState({isAssociatedWithProduct : true,});
+            return true;
           }
         })
         
@@ -313,13 +309,13 @@ class DetailProductCategory extends React.Component {
                                 <Row>
                                   <Col lg={12} className="mt-5 d-flex flex-wrap align-items-center justify-content-between">
                                     <FormGroup>
+                                    {this.state.isAssociatedWithProduct === false &&(
                                       <Button type="button" color="danger" className="btn-square" 	disabled1={this.state.disabled1}
-                                        style={{display:this.state.isAssociatedWithProduct === true ? 'none' : ''}} 
                                         onClick={this.deleteProductCategory}>
                                         <i className="fa fa-trash"></i> {this.state.disabled1
 																			? 'Deleting...'
 																			: strings.Delete }
-                                      </Button>
+                                      </Button>)}
                                     </FormGroup>
                                     <FormGroup className="text-right">
                                       <Button type="submit" 

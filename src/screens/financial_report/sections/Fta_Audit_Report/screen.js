@@ -93,7 +93,7 @@ class ViewFtaAuditReport extends React.Component {
 			{ label: 'GL/ID', value: 'glId', sort: true },
 			{ label: 'Location of Customer (Country or Emirate)', value: 'customerCountry', sort: false },
 			{ label: 'Customer TRN', value: 'customerTRN', sort: true },
-			{ label: 'Reverse Charge', value: 'reverseCharge', sort: true },
+			// { label: 'Reverse Charge', value: 'reverseCharge', sort: true },
 		];
 		
 		// Supplier Data Audit File
@@ -114,8 +114,8 @@ class ViewFtaAuditReport extends React.Component {
 			{ label: 'Permit No.', value: 'permitNo', sort: true },
 			{ label: 'Transaction ID', value: 'transactionID', sort: true },
 			{ label: 'Line No.', value: 'lineNo', sort: false },
-			{ label: 'Product Name', value: 'productName', sort: true },
-			{ label: 'Product Type', value: 'productType', sort: true },
+			// { label: 'Product Name', value: 'productName', sort: true },
+			// { label: 'Product Type', value: 'productType', sort: true },
 			{ label: 'Product Description', value: 'productDescription', sort: false },
 			{ label: 'Purchase Amount AED', value: 'purchaseValue', sort: true },
 			{ label: 'VAT Amount AED', value: 'vatvalue', sort: true },
@@ -143,8 +143,8 @@ class ViewFtaAuditReport extends React.Component {
 			{ label: 'Permit No.', value: 'permitNo', sort: true },
 			{ label: 'Transaction ID', value: 'transactionID', sort: true },
 			{ label: 'Line No.', value: 'lineNo', sort: false },
-			{ label: 'Product Name', value: 'productName', sort: true },
-			{ label: 'Product Type', value: 'productType', sort: true },
+			// { label: 'Product Name', value: 'productName', sort: true },
+			// { label: 'Product Type', value: 'productType', sort: true },
 			{ label: 'Product Description', value: 'productDescription', sort: false },
 			{ label: 'Supply Amount AED', value: 'supplyValue', sort: true },
 			{ label: 'VAT Amount AED', value: 'vatvalue', sort: true },
@@ -156,7 +156,6 @@ class ViewFtaAuditReport extends React.Component {
 		
 		// Supply Listing Total
 		this.columnHeaderCustomerTotal = [
-			
 			{ label: 'Supply Total AED', value: 'supplyTotal', sort: false },
 			{ label: 'VAT Total AED', value: 'customerVATTotal', sort: true },
 			{ label: 'Transaction Count Total', value: 'customerTransactionCountTotal', sort: true },
@@ -195,10 +194,6 @@ class ViewFtaAuditReport extends React.Component {
 
 	initializeData = async () => {
 		const { initValue } = this.state;
-		
-		
-		
-		
 		
 		const postData = {
 			startDate: initValue.startDate,
@@ -253,7 +248,7 @@ class ViewFtaAuditReport extends React.Component {
 
 	   }
 
-	   exportExcelFile  = () => 
+	exportExcelFile  = () => 
 	   {   let dl =""
 		   let fn =""
 		   let type="xlsx"
@@ -540,9 +535,9 @@ class ViewFtaAuditReport extends React.Component {
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['customerTRN']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'left'}}>
+																					{/* <td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['reverseCharge']}
-																					</td>
+																					</td> */}
 																					
 																				
 																				</tr>				
@@ -706,12 +701,12 @@ class ViewFtaAuditReport extends React.Component {
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['lineNo']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'left'}}>
+																					{/* <td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['productName']}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['productType']}
-																					</td>
+																					</td> */}
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['productDescription']}
 																					</td>
@@ -864,12 +859,12 @@ class ViewFtaAuditReport extends React.Component {
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['lineNo']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'left'}}>
+																					{/* <td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['productName']}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['productType']}
-																					</td>
+																					</td> */}
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['productDescription']}
 																					</td>

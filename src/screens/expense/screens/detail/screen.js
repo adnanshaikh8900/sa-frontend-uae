@@ -88,6 +88,7 @@ class DetailExpense extends React.Component {
 			disabled1:false,
 			exclusiveVat:true,
 			expenseType:true,
+			isVatClaimable:true,
 			isReverseChargeEnabled:false,
 			showReverseCharge:false,
 			lockPlacelist:false,
@@ -226,6 +227,7 @@ class DetailExpense extends React.Component {
 								exchangeRate:res.data.exchangeRate ? res.data.exchangeRate : '',
 								payee: res.data.payee ? res.data.payee : '',
 								expenseType: res.data.expenseType ? true : false,
+								isVatClaimable: res.data.expenseType ? false : true,
 								showPlacelist:res.data.taxTreatmentId !=8?true:false,
 								lockPlacelist:res.data.taxTreatmentId ==7?true:false,
 								isReverseChargeEnabled:res.data.isReverseChargeEnabled ?res.data.isReverseChargeEnabled:false,
@@ -244,7 +246,6 @@ class DetailExpense extends React.Component {
 								} else {
 									this.setState({ loading: false });
 								}
-
 								let currency= selectCurrencyFactory.renderOptions('currencyName','currencyCode',this.props.currency_convert_list,'Currency',)
 																	.find((option) => option.value ==res.data.currencyCode,)
 								this.setExchange(currency && currency.value);
@@ -292,6 +293,7 @@ class DetailExpense extends React.Component {
 		const expenseType = this.state.selectedStatus;
 		let formData = new FormData();
 		formData.append('expenseType',  this.state.expenseType);
+		formData.append('isVatClaimable',  this.state.isVatClaimable);
 		formData.append('delivaryNotes',notes);
 		formData.append('expenseNumber', expenseNumber);
 		formData.append('expenseId', current_expense_id);
@@ -566,8 +568,6 @@ class DetailExpense extends React.Component {
 	}
 
 // 	ReverseChargeSetting=(option,props)=>{
-// 		console.log(option,"VAT TAX TREATMEENT");
-		
 // 		if(this.state.isDesignatedZone==true)
 // 			switch(option){
 
@@ -1119,6 +1119,12 @@ class DetailExpense extends React.Component {
 																	onChange={(expenseType) => {
 																		props.handleChange('expenseType')(expenseType);
 																		this.setState({ expenseType, }, () => { },);
+																		if(this.state.isVatClaimable===true){
+																			this.setState({isVatClaimable:false});
+																		}
+																		else{
+																			this.setState({isVatClaimable:true});
+																		}
 																		// if (this.state.expenseType == true)
 																		// 	this.setState({ expenseType: true })
 																	}}
@@ -1270,7 +1276,6 @@ class DetailExpense extends React.Component {
 																					)
 																			}
 																			onChange={(option) => {
-																				console.log(props.values.payee);
 																				if (option && option.value) {
 																					props.handleChange('payee')(option);
 																				} else {

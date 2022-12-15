@@ -140,7 +140,7 @@ class ViewFtaAuditReport extends React.Component {
 			{ label: 'Customer TRN', value: 'customerTRN', sort: true },
 			{ label: 'Invoice Date', value: 'invoiceDate', sort: true },
 			{ label: 'Invoice No.', value: 'invoiceNo', sort: false },
-			{ label: 'Permit No.', value: 'permitNo', sort: true },
+			// { label: 'Permit No.', value: 'permitNo', sort: true },
 			{ label: 'Transaction ID', value: 'transactionID', sort: true },
 			{ label: 'Line No.', value: 'lineNo', sort: false },
 			// { label: 'Product Name', value: 'productName', sort: true },
@@ -149,6 +149,7 @@ class ViewFtaAuditReport extends React.Component {
 			{ label: 'Supply Amount AED', value: 'supplyValue', sort: true },
 			{ label: 'VAT Amount AED', value: 'vatvalue', sort: true },
 			{ label: 'Tax Code', value: 'taxCode', sort: false },
+			{ label: 'Country', value: 'fcycode', sort: false },
 			{ label: 'FCY Code', value: 'fcycode', sort: false },
 			{ label: 'Supply FCY', value: 'supplyFCY', sort: true },
 			{ label: 'VAT Amount FCY', value: 'vatfcy', sort: true },
@@ -850,9 +851,9 @@ class ViewFtaAuditReport extends React.Component {
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['invoiceNo']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'left'}}>
+																					{/* <td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['permitNo']}
-																					</td>
+																					</td> */}
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['transactionID']}
 																					</td>
@@ -876,6 +877,9 @@ class ViewFtaAuditReport extends React.Component {
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['taxCode']}
+																					</td>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
+																						{item['country']}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['fcycode']}

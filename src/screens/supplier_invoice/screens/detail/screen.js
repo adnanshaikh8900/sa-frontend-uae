@@ -1938,11 +1938,11 @@ class DetailSupplierInvoice extends React.Component {
 
 	setExchange = (value) => {
 		let result = this.props.currency_convert_list.filter((obj) => {
-		return obj.currencyCode === value;
+			return obj.currencyCode === value;
 		});
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
 		this.exchangeRaterevalidate(result[0].exchangeRate)
-		};
+	};
 
 	getCurrentUser = (data) => {
 		let option;
@@ -2255,6 +2255,7 @@ class DetailSupplierInvoice extends React.Component {
 																				)
 																			}
 																			onChange={(option) => {
+																				this.resetVatId(props);
 																				if (option && option.value) {
 																					this.formRef.current.setFieldValue('currencyCode', this.getCurrency(option.value), true);
 																					this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(option.value), true);
@@ -2265,7 +2266,6 @@ class DetailSupplierInvoice extends React.Component {
 																				} else {
 																					props.handleChange('contactId')('');
 																				}
-																				this.resetVatId(props);
 																			}}
 																			className={
 																				props.errors.contactId &&

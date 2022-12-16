@@ -979,7 +979,7 @@ class DetailCustomerInvoice extends React.Component {
 							vat_list &&
 							selectOptionsFactory
 								.renderOptions('name', 'id', vat_list, 'VAT')
-								.find((option) => option.value === +row.vatCategoryId)
+								.find((option) => option.value == row.vatCategoryId)
 						}
 						id="vatCategoryId"
 						placeholder={strings.Select+strings.VAT}
@@ -2178,6 +2178,7 @@ class DetailCustomerInvoice extends React.Component {
 																				)
 																			}
 																			onChange={(option) => {
+																				this.resetVatId(props);
 																				if (option && option.value) {
 																					this.formRef.current.setFieldValue('currencyCode', this.getCurrency(option.value), true);
 																					this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(option.value), true);
@@ -2188,7 +2189,6 @@ class DetailCustomerInvoice extends React.Component {
 																				} else {
 																					props.handleChange('contactId')('');
 																				}
-																				this.resetVatId(props);
 																				this.getCustomerShippingAddress(option.value,this.getTaxTreatment(option.value),props);
 																			
 																				// this.getCurrentUser(option)

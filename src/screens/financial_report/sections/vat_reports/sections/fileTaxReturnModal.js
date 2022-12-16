@@ -207,7 +207,7 @@ dateLimit=()=>{
 						}}
 						validationSchema={Yup.object().shape({
 							taxablePersonNameInEnglish: Yup.string().required('Taxable person name in english is required'),
-							taxablePersonNameInArabic: Yup.string().required('Taxable Person Name In Arabic is required'),
+							// taxablePersonNameInArabic: Yup.string().required('Taxable Person Name In Arabic is required'),
 							taxAgentName: Yup.string().required('Tax Agent Name is required'),
 							taxAgentApprovalNumber: Yup.string().required('TAAN is required'),
 							vatRegistrationNumber: Yup.string().required('Tax registration number is required'),

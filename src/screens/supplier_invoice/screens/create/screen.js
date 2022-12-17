@@ -2244,6 +2244,7 @@ class CreateSupplierInvoice extends React.Component {
 							selectedContact: '',
 							term: '',
 							exchangeRate:'',
+							disableLeavePage:false,
 							data: [
 								{
 									id: 0,

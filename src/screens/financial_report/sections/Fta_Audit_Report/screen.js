@@ -308,7 +308,7 @@ class ViewFtaAuditReport extends React.Component {
 													}}
 													// onClick={this.viewFilter}
 												>
-												 FTA Audit Report From  <b>{ this.state.initValue.startDate.replaceAll("/","-") +"  to  "+this.state.initValue.endDate.replaceAll("/","-") }</b>
+												 FTA VAT Audit File From  <b>{ this.state.initValue.startDate.replaceAll("/","-") +"  to  "+this.state.initValue.endDate.replaceAll("/","-") }</b>
 													{/* <i className="fa fa-cog mr-2"></i>CustomizeReport */}
 												</p>
 											</div>

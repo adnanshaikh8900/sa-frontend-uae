@@ -472,6 +472,7 @@ class CreateExpense extends React.Component {
 						this.setState({
 							createMore: false,
 							loading:false,
+							disableLeavePage:false,
 						});
 						this.getExpenseNumber()
 					} else {

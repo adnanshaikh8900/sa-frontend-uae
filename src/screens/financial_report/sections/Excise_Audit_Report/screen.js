@@ -318,7 +318,7 @@ class ViewFtaExciseAuditReport extends React.Component {
 													}}
 													onClick={this.viewFilter}
 												>
-													Excise Tax Report From <b>{ this.state.initValue.startDate.replaceAll("/","-") +"  to  "+this.state.initValue.endDate.replaceAll("/","-") }</b>												</p>
+													FTA Excise Tax Audit File From <b>{ this.state.initValue.startDate.replaceAll("/","-") +"  to  "+this.state.initValue.endDate.replaceAll("/","-") }</b>												</p>
 											</div>
 											<div className="d-flex">
 											<Dropdown isOpen={dropdownOpen} toggle={this.toggle}>

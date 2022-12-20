@@ -459,7 +459,6 @@ class VatReports extends React.Component {
 	}
 
 	renderStatus = (params) => {
-		debugger
 		return (
 			<>
 				{params === "UnFiled" ? (<label className="badge label-draft"> {params}</label>) : ""}

@@ -68,6 +68,7 @@ class DetailCurrencyConvert extends React.Component {
   }
 
   componentDidMount = () => {
+	
     if (this.props.location.state && this.props.location.state.id) {
       this.props.authActions.getCurrencylist()
       .then((res) => {
@@ -80,8 +81,14 @@ class DetailCurrencyConvert extends React.Component {
           'error',
           err && err.data ? err.data.message : 'Something Went Wrong',
         );
+		
         this.setState({ loading: false });
       });;;
+
+	  this.props.detailCurrencyConvertAction.getDeleteStatusById(this.props.location.state.id).then((res)=>{
+	
+	  })
+	
       this.getCompanyCurrency();
       this.props.detailCurrencyConvertAction.getCurrencyConvertById(this.props.location.state.id).then((res) => {
         if (res.status === 200) {

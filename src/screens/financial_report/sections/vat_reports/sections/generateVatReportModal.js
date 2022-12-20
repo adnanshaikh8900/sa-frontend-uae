@@ -216,8 +216,7 @@ class GenerateVatReportModal extends React.Component {
 													name="option"
 													value={state.monthOption}
 													placeholder="VAT Reporting Period"
-													onChange={(e) => {		
-														debugger													
+													onChange={(e) => {			
 													setState({enbaleReportGeneration:true,monthOption:e})														
 													}}
 														/>
@@ -423,15 +422,15 @@ getStartDate=()=>{
 				let date=moment(this.state.monthlyDate).format("DD/MM/YYYY")
 				var datearray = date.split("/");
 
-				let month=( parseInt(datearray[1]) +monthOption)
+				let month=( parseInt(datearray[1]) +monthOption.value)
 
 				if(( parseInt(datearray[1]) +monthOption) >12)
 						{
-							if(( parseInt(datearray[1]) +monthOption) ==13)
+							if(( parseInt(datearray[1]) +monthOption.value) ==13)
 							month=1
-							if(( parseInt(datearray[1]) +monthOption) ==14)
+							if(( parseInt(datearray[1]) +monthOption.value) ==14)
 							month=2
-							if(( parseInt(datearray[1]) +monthOption) ==15)
+							if(( parseInt(datearray[1]) +monthOption.value) ==15)
 							month=3
 						}
 				let day=0		

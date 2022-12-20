@@ -449,7 +449,6 @@ stockInHandTestForProduct = (row,markAsSent) => {
 							<DropdownItem>
 								<div
 									onClick={() => {
-										debugger
 										if(row.editFlag) 
 										this.props.history.push(
 											'/admin/income/customer-invoice/detail',

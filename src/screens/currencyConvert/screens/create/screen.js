@@ -468,7 +468,7 @@ class CreateCurrencyConvert extends React.Component {
 																		</FormGroup>
 																			</Col>
 															</Row>
-														
+															<span style={{fontWeight:'bold'}}>Note: If a currency is associated with any bank, contact or document, it cannot be deleted.</span>
 																<FormGroup className="text-right mt-5">
 																<Button
 																	type="submit"

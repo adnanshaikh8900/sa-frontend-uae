@@ -18,6 +18,21 @@ export const getCurrencyConvertById = (id) => {
   }
 }
 
+export const getDeleteStatusById = (id) => {
+  return (dispatch) => {
+    let data = {
+      method: 'GET',
+      url: `/rest/currency/getInvoicesCountForCurrency?currencyId=${id}`
+    }
+
+    return authApi(data).then((res) => {
+      return res
+    }).catch((err) => {
+      throw err
+    })
+  }
+}
+
 export const updateCurrencyConvert = (obj) => {
   return (dispatch) => {
     let data = {

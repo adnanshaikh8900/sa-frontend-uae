@@ -632,7 +632,7 @@ class DetailUser extends React.Component {
 																	</Row>
 																
 																	<Row>
-																	{this.state.current_user_id !== 1 &&
+																	{this.state.current_user_id !== 10000 &&
 																	  (
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">

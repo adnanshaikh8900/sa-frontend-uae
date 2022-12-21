@@ -824,6 +824,7 @@ class DetailUser extends React.Component {
 																								props.values.timeZone,
 																						)
 																					}
+																					isDisabled={this.state.current_user_id === 10000}
 																					onChange={(option) => {
 																						if (option && option.value) {
 																							props.handleChange('timeZone')(

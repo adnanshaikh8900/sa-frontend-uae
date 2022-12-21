@@ -363,7 +363,8 @@ class VatReports extends React.Component {
 			{params.status === "UnFiled" ? (
 			<DropdownItem
 						onClick={() => {
-						this.setState({ openFileTaxRetrunModal: true, current_report_id: params.id });
+						this.setState({ openFileTaxRetrunModal: true, 
+							current_report_id: params.id,taxReturns:params.taxReturns});
 					}}
 			>	<i class="fas fa-link" /> File The Report
 			</DropdownItem>	

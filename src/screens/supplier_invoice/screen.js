@@ -356,7 +356,12 @@ class SupplierInvoice extends React.Component {
 						{row.statusEnum === 'Sent'  && (
 							<DropdownItem
 								onClick={() => {
+									if(row.editFlag)
 									this.unPostInvoice(row);
+									else this.props.commonActions.tostifyAlert(
+										'error',
+										'You cannot edit transactions for which VAT is recorded'
+									);
 								}}
 							>
 								<i className="fas fa-file" /> {strings.Draft}
@@ -365,15 +370,12 @@ class SupplierInvoice extends React.Component {
 						{row.statusEnum !== 'Draft' && row.statusEnum !== 'Paid' && row.exchangeRate == 1 &&  (
 							<DropdownItem
 								onClick={() =>{
-									if(row.editFlag)
+									
+									
 									this.props.history.push(
 										'/admin/expense/supplier-invoice/record-payment',
-										{ id: row },
-									) 
-									else this.props.commonActions.tostifyAlert(
-										'error',
-										'You cannot edit transactions for which VAT is recorded'
-									); 
+										{ id: row },)
+									
 								}
 								}
 							>

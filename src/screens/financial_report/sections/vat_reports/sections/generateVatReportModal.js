@@ -90,7 +90,7 @@ class GenerateVatReportModal extends React.Component {
 				// startDate: firstdayoflastmonth.setMonth(firstdayoflastmonth.getMonth()-1),
 				// endDate: lastdayoflastmonth.setMonth(lastdayoflastmonth.getMonth(), 0),
 				startDate:new Date(),
-				endDate:new Date(new Date().setMonth(new Date().getMonth() + this.props.monthOption))
+				endDate:new Date(new Date().setMonth(new Date().getMonth() + this.props.monthOption.value))
 			},
 			dialog: null,
 			filterData: {
@@ -132,7 +132,7 @@ class GenerateVatReportModal extends React.Component {
 			{...this.state.initValue,
 			initValue: {
 				startDate:new Date(),
-				endDate:new Date(new Date().setMonth(new Date().getMonth() + this.props.monthOption))
+				endDate:new Date(new Date().setMonth(new Date().getMonth() + this.props.monthOption.value))
 			} })
 	};
 
@@ -424,7 +424,7 @@ getStartDate=()=>{
 
 				let month=( parseInt(datearray[1]) +monthOption.value)
 
-				if(( parseInt(datearray[1]) +monthOption) >12)
+				if(( parseInt(datearray[1]) +monthOption.value) >12)
 						{
 							if(( parseInt(datearray[1]) +monthOption.value) ==13)
 							month=1

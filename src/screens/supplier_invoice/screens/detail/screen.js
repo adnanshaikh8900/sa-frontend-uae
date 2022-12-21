@@ -2256,6 +2256,7 @@ class DetailSupplierInvoice extends React.Component {
 																			}
 																			onChange={(option) => {
 																				this.resetVatId(props);
+																				this.setState({isReverseChargeEnabled:false})
 																				if (option && option.value) {
 																					this.formRef.current.setFieldValue('currencyCode', this.getCurrency(option.value), true);
 																					this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(option.value), true);

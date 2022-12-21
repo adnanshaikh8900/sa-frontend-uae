@@ -2245,6 +2245,7 @@ class ExplainTrasactionDetail extends React.Component {
 																				</Label>
 																				<Select
 																					styles={customStyles}
+																					isDisabled={props.values.coaCategoryId.label ==='Transfered From' || props.values.coaCategoryId.label ==='Transfered To'}
 																					options={
 																						transactionCategoryList
 																							? transactionCategoryList.categoriesList

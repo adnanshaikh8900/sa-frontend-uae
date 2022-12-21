@@ -1351,11 +1351,11 @@ class VatReturnsReport extends React.Component {
 																</td>
 																<td className="pt-0 pb-0 " style={{ textAlign: 'right' }}>
 																			{this.state.data[
-																				'totalVatOnExpensesAndAllOtherInputs'
+																				'standardRatedExpensesVatAmount'
 																			] ? (
 																		<Currency
 																			value={this.state.data[
-																				'totalVatOnExpensesAndAllOtherInputs'
+																				'standardRatedExpensesVatAmount'
 																			] }
 																			currencySymbol={
 																				universal_currency_list[0]

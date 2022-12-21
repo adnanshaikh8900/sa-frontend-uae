@@ -1616,7 +1616,7 @@ class CreateSupplierInvoice extends React.Component {
 			this.formRef.current?.state?.values?.exchangeRate:1
 		data.map((obj, index) => {
 			if (obj.id === row.id) {
-				obj['unitPrice'] = (parseFloat(result.unitPrice)*(1/exchangeRate)).toFixed(0)
+				obj['unitPrice'] = (parseFloat(result.unitPrice)*(1/exchangeRate)).toFixed(2)
 				obj['exciseTaxId'] = result.exciseTaxId;
 				obj['description'] = result.description;
 				obj['discountType'] = result.discountType;
@@ -1698,7 +1698,6 @@ class CreateSupplierInvoice extends React.Component {
 
 	renderProduct = (cell, row, props) => {
 		if(this.state.producttype?.length === 0){
-			console.log(this.state.producttype,this.state.producttype?.length,"Render Product change product type");
 			this.UpdateProductVatList();
 		}
 		const { product_list } = this.props;

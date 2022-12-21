@@ -2362,9 +2362,9 @@ class DetailQuotation extends React.Component {
 																
 																</Row>
 																
-															<Row>
+															{/* <Row>
 																<Col lg={8} className="mb-3">
-																	{/* <Button
+																	 <Button
 																		color="primary"
 																		className={`btn-square mr-3 ${
 																			this.checkedRow() ? `disabled-cursor` : ``
@@ -2378,46 +2378,10 @@ class DetailQuotation extends React.Component {
 																		disabled={this.checkedRow() ? true : false}
 																	>
 																		<i className="fa fa-plus"></i> {strings.Addmore}
-																	</Button> */}
+																	</Button>
 																</Col>
-																<Col  >
 																
-																{this.state.taxType === false ?
-																	<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Exclusive}</b></span> :
-																	<span className='mr-4'>{strings.Exclusive}</span>}
-																<Switch
-																	value={props.values.taxType}
-																	checked={this.state.taxType}
-																	onChange={(taxType) => {
-
-																		props.handleChange('taxType')(taxType);
-																		this.setState({ taxType }, () => {
-																			this.updateAmount(
-																				this.state.data,
-																				props
-																			)
-																		});
-
-
-																	}}
-
-																	onColor="#2064d8"
-																	onHandleColor="#2693e6"
-																	handleDiameter={25}
-																	uncheckedIcon={false}
-																	checkedIcon={false}
-																	boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-																	activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-																	height={20}
-																	width={48}
-																	className="react-switch "
-																/>
-																{this.state.taxType === true ?
-																	<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.Inclusive}</b></span>
-																	: <span className='ml-4'>{strings.Inclusive}</span>
-																}
-															</Col>
-															</Row>
+															</Row> */}
 
 															<hr style={{display: props.values.exchangeRate === 1 ? 'none' : ''}} />
 														
@@ -2530,6 +2494,43 @@ class DetailQuotation extends React.Component {
 																	<i className="fa fa-plus"></i>{' '}{strings.Addproduct} 
 																</Button>
 																</Col>
+																<Col  >
+																
+																{this.state.taxType === false ?
+																	<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Exclusive}</b></span> :
+																	<span className='mr-4'>{strings.Exclusive}</span>}
+																<Switch
+																	value={props.values.taxType}
+																	checked={this.state.taxType}
+																	onChange={(taxType) => {
+
+																		props.handleChange('taxType')(taxType);
+																		this.setState({ taxType }, () => {
+																			this.updateAmount(
+																				this.state.data,
+																				props
+																			)
+																		});
+
+
+																	}}
+
+																	onColor="#2064d8"
+																	onHandleColor="#2693e6"
+																	handleDiameter={25}
+																	uncheckedIcon={false}
+																	checkedIcon={false}
+																	boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+																	activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+																	height={20}
+																	width={48}
+																	className="react-switch "
+																/>
+																{this.state.taxType === true ?
+																	<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.Inclusive}</b></span>
+																	: <span className='ml-4'>{strings.Inclusive}</span>
+																}
+															</Col>
 																<Col lg={12}>
 																	{props.errors.lineItemsString &&
 																		props.touched.lineItemsString &&

@@ -478,6 +478,7 @@ class DetailCurrencyConvert extends React.Component {
 																			</Col>
 																			
 															</Row>
+															<span style={{fontWeight:'bold'}}>Note: If a currency is associated with any bank, contact or document, it cannot be deleted.</span>
                                 <Row>
                                   <Col lg={10} className="mt-5 d-flex flex-wrap align-items-center justify-content-between">
                                   {this.state.current_currency_convert_id !== 10000 && this.state?.deletebutton===0 &&
@@ -526,6 +527,7 @@ class DetailCurrencyConvert extends React.Component {
                                     </FormGroup>
                                   </Col>
                                 </Row>
+								
                               </Form>
                             )}
                           </Formik>

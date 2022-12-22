@@ -1491,12 +1491,14 @@ class DetailSupplierInvoice extends React.Component {
 	checkedRow = () => {
 		if (this.state.data.length > 0) {
 			let length = this.state.data.length - 1;
-			let temp = Object.values(this.state.data[`${length}`]).indexOf('');
+			let temp = this.state.data?.[length].productId!==""?
+			this.state.data?.[length].productId:-2
 			if (temp > -1) {
 				return true;
 			} else {
 				return false;
 			}
+			
 		} else {
 			return true;
 		}
@@ -1936,11 +1938,11 @@ class DetailSupplierInvoice extends React.Component {
 
 	setExchange = (value) => {
 		let result = this.props.currency_convert_list.filter((obj) => {
-		return obj.currencyCode === value;
+			return obj.currencyCode === value;
 		});
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
 		this.exchangeRaterevalidate(result[0].exchangeRate)
-		};
+	};
 
 	getCurrentUser = (data) => {
 		let option;
@@ -2253,6 +2255,8 @@ class DetailSupplierInvoice extends React.Component {
 																				)
 																			}
 																			onChange={(option) => {
+																				this.resetVatId(props);
+																				this.setState({isReverseChargeEnabled:false})
 																				if (option && option.value) {
 																					this.formRef.current.setFieldValue('currencyCode', this.getCurrency(option.value), true);
 																					this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(option.value), true);
@@ -2263,7 +2267,6 @@ class DetailSupplierInvoice extends React.Component {
 																				} else {
 																					props.handleChange('contactId')('');
 																				}
-																				this.resetVatId(props);
 																			}}
 																			className={
 																				props.errors.contactId &&

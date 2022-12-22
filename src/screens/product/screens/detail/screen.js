@@ -410,6 +410,8 @@ renderName=(cell,row)=>{
 		const transactionCategoryId = this.state.inventoryAccount ? this.state.inventoryAccount[0].value : '';
 		const inventoryId = this.state.inventoryId;
 		const isActive = this.state.selectedStatus;
+		const productCategoryId = data['productCategoryId'].value ? data['productCategoryId'].value : data['productCategoryId'];
+		console.log(productCategoryId,"PRoductCategory ID");
 		// const exciseType = this.state.exciseType;
 		const unitTypeId=data["unitTypeId"];
 		let productPriceType;
@@ -1975,7 +1977,7 @@ renderName=(cell,row)=>{
 																			<Input
 																			disabled={this.state.childRecordsPresent}
 																			readonly 
-																			className="form-check-input"
+																			//className="form-check-input"
 																			type="checkbox"
 																			id="isInventoryEnabled"
 																			name="isInventoryEnabled"
@@ -1983,12 +1985,12 @@ renderName=(cell,row)=>{
 																				props.handleChange('isInventoryEnabled')(value);
 																			}}
 																			checked={props.values.isInventoryEnabled}
-																				className={
-																					props.errors.productPriceType &&
-																					props.touched.productPriceType
-																						? 'is-invalid'
-																						: ''
-																				}
+																			className={
+																				props.errors.productPriceType &&
+																				props.touched.productPriceType
+																					? 'is-invalid form-check-label'
+																					: 'form-check-label'
+																			}
 																			/>
 																		 {strings.EnableInventory}
 																			{props.errors.productPriceType &&
@@ -2323,11 +2325,11 @@ min="0"
 											 {strings.PurchaseOrder}
 											</TableHeaderColumn>
 											<TableHeaderColumn
-												className="text-right"
+											//	className="text-right"
 												columnClassName="text-right"
 												width='5%'
 												dataFormat={this.renderActions}
-												className="table-header-bg"
+												className="text-right table-header-bg"
 											></TableHeaderColumn>
 										</BootstrapTable>
 										</div>

@@ -68,6 +68,8 @@ class DetailCurrencyConvert extends React.Component {
   }
 
   componentDidMount = () => {
+	
+	
     if (this.props.location.state && this.props.location.state.id) {
       this.props.authActions.getCurrencylist()
       .then((res) => {
@@ -85,6 +87,10 @@ class DetailCurrencyConvert extends React.Component {
       this.getCompanyCurrency();
       this.props.detailCurrencyConvertAction.getCurrencyConvertById(this.props.location.state.id).then((res) => {
         if (res.status === 200) {
+			this.props.detailCurrencyConvertAction.getDeleteStatusById(res.data.currencyCode).then((res)=>{
+				
+				this.setState({deletebutton:res.data})
+			})
           this.setState({
             loading: false,
             current_currency_convert_id: this.props.location.state.id,
@@ -472,9 +478,10 @@ class DetailCurrencyConvert extends React.Component {
 																			</Col>
 																			
 															</Row>
+															<span style={{fontWeight:'bold'}}>Note: If a currency is associated with any bank, contact or document, it cannot be deleted.</span>
                                 <Row>
                                   <Col lg={10} className="mt-5 d-flex flex-wrap align-items-center justify-content-between">
-                                  {this.state.current_currency_convert_id !== 10000 &&
+                                  {this.state.current_currency_convert_id !== 10000 && this.state?.deletebutton===0 &&
 																	  (
                                   <FormGroup className="text-right">
                                   <Button
@@ -520,6 +527,7 @@ class DetailCurrencyConvert extends React.Component {
                                     </FormGroup>
                                   </Col>
                                 </Row>
+								
                               </Form>
                             )}
                           </Formik>

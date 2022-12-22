@@ -121,7 +121,7 @@ class ViewFtaAuditReport extends React.Component {
 			{ label: 'VAT Amount AED', value: 'vatvalue', sort: true },
 			{ label: 'Tax Code', value: 'taxCode', sort: false },
 			{ label: 'FCY Code', value: 'fcycode', sort: false },
-			{ label: 'Purchase FCY', value: 'purchaseFCY', sort: true },
+			{ label: 'Purchase Amount FCY', value: 'purchaseFCY', sort: true },
 			{ label: 'VAT Amount FCY', value: 'vatfcy', sort: true },
 		];
 		
@@ -151,7 +151,7 @@ class ViewFtaAuditReport extends React.Component {
 			{ label: 'Tax Code', value: 'taxCode', sort: false },
 			{ label: 'Country', value: 'fcycode', sort: false },
 			{ label: 'FCY Code', value: 'fcycode', sort: false },
-			{ label: 'Supply FCY', value: 'supplyFCY', sort: true },
+			{ label: 'Supply Amount FCY', value: 'supplyFCY', sort: true },
 			{ label: 'VAT Amount FCY', value: 'vatfcy', sort: true },
 		];
 		

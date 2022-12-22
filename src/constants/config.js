@@ -1,6 +1,7 @@
 
 
 export default {
+  //API_ROOT_URL:'https://devbox-api.app.simpleaccounts.io',
 // API_ROOT_URL: 'https://dev-api.app.simpleaccounts.io',
     // API_ROOT_URL: 'https://k8s-api.dev.simplevat.com',
     //  API_ROOT_URL: 'http://localhost:8080',
@@ -20,7 +21,7 @@ export default {
   INVENTORY_MODULE:false,
   PAYROLL_MODULE:true,
 
-  EXPENSE_EXPENSES:true,
+  EXPENSE_EXPENSES:false,
   EXPENSE_SI:true,
   EXPENSE_PR:true,
   EXPENSE_RFQ:false,

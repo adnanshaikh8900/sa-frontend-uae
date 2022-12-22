@@ -912,6 +912,7 @@ class VatReports extends React.Component {
 				<GenerateVatReportModal
 					openModal={this.state.openModal}
 					setState={(e)=>this.setState(e)}
+					vatReportDataList={vatReportDataList}
 					state={this.state}
 					monthOption={this.state.monthOption}
 					closeModal={(e) => {
@@ -931,6 +932,7 @@ class VatReports extends React.Component {
 					openModal={this.state.openFileTaxRetrunModal}
 					current_report_id={this.state.current_report_id}
 					endDate={this.state.endDate}
+					
 					taxReturns={this.state.taxReturns}
 					closeModal={(e) => {
 						this.closeFileTaxRetrunModal(e);

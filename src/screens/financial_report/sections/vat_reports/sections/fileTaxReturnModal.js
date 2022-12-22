@@ -24,6 +24,7 @@ import LocalizedStrings from 'react-localization';
 import '../style.scss';
 import * as PayrollEmployeeActions from '../../../../payrollemp/actions'
 import * as VatreportActions from '../actions';
+import moment from 'moment';
 
 const mapStateToProps = (state) => {
 
@@ -96,6 +97,8 @@ class FileTaxReturnModal extends React.Component {
 
 
 	handleSubmit = (data, resetForm, setSubmitting) => {
+	
+	
 		this.setState({ disabled: true });
 		let formData = new FormData();
 		for ( var key in data ) {	

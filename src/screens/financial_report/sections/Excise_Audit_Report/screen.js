@@ -120,7 +120,7 @@ class ViewFtaExciseAuditReport extends React.Component {
 			{ label: 'Excise Tax Amount AED', value: 'exciseTaxAmountAED', sort: true },
 			{ label: 'Tax Code', value: 'taxCode', sort: false },
 			{ label: 'FCY Code', value: 'fcycode', sort: false },
-			{ label: 'Purchase FCY', value: 'purchaseFCY', sort: true },
+			{ label: 'Purchase Amount FCY', value: 'purchaseFCY', sort: true },
 			{ label: 'Excise Tax Amount FCY', value: 'exciseTaxAmountFCY', sort: true },
 
 		];
@@ -149,7 +149,7 @@ class ViewFtaExciseAuditReport extends React.Component {
 			{ label: 'Tax Code', value: 'taxCode', sort: false },
 			{ label: 'Country', value: 'fcycode', sort: false },
 			{ label: 'FCY Code', value: 'fcycode', sort: false },
-			{ label: 'Supply FCY', value: 'supplyFCY', sort: true },
+			{ label: 'Supply Amount FCY', value: 'supplyFCY', sort: true },
 			{ label: 'Excise Tax Amount FCY', value: 'vatfcy', sort: true },
 		];
 		

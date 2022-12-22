@@ -146,6 +146,31 @@ class GenerateVatReportModal extends React.Component {
 
 	generateReport = () => {
 		const { openModal, closeModal } = this.props;
+			let notgererated=true
+		this.props.vatReportDataList.map(({taxReturns})=>{
+			
+			let dateArr = taxReturns ? taxReturns.split("-") : [];
+			let currenttartdate=moment(this.getStartDate())
+			let currentenddate=moment(this.getEndDate(),'DD-MM-YYYY')
+			let startDate = moment(dateArr[0])
+			let endDate = moment(dateArr[1],'DD/MM/YYYY')
+		
+			console.log(
+				currenttartdate.diff(startDate,'days'),
+			currentenddate.diff(endDate,'days'),
+			currenttartdate.diff(startDate,'days')>=0 && currentenddate.diff(endDate)<=0
+			)
+			let con=currentenddate.diff(endDate,'days')
+			debugger
+			if(currenttartdate.diff(startDate,'days')===0 || 
+			currentenddate.diff(endDate,'days')===0 || 
+			(currenttartdate.diff(startDate,'days')>=0 && currentenddate.diff(endDate,'days')<=0))
+			notgererated=false
+
+		})
+		if(!notgererated){
+			return this.props.commonActions.tostifyAlert('error', 'VAT Report is Already generated')
+		}
 		this.setState({ disabled: true });
 		const { initValue } = this.state;
 		const postData = {
@@ -416,47 +441,19 @@ getStartDate=()=>{
 	//
 	getEndDate=()=>{
 		const { monthOption} = this.props;
-	
+		let date=""
 			if(this.state.monthlyDate){
-
-				let date=moment(this.state.monthlyDate).format("DD/MM/YYYY")
-				var datearray = date.split("/");
-
-				let month=( parseInt(datearray[1]) +monthOption.value)
-
-				if(( parseInt(datearray[1]) +monthOption.value) >12)
-						{
-							if(( parseInt(datearray[1]) +monthOption.value) ==13)
-							month=1
-							if(( parseInt(datearray[1]) +monthOption.value) ==14)
-							month=2
-							if(( parseInt(datearray[1]) +monthOption.value) ==15)
-							month=3
-						}
-				let day=0		
-				switch(month){
-					case 1:
-					case 3:	
-					case 5:
-					case 7:
-					case 8:	
-					case 10:
-					case 12:	
-					         day=31
-					        break;
-
-					case 2:day=28
-							break;
-
-					case 4:	
-					case 6:
-					case 9:
-					case 11:	
-					        day=30
-					        break;
+				if(monthOption.value===0){
+					date=moment(this.state.monthlyDate).add(1,'month').subtract(1,'day').format("DD-MM-YYYY")
 				}
-				return	(day +"-"+ month +"-"+ parseInt(datearray[2]));
+				else if(monthOption.value===2) {
+					date=moment(this.state.monthlyDate).add(3,'month').subtract(1,'day').format("DD-MM-YYYY")
+				}
+				debugger
+				return date
+				
 			}
+			
 		}
 
 		//

@@ -425,6 +425,9 @@ class CreateContact extends React.Component {
 																if (values.billingcountryId == 229 || values.billingcountryId.value == 229) {
 																	if (values.billingPoBoxNumber === '')
 																		errors.poBoxNumber = 'PO box number is required';
+																	else if (this.state.showpoBoxNumberErrorMsg == true)
+																		errors.poBoxNumber = "Please enter 3 To 6 digit po box number"
+
 																	if(values.billingStateProvince =="")  
 																		errors.billingStateProvince ='Emirate is required';
 																} else {
@@ -439,7 +442,10 @@ class CreateContact extends React.Component {
 																}
 																if (values.shippingCountryId == 229 || values.shippingCountryId.value == 229) {
 																	if (values.shippingPoBoxNumber === '')
-																		errors.poBoxNumber = 'PO box number is required';
+																		errors.shippingPoBoxNumber = 'PO box number is required';
+																	else if (this.state.showshippingpoBoxNumberErrorMsg == true)
+																		errors.shippingPoBoxNumber = "Please enter 3 To 6 digit po box number"
+
 																	if(values.shippingStateId =="")  
 																		errors.shippingStateId ='Emirate is required';
 																} else {
@@ -458,8 +464,8 @@ class CreateContact extends React.Component {
 																if (this.state.showshippingFaxErrorMsg == true)
 																	errors.shippingFax = "Please enter 15 digit Fax"
 
-																if (this.state.showpoBoxNumberErrorMsg == true)
-																	errors.poBoxNumber = "Please enter 3 To 6 digit po box number"
+																
+																
 
 																return errors;
 
@@ -1759,9 +1765,9 @@ class CreateContact extends React.Component {
 																								this.regEx.test(option.target.value)
 																							) {
 																								if (option.target.value.length < 3)
-																									this.setState({ showpoBoxNumberErrorMsg: true })
+																									this.setState({ showshippingpoBoxNumberErrorMsg: true })
 																								else
-																									this.setState({ showpoBoxNumberErrorMsg: false })
+																									this.setState({ showshippingpoBoxNumberErrorMsg: false })
 																								props.handleChange('shippingPoBoxNumber')(
 																									option,
 																								);
@@ -1769,16 +1775,16 @@ class CreateContact extends React.Component {
 																						}}
 																						value={props.values.shippingPoBoxNumber}
 																						className={
-																							props.errors.poBoxNumber &&
-																								props.touched.poBoxNumber
+																							props.errors.shippingPoBoxNumber &&
+																								props.touched.shippingPoBoxNumber
 																								? 'is-invalid'
 																								: ''
 																						}
 																					/>
-																					{props.errors.poBoxNumber &&
-																						props.touched.poBoxNumber && (
+																					{props.errors.shippingPoBoxNumber &&
+																						props.touched.shippingPoBoxNumber && (
 																							<div className="invalid-feedback">
-																								{props.errors.poBoxNumber}
+																								{props.errors.shippingPoBoxNumber}
 																							</div>
 																						)}
 																				</FormGroup>

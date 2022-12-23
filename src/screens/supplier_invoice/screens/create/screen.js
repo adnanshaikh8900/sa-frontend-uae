@@ -2878,6 +2878,7 @@ class CreateSupplierInvoice extends React.Component {
 																			} else {
 																				props.handleChange('contactId')('');
 																			}
+																			this.setState({ isReverseChargeEnabled: false })
 																			this.resetVatId(props);
 																		}}
 																		className={

@@ -560,8 +560,10 @@ class CreateExpense extends React.Component {
 					},
 				});
 				
-				if( res.data && res.data!=null)
+				if( res.data && res.data!=null){
 					this.formRef.current.setFieldValue('expenseNumber', res.data, true,true);
+					this.expenseValidationCheck(res.data);
+				}
 				// this.validationCheck(res.data)
 				
 			}
@@ -972,7 +974,6 @@ componentWillUnmount() {
 												}}
 												validate={(values) => {
 													let errors = {};
-
 													// if (
 													// 	values.payMode.value === 'BANK' &&
 													// 	!values.bankAccountId
@@ -988,11 +989,11 @@ componentWillUnmount() {
 													// if(values.payMode.value === "CASH"){
 													// 	errors.payMode = 'Pay through is required'
 													// }
+													
 													if (exist === true) {
-														errors.expenseNumber =
-															'Expense number already exists'
+														errors.expenseNumber = 'Expense number already exists'
 													}
-													if (values.expenseNumber==='') {
+													if (values.expenseNumber === '') {
 														errors.expenseNumber = 'Expense number is required';
 													}
 													if(this.state.currency===true && values.currency === '' ){
@@ -1001,7 +1002,6 @@ componentWillUnmount() {
 													// if (!values.placeOfSupplyId && values.taxTreatmentId.value !== 8) {
 													// 	errors.placeOfSupplyId = 'Place of supply is required';
 													// }
-
 													return errors;
 												}}
 												validationSchema={Yup.object().shape({
@@ -1956,9 +1956,10 @@ componentWillUnmount() {
 																		onClick={() => {
 																			//	added validation popup	msg
 																			props.handleBlur();
-																			if(props.errors &&  Object.keys(props.errors).length != 0)
-																			this.props.commonActions.fillManDatoryDetails();
-																			console.log(props.errors,"errors")
+																			if(props.errors &&  Object.keys(props.errors).length != 0){
+																				if(props.errors.expenseNumber && this.state.exist===true)
+																					this.props.commonActions.fillManDatoryDetails();
+																			}
 																			this.setState(
 																				{ createMore: false },
 																				() => {
@@ -1980,8 +1981,10 @@ componentWillUnmount() {
 																		onClick={() => {
 																			//	added validation popup	msg
 																			props.handleBlur();
-																			if(props.errors &&  Object.keys(props.errors).length != 0)
-																			this.props.commonActions.fillManDatoryDetails();
+																			if(props.errors &&  Object.keys(props.errors).length != 0){
+																				if(props.errors.expenseNumber && this.state.exist===true)
+																					this.props.commonActions.fillManDatoryDetails();
+																			}
 
 																		this.setState(
 																			{ createMore: true },

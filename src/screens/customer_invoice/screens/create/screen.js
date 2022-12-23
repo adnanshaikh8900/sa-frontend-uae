@@ -182,6 +182,8 @@ class CreateCustomerInvoice extends React.Component {
 			contactId:'',
 			isDesignatedZone:false,
 			isRegisteredVat:false,
+			companyVATRegistrationDate:new Date(),
+			invoiceDateForVatValidation:new Date(),
 			producttype:[],
 			isQuotationSelected:false,
 			loadingMsg:"Loading...",
@@ -777,6 +779,9 @@ renderVatAmount = (cell, row,extraData) => {
 							invoiceDate: res.data.invoiceDate
 								? res.data.invoiceDate
 								: '',
+							invoiceDateForVatValidation: res.data.invoiceDate
+								? new Date(res.data.invoiceDate)
+								: '',
 							invoiceDueDate: res.data.invoiceDueDate
 								? res.data.invoiceDueDate
 								: '',
@@ -1194,8 +1199,10 @@ getCompanyType = () => {
 		.getCompanyById()
 		.then((res) => {
 				if (res.status === 200) {
+					console.log(res,"COMPANY");
 					this.setState({
 						isDesignatedZone: res.data.isDesignatedZone,
+						companyVATRegistrationDate : new Date(moment(res.data.vatRegistrationDate).format('MM DD YYYY')),
 					});
 					this.setState({
 						isRegisteredVat: res.data.isRegisteredVat,
@@ -1217,7 +1224,7 @@ getProductType=(id)=>{
 				var vt=[];
 				pt.id=res.data.productID;
 				pt.type=res.data.productType
-				if(this.state.isRegisteredVat){
+				if(this.state.isRegisteredVat && (this.state.invoiceDateForVatValidation > this.state.companyVATRegistrationDate)){
 					if(this.state.isDesignatedZone ){
 						if(res.data.productType=== "GOODS" ){
 							if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
@@ -1257,7 +1264,11 @@ getProductType=(id)=>{
 						}	
 					}
 				}else{
-					vt=vat_list;
+					vt=[{
+						"id": 10,
+						"vat": 0,
+						"name": "N/A"
+					}];
 				}
 				pt.vat_list=vt;
 				this.setState(prevState => ({
@@ -1490,7 +1501,6 @@ resetVatId = (props) => {
 		data.map((obj, index) => {
 			if (obj.id === row.id) {
 				obj['unitPrice'] = (parseFloat(result.unitPrice)*(1/exchangeRate)).toFixed(2);
-				obj['vatCategoryId'] = result.vatCategoryId;
 				obj['description'] = result.description;
 				obj['exciseTaxId'] = result.exciseTaxId;
 				obj['discountType'] = result.discountType;
@@ -1504,6 +1514,9 @@ resetVatId = (props) => {
 							const found = element.vat_list.find(element => element.id === result.vatCategoryId);
 							if(!found){
 								obj['vatCategoryId']='';
+							}
+							else{
+								obj['vatCategoryId'] = result.vatCategoryId;
 							}
 							return found;
 						}
@@ -2036,6 +2049,9 @@ resetVatId = (props) => {
 							createMore: false,
 							selectedContact: '',
 							exchangeRate:'',
+							disableLeavePage:false,
+							invoiceDateForVatValidation: new Date(),
+							producttype:[],
 							data: [
 								{
 									id: 0,
@@ -3001,10 +3017,14 @@ resetVatId = (props) => {
 																		dateFormat="dd-MM-yyyy"
 																		//minDate={new Date()}
 																		dropdownMode="select"
-																		value={props.values.invoiceDate1 ?new Date(props.values.invoiceDate1):props.values.invoiceDate}
+																		value={props.values.invoiceDate1 ? new Date(props.values.invoiceDate1):props.values.invoiceDate}
 																		// value={props.values.invoiceDate}
-																		selected={props.values.invoiceDate1 ?new Date(props.values.invoiceDate1):props.values.invoiceDate} 
+																		selected={props.values.invoiceDate1 ? new Date(props.values.invoiceDate1):props.values.invoiceDate} 
 																		onChange={(value) => {
+																			if((this.state.invoiceDateForVatValidation < this.state.companyVATRegistrationDate && value > this.state.companyVATRegistrationDate ) || (value < this.state.companyVATRegistrationDate && this.state.invoiceDateForVatValidation > this.state.companyVATRegistrationDate)){
+																				this.resetVatId(props);
+																			}
+																			this.setState({invoiceDateForVatValidation : value});
 																			props.handleChange('invoiceDate')(value);
 																			this.setDate(props, value);
 																		}}

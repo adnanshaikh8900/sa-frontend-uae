@@ -1,5 +1,12 @@
 import { BANK_ACCOUNT } from 'constants/types';
 import { PROFILE } from 'constants/types';
+import { CUSTOMER_INVOICE } from 'constants/types';
+import { QUOTATION } from 'constants/types';
+import { EXPENSE } from 'constants/types';
+import { PURCHASE_ORDER } from 'constants/types';
+import { REQUEST_FOR_QUOTATION } from 'constants/types';
+
+
 import {
   authApi,
   authFileUploadApi
@@ -239,3 +246,152 @@ export const getTransactionList = () => {
 			});
 	};
 };
+
+export const getInvoiceList = () => {
+	return (dispatch) => {
+		let param = `/rest/invoice/getList`;
+		let data = {
+			method: 'get',
+			url: param,
+			// data: postObj
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+						dispatch({
+							type: CUSTOMER_INVOICE.CUSTOMER_INVOICE_LIST,
+							payload: {
+								data: res.data,
+							},
+						});
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
+export const getQuotationList = (postObj) => {
+	return (dispatch) => {
+		let param = `/rest/poquatation/getListForQuatation`;
+		
+		let data = {
+			method: 'get',
+			url: param,
+			// data: postObj
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+						dispatch({
+							type: QUOTATION.QUOTATION_LIST,
+							payload: {
+								data: res.data,
+							},
+						});
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+export const getCreditNoteList = () => {
+  return (dispatch) => {
+		let param = `/rest/creditNote/getList`;
+		let data = {
+			method: 'get',
+			url: param,
+			// data: postObj
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+						dispatch({
+							type: CUSTOMER_INVOICE.CUSTOMER_INVOICE_LIST,
+							payload: {
+								data: res.data,
+							},
+						});
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+export const getExpenseList = () => {
+	return (dispatch) => {
+		let param = `/rest/expense/getList`;
+		let data = {
+			method: 'GET',
+			url: param,
+		};
+		return authApi(data)
+			.then((res) => {
+					dispatch({
+						type: EXPENSE.EXPENSE_LIST,
+						payload: res.data,
+					});
+				return res;
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+export const getpoList = () => {
+	return (dispatch) => {
+		let param = `/rest/poquatation/getListForPO`;
+		let data = {
+			method: 'get',
+			url: param,
+			// data: postObj
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+						dispatch({
+							type: PURCHASE_ORDER.PURCHASE_ORDER_LIST,
+							payload: {
+								data: res.data,
+							},
+						});
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+export const getRFQList = () => {
+  return (dispatch) => {
+		let param = `/rest/poquatation/getListForRfq`;
+		let data = {
+			method: 'get',
+			url: param,
+			// data: postObj
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+						dispatch({
+							type: REQUEST_FOR_QUOTATION.REQUEST_FOR_QUOTATION_LIST,
+							payload: {
+								data: res.data,
+							},
+						});
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+

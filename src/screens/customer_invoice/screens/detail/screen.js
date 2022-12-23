@@ -119,6 +119,7 @@ class DetailCustomerInvoice extends React.Component {
 			date:''	,
 			isDesignatedZone:false,
 			isRegisteredVat:false,
+			invoiceDateForVatValidation:new Date(),
 			producttype:[],
 			changeShippingAddress:'',
 			shippingAddress:'',
@@ -293,6 +294,9 @@ class DetailCustomerInvoice extends React.Component {
 										: '',
 								invoiceDueDate: res.data.invoiceDueDate
 									? res.data.invoiceDueDate
+									: '',
+								invoiceDateForVatValidation: res.data.invoiceDate
+									? new Date(res.data.invoiceDate)
 									: '',
 								discountAmount: res.data.discount ? res.data.discount : 0,
 								discountPercentage: res.data.discountPercentage
@@ -850,6 +854,7 @@ class DetailCustomerInvoice extends React.Component {
 					if (res.status === 200) {
 						this.setState({
 							isDesignatedZone: res.data.isDesignatedZone,
+							companyVATRegistrationDate : new Date(moment(res.data.vatRegistrationDate).format('MM DD YYYY')),
 						});
 						this.setState({
 							isRegisteredVat: res.data.isRegisteredVat,
@@ -871,7 +876,7 @@ class DetailCustomerInvoice extends React.Component {
 					var vt=[];
 					pt.id=res.data.productID;
 					pt.type=res.data.productType
-					if(this.state.isRegisteredVat){
+					if(this.state.isRegisteredVat && (this.state.invoiceDateForVatValidation > this.state.companyVATRegistrationDate)){
 						if(this.state.isDesignatedZone ){
 							if(res.data.productType=== "GOODS" ){
 								if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
@@ -912,7 +917,11 @@ class DetailCustomerInvoice extends React.Component {
 							}	
 						}
 					}else{
-						vt=vat_list;
+						vt=[{
+							"id": 10,
+							"vat": 0,
+							"name": "N/A"
+						}];
 					}
 					pt.vat_list=vt;
 					this.setState(prevState => ({
@@ -951,7 +960,7 @@ class DetailCustomerInvoice extends React.Component {
 		const product = this.state.producttype.find(element => element.id === row.productId);
 		if(product){
 			vat_list=product.vat_list;
-		 }
+		}
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
 				idx = index;
@@ -2441,7 +2450,10 @@ class DetailCustomerInvoice extends React.Component {
 																			 selected={new Date(props.values.invoiceDate1)} 
 																			
 																			onChange={(value) => {
-																			
+																				if((this.state.invoiceDateForVatValidation < this.state.companyVATRegistrationDate && value > this.state.companyVATRegistrationDate ) || (value < this.state.companyVATRegistrationDate && this.state.invoiceDateForVatValidation > this.state.companyVATRegistrationDate)){
+																					this.resetVatId(props);
+																				}
+																				this.setState({invoiceDateForVatValidation : value});
 																				props.handleChange('invoiceDate')(
 																					value
 																				);

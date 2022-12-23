@@ -124,7 +124,8 @@ class Profile extends React.Component {
 				fax:'',
 			},
 			// companyId: '',
-			transaction_first_date:new Date(),
+			//transaction_first_date:new Date(),
+			enableVatRegistrationDate:true,
 			imageState: true,
 			flag: true,
 			selectedStatus: false,
@@ -518,38 +519,138 @@ class Profile extends React.Component {
 					loading: false,
 				});
 			});
-			this.getTransactionList();
+			//this.getTransactionList();
+			this.getDocumentList();
 	};
-	getTransactionList = () => {
+	// getTransactionList = () => {
+	// 	this.props.profileActions
+	// 		.getTransactionList()
+	// 		.then((res) => {
+	// 			 if (res.status === 200) {
+	// 				var dates = [];
+	// 				let len= res.data.data.length;
+	// 				for (let i = 0; i < len; i++) {
+	// 					dates.push(new Date( moment(res.data.data[i].transactionDate, 'DD MM YYYY').toDate()));
+	// 				  }
+	// 				const maxDate = new Date(
+	// 					Math.min(
+	// 					  ...dates.map(element => {
+	// 						return element;
+	// 					  }),
+	// 					),
+	// 				  );
+	// 			 	this.setState(
+	// 			 	{
+	// 					transaction_first_date: maxDate
+	// 				})
+	// 				console.log(this.state.transaction_first_date,"First Transaction Date");
+	// 			}
+	// 		})
+	// 		.catch((err) => {
+	// 			console.log(err,"Transaction Error");
+	// 		});
+	// };
+	getDocumentList = () => {
 		this.props.profileActions
-			.getTransactionList()
-			.then((res) => {
-				 if (res.status === 200) {
-					var dates = [];
-					let len= res.data.data.length;
-					for (let i = 0; i < len; i++) {
-						dates.push(new Date( moment(res.data.data[i].transactionDate, 'DD MM YYYY').toDate()));
-					  }
-					const maxDate = new Date(
-						Math.min(
-						  ...dates.map(element => {
-							return element;
-						  }),
-						),
-					  );
-				 	this.setState(
-				 	{
-						transaction_first_date: maxDate
-					})
-					console.log(this.state.transaction_first_date,"First Transaction Date");
+		.getRFQList()
+		.then((res) => {
+			if (res.status === 200) {
+				console.log(res,"getRFQList");
+				if(res.data && res.data.data && res.data.data.length !== 0){
+					console.log("getRFQList EXITS");
+					this.setState({enableVatRegistrationDate:false});
+					return ;
 				}
-				})
-
-			.catch((err) => {
-				console.log(err,"Transaction Error");
-			});
+				else{
+					this.props.profileActions
+					.getInvoiceList()
+					.then((res) => {
+						if (res.status === 200) {
+							console.log(res,"Invoices");
+							if(res.data && res.data.data && res.data.data.length !== 0){
+								console.log("Invoices EXITS");
+								this.setState({enableVatRegistrationDate:false});
+								return ;
+							}
+							else{
+								this.props.profileActions
+								.getQuotationList()
+								.then((res) => {
+									if (res.status === 200) {
+										console.log(res,"getQuotationList");
+										if(res.data && res.data.data && res.data.data.length !== 0){
+											console.log("getQuotationList EXITS");
+											this.setState({enableVatRegistrationDate:false});
+											return ;
+										}else{
+											this.props.profileActions
+											.getCreditNoteList()
+											.then((res) => {
+												if (res.status === 200) {
+													console.log(res,"getCreditNoteList");
+													if(res.data && res.data.length !== 0){
+														console.log("getCreditNoteList EXITS");
+														this.setState({enableVatRegistrationDate:false});
+														return ;
+													}
+													else{
+														this.props.profileActions
+														.getpoList()
+														.then((res) => {
+															if (res.status === 200) {
+																console.log(res,"getpoList");
+																if(res.data && res.data.data && res.data.data.length !== 0){
+																	console.log("getpoList EXITS");
+																	this.setState({enableVatRegistrationDate:false});
+																	return ;
+																}
+																else{
+																	this.props.profileActions
+																	.getExpenseList()
+																	.then((res) => {
+																		if (res.status === 200) {
+																			console.log(res,"getExpenseList");
+																			if(res.data && res.data.data && res.data.data.length !== 0){
+																				console.log("getExpenseList EXITS");
+																				this.setState({enableVatRegistrationDate:false});
+																				return ;
+																			}
+																		}
+																	})
+																	.catch((err) => {
+																		console.log(err,"Get Expense List Error");
+																	});
+																}
+															}
+														})
+														.catch((err) => {
+															console.log(err,"Get Purchase Order List Error");
+														});
+													}
+												}
+											})
+											.catch((err) => {
+												console.log(err,"Get CreditNote List Error");
+											});
+										}
+									}
+								})
+								.catch((err) => {
+									console.log(err,"Get Quotation List Error");
+								});
+							}
+						}
+					})
+					.catch((err) => {
+						console.log(err,"Get Invoices List Error");
+					});
+				}
+			}
+		})
+		.catch((err) => {
+			console.log(err,"Get Request For Quotation List Error");
+		});
 	};
-
 	resetPassword = (email) => {
 
 			let data = {
@@ -2478,49 +2579,52 @@ class Profile extends React.Component {
 																									</div>
 																								)}
 																								<div className="VerifyTRN">
-																		<br/>
-																		<b>	<a target="_blank" rel="noopener noreferrer"  href="https://eservices.tax.gov.ae/en-us/trn-verify" style={{ color: '#2266d8' }}  >{strings.VerifyTRN}</a></b>
-														</div>
+																									<br/>
+																									<b>	<a target="_blank" rel="noopener noreferrer"  href="https://eservices.tax.gov.ae/en-us/trn-verify" style={{ color: '#2266d8' }}  >{strings.VerifyTRN}</a></b>
+																								</div>
 																						</FormGroup>
 																					</Col>
 																					<Col lg={4}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="expense_date">
-																			<span className="text-danger">* </span> {strings.VatRegisteredOn}
-																		</Label>
-																		<DatePicker
-																			id="date"
-																			name="vatRegistrationDate"
-																			placeholderText='Enter VAT Registered Date.'
-																			showMonthDropdown
-																			showYearDropdown
-																			dateFormat="dd-MM-yyyy"
-																			dropdownMode="select"
-																			minDate={new Date("01/01/2018")}
-																		 	maxDate={this.state.transaction_first_date}
-																			value={props.values.vatRegistrationDate ?moment(
-																				props.values.vatRegistrationDate,
-																			).format('DD-MM-YYYY'):""}
-																			selected={props.values.vatRegistrationDate ? new Date (moment(props.values.vatRegistrationDate).format('MM DD YYYY')) : new Date()}
-																			onChange={(value) => {
-																				props.handleChange('vatRegistrationDate')(value);
-																			}}
-																			className={`form-control ${
-																				props.errors.vatRegistrationDate &&
-																				props.touched.vatRegistrationDate
-																					? 'is-invalid'
-																					: ''
-																			}`}
-																		/>
-																		{props.errors.vatRegistrationDate &&
-																			props.touched.vatRegistrationDate && (
-																				<div className="invalid-feedback">
-																					{props.errors.vatRegistrationDate}
-																				</div>
-																			)}
-																	</FormGroup>
-																</Col>
-																</Row>
+																						<FormGroup className="mb-3">
+																							<Label htmlFor="expense_date">
+																								<span className="text-danger">* </span> {strings.VatRegisteredOn} 
+																								<div className="tooltip-icon nav-icon fas fa-question-circle ml-1">
+																								<span class="tooltiptext">Please note that you cannot update <br></br> this detail once you have created a document.</span></div>
+																							</Label>
+																							<DatePicker
+																								disabled={!this.state.enableVatRegistrationDate}
+																								id="date"
+																								name="vatRegistrationDate"
+																								placeholderText='Enter VAT Registered Date.'
+																								showMonthDropdown
+																								showYearDropdown
+																								dateFormat="dd-MM-yyyy"
+																								dropdownMode="select"
+																								minDate={new Date("01/01/2018")}
+																								//maxDate={this.state.transaction_first_date}
+																								value={props.values.vatRegistrationDate ?moment(
+																									props.values.vatRegistrationDate,
+																								).format('DD-MM-YYYY'):""}
+																								selected={props.values.vatRegistrationDate ? new Date (moment(props.values.vatRegistrationDate).format('MM DD YYYY')) : new Date()}
+																								onChange={(value) => {
+																									props.handleChange('vatRegistrationDate')(value);
+																								}}
+																								className={`form-control ${
+																									props.errors.vatRegistrationDate &&
+																									props.touched.vatRegistrationDate
+																										? 'is-invalid'
+																										: ''
+																								}`}
+																							/>
+																							{props.errors.vatRegistrationDate &&
+																								props.touched.vatRegistrationDate && (
+																									<div className="invalid-feedback">
+																										{props.errors.vatRegistrationDate}
+																									</div>
+																								)}
+																						</FormGroup>
+																					</Col>
+																				</Row>
 																			</Col>
 																		</Row>
 

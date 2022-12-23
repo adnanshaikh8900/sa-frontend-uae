@@ -94,6 +94,7 @@ class CreateExpense extends React.Component {
 			count:0,
 			expenseType:false,
 			isVatClaimable:true,
+			taxTreatmentId:'',
 			isReverseChargeEnabled:false,
 			currentData: {},
 			fileName: '',
@@ -208,11 +209,12 @@ class CreateExpense extends React.Component {
 										: '',
 									
 								},
-								payee:res.data.payee ? res.data.payee :'', 
+								payee:res.data.payee ? res.data.payee : '', 
 								expenseType: res.data.expenseType ? true : false,
 								isVatClaimable: res.data.isVatClaimable ? false : true,
-								showPlacelist:res.data.taxTreatmentId !=8?true:false,
-								lockPlacelist:res.data.taxTreatmentId ==7?true:false,
+								showPlacelist:res.data.taxTreatmentId !== 8 ? true : false,
+								lockPlacelist:res.data.taxTreatmentId === 7 ? true : false,
+								taxTreatmentId : res.data.taxTreatmentId ? res.data.taxTreatmentId : '',
 								isReverseChargeEnabled:res.data.isReverseChargeEnabled ?res.data.isReverseChargeEnabled:false,
 								exclusiveVat: res.data.exclusiveVat==true ? true : false,
 								expenseDateForVatValidation: new Date(res.data.expenseDate),
@@ -1177,7 +1179,7 @@ componentWillUnmount() {
 																					// ReverseCharge setup
 																					this.ReverseChargeSetting(option.value,props)
 																					this.setState({isReverseChargeEnabled:false,exclusiveVat:false})
-																																																													
+																					this.setState({taxTreatmentId:option.value})
 																				} else {
 																					props.handleChange('taxTreatmentId')(
 																						'',
@@ -1692,7 +1694,9 @@ componentWillUnmount() {
 														)
 														} 
 														<Row>
-													{this.state.showReverseCharge==true &&(<Col>
+													{((this.state.isDesignatedZone && (this.state.taxTreatmentId === 5  || this.state.taxTreatmentId === 6 ||this.state.taxTreatmentId === 7 ))
+														|| (!this.state.isDesignatedZone && (this.state.taxTreatmentId !== 3  && this.state.taxTreatmentId !== 8))
+														)&&(<Col>
 															{/* <Input
 															type="checkbox"
 															id="isReverseChargeEnabled"

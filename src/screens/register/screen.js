@@ -330,6 +330,9 @@ class Register extends React.Component {
 																errors.phoneNumber =
 																	'Invalid mobile number';
 															}
+															if (values.IsRegistered === true && !values.vatRegistrationDate) {
+																errors.vatRegistrationDate= "VAT registration date is required";
+															}
 															return errors;
 														}}
 
@@ -951,7 +954,9 @@ class Register extends React.Component {
 															<Col lg={4}>
 																<FormGroup>
 																	<Label htmlFor="date">
-																	VAT Registered On
+																		VAT Registered On
+																		<div className="tooltip-icon nav-icon fas fa-question-circle ml-1">
+																		<span class="tooltiptext">Please note that you cannot update <br></br> this detail once you have created a document.</span></div>
 																	</Label>
 																	<DatePicker
 																		autoComplete="off"

@@ -181,6 +181,7 @@ class CreateSupplierInvoice extends React.Component {
 			isSelected:false,
 			isDesignatedZone:false,
 			isRegisteredVat:false,
+			invoiceDateForVatValidation:new Date(),
 			producttype:[],
 			customer_taxTreatment: '',
 			customer_taxTreatment_des:'',
@@ -575,6 +576,9 @@ class CreateSupplierInvoice extends React.Component {
 								: '',
 							invoiceDate: res.data.invoiceDate
 								? res.data.invoiceDate
+								: '',
+							invoiceDateForVatValidation: res.data.invoiceDate
+								? new Date(res.data.invoiceDate)
 								: '',
 							invoiceDueDate: res.data.invoiceDueDate
 								? res.data.invoiceDueDate
@@ -1214,6 +1218,7 @@ class CreateSupplierInvoice extends React.Component {
 					if (res.status === 200) {
 						this.setState({
 							isDesignatedZone: res.data.isDesignatedZone,
+							companyVATRegistrationDate : new Date(moment(res.data.vatRegistrationDate).format('MM DD YYYY')),
 						});
 						this.setState({
 							isRegisteredVat: res.data.isRegisteredVat,
@@ -1263,7 +1268,7 @@ class CreateSupplierInvoice extends React.Component {
 						var vt=[];
 						pt.id=res.data.productID;
 						pt.type=res.data.productType
-						if(this.state.isRegisteredVat){
+						if(this.state.isRegisteredVat && (this.state.invoiceDateForVatValidation > this.state.companyVATRegistrationDate)){
 							if(this.state.isDesignatedZone ){
 								if(this.state.isReverseChargeEnabled){
 									if(res.data.productType=== "GOODS" ){
@@ -1385,7 +1390,11 @@ class CreateSupplierInvoice extends React.Component {
 								}
 							}
 						}else{
-							vt=vat_list;
+							vat_list.map(element => {
+								if(element.name==='N/A'){
+									vt.push(element);
+								}
+							});
 						}
 						pt.vat_list=vt;
 						this.setState(prevState => ({
@@ -2244,6 +2253,8 @@ class CreateSupplierInvoice extends React.Component {
 							term: '',
 							exchangeRate:'',
 							disableLeavePage:false,
+							invoiceDateForVatValidation: new Date(),
+							isReverseChargeEnabled: false,
 							data: [
 								{
 									id: 0,
@@ -3151,6 +3162,10 @@ class CreateSupplierInvoice extends React.Component {
 																		value={props.values.invoiceDate}
 																		selected={props.values.invoiceDate1 ?new Date(props.values.invoiceDate1):props.values.invoiceDate} 
 																		onChange={(value) => {
+																			if((this.state.invoiceDateForVatValidation < this.state.companyVATRegistrationDate && value > this.state.companyVATRegistrationDate ) || (value < this.state.companyVATRegistrationDate && this.state.invoiceDateForVatValidation > this.state.companyVATRegistrationDate)){
+																				this.resetVatId(props);
+																			}
+																			this.setState({invoiceDateForVatValidation : value});
 																			props.handleChange('invoiceDate')(value);
 																			this.setDate(props, value);
 																		}}

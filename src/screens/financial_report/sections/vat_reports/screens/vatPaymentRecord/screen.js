@@ -99,8 +99,18 @@ class VatPaymentRecord extends React.Component {
 	};
 
 	getInitialData = () => {
+		let { filterData } = this.state;
+		const paginationData = {
+			pageNo: this.options.page ? this.options.page - 1 : 0,
+			pageSize: this.options.sizePerPage,
+		};
+		const sortingData = {
+			order: this.options.sortOrder ? this.options.sortOrder : '',
+			sortingCol: this.options.sortName ? this.options.sortName : '',
+		};
+		const postData = { ...filterData, ...paginationData, ...sortingData };
 		this.props.vatreport
-			.getVatPaymentHistoryList()
+			.getVatPaymentHistoryList(postData)
 			.then((res) => {
 				if (res.status === 200) {
 					this.setState({ vatReportDataList: res.data }) // comment for dummy
@@ -320,7 +330,7 @@ class VatPaymentRecord extends React.Component {
 												remote
 												// data={vatReportDataList && vatReportDataList.data ? vatReportDataList.data : []}
 												// data={vatReportDataList ? vatReportDataList : []}										
-												data={vatReportDataList ? vatReportDataList : []}
+												data={vatReportDataList.data ? vatReportDataList.data : []}
 												pagination={
 													vatReportDataList &&
 													vatReportDataList.data &&

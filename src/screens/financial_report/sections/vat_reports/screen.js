@@ -650,6 +650,7 @@ class VatReports extends React.Component {
 								<Col lg={12} className="mb-5">
 									<div className="table-wrapper">
 										<FormGroup className="text-center">
+											
 											<Button color="primary" className="btn-square  pull-right"
 												onClick={() => {
 													this.props.history.push('/admin/report/vatreports/vatpaymentrecordhistory')
@@ -661,14 +662,12 @@ class VatReports extends React.Component {
 											// disabled={!this.state.enbaleReportGeneration}
 											// title={!this.state.enbaleReportGeneration?"Select VAT Reporting Period":""}
 												onClick={() => {
-													
-												this.setState({ openModal: true })
-													
+													this.setState({ openModal: true })
 												}}>
-												
 												<i class="fas fa-plus"></i> Generate VAT Report
 											</Button>
-											 <Button color="primary" className="btn-square  pull-right"
+
+											<Button color="primary" className="btn-square  pull-right"
 												onClick={() => {
 													this.setState({ openVatSettingModal: true })
 												}}>
@@ -816,7 +815,7 @@ class VatReports extends React.Component {
 												hover
 												responsive												
 												remote
-												data={vatReportDataList  ? vatReportDataList : []}
+												data={vatReportDataList &&vatReportDataList.data ? vatReportDataList.data : []}
 												// data={vatReportDataList.data ? vatReportDataList.data : []}										
 												// rowData={vatReportDataList.data ? vatReportDataList.data : []}
 												pagination={

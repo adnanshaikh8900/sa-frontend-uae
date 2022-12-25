@@ -1647,8 +1647,7 @@ class CreateBankTransaction extends React.Component {
                                   </Col>
                                   {props.values.coaCategoryId &&
                                     props.values.coaCategoryId.label ===
-                                    "Supplier Invoice" &&
-                                    props.values.vendorId && (
+                                    "Supplier Invoice" && (
                                       <Col lg={3}>
                                         <FormGroup className="mb-3">
                                           <Label htmlFor="invoiceIdList">

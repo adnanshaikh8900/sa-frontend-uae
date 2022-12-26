@@ -95,6 +95,9 @@ class DetailExpense extends React.Component {
 			lockPlacelist:false,
 			isDesignatedZone:true,
 			curreancyname:'',
+			expenseDateForVatValidation:new Date(),
+			isRegisteredVat: false,
+			companyVATRegistrationDate : new Date(),
 			exchangeRate:'',
 			taxTreatmentList:[],
 			count:0,
@@ -176,20 +179,25 @@ class DetailExpense extends React.Component {
 						this.props.expenseCreateActions.getPaytoList();
 						 
 						const {vat_list}=this.props
-					let vatCategoryId=
-						vat_list ?
-							selectOptionsFactory
-								.renderOptions(
-									'name',
-									'id',
-									vat_list,
-									'Tax',
-								)
-								.find(
-									(option) =>
-										option.value ===
-										+res.data.vatCategoryId,
-								)	:""
+						let vatCategoryId=
+							vat_list ?
+								selectOptionsFactory
+									.renderOptions(
+										'name',
+										'id',
+										vat_list,
+										'Tax',
+									)
+									.find(
+										(option) =>
+											option.value ===
+											+res.data.vatCategoryId,
+									):""
+						if(res.data.vatCategoryId === 10){
+							vatCategoryId={};
+							vatCategoryId.label="N/A";
+							vatCategoryId.value="10";
+						}
 						this.setState(
 							{
 								loading: false,
@@ -235,6 +243,8 @@ class DetailExpense extends React.Component {
 								taxTreatmentId:res.data.taxTreatmentId ? res.data.taxTreatmentId : '',
 								isReverseChargeEnabled:res.data.isReverseChargeEnabled ?res.data.isReverseChargeEnabled:false,
 								exclusiveVat: res.data.exclusiveVat==true ? true : false,
+								expenseDateForVatValidation: new Date(res.data.expenseDate),
+
 								view:
 									this.props.location.state && this.props.location.state.view
 										? true
@@ -491,7 +501,10 @@ class DetailExpense extends React.Component {
 			let isDesignatedZone =response.data.company.isDesignatedZone?response.data.company.isDesignatedZone:false;
 				this.setState({
 					userStateName:userStateName,
-					isDesignatedZone:isDesignatedZone})
+					isDesignatedZone:isDesignatedZone,
+					isRegisteredVat:response.data.company.isRegisteredVat,
+					companyVATRegistrationDate : new Date(response.data.company.vatRegistrationDate),
+				})
 		
 		})
 		.catch((err) => {
@@ -616,63 +629,67 @@ class DetailExpense extends React.Component {
 	renderVat=(props)=>{
 		let vat_list=[]
 		let vatIds=[]		
-		if(this.state.isDesignatedZone==true)
-			switch(props.values.taxTreatmentId.value ?props.values.taxTreatmentId.value:props.values.taxTreatmentId){
+		if(this.state.isRegisteredVat && (this.state.expenseDateForVatValidation > this.state.companyVATRegistrationDate)){
+			if(this.state.isDesignatedZone==true)
+				switch(props.values.taxTreatmentId.value ?props.values.taxTreatmentId.value:props.values.taxTreatmentId){
 
-				case 1: 
-				case 3: 
-					vatIds=[1,2,3]										
-				break;
+					case 1: 
+					case 3: 
+						vatIds=[1,2,3]										
+					break;
 
-				case 2: 
-				case 4:
-				case 8:  
-					vatIds=[4]
-			
-				break;
-
-				case 5: 
-				case 6: 
-				case 7: 
-					if(this.state.isReverseChargeEnabled==false)
-					vatIds=[3]
-					else if(this.state.isReverseChargeEnabled==true)
-					vatIds=[1,2]
-				break;
+					case 2: 
+					case 4:
+					case 8:  
+						vatIds=[4]
 				
-			}
-		else
-//Not Designated Zone		
-			if(this.state.isDesignatedZone==false)
-			switch(props.values.taxTreatmentId.value ?props.values.taxTreatmentId.value:props.values.taxTreatmentId){
+					break;
 
-				case 1: 
-					if(this.state.isReverseChargeEnabled==false)
-					vatIds=[1,2,3]
-					else if(this.state.isReverseChargeEnabled==true)
-					vatIds=[1,2]
-				break;
-
-				case 3: 
-					vatIds=[1,2,3]
+					case 5: 
+					case 6: 
+					case 7: 
+						if(this.state.isReverseChargeEnabled==false)
+						vatIds=[3]
+						else if(this.state.isReverseChargeEnabled==true)
+						vatIds=[1,2]
+					break;
 					
-				break;
+				}
+			else
+	//Not Designated Zone		
+				if(this.state.isDesignatedZone==false)
+				switch(props.values.taxTreatmentId.value ?props.values.taxTreatmentId.value:props.values.taxTreatmentId){
 
-				case 2: 
-				case 4: 
-				case 5:
-				case 6: 
-				case 7: 
-					if(this.state.isReverseChargeEnabled==false)
-					vatIds=[3]
-					else if(this.state.isReverseChargeEnabled==true)
-					vatIds=[1,2]
-				break;
+					case 1: 
+						if(this.state.isReverseChargeEnabled==false)
+						vatIds=[1,2,3]
+						else if(this.state.isReverseChargeEnabled==true)
+						vatIds=[1,2]
+					break;
 
-				case 8: 
-				vatIds=[4]
-					
-				break;
+					case 3: 
+						vatIds=[1,2,3]
+						
+					break;
+
+					case 2: 
+					case 4: 
+					case 5:
+					case 6: 
+					case 7: 
+						if(this.state.isReverseChargeEnabled==false)
+						vatIds=[3]
+						else if(this.state.isReverseChargeEnabled==true)
+						vatIds=[1,2]
+					break;
+
+					case 8: 
+					vatIds=[4]
+						
+					break;
+				}
+			}else{
+				vatIds=[10]
 			}
 
 			vat_list=this.getVatListByIds(vatIds)
@@ -755,6 +772,13 @@ class DetailExpense extends React.Component {
 				}
 			})
 		})
+		if(vatIds[0] === 10){
+			array.push({
+				"id": 10,
+				"vat": 0,
+				"name": "N/A"
+			})
+		}
 
 		return array;
 	}
@@ -1241,6 +1265,10 @@ class DetailExpense extends React.Component {
 																			dateFormat="dd-MM-yyyy"
 																			//minDate={new Date()}
 																			onChange={(value) => {
+																				if((this.state.expenseDateForVatValidation < this.state.companyVATRegistrationDate && value > this.state.companyVATRegistrationDate ) || (value < this.state.companyVATRegistrationDate && this.state.expenseDateForVatValidation > this.state.companyVATRegistrationDate)){
+																					props.handleChange('vatCategoryId')('');		
+																				}
+																				this.setState({expenseDateForVatValidation : value});
 																				props.handleChange('expenseDate')(value);
 																			}}
 																		/>

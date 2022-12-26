@@ -123,6 +123,7 @@ class DetailQuotation extends React.Component {
 			vat_list:[],
 			isDesignatedZone:false,
 			isRegisteredVat:false,
+			quotationDateForVatValidation:new Date(),
 			producttype:[],
 			loadingMsg:"Loading",
 			disableLeavePage:false, 
@@ -252,18 +253,21 @@ class DetailQuotation extends React.Component {
 											taxType : res.data.taxType ? true : false,
 								},
 								quotaionExpirationNotChanged: res.data.quotaionExpiration
-										? moment(res.data.quotaionExpiration)
-										: '',
-										quotaionExpiration: res.data.quotaionExpiration
-										? res.data.quotaionExpiration
-										: '',	
-										taxType : res.data.taxType ? true : false,	
+									? moment(res.data.quotaionExpiration)
+									: '',
+								quotaionExpiration: res.data.quotaionExpiration
+									? res.data.quotaionExpiration
+									: '',	
+								taxType : res.data.taxType ? true : false,	
 								customer_taxTreatment_des : res.data.taxtreatment ? res.data.taxtreatment : '',
 								placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 								total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
 								data: res.data.poQuatationLineItemRequestModelList
 									? res.data.poQuatationLineItemRequestModelList
 									: [],
+								quotationDateForVatValidation: res.data.quotationdate
+									? new Date(res.data.quotationdate)
+									: new Date(),
 								selectedContact: res.data.customerId ? res.data.customerId : '',
 								discountAmount: res.data.discount ? res.data.discount : 0,
 								discountPercentage: res.data.discountPercentage
@@ -959,6 +963,7 @@ class DetailQuotation extends React.Component {
 					if (res.status === 200) {
 						this.setState({
 							isDesignatedZone: res.data.isDesignatedZone,
+							companyVATRegistrationDate : new Date(moment(res.data.vatRegistrationDate).format('MM DD YYYY')),
 						});
 						this.setState({
 							isRegisteredVat: res.data.isRegisteredVat,
@@ -980,7 +985,7 @@ class DetailQuotation extends React.Component {
 					var vt=[];
 					pt.id=res.data.productID;
 					pt.type=res.data.productType
-					if(this.state.isRegisteredVat){
+					if(this.state.isRegisteredVat && (this.state.quotationDateForVatValidation > this.state.companyVATRegistrationDate)){
 						if(this.state.isDesignatedZone ){
 							if(res.data.productType=== "GOODS" ){
 								if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
@@ -1020,7 +1025,11 @@ class DetailQuotation extends React.Component {
 							}	
 						}
 					}else{
-						vt=vat_list;
+						vt=[{
+							"id": 10,
+							"vat": 0,
+							"name": "N/A"
+						}];	
 					}
 					pt.vat_list=vt;
 					this.setState(prevState => ({
@@ -2243,6 +2252,10 @@ class DetailQuotation extends React.Component {
 																			value={props.values.quotationdate}
 																			selected={props.values.quotationdate1 ? new Date(props.values.quotationdate1) : new Date()}
 																			onChange={(value) => {
+																				if((this.state.quotationDateForVatValidation < this.state.companyVATRegistrationDate && value > this.state.companyVATRegistrationDate ) || (value < this.state.companyVATRegistrationDate && this.state.quotationDateForVatValidation > this.state.companyVATRegistrationDate)){
+																					this.resetVatId(props);
+																				}
+																				this.setState({quotationDateForVatValidation : value});
 																				props.handleChange('quotationdate')(
 																					value
 																				);

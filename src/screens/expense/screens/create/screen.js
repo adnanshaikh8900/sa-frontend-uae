@@ -473,9 +473,6 @@ class CreateExpense extends React.Component {
 		this.props.expenseCreateActions
 			.createExpense(formData)
 			.then((res) => {
-			
-				this.setState({ disabled: false });
-				
 				if (res.status === 200) {					
 					this.props.commonActions.tostifyAlert(
 						'success',
@@ -488,16 +485,17 @@ class CreateExpense extends React.Component {
 							loading:false,
 							disableLeavePage:false,
 							expenseDateForVatValidation:new Date(),
+							disabled: false ,
 						});
 						this.getExpenseNumber()
 					} else {
 						this.props.history.push('/admin/expense/expense');
-						this.setState({ loading:false,});
+						this.setState({ disabled: false,loading:false,});
 					}
 				}
 			})
 			.catch((err) => {
-				this.setState({ disabled: false });
+				this.setState({ disabled: false, loading:false,});
 				this.props.commonActions.tostifyAlert(
 					'error',
 					err.data ? err.data.message : 'Expense Created Unsuccessfully'
@@ -1958,7 +1956,8 @@ componentWillUnmount() {
 																		className="btn-square mr-3"
 																		disabled={this.state.disabled}
 																		onClick={() => {
-																			//	added validation popup	msg
+																			//  added validation popup	msg
+																			console.log(props.errors,this.state.exist,"ERRORS");
 																			props.handleBlur();
 																			if(props.errors &&  Object.keys(props.errors).length != 0){
 																				if(props.errors.expenseNumber && this.state.exist===true)
@@ -1984,6 +1983,7 @@ componentWillUnmount() {
 																		disabled={this.state.disabled}
 																		onClick={() => {
 																			//	added validation popup	msg
+																			console.log(props.errors,this.state.exist,"ERRORS");
 																			props.handleBlur();
 																			if(props.errors &&  Object.keys(props.errors).length != 0){
 																				if(props.errors.expenseNumber && this.state.exist===true)

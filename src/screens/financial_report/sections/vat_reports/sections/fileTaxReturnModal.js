@@ -145,10 +145,9 @@ class FileTaxReturnModal extends React.Component {
 		});
 	};
 dateLimit=()=>{
-	const { endDate} = this.props;
-
-		if(endDate){
-			var datearray = endDate.split("/");
+	const { taxReturns} = this.props;
+		if(taxReturns){
+			var datearray = taxReturns.split("-")[1].split("/");
 			return	new Date(parseInt(datearray[2]),parseInt(datearray[1])-1,parseInt(datearray[0])+1)
 		}
 	}

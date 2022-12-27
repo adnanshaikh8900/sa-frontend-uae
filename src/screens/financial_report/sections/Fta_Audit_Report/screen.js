@@ -93,7 +93,7 @@ class ViewFtaAuditReport extends React.Component {
 			{ label: 'GL/ID', value: 'glId', sort: true },
 			{ label: 'Location of Customer (Country or Emirate)', value: 'customerCountry', sort: false },
 			{ label: 'Customer TRN', value: 'customerTRN', sort: true },
-			{ label: 'Reverse Charge', value: 'reverseCharge', sort: true },
+			// { label: 'Reverse Charge', value: 'reverseCharge', sort: true },
 		];
 		
 		// Supplier Data Audit File
@@ -114,14 +114,14 @@ class ViewFtaAuditReport extends React.Component {
 			{ label: 'Permit No.', value: 'permitNo', sort: true },
 			{ label: 'Transaction ID', value: 'transactionID', sort: true },
 			{ label: 'Line No.', value: 'lineNo', sort: false },
-			{ label: 'Product Name', value: 'productName', sort: true },
-			{ label: 'Product Type', value: 'productType', sort: true },
+			// { label: 'Product Name', value: 'productName', sort: true },
+			// { label: 'Product Type', value: 'productType', sort: true },
 			{ label: 'Product Description', value: 'productDescription', sort: false },
 			{ label: 'Purchase Amount AED', value: 'purchaseValue', sort: true },
 			{ label: 'VAT Amount AED', value: 'vatvalue', sort: true },
 			{ label: 'Tax Code', value: 'taxCode', sort: false },
 			{ label: 'FCY Code', value: 'fcycode', sort: false },
-			{ label: 'Purchase FCY', value: 'purchaseFCY', sort: true },
+			{ label: 'Purchase Amount FCY', value: 'purchaseFCY', sort: true },
 			{ label: 'VAT Amount FCY', value: 'vatfcy', sort: true },
 		];
 		
@@ -140,23 +140,23 @@ class ViewFtaAuditReport extends React.Component {
 			{ label: 'Customer TRN', value: 'customerTRN', sort: true },
 			{ label: 'Invoice Date', value: 'invoiceDate', sort: true },
 			{ label: 'Invoice No.', value: 'invoiceNo', sort: false },
-			{ label: 'Permit No.', value: 'permitNo', sort: true },
+			// { label: 'Permit No.', value: 'permitNo', sort: true },
 			{ label: 'Transaction ID', value: 'transactionID', sort: true },
 			{ label: 'Line No.', value: 'lineNo', sort: false },
-			{ label: 'Product Name', value: 'productName', sort: true },
-			{ label: 'Product Type', value: 'productType', sort: true },
+			// { label: 'Product Name', value: 'productName', sort: true },
+			// { label: 'Product Type', value: 'productType', sort: true },
 			{ label: 'Product Description', value: 'productDescription', sort: false },
 			{ label: 'Supply Amount AED', value: 'supplyValue', sort: true },
 			{ label: 'VAT Amount AED', value: 'vatvalue', sort: true },
 			{ label: 'Tax Code', value: 'taxCode', sort: false },
+			{ label: 'Country', value: 'fcycode', sort: false },
 			{ label: 'FCY Code', value: 'fcycode', sort: false },
-			{ label: 'Supply FCY', value: 'supplyFCY', sort: true },
+			{ label: 'Supply Amount FCY', value: 'supplyFCY', sort: true },
 			{ label: 'VAT Amount FCY', value: 'vatfcy', sort: true },
 		];
 		
 		// Supply Listing Total
 		this.columnHeaderCustomerTotal = [
-			
 			{ label: 'Supply Total AED', value: 'supplyTotal', sort: false },
 			{ label: 'VAT Total AED', value: 'customerVATTotal', sort: true },
 			{ label: 'Transaction Count Total', value: 'customerTransactionCountTotal', sort: true },
@@ -195,10 +195,6 @@ class ViewFtaAuditReport extends React.Component {
 
 	initializeData = async () => {
 		const { initValue } = this.state;
-		
-		
-		
-		
 		
 		const postData = {
 			startDate: initValue.startDate,
@@ -253,7 +249,7 @@ class ViewFtaAuditReport extends React.Component {
 
 	   }
 
-	   exportExcelFile  = () => 
+	exportExcelFile  = () => 
 	   {   let dl =""
 		   let fn =""
 		   let type="xlsx"
@@ -312,7 +308,7 @@ class ViewFtaAuditReport extends React.Component {
 													}}
 													// onClick={this.viewFilter}
 												>
-												<i className="fa fa-cog mr-2"></i> FTA Audit Report From  <b>{ this.state.initValue.startDate.replaceAll("/","-") +"  to  "+this.state.initValue.endDate.replaceAll("/","-") }</b>
+												 FTA VAT Audit File From  <b>{ this.state.initValue.startDate.replaceAll("/","-") +"  to  "+this.state.initValue.endDate.replaceAll("/","-") }</b>
 													{/* <i className="fa fa-cog mr-2"></i>CustomizeReport */}
 												</p>
 											</div>
@@ -382,7 +378,7 @@ class ViewFtaAuditReport extends React.Component {
 									ref={(component) => (this.pdfExportComponent = component)}
 									scale={0.8}
 									paperSize="A3"
-								    fileName="Detailed General Ledger.pdf"
+								    fileName="FTA VAT Audit File.pdf"
 								>
 
 									{loading ? (
@@ -540,9 +536,9 @@ class ViewFtaAuditReport extends React.Component {
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['customerTRN']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'left'}}>
+																					{/* <td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['reverseCharge']}
-																					</td>
+																					</td> */}
 																					
 																				
 																				</tr>				
@@ -706,12 +702,12 @@ class ViewFtaAuditReport extends React.Component {
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['lineNo']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'left'}}>
+																					{/* <td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['productName']}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['productType']}
-																					</td>
+																					</td> */}
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['productDescription']}
 																					</td>
@@ -855,21 +851,21 @@ class ViewFtaAuditReport extends React.Component {
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['invoiceNo']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'left'}}>
+																					{/* <td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['permitNo']}
-																					</td>
+																					</td> */}
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['transactionID']}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['lineNo']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'left'}}>
+																					{/* <td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['productName']}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['productType']}
-																					</td>
+																					</td> */}
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['productDescription']}
 																					</td>
@@ -881,6 +877,9 @@ class ViewFtaAuditReport extends React.Component {
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['taxCode']}
+																					</td>
+																					<td style={{ width: '12%', textAlign: 'left'}}>
+																						{item['country']}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['fcycode']}

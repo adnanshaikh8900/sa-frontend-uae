@@ -710,8 +710,8 @@ class CreateRequestForQuotation extends React.Component {
 									this.formRef.current.setFieldValue('placeOfSupplyId', res.data.placeOfSupplyId, true);
 									this.formRef.current.setFieldValue('currency', this.getCurrency(res.data.supplierId), true);
 									this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(res.data.supplierId), true);
-									this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
-									this.formRef.current.setFieldValue('notes',  res.data.notes, true);
+									// this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
+									// this.formRef.current.setFieldValue('notes',  res.data.notes, true);
 									this.addRow();
 								} else {
 									this.setState({
@@ -1489,8 +1489,8 @@ class CreateRequestForQuotation extends React.Component {
 		if (supplierId && supplierId.value) {
 			formData.append('supplierId', supplierId.value);
 		}
-		if (this.uploadFile && this.uploadFile.files && this.uploadFile.files[0]) {
-			formData.append('attachmentFile', this.uploadFile.files[0]);
+		if (this.uploadFile && this.uploadFile.files && this.uploadFile?.files?.[0]) {
+			formData.append('attachmentFile', this.uploadFile?.files?.[0]);
 		}
 		if (currency !== null && currency) {
 			formData.append('currencyCode', this.state.supplier_currency);

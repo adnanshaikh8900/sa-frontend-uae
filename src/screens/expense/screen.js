@@ -103,7 +103,7 @@ class Expense extends React.Component {
 		this.props.expenseActions.getExpenseCategoriesList();
 		this.initializeData();
 		this.props.expenseActions.getVatList();
-		this.props.expenseActions.getPaytoList();
+		//this.props.expenseActions.getPaytoList();
 	};
 
 	initializeData = (search) => {
@@ -134,7 +134,7 @@ class Expense extends React.Component {
 			});
 
 			// added for props issue
-			this.props.expenseActions.getPaytoList();
+			//this.props.expenseActions.getPaytoList();
 			this.props.expenseActions.getVatList();
 			this.props.expenseActions.getExpenseCategoriesList();
 			this.props.expenseActions.getBankList();
@@ -223,9 +223,14 @@ class Expense extends React.Component {
 							<DropdownItem>
 								<div
 									onClick={() => {
+										if(row.editFlag)
 										this.props.history.push('/admin/expense/expense/detail', {
 											expenseId: row.expenseId,
 										});
+										else this.props.commonActions.tostifyAlert(
+											'error',
+											'You cannot edit transactions for which VAT is recorded'
+										);
 									}}
 								>
 									<i className="fas fa-edit" /> {strings.Edit}
@@ -251,10 +256,15 @@ class Expense extends React.Component {
 								<i className="fas fa-send" /> {strings.Post}
 							</DropdownItem>
 						)}
-						{row.expenseStatus === 'Posted' && row.bankAccountId === null && row.editFlag==true && (
+						{row.expenseStatus === 'Posted' && row.bankAccountId === null &&  (
 							<DropdownItem
 								onClick={() => {
+									if(row.editFlag)
 									this.unPostExpense(row);
+									else this.props.commonActions.tostifyAlert(
+										'error',
+										'You cannot edit transactions for which VAT is recorded'
+									);
 								}}
 							>
 								<i className="fas fa-file" />  {strings.Draft}
@@ -942,11 +952,10 @@ class Expense extends React.Component {
 												{strings.EXPENSEAMOUNT}
 											</TableHeaderColumn>
 											<TableHeaderColumn
-												className="text-right"
+												className="text-right table-header-bg"
 												columnClassName="text-right"
 												width="5%"
 												dataFormat={this.renderActions}
-												className='table-header-bg'
 											></TableHeaderColumn>
 										</BootstrapTable>
 									</div>

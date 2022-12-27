@@ -1292,8 +1292,8 @@ class DetailRequestForQuotation extends React.Component {
 	
 			formData.append('supplierId',supplierId.value ? supplierId.value : supplierId );
 		
-		// if (this.uploadFile.files[0]) {
-		// 	formData.append('attachmentFile', this.uploadFile.files[0]);
+		// if (this.uploadFile?.files?.[0]) {
+		// 	formData.append('attachmentFile', this.uploadFile?.files?.[0]);
 		// }
 		if (currency !== null && currency) {
 			formData.append('currencyCode', this.state.supplier_currency);

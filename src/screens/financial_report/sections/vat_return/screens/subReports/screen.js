@@ -340,13 +340,13 @@ class SubReports extends React.Component {
 				
 			></AgGridColumn>
 
-			<AgGridColumn field="transactionType"
+			{/* <AgGridColumn field="transactionType"
 				headerName="Transaction Type"
 				sortable={true}
 				filter={true}
 				enablePivot={true}
 			
-			></AgGridColumn>
+			></AgGridColumn> */}
 
 			<AgGridColumn field="amount"
 

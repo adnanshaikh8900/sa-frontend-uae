@@ -12,6 +12,7 @@ import {
 	FormGroup,
 	Input,
 	Label,
+	UncontrolledTooltip,
 } from 'reactstrap';
 import Select from 'react-select';
 import { Formik } from 'formik';
@@ -90,7 +91,8 @@ class DetailProduct extends React.Component {
 			loadingMsg:"Loading",
 			disableLeavePage:false,
 //			disableEditing:true,
-			inventoryTableData:[]
+			inventoryTableData:[],
+			childRecordsPresent:false
 		};
 
 		this.selectRowProp = {
@@ -254,7 +256,9 @@ class DetailProduct extends React.Component {
 							isInventoryEnabled: res.data.isInventoryEnabled ? res.data.isInventoryEnabled : '',
 							selectedStatus: res.data.isActive ? true : false,
 							salesProductCheck:res.data.productType=="SERVICE" ? true : false,
-						});
+						},
+						() => this.checkChildActivitiesForProductId(this.state.current_product_id)
+						)
 					} else {
 						this.setState({ loading: false });
 						this.props.history.push('/admin/master/product');
@@ -406,6 +410,8 @@ renderName=(cell,row)=>{
 		const transactionCategoryId = this.state.inventoryAccount ? this.state.inventoryAccount[0].value : '';
 		const inventoryId = this.state.inventoryId;
 		const isActive = this.state.selectedStatus;
+		const productCategoryId = data['productCategoryId'].value ? data['productCategoryId'].value : data['productCategoryId'];
+		console.log(productCategoryId,"PRoductCategory ID");
 		// const exciseType = this.state.exciseType;
 		const unitTypeId=data["unitTypeId"];
 		let productPriceType;
@@ -543,6 +549,19 @@ renderName=(cell,row)=>{
 		this.setState({ openWarehouseModal: false });
 		this.props.productActions.getProductWareHouseList();
 	};
+
+	checkChildActivitiesForProductId = (id) => {
+		this.props.productActions
+			.getInvoicesCountProduct(this.state.current_product_id)
+			.then((res) => {
+				if (res.data > 0) {
+				this.setState({childRecordsPresent:true})
+				} else {
+            this.setState({childRecordsPresent:false})
+				}
+			});
+	};
+
 	deleteProduct = () => {
 		const { current_product_id } = this.state;
 		this.props.productActions
@@ -970,7 +989,7 @@ renderName=(cell,row)=>{
 															'Product code is required',
 														),
 														vatCategoryId: Yup.string()
-															.required('VAT category is required')
+															.required('Tax category is required')
 															.nullable(),
 													})}
 												>
@@ -979,7 +998,18 @@ renderName=(cell,row)=>{
 															<Row>
 																<Col lg={4}>
 																	<FormGroup check inline className="mb-3">
-																		<Label className="productlabel"> {strings.Type}</Label>
+																		<Label className="productlabel"> {strings.Type}
+																		<i
+																				id="ProductTypetip"
+																				className="fa fa-question-circle ml-1"
+																			></i>
+																			<UncontrolledTooltip
+																				placement="right"
+																				target="ProductTypetip"
+																			>
+																				The product type cannot be changed after any document has been created using this product.
+																			</UncontrolledTooltip>
+																		</Label>
 																		<div className="wrapper">
 																			<Label
 																				className="form-check-label"
@@ -987,6 +1017,7 @@ renderName=(cell,row)=>{
 																				htmlFor="producttypeone"
 																			>
 																				<Input
+																					disabled={this.state.childRecordsPresent}
 																					className="form-check-input"
 																					type="radio"
 																					id="producttypeone"
@@ -1010,6 +1041,7 @@ renderName=(cell,row)=>{
 																				htmlFor="producttypetwo"
 																			>
 																				<Input
+																					disabled={this.state.childRecordsPresent}
 																					className="form-check-input"
 																					type="radio"
 																					id="producttypetwo"
@@ -1041,6 +1073,7 @@ renderName=(cell,row)=>{
 																		check
 																	>
 																	<Input
+																		disabled={this.state.childRecordsPresent}
 																		className="form-check-input"
 																		type="radio"
 																		id="inline-radio1"
@@ -1067,6 +1100,7 @@ renderName=(cell,row)=>{
 																				check
 																			>
 																				<Input
+																					disabled={this.state.childRecordsPresent}
 																					className="form-check-input"
 																					type="radio"
 																					id="inline-radio2"
@@ -1237,7 +1271,7 @@ renderName=(cell,row)=>{
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="vatCategoryId">
 																			<span className="text-danger">* </span>
-																			{"VAT"+" "+strings.Type}
+																			{strings.VATType}
 																		</Label>
 																		<Select
 																		 isDisabled={this.state.companyDetails && !this.state.companyDetails.isRegisteredVat}
@@ -1247,7 +1281,7 @@ renderName=(cell,row)=>{
 																							'name',
 																							'id',
 																							vat_list,
-																							'VAT',
+																							'Tax',
 																					  )
 																					: []
 																			}
@@ -1261,7 +1295,7 @@ renderName=(cell,row)=>{
 																						'name',
 																						'id',
 																						vat_list_data,
-																						'VAT',
+																						'Tax',
 																					)
 																					.find(
 																						(option) =>
@@ -1370,6 +1404,7 @@ renderName=(cell,row)=>{
 																	</FormGroup>
 																</Col>
 															</Row> */}
+															
 															<Row style={{display: props.values.productType !='SERVICE'   ?'' : 'none'}}		>
 																{this.state.companyDetails && this.state.companyDetails.isRegisteredVat===true &&(<Col lg={4}>
 																<FormGroup check inline className="mb-3">
@@ -1378,7 +1413,9 @@ renderName=(cell,row)=>{
 																			check
 																			htmlFor="exciseTaxCheck"
 																		>
+																			
 																			<Input
+																				disabled={this.state.childRecordsPresent}
 																				type="checkbox"
 																				id="exciseTaxCheck"
 																				name="exciseTaxCheck"
@@ -1399,6 +1436,16 @@ renderName=(cell,row)=>{
 																				
 																			/>
 																			{strings.excise_product}
+																			<i
+																				id="ExciseTooltip"
+																				className="fa fa-question-circle ml-1"
+																			></i>
+																			<UncontrolledTooltip
+																				placement="right"
+																				target="ExciseTooltip"
+																			>
+																				Note: It is not possible to switch from Excise Goods to Non-Excise Goods or vice versa once any document is created using this product.
+																			</UncontrolledTooltip>
 																		</Label>
 																	</FormGroup>
 																</Col>)}
@@ -1413,7 +1460,7 @@ renderName=(cell,row)=>{
 																			{strings.excise_tax_type}
 																		</Label>
 																		<Select
-																		// isDisabled={props.values.exciseTaxId!='' ?true:false}
+																		isDisabled={props.values.exciseTaxId!='' ?true:false}
 																			options={
 																				exciseTaxList
 																					? selectOptionsFactory.renderOptions(
@@ -1928,8 +1975,9 @@ renderName=(cell,row)=>{
 																			htmlFor="isInventoryEnabled"
 																		>
 																			<Input
+																			disabled={this.state.childRecordsPresent}
 																			readonly 
-																			className="form-check-input"
+																			//className="form-check-input"
 																			type="checkbox"
 																			id="isInventoryEnabled"
 																			name="isInventoryEnabled"
@@ -1937,14 +1985,12 @@ renderName=(cell,row)=>{
 																				props.handleChange('isInventoryEnabled')(value);
 																			}}
 																			checked={props.values.isInventoryEnabled}
-																				
-																			
-																				className={
-																					props.errors.productPriceType &&
-																					props.touched.productPriceType
-																						? 'is-invalid'
-																						: ''
-																				}
+																			className={
+																				props.errors.productPriceType &&
+																				props.touched.productPriceType
+																					? 'is-invalid form-check-label'
+																					: 'form-check-label'
+																			}
 																			/>
 																		 {strings.EnableInventory}
 																			{props.errors.productPriceType &&
@@ -1953,6 +1999,17 @@ renderName=(cell,row)=>{
 																						{props.errors.productPriceType}
 																					</div>
 																				)}
+																				<i
+																				id="EnventoryTooltip"
+																				className="fa fa-question-circle ml-1"
+																			>
+																			</i>
+																			<UncontrolledTooltip
+																				placement="right"
+																				target="EnventoryTooltip"
+																			>
+																				Inventory cannot be enabled or disabled once a document has been created using this product.
+																			</UncontrolledTooltip>
 																		</Label>
 																	</FormGroup>
 															
@@ -2268,11 +2325,11 @@ min="0"
 											 {strings.PurchaseOrder}
 											</TableHeaderColumn>
 											<TableHeaderColumn
-												className="text-right"
+											//	className="text-right"
 												columnClassName="text-right"
 												width='5%'
 												dataFormat={this.renderActions}
-												className="table-header-bg"
+												className="text-right table-header-bg"
 											></TableHeaderColumn>
 										</BootstrapTable>
 										</div>

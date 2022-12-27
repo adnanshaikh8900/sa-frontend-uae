@@ -953,7 +953,7 @@ min="0"
 		if (this.state.data.length > 0) {
 			let length = this.state.data.length - 1;
 			let temp = Object.values(this.state.data[`${length}`]).indexOf('');
-			debugger
+			
 			if (temp > -1) {
 				return true;
 			} else {
@@ -965,7 +965,7 @@ min="0"
 	};
 
 	updateAmount = (data, props) => {
-		debugger
+		
 		const { vat_list , excise_list} = this.props;
 		const { discountPercentage, discountAmount } = this.state;
 		let total_net = 0;
@@ -1086,7 +1086,7 @@ min="0"
 			poNumber,
 			currency,
 		} = data;
-debugger
+
 		let formData = new FormData();
 		formData.append('type', 5);
 		formData.append('id', current_grn_id);
@@ -1194,7 +1194,7 @@ debugger
 		this.setState({ openProductModal: false });
 	};
 	setDate = (props, value) => {
-		debugger
+		
 		this.setState({
 			dateChanged: true,
 		});

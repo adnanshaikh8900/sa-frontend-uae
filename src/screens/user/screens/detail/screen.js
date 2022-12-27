@@ -632,7 +632,7 @@ class DetailUser extends React.Component {
 																	</Row>
 																
 																	<Row>
-																	{this.state.current_user_id !== 1 &&
+																	{this.state.current_user_id !== 10000 &&
 																	  (
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
@@ -754,7 +754,7 @@ class DetailUser extends React.Component {
 																		<Col lg={6}>
 																			<FormGroup>
 																				<Label htmlFor="roleId">
-																					<span className="text-danger">* </span>
+																					<span className="text-danger"> </span>
 																					 {strings.Role}
 																				</Label>
 																				<Select
@@ -824,6 +824,7 @@ class DetailUser extends React.Component {
 																								props.values.timeZone,
 																						)
 																					}
+																					isDisabled={this.state.current_user_id === 10000}
 																					onChange={(option) => {
 																						if (option && option.value) {
 																							props.handleChange('timeZone')(

@@ -39,6 +39,7 @@ import LocalizedStrings from 'react-localization';
 import { TextareaAutosize } from '@material-ui/core';
 import './style.scss';
 import moment from 'moment';
+import { ReorderOutlined } from '@material-ui/icons';
 
 const mapStateToProps = (state) => {
 	return {
@@ -120,7 +121,7 @@ class CreateQuotation extends React.Component {
 					productId: '',
 					isExciseTaxExclusive: '',
 					unitType:'',
-					unitTypeId:''
+					unitTypeId:'',
 				},
 			],
 			discountEnabled: false,
@@ -132,8 +133,8 @@ class CreateQuotation extends React.Component {
 				receiptNumber: '',
 				currencyCode: '',
 				poApproveDate: new Date(),
-				quotaionExpiration: new Date(new Date().setMonth(new Date().getMonth() + 1)),
-				// quotaionExpiration: new Date(),
+				//quotaionExpiration: new Date(new Date().setMonth(new Date().getMonth() + 1)),
+				quotaionExpiration: new Date(),
 				quotationdate: new Date(),
 				customerId: '',
 				placeOfSupplyId: '',
@@ -181,6 +182,10 @@ class CreateQuotation extends React.Component {
 			param:false,
 			loadingMsg:"Loading...",
 			disableLeavePage:false,
+			isDesignatedZone:false,
+			isRegisteredVat:false,
+			quotationDateForVatValidation:new Date(),
+			producttype:[],
 			vat_list:[
 				{
 					"id": 1,
@@ -612,6 +617,9 @@ class CreateQuotation extends React.Component {
 								data: res.data.poQuatationLineItemRequestModelList
 									? res.data.poQuatationLineItemRequestModelList
 									: [],
+								quotationDateForVatValidation: res.data.quotationdate
+									? new Date(res.data.quotationdate)
+									: new Date(),
 								selectedContact: res.data.customerId ? res.data.customerId : '',
 								customerId: res.data.customerId ? res.data.customerId : '',
 								discountAmount: res.data.discount ? res.data.discount : 0,
@@ -672,6 +680,7 @@ class CreateQuotation extends React.Component {
 	componentDidMount = () => {
 		this.props.requestForQuotationAction.getVatList();
 		this.getInitialData();
+		this.getCompanyType();
 
 		if(this.props.location.state &&this.props.location.state.contactData)
 				this.getCurrentUser(this.props.location.state.contactData);
@@ -784,7 +793,7 @@ class CreateQuotation extends React.Component {
 					discount: 0,
 					productId: '',
 					unitType:'',
-					unitTypeId:''
+					unitTypeId:'',
 				}),
 				idCount: this.state.idCount + 1,
 			},
@@ -939,9 +948,134 @@ discountType = (row) =>
 			.renderOptions('label', 'value', this.state.discountOptions, 'discount')
 			.find((option) => option.value === +row.discountType)
 }
-
+getCustomerShippingAddress = (cutomerID,taxID,props) =>{
+	if(taxID !== 5 && taxID !== 6 && taxID !== 7){
+		this.props.quotationCreateAction.getCustomerShippingAddressbyID(cutomerID).then((res) => {
+			if(res.status === 200){
+				var PlaceofSupply= this.placelist &&
+					selectOptionsFactory.renderOptions(
+						'label',
+						'value',
+						this.placelist,
+						'Place of Supply',).
+						find((option) => option.label.toUpperCase() === res.data.shippingStateName.toUpperCase())
+					if(PlaceofSupply){
+					props.handleChange('placeOfSupplyId')(PlaceofSupply,);
+					this.setState({placeOfSupplyId : PlaceofSupply});
+					this.formRef.current.setFieldValue('placeOfSupplyId', PlaceofSupply.value, true);
+				}
+			}
+		});
+	}
+};
+getCompanyType = () => {
+	this.props.quotationCreateAction
+		.getCompanyById()
+		.then((res) => {
+				if (res.status === 200) {
+					this.setState({
+						isDesignatedZone: res.data.isDesignatedZone,
+						companyVATRegistrationDate : new Date(moment(res.data.vatRegistrationDate).format('MM DD YYYY')),
+					});
+					this.setState({
+						isRegisteredVat: res.data.isRegisteredVat,
+					});
+				}
+			})
+		.catch((err) => {
+			console.log(err,"Get Company Type Error");
+		});
+};
+getProductType=(id)=>{
+	if(this.state.customer_taxTreatment_des){
+	this.props.quotationCreateAction
+	.getProductById(id)
+	.then((res) => {
+		if (res.status === 200) {
+			var { vat_list } = this.props;
+			let pt={};
+			var vt=[];
+			pt.id=res.data.productID;
+			pt.type=res.data.productType
+			if(this.state.isRegisteredVat && (this.state.quotationDateForVatValidation > this.state.companyVATRegistrationDate)){
+				if(this.state.isDesignatedZone ){
+					if(res.data.productType=== "GOODS" ){
+						if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+							vat_list.map(element => {
+								if(element.name=='OUT OF SCOPE'){
+									vt.push(element);
+								}
+							});
+						}
+						if(this.state.customer_taxTreatment_des==='NON-VAT REGISTERED'){
+							vt=vat_list;
+						}
+					}
+					else if(res.data.productType === "SERVICE"){
+						if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE'){
+							vt=vat_list;
+						}
+						if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+							vat_list.map(element => {
+								if(element.name=='ZERO RATED TAX (0%)'){
+									vt.push(element);
+								}
+							});
+						}	
+					}
+				}else{
+					if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE'){
+						vt=vat_list;
+					}
+					if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+						vat_list.map(element => {
+							if(element.name=='ZERO RATED TAX (0%)'){
+								vt.push(element);
+							}
+						});
+						
+					}	
+				}
+			}else{
+				vt=[{
+					"id": 10,
+					"vat": 0,
+					"name": "N/A"
+				}];			
+			}
+			pt.vat_list=vt;
+			this.setState(prevState => ({
+				producttype: [...prevState.producttype, pt]
+			}));
+		}
+	})
+	.catch((err) => {
+		console.log(err,"Get Product by ID Error");
+	});
+}
+};
+resetVatId = (props) => {
+	this.setState({
+		producttype: [],
+	});
+	let newData = [];
+	const data = this.state.data;
+	data.map((obj,index) => {
+			obj['vatCategoryId'] = '' ;
+			newData.push(obj);
+			return obj;
+		
+	})
+	props.setFieldValue('lineItemsString', newData, true);
+	this.updateAmount(newData, props);
+};
 	renderVat = (cell, row, props) => {
-		const { vat_list } = this.props;
+		//const { vat_list } = this.props;
+		let vat_list=[];
+		const product = this.state.producttype.find(element => element.id === row.productId);
+		if(product){
+			vat_list=product.vat_list;
+		}
 		let idx;
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -949,7 +1083,10 @@ discountType = (row) =>
 			}
 			return obj;
 		});
-
+		if(row.productId && row.vatCategoryId)
+		{
+			row.vatCategoryId=typeof(row.vatCategoryId) === 'string' ? parseInt(row.vatCategoryId):row.vatCategoryId;
+		}
 		return (
 			<Field
 				name={`lineItemsString.${idx}.vatCategoryId`}
@@ -970,7 +1107,7 @@ discountType = (row) =>
 							vat_list &&
 							selectOptionsFactory
 								.renderOptions('name', 'id', vat_list, 'VAT')
-								.find((option) => option.value === +row.vatCategoryId)
+								.find((option) => option.value === row.vatCategoryId)
 						}
 						id="vatCategoryId"
 						placeholder={strings.Select+strings.VAT}
@@ -1035,15 +1172,37 @@ discountType = (row) =>
 		);
 	};
 
+	exchangeRaterevalidate=(exc)=>{
+		let local=[...this.state.data]
+		var { product_list } = this.props;
+		
+		let local2=local.map((obj, index) => {
+
+			const result = product_list.find((item) => item.id === obj.productId);
+			return {
+				...obj,unitPrice:result?
+				(parseFloat(result.unitPrice)*(1/exc)).toFixed(2):0
+			}
+			
+		});
+		
+		this.setState({data:local2},()=>{
+			this.updateAmount(local2);
+			if(this.checkedRow()) this.addRow()
+		})
+	}
+
 	prductValue = (e, row, name, form, field, props) => {
 		const { product_list } = this.props;
 		let data = this.state.data;
 		const result = product_list.find((item) => item.id === parseInt(e));
 		let idx;
+		let exchangeRate=this.formRef.current?.state?.values?.exchangeRate>0 
+			&& this.formRef.current?.state?.values?.exchangeRate!=="" ?
+			this.formRef.current?.state?.values?.exchangeRate:1
 		data.map((obj, index) => {
 			if (obj.id === row.id) {
-				obj['unitPrice'] = result.unitPrice;
-				obj['vatCategoryId'] = result.vatCategoryId;
+				obj['unitPrice'] =  (parseFloat(result.unitPrice)*(1/exchangeRate)).toFixed(2);
 				obj['description'] = result.description;
 				obj['exciseTaxId'] = result.exciseTaxId;
 				obj['discountType'] = result.discountType;
@@ -1051,6 +1210,19 @@ discountType = (row) =>
 				obj['unitType']=result.unitType;
 				obj['unitTypeId']=result.unitTypeId;
 				idx = index;
+				if(this.state.isRegisteredVat){
+					this.state.producttype.map(element => {
+						if(element.id===e){
+							const found = element.vat_list.find(element => element.id === result.vatCategoryId);
+							if(!found){
+								obj['vatCategoryId']='';
+							}
+							else{
+								obj['vatCategoryId'] = result.vatCategoryId;
+							}
+						}
+					});
+				}
 			}
 			return obj;
 		});
@@ -1097,6 +1269,13 @@ discountType = (row) =>
 
 	renderProduct = (cell, row, props) => {
 		const { product_list } = this.props;
+		if(product_list.length>0){
+			if(product_list.length > this.state.producttype.length){
+				product_list.map(element => {
+					this.getProductType(element.id);
+				});
+			}
+		}
 		let idx;
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -1127,8 +1306,9 @@ discountType = (row) =>
 							if (e && e.label !== 'Select Product') {
 								this.selectItem(e.value, row, 'productId', form, field, props);
 								this.prductValue(e.value, row, 'productId', form, field, props);
-								if(this.checkedRow()==false)
-								this.addRow();
+								if(this.checkedRow()){
+									this.addRow();
+								}
 								// this.formRef.current.props.handleChange(field.name)(e.value)
 							} else {
 								form.setFieldValue(
@@ -1271,7 +1451,8 @@ discountType = (row) =>
 	checkedRow = () => {
 		if (this.state.data.length > 0) {
 			let length = this.state.data.length - 1;
-			let temp = Object.values(this.state.data[`${length}`]).indexOf('');
+			let temp = this.state.data?.[length].productId!==""?
+			this.state.data?.[length].productId:-2;
 			if (temp > -1) {
 				return true;
 			} else {
@@ -1327,8 +1508,7 @@ discountType = (row) =>
 				obj.vatCategoryId !== ''
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
-			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
-
+			const vat = index !== '' && index >=0 ? vat_list[`${index}`].vat : 0;
 			//Excise calculation
 			if(this.state.taxType === false){
 				if (obj.discountType === 'PERCENTAGE') {
@@ -1518,12 +1698,14 @@ discountType = (row) =>
 			discountType,
 			discountPercentage,
 			quotationId,
-			footNote
+			footNote,
+			exchangeRate
 		} = data;
 		const { term } = this.state;
 
 		let formData = new FormData();
 		formData.append('taxType', this.state.taxType)
+		formData.append('exchangeRate', exchangeRate !== null ? exchangeRate : '');
 		formData.append('quotationNumber',quotation_Number !== null ? this.state.prefix + quotation_Number : '',);
 		formData.append('quotaionExpiration',quotaionExpiration ? quotaionExpiration : '',);
 		formData.append('quotationdate',quotationdate ? quotationdate : '',);
@@ -1550,8 +1732,8 @@ discountType = (row) =>
 		if (placeOfSupplyId ) {
 			formData.append('placeOfSupplyId', placeOfSupplyId.value ?placeOfSupplyId.value:placeOfSupplyId);
 		}
-		if (this.uploadFile && this.uploadFile.files && this.uploadFile.files[0]) {
-			formData.append('attachmentFile', this.uploadFile.files[0]);
+		if (this.uploadFile && this.uploadFile.files && this.uploadFile?.files?.[0]) {
+			formData.append('attachmentFile', this.uploadFile?.files?.[0]);
 		}
 		this.setState({ loading:true, loadingMsg:"Creating Quotation..."});
 		this.props.quotationCreateAction
@@ -1569,6 +1751,8 @@ discountType = (row) =>
 							createMore: false,
 							selectedContact: '',
 							term: '',
+							disableLeavePage:false,
+							quotationDateForVatValidation: new Date(),
 							data: [
 								{
 									id: 0,
@@ -1790,7 +1974,8 @@ discountType = (row) =>
 						values: this.state.initValue,
 					};
 					this.updateAmount(this.state.data, values);
-					this.addRow()
+					this.addRow();
+					this.getProductType(res.data[0].id);
 				},
 			);
 			this.formRef.current.setFieldValue(
@@ -1845,6 +2030,7 @@ discountType = (row) =>
 			}
 		});
 	};
+
 
 	validationCheck = (value) => {
 		const data = {
@@ -1974,7 +2160,7 @@ discountType = (row) =>
 												// 	) 
 												// 	  errors.placeOfSupplyId ='Place of supply is required';
 												//    }
-												if(this.state.customer_taxTreatment_des!="NON GCC")
+												if(this.state.customer_taxTreatment_des!="NON GCC" && this.state.customer_taxTreatment_des!="GCC NON-VAT REGISTERED" && this.state.customer_taxTreatment_des!="GCC VAT REGISTERED")
 												{
 													if (!values.placeOfSupplyId) 
 																   errors.placeOfSupplyId ='Place of supply is required';
@@ -2099,7 +2285,6 @@ discountType = (row) =>
 												{(props) => (
 													<Form onSubmit={props.handleSubmit}>
 														<Row>
-															{console.log(props.error,"props.error")}
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="quotation_Number">
@@ -2183,6 +2368,8 @@ discountType = (row) =>
 
 																				props.handleChange('customerId')('');
 																			}
+																			this.resetVatId(props);
+																			this.getCustomerShippingAddress(option.value,this.getTaxTreatment(option.value),props);
 																		}}
 																		className={
 																			props.errors.customerId &&
@@ -2257,7 +2444,8 @@ discountType = (row) =>
 																</FormGroup>
 															</Col>: ''}
 															<Col lg={3}>
-															{this.state.customer_taxTreatment_des!="NON GCC" &&(<FormGroup className="mb-3">
+															{this.state.customer_taxTreatment_des !== "NON GCC" && this.state.customer_taxTreatment_des !== "GCC VAT REGISTERED" && this.state.customer_taxTreatment_des !== "GCC NON-VAT REGISTERED" &&
+																(<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">
 																		<span className="text-danger">* </span>
 																		{/* {this.state.customer_taxTreatment_des &&
@@ -2291,14 +2479,12 @@ discountType = (row) =>
 																				'value',
 																				this.placelist,
 																				'Place of Supply',
-																		  ).find(
-																									(option) =>
-																										option.value ==
-																										((this.state.quotationId||this.state.parentId) ? this.state.placeOfSupplyId:props.values
-																											.placeOfSupplyId.toString())
-
-																								)
-																						}
+																		  	).find(
+																				(option) =>
+																					option.value ==
+																					((this.state.quotationId||this.state.parentId) ? this.state.placeOfSupplyId.value ? this.state.placeOfSupplyId.value : this.state.placeOfSupplyId :
+																					 props.values.placeOfSupplyId.toString()))
+																		}
 																		className={
 																			props.errors.placeOfSupplyId &&
 																			props.touched.placeOfSupplyId
@@ -2384,6 +2570,10 @@ discountType = (row) =>
 																		dropdownMode="select"
 																		dateFormat="dd-MM-yyyy"
 																		onChange={(value) => {
+																			if((this.state.quotationDateForVatValidation < this.state.companyVATRegistrationDate && value > this.state.companyVATRegistrationDate ) || (value < this.state.companyVATRegistrationDate && this.state.quotationDateForVatValidation > this.state.companyVATRegistrationDate)){
+																				this.resetVatId(props);
+																			}
+																			this.setState({quotationDateForVatValidation : value});
 																			props.handleChange('quotationdate')(value);
 																		}}
 																	/>
@@ -2418,7 +2608,6 @@ discountType = (row) =>
 																		showYearDropdown
 																		dropdownMode="select"
 																		dateFormat="dd-MM-yyyy"
-																		minDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('quotaionExpiration')(value);
 																		}}
@@ -2433,6 +2622,7 @@ discountType = (row) =>
 																	
 																</FormGroup>
 															</Col>
+															
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currency">
@@ -2492,6 +2682,89 @@ discountType = (row) =>
 															</Col>
 														</Row>
 														<hr style={{display: props.values.exchangeRate === 1 ? 'none' : ''}} />
+														
+																<Row style={{display: props.values.exchangeRate === 1  ? 'none' : ''}}>
+																<Col>
+																<Label >
+																		{strings.CurrencyExchangeRate}
+																	</Label>	
+																</Col>
+																</Row>
+																
+																<Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
+																<Col md={1}>
+																<Input
+																		disabled
+																				id="1"
+																				name="1"
+																				value=	{
+																					1 }
+																				
+																			/>
+																</Col>
+																<Col md={2}>
+																<FormGroup className="mb-3">
+																	{/* <Label htmlFor="exchangeRate">
+																		Exchange rate
+																	</Label> */}
+																	<div>
+																		<Input
+																		disabled	
+																			className="form-control"
+																			id="curreancyname"
+																			name="curreancyname"
+																			value={this.state?.supplier_currency_symbol}
+																			onChange={(value) => {
+																				props.handleChange('curreancyname')(
+																					value,
+																				);
+																			}}
+																		/>
+																	</div>
+																</FormGroup>
+															</Col>
+															<FormGroup className="mt-2"><label><b>=</b></label>	</FormGroup>
+															<Col lg={2}>
+																<FormGroup className="mb-3">
+																	{/* <Label htmlFor="exchangeRate">
+																		Exchange rate
+																	</Label> */}
+																	<div>
+																		<Input
+																			type="number"
+																			className="form-control"
+																			id="exchangeRate"
+																
+																			name="exchangeRate"
+																			value={props.values.exchangeRate}
+																			onChange={(value) => {
+																				props.handleChange('exchangeRate')(
+																					value,
+																				);
+																				this.exchangeRaterevalidate(parseFloat(value.target.value))
+																			}}
+																		/>
+																	</div>
+																</FormGroup>
+															</Col>
+															<Col  lg={2}>
+																	<Input
+																		type="text"
+																		min="0"	
+																		disabled
+																		id="currencyName"
+																		name="currencyName"
+																		value=	{
+																		this.state?.basecurrency?.currencyName }
+																				
+																			/>
+														</Col>
+														
+														
+														</Row>
+														
+														<hr style={{display: props.values.exchangeRate === 1 ? 'none' : ''}} />
+														
 														<Row>
 															<Col lg={8} className="mb-3">
 																{/* <Button
@@ -2513,7 +2786,7 @@ discountType = (row) =>
 																	color="primary"
 																	className= "btn-square mr-3"
 																	onClick={(e, props) => {
-																		this.openProductModal()
+																		this.openProductModal();
 																		// this.props.history.push(`/admin/master/product/create`,{gotoParentURL:"/admin/income/quotation/create"})
 																		}}
 													                >
@@ -3012,7 +3285,7 @@ discountType = (row) =>
 																		onClick={() => {
 																			if(this.state.data.length === 1)
 																				{
-																				console.log(props.errors,"ERRORs")
+																				//console.log(props.errors,"ERRORs")
 																				//	added validation popup	msg
 																			props.handleBlur();
 																			if(props.errors &&  Object.keys(props.errors).length != 0)

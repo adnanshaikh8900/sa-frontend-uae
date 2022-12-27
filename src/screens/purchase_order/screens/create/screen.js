@@ -713,8 +713,8 @@ class CreatePurchaseOrder extends React.Component {
 									this.formRef.current.setFieldValue('supplierId', supplier, true);
 									this.formRef.current.setFieldValue('placeOfSupplyId', res.data.placeOfSupplyId, true);
 									this.formRef.current.setFieldValue('currency', this.getCurrency(res.data.supplierId), true);
-									this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(res.data.supplierId), true);
-									this.formRef.current.setFieldValue('notes',  res.data.notes, true);
+									// this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(res.data.supplierId), true);
+									// this.formRef.current.setFieldValue('notes',  res.data.notes, true);
 								let rfq=selectOptionsFactory.renderOptions('label','value',this.props.rfq_list.data,'RFQ Number',)
 									        .find((option) => option.label == res.data.rfqNumber)
 									this.formRef.current.setFieldValue('rfqNumber',rfq, true);
@@ -1569,8 +1569,8 @@ class CreatePurchaseOrder extends React.Component {
         if (rfqNumber && rfqNumber.value) {
 			formData.append('rfqId', rfqNumber.value);
 		}
-		if (this.uploadFile && this.uploadFile.files && this.uploadFile.files[0]) {
-			formData.append('attachmentFile', this.uploadFile.files[0]);
+		if (this.uploadFile && this.uploadFile.files && this.uploadFile?.files?.[0]) {
+			formData.append('attachmentFile', this.uploadFile?.files?.[0]);
 		}
 		
 			formData.append('currencyCode', this.state.supplier_currency);

@@ -306,13 +306,19 @@ class SupplierInvoice extends React.Component {
 						)}
 					</DropdownToggle>
 					<DropdownMenu right>
-						{row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && row.statusEnum !== 'Partially Paid' && (
+						{row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && row.statusEnum !== 'Partially Paid'  && (
 							<DropdownItem
-								onClick={() =>
+								onClick={() =>{
+								 if(row.editFlag)
 									this.props.history.push(
 										'/admin/expense/supplier-invoice/detail',
 										{ id: row.id },
 									)
+									else this.props.commonActions.tostifyAlert(
+										'error',
+										'You cannot edit transactions for which VAT is recorded'
+									);
+								}
 								}
 							>
 								<i className="fas fa-edit" />  {strings.Edit}
@@ -347,10 +353,15 @@ class SupplierInvoice extends React.Component {
 					<i className="fas fa-copy" /> {strings.CreateADuplicate}
 				</DropdownItem>
 
-						{row.statusEnum === 'Sent'  && row.editFlag==true&& (
+						{row.statusEnum === 'Sent'  && (
 							<DropdownItem
 								onClick={() => {
+									if(row.editFlag)
 									this.unPostInvoice(row);
+									else this.props.commonActions.tostifyAlert(
+										'error',
+										'You cannot edit transactions for which VAT is recorded'
+									);
 								}}
 							>
 								<i className="fas fa-file" /> {strings.Draft}
@@ -358,11 +369,14 @@ class SupplierInvoice extends React.Component {
 						)}
 						{row.statusEnum !== 'Draft' && row.statusEnum !== 'Paid' && row.exchangeRate == 1 &&  (
 							<DropdownItem
-								onClick={() =>
+								onClick={() =>{
+									
+									
 									this.props.history.push(
 										'/admin/expense/supplier-invoice/record-payment',
-										{ id: row },
-									)
+										{ id: row },)
+									
+								}
 								}
 							>
 								<i className="fas fa-university" />  {strings.RecordPayment}
@@ -820,7 +834,7 @@ console.log(supplier_invoice_list)
 
 							<Row>
 								<Col lg={12}>
-									<div className="mb-4 status-panel p-3">
+									{/* <div className="mb-4 status-panel p-3">
 										<Row className="align-items-center justify-content-around">
 											<div className="h4 mb-0 d-flex align-items-center ">
 												<img
@@ -937,7 +951,7 @@ console.log(supplier_invoice_list)
 												</div>
 											</div>
 										</Row>
-									</div>
+									</div> */}
 									<div className="d-flex justify-content-end">
 										<ButtonGroup size="sm">
 											{/* <Button
@@ -1212,11 +1226,10 @@ console.log(supplier_invoice_list)
 												Due Amount
 											</TableHeaderColumn> */}
 											<TableHeaderColumn
-												className="text-right"
+												className="text-right table-header-bg"
 												columnClassName="text-right"
 												width="5%"
 												dataFormat={this.renderActions}
-												className="table-header-bg"
 											></TableHeaderColumn>
 										</BootstrapTable>
 								</Col>

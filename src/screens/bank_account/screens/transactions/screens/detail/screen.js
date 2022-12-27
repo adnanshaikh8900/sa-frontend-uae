@@ -227,8 +227,8 @@ class DetailBankTransaction extends React.Component {
       'attachementDescription',
       attachementDescription ? attachementDescription : '',
     );
-    if (this.uploadFile.files[0]) {
-      formData.append('attachment', this.uploadFile.files[0]);
+    if (this.uploadFile?.files?.[0]) {
+      formData.append('attachment', this.uploadFile?.files?.[0]);
     }
     this.props.transactionDetailActions
       .updateTransaction(formData)

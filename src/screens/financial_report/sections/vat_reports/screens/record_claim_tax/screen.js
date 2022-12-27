@@ -12,16 +12,13 @@ import {
 	FormGroup,
 	Input,
 	Label,
-	NavLink,
 } from 'reactstrap';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
-import { Formik, Field } from 'formik';
+import { Formik } from 'formik';
 import * as Yup from 'yup';
 import * as VatreportActions from '../../actions';
-
 import { Loader } from 'components';
-
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
@@ -87,7 +84,6 @@ class RecordTaxClaim extends React.Component {
 			loadingMsg:"Loading..."
 		};
 		this.formRef = React.createRef();
-
 		this.regEx = /^[0-9\b]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
@@ -159,15 +155,16 @@ class RecordTaxClaim extends React.Component {
 			formData.append('vatFiledNumber', reportId);
 		}
 		formData.append('isVatReclaimed', true);
-		if (this.uploadFile.files[0]) {
-			formData.append('attachmentFile', this.uploadFile.files[0]);
+		if (this.uploadFile?.files?.[0]) {
+			formData.append('attachmentFile', this.uploadFile?.files?.[0]);
 		}
 		this.setState({ loading:true, loadingMsg:"Tax Claim Recording..."});
 		this.props.vatreportActions.recordVatPayment(formData)
 			.then((res) => {
+				
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data ? res.data.message : 'Tax Claim Recorded Successfully',
+					 'Tax Payment Recorded Successfully',
 				);
 				this.props.history.push('/admin/report/vatreports');
 				this.setState({ loading:false,});
@@ -214,7 +211,7 @@ class RecordTaxClaim extends React.Component {
 											<div className="h4 mb-0 d-flex align-items-center">
 												<i className="fas fa-address-book" />
 												<span className="ml-2">
-											Record Tax Claim For {headerValue}
+											Record VAT Claim For {headerValue}
 												</span>
 											</div>
 										</Col>
@@ -308,7 +305,7 @@ class RecordTaxClaim extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="totalTaxReclaimable">
 																			<span className="text-danger">* </span>{' '}
-																		Total Tax Reclaimable
+																		Total VAT Reclaimable
 																		</Label>
 																		<Input
 																			type="number"
@@ -347,7 +344,7 @@ class RecordTaxClaim extends React.Component {
 																			Amount Reclaimed
 																		</Label>
 																		<Input
-																			type="number"
+																			type="text"
 																			placeholder='Enter Amount Reclaimed'
 																			id="amount"
 																			name="amount"
@@ -463,13 +460,13 @@ class RecordTaxClaim extends React.Component {
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="referenceCode">
-																					{strings.ReceiptNumber}
+																					{strings.ReferenceNo}
 																				</Label>
 																				<Input
 																					type="text"
 																					id="referenceCode"
 																					name="referenceCode"
-																					placeholder={strings.Enter+strings.ReceiptNumber}
+																					placeholder="e.g. Receipt Number"
 																					onChange={(option) => {
 																						if (
 																							option.target.value === '' ||
@@ -487,7 +484,7 @@ class RecordTaxClaim extends React.Component {
 																			</FormGroup>
 																		</Col>
 																	</Row>
-																	<Row>
+																	{/* <Row>
 																		<Col lg={12}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="notes">{strings.Notes}</Label>
@@ -504,9 +501,9 @@ class RecordTaxClaim extends React.Component {
 																				/>
 																			</FormGroup>
 																		</Col>
-																	</Row>
+																	</Row> */}
 																</Col>
-																<Col lg={4}>
+																{/* <Col lg={4}>
 																	<Row>
 																		<Col lg={12}>
 																			<FormGroup className="mb-3">
@@ -543,7 +540,7 @@ class RecordTaxClaim extends React.Component {
 																											props,
 																										);
 																									}}
-																								/>
+																								/> */}
 																								{/* {this.state.fileName && (
 																									<div>
 																										<i
@@ -557,7 +554,7 @@ class RecordTaxClaim extends React.Component {
 																										{this.state.fileName}
 																									</div>
 																								)} */}
-																								{this.state.fileName ? (
+																								{/* {this.state.fileName ? (
 																									this.state.fileName
 																								) : (
 																									<NavLink
@@ -589,7 +586,7 @@ class RecordTaxClaim extends React.Component {
 																			</FormGroup>
 																		</Col>
 																	</Row>
-																</Col>
+																</Col> */}
 															</Row>
 															<Row>
 																<Col
@@ -614,7 +611,7 @@ class RecordTaxClaim extends React.Component {
 																			 {/* {strings.RecordPayment} */}
 																			 {this.state.disabled
 																			? 'Recording...'
-																			: "Record Tax Claim" }
+																			: strings.RecordPayment }
 																		</Button>
 																		<Button
 																			color="secondary"

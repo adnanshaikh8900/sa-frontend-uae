@@ -278,7 +278,7 @@ const fr = {
       CreateSupplier:"Créer un fournisseur ",		
 
 //Expenses
-      IsReverseCharge:"Est l’autoliquidation",
+      IsReverseCharge:"Souhaitez-vous appliquer l'autoliquidation à cela ?",
       UnitPrice:"PRIX UNITAIRE",
       InclusiveVAT:"TVA incluse",
       ExclusiveVAT:"TVA exclue",
@@ -471,7 +471,7 @@ const fr = {
 //Add Chart of Accounts
       NewChartAccount:"Nouveau compte graphique",		
       Name:"Nom",		
-      Type:"Type",
+      Type:"type de produit",
       Chart_of_Account:"Plan comptable",		
 
 //Contact
@@ -504,6 +504,7 @@ const fr = {
       ProductType: "Type de produit",
       Inventory:"INVENTAIRE",
       VATTYPE:"TYPE DE TVA",
+      VATType:"Type de TVA",
       excise_slab:"DALLE D’ACCISE",
       enabled:"Activé",
       disabled:"Handicapé",

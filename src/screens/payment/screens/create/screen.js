@@ -263,8 +263,8 @@ class CreatePayment extends React.Component {
 		if (contactId) {
 			formData.append('contactId', contactId.value);
 		}
-		if (this.uploadFile.files[0]) {
-			formData.append('attachmentFile', this.uploadFile.files[0]);
+		if (this.uploadFile?.files?.[0]) {
+			formData.append('attachmentFile', this.uploadFile?.files?.[0]);
 		}
 
 		this.props.createPaymentActions

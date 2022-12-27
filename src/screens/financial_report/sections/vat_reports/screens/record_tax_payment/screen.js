@@ -12,25 +12,21 @@ import {
 	FormGroup,
 	Input,
 	Label,
-	NavLink,
 } from 'reactstrap';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
-import { Formik, Field } from 'formik';
+import { Formik } from 'formik';
 import * as Yup from 'yup';
 import * as VatreportActions from '../../actions';
-
 import { Loader } from 'components';
-
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
-import { selectOptionsFactory } from 'utils';
-
 import './style.scss';
 import moment from 'moment';
 import {data}  from '../../../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import { formControlClasses } from '@mui/material';
 
 const mapStateToProps = (state) => {
 	return {
@@ -77,7 +73,7 @@ class RecordVatPayment extends React.Component {
 			headerValue: this.props.location.state.taxReturns ?this.props.location.state.taxReturns :'',
 			initValue: {
 				receiptNo: '',
-				vatPaymentDate: new Date(),
+				vatPaymentDate: '',
 				reportId: this.props.location.state && this.props.location.state.id ?this.props.location.state.id:'',
 				amount: '',
 				totalTaxPayable: this.props.location.state && this.props.location.state.totalTaxPayable ?this.props.location.state.totalTaxPayable: 0.00,
@@ -99,15 +95,37 @@ class RecordVatPayment extends React.Component {
 			discountAmount: 0,
 			fileName: '',
 			disabled: false,
+			reportfilledOn:new Date(),
 			loadingMsg:"Loading..."
 		};
 
+		this.props.vatreportActions
+			.getVatReportList()
+			.then((res) => {
+				if (res.status === 200) {
+					res.data.map(obj => {
+						if(obj.id === this.props.location.state.id){
+							this.setState({ 
+								reportfilledOn: new Date(obj.filedOn),
+								initValue: {
+									vatPaymentDate: new Date(obj.filedOn),
+								},
+							})
+						}
+					})
+				}
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+			}
+		);
 		this.formRef = React.createRef();
-
 		this.regEx = /^[0-9\b]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
-
 		this.file_size = 1024000;
 		this.supported_format = [
 			'image/png',
@@ -126,7 +144,7 @@ class RecordVatPayment extends React.Component {
 
 	initializeData = () => {
 		this.props.vatreportActions.getDepositList().then((res)=>{	
-			this.setState({deposit_list:res})
+			this.setState({deposit_list:res});
 		})
 	};
 
@@ -175,17 +193,19 @@ class RecordVatPayment extends React.Component {
 			formData.append('id', reportId);
 			formData.append('vatFiledNumber', reportId);
 		}
-		if (this.uploadFile.files[0]) {
-			formData.append('attachmentFile', this.uploadFile.files[0]);
+		if (this.uploadFile?.files?.[0]) {
+			formData.append('attachmentFile', this.uploadFile?.files?.[0]);
 		}
 		formData.append('isVatReclaimed', false);
 		this.setState({ loading:true, loadingMsg:"Tax Claim Recording..."});
 		this.props.vatreportActions.recordVatPayment(formData)
 			.then((res) => {
+				
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data ? res.data.message : 'Tax Claim Recorded Successfully',
+					 'Tax Payment Recorded Successfully',
 				);
+				
 				this.props.history.push('/admin/report/vatreports');
 				this.setState({ loading:false,});
 			})
@@ -223,7 +243,7 @@ class RecordVatPayment extends React.Component {
 											<div className="h4 mb-0 d-flex align-items-center">
 												<i className="fas fa-address-book" />
 												<span className="ml-2">
-											Record Tax Payment For  {headerValue}
+											Record VAT Payment For  {headerValue}
 												</span>
 											</div>
 										</Col>
@@ -250,6 +270,11 @@ class RecordVatPayment extends React.Component {
 													 if(!values.vatPaymentDate){
 														errors.vatPaymentDate='Payment date is required';
 													 }
+													
+													 if(parseFloat(values.amount)>values.balanceDue){
+														errors.amount ="Amount Cannot Be greater than Balance amount"
+													 }
+
 													 return errors
 													}}
 													validationSchema={Yup.object().shape({
@@ -320,7 +345,7 @@ class RecordVatPayment extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="totalTaxPayable">
 																			<span className="text-danger">* </span>{' '}
-																		Total Tax Payable
+																		Total VAT Payable
 																		</Label>
 																		<Input
 																			type="number"
@@ -396,7 +421,7 @@ class RecordVatPayment extends React.Component {
 																			Amount Paid
 																		</Label>
 																		<Input
-																			type="number"
+																			type="text"
 																			min="0"
 																			placeholder='Enter Amount Paid'
 																			id="amount"
@@ -438,13 +463,14 @@ class RecordVatPayment extends React.Component {
 																		<DatePicker
 																			id="vatPaymentDate"
 																			name="vatPaymentDate"
-																			placeholderText={strings.vatPaymentDate}
+																			placeholderText={'Select '+strings.PaymentDate}
 																			showMonthDropdown
 																			showYearDropdown
 																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
-																			value={props.values.vatPaymentDate}
-																			selected={props.values.vatPaymentDate}
+																			value={props.values.vatPaymentDate ? props.values.vatPaymentDate : this.state.reportfilledOn}
+																			selected={props.values.vatPaymentDate ? props.values.vatPaymentDate : this.state.reportfilledOn}
+																			minDate={this.state.reportfilledOn}
 																			onChange={(value) => {
 																				props.handleChange('vatPaymentDate')(
 																					value,
@@ -484,7 +510,7 @@ class RecordVatPayment extends React.Component {
 																					props.handleChange('paidThrough')('');
 																				}
 																			}}
-																			placeholder={strings.Select+strings.DepositTo}
+																			placeholder={strings.Select+strings.PaidThrough}
 																			id="paidThrough"
 																			name="paidThrough"
 																			className={
@@ -513,13 +539,13 @@ class RecordVatPayment extends React.Component {
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="referenceCode">
-																					{strings.ReceiptNumber}
+																					{strings.ReferenceNo}
 																				</Label>
 																				<Input
 																					type="text"
 																					id="referenceCode"
 																					name="referenceCode"
-																					placeholder={strings.Enter+strings.ReceiptNumber}
+																					placeholder="e.g. Receipt Number"
 																					onChange={(option) => {
 																						if (
 																							option.target.value === '' ||
@@ -537,7 +563,7 @@ class RecordVatPayment extends React.Component {
 																			</FormGroup>
 																		</Col>
 																	</Row>
-																	<Row>
+																	{/* <Row>
 																		<Col lg={12}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="notes">{strings.Notes}</Label>
@@ -554,9 +580,9 @@ class RecordVatPayment extends React.Component {
 																				/>
 																			</FormGroup>
 																		</Col>
-																	</Row>
+																	</Row> */}
 																</Col>
-																<Col lg={4}>
+																{/* <Col lg={4}>
 																	<Row>
 																		<Col lg={12}>
 																			<FormGroup className="mb-3">
@@ -593,7 +619,7 @@ class RecordVatPayment extends React.Component {
 																											props,
 																										);
 																									}}
-																								/>
+																								/> */}
 																								{/* {this.state.fileName && (
 																									<div>
 																										<i
@@ -607,7 +633,7 @@ class RecordVatPayment extends React.Component {
 																										{this.state.fileName}
 																									</div>
 																								)} */}
-																								{this.state.fileName ? (
+																								{/* {this.state.fileName ? (
 																									this.state.fileName
 																								) : (
 																									<NavLink
@@ -639,7 +665,7 @@ class RecordVatPayment extends React.Component {
 																			</FormGroup>
 																		</Col>
 																	</Row>
-																</Col>
+																</Col> */}
 															</Row>
 															<Row>
 																<Col

@@ -9,28 +9,28 @@ import {
 	CardHeader,
 	CardBody,
 	Row,
-	ButtonDropdown,
-	DropdownToggle,
 	DropdownMenu,
 	DropdownItem,
+	ButtonDropdown,
+	DropdownToggle,
 } from 'reactstrap';
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { AuthActions, CommonActions } from 'services/global';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-datepicker/dist/react-datepicker.css'
 import './style.scss';
 import * as Vatreport from './actions';
-import { isDate, upperFirst } from 'lodash-es';
-
-import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+import { upperFirst } from 'lodash-es';
+// import { AgGridReact, AgGridColumn } from 'ag-grid-react/lib/agGridReact';
+// import 'ag-grid-community/dist/styles/ag-grid.css';
+// import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import moment from 'moment';
 import download from 'downloadjs';
 import { DeleteModal, FileTaxReturnModal, GenerateVatReportModal, VatSettingModal } from './sections';
-import { AgGridReact, AgGridColumn } from 'ag-grid-react/lib/agGridReact';
 import { ConfirmDeleteModal, Currency,Loader } from 'components';
-import { selectOptionsFactory } from 'utils';
-import Select from 'react-select';
-import { toast } from 'react-toastify';
+import {data} from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
+
 const mapStateToProps = (state) => {
 	return {
 		version: state.common.version,
@@ -45,7 +45,7 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
-
+let strings = new LocalizedStrings(data);
 class VatReports extends React.Component {
 	constructor(props) {
 		super(props);
@@ -62,10 +62,11 @@ class VatReports extends React.Component {
 			coaName: '',
 			vatReportDataList:[],
 			options:[
-				{label:"Montly",value:0},		{label:"Quarterly",value:2},
+				{label:"Montly",value:0},		
+				{label:"Quarterly",value:2},
 			],
 			enbaleReportGeneration:false,
-			monthOption:0,
+			monthOption:{label:"Montly",value:0},
 			// vatReportDataList: [
 			// 	{
 			// 	id:11,	taxReturns: "30/11/2021-14/12/2021", totalTaxPayable: 3000, totalTaxReclaimable: null, filedOn: "2021-12-23T06:41:37", status: "Paid", balanceDue: null, currency: "AED", currency: "AED", action: true
@@ -110,14 +111,41 @@ class VatReports extends React.Component {
 			deleteModal:false,
 			loadingMsg:"Loading..."
 		};
+
+		this.options = {
+			// onRowClick: this.goToDetail,
+			page: 1,
+			sizePerPage: 10,
+			onSizePerPageList: this.onSizePerPageList,
+			onPageChange: this.onPageChange,
+			sortName: '',
+			sortOrder: '',
+			onSortChange: this.sortColumn,
+		};
 	}
+	
 	onPageSizeChanged = (newPageSize) => {
 		var value = document.getElementById('page-size').value;
 		this.gridApi.paginationSetPageSize(Number(value));
 	};
+
 	onGridReady = (params) => {
 		this.gridApi = params.api;
 		this.gridColumnApi = params.columnApi;
+	};
+
+	onSizePerPageList = (sizePerPage) => {
+		if (this.options.sizePerPage !== sizePerPage) {
+			this.options.sizePerPage = sizePerPage;
+			this.getInitialData();
+		}
+	};
+
+	onPageChange = (page, sizePerPage) => {
+		if (this.options.page !== page) {
+			this.options.page = page;
+			this.getInitialData();
+		}
 	};
 
 	onBtnExport = () => {
@@ -127,15 +155,15 @@ class VatReports extends React.Component {
 	onBtnExportexcel = () => {
 		this.gridApi.exportDataAsExcel();
 	};
+
 	componentDidMount = () => {
 		this.getInitialData();
 	};
-
 	
 	markItUnfiled=(row)=>{
 		const postingRequestModel = {
 			postingRefId: row.id,
-			postingRefType: 'PUBLISH',
+			postingRefType: 'VAT_REPORT_FILED',
 		};
 		this.setState({ loading:true, loadingMsg:"VAT UnFiling..."});
 		this.props.vatreport
@@ -160,8 +188,18 @@ class VatReports extends React.Component {
 	}
 
 	getInitialData = () => {
+		let { filterData } = this.state;
+		const paginationData = {
+			pageNo: this.options.page ? this.options.page - 1 : 0,
+			pageSize: this.options.sizePerPage,
+		};
+		const sortingData = {
+			order: this.options.sortOrder ? this.options.sortOrder : '',
+			sortingCol: this.options.sortName ? this.options.sortName : '',
+		};
+		const postData = { ...filterData, ...paginationData, ...sortingData };
 		this.props.vatreport
-			.getVatReportList()
+			.getVatReportList(postData)
 			.then((res) => {
 				if (res.status === 200) {
 					this.setState({ vatReportDataList: res.data }) // comment for dummy
@@ -174,7 +212,6 @@ class VatReports extends React.Component {
 				);
 			});
 	};
-
 
 	export = (filename) => {
 		this.props.vatreport
@@ -192,17 +229,17 @@ class VatReports extends React.Component {
 				);
 			});
 	}
+
 	handleChange = (key, val) => {
 		this.setState({
 			[key]: val,
 		});
 	};
 
-
-
 	closeModal = (res) => {
 		this.setState({ openModal: false });
 	};
+
 	closeVatSettingModal = (res) => {
 		this.setState({ openVatSettingModal: false });
 	};
@@ -210,14 +247,15 @@ class VatReports extends React.Component {
 	closeFileTaxRetrunModal = (res) => {
 		this.setState({ openFileTaxRetrunModal: false });
 	};
+
 	closeDeleteModal = (res) => {
 		this.setState({ deleteModal: false });
 	};
 
-
 	showHeader = (s) => {
 		return upperFirst(s.replace(/([a-z])([A-Z])/g, '$1 $2'));
 	}
+
 	toggleActionButton = (index) => {
 		console.log(index, this.state.actionButtons ," this.state.actionButtons")
 		let temp = Object.assign({}, this.state.actionButtons);
@@ -232,187 +270,191 @@ class VatReports extends React.Component {
 		console.log(index, this.state.actionButtons ," this.state.actionButtons")
 	};
 
-	getActionButtons = (params) => {
+	getActionButtons = (cell,params) => {
 
 		return (
 // DROPDOWN ACTIONS
 
-	// 	<ButtonDropdown
-	// 		isOpen={this.state.actionButtons[params.data.id]}
-	// 		toggle={() => this.toggleActionButton(params.data.id)}
-	// 	>
-	// 		<DropdownToggle size="sm" color="primary" className="btn-brand">
-	// 			{this.state.actionButtons[params.data.id] === true ? (
-	// 				<i className="fas fa-chevron-up" />
-	// 			) : (
-	// 				<i className="fas fa-chevron-down" />
-	// 			)}
-	// 		</DropdownToggle>
+		<ButtonDropdown
+			isOpen={this.state.actionButtons[params.id]}
+			toggle={() => this.toggleActionButton(params.id)}
+		>
+			<DropdownToggle size="sm" color="primary" className="btn-brand icon">
+				{this.state.actionButtons[params.id] === true ? (
+					<i className="fas fa-chevron-up" />
+				) : (
+					<i className="fas fa-chevron-down" />
+				)}
+			</DropdownToggle>
 			
-	// {/* Menu start */}
-	// 	<DropdownMenu right className='translate'>
+	{/* Menu start */}
+		<DropdownMenu right >
 			
-	// 	{/* View */}
+		{/* View */}
 			
-	// 		<DropdownItem
-	// 		onClick={() => {
-	// 					this.setState({current_report_id:params.data.id})
-	// 					let dateArr = params.data.taxReturns ? params.data.taxReturns.split("-") : [];
-	// 					this.props.history.push('/admin/report/vatreports/view',{startDate:dateArr[0] ?dateArr[0] :'',endDate:dateArr[1] ?dateArr[1] :''})
-	// 		}}
-	// 				>
-	// 					<i className="fas fa-eye" /> View
-	// 		</DropdownItem>	
+			<DropdownItem
+			// onClick={() => {
+			// 			this.setState({current_report_id:params.id})
+			// 			let dateArr = params.taxReturns ? params.taxReturns.split("-") : [];
+			// 			this.props.history.push('/admin/report/vatreports/view',{startDate:dateArr[0] ?dateArr[0] :'',endDate:dateArr[1] ?dateArr[1] :''})
+			// }}
+			onClick={() => {
+								this.setState({current_report_id:params.id})
+								let dateArr = params.taxReturns ? params.taxReturns.split("-") : [];
+								this.props.history.push(`/admin/report/vatreports/view?id=${params.id}`,{startDate:dateArr[0] ?dateArr[0] :'',endDate:dateArr[1] ?dateArr[1] :''})
+							}}
+					>
+						<i className="fas fa-eye" /> View
+			</DropdownItem>	
 			
-	// 	{/* delete */}
+		{/* delete */}
 			
-	// 		{params.data.status === "UnFiled" || params.data.status === "Filed" ? (
-	// 		<DropdownItem
+			{params.status === "UnFiled" ? (
+			<DropdownItem
+					onClick={() => {
+						// this.delete(params.id)
+						this.setState({current_report_id:params.id,deleteModal:true})
+					}}
+					>
+						<i className="fas fa-trash" />  Delete
+			</DropdownItem>									
+						) : ''}
+			
+			
+			
+		{/* Record Payment */}
+			
+						{params.status === "Filed" || params.status === "Partially Paid" ? (
+			<DropdownItem
+			onClick={() => {
+									this.setState({current_report_id:params.id})
+										if (params.totalTaxReclaimable != 0)
+											this.props.history.push('/admin/report/vatreports/recordclaimtax',{id:params.id,
+																									totalTaxReclaimable:params.totalTaxReclaimable,
+																									taxReturns:params.taxReturns,})
+										else
+											this.props.history.push('/admin/report/vatreports/recordtaxpayment',{id:params.id,
+																									taxReturns:params.taxReturns,
+																									totalTaxPayable:params.totalTaxPayable,
+																									balanceDue:params.balanceDue,																	
+																									})
+						}}
+			>	<i className="fas fa-university" /> Record Payment
+				</DropdownItem>
+						) : ''}
+				
+				
+				
+		{/* Mark It Unfiled  */}
+			
+				{params.status === "Filed" ? (
+				<DropdownItem
+				onClick={() => {
+									this.setState({current_report_id:params.id})
+									this.markItUnfiled(params)
+								}}
+				>	<i class="fas fa-unlink" /> Mark It Unfiled 
+					</DropdownItem>	
+				) : ''}
+				
+					
+		 {/* File The Report */}
+		
+			{params.status === "UnFiled" ? (
+			<DropdownItem
+						onClick={() => {
+						this.setState({ openFileTaxRetrunModal: true, 
+							current_report_id: params.id,taxReturns:params.taxReturns});
+					}}
+			>	<i class="fas fa-link" /> File The Report
+			</DropdownItem>	
+			) : ""}
+			
+			
+		</DropdownMenu>
+	</ButtonDropdown>
+	// <>
+
+	
+	// BUTTON ACTIONS
+	// 		View
+	// 		<Button
+	// 			className="Ag-gridActionButtons btn-sm"
+	// 			title='View'
+	// 			color="secondary"
+	// 			onClick={() => {
+	// 				this.setState({current_report_id:params.data.id})
+	// 				let dateArr = params.data.taxReturns ? params.data.taxReturns.split("-") : [];
+	// 				this.props.history.push(`/admin/report/vatreports/view?id=${params.data.id}`,{startDate:dateArr[0] ?dateArr[0] :'',endDate:dateArr[1] ?dateArr[1] :''})
+	// 			}}
+	// 		>	<i className="fas fa-eye" /> </Button>&nbsp;&nbsp;
+
+	// 		Delete
+	// 		{params.data.status === "UnFiled"  ? (
+	// 			<Button
+	// 				title='Delete'
+	// 				color="danger"
+	// 				className=" btn-sm Ag-gridActionButtons deleteButton"
 	// 				onClick={() => {
 	// 					// this.delete(params.data.id)
 	// 					this.setState({current_report_id:params.data.id,deleteModal:true})
 	// 				}}
-	// 				>
-	// 					<i className="fas fa-trash" />  Delete
-	// 		</DropdownItem>									
-	// 					) : ''}
-			
-			
-			
-	// 	{/* Record Payment */}
-			
-	// 					{params.data.status === "Filed" || params.data.status === "Partially Paid" ? (
-	// 		<DropdownItem
-	// 		onClick={() => {
-	// 			this.setState({current_report_id:params.data.id})
-	// 			if (params.data.totalTaxReclaimable != 0)
-	// 				this.props.history.push('/admin/report/recordclaimtax',{id:params.data.id,
-	// 																		totalTaxReclaimable:params.data.totalTaxReclaimable,
-	// 																		taxReturns:params.data.taxReturns,})
-	// 			else
-	// 				this.props.history.push('/admin/report/recordtaxpayment',{id:params.data.id,
-	// 																		taxReturns:params.data.taxReturns,
-	// 																		totalTaxPayable:params.data.totalTaxPayable,
-	// 																		balanceDue:params.data.balanceDue,																	
-	// 																		})
-	// 		}}
-	// 		>	<i className="fas fa-university" /> Record Payment
-	// 			</DropdownItem>
-	// 					) : ''}
-				
-				
-				
-	// 	{/* Mark It Unfiled  */}
-			
-	// 			{params.data.status === "Filed" ? (
-	// 			<DropdownItem
+	// 			>	<i className="fas fa-trash" /> </Button>
+	// 		) : ''}
+	// 		{params.data.status === "UnFiled" || params.data.status === "Filed" ? (<>&nbsp;&nbsp;</>) : ''}
+
+	// 		Record Payment
+	// 		{params.data.status === "Filed" || params.data.status === "Partially Paid" ? (
+	// 			<Button
+	// 				title={params.data.totalTaxReclaimable != 0?'Record Tax Claim':'Record Tax Payment'}
+	// 				color="secondary"
+	// 				className=" btn-sm"
 	// 				onClick={() => {
-	// 			this.setState({current_report_id:params.data.id})
-	// 			// this.props.history.push('/admin/report/recordclaimtax')
-	// 			this.markItUnfiled(params.data.id)
+	// 					this.setState({current_report_id:params.data.id})
+	// 						if (params.data.totalTaxReclaimable != 0)
+	// 							this.props.history.push('/admin/report/vatreports/recordclaimtax',{id:params.data.id,
+	// 																					totalTaxReclaimable:params.data.totalTaxReclaimable,
+	// 																					taxReturns:params.data.taxReturns,})
+	// 						else
+	// 							this.props.history.push('/admin/report/vatreports/recordtaxpayment',{id:params.data.id,
+	// 																					taxReturns:params.data.taxReturns,
+	// 																					totalTaxPayable:params.data.totalTaxPayable,
+	// 																					balanceDue:params.data.balanceDue,																	
+	// 																					})
+	// 		}}
+	// 			>	<i className="fas fa-university" /> </Button>
+	// 		) : ''}
+	// 		{params.data.status === "Filed" || params.data.status === "Partially Paid" ? (<>&nbsp;&nbsp;</>) : ''}
+
+	// 		Mark It Unfiled
+	// 		{params.data.status === "Filed" ? (<Button
+	// 			title='Mark It Unfiled'
+	// 			color="secondary"
+	// 			className=" btn-sm"
+	// 			onClick={() => {
+	// 				this.setState({current_report_id:params.data.id})
+	// 				this.markItUnfiled(params.data)
 	// 			}}
-	// 			>	<i class="fas fa-unlink" /> Mark It Unfiled 
-	// 				</DropdownItem>	
-	// 			) : ''}
-				
-					
-	// 	 {/* File The Report */}
-		
-	// 		{params.data.status === "UnFiled" ? (
-	// 		<DropdownItem
-	// 					onClick={() => {
-	// 					this.setState({ openFileTaxRetrunModal: true, current_report_id: params.data.id });
-	// 				}}
-	// 		>	<i class="fas fa-link" /> File The Report
-	// 		</DropdownItem>	
-	// 		) : ""}
-			
-			
-	// 	</DropdownMenu>
-	// </ButtonDropdown>
-	<>
+	// 		>	<i class="fas fa-unlink" /> </Button>) : ""}
+	// 		{params.data.status === "Filed" ? (<>&nbsp;&nbsp;</>) : ''}
 
-	
-	{/* BUTTON ACTIONS */}
-			{/* View */}
-			<Button
-				className="Ag-gridActionButtons"
-				title='View'
-				color="secondary"
-				className="btn-sm"
-				onClick={() => {
-					this.setState({current_report_id:params.data.id})
-					let dateArr = params.data.taxReturns ? params.data.taxReturns.split("-") : [];
-					this.props.history.push('/admin/report/vatreports/view',{startDate:dateArr[0] ?dateArr[0] :'',endDate:dateArr[1] ?dateArr[1] :''})
-				}}
-			>	<i className="fas fa-eye" /> </Button>&nbsp;&nbsp;
+	// 		File The Report
+	// 		{params.data.status === "UnFiled" ? (<Button
+	// 			title='File The Report'
+	// 			color="secondary"
+	// 			className=" btn-sm"
+	// 			onClick={() => {
+	// 				let dateArr = params.data.taxReturns ? params.data.taxReturns.split("-") : [];
+	// 				let endDate = dateArr[1]		
 
-			{/* Delete */}
-			{params.data.status === "UnFiled" || params.data.status === "Filed" ? (
-				<Button
-					title='Delete'
-					color="danger"
-					className=" btn-sm Ag-gridActionButtons deleteButton"
-					onClick={() => {
-						// this.delete(params.data.id)
-						this.setState({current_report_id:params.data.id,deleteModal:true})
-					}}
-				>	<i className="fas fa-trash" /> </Button>
-			) : ''}
-			{params.data.status === "UnFiled" || params.data.status === "Filed" ? (<>&nbsp;&nbsp;</>) : ''}
-
-			{/* Record Payment */}
-			{params.data.status === "Filed" || params.data.status === "Partially Paid" ? (
-				<Button
-					title={params.data.totalTaxReclaimable != 0?'Record Tax Claim':'Record Tax Payment'}
-					color="secondary"
-					className=" btn-sm"
-					onClick={() => {
-						this.setState({current_report_id:params.data.id})
-							if (params.data.totalTaxReclaimable != 0)
-								this.props.history.push('/admin/report/vatreports/recordclaimtax',{id:params.data.id,
-																						totalTaxReclaimable:params.data.totalTaxReclaimable,
-																						taxReturns:params.data.taxReturns,})
-							else
-								this.props.history.push('/admin/report/vatreports/recordtaxpayment',{id:params.data.id,
-																						taxReturns:params.data.taxReturns,
-																						totalTaxPayable:params.data.totalTaxPayable,
-																						balanceDue:params.data.balanceDue,																	
-																						})
-			}}
-				>	<i className="fas fa-university" /> </Button>
-			) : ''}
-			{params.data.status === "Filed" || params.data.status === "Partially Paid" ? (<>&nbsp;&nbsp;</>) : ''}
-
-			{/* Mark It Unfiled */}
-			{params.data.status === "Filed" ? (<Button
-				title='Mark It Unfiled'
-				color="secondary"
-				className=" btn-sm"
-				onClick={() => {
-					this.setState({current_report_id:params.data.id})
-					this.markItUnfiled(params.data)
-				}}
-			>	<i class="fas fa-unlink" /> </Button>) : ""}
-			{params.data.status === "Filed" ? (<>&nbsp;&nbsp;</>) : ''}
-
-			{/* File The Report */}
-			{params.data.status === "UnFiled" ? (<Button
-				title='File The Report'
-				color="secondary"
-				className=" btn-sm"
-				onClick={() => {
-					let dateArr = params.data.taxReturns ? params.data.taxReturns.split("-") : [];
-					let endDate = dateArr[1]		
-
-					this.setState({ openFileTaxRetrunModal: true,
-						 			current_report_id: params.data.id ,
-									endDate:endDate,
-									taxReturns:params.data.taxReturns,
-								});
-				}}
-			>	<i class="fas fa-link" /></Button>) : ""}
-	</>
+	// 				this.setState({ openFileTaxRetrunModal: true,
+	// 					 			current_report_id: params.data.id ,
+	// 								endDate:endDate,
+	// 								taxReturns:params.data.taxReturns,
+	// 							});
+	// 			}}
+	// 		>	<i class="fas fa-link" /></Button>) : ""}
+	// </>
 		)
 
 	}
@@ -420,11 +462,12 @@ class VatReports extends React.Component {
 	renderStatus = (params) => {
 		return (
 			<>
-				{params.value === "UnFiled" ? (<label className="badge label-draft"> {params.value}</label>) : ""}
-				{params.value === "Filed" ? (<label className="badge label-due"> {params.value}</label>) : ""}
-				{params.value === "Partially Paid" ? (<label className="badge label-PartiallyPaid"> {params.value}</label>) : ""}
-				{params.value === "Paid" ? (<label className="badge label-paid"> {params.value}</label>) : ""}
-				{params.value === "Reclaimed" ? (<label className="badge label-sent"> {params.value}</label>) : ""}
+				{params === "UnFiled" ? (<label className="badge label-draft"> {params}</label>) : ""}
+				{params === "Filed" ? (<label className="badge label-due"> {params}</label>) : ""}
+				{params === "Partially Paid" ? (<label className="badge label-PartiallyPaid"> {params}</label>) : ""}
+				{params === "Paid" ? (<label className="badge label-paid">{params}</label>) : ""}
+				{params === "claimed" ? (<label className="badge label-paid text-capitalize">{params}</label>) : ""}
+				{params === "Reclaimed" ? (<label className="badge label-sent"> {params}</label>) : ""}
 			</>
 		)
 	}
@@ -435,7 +478,7 @@ class VatReports extends React.Component {
 				<>
 					<Currency
 						value={amount}
-						currencySymbol={params.data.currency}
+						currencySymbol={params.currency}
 					/>
 				</>
 
@@ -517,8 +560,8 @@ class VatReports extends React.Component {
 
 	renderDate = (cell, row) => {
 		return cell ? moment(cell)
-			// .format('DD-MM-YYYY') 
-			.format('LL')
+			.format('DD-MM-YYYY') 
+			// .format('LL')
 			: '-';
 	};
 
@@ -531,12 +574,9 @@ class VatReports extends React.Component {
 		return (<>{dateArr[0].replaceAll("/","-")}</>);
 	};
 
-
-
 	render() {
 		const { vatReportDataList, csvFileNamesData, dialog ,options,loading,loadingMsg,} = this.state;
-
-
+		console.log(vatReportDataList,"vatReportDataList")
 		return (
 			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 			<div className="import-bank-statement-screen">
@@ -555,9 +595,7 @@ class VatReports extends React.Component {
 							)}
 							<Row>
 								<Col lg={12}>
-
-
-									<div
+											<div
 										className="h4 mb-0 d-flex align-items-center"
 										style={{ justifyContent: 'space-between' }}
 									>
@@ -571,7 +609,7 @@ class VatReports extends React.Component {
 												}}
 												onClick={this.viewFilter}
 											>
-												<i className="fa fa-cog mr-2"></i>VAT Report
+												VAT Report
 											</p>
 										</div>
 										<div>
@@ -612,46 +650,29 @@ class VatReports extends React.Component {
 								<Col lg={12} className="mb-5">
 									<div className="table-wrapper">
 										<FormGroup className="text-center">
+											
 											<Button color="primary" className="btn-square  pull-right"
 												onClick={() => {
 													this.props.history.push('/admin/report/vatreports/vatpaymentrecordhistory')
 												}}>
 												<i className="fas fa-history"></i> VAT Payment Record
 											</Button>
-
+											
 											<Button name="button" color="primary" className="btn-square pull-right "
 											// disabled={!this.state.enbaleReportGeneration}
 											// title={!this.state.enbaleReportGeneration?"Select VAT Reporting Period":""}
 												onClick={() => {
-													if(!this.state.enbaleReportGeneration)
-													toast.error(" First Select VAT Reporting Period ");
-													else
-												{	this.setState({ openModal: true })
-													}
+													this.setState({ openModal: true })
 												}}>
-												
 												<i class="fas fa-plus"></i> Generate VAT Report
-
-												
 											</Button>
-										<Col lg={3} className=" pull-right ">
-												<Select 
 
-														options={options}
-														id="option"
-														name="option"
-														placeholder="VAT Reporting Period"
-														onChange={(e) => {															
-														this.setState({enbaleReportGeneration:true,monthOption:e.value})														
-														}}
-														/>
-														</Col>
-											{/* <Button color="primary" className="btn-square  pull-right"
+											<Button color="primary" className="btn-square  pull-right"
 												onClick={() => {
 													this.setState({ openVatSettingModal: true })
 												}}>
-												<i className="fa fa-cog mr-2"></i> VAT Settings
-											</Button> */}
+												<i className="fa"></i>Company Details
+											</Button> 
 
 										</FormGroup>
 									</div>
@@ -662,7 +683,7 @@ class VatReports extends React.Component {
 							taxReturns:"30/11/2021-14/12/2021",totalTaxPayable:3000,totalTaxReclaimable:null,filedOn:"2021-12-23T06:41:37",status:"Paid",balanceDue:null,action:true
 								
 								 */}
-							<div className="ag-theme-alpine mb-3" style={{ height: 550, width: "100%" }}>
+							{/* <div className="ag-theme-alpine mb-3" style={{ height: 550, width: "100%" }}>
 
 								<AgGridReact
 
@@ -685,7 +706,7 @@ class VatReports extends React.Component {
 								>
 
 									<AgGridColumn field="taxReturns"
-										headerName="Tax Return"
+										headerName="VAT Return"
 										sortable={true}
 										filter={true}
 										// checkboxSelection={true}
@@ -699,7 +720,7 @@ class VatReports extends React.Component {
 									></AgGridColumn>
 
 									<AgGridColumn field="totalTaxPayable"
-										headerName="Total Tax Payable"
+										headerName="Total VAT Payable"
 										sortable={true}
 										filter={true}
 										enablePivot={true}
@@ -711,7 +732,7 @@ class VatReports extends React.Component {
 									></AgGridColumn>
 
 									<AgGridColumn field="totalTaxReclaimable"
-										headerName="Total Tax Reclaimable"
+										headerName="Total VAT Reclaimable"
 										sortable={true}
 										filter={true}
 										enablePivot={true}
@@ -784,13 +805,114 @@ class VatReports extends React.Component {
 										<option value="1000">1000</option>
 									</select>
 								</div>
-							</div>
+							</div> */}
+
+										<div>
+											<BootstrapTable
+												selectRow={this.selectRowProp}										
+												options={this.options}
+												version="4"
+												hover
+												responsive												
+												remote
+												data={vatReportDataList &&vatReportDataList.data ? vatReportDataList.data : []}
+												// data={vatReportDataList.data ? vatReportDataList.data : []}										
+												// rowData={vatReportDataList.data ? vatReportDataList.data : []}
+												pagination={
+													vatReportDataList &&
+													vatReportDataList.data &&
+													vatReportDataList.data.length
+														? true
+														: false
+												}											
+												fetchInfo={{
+													dataTotalSize: vatReportDataList.count
+														? vatReportDataList.count
+														: 0,
+												}}											
+												>
+													{/* <TableHeaderColumn
+															tdStyle={{ whiteSpace: 'normal' }}
+															isKey
+															dataField="vatNumber"
+															dataSort
+															className="table-header-bg"
+														>
+															VAT Report No.
+														</TableHeaderColumn> */}
+														<TableHeaderColumn
+															tdStyle={{ whiteSpace: 'normal' }}
+															isKey
+															dataField="taxReturns"
+															dataSort
+														    dataFormat={this.renderTaxReturns}
+															className="table-header-bg"
+														>
+															VAT Return
+														</TableHeaderColumn>							
+														<TableHeaderColumn
+															width='10%'
+															dataField="totalTaxPayable"
+															dataSort
+															// dataFormat={this.renderAmount}
+															className="table-header-bg"
+														>
+														    Total VAT Payable
+														</TableHeaderColumn>
+													 <TableHeaderColumn
+															dataField="totalTaxReclaimable"
+															// columnTitle={this.customEmail}
+															dataSort
+															dataFormat={this.renderAmount}
+															className="table-header-bg"
+														>
+															Total VAT Reclaimable
+														</TableHeaderColumn>
+														<TableHeaderColumn
+															dataField="filedOn"
+															// columnTitle={this.customEmail}
+															dataSort
+															dataFormat={this.renderDate}
+															className="table-header-bg"
+														>
+															Filed On
+														</TableHeaderColumn>
+														<TableHeaderColumn
+															dataField="status"
+															// columnTitle={this.customEmail}
+															dataSort
+															dataFormat={this.renderStatus}
+															className="table-header-bg"
+														>
+															{strings.Status}
+														</TableHeaderColumn>
+															<TableHeaderColumn
+															dataField="balanceDue"
+															// columnTitle={this.customEmail}
+															dataSort
+															dataFormat={this.renderAmount}
+															className="table-header-bg"
+														>
+															{strings.BalanceDue}
+														</TableHeaderColumn>
+														<TableHeaderColumn
+															className="text-right table-header-bg"
+															columnClassName="text-right"
+															dataField="balanceDue"
+															width="5%"
+															dataFormat={this.getActionButtons}
+														></TableHeaderColumn>
+											</BootstrapTable>
+										</div>
 
 						</CardBody>
 					</Card>
 				</div>
 				<GenerateVatReportModal
 					openModal={this.state.openModal}
+					setState={(e)=>this.setState(e)}
+					vatReportDataList={vatReportDataList}
+					state={this.state}
 					monthOption={this.state.monthOption}
 					closeModal={(e) => {
 						this.closeModal(e);
@@ -809,6 +931,7 @@ class VatReports extends React.Component {
 					openModal={this.state.openFileTaxRetrunModal}
 					current_report_id={this.state.current_report_id}
 					endDate={this.state.endDate}
+					
 					taxReturns={this.state.taxReturns}
 					closeModal={(e) => {
 						this.closeFileTaxRetrunModal(e);

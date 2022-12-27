@@ -45,6 +45,7 @@ class InvoiceTemplate extends Component {
 			return 'saved-color';
 		}
 	};
+
 	renderInvoiceStatus = (status) => {
 		let classname = '';
 		if (status === 'Paid') {
@@ -108,7 +109,6 @@ class InvoiceTemplate extends Component {
 			       {invoiceData && contactData && (this.renderShippingPostZipCode())}
 				   {invoiceData && contactData && (this.rendershippingState())}
 				   {invoiceData && contactData && (this.rendershippingCountry())}
-				  
 			   </div>
 			   {/* {invoiceData && contactData&&( this.renderShippingCity())} */}
 			   {/* <div className="mb-1 ml-2">{strings.VATRegistrationNo} : {invoiceData.taxRegistrationNo}</div>
@@ -121,6 +121,7 @@ class InvoiceTemplate extends Component {
 			   return ""
 
 			}
+
 	renderShippingAddress = () => {
 		const { invoiceData, currencyData, totalNet, totalExciseAmount, companyData, status, contactData } = this.props;
 		//ischanged at inv level
@@ -184,7 +185,6 @@ class InvoiceTemplate extends Component {
 		return (<div className="mb-1 ml-2"><b>{strings.City} : </b>{shippingCity}</div>);
 	}
 
-
 	rendershippingCountry = () => {
 		const { invoiceData, currencyData, totalNet, totalExciseAmount, companyData, status, contactData } = this.props;
 		//ischanged at inv level
@@ -202,7 +202,6 @@ class InvoiceTemplate extends Component {
 		return shippingCountry;
 	}
 
-
 	rendershippingState = () => {
 		const { invoiceData, currencyData, totalNet, totalExciseAmount, companyData, status, contactData } = this.props;
 		//ischanged at inv level
@@ -219,6 +218,7 @@ class InvoiceTemplate extends Component {
 
 		return shippingState + ", ";
 	}
+
 	getTerms = (term) => {
 
 		let val = this.termList &&
@@ -228,6 +228,7 @@ class InvoiceTemplate extends Component {
 			)
 		return val && val.label ? val.label : ''
 	}
+
 	companyMobileNumber = (number) => {
 
 		let number1 = number.split(",")
@@ -285,9 +286,7 @@ class InvoiceTemplate extends Component {
 										alt=""
 										style={{ width: ' 300px' }}
 									/>
-
 								</div>
-
 							</div>
 							<div
 								style={{
@@ -300,7 +299,6 @@ class InvoiceTemplate extends Component {
 								<div style={{
 									width: '97%',
 									textAlign: 'right',
-
 								}}>
 									<div style={{ marginTop: '0.5rem' }}>
 										<h2 className="mb-1 ml-2"><b>TAX INVOICE</b></h2><br />
@@ -315,8 +313,6 @@ class InvoiceTemplate extends Component {
 										<div className="mb-1 ml-2">{strings.MobileNumber}: {this.companyMobileNumber(companyData.phoneNumber ? "+" + companyData.phoneNumber : '')}</div>
 										{companyData.emailAddress&&(<div className="mb-1 ml-2">Email: {companyData.emailAddress}</div>)}
 									</div>
-		
-
 								</div>
 							</div>
 						</div>
@@ -379,21 +375,14 @@ class InvoiceTemplate extends Component {
 									<br />
 									<br />
 									<div className="mb-1 ml-2" >
-
                                         <strong style={{ padding: '0.5rem', background: '#f2f2f2'}}>{strings.BalanceDue}: {invoiceData.dueAmount ?
-
                                         invoiceData.currencyIsoCode + " " +invoiceData.dueAmount.toLocaleString(navigator.language, {minimumFractionDigits: 2, maximumFractionDigits: 2}) :
-
                                         invoiceData.currencyIsoCode + " " +ZERO.toLocaleString(navigator.language, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
-
-                                    </strong>
-									
+										</strong>
 									</div>
 									<div className="mb-1 ml-2 mt-1 w-100" >
-									{(invoiceData.exchangeRate && invoiceData.exchangeRate!==1 ) && <strong style={{ padding: '0.5rem', background: '#f2f2f2'}}>Exchange Rate: {invoiceData.exchangeRate }
-
-</strong>}
-</div>
+									{(invoiceData.exchangeRate && invoiceData.exchangeRate!==1 ) && <strong style={{ padding: '0.5rem', background: '#f2f2f2'}}>{strings.Exchangerate}: {invoiceData.exchangeRate }</strong>}
+									</div>
 								</div>
 							</div>
 						</div>

@@ -424,8 +424,8 @@ class CreateBankTransaction extends React.Component {
 
     }
     formData.append("reference", reference ? reference : "");
-    if (this.uploadFile.files[0]) {
-      formData.append("attachmentFile", this.uploadFile.files[0]);
+    if (this.uploadFile?.files?.[0]) {
+      formData.append("attachmentFile", this.uploadFile?.files?.[0]);
     }
     if (
       payrollListIds &&
@@ -821,7 +821,7 @@ class CreateBankTransaction extends React.Component {
           remainingcredit = localremainamount
         }
         const basecurrency=this.basecurrencyconvertor(i.currencyCode)
-        debugger
+        
         return {
           ...i,
 
@@ -1647,8 +1647,7 @@ class CreateBankTransaction extends React.Component {
                                   </Col>
                                   {props.values.coaCategoryId &&
                                     props.values.coaCategoryId.label ===
-                                    "Supplier Invoice" &&
-                                    props.values.vendorId && (
+                                    "Supplier Invoice" && (
                                       <Col lg={3}>
                                         <FormGroup className="mb-3">
                                           <Label htmlFor="invoiceIdList">
@@ -2097,7 +2096,7 @@ class CreateBankTransaction extends React.Component {
 																								)
 																						}
 																						onChange={(option) => {
-																							debugger
+																							
 																							if (option && option.value) {
 																								props.handleChange(
 																									'currencyCode',

@@ -445,13 +445,18 @@ stockInHandTestForProduct = (row,markAsSent) => {
 						)}
 					</DropdownToggle>
 					<DropdownMenu right>
-						{row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && row.statusEnum !== 'Partially Paid' && (
+						{row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && row.statusEnum !== 'Partially Paid' &&   (
 							<DropdownItem>
 								<div
 									onClick={() => {
+										if(row.editFlag) 
 										this.props.history.push(
 											'/admin/income/customer-invoice/detail',
 											{ id: row.id },
+										);
+										else this.props.commonActions.tostifyAlert(
+											'error',
+											'You cannot edit transactions for which VAT is recorded'
 										);
 									}}
 								>
@@ -481,10 +486,15 @@ stockInHandTestForProduct = (row,markAsSent) => {
               <i className="fas fa-eye" /> View
             </DropdownItem> */}
 
-						{row.statusEnum === 'Sent' && row.editFlag==true && (
+						{row.statusEnum === 'Sent' &&  (
 							<DropdownItem
 								onClick={() => {
+									if(row.editFlag)
 									this.unPostInvoice(row);
+									else this.props.commonActions.tostifyAlert(
+										'error',
+										'You cannot edit transactions for which VAT is recorded'
+									);
 								}}
 							>
 								<i className="fas fa-file" /> {strings.Draft}
@@ -1027,7 +1037,7 @@ stockInHandTestForProduct = (row,markAsSent) => {
 							)}
 							<Row>
 								<Col lg={12}>
-									<div className="mb-4 status-panel p-3">
+									{/* <div className="mb-4 status-panel p-3">
 										<Row className="align-items-center justify-content-around">
 											<div className="h4 mb-0 d-flex align-items-center ">
 												<img
@@ -1144,7 +1154,7 @@ stockInHandTestForProduct = (row,markAsSent) => {
 												</div>
 											</div>
 										</Row>
-									</div>
+									</div> */}
 									<div className="d-flex justify-content-end">
 										<ButtonGroup size="sm">
 											{/* <Button

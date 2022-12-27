@@ -77,6 +77,17 @@ class ViewCustomerInvoice extends React.Component {
 				.getInvoiceById(this.props.location.state.id)
 				.then((res) => {
 					let val = 0;
+					if(!this.props.location.state.contactId)
+					this.props.supplierInvoiceDetailActions
+							.getContactById(res.data.contactId)
+							.then((res) => {
+								if (res.status === 200) {									
+									this.setState({
+										contactData: res.data,
+										isBillingAndShippingAddressSame:res.data.isBillingAndShippingAddressSame
+									});
+								}
+							});
 					if (res.status === 200) {
 						res.data.invoiceLineItems &&
 							res.data.invoiceLineItems.map((item) => {
@@ -114,6 +125,7 @@ class ViewCustomerInvoice extends React.Component {
 						);
 					}
 				});
+				if(this.props.location.state.contactId)
 				this.props.supplierInvoiceDetailActions
 							.getContactById(this.props.location.state.contactId)
 							.then((res) => {

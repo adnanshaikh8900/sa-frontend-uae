@@ -916,7 +916,7 @@ class CreateJournal extends React.Component {
 																		name="description"
 																		id="description"
 																		rows="5"
-																		placeholder={strings.DeliveryNotes}
+																		// placeholder={strings.DeliveryNotes}
 																		value={props.values.description || ''}
 																		onChange={(value) => {
 																			props.handleChange('description')(value);

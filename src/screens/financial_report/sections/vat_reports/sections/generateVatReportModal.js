@@ -147,7 +147,6 @@ class GenerateVatReportModal extends React.Component {
 	generateReport = () => {
 		const { openModal, closeModal } = this.props;
 			let notgererated=true
-			debugger
 		this.props.vatReportDataList.map(({taxReturns})=>{
 			
 			let dateArr = taxReturns ? taxReturns.split("-") : [];
@@ -155,6 +154,14 @@ class GenerateVatReportModal extends React.Component {
 			let currentenddate=moment(this.getEndDate(),'DD-MM-YYYY')
 			let startDate = moment(dateArr[0])
 			let endDate = moment(dateArr[1],'DD/MM/YYYY')
+		
+			console.log(
+				currenttartdate.diff(startDate,'days'),
+			currentenddate.diff(endDate,'days'),
+			currenttartdate.diff(startDate,'days')>=0 && currentenddate.diff(endDate)<=0
+			)
+			let con=currentenddate.diff(endDate,'days')
+			debugger
 			if(currenttartdate.diff(startDate,'days')===0 || 
 			currentenddate.diff(endDate,'days')===0 || 
 			(currenttartdate.diff(startDate,'days')>=0 && currentenddate.diff(endDate,'days')<=0))

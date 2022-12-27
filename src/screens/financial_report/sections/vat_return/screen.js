@@ -197,8 +197,9 @@ class VatReturnsReport extends React.Component {
 		this.props.vatreport
 			.getVatReportList()
 			.then((res) => {
+				
 				if (res.status === 200) {
-					this.setState({ vatReportData: res?.data?.data?.find((i)=>i.id==idofvat) }) // comment for dummy
+					this.setState({ vatReportData: res?.data?.find((i)=>i.id==idofvat) }) // comment for dummy
 				}
 			})
 			.catch((err) => {
@@ -501,8 +502,8 @@ class VatReturnsReport extends React.Component {
 																<th
 																	key={index}
 																	style={{ fontWeight: '600', color:'black' }}
-																	className={`${column.align ? 'text-right' : ''} table-header-color`}
-																	
+																	className={column.align ? 'text-right' : ''}
+																	className="table-header-color"
 																>
 																	{column.label}
 																</th>
@@ -1200,7 +1201,8 @@ class VatReturnsReport extends React.Component {
 																<th
 																	key={index}
 																	style={{ fontWeight: '600', color:'black' }}
-																	className={`${column.align ? 'text-right' : ''} table-header-color`}
+																	className={column.align ? 'text-right' : ''}
+																	className="table-header-color"
 																>
 																	{column.label}
 																</th>
@@ -1395,7 +1397,8 @@ class VatReturnsReport extends React.Component {
 																<th
 																	key={index}
 																	style={{ fontWeight: '600', color:'black' }}
-																	className={`${column.align ? 'text-right' : ''} table-header-color`}
+																	className={column.align ? 'text-right' : ''}
+																	className="table-header-color"
 																>
 																	{column.label}
 																</th>

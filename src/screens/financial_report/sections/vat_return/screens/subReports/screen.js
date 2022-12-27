@@ -161,7 +161,7 @@ class SubReports extends React.Component {
 	getInvoice = (postingType, type, id) => {
 		switch (postingType) {
 			case 'INVOICE':
-			debugger
+		
 			if (type === 1) {
 					this.props.history.push('/admin/expense/supplier-invoice/view', {
 						id,

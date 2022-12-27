@@ -202,7 +202,7 @@ class VatReports extends React.Component {
 			.getVatReportList(postData)
 			.then((res) => {
 				if (res.status === 200) {
-					this.setState({ vatReportDataList: res.data.data }) // comment for dummy
+					this.setState({ vatReportDataList: res.data }) // comment for dummy
 				}
 			})
 			.catch((err) => {

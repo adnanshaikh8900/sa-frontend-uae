@@ -13,7 +13,7 @@ const Getbyid=({row,bankAccountId,closeExplainTransactionModal,transactionDetail
 		setresponsedata(responsedata)
 		})
     },[row])
-   debugger
+   
     return <>
 		
 			<>{

@@ -90,7 +90,7 @@ class GenerateVatReportModal extends React.Component {
 				// startDate: firstdayoflastmonth.setMonth(firstdayoflastmonth.getMonth()-1),
 				// endDate: lastdayoflastmonth.setMonth(lastdayoflastmonth.getMonth(), 0),
 				startDate:new Date(),
-				endDate:new Date(new Date().setMonth(new Date().getMonth() + this.props.monthOption))
+				endDate:new Date(new Date().setMonth(new Date().getMonth() + this.props.monthOption.value))
 			},
 			dialog: null,
 			filterData: {
@@ -132,7 +132,7 @@ class GenerateVatReportModal extends React.Component {
 			{...this.state.initValue,
 			initValue: {
 				startDate:new Date(),
-				endDate:new Date(new Date().setMonth(new Date().getMonth() + this.props.monthOption))
+				endDate:new Date(new Date().setMonth(new Date().getMonth() + this.props.monthOption.value))
 			} })
 	};
 
@@ -146,6 +146,31 @@ class GenerateVatReportModal extends React.Component {
 
 	generateReport = () => {
 		const { openModal, closeModal } = this.props;
+			let notgererated=true
+		this.props.vatReportDataList.map(({taxReturns})=>{
+			
+			let dateArr = taxReturns ? taxReturns.split("-") : [];
+			let currenttartdate=moment(this.getStartDate())
+			let currentenddate=moment(this.getEndDate(),'DD-MM-YYYY')
+			let startDate = moment(dateArr[0])
+			let endDate = moment(dateArr[1],'DD/MM/YYYY')
+		
+			console.log(
+				currenttartdate.diff(startDate,'days'),
+			currentenddate.diff(endDate,'days'),
+			currenttartdate.diff(startDate,'days')>=0 && currentenddate.diff(endDate)<=0
+			)
+			let con=currentenddate.diff(endDate,'days')
+			debugger
+			if(currenttartdate.diff(startDate,'days')===0 || 
+			currentenddate.diff(endDate,'days')===0 || 
+			(currenttartdate.diff(startDate,'days')>=0 && currentenddate.diff(endDate,'days')<=0))
+			notgererated=false
+
+		})
+		if(!notgererated){
+			return this.props.commonActions.tostifyAlert('error', 'VAT Report is Already generated')
+		}
 		this.setState({ disabled: true });
 		const { initValue } = this.state;
 		const postData = {
@@ -170,7 +195,7 @@ class GenerateVatReportModal extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { openModal, closeModal,monthOption } = this.props;
+		const { openModal, closeModal,monthOption,setState,state } = this.props;
 		const { initValue, loading } = this.state;
 
 		var lastdayoflastmonth = new Date();
@@ -186,7 +211,9 @@ class GenerateVatReportModal extends React.Component {
 							<Col lg={12}>
 								<div className="h4 mb-0 d-flex align-items-center">
 									<i className="nav-icon fas fa-user-tie" />
-									<span className="ml-2">Report Filing ( <b>{this.props.monthOption==0?"Monthly":"Quarterly"}</b> )</span>
+									<span className="ml-2">Report Filing 
+									{/* ( <b>{this.props.monthOption==0?"Monthly":"Quarterly"}</b> ) */}
+										</span>
 								</div>
 							</Col>
 						</Row>
@@ -206,9 +233,23 @@ class GenerateVatReportModal extends React.Component {
 											{(props) => (
 												<Form>
 													<Row>
+													<Col lg={4} className=" pull-right ">
+													<Label ><span className="text-danger">* </span>Reporting Period</Label>
+												<Select 
+													options={state.options}
+													id="option"
+													name="option"
+													value={state.monthOption}
+													placeholder="VAT Reporting Period"
+													onChange={(e) => {			
+													setState({enbaleReportGeneration:true,monthOption:e})														
+													}}
+														/>
+														</Col>
+
 													<Col lg={4}>
 												<FormGroup className="mb-3">
-																<Label htmlFor="startDate"><span className="text-danger">* </span>Select Month</Label>
+																<Label htmlFor="startDate"><span className="text-danger">* </span>Generate VAT Report for</Label>
 														<b>	<DatePicker
 																		selected={this.state.monthlyDate}
 																		onChange={(date) =>{
@@ -220,7 +261,7 @@ class GenerateVatReportModal extends React.Component {
 																		minDate={new Date("01/01/2018")}
 																		showMonthYearPicker
 																		withPortal
-																		placeholderText={'Month For VAT Report'}
+																		placeholderText={'Select Month'}
     																  portalId="root-portal"
 																	  className={`text-center`}
 																	  Style={{textAlign:"center !important"}}
@@ -263,11 +304,13 @@ class GenerateVatReportModal extends React.Component {
 															}
 														</Col> */}
 													</Row>
-													<Row>
+													<Row style={{marginTop:20}}>
 														<Col lg={4}>
 															<FormGroup className="mb-3">
 																<Label htmlFor="startDate">{strings.StartDate}</Label>
-																<Input value={this.getStartDate()} 	placeholder="Select Month For Start Date" disabled/>	
+																<Input value={this.getStartDate()} 
+																
+																placeholder="Select Month For Start Date" disabled/>	
 																{/* <DatePicker
 																	id="date"
 																	name="startDate"
@@ -354,9 +397,9 @@ class GenerateVatReportModal extends React.Component {
 									color="primary"
 									className="btn-square "
 									title={this.state.monthlyDate ? "" :"Please Select Month"}
-									disabled={this.state.monthlyDate ? false :true}
+									
 									onClick={this.generateReport}
-								// disabled={selectedRows.length === 0}
+									disabled={this.props.monthOption==="" || !this.state.monthlyDate}
 
 								>
 									<i class="fas fa-check-double mr-1"></i>
@@ -398,47 +441,19 @@ getStartDate=()=>{
 	//
 	getEndDate=()=>{
 		const { monthOption} = this.props;
-	
+		let date=""
 			if(this.state.monthlyDate){
-
-				let date=moment(this.state.monthlyDate).format("DD/MM/YYYY")
-				var datearray = date.split("/");
-
-				let month=( parseInt(datearray[1]) +monthOption)
-
-				if(( parseInt(datearray[1]) +monthOption) >12)
-						{
-							if(( parseInt(datearray[1]) +monthOption) ==13)
-							month=1
-							if(( parseInt(datearray[1]) +monthOption) ==14)
-							month=2
-							if(( parseInt(datearray[1]) +monthOption) ==15)
-							month=3
-						}
-				let day=0		
-				switch(month){
-					case 1:
-					case 3:	
-					case 5:
-					case 7:
-					case 8:	
-					case 10:
-					case 12:	
-					         day=31
-					        break;
-
-					case 2:day=28
-							break;
-
-					case 4:	
-					case 6:
-					case 9:
-					case 11:	
-					        day=30
-					        break;
+				if(monthOption.value===0){
+					date=moment(this.state.monthlyDate).add(1,'month').subtract(1,'day').format("DD-MM-YYYY")
 				}
-				return	(day +"-"+ month +"-"+ parseInt(datearray[2]));
+				else if(monthOption.value===2) {
+					date=moment(this.state.monthlyDate).add(3,'month').subtract(1,'day').format("DD-MM-YYYY")
+				}
+				debugger
+				return date
+				
 			}
+			
 		}
 
 		//

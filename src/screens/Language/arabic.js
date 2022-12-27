@@ -233,7 +233,7 @@ const ar = {
       CreateSupplier:"إنشاء المورد ",		
 
 //Expenses
-      IsReverseCharge:"هو الشحن العكسي",
+      IsReverseCharge:"هل تريد تطبيق الرسوم العكسية على ذلك؟",
       UnitPrice:"سعر الوحدة",
       InclusiveVAT:"شامل ضريبة القيمة المضافة",
       ExclusiveVAT:"ضريبة القيمة المضافة الحصرية",
@@ -387,7 +387,7 @@ const ar = {
       POSTDATE:"تاريخ النشر",		
       PostDate:"تاريخ النشر",
       JOURNALREFERENCENO:"رقم مرجع دفتر اليومية",		
-      TYPE:"نوع",		
+      TYPE:"نوع المنتج",		
       TRANSACTIONTYPE:"نوع المعاملة",
       NOTES:"تلاحظ",
       ACCOUNT:"حساب",		
@@ -456,6 +456,7 @@ const ar = {
       ProductType:"نوع المنتج",
       INVENTORY:"المخزون",
       VATTYPE:"نوع ضريبة القيمة المضافة",
+      VATType:"نوع ضريبة القيمة المضافة",
       excise_slab:"لوح المكوس",
       enabled:"تمكين",
       disabled:"ذوي الاحتياجات الخاصه",

@@ -12,6 +12,7 @@ import {
 	FormGroup,
 	Input,
 	Label,
+	UncontrolledTooltip,
 } from 'reactstrap';
 import Select from 'react-select';
 import { LeavePage, Loader } from 'components';
@@ -100,6 +101,7 @@ class CreateContact extends React.Component {
 				shippingPoBoxNumber: '',
 				taxTreatmentId: '',
 			},
+			country_list:[],
 			state_list_for_shipping: [],
 			createMore: false,
 			checkmobileNumberParam: false,
@@ -257,6 +259,57 @@ class CreateContact extends React.Component {
 				);
 			});
 	};
+	resetCountryList= (taxtid ,props) =>{
+		const{country_list}=this.props;
+		let list=[];
+		if(taxtid === 7 || taxtid === 5 || taxtid === 6){
+			country_list.map( (obj) => {
+				if((taxtid === 6 || taxtid === 5) && (obj.countryCode === 229 || obj.countryCode === 191 || obj.countryCode === 178 ||
+					obj.countryCode === 165 || obj.countryCode === 117 || obj.countryCode === 17)){
+					list.push(obj);
+				}
+				if((taxtid === 7) && (obj.countryCode !== 229 && obj.countryCode !== 191 && obj.countryCode !== 178 &&
+					obj.countryCode !== 165 && obj.countryCode !== 117 && obj.countryCode !== 17)){
+					list.push(obj);
+				}
+			});
+			props.handleChange('billingcountryId')('');
+			props.handleChange('shippingCountryId')('');
+			this.getStateList('');
+			props.handleChange('stateId')({
+				label: 'Select State',
+				value: '',
+			});
+			props.handleChange('billingStateProvince')('');
+			props.handleChange('shippingStateId')('');
+			this.setState({ isSame: false, });
+		}
+		else{
+			list = country_list;	
+			props.handleChange('billingcountryId')(country_list && selectOptionsFactory.renderOptions(
+				'countryName',
+				'countryCode',
+				country_list,
+				'Country',
+			).find((option) => option.value === 229));
+			props.handleChange('shippingCountryId')(country_list && selectOptionsFactory.renderOptions(
+				'countryName',
+				'countryCode',
+				country_list,
+				'Country',
+			).find((option) => option.value === 229));
+			this.getStateListForShippingAddress(229);
+			this.getStateList(229);
+			props.handleChange('stateId')({
+				label: 'Select State',
+				value: '',
+			});
+			props.handleChange('billingStateProvince')('');
+			props.handleChange('shippingStateId')('');
+			this.setState({ isSame: false, });
+		}
+		this.setState({country_list : list });
+	};
 	validationCheck = (value) => {
 		const data = {
 			moduleType: 21,
@@ -304,10 +357,10 @@ class CreateContact extends React.Component {
 		strings.setLanguage(this.state.language);
 		const {
 			currency_list,
-			country_list,
 			contact_type_list,
 			state_list,
 		} = this.props;
+		const {country_list} = this.state.country_list;
 		const { initValue, checkmobileNumberParam, taxTreatmentList, isSame, state_list_for_shipping } = this.state;
 		const { loading, loadingMsg } = this.state;
 
@@ -372,6 +425,9 @@ class CreateContact extends React.Component {
 																if (values.billingcountryId == 229 || values.billingcountryId.value == 229) {
 																	if (values.billingPoBoxNumber === '')
 																		errors.poBoxNumber = 'PO box number is required';
+																	else if (this.state.showpoBoxNumberErrorMsg == true)
+																		errors.poBoxNumber = "Please enter 3 To 6 digit po box number"
+
 																	if(values.billingStateProvince =="")  
 																		errors.billingStateProvince ='Emirate is required';
 																} else {
@@ -386,7 +442,10 @@ class CreateContact extends React.Component {
 																}
 																if (values.shippingCountryId == 229 || values.shippingCountryId.value == 229) {
 																	if (values.shippingPoBoxNumber === '')
-																		errors.poBoxNumber = 'PO box number is required';
+																		errors.shippingPoBoxNumber = 'PO box number is required';
+																	else if (this.state.showshippingpoBoxNumberErrorMsg == true)
+																		errors.shippingPoBoxNumber = "Please enter 3 To 6 digit po box number"
+
 																	if(values.shippingStateId =="")  
 																		errors.shippingStateId ='Emirate is required';
 																} else {
@@ -405,8 +464,8 @@ class CreateContact extends React.Component {
 																if (this.state.showshippingFaxErrorMsg == true)
 																	errors.shippingFax = "Please enter 15 digit Fax"
 
-																if (this.state.showpoBoxNumberErrorMsg == true)
-																	errors.poBoxNumber = "Please enter 3 To 6 digit po box number"
+																
+																
 
 																return errors;
 
@@ -658,6 +717,16 @@ class CreateContact extends React.Component {
 																				<Label htmlFor="contactType">
 																					<span className="text-danger">* </span>
 																					{strings.ContactType}
+																					<i
+																				id="Contacttyprtip"
+																				className="fa fa-question-circle ml-1"
+																			></i>
+																			<UncontrolledTooltip
+																				placement="right"
+																				target="Contacttyprtip"
+																			>
+																				The contact type cannot be changed once a document has been created for this contact.
+																			</UncontrolledTooltip>
 																				</Label>
 																				<Select
 																					options={
@@ -780,6 +849,16 @@ class CreateContact extends React.Component {
 																				<Label htmlFor="currencyCode">
 																					<span className="text-danger">* </span>
 																					{strings.Currency}
+																					<i
+																				id="Currencytip"
+																				className="fa fa-question-circle ml-1"
+																			></i>
+																			<UncontrolledTooltip
+																				placement="right"
+																				target="Currencytip"
+																			>
+																				You cannot change the currency once a document is created for this contact.
+																			</UncontrolledTooltip>
 																				</Label>
 																				<Select
 																					options={
@@ -951,6 +1030,16 @@ class CreateContact extends React.Component {
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="taxTreatmentId">
 																					<span className="text-danger">* </span>{strings.TaxTreatment}
+																					<i
+																				id="TaxTreatmenttip"
+																				className="fa fa-question-circle ml-1"
+																			></i>
+																			<UncontrolledTooltip
+																				placement="right"
+																				target="TaxTreatmenttip"
+																			>
+																				Once any document has been created for this contact, you cannot change the Tax treatment.
+																			</UncontrolledTooltip>
 																				</Label>
 																				<Select
 																					options={
@@ -963,6 +1052,7 @@ class CreateContact extends React.Component {
 																							)
 																							: []
 																					}
+																					isDisabled={this.state.childRecordsPresent}
 																					id="taxTreatmentId"
 																					name="taxTreatmentId"
 																					placeholder={strings.Select + strings.TaxTreatment}
@@ -971,6 +1061,7 @@ class CreateContact extends React.Component {
 																						// this.setState({
 																						//   selectedVatCategory: option.value
 																						// })
+																						this.resetCountryList(option.value, props);
 																						if (option && option.value) {
 
 																							props.handleChange('taxTreatmentId')(
@@ -1097,15 +1188,16 @@ class CreateContact extends React.Component {
 																				<Label htmlFor="billingcountryId"><span className="text-danger">* </span>{strings.Country}</Label>
 																				<Select
 																					options={
-																						country_list
+																						this.state.country_list
 																							? selectOptionsFactory.renderOptions(
 																								'countryName',
 																								'countryCode',
-																								country_list,
+																								this.state.country_list,
 																								'Country',
 																							)
 																							: []
 																					}
+																					isDisabled = {props.values.taxTreatmentId.value === 1 || props.values.taxTreatmentId.value === 2 || props.values.taxTreatmentId.value === 3 || props.values.taxTreatmentId.value === 4}
 																					value={props.values.billingcountryId}
 																					onChange={(option) => {
 																						if (option && option.value) {
@@ -1120,6 +1212,7 @@ class CreateContact extends React.Component {
 																							label: 'Select State',
 																							value: '',
 																						});
+																						props.handleChange('billingStateProvince')('');
 																					}}
 																					placeholder={strings.Select + strings.Country}
 																					id="billingcountryId"
@@ -1157,13 +1250,7 @@ class CreateContact extends React.Component {
 																							: []
 																					}
 																					// value={props.values.billingStateProvince}
-																					value={
-																						state_list.find(
-																							(option) =>
-																								option.value ===
-																								+props.values.billingStateProvince.value,
-																						)
-																					}
+																					value={props.values.billingStateProvince}
 																					onChange={(option) => {
 																						if (option && option.value) {
 																							props.handleChange('billingStateProvince')(option);
@@ -1264,7 +1351,7 @@ class CreateContact extends React.Component {
 																				<FormGroup>
 																					{/* <Label htmlFor="select">{strings.POBoxNumber}</Label> */}
 																					<Label htmlFor="POBoxNumber">
-																						<span className="text-danger">* </span>{strings.BillingPOBoxNumber}
+																						<span className="text-danger">* </span>{strings.POBoxNumber}
 																					</Label>
 																					<Input
 																						type="text"
@@ -1273,7 +1360,7 @@ class CreateContact extends React.Component {
 																						id="poBoxNumber"
 																						name="poBoxNumber"
 																						autoComplete="Off"
-																						placeholder={strings.Enter + strings.BillingPOBoxNumber}
+																						placeholder={strings.Enter + strings.POBoxNumber}
 																						onChange={(option) => {
 																							if (
 																								option.target.value === '' ||
@@ -1535,30 +1622,17 @@ class CreateContact extends React.Component {
 																				<Label htmlFor="shippingCountryId"><span className="text-danger">* </span>{strings.Country}</Label>
 																				<Select
 																					options={
-																						country_list
+																						this.state.country_list
 																							? selectOptionsFactory.renderOptions(
 																								'countryName',
 																								'countryCode',
-																								country_list,
+																								this.state.country_list,
 																								'Country',
 																							)
 																							: []
 																					}
-																					value={
-																						country_list &&
-																						selectOptionsFactory
-																							.renderOptions(
-																								'countryName',
-																								'countryCode',
-																								country_list,
-																								'Country',
-																							)
-																							.find(
-																								(option) =>
-																									option.value ===
-																									+props.values.shippingCountryId.value,
-																							)
-																					}
+																					value={props.values.shippingCountryId}
+																					isDisabled = {props.values.taxTreatmentId.value === 1 || props.values.taxTreatmentId.value === 2 || props.values.taxTreatmentId.value === 3 || props.values.taxTreatmentId.value === 4}
 																					onChange={(option) => {
 																						if (option && option.value) {
 																							props.handleChange('shippingCountryId')(option);
@@ -1568,10 +1642,7 @@ class CreateContact extends React.Component {
 																							props.handleChange('shippingCountryId')('');
 																							// this.getStateListForShippingAddress('');
 																						}
-																						props.handleChange('stateId')({
-																							label: 'Select State',
-																							value: '',
-																						});
+																						props.handleChange('shippingStateId')('');
 																					}}
 																					placeholder={strings.Select + strings.Country}
 																					id="shippingCountryId"
@@ -1608,13 +1679,7 @@ class CreateContact extends React.Component {
 																							)
 																							: []
 																					}
-																					value={
-																						state_list_for_shipping.find(
-																							(option) =>
-																								option.value ===
-																								+props.values.shippingStateId.value,
-																						)
-																					}
+																					value={props.values.shippingStateId}
 																					onChange={(option) => {
 																						if (option && option.value) {
 																							props.handleChange('shippingStateId')(option);
@@ -1684,7 +1749,7 @@ class CreateContact extends React.Component {
 																				<FormGroup>
 																					{/* <Label htmlFor="select">{strings.POBoxNumber}</Label> */}
 																					<Label htmlFor="POBoxNumber">
-																						<span className="text-danger">* </span>{strings.ShippingPOBoxNumber}
+																						<span className="text-danger">* </span>{strings.POBoxNumber}
 																					</Label>
 																					<Input
 																						type="text"
@@ -1693,16 +1758,16 @@ class CreateContact extends React.Component {
 																						id="shippingPoBoxNumber"
 																						name="shippingPoBoxNumber"
 																						autoComplete="Off"
-																						placeholder={strings.Enter + strings.ShippingPOBoxNumber}
+																						placeholder={strings.Enter + strings.POBoxNumber}
 																						onChange={(option) => {
 																							if (
 																								option.target.value === '' ||
 																								this.regEx.test(option.target.value)
 																							) {
 																								if (option.target.value.length < 3)
-																									this.setState({ showpoBoxNumberErrorMsg: true })
+																									this.setState({ showshippingpoBoxNumberErrorMsg: true })
 																								else
-																									this.setState({ showpoBoxNumberErrorMsg: false })
+																									this.setState({ showshippingpoBoxNumberErrorMsg: false })
 																								props.handleChange('shippingPoBoxNumber')(
 																									option,
 																								);
@@ -1710,16 +1775,16 @@ class CreateContact extends React.Component {
 																						}}
 																						value={props.values.shippingPoBoxNumber}
 																						className={
-																							props.errors.poBoxNumber &&
-																								props.touched.poBoxNumber
+																							props.errors.shippingPoBoxNumber &&
+																								props.touched.shippingPoBoxNumber
 																								? 'is-invalid'
 																								: ''
 																						}
 																					/>
-																					{props.errors.poBoxNumber &&
-																						props.touched.poBoxNumber && (
+																					{props.errors.shippingPoBoxNumber &&
+																						props.touched.shippingPoBoxNumber && (
 																							<div className="invalid-feedback">
-																								{props.errors.poBoxNumber}
+																								{props.errors.shippingPoBoxNumber}
 																							</div>
 																						)}
 																				</FormGroup>
@@ -1852,6 +1917,7 @@ class CreateContact extends React.Component {
 																					className="btn-square mr-3"
 																					disabled={this.state.disabled}
 																					onClick={() => {
+																						console.log(props.errors,"ERROR");
 																						//  added validation popup  msg                                                                
 																						props.handleBlur();
 																						if (props.errors && Object.keys(props.errors).length != 0)

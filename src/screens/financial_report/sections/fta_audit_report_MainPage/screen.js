@@ -382,7 +382,7 @@ class FtaAuditReport extends React.Component {
 												}}
 												
 											>
-												<i className="fa fa-cog mr-2"></i>{strings.FTA_Audit_Report}
+												{strings.FTA_Audit_Report}
 											</p>
 										</div>
 										<div>

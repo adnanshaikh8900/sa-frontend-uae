@@ -117,6 +117,10 @@ class DetailCustomerInvoice extends React.Component {
 			language: window['localStorage'].getItem('language'),
 			param :false,
 			date:''	,
+			isDesignatedZone:false,
+			isRegisteredVat:false,
+			invoiceDateForVatValidation:new Date(),
+			producttype:[],
 			changeShippingAddress:'',
 			shippingAddress:'',
 			shippingCountryId:'',
@@ -128,7 +132,7 @@ class DetailCustomerInvoice extends React.Component {
 			shippingFax:'',
 			loadingMsg:"Loading",
 			disableLeavePage:false, 
-		datesChanged : false	};
+			datesChanged : false	};
 
 		// this.options = {
 		//   paginationPosition: 'top'
@@ -179,6 +183,7 @@ class DetailCustomerInvoice extends React.Component {
 			 this.setState({vat_list:res.data})
 		});
 		this.initializeData();
+		this.getCompanyType();
 	};
 	salesCategory = () => {
 		try {
@@ -289,6 +294,9 @@ class DetailCustomerInvoice extends React.Component {
 										: '',
 								invoiceDueDate: res.data.invoiceDueDate
 									? res.data.invoiceDueDate
+									: '',
+								invoiceDateForVatValidation: res.data.invoiceDate
+									? new Date(res.data.invoiceDate)
 									: '',
 								discountAmount: res.data.discount ? res.data.discount : 0,
 								discountPercentage: res.data.discountPercentage
@@ -750,17 +758,15 @@ class DetailCustomerInvoice extends React.Component {
 	};
 	addRow = () => {
 		const data = [...this.state.data];
-		const idCount =
-						this.state.idCount?
-								this.state.idCount:
-												data.length > 0
-													? Math.max.apply(
-															Math,
-															data.map((item) => {
-																return item.id;
-															}),
-													)
-													: 0;
+		const idCount =this.state.idCount? this.state.idCount:
+						data.length > 0
+							? Math.max.apply(
+									Math,
+									data.map((item) => {
+										return item.id;
+									}),
+							)
+							: 0;
 		this.setState(
 			{
 				data: data.concat({
@@ -821,14 +827,140 @@ class DetailCustomerInvoice extends React.Component {
 			});
 		}
 	};
-
+	getCustomerShippingAddress = (cutomerID,taxID,props) =>{
+		if(taxID !== 5 && taxID !== 6 && taxID !== 7){
+			this.props.customerInvoiceDetailActions.getCustomerShippingAddressbyID(cutomerID).then((res) => {
+				if(res.status === 200){
+					var PlaceofSupply= this.placelist &&
+						selectOptionsFactory.renderOptions(
+							'label',
+							'value',
+							this.placelist,
+							'Place of Supply',).
+							find((option) => option.label.toUpperCase() === res.data.shippingStateName.toUpperCase())
+						if(PlaceofSupply){
+						props.handleChange('placeOfSupplyId')(PlaceofSupply,);
+						this.setState({placeOfSupplyId : PlaceofSupply});
+						this.formRef.current.setFieldValue('placeOfSupplyId', PlaceofSupply.value, true);
+					}
+				}
+			});
+		}
+	};
+	getCompanyType = () => {
+		this.props.customerInvoiceDetailActions
+			.getCompanyById()
+			.then((res) => {
+					if (res.status === 200) {
+						this.setState({
+							isDesignatedZone: res.data.isDesignatedZone,
+							companyVATRegistrationDate : new Date(moment(res.data.vatRegistrationDate).format('MM DD YYYY')),
+						});
+						this.setState({
+							isRegisteredVat: res.data.isRegisteredVat,
+						});
+					}
+				})
+			.catch((err) => {
+				console.log(err,"Get Company Type Error");
+			});
+	};
+	getProductType=(id)=>{
+		if(this.state.customer_taxTreatment_des){
+			this.props.customerInvoiceDetailActions
+			.getProductById(id)
+			.then((res) => {
+				if (res.status === 200) {
+					var { vat_list } = this.state;
+					let pt={};
+					var vt=[];
+					pt.id=res.data.productID;
+					pt.type=res.data.productType
+					if(this.state.isRegisteredVat && (this.state.invoiceDateForVatValidation > this.state.companyVATRegistrationDate)){
+						if(this.state.isDesignatedZone ){
+							if(res.data.productType=== "GOODS" ){
+								if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+									vat_list.map(element => {
+										if(element.name=='OUT OF SCOPE'){
+											vt.push(element);
+										}
+									});
+								}
+								if(this.state.customer_taxTreatment_des==='NON-VAT REGISTERED'){
+									vt=vat_list;
+								}
+							}
+							else if(res.data.productType === "SERVICE"){
+								if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE'){
+									vt=vat_list;
+								}
+								if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+									vat_list.map(element => {
+										if(element.name=='ZERO RATED TAX (0%)'){
+											vt.push(element);
+										}
+									});
+									
+								}	
+							}
+						}else{
+							if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE'){
+								vt=vat_list;
+							}
+							if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+								vat_list.map(element => {
+									if(element.name=='ZERO RATED TAX (0%)'){
+										vt.push(element);
+									}
+								});
+								
+							}	
+						}
+					}else{
+						vt=[{
+							"id": 10,
+							"vat": 0,
+							"name": "N/A"
+						}];
+					}
+					pt.vat_list=vt;
+					this.setState(prevState => ({
+						producttype: [...prevState.producttype, pt]
+					}));
+				}
+		})
+		.catch((err) => {
+			console.log(err,"Get Product by ID Error");
+		});
+	}
+	
+	};
+	resetVatId = (props) => {
+		this.setState({
+			producttype: [],
+		});
+		let newData = [];
+		const data = this.state.data;
+		data.map((obj,index) => {
+				obj['vatCategoryId'] = '' ;
+				newData.push(obj);
+				return obj;
+			
+		})
+		props.setFieldValue('lineItemsString', newData, true);
+		this.updateAmount(newData, props);
+	};
 	renderVat = (cell, row, props) => {
-		// const { vat_list } = this.props;
-		const { vat_list } = this.state;
-		let vatList = vat_list && vat_list.length
-			? [{ id: '', vat: 'Select VAT' }, ...vat_list]
-			: vat_list;
+		// const { vat_list } = this.state;
+		// let vatList = vat_list && vat_list.length
+		// 	? [{ id: '', vat: 'Select VAT' }, ...vat_list]
+		// 	: vat_list;
 		let idx;
+		let vat_list=[];
+		const product = this.state.producttype.find(element => element.id === row.productId);
+		if(product){
+			vat_list=product.vat_list;
+		}
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
 				idx = index;
@@ -856,7 +988,7 @@ class DetailCustomerInvoice extends React.Component {
 							vat_list &&
 							selectOptionsFactory
 								.renderOptions('name', 'id', vat_list, 'VAT')
-								.find((option) => option.value === +row.vatCategoryId)
+								.find((option) => option.value == row.vatCategoryId)
 						}
 						id="vatCategoryId"
 						placeholder={strings.Select+strings.VAT}
@@ -959,6 +1091,15 @@ class DetailCustomerInvoice extends React.Component {
 				obj['unitType']=result.unitType;
 				obj['unitTypeId']=result.unitTypeId;
 				idx = index;
+				this.state.producttype.map(element => {
+					if(element.id===e){
+						const found = element.vat_list.find(element => element.id === result.vatCategoryId);
+						if(!found){
+							obj['vatCategoryId']='';
+						}
+						return found;
+					}
+				});
 			}
 			return obj;
 		});
@@ -1005,7 +1146,14 @@ class DetailCustomerInvoice extends React.Component {
 		// 	: product_list;
 			
 		var product_list1=product_list.filter((obj)=>obj.stockOnHand !=0 )
-		
+		product_list=product_list.filter((row)=>row.stockOnHand !=0 );
+		if(product_list.length>0){
+			if(product_list.length > this.state.producttype.length){
+				product_list.map(element => {
+					this.getProductType(element.id);
+				});
+			}
+		}
 		let idx;
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -1054,7 +1202,7 @@ class DetailCustomerInvoice extends React.Component {
 							if (e && e.label !== 'Select Product') {
 								this.selectItem(e.value, row, 'productId', form, field, props);
 								this.prductValue(e.value, row, 'productId', form, field, props);
-								if(this.checkedRow()==false)
+								if(this.checkedRow())
 								this.addRow();
 							}
 						}}
@@ -1139,7 +1287,8 @@ class DetailCustomerInvoice extends React.Component {
 	checkedRow = () => {
 		if (this.state.data.length > 0) {
 			let length = this.state.data.length - 1;
-			let temp = Object.values(this.state.data[`${length}`]).indexOf('');
+			let temp = this.state.data?.[length].productId!==""?
+			this.state.data?.[length].productId:-2;
 			if (temp > -1) {
 				return true;
 			} else {
@@ -1163,10 +1312,10 @@ class DetailCustomerInvoice extends React.Component {
 		data.map((obj) => {
 			let unitprice=obj.unitPrice
 			const index =
-				obj.vatCategoryId !== ''
+				obj.vatCategoryId !== '' && vat_list
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
-			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
+			const vat = index !== '' && index >= 0? vat_list[`${index}`].vat : 0;
 
 			//Exclusive case
 			if(this.state.taxType === false){
@@ -1495,8 +1644,8 @@ class DetailCustomerInvoice extends React.Component {
 		if (project) {
 			formData.append('projectId', project);
 		}
-		if (this.uploadFile.files[0]) {
-			formData.append('attachmentFile', this.uploadFile.files[0]);
+		if (this.uploadFile?.files?.[0]) {
+			formData.append('attachmentFile', this.uploadFile?.files?.[0]);
 		}
 		this.setState({ loading:true, disableLeavePage:true, loadingMsg:"Updating Invoice..."});
 		this.props.customerInvoiceDetailActions
@@ -1622,13 +1771,21 @@ class DetailCustomerInvoice extends React.Component {
 			});
 	};	
 
-	setExchange = (value) => {
+	setExchange = (value,props) => {
 		let result = this.props.currency_convert_list.filter((obj) => {
 		return obj.currencyCode === value;
 		});
-		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
-		this.exchangeRaterevalidate(result[0].exchangeRate)
-		};
+		if(result[0]){
+			this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
+			//props.handleChange('exchangeRate')(result[0].exchangeRate,);
+			this.exchangeRaterevalidate(result[0].exchangeRate)
+		}
+		else{
+			this.formRef.current.setFieldValue('exchangeRate', '', true);
+			//props.handleChange('exchangeRate')(result[0].exchangeRate,);
+			this.exchangeRaterevalidate('')
+		}
+	};
 
 	deleteInvoice = () => {
 		const message1 =
@@ -1694,7 +1851,6 @@ class DetailCustomerInvoice extends React.Component {
 				customer_item_currency = item.label.currency
 			}
 		})
-	
 		return customer_currencyCode;
 	}
 	getTaxTreatment= (opt) => {
@@ -1792,21 +1948,13 @@ class DetailCustomerInvoice extends React.Component {
 																'Discount amount Cannot be greater than invoice total amount';
 														}
 
-														if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
-														||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
-														||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED" )
+														if(this.state.customer_taxTreatment_des!="NON GCC" && this.state.customer_taxTreatment_des!="GCC NON-VAT REGISTERED" && this.state.customer_taxTreatment_des!="GCC VAT REGISTERED")
 														{
-															
 															if (!values.placeOfSupplyId) 
-													       	errors.placeOfSupplyId ='Place of supply is required';
-														if (values.placeOfSupplyId &&
-															(values.placeOfSupplyId=="" ||
-															(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")
-															)
-														   )
-													         errors.placeOfSupplyId ='Place of supply is required';
-														
-													   }
+													       		errors.placeOfSupplyId ='Place of supply is required';
+															if (values.placeOfSupplyId && (values.placeOfSupplyId=="" || (values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")))
+													         	errors.placeOfSupplyId ='Place of supply is required';
+													   	}
 
 														// if (values.placeOfSupplyId && values.placeOfSupplyId.label &&( values.placeOfSupplyId.label === "Select Place of Supply"))
 														//  {
@@ -2018,7 +2166,7 @@ class DetailCustomerInvoice extends React.Component {
 																		<Select
 																			id="contactId"
 																			name="contactId"
-																			isDisabled
+																			
 																			options={
 																				tmpCustomer_list
 																					? selectOptionsFactory.renderOptions(
@@ -2039,16 +2187,19 @@ class DetailCustomerInvoice extends React.Component {
 																				)
 																			}
 																			onChange={(option) => {
+																				this.resetVatId(props);
 																				if (option && option.value) {
 																					this.formRef.current.setFieldValue('currencyCode', this.getCurrency(option.value), true);
 																					this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(option.value), true);
-																					this.setExchange( this.getCurrency(option.value) );
+																					this.setExchange(this.getCurrency(option.value),props );
 																					props.handleChange('contactId')(
 																						option.value,
 																					);
 																				} else {
 																					props.handleChange('contactId')('');
 																				}
+																				this.getCustomerShippingAddress(option.value,this.getTaxTreatment(option.value),props);
+																			
 																				// this.getCurrentUser(option)
 																			}}
 																			className={
@@ -2119,7 +2270,8 @@ class DetailCustomerInvoice extends React.Component {
 																	</Button>
 																</Col> */}
 																<Col lg={3}>
-																{this.state.customer_taxTreatment_des!="NON GCC" &&(	<FormGroup className="mb-3">
+																{this.state.customer_taxTreatment_des !== "NON GCC" && this.state.customer_taxTreatment_des !== "GCC VAT REGISTERED" && this.state.customer_taxTreatment_des !== "GCC NON-VAT REGISTERED" &&
+																	(	<FormGroup className="mb-3">
 																		<Label htmlFor="placeOfSupplyId">
 																		<span className="text-danger">* </span>
 																		{/* {this.state.customer_taxTreatment_des &&
@@ -2298,7 +2450,10 @@ class DetailCustomerInvoice extends React.Component {
 																			 selected={new Date(props.values.invoiceDate1)} 
 																			
 																			onChange={(value) => {
-																			
+																				if((this.state.invoiceDateForVatValidation < this.state.companyVATRegistrationDate && value > this.state.companyVATRegistrationDate ) || (value < this.state.companyVATRegistrationDate && this.state.invoiceDateForVatValidation > this.state.companyVATRegistrationDate)){
+																					this.resetVatId(props);
+																				}
+																				this.setState({invoiceDateForVatValidation : value});
 																				props.handleChange('invoiceDate')(
 																					value
 																				);
@@ -2364,7 +2519,7 @@ class DetailCustomerInvoice extends React.Component {
 																		</Label>
 																		<Select
 																		isDisabled={true}
-																			styles={customStyles}
+																		styles={customStyles}
 																			options={
 																				currency_convert_list
 																					? selectCurrencyFactory.renderOptions(
@@ -2377,6 +2532,7 @@ class DetailCustomerInvoice extends React.Component {
 																			}
 																			id="currencyCode"
 																			name="currencyCode"
+																			placeholder={strings.Select+strings.Currency}
 																			value={
 																				currency_convert_list &&
 																				selectCurrencyFactory
@@ -2798,6 +2954,7 @@ class DetailCustomerInvoice extends React.Component {
 																			className="form-control"
 																			id="currencyName"
 																			name="currencyName"
+																			placeholder='Select Currency'
 																			value={this.state.customer_currency_des ? this.state.customer_currency_des : props.values.currencyName}
 																			onChange={(value) => {
 																				props.handleChange('currencyName')(
@@ -2822,7 +2979,6 @@ class DetailCustomerInvoice extends React.Component {
 																			className="form-control"
 																			id="exchangeRate"
 																			name="exchangeRate"
-																			
 																			value={props.values.exchangeRate}
 																			onChange={(value) => {
 																				props.handleChange('exchangeRate')(

@@ -246,7 +246,7 @@ const en = {
       excise:"Excise",
 
 //Expenses
-      IsReverseCharge:"Is Reverse Charge",
+      IsReverseCharge:"Do you want to apply Reverse Charge to this?",
       ExpenseNumber:"Expense Number",
       InclusiveVAT:"Inclusive VAT",
       ExclusiveVAT:"Exclusive VAT",
@@ -437,7 +437,7 @@ const en = {
 //Add Chart of Accounts
       NewChartAccount:"New Chart Account",		
       Name:"Name",		
-      Type:"Type",		
+      Type:"Product Type",		
       Chart_of_Account:"Chart of Account",
 
 //Contact
@@ -471,6 +471,7 @@ const en = {
       ProductType:"PRODUCT TYPE",	
       INVENTORY:"INVENTORY",
       VATTYPE:"VAT TYPE",
+      VATType:"VAT Type",
       excise_slab:"EXCISE SLAB",
       enabled:"Enabled",
       disabled:"Disabled",
@@ -918,13 +919,13 @@ const en = {
       HorizontalBalanceSheet:"Horizontal Balance Sheet",
       TrailBalances:"Trial Balances",
       VatReports:"VAT Reports",
-      FTA_Audit_Report:"FTA Audit Report",
-      Excise_Tax_Report:"Excise Tax Report",
+      FTA_Audit_Report:"FTA VAT Audit File",
+      Excise_Tax_Report:"FTA Excise Tax Audit File",
       Audit_Start_Date:"Audit Start Date",
       Audit_End_Date:"Audit End Date",
       Created_Date:" Created Date",
       Created_By:"Created By",
-      Excise_Tax_Audit_Report:" Excise Tax Audit Report",
+      Excise_Tax_Audit_Report:" FTA Excise Tax Audit File",
       VatReturnsReport:"VAT Returns Report",
       VatTransactionReport:"VAT Transaction Report",
       Detailed:"Detailed",
@@ -952,7 +953,7 @@ const en = {
       UpdateReceipt:"UpdateReceipt",
       Invoice:"Invoice",
       InvoiceNo:"Invoice No",
-      ReferenceNo:"Reference No",
+      ReferenceNo:"Reference Number",
       Details:"Details",
       SupplierInvoiceDetails:"Supplier Invoice Details",
       ModeTBD:"Mode(TBD)",

@@ -32,6 +32,7 @@ import { Checkbox } from '@material-ui/core';
 import Switch from "react-switch";
 import { TextareaAutosize } from '@material-ui/core';
 import currency from 'screens/currency';
+import { getCustomerInvoicesCountForDelete } from 'screens/customer_invoice/actions';
 
 const mapStateToProps = (state) => {
 	return {
@@ -92,10 +93,15 @@ class CreateExpense extends React.Component {
 			},
 			count:0,
 			expenseType:false,
+			isVatClaimable:true,
+			taxTreatmentId:'',
 			isReverseChargeEnabled:false,
 			currentData: {},
 			fileName: '',
 			payMode: '',
+			expenseDateForVatValidation:new Date(),
+			isRegisteredVat: false,
+			companyVATRegistrationDate : new Date(),
 			exchangeRate:'',
 			basecurrency:[],
 			// disabled: false,
@@ -149,7 +155,6 @@ class CreateExpense extends React.Component {
 					if (res.status === 200) {
 						this.getCompanyCurrency();					
 						const {vat_list}=this.props
-						console.log("in degugger"+res.data)
 					let vatCategoryId=
 						vat_list ?
 							selectOptionsFactory
@@ -204,12 +209,15 @@ class CreateExpense extends React.Component {
 										: '',
 									
 								},
-								payee:res.data.payee ? res.data.payee :'', 
+								payee:res.data.payee ? res.data.payee : '', 
 								expenseType: res.data.expenseType ? true : false,
-								showPlacelist:res.data.taxTreatmentId !=8?true:false,
-								lockPlacelist:res.data.taxTreatmentId ==7?true:false,
+								isVatClaimable: res.data.isVatClaimable ? false : true,
+								showPlacelist:res.data.taxTreatmentId !== 8 ? true : false,
+								lockPlacelist:res.data.taxTreatmentId === 7 ? true : false,
+								taxTreatmentId : res.data.taxTreatmentId ? res.data.taxTreatmentId : '',
 								isReverseChargeEnabled:res.data.isReverseChargeEnabled ?res.data.isReverseChargeEnabled:false,
 								exclusiveVat: res.data.exclusiveVat==true ? true : false,
+								expenseDateForVatValidation: new Date(res.data.expenseDate),
 								view:
 									this.props.location.state && this.props.location.state.view
 										? true
@@ -250,34 +258,33 @@ class CreateExpense extends React.Component {
 								let expenseCategory= selectOptionsFactory.renderOptions('transactionCategoryName','transactionCategoryId',	this.props.expense_categories_list,	'Expense Category', )
 								                                         .find((option)=>option.value==res.data.expenseCategory);
 								this.formRef.current.setFieldValue('expenseCategory',expenseCategory, true);
-
 								this.formRef.current.setFieldValue('expenseDate', new Date(res.data.expenseDate), true);
-
 								let currency= selectCurrencyFactory.renderOptions('currencyName','currencyCode',this.props.currency_convert_list,'Currency',)
-																	.find(
-																		(option) =>
-																			option.value ==res.data.currencyCode,
-																	)
+																	.find((option) => option.value ==res.data.currencyCode,																	)
 								this.formRef.current.setFieldValue('currency',currency , true);
 								this.formRef.current.setFieldValue('currencyCode',currency , true);
 								this.setExchange(currency && currency.value);
 								this.setCurrency(currency && currency.value);
-							let payMode=	selectOptionsFactory.renderOptions('label',	'value',this.props.pay_mode_list,	'',)
+								let payMode=	selectOptionsFactory.renderOptions('label',	'value',this.props.pay_mode_list,	'',)
 																.find((option)=>option.value==res.data.payMode)
 								this.formRef.current.setFieldValue('payMode',payMode , true);
-								
 								this.formRef.current.setFieldValue('expenseAmount', res.data.expenseAmount, true);
-							let vat=	selectOptionsFactory.renderOptions(
+								let vat=	selectOptionsFactory.renderOptions(
 									'name',
 									'id',
 									this.props.vat_list,
 									'VAT',
-							  ).find((option)=>option.value==res.data.vatCategoryId)
+								).find((option)=>option.value==res.data.vatCategoryId)
+								if(res.data.vatCategoryId === 10){
+									vat={};
+									vat.label="N/A";
+									vat.value="10";
+								}
 								this.formRef.current.setFieldValue('vatCategoryId',  vat, true);
-								this.formRef.current.setFieldValue('expenseDescription',  res.data.expenseDescription, true);
-								this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
-								this.formRef.current.setFieldValue('receiptAttachmentDescription', res.data.receiptAttachmentDescription, true);
-								this.formRef.current.setFieldValue('notes',  res.data.notes, true);
+								// this.formRef.current.setFieldValue('expenseDescription',  res.data.expenseDescription, true);
+								// this.formRef.current.setFieldValue('receiptNumber', res.data.receiptNumber, true);
+								// this.formRef.current.setFieldValue('receiptAttachmentDescription', res.data.receiptAttachmentDescription, true);
+								// this.formRef.current.setFieldValue('notes',  res.data.notes, true);
 
 								let payee=	selectOptionsFactory.renderOptions(	'label','value',	this.props.pay_to_list,	'Payee',)
 								.find((option) => 	option.label == res.data.payee)
@@ -353,15 +360,18 @@ class CreateExpense extends React.Component {
 		this.getcurentCompanyUser()
 	};
 	getcurentCompanyUser=()=>{
-	this.props.expenseCreateActions.checkAuthStatus().then((response) => {
+		this.props.expenseCreateActions.checkAuthStatus().then((response) => {
 		let userStateName    = response.data.company.companyStateCode.stateName ?response.data.company.companyStateCode.stateName:'';
 		let isDesignatedZone =response.data.company.isDesignatedZone?response.data.company.isDesignatedZone:false;
 			
 			this.setState({
 				userStateName:userStateName,
-				isDesignatedZone:isDesignatedZone})
+				isDesignatedZone:isDesignatedZone,
+				isRegisteredVat:response.data.company.isRegisteredVat,
+				companyVATRegistrationDate : new Date(response.data.company.vatRegistrationDate),
+			})
 	
-	});
+		});
 	}
 	getTaxTreatmentList=()=>{
 		this.props.expenseActions
@@ -409,8 +419,9 @@ class CreateExpense extends React.Component {
 			footNote
 		} = data;
 		let formData = new FormData();
-		
 		formData.append('expenseType',  this.state.expenseType );
+		formData.append('isVatClaimable',  this.state.isVatClaimable );
+
 		formData.append('delivaryNotes',notes);
 		formData.append('footNote',footNote? footNote : '')
 		formData.append('expenseNumber', expenseNumber ? expenseNumber : '');
@@ -419,10 +430,7 @@ class CreateExpense extends React.Component {
 		formData.append('expenseDate', expenseDate !== null ? expenseDate : '');
 		formData.append('expenseDescription', expenseDescription);
 		formData.append('receiptNumber', receiptNumber);
-		formData.append(
-			'receiptAttachmentDescription',
-			receiptAttachmentDescription,
-		);
+		formData.append('receiptAttachmentDescription',	receiptAttachmentDescription,		);
 		formData.append('expenseAmount', expenseAmount);
 		if (payMode && payMode.value) {
 			formData.append('payMode', payMode.value);
@@ -436,7 +444,6 @@ class CreateExpense extends React.Component {
 		if (placeOfSupplyId  ) {
 			formData.append('placeOfSupplyId', placeOfSupplyId.value ?placeOfSupplyId.value :placeOfSupplyId);
 		}
-		
 		if (taxTreatmentId && taxTreatmentId.value) {
 			formData.append('taxTreatmentId', taxTreatmentId.value);
 		}
@@ -447,11 +454,9 @@ class CreateExpense extends React.Component {
 		if (currency) {
 			formData.append('currencyCode', currency.value);
 		}
-
 		if (vatCategoryId && vatCategoryId.value) {
 			formData.append('vatCategoryId', vatCategoryId.value);
-			 
-			if(this.state.exclusiveVat !== undefined){
+		if(this.state.exclusiveVat !== undefined){
 				formData.append('exclusiveVat', this.state.exclusiveVat );
 			}
 		}
@@ -461,16 +466,13 @@ class CreateExpense extends React.Component {
 		if (project && project.value) {
 			formData.append('projectId', project.value);
 		}
-		if (this.uploadFile.files[0]) {
-			formData.append('attachmentFile', this.uploadFile.files[0]);
+		if (this.uploadFile?.files?.[0]) {
+			formData.append('attachmentFile', this.uploadFile?.files?.[0]);
 		}
 		this.setState({ loading:true, loadingMsg:"Creating Expense..."});
 		this.props.expenseCreateActions
 			.createExpense(formData)
 			.then((res) => {
-			
-				this.setState({ disabled: false });
-				
 				if (res.status === 200) {					
 					this.props.commonActions.tostifyAlert(
 						'success',
@@ -481,16 +483,19 @@ class CreateExpense extends React.Component {
 						this.setState({
 							createMore: false,
 							loading:false,
+							disableLeavePage:false,
+							expenseDateForVatValidation:new Date(),
+							disabled: false ,
 						});
 						this.getExpenseNumber()
 					} else {
 						this.props.history.push('/admin/expense/expense');
-						this.setState({ loading:false,});
+						this.setState({ disabled: false,loading:false,});
 					}
 				}
 			})
 			.catch((err) => {
-				this.setState({ disabled: false });
+				this.setState({ disabled: false, loading:false,});
 				this.props.commonActions.tostifyAlert(
 					'error',
 					err.data ? err.data.message : 'Expense Created Unsuccessfully'
@@ -554,10 +559,11 @@ class CreateExpense extends React.Component {
 						...{ expenseNumber: res.data },
 					},
 				});
-				alert("my check")
-				console.log(res.data)
-				if( res.data && res.data!=null)
-				this.formRef.current.setFieldValue('expenseNumber', res.data, true,true);
+				
+				if( res.data && res.data!=null){
+					this.formRef.current.setFieldValue('expenseNumber', res.data, true,true);
+					this.expenseValidationCheck(res.data);
+				}
 				// this.validationCheck(res.data)
 				
 			}
@@ -740,74 +746,78 @@ class CreateExpense extends React.Component {
 	renderVat=(props)=>{
 		let vat_list=[]
 		let vatIds=[]
-		if(this.state.isDesignatedZone && this.state.isDesignatedZone != null && this.state.isDesignatedZone == true){
-			switch(props.values.taxTreatmentId && props.values.taxTreatmentId.value ? props.values.taxTreatmentId.value:''){
+		if(this.state.isRegisteredVat && (this.state.expenseDateForVatValidation > this.state.companyVATRegistrationDate)){
+			if(this.state.isDesignatedZone && this.state.isDesignatedZone != null && this.state.isDesignatedZone == true){
+				switch(props.values.taxTreatmentId && props.values.taxTreatmentId.value ? props.values.taxTreatmentId.value:''){
 
-				case 1: 
-				case 3: 
+					case 1: 
+					case 3: 
+						if(this.state.isReverseChargeEnabled==false)
+						vatIds=[1,2,3]
+											
+					break;
+
+					case 2: 
+					case 4:
+					case 8:  
 					if(this.state.isReverseChargeEnabled==false)
-					vatIds=[1,2,3]
-										
-				break;
-
-				case 2: 
-				case 4:
-				case 8:  
-				if(this.state.isReverseChargeEnabled==false)
-				vatIds=[4]
-			
-				break;
-
-				case 5: 
-				case 6: 
-				case 7: 
-					if(this.state.isReverseChargeEnabled==false)
-					vatIds=[3]
-					else if(this.state.isReverseChargeEnabled==true)
-					vatIds=[1,2]
-				break;
-				
-				case 8: 
-				if(this.state.isReverseChargeEnabled==false)
 					vatIds=[4]
+				
+					break;
+
+					case 5: 
+					case 6: 
+					case 7: 
+						if(this.state.isReverseChargeEnabled==false)
+						vatIds=[3]
+						else if(this.state.isReverseChargeEnabled==true)
+						vatIds=[1,2]
+					break;
 					
-				break;
+					case 8: 
+					if(this.state.isReverseChargeEnabled==false)
+						vatIds=[4]
+						
+					break;
+				}
 			}
-		}
-		else
-//Not Designated Zone		
-			if(this.state.isDesignatedZone==false)
-			switch(props.values.taxTreatmentId && props.values.taxTreatmentId.value ?props.values.taxTreatmentId.value:''){
+			else
+			//Not Designated Zone		
+				if(this.state.isDesignatedZone==false)
+				switch(props.values.taxTreatmentId && props.values.taxTreatmentId.value ?props.values.taxTreatmentId.value:''){
 
-				case 1: 
+					case 1: 
+						if(this.state.isReverseChargeEnabled==false)
+						vatIds=[1,2,3]
+						else if(this.state.isReverseChargeEnabled==true)
+						vatIds=[1,2]
+					break;
+
+					case 3: 
+						if(this.state.isReverseChargeEnabled==false)
+						vatIds=[1,2,3]
+						
+					break;
+
+					case 2: 
+					case 4: 
+					case 5:
+					case 6: 
+					case 7: 
+						if(this.state.isReverseChargeEnabled==false)
+						vatIds=[3]
+						else if(this.state.isReverseChargeEnabled==true)
+						vatIds=[1,2]
+					break;
+
+					case 8: 
 					if(this.state.isReverseChargeEnabled==false)
-					vatIds=[1,2,3]
-					else if(this.state.isReverseChargeEnabled==true)
-					vatIds=[1,2]
-				break;
-
-				case 3: 
-					if(this.state.isReverseChargeEnabled==false)
-					vatIds=[1,2,3]
-					
-				break;
-
-				case 2: 
-				case 4: 
-				case 5:
-				case 6: 
-				case 7: 
-					if(this.state.isReverseChargeEnabled==false)
-					vatIds=[3]
-					else if(this.state.isReverseChargeEnabled==true)
-					vatIds=[1,2]
-				break;
-
-				case 8: 
-				if(this.state.isReverseChargeEnabled==false)
-				vatIds=[4]
-					
-				break;
+					vatIds=[4]
+						
+					break;
+				}
+			}else{
+				vatIds=[10]
 			}
 
 			vat_list=this.getVatListByIds(vatIds)
@@ -866,7 +876,7 @@ class CreateExpense extends React.Component {
 		const	{vat_list}=this.props	
 
 		let array=[]
-
+		
 		vat_list.map((row)=>{
 			vatIds.map((id)=>{
 				if(row.id===id){
@@ -874,6 +884,13 @@ class CreateExpense extends React.Component {
 				}
 			})
 		})
+		if(vatIds[0] === 10){
+			array.push({
+				"id": 10,
+				"vat": 0,
+				"name": "N/A"
+			})
+		}
 
 		return array;
 	}
@@ -972,20 +989,19 @@ componentWillUnmount() {
 													// if(values.payMode.value === "CASH"){
 													// 	errors.payMode = 'Pay through is required'
 													// }
+													
 													if (exist === true) {
-														errors.expenseNumber =
-															'Expense number already exists'
+														errors.expenseNumber = 'Expense number already exists'
 													}
-													if (values.expenseNumber==='') {
+													if (values.expenseNumber === '') {
 														errors.expenseNumber = 'Expense number is required';
 													}
 													if(this.state.currency===true && values.currency === '' ){
 														errors.currency = 'Currency is required';
 													}
-													if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
-														errors.placeOfSupplyId = 'Place of supply is required';
-													}
-
+													// if (!values.placeOfSupplyId && values.taxTreatmentId.value !== 8) {
+													// 	errors.placeOfSupplyId = 'Place of supply is required';
+													// }
 													return errors;
 												}}
 												validationSchema={Yup.object().shape({
@@ -1003,9 +1019,6 @@ componentWillUnmount() {
 													),
 													currency: Yup.string().required(
 														'Currency is required',
-													),
-													placeOfSupplyId: Yup.string().required(
-														'Place of supply is required',
 													),
 													payee: Yup.string().required(
 														'Paid by is required',
@@ -1156,7 +1169,7 @@ componentWillUnmount() {
 																					props.handleChange('taxTreatmentId')(
 																						option,
 																					);
-																					props.handleChange('placeOfSupplyId')('');
+																					// props.handleChange('placeOfSupplyId')('');
 																							// for resetting Vat
 																					props.handleChange('vatCategoryId')('');
 																					//placelist Setup
@@ -1164,7 +1177,7 @@ componentWillUnmount() {
 																					// ReverseCharge setup
 																					this.ReverseChargeSetting(option.value,props)
 																					this.setState({isReverseChargeEnabled:false,exclusiveVat:false})
-																																																													
+																					this.setState({taxTreatmentId:option.value})
 																				} else {
 																					props.handleChange('taxTreatmentId')(
 																						'',
@@ -1186,7 +1199,7 @@ componentWillUnmount() {
 																			)}
 																	</FormGroup>
 																</Col>
-															{this.state.showPlacelist==true&& (	<Col lg={3}>
+															{/* {this.state.showPlacelist==true&& (	<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">
 																		<span className="text-danger">*</span>
@@ -1239,7 +1252,7 @@ componentWillUnmount() {
 																			</div>
 																		)}
 																</FormGroup>
-															</Col>)}
+															</Col>)} */}
 															<Col className='mb-2' lg={3}>
 																<Label htmlFor="inline-radio3"><span className="text-danger">* </span>{strings.ExpenseType}</Label>
 																<div style={{display:"flex"}}>
@@ -1251,7 +1264,14 @@ componentWillUnmount() {
 																		checked={this.state.expenseType}
 																		onChange={(expenseType) => {
 																			props.handleChange('expenseType')(expenseType);
+
 																			this.setState({ expenseType, }, () => { },);
+																			if(this.state.isVatClaimable===true){
+																				this.setState({isVatClaimable:false});
+																			}
+																			else{
+																				this.setState({isVatClaimable:true});
+																			}
 																			// if (this.state.expenseType == true)
 																			// 	this.setState({ expenseType: true })
 																		}}
@@ -1346,12 +1366,17 @@ componentWillUnmount() {
 																		}`}
 																		placeholderText={strings.ExpenseDate}
 																		selected={props.values.expenseDate}
+																		value={props.values.expenseDate}
 																		showMonthDropdown
 																		showYearDropdown
 																		dropdownMode="select"
 																		dateFormat="dd-MM-yyyy"
 																		//minDate={new Date()}
 																		onChange={(value) => {
+																			if((this.state.expenseDateForVatValidation < this.state.companyVATRegistrationDate && value > this.state.companyVATRegistrationDate ) || (value < this.state.companyVATRegistrationDate && this.state.expenseDateForVatValidation > this.state.companyVATRegistrationDate)){
+																				props.handleChange('vatCategoryId')('');		
+																			}
+																			this.setState({expenseDateForVatValidation : value});
 																			props.handleChange('expenseDate')(value);
 																		}}
 																	/>
@@ -1411,7 +1436,7 @@ componentWillUnmount() {
 																</FormGroup>
 															</Col>
 														
-															<Col>
+															{/* <Col>
 															<Button
                                                                 color="primary"
                                                                 className="btn-square pull-left mb-3 mr-3 mt-4"
@@ -1420,13 +1445,11 @@ componentWillUnmount() {
 																	//  this.props.history.push(`/admin/payroll/employee/create`,{goto:"Expense"})
 																	this.props.history.push(`/admin/master/employee/create`,{goto:"Expense"})
 																	}
-
                                                             >
                                                                 <i className="fas fa-plus mr-1" />
-                                         {strings.NewEmployee}
-										
-										</Button>
-												</Col>
+																{strings.NewEmployee}
+															</Button>
+															</Col> */}
 													</Row>
 														<Row>
 															<Col lg={3}>
@@ -1535,6 +1558,7 @@ componentWillUnmount() {
 																				: []
 																		}
 																		placeholder={strings.Select+strings.Currency}
+																		value={props.values.currency}
 																		onChange={(option) => {
 																			if(option.value!="")
 																			{
@@ -1668,7 +1692,9 @@ componentWillUnmount() {
 														)
 														} 
 														<Row>
-													{this.state.showReverseCharge==true &&(<Col>
+													{((this.state.isDesignatedZone && (this.state.taxTreatmentId === 5  || this.state.taxTreatmentId === 6 ||this.state.taxTreatmentId === 7 ))
+														|| (!this.state.isDesignatedZone && (this.state.taxTreatmentId !== 3  && this.state.taxTreatmentId !== 8))
+														)&&(<Col>
 															{/* <Input
 															type="checkbox"
 															id="isReverseChargeEnabled"
@@ -1687,7 +1713,7 @@ componentWillUnmount() {
 																		props.handleChange('vatCategoryId')('');
 																}}
 															/>
-															<Label>Reverse Charge</Label>
+															<Label>{strings.IsReverseCharge}</Label>
 															</Col>)}
 															</Row>
 														<hr />
@@ -1793,7 +1819,7 @@ componentWillUnmount() {
 														<hr />
 														<Row>
 																<Col lg={8}>
-																<FormGroup className="py-2">
+																{/* <FormGroup className="py-2">
 																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
 																		<TextareaAutosize
 																			type="textarea"
@@ -1809,7 +1835,7 @@ componentWillUnmount() {
 																			}
 																			value={props.values.notes}
 																		/>
-																	</FormGroup>
+																	</FormGroup> */}
 																	<Row>
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
@@ -1835,7 +1861,7 @@ componentWillUnmount() {
 																			
 																			</FormGroup>
 																		</Col>
-																		<Col lg={6}>
+																		{/* <Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Field
 																					name="attachmentFile"
@@ -1892,9 +1918,9 @@ componentWillUnmount() {
 																						</div>
 																					)}
 																			</FormGroup>
-																		</Col>
+																		</Col> */}
 																	</Row>
-																	<FormGroup className="mb-3">
+																	{/* <FormGroup className="mb-3">
 																		<Label htmlFor="receiptAttachmentDescription">
 																			{strings.AttachmentDescription}
 																		</Label><br/>
@@ -1917,7 +1943,7 @@ componentWillUnmount() {
 																					.receiptAttachmentDescription
 																			}
 																		/>
-																	</FormGroup>
+																	</FormGroup> */}
 																</Col>
 																</Row>
 
@@ -1930,11 +1956,13 @@ componentWillUnmount() {
 																		className="btn-square mr-3"
 																		disabled={this.state.disabled}
 																		onClick={() => {
-																			//	added validation popup	msg
+																			//  added validation popup	msg
+																			console.log(props.errors,this.state.exist,"ERRORS");
 																			props.handleBlur();
-																			if(props.errors &&  Object.keys(props.errors).length != 0)
-																			this.props.commonActions.fillManDatoryDetails();
-																			console.log(props.errors,"errors")
+																			if(props.errors &&  Object.keys(props.errors).length != 0){
+																				if(props.errors.expenseNumber && this.state.exist===true)
+																					this.props.commonActions.fillManDatoryDetails();
+																			}
 																			this.setState(
 																				{ createMore: false },
 																				() => {
@@ -1955,9 +1983,12 @@ componentWillUnmount() {
 																		disabled={this.state.disabled}
 																		onClick={() => {
 																			//	added validation popup	msg
+																			console.log(props.errors,this.state.exist,"ERRORS");
 																			props.handleBlur();
-																			if(props.errors &&  Object.keys(props.errors).length != 0)
-																			this.props.commonActions.fillManDatoryDetails();
+																			if(props.errors &&  Object.keys(props.errors).length != 0){
+																				if(props.errors.expenseNumber && this.state.exist===true)
+																					this.props.commonActions.fillManDatoryDetails();
+																			}
 
 																		this.setState(
 																			{ createMore: true },

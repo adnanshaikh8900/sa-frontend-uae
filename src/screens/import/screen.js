@@ -1267,7 +1267,7 @@ class Import extends React.Component {
 																								{
 																											
 																											for (const file of e.target.files) {
-																										debugger
+																										
 																										if(props.values.productName=="zoho" )
 																											{	
 																												if(file.name &&

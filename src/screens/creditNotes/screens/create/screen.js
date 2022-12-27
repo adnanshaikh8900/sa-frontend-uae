@@ -1313,8 +1313,8 @@ if (invoiceNumber && invoiceNumber.value) {
 		// if (project !== null && project.value) {
 		// 	formData.append('projectId', project.value);
 		// }
-		if (this.uploadFile && this.uploadFile.files && this.uploadFile.files[0]) {
-			formData.append('attachmentFile', this.uploadFile.files[0]);
+		if (this.uploadFile && this.uploadFile.files && this.uploadFile?.files?.[0]) {
+			formData.append('attachmentFile', this.uploadFile?.files?.[0]);
 		}
 
 		this.setState({ loading:true, loadingMsg:"Creating Credit Note..."});
@@ -1746,7 +1746,7 @@ if (invoiceNumber && invoiceNumber.value) {
 													{
 														errors.creditNoteNumber ='Tax credit note number cannot be same';
 													}	
-													debugger
+													
 													if(this.state.isCreatedWIWP==false && !values.invoiceNumber)
 													{
 														errors.invoiceNumber = 'Invoice number is required';}

@@ -754,7 +754,7 @@ class DetailUser extends React.Component {
 																		<Col lg={6}>
 																			<FormGroup>
 																				<Label htmlFor="roleId">
-																					<span className="text-danger">* </span>
+																					<span className="text-danger"> </span>
 																					 {strings.Role}
 																				</Label>
 																				<Select

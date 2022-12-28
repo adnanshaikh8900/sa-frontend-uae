@@ -317,6 +317,7 @@ class VatReturnsReport extends React.Component {
 		strings.setLanguage(this.state.language);
 		const { loading, initValue, dropdownOpen, csvData, view } = this.state;
 		const { profile, universal_currency_list,company_profile } = this.props;
+		const id = this.props.location.search.replace("?id=",'')
 		return (
 			<div className="transactions-report-screen">
 				<div className="animated fadeIn">
@@ -502,9 +503,7 @@ class VatReturnsReport extends React.Component {
 																<th
 																	key={index}
 																	style={{ fontWeight: '600', color:'black' }}
-																	className={column.align ? 'text-right' : ''}
-																	className="table-header-color"
-																>
+																	className={column.align ? 'table-header-color text-right' : 'table-header-color'}																>
 																	{column.label}
 																</th>
 															);
@@ -529,7 +528,8 @@ class VatReturnsReport extends React.Component {
 																						description:"Box 1a - Standard rated supplies in Abu Dhabi",
 																						startDate:this.props.location.state.startDate,
 																						endDate:this.props.location.state.endDate,
-																						placeOfSupplyId:1
+																						placeOfSupplyId:1,
+																						id:id
 																					});
 																				}}>
 																		<Currency
@@ -588,7 +588,8 @@ class VatReturnsReport extends React.Component {
 																						description:"Box 1b - Standard rated supplies in Dubai",
 																						startDate:this.props.location.state.startDate,
 																						endDate:this.props.location.state.endDate,
-																						placeOfSupplyId:2
+																						placeOfSupplyId:2,
+																						id:id
 																					});
 																				}}>
 																					
@@ -648,7 +649,8 @@ class VatReturnsReport extends React.Component {
 																						description:"Box 1c - Standard rated supplies in Sharjah",
 																						startDate:this.props.location.state.startDate,
 																						endDate:this.props.location.state.endDate,
-																						placeOfSupplyId:3
+																						placeOfSupplyId:3,
+																						id:id
 																					});
 																				}}>
 																		<Currency
@@ -707,7 +709,8 @@ class VatReturnsReport extends React.Component {
 																						description:"Box 1d - Standard rated supplies in Ajman",
 																						startDate:this.props.location.state.startDate,
 																						endDate:this.props.location.state.endDate,
-																						placeOfSupplyId:4
+																						placeOfSupplyId:4,
+																						id:id
 																					});
 																				}}>
 																		<Currency
@@ -765,7 +768,8 @@ class VatReturnsReport extends React.Component {
 																						description:"Box 1e - Standard rated supplies in Umm Al Quwain",
 																						startDate:this.props.location.state.startDate,
 																						endDate:this.props.location.state.endDate,
-																						placeOfSupplyId:5
+																						placeOfSupplyId:5,
+																						id:id
 																					});
 																				}}>
 																		<Currency
@@ -823,7 +827,8 @@ class VatReturnsReport extends React.Component {
 																						description:"Box 1f - Standard rated supplies in Ras Al Khaimah",
 																						startDate:this.props.location.state.startDate,
 																						endDate:this.props.location.state.endDate,
-																						placeOfSupplyId:6
+																						placeOfSupplyId:6,
+																						id:id
 																					});
 																				}}>
 																		<Currency
@@ -882,7 +887,8 @@ class VatReturnsReport extends React.Component {
 																						description:"Box 1g - Standard rated supplies in Fujairah",
 																						startDate:this.props.location.state.startDate,
 																						endDate:this.props.location.state.endDate,
-																						placeOfSupplyId:7
+																						placeOfSupplyId:7,
+																						id:id
 																					});
 																				}}>
 																		<Currency
@@ -967,7 +973,8 @@ class VatReturnsReport extends React.Component {
 																					description:"Box 3 - Supplies subject to the reverse charge provisions",
 																					startDate:this.props.location.state.startDate,
 																					endDate:this.props.location.state.endDate,
-																					placeOfSupplyId:8
+																					placeOfSupplyId:8,
+																					id:id
 																				});
 																			}}>
 																		<Currency
@@ -1025,7 +1032,8 @@ class VatReturnsReport extends React.Component {
 																						description:"Box 4 - Zero rated supplies",
 																						startDate:this.props.location.state.startDate,
 																						endDate:this.props.location.state.endDate,
-																						placeOfSupplyId:9
+																						placeOfSupplyId:9,
+																						id:id
 																					});
 																				}}>
 																		<Currency
@@ -1068,7 +1076,8 @@ class VatReturnsReport extends React.Component {
 																						description:"Box 5 - Exempt supplies",
 																						startDate:this.props.location.state.startDate,
 																						endDate:this.props.location.state.endDate,
-																						placeOfSupplyId:10
+																						placeOfSupplyId:10,
+																						id:id
 																					});
 																				}}>
 																		<Currency
@@ -1201,8 +1210,7 @@ class VatReturnsReport extends React.Component {
 																<th
 																	key={index}
 																	style={{ fontWeight: '600', color:'black' }}
-																	className={column.align ? 'text-right' : ''}
-																	className="table-header-color"
+																	className={column.align ? 'table-header-color text-right' : 'table-header-color'}
 																>
 																	{column.label}
 																</th>
@@ -1225,7 +1233,8 @@ class VatReturnsReport extends React.Component {
 																						description:"Box 9 - Standard rated expenses",
 																						startDate:this.props.location.state.startDate,
 																						endDate:this.props.location.state.endDate,
-																						placeOfSupplyId:11
+																						placeOfSupplyId:11,
+																						id:id
 																					});
 																				}}>
 																		<Currency
@@ -1283,8 +1292,9 @@ class VatReturnsReport extends React.Component {
 																						description:"Box 10 - Supplies subject to the reverse charge provisions",
 																						startDate:this.props.location.state.startDate,
 																						endDate:this.props.location.state.endDate,
-																						placeOfSupplyId:8
-																																										});
+																						placeOfSupplyId:8,
+																						id:id
+																					});
 																				}}>
 																		<Currency
 																			value={this.state.data[
@@ -1397,8 +1407,7 @@ class VatReturnsReport extends React.Component {
 																<th
 																	key={index}
 																	style={{ fontWeight: '600', color:'black' }}
-																	className={column.align ? 'text-right' : ''}
-																	className="table-header-color"
+																	className={column.align ? 'table-header-color text-right' : 'table-header-color'}
 																>
 																	{column.label}
 																</th>

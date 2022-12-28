@@ -207,6 +207,7 @@ class SubReports extends React.Component {
 	render() {
 		const { dataList } = this.state;
 		const { company_profile, description } = this.props;
+		const id = this.props.location.state.id;
 		return (
 			<div className="import-bank-statement-screen">
 				<div className="animated fadeIn">
@@ -240,7 +241,7 @@ class SubReports extends React.Component {
 											<Button name="button" color="primary"
 												className="mr-2 print-btn-cont"
 												onClick={() => {
-													this.props.history.push('/admin/report/vatreports/view', { startDate: this.props.location.state.startDate, endDate: this.props.location.state.endDate });
+													this.props.history.push(`/admin/report/vatreports/view?id=${id}`, { startDate: this.props.location.state.startDate, endDate: this.props.location.state.endDate });
 												}}
 												style={{ cursor: 'pointer' }}
 											>

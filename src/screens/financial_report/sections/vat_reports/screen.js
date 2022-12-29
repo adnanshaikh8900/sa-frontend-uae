@@ -257,7 +257,6 @@ class VatReports extends React.Component {
 	}
 
 	toggleActionButton = (index) => {
-		console.log(index, this.state.actionButtons ," this.state.actionButtons")
 		let temp = Object.assign({}, this.state.actionButtons);
 		if (temp[parseInt(index, 10)]) {
 			temp[parseInt(index, 10)] = false;
@@ -267,7 +266,6 @@ class VatReports extends React.Component {
 		this.setState({
 			actionButtons: temp,
 		});
-		console.log(index, this.state.actionButtons ," this.state.actionButtons")
 	};
 
 	getActionButtons = (cell,params) => {
@@ -298,13 +296,13 @@ class VatReports extends React.Component {
 			// 			let dateArr = params.taxReturns ? params.taxReturns.split("-") : [];
 			// 			this.props.history.push('/admin/report/vatreports/view',{startDate:dateArr[0] ?dateArr[0] :'',endDate:dateArr[1] ?dateArr[1] :''})
 			// }}
-			onClick={() => {
-								this.setState({current_report_id:params.id})
-								let dateArr = params.taxReturns ? params.taxReturns.split("-") : [];
-								this.props.history.push(`/admin/report/vatreports/view?id=${params.id}`,{startDate:dateArr[0] ?dateArr[0] :'',endDate:dateArr[1] ?dateArr[1] :''})
-							}}
-					>
-						<i className="fas fa-eye" /> View
+				onClick={() => {
+					this.setState({current_report_id:params.id})
+					let dateArr = params.taxReturns ? params.taxReturns.split("-") : [];
+					this.props.history.push(`/admin/report/vatreports/view?id=${params.id}`,{startDate:dateArr[0] ?dateArr[0] :'',endDate:dateArr[1] ?dateArr[1] :''})
+				}}
+				>
+				<i className="fas fa-eye" /> View
 			</DropdownItem>	
 			
 		{/* delete */}
@@ -576,7 +574,6 @@ class VatReports extends React.Component {
 
 	render() {
 		const { vatReportDataList, csvFileNamesData, dialog ,options,loading,loadingMsg,} = this.state;
-		console.log(vatReportDataList,"vatReportDataList")
 		return (
 			loading ==true? <Loader loadingMsg={loadingMsg}/> :
 			<div className="import-bank-statement-screen">

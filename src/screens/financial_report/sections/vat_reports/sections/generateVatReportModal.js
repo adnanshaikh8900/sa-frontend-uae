@@ -146,8 +146,8 @@ class GenerateVatReportModal extends React.Component {
 
 	generateReport = () => {
 		const { openModal, closeModal } = this.props;
-			let notgererated=true
-		this.props.vatReportDataList.data.map(({taxReturns})=>{
+			let notgererated=true;
+			this.props.vatReportDataList.data.map(({taxReturns})=>{
 			
 			let dateArr = taxReturns ? taxReturns.split("-") : [];
 			let currenttartdate=moment(this.getStartDate())

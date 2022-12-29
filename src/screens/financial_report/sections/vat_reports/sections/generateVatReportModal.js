@@ -160,8 +160,6 @@ class GenerateVatReportModal extends React.Component {
 			currentenddate.diff(endDate,'days'),
 			currenttartdate.diff(startDate,'days')>=0 && currentenddate.diff(endDate)<=0
 			)
-			let con=currentenddate.diff(endDate,'days')
-			debugger
 			if(currenttartdate.diff(startDate,'days')===0 || 
 			currentenddate.diff(endDate,'days')===0 || 
 			(currenttartdate.diff(startDate,'days')>=0 && currentenddate.diff(endDate,'days')<=0))
@@ -449,7 +447,7 @@ getStartDate=()=>{
 				else if(monthOption.value===2) {
 					date=moment(this.state.monthlyDate).add(3,'month').subtract(1,'day').format("DD-MM-YYYY")
 				}
-				debugger
+				
 				return date
 				
 			}

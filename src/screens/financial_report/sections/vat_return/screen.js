@@ -199,7 +199,7 @@ class VatReturnsReport extends React.Component {
 			.then((res) => {
 				
 				if (res.status === 200) {
-					this.setState({ vatReportData: res?.data?.find((i)=>i.id==idofvat) }) // comment for dummy
+					this.setState({ vatReportData: res?.data?.data?.find((i)=>i.id==idofvat) }) // comment for dummy
 				}
 			})
 			.catch((err) => {

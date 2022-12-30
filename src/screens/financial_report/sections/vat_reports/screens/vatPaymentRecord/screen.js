@@ -73,8 +73,41 @@ class VatPaymentRecord extends React.Component {
 				paginationPageSize:10,
 			
 		};
-	}
 
+		this.options = {
+			// onRowClick: this.goToDetail,
+			page: 1,
+			sizePerPage: 10,
+			onSizePerPageList: this.onSizePerPageList,
+			onPageChange: this.onPageChange,
+			sortName: '',
+			sortOrder: '',
+			onSortChange: this.sortColumn,
+		};
+	}
+	onPageSizeChanged = (newPageSize) => {
+		var value = document.getElementById('page-size').value;
+		this.gridApi.paginationSetPageSize(Number(value));
+	};
+
+	onGridReady = (params) => {
+		this.gridApi = params.api;
+		this.gridColumnApi = params.columnApi;
+	};
+
+	onSizePerPageList = (sizePerPage) => {
+		if (this.options.sizePerPage !== sizePerPage) {
+			this.options.sizePerPage = sizePerPage;
+			this.getInitialData();
+		}
+	};
+
+	onPageChange = (page, sizePerPage) => {
+		if (this.options.page !== page) {
+			this.options.page = page;
+			this.getInitialData();
+		}
+	};
     onPageSizeChanged = (newPageSize) => {
         var value = document.getElementById('page-size').value;
         this.gridApi.paginationSetPageSize(Number(value));
@@ -102,7 +135,7 @@ class VatPaymentRecord extends React.Component {
 		let { filterData } = this.state;
 		const paginationData = {
 			pageNo: this.options.page ? this.options.page - 1 : 0,
-			pageSize: this.options.sizePerPage,
+			pageSize: this.options?.sizePerPage,
 		};
 		const sortingData = {
 			order: this.options.sortOrder ? this.options.sortOrder : '',
@@ -113,7 +146,8 @@ class VatPaymentRecord extends React.Component {
 			.getVatPaymentHistoryList(postData)
 			.then((res) => {
 				if (res.status === 200) {
-					this.setState({ vatReportDataList: res.data }) // comment for dummy
+					
+					this.setState({ vatReportDataList: res.data}) // comment for dummy
 				}
 			})
 			.catch((err) => {

@@ -150,18 +150,18 @@ class InvoiceTemplate extends Component {
 		if (invoiceData.changeShippingAddress && invoiceData.changeShippingAddress == true) {
 			shippingPostZipCode = invoiceData.shippingPostZipCode ? invoiceData.shippingPostZipCode : "";
 			if(invoiceData.shippingCountry==229 )
-				shippingPostZipCode=strings.POBox +" : " +shippingPostZipCode	
+				shippingPostZipCode=strings.POBox +": " +shippingPostZipCode	
 		} else {
 			if (contactData && contactData.isBillingAndShippingAddressSame && contactData.isBillingAndShippingAddressSame == true)
 				{shippingPostZipCode = contactData.postZipCode ? contactData.postZipCode : "";
 				if(contactData.shippingCountryId==229 )
-				shippingPostZipCode=strings.POBox +" : " +shippingPostZipCode
+				shippingPostZipCode=strings.POBox +": " +shippingPostZipCode
 			}
 			else
 			{	
 				shippingPostZipCode = contactData.shippingPostZipCode ? contactData.shippingPostZipCode : "";
 				if(contactData.shippingCountryId==229 )
-				shippingPostZipCode=strings.POBox +" : " +shippingPostZipCode
+				shippingPostZipCode=strings.POBox +": " +shippingPostZipCode
 		}
 		}
 

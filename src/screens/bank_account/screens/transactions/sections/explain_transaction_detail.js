@@ -146,6 +146,7 @@ class ExplainTrasactionDetail extends React.Component {
 			.getBankAccountByID(bankId)
 			.then((res) => {
 					
+					
 				this.setState({
 					bankCurrency: res,
 				});

@@ -2138,6 +2138,7 @@ resetVatId = (props) => {
 												}}
 												validate={(values) => 
 													{
+														console.log(values,"values")
 													let errors = {};
 													if (this.state.exist === true) {
 														errors.quotation_Number =

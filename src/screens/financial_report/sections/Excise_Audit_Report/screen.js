@@ -221,8 +221,8 @@ class ViewFtaExciseAuditReport extends React.Component {
 			.then((res) => {
 				const tempData = [];
 				if (res.status === 200) {
-					// res.data.map((item) => {
-					// 	item.map((val) => {
+					// res.data?.map((item) => {
+					// 	item?.map((val) => {
 					// 		tempData.push(val);
 					// 		return val;
 					// 	});
@@ -474,7 +474,7 @@ class ViewFtaExciseAuditReport extends React.Component {
 												
 												<thead>
 													<tr className="header-row">
-														{this.columnHeaderCompany.map((column, index) => {
+														{this.columnHeaderCompany?.map((column, index) => {
 															return (
 																<th
 																	key={index}
@@ -492,40 +492,40 @@ class ViewFtaExciseAuditReport extends React.Component {
 												
 																				<tr>
 																					<td style={{ width: '18%', textAlign: 'Left'}}>
-																						{this.state.FtaExciseAuditData.taxablePersonNameEn}
+																						{this.state.FtaExciseAuditData?.taxablePersonNameEn}
 																					</td>
 																					<td style={{ width: '13%', textAlign: 'left'}}>
-																						{this.state.FtaExciseAuditData.taxablePersonNameAr}
+																						{this.state.FtaExciseAuditData?.taxablePersonNameAr}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
-																						{this.state.FtaExciseAuditData.taxRegistrationNumber}
+																						{this.state.FtaExciseAuditData?.taxRegistrationNumber}
 																					</td>
 																					<td style={{ width: '18%', textAlign: 'left'}}>
-																						{this.state.FtaExciseAuditData.taxAgencyName}
+																						{this.state.FtaExciseAuditData?.taxAgencyName}
 																					</td>
 																					<td style={{ width: '13%', textAlign: 'left'}}>
-																						{this.state.FtaExciseAuditData.taxAgencyNumber}
+																						{this.state.FtaExciseAuditData?.taxAgencyNumber}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
-																						{this.state.FtaExciseAuditData.taxAgentName}
+																						{this.state.FtaExciseAuditData?.taxAgentName}
 																					</td>
 																					<td style={{ width: '18%', textAlign: 'left'}}>
-																						{this.state.FtaExciseAuditData.taxAgencyAgentNumber}
+																						{this.state.FtaExciseAuditData?.taxAgencyAgentNumber}
 																					</td>
 																					<td style={{ width: '13%', textAlign: 'left'}}>
-																						{this.renderDate(this.state.FtaExciseAuditData.startDate,'').replaceAll("/","-")}
+																						{this.renderDate(this.state.FtaExciseAuditData?.startDate,'').replaceAll("/","-")}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
-																						{this.renderDate(this.state.FtaExciseAuditData.endDate,'')}
+																						{this.renderDate(this.state.FtaExciseAuditData?.endDate,'')}
 																					</td>
 																					<td style={{ width: '18%', textAlign: 'left'}}>
-																						{this.renderDate(this.state.FtaExciseAuditData.creationDate,'')}
+																						{this.renderDate(this.state.FtaExciseAuditData?.creationDate,'')}
 																					</td>
 																					<td style={{ width: '13%', textAlign: 'left'}}>
-																						{this.state.FtaExciseAuditData.productVersion}
+																						{this.state.FtaExciseAuditData?.productVersion}
 																					</td>
 																					<td style={{ width: '13%', textAlign: 'left'}}>
-																						{this.state.FtaExciseAuditData.fafVersion}
+																						{this.state.FtaExciseAuditData?.fafVersion}
 																					</td>
 																				
 																				</tr>																		
@@ -560,7 +560,7 @@ class ViewFtaExciseAuditReport extends React.Component {
 												
 												<thead>
 													<tr className="header-row">
-														{this.columnHeaderCustomer.map((column, index) => {
+														{this.columnHeaderCustomer?.map((column, index) => {
 															return (
 																<th
 																	key={index}
@@ -576,7 +576,7 @@ class ViewFtaExciseAuditReport extends React.Component {
 												</thead>
 												<tbody className="data-column">
 													{this.state.FtaExciseAuditData &&
-														this.state.FtaExciseAuditData.customerDataResponseModels.map(
+														this.state.FtaExciseAuditData?.customerDataResponseModels?.map(
 															(item, index) => {
 
 																return (
@@ -638,7 +638,7 @@ class ViewFtaExciseAuditReport extends React.Component {
 												
 												<thead>
 													<tr className="header-row">
-														{this.columnHeaderSupplier.map((column, index) => {
+														{this.columnHeaderSupplier?.map((column, index) => {
 															return (
 																<th
 																	key={index}
@@ -653,8 +653,8 @@ class ViewFtaExciseAuditReport extends React.Component {
 													</tr>
 												</thead>
 												<tbody className="data-column">
-													{this.state.FtaExciseAuditData &&
-														this.state.FtaExciseAuditData.supplierDataResponseModels.map(
+													{this.state?.FtaExciseAuditData &&
+														this.state.FtaExciseAuditData?.supplierDataResponseModels?.map(
 															(item, index) => {
 																return (
 																	<>
@@ -715,7 +715,7 @@ class ViewFtaExciseAuditReport extends React.Component {
 												
 												<thead>
 													<tr className="header-row">
-														{this.columnHeaderPurchase.map((column, index) => {
+														{this.columnHeaderPurchase?.map((column, index) => {
 															return (
 																<th
 																	key={index}
@@ -731,7 +731,7 @@ class ViewFtaExciseAuditReport extends React.Component {
 												</thead>
 												<tbody className="data-column">
 													{this.state.FtaExciseAuditData &&
-														this.state.FtaExciseAuditData.supplierSupplyListingResponseModels.map(
+														this.state.FtaExciseAuditData?.supplierSupplyListingResponseModels?.map(
 															(item, index) => {
 																return (
 																	<>
@@ -815,7 +815,7 @@ class ViewFtaExciseAuditReport extends React.Component {
 												
 												<thead>
 													<tr className="header-row">
-														{this.columnHeaderSupplierTotal.map((column, index) => {
+														{this.columnHeaderSupplierTotal?.map((column, index) => {
 															return (
 																<th
 																	key={index}
@@ -836,13 +836,13 @@ class ViewFtaExciseAuditReport extends React.Component {
 																		
 																				<tr >
 																					<td style={{ width: '12%', textAlign: 'left'}}>
-																					{this.state.FtaExciseAuditData.purchaseTotal}
+																					{this.state.FtaExciseAuditData?.purchaseTotal}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
-																					{this.state.FtaExciseAuditData.supplierExciseTotal}
+																					{this.state.FtaExciseAuditData?.supplierExciseTotal}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
-																					{this.state.FtaExciseAuditData.supplierTransactionCountTotal}
+																					{this.state.FtaExciseAuditData?.supplierTransactionCountTotal}
 																					</td>
 																					
 																					
@@ -877,7 +877,7 @@ class ViewFtaExciseAuditReport extends React.Component {
 												
 												<thead>
 													<tr className="header-row">
-														{this.columnHeaderSupply.map((column, index) => {
+														{this.columnHeaderSupply?.map((column, index) => {
 															return (
 																<th
 																	key={index}
@@ -893,7 +893,7 @@ class ViewFtaExciseAuditReport extends React.Component {
 												</thead>
 												<tbody className="data-column">
 													{this.state.FtaExciseAuditData &&
-														this.state.FtaExciseAuditData.customerSupplyListingResponseModel.map(
+														this.state.FtaExciseAuditData?.customerSupplyListingResponseModel?.map(
 															(item, index) => {
 																return (
 																	<>
@@ -980,7 +980,7 @@ class ViewFtaExciseAuditReport extends React.Component {
 												
 												<thead>
 													<tr className="header-row">
-														{this.columnHeaderCustomerTotal.map((column, index) => {
+														{this.columnHeaderCustomerTotal?.map((column, index) => {
 															return (
 																<th
 																	key={index}
@@ -1002,13 +1002,13 @@ class ViewFtaExciseAuditReport extends React.Component {
 																				<tr >
 																				
 																					<td style={{ width: '12%', textAlign: 'left'}}>
-																					{this.state.FtaExciseAuditData.supplyTotal}
+																					{this.state.FtaExciseAuditData?.supplyTotal}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
-																					{this.state.FtaExciseAuditData.customerExciseTotal}
+																					{this.state.FtaExciseAuditData?.customerExciseTotal}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
-																					{this.state.FtaExciseAuditData.customerTransactionCountTotal}
+																					{this.state.FtaExciseAuditData?.customerTransactionCountTotal}
 																					</td>
 																					
 																				
@@ -1040,7 +1040,7 @@ class ViewFtaExciseAuditReport extends React.Component {
 												
 												<thead>
 													<tr className="header-row">
-														{this.columnHeaderGenral.map((column, index) => {
+														{this.columnHeaderGenral?.map((column, index) => {
 															return (
 																<th
 																key={index}
@@ -1056,7 +1056,7 @@ class ViewFtaExciseAuditReport extends React.Component {
 												</thead>
 												<tbody className="data-column">
 													{this.state.FtaExciseAuditData &&
-														this.state.FtaExciseAuditData.generalLedgerListingResponseModels.map(
+														this.state.FtaExciseAuditData?.generalLedgerListingResponseModels?.map(
 															(item, index) => {
 																return (
 																	<>
@@ -1125,7 +1125,7 @@ class ViewFtaExciseAuditReport extends React.Component {
 												
 												<thead>
 													<tr className="header-row">
-														{this.columnHeaderGeneralTotal.map((column, index) => {
+														{this.columnHeaderGeneralTotal?.map((column, index) => {
 															return (
 																<th
 																	key={index}
@@ -1146,16 +1146,16 @@ class ViewFtaExciseAuditReport extends React.Component {
 																		
 																				<tr >
 																					<td style={{ width: '12%', textAlign: 'left'}}>
-																					{this.state.FtaExciseAuditData.totalDebit}
+																					{this.state.FtaExciseAuditData?.totalDebit}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
-																					{this.state.FtaExciseAuditData.totalCredit}
+																					{this.state.FtaExciseAuditData?.totalCredit}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
-																					{this.state.FtaExciseAuditData.transactionCountTotal}
+																					{this.state.FtaExciseAuditData?.transactionCountTotal}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
-																					{this.state.FtaExciseAuditData.gltcurrency}
+																					{this.state.FtaExciseAuditData?.gltcurrency}
 																					</td>
 																				
 																				</tr>
@@ -1186,7 +1186,7 @@ class ViewFtaExciseAuditReport extends React.Component {
 												
 												<thead>
 													<tr className="header-row">
-														{this.columnStockFileTable.map((column, index) => {
+														{this.columnStockFileTable?.map((column, index) => {
 															return (
 																<th
 																	key={index}
@@ -1204,37 +1204,37 @@ class ViewFtaExciseAuditReport extends React.Component {
 												
 																				<tr>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
-																						{this.state.FtaExciseAuditData.warehouseID}
+																						{this.state.FtaExciseAuditData?.warehouseID}
 																					</td>
 																					<td style={{ width: '18%', textAlign: 'left'}}>
-																						{this.state.FtaExciseAuditData.productCode}
+																						{this.state.FtaExciseAuditData?.productCode}
 																					</td>
 																					<td style={{ width: '13%', textAlign: 'left'}}>
-																						{this.state.FtaExciseAuditData.exciseRate}
+																						{this.state.FtaExciseAuditData?.exciseRate}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
-																						{this.state.FtaExciseAuditData.trandsctionType}
+																						{this.state.FtaExciseAuditData?.trandsctionType}
 																					</td>
 																					<td style={{ width: '18%', textAlign: 'left'}}>
-																						{this.state.FtaExciseAuditData.momentDetails}
+																						{this.state.FtaExciseAuditData?.momentDetails}
 																					</td>
 																					<td style={{ width: '13%', textAlign: 'left'}}>
-																						{this.state.FtaExciseAuditData.transferID}
+																						{this.state.FtaExciseAuditData?.transferID}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
-																						{this.state.FtaExciseAuditData.transactionDate}
+																						{this.state.FtaExciseAuditData?.transactionDate}
 																					</td>
 																					<td style={{ width: '18%', textAlign: 'left'}}>
-																						{this.state.FtaExciseAuditData.taxPaymentDate}
+																						{this.state.FtaExciseAuditData?.taxPaymentDate}
 																					</td>
 																					<td style={{ width: '13%', textAlign: 'left'}}>
-																						{this.state.FtaExciseAuditData.stockDutyStatus}
+																						{this.state.FtaExciseAuditData?.stockDutyStatus}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
-																						{this.state.FtaExciseAuditData.stockAdjustment}
+																						{this.state.FtaExciseAuditData?.stockAdjustment}
 																					</td>
 																					<td style={{ width: '18%', textAlign: 'left'}}>
-																						{this.state.FtaExciseAuditData.goodsLocation}
+																						{this.state.FtaExciseAuditData?.goodsLocation}
 																					</td>
 																				</tr>
 												</tbody>

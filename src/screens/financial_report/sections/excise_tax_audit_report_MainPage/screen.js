@@ -28,7 +28,7 @@ import { AgGridReact, AgGridColumn } from 'ag-grid-react/lib/agGridReact';
 import { ConfirmDeleteModal, Currency } from 'components';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-
+import GenerateFTAExcisereport from './sections/generateExciseTaxAudit'
 const mapStateToProps = (state) => {
 	return {
 		version: state.common.version,
@@ -53,6 +53,7 @@ class ExciseTaxAuditReport extends React.Component {
 			loading: false,
 			fileName: '',
 			actionButtons:{},
+			openGenerateModal:false,
 			disabled: false,
 			file_data_list: [],
 			openModal: false,
@@ -417,6 +418,7 @@ class ExciseTaxAuditReport extends React.Component {
 		return (
 			<div className="import-bank-statement-screen">
 				<div className="animated fadeIn">
+				<GenerateFTAExcisereport openModal={this.state.openGenerateModal} closeModal={()=>{this.setState({openGenerateModal:false})}}/>
 					<Card>
 						<CardHeader>
 							<Row>
@@ -463,7 +465,12 @@ class ExciseTaxAuditReport extends React.Component {
 
 
 						<CardBody>
-						
+						<div
+							style={{width:'100%',display:'flex',justifyContent: 'flex-end'}}
+							>
+								<Button color="primary"
+								onClick={()=>{this.setState({openGenerateModal:true})}}
+								>Create a FTA Excise Tax Audit File</Button></div>
 							<Row>
 								<Col lg={12} className="mb-5">
 									<div className="table-wrapper">

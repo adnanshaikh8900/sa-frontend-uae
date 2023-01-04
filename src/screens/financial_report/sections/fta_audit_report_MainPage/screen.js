@@ -21,7 +21,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import './style.scss';
 import * as FTAreport from './actions';
 import { isDate, upperFirst } from 'lodash-es';
-
+import GenerateFTAreport from './sections/generateFTAauditFile'
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import moment from 'moment';
@@ -29,6 +29,7 @@ import download from 'downloadjs';
 import { AgGridReact, AgGridColumn } from 'ag-grid-react/lib/agGridReact';
 import { ConfirmDeleteModal, Currency } from 'components';
 import {data}  from '../../../Language/index'
+
 import LocalizedStrings from 'react-localization';
 const mapStateToProps = (state) => {
 	return {
@@ -58,6 +59,7 @@ class FtaAuditReport extends React.Component {
 			file_data_list: [],
 			openModal: false,
 			openVatSettingModal: false,
+			openGenerateModal:false,
 			openFileTaxRetrunModal: false,
 			coaName: '',
 			ftaAuditReporttDataList: [ ],
@@ -425,6 +427,7 @@ class FtaAuditReport extends React.Component {
 
 		return (
 			<div className="import-bank-statement-screen">
+				<GenerateFTAreport openModal={this.state.openGenerateModal} closeModal={()=>{this.setState({openGenerateModal:false})}}/>
 				<div className="animated fadeIn">
 					<Card>
 						<CardHeader>
@@ -472,6 +475,12 @@ class FtaAuditReport extends React.Component {
 
 
 						<CardBody>
+							<div
+							style={{width:'100%',display:'flex',justifyContent: 'flex-end'}}
+							>
+								<Button color="primary"
+								onClick={()=>{this.setState({openGenerateModal:true})}}
+								>Create a FTA VAT Audit File</Button></div>
 						
 							<Row>
 								<Col lg={12} className="mb-5">

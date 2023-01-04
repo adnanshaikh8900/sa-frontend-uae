@@ -2422,6 +2422,9 @@ class CreateSupplierInvoice extends React.Component {
 						newData = data.filter((obj) => obj.productId !== "");
 						// props.setFieldValue('lineItemsString', newData, true);
 						// this.updateAmount(newData, props);
+			let exchangeRate=this.formRef.current?.state?.values?.exchangeRate>0 
+			&& this.formRef.current?.state?.values?.exchangeRate!=="" ?
+			this.formRef.current?.state?.values?.exchangeRate:1
 			this.setState(
 				{
 					data: newData.concat({
@@ -2429,7 +2432,7 @@ class CreateSupplierInvoice extends React.Component {
 						description: res.data[0].description,
 						quantity: 1,
 						discount:0,
-						unitPrice: res.data[0].unitPrice,
+						unitPrice: (parseFloat(res.data[0].unitPrice)*(1/exchangeRate)).toFixed(2),
 						vatCategoryId: res.data[0].vatCategoryId,
 						exciseTaxId: res.data[0].exciseTaxId,
 						vatAmount:res.data[0].vatAmount ?res.data[0].vatAmount:0,

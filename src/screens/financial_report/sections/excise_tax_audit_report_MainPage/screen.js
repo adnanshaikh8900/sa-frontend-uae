@@ -655,7 +655,6 @@ class ExciseTaxAuditReport extends React.Component {
 									</TableHeaderColumn>
 									<TableHeaderColumn
 										dataField="createdDate"
-										// columnTitle={this.customEmail}
 										width='23%'
 										dataSort
 										dataFormat={this.renderDate}
@@ -674,7 +673,6 @@ class ExciseTaxAuditReport extends React.Component {
 									<TableHeaderColumn
 										className="text-right table-header-bg"
 										columnClassName="text-right"
-										dataField="balanceDue"
 										width="5%"
 										dataFormat={this.getActionButtons}
 									></TableHeaderColumn>

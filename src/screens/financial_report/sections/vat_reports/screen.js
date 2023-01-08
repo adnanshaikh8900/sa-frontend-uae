@@ -895,7 +895,6 @@ class VatReports extends React.Component {
 														<TableHeaderColumn
 															className="text-right table-header-bg"
 															columnClassName="text-right"
-															dataField="balanceDue"
 															width="5%"
 															dataFormat={this.getActionButtons}
 														></TableHeaderColumn>

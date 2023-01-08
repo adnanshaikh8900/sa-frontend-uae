@@ -14,6 +14,7 @@ import {
 	DropdownMenu,
 	DropdownItem,
 } from 'reactstrap';
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { AuthActions, CommonActions } from 'services/global';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-datepicker/dist/react-datepicker.css'
@@ -66,6 +67,16 @@ class ExciseTaxAuditReport extends React.Component {
 			current_report_id: '',
 			deleteModal:false,
 		};
+		this.options = {
+			// onRowClick: this.goToDetail,
+			page: 1,
+			sizePerPage: 10,
+			onSizePerPageList: this.onSizePerPageList,
+			onPageChange: this.onPageChange,
+			sortName: '',
+			sortOrder: '',
+			onSortChange: this.sortColumn,
+		};
 	}
 	onPageSizeChanged = (newPageSize) => {
 		var value = document.getElementById('page-size').value;
@@ -75,7 +86,18 @@ class ExciseTaxAuditReport extends React.Component {
 		this.gridApi = params.api;
 		this.gridColumnApi = params.columnApi;
 	};
-
+	onSizePerPageList = (sizePerPage) => {
+		if (this.options.sizePerPage !== sizePerPage) {
+			this.options.sizePerPage = sizePerPage;
+			this.getInitialData();
+		}
+	};
+	onPageChange = (page, sizePerPage) => {
+		if (this.options.page !== page) {
+			this.options.page = page;
+			this.getInitialData();
+		}
+	};
 	onBtnExport = () => {
 		this.gridApi.exportDataAsCsv();
 	};
@@ -113,16 +135,27 @@ class ExciseTaxAuditReport extends React.Component {
 	}
 
 	getInitialData = () => {
+		let { filterData } = this.state;
+		const paginationData = {
+			pageNo: this.options.page ? this.options.page - 1 : 0,
+			pageSize: this.options.sizePerPage,
+		};
+		const sortingData = {
+			order: this.options.sortOrder ? this.options.sortOrder : '',
+			sortingCol: this.options.sortName ? this.options.sortName : '',
+		};
+		const postData = { ...filterData, ...paginationData, ...sortingData };
 		this.props.ftaReport
-			.getVatReportList()
+			.getVatReportList(postData)
 			.then((res) => {
 				if (res.status === 200) {
-					let arrayList=[]
+					let arrayList={}
+					arrayList.count=res.data.count;
 					debugger
+
 					if(res.data?.data?.length >0 )
-					arrayList=res.data?.data.filter((row)=>row.status!="UnFiled")
-					
-					 this.setState({ ftaAuditReporttDataList: arrayList }) // comment for dummy
+						arrayList.data=res.data?.data.filter((row)=>row.status!="UnFiled")
+					this.setState({ ftaAuditReporttDataList: arrayList }) // comment for dummy
 				}
 			})
 			.catch((err) => {
@@ -189,16 +222,16 @@ class ExciseTaxAuditReport extends React.Component {
 		console.log(index, this.state.actionButtons ," this.state.actionButtons")
 	};
 	
-	getActionButtons = ({data}) => {
+	getActionButtons = (cell,params) => {
 		return (
 // DROPDOWN ACTIONS
 
 		<ButtonDropdown
-			isOpen={this.state.actionButtons[data.id]}
-			toggle={() => this.toggleActionButton(data.id)}
+			isOpen={this.state.actionButtons[params.id]}
+			toggle={() => this.toggleActionButton(params.id)}
 		>
 			<DropdownToggle size="sm" color="primary" className="btn-brand icon">
-				{this.state.actionButtons[data.id] === true ? (
+				{this.state.actionButtons[params.id] === true ? (
 					<i className="fas fa-chevron-up" />
 				) : (
 					<i className="fas fa-chevron-down" />
@@ -206,17 +239,16 @@ class ExciseTaxAuditReport extends React.Component {
 			</DropdownToggle>
 			
 	{/* Menu start */}
-		<DropdownMenu left >
+		<DropdownMenu right >
 			
 		{/* View */}
 			
 			<DropdownItem
 		
-		className="py-0"
 			onClick={() => {
-				this.setState({current_report_id:data.id})
-				let dateArr = data.taxReturns ? data.taxReturns.split("-") : [];
-				this.props.history.push('/admin/report/exciseTaxAuditReports/view', {startDate:dateArr[0],endDate:dateArr[1],userId:data.userId,	companyId:1,taxAgencyId:data.taxAgencyId})
+				this.setState({current_report_id:params.id})
+				let dateArr = params.taxReturns ? params.taxReturns.split("-") : [];
+				this.props.history.push('/admin/report/exciseTaxAuditReports/view', {startDate:dateArr[0],endDate:dateArr[1],userId:params.userId,	companyId:1,taxAgencyId:params.taxAgencyId})
 				
 			}}
 				
@@ -225,9 +257,9 @@ class ExciseTaxAuditReport extends React.Component {
 			</DropdownItem>	
 			
 			<DropdownItem
-			className="py-0"
 				onClick={() => {	
-				this.delete(data.id)
+					this.delete(params.id)
+					//this.setState({current_report_id:params.id,deleteModal: true})
 				}}
 				>
 				<i className="fas fa-trash" /> Delete
@@ -311,7 +343,7 @@ class ExciseTaxAuditReport extends React.Component {
 				<>
 					<Currency
 						value={amount}
-						currencySymbol={params.data.currency}
+						currencySymbol={params.currency}
 					/>
 				</>
 
@@ -326,7 +358,7 @@ class ExciseTaxAuditReport extends React.Component {
 				<label className="badge label-due">
 					<Currency
 						value={amount}
-						currencySymbol={params.data.currency}
+						currencySymbol={params.currency}
 					/>
 				</label>
 
@@ -412,7 +444,7 @@ class ExciseTaxAuditReport extends React.Component {
 	};
 	render() {
 		strings.setLanguage(this.state.language);
-		var { ftaAuditReporttDataList, csvFileNamesData, dialog } = this.state;
+		var { ftaAuditReporttDataList, csvFileNamesData, dialog ,options} = this.state;
 
 
 		return (
@@ -465,28 +497,27 @@ class ExciseTaxAuditReport extends React.Component {
 
 
 						<CardBody>
-						<div
-							style={{width:'100%',display:'flex',justifyContent: 'flex-end'}}
-							>
-								<Button color="primary"
-								onClick={()=>{this.setState({openGenerateModal:true})}}
-								>Create a FTA Excise Tax Audit File</Button></div>
 							<Row>
 								<Col lg={12} className="mb-5">
-									<div className="table-wrapper">
-										<FormGroup className="text-center">
-											{/* <Button color="primary" className="btn-square  pull-right"
-												onClick={() => {
-													this.props.history.push('/admin/report/exciseTaxAuditReports/generateftaAuditReport')
-												}}>
-												<i className="fas fa-plus"></i> Create FTA Audit Report
-											</Button>								 */}
+									<div className='table-wrapper'>
+										<FormGroup className='text-center'>
+											<Button color="primary"  className="btn-square  pull-right"
+											onClick={()=>{this.setState({openGenerateModal:true})}}>
+												Create a FTA Excise Tax Audit File
+											</Button>
 										</FormGroup>
 									</div>
 								</Col>
 							</Row>
-
-							<div className="ag-theme-alpine mb-3" style={{ height: 550, width: "100%" }}>
+						{/* <div
+							style={{width:'100%',display:'flex',justifyContent: 'flex-end'}}
+							>
+								<Button color="primary"
+								onClick={()=>{this.setState({openGenerateModal:true})}}
+								>Create a FTA Excise Tax Audit File</Button>
+						</div> */}
+							
+							{/* <div className="ag-theme-alpine mb-3" style={{ height: 550, width: "100%" }}>
 
 								<AgGridReact
 
@@ -577,6 +608,77 @@ class ExciseTaxAuditReport extends React.Component {
 										<option value="1000">1000</option>
 									</select>
 								</div>
+							</div> */}
+							<div>
+								<BootstrapTable
+									selectRow={this.selectRowProp}										
+									options={this.options}
+									version="4"
+									hover
+									responsive												
+									remote
+									data={ftaAuditReporttDataList && ftaAuditReporttDataList.data ? ftaAuditReporttDataList.data : []}
+									// data={vatReportDataList.data ? vatReportDataList.data : []}										
+									// rowData={vatReportDataList.data ? vatReportDataList.data : []}
+									pagination={
+										ftaAuditReporttDataList &&
+										ftaAuditReporttDataList.data &&
+										ftaAuditReporttDataList.data.length
+											? true
+											: false
+									}											
+									fetchInfo={{
+										dataTotalSize: ftaAuditReporttDataList.count
+											? ftaAuditReporttDataList.count
+											: 0,
+									}}											
+								>
+									<TableHeaderColumn
+										tdStyle={{ whiteSpace: 'normal' }}
+										width='23%'
+										isKey
+										dataField="taxReturns"
+										dataSort
+										dataFormat={this.renderStartDate}
+										className="table-header-bg"
+									>
+										Audit Start Date
+									</TableHeaderColumn>							
+									<TableHeaderColumn
+										width='23%'
+										dataField="taxReturns"
+										dataSort
+										dataFormat={this.renderEnd}
+										className="table-header-bg"
+									>
+										Audit End Date
+									</TableHeaderColumn>
+									<TableHeaderColumn
+										dataField="createdDate"
+										// columnTitle={this.customEmail}
+										width='23%'
+										dataSort
+										dataFormat={this.renderDate}
+										className="table-header-bg"
+									>
+										Created Date
+									</TableHeaderColumn>
+									<TableHeaderColumn
+										dataField="createdBy"
+										width='26%'
+										dataSort
+										className="table-header-bg"
+									>
+										Created By
+									</TableHeaderColumn>
+									<TableHeaderColumn
+										className="text-right table-header-bg"
+										columnClassName="text-right"
+										dataField="balanceDue"
+										width="5%"
+										dataFormat={this.getActionButtons}
+									></TableHeaderColumn>
+								</BootstrapTable>
 							</div>
 
 						</CardBody>

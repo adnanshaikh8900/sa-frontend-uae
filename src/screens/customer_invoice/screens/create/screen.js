@@ -2237,6 +2237,9 @@ resetVatId = (props) => {
 			let newData=[]
 			const data = this.state.data;
 			newData = data.filter((obj) => obj.productId !== "");
+			let exchangeRate=this.formRef.current?.state?.values?.exchangeRate>0 
+			&& this.formRef.current?.state?.values?.exchangeRate!=="" ?
+			this.formRef.current?.state?.values?.exchangeRate:1
 			// props.setFieldValue('lineItemsString', newData, true);
 			// this.updateAmount(newData, props);
 			this.setState(
@@ -2246,7 +2249,7 @@ resetVatId = (props) => {
 						description: res.data[0].description,
 						quantity: 1,
 						discount:0,
-						unitPrice: res.data[0].unitPrice,
+						unitPrice: (parseFloat(res.data[0].unitPrice)*(1/exchangeRate)).toFixed(2),
 						vatCategoryId: res.data[0].vatCategoryId,
 						exciseTaxId: res.data[0].exciseTaxId,
 						vatAmount:res.data[0].vatAmount ?res.data[0].vatAmount:0,

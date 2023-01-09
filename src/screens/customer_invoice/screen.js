@@ -1320,7 +1320,9 @@ stockInHandTestForProduct = (row,markAsSent) => {
 											>
 												<i className="fas fa-plus mr-1" />
 												{strings.AddNewInvoice}
-											</Button></div></Row>
+											</Button>
+										</div>
+									</Row>
 
 									<BootstrapTable
 										selectRow={this.selectRowProp}
@@ -1433,7 +1435,8 @@ stockInHandTestForProduct = (row,markAsSent) => {
 												width="5%"
 											dataFormat={this.renderActions}
 											
-										></TableHeaderColumn>
+										>										
+										</TableHeaderColumn>
 									</BootstrapTable>
 								</Col>
 							</Row>
@@ -1455,30 +1458,30 @@ stockInHandTestForProduct = (row,markAsSent) => {
 						this.closeModal(e);
 						this.initializeData();
 					}}
-				updateParentAmount={
-					(e,e1,e2) => {
-						this.updateParentAmount(e,e1,e2);
-				}}
-				updateParentSelelectedData={
-					(e) => {
-						this.updateParentSelelectedData(e);
-				}}
-				invoiceNumber={this.state.invoiceNumber}
-				id={this.state.rowId}
-				selectedData={this.state.selectedData}
+					updateParentAmount={
+						(e,e1,e2) => {
+							this.updateParentAmount(e,e1,e2);
+					}}
+					updateParentSelelectedData={
+						(e) => {
+							this.updateParentSelelectedData(e);
+					}}
+					invoiceNumber={this.state.invoiceNumber}
+					id={this.state.rowId}
+					selectedData={this.state.selectedData}
 
-				prefixData={this.state.prefixData}
+					prefixData={this.state.prefixData}
 
-				createCreditNote={this.props.creditNotesActions.createCreditNote}
-				totalAmount={this.state.totalAmount}
-				totalVatAmount={this.state.totalVatAmount}
-				totalExciseAmount={this.state.totalExciseAmount}
-				// getRfqbyid={this.props.requestForQuotationDetailsAction.getRFQeById}
-				//	 getState={this.props.requestForQuotationDetailsAction.renderActionForState}
-				//	getInvoice={this.props.purchaseOrderCreateAction.getPoNo()}
-				//	nextprefixData={this.state.nextprefixData}
-				//	getVat={this.props.purchaseOrderAction.getVatList()}
-				//	getProductList={this.props.purchaseOrderAction.getProductList()}
+					createCreditNote={this.props.creditNotesActions.createCreditNote}
+					totalAmount={this.state.totalAmount}
+					totalVatAmount={this.state.totalVatAmount}
+					totalExciseAmount={this.state.totalExciseAmount}
+					//  getRfqbyid={this.props.requestForQuotationDetailsAction.getRFQeById}
+					//	getState={this.props.requestForQuotationDetailsAction.renderActionForState}
+					//	getInvoice={this.props.purchaseOrderCreateAction.getPoNo()}
+					//	nextprefixData={this.state.nextprefixData}
+					//	getVat={this.props.purchaseOrderAction.getVatList()}
+					//	getProductList={this.props.purchaseOrderAction.getProductList()}
 				/>
 				<EmailModal
 					openEmailModal={this.state.openEmailModal}

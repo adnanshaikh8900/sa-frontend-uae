@@ -812,7 +812,7 @@ class VatReports extends React.Component {
 												hover
 												responsive												
 												remote
-												data={vatReportDataList &&vatReportDataList.data ? vatReportDataList.data : []}
+												data={vatReportDataList && vatReportDataList.data ? vatReportDataList.data : []}
 												// data={vatReportDataList.data ? vatReportDataList.data : []}										
 												// rowData={vatReportDataList.data ? vatReportDataList.data : []}
 												pagination={
@@ -895,7 +895,6 @@ class VatReports extends React.Component {
 														<TableHeaderColumn
 															className="text-right table-header-bg"
 															columnClassName="text-right"
-															dataField="balanceDue"
 															width="5%"
 															dataFormat={this.getActionButtons}
 														></TableHeaderColumn>

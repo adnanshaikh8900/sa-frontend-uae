@@ -597,7 +597,7 @@ class CreateExpense extends React.Component {
 	placelistSetting=(option,props)=>{
 
 		this.setState({showPlacelist:true,lockPlacelist:false})
-		if(option.value === 6)
+		if(option?.value === 6)
 		this.setState({placelist:
 			[
 				{ label: 'Abu Dhabi', value: '1' },
@@ -615,7 +615,7 @@ class CreateExpense extends React.Component {
 			]
 		})
 		else
-		if(option.value === 5)
+		if(option?.value === 5)
 		this.setState({placelist:
 			[
 				{ label: 'Abu Dhabi', value: '1' },
@@ -633,7 +633,7 @@ class CreateExpense extends React.Component {
 			]
 		})
 		else 
-		if(option.value===8)
+		if(option?.value===8)
 		{
 			if(props)
 			props.handleChange('placeOfSupplyId')('')
@@ -641,7 +641,7 @@ class CreateExpense extends React.Component {
 			this.formRef.current.setFieldValue('placeOfSupplyId', "", true);
 			this.setState({showPlacelist:false})
 		}else
-		if(option.value===7){
+		if(option?.value===7){
 			let placeOfSupplyId=this.state.placelist.find(
 														(option) =>
 															option.label === this.state.userStateName,
@@ -1173,6 +1173,7 @@ componentWillUnmount() {
 																							// for resetting Vat
 																					props.handleChange('vatCategoryId')('');
 																					//placelist Setup
+
 																					this.placelistSetting(option,props)
 																					// ReverseCharge setup
 																					this.ReverseChargeSetting(option.value,props)

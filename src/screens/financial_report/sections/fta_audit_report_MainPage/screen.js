@@ -21,7 +21,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import './style.scss';
 import * as FTAreport from './actions';
 import { isDate, upperFirst } from 'lodash-es';
-
+import GenerateFTAreport from './sections/generateFTAauditFile'
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import moment from 'moment';
@@ -29,6 +29,7 @@ import download from 'downloadjs';
 import { AgGridReact, AgGridColumn } from 'ag-grid-react/lib/agGridReact';
 import { ConfirmDeleteModal, Currency } from 'components';
 import {data}  from '../../../Language/index'
+
 import LocalizedStrings from 'react-localization';
 const mapStateToProps = (state) => {
 	return {
@@ -58,6 +59,7 @@ class FtaAuditReport extends React.Component {
 			file_data_list: [],
 			openModal: false,
 			openVatSettingModal: false,
+			openGenerateModal:false,
 			openFileTaxRetrunModal: false,
 			coaName: '',
 			ftaAuditReporttDataList: [ ],
@@ -118,8 +120,8 @@ class FtaAuditReport extends React.Component {
 			.then((res) => {
 				if (res.status === 200) {
 					let arrayList=[]
-					if(res.data && res.data.length && res.data.length !=0)
-					arrayList=res.data.filter((row)=>row.status!="UnFiled")
+					if(res.data?.data && res.data?.data.length && res.data?.data.length !=0)
+					arrayList=res.data?.data.filter((row)=>row.status!="UnFiled")
 					
 					 this.setState({ ftaAuditReporttDataList: arrayList }) // comment for dummy
 				}
@@ -175,7 +177,6 @@ class FtaAuditReport extends React.Component {
 		return upperFirst(s.replace(/([a-z])([A-Z])/g, '$1 $2'));
 	}
 	toggleActionButton = (index) => {
-		console.log(index, this.state.actionButtons ," this.state.actionButtons")
 		let temp = Object.assign({}, this.state.actionButtons);
 		if (temp[parseInt(index, 10)]) {
 			temp[parseInt(index, 10)] = false;
@@ -185,57 +186,122 @@ class FtaAuditReport extends React.Component {
 		this.setState({
 			actionButtons: temp,
 		});
-		console.log(index, this.state.actionButtons ," this.state.actionButtons")
 	};
 
-	getActionButtons = (params) => {
-
+	getActionButtons = ({data}) => {
 		return (
-	<>	
-	{/* BUTTON ACTIONS */}
-			<Button
-				className="Ag-gridActionButtons"
-				title='download'
-				color="secondary"
-				className="btn-sm"
-				onClick={() => {
-					
-					this.setState({current_report_id:params.data.id})
-					let dateArr = params.data.taxReturns ? params.data.taxReturns.split("-") : [];
-					this.props.history.push('/admin/report/ftaAuditReports/view', {startDate:dateArr[0],endDate:dateArr[1],userId:params.data.userId,	companyId:1, taxAgencyId:params.data.taxAgencyId})
+// DROPDOWN ACTIONS
 
-					// const postData = {
-					// 	startDate:dateArr[0],
-					// 	endDate:dateArr[0],
-					// 	userId:params.data.userId,
-					// 	companyId:1
-					// };
-					// this.props.ftaReport
-					// .getFtaAuditReport(postData)
-					// .then((res) => {
-					// 	 
-					// 	if (res.status === 200) {
-					// 		const blob = new Blob([res.data], { type: 'application/csv' });
-					// 		download(blob,params.data.taxReturns+".csv" )
-					// 		this.props.commonActions.tostifyAlert(
-					// 			'success',
-					// 			'Downloaded Successfully',
-					// 		);
-					// 	}
-					// })
-					// .catch((err) => {
-					// 	this.props.commonActions.tostifyAlert(
-					// 		'error',
-					// 		err && err.data ? err.data.message : 'Something Went Wrong',
-					// 	);
-					// });
+		<ButtonDropdown
+			isOpen={this.state.actionButtons[data.id]}
+			toggle={() => this.toggleActionButton(data.id)}
+		>
+			<DropdownToggle size="sm" color="primary" className="btn-brand icon">
+				{this.state.actionButtons[data.id] === true ? (
+					<i className="fas fa-chevron-up" />
+				) : (
+					<i className="fas fa-chevron-down" />
+				)}
+			</DropdownToggle>
+			
+	{/* Menu start */}
+		<DropdownMenu left >
+			
+		{/* View */}
+			
+			<DropdownItem
+		
+		className="py-0"
+			onClick={() => {
+				this.setState({current_report_id:data.id})
+				let dateArr = data.taxReturns ? data.taxReturns.split("-") : [];
+				this.props.history.push('/admin/report/ftaAuditReports/view', {startDate:dateArr[0],endDate:dateArr[1],userId:data.userId,	companyId:1, taxAgencyId:data.taxAgencyId})
+				
+			}}
+				
+				>
+				<i className="fas fa-eye" /> View
+			</DropdownItem>	
+			
+			<DropdownItem
+			className="py-0"
+				onClick={() => {	
+				this.delete(data.id)
 				}}
-			>	<i class="fas fa-eye"></i>  </Button>
+				>
+				<i className="fas fa-trash" /> Delete
+			</DropdownItem>
+			
+			
+		
+		</DropdownMenu>
+	</ButtonDropdown>
+	// <>
 
-	</>
+	
+	
 		)
 
 	}
+
+
+// 	getActionButtons = (params) => {
+
+// 		return (
+// 	<>	
+// 	{/* BUTTON ACTIONS */}
+// 			<Button
+// 				className="Ag-gridActionButtons"
+// 				title='download'
+// 				color="secondary"
+// 				className="btn-sm"
+// 				onClick={() => {
+					
+// 					this.setState({current_report_id:params.data.id})
+// 					let dateArr = params.data.taxReturns ? params.data.taxReturns.split("-") : [];
+// 					this.props.history.push('/admin/report/ftaAuditReports/view', {startDate:dateArr[0],endDate:dateArr[1],userId:params.data.userId,	companyId:1, taxAgencyId:params.data.taxAgencyId})
+
+// 					// const postData = {
+// 					// 	startDate:dateArr[0],
+// 					// 	endDate:dateArr[0],
+// 					// 	userId:params.data.userId,
+// 					// 	companyId:1
+// 					// };
+// 					// this.props.ftaReport
+// 					// .getFtaAuditReport(postData)
+// 					// .then((res) => {
+// 					// 	 
+// 					// 	if (res.status === 200) {
+// 					// 		const blob = new Blob([res.data], { type: 'application/csv' });
+// 					// 		download(blob,params.data.taxReturns+".csv" )
+// 					// 		this.props.commonActions.tostifyAlert(
+// 					// 			'success',
+// 					// 			'Downloaded Successfully',
+// 					// 		);
+// 					// 	}
+// 					// })
+// 					// .catch((err) => {
+// 					// 	this.props.commonActions.tostifyAlert(
+// 					// 		'error',
+// 					// 		err && err.data ? err.data.message : 'Something Went Wrong',
+// 					// 	);
+// 					// });
+// 				}}
+// 			>	<i class="fas fa-eye"></i>  </Button>
+
+// <Button
+// 				className="Ag-gridActionButtons btn-sm ml-2"
+// 				title='download'
+// 				color="secondary"
+// 				onClick={() => {	
+// 				this.delete(params.data.id)
+// 				}}
+// 			>	<i class="fas fa-trash"></i>  </Button>
+
+// 	</>
+// 		)
+
+// 	}
 
 	renderStatus = (params) => {
 		return (
@@ -293,7 +359,7 @@ class FtaAuditReport extends React.Component {
 			dialog: (
 				<ConfirmDeleteModal
 					isOpen={true}
-					okHandler={this.remove(id)}
+					okHandler={()=>this.remove(id)}
 					cancelHandler={this.removeDialog}
 					message={message}
 					message1={message1}
@@ -321,7 +387,7 @@ class FtaAuditReport extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data ? err.data.message : 'VAT Report File Deleted Unsuccessfully'
+					err?.data ? err?.data?.message : 'VAT Report File Deleted Unsuccessfully'
 				);
 				this.setState({
 					dialog: null,
@@ -361,6 +427,7 @@ class FtaAuditReport extends React.Component {
 
 		return (
 			<div className="import-bank-statement-screen">
+				<GenerateFTAreport openModal={this.state.openGenerateModal} closeModal={()=>{this.setState({openGenerateModal:false})}}/>
 				<div className="animated fadeIn">
 					<Card>
 						<CardHeader>
@@ -408,6 +475,12 @@ class FtaAuditReport extends React.Component {
 
 
 						<CardBody>
+							<div
+							style={{width:'100%',display:'flex',justifyContent: 'flex-end'}}
+							>
+								<Button color="primary"
+								onClick={()=>{this.setState({openGenerateModal:true})}}
+								>Create a FTA VAT Audit File</Button></div>
 						
 							<Row>
 								<Col lg={12} className="mb-5">
@@ -495,11 +568,9 @@ class FtaAuditReport extends React.Component {
 										// className="Ag-gridActionButtons"
 										headerName={strings.action}
 										cellRendererFramework={(params) =>
-											<div
-											 className="Ag-gridActionButtons"
-											 >
-												{this.getActionButtons(params)}
-											</div>
+											
+												this.getActionButtons(params)
+											
 
 										}
 									></AgGridColumn>

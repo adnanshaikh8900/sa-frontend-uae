@@ -164,7 +164,7 @@ class RecordTaxClaim extends React.Component {
 				
 				this.props.commonActions.tostifyAlert(
 					'success',
-					 'Tax Payment Recorded Successfully',
+					 'Tax Claim Recorded Successfully',
 				);
 				this.props.history.push('/admin/report/vatreports');
 				this.setState({ loading:false,});

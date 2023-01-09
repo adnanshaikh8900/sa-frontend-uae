@@ -1094,7 +1094,7 @@ setConfigurations=(configurationList)=>{
 																			let data = configurationList.filter(
 																				(item) => item.id === e.value,
 																			);
-																			debugger
+																			
 																			if (data.length > 0) {
 																				let local=[...this.state.selectedValueDropdown.map(()=>{return {label:"Select",value:""}})]
 																			Object.keys(data[0].indexMap).map((i)=>{

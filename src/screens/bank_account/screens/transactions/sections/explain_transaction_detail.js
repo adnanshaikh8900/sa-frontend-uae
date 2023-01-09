@@ -146,6 +146,7 @@ class ExplainTrasactionDetail extends React.Component {
 			.getBankAccountByID(bankId)
 			.then((res) => {
 					
+					
 				this.setState({
 					bankCurrency: res,
 				});
@@ -1019,21 +1020,6 @@ class ExplainTrasactionDetail extends React.Component {
 	
 		return exchange
 	  }
-	
-	  
-	  basecurrencyconvertor=(customerinvoice)=>{
-		let exchange;
-		if(this.state.bankCurrency.bankAccountCurrency!==this.state.basecurrency.currencyCode)
-		{let result = this.props.currency_convert_list.filter((obj) => {
-		  return obj.currencyCode === customerinvoice;
-		});
-		exchange= result[0].exchangeRate
-	  } else {
-		exchange= 1
-	  }
-		return exchange
-	  }
-	  
 	
 	  
 	  basecurrencyconvertor=(customerinvoice)=>{

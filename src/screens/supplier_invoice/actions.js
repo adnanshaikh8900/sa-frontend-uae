@@ -10,11 +10,11 @@ export const getSupplierInvoiceList = (postObj) => {
 	let amount = postObj.amount ? postObj.amount : '';
 	let status = postObj.status ? postObj.status.value : '';
 	let contactType = 1; //postObj.contactType ? postObj.contactType : ''
-	let pageNo = postObj.pageNo ? postObj.pageNo : '';
-	let pageSize = postObj.pageSize ? postObj.pageSize : '';
-	let order = postObj.order ? postObj.order : '';
-	let sortingCol = postObj.sortingCol ? postObj.sortingCol : '';
-	let paginationDisable = postObj.paginationDisable
+	let pageNo = postObj?.pageNo ? postObj.pageNo : '';
+	let pageSize = postObj?.pageSize ? postObj.pageSize : '';
+	let order = postObj?.order ? postObj.order : '';
+	let sortingCol = postObj?.sortingCol ? postObj.sortingCol : '';
+	let paginationDisable = postObj?.paginationDisable
 		? postObj.paginationDisable
 		: false;
 

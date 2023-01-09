@@ -5,10 +5,10 @@ import {
 
 
 export const getVatPaymentHistoryList = (postObj) => {
-	let pageNo = postObj.pageNo ? postObj.pageNo : '';
-	let pageSize = postObj.pageSize ? postObj.pageSize : '';
-	let order = postObj.order ? postObj.order : '';
-	let sortingCol = postObj.sortingCol ? postObj.sortingCol : '';
+	let pageNo = postObj?.pageNo ? postObj.pageNo : '';
+	let pageSize = postObj?.pageSize ? postObj.pageSize : '';
+	let order = postObj?.order ? postObj.order : '';
+	let sortingCol = postObj?.sortingCol ? postObj.sortingCol : '';
 	return (dispatch) => {
 		let data = {
 			method: 'get',

@@ -195,39 +195,32 @@ class VatSettingModal extends React.Component {
 						validate={(values) => {
 							let errors = {};
 							if(values.taxablePersonNameInEnglish && this.regExAlpha.test(values.taxablePersonNameInEnglish)!=true)
-							errors.taxablePersonNameInEnglish="A taxable person's name must contain only alphabets";
+								errors.taxablePersonNameInEnglish="A taxable person's name must contain only alphabets";
 							if(values.taxablePersonNameInArabic && this.regExAlpha.test(values.taxablePersonNameInArabic)!=true)
-							errors.taxablePersonNameInArabic="A taxable person's name must contain only alphabets";
+								errors.taxablePersonNameInArabic="A taxable person's name must contain only alphabets";
 							if(values.taxAgentName && this.regExAlpha.test(values.taxAgentName)!=true)
-							errors.taxAgentName="Tax agent name must contain only alphabets";
+								errors.taxAgentName="Tax agent name must contain only alphabets";
 							if(values.taxAgencyName && this.regExAlpha.test(values.taxAgencyName)!=true)
-							errors.taxAgencyName="Tax agency name must contain only alphabets";
+								errors.taxAgencyName="Tax agency name must contain only alphabets";
 							if(values.taxAgentApprovalNumber && this.regExTelephone.test(values.taxAgentApprovalNumber)!=true)
-							errors.taxAgentApprovalNumber="Tax agent approval number must contain only numbers";
-							if(this.state.isTANMandetory && !values.taxAgencyNumber ){
-								errors.taxAgencyNumber="TAN is required"
-							}
+								errors.taxAgentApprovalNumber="Tax agent approval number must contain only numbers";
 							if(values.taxAgencyNumber && this.regExBoth.test(values.taxAgencyNumber)!=true)
-							errors.taxAgencyNumber="TAN must contain only alphanumeric";
+								errors.taxAgencyNumber="TAN must contain only alphanumeric";
 							if(values.taxAgencyNumber && values.taxAgencyNumber.length !== 10){
 								errors.taxAgencyNumber="TAN must contain 10 digits alphanumeric";	
 							}
 							if(values.taxAgentApprovalNumber && values.taxAgentApprovalNumber.length !== 8){
 								errors.taxAgentApprovalNumber="TAAN must contain 8 digits number";	
 							}
-							
-							
-																		
 							return errors;
 						}}
 						validationSchema={Yup.object().shape({
-							taxablePersonNameInEnglish: Yup.string().required('Taxable person name in english is required'),
-							// taxablePersonNameInArabic: Yup.string().required('Taxable Person Name In Arabic is required'),
-							taxAgentName: Yup.string().required('Tax Agent Name is required'),
-							taxAgentApprovalNumber: Yup.string().required('TAAN is required'),
+							//taxablePersonNameInEnglish: Yup.string().required('Taxable person name in english is required'),
+							//taxablePersonNameInArabic: Yup.string().required('Taxable Person Name In Arabic is required'),
+							//taxAgentName: Yup.string().required('Tax Agent Name is required'),
+							//taxAgentApprovalNumber: Yup.string().required('TAAN is required'),
 							//vatRegistrationNumber: Yup.string().required('Tax registration number is required'),
-							
-										})}
+						})}
 					>
 						{(props) => {
 							const { isSubmitting } = props;
@@ -241,7 +234,7 @@ class VatSettingModal extends React.Component {
 									<ModalBody>
 													<Row>
 														<Col lg={4}>
-															<FormGroup className="mb-3"><span className="text-danger">* </span>
+															<FormGroup className="mb-3"><span className="text-danger"> </span>
 																<Label htmlFor="taxablePersonNameInEnglish">Taxable Person Name (English)</Label>
 																<Input
 																	type="text"
@@ -268,7 +261,7 @@ class VatSettingModal extends React.Component {
 															</FormGroup>
 														</Col>
 														<Col lg={4}>
-															<FormGroup className="mb-3"><span className="text-danger">* </span>
+															<FormGroup className="mb-3"><span className="text-danger"> </span>
 																<Label htmlFor="taxablePersonNameInArabic">Taxable Person Name (Arabic)</Label>
 																<Input
 																	type="text"
@@ -362,7 +355,7 @@ class VatSettingModal extends React.Component {
 														
 														<Col lg={4}>
 															<FormGroup className="mb-3">
-													{this.state.isTANMandetory === true &&(<span className="text-danger">* </span> )}
+													{this.state.isTANMandetory === true &&(<span className="text-danger"> </span> )}
 																<Label htmlFor="taxAgencyNumber">Tax Agency Number (TAN)</Label>
 																<Input
 																	type="text"
@@ -394,7 +387,7 @@ class VatSettingModal extends React.Component {
 													<Row>
 													<Col lg={4}>
 															<FormGroup className="mb-3">
-															<span className="text-danger">* </span>
+															<span className="text-danger"></span>
 																<Label htmlFor="taxAgentName">Tax Agent Name</Label>
 																<Input
 																	type="text"
@@ -422,7 +415,7 @@ class VatSettingModal extends React.Component {
 														</Col>
 														<Col lg={4}>
 															<FormGroup className="mb-3">	
-																<span className="text-danger">* </span>
+																<span className="text-danger"> </span>
 															<Label htmlFor="taxAgentApprovalNumber">Tax Agent Approval Number (TAAN) </Label>
 																<Input
 																	type="text"

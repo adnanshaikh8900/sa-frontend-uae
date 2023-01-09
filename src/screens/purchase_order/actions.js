@@ -9,11 +9,11 @@ export const getpoList = (postObj) => {
 	let poNumber = postObj.poNumber ? postObj.poNumber : '';
 	let type = postObj.type ? postObj.type : '';
 	let status = postObj.status ? postObj.status.value : '';
-	let pageNo = postObj.pageNo ? postObj.pageNo : '';
-	let pageSize = postObj.pageSize ? postObj.pageSize : '';
-	let order = postObj.order ? postObj.order : '';
-	let sortingCol = postObj.sortingCol ? postObj.sortingCol : '';
-	let paginationDisable = postObj.paginationDisable
+	let pageNo = postObj?.pageNo ? postObj.pageNo : '';
+	let pageSize = postObj?.pageSize ? postObj.pageSize : '';
+	let order = postObj?.order ? postObj.order : '';
+	let sortingCol = postObj?.sortingCol ? postObj.sortingCol : '';
+	let paginationDisable = postObj?.paginationDisable
 		? postObj.paginationDisable
 		: false;
 

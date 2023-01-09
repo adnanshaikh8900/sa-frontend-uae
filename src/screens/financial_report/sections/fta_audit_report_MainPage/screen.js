@@ -506,12 +506,12 @@ class FtaAuditReport extends React.Component {
 
 
 						<CardBody>
-							<div
+							{/* <div
 							style={{width:'100%',display:'flex',justifyContent: 'flex-end'}}
 							>
 								<Button color="primary"
 								onClick={()=>{this.setState({openGenerateModal:true})}}
-								>Create a FTA VAT Audit File</Button></div> 
+								>Create a FTA VAT Audit File</Button></div>  */}
 						
 							<Row>
 								<Col lg={12} className="mb-5">
@@ -519,7 +519,7 @@ class FtaAuditReport extends React.Component {
 										<FormGroup className="text-center">
 											 <Button color="primary" className="btn-square  pull-right"
 												onClick={() => {
-													this.props.history.push('/admin/report/ftaAuditReports/generateftaAuditReport')
+													this.setState({openGenerateModal:true})
 												}}>
 												<i className="fas fa-plus"></i> Create FTA Audit Report
 											</Button>

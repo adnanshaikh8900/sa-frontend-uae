@@ -28,7 +28,7 @@ import { AgGridReact, AgGridColumn } from 'ag-grid-react/lib/agGridReact';
 import { ConfirmDeleteModal, Currency } from 'components';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-
+import GenerateFTAExcisereport from './sections/generateExciseTaxAudit'
 const mapStateToProps = (state) => {
 	return {
 		version: state.common.version,
@@ -53,6 +53,7 @@ class ExciseTaxAuditReport extends React.Component {
 			loading: false,
 			fileName: '',
 			actionButtons:{},
+			openGenerateModal:false,
 			disabled: false,
 			file_data_list: [],
 			openModal: false,
@@ -117,8 +118,9 @@ class ExciseTaxAuditReport extends React.Component {
 			.then((res) => {
 				if (res.status === 200) {
 					let arrayList=[]
-					if(res.data && res.data.length && res.data.length !=0)
-					arrayList=res.data.filter((row)=>row.status!="UnFiled")
+					debugger
+					if(res.data?.data?.length >0 )
+					arrayList=res.data?.data.filter((row)=>row.status!="UnFiled")
 					
 					 this.setState({ ftaAuditReporttDataList: arrayList }) // comment for dummy
 				}
@@ -186,53 +188,110 @@ class ExciseTaxAuditReport extends React.Component {
 		});
 		console.log(index, this.state.actionButtons ," this.state.actionButtons")
 	};
-
-	getActionButtons = (params) => {
-
+	
+	getActionButtons = ({data}) => {
 		return (
-	<>	
-	{/* BUTTON ACTIONS */}
-			<Button
-				className="Ag-gridActionButtons btn-sm"
-				title='download'
-				color="secondary"
-				onClick={() => {
-					this.setState({current_report_id:params.data.id})
-					let dateArr = params.data.taxReturns ? params.data.taxReturns.split("-") : []; 
-					this.props.history.push('/admin/report/exciseTaxAuditReports/view', {startDate:dateArr[0],endDate:dateArr[1],userId:params.data.userId,	companyId:1,taxAgencyId:params.data.taxAgencyId})
+// DROPDOWN ACTIONS
 
-					// const postData = {
-					// 	startDate:dateArr[0],
-					// 	endDate:dateArr[0],
-					// 	userId:params.data.userId,
-					// 	companyId:1
-					// };
-					// this.props.ftaReport
-					// .getFtaAuditReport(postData)
-					// .then((res) => {
-					// 	 
-					// 	if (res.status === 200) {
-					// 		const blob = new Blob([res.data], { type: 'application/csv' });
-					// 		download(blob,params.data.taxReturns+".csv" )
-					// 		this.props.commonActions.tostifyAlert(
-					// 			'success',
-					// 			'Downloaded Successfully',
-					// 		);
-					// 	}
-					// })
-					// .catch((err) => {
-					// 	this.props.commonActions.tostifyAlert(
-					// 		'error',
-					// 		err && err.data ? err.data.message : 'Something Went Wrong',
-					// 	);
-					// });
+		<ButtonDropdown
+			isOpen={this.state.actionButtons[data.id]}
+			toggle={() => this.toggleActionButton(data.id)}
+		>
+			<DropdownToggle size="sm" color="primary" className="btn-brand icon">
+				{this.state.actionButtons[data.id] === true ? (
+					<i className="fas fa-chevron-up" />
+				) : (
+					<i className="fas fa-chevron-down" />
+				)}
+			</DropdownToggle>
+			
+	{/* Menu start */}
+		<DropdownMenu left >
+			
+		{/* View */}
+			
+			<DropdownItem
+		
+		className="py-0"
+			onClick={() => {
+				this.setState({current_report_id:data.id})
+				let dateArr = data.taxReturns ? data.taxReturns.split("-") : [];
+				this.props.history.push('/admin/report/exciseTaxAuditReports/view', {startDate:dateArr[0],endDate:dateArr[1],userId:data.userId,	companyId:1,taxAgencyId:data.taxAgencyId})
+				
+			}}
+				
+				>
+				<i className="fas fa-eye" /> View
+			</DropdownItem>	
+			
+			<DropdownItem
+			className="py-0"
+				onClick={() => {	
+				this.delete(data.id)
 				}}
-			>	<i class="fas fa-eye"></i>  </Button>
+				>
+				<i className="fas fa-trash" /> Delete
+			</DropdownItem>
+			
+			
+		
+		</DropdownMenu>
+	</ButtonDropdown>
+	// <>
 
-	</>
+	
+	
 		)
 
 	}
+
+
+	// getActionButtons = (params) => {
+
+	// 	return (
+	// <>	
+	// {/* BUTTON ACTIONS */}
+	// 		<Button
+	// 			className="Ag-gridActionButtons btn-sm"
+	// 			title='download'
+	// 			color="secondary"
+	// 			onClick={() => {
+	// 				this.setState({current_report_id:params.data.id})
+	// 				let dateArr = params.data.taxReturns ? params.data.taxReturns.split("-") : []; 
+	// 				this.props.history.push('/admin/report/exciseTaxAuditReports/view', {startDate:dateArr[0],endDate:dateArr[1],userId:params.data.userId,	companyId:1,taxAgencyId:params.data.taxAgencyId})
+
+	// 				// const postData = {
+	// 				// 	startDate:dateArr[0],
+	// 				// 	endDate:dateArr[0],
+	// 				// 	userId:params.data.userId,
+	// 				// 	companyId:1
+	// 				// };
+	// 				// this.props.ftaReport
+	// 				// .getFtaAuditReport(postData)
+	// 				// .then((res) => {
+	// 				// 	 
+	// 				// 	if (res.status === 200) {
+	// 				// 		const blob = new Blob([res.data], { type: 'application/csv' });
+	// 				// 		download(blob,params.data.taxReturns+".csv" )
+	// 				// 		this.props.commonActions.tostifyAlert(
+	// 				// 			'success',
+	// 				// 			'Downloaded Successfully',
+	// 				// 		);
+	// 				// 	}
+	// 				// })
+	// 				// .catch((err) => {
+	// 				// 	this.props.commonActions.tostifyAlert(
+	// 				// 		'error',
+	// 				// 		err && err.data ? err.data.message : 'Something Went Wrong',
+	// 				// 	);
+	// 				// });
+	// 			}}
+	// 		>	<i class="fas fa-eye"></i>  </Button>
+
+	// </>
+	// 	)
+
+	// }
 
 	renderStatus = (params) => {
 		return (
@@ -318,7 +377,7 @@ class ExciseTaxAuditReport extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data ? err.data.message : 'VAT Report File Deleted Unsuccessfully'
+					err?.data ? err?.data?.message : 'VAT Report File Deleted Unsuccessfully'
 				);
 				this.setState({
 					dialog: null,
@@ -359,6 +418,7 @@ class ExciseTaxAuditReport extends React.Component {
 		return (
 			<div className="import-bank-statement-screen">
 				<div className="animated fadeIn">
+				<GenerateFTAExcisereport openModal={this.state.openGenerateModal} closeModal={()=>{this.setState({openGenerateModal:false})}}/>
 					<Card>
 						<CardHeader>
 							<Row>
@@ -405,7 +465,12 @@ class ExciseTaxAuditReport extends React.Component {
 
 
 						<CardBody>
-						
+						<div
+							style={{width:'100%',display:'flex',justifyContent: 'flex-end'}}
+							>
+								<Button color="primary"
+								onClick={()=>{this.setState({openGenerateModal:true})}}
+								>Create a FTA Excise Tax Audit File</Button></div>
 							<Row>
 								<Col lg={12} className="mb-5">
 									<div className="table-wrapper">

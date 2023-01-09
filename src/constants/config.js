@@ -1,7 +1,7 @@
 
 
 export default {
- //API_ROOT_URL:'https://devbox-api.app.simpleaccounts.io',
+// API_ROOT_URL:'https://devbox-api.app.simpleaccounts.io',
 // API_ROOT_URL: 'https://dev-api.app.simpleaccounts.io',
     // API_ROOT_URL: 'https://k8s-api.dev.simplevat.com',
     //  API_ROOT_URL: 'http://localhost:8080',

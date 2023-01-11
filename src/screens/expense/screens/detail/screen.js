@@ -231,10 +231,10 @@ class DetailExpense extends React.Component {
 									isReverseChargeEnabled:res.data.isReverseChargeEnabled ?res.data.isReverseChargeEnabled:false,
 									placeOfSupplyId:res.data.placeOfSupplyId ?res.data.placeOfSupplyId:'',
 									taxTreatmentId:res.data.taxTreatmentId ?res.data.taxTreatmentId:'',
-									notes:res.data.delivaryNotes
+									notes:res.data.delivaryNotes,
 									
 								},
-								exchangeRate:res.data.exchangeRate ? res.data.exchangeRate : '',
+								exchangeRate:res?.data?.exchangeRate ? res.data.exchangeRate : '',
 								payee: res.data.payee ? res.data.payee : '',
 								expenseType: res.data.expenseType ? true : false,
 								isVatClaimable: res.data.expenseType ? false : true,

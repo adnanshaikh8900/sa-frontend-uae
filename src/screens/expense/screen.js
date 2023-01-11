@@ -226,7 +226,7 @@ class Expense extends React.Component {
 										if(row.editFlag)
 										this.props.history.push('/admin/expense/expense/detail', {
 											expenseId: row.expenseId,
-										});
+										})
 										else this.props.commonActions.tostifyAlert(
 											'error',
 											'You cannot edit transactions for which VAT is recorded'
@@ -362,9 +362,7 @@ class Expense extends React.Component {
 					<label className="font-weight-bold mr-2 ">{strings.ActualExpenseAmount}: </label>
 					<label>
 						
-						{row.exclusiveVat  ?
-						 row.currencyName +" "+ (row.expenseAmount-row.expenseVatAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2}): 
-						 row.currencyName +" "+ (row.expenseAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+						{!row.exclusiveVat  ? row.currencyName +" "+ (row.expenseAmount-row.expenseVatAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2}): row.currencyName +" "+ (row.expenseAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
 					
 					</label>
 			</div>
@@ -380,10 +378,8 @@ class Expense extends React.Component {
 			<div style={{ display: row.expenseAmount === 0 ? 'none' : '' }}>
 					<label className="font-weight-bold mr-2">{strings.ExpenseAmount}: </label>
 					<label>
-					{!row.exclusiveVat  ?
-						 row.currencyName +" "+ (row.expenseAmount-row.expenseVatAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2}): 
-						 row.currencyName +" "+ (row.expenseAmount+row.expenseVatAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-					
+						
+						{!row.exclusiveVat  ? row.currencyName +" "+ (row.expenseAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2 , maximumFractionDigits: 2}): row.currencyName +" "+ (row.expenseAmount+row.expenseVatAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
 						</label>
 			</div>
 		</div>

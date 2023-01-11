@@ -226,7 +226,7 @@ class Expense extends React.Component {
 										if(row.editFlag)
 										this.props.history.push('/admin/expense/expense/detail', {
 											expenseId: row.expenseId,
-										});
+										})
 										else this.props.commonActions.tostifyAlert(
 											'error',
 											'You cannot edit transactions for which VAT is recorded'

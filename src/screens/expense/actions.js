@@ -5,14 +5,14 @@ import moment from 'moment';
 export const getExpenseList = (obj) => {
 	let payee = obj.payee ? obj.payee.value : '';
 	let expenseDate = obj.expenseDate ? obj.expenseDate : '';
-	let transactionCategoryId = obj.transactionCategoryId
+	let transactionCategoryId = obj.transactionCategoryId    
 		? obj.transactionCategoryId.value
 		: '';
-	let pageNo = obj.pageNo ? obj.pageNo : '';
-	let pageSize = obj.pageSize ? obj.pageSize : '';
-	let order = obj.order ? obj.order : '';
-	let sortingCol = obj.sortingCol ? obj.sortingCol : '';
-	let paginationDisable = obj.paginationDisable ? obj.paginationDisable : false;
+	let pageNo = obj?.pageNo ? obj.pageNo : '';
+	let pageSize = obj?.pageSize ? obj.pageSize : '';
+	let order = obj?.order ? obj.order : '';
+	let sortingCol = obj?.sortingCol ? obj.sortingCol : '';
+	let paginationDisable = obj?.paginationDisable ? obj.paginationDisable : false;
 
 	return (dispatch) => {
 		let param = `/rest/expense/getList?payee=${payee}&transactionCategoryId=${transactionCategoryId}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`;

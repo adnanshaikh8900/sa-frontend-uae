@@ -924,7 +924,7 @@ class Expense extends React.Component {
 											>
 												{strings.EXPENSECATEGORY}
 											</TableHeaderColumn>
-											<TableHeaderColumn
+											{/* <TableHeaderColumn
                                                 className="table-header-bg"
                                                 dataField="exclusiveVat"
                                                 dataSort
@@ -932,7 +932,7 @@ class Expense extends React.Component {
                                             >
                                                 {strings.ExpenseType}
 
-                          					</TableHeaderColumn>
+                          					</TableHeaderColumn> */}
 
 											<TableHeaderColumn
 												dataField="expenseStatus"

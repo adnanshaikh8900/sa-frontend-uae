@@ -32,6 +32,7 @@ import Switch from "react-switch";
 import IconButton from '@material-ui/core/IconButton';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
+import { Checkbox } from '@material-ui/core';
 const mapStateToProps = (state) => {
 	return {
 		expense_list: state.bank_account.expense_list,
@@ -96,7 +97,9 @@ class ExplainTrasactionDetail extends React.Component {
 			payrollListIds: '',
 			expenseType: true,
 			showMore: false,
-			res: []
+			res: [],   
+			isReverseChargeEnabled:false,
+			exclusiveVat:false
 		};
 
 		this.file_size = 1024000;
@@ -195,6 +198,8 @@ class ExplainTrasactionDetail extends React.Component {
 						customerId: res.data.customerId ? res.data.customerId : '',
 						employeeId: res.data.employeeId ? res.data.employeeId : '',
 						explinationStatusEnum: res.data.explinationStatusEnum,
+						isReverseChargeEnabled:res.data.isReverseChargeEnabled? res.data?.isReverseChargeEnabled:false,
+						exclusiveVat:res.data.exclusiveVat || false,
 						reference: res.data.reference ? res.data.reference : '',
 						exchangeRate: res.data.exchangeRate ? res.data.exchangeRate : '',
 						//currencyName: res.data.currencyName ? res.data.currencyName : '',
@@ -332,7 +337,8 @@ class ExplainTrasactionDetail extends React.Component {
 			this.formRef.current.setFieldValue('expenseType', res.data.expenseType, true)
 			this.formRef.current.setFieldValue('description', res.data.description, true)
 			this.formRef.current.setFieldValue('reference', res.data.reference, true)
-				
+			this.formRef.current.setFieldValue('isReverseChargeEnabled',res.data.isReverseChargeEnabled,false)
+			this.formRef.current.setFieldValue('exclusiveVat',res.data.exclusiveVat,false)	
 		}
 	};
 
@@ -1514,7 +1520,7 @@ class ExplainTrasactionDetail extends React.Component {
 																			<span className="text-danger">* </span>
 																			{strings.TransactionType}
 																		</Label>
-																		{console.log("sdsdfsdf",chartOfAccountCategoryList)}
+																		
 																			<Select
 																				// styles={customStyles}
 																				isDisabled={this.state.initValue.explinationStatusEnum ==='PARTIAL' || this.state.initValue.explinationStatusEnum==="FULL" ||this.state.initValue.explinationStatusEnum=== "RECONCILED"}
@@ -1746,6 +1752,7 @@ class ExplainTrasactionDetail extends React.Component {
 																				</Label>
 																				<Select
 																					styles={customStyles}
+																					isDisabled={this.state.initValue.explinationStatusEnum ==='PARTIAL' || this.state.initValue.explinationStatusEnum==="FULL" ||this.state.initValue.explinationStatusEnum=== "RECONCILED"}
 																					options={
 																						expense_categories_list
 																							? selectOptionsFactory.renderOptions(
@@ -1806,6 +1813,7 @@ class ExplainTrasactionDetail extends React.Component {
 																					<FormGroup className="mb-3">
 																						<Label htmlFor="vatId">{strings.VAT}</Label>
 																						<Select
+																						isDisabled={this.state.initValue.explinationStatusEnum ==='PARTIAL' || this.state.initValue.explinationStatusEnum==="FULL" ||this.state.initValue.explinationStatusEnum=== "RECONCILED"}
 																							options={
 																								vat_list
 																									? selectOptionsFactory.renderOptions(
@@ -1864,9 +1872,12 @@ class ExplainTrasactionDetail extends React.Component {
 
 																				<Switch
 																					checked={this.state.expenseType}
+																					
 																					onChange={(expenseType) => {
-																						props.handleChange('expenseType')(expenseType);
+																						if(this.state.initValue.explinationStatusEnum !=='PARTIAL' && this.state.initValue.explinationStatusEnum!=="FULL" && this.state.initValue.explinationStatusEnum!== "RECONCILED")
+																						{props.handleChange('expenseType')(expenseType);
 																						this.setState({ expenseType, }, () => { },);
+																					}
 																					}}
 																					onColor="#2064d8"
 																					onHandleColor="#2693e6"
@@ -1890,6 +1901,111 @@ class ExplainTrasactionDetail extends React.Component {
 
 																	</Row>
 																)}
+
+{props.values.coaCategoryId &&
+                              props.values.coaCategoryId.label ===
+                              "Expense" && props.values?.vatId===1 && (
+                                <Row>
+                                  <Col lg={3}>
+                                  </Col>
+                                  {props.values.expenseCategory &&
+                                    props.values.expenseCategory.value &&
+                                    props.values.expenseCategory.value == 34 &&
+                                    this.getPayrollList(
+                                      UnPaidPayrolls_List,
+                                      props
+                                    )}
+                                  {props.values.coaCategoryId &&
+                                    props.values.coaCategoryId.label ===
+                                    "Expense" &&
+                                    props.values.expenseCategory &&
+                                    props.values.expenseCategory.value !==
+                                    34 && (
+                                      <Col lg={3}>
+                                         
+                                    <div style={{ display: "flex" }}>
+                                      {!this.state.exclusiveVat  ? (
+                                        <span
+                                          style={{ color: "#0069d9" }}
+                                          className="mr-4"
+                                        >
+                                          <b>{strings.InclusiveVAT}</b>
+                                        </span>
+                                      ) : (
+                                        <span className="mr-4">
+                                          {strings.InclusiveVAT}
+                                        </span>
+                                      )}
+
+                                      <Switch
+                                        checked={this.state.exclusiveVat}
+                                        onChange={(exclusiveVat) => {
+											if(this.state.initValue.explinationStatusEnum !=='PARTIAL' && this.state.initValue.explinationStatusEnum!=="FULL" && this.state.initValue.explinationStatusEnum!== "RECONCILED"){
+                                          props.handleChange("exclusiveVat")(
+                                            exclusiveVat
+                                          );
+                                          this.setState(
+                                            { exclusiveVat },
+                                            () => { }
+                                          );
+										  }
+                                          // if (this.state.expenseType == true)
+                                          // 	this.setState({ expenseType: true })
+                                        }}
+                                        onColor="#2064d8"
+                                        onHandleColor="#2693e6"
+                                        handleDiameter={25}
+                                        uncheckedIcon={false}
+                                        checkedIcon={false}
+                                        boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+                                        activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+                                        height={20}
+                                        width={48}
+                                        className="react-switch"
+                                      />
+
+                                      {this.state.exclusiveVat  ? (
+                                        <span
+                                          style={{ color: "#0069d9" }}
+                                          className="ml-4"
+                                        >
+                                          <b>{strings.ExclusiveVAT}</b>
+                                        </span>
+                                      ) : (
+                                        <span className="ml-4">
+                                          {strings.ExclusiveVAT}
+                                        </span>
+                                      )}
+                                    </div>
+                                      </Col>
+                                    )}
+                                  <Col className="mb-6" lg={6}>
+                                  
+                                  </Col>
+                                </Row>
+                              )}
+
+<Row>
+													{props.values.coaCategoryId && props.values.coaCategoryId?.label ===
+                            "Expense" && (<Col>
+															
+															<Checkbox
+																id="isReverseChargeEnabled"
+																disabled={this.state.initValue.explinationStatusEnum ==='PARTIAL' || this.state.initValue.explinationStatusEnum==="FULL" ||this.state.initValue.explinationStatusEnum=== "RECONCILED"}
+																checked={this.state.isReverseChargeEnabled}
+																onChange={(option)=>{
+																		this.setState({isReverseChargeEnabled:!this.state.isReverseChargeEnabled,
+                                      exclusiveVat:false})
+																		// for resetting Vat
+
+																		props.handleChange('vatId')('');
+                                    props.handleChange('isReverseChargeEnabled')(!props.values.isReverseChargeEnabled);
+																}}
+															/>
+															<Label>{strings.IsReverseCharge}</Label>
+															</Col>)}
+															</Row>
+
 															{props.values.coaCategoryId &&
 																props.values.coaCategoryId.label ===
 																'Supplier Invoice' && (

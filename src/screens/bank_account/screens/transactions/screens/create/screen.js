@@ -30,6 +30,7 @@ import LocalizedStrings from "react-localization";
 import { selectOptionsFactory, selectCurrencyFactory } from "utils";
 import Switch from "react-switch";
 import { LeavePage, Loader } from "components";
+import { Checkbox } from "@material-ui/core";
 
 const mapStateToProps = (state) => {
   return {
@@ -106,6 +107,8 @@ class CreateBankTransaction extends React.Component {
         employeeId: "",
         currencyCode: "",
         exchangeRate: [],
+        exclusiveVat:false,
+        isReverseChargeEnabled:false
       },
       expenseType: false,
       loadingMsg: "Loading...",
@@ -296,7 +299,9 @@ class CreateBankTransaction extends React.Component {
       userId,
       expenseType,
       ExplainedInvoiceListModal,
-      setexcessorshortamount
+      setexcessorshortamount,
+      isReverseChargeEnabled,
+      exclusiveVat
 
     } = data;
 
@@ -354,6 +359,15 @@ class CreateBankTransaction extends React.Component {
       (vatId && coaCategoryId.label === "Expense")
     ) {
       formData.append("vatId", vatId ? vatId.value : "");
+      
+    
+      formData.append("isReverseChargeEnabled",  isReverseChargeEnabled);
+    
+
+    
+      formData.append("exclusiveVat",  exclusiveVat);
+
+    
     }
     if (
       (currencyCode && coaCategoryId.label === "Expense") ||
@@ -376,6 +390,8 @@ class CreateBankTransaction extends React.Component {
     if (vendorId && coaCategoryId.value && coaCategoryId.label === "Expenses") {
       formData.append("vendorId", vendorId ? vendorId.value : "");
     }
+
+    
 
     if (vendorId && coaCategoryId.label === "Supplier Invoice") {
       formData.append("vendorId", vendorId.value ? vendorId.value : vendorId);
@@ -739,6 +755,17 @@ class CreateBankTransaction extends React.Component {
 
     //   this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
   };
+
+
+
+
+  getVatListByIds=(vatIds)=>{
+		const	{vat_list}=this.props	
+		const finalarr=vat_list.filter((i)=>vatIds.includes(i.id))
+    debugger
+		return finalarr;
+	}
+
 
   setCurrency = (value) => {
     let result = this.props.currency_convert_list.find((obj) => {
@@ -1464,12 +1491,13 @@ class CreateBankTransaction extends React.Component {
                                           <Label htmlFor="vatId">VAT</Label>
                                           <Select
                                             style={customStyles}
+                                            value={props.values.vatId}
                                             options={
                                               vat_list
                                                 ? selectOptionsFactory.renderOptions(
                                                   "name",
                                                   "id",
-                                                  vat_list,
+                                                  this.getVatListByIds(this.state.isReverseChargeEnabled?[1,2]:[1,2,3,4]),
                                                   "Tax"
                                                 )
                                                 : []
@@ -1574,6 +1602,108 @@ class CreateBankTransaction extends React.Component {
                                   </Col>
                                 </Row>
                               )}
+
+
+{props.values.coaCategoryId &&
+                              props.values.coaCategoryId.label ===
+                              "Expense" && props.values?.vatId?.value===1 && (
+                                <Row>
+                                  <Col lg={3}>
+                                  </Col>
+                                  {props.values.expenseCategory &&
+                                    props.values.expenseCategory.value &&
+                                    props.values.expenseCategory.value == 34 &&
+                                    this.getPayrollList(
+                                      UnPaidPayrolls_List,
+                                      props
+                                    )}
+                                  {props.values.coaCategoryId &&
+                                    props.values.coaCategoryId.label ===
+                                    "Expense" &&
+                                    props.values.expenseCategory &&
+                                    props.values.expenseCategory.value !==
+                                    34 && (
+                                      <Col lg={3}>
+                                         
+                                    <div style={{ display: "flex" }}>
+                                      {!this.state.exclusiveVat  ? (
+                                        <span
+                                          style={{ color: "#0069d9" }}
+                                          className="mr-4"
+                                        >
+                                          <b>{strings.InclusiveVAT}</b>
+                                        </span>
+                                      ) : (
+                                        <span className="mr-4">
+                                          {strings.InclusiveVAT}
+                                        </span>
+                                      )}
+
+                                      <Switch
+                                        checked={this.state.exclusiveVat}
+                                        onChange={(exclusiveVat) => {
+                                          props.handleChange("exclusiveVat")(
+                                            exclusiveVat
+                                          );
+                                          this.setState(
+                                            { exclusiveVat },
+                                            () => { }
+                                          );
+                                          // if (this.state.expenseType == true)
+                                          // 	this.setState({ expenseType: true })
+                                        }}
+                                        onColor="#2064d8"
+                                        onHandleColor="#2693e6"
+                                        handleDiameter={25}
+                                        uncheckedIcon={false}
+                                        checkedIcon={false}
+                                        boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+                                        activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+                                        height={20}
+                                        width={48}
+                                        className="react-switch"
+                                      />
+
+                                      {this.state.exclusiveVat  ? (
+                                        <span
+                                          style={{ color: "#0069d9" }}
+                                          className="ml-4"
+                                        >
+                                          <b>{strings.ExclusiveVAT}</b>
+                                        </span>
+                                      ) : (
+                                        <span className="ml-4">
+                                          {strings.ExclusiveVAT}
+                                        </span>
+                                      )}
+                                    </div>
+                                      </Col>
+                                    )}
+                                  <Col className="mb-6" lg={6}>
+                                  
+                                  </Col>
+                                </Row>
+                              )}
+
+<Row>
+													{props.values.coaCategoryId.label ===
+                            "Expense" && (<Col>
+															
+															<Checkbox
+																id="isReverseChargeEnabled"
+																checked={this.state.isReverseChargeEnabled}
+																onChange={(option)=>{
+																		this.setState({isReverseChargeEnabled:!this.state.isReverseChargeEnabled,
+                                      exclusiveVat:false})
+																		// for resetting Vat
+                                    debugger
+																		props.handleChange('vatId')('');
+                                    props.handleChange('isReverseChargeEnabled')(!props.values.isReverseChargeEnabled);
+																}}
+															/>
+															<Label>{strings.IsReverseCharge}</Label>
+															</Col>)}
+															</Row>
 
                             {props.values.coaCategoryId &&
                               props.values.coaCategoryId.label ===

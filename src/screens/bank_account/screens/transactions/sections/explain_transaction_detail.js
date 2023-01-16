@@ -764,6 +764,10 @@ class ExplainTrasactionDetail extends React.Component {
 			(vatId && coaCategoryId.label === 'Expense')
 		) {
 			formData.append('vatId', vatId ? vatId : '');
+			formData.append('isReverseChargeEnabled',this.state.isReverseChargeEnabled)
+			formData.append('exclusiveVat',this.state.exclusiveVat)
+			formData.append('exchangeRate',1)
+			
 		}
 
 		if (employeeId !== null) {

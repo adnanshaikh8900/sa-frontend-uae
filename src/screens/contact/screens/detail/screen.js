@@ -432,10 +432,9 @@ class DetailContact extends React.Component {
 			.updateContact(postData)
 			.then((res) => {
 				if (res.status === 200) {
-
+					console.log("SUCessss");
 					this.setState({ disabled: false });
 					resetForm();
-
 					this.props.commonActions.tostifyAlert(
 						'success',
 						res.data ? res.data.message : 'Contact Updated Successfully',
@@ -451,6 +450,7 @@ class DetailContact extends React.Component {
 					'error',
 					err.data ? err.data.message : 'Contact Updated Unsuccessfully'
 				);
+				this.setState({ loading: false, });
 				// this.props.history.push('/admin/master/contact');
 			});
 	};
@@ -728,9 +728,9 @@ class DetailContact extends React.Component {
 																		if (values.vatRegistrationNumber.length != 15) {
 																			errors.vatRegistrationNumber = "Please enter 15 digit Tax Registration Number"
 																		}
-																		if (this.state.trnExist == true) {
-																			errors.vatRegistrationNumber = 'Tax Registration Number Already Exists';
-																		}
+																		// if (this.state.trnExist == true) {
+																		// 	errors.vatRegistrationNumber = 'Tax Registration Number Already Exists';
+																		// }
 																	}
 
 																	if (this.state.emailExist == true) {
@@ -755,7 +755,7 @@ class DetailContact extends React.Component {
 																	}
 																	if (values.shippingCountryId == 229 || values.shippingCountryId.value == 229) {
 																		if (values.shippingPoBoxNumber === '')
-																			errors.poBoxNumber = 'PO Box Number is Required';
+																			errors.shippingPoBoxNumber = 'PO Box Number is Required';
 																		if(values.shippingStateId =="")  
 																			errors.shippingStateId ='Emirate is required';
 																	} else {
@@ -777,6 +777,8 @@ class DetailContact extends React.Component {
 
 																	if (this.state.showpoBoxNumberErrorMsg == true)
 																		errors.poBoxNumber = "Please Enter 3 To 6 Digit PO Box Number"
+																	if (this.state.showShippingpoBoxNumberErrorMsg == true)
+																		errors.shippingPoBoxNumber = "Please Enter 3 To 6 Digit PO Box Number"
 
 																	return errors;
 
@@ -1471,8 +1473,8 @@ class DetailContact extends React.Component {
 																								props.handleChange(
 																									'vatRegistrationNumber',
 																								)(option);
-																								if (this.state.existingTrn != option.target.value)
-																									this.validationCheck(option.target.value)
+																								// if (this.state.existingTrn != option.target.value)
+																								// 	//this.validationCheck(option.target.value)
 																							}
 																						}}
 																						value={props.values.vatRegistrationNumber}
@@ -2174,9 +2176,9 @@ class DetailContact extends React.Component {
 																									this.regEx.test(option.target.value)
 																								) {
 																									if (option.target.value.length < 3)
-																										this.setState({ showpoBoxNumberErrorMsg: true })
+																										this.setState({ showShippingpoBoxNumberErrorMsg: true })
 																									else
-																										this.setState({ showpoBoxNumberErrorMsg: false })
+																										this.setState({ showShippingpoBoxNumberErrorMsg: false })
 																									
 																									props.handleChange('shippingPoBoxNumber')(
 																										option,
@@ -2185,16 +2187,16 @@ class DetailContact extends React.Component {
 																							}}
 																							value={props.values.shippingPoBoxNumber}
 																							className={
-																								props.errors.poBoxNumber &&
-																									props.touched.poBoxNumber
+																								props.errors.shippingPoBoxNumber &&
+																									props.touched.shippingPoBoxNumber
 																									? 'is-invalid'
 																									: ''
 																							}
 																						/>
-																						{props.errors.poBoxNumber &&
-																							props.touched.poBoxNumber && (
+																						{props.errors.shippingPoBoxNumber &&
+																							props.touched.shippingPoBoxNumber && (
 																								<div className="invalid-feedback">
-																									{props.errors.poBoxNumber}
+																									{props.errors.shippingPoBoxNumber}
 																								</div>
 																							)}
 																					</FormGroup>

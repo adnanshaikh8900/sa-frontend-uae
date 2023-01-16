@@ -1484,7 +1484,8 @@ resetVatId = (props) => {
 		});
 		if(result &&result[0]&&  result[0].exchangeRate)
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
-		};
+		this.exchangeRaterevalidate(result[0].exchangeRate)
+	};
 
 	setCurrency = (value) => {
 		let result = this.props.currency_convert_list.filter((obj) => {
@@ -2364,6 +2365,8 @@ resetVatId = (props) => {
 																				this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(option.value), true);
 																				this.setExchange( this.getCurrency(option.value) );
 																				props.handleChange('customerId')(option);
+																					
+															
 																			} else {
 
 																				props.handleChange('customerId')('');

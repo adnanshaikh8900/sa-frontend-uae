@@ -27,9 +27,11 @@ import moment from 'moment';
 import download from 'downloadjs';
 import { AgGridReact, AgGridColumn } from 'ag-grid-react/lib/agGridReact';
 import { ConfirmDeleteModal, Currency } from 'components';
-import {data}  from '../../../Language/index'
+import {data}  from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
-import GenerateFTAExcisereport from './sections/generateExciseTaxAudit'
+import GenerateFTAExcisereport from './sections/generateExciseTaxAudit';
+import VatSettingModal from './sections/vatSettingModal';
+
 const mapStateToProps = (state) => {
 	return {
 		version: state.common.version,
@@ -505,6 +507,12 @@ class ExciseTaxAuditReport extends React.Component {
 											onClick={()=>{this.setState({openGenerateModal:true})}}>
 												Create a FTA Excise Tax Audit File
 											</Button>
+											<Button color="primary" className="btn-square  pull-right"
+												onClick={() => {
+													this.setState({ openVatSettingModal: true })
+												}}>
+												<i className="fa"></i>Company Details
+											</Button>
 										</FormGroup>
 									</div>
 								</Col>
@@ -682,6 +690,13 @@ class ExciseTaxAuditReport extends React.Component {
 						</CardBody>
 					</Card>
 				</div>
+				<VatSettingModal
+					openModal={this.state.openVatSettingModal}
+					closeModal={(e) => {
+						this.closeVatSettingModal(e);
+						this.getInitialData();
+					}}
+				/>
 
 			</div>
 		);

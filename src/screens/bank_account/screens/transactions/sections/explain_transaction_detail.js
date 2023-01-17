@@ -767,6 +767,7 @@ class ExplainTrasactionDetail extends React.Component {
 			formData.append('isReverseChargeEnabled',this.state.isReverseChargeEnabled)
 			formData.append('exclusiveVat',this.state.exclusiveVat)
 			formData.append('exchangeRate',1)
+			formData.append('bankGenerated',true)
 			
 		}
 

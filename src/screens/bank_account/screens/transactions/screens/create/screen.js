@@ -353,18 +353,15 @@ class CreateBankTransaction extends React.Component {
         "expenseCategory",
         expenseCategory ? expenseCategory.value : ""
       );
+
    }
     if (
       (vatId && coaCategoryId.value === 10) ||
       (vatId && coaCategoryId.label === "Expense")
     ) {
       formData.append("vatId", vatId ? vatId.value : "");
-      
-    
+      formData.append('bankGenerated',true)
       formData.append("isReverseChargeEnabled",  isReverseChargeEnabled);
-    
-
-    
       formData.append("exclusiveVat",  exclusiveVat);
 
     

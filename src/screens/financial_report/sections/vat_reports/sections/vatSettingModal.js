@@ -202,8 +202,8 @@ class VatSettingModal extends React.Component {
 								errors.taxAgentName="Tax agent name must contain only alphabets";
 							if(values.taxAgencyName && this.regExAlpha.test(values.taxAgencyName)!=true)
 								errors.taxAgencyName="Tax agency name must contain only alphabets";
-							if(values.taxAgentApprovalNumber && this.regExTelephone.test(values.taxAgentApprovalNumber)!=true)
-								errors.taxAgentApprovalNumber="Tax agent approval number must contain only numbers";
+							if(values.taxAgentApprovalNumber && this.regEx.test(values.taxAgentApprovalNumber)!=true)
+								errors.taxAgentApprovalNumber="TAAN must contain 8 digits number";
 							if(values.taxAgencyNumber && this.regExBoth.test(values.taxAgencyNumber)!=true)
 								errors.taxAgencyNumber="TAN must contain only alphanumeric";
 							if(values.taxAgencyNumber && values.taxAgencyNumber.length !== 10){
@@ -251,13 +251,17 @@ class VatSettingModal extends React.Component {
 																		}
 																	}
 																	defaultValue={props.values.taxablePersonNameInEnglish}
+																	className={
+																		props.errors.taxablePersonNameInEnglish 
+																			? 'is-invalid'
+																			: ''
+																	}
 																/>
-																	{props.errors.taxablePersonNameInEnglish &&												
-																(
-																		<div className='text-danger' >
-																			{props.errors.taxablePersonNameInEnglish}
-																		</div>
-																	)}
+																	{props.errors.taxablePersonNameInEnglish && (
+															<div className="invalid-feedback">
+																{props.errors.taxablePersonNameInEnglish}
+															</div>
+													)}
 															</FormGroup>
 														</Col>
 														<Col lg={4}>
@@ -273,13 +277,17 @@ class VatSettingModal extends React.Component {
 																		props.handleChange('taxablePersonNameInArabic')(option)
 																	}
 																	defaultValue={props.values.taxablePersonNameInArabic}
+																	className={
+																		props.errors.taxablePersonNameInArabic 
+																			? 'is-invalid'
+																			: ''
+																	}
 																/>
-																	{props.errors.taxablePersonNameInArabic &&												
-																(
-																		<div className='text-danger' >
-																			{props.errors.taxablePersonNameInArabic}
-																		</div>
-																	)}
+																	{props.errors.taxablePersonNameInArabic && (
+															<div className="invalid-feedback">
+																{props.errors.taxablePersonNameInArabic}
+															</div>
+													)}
 															</FormGroup>
 														</Col>
 														<Col lg="4" >
@@ -343,13 +351,17 @@ class VatSettingModal extends React.Component {
 																			}
 																		}}
 																	defaultValue={props.values.taxAgencyName}
+																	className={
+																		props.errors.taxAgencyName 
+																			? 'is-invalid'
+																			: ''
+																	}
 																/>
-																{props.errors.taxAgencyName &&												
-																(
-																		<div className='text-danger' >
-																			{props.errors.taxAgencyName}
-																		</div>
-																	)}
+																{props.errors.taxAgencyName && (
+															<div className="invalid-feedback">
+																{props.errors.taxAgencyName}
+															</div>
+													)}
 															</FormGroup>
 														</Col>
 														
@@ -373,13 +385,17 @@ class VatSettingModal extends React.Component {
 																			}
 																		}}
 																	value={props.values.taxAgencyNumber}
+																	className={
+																		props.errors.taxAgencyNumber
+																			? 'is-invalid'
+																			: ''
+																	}
 																/>
-																	{props.errors.taxAgencyNumber &&												
-																(
-																		<div className='text-danger' >
-																			{props.errors.taxAgencyNumber}
-																		</div>
-																	)}
+																{props.errors.taxAgencyNumber && (
+															<div className="invalid-feedback">
+																{props.errors.taxAgencyNumber}
+															</div>
+													)}
 															</FormGroup>
 														</Col>
 													</Row>
@@ -404,13 +420,17 @@ class VatSettingModal extends React.Component {
 																		}
 																	}}
 																	defaultValue={props.values.taxAgentName}
+																	className={
+																		props.errors.taxAgentName
+																			? 'is-invalid'
+																			: ''
+																	}
 																/>
-																	{props.errors.taxAgentName &&												
-																(
-																		<div className='text-danger' >
-																			{props.errors.taxAgentName}
-																		</div>
-																	)}
+																{props.errors.taxAgentName && (
+															<div className="invalid-feedback">
+																{props.errors.taxAgentName}
+															</div>
+													)}
 															</FormGroup>
 														</Col>
 														<Col lg={4}>
@@ -428,19 +448,25 @@ class VatSettingModal extends React.Component {
 																		{
 																		if (
 																			option.target.value === '' ||
-																			this.regExTelephone.test(option.target.value)
+																			this.regEx.test(option.target.value)
 																		) {
+																			props.handleChange('taxAgentApprovalNumber')(option)
+																		}else{
 																			props.handleChange('taxAgentApprovalNumber')(option)
 																		}
 																	}}
 																	value={props.values.taxAgentApprovalNumber}
+																	className={
+																		props.errors.taxAgentApprovalNumber 
+																			? 'is-invalid'
+																			: ''
+																	}
 																/>
-																	{props.errors.taxAgentApprovalNumber &&												
-																		(
-																				<div className='text-danger' >
-																					{props.errors.taxAgentApprovalNumber}
-																				</div>
-																			)}
+																{props.errors.taxAgentApprovalNumber && (
+															<div className="invalid-feedback">
+																{props.errors.taxAgentApprovalNumber}
+															</div>
+													)}
 															</FormGroup>
 														</Col>
 

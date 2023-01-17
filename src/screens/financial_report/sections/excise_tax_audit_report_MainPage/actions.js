@@ -150,3 +150,38 @@ export const getCompany = () => {
 			});
 	};
 };
+export const getCompanyDetails = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: '/rest/company/getCompanyDetails',
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {				
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
+export const VATSetting = (obj) => {
+	console.log(obj)
+	return (dispatch) => {
+		let data = {
+			method: 'post',
+			url: '/rest/vatReport/VATSetting',
+			data: obj,
+		};
+		return authFileUploadApi(data)
+			.then((res) => {
+				return res			
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};

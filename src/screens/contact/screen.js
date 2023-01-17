@@ -599,11 +599,10 @@ class Contact extends React.Component {
 														    {strings.OPENINGBALANCE}
 														</TableHeaderColumn> */}
 														<TableHeaderColumn
-															className="text-right"
 															columnClassName="text-right"
 															width="5%"
 															// dataFormat={this.renderActions}
-															className="table-header-bg"
+															className="table-header-bg text-right"
 														></TableHeaderColumn>
 														
 														

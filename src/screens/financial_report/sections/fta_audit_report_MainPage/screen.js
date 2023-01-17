@@ -29,7 +29,9 @@ import moment from 'moment';
 import download from 'downloadjs';
 import { AgGridReact, AgGridColumn } from 'ag-grid-react/lib/agGridReact';
 import { ConfirmDeleteModal, Currency } from 'components';
-import {data}  from '../../../Language/index'
+import {data}  from '../../../Language/index';
+import VatSettingModal from './sections/vatSettingModal';
+
 
 import LocalizedStrings from 'react-localization';
 const mapStateToProps = (state) => {
@@ -523,6 +525,12 @@ class FtaAuditReport extends React.Component {
 												}}>
 												<i className="fas fa-plus"></i> Create FTA Audit Report
 											</Button>
+											<Button color="primary" className="btn-square  pull-right"
+												onClick={() => {
+													this.setState({ openVatSettingModal: true })
+												}}>
+												<i className="fa"></i>Company Details
+											</Button> 
 										</FormGroup>
 									</div>
 								</Col>
@@ -691,6 +699,13 @@ class FtaAuditReport extends React.Component {
 						</CardBody>
 					</Card>
 				</div>
+				<VatSettingModal
+					openModal={this.state.openVatSettingModal}
+					closeModal={(e) => {
+						this.closeVatSettingModal(e);
+						this.getInitialData();
+					}}
+				/>
 
 			</div>
 		);

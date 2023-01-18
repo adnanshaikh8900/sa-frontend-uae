@@ -907,11 +907,13 @@ class Register extends React.Component {
 																	</FormGroup>
 																	</Col>
 															</Row>
-														<Row className="row-wrapper" style={{display:props.values.IsRegistered === true ? '': 'none'}}>
+															<Row className="row-wrapper" style={{display:props.values.IsRegistered === true ? '': 'none'}}>
 																<Col lg={4}>
 																<FormGroup >
 																	<Label htmlFor="TaxRegistrationNumber">
-																	{strings.TaxRegistrationNumber}
+																		{strings.TaxRegistrationNumber}
+																		<div className="tooltip-icon nav-icon fas fa-question-circle ml-1">
+																			<span class="tooltiptext">Please note that the TRN cannot be updated <br></br>once a document has been created.</span></div>
 																	</Label>
 																	<Input
 																		type="text"

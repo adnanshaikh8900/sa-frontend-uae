@@ -2536,13 +2536,16 @@ class Profile extends React.Component {
 																			</Col>
 																		</Row>
 																		
-																		<Row style={{display: props.values.isRegisteredVat === true ? '' : 'none'}}>
-																			<Col lg={4}>
+																				<Row style={{display: props.values.isRegisteredVat === true ? '' : 'none'}}>
+																					<Col lg={4}>
 																						<FormGroup className="mb-3">
 																							<Label htmlFor="product_code">
 																							<span className="text-danger">* </span> {strings.TaxRegistrationNumber}
+																							<div className="tooltip-icon nav-icon fas fa-question-circle ml-1">
+																								<span class="tooltiptext">Please note that the TRN cannot be updated <br></br>once a document has been created.</span></div>
 																						</Label>
 																							<Input
+																								disabled={!this.state.enableVatRegistrationDate}
 																								type="text"
 																								id="vatRegistrationNumber"
 																								minLength="15"

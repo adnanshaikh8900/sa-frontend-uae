@@ -34,12 +34,31 @@ import { TextareaAutosize } from '@material-ui/core';
 import currency from 'screens/currency';
 import { getCustomerInvoicesCountForDelete } from 'screens/customer_invoice/actions';
 
+const SortExpenseCategory = (list) =>{
+	if(list.length !== 0){
+		const COAList=['Admin Expense','Current Asset','COGS','Fixed Asset','Other Current Asset','Other Current Liability', 'Other Expense','Other Liability'];
+		let expenseCategory=[];
+		COAList.map(transactionCategoryDescription => {
+			let expenseSubCategoryList=[];
+			let sub_Cat = list.filter((subCat)=>subCat.transactionCategoryDescription === transactionCategoryDescription);
+			expenseSubCategoryList=selectOptionsFactory.renderOptions('transactionCategoryName','transactionCategoryId',sub_Cat,'Expense Category',);
+			expenseSubCategoryList = expenseSubCategoryList.filter((obj) => obj.label !== 'Select Expense Category');
+			let expenseSubCategory={label:transactionCategoryDescription , options:expenseSubCategoryList};
+			expenseCategory.push(expenseSubCategory);
+		})
+		return expenseCategory;
+	}else{
+		return list;
+	}
+};
 const mapStateToProps = (state) => {
+	const expenseCategoryList = SortExpenseCategory(state?.expense?.expense_categories_list);
 	return {
 		currency_list: state.expense.currency_list,
 		project_list: state.expense.project_list,
 		employee_list: state.expense.employee_list,
 		vat_list: state.expense.vat_list,
+		expense_categories_list_Sorted: expenseCategoryList,
 		expense_categories_list: state.expense.expense_categories_list,
 		bank_list: state.expense.bank_list,
 		pay_mode_list: state.expense.pay_mode_list,
@@ -912,6 +931,7 @@ componentWillUnmount() {
 		const {
 			// currency_list,
 			expense_categories_list,
+			expense_categories_list_Sorted,
 			// vat_list,
 			// profile,
 			// user_list,
@@ -1307,13 +1327,8 @@ componentWillUnmount() {
 																	</Label>
 																	<Select	
 																		options={
-																			expense_categories_list
-																				? selectOptionsFactory.renderOptions(
-																						'transactionCategoryName',
-																						'transactionCategoryId',
-																						expense_categories_list,
-																						'Expense Category',
-																				  )
+																			expense_categories_list && expense_categories_list_Sorted
+																				? expense_categories_list_Sorted
 																				: []
 																		}
 																		value={props.values.expenseCategory}

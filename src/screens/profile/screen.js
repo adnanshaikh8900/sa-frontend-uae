@@ -1051,6 +1051,7 @@ class Profile extends React.Component {
 																							</span> {strings.EmailID}
 																						</Label>
 																							<Input
+																							disabled
 																								type="email"
 																								id="email"
 																								name="email"
@@ -1153,6 +1154,7 @@ class Profile extends React.Component {
 																												+props.values.roleId,
 																										)
 																								}
+																								isDisabled={true}
 																								onChange={(option) => {
 																									if (option.value) {
 																										props.handleChange('roleId')(

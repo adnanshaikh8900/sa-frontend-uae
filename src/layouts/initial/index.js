@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux';
 
 import { initialRoutes } from 'routes';
 import { AuthActions, CommonActions } from 'services/global';
+import config from 'constants/config';
 
 const mapStateToProps = (state) => {
 	return {};
@@ -24,7 +25,7 @@ class InitialLayout extends React.Component {
 
 	componentDidMount() {
 		if (window['sessionStorage'].getItem('accessToken')) {
-			this.props.history.push('/admin');
+			this.props.history.push(config.DASHBOARD?'/admin':'/admin/income/customer-invoice');
 		}
 		// this.props.commonActions.getSimpleVATVersion()
 	}

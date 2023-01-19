@@ -768,6 +768,7 @@ class ExplainTrasactionDetail extends React.Component {
 			formData.append('exclusiveVat',this.state.exclusiveVat)
 			formData.append('exchangeRate',1)
 			formData.append('bankGenerated',true)
+			formData.append('convertedAmount',this.expenceconvert(amount))
 			
 		}
 
@@ -869,6 +870,17 @@ class ExplainTrasactionDetail extends React.Component {
 	};
 
 
+	expenceconvert=(amount)=>{
+    
+		let result = this.props.currency_convert_list.filter((obj) => {
+		  return obj.currencyCode ===this.state.bankCurrency.bankAccountCurrency
+		});
+		const exchange= result[0].exchangeRate
+	
+		debugger
+		return amount=amount*exchange
+	  }
+	
 	payrollList = (option) => {
 		this.setState({
 			initValue: {

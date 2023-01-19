@@ -318,6 +318,7 @@ const adminRoutes = [
 		pathTo: '/admin/banking/bank-account',
 		name: 'Banking',
 	},
+	
 	Config.INCOME_Q && {
 		path: '/admin/income/quotation/create',
 		name: 'Add Quotation',
@@ -413,13 +414,7 @@ const adminRoutes = [
 		name: 'Credit Notes',
 		component: CreditNotes.screen,
 	},
-	Config.INCOME_TCN && {
-		redirect: true,
-		path: '/admin/income',
-		pathTo: '/admin/income/customer-invoice',
-		name: 'Income',
-	},
-
+	
 	Config.EXPENSE_RFQ && {
 		path: '/admin/expense/request-for-quotation/create',
 		name: 'Add Request For Quotation',
@@ -553,7 +548,7 @@ const adminRoutes = [
 		component: ViewEmployee.screen,
 	},
 	Config.MASTER_EMPLOYEE && {
-		path: '/admin/master/employee/updateEmployeePersonal',
+		path: '/admin/master/employee/up;dateEmployeePersonal',
 		name: 'Update Employee',
 		component: UpdateEmployeePersonal.screen,
 	},
@@ -1132,10 +1127,11 @@ const adminRoutes = [
 
 	 {
 		redirect: true,
-		path: '/admin',
+		path:  Config.DASHBOARD?'/admin':'/admin/income',
 		pathTo: Config.DASHBOARD ?'/admin/dashboard':'/admin/income/customer-invoice',
-		name: 'Admin',
+		name:  Config.DASHBOARD?'Admin':'Income',
 	},
+	
 ].filter((i)=>i.path)
 
 export default adminRoutes;

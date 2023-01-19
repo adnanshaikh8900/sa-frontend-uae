@@ -72,7 +72,7 @@ class Header extends Component {
 				<AppNavbarBrand
 					className="p-2 ml-3 "
 					tag={NavLink}
-					to={'/admin/dashboard'}
+					to={config.DASHBOARD ?'/admin/dashboard':'admin/income/customer-invoice'}
 					full={{
 						src: logo,
 						width: '115%',

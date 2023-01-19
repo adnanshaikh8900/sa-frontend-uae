@@ -209,7 +209,7 @@ class GenerateVatReportModal extends React.Component {
 							<Col lg={12}>
 								<div className="h4 mb-0 d-flex align-items-center">
 									<i className="nav-icon fas fa-user-tie" />
-									<span className="ml-2">Report Filing 
+									<span className="ml-2">Generate VAT Report
 									{/* ( <b>{this.props.monthOption==0?"Monthly":"Quarterly"}</b> ) */}
 										</span>
 								</div>
@@ -301,6 +301,17 @@ class GenerateVatReportModal extends React.Component {
 															</FormGroup>)
 															}
 														</Col> */}
+
+<Col lg={4}>												
+															<FormGroup className="mb-3">
+																<Label htmlFor="startDate">*VAT Report Number </Label>
+																<Input value={this.getStartDate()} 
+																
+																placeholder="Enter VAT Report Number" disabled/>	
+																
+															</FormGroup>
+															
+														</Col>
 													</Row>
 													<Row style={{marginTop:20}}>
 														<Col lg={4}>
@@ -348,7 +359,8 @@ class GenerateVatReportModal extends React.Component {
 														<Col lg={4}>
 															<FormGroup className="mb-3">
 																<Label htmlFor="endDate">{strings.EndDate}</Label>
-																<Input value={this.getEndDate()} placeholder="Select Month For End Date" disabled/>																{/* <DatePicker
+																<Input value={this.getEndDate()} 
+																placeholder="Select Month For End Date" disabled/>																{/* <DatePicker
 																	id="date"
 																	disabled
 																	name="endDate"

@@ -767,6 +767,8 @@ class ExplainTrasactionDetail extends React.Component {
 			formData.append('isReverseChargeEnabled',this.state.isReverseChargeEnabled)
 			formData.append('exclusiveVat',this.state.exclusiveVat)
 			formData.append('exchangeRate',1)
+			formData.append('bankGenerated',true)
+			formData.append('convertedAmount',this.expenceconvert(amount))
 			
 		}
 
@@ -868,6 +870,39 @@ class ExplainTrasactionDetail extends React.Component {
 	};
 
 
+	expenceconvert=(amount)=>{
+    
+		let result = this.props.currency_convert_list.filter((obj) => {
+		  return obj.currencyCode ===this.state.bankCurrency.bankAccountCurrency
+		});
+		const exchange= result[0].exchangeRate
+	
+		debugger
+		return amount=amount*exchange
+	  }
+
+	  expense_categories_list_generate=()=>{
+		const categoriesList=[...this.props.expense_categories_list]
+		const grouped=[]
+		categoriesList.map((i)=>{
+		
+		  const category=grouped.findIndex((g)=>g.label===i.transactionCategoryDescription)
+		  if(category>-1){
+		   
+			  grouped[category].options=[...grouped[category].options,{label:i.transactionCategoryName,value:i.transactionCategoryId}]
+		  }
+		  else {
+			grouped.push({label:i.transactionCategoryDescription,options:[{label:i.transactionCategoryName,value:i.transactionCategoryId}]})
+		  }
+		
+	 
+	   
+	
+		})
+		return grouped
+	  
+	  }
+	
 	payrollList = (option) => {
 		this.setState({
 			initValue: {

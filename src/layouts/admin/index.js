@@ -39,7 +39,7 @@ const mapDispatchToProps = (dispatch) => {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
-console.log(adminRoutes)
+
 let strings = new LocalizedStrings(data);
 if(localStorage.getItem('language')==null)
 	{

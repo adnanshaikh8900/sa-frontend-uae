@@ -36,11 +36,30 @@ import LocalizedStrings from 'react-localization';
 import { Checkbox } from '@material-ui/core';
 import Switch from "react-switch";
 
+const SortExpenseCategory = (list) =>{
+	if(list.length !== 0){
+		const COAList=['Admin Expense','Current Asset','COGS','Fixed Asset','Other Current Asset','Other Current Liability', 'Other Expense','Other Liability'];
+		let expenseCategory=[];
+		COAList.map(transactionCategoryDescription => {
+			let expenseSubCategoryList=[];
+			let sub_Cat = list.filter((subCat)=>subCat.transactionCategoryDescription === transactionCategoryDescription);
+			expenseSubCategoryList=selectOptionsFactory.renderOptions('transactionCategoryName','transactionCategoryId',sub_Cat,'Expense Category',);
+			expenseSubCategoryList = expenseSubCategoryList.filter((obj) => obj.label !== 'Select Expense Category');
+			let expenseSubCategory={label:transactionCategoryDescription , options:expenseSubCategoryList};
+			expenseCategory.push(expenseSubCategory);
+		})
+		return expenseCategory;
+	}else{
+		return list;
+	}
+};
 const mapStateToProps = (state) => {
+	const expenseCategoryList = SortExpenseCategory(state?.expense?.expense_categories_list);
 	return {
 		expense_detail: state.expense.expense_detail,
 		currency_list: state.expense.currency_list,
 		vat_list: state.expense.vat_list,
+		expense_categories_list_Sorted: expenseCategoryList,
 		expense_categories_list: state.expense.expense_categories_list,
 		bank_list: state.expense.bank_list,
 		pay_mode_list: state.expense.pay_mode_list,
@@ -791,6 +810,7 @@ class DetailExpense extends React.Component {
 			bank_list,
 			vat_list,
 			expense_categories_list,
+			expense_categories_list_Sorted,
 			pay_mode_list,
 			pay_to_list,
 			currency_convert_list,
@@ -1190,13 +1210,8 @@ class DetailExpense extends React.Component {
 																			id="expenseCategory"
 																			name="expenseCategory"
 																			options={
-																				expense_categories_list
-																					? selectOptionsFactory.renderOptions(
-																							'transactionCategoryName',
-																							'transactionCategoryId',
-																							expense_categories_list,
-																							'Expense Category',
-																					  )
+																				expense_categories_list && expense_categories_list_Sorted
+																					? expense_categories_list_Sorted 
 																					: []
 																			}
 																			value={

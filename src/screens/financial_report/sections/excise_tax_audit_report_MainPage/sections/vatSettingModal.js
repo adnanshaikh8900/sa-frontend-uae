@@ -44,7 +44,7 @@ import { Loader } from 'components';
 import * as PayrollEmployeeActions from '../../../../payrollemp/actions'
 import * as CreatePayrollActions from '../actions';
 import { Checkbox } from '@material-ui/core';
-import * as VatreportActions from '../actions';
+import * as ExciseTaxAuditReportActions from '../actions';
 
 const mapStateToProps = (state) => {
 
@@ -60,7 +60,7 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 		payrollEmployeeActions: bindActionCreators(PayrollEmployeeActions, dispatch),
-		vatreportActions: bindActionCreators(VatreportActions, dispatch),
+		ExciseTaxAuditReportActions: bindActionCreators(ExciseTaxAuditReportActions, dispatch),
 	};
 };
 const customStyles = {
@@ -120,7 +120,7 @@ class VatSettingModal extends React.Component {
 		for ( var key in data ) {	
 			formData.append(key, data[key]);
 		}
-		this.props.vatreportActions
+		this.props.ExciseTaxAuditReportActions
 			.VATSetting(formData)
 			.then((res) => {
 				if (res.status === 200) {
@@ -155,7 +155,7 @@ class VatSettingModal extends React.Component {
 
 
 	componentDidMount = () => {
-		this.props.vatreportActions.getCompanyDetails().then((res)=>{			
+		this.props.ExciseTaxAuditReportActions.getCompanyDetails().then((res)=>{			
 			if(res.status==200){
 			this.setState({initValue:{vatRegistrationNumber:res.data.vatRegistrationNumber?res.data.vatRegistrationNumber:""}})}
 		});

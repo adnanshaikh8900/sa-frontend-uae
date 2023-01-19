@@ -565,6 +565,7 @@ class DetailUser extends React.Component {
 																					type="email"
 																					id="email"
 																					name="email"
+																					disabled="true"
 																					placeholder={strings.Enter+strings.EmailID}
 																					value={props.values.email}
 																					onChange={(value) => {

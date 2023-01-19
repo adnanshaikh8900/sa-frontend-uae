@@ -95,6 +95,7 @@ class DetailQuotation extends React.Component {
 		this.state = {
 			loading: true,
 			dialog: false,
+			exchangeRate:1,
 			discountOptions: [
 				{ value: 'FIXED', label: 'Fixed' },
 				{ value: 'PERCENTAGE', label: '%' },
@@ -244,6 +245,7 @@ class DetailQuotation extends React.Component {
 										placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 										total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
 										discount: res.data.discount ? res.data.discount : 0,
+										exchangeRate:res.data.exchangeRate?res.data.exchangeRate:1,
 										discountPercentage: res.data.discountPercentage
 											? res.data.discountPercentage
 											: 0,
@@ -308,6 +310,26 @@ class DetailQuotation extends React.Component {
 			this.props.history.push('/admin/income/quotation');
 		}
 	};
+
+	exchangeRaterevalidate=(exc)=>{
+		let local=[...this.state.data]
+		var { product_list } = this.props;
+		
+		let local2=local.map((obj, index) => {
+
+			const result = product_list.find((item) => item.id === obj.productId);
+			return {
+				...obj,unitPrice:result?
+				(parseFloat(result.unitPrice)*(1/exc)).toFixed(2):0
+			}
+			
+		});
+		
+		this.setState({data:local2},()=>{
+			this.updateAmount(local2);
+			if(this.checkedRow()) this.addRow()
+		})
+	}
 
 	purchaseCategory = () => {
 		try {
@@ -1743,7 +1765,8 @@ class DetailQuotation extends React.Component {
 		return obj.currencyCode === value;
 		});
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
-		};
+		this.exchangeRaterevalidate(result[0].exchangeRate)
+	};
 
 	getCurrentUser = (data) => {
 		let option;

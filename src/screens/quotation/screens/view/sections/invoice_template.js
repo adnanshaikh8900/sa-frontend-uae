@@ -210,8 +210,8 @@ class RFQTemplate extends Component {
 	{moment(QuotationData.createdDate).format('DD MMM YYYY')}</div>
 <div className="mb-1 ml-2"><b>{strings.ExpirationDate }: </b>
 	{moment(QuotationData.quotaionExpiration).format('DD MMM YYYY')}</div>
-<div className="mb-1 ml-2"><b>{strings.Status}: </b>{this.renderQuotationStatus(QuotationData.status)}</div><br />
-
+<div className=" ml-2"><b>{strings.Status}: </b>{this.renderQuotationStatus(QuotationData.status)}</div>
+<div className="mb-1 ml-2"><b>{strings.Exchangerate}: </b>{QuotationData.exchangeRate}</div><br /><br/>
 </div>
 </div>
 </div>

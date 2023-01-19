@@ -711,6 +711,8 @@ const en = {
       CompanyAddressLine3:"Company Address Line 3",
       VatRegisteredOn:"VAT Registered Date",
       Fax:"Fax",
+      Mainland:"Mainland",
+      Freezone:"Freezone",
 
 //Header DropDown
       GeneralSettings:"General Settings",

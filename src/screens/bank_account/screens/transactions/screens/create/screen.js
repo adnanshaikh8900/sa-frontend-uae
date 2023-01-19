@@ -1085,7 +1085,7 @@ class CreateBankTransaction extends React.Component {
     const categoriesList=[...this.props.expense_categories_list]
     const grouped=[]
     categoriesList.map((i)=>{
-      if(i.transactionCategoryDescription && i.transactionCategoryDescription!==""){
+    
       const category=grouped.findIndex((g)=>g.label===i.transactionCategoryDescription)
       if(category>-1){
        
@@ -1094,17 +1094,8 @@ class CreateBankTransaction extends React.Component {
       else {
         grouped.push({label:i.transactionCategoryDescription,options:[{label:i.transactionCategoryName,value:i.transactionCategoryId}]})
       }
-    }
-    else {
-      const category=grouped.findIndex((g)=>g.label==="Others")
-      if(category>-1){
-       
-        grouped[category].options=[...grouped[category].options,{label:i.transactionCategoryName,value:i.transactionCategoryId}]
-    }
-    else {
-      grouped.push({label:"Others",options:[{label:i.transactionCategoryName,value:i.transactionCategoryId}]})
-    }
-    }
+    
+ 
    
 
     })

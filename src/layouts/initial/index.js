@@ -25,7 +25,7 @@ class InitialLayout extends React.Component {
 
 	componentDidMount() {
 		if (window['sessionStorage'].getItem('accessToken')) {
-			this.props.history.push(config.DASHBOARD?'/admin':'/admin/income/customer-invoice');
+			this.props.history.push(config.DASHBOARD?config.BASE_ROUTE:config.SECONDARY_BASE_ROUTE);
 		}
 		// this.props.commonActions.getSimpleVATVersion()
 	}

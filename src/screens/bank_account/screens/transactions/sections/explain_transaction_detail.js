@@ -880,6 +880,28 @@ class ExplainTrasactionDetail extends React.Component {
 		debugger
 		return amount=amount*exchange
 	  }
+
+	  expense_categories_list_generate=()=>{
+		const categoriesList=[...this.props.expense_categories_list]
+		const grouped=[]
+		categoriesList.map((i)=>{
+		
+		  const category=grouped.findIndex((g)=>g.label===i.transactionCategoryDescription)
+		  if(category>-1){
+		   
+			  grouped[category].options=[...grouped[category].options,{label:i.transactionCategoryName,value:i.transactionCategoryId}]
+		  }
+		  else {
+			grouped.push({label:i.transactionCategoryDescription,options:[{label:i.transactionCategoryName,value:i.transactionCategoryId}]})
+		  }
+		
+	 
+	   
+	
+		})
+		return grouped
+	  
+	  }
 	
 	payrollList = (option) => {
 		this.setState({

@@ -55,11 +55,11 @@ export default {
     SETTING_THEME:false,
     SETTING_IMPORT:false,
   
-    REPORTS_HEAD_FI:true,
-    REPORTS_PAL:true,
-    REPORTS_BS:true,
-    REPORTS_HBS:true,
-    REPORTS_TB:true,
+    REPORTS_HEAD_FI:false,
+    REPORTS_PAL:false,
+    REPORTS_BS:false,
+    REPORTS_HBS:false,
+    REPORTS_TB:false,
   
     REPORTS_HEAD_SALES:false,
     REPORTS_SALESBYCUSTOMER:false,
@@ -81,7 +81,7 @@ export default {
   
     REPORTS_ARAGINGREPORT:false,
   
-    REPORT_DGL:true,
+    REPORT_DGL:false,
   
     REPORTS_HEAD_PURCHASE:false,
     REPORTS_PURCHASEBYVENDOR:false,
@@ -96,7 +96,7 @@ export default {
   
     REPORTS_HEAD_VAT:true,
     REPORTS_VAT_REPORTS:true,
-    REPORTS_FTA_AUDIT:true,
-    REPORTS_EXCISE_TAX:true
+    REPORTS_FTA_AUDIT:false,
+    REPORTS_EXCISE_TAX:false
 
 };

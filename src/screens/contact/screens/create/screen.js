@@ -415,9 +415,9 @@ class CreateContact extends React.Component {
 																	if (values.vatRegistrationNumber.length != 15) {
 																		errors.vatRegistrationNumber = "Please enter 15 digit Tax registration number"
 																	}
-																	if (this.state.trnExist == true) {
-																		errors.vatRegistrationNumber = 'Tax registration number already exists';
-																	}
+																	// if (this.state.trnExist == true) {
+																	// 	errors.vatRegistrationNumber = 'Tax registration number already exists';
+																	// }
 																}
 																if (this.state.emailExist == true) {
 																	errors.email = 'Email already exists';
@@ -1117,7 +1117,7 @@ class CreateContact extends React.Component {
 																							props.handleChange(
 																								'vatRegistrationNumber',
 																							)(option);
-																							this.validationCheck(option.target.value)
+																							//this.validationCheck(option.target.value)
 																						}
 																					}}
 																					value={props.values.vatRegistrationNumber}

@@ -145,6 +145,7 @@ class Profile extends React.Component {
 				disableLeavePage:false
 			},
 			timezone: [],
+			isDesignatedZone:true,
 		};
 
 		this.regEx = /^[0-9\d]+$/;
@@ -433,7 +434,7 @@ class Profile extends React.Component {
 										? res.data.companyRevenueBudget
 										: '',
 									dateFormat: res.data.dateFormat ? res.data.dateFormat : '',
-									isDesignatedZone: res.data.isDesignatedZone ? res.data.isDesignatedZone : '',
+									isDesignatedZone: res.data.isDesignatedZone ? res.data.isDesignatedZone : false,
 									isRegisteredVat: res.data.isRegisteredVat ? res.data.isRegisteredVat : '',
 									companyStateCode: res.data.companyStateCode ? res.data.companyStateCode :'',
 									vatRegistrationDate: res.data.vatRegistrationDate
@@ -449,6 +450,7 @@ class Profile extends React.Component {
 								loading: false,
 								flag: false,
 								isSame: res.data.isSame ? res.data.isSame : false,
+								isDesignatedZone: res.data.isDesignatedZone ? res.data.isDesignatedZone : '',
 							},
 							() => {
 								if (res.data.invoicingCountryCode) {
@@ -759,7 +761,7 @@ class Profile extends React.Component {
 		formData.append('invoicingPoBoxNumber',	invoicingPoBoxNumber ? invoicingPoBoxNumber : '');
 		formData.append('invoicingCountryCode',	invoicingCountryCode ? invoicingCountryCode : '');
 		formData.append('companyStateCode',	companyStateCode ? companyStateCode : '');
-		formData.append('isDesignatedZone',	isDesignatedZone);
+		formData.append('isDesignatedZone',	this.state.isDesignatedZone ? this.state.isDesignatedZone : false);
 		formData.append('isRegisteredVat', isRegisteredVat ? isRegisteredVat : 0);
 
 		if(vatRegistrationDate && vatRegistrationDate!="Invalid date")
@@ -1051,6 +1053,7 @@ class Profile extends React.Component {
 																							</span> {strings.EmailID}
 																						</Label>
 																							<Input
+																							disabled
 																								type="email"
 																								id="email"
 																								name="email"
@@ -1153,6 +1156,7 @@ class Profile extends React.Component {
 																												+props.values.roleId,
 																										)
 																								}
+																								isDisabled={true}
 																								onChange={(option) => {
 																									if (option.value) {
 																										props.handleChange('roleId')(
@@ -2480,7 +2484,7 @@ class Profile extends React.Component {
 {/* Hidden by shoaib for multi country */}
 																		<Row className={"mt-3"}>
 																			<Col lg={4}>
-																				<FormGroup className="mb-3" check inline >
+																				{/* <FormGroup className="mb-3" check inline >
 																					<div>
 																						<Input
 																							// className="custom-control-input"
@@ -2505,9 +2509,61 @@ class Profile extends React.Component {
 																						{strings.CompanyLoatedInDesignatedZone}
 																					</label>
 																					</div>
-																				</FormGroup>
-																				</Col>
-																				<Col lg={4}>
+																				</FormGroup> */}
+																				<Row>
+																					<Col xs={12}>
+																							<Label>Where Is The Company Located?</Label>
+																					</Col>
+																					<Col>
+																						<FormGroup className="mb-3">
+																							<FormGroup check inline>
+																								<div className="custom-radio custom-control">
+																									<input
+																										className="custom-control-input"
+																										type="radio"
+																										id="inline-radio1"
+																										name="active"
+																										checked={!this.state.isDesignatedZone}
+																										value={true}
+																										onChange={(value) => {
+																											this.setState({isDesignatedZone: !this.state.isDesignatedZone})
+																										}}
+																									/>
+																									<label
+																										className="custom-control-label"
+																										htmlFor="inline-radio1"
+																									>
+																										{strings.Mainland}
+																									</label>
+																								</div>
+																							</FormGroup>
+																							<FormGroup check inline>
+																								<div className="custom-radio custom-control">
+																									<input
+																										className="custom-control-input"
+																										type="radio"
+																										id="inline-radio2"
+																										name="active"
+																										value={false}
+																										checked={this.state.isDesignatedZone}
+																										onChange={(value) => {
+																											this.setState({isDesignatedZone: !this.state.isDesignatedZone})
+																										}}
+																									/>
+																									<label
+																										className="custom-control-label"
+																										htmlFor="inline-radio2"
+																									>
+																										{strings.Freezone}
+																									</label>
+																								</div>
+																							</FormGroup>
+
+																						</FormGroup>
+																					</Col>
+																				</Row>
+																			</Col>
+																			<Col lg={4}>
 																				<FormGroup check inline className="mb-3">
 																					<div>
 																						<Input
@@ -2517,6 +2573,7 @@ class Profile extends React.Component {
 																							name="SMTP-auth"
 																							checked={props.values.isRegisteredVat}
 																							onChange={(value) => {
+																								console.log(value,value.target.value,"Value")
 																								if(value != null){
 																								props.handleChange('isRegisteredVat')(
 																									value,
@@ -2536,13 +2593,16 @@ class Profile extends React.Component {
 																			</Col>
 																		</Row>
 																		
-																		<Row style={{display: props.values.isRegisteredVat === true ? '' : 'none'}}>
-																			<Col lg={4}>
+																				<Row style={{display: props.values.isRegisteredVat === true ? '' : 'none'}}>
+																					<Col lg={4}>
 																						<FormGroup className="mb-3">
 																							<Label htmlFor="product_code">
 																							<span className="text-danger">* </span> {strings.TaxRegistrationNumber}
+																							<div className="tooltip-icon nav-icon fas fa-question-circle ml-1">
+																								<span class="tooltiptext">Please note that the TRN cannot be updated <br></br>once a document has been created.</span></div>
 																						</Label>
 																							<Input
+																								disabled={!this.state.enableVatRegistrationDate}
 																								type="text"
 																								id="vatRegistrationNumber"
 																								minLength="15"

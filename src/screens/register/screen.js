@@ -106,7 +106,8 @@ class Register extends React.Component {
 			togglePassword: '***********',
 			loading: false,
 			checkphoneNumberParam: false,
-			loadingMsg:"Loading..."
+			loadingMsg:"Loading...",
+			isDesignatedZone:false,
 			// timeZone: "Asia/Dubai",
 			// timezone: {	label: "Asia/Dubai",value: "Asia/Dubai"	},
 		};
@@ -193,7 +194,7 @@ class Register extends React.Component {
 			// countryCode: countryCode ? countryCode : '',
 			countryId:countryId.value,
 			stateId:stateId.value,
-			IsDesignatedZone:IsDesignatedZone,
+			IsDesignatedZone:this.state.isDesignatedZone ? this.state.isDesignatedZone : false,
 			IsRegisteredVat:IsRegistered,
 			TaxRegistrationNumber:TaxRegistrationNumber,
 			vatRegistrationDate:vatRegistrationDate,
@@ -212,9 +213,7 @@ class Register extends React.Component {
 		formData.append('countryId', countryId ? countryId : '229')
 		formData.append('stateId', stateId ? stateId.value : '')
 		formData.append('phoneNumber', phoneNumber ? phoneNumber :'')
-		if (IsDesignatedZone) {
-			formData.append('IsDesignatedZone', IsDesignatedZone);
-		}
+		formData.append('IsDesignatedZone', this.state.isDesignatedZone ? this.state.isDesignatedZone : false);
 		if (IsRegistered) {
 			formData.append('IsRegisteredVat', IsRegistered);
 		}
@@ -822,7 +821,7 @@ class Register extends React.Component {
 															{/* style={{display:props.values.countryId.value === 229 ? '' : 'none'}} */}
 															<Row >
 															<Col lg={5} >
-																<FormGroup check inline className="mt-1">
+																{/* <FormGroup check inline className="mt-1">
 																		<Label
 																			className="form-check-label mt-3"
 																			check
@@ -859,8 +858,61 @@ class Register extends React.Component {
 																					</div>
 																				)}
 																		</Label>
-																	</FormGroup>
-																	</Col>
+																	</FormGroup> */}
+																	<Row>
+																		<Col xs={12}>
+																				<Label>Where Is The Company Located?</Label>
+																		</Col>
+																		<Col>
+																			<FormGroup className="mb-3">
+																				<FormGroup check inline>
+																					<div className="custom-radio custom-control">
+																						<input
+																							className="custom-control-input"
+																							type="radio"
+																							id="inline-radio1"
+																							name="active"
+																							checked={!this.state.isDesignatedZone}
+																							value={true}
+																							onChange={(value) => {
+																								this.setState({isDesignatedZone: !this.state.isDesignatedZone})
+																							}}
+																						/>
+																						<label
+																							className="custom-control-label"
+																							htmlFor="inline-radio1"
+																						>
+																							{strings.Mainland}
+																						</label>
+																					</div>
+																				</FormGroup>
+																				<FormGroup check inline>
+																					<div className="custom-radio custom-control">
+																						<input
+																							className="custom-control-input"
+																							type="radio"
+																							id="inline-radio2"
+																							name="active"
+																							value={false}
+																							checked={this.state.isDesignatedZone}
+																							onChange={(value) => {
+																								this.setState({isDesignatedZone: !this.state.isDesignatedZone})
+																							}}
+																						/>
+																						<label
+																							className="custom-control-label"
+																							htmlFor="inline-radio2"
+																						>
+																							{strings.Freezone}
+																						</label>
+																					</div>
+																				</FormGroup>
+
+																			</FormGroup>
+																		</Col>
+																	</Row>
+																				
+																</Col>
 															</Row>
 															{/* style={{display:props.values.countryId.value === 229 ? '' : 'none'}}  */}
 															<Row className="mb-4" >
@@ -907,11 +959,13 @@ class Register extends React.Component {
 																	</FormGroup>
 																	</Col>
 															</Row>
-														<Row className="row-wrapper" style={{display:props.values.IsRegistered === true ? '': 'none'}}>
+															<Row className="row-wrapper" style={{display:props.values.IsRegistered === true ? '': 'none'}}>
 																<Col lg={4}>
 																<FormGroup >
 																	<Label htmlFor="TaxRegistrationNumber">
-																	{strings.TaxRegistrationNumber}
+																		{strings.TaxRegistrationNumber}
+																		<div className="tooltip-icon nav-icon fas fa-question-circle ml-1">
+																			<span class="tooltiptext">Please note that the TRN cannot be updated <br></br>once a document has been created.</span></div>
 																	</Label>
 																	<Input
 																		type="text"

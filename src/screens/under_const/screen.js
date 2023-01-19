@@ -13,6 +13,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import './style.scss';
+import config from 'constants/config';
 
 
 
@@ -90,7 +91,7 @@ class LogIn extends React.Component {
 					position: toast.POSITION.TOP_RIGHT,
 				});
 
-				this.props.history.push('/admin');
+				this.props.history.push(config.DASHBOARD?config.BASE_ROUTE:config.SECONDARY_BASE_ROUTE);
 				this.setState({ loading: false });
 			})
 			.catch((err) => {

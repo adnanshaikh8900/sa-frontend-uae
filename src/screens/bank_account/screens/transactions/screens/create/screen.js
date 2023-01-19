@@ -353,20 +353,17 @@ class CreateBankTransaction extends React.Component {
         "expenseCategory",
         expenseCategory ? expenseCategory.value : ""
       );
+
    }
     if (
       (vatId && coaCategoryId.value === 10) ||
       (vatId && coaCategoryId.label === "Expense")
     ) {
       formData.append("vatId", vatId ? vatId.value : "");
-      
-    
+      formData.append('bankGenerated',true)
       formData.append("isReverseChargeEnabled",  isReverseChargeEnabled);
-    
-
-    
       formData.append("exclusiveVat",  exclusiveVat);
-
+      formData.append('convertedAmount',this.expenceconvert(transactionAmount))
     
     }
     if (
@@ -762,7 +759,7 @@ class CreateBankTransaction extends React.Component {
   getVatListByIds=(vatIds)=>{
 		const	{vat_list}=this.props	
 		const finalarr=vat_list.filter((i)=>vatIds.includes(i.id))
-    debugger
+  
 		return finalarr;
 	}
 
@@ -808,6 +805,18 @@ class CreateBankTransaction extends React.Component {
 
     return exchange
   }
+
+  expenceconvert=(amount)=>{
+    
+    let result = this.props.currency_convert_list.filter((obj) => {
+      return obj.currencyCode ===this.state.bankCurrency.bankAccountCurrency
+    });
+    const exchange= result[0].exchangeRate
+
+    debugger
+    return amount=amount*exchange
+  }
+
 
   basecurrencyconvertor=(customerinvoice)=>{
     let exchange;
@@ -1072,7 +1081,27 @@ class CreateBankTransaction extends React.Component {
       } `,data:final?.toFixed(2)}
 
   }
+  expense_categories_list_generate=()=>{
+    const categoriesList=[...this.props.expense_categories_list]
+    const grouped=[]
+    categoriesList.map((i)=>{
+    
+      const category=grouped.findIndex((g)=>g.label===i.transactionCategoryDescription)
+      if(category>-1){
+       
+          grouped[category].options=[...grouped[category].options,{label:i.transactionCategoryName,value:i.transactionCategoryId}]
+      }
+      else {
+        grouped.push({label:i.transactionCategoryDescription,options:[{label:i.transactionCategoryName,value:i.transactionCategoryId}]})
+      }
+    
+ 
+   
 
+    })
+    return grouped
+  
+  }
   render() {
     strings.setLanguage(this.state.language);
     const {
@@ -1093,6 +1122,8 @@ class CreateBankTransaction extends React.Component {
       UnPaidPayrolls_List,
     } = this.props;
 
+    
+
     let tmpSupplier_list = [];
 
     vendor_list.map((item) => {
@@ -1101,6 +1132,9 @@ class CreateBankTransaction extends React.Component {
      
       tmpSupplier_list.push(obj);
     });
+
+
+   
 
     return (
       <div className="create-bank-transaction-screen">
@@ -1442,12 +1476,8 @@ class CreateBankTransaction extends React.Component {
                                         placeholder={strings.Select +" Expense Category"}
                                         options={
                                           expense_categories_list
-                                            ? selectOptionsFactory.renderOptions(
-                                              "transactionCategoryName",
-                                              "transactionCategoryId",
-                                              expense_categories_list,
-                                              "Expense Category"
-                                            )
+                                            ? this.expense_categories_list_generate()
+                                            
                                             : []
                                         }
                                         // value={props.values.expenseCategory}
@@ -1696,7 +1726,7 @@ class CreateBankTransaction extends React.Component {
 																		this.setState({isReverseChargeEnabled:!this.state.isReverseChargeEnabled,
                                       exclusiveVat:false})
 																		// for resetting Vat
-                                    debugger
+                                  
 																		props.handleChange('vatId')('');
                                     props.handleChange('isReverseChargeEnabled')(!props.values.isReverseChargeEnabled);
 																}}

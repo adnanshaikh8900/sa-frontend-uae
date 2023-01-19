@@ -950,7 +950,7 @@ class DetailSupplierInvoice extends React.Component {
 							if(this.state.isDesignatedZone ){
 								if(this.state.isReverseChargeEnabled){
 									if(res.data.productType=== "GOODS" ){
-										if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE' ||this.state.customer_taxTreatment_des==='NON-VAT REGISTERED' ){
+										if(this.state.customer_taxTreatment_des==='UAE VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'UAE VAT REGISTERED FREEZONE' || this.state.customer_taxTreatment_des==='UAE NON-VAT REGISTERED FREEZONE' ||this.state.customer_taxTreatment_des==='UAE NON-VAT REGISTERED' ){
 											vat_list.map(element => {
 												if(element.name==='N/A'){
 													vt.push(element);
@@ -969,7 +969,7 @@ class DetailSupplierInvoice extends React.Component {
 										}
 									}
 									else if(res.data.productType === "SERVICE"){
-										if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE' ||this.state.customer_taxTreatment_des==='NON-VAT REGISTERED' ){
+										if(this.state.customer_taxTreatment_des==='UAE VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'UAE VAT REGISTERED FREEZONE' || this.state.customer_taxTreatment_des==='UAE NON-VAT REGISTERED FREEZONE' ||this.state.customer_taxTreatment_des==='UAE NON-VAT REGISTERED' ){
 											vat_list.map(element => {
 												if(element.name==='N/A'){
 													vt.push(element);
@@ -989,10 +989,10 @@ class DetailSupplierInvoice extends React.Component {
 									}
 								}else{
 									if(res.data.productType=== "GOODS" ){
-										if(this.state.customer_taxTreatment_des==='VAT REGISTERED' ){
+										if(this.state.customer_taxTreatment_des==='UAE VAT REGISTERED' ){
 											vt=vat_list.filter((obj) => obj.id !== 10);
 										}
-										if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE' ||this.state.customer_taxTreatment_des==='NON-VAT REGISTERED'||this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+										if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'UAE VAT REGISTERED FREEZONE' || this.state.customer_taxTreatment_des==='UAE NON-VAT REGISTERED FREEZONE' ||this.state.customer_taxTreatment_des==='UAE NON-VAT REGISTERED'||this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
 											vat_list.map(element => {
 												if(element.name==='OUT OF SCOPE'){
 													vt.push(element);
@@ -1001,7 +1001,7 @@ class DetailSupplierInvoice extends React.Component {
 										}
 									}
 									else if(res.data.productType === "SERVICE"){
-										if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE'){
+										if(this.state.customer_taxTreatment_des==='UAE VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'UAE VAT REGISTERED FREEZONE'){
 											vt=vat_list.filter((obj) => obj.id !== 10);
 										}
 										if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
@@ -1011,7 +1011,7 @@ class DetailSupplierInvoice extends React.Component {
 												}
 											});
 										}
-										if(this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED'){
+										if(this.state.customer_taxTreatment_des==='UAE NON-VAT REGISTERED FREEZONE' || this.state.customer_taxTreatment_des==='UAE NON-VAT REGISTERED'){
 											vat_list.map(element => {
 												if(element.name==='OUT OF SCOPE'){
 													vt.push(element);
@@ -1023,14 +1023,14 @@ class DetailSupplierInvoice extends React.Component {
 								}
 							}else{
 								if(this.state.isReverseChargeEnabled){
-									if(this.state.customer_taxTreatment_des==='VAT REGISTERED DESIGNATED ZONE' ){
+									if(this.state.customer_taxTreatment_des==='UAE VAT REGISTERED FREEZONE' ){
 										vat_list.map(element => {
 											if(element.name==='N/A'){
 												vt.push(element);
 											}
 										});
 									}
-									if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE' ||this.state.customer_taxTreatment_des==='NON-VAT REGISTERED'||this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+									if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'UAE VAT REGISTERED' || this.state.customer_taxTreatment_des==='UAE NON-VAT REGISTERED FREEZONE' ||this.state.customer_taxTreatment_des==='UAE NON-VAT REGISTERED'||this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
 										vat_list.map(element => {
 											if(element.name=='STANDARD RATED TAX (5%) '){
 												vt.push(element);
@@ -1042,10 +1042,10 @@ class DetailSupplierInvoice extends React.Component {
 									}
 								}else{
 									if(res.data.productType=== "GOODS" ){
-										if(this.state.customer_taxTreatment_des==='VAT REGISTERED' ){
+										if(this.state.customer_taxTreatment_des==='UAE VAT REGISTERED' ){
 											vt=vat_list.filter((obj) => obj.id !== 10);
 										}
-										if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE' ||this.state.customer_taxTreatment_des==='NON-VAT REGISTERED'||this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+										if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'UAE VAT REGISTERED FREEZONE' || this.state.customer_taxTreatment_des==='UAE NON-VAT REGISTERED FREEZONE' ||this.state.customer_taxTreatment_des==='UAE NON-VAT REGISTERED'||this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
 											vat_list.map(element => {
 												if(element.name==='EXEMPT'){
 													vt.push(element);
@@ -1054,10 +1054,10 @@ class DetailSupplierInvoice extends React.Component {
 										}
 									}
 									else if(res.data.productType === "SERVICE"){
-										if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' ){
+										if(this.state.customer_taxTreatment_des==='UAE VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'UAE VAT REGISTERED FREEZONE' ){
 											vt=vat_list.filter((obj) => obj.id !== 10);
 										}
-										if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE' ||this.state.customer_taxTreatment_des==='NON-VAT REGISTERED'||this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+										if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='UAE NON-VAT REGISTERED FREEZONE' ||this.state.customer_taxTreatment_des==='UAE NON-VAT REGISTERED'||this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
 											vat_list.map(element => {
 												if(element.name==='EXEMPT'){
 													vt.push(element);
@@ -2331,7 +2331,7 @@ class DetailSupplierInvoice extends React.Component {
 																		<Label htmlFor="placeOfSupplyId">
 																			<span className="text-danger">* </span>
 																		/* {this.state.customer_taxTreatment_des &&
-																		(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
+																		(this.state.customer_taxTreatment_des=='UAE VAT REGISTERED' 
 																		||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
 																		||this.state.customer_taxTreatment_des=="GCC VAT REGISTERED") && (
 																			<span className="text-danger">* </span>
@@ -2894,8 +2894,8 @@ class DetailSupplierInvoice extends React.Component {
 															</Row>
                                                             <Row className="ml-4">
 														<Col className="ml-4">
-														{ (this.state.isDesignatedZone && this.state.customer_taxTreatment_des !== 'NON-VAT REGISTERED' && this.state.customer_taxTreatment_des !== "NON-VAT REGISTERED DESIGNATED ZONE" && this.state.customer_taxTreatment_des !== "VAT REGISTERED" && this.state.customer_taxTreatment_des !== "VAT REGISTERED DESIGNATED ZONE")
-															|| (!this.state.isDesignatedZone && this.state.customer_taxTreatment_des !== "VAT REGISTERED DESIGNATED ZONE" )
+														{ (this.state.isDesignatedZone && this.state.customer_taxTreatment_des !== 'UAE NON-VAT REGISTERED' && this.state.customer_taxTreatment_des !== 'UAE NON-VAT REGISTERED FREEZONE' && this.state.customer_taxTreatment_des !== 'UAE VAT REGISTERED' && this.state.customer_taxTreatment_des !== 'UAE VAT REGISTERED FREEZONE')
+															|| (!this.state.isDesignatedZone && this.state.customer_taxTreatment_des !== 'UAE VAT REGISTERED FREEZONE' )
 														 ? <FormGroup className="mb-3">
 															<Input
 																type="checkbox"

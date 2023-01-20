@@ -184,7 +184,7 @@ dateLimit=()=>{
 						}}
 						validate={(values) => {
 							let errors = {};
-							// if(this.state.FTAExciseTaxAuditFile === true || this.state.FTAVatAuditFile === true){
+							if(this.state.FTAExciseTaxAuditFile === true || this.state.FTAVatAuditFile === true){
 								if(!values.taxablePersonNameInEnglish)
 									errors.taxablePersonNameInEnglish="Taxable person name in english is required";
 								if(values.taxablePersonNameInEnglish && this.regExAlpha.test(values.taxablePersonNameInEnglish)!=true)
@@ -203,7 +203,7 @@ dateLimit=()=>{
 									errors.taxAgentName = 'Tax agent name is required';
 								if (!values.taxAgentApprovalNumber)
 									errors.taxAgentApprovalNumber = 'TAAN is required';
-							// }	
+							}	
 							if(!values.taxFiledOn)
 								errors.taxFiledOn='Date of filling is required';				
 							return errors;
@@ -309,7 +309,7 @@ dateLimit=()=>{
 												</FormGroup>
 											</Col>
 										</Row> */}
-										{/* {(this.state.FTAExciseTaxAuditFile === true || this.state.FTAVatAuditFile === true) && ( */}
+										{(this.state.FTAExciseTaxAuditFile === true || this.state.FTAVatAuditFile === true) && (
 										<Row>
 											<Col lg={4}>
 												<FormGroup className="mb-3"><span className="text-danger">* </span>
@@ -543,8 +543,7 @@ dateLimit=()=>{
 													)}
 												</FormGroup>
 											</Col>
-										</Row>
-										{/* )} */}
+										</Row>)}
 									</ModalBody>
 									<ModalFooter>
 										<Button

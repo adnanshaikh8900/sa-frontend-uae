@@ -683,7 +683,7 @@ class ExplainTrasactionDetail extends React.Component {
 			id = coaCategoryId.value;
 		}
 		let formData = new FormData();
-		formData.append('expenseType', this.state.expenseType);
+		formData.append('expenseType', !this.state.expenseType);
 		formData.append('transactionId', this.state.transactionId ? this.state.transactionId : '');
 		formData.append('explanationId', this.state.explanationId ? this.state.explanationId : '')
 		formData.append('bankId ', this.props.bankId ? this.props.bankId : '');

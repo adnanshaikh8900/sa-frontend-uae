@@ -328,7 +328,7 @@ class CreateBankTransaction extends React.Component {
       console.log(result1);
     }
     let formData = new FormData();
-    formData.append("expenseType", this.state.expenseType);
+    formData.append("expenseType", !this.state.expenseType);
     formData.append("bankId ", bankAccountId ? bankAccountId : "");
     formData.append("date", transactionDate ? transactionDate : "");
     formData.append("description", description ? description : "");

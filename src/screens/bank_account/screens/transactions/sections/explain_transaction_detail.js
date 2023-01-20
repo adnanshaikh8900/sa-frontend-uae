@@ -683,7 +683,7 @@ class ExplainTrasactionDetail extends React.Component {
 			id = coaCategoryId.value;
 		}
 		let formData = new FormData();
-		formData.append('expenseType', this.state.expenseType);
+		formData.append('expenseType', !this.state.expenseType);
 		formData.append('transactionId', this.state.transactionId ? this.state.transactionId : '');
 		formData.append('explanationId', this.state.explanationId ? this.state.explanationId : '')
 		formData.append('bankId ', this.props.bankId ? this.props.bankId : '');
@@ -767,7 +767,11 @@ class ExplainTrasactionDetail extends React.Component {
 			formData.append('vatId', vatId ? vatId : '');
 			formData.append('isReverseChargeEnabled',this.state.isReverseChargeEnabled)
 			formData.append('exclusiveVat',this.state.exclusiveVat)
-			formData.append('exchangeRate',1)
+			let result = this.props.currency_convert_list.filter((obj) => {
+				return obj.currencyCode ===this.state.bankCurrency.bankAccountCurrency
+			  });
+			  const exchange= result[0].exchangeRate
+			formData.append('exchangeRate', exchange || 1 )
 			formData.append('bankGenerated',true)
 			formData.append('convertedAmount',this.expenceconvert(amount))
 		
@@ -877,8 +881,6 @@ class ExplainTrasactionDetail extends React.Component {
 		  return obj.currencyCode ===this.state.bankCurrency.bankAccountCurrency
 		});
 		const exchange= result[0].exchangeRate
-	
-		debugger
 		return amount=amount*exchange
 	  }
 

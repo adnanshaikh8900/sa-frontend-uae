@@ -364,7 +364,11 @@ class CreateBankTransaction extends React.Component {
       formData.append("isReverseChargeEnabled",  isReverseChargeEnabled);
       formData.append("exclusiveVat",  exclusiveVat);
       formData.append('convertedAmount',this.expenceconvert(transactionAmount))
-    
+      let result = this.props.currency_convert_list.filter((obj) => {
+				return obj.currencyCode ===this.state.bankCurrency.bankAccountCurrency
+			  });
+			  const exchange= result[0].exchangeRate
+        formData.append('exchangeRate', exchange || 1 )
     }
     if (
       (currencyCode && coaCategoryId.label === "Expense") ||

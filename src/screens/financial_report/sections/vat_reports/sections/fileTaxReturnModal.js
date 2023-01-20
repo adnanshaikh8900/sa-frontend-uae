@@ -196,7 +196,7 @@ dateLimit=()=>{
 								if(values.taxAgencyName && this.regExAlpha.test(values.taxAgencyName)!=true)
 									errors.taxAgencyName="Tax agency name must contain only alphabets";
 								if(values.taxAgentApprovalNumber && !this.regEx.test(values.taxAgentApprovalNumber))
-									errors.taxAgentApprovalNumber="TAAN must contain 8 digits number";
+									errors.taxAgentApprovalNumber="The TAAN must consist of an 8-digit number";
 								if (this.state.isTANMandetory === true &&( values.taxAgencyNumber=="" ||values.taxAgencyNumber==undefined)) 
 									errors.taxAgencyNumber ='TAN is required';
 								if (!values.taxAgentName)
@@ -522,7 +522,6 @@ dateLimit=()=>{
 														autoComplete='off'
 														placeholder={"Enter Tax Agent Approval Number (TAAN)"}
 														onChange={(option) =>{
-															console.log(this.regEx.test(option.target.value),option.target.value,"taxAgentApprovalNumber")
 															if (option.target.value === '' || this.regEx.test(option.target.value)) {
 																props.handleChange('taxAgentApprovalNumber')(option,)
 															}

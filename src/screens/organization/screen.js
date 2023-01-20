@@ -33,6 +33,7 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
 import { selectOptionsFactory } from 'utils'
 import { Formik } from 'formik';
 import './style.scss'
+import config from 'constants/config'
 
 
 // const industryOptions = [
@@ -138,7 +139,7 @@ class Organization extends React.Component {
     this.props.organizationActions.createOrganization(formData).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'New Company Created Successfully')
-        this.props.history.push('/admin/dashboard')
+        this.props.history.push(config.DASHBOARD?'/admin/dashboard':'/admin/income/customer-invoice')
       }
     }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')

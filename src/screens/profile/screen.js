@@ -39,6 +39,7 @@ import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
 import { Message } from '@material-ui/icons';
 import PasswordChecklist from "react-password-checklist"
+import config from 'constants/config';
 
 const mapStateToProps = (state) => {
 	return {
@@ -336,7 +337,7 @@ class Profile extends React.Component {
 						this.props.authActions.logOut();
 						this.props.history.push('/login');
 					});
-					this.props.history.push('/admin/dashboard');
+					this.props.history.push(config.DASHBOARD?'/admin/dashboard':'/admin/income/customer-invoice');
 					{this.setState({ loading:false,})}
 				}
 			})
@@ -792,7 +793,7 @@ class Profile extends React.Component {
 						'success',
 						'Company Updated Successfully',
 					);
-					this.props.history.push('/admin/dashboard');
+					this.props.history.push(config.DASHBOARD?'/admin/dashboard':'/admin/income/customer-invoice');
 					{this.setState({ loading:false,})}
 					this.props.commonActions.getCurrencyList();
 				}

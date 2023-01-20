@@ -328,7 +328,7 @@ class CreateBankTransaction extends React.Component {
       console.log(result1);
     }
     let formData = new FormData();
-    formData.append("expenseType", this.state.expenseType);
+    formData.append("expenseType", !this.state.expenseType);
     formData.append("bankId ", bankAccountId ? bankAccountId : "");
     formData.append("date", transactionDate ? transactionDate : "");
     formData.append("description", description ? description : "");
@@ -1187,7 +1187,9 @@ class CreateBankTransaction extends React.Component {
                           if ( values.coaCategoryId.label === "Expense" && !values.expenseCategory) {
                             errors.expenseCategory = "Expense Category is Required";
                           }
-
+                          if(values.vatId==="" && values.coaCategoryId.label === 'Expense'){
+                            errors.vatId="Please select Vat"
+                            }
 
                           if ((values.coaCategoryId.value === 2 || values.coaCategoryId.value === 100)) 
                           {
@@ -1518,6 +1520,7 @@ class CreateBankTransaction extends React.Component {
                                     34 && (
                                       <Col lg={3}>
                                         <FormGroup className="mb-3">
+                                        <span className="text-danger">* </span>
                                           <Label htmlFor="vatId">VAT</Label>
                                           <Select
                                             style={customStyles}

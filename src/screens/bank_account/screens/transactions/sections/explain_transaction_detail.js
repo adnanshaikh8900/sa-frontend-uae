@@ -341,7 +341,7 @@ class ExplainTrasactionDetail extends React.Component {
 			this.formRef.current.setFieldValue('exclusiveVat',res.data.exclusiveVat,false)	
 		}
 	};
-
+	
 	getChartOfAccountCategoryList = (type) => {
 		this.setState({ loading: true });
 
@@ -683,7 +683,7 @@ class ExplainTrasactionDetail extends React.Component {
 			id = coaCategoryId.value;
 		}
 		let formData = new FormData();
-		formData.append('expenseType', this.state.expenseType);
+		formData.append('expenseType', !this.state.expenseType);
 		formData.append('transactionId', this.state.transactionId ? this.state.transactionId : '');
 		formData.append('explanationId', this.state.explanationId ? this.state.explanationId : '')
 		formData.append('bankId ', this.props.bankId ? this.props.bankId : '');
@@ -759,6 +759,7 @@ class ExplainTrasactionDetail extends React.Component {
 				expenseCategory ? expenseCategory : '',
 			);
 		}
+		
 		if (
 			(vatId && coaCategoryId.value === 10) ||
 			(vatId && coaCategoryId.label === 'Expense')
@@ -766,10 +767,14 @@ class ExplainTrasactionDetail extends React.Component {
 			formData.append('vatId', vatId ? vatId : '');
 			formData.append('isReverseChargeEnabled',this.state.isReverseChargeEnabled)
 			formData.append('exclusiveVat',this.state.exclusiveVat)
-			formData.append('exchangeRate',1)
+			let result = this.props.currency_convert_list.filter((obj) => {
+				return obj.currencyCode ===this.state.bankCurrency.bankAccountCurrency
+			  });
+			  const exchange= result[0].exchangeRate
+			formData.append('exchangeRate', exchange || 1 )
 			formData.append('bankGenerated',true)
 			formData.append('convertedAmount',this.expenceconvert(amount))
-			
+		
 		}
 
 		if (employeeId !== null) {
@@ -876,8 +881,6 @@ class ExplainTrasactionDetail extends React.Component {
 		  return obj.currencyCode ===this.state.bankCurrency.bankAccountCurrency
 		});
 		const exchange= result[0].exchangeRate
-	
-		debugger
 		return amount=amount*exchange
 	  }
 
@@ -1470,7 +1473,10 @@ class ExplainTrasactionDetail extends React.Component {
                          
                        			 }
 														  }
-								
+													
+														  if(values.vatId==="" && values.coaCategoryId.label === 'Expense'){
+															errors.vatId="Please select Vat"
+														  }
 														
 														// if (
 														// 	values.coaCategoryId.label !==
@@ -1793,14 +1799,7 @@ class ExplainTrasactionDetail extends React.Component {
 																					styles={customStyles}
 																					isDisabled={this.state.initValue.explinationStatusEnum ==='PARTIAL' || this.state.initValue.explinationStatusEnum==="FULL" ||this.state.initValue.explinationStatusEnum=== "RECONCILED"}
 																					options={
-																						expense_categories_list
-																							? selectOptionsFactory.renderOptions(
-																								'transactionCategoryName',
-																								'transactionCategoryId',
-																								expense_categories_list,
-																								'Expense Category',
-																							)
-																							: []
+																						this.expense_categories_list_generate()
 																					}
 																					value={
 																						expense_categories_list &&
@@ -1850,6 +1849,7 @@ class ExplainTrasactionDetail extends React.Component {
 																			'Expense' && props.values.expenseCategory !== 34 && (
 																				<Col lg={3}>
 																					<FormGroup className="mb-3">
+																					<span className="text-danger">* </span>
 																						<Label htmlFor="vatId">{strings.VAT}</Label>
 																						<Select
 																						isDisabled={this.state.initValue.explinationStatusEnum ==='PARTIAL' || this.state.initValue.explinationStatusEnum==="FULL" ||this.state.initValue.explinationStatusEnum=== "RECONCILED"}
@@ -1899,6 +1899,12 @@ class ExplainTrasactionDetail extends React.Component {
 																									: ''
 																							}
 																						/>
+																						{props.errors.vatId &&
+																					props.touched.vatId && (
+																						<div className="invalid-feedback">
+																							{props.errors.vatId}
+																						</div>
+																					)}
 																					</FormGroup>
 																				</Col>
 																			)}

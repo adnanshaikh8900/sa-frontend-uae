@@ -184,7 +184,7 @@ dateLimit=()=>{
 						}}
 						validate={(values) => {
 							let errors = {};
-							if(this.state.FTAExciseTaxAuditFile === true || this.state.FTAVatAuditFile === true){
+							// if(this.state.FTAExciseTaxAuditFile === true || this.state.FTAVatAuditFile === true){
 								if(!values.taxablePersonNameInEnglish)
 									errors.taxablePersonNameInEnglish="Taxable person name in english is required";
 								if(values.taxablePersonNameInEnglish && this.regExAlpha.test(values.taxablePersonNameInEnglish)!=true)
@@ -203,7 +203,7 @@ dateLimit=()=>{
 									errors.taxAgentName = 'Tax agent name is required';
 								if (!values.taxAgentApprovalNumber)
 									errors.taxAgentApprovalNumber = 'TAAN is required';
-							}	
+							// }	
 							if(!values.taxFiledOn)
 								errors.taxFiledOn='Date of filling is required';				
 							return errors;
@@ -265,7 +265,7 @@ dateLimit=()=>{
 												</FormGroup>
 											</Col>
 										</Row>
-										<Row className='mb-4'><Col><h4>Would you also like to generate the following reports for this period?</h4></Col></Row>
+										{/* <Row className='mb-4'><Col><h4>Would you also like to generate the following reports for this period?</h4></Col></Row>
 										<Row>
 											<Col lg={4}>
 												<FormGroup check inline className="mb-3">
@@ -308,8 +308,8 @@ dateLimit=()=>{
 														</Label>										
 												</FormGroup>
 											</Col>
-										</Row>
-										{(this.state.FTAExciseTaxAuditFile === true || this.state.FTAVatAuditFile === true) && (
+										</Row> */}
+										{/* {(this.state.FTAExciseTaxAuditFile === true || this.state.FTAVatAuditFile === true) && ( */}
 										<Row>
 											<Col lg={4}>
 												<FormGroup className="mb-3"><span className="text-danger">* </span>
@@ -543,7 +543,8 @@ dateLimit=()=>{
 													)}
 												</FormGroup>
 											</Col>
-										</Row>)}
+										</Row>
+										{/* )} */}
 									</ModalBody>
 									<ModalFooter>
 										<Button

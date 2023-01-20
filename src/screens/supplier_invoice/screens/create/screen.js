@@ -1272,7 +1272,7 @@ class CreateSupplierInvoice extends React.Component {
 							if(this.state.isDesignatedZone ){
 								if(this.state.isReverseChargeEnabled){
 									if(res.data.productType=== "GOODS" ){
-I										if(this.state.customer_taxTreatment_des==='UAE VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'UAE VAT REGISTERED FREEZONE' || this.state.customer_taxTreatment_des==='UAE NON-VAT REGISTERED FREEZONE' ||this.state.customer_taxTreatment_des==='UAE NON-VAT REGISTERED' ){
+										if(this.state.customer_taxTreatment_des==='UAE VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'UAE VAT REGISTERED FREEZONE' || this.state.customer_taxTreatment_des==='UAE NON-VAT REGISTERED FREEZONE' ||this.state.customer_taxTreatment_des==='UAE NON-VAT REGISTERED' ){
 											vat_list.map(element => {
 												if(element.name==='N/A'){
 													vt.push(element);
@@ -1291,7 +1291,7 @@ I										if(this.state.customer_taxTreatment_des==='UAE VAT REGISTERED' || thi
 										}
 									}
 									else if(res.data.productType === "SERVICE"){
-x										if(this.state.customer_taxTreatment_des==='UAE VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'UAE VAT REGISTERED FREEZONE' || this.state.customer_taxTreatment_des==='UAE NON-VAT REGISTERED FREEZONE' ||this.state.customer_taxTreatment_des==='UAE NON-VAT REGISTERED' ){
+										if(this.state.customer_taxTreatment_des==='UAE VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'UAE VAT REGISTERED FREEZONE' || this.state.customer_taxTreatment_des==='UAE NON-VAT REGISTERED FREEZONE' ||this.state.customer_taxTreatment_des==='UAE NON-VAT REGISTERED' ){
 											vat_list.map(element => {
 												if(element.name==='N/A'){
 													vt.push(element);
@@ -1311,7 +1311,7 @@ x										if(this.state.customer_taxTreatment_des==='UAE VAT REGISTERED' || thi
 									}
 								}else{
 									if(res.data.productType=== "GOODS" ){
-F										if(this.state.customer_taxTreatment_des==='UAE VAT REGISTERED' ){
+										if(this.state.customer_taxTreatment_des==='UAE VAT REGISTERED' ){
 											vt=vat_list.filter((obj) => obj.id !== 10);
 										}
 										if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'UAE VAT REGISTERED FREEZONE' || this.state.customer_taxTreatment_des==='UAE NON-VAT REGISTERED FREEZONE' ||this.state.customer_taxTreatment_des==='UAE NON-VAT REGISTERED'||this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){

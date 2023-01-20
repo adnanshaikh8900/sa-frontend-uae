@@ -23,6 +23,7 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import * as GeneralSettingActions from './actions';
 import { data } from '../Language/index'
 import LocalizedStrings from 'react-localization';
+import config from 'constants/config';
 
 const mapStateToProps = (state) => {
 	return {};
@@ -87,7 +88,7 @@ class GeneralSettings extends React.Component {
 					'error',
 					err && err.data ? err.data.message : 'Something Went Wrong',
 				);
-				this.props.history.push('/admin');
+				this.props.history.push(config.DASHBOARD?config.BASE_ROUTE:config.SECONDARY_BASE_ROUTE);
 			});
 	}
 			
@@ -171,7 +172,7 @@ class GeneralSettings extends React.Component {
 					'error',
 					err && err.data ? err.data.message : 'Something Went Wrong',
 				);
-				this.props.history.push('/admin');
+				this.props.history.push(config.DASHBOARD?config.BASE_ROUTE:config.SECONDARY_BASE_ROUTE);
 			});
 	};
 
@@ -199,7 +200,7 @@ class GeneralSettings extends React.Component {
 						'success',
 						'General Setting Updated Successfully',
 					);
-					this.props.history.push('/admin');
+					this.props.history.push(config.DASHBOARD?config.BASE_ROUTE:config.SECONDARY_BASE_ROUTE);
 				}
 			})
 			.catch((err) => {

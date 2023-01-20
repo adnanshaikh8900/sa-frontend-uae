@@ -28,6 +28,7 @@ import {data}  from '../../screens/Language/index'
 import LocalizedStrings from 'react-localization';
 // import avatar from 'assets/images/avatars/6.jpg'
 import config from '../../constants/config'
+import { Config } from 'svgo';
 const propTypes = {
 	children: PropTypes.node,
 };
@@ -72,7 +73,7 @@ class Header extends Component {
 				<AppNavbarBrand
 					className="p-2 ml-3 "
 					tag={NavLink}
-					to={'/admin/dashboard'}
+					to={config.DASHBOARD ?config.BASE_ROUTE:config.SECONDARY_BASE_ROUTE}
 					full={{
 						src: logo,
 						width: '115%',

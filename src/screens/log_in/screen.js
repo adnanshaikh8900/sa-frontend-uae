@@ -23,6 +23,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';
+import config from 'constants/config';
 
 
 const mapStateToProps = (state) => {
@@ -101,7 +102,7 @@ class LogIn extends React.Component {
 					position: toast.POSITION.TOP_RIGHT,
 				});
 
-				this.props.history.push('/admin');
+				this.props.history.push(config.DASHBOARD?config.BASE_ROUTE:config.SECONDARY_BASE_ROUTE);
 				this.setState({ loading: false });
 			})
 			.catch((err) => {

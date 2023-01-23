@@ -203,14 +203,14 @@ class VatSettingModal extends React.Component {
 							if(values.taxAgencyName && this.regExAlpha.test(values.taxAgencyName)!=true)
 								errors.taxAgencyName="Tax agency name must contain only alphabets";
 							if(values.taxAgentApprovalNumber && this.regEx.test(values.taxAgentApprovalNumber)!=true)
-								errors.taxAgentApprovalNumber="TAAN must contain 8 digits number";
+								errors.taxAgentApprovalNumber="The TAAN must consist of an 8-digit number";
 							if(values.taxAgencyNumber && this.regExBoth.test(values.taxAgencyNumber)!=true)
 								errors.taxAgencyNumber="TAN must contain only alphanumeric";
 							if(values.taxAgencyNumber && values.taxAgencyNumber.length !== 10){
 								errors.taxAgencyNumber="TAN must contain 10 digits alphanumeric";	
 							}
 							if(values.taxAgentApprovalNumber && values.taxAgentApprovalNumber.length !== 8){
-								errors.taxAgentApprovalNumber="TAAN must contain 8 digits number";	
+								errors.taxAgentApprovalNumber="The TAAN must consist of an 8-digit number";	
 							}
 							return errors;
 						}}

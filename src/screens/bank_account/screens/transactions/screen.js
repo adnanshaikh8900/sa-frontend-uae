@@ -995,8 +995,8 @@ class BankTransactions extends React.Component {
 										)}
 										</div>
 										<div className="py-3">
-											<h6>{strings.Filter}: </h6>
-											<Row>
+											{/* <h6>{strings.Filter}: </h6>
+											<Row> */}
 												{/* <Col lg={3} className="mb-1">
 													<Select
 														className=""
@@ -1035,7 +1035,7 @@ class BankTransactions extends React.Component {
 														value={filterData.chartOfAccountId}
 													/>
 												</Col> */}
-												<Col lg={3} className="mb-1">
+												{/* <Col lg={3} className="mb-1">
 													<DatePicker
 														className="form-control"
 														id="date"
@@ -1070,7 +1070,7 @@ class BankTransactions extends React.Component {
 														<i className="fa fa-refresh"></i>
 													</Button>
 												</Col>
-											</Row>
+											</Row> */}
 										</div>
 										<div>
 											<Nav tabs className="pull-left">

@@ -196,7 +196,7 @@ dateLimit=()=>{
 								if(values.taxAgencyName && this.regExAlpha.test(values.taxAgencyName)!=true)
 									errors.taxAgencyName="Tax agency name must contain only alphabets";
 								if(values.taxAgentApprovalNumber && !this.regEx.test(values.taxAgentApprovalNumber))
-									errors.taxAgentApprovalNumber="TAAN must contain 8 digits number";
+									errors.taxAgentApprovalNumber="The TAAN must consist of an 8-digit number";
 								if (this.state.isTANMandetory === true &&( values.taxAgencyNumber=="" ||values.taxAgencyNumber==undefined)) 
 									errors.taxAgencyNumber ='TAN is required';
 								if (!values.taxAgentName)
@@ -265,7 +265,7 @@ dateLimit=()=>{
 												</FormGroup>
 											</Col>
 										</Row>
-										<Row className='mb-4'><Col><h4>Would you also like to generate the following reports for this period?</h4></Col></Row>
+										{/* <Row className='mb-4'><Col><h4>Would you also like to generate the following reports for this period?</h4></Col></Row>
 										<Row>
 											<Col lg={4}>
 												<FormGroup check inline className="mb-3">
@@ -308,7 +308,7 @@ dateLimit=()=>{
 														</Label>										
 												</FormGroup>
 											</Col>
-										</Row>
+										</Row> */}
 										{(this.state.FTAExciseTaxAuditFile === true || this.state.FTAVatAuditFile === true) && (
 										<Row>
 											<Col lg={4}>
@@ -522,7 +522,6 @@ dateLimit=()=>{
 														autoComplete='off'
 														placeholder={"Enter Tax Agent Approval Number (TAAN)"}
 														onChange={(option) =>{
-															console.log(this.regEx.test(option.target.value),option.target.value,"taxAgentApprovalNumber")
 															if (option.target.value === '' || this.regEx.test(option.target.value)) {
 																props.handleChange('taxAgentApprovalNumber')(option,)
 															}

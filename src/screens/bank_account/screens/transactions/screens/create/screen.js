@@ -110,7 +110,7 @@ class CreateBankTransaction extends React.Component {
         exclusiveVat:false,
         isReverseChargeEnabled:false
       },
-      expenseType: false,
+      expenseType: true,
       loadingMsg: "Loading...",
       disableLeavePage: false,
       transactionCategoryList: [],
@@ -328,7 +328,7 @@ class CreateBankTransaction extends React.Component {
       console.log(result1);
     }
     let formData = new FormData();
-    formData.append("expenseType", !this.state.expenseType);
+    formData.append("expenseType", this.state.expenseType);
     formData.append("bankId ", bankAccountId ? bankAccountId : "");
     formData.append("date", transactionDate ? transactionDate : "");
     formData.append("description", description ? description : "");
@@ -1590,11 +1590,11 @@ class CreateBankTransaction extends React.Component {
                                           style={{ color: "#0069d9" }}
                                           className="mr-4"
                                         >
-                                          <b>{strings.Claimable}</b>
+                                          <b>{strings.NonClaimable}</b>
                                         </span>
                                       ) : (
                                         <span className="mr-4">
-                                          {strings.Claimable}
+                                          {strings.NonClaimable}
                                         </span>
                                       )}
 
@@ -1628,11 +1628,11 @@ class CreateBankTransaction extends React.Component {
                                           style={{ color: "#0069d9" }}
                                           className="ml-4"
                                         >
-                                          <b>{strings.NonClaimable}</b>
+                                          <b>{strings.Claimable}</b>
                                         </span>
                                       ) : (
                                         <span className="ml-4">
-                                          {strings.NonClaimable}
+                                         {strings.Claimable}
                                         </span>
                                       )}
                                     </div>

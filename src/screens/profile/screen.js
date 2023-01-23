@@ -1446,7 +1446,7 @@ class Profile extends React.Component {
 																						className="btn-square"
 																						onClick={() => {
 																							this.props.history.push(
-																								'/admin/dashboard',
+																								config.DASHBOARD ?'/admin/dashboard':'/admin/income/customer-invoice'
 																							);
 																						}}
 																					>
@@ -3687,7 +3687,7 @@ class Profile extends React.Component {
 																						className="btn-square"
 																						onClick={() => {
 																							this.props.history.push(
-																								'/admin/dashboard',
+																								config.DASHBOARD ?'/admin/dashboard':'/admin/income/customer-invoice'
 																							);
 																						}}
 																					>
@@ -3987,7 +3987,7 @@ class Profile extends React.Component {
 																						className="btn-square"
 																						onClick={() => {
 																							this.props.history.push(
-																								'/admin/dashboard',
+																								config.DASHBOARD ?'/admin/dashboard':'/admin/income/customer-invoice'
 																							);
 																						}}
 																					>

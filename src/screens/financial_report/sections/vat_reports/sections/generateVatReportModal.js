@@ -303,13 +303,13 @@ class GenerateVatReportModal extends React.Component {
 														</Col> */}
 
 <Col lg={4}>												
-															<FormGroup className="mb-3">
+															{/* <FormGroup className="mb-3">
 																<Label htmlFor="startDate">*VAT Report Number </Label>
 																<Input value={this.getStartDate()} 
 																
 																placeholder="Enter VAT Report Number" disabled/>	
 																
-															</FormGroup>
+															</FormGroup> */}
 															
 														</Col>
 													</Row>

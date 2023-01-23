@@ -1227,19 +1227,19 @@ getProductType=(id)=>{
 				if(this.state.isRegisteredVat && (this.state.invoiceDateForVatValidation > this.state.companyVATRegistrationDate)){
 					if(this.state.isDesignatedZone ){
 						if(res.data.productType=== "GOODS" ){
-							if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
+							if(this.state.customer_taxTreatment_des==='UAE VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'UAE VAT REGISTERED FREEZONE' || this.state.customer_taxTreatment_des==='UAE NON-VAT REGISTERED FREEZONE' || this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
 								vat_list.map(element => {
 									if(element.name=='OUT OF SCOPE'){
 										vt.push(element);
 									}
 								});
 							}
-							if(this.state.customer_taxTreatment_des==='NON-VAT REGISTERED'){
+							if(this.state.customer_taxTreatment_des==='UAE NON-VAT REGISTERED'){
 								vt=vat_list;
 							}
 						}
 						else if(res.data.productType === "SERVICE"){
-							if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE'){
+							if(this.state.customer_taxTreatment_des==='UAE VAT REGISTERED' || this.state.customer_taxTreatment_des==='UAE NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'UAE VAT REGISTERED FREEZONE' || this.state.customer_taxTreatment_des==='UAE NON-VAT REGISTERED FREEZONE'){
 								vt=vat_list;
 							}
 							if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){
@@ -1252,7 +1252,7 @@ getProductType=(id)=>{
 							}	
 						}
 					}else{
-						if(this.state.customer_taxTreatment_des==='VAT REGISTERED' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'VAT REGISTERED DESIGNATED ZONE' || this.state.customer_taxTreatment_des==='NON-VAT REGISTERED DESIGNATED ZONE'){
+						if(this.state.customer_taxTreatment_des==='UAE VAT REGISTERED' || this.state.customer_taxTreatment_des==='UAE NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'UAE VAT REGISTERED FREEZONE' || this.state.customer_taxTreatment_des==='UAE NON-VAT REGISTERED FREEZONE'){
 							vt=vat_list;
 						}
 						if(this.state.customer_taxTreatment_des==='GCC VAT REGISTERED' || this.state.customer_taxTreatment_des==='GCC NON-VAT REGISTERED' || this.state.customer_taxTreatment_des=== 'NON GCC'){

@@ -530,7 +530,7 @@ class ChartAccount extends React.Component {
 												</Button> */}
 											</ButtonGroup>
 										</div>)}
-										{	this.state.hideForPrint==false&&(<div className="py-3">
+										{/* {	this.state.hideForPrint==false&&(<div className="py-3">
 											<h5>{strings.Filter}: </h5>
 											<form>
 												<Row>
@@ -617,7 +617,7 @@ class ChartAccount extends React.Component {
 												</Row>
 											</form>
 											
-										</div>)}
+										</div>)} */}
 										
 										<div  id="section-to-print">
 											<BootstrapTable

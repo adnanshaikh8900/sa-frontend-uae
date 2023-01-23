@@ -811,7 +811,7 @@ class GeneralSettings extends React.Component {
 																			onClick={() => {
 																				this.handleSubmit(props.values)
 																				this.props.history.push(
-																					'/admin/dashboard',
+																					config.DASHBOARD ?'/admin/dashboard':'/admin/income/customer-invoice'
 																				);
 																			}}
 
@@ -825,7 +825,7 @@ class GeneralSettings extends React.Component {
 																			className="btn-square"
 																			onClick={() => {
 																				this.props.history.push(
-																					'/admin/dashboard',
+																					config.DASHBOARD ?'/admin/dashboard':'/admin/income/customer-invoice'
 																				);
 																			}}
 																		

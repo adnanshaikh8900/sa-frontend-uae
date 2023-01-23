@@ -1987,6 +1987,7 @@ class ExplainTrasactionDetail extends React.Component {
 
                                       <Switch
                                         checked={props.values.exclusiveVat}
+										disabled
                                         onChange={(exclusiveVat) => {
 											if(this.state.initValue.explinationStatusEnum !=='PARTIAL' && this.state.initValue.explinationStatusEnum!=="FULL" && this.state.initValue.explinationStatusEnum!== "RECONCILED"){
                                           props.handleChange("exclusiveVat")(

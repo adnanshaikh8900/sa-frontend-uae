@@ -1678,6 +1678,7 @@ class CreateBankTransaction extends React.Component {
 
                                       <Switch
                                         checked={this.state.exclusiveVat}
+                                        disabled
                                         onChange={(exclusiveVat) => {
                                           props.handleChange("exclusiveVat")(
                                             exclusiveVat

@@ -817,7 +817,7 @@ class CreateBankTransaction extends React.Component {
     });
     const exchange= result[0].exchangeRate
 
-    debugger
+    
     return amount=amount*exchange
   }
 

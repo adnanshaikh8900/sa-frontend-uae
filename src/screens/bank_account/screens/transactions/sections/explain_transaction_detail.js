@@ -173,7 +173,7 @@ class ExplainTrasactionDetail extends React.Component {
 	getData = () => {
 		
 		const { selectedData, data, bankId } = this.props;
-		debugger
+		
 		if (data) {
 			const res = { data: data }
 			
@@ -685,7 +685,7 @@ class ExplainTrasactionDetail extends React.Component {
 			id = coaCategoryId.value;
 		}
 		let formData = new FormData();
-		formData.append('expenseType', !this.state.expenseType);
+		formData.append('expenseType', this.state.expenseType);
 		formData.append('transactionId', this.state.transactionId ? this.state.transactionId : '');
 		formData.append('explanationId', this.state.explanationId ? this.state.explanationId : '')
 		formData.append('bankId ', this.props.bankId ? this.props.bankId : '');
@@ -1915,8 +1915,8 @@ class ExplainTrasactionDetail extends React.Component {
 																			<Label htmlFor="inline-radio3"><span className="text-danger">* </span>{strings.ExpenseType}</Label>
 																			<div style={{ display: "flex" }}>
 																				{this.state.expenseType === false ?
-																					<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Claimable}</b></span> :
-																					<span className='mr-4'>{strings.Claimable}</span>}
+																					<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.NonClaimable}</b></span> :
+																					<span className='mr-4'>{strings.NonClaimable}</span>}
 
 																				<Switch
 																					checked={this.state.expenseType}
@@ -1940,8 +1940,8 @@ class ExplainTrasactionDetail extends React.Component {
 																				/>
 
 																				{this.state.expenseType === true ?
-																					<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.NonClaimable}</b></span>
-																					: <span className='ml-4'>{strings.NonClaimable}</span>
+																					<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.Claimable}</b></span>
+																					: <span className='ml-4'>{strings.Claimable}</span>
 																				}
 																			</div>
 
@@ -1987,6 +1987,7 @@ class ExplainTrasactionDetail extends React.Component {
 
                                       <Switch
                                         checked={props.values.exclusiveVat}
+										disabled
                                         onChange={(exclusiveVat) => {
 											if(this.state.initValue.explinationStatusEnum !=='PARTIAL' && this.state.initValue.explinationStatusEnum!=="FULL" && this.state.initValue.explinationStatusEnum!== "RECONCILED"){
                                           props.handleChange("exclusiveVat")(

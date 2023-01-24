@@ -103,16 +103,16 @@ class RecordVatPayment extends React.Component {
 			.getVatReportList()
 			.then((res) => {
 				if (res.status === 200) {
-					res.data.map(obj => {
-						if(obj.id === this.props.location.state.id){
-							this.setState({ 
-								reportfilledOn: new Date(obj.filedOn),
-								initValue: {
-									vatPaymentDate: new Date(obj.filedOn),
-								},
-							})
-						}
+					const data=res.data?.data || []
+					const reportInfoById=data.find((obj)=>obj.id === this.props.location.state.id)
+					if(reportInfoById)
+					this.setState({ 
+						reportfilledOn: new Date(reportInfoById.filedOn),
+						initValue: {
+							vatPaymentDate: new Date(reportInfoById.filedOn),
+						},
 					})
+				
 				}
 			})
 			.catch((err) => {

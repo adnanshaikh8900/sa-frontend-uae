@@ -153,7 +153,7 @@ class ExciseTaxAuditReport extends React.Component {
 				if (res.status === 200) {
 					let arrayList={}
 					arrayList.count=res.data.count;
-					debugger
+					
 
 					if(res.data?.data?.length >0 )
 						arrayList.data=res.data?.data.filter((row)=>row.status!="UnFiled")

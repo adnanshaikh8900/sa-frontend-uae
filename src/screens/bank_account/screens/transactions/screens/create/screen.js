@@ -817,7 +817,7 @@ class CreateBankTransaction extends React.Component {
     });
     const exchange= result[0].exchangeRate
 
-    debugger
+    
     return amount=amount*exchange
   }
 
@@ -1678,6 +1678,7 @@ class CreateBankTransaction extends React.Component {
 
                                       <Switch
                                         checked={this.state.exclusiveVat}
+                                        disabled
                                         onChange={(exclusiveVat) => {
                                           props.handleChange("exclusiveVat")(
                                             exclusiveVat

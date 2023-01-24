@@ -1460,7 +1460,7 @@ renderName=(cell,row)=>{
 																			{strings.excise_tax_type}
 																		</Label>
 																		<Select
-																		isDisabled={props.values.exciseTaxId!='' ?true:false}
+																		// isDisabled={props.values.exciseTaxId!='' ?true:false}
 																			options={
 																				exciseTaxList
 																					? selectOptionsFactory.renderOptions(

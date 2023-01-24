@@ -14,27 +14,20 @@ import {
 } from 'reactstrap';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import Select from 'react-select';
-
 import { Loader, ConfirmDeleteModal } from 'components';
-
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
-
 import * as ChartAccountActions from './actions';
 import { selectOptionsFactory } from 'utils';
 import { CommonActions } from 'services/global';
 import { CSVLink } from 'react-csv';
-
 import './style.scss';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
-import { string } from 'prop-types';
-import { toLower, upperCase, upperFirst } from 'lodash-es';
 // import { AgGridReact,AgGridColumn } from 'ag-grid-react/lib/agGridReact';
 // import 'ag-grid-community/dist/styles/ag-grid.css';
 // import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
-import { CallToActionSharp } from '@material-ui/icons';
-import ReactToPrint from 'react-to-print';
+
 const mapStateToProps = (state) => {
 	return {
 		transaction_category_list: state.chart_account.transaction_category_list,
@@ -530,8 +523,8 @@ class ChartAccount extends React.Component {
 												</Button> */}
 											</ButtonGroup>
 										</div>)}
-										{/* {	this.state.hideForPrint==false&&(<div className="py-3">
-											<h5>{strings.Filter}: </h5>
+										{	this.state.hideForPrint==false&&(<div className="py-3">
+											{/* <h5>{strings.Filter}: </h5>
 											<form>
 												<Row>
 													<Col lg={3} className="mb-1">
@@ -615,9 +608,8 @@ class ChartAccount extends React.Component {
 														
 													</Col>
 												</Row>
-											</form>
-											
-										</div>)} */}
+											</form> */}
+										</div>)}
 										
 										<div  id="section-to-print">
 											<BootstrapTable
@@ -677,7 +669,8 @@ class ChartAccount extends React.Component {
 												>
 												    {strings.ACCOUNTTYPE}
 												</TableHeaderColumn>
-											{	this.state.hideForPrint==false&&	(	<TableHeaderColumn
+											{	this.state.hideForPrint==false&&	(	
+												<TableHeaderColumn
 													dataField="isEditable"
 													dataFormat={this.editFormatter}
 													className="table-header-bg"

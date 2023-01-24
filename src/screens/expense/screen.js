@@ -946,6 +946,7 @@ class Expense extends React.Component {
                           					</TableHeaderColumn> */}
 
 											<TableHeaderColumn
+												dataAlign="center"
 												dataField="expenseStatus"
 												dataFormat={this.renderExpenseStatus}
 												dataSort

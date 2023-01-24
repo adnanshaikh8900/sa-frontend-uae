@@ -1480,6 +1480,10 @@ class ExplainTrasactionDetail extends React.Component {
 														  if(values.vatId==="" && values.coaCategoryId.label === 'Expense'){
 															errors.vatId="Please select Vat"
 														  }
+												
+														  if((values.expenseCategory==="" || !values.expenseCategory) && values.coaCategoryId.label === 'Expense'){
+															errors.expenseCategory="Please select Expence Category"
+														  }
 														
 														// if (
 														// 	values.coaCategoryId.label !==

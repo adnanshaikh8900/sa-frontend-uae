@@ -237,7 +237,7 @@ class Expense extends React.Component {
 								</div>
 							</DropdownItem>
 						)}
-						{row.bankAccountId==null&&(
+						{!row.bankGenerated  &&(
 							<DropdownItem					
 								onClick={() =>
 									this.props.history.push(`/admin/expense/expense/create`,{parentId: row.expenseId})
@@ -351,7 +351,7 @@ class Expense extends React.Component {
 				{row.expenseStatus}
 				
 			</span>
-			{row.bankGenerated?"( Bank Generated )":""}
+			{row.bankGenerated ?"( Bank Generated )":""}
 			</div>
 		);
 	};

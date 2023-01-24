@@ -110,7 +110,7 @@ class CreateBankTransaction extends React.Component {
         exclusiveVat:false,
         isReverseChargeEnabled:false
       },
-      expenseType: false,
+      expenseType: true,
       loadingMsg: "Loading...",
       disableLeavePage: false,
       transactionCategoryList: [],
@@ -328,7 +328,7 @@ class CreateBankTransaction extends React.Component {
       console.log(result1);
     }
     let formData = new FormData();
-    formData.append("expenseType", !this.state.expenseType);
+    formData.append("expenseType", this.state.expenseType);
     formData.append("bankId ", bankAccountId ? bankAccountId : "");
     formData.append("date", transactionDate ? transactionDate : "");
     formData.append("description", description ? description : "");
@@ -364,7 +364,11 @@ class CreateBankTransaction extends React.Component {
       formData.append("isReverseChargeEnabled",  isReverseChargeEnabled);
       formData.append("exclusiveVat",  exclusiveVat);
       formData.append('convertedAmount',this.expenceconvert(transactionAmount))
-    
+      let result = this.props.currency_convert_list.filter((obj) => {
+				return obj.currencyCode ===this.state.bankCurrency.bankAccountCurrency
+			  });
+			  const exchange= result[0].exchangeRate
+        formData.append('exchangeRate', exchange || 1 )
     }
     if (
       (currencyCode && coaCategoryId.label === "Expense") ||
@@ -813,7 +817,7 @@ class CreateBankTransaction extends React.Component {
     });
     const exchange= result[0].exchangeRate
 
-    debugger
+    
     return amount=amount*exchange
   }
 
@@ -1586,11 +1590,11 @@ class CreateBankTransaction extends React.Component {
                                           style={{ color: "#0069d9" }}
                                           className="mr-4"
                                         >
-                                          <b>{strings.Claimable}</b>
+                                          <b>{strings.NonClaimable}</b>
                                         </span>
                                       ) : (
                                         <span className="mr-4">
-                                          {strings.Claimable}
+                                          {strings.NonClaimable}
                                         </span>
                                       )}
 
@@ -1624,11 +1628,11 @@ class CreateBankTransaction extends React.Component {
                                           style={{ color: "#0069d9" }}
                                           className="ml-4"
                                         >
-                                          <b>{strings.NonClaimable}</b>
+                                          <b>{strings.Claimable}</b>
                                         </span>
                                       ) : (
                                         <span className="ml-4">
-                                          {strings.NonClaimable}
+                                         {strings.Claimable}
                                         </span>
                                       )}
                                     </div>
@@ -1674,6 +1678,7 @@ class CreateBankTransaction extends React.Component {
 
                                       <Switch
                                         checked={this.state.exclusiveVat}
+                                        disabled
                                         onChange={(exclusiveVat) => {
                                           props.handleChange("exclusiveVat")(
                                             exclusiveVat

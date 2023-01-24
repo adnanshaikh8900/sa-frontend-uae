@@ -23,6 +23,7 @@ import { LeavePage, Loader } from 'components';
 import { TextareaAutosize } from '@material-ui/core';
 import * as NotesSettingsAction from './actions';
 import { toast } from 'react-toastify';
+import config from 'constants/config';
 
 const mapStateToProps = (state) => {
 	return {
@@ -79,7 +80,7 @@ class NotesSettings extends React.Component {
 		this.props.notesSettingsAction.saveNoteSettingsInfo(formData).then((res) => {
 			if (res.status === 200) {
 				toast.success("Default Notes Saved Successfully")
-				this.props.history.push('/admin/dashboard');
+				this.props.history.push(config.DASHBOARD?'/admin/dashboard':'/admin/income/customer-invoice');
 			}
 		}).catch((err) => {
 			toast.error("Save UnSuccessful")
@@ -264,7 +265,7 @@ class NotesSettings extends React.Component {
 																		color="secondary"
 																		className="btn-square"
 																		onClick={() => {
-																			this.props.history.push('/admin/dashboard');
+																			this.props.history.push(config.DASHBOARD?'/admin/dashboard':'/admin/income/customer-invoice');
 																		}}
 																	>
 																		<i className="fa fa-ban mr-1"></i>{strings.Cancel}

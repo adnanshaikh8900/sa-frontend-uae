@@ -173,9 +173,10 @@ class ExplainTrasactionDetail extends React.Component {
 	getData = () => {
 		
 		const { selectedData, data, bankId } = this.props;
+		
 		if (data) {
 			const res = { data: data }
-
+			
 			this.setState(
 				{
 					loading: false,
@@ -319,6 +320,7 @@ class ExplainTrasactionDetail extends React.Component {
 				}
 
 			)
+			
 			this.formRef.current.setFieldValue('amount', res.data.amount ? res.data.amount
 			+(res.data.explainedInvoiceList?.[0].exchangeGainOrLossAmount ||0 )
 			: 0, true);
@@ -337,7 +339,7 @@ class ExplainTrasactionDetail extends React.Component {
 			this.formRef.current.setFieldValue('expenseType', res.data.expenseType, true)
 			this.formRef.current.setFieldValue('description', res.data.description, true)
 			this.formRef.current.setFieldValue('reference', res.data.reference, true)
-			this.formRef.current.setFieldValue('isReverseChargeEnabled',res.data.isReverseChargeEnabled,false)
+			this.formRef.current.setFieldValue('isReverseChargeEnabled',res.data.isReverseChargeEnabled)
 			this.formRef.current.setFieldValue('exclusiveVat',res.data.exclusiveVat,false)	
 		}
 	};
@@ -683,7 +685,7 @@ class ExplainTrasactionDetail extends React.Component {
 			id = coaCategoryId.value;
 		}
 		let formData = new FormData();
-		formData.append('expenseType', !this.state.expenseType);
+		formData.append('expenseType', this.state.expenseType);
 		formData.append('transactionId', this.state.transactionId ? this.state.transactionId : '');
 		formData.append('explanationId', this.state.explanationId ? this.state.explanationId : '')
 		formData.append('bankId ', this.props.bankId ? this.props.bankId : '');
@@ -771,6 +773,7 @@ class ExplainTrasactionDetail extends React.Component {
 				return obj.currencyCode ===this.state.bankCurrency.bankAccountCurrency
 			  });
 			  const exchange= result[0].exchangeRate
+			formData.append('currencyCode', this.state.bankCurrency.bankAccountCurrency);
 			formData.append('exchangeRate', exchange || 1 )
 			formData.append('bankGenerated',true)
 			formData.append('convertedAmount',this.expenceconvert(amount))
@@ -1912,12 +1915,12 @@ class ExplainTrasactionDetail extends React.Component {
 																			<Label htmlFor="inline-radio3"><span className="text-danger">* </span>{strings.ExpenseType}</Label>
 																			<div style={{ display: "flex" }}>
 																				{this.state.expenseType === false ?
-																					<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Claimable}</b></span> :
-																					<span className='mr-4'>{strings.Claimable}</span>}
+																					<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.NonClaimable}</b></span> :
+																					<span className='mr-4'>{strings.NonClaimable}</span>}
 
 																				<Switch
 																					checked={this.state.expenseType}
-																					
+																					disabled={this.state.initValue.explinationStatusEnum ==='PARTIAL' || this.state.initValue.explinationStatusEnum==="FULL" ||this.state.initValue.explinationStatusEnum=== "RECONCILED"}
 																					onChange={(expenseType) => {
 																						if(this.state.initValue.explinationStatusEnum !=='PARTIAL' && this.state.initValue.explinationStatusEnum!=="FULL" && this.state.initValue.explinationStatusEnum!== "RECONCILED")
 																						{props.handleChange('expenseType')(expenseType);
@@ -1937,8 +1940,8 @@ class ExplainTrasactionDetail extends React.Component {
 																				/>
 
 																				{this.state.expenseType === true ?
-																					<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.NonClaimable}</b></span>
-																					: <span className='ml-4'>{strings.NonClaimable}</span>
+																					<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.Claimable}</b></span>
+																					: <span className='ml-4'>{strings.Claimable}</span>
 																				}
 																			</div>
 
@@ -1969,7 +1972,7 @@ class ExplainTrasactionDetail extends React.Component {
                                       <Col lg={3}>
                                          
                                     <div style={{ display: "flex" }}>
-                                      {!this.state.exclusiveVat  ? (
+                                      {!props.values.exclusiveVat  ? (
                                         <span
                                           style={{ color: "#0069d9" }}
                                           className="mr-4"
@@ -1983,7 +1986,8 @@ class ExplainTrasactionDetail extends React.Component {
                                       )}
 
                                       <Switch
-                                        checked={this.state.exclusiveVat}
+                                        checked={props.values.exclusiveVat}
+										disabled
                                         onChange={(exclusiveVat) => {
 											if(this.state.initValue.explinationStatusEnum !=='PARTIAL' && this.state.initValue.explinationStatusEnum!=="FULL" && this.state.initValue.explinationStatusEnum!== "RECONCILED"){
                                           props.handleChange("exclusiveVat")(
@@ -2009,7 +2013,7 @@ class ExplainTrasactionDetail extends React.Component {
                                         className="react-switch"
                                       />
 
-                                      {this.state.exclusiveVat  ? (
+                                      {props.values.exclusiveVat  ? (
                                         <span
                                           style={{ color: "#0069d9" }}
                                           className="ml-4"
@@ -2037,8 +2041,10 @@ class ExplainTrasactionDetail extends React.Component {
 															<Checkbox
 																id="isReverseChargeEnabled"
 																disabled={this.state.initValue.explinationStatusEnum ==='PARTIAL' || this.state.initValue.explinationStatusEnum==="FULL" ||this.state.initValue.explinationStatusEnum=== "RECONCILED"}
-																checked={this.state.isReverseChargeEnabled}
+																checked={props.values.isReverseChargeEnabled}
+																
 																onChange={(option)=>{
+																	
 																		this.setState({isReverseChargeEnabled:!this.state.isReverseChargeEnabled,
                                       exclusiveVat:false})
 																		// for resetting Vat

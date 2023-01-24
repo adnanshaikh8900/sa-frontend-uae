@@ -237,7 +237,7 @@ class Expense extends React.Component {
 								</div>
 							</DropdownItem>
 						)}
-						{row.bankAccountId==null&&(
+						{!row.bankGenerated  &&(
 							<DropdownItem					
 								onClick={() =>
 									this.props.history.push(`/admin/expense/expense/create`,{parentId: row.expenseId})
@@ -250,7 +250,12 @@ class Expense extends React.Component {
 						{row.expenseStatus !== 'Posted' && (
 							<DropdownItem
 								onClick={() => {
-									this.postExpense(row);
+									if(row.bankGenerated){
+										this.props.commonActions.tostifyAlert(
+											'error',
+											'In order to post this expense, please select the tax treatment and pay-through options.'
+										);
+									} else this.postExpense(row);
 								}}
 							>
 								<i className="fas fa-send" /> {strings.Post}
@@ -339,9 +344,15 @@ class Expense extends React.Component {
 			classname = 'label-info';
 		}
 		return (
+			<div className='d-flex justify-content-center flex-column align-items-center'>
+
+			
 			<span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>
 				{row.expenseStatus}
+				
 			</span>
+			{row.bankGenerated ?"( Bank Generated )":""}
+			</div>
 		);
 	};
 
@@ -935,6 +946,7 @@ class Expense extends React.Component {
                           					</TableHeaderColumn> */}
 
 											<TableHeaderColumn
+												dataAlign="center"
 												dataField="expenseStatus"
 												dataFormat={this.renderExpenseStatus}
 												dataSort

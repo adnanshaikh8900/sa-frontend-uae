@@ -1460,7 +1460,7 @@ renderName=(cell,row)=>{
 																			{strings.excise_tax_type}
 																		</Label>
 																		<Select
-																		isDisabled={props.values.exciseTaxId!='' ?true:false}
+																		// isDisabled={props.values.exciseTaxId!='' ?true:false}
 																			options={
 																				exciseTaxList
 																					? selectOptionsFactory.renderOptions(
@@ -1607,6 +1607,17 @@ renderName=(cell,row)=>{
 																		<Label htmlFor="salesUnitPrice">
 																			<span className="text-danger">* </span>{' '}
 																			 {strings.SellingPrice}
+																			 <i
+																				id="SalesTooltip"
+																				className="fa fa-question-circle ml-1"
+																			></i>
+																			<UncontrolledTooltip
+																				placement="right"
+																				target="SalesTooltip"
+																			>
+																				Selling price – Price at which your
+																				product is sold
+																			</UncontrolledTooltip>
 																		</Label>
 																		<Input
 																			type="text"
@@ -1808,6 +1819,17 @@ renderName=(cell,row)=>{
 																		<Label htmlFor="salesUnitPrice">
 																			<span className="text-danger">* </span>{' '}
 																			 {strings.PurchasePrice}
+																			 <i
+																				id="PurchaseTooltip"
+																				className="fa fa-question-circle ml-1"
+																			></i>
+																			<UncontrolledTooltip
+																				placement="right"
+																				target="PurchaseTooltip"
+																			>
+																				Purchase price – Amount of money you
+																				paid for the product
+																			</UncontrolledTooltip>
 																		</Label>
 																		<Input
 																		disabled={props.values.isInventoryEnabled===true }

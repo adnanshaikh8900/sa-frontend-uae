@@ -664,12 +664,12 @@ class VatReports extends React.Component {
 												<i class="fas fa-plus"></i> Generate VAT Report
 											</Button>
 
-											<Button color="primary" className="btn-square  pull-right"
+											{/* <Button color="primary" className="btn-square  pull-right"
 												onClick={() => {
 													this.setState({ openVatSettingModal: true })
 												}}>
 												<i className="fa"></i>Company Details
-											</Button> 
+											</Button>  */}
 
 										</FormGroup>
 									</div>

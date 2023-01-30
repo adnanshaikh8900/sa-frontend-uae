@@ -1161,8 +1161,8 @@ class DetailExpense extends React.Component {
 															<Label htmlFor="inline-radio3"><span className="text-danger">* </span>{strings.ExpenseType}</Label>
 															<div style={{display:"flex"}}>
 																{this.state.expenseType === false ?
-																	<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.Claimable}</b></span> :
-																	<span className='mr-4'>{strings.Claimable}</span>}
+																	<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.NonClaimable}</b></span> :
+																	<span className='mr-4'>{strings.NonClaimable}</span>}
 
 																<Switch
 																	checked={this.state.expenseType}
@@ -1191,8 +1191,8 @@ class DetailExpense extends React.Component {
 																/>
 
 																{this.state.expenseType === true ?
-																	<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.NonClaimable}</b></span> : 
-																	<span className='ml-4'>{strings.NonClaimable}</span>
+																	<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.Claimable}</b></span> : 
+																	<span className='ml-4'>{strings.Claimable}</span>
 																}
 																</div>
 

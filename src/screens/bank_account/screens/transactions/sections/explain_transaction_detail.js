@@ -1920,7 +1920,7 @@ class ExplainTrasactionDetail extends React.Component {
 
 																				<Switch
 																					checked={this.state.expenseType}
-																					
+																					disabled={this.state.initValue.explinationStatusEnum ==='PARTIAL' || this.state.initValue.explinationStatusEnum==="FULL" ||this.state.initValue.explinationStatusEnum=== "RECONCILED"}
 																					onChange={(expenseType) => {
 																						if(this.state.initValue.explinationStatusEnum !=='PARTIAL' && this.state.initValue.explinationStatusEnum!=="FULL" && this.state.initValue.explinationStatusEnum!== "RECONCILED")
 																						{props.handleChange('expenseType')(expenseType);

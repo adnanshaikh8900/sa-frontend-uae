@@ -562,7 +562,12 @@ class VatReports extends React.Component {
 			// .format('LL')
 			: '-';
 	};
+	
+	renderVATNumber = (cell, row) => {
+		
 
+		return (<>{row.vatNumber}</>);
+	};
 	renderTaxReturns = (cell, row) => {
 		let dateArr = cell ? cell.split("-") : [];
 
@@ -840,6 +845,16 @@ class VatReports extends React.Component {
 														<TableHeaderColumn
 															tdStyle={{ whiteSpace: 'normal' }}
 															isKey
+															dataSort
+															dataField="VATnumber"
+														    dataFormat={this.renderVATNumber}
+															className="table-header-bg"
+														>
+															VAT Number
+														</TableHeaderColumn>
+														<TableHeaderColumn
+															tdStyle={{ whiteSpace: 'normal' }}
+															
 															dataField="taxReturns"
 															dataSort
 														    dataFormat={this.renderTaxReturns}

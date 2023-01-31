@@ -241,6 +241,7 @@ class ExplainTrasactionDetail extends React.Component {
 						coaCategoryId: res.data.coaCategoryId
 							? res.data.coaCategoryId
 							: '',
+
 						explainParamList: res.data.explainParamList
 							? res.data.explainParamList
 							: [],
@@ -332,6 +333,7 @@ class ExplainTrasactionDetail extends React.Component {
 			this.formRef.current.setFieldValue('invoiceIdList', (res.data.explainParamList && res.data.explainedInvoiceList)
 			? res.data.explainParamList.map((i,inc)=>{return {...i,...res.data.explainedInvoiceList[inc],pp:res.data.explainedInvoiceList[inc].partiallyPaid}})
 			: [], true);
+			debugger
 			this.formRef.current.setFieldValue('customerId', res.data.customerId ? res.data.customerId : '', true);
 			this.formRef.current.setFieldValue('exchangeRate', res.data.exchangeRate, true);
 			this.formRef.current.setFieldValue('payrollListIds', res.data.payrollListIds, true);
@@ -457,6 +459,7 @@ class ExplainTrasactionDetail extends React.Component {
 			currency: this.state.custInvoiceCurrency && invoice_list != null ? this.state.custInvoiceCurrency : 0,
 			bankId: this.props.bankId,
 		};
+		debugger
 		this.props.transactionsActions.getCustomerInvoiceList(data).then((res) => {
 			this.setState({
 				customer_invoice_list_state: res.data,
@@ -2925,6 +2928,7 @@ class ExplainTrasactionDetail extends React.Component {
                                           display: "flex",
                                           justifyContent: "flex-end",
                                           marginLeft: "20px",
+										  marginTop:'10px'
                                         }}
                                       >
                                         
@@ -2940,24 +2944,22 @@ class ExplainTrasactionDetail extends React.Component {
                                         />
                                         </Col>}
 
-                                        <Col lg={3}>
+                                        <Col lg={4}>
                                           <Input
                                             disabled
                                             id="total"
+											style={{textAlign:'right'}}
                                             name="total"
-                                            value={"Total Excess/Short Amount"}
+                                            value={"Total Excess/Short Amount ="}
                                           />
                                         </Col>
-                                        <FormGroup className="mt-2">
-                                          <label>
-                                            <b>=</b>
-                                          </label>{" "}
-                                        </FormGroup>
+                                       
                                         <Col lg={2}>
                                           <Input
                                             disabled
                                             id="total"
                                             name="total"
+											style={{textAlign:'right'}}
                                             value={this.setexcessorshortamount().value}
                                           />
                                         </Col>

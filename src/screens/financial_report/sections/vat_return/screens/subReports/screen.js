@@ -337,8 +337,11 @@ class SubReports extends React.Component {
 						<p 	onClick={() => {
 							if(params.data.entry.includes("SUP")){
 								this.getInvoice("INVOICE",1,params.data.id)
-							}else{
+							}else if(params.data.entry.includes("INV")){
 								this.getInvoice("INVOICE",2,params.data.id)
+							}
+							else{
+								this.getInvoice("EXPENSE",0,params.data.id)
 							}
 						}}>
 						{params.value}</p>

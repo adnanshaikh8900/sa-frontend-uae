@@ -2250,7 +2250,7 @@ resetVatId = (props) => {
 						quantity: 1,
 						discount:0,
 						unitPrice: (parseFloat(res.data[0].unitPrice)*(1/exchangeRate)).toFixed(2),
-						vatCategoryId: res.data[0].vatCategoryId,
+						vatCategoryId: '',
 						exciseTaxId: res.data[0].exciseTaxId,
 						vatAmount:res.data[0].vatAmount ?res.data[0].vatAmount:0,
 						subTotal: res.data[0].unitPrice,

@@ -334,7 +334,13 @@ class SubReports extends React.Component {
 				enablePivot={true}
 				cellRendererFramework={(params) =>
 					<>
-						<p 	onClick={() => {this.getInvoice("INVOICE",2,params.data.id)}}>
+						<p 	onClick={() => {
+							if(params.data.entry.includes("SUP")){
+								this.getInvoice("INVOICE",1,params.data.id)
+							}else{
+								this.getInvoice("INVOICE",2,params.data.id)
+							}
+						}}>
 						{params.value}</p>
 					</>
 				}

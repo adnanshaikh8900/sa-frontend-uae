@@ -469,7 +469,7 @@ class ChartAccount extends React.Component {
 														target="_blank"
 													/>
 												)}
-												<Button 	color="primary"	className="mr-2 btn-square"
+												<Button 	color="primary"	className="btn-square  pull-right"
 													onClick={() => {
 														let { filterData } = this.state;
 														const paginationData = {
@@ -524,7 +524,7 @@ class ChartAccount extends React.Component {
 											</ButtonGroup>
 										</div>)}
 										{	this.state.hideForPrint==false&&(<div className="py-3">
-											{/* <h5>{strings.Filter}: </h5>
+											<h5>{strings.Filter}: </h5>
 											<form>
 												<Row>
 													<Col lg={3} className="mb-1">
@@ -608,7 +608,7 @@ class ChartAccount extends React.Component {
 														
 													</Col>
 												</Row>
-											</form> */}
+											</form>
 										</div>)}
 										
 										<div  id="section-to-print">

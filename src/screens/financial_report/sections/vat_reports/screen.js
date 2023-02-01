@@ -664,12 +664,12 @@ class VatReports extends React.Component {
 												<i class="fas fa-plus"></i> Generate VAT Report
 											</Button>
 
-											{/* <Button color="primary" className="btn-square  pull-right"
+											<Button color="primary" className="btn-square  pull-right"
 												onClick={() => {
 													this.setState({ openVatSettingModal: true })
 												}}>
 												<i className="fa"></i>Company Details
-											</Button>  */}
+											</Button> 
 
 										</FormGroup>
 									</div>
@@ -828,7 +828,7 @@ class VatReports extends React.Component {
 														: 0,
 												}}											
 												>
-													{/* <TableHeaderColumn
+													<TableHeaderColumn
 															tdStyle={{ whiteSpace: 'normal' }}
 															isKey
 															dataField="vatNumber"
@@ -836,10 +836,10 @@ class VatReports extends React.Component {
 															className="table-header-bg"
 														>
 															VAT Report No.
-														</TableHeaderColumn> */}
+														</TableHeaderColumn>
 														<TableHeaderColumn
 															tdStyle={{ whiteSpace: 'normal' }}
-															isKey
+															// isKey
 															dataField="taxReturns"
 															dataSort
 														    dataFormat={this.renderTaxReturns}

@@ -2444,7 +2444,8 @@ class CreateSupplierInvoice extends React.Component {
 						transactionCategoryId: res.data[0].transactionCategoryId,
 						transactionCategoryLabel: res.data[0].transactionCategoryLabel,
 					}),
-					idCount: this.state.idCount + 1,					
+					idCount: this.state.idCount + 1,	
+					producttype: [],
 				},					
 				() => {
 					const values = {

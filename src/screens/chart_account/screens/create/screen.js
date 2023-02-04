@@ -254,13 +254,13 @@ class CreateChartAccount extends React.Component {
                             </FormGroup> */}
 														<FormGroup>
 															<Label htmlFor="name">
-																<span className="text-danger">* </span>{strings.Name}
+																<span className="text-danger">* </span>{strings.chartOfAccountName}
 															</Label>
 															<Input
 																type="text" maxLength='50'
 																id="transactionCategoryName"
 																name="transactionCategoryName"
-																placeholder={strings.Enter+strings.Name}
+																placeholder={strings.Enter+strings.chartOfAccountName}
 																onChange={(option) => {
 																	if (
 																		option.target.value === '' ||
@@ -289,7 +289,7 @@ class CreateChartAccount extends React.Component {
 														</FormGroup>
 														<FormGroup>
 															<Label htmlFor="name">
-																<span className="text-danger">* </span>{strings.Type}
+																<span className="text-danger">* </span>{strings.accountType}
 															</Label>
 															{/* <Select
                                 className="select-default-width"
@@ -317,7 +317,7 @@ class CreateChartAccount extends React.Component {
 															<Select
 																id="chartOfAccount"
 																name="chartOfAccount"
-																placeholder={strings.Select+strings.Type}
+																placeholder={strings.Select+strings.accountType}
 																value={props.values.chartOfAccount}
 																// size="1"
 																onChange={(val) => {
@@ -339,6 +339,7 @@ class CreateChartAccount extends React.Component {
 																	</div>
 																)}
 														</FormGroup>
+											<span style={{fontWeight:'bold'}}>Note: A Chart Of Account cannot be edited after a document or transaction has been created using it.</span>
 														<FormGroup className="text-right mt-5">
 															<Button
 																type="button"

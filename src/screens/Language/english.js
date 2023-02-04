@@ -435,7 +435,9 @@ const en = {
       AddnewAccount:"Add new Account",
 
 //Add Chart of Accounts
-      NewChartAccount:"New Chart Account",		
+      NewChartAccount:"New Chart Of Account",		
+      chartOfAccountName:"Chart Of Account Name",
+      accountType:"Account Type",
       Name:"Name",		
       Type:"Product Type",		
       Chart_of_Account:"Chart of Account",

@@ -419,7 +419,9 @@ const ar = {
       AddnewAccount:"إضافة حساب جديد",
 
 //Add Chart of Accounts
-      NewChartAccount:"حساب مخطط جديد",		
+      NewChartAccount:"حساب مخطط جديد",
+      chartOfAccountName:"مخطط اسم الحساب",
+      accountType:"نوع الحساب",		
       Name:"اسم",		
       Type:"نوع",		
       Chart_of_Account:"دليل الحساب",

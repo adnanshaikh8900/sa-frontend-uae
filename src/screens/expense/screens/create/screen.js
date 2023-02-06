@@ -112,7 +112,7 @@ class CreateExpense extends React.Component {
 			},
 			count:0,
 			expenseType:false,
-			isVatClaimable:true,
+			isVatClaimable:false,
 			taxTreatmentId:'',
 			isReverseChargeEnabled:false,
 			currentData: {},
@@ -230,7 +230,7 @@ class CreateExpense extends React.Component {
 								},
 								payee:res.data.payee ? res.data.payee : '', 
 								expenseType: res.data.expenseType ? true : false,
-								isVatClaimable: res.data.isVatClaimable ? false : true,
+								isVatClaimable: res.data.isVatClaimable ? res.data.isVatClaimable : false,
 								showPlacelist:res.data.taxTreatmentId !== 8 ? true : false,
 								lockPlacelist:res.data.taxTreatmentId === 7 ? true : false,
 								taxTreatmentId : res.data.taxTreatmentId ? res.data.taxTreatmentId : '',
@@ -438,6 +438,7 @@ class CreateExpense extends React.Component {
 			footNote
 		} = data;
 		let formData = new FormData();
+
 		formData.append('expenseType',  this.state.expenseType );
 		formData.append('isVatClaimable',  this.state.isVatClaimable );
 
@@ -1282,7 +1283,7 @@ componentWillUnmount() {
 																		<span className='mr-4'>{strings.NonClaimable}</span>}
 
 																	<Switch
-																		checked={this.state.expenseType}
+																		checked={this.state.isVatClaimable}
 																		onChange={(expenseType) => {
 																			props.handleChange('expenseType')(expenseType);
 

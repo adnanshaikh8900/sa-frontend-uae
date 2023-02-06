@@ -469,7 +469,9 @@ const fr = {
       print_csv:"Imprimer",
 
 //Add Chart of Accounts
-      NewChartAccount:"Nouveau compte graphique",		
+      NewChartAccount:"Nouveau compte graphique",
+      chartOfAccountName:"Nom du plan comptable",
+      accountType:"Type de compte",		
       Name:"Nom",		
       Type:"type de produit",
       Chart_of_Account:"Plan comptable",		

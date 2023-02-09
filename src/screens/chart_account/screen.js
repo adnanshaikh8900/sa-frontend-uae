@@ -529,7 +529,7 @@ class ChartAccount extends React.Component {
 												<Row>
 													<Col lg={3} className="mb-1">
 														<Input
-														maxLength="25"
+															maxLength="25"
 															type="text"
 															placeholder={strings.AccountCode}
 															value={filterData.transactionCategoryCode}
@@ -543,7 +543,7 @@ class ChartAccount extends React.Component {
 													</Col>
 													<Col lg={3} className="mb-2">
 														<Input
-														maxLength="30"
+															maxLength="30"
 															type="text"
 															placeholder={strings.AccountName}
 															value={filterData.transactionCategoryName}
@@ -649,7 +649,7 @@ class ChartAccount extends React.Component {
 													dataSort
 													className="table-header-bg"
 												>
-													 {strings.ACCOUNTCODE}
+													{strings.ACCOUNTCODE}
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													tdStyle={{ whiteSpace: 'normal' }}

@@ -112,7 +112,7 @@ class CreateExpense extends React.Component {
 			},
 			count:0,
 			expenseType:false,
-			isVatClaimable:true,
+			isVatClaimable:false,
 			taxTreatmentId:'',
 			isReverseChargeEnabled:false,
 			currentData: {},
@@ -230,7 +230,7 @@ class CreateExpense extends React.Component {
 								},
 								payee:res.data.payee ? res.data.payee : '', 
 								expenseType: res.data.expenseType ? true : false,
-								isVatClaimable: res.data.isVatClaimable ? false : true,
+								isVatClaimable: res.data.isVatClaimable ? res.data.isVatClaimable : false,
 								showPlacelist:res.data.taxTreatmentId !== 8 ? true : false,
 								lockPlacelist:res.data.taxTreatmentId === 7 ? true : false,
 								taxTreatmentId : res.data.taxTreatmentId ? res.data.taxTreatmentId : '',
@@ -438,6 +438,7 @@ class CreateExpense extends React.Component {
 			footNote
 		} = data;
 		let formData = new FormData();
+
 		formData.append('expenseType',  this.state.expenseType );
 		formData.append('isVatClaimable',  this.state.isVatClaimable );
 
@@ -1014,7 +1015,7 @@ componentWillUnmount() {
 														errors.expenseNumber = 'Expense number already exists'
 													}
 													if (values.expenseNumber === '') {
-														errors.expenseNumber = 'Expense number is required';
+														errors.expenseNumber = strings.ExpenseCategoryRequired
 													}
 													if(this.state.currency===true && values.currency === '' ){
 														errors.currency = 'Currency is required';
@@ -1026,25 +1027,26 @@ componentWillUnmount() {
 												}}
 												validationSchema={Yup.object().shape({
 													expenseNumber: Yup.string().required(
-														'Expense number is required',
+														'Expense  is required',
 													),
 													taxTreatmentId: Yup.string().required(
-														'Tax treatment is required',
+														strings.TaxTreatmentRequired
 													),
 													expenseCategory: Yup.string().required(
-														'Expense category is required',
+														strings.ExpenseCategoryRequired
 													),
 													expenseDate: Yup.date().required(
 														'Expense date is required',
 													),
 													currency: Yup.string().required(
-														'Currency is required',
+														strings.CurrencyIsRequired
 													),
 													payee: Yup.string().required(
-														'Paid by is required',
+														strings.PaidByRequired
 													),
-													expenseAmount: Yup.string()
-														.required('Amount is required')
+													expenseAmount: Yup.string().required(
+														strings.AmountIsRequired
+													)
 														.matches(
 															 /^[0-9][0-9]*[.]?[0-9]{0,2}$$/,
 															'Enter a valid amount',
@@ -1061,10 +1063,10 @@ componentWillUnmount() {
 															},
 														),
 													vatCategoryId: Yup.string().required(
-														'VAT is required',
+														strings.VATIsRequired
 													),
 													payMode: Yup.string().required(
-														'Pay through is required',
+														strings.PayThroughIsRequired
 													),
 													attachmentFile: Yup.mixed()
 														.test(
@@ -1282,7 +1284,7 @@ componentWillUnmount() {
 																		<span className='mr-4'>{strings.NonClaimable}</span>}
 
 																	<Switch
-																		checked={this.state.expenseType}
+																		checked={this.state.isVatClaimable}
 																		onChange={(expenseType) => {
 																			props.handleChange('expenseType')(expenseType);
 

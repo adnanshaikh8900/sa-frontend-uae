@@ -171,7 +171,7 @@ class CreateProductCategory extends React.Component {
 													let errors = {};
 													if (!values.productCategoryName) {
 														errors.productCategoryName =
-															'Product category name is required';
+															strings.ProductCategoryNameRequired
 													}
 
 													if (
@@ -186,7 +186,7 @@ class CreateProductCategory extends React.Component {
 
 													if (!values.productCategoryCode) {
 														errors.productCategoryCode =
-															'Product category code is required';
+															strings.ProductCategoryCodeRequired
 													}
 													return errors;
 												}}

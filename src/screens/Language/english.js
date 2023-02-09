@@ -213,6 +213,7 @@ const en = {
       ShippingDetails:"Shipping Details",
       ContactAddressDetails:"Contact Address Details",
       ShippingAddressIsSameAsBillingAddress:"Shipping Address Is Same As Billing Address",
+      TernIsRequired:'Term is required',
 
 // Note Settings
       Notes_Settings:"Note Settings",
@@ -236,6 +237,11 @@ const en = {
       QuotationDate:"Quotation Date",			
       AddNewRequest:"Add New Quotation",
       CREATED_DATE:"CREATED DATE",
+      CustomerIsRequired:'Customer is required',
+      QuotationNumberIsRequired:"Quotation number is required",
+      ExpiryDateRequired:"Expiry date is required",
+
+      
 
 //Create Quotation
       CreateQuotation:"Create Quotation",		
@@ -244,6 +250,7 @@ const en = {
       ExpirationDate:"Expiry Date",			
       CreateSupplier:"Create Supplier",
       excise:"Excise",
+      PlaceOfSupplyRequired:'Place of supply is required',
 
 //Expenses
       IsReverseCharge:"Do you want to apply Reverse Charge to this?",
@@ -261,6 +268,13 @@ const en = {
       UpdateExpense:"Update Expense",
       ExpenseType: "Expense Type",
       ActualExpenseAmount: "Actual Expense Amount",
+      TaxTreatmentRequired:'Tax treatment is required',
+      ExpenseCategoryRequired:'Expense number is required',
+      PaidByRequired:'Paid by is required',
+      AmountIsRequired:'Amount is required',
+      CurrencyIsRequired:'Currency is required',
+      PayThroughIsRequired:'Pay through is required',
+
 
 //Add expense		
       CreateExpense:"Create Expense",		
@@ -464,6 +478,16 @@ const en = {
       active:"Active",
       inactive:"InActive",
       TRN:"TRN",
+      BillingAddressRequired:'Billing address is required',
+      CountryIsRequired:'Country is required',
+      StateIsRequired:'State is required',
+      PostalCodeRequired:'Postal code is required',
+      ShippingAddressRequired:'Shipping address is required',
+      CountryIsRequired:'Country is required',
+      EmailIsRequired:'Email is required',
+      FirstNameRequired:'First name is required',
+      LastNameRequired:'Last name is required',
+      
 
 //Product
       Products:"Products",		
@@ -477,6 +501,8 @@ const en = {
       excise_slab:"EXCISE SLAB",
       enabled:"Enabled",
       disabled:"Disabled",
+      ProductCategoryCodeRequired:"Product category code is required",
+      ProductCategoryNameRequired:"Product category name is required",
 
 //Add product
       CreateProduct:"Create Product",		
@@ -529,6 +555,7 @@ const en = {
       CURRENCYNAMECONVERTEDTO:"CURRENCY NAME CONVERTED TO",				
       EXCHANGERATE:"EXCHANGE RATE",			
       AddNewCurrencyConversion:"Add New Currency Conversion",
+      
 
 //AddCurrencyConversion
       NewCurrencyConversion:"New Currency Conversion",			
@@ -536,8 +563,11 @@ const en = {
       ExchangeCurrency:"Exchange Currency",			
       Exchangerate:"Exchange rate",			
       BaseCurrency:"Base Currency",	
-      CURRENCY:"CURRENCY",		
-
+      CURRENCY:"CURRENCY",	
+      ExchangeCurrencyRequired:"Exchange currency is required",  
+      ExchangeRateRequired:"Exchange rate is required",  
+      
+      
 //Inventory
       Inventory:"Inventory",
       InventoryReorderLevel:"Inventory Reorder Level",
@@ -1081,5 +1111,11 @@ const en = {
       create:"Create",
       select_approver:"Select Approver",
       action:"Actions",
+
+//Line Item
+      ProductIsRequired:"Product is Required",
+      QuantityGreaterThan0:'Quantity should be greater than 0',
+      UnitPriceGreaterThan1:'Unit price should be greater than 1',
+      VATIsRequired:'VAT is required',
 }
 export { en }

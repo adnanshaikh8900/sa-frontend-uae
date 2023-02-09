@@ -2475,7 +2475,7 @@ resetVatId = (props) => {
 													if(this.state.customer_taxTreatment_des!="NON GCC" && this.state.customer_taxTreatment_des!="GCC NON-VAT REGISTERED" && this.state.customer_taxTreatment_des!="GCC VAT REGISTERED")
 													{
 														if (!values.placeOfSupplyId) 
-															       	errors.placeOfSupplyId ='Place of supply is required';
+															       	errors.placeOfSupplyId =strings.PlaceOfSupplyRequired
 														if (values.placeOfSupplyId &&
 																	(values.placeOfSupplyId=="" ||
 																	(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")
@@ -2561,15 +2561,15 @@ resetVatId = (props) => {
 														'Invoice number is required',
 													),
 													contactId: Yup.string().required(
-														'Customer is required',
+														strings.CustomerIsRequired
 													),
 													// placeOfSupplyId: Yup.string().required('Place of supply is required'),
-													term: Yup.string().required('Term is required'),
+													term: Yup.string().required(strings. TernIsRequired),
 													currency: Yup.string().required(
-														'Currency is required',
+														strings.CurrencyIsRequired
 													),
 													invoiceDate: Yup.string().required(
-														'Invoice date is required',
+														'Invoice date is ',
 													),
 													
 													lineItemsString: Yup.array()
@@ -2595,7 +2595,7 @@ resetVatId = (props) => {
 																	.required('Value is required')
 																	.test(
 																		'Unit Price',
-																		'Unit price should be greater than 1',
+																		strings.UnitPriceGreaterThan1,
 																		(value) => {
 																			if (value > 0) {
 																				return true;
@@ -2605,10 +2605,10 @@ resetVatId = (props) => {
 																		},
 																	),
 																vatCategoryId: Yup.string().required(
-																	'VAT is required',
+																	strings.VATIsRequired
 																),
 																productId: Yup.string().required(
-																	'Product is required',
+																	strings.ProductIsRequired
 																),
 															}),
 														),

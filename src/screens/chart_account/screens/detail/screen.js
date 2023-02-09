@@ -64,7 +64,7 @@ class DetailChartAccount extends React.Component {
 			dialog: false,
 			currentData: {},
 			chartOfAccountCategory: [],
-			coaId: '',
+			coaId: null,
 			disabled: false,
 			disabled1:false,
 			loadingMsg:"Loading...",
@@ -152,9 +152,9 @@ class DetailChartAccount extends React.Component {
 		});
 	};
 
-	checkChildActivitiesForContactId = (id) => {
+	checkChildActivitiesForCoaId = (id) => {
 		this.props.chartOfAccontActions
-			.getExplainedTransactionCountForTransactionCategory(this.state.current_contact_id)
+			.getExplainedTransactionCountForTransactionCategory(this.state.coaId)
 			.then((res) => {
 				if (res.data > 0) {
 				this.setState({childRecordsPresent:true})

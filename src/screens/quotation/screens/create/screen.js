@@ -2146,7 +2146,7 @@ resetVatId = (props) => {
 															'Quotation number already exists';
 													}
 													if (values.quotation_Number==='') {
-														errors.quotation_Number = 'Quotation number is required';
+														errors.quotation_Number = strings.QuotationNumberIsRequired
 													}
 												// 	if(this.state.customer_taxTreatment_des=="VAT REGISTERED" 
 												// 	||this.state.customer_taxTreatment_des=="VAT REGISTERED DESIGNATED ZONE" 
@@ -2164,7 +2164,7 @@ resetVatId = (props) => {
 												if(this.state.customer_taxTreatment_des!="NON GCC" && this.state.customer_taxTreatment_des!="GCC NON-VAT REGISTERED" && this.state.customer_taxTreatment_des!="GCC VAT REGISTERED")
 												{
 													if (!values.placeOfSupplyId) 
-																   errors.placeOfSupplyId ='Place of supply is required';
+																   errors.placeOfSupplyId =strings.PlaceOfSupplyRequired
 													if (values.placeOfSupplyId &&
 																(values.placeOfSupplyId=="" ||
 																(values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")
@@ -2178,7 +2178,7 @@ resetVatId = (props) => {
 													}
 													if (!values.quotationdate) {
 														errors.quotationdate =
-															'Quotation date is required';
+															strings.QuotationDateRequired
 													}
 													if(values.quotationdate && values.quotaionExpiration && (values.quotationdate > values.quotaionExpiration)){
 														errors.quotaionExpiration='Expiry date should be later than the quotation date';
@@ -2192,7 +2192,7 @@ resetVatId = (props) => {
 														'Invoice number is required',
 													),
 														customerId: Yup.string().required(
-														'Customer is required',
+														strings.CustomerIsRequired
 													),
 														// placeOfSupplyId: Yup.string().required('Place of supply is required'),
 													
@@ -2215,7 +2215,7 @@ resetVatId = (props) => {
 																	.required('Value is required')
 																	.test(
 																		'quantity',
-																		'Quantity should be greater than 0',
+																		strings.QuantityGreaterThan0,
 																		(value) => {
 																			if (value > 0) {
 																				return true;
@@ -2228,7 +2228,7 @@ resetVatId = (props) => {
 																	.required('Value is required')
 																	.test(
 																		'Unit Price',
-																		'Unit price should be greater than 1',
+																		strings.UnitPriceGreaterThan1,
 																		(value) => {
 																			if (value > 0) {
 																				return true;
@@ -2238,10 +2238,10 @@ resetVatId = (props) => {
 																		},
 																	),
 																vatCategoryId: Yup.string().required(
- 																	'VAT is required',
+ 																	strings.VATIsRequired,
 																),
 																productId: Yup.string().required(
-																	'Product is required',
+																	strings.ProductIsRequired,
 																),
 															}),
 														),
@@ -2481,7 +2481,7 @@ resetVatId = (props) => {
 																				'label',
 																				'value',
 																				this.placelist,
-																				'Place of Supply',
+																				strings.PlaceofSupply,
 																		  	).find(
 																				(option) =>
 																					option.value ==
@@ -2619,7 +2619,7 @@ resetVatId = (props) => {
 																		props.touched.quotaionExpiration && (
 																			<div className="invalid-feedback">
 																				{/* {props.errors.quotaionExpiration} */}
-																				{props.errors.quotaionExpiration.includes("nullable()") ? "Expiry date is required" :props.errors.quotaionExpiration}
+																				{props.errors.quotaionExpiration.includes("nullable()") ? strings.ExpiryDateRequired :props.errors.quotaionExpiration}
 																			</div>
 																		)}
 																	

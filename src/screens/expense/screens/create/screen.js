@@ -1401,7 +1401,7 @@ componentWillUnmount() {
 																	{props.errors.expenseDate &&
 																		props.touched.expenseDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.expenseDate.includes("final value was:") ? "Expense date is required" :props.errors.expenseDate}
+																				{props.errors.expenseDate.includes("final value was:") ? strings.ExpenseDateRequired :props.errors.expenseDate}
 																			</div>
 																		)}
 																</FormGroup>

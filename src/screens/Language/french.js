@@ -258,14 +258,14 @@ const fr = {
       ContractPONumber: "Numéro po du contrat",
       VerifyTRN:"Vérifier TRN",
       TermsAndConditions:'Termes et conditions',
-      TernIsRequired:'Le terme est requis',
+      TermIsRequired:'Le terme est requis',
       EmailIsRequired:'Le-mail est requis',
       FirstNameRequired:'Le prénom est requis',
       LastNameRequired:'Le nom de famille est requis',
+      InvoiceNumberRequired:"Le numéro de facture est requis",
+      InvoiceDateRequired:"La date de facturation est obligatoire",
 
-      //Product
-
-      
+            
 //Income receipts
       CreateIncomeReciept:"Créer un reçu de revenu",
       AddNewReceipt:"Ajouter une nouvelle demande",
@@ -317,6 +317,7 @@ const fr = {
       AmountIsRequired:'Le montant est requis',
       CurrencyIsRequired:'La devise est requise',
       PayThroughIsRequired:'Le paiement est requis',
+      ExpenseDateRequired:"La date de la dépense est requise",
 
 
 //Add expense		
@@ -335,7 +336,9 @@ const fr = {
       SupplierInvoices:"Factures fournisseur",						
       SUPPLIERNAME:"NOM DU FOURNISSEUR",										
       INVOICEAMOUNT:"MONTANT DE LA FACTURE",		
-      SupplierInvoice:"Facture fournisseur",	
+      SupplierInvoice:"Facture fournisseur",
+      InvoiceNumberRequired:"Le numéro de facture est requis",
+      SupplierIsRequired:"Le fournisseur est requis",	
 		
 //Create invoice
       SupplierName:"Nom du fournisseur",	
@@ -544,6 +547,10 @@ const fr = {
       disabled:"Handicapé",
       ProductCategoryCodeRequired:"Le code de catégorie de produit est requis",
       ProductCategoryNameRequired:"Le nom de la catégorie de produits est requis",
+      VATCategoryRequired:"VAT la catégorie est obligatoire",
+      SellingPriceRequired:"Le prix de vente est requis",
+      PurchasePriceRequired:"Le prix d'achat est requis",
+
 
 
 

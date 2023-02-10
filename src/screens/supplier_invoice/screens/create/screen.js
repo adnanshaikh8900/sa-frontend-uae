@@ -2663,7 +2663,7 @@ class CreateSupplierInvoice extends React.Component {
 															'Invoice number already exists';
 													}
 													if (values.invoice_number === '') {
-														errors.invoice_number = 'Invoice number is required';
+														errors.invoice_number = strings.InvoiceNumberRequired
 													}
 												// 	if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply") {
 												// 		errors.placeOfSupplyId = 'Place of supply is required';
@@ -2707,10 +2707,11 @@ class CreateSupplierInvoice extends React.Component {
 														'Invoice number is required',
 													),
 													contactId: Yup.string().required(
-														'Supplier is required',
+														strings.SupplierIsRequired
 													),
 													// placeOfSupplyId: Yup.string().required('Place of supply is required'),
-													term: Yup.string().required('Term is required'),
+													term: Yup.string().required( strings.TermIsRequired
+														),
 													invoiceDate: Yup.string().required(
 														'Invoice Date is required',
 													),
@@ -2727,7 +2728,7 @@ class CreateSupplierInvoice extends React.Component {
 																	.required('Value is required')
 																	.test(
 																		'quantity',
-																		'Quantity should be greater than 0',
+																		strings.QuantityGreaterThan0,
 																		(value) => {
 																			if (value > 0) {
 																				return true;
@@ -2740,7 +2741,7 @@ class CreateSupplierInvoice extends React.Component {
 																	.required('Value is required')
 																	.test(
 																		'Unit Price',
-																		'Unit price should be greater than 1',
+																		strings.UnitPriceGreaterThan1,
 																		(value) => {
 																			if (value > 0) {
 																				return true;
@@ -2750,10 +2751,10 @@ class CreateSupplierInvoice extends React.Component {
 																		},
 																	),
 																vatCategoryId: Yup.string().required(
-																	'VAT is required',
+																	strings.VATIsRequired,
 																),
 																productId: Yup.string().required(
-																	'Product is required',
+																	strings.ProductIsRequired,
 																),
 																// transactionCategoryId: Yup.string().required(
 																// 	'Account is required',
@@ -3182,7 +3183,7 @@ class CreateSupplierInvoice extends React.Component {
 																	{props.errors.invoiceDate &&
 																		props.touched.invoiceDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.invoiceDate.includes("nullable()") ? "Invoice date is required" : props.errors.invoiceDate}
+																				{props.errors.invoiceDate.includes("nullable()") ? strings.InvoiceDateRequired : props.errors.invoiceDate}
 																			</div>
 																		)}
 																</FormGroup>

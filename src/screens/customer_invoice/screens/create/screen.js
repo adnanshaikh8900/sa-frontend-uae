@@ -2466,7 +2466,7 @@ resetVatId = (props) => {
 															'Invoice number already exists';
 													}
 													if (values.invoice_number==='') {
-														errors.invoice_number = 'Invoice number is required';
+														errors.invoice_number = strings.InvoiceNumberRequired
 													}
 													if (param === true) {
 														errors.discount =
@@ -2582,7 +2582,7 @@ resetVatId = (props) => {
 																	.required('Value is required')
 																	.test(
 																		'quantity',
-																		'Quantity should be greater than 0',
+																		strings.QuantityGreaterThan0,
 																		(value) => {                                      
 																			if (value > 0) {
 																				return true;
@@ -3041,7 +3041,7 @@ resetVatId = (props) => {
 																	{props.errors.invoiceDate &&
 																		props.touched.invoiceDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.invoiceDate.includes("nullable()") ? "Invoice date is required" :props.errors.invoiceDate}
+																				{props.errors.invoiceDate.includes("nullable()") ? strings.InvoiceDateRequired :props.errors.invoiceDate}
 																			</div>
 																		)}
 																</FormGroup>

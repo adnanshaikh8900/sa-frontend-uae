@@ -1015,7 +1015,7 @@ componentWillUnmount() {
 														errors.expenseNumber = 'Expense number already exists'
 													}
 													if (values.expenseNumber === '') {
-														errors.expenseNumber = 'Expense number is required';
+														errors.expenseNumber = strings.ExpenseCategoryRequired
 													}
 													if(this.state.currency===true && values.currency === '' ){
 														errors.currency = 'Currency is required';
@@ -1027,25 +1027,26 @@ componentWillUnmount() {
 												}}
 												validationSchema={Yup.object().shape({
 													expenseNumber: Yup.string().required(
-														'Expense number is required',
+														'Expense  is required',
 													),
 													taxTreatmentId: Yup.string().required(
-														'Tax treatment is required',
+														strings.TaxTreatmentRequired
 													),
 													expenseCategory: Yup.string().required(
-														'Expense category is required',
+														strings.ExpenseCategoryRequired
 													),
 													expenseDate: Yup.date().required(
 														'Expense date is required',
 													),
 													currency: Yup.string().required(
-														'Currency is required',
+														strings.CurrencyIsRequired
 													),
 													payee: Yup.string().required(
-														'Paid by is required',
+														strings.PaidByRequired
 													),
-													expenseAmount: Yup.string()
-														.required('Amount is required')
+													expenseAmount: Yup.string().required(
+														strings.AmountIsRequired
+													)
 														.matches(
 															 /^[0-9][0-9]*[.]?[0-9]{0,2}$$/,
 															'Enter a valid amount',
@@ -1062,10 +1063,10 @@ componentWillUnmount() {
 															},
 														),
 													vatCategoryId: Yup.string().required(
-														'VAT is required',
+														strings.VATIsRequired
 													),
 													payMode: Yup.string().required(
-														'Pay through is required',
+														strings.PayThroughIsRequired
 													),
 													attachmentFile: Yup.mixed()
 														.test(

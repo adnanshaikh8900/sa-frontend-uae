@@ -114,6 +114,7 @@ const ar = {
 
 //Expenses
       ExpenseNumber:"رقم المصروفات ",
+      CurrencyIsRequired:'العملة مطلوبة',
 
 //Customer invoice
       SelectPlaceOfSupply:"اختر مكان التوريد",
@@ -211,6 +212,8 @@ const ar = {
       BillingEmail:"البريد الإلكتروني للفوترة",
       ContractPONumber: "رقم أمر الشراء للعقد",
       VerifyTRN:"تحقق من TRN",
+      TermsAndConditions:'الأحكام والشروط',
+      TernIsRequired:'المصطلح مطلوب',
       
 //Income receipts
       CreateIncomeReciept:"إنشاء إيصال الدخل",
@@ -224,13 +227,17 @@ const ar = {
       EXPIRATIONDATE:"تاريخ انتهاء الصلاحية",				
       AddNewRequest:"أضف عرض أسعار جديد",
       CREATED_DATE:" تاريخ الإنشاء",
+      QuotationDate:"تاريخ الاقتباس",
+      CustomerIsRequired:'الزبون مطلوب',
+
 
 //Create Quotation
       CreateQuotation:"إنشاء عرض أسعار",		
       QuotationNumber:"رقم الكواتيشن",	
       QuotationNo:"سؤال رقم",				
       ExpirationDate:"تاريخ انتهاء الصلاحية ",			
-      CreateSupplier:"إنشاء المورد ",		
+      CreateSupplier:"إنشاء المورد ",
+      PlaceOfSupplyRequired:'مكان التوريد مطلوب',		
 
 //Expenses
       IsReverseCharge:"هل تريد تطبيق الرسوم العكسية على ذلك؟",
@@ -248,6 +255,13 @@ const ar = {
       UpdateExpense:"تحديث مصروف",
       ExpenseType: "نوع المصاريف",
       ActualExpenseAmount: "مبلغ المصاريف الفعلي",
+      TaxTreatmentRequired:'العلاج الضريبي مطلوب',
+      ExpenseCategoryRequired:'رقم المصاريف مطلوب',
+      PaidByRequired:'تدفع من قبل مطلوب',
+      AmountIsRequired:'المبلغ مطلوب',
+      CurrencyIsRequired:'العملة مطلوبة',
+      PayThroughIsRequired:'مطلوب الدفع عن طريق',
+
 
 //Add expense		
       CreateExpense:"إنشاء مصروفات",		
@@ -1049,5 +1063,13 @@ const ar = {
       create:"خلق",
       select_approver:"اختر المعتمد",
       action:"الاجراءات",
+
+//Line Item
+      ProductIsRequired:"المنتج مطلوب",
+      QuantityGreaterThan0:'يجب أن تكون الكمية أكبر من 0',
+      UnitPriceGreaterThan1:'يجب أن يكون سعر الوحدة أكبر من 1',
+      VATIsRequired:'VAT مطلوب',
+
+      
 }
   export {ar};

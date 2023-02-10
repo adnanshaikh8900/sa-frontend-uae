@@ -2019,7 +2019,7 @@ class DetailCustomerInvoice extends React.Component {
 													}}
 													validationSchema={Yup.object().shape({
 														invoice_number: Yup.string().required(
-															'Invoice number is required',
+															' number is required',
 														),
 														contactId: Yup.string().required(
 															'Supplier is required',

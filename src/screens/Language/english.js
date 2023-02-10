@@ -213,7 +213,9 @@ const en = {
       ShippingDetails:"Shipping Details",
       ContactAddressDetails:"Contact Address Details",
       ShippingAddressIsSameAsBillingAddress:"Shipping Address Is Same As Billing Address",
-      TernIsRequired:'Term is required',
+      TermIsRequired:'Term is required',
+      InvoiceNumberRequired:"Invoice number is required",
+      InvoiceDateRequired:"Invoice date is required",
 
 // Note Settings
       Notes_Settings:"Note Settings",
@@ -274,6 +276,7 @@ const en = {
       AmountIsRequired:'Amount is required',
       CurrencyIsRequired:'Currency is required',
       PayThroughIsRequired:'Pay through is required',
+      ExpenseDateRequired:"Expense date is required",
 
 
 //Add expense		
@@ -293,12 +296,15 @@ const en = {
       INVOICEAMOUNT:"INVOICE AMOUNT",
       BillFrom:"Bill From",	
       SupplierInvoice:"Supplier Invoice",	
+      InvoiceNumberRequired:"Invoice number is required",
+      SupplierIsRequired:"Supplier is required",	
+			
 		
 //Create invoice
       SupplierName:"Supplier Name",		
       Supplier:"Supplier",	
-      AddNewSupplier:"Add New Supplier",			
-			
+      AddNewSupplier:"Add New Supplier",
+      
 //Purchase receipts
       Purchasereceipts:"Purchase Receipts",				
       PAYMENTDATE:"Payment Date",					
@@ -503,6 +509,10 @@ const en = {
       disabled:"Disabled",
       ProductCategoryCodeRequired:"Product category code is required",
       ProductCategoryNameRequired:"Product category name is required",
+      VATCategoryRequired:"VAT category is required",
+      SellingPriceRequired:"Selling price is required",
+      PurchasePriceRequired:"Purchase price is required",
+      
 
 //Add product
       CreateProduct:"Create Product",		

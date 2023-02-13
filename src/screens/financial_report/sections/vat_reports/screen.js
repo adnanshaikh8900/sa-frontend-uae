@@ -850,15 +850,17 @@ class VatReports extends React.Component {
 														<TableHeaderColumn
 															width='10%'
 															dataField="totalTaxPayable"
+															dataAlign='right'
 															dataSort
-															// dataFormat={this.renderAmount}
+															dataFormat={this.renderAmount}
 															className="table-header-bg"
 														>
 														    Total VAT Payable
 														</TableHeaderColumn>
-													 <TableHeaderColumn
+													 	<TableHeaderColumn
 															dataField="totalTaxReclaimable"
 															// columnTitle={this.customEmail}
+															dataAlign='right'
 															dataSort
 															dataFormat={this.renderAmount}
 															className="table-header-bg"
@@ -886,6 +888,7 @@ class VatReports extends React.Component {
 															<TableHeaderColumn
 															dataField="balanceDue"
 															// columnTitle={this.customEmail}
+															dataAlign='right'
 															dataSort
 															dataFormat={this.renderAmount}
 															className="table-header-bg"

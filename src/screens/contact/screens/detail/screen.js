@@ -1073,7 +1073,7 @@ class DetailContact extends React.Component {
 																									'label',
 																									'value',
 																									contact_type_list,
-																									'Contact Type',
+																									'Contact ',
 																								)
 																								: []
 																						}

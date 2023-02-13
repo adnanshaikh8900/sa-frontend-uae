@@ -891,7 +891,7 @@ class DetailExpense extends React.Component {
 															'Expense date is required',
 														),
 														taxTreatmentId: Yup.string().required(
-															'Tax treatment is required',
+															'Tax  is required',
 														),
 														currency: Yup.string().required(
 															'Currency is required',

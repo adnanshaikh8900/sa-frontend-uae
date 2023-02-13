@@ -432,12 +432,12 @@ class CreateContact extends React.Component {
 																		errors.billingStateProvince ='Emirate is required';
 																} else {
 																	if (values.billingPostZipCode == '')
-																		errors.billingPostZipCode = 'Postal code is required';
+																		errors.billingPostZipCode = strings.PostalCodeRequired
 																	else
 																		if (values.billingPostZipCode.length != 6)
 																			errors.billingPostZipCode = "Please enter 6 digit postal zip code"
 																	if(values.billingStateProvince =="")  
-																		errors.billingStateProvince ='State is required';
+																		errors.billingStateProvince =strings.StateIsRequired
 
 																}
 																if (values.shippingCountryId == 229 || values.shippingCountryId.value == 229) {
@@ -450,12 +450,12 @@ class CreateContact extends React.Component {
 																		errors.shippingStateId ='Emirate is required';
 																} else {
 																		if (values.shippingPostZipCode == '')
-																			errors.shippingPostZipCode = 'Postal Code is required';
+																			errors.shippingPostZipCode = strings.PostalCodeRequired
 																	else
 																		if (values.shippingPostZipCode.length != 6)
 																			errors.shippingPostZipCode = "Please enter 6 digit Postal Zip Code"
 																	if(values.shippingStateId =="")  
-																		errors.shippingStateId ='State is required';
+																		errors.shippingStateId =strings.StateIsRequired
 
 																}
 																if (this.state.showbillingFaxErrorMsg == true)
@@ -472,10 +472,10 @@ class CreateContact extends React.Component {
 															}}
 															validationSchema={Yup.object().shape({
 																firstName: Yup.string().required(
-																	'First name is required',
+																	strings.FirstNameRequired
 																),
 																lastName: Yup.string().required(
-																	'Last name is required',
+																	strings.LastNameRequired
 																),
 																currencyCode: Yup.string().required(
 																	'Currency is required',
@@ -484,29 +484,29 @@ class CreateContact extends React.Component {
 																	'Contact type is required',
 																),
 																taxTreatmentId: Yup.string().required(
-																	'Tax treatment is required',
+																	strings.TaxTreatmentRequired
 																),
 																email: Yup.string()
-																	.required('Email is required')
+																	.required(strings.EmailIsRequired)
 																	.email('Invalid Email')
 																,
 																// mobileNumber: Yup.string()
 																// 	.required('Mobile number is required')
 																// ,
 																billingAddress: Yup.string().required(
-																	'Billing address is required',
+																	strings.BillingAddressRequired
 																),
 																billingcountryId: Yup.string().required(
-																	'Country is required',
+																	strings.CountryIsRequired
 																),
 																billingStateProvince: Yup.string().required(
 																	'State is required',
 																),
 																shippingAddress: Yup.string().required(
-																	'Shipping address is required',
+																	strings.ShippingAddressRequired
 																),
 																shippingCountryId: Yup.string().required(
-																	'Country is required',
+																	strings.CountryIsrequired
 																),
 																shippingStateId: Yup.string().required(
 																	'State is required',
@@ -735,7 +735,7 @@ class CreateContact extends React.Component {
 																								'label',
 																								'value',
 																								contact_type_list,
-																								'Contact Type',
+																								'Contact ',
 																							)
 																							: []
 																					}

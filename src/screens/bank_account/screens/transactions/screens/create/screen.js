@@ -110,6 +110,8 @@ class CreateBankTransaction extends React.Component {
         exclusiveVat:false,
         isReverseChargeEnabled:false
       },
+      transactionVatAmount:'',
+      transactionExpenseAmount:'',
       expenseType: true,
       loadingMsg: "Loading...",
       disableLeavePage: false,
@@ -271,7 +273,21 @@ class CreateBankTransaction extends React.Component {
         });
     }
   };
-
+  calculateVAT = (transactionAmount, vatId, exclusiveVat) => {
+    if((transactionAmount) && (vatId === 1) && exclusiveVat){
+      let transactionVatAmount = 0;
+      let transactionExpenseAmount = 0;
+      transactionVatAmount = transactionAmount * 0.05;
+      transactionExpenseAmount = transactionVatAmount + transactionAmount;
+      this.setState({transactionVatAmount:transactionVatAmount,transactionExpenseAmount:transactionExpenseAmount})
+    }else if((transactionAmount) && (vatId === 1) && !exclusiveVat){
+      let transactionVatAmount = 0;
+      let transactionExpenseAmount = 0;
+      transactionVatAmount = (transactionAmount * 5) / 105;
+      transactionExpenseAmount = transactionAmount - transactionVatAmount ;
+      this.setState({transactionVatAmount:transactionVatAmount,transactionExpenseAmount:transactionExpenseAmount})
+    }
+  };
   handleFileChange = (e, props) => {
     e.preventDefault();
     let reader = new FileReader();
@@ -322,7 +338,7 @@ getVatReportListForBank=(id)=>{
       exclusiveVat,
       VATReportId
     } = data;
-
+    this.calculateVAT(transactionAmount, vatId.value, exclusiveVat);
     if (
       (invoiceIdList && coaCategoryId.label === "Sales") ||
       (invoiceIdList && coaCategoryId.label === "Supplier Invoice")
@@ -378,6 +394,8 @@ getVatReportListForBank=(id)=>{
       (vatId && coaCategoryId.label === "Expense")
     ) {
       formData.append("vatId", vatId ? vatId.value : "");
+      formData.append("transactionVatAmount", this.state.transactionVatAmount ? this.state.transactionVatAmount : "");
+      formData.append("transactionExpenseAmount", this.state.transactionExpenseAmount ? this.state.transactionExpenseAmount : "");
       formData.append('bankGenerated',true)
       formData.append("isReverseChargeEnabled",  isReverseChargeEnabled);
       formData.append("exclusiveVat",  exclusiveVat);
@@ -508,6 +526,7 @@ getVatReportListForBank=(id)=>{
           "error",
           err && err.data ? err.data.message : "Something Went Wrong"
         );
+        this.setState({ disabled: false, loading: false, disableLeavePage: false });
       });
   };
 
@@ -1195,8 +1214,7 @@ getVatReportListForBank=(id)=>{
                         onSubmit={(values, { resetForm }) => {
                           this.handleSubmit(values, resetForm);
                         }}
-                        validate={(values) => {
-                          
+                        validate={(values) => {                          
                           let errors = {};
                           const totalexpaled=values?.invoiceIdList.reduce((a,c)=>a+c.explainedAmount,0)
                          
@@ -1658,6 +1676,7 @@ getVatReportListForBank=(id)=>{
                                                 props.handleChange("vatId")(
                                                   option
                                                 );
+                                                
                                               } else {
                                                 props.handleChange("vatId")("");
                                               }
@@ -1781,7 +1800,7 @@ getVatReportListForBank=(id)=>{
 
                                       <Switch
                                         checked={this.state.exclusiveVat}
-                                        disabled
+                                        //disabled
                                         onChange={(exclusiveVat) => {
                                           props.handleChange("exclusiveVat")(
                                             exclusiveVat

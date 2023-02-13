@@ -698,7 +698,7 @@ const en = {
       Apply:"Apply",	
       RefundForCreditNote:"Refund For Tax Credit Note:",
       RefundPayment:"Refund Payment",
-      UpdateChartAccount:"Update Chart Account",
+      UpdateChartAccount:"Update Chart Of Account",
       UpdateContact:"Update Contact",
       CurrencyCode:"Currency",		
       UpdateProduct:"Update Product",

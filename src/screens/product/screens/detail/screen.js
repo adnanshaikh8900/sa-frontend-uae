@@ -1234,6 +1234,7 @@ renderName=(cell,row)=>{
 																			}
 																			id="productCategoryId"
 																			name="productCategoryId"
+																			placeholder={strings.Select+strings.ProductCategory}
 																			value={
 																				product_category_list &&
 																				selectOptionsFactory

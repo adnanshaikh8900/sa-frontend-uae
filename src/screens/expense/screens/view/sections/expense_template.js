@@ -51,6 +51,7 @@ class ExpenseTemplate extends Component {
 						<div style={{ width: '50%', marginTop: '4.5rem', marginLeft: '3rem' }}>
 								
 								<div className="companyDetails">
+									
 									<img
 									src={
 										companyData &&
@@ -65,13 +66,15 @@ class ExpenseTemplate extends Component {
 									/>
 								
 							</div>
+							
 							</div>
 							<div
 								style={{
 									width: '70%',
 									display: 'flex',
 									flexDirection: 'column',
-									justifyContent: 'left',
+									justifyContent: 'center',
+									padding: '60px'
 								}}
 							>
 								<div style={{
@@ -80,7 +83,7 @@ class ExpenseTemplate extends Component {
 								}}
 								>
 									<h2 className="mb-1 ml-2"><b>{strings.Expense}</b></h2>	
-									<div className="mb-1 ml-2" style={{fontSize:"22px"}}><b> {expenseData.payee} </b></div>
+									{/* <div className="mb-1 ml-2" style={{fontSize:"22px"}}><b> {expenseData.payee} </b></div> */}
 									<div className="mb-1 ml-2"><b>{strings.ExpenseDate}</b>: {moment(expenseData.expenseDate ).format('DD-MM-YYYY')}
 									</div> 
 								</div>

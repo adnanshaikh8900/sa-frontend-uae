@@ -393,7 +393,7 @@ const ar = {
       CreateBankTransaction:" إنشاء حركة مصرفية",			
       TransactionType:"نوع الحركة",			
       TransactionDate:" تاريخ الحركة",								
-      ReferenceNumber:"الرقم المرجعي",			
+      ReferenceNumber:"الرقم المرجعي",
 
 //Journals
       UpdateJournal:"تحديث المجلة",

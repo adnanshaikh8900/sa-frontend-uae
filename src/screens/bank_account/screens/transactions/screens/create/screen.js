@@ -1365,9 +1365,7 @@ class CreateBankTransaction extends React.Component {
                                       }
                                       this.totalAmount("");
                                     }}
-                                    placeholder={
-                                      strings.Select + " " + strings.Type
-                                    }
+                                    placeholder={strings.Select + " " + strings.TransactionType}
                                     id="coaCategoryId"
                                     name="coaCategoryId"
                                     className={
@@ -1639,9 +1637,7 @@ class CreateBankTransaction extends React.Component {
                                   </Col>
                                 </Row>
                               )}
-
-
-{props.values.coaCategoryId &&
+                            {props.values.coaCategoryId &&
                               props.values.coaCategoryId.label ===
                               "Expense" && props.values?.vatId?.value===1 && (
                                 <Row>
@@ -1722,11 +1718,10 @@ class CreateBankTransaction extends React.Component {
                                   </Col>
                                 </Row>
                               )}
-
-<Row>
+                        <Row>
 													{props.values.coaCategoryId.label ===
-                            "Expense" && (<Col>
-															
+                            "Expense" && (
+                            <Col>	
 															<Checkbox
 																id="isReverseChargeEnabled"
 																checked={this.state.isReverseChargeEnabled}
@@ -2330,7 +2325,7 @@ class CreateBankTransaction extends React.Component {
                                           </div>
                                         </FormGroup>
                                       </Col>
-  }
+                                      }
                                       <Col lg={1} >
                                         <FormGroup className="font-weight-bold " style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
 
@@ -2472,10 +2467,6 @@ class CreateBankTransaction extends React.Component {
                                       );
                                     }
                                   )}
-
-
-
-
                                   {props.values?.invoiceIdList?.length > 0 && (
                                     <>
                                       <Row
@@ -2487,8 +2478,6 @@ class CreateBankTransaction extends React.Component {
                                          
                                         }}
                                       >
-                                        
-                                        
                                         <Col lg={2} 
                                         style={{float:'right'}}
                                         >

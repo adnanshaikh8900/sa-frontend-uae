@@ -453,9 +453,9 @@ const fr = {
 
 //Add Transaction
       CreateBankTransaction:"Créer une transaction bancaire",			
-      TransactionType:"Transaction Type",			
-      TransactionDate:"Transaction Date",								
-      ReferenceNumber:"Numéro de référence",			
+      TransactionType:"Type de transaction",			
+      TransactionDate:"Date de la transaction",								
+      ReferenceNumber:"Numéro de référence",
 
 //Journals
       UpdateJournal:"Mettre à jour le journal ",

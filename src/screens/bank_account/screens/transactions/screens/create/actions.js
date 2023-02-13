@@ -38,3 +38,20 @@ export const getTransactionCategoryListForExplain = (id, bankId) => {
 			});
 	};
 };
+
+
+export const getVatReportListForBank=(id)=>{
+	return (dispatch) => {
+		let data = {
+			method: 'GET',
+			url: `/rest/vatReport/getVatReportListForBank?id=${id}`,
+		};
+		return authApi(data)
+			.then((res) => {
+				return res;
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+}

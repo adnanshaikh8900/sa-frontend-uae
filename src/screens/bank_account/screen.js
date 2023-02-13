@@ -328,7 +328,8 @@ class BankAccount extends React.Component {
 					<DropdownMenu right>
 					{row.name !== 'PettyCash' &&(
 						<DropdownItem
-						onClick={() =>this.props.history.push('/admin/banking/bank-account/transaction/create',{bankAccountId: row.bankAccountId,})	}
+						onClick={() =>this.props.history.push('/admin/banking/bank-account/transaction/create',{bankAccountId: row.bankAccountId,currency:row.curruncySymbol})}
+						
 					>
 				<i className="fas fa-plus" />{strings.AddnewTransaction}
 					</DropdownItem>

@@ -112,7 +112,7 @@ class CreateExpense extends React.Component {
 			},
 			count:0,
 			expenseType:false,
-			isVatClaimable:false,
+			isVatClaimable:true,
 			taxTreatmentId:'',
 			isReverseChargeEnabled:false,
 			currentData: {},
@@ -1279,7 +1279,7 @@ componentWillUnmount() {
 															<Col className='mb-2' lg={3}>
 																<Label htmlFor="inline-radio3"><span className="text-danger">* </span>{strings.ExpenseType}</Label>
 																<div style={{display:"flex"}}>
-																	{this.state.expenseType === false ?
+																	{this.state.isVatClaimable === false ?
 																		<span style={{ color: "#0069d9" }} className='mr-4'><b>{strings.NonClaimable}</b></span> :
 																		<span className='mr-4'>{strings.NonClaimable}</span>}
 
@@ -1310,7 +1310,7 @@ componentWillUnmount() {
 																		className="react-switch"
 																	/>
 
-																	{this.state.expenseType === true ?
+																	{this.state.isVatClaimable === true ?
 																		<span style={{ color: "#0069d9" }} className='ml-4'><b>{strings.Claimable}</b></span> : 
 																		<span className='ml-4'>{strings.Claimable}</span>
 																		

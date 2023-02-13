@@ -115,6 +115,7 @@ class CreateBankTransaction extends React.Component {
       disableLeavePage: false,
       transactionCategoryList: [],
       moneyCategoryList: [],
+      VATlist:[],
       totalAmount: "",
       categoriesList: [
         {
@@ -144,7 +145,11 @@ class CreateBankTransaction extends React.Component {
               value: 100,
               label: "Supplier Invoice",
             },
-          ],
+            {...(this.props.location.state?.currency==="AED" ? {
+              value: 16,
+              label: "VAT Payment",
+            }:{})},
+          ].filter((i)=>i.label),
         },
         {
           label: "Money Received",
@@ -177,7 +182,11 @@ class CreateBankTransaction extends React.Component {
               value: 8,
               label: "Money Received Others",
             },
-          ],
+            {...(this.props.location.state?.currency==="AED" ? {
+              value: 17,
+              label: "VAT Claim",
+            }:{})},
+          ].filter((i)=>i.value),
         },
       ],
       cat_label: "",
@@ -274,6 +283,15 @@ class CreateBankTransaction extends React.Component {
     }
   };
 
+getVatReportListForBank=(id)=>{
+		this.props.transactionCreateActions
+    .getVatReportListForBank(id)
+		.then((res)=>{
+		this.setState({VATlist:res.data})
+		})
+	}
+
+
   handleSubmit = (data, resetForm) => {
     this.setState({ disabled: true, loading: true, disableLeavePage: true });
     let bankAccountId =
@@ -301,8 +319,8 @@ class CreateBankTransaction extends React.Component {
       ExplainedInvoiceListModal,
       setexcessorshortamount,
       isReverseChargeEnabled,
-      exclusiveVat
-
+      exclusiveVat,
+      VATReportId
     } = data;
 
     if (
@@ -454,6 +472,16 @@ class CreateBankTransaction extends React.Component {
         payrollListIds ? JSON.stringify(result1) : ""
       );
     }
+
+
+    if(coaCategoryId.label ==='VAT Payment' ||
+                            coaCategoryId.label ==='VAT Claim')
+                {  const info=this.state.VATlist.find((i)=>i.id===VATReportId.value)  
+                  formData.append(
+                    "explainedVatPaymentListString",
+                    info ? JSON.stringify([info]) : ""
+                  );
+                  }
     this.props.transactionCreateActions
       .createTransaction(formData)
       .then((res) => {
@@ -1175,8 +1203,25 @@ class CreateBankTransaction extends React.Component {
                           const date = moment(values.transactionDate).format("MM/DD/YYYY");
                           const date1 = new Date(date);
                           const date2 = new Date(this.state.date);
-                          
-                          if(values.coaCategoryId.label !== "Expense" && values.coaCategoryId.label !== "Supplier Invoice" && values.coaCategoryId.label !== "Sales"){
+                          debugger
+                          if(values.coaCategoryId && this.props.location.state?.currency==="AED" &&
+                            (values.coaCategoryId.label ==='VAT Payment' ||
+                            values.coaCategoryId.label ==='VAT Claim')
+                            )
+                            {
+                            
+                              if(!values.VATReportId || values.VATReportId===""){
+                                  errors.VATReportId="Please Select Vat Report"
+                             
+                            }
+                          }
+
+                          if(values.coaCategoryId.label !== "Expense" && 
+                          values.coaCategoryId.label !== "Supplier Invoice"
+                           && values.coaCategoryId.label !== "Sales" && 
+                           values.coaCategoryId.label !== "VAT Payment" &&
+                           values.coaCategoryId.label !== "VAT Claim" 
+                           ){
                               if(!values.transactionCategoryId || values.transactionCategoryId===""){
                                   errors.transactionCategoryId="Category is required"
                               }
@@ -1349,7 +1394,9 @@ class CreateBankTransaction extends React.Component {
                                       }
                                       if (
                                         option.label !== "Expense" &&
-                                        option.label !== "Supplier Invoice"
+                                        option.label !== "Supplier Invoice" &&
+                                        option.label !== "VAT Payment" &&
+                                        option.label !== "VAT Claim"
                                       ) {
                                         this.getTransactionCategoryList(option);
                                       }
@@ -1363,6 +1410,14 @@ class CreateBankTransaction extends React.Component {
                                       if (option.label === "Supplier Invoice") {
                                         this.getVendorList();
                                       }
+                                      if (option.label === "VAT Payment") {
+                                        this.getVatReportListForBank(1);
+                                      }
+                                      if (option.label === "VAT Claim") {
+                                        this.getVatReportListForBank(2);
+                                      }
+                                      
+                                      
                                       this.totalAmount("");
                                     }}
                                     placeholder={strings.Select + " " + strings.TransactionType}
@@ -1430,6 +1485,11 @@ class CreateBankTransaction extends React.Component {
                                   <Input
                                     type="number"
                                     min="0"
+
+                                    disabled={
+                                      props.values.coaCategoryId.label ==='VAT Claim' || 
+                              props.values.coaCategoryId.label ==='VAT Payment'
+                                    }
                                     maxLength="100"
                                     id="transactionAmount"
                                     name="transactionAmount"
@@ -1463,6 +1523,53 @@ class CreateBankTransaction extends React.Component {
                                     )}
                                 </FormGroup>
                               </Col>
+                              {(props.values.coaCategoryId.label ==='VAT Claim' || 
+                              props.values.coaCategoryId.label ==='VAT Payment')  &&
+                              <Col lg={3}>
+                                <FormGroup className="mb-3">
+                                  <Label htmlFor="dueAmount">
+                                    <span className="text-danger">* </span>
+                                    {props.values.coaCategoryId.label ==='VAT Claim' ?
+                                    'Total VAT Reclaimable':'Total VAT Payable'}
+                                  </Label>
+                                  <Input
+                                    type="number"
+                                    min="0"
+                                    disabled
+                                    maxLength="100"
+                                    id="dueAmount"
+                                    name="dueAmount"
+                                    placeholder={props.values.coaCategoryId.label ==='VAT Claim' ?
+                                    'Total VAT Reclaimable':'Total VAT Payable'}
+                                    onChange={(option) => {
+                                      if (
+                                        option.target.value === "" ||
+                                        this.regDecimal.test(
+                                          option.target.value
+                                        )
+                                      ) {
+                                        props.handleChange("dueAmount")(
+                                          option
+                                        );
+                    
+                                      }
+                                    }}
+                                    value={props.values.dueAmount}
+                                    className={
+                                      props.errors.transactionAmount &&
+                                        props.touched.dueAmount
+                                        ? "is-invalid"
+                                        : ""
+                                    }
+                                  />
+                                  {props.errors.dueAmount &&
+                                    props.touched.dueAmount && (
+                                      <div className="invalid-feedback">
+                                        {props.errors.dueAmount}
+                                      </div>
+                                    )}
+                                </FormGroup>
+                              </Col> }
                             </Row>
                             <hr />
                             {props.values.coaCategoryId &&
@@ -1898,6 +2005,8 @@ class CreateBankTransaction extends React.Component {
                                 </Row>
                               )}
                             {transactionCategoryList.categoriesList &&
+                            props.values.coaCategoryId.label !== "VAT Payment" &&
+                            props.values.coaCategoryId.label !== "Vat Claim" &&
                               props.values.coaCategoryId.label !== "Expense" &&
                               props.values.coaCategoryId.label !==
                               "Supplier Invoice" &&
@@ -2817,6 +2926,52 @@ class CreateBankTransaction extends React.Component {
 														</Col>
 														</Row>
 																)} */}
+{ props.values.coaCategoryId &&
+	(props.values.coaCategoryId.label ==='VAT Payment' ||
+  props.values.coaCategoryId.label ==='VAT Claim' 
+  )&& 
+  <Row>
+  <Col lg={4}>
+  <FormGroup className="mb-3">
+                                      <Label htmlFor="currencyCode">
+                                        VAT Report Number
+                                      </Label>
+                                      <Select
+                                        style={customStyles}
+                                        id="VATReport"
+                                        name="VATReportId"
+                                        options={
+                                          this.state.VATlist.map((i)=>{return {
+                                            label:i.vatNumber,value:i.id
+                                          }})
+                                           
+                                        }
+                                        value={props.values.VATReportId || ""}
+                                        onChange={(option) => {
+                                          
+                                          props.handleChange("VATReportId")(
+                                            option
+                                          );
+                                          const info=this.state.VATlist.find((i)=>i.id===option.value)
+                                            props.handleChange('transactionAmount')(
+                                              info.totalAmount
+                                            )
+                                            props.handleChange('dueAmount')(
+                                              info.dueAmount
+                                            )
+                                        }}
+                                      />
+                                      {props.errors.currencyCode &&
+                                        props.touched.currencyCode && (
+                                          <div className="invalid-feedback">
+                                            {props.errors.currencyCode}
+                                          </div>
+                                        )}
+                                    </FormGroup>
+  </Col>
+</Row>}
+
+
 
                             <Row>
                               <Col lg={8}>

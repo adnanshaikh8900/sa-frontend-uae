@@ -562,7 +562,12 @@ class VatReports extends React.Component {
 			// .format('LL')
 			: '-';
 	};
+	
+	renderVATNumber = (cell, row) => {
+		
 
+		return (<>{row.vatNumber}</>);
+	};
 	renderTaxReturns = (cell, row) => {
 		let dateArr = cell ? cell.split("-") : [];
 
@@ -837,9 +842,10 @@ class VatReports extends React.Component {
 														>
 															VAT Report No.
 														</TableHeaderColumn>
+														
 														<TableHeaderColumn
 															tdStyle={{ whiteSpace: 'normal' }}
-															// isKey
+															
 															dataField="taxReturns"
 															dataSort
 														    dataFormat={this.renderTaxReturns}
@@ -850,15 +856,17 @@ class VatReports extends React.Component {
 														<TableHeaderColumn
 															width='10%'
 															dataField="totalTaxPayable"
+															dataAlign='right'
 															dataSort
-															// dataFormat={this.renderAmount}
+															dataFormat={this.renderAmount}
 															className="table-header-bg"
 														>
 														    Total VAT Payable
 														</TableHeaderColumn>
-													 <TableHeaderColumn
+													 	<TableHeaderColumn
 															dataField="totalTaxReclaimable"
 															// columnTitle={this.customEmail}
+															dataAlign='right'
 															dataSort
 															dataFormat={this.renderAmount}
 															className="table-header-bg"
@@ -886,6 +894,7 @@ class VatReports extends React.Component {
 															<TableHeaderColumn
 															dataField="balanceDue"
 															// columnTitle={this.customEmail}
+															dataAlign='right'
 															dataSort
 															dataFormat={this.renderAmount}
 															className="table-header-bg"

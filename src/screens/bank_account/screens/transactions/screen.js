@@ -1121,6 +1121,7 @@ class BankTransactions extends React.Component {
 																this.props.location.state.bankAccountId
 																	? this.props.location.state.bankAccountId
 																	: '',
+															currency:this.props.location.state.currency		
 														},
 													)
 												}

@@ -842,16 +842,7 @@ class VatReports extends React.Component {
 														>
 															VAT Report No.
 														</TableHeaderColumn>
-														<TableHeaderColumn
-															tdStyle={{ whiteSpace: 'normal' }}
-															isKey
-															dataSort
-															dataField="VATnumber"
-														    dataFormat={this.renderVATNumber}
-															className="table-header-bg"
-														>
-															VAT Number
-														</TableHeaderColumn>
+														
 														<TableHeaderColumn
 															tdStyle={{ whiteSpace: 'normal' }}
 															

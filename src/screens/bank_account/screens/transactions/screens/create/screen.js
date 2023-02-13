@@ -1420,9 +1420,7 @@ getVatReportListForBank=(id)=>{
                                       
                                       this.totalAmount("");
                                     }}
-                                    placeholder={
-                                      strings.Select + " " + strings.Type
-                                    }
+                                    placeholder={strings.Select + " " + strings.TransactionType}
                                     id="coaCategoryId"
                                     name="coaCategoryId"
                                     className={
@@ -1746,9 +1744,7 @@ getVatReportListForBank=(id)=>{
                                   </Col>
                                 </Row>
                               )}
-
-
-{props.values.coaCategoryId &&
+                            {props.values.coaCategoryId &&
                               props.values.coaCategoryId.label ===
                               "Expense" && props.values?.vatId?.value===1 && (
                                 <Row>
@@ -1829,11 +1825,10 @@ getVatReportListForBank=(id)=>{
                                   </Col>
                                 </Row>
                               )}
-
-<Row>
+                        <Row>
 													{props.values.coaCategoryId.label ===
-                            "Expense" && (<Col>
-															
+                            "Expense" && (
+                            <Col>	
 															<Checkbox
 																id="isReverseChargeEnabled"
 																checked={this.state.isReverseChargeEnabled}
@@ -2439,7 +2434,7 @@ getVatReportListForBank=(id)=>{
                                           </div>
                                         </FormGroup>
                                       </Col>
-  }
+                                      }
                                       <Col lg={1} >
                                         <FormGroup className="font-weight-bold " style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
 
@@ -2581,10 +2576,6 @@ getVatReportListForBank=(id)=>{
                                       );
                                     }
                                   )}
-
-
-
-
                                   {props.values?.invoiceIdList?.length > 0 && (
                                     <>
                                       <Row
@@ -2596,8 +2587,6 @@ getVatReportListForBank=(id)=>{
                                          
                                         }}
                                       >
-                                        
-                                        
                                         <Col lg={2} 
                                         style={{float:'right'}}
                                         >

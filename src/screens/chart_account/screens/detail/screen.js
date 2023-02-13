@@ -64,11 +64,12 @@ class DetailChartAccount extends React.Component {
 			dialog: false,
 			currentData: {},
 			chartOfAccountCategory: [],
-			coaId: '',
+			coaId: null,
 			disabled: false,
 			disabled1:false,
 			loadingMsg:"Loading...",
-			disableLeavePage:false
+			disableLeavePage:false,
+			childRecordsPresent:false
 		};
 		// this.regExAlpha = /^[a-zA-Z]+$/;
 		this.regExAlpha = /^[A-Za-z0-9 !@#$%^&*)(+=._-]+$/;
@@ -149,6 +150,18 @@ class DetailChartAccount extends React.Component {
 		toast.success(msg, {
 			position: toast.POSITION.TOP_RIGHT,
 		});
+	};
+
+	checkChildActivitiesForCoaId = (id) => {
+		this.props.chartOfAccontActions
+			.getExplainedTransactionCountForTransactionCategory(this.state.coaId)
+			.then((res) => {
+				if (res.data > 0) {
+				this.setState({childRecordsPresent:true})
+				} else {
+            this.setState({childRecordsPresent:false})
+				}
+			});
 	};
 
 	deleteChartAccount = () => {
@@ -323,14 +336,14 @@ class DetailChartAccount extends React.Component {
                                 </FormGroup> */}
 															<FormGroup>
 																<Label htmlFor="transactionCategoryName">
-																	<span className="text-danger">* </span> {strings.Name}
+																	<span className="text-danger">* </span> {strings.chartOfAccountName}
 																</Label>
 																<Input
 																	type="text"
 																	maxLength='50'
 																	id="transactionCategoryName"
 																	name="transactionCategoryName"
-																	placeholder={strings.Enter+strings.Name}
+																	placeholder={strings.Enter+strings.chartOfAccountName}
 																	onChange={(option) => {
 																		if (
 																			option.target.value === '' ||
@@ -358,7 +371,7 @@ class DetailChartAccount extends React.Component {
 															</FormGroup>
 															<FormGroup>
 																<Label htmlFor="chartOfAccount">
-																	<span className="text-danger">* </span>{strings.Type}
+																	<span className="text-danger">* </span>{strings.accountType}
 																</Label>
 																{/* <Select
                                     className="select-default-width"
@@ -385,6 +398,7 @@ class DetailChartAccount extends React.Component {
 																	id="chartOfAccount"
 																	name="chartOfAccount"
 																	value={props.values.chartOfAccount}
+																	isDisabled={this.state.childRecordsPresent}
 																	// size="1"
 																	onChange={(val) => {
 																		props.handleChange('chartOfAccount')(val);
@@ -405,7 +419,7 @@ class DetailChartAccount extends React.Component {
 																		</div>
 																	)}
 															</FormGroup>
-
+												<span style={{fontWeight:'bold'}}>Note: A Chart Of Account cannot be edited after a document or transaction has been created using it.</span>
 															<Row>
 																<Col
 																	lg={12}

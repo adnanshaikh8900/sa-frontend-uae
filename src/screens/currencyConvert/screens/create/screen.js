@@ -230,10 +230,11 @@ class CreateCurrencyConvert extends React.Component {
 												}}
 												validationSchema={Yup.object().shape({
 													currencyCode: Yup.string().required(
-														'Exchange currency is required',
+														strings.ExchangeCurrencyRequired
 													),
 													exchangeRate: Yup.string()
-														.required('Exchange rate is required')
+														.required(
+															strings.ExchangeRateRequired)
 														.test(
 														'exchangeRate',
 														'Exchange rate should not be equal to 1',

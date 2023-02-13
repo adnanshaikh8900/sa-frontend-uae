@@ -669,12 +669,12 @@ class VatReports extends React.Component {
 												<i class="fas fa-plus"></i> Generate VAT Report
 											</Button>
 
-											{/* <Button color="primary" className="btn-square  pull-right"
+											<Button color="primary" className="btn-square  pull-right"
 												onClick={() => {
 													this.setState({ openVatSettingModal: true })
 												}}>
 												<i className="fa"></i>Company Details
-											</Button>  */}
+											</Button> 
 
 										</FormGroup>
 									</div>
@@ -833,7 +833,7 @@ class VatReports extends React.Component {
 														: 0,
 												}}											
 												>
-													{/* <TableHeaderColumn
+													<TableHeaderColumn
 															tdStyle={{ whiteSpace: 'normal' }}
 															isKey
 															dataField="vatNumber"
@@ -841,7 +841,7 @@ class VatReports extends React.Component {
 															className="table-header-bg"
 														>
 															VAT Report No.
-														</TableHeaderColumn> */}
+														</TableHeaderColumn>
 														<TableHeaderColumn
 															tdStyle={{ whiteSpace: 'normal' }}
 															isKey
@@ -865,15 +865,17 @@ class VatReports extends React.Component {
 														<TableHeaderColumn
 															width='10%'
 															dataField="totalTaxPayable"
+															dataAlign='right'
 															dataSort
-															// dataFormat={this.renderAmount}
+															dataFormat={this.renderAmount}
 															className="table-header-bg"
 														>
 														    Total VAT Payable
 														</TableHeaderColumn>
-													 <TableHeaderColumn
+													 	<TableHeaderColumn
 															dataField="totalTaxReclaimable"
 															// columnTitle={this.customEmail}
+															dataAlign='right'
 															dataSort
 															dataFormat={this.renderAmount}
 															className="table-header-bg"
@@ -901,6 +903,7 @@ class VatReports extends React.Component {
 															<TableHeaderColumn
 															dataField="balanceDue"
 															// columnTitle={this.customEmail}
+															dataAlign='right'
 															dataSort
 															dataFormat={this.renderAmount}
 															className="table-header-bg"

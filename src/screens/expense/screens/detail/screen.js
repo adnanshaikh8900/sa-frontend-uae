@@ -107,7 +107,7 @@ class DetailExpense extends React.Component {
 			disabled1:false,
 			exclusiveVat:true,
 			expenseType:true,
-			isVatClaimable:true,
+			isVatClaimable:false,
 			isReverseChargeEnabled:false,
 			taxTreatmentId:'',
 			showReverseCharge:false,
@@ -256,7 +256,7 @@ class DetailExpense extends React.Component {
 								exchangeRate:res?.data?.exchangeRate ? res.data.exchangeRate : '',
 								payee: res.data.payee ? res.data.payee : '',
 								expenseType: res.data.expenseType ? true : false,
-								isVatClaimable: res.data.expenseType ? false : true,
+								isVatClaimable: res.data.expenseType ? res.data.expenseType : false,
 								showPlacelist:res.data.taxTreatmentId !== 8 ? true : false,
 								lockPlacelist:res.data.taxTreatmentId === 7 ? true : false,
 								taxTreatmentId:res.data.taxTreatmentId ? res.data.taxTreatmentId : '',
@@ -891,7 +891,7 @@ class DetailExpense extends React.Component {
 															'Expense date is required',
 														),
 														taxTreatmentId: Yup.string().required(
-															'Tax treatment is required',
+															'Tax  is required',
 														),
 														currency: Yup.string().required(
 															'Currency is required',
@@ -1165,7 +1165,7 @@ class DetailExpense extends React.Component {
 																	<span className='mr-4'>{strings.NonClaimable}</span>}
 
 																<Switch
-																	checked={this.state.expenseType}
+																	checked={this.state.isVatClaimable}
 																	onChange={(expenseType) => {
 																		props.handleChange('expenseType')(expenseType);
 																		this.setState({ expenseType, }, () => { },);

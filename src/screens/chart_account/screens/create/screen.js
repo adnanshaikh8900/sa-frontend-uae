@@ -152,10 +152,7 @@ class CreateChartAccount extends React.Component {
 					} else {
 						this.props.history.push('/admin/master/chart-account');
 						this.setState({ loading:false,});
-					
-						
-						
-						
+
 					}
 				}
 			})
@@ -213,19 +210,27 @@ class CreateChartAccount extends React.Component {
 												}}
 												validate={(values) => {
 													let errors = {};
-													if (this.state.exist === true) {
+													// if (this.state.exist === true) {
+													// 	errors.transactionCategoryName =
+													// 		'Chart of account name is already exist';
+													// }
+													if (!values.transactionCategoryName) {
+														errors.transactionCategoryName = 'Name is required';
+													}
+													else if (this.state.exist === true) {
 														errors.transactionCategoryName =
-															'Chart of account name is already exist';
+															'Name already exist';
 													}
 													return errors;
 												}}
-												validationSchema={Yup.object().shape({
+												validationSchema={
+													Yup.object().shape({
 													// transactionCategoryCode: Yup.string()
-													//   .required("Code Name is required"),
-													transactionCategoryName: Yup.string()
-														.required('Name is required')
-														.min(2, 'Name is too Short!')
-														.max(50, 'Name is too Long!'),
+													//   .required("Name is required"),
+													// transactionCategoryName: Yup.string()
+													// 	.required('Name is required')
+													// 	.min(2, 'Name is too Short!')
+													// 	.max(50, 'Name is too Long!'),
 													chartOfAccount: Yup.string().required(
 														'Type is required',
 													),
@@ -233,7 +238,7 @@ class CreateChartAccount extends React.Component {
 											>
 												{(props) => (
 													<Form onSubmit={props.handleSubmit} name="simpleForm">
-														{/* <FormGroup>
+							{/* <FormGroup>
                               <Label htmlFor="transactionCategoryCode">Code</Label>
                               <Input
                                 type="text"
@@ -254,13 +259,14 @@ class CreateChartAccount extends React.Component {
                             </FormGroup> */}
 														<FormGroup>
 															<Label htmlFor="name">
-																<span className="text-danger">* </span>{strings.Name}
+																<span className="text-danger">* </span>{strings.chartOfAccountName}
 															</Label>
 															<Input
-																type="text" maxLength='50'
+																type="text" 
+																maxLength='50'
 																id="transactionCategoryName"
 																name="transactionCategoryName"
-																placeholder={strings.Enter+strings.Name}
+																placeholder={strings.Enter+strings.chartOfAccountName}
 																onChange={(option) => {
 																	if (
 																		option.target.value === '' ||
@@ -289,9 +295,9 @@ class CreateChartAccount extends React.Component {
 														</FormGroup>
 														<FormGroup>
 															<Label htmlFor="name">
-																<span className="text-danger">* </span>{strings.Type}
+																<span className="text-danger">* </span>{strings.accountType}
 															</Label>
-															{/* <Select
+							{/* <Select
                                 className="select-default-width"
                                 options={transaction_type_list ? selectOptionsFactory.renderOptions('chartOfAccountName', 'chartOfAccountId', transaction_type_list,'Type') : ''}
                                 value={props.values.chartOfAccount}
@@ -317,7 +323,7 @@ class CreateChartAccount extends React.Component {
 															<Select
 																id="chartOfAccount"
 																name="chartOfAccount"
-																placeholder={strings.Select+strings.Type}
+																placeholder={strings.Select+strings.accountType}
 																value={props.values.chartOfAccount}
 																// size="1"
 																onChange={(val) => {
@@ -339,6 +345,7 @@ class CreateChartAccount extends React.Component {
 																	</div>
 																)}
 														</FormGroup>
+											<span style={{fontWeight:'bold'}}>Note: A Chart Of Account cannot be edited after a document or transaction has been created using it.</span>
 														<FormGroup className="text-right mt-5">
 															<Button
 																type="button"

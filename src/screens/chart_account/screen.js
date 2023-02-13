@@ -469,7 +469,7 @@ class ChartAccount extends React.Component {
 														target="_blank"
 													/>
 												)}
-												<Button 	color="primary"	className="mr-2 btn-square"
+												<Button 	color="primary"	className="btn-square  pull-right"
 													onClick={() => {
 														let { filterData } = this.state;
 														const paginationData = {
@@ -524,12 +524,12 @@ class ChartAccount extends React.Component {
 											</ButtonGroup>
 										</div>)}
 										{	this.state.hideForPrint==false&&(<div className="py-3">
-											{/* <h5>{strings.Filter}: </h5>
+											<h5>{strings.Filter}: </h5>
 											<form>
 												<Row>
 													<Col lg={3} className="mb-1">
 														<Input
-														maxLength="25"
+															maxLength="25"
 															type="text"
 															placeholder={strings.AccountCode}
 															value={filterData.transactionCategoryCode}
@@ -543,7 +543,7 @@ class ChartAccount extends React.Component {
 													</Col>
 													<Col lg={3} className="mb-2">
 														<Input
-														maxLength="30"
+															maxLength="30"
 															type="text"
 															placeholder={strings.AccountName}
 															value={filterData.transactionCategoryName}
@@ -608,7 +608,7 @@ class ChartAccount extends React.Component {
 														
 													</Col>
 												</Row>
-											</form> */}
+											</form>
 										</div>)}
 										
 										<div  id="section-to-print">
@@ -649,7 +649,7 @@ class ChartAccount extends React.Component {
 													dataSort
 													className="table-header-bg"
 												>
-													 {strings.ACCOUNTCODE}
+													{strings.ACCOUNTCODE}
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													tdStyle={{ whiteSpace: 'normal' }}

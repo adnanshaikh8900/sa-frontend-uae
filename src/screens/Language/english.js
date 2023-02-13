@@ -412,8 +412,7 @@ const en = {
       CreateBankTransaction:"Create Bank Transaction",			
       TransactionType:"Transaction Type",			
       TransactionDate:"Transaction Date",								
-      ReferenceNumber:"Reference Number",			
-
+      ReferenceNumber:"Reference Number",
 //Journals
       UpdateJournal:"Update Journal",
       Journal:"Journal",				

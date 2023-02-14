@@ -998,7 +998,7 @@ renderName=(cell,row)=>{
 															<Row>
 																<Col lg={4}>
 																	<FormGroup check inline className="mb-3">
-																		<Label className="productlabel"> {strings.Type}
+																		<Label className="productlabel"> {strings.ProductType}
 																		<i
 																				id="ProductTypetip"
 																				className="fa fa-question-circle ml-1"

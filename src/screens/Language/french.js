@@ -501,7 +501,7 @@ const fr = {
       chartOfAccountName:"Nom du plan comptable",
       accountType:"Type de compte",		
       Name:"Nom",		
-      Type:"type de produit",
+      Type:"type",
       Chart_of_Account:"Plan comptable",		
 
 //Contact
@@ -550,6 +550,7 @@ const fr = {
       VATCategoryRequired:"VAT la catégorie est obligatoire",
       SellingPriceRequired:"Le prix de vente est requis",
       PurchasePriceRequired:"Le prix d'achat est requis",
+      ProductType:"type de produit",
 
 
 

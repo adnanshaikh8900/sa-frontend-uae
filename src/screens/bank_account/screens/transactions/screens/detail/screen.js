@@ -401,7 +401,7 @@ class DetailBankTransaction extends React.Component {
                                           )('');
                                         }
                                       }}
-                                      placeholder={strings.Select+" "+strings.Type}
+                                      placeholder={strings.Select+" "+strings.TransactionType}
                                       id="chartOfAccountId"
                                       name="chartOfAccountId"
                                       className={
@@ -469,7 +469,7 @@ class DetailBankTransaction extends React.Component {
                                     </Label>
                                     <Input
                                       type="number"
-min="0"
+                                      min="0"
                                       id="transactionAmount"
                                       name="transactionAmount"
                                       placeholder={strings.Amount}

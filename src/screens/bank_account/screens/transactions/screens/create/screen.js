@@ -102,22 +102,22 @@ class CreateBankTransaction extends React.Component {
         invoiceIdList: [],
         payrollListIds: "",
         vatId: "",
-        expenseCategory:"",
+        expenseCategory: "",
         vendorId: "",
         employeeId: "",
         currencyCode: "",
         exchangeRate: [],
-        exclusiveVat:false,
-        isReverseChargeEnabled:false
+        exclusiveVat: false,
+        isReverseChargeEnabled: false,
       },
-      transactionVatAmount:'',
-      transactionExpenseAmount:'',
+      transactionVatAmount: "",
+      transactionExpenseAmount: "",
       expenseType: true,
       loadingMsg: "Loading...",
       disableLeavePage: false,
       transactionCategoryList: [],
       moneyCategoryList: [],
-      VATlist:[],
+      VATlist: [],
       totalAmount: "",
       categoriesList: [
         {
@@ -147,11 +147,15 @@ class CreateBankTransaction extends React.Component {
               value: 100,
               label: "Supplier Invoice",
             },
-            {...(this.props.location.state?.currency==="AED" ? {
-              value: 16,
-              label: "VAT Payment",
-            }:{})},
-          ].filter((i)=>i.label),
+            {
+              ...(this.props.location.state?.currency === "AED"
+                ? {
+                    value: 16,
+                    label: "VAT Payment",
+                  }
+                : {}),
+            },
+          ].filter((i) => i.label),
         },
         {
           label: "Money Received",
@@ -184,11 +188,15 @@ class CreateBankTransaction extends React.Component {
               value: 8,
               label: "Money Received Others",
             },
-            {...(this.props.location.state?.currency==="AED" ? {
-              value: 17,
-              label: "VAT Claim",
-            }:{})},
-          ].filter((i)=>i.value),
+            {
+              ...(this.props.location.state?.currency === "AED"
+                ? {
+                    value: 17,
+                    label: "VAT Claim",
+                  }
+                : {}),
+            },
+          ].filter((i) => i.value),
         },
       ],
       cat_label: "",
@@ -262,7 +270,7 @@ class CreateBankTransaction extends React.Component {
                 : "",
               bankCurrency: res.bankAccountCurrency ? res : "",
             },
-            () => { }
+            () => {}
           );
         })
         .catch((err) => {
@@ -274,18 +282,24 @@ class CreateBankTransaction extends React.Component {
     }
   };
   calculateVAT = (transactionAmount, vatId, exclusiveVat) => {
-    if((transactionAmount) && (vatId === 1) && exclusiveVat){
+    if (transactionAmount && vatId === 1 && exclusiveVat) {
       let transactionVatAmount = 0;
       let transactionExpenseAmount = 0;
       transactionVatAmount = transactionAmount * 0.05;
       transactionExpenseAmount = transactionVatAmount + transactionAmount;
-      this.setState({transactionVatAmount:transactionVatAmount,transactionExpenseAmount:transactionExpenseAmount})
-    }else if((transactionAmount) && (vatId === 1) && !exclusiveVat){
+      this.setState({
+        transactionVatAmount: transactionVatAmount,
+        transactionExpenseAmount: transactionExpenseAmount,
+      });
+    } else if (transactionAmount && vatId === 1 && !exclusiveVat) {
       let transactionVatAmount = 0;
       let transactionExpenseAmount = 0;
       transactionVatAmount = (transactionAmount * 5) / 105;
-      transactionExpenseAmount = transactionAmount - transactionVatAmount ;
-      this.setState({transactionVatAmount:transactionVatAmount,transactionExpenseAmount:transactionExpenseAmount})
+      transactionExpenseAmount = transactionAmount - transactionVatAmount;
+      this.setState({
+        transactionVatAmount: transactionVatAmount,
+        transactionExpenseAmount: transactionExpenseAmount,
+      });
     }
   };
   handleFileChange = (e, props) => {
@@ -293,20 +307,19 @@ class CreateBankTransaction extends React.Component {
     let reader = new FileReader();
     let file = e.target.files[0];
     if (file) {
-      reader.onloadend = () => { };
+      reader.onloadend = () => {};
       reader.readAsDataURL(file);
       props.setFieldValue("attachment", file, true);
     }
   };
 
-getVatReportListForBank=(id)=>{
-		this.props.transactionCreateActions
-    .getVatReportListForBank(id)
-		.then((res)=>{
-		this.setState({VATlist:res.data})
-		})
-	}
-
+  getVatReportListForBank = (id) => {
+    this.props.transactionCreateActions
+      .getVatReportListForBank(id)
+      .then((res) => {
+        this.setState({ VATlist: res.data });
+      });
+  };
 
   handleSubmit = (data, resetForm) => {
     this.setState({ disabled: true, loading: true, disableLeavePage: true });
@@ -336,14 +349,13 @@ getVatReportListForBank=(id)=>{
       setexcessorshortamount,
       isReverseChargeEnabled,
       exclusiveVat,
-      VATReportId
+      VATReportId,
     } = data;
     this.calculateVAT(transactionAmount, vatId.value, exclusiveVat);
     if (
       (invoiceIdList && coaCategoryId.label === "Sales") ||
       (invoiceIdList && coaCategoryId.label === "Supplier Invoice")
     ) {
-
       var result = invoiceIdList.map((o, index) => ({
         id: o.value,
         remainingInvoiceAmount: 0,
@@ -375,36 +387,49 @@ getVatReportListForBank=(id)=>{
           : coaCategoryId.value
         : ""
     );
-    formData.append("exchangeRate", exchangeRate.lenght > 0 ? exchangeRate[0] : 1);
+    formData.append(
+      "exchangeRate",
+      exchangeRate.lenght > 0 ? exchangeRate[0] : 1
+    );
     if (transactionCategoryId) {
       formData.append(
         "transactionCategoryId",
         transactionCategoryId ? transactionCategoryId.value : ""
       );
     }
-   if (expenseCategory && coaCategoryId.label === "Expense") {
+    if (expenseCategory && coaCategoryId.label === "Expense") {
       formData.append(
         "expenseCategory",
         expenseCategory ? expenseCategory.value : ""
       );
-
-   }
+    }
     if (
       (vatId && coaCategoryId.value === 10) ||
       (vatId && coaCategoryId.label === "Expense")
     ) {
       formData.append("vatId", vatId ? vatId.value : "");
-      formData.append("transactionVatAmount", this.state.transactionVatAmount ? this.state.transactionVatAmount : "");
-      formData.append("transactionExpenseAmount", this.state.transactionExpenseAmount ? this.state.transactionExpenseAmount : "");
-      formData.append('bankGenerated',true)
-      formData.append("isReverseChargeEnabled",  isReverseChargeEnabled);
-      formData.append("exclusiveVat",  exclusiveVat);
-      formData.append('convertedAmount',this.expenceconvert(transactionAmount))
+      formData.append(
+        "transactionVatAmount",
+        this.state.transactionVatAmount ? this.state.transactionVatAmount : ""
+      );
+      formData.append(
+        "transactionExpenseAmount",
+        this.state.transactionExpenseAmount
+          ? this.state.transactionExpenseAmount
+          : ""
+      );
+      formData.append("bankGenerated", true);
+      formData.append("isReverseChargeEnabled", isReverseChargeEnabled);
+      formData.append("exclusiveVat", exclusiveVat);
+      formData.append(
+        "convertedAmount",
+        this.expenceconvert(transactionAmount)
+      );
       let result = this.props.currency_convert_list.filter((obj) => {
-				return obj.currencyCode ===this.state.bankCurrency.bankAccountCurrency
-			  });
-			  const exchange= result[0].exchangeRate
-        formData.append('exchangeRate', exchange || 1 )
+        return obj.currencyCode === this.state.bankCurrency.bankAccountCurrency;
+      });
+      const exchange = result[0].exchangeRate;
+      formData.append("exchangeRate", exchange || 1);
     }
     if (
       (currencyCode && coaCategoryId.label === "Expense") ||
@@ -428,8 +453,6 @@ getVatReportListForBank=(id)=>{
       formData.append("vendorId", vendorId ? vendorId.value : "");
     }
 
-    
-
     if (vendorId && coaCategoryId.label === "Supplier Invoice") {
       formData.append("vendorId", vendorId.value ? vendorId.value : vendorId);
     }
@@ -449,32 +472,37 @@ getVatReportListForBank=(id)=>{
         "explainParamListStr",
         invoiceIdList ? JSON.stringify(result) : ""
       );
-            
-     
-     
+
       formData.append(
         "explainedInvoiceListString",
-        invoiceIdList ?JSON.stringify(invoiceIdList.map((i)=>{
-                  
-         return {
-          invoiceId:i.value,
-          invoiceAmount:i.dueAmount,
-          convertedInvoiceAmount:i.convertedInvoiceAmount,
-          explainedAmount:i.explainedAmount,
-          exchangeRate:i.exchangeRate,
-          partiallyPaid:i.pp,
-          nonConvertedInvoiceAmount:i.explainedAmount/i.exchangeRate,
-          convertedToBaseCurrencyAmount:i.convertedToBaseCurrencyAmount,
-         } })) : []
-      );
-    
-      formData.append(
-        "exchangeGainOrLossId",this.setexcessorshortamount().data<0?103:this.setexcessorshortamount().data>0?79:0
-      );
-      formData.append(
-        "exchangeGainOrLoss",this.setexcessorshortamount().data
+        invoiceIdList
+          ? JSON.stringify(
+              invoiceIdList.map((i) => {
+                return {
+                  invoiceId: i.value,
+                  invoiceAmount: i.dueAmount,
+                  convertedInvoiceAmount: i.convertedInvoiceAmount,
+                  explainedAmount: i.explainedAmount,
+                  exchangeRate: i.exchangeRate,
+                  partiallyPaid: i.pp,
+                  nonConvertedInvoiceAmount: i.explainedAmount / i.exchangeRate,
+                  convertedToBaseCurrencyAmount:
+                    i.convertedToBaseCurrencyAmount,
+                };
+              })
+            )
+          : []
       );
 
+      formData.append(
+        "exchangeGainOrLossId",
+        this.setexcessorshortamount().data < 0
+          ? 103
+          : this.setexcessorshortamount().data > 0
+          ? 79
+          : 0
+      );
+      formData.append("exchangeGainOrLoss", this.setexcessorshortamount().data);
     }
     formData.append("reference", reference ? reference : "");
     if (this.uploadFile?.files?.[0]) {
@@ -491,15 +519,16 @@ getVatReportListForBank=(id)=>{
       );
     }
 
-
-    if(coaCategoryId.label ==='VAT Payment' ||
-                            coaCategoryId.label ==='VAT Claim')
-                {  const info=this.state.VATlist.find((i)=>i.id===VATReportId.value)  
-                  formData.append(
-                    "explainedVatPaymentListString",
-                    info ? JSON.stringify([info]) : ""
-                  );
-                  }
+    if (
+      coaCategoryId.label === "VAT Payment" ||
+      coaCategoryId.label === "VAT Claim"
+    ) {
+      const info = this.state.VATlist.find((i) => i.id === VATReportId.value);
+      formData.append(
+        "explainedVatPaymentListString",
+        info ? JSON.stringify([info]) : ""
+      );
+    }
     this.props.transactionCreateActions
       .createTransaction(formData)
       .then((res) => {
@@ -512,7 +541,7 @@ getVatReportListForBank=(id)=>{
           if (this.state.createMore) {
             this.setState({
               createMore: false,
-              disabled:false
+              disabled: false,
             });
           } else {
             this.props.history.push("/admin/banking/bank-account/transaction", {
@@ -526,7 +555,11 @@ getVatReportListForBank=(id)=>{
           "error",
           err && err.data ? err.data.message : "Something Went Wrong"
         );
-        this.setState({ disabled: false, loading: false, disableLeavePage: false });
+        this.setState({
+          disabled: false,
+          loading: false,
+          disableLeavePage: false,
+        });
       });
   };
 
@@ -546,7 +579,7 @@ getVatReportListForBank=(id)=>{
   totalAmount(option) {
     let totalInvoiceAmount = 0;
     console.log(option);
-  
+
     if (option && option != "") {
       option.map((row) => {
         let listData = row.amount;
@@ -557,16 +590,16 @@ getVatReportListForBank=(id)=>{
         (totalAmount, invoice) => totalAmount + invoice.amount,
         0
       );
-      
+
       this.setState(
         { totalAmount: amount, totalInvoiceAmount: totalInvoiceAmount },
-        () => { }
+        () => {}
       );
       console.log(totalInvoiceAmount, " : totalInvoiceAmount");
     } else {
       this.setState(
         { totalAmount: 0, totalInvoiceAmount: totalInvoiceAmount },
-        () => { }
+        () => {}
       );
     }
   }
@@ -609,7 +642,6 @@ getVatReportListForBank=(id)=>{
     this.props.transactionActions.getCustomerInvoiceList(data);
   };
   getSuggestionInvoicesFotVend = (option, amount, invoice_list) => {
-    ;
     const data = {
       amount: amount,
       id: option,
@@ -628,7 +660,6 @@ getVatReportListForBank=(id)=>{
   };
 
   invoiceIdList = (option) => {
-  
     this.setState({
       initValue: {
         ...this.state.initValue,
@@ -650,7 +681,6 @@ getVatReportListForBank=(id)=>{
         invoiceCurrency: customerinvoice?.[0].currencyCode,
       },
       () => {
-        ;
         console.log(props.values.invoiceIdList);
         // this.getInvoices(
         // 	props.values.customerId,
@@ -792,34 +822,26 @@ getVatReportListForBank=(id)=>{
       }
     }
 
-    ;
-
     this.formRef.current.setFieldValue(
       "exchangeRate",
       [...this.formRef.current.state.values.exchangeRate, exchange],
       true
     );
 
-
     //   this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
   };
 
+  getVatListByIds = (vatIds) => {
+    const { vat_list } = this.props;
+    const finalarr = vat_list.filter((i) => vatIds.includes(i.id));
 
-
-
-  getVatListByIds=(vatIds)=>{
-		const	{vat_list}=this.props	
-		const finalarr=vat_list.filter((i)=>vatIds.includes(i.id))
-  
-		return finalarr;
-	}
-
+    return finalarr;
+  };
 
   setCurrency = (value) => {
     let result = this.props.currency_convert_list.find((obj) => {
       return obj.currencyCode === value;
     });
-    ;
     this.formRef.current.setFieldValue(
       "curreancyname",
       result.currencyIsoCode,
@@ -828,11 +850,12 @@ getVatReportListForBank=(id)=>{
   };
 
   setcustomexchnage = (customerinvoice) => {
-
-   
-      let exchange;
-    let convertor=this.state.bankCurrency.bankAccountCurrency===this.state.basecurrency.currencyCode
-    ?customerinvoice:this.state.bankCurrency.bankAccountCurrency
+    let exchange;
+    let convertor =
+      this.state.bankCurrency.bankAccountCurrency ===
+      this.state.basecurrency.currencyCode
+        ? customerinvoice
+        : this.state.bankCurrency.bankAccountCurrency;
     let result = this.props.currency_convert_list.filter((obj) => {
       return obj.currencyCode === convertor;
     });
@@ -842,162 +865,174 @@ getVatReportListForBank=(id)=>{
     // if(this.state.bankCurrency.bankAccountCurrency=== this.state.invoiceCurrency )
     //  return this.formRef.current.setFieldValue('exchangeRate',1/result[0].exchangeRate, true);
 
-    if (
-      customerinvoice === this.state.bankCurrency.bankAccountCurrency
-    ) {
+    if (customerinvoice === this.state.bankCurrency.bankAccountCurrency) {
       exchange = 1;
       //this.formRef.current.setFieldValue('exchangeRate', 1, true);
     } else {
-      if(this.state.basecurrency.currencyCode===customerinvoice)
-      exchange= 1/result[0].exchangeRate
-      else exchange= result[0].exchangeRate
+      if (this.state.basecurrency.currencyCode === customerinvoice)
+        exchange = 1 / result[0].exchangeRate;
+      else exchange = result[0].exchangeRate;
     }
-    
 
-    return exchange
-  }
+    return exchange;
+  };
 
-  expenceconvert=(amount)=>{
-    
+  expenceconvert = (amount) => {
     let result = this.props.currency_convert_list.filter((obj) => {
-      return obj.currencyCode ===this.state.bankCurrency.bankAccountCurrency
+      return obj.currencyCode === this.state.bankCurrency.bankAccountCurrency;
     });
-    const exchange= result[0].exchangeRate
+    const exchange = result[0].exchangeRate;
 
-    
-    return amount=amount*exchange
-  }
+    return (amount = amount * exchange);
+  };
 
-
-  basecurrencyconvertor=(customerinvoice)=>{
+  basecurrencyconvertor = (customerinvoice) => {
     let exchange;
-    if(this.state.bankCurrency.bankAccountCurrency!==this.state.basecurrency.currencyCode)
-    {let result = this.props.currency_convert_list.filter((obj) => {
-      return obj.currencyCode === customerinvoice;
-    });
-    exchange= result[0].exchangeRate
-  } else {
-    exchange= 1
-  }
-    return exchange
-  }
+    if (
+      this.state.bankCurrency.bankAccountCurrency !==
+      this.state.basecurrency.currencyCode
+    ) {
+      let result = this.props.currency_convert_list.filter((obj) => {
+        return obj.currencyCode === customerinvoice;
+      });
+      exchange = result[0].exchangeRate;
+    } else {
+      exchange = 1;
+    }
+    return exchange;
+  };
   setexchnagedamount = (option, amount) => {
     if (option?.length > 0) {
-      const transactionAmount = amount || this.formRef.current.state.values.transactionAmount
-      const exchangerate = this.formRef.current.state.values?.exchangeRate
-    
-      const invoicelist = [...option]
-      const total = invoicelist.reduce((accu, curr, index) => curr.dueAmount * exchangerate[index])
-      let remainingcredit = transactionAmount
+      const transactionAmount =
+        amount || this.formRef.current.state.values.transactionAmount;
+      const exchangerate = this.formRef.current.state.values?.exchangeRate;
+
+      const invoicelist = [...option];
+      const total = invoicelist.reduce(
+        (accu, curr, index) => curr.dueAmount * exchangerate[index]
+      );
+      let remainingcredit = transactionAmount;
       const finaldata = invoicelist?.map((i, ind) => {
-        let localexe = 0
-      
-        if (i.exchnageRate === undefined) localexe = this.setcustomexchnage(i.currencyCode)
-        else localexe = i.exchnageRate
-        let finalcredit = 0
-        let localremainamount = remainingcredit
+        let localexe = 0;
+
+        if (i.exchnageRate === undefined)
+          localexe = this.setcustomexchnage(i.currencyCode);
+        else localexe = i.exchnageRate;
+        let finalcredit = 0;
+        let localremainamount = remainingcredit;
         if (remainingcredit > 0) {
-          localremainamount = remainingcredit - (i.dueAmount * localexe)
+          localremainamount = remainingcredit - i.dueAmount * localexe;
 
           if (localremainamount >= 0) {
-            finalcredit = (i.dueAmount * localexe)
+            finalcredit = i.dueAmount * localexe;
           }
           if (localremainamount < 0) {
-            finalcredit = (i.dueAmount * localexe) + localremainamount
+            finalcredit = i.dueAmount * localexe + localremainamount;
           }
-          remainingcredit = localremainamount
+          remainingcredit = localremainamount;
         }
-        const basecurrency=this.basecurrencyconvertor(i.currencyCode)
-        
+        const basecurrency = this.basecurrencyconvertor(i.currencyCode);
+
         return {
           ...i,
 
           invoiceId: i.value,
           invoiceAmount: i.dueAmount,
           convertedInvoiceAmount: i.dueAmount * localexe,
-          explainedAmount:  i.dueAmount * localexe,
+          explainedAmount: i.dueAmount * localexe,
           exchangeRate: localexe,
           pp: false,
-          convertedToBaseCurrencyAmount:(i.dueAmount * localexe)*basecurrency
-        }
-      })
-     
-      this.formRef.current.setFieldValue('invoiceIdList', finaldata)
-    
-      return finaldata
-    }
-    else {
-      this.formRef.current.setFieldValue('invoiceIdList', [])
-      return []
-    }
+          convertedToBaseCurrencyAmount: i.dueAmount * localexe * basecurrency,
+        };
+      });
 
+      this.formRef.current.setFieldValue("invoiceIdList", finaldata);
 
-  }
+      return finaldata;
+    } else {
+      this.formRef.current.setFieldValue("invoiceIdList", []);
+      return [];
+    }
+  };
 
   onppclick = (value, indexofinvoce) => {
-		
-		const local2 = [...this.formRef.current.state.values.invoiceIdList]
-		local2[indexofinvoce].pp = value
-		let finaldata = [...(local2)]
-		//how many are clicked
-		const howManyAreClicked = finaldata.reduce((a, c, i) => a + (c.pp ? 1 : 0), 0)
-		const transactionAmount = this.formRef.current.state.values.transactionAmount
-		const total = finaldata.reduce((accu, curr, index) => accu + curr.convertedInvoiceAmount, 0)
-		const shortAmount = transactionAmount - total
-		let remainingcredit = transactionAmount
-		let updatedfinaldata = []
-		let temp=finaldata.reduce((a,c,i)=>c.convertedInvoiceAmount>=transactionAmount?a+1:a+0,0)
-		let amountislessthanallinvoice= temp===finaldata.length
-		let tempdata
-		if(amountislessthanallinvoice) {
-		if(value){
-		  tempdata=finaldata.map((i)=>
-		  {const basecurrency=this.basecurrencyconvertor(i.currencyCode)
-        return {...i,pp:value,explainedAmount:(transactionAmount/finaldata.length)?.toFixed(2),
-      convertedToBaseCurrencyAmount:((transactionAmount/finaldata.length)*basecurrency)?.toFixed(2)
-    }
-		 })
-		}
-		else {
-		  const temp=finaldata.map((i)=>{
-			return {...i,pp:value}
-		  })
-		  tempdata=this.setexchnagedamount(temp)
-		
-		}
-		finaldata=[...tempdata]
-		if(transactionAmount>0 && transactionAmount!=="")
-		this.formRef.current.setFieldValue('invoiceIdList', finaldata)
-	   } else {
-		let currentshort=shortAmount
-		finaldata.map((i, inx) => {
-		  const local = { ...i }
-				
-		  if (i.pp) {
-				let iio= local.convertedInvoiceAmount +(currentshort/howManyAreClicked)
-				if(iio<0){
-					local.explainedAmount= 0
-					
-				} else {
-					local.explainedAmount=iio
-				}
-			}
-			 else {
-				local.explainedAmount=local.convertedInvoiceAmount
-			}	 
-		  updatedfinaldata.push(local)
-		})
-    let updatedfinaldata2=updatedfinaldata.map((i)=>{
-      const basecurrency=this.basecurrencyconvertor(i.currencyCode)
-      return {...i,
-        convertedToBaseCurrencyAmount:(i.explainedAmount*basecurrency)?.toFixed(2)
+    const local2 = [...this.formRef.current.state.values.invoiceIdList];
+    local2[indexofinvoce].pp = value;
+    let finaldata = [...local2];
+    //how many are clicked
+    const howManyAreClicked = finaldata.reduce(
+      (a, c, i) => a + (c.pp ? 1 : 0),
+      0
+    );
+    const transactionAmount =
+      this.formRef.current.state.values.transactionAmount;
+    const total = finaldata.reduce(
+      (accu, curr, index) => accu + curr.convertedInvoiceAmount,
+      0
+    );
+    const shortAmount = transactionAmount - total;
+    let remainingcredit = transactionAmount;
+    let updatedfinaldata = [];
+    let temp = finaldata.reduce(
+      (a, c, i) =>
+        c.convertedInvoiceAmount >= transactionAmount ? a + 1 : a + 0,
+      0
+    );
+    let amountislessthanallinvoice = temp === finaldata.length;
+    let tempdata;
+    if (amountislessthanallinvoice) {
+      if (value) {
+        tempdata = finaldata.map((i) => {
+          const basecurrency = this.basecurrencyconvertor(i.currencyCode);
+          return {
+            ...i,
+            pp: value,
+            explainedAmount: (transactionAmount / finaldata.length)?.toFixed(2),
+            convertedToBaseCurrencyAmount: (
+              (transactionAmount / finaldata.length) *
+              basecurrency
+            )?.toFixed(2),
+          };
+        });
+      } else {
+        const temp = finaldata.map((i) => {
+          return { ...i, pp: value };
+        });
+        tempdata = this.setexchnagedamount(temp);
       }
-    })
-		this.formRef.current.setFieldValue('invoiceIdList', updatedfinaldata2)
-	  }
-	}
+      finaldata = [...tempdata];
+      if (transactionAmount > 0 && transactionAmount !== "")
+        this.formRef.current.setFieldValue("invoiceIdList", finaldata);
+    } else {
+      let currentshort = shortAmount;
+      finaldata.map((i, inx) => {
+        const local = { ...i };
 
-
+        if (i.pp) {
+          let iio =
+            local.convertedInvoiceAmount + currentshort / howManyAreClicked;
+          if (iio < 0) {
+            local.explainedAmount = 0;
+          } else {
+            local.explainedAmount = iio;
+          }
+        } else {
+          local.explainedAmount = local.convertedInvoiceAmount;
+        }
+        updatedfinaldata.push(local);
+      });
+      let updatedfinaldata2 = updatedfinaldata.map((i) => {
+        const basecurrency = this.basecurrencyconvertor(i.currencyCode);
+        return {
+          ...i,
+          convertedToBaseCurrencyAmount: (
+            i.explainedAmount * basecurrency
+          )?.toFixed(2),
+        };
+      });
+      this.formRef.current.setFieldValue("invoiceIdList", updatedfinaldata2);
+    }
+  };
 
   getCurrency = (opt) => {
     let supplier_currencyCode = 0;
@@ -1046,13 +1081,12 @@ getVatReportListForBank=(id)=>{
           this.props.location.state.bankAccountId
         )
         .then((res) => {
-         
           if (res.status === 200) {
             this.setState(
               {
                 transactionCategoryList: res.data,
               },
-              () => { }
+              () => {}
             );
           }
         });
@@ -1070,7 +1104,7 @@ getVatReportListForBank=(id)=>{
               {
                 moneyCategoryList: res.data,
               },
-              () => { }
+              () => {}
             );
           }
         });
@@ -1098,61 +1132,71 @@ getVatReportListForBank=(id)=>{
   };
 
   setexcessorshortamount = () => {
-    const totalexpainedamount = this.formRef.current.state.values?.invoiceIdList?.reduce(
-      (accu, curr, index) =>
-        accu +
-        (curr.explainedAmount)
-      ,
-      0
-    )
+    const totalexpainedamount =
+      this.formRef.current.state.values?.invoiceIdList?.reduce(
+        (accu, curr, index) => accu + curr.explainedAmount,
+        0
+      );
 
-    const totalconvetedamount = this.formRef.current.state.values?.invoiceIdList?.reduce(
-      (accu, curr, index) =>
-        accu +
-        (curr.convertedInvoiceAmount)
-      ,
-      0
-    )
+    const totalconvetedamount =
+      this.formRef.current.state.values?.invoiceIdList?.reduce(
+        (accu, curr, index) => accu + curr.convertedInvoiceAmount,
+        0
+      );
 
-    const transactionAmount = this.formRef.current.state.values.transactionAmount
-    const isppselected = this.formRef.current.state.values?.invoiceIdList?.reduce((a, c, i) => a + (c.pp ? 1 : 0), 0)
+    const transactionAmount =
+      this.formRef.current.state.values.transactionAmount;
+    const isppselected =
+      this.formRef.current.state.values?.invoiceIdList?.reduce(
+        (a, c, i) => a + (c.pp ? 1 : 0),
+        0
+      );
 
-    let final = 0
-    const totalshort = totalexpainedamount - totalconvetedamount
+    let final = 0;
+    const totalshort = totalexpainedamount - totalconvetedamount;
     if (isppselected > 0) {
-      final = 0
+      final = 0;
     } else if (totalshort < 0) {
-      final = totalshort
+      final = totalshort;
     } else if (totalshort >= 0) {
-      final = transactionAmount - totalconvetedamount
+      final = transactionAmount - totalconvetedamount;
     }
-    return {value:` ${this.state.bankCurrency
-      .bankAccountCurrencyIsoCode
-    } ${final.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-      } `,data:final?.toFixed(2)}
-
-  }
-  expense_categories_list_generate=()=>{
-    const categoriesList=[...this.props.expense_categories_list]
-    const grouped=[]
-    categoriesList.map((i)=>{
-    
-      const category=grouped.findIndex((g)=>g.label===i.transactionCategoryDescription)
-      if(category>-1){
-       
-          grouped[category].options=[...grouped[category].options,{label:i.transactionCategoryName,value:i.transactionCategoryId}]
+    return {
+      value: ` ${
+        this.state.bankCurrency.bankAccountCurrencyIsoCode
+      } ${final.toLocaleString(navigator.language, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })} `,
+      data: final?.toFixed(2),
+    };
+  };
+  expense_categories_list_generate = () => {
+    const categoriesList = [...this.props.expense_categories_list];
+    const grouped = [];
+    categoriesList.map((i) => {
+      const category = grouped.findIndex(
+        (g) => g.label === i.transactionCategoryDescription
+      );
+      if (category > -1) {
+        grouped[category].options = [
+          ...grouped[category].options,
+          { label: i.transactionCategoryName, value: i.transactionCategoryId },
+        ];
+      } else {
+        grouped.push({
+          label: i.transactionCategoryDescription,
+          options: [
+            {
+              label: i.transactionCategoryName,
+              value: i.transactionCategoryId,
+            },
+          ],
+        });
       }
-      else {
-        grouped.push({label:i.transactionCategoryDescription,options:[{label:i.transactionCategoryName,value:i.transactionCategoryId}]})
-      }
-    
- 
-   
-
-    })
-    return grouped
-  
-  }
+    });
+    return grouped;
+  };
   render() {
     strings.setLanguage(this.state.language);
     const {
@@ -1173,19 +1217,13 @@ getVatReportListForBank=(id)=>{
       UnPaidPayrolls_List,
     } = this.props;
 
-    
-
     let tmpSupplier_list = [];
 
     vendor_list.map((item) => {
-
       let obj = { label: item.label.contactName, value: item.value };
-     
+
       tmpSupplier_list.push(obj);
     });
-
-
-   
 
     return (
       <div className="create-bank-transaction-screen">
@@ -1214,111 +1252,156 @@ getVatReportListForBank=(id)=>{
                         onSubmit={(values, { resetForm }) => {
                           this.handleSubmit(values, resetForm);
                         }}
-                        validate={(values) => {                          
+                        validate={(values) => {
                           let errors = {};
-                          const totalexpaled=values?.invoiceIdList.reduce((a,c)=>a+c.explainedAmount,0)
-                         
-                          const date = moment(values.transactionDate).format("MM/DD/YYYY");
+                          const totalexpaled = values?.invoiceIdList.reduce(
+                            (a, c) => a + c.explainedAmount,
+                            0
+                          );
+
+                          const date = moment(values.transactionDate).format(
+                            "MM/DD/YYYY"
+                          );
                           const date1 = new Date(date);
                           const date2 = new Date(this.state.date);
-                          debugger
-                          if(values.coaCategoryId && this.props.location.state?.currency==="AED" &&
-                            (values.coaCategoryId.label ==='VAT Payment' ||
-                            values.coaCategoryId.label ==='VAT Claim')
-                            )
-                            {
-                            
-                              if(!values.VATReportId || values.VATReportId===""){
-                                  errors.VATReportId="Please Select Vat Report"
-                             
+
+                          if (
+                            values.coaCategoryId &&
+                            this.props.location.state?.currency === "AED" &&
+                            (values.coaCategoryId.label === "VAT Payment" ||
+                              values.coaCategoryId.label === "VAT Claim")
+                          ) {
+                            if (
+                              !values.VATReportId ||
+                              values.VATReportId === ""
+                            ) {
+                              errors.VATReportId = "Please Select Vat Report";
                             }
                           }
 
-                          if(values.coaCategoryId.label !== "Expense" && 
-                          values.coaCategoryId.label !== "Supplier Invoice"
-                           && values.coaCategoryId.label !== "Sales" && 
-                           values.coaCategoryId.label !== "VAT Payment" &&
-                           values.coaCategoryId.label !== "VAT Claim" 
-                           ){
-                              if(!values.transactionCategoryId || values.transactionCategoryId===""){
-                                  errors.transactionCategoryId="Category is required"
-                              }
-                              if (
-                                (values.coaCategoryId.value === 12 ||
-                                  values.coaCategoryId.value === 6) &&
-                                !values.employeeId
-                              ) {
-                                errors.employeeId = "User is Required";
-                              }
-                          }
-                          if ( values.coaCategoryId.label === "Expense" && !values.expenseCategory) {
-                            errors.expenseCategory = "Expense Category is Required";
-                          }
-                          if(values.vatId==="" && values.coaCategoryId.label === 'Expense'){
-                            errors.vatId="Please select Vat"
+                          if (
+                            values.coaCategoryId.label !== "Expense" &&
+                            values.coaCategoryId.label !== "Supplier Invoice" &&
+                            values.coaCategoryId.label !== "Sales" &&
+                            values.coaCategoryId.label !== "VAT Payment" &&
+                            values.coaCategoryId.label !== "VAT Claim"
+                          ) {
+                            if (
+                              !values.transactionCategoryId ||
+                              values.transactionCategoryId === ""
+                            ) {
+                              errors.transactionCategoryId =
+                                "Category is required";
                             }
+                            if (
+                              (values.coaCategoryId.value === 12 ||
+                                values.coaCategoryId.value === 6) &&
+                              !values.employeeId
+                            ) {
+                              errors.employeeId = "User is Required";
+                            }
+                          }
+                          if (
+                            values.coaCategoryId.label === "Expense" &&
+                            !values.expenseCategory
+                          ) {
+                            errors.expenseCategory =
+                              "Expense Category is Required";
+                          }
+                          if (
+                            values.vatId === "" &&
+                            values.coaCategoryId.label === "Expense"
+                          ) {
+                            errors.vatId = "Please select Vat";
+                          }
 
-                          if ((values.coaCategoryId.value === 2 || values.coaCategoryId.value === 100)) 
-                          {
-                            if (!values.vendorId.value && values.coaCategoryId.value === 100) {
-                              errors.vendorId = "Please select the Vendor"
+                          if (
+                            values.coaCategoryId.value === 2 ||
+                            values.coaCategoryId.value === 100
+                          ) {
+                            if (
+                              !values.vendorId.value &&
+                              values.coaCategoryId.value === 100
+                            ) {
+                              errors.vendorId = "Please select the Vendor";
                             }
-                            if (!values.customerId.value && values.coaCategoryId.value === 2) {
-                              errors.customerId = "Please select the Customer"
+                            if (
+                              !values.customerId.value &&
+                              values.coaCategoryId.value === 2
+                            ) {
+                              errors.customerId = "Please select the Customer";
                             }
                             if (values.invoiceIdList.length === 0) {
-                              errors.invoiceIdList = "Please Select Invoice"
-                            }else {
-                              let isExplainAmountZero=false
-                              values.invoiceIdList.map((i)=>{
-                                  if(i.explainedAmount===0){
-                                    isExplainAmountZero=true 
-                                  }
-                              })
+                              errors.invoiceIdList = "Please Select Invoice";
+                            } else {
+                              let isExplainAmountZero = false;
+                              values.invoiceIdList.map((i) => {
+                                if (i.explainedAmount === 0) {
+                                  isExplainAmountZero = true;
+                                }
+                              });
 
-                              if(isExplainAmountZero){
-                                errors.invoiceIdList="Expain Amount Cannot Be Zero"  
+                              if (isExplainAmountZero) {
+                                errors.invoiceIdList =
+                                  "Expain Amount Cannot Be Zero";
                               }
 
-                              values.invoiceIdList.map((ii)=>{
-                                if((this.state.bankCurrency.bankAccountCurrency!==this.state.basecurrency.currencyCode && this.state.basecurrency.currencyCode!==ii.currencyCode) && this.state.bankCurrency.bankAccountCurrency!==ii.currencyCode)
-                                  errors.invoiceIdList="Invoices created in another FCY cannot be processed by this foreign currency bank account."
-                              } )
-                              
-            
-                              if( values.transactionAmount>totalexpaled && this.state?.bankCurrency?.bankAccountCurrency===values?.invoiceIdList?.[0]?.currencyCode)
-                              {
-                                errors.transactionAmount=`The transaction amount cannot be greater than the invoice amount.`
-                              }
-                              const isppselected=values?.invoiceIdList.reduce((a,c)=>c.pp?a+1:a+0,0)
-                              if( values.transactionAmount<totalexpaled &&
-                                this.state?.bankCurrency?.bankAccountCurrency===values?.invoiceIdList?.[0]?.currencyCode
-                                && isppselected===0
+                              values.invoiceIdList.map((ii) => {
+                                if (
+                                  this.state.bankCurrency
+                                    .bankAccountCurrency !==
+                                    this.state.basecurrency.currencyCode &&
+                                  this.state.basecurrency.currencyCode !==
+                                    ii.currencyCode &&
+                                  this.state.bankCurrency
+                                    .bankAccountCurrency !== ii.currencyCode
                                 )
-                              {
-                                errors.transactionAmount=`The transaction amount is less than the invoice amount. To partially pay the invoice, please select the checkbox `
+                                  errors.invoiceIdList =
+                                    "Invoices created in another FCY cannot be processed by this foreign currency bank account.";
+                              });
+
+                              if (
+                                values.transactionAmount > totalexpaled &&
+                                this.state?.bankCurrency
+                                  ?.bankAccountCurrency ===
+                                  values?.invoiceIdList?.[0]?.currencyCode
+                              ) {
+                                errors.transactionAmount = `The transaction amount cannot be greater than the invoice amount.`;
+                              }
+                              const isppselected = values?.invoiceIdList.reduce(
+                                (a, c) => (c.pp ? a + 1 : a + 0),
+                                0
+                              );
+                              if (
+                                values.transactionAmount < totalexpaled &&
+                                this.state?.bankCurrency
+                                  ?.bankAccountCurrency ===
+                                  values?.invoiceIdList?.[0]?.currencyCode &&
+                                isppselected === 0
+                              ) {
+                                errors.transactionAmount = `The transaction amount is less than the invoice amount. To partially pay the invoice, please select the checkbox `;
                               }
                             }
-                            if (date1 < date2 || date1 < new Date(this.state.reconciledDate))
-                            {
-                                errors.transactionDate = "Transaction Date cannot be before Bank Account Opening Date or after Current Date.";
+                            if (
+                              date1 < date2 ||
+                              date1 < new Date(this.state.reconciledDate)
+                            ) {
+                              errors.transactionDate =
+                                "Transaction Date cannot be before Bank Account Opening Date or after Current Date.";
                             }
-                         
-                            
+
                             if (
                               values.coaCategoryId.label === "Expense" &&
                               !values.currencyCode
                             ) {
                               errors.currencyCode = " Currency is Required";
                             }
-                            
 
                             if (
-                              this.state.totalInvoiceAmount==="" &&
+                              this.state.totalInvoiceAmount === "" &&
                               this.state.totalInvoiceAmount === 0
                             ) {
-                            
-                                errors.transactionAmount = `Enter Amount`;
+                              errors.transactionAmount = `Enter Amount`;
                             }
 
                             // if (
@@ -1332,14 +1415,13 @@ getVatReportListForBank=(id)=>{
                             //     errors.transactionAmount = `Transaction Amount Must be Equal to Invoice Total(  ${this.state.totalInvoiceAmount}  )`;
                             // }
                           }
-                        return errors;
-                      }
-                    }
+                          return errors;
+                        }}
                         validationSchema={Yup.object().shape({
                           transactionDate: Yup.date().required(
                             "Transaction Date is Required"
                           ),
-                          reference:Yup.string().max(20),
+                          reference: Yup.string().max(20),
                           transactionAmount: Yup.string()
                             .required("Transaction Amount is Required")
                             .test(
@@ -1434,16 +1516,19 @@ getVatReportListForBank=(id)=>{
                                       if (option.label === "VAT Claim") {
                                         this.getVatReportListForBank(2);
                                       }
-                                      
-                                      
+
                                       this.totalAmount("");
                                     }}
-                                    placeholder={strings.Select + " " + strings.TransactionType}
+                                    placeholder={
+                                      strings.Select +
+                                      " " +
+                                      strings.TransactionType
+                                    }
                                     id="coaCategoryId"
                                     name="coaCategoryId"
                                     className={
                                       props.errors.coaCategoryId &&
-                                        props.touched.coaCategoryId
+                                      props.touched.coaCategoryId
                                         ? "is-invalid"
                                         : ""
                                     }
@@ -1480,11 +1565,12 @@ getVatReportListForBank=(id)=>{
                                         value
                                       );
                                     }}
-                                    className={`form-control ${props.errors.transactionDate &&
-                                        props.touched.transactionDate
+                                    className={`form-control ${
+                                      props.errors.transactionDate &&
+                                      props.touched.transactionDate
                                         ? "is-invalid"
                                         : ""
-                                      }`}
+                                    }`}
                                   />
                                   {props.errors.transactionDate &&
                                     props.touched.transactionDate && (
@@ -1503,10 +1589,11 @@ getVatReportListForBank=(id)=>{
                                   <Input
                                     type="number"
                                     min="0"
-
                                     disabled={
-                                      props.values.coaCategoryId.label ==='VAT Claim' || 
-                              props.values.coaCategoryId.label ==='VAT Payment'
+                                      props.values.coaCategoryId.label ===
+                                        "VAT Claim" ||
+                                      props.values.coaCategoryId.label ===
+                                        "VAT Payment"
                                     }
                                     maxLength="100"
                                     id="transactionAmount"
@@ -1522,13 +1609,16 @@ getVatReportListForBank=(id)=>{
                                         props.handleChange("transactionAmount")(
                                           option
                                         );
-                                        this.setexchnagedamount(props.values.invoiceIdList, option.target.value)
+                                        this.setexchnagedamount(
+                                          props.values.invoiceIdList,
+                                          option.target.value
+                                        );
                                       }
                                     }}
                                     value={props.values.transactionAmount}
                                     className={
                                       props.errors.transactionAmount &&
-                                        props.touched.transactionAmount
+                                      props.touched.transactionAmount
                                         ? "is-invalid"
                                         : ""
                                     }
@@ -1541,58 +1631,66 @@ getVatReportListForBank=(id)=>{
                                     )}
                                 </FormGroup>
                               </Col>
-                              {(props.values.coaCategoryId.label ==='VAT Claim' || 
-                              props.values.coaCategoryId.label ==='VAT Payment')  &&
-                              <Col lg={3}>
-                                <FormGroup className="mb-3">
-                                  <Label htmlFor="dueAmount">
-                                    <span className="text-danger">* </span>
-                                    {props.values.coaCategoryId.label ==='VAT Claim' ?
-                                    'Total VAT Reclaimable':'Total VAT Payable'}
-                                  </Label>
-                                  <Input
-                                    type="number"
-                                    min="0"
-                                    disabled
-                                    maxLength="100"
-                                    id="dueAmount"
-                                    name="dueAmount"
-                                    placeholder={props.values.coaCategoryId.label ==='VAT Claim' ?
-                                    'Total VAT Reclaimable':'Total VAT Payable'}
-                                    onChange={(option) => {
-                                      if (
-                                        option.target.value === "" ||
-                                        this.regDecimal.test(
-                                          option.target.value
-                                        )
-                                      ) {
-                                        props.handleChange("dueAmount")(
-                                          option
-                                        );
-                    
+                              {(props.values.coaCategoryId.label ===
+                                "VAT Claim" ||
+                                props.values.coaCategoryId.label ===
+                                  "VAT Payment") && (
+                                <Col lg={3}>
+                                  <FormGroup className="mb-3">
+                                    <Label htmlFor="dueAmount">
+                                      <span className="text-danger">* </span>
+                                      {props.values.coaCategoryId.label ===
+                                      "VAT Claim"
+                                        ? "Total VAT Reclaimable"
+                                        : "Total VAT Payable"}
+                                    </Label>
+                                    <Input
+                                      type="number"
+                                      min="0"
+                                      disabled
+                                      maxLength="100"
+                                      id="dueAmount"
+                                      name="dueAmount"
+                                      placeholder={
+                                        props.values.coaCategoryId.label ===
+                                        "VAT Claim"
+                                          ? "Total VAT Reclaimable"
+                                          : "Total VAT Payable"
                                       }
-                                    }}
-                                    value={props.values.dueAmount}
-                                    className={
-                                      props.errors.transactionAmount &&
+                                      onChange={(option) => {
+                                        if (
+                                          option.target.value === "" ||
+                                          this.regDecimal.test(
+                                            option.target.value
+                                          )
+                                        ) {
+                                          props.handleChange("dueAmount")(
+                                            option
+                                          );
+                                        }
+                                      }}
+                                      value={props.values.dueAmount}
+                                      className={
+                                        props.errors.transactionAmount &&
                                         props.touched.dueAmount
-                                        ? "is-invalid"
-                                        : ""
-                                    }
-                                  />
-                                  {props.errors.dueAmount &&
-                                    props.touched.dueAmount && (
-                                      <div className="invalid-feedback">
-                                        {props.errors.dueAmount}
-                                      </div>
-                                    )}
-                                </FormGroup>
-                              </Col> }
+                                          ? "is-invalid"
+                                          : ""
+                                      }
+                                    />
+                                    {props.errors.dueAmount &&
+                                      props.touched.dueAmount && (
+                                        <div className="invalid-feedback">
+                                          {props.errors.dueAmount}
+                                        </div>
+                                      )}
+                                  </FormGroup>
+                                </Col>
+                              )}
                             </Row>
                             <hr />
                             {props.values.coaCategoryId &&
                               props.values.coaCategoryId.label ===
-                              "Expense" && (
+                                "Expense" && (
                                 <Row>
                                   <Col lg={3}>
                                     <FormGroup className="mb-3">
@@ -1602,11 +1700,12 @@ getVatReportListForBank=(id)=>{
                                       </Label>
                                       <Select
                                         style={customStyles}
-                                        placeholder={strings.Select +" Expense Category"}
+                                        placeholder={
+                                          strings.Select + " Expense Category"
+                                        }
                                         options={
                                           expense_categories_list
                                             ? this.expense_categories_list_generate()
-                                            
                                             : []
                                         }
                                         // value={props.values.expenseCategory}
@@ -1619,7 +1718,7 @@ getVatReportListForBank=(id)=>{
                                         name="expenseCategory"
                                         className={
                                           props.errors.expenseCategory &&
-                                            props.touched.expenseCategory
+                                          props.touched.expenseCategory
                                             ? "is-invalid"
                                             : ""
                                         }
@@ -1641,13 +1740,15 @@ getVatReportListForBank=(id)=>{
                                     )}
                                   {props.values.coaCategoryId &&
                                     props.values.coaCategoryId.label ===
-                                    "Expense" &&
+                                      "Expense" &&
                                     props.values.expenseCategory &&
                                     props.values.expenseCategory.value !==
-                                    34 && (
+                                      34 && (
                                       <Col lg={3}>
                                         <FormGroup className="mb-3">
-                                        <span className="text-danger">* </span>
+                                          <span className="text-danger">
+                                            *{" "}
+                                          </span>
                                           <Label htmlFor="vatId">VAT</Label>
                                           <Select
                                             style={customStyles}
@@ -1655,11 +1756,16 @@ getVatReportListForBank=(id)=>{
                                             options={
                                               vat_list
                                                 ? selectOptionsFactory.renderOptions(
-                                                  "name",
-                                                  "id",
-                                                  this.getVatListByIds(this.state.isReverseChargeEnabled?[1,2]:[1,2,3,4]),
-                                                  "Tax"
-                                                )
+                                                    "name",
+                                                    "id",
+                                                    this.getVatListByIds(
+                                                      this.state
+                                                        .isReverseChargeEnabled
+                                                        ? [1, 2]
+                                                        : [1, 2, 3, 4]
+                                                    ),
+                                                    "Tax"
+                                                  )
                                                 : []
                                             }
                                             // value={
@@ -1676,30 +1782,28 @@ getVatReportListForBank=(id)=>{
                                                 props.handleChange("vatId")(
                                                   option
                                                 );
-                                                
                                               } else {
                                                 props.handleChange("vatId")("");
                                               }
                                             }}
                                             placeholder={
-                                              strings.Select +
-                                              " VAT"
+                                              strings.Select + " VAT"
                                             }
                                             id="vatId"
                                             name="vatId"
                                             className={
                                               props.errors.vatId &&
-                                                props.touched.vatId
+                                              props.touched.vatId
                                                 ? "is-invalid"
                                                 : ""
                                             }
                                           />
                                           {props.errors.vatId &&
-                                        props.touched.vatId && (
-                                          <div className="invalid-feedback">
-                                            {props.errors.vatId}
-                                          </div>
-                                        )}
+                                            props.touched.vatId && (
+                                              <div className="invalid-feedback">
+                                                {props.errors.vatId}
+                                              </div>
+                                            )}
                                         </FormGroup>
                                       </Col>
                                     )}
@@ -1730,7 +1834,7 @@ getVatReportListForBank=(id)=>{
                                           );
                                           this.setState(
                                             { expenseType },
-                                            () => { }
+                                            () => {}
                                           );
                                           // if (this.state.expenseType == true)
                                           // 	this.setState({ expenseType: true })
@@ -1756,7 +1860,7 @@ getVatReportListForBank=(id)=>{
                                         </span>
                                       ) : (
                                         <span className="ml-4">
-                                         {strings.Claimable}
+                                          {strings.Claimable}
                                         </span>
                                       )}
                                     </div>
@@ -1764,11 +1868,10 @@ getVatReportListForBank=(id)=>{
                                 </Row>
                               )}
                             {props.values.coaCategoryId &&
-                              props.values.coaCategoryId.label ===
-                              "Expense" && props.values?.vatId?.value===1 && (
+                              props.values.coaCategoryId.label === "Expense" &&
+                              props.values?.vatId?.value === 1 && (
                                 <Row>
-                                  <Col lg={3}>
-                                  </Col>
+                                  <Col lg={3}></Col>
                                   {props.values.expenseCategory &&
                                     props.values.expenseCategory.value &&
                                     props.values.expenseCategory.value == 34 &&
@@ -1778,95 +1881,98 @@ getVatReportListForBank=(id)=>{
                                     )}
                                   {props.values.coaCategoryId &&
                                     props.values.coaCategoryId.label ===
-                                    "Expense" &&
+                                      "Expense" &&
                                     props.values.expenseCategory &&
                                     props.values.expenseCategory.value !==
-                                    34 && (
+                                      34 && (
                                       <Col lg={3}>
-                                         
-                                    <div style={{ display: "flex" }}>
-                                      {!this.state.exclusiveVat  ? (
-                                        <span
-                                          style={{ color: "#0069d9" }}
-                                          className="mr-4"
-                                        >
-                                          <b>{strings.InclusiveVAT}</b>
-                                        </span>
-                                      ) : (
-                                        <span className="mr-4">
-                                          {strings.InclusiveVAT}
-                                        </span>
-                                      )}
+                                        <div style={{ display: "flex" }}>
+                                          {!this.state.exclusiveVat ? (
+                                            <span
+                                              style={{ color: "#0069d9" }}
+                                              className="mr-4"
+                                            >
+                                              <b>{strings.InclusiveVAT}</b>
+                                            </span>
+                                          ) : (
+                                            <span className="mr-4">
+                                              {strings.InclusiveVAT}
+                                            </span>
+                                          )}
 
-                                      <Switch
-                                        checked={this.state.exclusiveVat}
-                                        //disabled
-                                        onChange={(exclusiveVat) => {
-                                          props.handleChange("exclusiveVat")(
-                                            exclusiveVat
-                                          );
-                                          this.setState(
-                                            { exclusiveVat },
-                                            () => { }
-                                          );
-                                          // if (this.state.expenseType == true)
-                                          // 	this.setState({ expenseType: true })
-                                        }}
-                                        onColor="#2064d8"
-                                        onHandleColor="#2693e6"
-                                        handleDiameter={25}
-                                        uncheckedIcon={false}
-                                        checkedIcon={false}
-                                        boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-                                        activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-                                        height={20}
-                                        width={48}
-                                        className="react-switch"
-                                      />
+                                          <Switch
+                                            checked={this.state.exclusiveVat}
+                                            //disabled
+                                            onChange={(exclusiveVat) => {
+                                              props.handleChange(
+                                                "exclusiveVat"
+                                              )(exclusiveVat);
+                                              this.setState(
+                                                { exclusiveVat },
+                                                () => {}
+                                              );
+                                              // if (this.state.expenseType == true)
+                                              // 	this.setState({ expenseType: true })
+                                            }}
+                                            onColor="#2064d8"
+                                            onHandleColor="#2693e6"
+                                            handleDiameter={25}
+                                            uncheckedIcon={false}
+                                            checkedIcon={false}
+                                            boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+                                            activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+                                            height={20}
+                                            width={48}
+                                            className="react-switch"
+                                          />
 
-                                      {this.state.exclusiveVat  ? (
-                                        <span
-                                          style={{ color: "#0069d9" }}
-                                          className="ml-4"
-                                        >
-                                          <b>{strings.ExclusiveVAT}</b>
-                                        </span>
-                                      ) : (
-                                        <span className="ml-4">
-                                          {strings.ExclusiveVAT}
-                                        </span>
-                                      )}
-                                    </div>
+                                          {this.state.exclusiveVat ? (
+                                            <span
+                                              style={{ color: "#0069d9" }}
+                                              className="ml-4"
+                                            >
+                                              <b>{strings.ExclusiveVAT}</b>
+                                            </span>
+                                          ) : (
+                                            <span className="ml-4">
+                                              {strings.ExclusiveVAT}
+                                            </span>
+                                          )}
+                                        </div>
                                       </Col>
                                     )}
-                                  <Col className="mb-6" lg={6}>
-                                  
-                                  </Col>
+                                  <Col className="mb-6" lg={6}></Col>
                                 </Row>
                               )}
-                        <Row>
-													{props.values.coaCategoryId.label ===
-                            "Expense" && (
-                            <Col>	
-															<Checkbox
-																id="isReverseChargeEnabled"
-																checked={this.state.isReverseChargeEnabled}
-																onChange={(option)=>{
-																		this.setState({isReverseChargeEnabled:!this.state.isReverseChargeEnabled,
-                                      exclusiveVat:false})
-																		// for resetting Vat
-                                  
-																		props.handleChange('vatId')('');
-                                    props.handleChange('isReverseChargeEnabled')(!props.values.isReverseChargeEnabled);
-																}}
-															/>
-															<Label>{strings.IsReverseCharge}</Label>
-															</Col>)}
-															</Row>
+                            <Row>
+                              {props.values.coaCategoryId.label ===
+                                "Expense" && (
+                                <Col>
+                                  <Checkbox
+                                    id="isReverseChargeEnabled"
+                                    checked={this.state.isReverseChargeEnabled}
+                                    onChange={(option) => {
+                                      this.setState({
+                                        isReverseChargeEnabled:
+                                          !this.state.isReverseChargeEnabled,
+                                        exclusiveVat: false,
+                                      });
+                                      // for resetting Vat
+
+                                      props.handleChange("vatId")("");
+                                      props.handleChange(
+                                        "isReverseChargeEnabled"
+                                      )(!props.values.isReverseChargeEnabled);
+                                    }}
+                                  />
+                                  <Label>{strings.IsReverseCharge}</Label>
+                                </Col>
+                              )}
+                            </Row>
 
                             {props.values.coaCategoryId &&
                               props.values.coaCategoryId.label ===
-                              "Supplier Invoice" && (
+                                "Supplier Invoice" && (
                                 <Row>
                                   <Col lg={3}>
                                     <FormGroup className="mb-3">
@@ -1875,15 +1981,15 @@ getVatReportListForBank=(id)=>{
                                         Vendor
                                       </Label>
                                       <Select
-                                       // style={customStyles}
+                                        // style={customStyles}
                                         options={
                                           tmpSupplier_list
                                             ? selectOptionsFactory.renderOptions(
-                                              "label",
-                                              "value",
-                                              tmpSupplier_list,
-                                              "Supplier Name"
-                                            )
+                                                "label",
+                                                "value",
+                                                tmpSupplier_list,
+                                                "Supplier Name"
+                                              )
                                             : []
                                         }
                                         // value={
@@ -1912,20 +2018,17 @@ getVatReportListForBank=(id)=>{
                                             props.values.transactionAmount
                                           );
                                         }}
-                                        placeholder={
-                                          strings.Select + " Vendor"
-                                        }
+                                        placeholder={strings.Select + " Vendor"}
                                         id="vendorId"
                                         name="vendorId"
                                         className={
                                           props.errors.vendorId &&
-                                            props.touched.vendorId
+                                          props.touched.vendorId
                                             ? "is-invalid"
                                             : ""
                                         }
-                                        
                                       />
-                                      
+
                                       {props.errors.vendorId &&
                                         props.touched.vendorId && (
                                           <div className="invalid-feedback">
@@ -1936,7 +2039,7 @@ getVatReportListForBank=(id)=>{
                                   </Col>
                                   {props.values.coaCategoryId &&
                                     props.values.coaCategoryId.label ===
-                                    "Supplier Invoice" && (
+                                      "Supplier Invoice" && (
                                       <Col lg={3}>
                                         <FormGroup className="mb-3">
                                           <Label htmlFor="invoiceIdList">
@@ -1954,7 +2057,6 @@ getVatReportListForBank=(id)=>{
                                                 : []
                                             }
                                             onChange={(option) => {
-                                              ;
                                               if (option === null) {
                                                 this.getSuggestionInvoicesFotVend(
                                                   props.values.vendorId.value,
@@ -1963,8 +2065,8 @@ getVatReportListForBank=(id)=>{
                                                   option
                                                 );
                                               }
-                                              this.setexchnagedamount(option)
-                                              
+                                              this.setexchnagedamount(option);
+
                                               this.totalAmount(option);
                                               if (option) {
                                                 this.getVendorInvoiceCurrency(
@@ -1975,14 +2077,13 @@ getVatReportListForBank=(id)=>{
                                             }}
                                             value={props.values.invoiceIdList}
                                             placeholder={
-                                              strings.Select +
-                                              " Invoice"
+                                              strings.Select + " Invoice"
                                             }
                                             id="invoiceIdList"
                                             name="invoiceIdList"
                                             className={
                                               props.errors.invoiceIdList &&
-                                                props.touched.invoiceIdList
+                                              props.touched.invoiceIdList
                                                 ? "is-invalid"
                                                 : ""
                                             }
@@ -2007,7 +2108,7 @@ getVatReportListForBank=(id)=>{
                                                       invoice.amount,
                                                     0
                                                   ) >
-                                                    this.state.initValue.amount
+                                                  this.state.initValue.amount
                                                     ? "is-invalid"
                                                     : ""
                                                 }
@@ -2024,11 +2125,13 @@ getVatReportListForBank=(id)=>{
                                 </Row>
                               )}
                             {transactionCategoryList.categoriesList &&
-                            props.values.coaCategoryId.label !== "VAT Payment" &&
-                            props.values.coaCategoryId.label !== "Vat Claim" &&
+                              props.values.coaCategoryId.label !==
+                                "VAT Payment" &&
+                              props.values.coaCategoryId.label !==
+                                "Vat Claim" &&
                               props.values.coaCategoryId.label !== "Expense" &&
                               props.values.coaCategoryId.label !==
-                              "Supplier Invoice" &&
+                                "Supplier Invoice" &&
                               props.values.coaCategoryId.label !== "Sales" && (
                                 <Row>
                                   <Col lg={3}>
@@ -2040,7 +2143,9 @@ getVatReportListForBank=(id)=>{
                                       <Select
                                         style={customStyles}
                                         // className="select-default-width"
-                                        placeholder={strings.Select+" Category"}
+                                        placeholder={
+                                          strings.Select + " Category"
+                                        }
                                         options={
                                           transactionCategoryList
                                             ? transactionCategoryList.categoriesList
@@ -2064,18 +2169,18 @@ getVatReportListForBank=(id)=>{
                                           }
                                           if (
                                             option.label !==
-                                            "Salaries and Employee Wages" &&
+                                              "Salaries and Employee Wages" &&
                                             option.label !== "Owners Drawing" &&
                                             option.label !== "Dividend" &&
                                             option.label !==
-                                            "Owners Current Account" &&
+                                              "Owners Current Account" &&
                                             option.label !== "Share Premium" &&
                                             option.label !==
-                                            "Employee Advance" &&
+                                              "Employee Advance" &&
                                             option.label !==
-                                            "Employee Reimbursements" &&
+                                              "Employee Reimbursements" &&
                                             option.label !==
-                                            "Director Loan Account" &&
+                                              "Director Loan Account" &&
                                             option.label !== "Owners Equity"
                                           ) {
                                           }
@@ -2127,10 +2232,11 @@ getVatReportListForBank=(id)=>{
                                             this.getMoneyPaidToUserlist(option);
                                           }
                                         }}
-                                        className={`${props.errors.transactionCategoryId &&
+                                        className={`${
+                                          props.errors.transactionCategoryId &&
                                           props.touched.transactionCategoryId
-                                          ? "is-invalid"
-                                          : ""
+                                            ? "is-invalid"
+                                            : ""
                                         }`}
                                       />
                                       {props.errors.transactionCategoryId &&
@@ -2167,10 +2273,11 @@ getVatReportListForBank=(id)=>{
                                             option
                                           );
                                         }}
-                                        className={`${props.errors.employeeId &&
+                                        className={`${
+                                          props.errors.employeeId &&
                                           props.touched.employeeId
-                                          ? "is-invalid"
-                                          : ""
+                                            ? "is-invalid"
+                                            : ""
                                         }`}
                                       />
                                       {props.errors.employeeId &&
@@ -2210,10 +2317,11 @@ getVatReportListForBank=(id)=>{
                                             option
                                           );
                                         }}
-                                        className={`${props.errors.employeeId &&
+                                        className={`${
+                                          props.errors.employeeId &&
                                           props.touched.employeeId
-                                          ? "is-invalid"
-                                          : ""
+                                            ? "is-invalid"
+                                            : ""
                                         }`}
                                       />
                                       {props.errors.employeeId &&
@@ -2228,63 +2336,66 @@ getVatReportListForBank=(id)=>{
 
                                 {props.values.coaCategoryId.label ===
                                   "Sales" && (
-                                    <Col lg={3}>
-                                      <FormGroup className="mb-3">
-                                        <Label htmlFor="customerId">
-                                          {" "}
-                                          <span className="text-danger">* </span>
-                                          Customer
-                                        </Label>
-                                        <Select
-                                          style={customStyles}
-                                          placeholder={strings.Select+" Customer"}
-                                          className={`select-default-width , ${props.errors.customerId &&
-                                            props.touched.customerId
+                                  <Col lg={3}>
+                                    <FormGroup className="mb-3">
+                                      <Label htmlFor="customerId">
+                                        {" "}
+                                        <span className="text-danger">* </span>
+                                        Customer
+                                      </Label>
+                                      <Select
+                                        style={customStyles}
+                                        placeholder={
+                                          strings.Select + " Customer"
+                                        }
+                                        className={`select-default-width , ${
+                                          props.errors.customerId &&
+                                          props.touched.customerId
                                             ? "is-invalid"
                                             : ""
-                                          }`}
-                                          options={
-                                            transactionCategoryList &&
-                                              transactionCategoryList.dataList[1]
-                                              ? transactionCategoryList
+                                        }`}
+                                        options={
+                                          transactionCategoryList &&
+                                          transactionCategoryList.dataList[1]
+                                            ? transactionCategoryList
                                                 .dataList[0].options
-                                              : []
-                                          }
-                                          id="customerId"
-                                          value={props.values.customerId}
-                                          onChange={(option) => {
-                                            // if (option && option.value) {
-                                            // 	this.formRef.current.setFieldValue('currencyCode', this.getCurrency(option.value), true);
+                                            : []
+                                        }
+                                        id="customerId"
+                                        value={props.values.customerId}
+                                        onChange={(option) => {
+                                          // if (option && option.value) {
+                                          // 	this.formRef.current.setFieldValue('currencyCode', this.getCurrency(option.value), true);
 
-                                            // 	this.setExchange( this.getCurrency(option.value) );
-                                            props.handleChange("customerId")(
-                                              option
-                                            );
-                                            // 		option.value,
-                                            // 	);
-                                            // } else {
-                                            // 	props.handleChange('customerId')(
-                                            // 		'',
-                                            // 	);
-                                            // }
-                                            props.handleChange("invoiceIdList")(
-                                              []
-                                            );
-                                            this.getInvoices(
-                                              option,
-                                              props.values.transactionAmount
-                                            );
-                                          }}
-                                        />
-                                        {props.errors.customerId &&
+                                          // 	this.setExchange( this.getCurrency(option.value) );
+                                          props.handleChange("customerId")(
+                                            option
+                                          );
+                                          // 		option.value,
+                                          // 	);
+                                          // } else {
+                                          // 	props.handleChange('customerId')(
+                                          // 		'',
+                                          // 	);
+                                          // }
+                                          props.handleChange("invoiceIdList")(
+                                            []
+                                          );
+                                          this.getInvoices(
+                                            option,
+                                            props.values.transactionAmount
+                                          );
+                                        }}
+                                      />
+                                      {props.errors.customerId &&
                                         props.touched.customerId && (
                                           <div className="invalid-feedback">
                                             {props.errors.customerId}
                                           </div>
                                         )}
-                                      </FormGroup>
-                                    </Col>
-                                  )}
+                                    </FormGroup>
+                                  </Col>
+                                )}
                                 {props.values.coaCategoryId.value === 2 && (
                                   <Col lg={3}>
                                     <FormGroup className="mb-3">
@@ -2294,16 +2405,19 @@ getVatReportListForBank=(id)=>{
                                       </Label>
                                       <Select
                                         style={customStyles}
-                                        placeholder={strings.Select+" Invoice"}
+                                        placeholder={
+                                          strings.Select + " Invoice"
+                                        }
                                         isMulti
-                                        className={`select-default-width, ${props.errors.invoiceIdList &&
+                                        className={`select-default-width, ${
+                                          props.errors.invoiceIdList &&
                                           props.touched.invoiceIdList
-                                          ? "is-invalid"
-                                          : ""
+                                            ? "is-invalid"
+                                            : ""
                                         }`}
                                         options={
                                           customer_invoice_list &&
-                                            customer_invoice_list.data
+                                          customer_invoice_list.data
                                             ? customer_invoice_list.data
                                             : []
                                         }
@@ -2321,7 +2435,7 @@ getVatReportListForBank=(id)=>{
                                             );
                                           }
 
-                                          this.setexchnagedamount(option)
+                                          this.setexchnagedamount(option);
                                           this.totalAmount(option);
 
                                           if (option != null) {
@@ -2417,49 +2531,73 @@ getVatReportListForBank=(id)=>{
 																			</Col>
 																		</Row>
 																	:'')} */}
-                          
+
                             {props.values.coaCategoryId &&
                               (props.values.coaCategoryId.label === "Sales" ||
                                 props.values.coaCategoryId.label ===
-                                "Supplier Invoice") && (
+                                  "Supplier Invoice") && (
                                 <>
-                                  {props.values?.invoiceIdList.length > 0 &&
-                                    <Row className="border-bottom mb-3"
-                                    style={{display:'flex',justifyContent:'space-between'}}
+                                  {props.values?.invoiceIdList.length > 0 && (
+                                    <Row
+                                      className="border-bottom mb-3"
+                                      style={{
+                                        display: "flex",
+                                        justifyContent: "space-between",
+                                      }}
                                     >
                                       <Col lg={1}>
-                                        <span className="font-weight-bold"> Invoice</span>
+                                        <span className="font-weight-bold">
+                                          {" "}
+                                          Invoice
+                                        </span>
                                       </Col>
                                       <Col lg={2}>
-                                        <span className="font-weight-bold"> Invoice Date</span>
+                                        <span className="font-weight-bold">
+                                          {" "}
+                                          Invoice Date
+                                        </span>
                                       </Col>
                                       <Col lg={2}>
-                                        <span className="font-weight-bold">Invoice Amount</span>
+                                        <span className="font-weight-bold">
+                                          Invoice Amount
+                                        </span>
                                       </Col>
-                                      { this.state.bankCurrency.bankAccountCurrencyIsoCode!==props.values.curreancyname &&
-                                      <Col lg={2}>
-                                        <FormGroup className="mb-3">
-                                          <div>
-                                            <span className="font-weight-bold">Currency Rate</span>
-                                          </div>
-                                        </FormGroup>
-                                      </Col>
-                                      }
-                                       { this.state.bankCurrency.bankAccountCurrencyIsoCode!==props.values.curreancyname &&
-                                      <Col lg={2}>
-                                        <FormGroup className="mb-3">
-                                          <div>
-                                            <span className="font-weight-bold">Amount</span>
-                                          </div>
-                                        </FormGroup>
-                                      </Col>
-                                      }
-                                      <Col lg={1} >
-                                        <FormGroup className="font-weight-bold " style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
-
-                                          <div>
-                                            Partially Paid
-                                          </div>
+                                      {this.state.bankCurrency
+                                        .bankAccountCurrencyIsoCode !==
+                                        props.values.curreancyname && (
+                                        <Col lg={2}>
+                                          <FormGroup className="mb-3">
+                                            <div>
+                                              <span className="font-weight-bold">
+                                                Currency Rate
+                                              </span>
+                                            </div>
+                                          </FormGroup>
+                                        </Col>
+                                      )}
+                                      {this.state.bankCurrency
+                                        .bankAccountCurrencyIsoCode !==
+                                        props.values.curreancyname && (
+                                        <Col lg={2}>
+                                          <FormGroup className="mb-3">
+                                            <div>
+                                              <span className="font-weight-bold">
+                                                Amount
+                                              </span>
+                                            </div>
+                                          </FormGroup>
+                                        </Col>
+                                      )}
+                                      <Col lg={1}>
+                                        <FormGroup
+                                          className="font-weight-bold "
+                                          style={{
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                          }}
+                                        >
+                                          <div>Partially Paid</div>
                                         </FormGroup>
                                       </Col>
 
@@ -2471,14 +2609,17 @@ getVatReportListForBank=(id)=>{
                                         </FormGroup>
                                       </Col>
                                     </Row>
-                                  }
+                                  )}
                                   {props.values?.invoiceIdList?.map(
                                     (i, invindex) => {
                                       return (
                                         <Row
-                                        style={{display:'flex',justifyContent:'space-between'}}
+                                          style={{
+                                            display: "flex",
+                                            justifyContent: "space-between",
+                                          }}
                                         >
-                                           <Col lg={1}>
+                                          <Col lg={1}>
                                             <span>{i.invoiceNumber}</span>
                                           </Col>
                                           <Col lg={2}>
@@ -2486,12 +2627,14 @@ getVatReportListForBank=(id)=>{
                                               disabled
                                               id="1"
                                               name="1"
-                                              value={moment(i.invoiceDate).format('DD-MM-YYYY')}
+                                              value={moment(
+                                                i.invoiceDate
+                                              ).format("DD-MM-YYYY")}
                                             />
                                           </Col>
                                           <Col lg={2}>
                                             <Input
-                                            style={{textAlign:'right'}}
+                                              style={{ textAlign: "right" }}
                                               disabled
                                               id="1"
                                               name="1"
@@ -2499,70 +2642,105 @@ getVatReportListForBank=(id)=>{
                                             />
                                           </Col>
 
-                                          { this.state.bankCurrency.bankAccountCurrencyIsoCode!==props.values.curreancyname &&
-                                          <Col lg={2}>
-                                          
-                                                    <FormGroup className="mb-3">
+                                          {this.state.bankCurrency
+                                            .bankAccountCurrencyIsoCode !==
+                                            props.values.curreancyname && (
+                                            <Col lg={2}>
+                                              <FormGroup className="mb-3">
+                                                <div>
+                                                  <Input
+                                                    className="form-control"
+                                                    id="exchangeamount"
+                                                    name="exchangeamount"
+                                                    type="number"
+                                                    style={{
+                                                      textAlign: "right",
+                                                    }}
+                                                    value={i.exchangeRate}
+                                                    onChange={(value) => {
+                                                      let local2 = [
+                                                        ...props.values
+                                                          ?.invoiceIdList,
+                                                      ];
+                                                      local2[
+                                                        invindex
+                                                      ].exchnageRate =
+                                                        value.target.value;
+
+                                                      this.setexchnagedamount(
+                                                        local2
+                                                      );
+                                                    }}
+                                                  />
+                                                </div>
+                                              </FormGroup>
+                                            </Col>
+                                          )}
+
+                                          {this.state.bankCurrency
+                                            .bankAccountCurrencyIsoCode !==
+                                            props.values.curreancyname && (
+                                            <Col lg={2}>
+                                              <FormGroup className="mb-3">
+                                                <div>
+                                                  <Input
+                                                    className="form-control"
+                                                    id="exchangeRate"
+                                                    style={{
+                                                      textAlign: "right",
+                                                    }}
+                                                    name="exchangeRate"
+                                                    disabled
+                                                    value={`${
+                                                      this.state.bankCurrency
+                                                        .bankAccountCurrencyIsoCode
+                                                    } ${i.convertedInvoiceAmount?.toLocaleString(
+                                                      navigator.language,
+                                                      {
+                                                        minimumFractionDigits: 2,
+                                                        maximumFractionDigits: 2,
+                                                      }
+                                                    )} `}
+                                                    onChange={(value) => {}}
+                                                  />
+                                                </div>
+                                              </FormGroup>
+                                            </Col>
+                                          )}
+                                          <Col lg={1}>
+                                            <FormGroup
+                                              className="mb-3"
+                                              style={{
+                                                display: "flex",
+                                                justifyContent: "center",
+                                                alignItems: "center",
+                                              }}
+                                            >
                                               <div>
                                                 <Input
-                                                 
-                                                  className="form-control"
-                                                  id="exchangeamount"
-                                                  name="exchangeamount"
-                                                  type="number"
-                                                  style={{textAlign:'right'}}
-                                                  value={
-                                                    i.exchangeRate}
-                                                  onChange={(value) => {
-                                                    let local2 = [...props.values?.invoiceIdList]
-                                                    local2[invindex].exchnageRate = value.target.value
-
-                                                    this.setexchnagedamount(local2)
-                                                  }}
-                                                />
-                                              </div>
-                                            </FormGroup>
-                                          </Col>}
-
-                                          { this.state.bankCurrency.bankAccountCurrencyIsoCode!==props.values.curreancyname &&
-                                          <Col lg={2}>
-                                            <FormGroup className="mb-3">
-                                              <div>
-                                                <Input
-                                                  className="form-control"
-                                                  id="exchangeRate"
-                                                  style={{textAlign:'right'}}
-                                                  name="exchangeRate"
-                                                  disabled
-                                                  value={`${this.state.bankCurrency.bankAccountCurrencyIsoCode} ${i.convertedInvoiceAmount?.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} `
+                                                  disabled={
+                                                    props.values
+                                                      ?.transactionAmount -
+                                                      props.values?.invoiceIdList?.reduce(
+                                                        (accu, curr, index) =>
+                                                          accu +
+                                                          curr.dueAmount *
+                                                            curr.exchangeRate,
+                                                        0
+                                                      ) >=
+                                                    0
                                                   }
-                                                  onChange={(value) => {
-
-                                                  }}
-                                                />
-                                              </div>
-                                            </FormGroup>
-                                          </Col>}
-                                          <Col lg={1} >
-                                            <FormGroup className="mb-3" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
-                                              <div>
-                                                <Input
-                                                
-                                                  disabled={props.values?.transactionAmount -
-                                                    props.values?.invoiceIdList?.reduce(
-                                                      (accu, curr, index) =>
-                                                        accu +
-                                                        curr.dueAmount * curr.exchangeRate
-                                                      ,
-                                                      0
-                                                    ) >= 0}
                                                   type="checkbox"
-
-                                                  checked={i.pp !== undefined ? i.pp : false}
-
+                                                  checked={
+                                                    i.pp !== undefined
+                                                      ? i.pp
+                                                      : false
+                                                  }
                                                   onChange={(e) => {
-
-                                                    this.onppclick(e.target.checked, invindex)
+                                                    this.onppclick(
+                                                      e.target.checked,
+                                                      invindex
+                                                    );
                                                   }}
                                                 />
                                               </div>
@@ -2577,17 +2755,29 @@ getVatReportListForBank=(id)=>{
                                                   id="exchangeRate"
                                                   name="exchangeRate"
                                                   disabled
-                                                  style={{textAlign:'right'}}
-                                                  value={`${this.state.bankCurrency.bankAccountCurrencyIsoCode} ${i.explainedAmount?.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} `
-
-                                                  }
-                                                  onChange={(value) => {
-
-                                                  }}
+                                                  style={{ textAlign: "right" }}
+                                                  value={`${
+                                                    this.state.bankCurrency
+                                                      .bankAccountCurrencyIsoCode
+                                                  } ${i.explainedAmount?.toLocaleString(
+                                                    navigator.language,
+                                                    {
+                                                      minimumFractionDigits: 2,
+                                                      maximumFractionDigits: 2,
+                                                    }
+                                                  )} `}
+                                                  onChange={(value) => {}}
                                                 />
-                                                {i.explainedAmount===0 && <div
-                                                style={{color:'red',fontSize:'9px'}}
-                                                >Expain Amount Cannot be Zero</div>}
+                                                {i.explainedAmount === 0 && (
+                                                  <div
+                                                    style={{
+                                                      color: "red",
+                                                      fontSize: "9px",
+                                                    }}
+                                                  >
+                                                    Expain Amount Cannot be Zero
+                                                  </div>
+                                                )}
                                               </div>
                                             </FormGroup>
                                           </Col>
@@ -2600,36 +2790,37 @@ getVatReportListForBank=(id)=>{
                                       <Row
                                         style={{
                                           display: "flex",
-                                          flexDirection:'row-reverse',
+                                          flexDirection: "row-reverse",
                                           justifyContent: "flex-start",
-                                       
-                                         
                                         }}
                                       >
-                                        <Col lg={2} 
-                                        style={{float:'right'}}
-                                        >
+                                        <Col lg={2} style={{ float: "right" }}>
                                           <Input
                                             disabled
-                                            style={{textAlign:'right'}}
+                                            style={{ textAlign: "right" }}
                                             id="total"
                                             name="total"
-                                            value={`${this.state.bankCurrency
-                                              .bankAccountCurrencyIsoCode
-                                            } ${(props.values?.invoiceIdList?.reduce(
-                                              (accu, curr, index) =>
-                                                accu +
-                                                curr.explainedAmount
-                                              ,
-                                              0
-                                            )).toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-                                              }  `
-                                            }
+                                            value={`${
+                                              this.state.bankCurrency
+                                                .bankAccountCurrencyIsoCode
+                                            } ${props.values?.invoiceIdList
+                                              ?.reduce(
+                                                (accu, curr, index) =>
+                                                  accu + curr.explainedAmount,
+                                                0
+                                              )
+                                              .toLocaleString(
+                                                navigator.language,
+                                                {
+                                                  minimumFractionDigits: 2,
+                                                  maximumFractionDigits: 2,
+                                                }
+                                              )}  `}
                                           />
                                         </Col>
                                         <Col lg={3}>
                                           <Input
-                                          style={{textAlign:'right'}}
+                                            style={{ textAlign: "right" }}
                                             disabled
                                             id="total"
                                             name="total"
@@ -2637,50 +2828,77 @@ getVatReportListForBank=(id)=>{
                                           />
                                         </Col>
                                       </Row>
-                                    { (this.setexcessorshortamount().data!== 0
-                                    && 
-                                    this.state.bankCurrency.bankAccountCurrencyIsoCode!==props.values.curreancyname 
-                                    ) && <Row
-                                        style={{
-                                          display: "flex",
-                                          justifyContent: "flex-end",
-                                         
-                                          marginTop:10
-                                        }}
-                                      >
-                                        
-                                         { <Col lg={5}>
-                                        <Select
-                                     options={[{label:'Currency Gain ',value:79},
-                                        {label:'Currency Loss',value:103}    
-                                      ]}
-                                      isDisabled={true}
-                                      value={this.setexcessorshortamount().data<0
-                                      ?{label:'Currency Loss',value:103}:{label:'Currency Gain ',value:103}
-                                      }
-                                        />
-                                        </Col>}
+                                      {this.setexcessorshortamount().data !==
+                                        0 &&
+                                        this.state.bankCurrency
+                                          .bankAccountCurrencyIsoCode !==
+                                          props.values.curreancyname && (
+                                          <Row
+                                            style={{
+                                              display: "flex",
+                                              justifyContent: "flex-end",
 
-                                        <Col lg={3}>
-                                          <Input
-                                          style={{textAlign:'right'}}
-                                            disabled
-                                            id="total"
-                                            name="total"
-                                            value={"Total Excess/Short Amount = "}
-                                          />
-                                        </Col>
-                                        
-                                        <Col lg={2}>
-                                          <Input
-                                          style={{textAlign:'right'}}
-                                            disabled
-                                            id="total"
-                                            name="total"
-                                            value={this.setexcessorshortamount().value}
-                                          />
-                                        </Col>
-                                      </Row>}
+                                              marginTop: 10,
+                                            }}
+                                          >
+                                            {
+                                              <Col lg={5}>
+                                                <Select
+                                                  options={[
+                                                    {
+                                                      label: "Currency Gain ",
+                                                      value: 79,
+                                                    },
+                                                    {
+                                                      label: "Currency Loss",
+                                                      value: 103,
+                                                    },
+                                                  ]}
+                                                  isDisabled={true}
+                                                  value={
+                                                    this.setexcessorshortamount()
+                                                      .data < 0
+                                                      ? {
+                                                          label:
+                                                            "Currency Loss",
+                                                          value: 103,
+                                                        }
+                                                      : {
+                                                          label:
+                                                            "Currency Gain ",
+                                                          value: 103,
+                                                        }
+                                                  }
+                                                />
+                                              </Col>
+                                            }
+
+                                            <Col lg={3}>
+                                              <Input
+                                                style={{ textAlign: "right" }}
+                                                disabled
+                                                id="total"
+                                                name="total"
+                                                value={
+                                                  "Total Excess/Short Amount = "
+                                                }
+                                              />
+                                            </Col>
+
+                                            <Col lg={2}>
+                                              <Input
+                                                style={{ textAlign: "right" }}
+                                                disabled
+                                                id="total"
+                                                name="total"
+                                                value={
+                                                  this.setexcessorshortamount()
+                                                    .value
+                                                }
+                                              />
+                                            </Col>
+                                          </Row>
+                                        )}
                                     </>
                                   )}
                                 </>
@@ -2688,8 +2906,9 @@ getVatReportListForBank=(id)=>{
 
                             {props.values.coaCategoryId &&
                               props.values.coaCategoryId.label ===
-                              "Supplier Invoice" &&
-                              (this.state.invoiceCurrency && this.state.invoiceCurrency !=
+                                "Supplier Invoice" &&
+                              (this.state.invoiceCurrency &&
+                              this.state.invoiceCurrency !=
                                 this.state.bankCurrency.bankAccountCurrency ? (
                                 <Row>
                                   <Col lg={3}>
@@ -2704,11 +2923,11 @@ getVatReportListForBank=(id)=>{
                                         options={
                                           currency_convert_list
                                             ? selectCurrencyFactory.renderOptions(
-                                              "currencyName",
-                                              "currencyCode",
-                                              currency_convert_list,
-                                              "Currency"
-                                            )
+                                                "currencyName",
+                                                "currencyCode",
+                                                currency_convert_list,
+                                                "Currency"
+                                              )
                                             : []
                                         }
                                         value={
@@ -2945,13 +3164,14 @@ getVatReportListForBank=(id)=>{
 														</Col>
 														</Row>
 																)} */}
-{ props.values.coaCategoryId &&
-	(props.values.coaCategoryId.label ==='VAT Payment' ||
-  props.values.coaCategoryId.label ==='VAT Claim' 
-  )&& 
-  <Row>
-  <Col lg={4}>
-  <FormGroup className="mb-3">
+                            {props.values.coaCategoryId &&
+                              (props.values.coaCategoryId.label ===
+                                "VAT Payment" ||
+                                props.values.coaCategoryId.label ===
+                                  "VAT Claim") && (
+                                <Row>
+                                  <Col lg={4}>
+                                    <FormGroup className="mb-3">
                                       <Label htmlFor="currencyCode">
                                         VAT Report Number
                                       </Label>
@@ -2959,25 +3179,26 @@ getVatReportListForBank=(id)=>{
                                         style={customStyles}
                                         id="VATReport"
                                         name="VATReportId"
-                                        options={
-                                          this.state.VATlist.map((i)=>{return {
-                                            label:i.vatNumber,value:i.id
-                                          }})
-                                           
-                                        }
+                                        options={this.state.VATlist.map((i) => {
+                                          return {
+                                            label: i.vatNumber,
+                                            value: i.id,
+                                          };
+                                        })}
                                         value={props.values.VATReportId || ""}
                                         onChange={(option) => {
-                                          
                                           props.handleChange("VATReportId")(
                                             option
                                           );
-                                          const info=this.state.VATlist.find((i)=>i.id===option.value)
-                                            props.handleChange('transactionAmount')(
-                                              info.dueAmount
-                                            )
-                                            props.handleChange('dueAmount')(
-                                              info.totalAmount
-                                            )
+                                          const info = this.state.VATlist.find(
+                                            (i) => i.id === option.value
+                                          );
+                                          props.handleChange(
+                                            "transactionAmount"
+                                          )(info.dueAmount);
+                                          props.handleChange("dueAmount")(
+                                            info.totalAmount
+                                          );
                                         }}
                                       />
                                       {props.errors.currencyCode &&
@@ -2987,10 +3208,9 @@ getVatReportListForBank=(id)=>{
                                           </div>
                                         )}
                                     </FormGroup>
-  </Col>
-</Row>}
-
-
+                                  </Col>
+                                </Row>
+                              )}
 
                             <Row>
                               <Col lg={8}>
@@ -3043,9 +3263,12 @@ getVatReportListForBank=(id)=>{
                                         }}
                                         value={props.values.reference}
                                       />
-                                       {props.errors.reference &&
+                                      {props.errors.reference &&
                                         props.touched.reference && (
-                                          <div className="invalid-file" style={{color:"red"}}>
+                                          <div
+                                            className="invalid-file"
+                                            style={{ color: "red" }}
+                                          >
                                             {props.errors.reference}
                                           </div>
                                         )}
@@ -3123,7 +3346,7 @@ getVatReportListForBank=(id)=>{
                                     disabled={this.state.disabled}
                                     onClick={() => {
                                       //	added validation popup	msg
-                                      console.log(props.errors,"EERRROR");
+                                      console.log(props.errors, "EERRROR");
                                       props.handleBlur();
                                       if (
                                         props.errors &&

@@ -2973,10 +2973,10 @@ getVatReportListForBank=(id)=>{
                                           );
                                           const info=this.state.VATlist.find((i)=>i.id===option.value)
                                             props.handleChange('transactionAmount')(
-                                              info.totalAmount
+                                              info.dueAmount
                                             )
                                             props.handleChange('dueAmount')(
-                                              info.dueAmount
+                                              info.totalAmount
                                             )
                                         }}
                                       />

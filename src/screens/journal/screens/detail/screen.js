@@ -1045,12 +1045,7 @@ min="0"
 																			}
 																			id="currencyCode"
 																			name="currencyCode"
-																			isDisabled={
-																				props.values.postingReferenceType ===
-																				'MANUAL'
-																					? false
-																					: true
-																			}
+																			isDisabled={ true }
 																			value={
 																				currency_list &&
 																				selectCurrencyFactory

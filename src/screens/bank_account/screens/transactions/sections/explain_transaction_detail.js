@@ -1798,7 +1798,7 @@ class ExplainTrasactionDetail extends React.Component {
                                         );
                                       }}
                                       placeholder={
-                                        strings.Select + strings.Type
+                                        strings.Select + strings.TransactionType
                                       }
                                       id="coaCategoryId"
                                       name="coaCategoryId"
@@ -2104,7 +2104,7 @@ class ExplainTrasactionDetail extends React.Component {
                                                 }
                                               }}
                                               placeholder={
-                                                strings.Select + strings.Type
+                                                strings.Select + strings.TransactionType
                                               }
                                               id="vatId"
                                               name="vatId"
@@ -2419,7 +2419,7 @@ class ExplainTrasactionDetail extends React.Component {
                                                 )
                                           }
                                           placeholder={
-                                            strings.Select + strings.Type
+                                            strings.Select + strings.TransactionType
                                           }
                                           id="vendorId"
                                           name="vendorId"
@@ -2502,7 +2502,7 @@ class ExplainTrasactionDetail extends React.Component {
                                                   : props.values.invoiceIdList
                                               }
                                               placeholder={
-                                                strings.Select + strings.Type
+                                                strings.Select + strings.TransactionType
                                               }
                                               id="invoiceIdList"
                                               name="invoiceIdList"
@@ -2627,7 +2627,7 @@ class ExplainTrasactionDetail extends React.Component {
                                                 )
                                           }
                                           placeholder={
-                                            strings.Select + strings.Type
+                                            strings.Select + strings.TransactionType
                                           }
                                           id="customerId"
                                           name="customerId"
@@ -2715,7 +2715,7 @@ class ExplainTrasactionDetail extends React.Component {
                                               : props.values.invoiceIdList
                                           }
                                           placeholder={
-                                            strings.Select + strings.Type
+                                            strings.Select + strings.TransactionType
                                           }
                                           id="invoiceIdList"
                                           name="invoiceIdList"

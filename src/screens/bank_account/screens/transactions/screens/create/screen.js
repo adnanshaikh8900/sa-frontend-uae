@@ -280,6 +280,7 @@ class CreateBankTransaction extends React.Component {
       transactionVatAmount = transactionAmount * 0.05;
       transactionExpenseAmount = transactionVatAmount + transactionAmount;
       this.setState({transactionVatAmount:transactionVatAmount,transactionExpenseAmount:transactionExpenseAmount})
+      transactionAmount = transactionExpenseAmount;
     }else if((transactionAmount) && (vatId === 1) && !exclusiveVat){
       let transactionVatAmount = 0;
       let transactionExpenseAmount = 0;
@@ -287,6 +288,7 @@ class CreateBankTransaction extends React.Component {
       transactionExpenseAmount = transactionAmount - transactionVatAmount ;
       this.setState({transactionVatAmount:transactionVatAmount,transactionExpenseAmount:transactionExpenseAmount})
     }
+    return transactionAmount;
   };
   handleFileChange = (e, props) => {
     e.preventDefault();
@@ -314,7 +316,7 @@ getVatReportListForBank=(id)=>{
       this.props.location.state && this.props.location.state.bankAccountId
         ? this.props.location.state.bankAccountId
         : "";
-    const {
+    let {
       transactionDate,
       description,
       transactionAmount,
@@ -338,7 +340,7 @@ getVatReportListForBank=(id)=>{
       exclusiveVat,
       VATReportId
     } = data;
-    this.calculateVAT(transactionAmount, vatId.value, exclusiveVat);
+    transactionAmount = this.calculateVAT(transactionAmount, vatId.value, exclusiveVat);
     if (
       (invoiceIdList && coaCategoryId.label === "Sales") ||
       (invoiceIdList && coaCategoryId.label === "Supplier Invoice")

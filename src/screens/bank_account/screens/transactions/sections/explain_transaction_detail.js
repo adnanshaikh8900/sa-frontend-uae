@@ -169,10 +169,8 @@ class ExplainTrasactionDetail extends React.Component {
 
   getData = () => {
     const { selectedData, data, bankId } = this.props;
-
     if (data) {
       const res = { data: data };
-
       this.setState(
         {
           loading: false,
@@ -312,8 +310,9 @@ class ExplainTrasactionDetail extends React.Component {
             );
           }
         }
-      );
 
+      );
+      
       this.formRef.current.setFieldValue(
         "amount",
         res.data.amount
@@ -399,7 +398,16 @@ class ExplainTrasactionDetail extends React.Component {
       );
     }
   };
-
+  getExchangeRate = () => {
+    let result = this.props.currency_convert_list.filter((obj) => {
+      return obj.currencyCode === this.state?.bankCurrency?.bankAccountCurrency;
+    });
+    // if(result[0]){
+    //   //this.setState({exchangeRate:result[0].exchangeRate});
+    //   
+    // }
+    return result[0];
+  };
   getChartOfAccountCategoryList = (type) => {
     this.setState({ loading: true });
 
@@ -456,6 +464,7 @@ class ExplainTrasactionDetail extends React.Component {
         );
         this.setState({ loading: false });
       });
+      
   };
   setExchange = (value) => {
     let result = this.props.currency_convert_list.filter((obj) => {
@@ -740,7 +749,6 @@ class ExplainTrasactionDetail extends React.Component {
       var result1 = payrollListIds.map((o) => ({
         payrollId: o.value,
       }));
-      console.log(result1);
     }
     let id;
     if (coaCategoryId && coaCategoryId.value === 100) {
@@ -1026,7 +1034,6 @@ class ExplainTrasactionDetail extends React.Component {
     for (var key in this.state.unexplainValue) {
       formData.append(key, this.state.unexplainValue[key]);
       formData.set("date", moment(this.state.unexplainValue["date"]));
-      console.log(this.state.unexplainValue["explainParamList"]);
       formData.set(
         "explainParamListStr",
         JSON.stringify(this.state.unexplainValue["explainParamList"])
@@ -1355,7 +1362,6 @@ class ExplainTrasactionDetail extends React.Component {
       }
     });
 
-    console.log("supplier_currencyCode", supplier_currencyCode);
 
     if (supplier_currencyCode != 0) {
       return supplier_currencyCode;
@@ -1459,7 +1465,7 @@ class ExplainTrasactionDetail extends React.Component {
     } = this.props;
 
     let tmpSupplier_list = [];
-
+    let ExchangeChangeList = this.getExchangeRate();
     vendor_list.map((item) => {
       let obj = { label: item.label.contactName, value: item.value };
       tmpSupplier_list.push(obj);
@@ -1719,8 +1725,6 @@ class ExplainTrasactionDetail extends React.Component {
                         >
                           {(props) => (
                             <Form onSubmit={props.handleSubmit}>
-                              {console.log(props, this.state)}
-
                               <Row>
                                 <Col lg={3}>
                                   <FormGroup className="mb-3">
@@ -2341,6 +2345,93 @@ class ExplainTrasactionDetail extends React.Component {
                                     </Col>
                                   )}
                               </Row>
+                              {props.values.coaCategoryId &&
+                                  props.values.coaCategoryId?.label ===
+                                    "Expense" && (<hr />)}
+                            {props.values.coaCategoryId &&
+                                  props.values.coaCategoryId?.label ===
+                                    "Expense" &&  (
+                                  <Row>
+																<Col>
+																<Label htmlFor="currency">
+																{strings.CurrencyExchangeRate}  
+																	</Label>	
+																</Col>
+																</Row>)}
+                                {props.values.coaCategoryId &&
+                                  props.values.coaCategoryId?.label ===
+                                    "Expense" && (
+																<Row>
+																<Col lg={1}>
+																<Input
+																		disabled
+																				id="1"
+																				name="1"
+																				value=	{
+																					1 }
+																				
+																			/>
+																</Col>
+																<Col lg={3}>
+																<FormGroup className="mb-3">
+																	{/* <Label htmlFor="exchangeRate">
+																		Exchange rate
+																	</Label> */}
+																	<div>
+																		<Input
+																		disabled	
+																			className="form-control"
+																			id="currencyName"
+																			name="currencyName"
+																			
+																			value={ExchangeChangeList?.currencyName}
+																			onChange={(value) => {
+																				props.handleChange('curreancyname')(
+																					value,
+																				);
+																			}}
+																		/>
+																	</div>
+																</FormGroup>
+															</Col>
+															<FormGroup className="mt-2"><label><b>=</b></label>	</FormGroup>
+															<Col lg={2}>
+																<FormGroup className="mb-3">
+																	{/* <Label htmlFor="exchangeRate">
+																		Exchange rate
+																	</Label> */}
+																	<div>
+																		<Input
+                                    disabled
+																			type="number"
+																			min="0"
+																			className="form-control"
+																			id="exchangeRate"
+																			name="exchangeRate"
+																			maxLength="20"
+                                      value={props.values?.exchangeRate}
+																			onChange={(option) => {
+																				props.handleChange('exchangeRate')(
+																					option,
+																				);
+                                        //props.values.exchangeRate = 
+                                      }}
+																		/>
+																	</div>
+																</FormGroup>
+															</Col>
+														
+															<Col lg={3}>
+															<Input
+																		disabled
+																				id="currencyName"
+																				name="currencyName"
+																				value=	{	this.state?.basecurrency?.currencyName }
+																				
+																			/>
+															</Col>
+														</Row>
+                                )}
 
                               {props.values.coaCategoryId &&
                                 props.values.coaCategoryId.label ===
@@ -2556,7 +2647,6 @@ class ExplainTrasactionDetail extends React.Component {
                                   </Row>
                                 )}
                               <Row>
-                                {console.log(transactionCategoryList.dataList)}
                                 {transactionCategoryList.dataList &&
                                   props.values.coaCategoryId.value === 2 && (
                                     <Col lg={4}>
@@ -3392,7 +3482,6 @@ class ExplainTrasactionDetail extends React.Component {
                                       }
                                     )}
 
-                                    {console.log(props.values?.invoiceIdList)}
                                     {props.values?.invoiceIdList?.length >
                                       0 && (
                                       <>

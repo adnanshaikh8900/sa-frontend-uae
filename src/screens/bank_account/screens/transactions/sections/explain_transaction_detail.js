@@ -1800,9 +1800,24 @@ class ExplainTrasactionDetail extends React.Component {
                                               {
                                                 ...chartOfAccountCategoryList[0],
                                                 options:
-                                                  chartOfAccountCategoryList[0]?.options?.filter(
-                                                    (i) => i.value !== 6
-                                                  ),
+                                                  this.state.initValue
+                                                    .explinationStatusEnum ===
+                                                    "PARTIAL" ||
+                                                  this.state.initValue
+                                                    .explinationStatusEnum ===
+                                                    "FULL" ||
+                                                  this.state.initValue
+                                                    .explinationStatusEnum ===
+                                                    "RECONCILED"
+                                                    ? chartOfAccountCategoryList[0]?.options?.filter(
+                                                        (i) => i.value !== 6
+                                                      )
+                                                    : chartOfAccountCategoryList[0]?.options?.filter(
+                                                        (i) =>
+                                                          i.value !== 6 &&
+                                                          i.value !== 16 &&
+                                                          i.value !== 17
+                                                      ),
                                               },
                                             ]
                                           : ""

@@ -84,6 +84,7 @@ class ExplainTrasactionDetail extends React.Component {
       loading: false,
       fileName: "",
       initValue: {},
+      VATlist: [],
       view: false,
       chartOfAccountCategoryList: [],
       transactionCategoryList: [],
@@ -175,8 +176,15 @@ class ExplainTrasactionDetail extends React.Component {
         {
           loading: false,
           creationMode: this.props.creationMode,
+          VATlist: res.data.vatReportResponseModelList || [],
           initValue: {
             bankId: bankId,
+            VATReportId: res.data.vatReportResponseModelList
+              ? {
+                  label: res.data.vatReportResponseModelList?.[0]?.vatNumber,
+                  value: res.data.vatReportResponseModelList?.[0]?.id,
+                }
+              : {},
             contactName: res.data.contactName ? res.data.contactName : "",
             amount: res.data.amount ? res.data.amount : 0,
             dueAmount: res.data.dueAmount ? res.data.dueAmount : "",
@@ -194,6 +202,7 @@ class ExplainTrasactionDetail extends React.Component {
             isReverseChargeEnabled: res.data.isReverseChargeEnabled
               ? res.data?.isReverseChargeEnabled
               : false,
+
             exclusiveVat: res.data.exclusiveVat || false,
             reference: res.data.reference ? res.data.reference : "",
             exchangeRate: res.data.exchangeRate ? res.data.exchangeRate : "",
@@ -310,15 +319,28 @@ class ExplainTrasactionDetail extends React.Component {
             );
           }
         }
-
       );
-      
+      this.formRef.current.setFieldValue(
+        "VATReportId",
+        res.data.vatReportResponseModelList
+          ? {
+              label: res.data.vatReportResponseModelList?.[0]?.vatNumber,
+              value: res.data.vatReportResponseModelList?.[0]?.id,
+            }
+          : {},
+        true
+      );
       this.formRef.current.setFieldValue(
         "amount",
         res.data.amount
           ? res.data.amount +
               (res.data.explainedInvoiceList?.[0].exchangeGainOrLossAmount || 0)
           : 0,
+        true
+      );
+      this.formRef.current.setFieldValue(
+        "dueAmount",
+        res.data.dueAmount ? res.data.dueAmount : 0,
         true
       );
       this.formRef.current.setFieldValue("date", res.data.date1, true);
@@ -398,21 +420,37 @@ class ExplainTrasactionDetail extends React.Component {
       );
     }
   };
+  getVatReportListForBank = (id) => {
+    this.props.transactionsActions.getVatReportListForBank(id).then((res) => {
+      this.setState({ VATlist: res.data });
+    });
+  };
   getExchangeRate = () => {
     let result = this.props.currency_convert_list.filter((obj) => {
       return obj.currencyCode === this.state?.bankCurrency?.bankAccountCurrency;
     });
     // if(result[0]){
     //   //this.setState({exchangeRate:result[0].exchangeRate});
-    //   
+    //
     // }
     return result[0];
   };
   getChartOfAccountCategoryList = (type) => {
     this.setState({ loading: true });
-
     this.props.transactionsActions.getChartOfCategoryList(type).then((res) => {
       if (res.status === 200) {
+        if (
+          this.state.initValue.explinationStatusEnum !== "PARTIAL" &&
+          this.state.initValue.explinationStatusEnum !== "FULL" &&
+          this.state.initValue.explinationStatusEnum !== "RECONCILED"
+        ) {
+          if (this.state.initValue.coaCategoryId === 16) {
+            this.getVatReportListForBank(1);
+          }
+          if (this.state.initValue.coaCategoryId === 17) {
+            this.getVatReportListForBank(2);
+          }
+        }
         this.setState(
           {
             chartOfAccountCategoryList: res.data,
@@ -464,7 +502,6 @@ class ExplainTrasactionDetail extends React.Component {
         );
         this.setState({ loading: false });
       });
-      
   };
   setExchange = (value) => {
     let result = this.props.currency_convert_list.filter((obj) => {
@@ -727,6 +764,7 @@ class ExplainTrasactionDetail extends React.Component {
       vatId,
       currencyCode,
       // userId,
+      VATReportId,
       transactionId,
       expenseCategory,
       payrollListIds,
@@ -770,6 +808,18 @@ class ExplainTrasactionDetail extends React.Component {
     formData.append("date", this.state.date ? moment(this.state.date) : date);
     if (exchangeRate != null) {
       formData.append("exchangeRate", exchangeRate ? exchangeRate : 1);
+    }
+
+    if (
+      coaCategoryId.label === "Vat Payment" ||
+      coaCategoryId.label === "Vay Claim"
+    ) {
+      const info = this.state.VATlist.find((i) => i.id === VATReportId.value);
+      delete info.taxFiledOn;
+      formData.append(
+        "explainedVatPaymentListString",
+        info ? JSON.stringify([info]) : ""
+      );
     }
 
     formData.append("description", description ? description : "");
@@ -1362,7 +1412,6 @@ class ExplainTrasactionDetail extends React.Component {
       }
     });
 
-
     if (supplier_currencyCode != 0) {
       return supplier_currencyCode;
     } else {
@@ -1781,7 +1830,9 @@ class ExplainTrasactionDetail extends React.Component {
                                         }
                                         if (
                                           option.label !== "Expense" &&
-                                          option.label !== "Supplier Invoice"
+                                          option.label !== "Supplier Invoice" &&
+                                          option.label !== "Vat Payment" &&
+                                          option.label !== "Vat Claim"
                                         ) {
                                           this.getTransactionCategoryList(
                                             option
@@ -1795,6 +1846,15 @@ class ExplainTrasactionDetail extends React.Component {
                                         ) {
                                           this.getVendorList();
                                         }
+
+                                        if (option.label === "Vat Payment") {
+                                          this.getVatReportListForBank(1);
+                                        }
+
+                                        if (option.label === "Vat Claim") {
+                                          this.getVatReportListForBank(2);
+                                        }
+
                                         this.formRef.current.setFieldValue(
                                           "transactionCategoryLabel",
                                           "",
@@ -1898,6 +1958,12 @@ class ExplainTrasactionDetail extends React.Component {
                                           ? "is-invalid"
                                           : ""
                                       }
+                                      disabled={
+                                        props.values.coaCategoryId?.label ===
+                                          "Vat Claim" ||
+                                        props.values.coaCategoryId?.label ===
+                                          "Vat Payment"
+                                      }
                                     />
                                     {props.errors.amount &&
                                       props.touched.amount && (
@@ -1907,6 +1973,62 @@ class ExplainTrasactionDetail extends React.Component {
                                       )}
                                   </FormGroup>
                                 </Col>
+
+                                {(props.values.coaCategoryId?.label ===
+                                  "Vat Claim" ||
+                                  props.values.coaCategoryId?.label ===
+                                    "Vat Payment") && (
+                                  <Col lg={3}>
+                                    <FormGroup className="mb-3">
+                                      <Label htmlFor="dueAmount">
+                                        <span className="text-danger">* </span>
+                                        {props.values.coaCategoryId?.label ===
+                                        "Vat Claim"
+                                          ? "Total VAT Reclaimable"
+                                          : "Total VAT Payable"}
+                                      </Label>
+                                      <Input
+                                        type="number"
+                                        min="0"
+                                        disabled
+                                        maxLength="100"
+                                        id="dueAmount"
+                                        name="dueAmount"
+                                        placeholder={
+                                          props.values.coaCategoryId?.label ===
+                                          "Vat Claim"
+                                            ? "Total VAT Reclaimable"
+                                            : "Total VAT Payable"
+                                        }
+                                        onChange={(option) => {
+                                          if (
+                                            option.target.value === "" ||
+                                            this.regDecimal.test(
+                                              option.target.value
+                                            )
+                                          ) {
+                                            props.handleChange("dueAmount")(
+                                              option
+                                            );
+                                          }
+                                        }}
+                                        value={props.values.dueAmount}
+                                        className={
+                                          props.errors.dueAmount &&
+                                          props.touched.dueAmount
+                                            ? "is-invalid"
+                                            : ""
+                                        }
+                                      />
+                                      {props.errors.dueAmount &&
+                                        props.touched.dueAmount && (
+                                          <div className="invalid-feedback">
+                                            {props.errors.dueAmount}
+                                          </div>
+                                        )}
+                                    </FormGroup>
+                                  </Col>
+                                )}
                               </Row>
                               {/* {transactionCategoryList.dataList &&
 																props.values.coaCategoryId === 10 && (
@@ -1977,7 +2099,7 @@ class ExplainTrasactionDetail extends React.Component {
 																	</Row>
 																)} */}
                               {props.values.coaCategoryId &&
-                                props.values.coaCategoryId.label ===
+                                props.values.coaCategoryId?.label ===
                                   "Expense" && (
                                   <Row>
                                     <Col lg={3}>
@@ -2048,7 +2170,7 @@ class ExplainTrasactionDetail extends React.Component {
                                         props
                                       )}
                                     {props.values.coaCategoryId &&
-                                      props.values.coaCategoryId.label ===
+                                      props.values.coaCategoryId?.label ===
                                         "Expense" &&
                                       props.values.expenseCategory !== 34 && (
                                         <Col lg={3}>
@@ -2108,7 +2230,8 @@ class ExplainTrasactionDetail extends React.Component {
                                                 }
                                               }}
                                               placeholder={
-                                                strings.Select + strings.TransactionType
+                                                strings.Select +
+                                                strings.TransactionType
                                               }
                                               id="vatId"
                                               name="vatId"
@@ -2211,7 +2334,7 @@ class ExplainTrasactionDetail extends React.Component {
                                 )}
 
                               {props.values.coaCategoryId &&
-                                props.values.coaCategoryId.label ===
+                                props.values.coaCategoryId?.label ===
                                   "Expense" &&
                                 props.values?.vatId === 1 && (
                                   <Row>
@@ -2225,7 +2348,7 @@ class ExplainTrasactionDetail extends React.Component {
                                         props
                                       )}
                                     {props.values.coaCategoryId &&
-                                      props.values.coaCategoryId.label ===
+                                      props.values.coaCategoryId?.label ===
                                         "Expense" &&
                                       props.values.expenseCategory &&
                                       props.values.expenseCategory.value !==
@@ -2346,95 +2469,100 @@ class ExplainTrasactionDetail extends React.Component {
                                   )}
                               </Row>
                               {props.values.coaCategoryId &&
-                                  props.values.coaCategoryId?.label ===
-                                    "Expense" && (<hr />)}
-                            {props.values.coaCategoryId &&
-                                  props.values.coaCategoryId?.label ===
-                                    "Expense" &&  (
+                                props.values.coaCategoryId?.label ===
+                                  "Expense" && <hr />}
+                              {props.values.coaCategoryId &&
+                                props.values.coaCategoryId?.label ===
+                                  "Expense" && (
                                   <Row>
-																<Col>
-																<Label htmlFor="currency">
-																{strings.CurrencyExchangeRate}  
-																	</Label>	
-																</Col>
-																</Row>)}
-                                {props.values.coaCategoryId &&
-                                  props.values.coaCategoryId?.label ===
-                                    "Expense" && (
-																<Row>
-																<Col lg={1}>
-																<Input
-																		disabled
-																				id="1"
-																				name="1"
-																				value=	{
-																					1 }
-																				
-																			/>
-																</Col>
-																<Col lg={3}>
-																<FormGroup className="mb-3">
-																	{/* <Label htmlFor="exchangeRate">
+                                    <Col>
+                                      <Label htmlFor="currency">
+                                        {strings.CurrencyExchangeRate}
+                                      </Label>
+                                    </Col>
+                                  </Row>
+                                )}
+                              {props.values.coaCategoryId &&
+                                props.values.coaCategoryId?.label ===
+                                  "Expense" && (
+                                  <Row>
+                                    <Col lg={1}>
+                                      <Input
+                                        disabled
+                                        id="1"
+                                        name="1"
+                                        value={1}
+                                      />
+                                    </Col>
+                                    <Col lg={3}>
+                                      <FormGroup className="mb-3">
+                                        {/* <Label htmlFor="exchangeRate">
 																		Exchange rate
 																	</Label> */}
-																	<div>
-																		<Input
-																		disabled	
-																			className="form-control"
-																			id="currencyName"
-																			name="currencyName"
-																			
-																			value={ExchangeChangeList?.currencyName}
-																			onChange={(value) => {
-																				props.handleChange('curreancyname')(
-																					value,
-																				);
-																			}}
-																		/>
-																	</div>
-																</FormGroup>
-															</Col>
-															<FormGroup className="mt-2"><label><b>=</b></label>	</FormGroup>
-															<Col lg={2}>
-																<FormGroup className="mb-3">
-																	{/* <Label htmlFor="exchangeRate">
+                                        <div>
+                                          <Input
+                                            disabled
+                                            className="form-control"
+                                            id="currencyName"
+                                            name="currencyName"
+                                            value={
+                                              ExchangeChangeList?.currencyName
+                                            }
+                                            onChange={(value) => {
+                                              props.handleChange(
+                                                "curreancyname"
+                                              )(value);
+                                            }}
+                                          />
+                                        </div>
+                                      </FormGroup>
+                                    </Col>
+                                    <FormGroup className="mt-2">
+                                      <label>
+                                        <b>=</b>
+                                      </label>{" "}
+                                    </FormGroup>
+                                    <Col lg={2}>
+                                      <FormGroup className="mb-3">
+                                        {/* <Label htmlFor="exchangeRate">
 																		Exchange rate
 																	</Label> */}
-																	<div>
-																		<Input
-                                    disabled
-																			type="number"
-																			min="0"
-																			className="form-control"
-																			id="exchangeRate"
-																			name="exchangeRate"
-																			maxLength="20"
-                                      value={props.values?.exchangeRate}
-																			onChange={(option) => {
-																				props.handleChange('exchangeRate')(
-																					option,
-																				);
-                                        //props.values.exchangeRate = 
-                                      }}
-																		/>
-																	</div>
-																</FormGroup>
-															</Col>
-														
-															<Col lg={3}>
-															<Input
-																		disabled
-																				id="currencyName"
-																				name="currencyName"
-																				value=	{	this.state?.basecurrency?.currencyName }
-																				
-																			/>
-															</Col>
-														</Row>
+                                        <div>
+                                          <Input
+                                            disabled
+                                            type="number"
+                                            min="0"
+                                            className="form-control"
+                                            id="exchangeRate"
+                                            name="exchangeRate"
+                                            maxLength="20"
+                                            value={props.values?.exchangeRate}
+                                            onChange={(option) => {
+                                              props.handleChange(
+                                                "exchangeRate"
+                                              )(option);
+                                              //props.values.exchangeRate =
+                                            }}
+                                          />
+                                        </div>
+                                      </FormGroup>
+                                    </Col>
+
+                                    <Col lg={3}>
+                                      <Input
+                                        disabled
+                                        id="currencyName"
+                                        name="currencyName"
+                                        value={
+                                          this.state?.basecurrency?.currencyName
+                                        }
+                                      />
+                                    </Col>
+                                  </Row>
                                 )}
 
                               {props.values.coaCategoryId &&
-                                props.values.coaCategoryId.label ===
+                                props.values.coaCategoryId?.label ===
                                   "Supplier Invoice" && (
                                   <Row>
                                     <Col lg={4}>
@@ -2510,7 +2638,8 @@ class ExplainTrasactionDetail extends React.Component {
                                                 )
                                           }
                                           placeholder={
-                                            strings.Select + strings.TransactionType
+                                            strings.Select +
+                                            strings.TransactionType
                                           }
                                           id="vendorId"
                                           name="vendorId"
@@ -2524,7 +2653,7 @@ class ExplainTrasactionDetail extends React.Component {
                                       </FormGroup>
                                     </Col>
                                     {props.values.coaCategoryId &&
-                                      props.values.coaCategoryId.label ===
+                                      props.values.coaCategoryId?.label ===
                                         "Supplier Invoice" &&
                                       props.values.vendorId && (
                                         <Col lg={4}>
@@ -2593,7 +2722,8 @@ class ExplainTrasactionDetail extends React.Component {
                                                   : props.values.invoiceIdList
                                               }
                                               placeholder={
-                                                strings.Select + strings.TransactionType
+                                                strings.Select +
+                                                strings.TransactionType
                                               }
                                               id="invoiceIdList"
                                               name="invoiceIdList"
@@ -2717,7 +2847,8 @@ class ExplainTrasactionDetail extends React.Component {
                                                 )
                                           }
                                           placeholder={
-                                            strings.Select + strings.TransactionType
+                                            strings.Select +
+                                            strings.TransactionType
                                           }
                                           id="customerId"
                                           name="customerId"
@@ -2805,7 +2936,8 @@ class ExplainTrasactionDetail extends React.Component {
                                               : props.values.invoiceIdList
                                           }
                                           placeholder={
-                                            strings.Select + strings.TransactionType
+                                            strings.Select +
+                                            strings.TransactionType
                                           }
                                           id="invoiceIdList"
                                           name="invoiceIdList"
@@ -2857,12 +2989,16 @@ class ExplainTrasactionDetail extends React.Component {
                                     </Col>
                                   )}
                                 {props.values.coaCategoryId &&
-                                  props.values.coaCategoryId.label !==
+                                  props.values.coaCategoryId?.label !==
                                     "Expense" &&
-                                  props.values.coaCategoryId.label !==
+                                  props.values.coaCategoryId?.label !==
                                     "Supplier Invoice" &&
-                                  props.values.coaCategoryId.label !==
-                                    "Sales" && (
+                                  props.values.coaCategoryId?.label !==
+                                    "Sales" &&
+                                  props.values.coaCategoryId?.label !==
+                                    "Vat Payment" &&
+                                  props.values.coaCategoryId?.label !==
+                                    "Vat Claim" && (
                                     <Col lg={4}>
                                       <FormGroup className="mb-3">
                                         <Label htmlFor="transactionCategoryId">
@@ -2874,10 +3010,19 @@ class ExplainTrasactionDetail extends React.Component {
                                         <Select
                                           styles={customStyles}
                                           isDisabled={
-                                            props.values.coaCategoryId.label ===
-                                              "Transfered From" ||
-                                            props.values.coaCategoryId.label ===
-                                              "Transfered To"
+                                            props.values.coaCategoryId
+                                              ?.label === "Transfered From" ||
+                                            props.values.coaCategoryId
+                                              ?.label === "Transfered To" ||
+                                            this.state.initValue
+                                              .explinationStatusEnum ===
+                                              "PARTIAL" ||
+                                            this.state.initValue
+                                              .explinationStatusEnum ===
+                                              "FULL" ||
+                                            this.state.initValue
+                                              .explinationStatusEnum ===
+                                              "RECONCILED"
                                           }
                                           options={
                                             transactionCategoryList
@@ -3020,6 +3165,65 @@ class ExplainTrasactionDetail extends React.Component {
                                       </FormGroup>
                                     </Col>
                                   )}
+                                {props.values.coaCategoryId &&
+                                  (props.values.coaCategoryId?.label ===
+                                    "Vat Payment" ||
+                                    props.values.coaCategoryId?.label ===
+                                      "Vat Claim") && (
+                                    <Col lg={4}>
+                                      <FormGroup className="mb-3">
+                                        <Label htmlFor="currencyCode">
+                                          VAT Report Number
+                                        </Label>
+                                        <Select
+                                          style={customStyles}
+                                          id="VATReport"
+                                          isDisabled={
+                                            this.state.initValue
+                                              .explinationStatusEnum ===
+                                              "PARTIAL" ||
+                                            this.state.initValue
+                                              .explinationStatusEnum ===
+                                              "FULL" ||
+                                            this.state.initValue
+                                              .explinationStatusEnum ===
+                                              "RECONCILED"
+                                          }
+                                          name="VATReportId"
+                                          options={this.state.VATlist.map(
+                                            (i) => {
+                                              return {
+                                                label: i.vatNumber,
+                                                value: i.id,
+                                              };
+                                            }
+                                          )}
+                                          value={props.values.VATReportId || ""}
+                                          onChange={(option) => {
+                                            props.handleChange("VATReportId")(
+                                              option
+                                            );
+                                            const info =
+                                              this.state.VATlist.find(
+                                                (i) => i.id === option.value
+                                              );
+                                            props.handleChange(
+                                              "transactionAmount"
+                                            )(info.dueAmount);
+                                            props.handleChange("dueAmount")(
+                                              info.totalAmount
+                                            );
+                                          }}
+                                        />
+                                        {props.errors.currencyCode &&
+                                          props.touched.currencyCode && (
+                                            <div className="invalid-feedback">
+                                              {props.errors.currencyCode}
+                                            </div>
+                                          )}
+                                      </FormGroup>
+                                    </Col>
+                                  )}
                                 {transactionCategoryList.dataList &&
                                   (props.values.coaCategoryId.value === 6 ||
                                     props.values.coaCategoryId.value ===
@@ -3071,7 +3275,7 @@ class ExplainTrasactionDetail extends React.Component {
                                   )}
                               </Row>
                               {/* {props.values.coaCategoryId &&
-																	props.values.coaCategoryId.label ===
+																	props.values.coaCategoryId?.label ===
 																	'Expense' &&  (
 																		<Row style={{display: this.state.bankAccountCurrency === this.state.basecurrency.currencyCode ? 'none': ''}}>
 																			<Col lg={3}>
@@ -3132,7 +3336,7 @@ class ExplainTrasactionDetail extends React.Component {
 																		</Row>
 																	)}
 																{props.values.coaCategoryId &&
-																	props.values.coaCategoryId.label ===
+																	props.values.coaCategoryId?.label ===
 																	'Expense' && (
 																		<Row  style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
 																			<Col lg={2}>
@@ -3196,8 +3400,9 @@ class ExplainTrasactionDetail extends React.Component {
 																		</Row>
 																	)} */}
                               {props.values.coaCategoryId &&
-                                (props.values.coaCategoryId.label === "Sales" ||
-                                  props.values.coaCategoryId.label ===
+                                (props.values.coaCategoryId?.label ===
+                                  "Sales" ||
+                                  props.values.coaCategoryId?.label ===
                                     "Supplier Invoice") && (
                                   <>
                                     {props.values?.invoiceIdList.length > 0 && (
@@ -3604,7 +3809,7 @@ class ExplainTrasactionDetail extends React.Component {
                                 )}
 
                               {/* {props.values.coaCategoryId &&
-																props.values.coaCategoryId.label ===
+																props.values.coaCategoryId?.label ===
 																'Sales' && (
 																	<Row style={{ display: props.values.exchangeRate === 1 ? 'none' : '' }}>
 																		<Col lg={2}>
@@ -3669,7 +3874,7 @@ class ExplainTrasactionDetail extends React.Component {
 																)}
 															
 															{props.values.coaCategoryId &&
-																props.values.coaCategoryId.label ===
+																props.values.coaCategoryId?.label ===
 																'Supplier Invoice' &&
 
 																(

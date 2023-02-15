@@ -2347,10 +2347,10 @@ class ExplainTrasactionDetail extends React.Component {
                               </Row>
                               {props.values.coaCategoryId &&
                                   props.values.coaCategoryId?.label ===
-                                    "Expense" && (<hr />)}
+                                    "Expense" && this.state?.bankCurrency?.bankAccountCurrency !== 150 &&(<hr />)}
                             {props.values.coaCategoryId &&
                                   props.values.coaCategoryId?.label ===
-                                    "Expense" &&  (
+                                    "Expense" && this.state?.bankCurrency?.bankAccountCurrency !== 150 && (
                                   <Row>
 																<Col>
 																<Label htmlFor="currency">
@@ -2360,7 +2360,7 @@ class ExplainTrasactionDetail extends React.Component {
 																</Row>)}
                                 {props.values.coaCategoryId &&
                                   props.values.coaCategoryId?.label ===
-                                    "Expense" && (
+                                    "Expense" && this.state?.bankCurrency?.bankAccountCurrency !== 150 && (
 																<Row>
 																<Col lg={1}>
 																<Input

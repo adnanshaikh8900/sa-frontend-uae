@@ -1284,6 +1284,25 @@ class CreateBankTransaction extends React.Component {
                             0
                           );
 
+                          if (
+                            values.coaCategoryId.label === "VAT Payment" ||
+                            values.coaCategoryId.label === "VAT Claim"
+                          ) {
+                            const info = this.state.VATlist.find(
+                              (i) => i.id === values.VATReportId.value
+                            );
+
+                            if (
+                              moment(values.transactionDate).diff(
+                                moment(info.taxFiledOn),
+                                "days"
+                              ) > 0
+                            ) {
+                              errors.transactionDate =
+                                "The transaction date cannot be before the Date of Filing.";
+                            }
+                          }
+
                           const date = moment(values.transactionDate).format(
                             "MM/DD/YYYY"
                           );
@@ -1440,6 +1459,7 @@ class CreateBankTransaction extends React.Component {
                             //     errors.transactionAmount = `Transaction Amount Must be Equal to Invoice Total(  ${this.state.totalInvoiceAmount}  )`;
                             // }
                           }
+                          debugger;
                           return errors;
                         }}
                         validationSchema={Yup.object().shape({

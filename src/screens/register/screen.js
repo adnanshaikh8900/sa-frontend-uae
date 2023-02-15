@@ -1188,6 +1188,7 @@ class Register extends React.Component {
 																			</Button>
 																		</Col>
 																	</Row>
+																	<label><a href="https://www.simpleaccounts.io/privacy-policy/" target="_blank">Privacy Policy</a></label>
 																</Form>
 															);
 														}}

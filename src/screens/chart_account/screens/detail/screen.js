@@ -69,7 +69,8 @@ class DetailChartAccount extends React.Component {
 			disabled1:false,
 			loadingMsg:"Loading...",
 			disableLeavePage:false,
-			childRecordsPresent:false
+			childRecordsPresent:false,
+			exist: false
 		};
 		// this.regExAlpha = /^[a-zA-Z]+$/;
 		this.regExAlpha = /^[A-Za-z0-9 !@#$%^&*)(+=._-]+$/;
@@ -225,7 +226,26 @@ class DetailChartAccount extends React.Component {
 		});
 	};
 
-	// Create or Edit VAT
+	validationCheck = (value) => {
+		const data = {
+			moduleType: 16,
+			name: value,
+		};
+		this.props.detailChartOfAccontActions
+			.checkValidation(data)
+			.then((response) => {
+				if (response.data === 'Transaction Category Name Already Exists') {
+					this.setState({
+						exist: true,
+					});
+				} else {
+					this.setState({
+						exist: false,
+					});
+				}
+			});
+	};
+
 	handleSubmit = (data, resetForm) => {
 		this.setState({ disabled: true, disableLeavePage:true });
 		const id = this.props.location.state.id;
@@ -299,12 +319,18 @@ class DetailChartAccount extends React.Component {
 													onSubmit={(values, { resetForm }) => {
 														this.handleSubmit(values, resetForm);
 													}}
+													validate={(values) => {
+														let errors = {};
+														if (!values.transactionCategoryName) {
+															errors.transactionCategoryName = 'Name is required';
+														}
+														else if (this.state.exist === true) {
+															errors.transactionCategoryName =
+																'Name already exist';
+														}
+														return errors;
+													}}
 													validationSchema={Yup.object().shape({
-														// transactionCategoryCode: Yup.string()
-														//   .required("Code Name is required"),
-														transactionCategoryName: Yup.string().required(
-															'Account is required',
-														),
 														chartOfAccount: Yup.string()
 															.required('Type is required')
 															.nullable(),
@@ -353,6 +379,7 @@ class DetailChartAccount extends React.Component {
 																				'transactionCategoryName',
 																			)(option);
 																		}
+																		this.validationCheck(option.target.value);
 																	}}
 																	value={props.values.transactionCategoryName}
 																	className={

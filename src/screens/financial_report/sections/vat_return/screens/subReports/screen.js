@@ -187,6 +187,12 @@ class SubReports extends React.Component {
 			case 'EXPENSE':
 				this.props.history.push('/admin/expense/expense/view', {
 					expenseId: id,
+					boxNo:this.props.location.state.boxNo,
+					description:this.props.location.state.description,
+					startDate:this.props.location.state.startDate,
+					endDate:this.props.location.state.endDate,
+					placeOfSupplyId:this.props.location.state.placeOfSupplyId,
+					crossLinked:true
 				});
 				break;
 			case 'MANUAL':

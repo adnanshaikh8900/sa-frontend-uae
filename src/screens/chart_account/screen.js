@@ -442,16 +442,17 @@ class ChartAccount extends React.Component {
 									<Col lg={12}>
 									{this.state.hideForPrint==false&&(	<div className="d-flex justify-content-end">
 											<ButtonGroup size="sm">
-											
+										<span>
 											<Button
 											color="primary"
 											className="btn-square pull-right mr-1"
 											onClick={this.goToCreatePage}
-											
-										>
-											<i className="fas fa-plus mr-1" />
-										{strings.AddNewAccount}
-										</Button>
+											>
+												<i className="fas fa-plus mr-1" />
+												{strings.AddNewAccount}
+											</Button>
+										</span>
+											<span>
 												<Button
 													color="primary"
 													className="btn-square mr-1"
@@ -460,6 +461,8 @@ class ChartAccount extends React.Component {
 													<i className="fa glyphicon glyphicon-export fa-download mr-1" />
 												{strings.export_csv}
 												</Button>
+											</span>
+											<span>
 												{view && (
 													<CSVLink
 														data={csvData}
@@ -512,6 +515,7 @@ class ChartAccount extends React.Component {
 														}}>
 											 		<i className="fa fa-print"> {strings.print_csv} </i>
 											</Button>
+											</span>
 												{/* <Button
 													color="primary"
 													className="btn-square mr-1"

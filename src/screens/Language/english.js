@@ -454,11 +454,11 @@ const en = {
       AddnewAccount:"Add new Account",
 
 //Add Chart of Accounts
-      NewChartAccount:"New Chart Of Account",		
+      NewChartAccount:"Create Chart Of Account",		
       chartOfAccountName:"Chart Of Account Name",
       accountType:"Account Type",
       Name:"Name",		
-      Type:"Product Type",		
+      Type:"Type",		
       Chart_of_Account:"Chart of Account",
 
 //Contact
@@ -511,6 +511,7 @@ const en = {
       VATCategoryRequired:"VAT category is required",
       SellingPriceRequired:"Selling price is required",
       PurchasePriceRequired:"Purchase price is required",
+      ProductType:"Product Type",
       
 
 //Add product

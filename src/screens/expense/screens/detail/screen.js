@@ -107,7 +107,7 @@ class DetailExpense extends React.Component {
 			disabled1:false,
 			exclusiveVat:true,
 			expenseType:true,
-			isVatClaimable:false,
+			isVatClaimable:true,
 			isReverseChargeEnabled:false,
 			taxTreatmentId:'',
 			showReverseCharge:false,
@@ -232,7 +232,7 @@ class DetailExpense extends React.Component {
 										: '',
 									expenseAmount: res.data.expenseAmount,
 									vatCategoryId: vatCategoryId,
-									payMode: res.data.payMode ? res.data.payMode : '',
+									payMode: res.data.payMode ? res.data.payMode : 'CASH',
 									bankAccountId: res.data.bankAccountId
 										? res.data.bankAccountId
 										: '',
@@ -256,7 +256,7 @@ class DetailExpense extends React.Component {
 								exchangeRate:res?.data?.exchangeRate ? res.data.exchangeRate : '',
 								payee: res.data.payee ? res.data.payee : '',
 								expenseType: res.data.expenseType ? true : false,
-								isVatClaimable: res.data.expenseType ? res.data.expenseType : false,
+								isVatClaimable: res.data.expenseType ? false : true,
 								showPlacelist:res.data.taxTreatmentId !== 8 ? true : false,
 								lockPlacelist:res.data.taxTreatmentId === 7 ? true : false,
 								taxTreatmentId:res.data.taxTreatmentId ? res.data.taxTreatmentId : '',
@@ -1165,7 +1165,7 @@ class DetailExpense extends React.Component {
 																	<span className='mr-4'>{strings.NonClaimable}</span>}
 
 																<Switch
-																	checked={this.state.isVatClaimable}
+																	checked={this.state.expenseType}
 																	onChange={(expenseType) => {
 																		props.handleChange('expenseType')(expenseType);
 																		this.setState({ expenseType, }, () => { },);
@@ -1474,6 +1474,7 @@ class DetailExpense extends React.Component {
 																						  )
 																						: []
 																				}
+																				disabled
 																				value={
 																					pay_mode_list &&
 																					pay_mode_list.find(
@@ -1482,6 +1483,7 @@ class DetailExpense extends React.Component {
 																							props.values.payMode,
 																					)
 																				}
+																			
 																				onChange={(option) => {
 																					props.handleChange('payMode')(
 																						option.value,

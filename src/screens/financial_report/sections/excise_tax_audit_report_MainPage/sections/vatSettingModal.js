@@ -112,16 +112,24 @@ class VatSettingModal extends React.Component {
 
 		this.formikRef = React.createRef();
 	}
-
+	getData = (data) => {
+		let temp = {};
+		for (let item in data) {
+			if (typeof data[`${item}`] !== 'object') {
+				temp[`${item}`] = data[`${item}`];
+			} else {
+				temp[`${item}`] = data[`${item}`].value;
+			}
+		}
+		return temp;
+	};
 
 	handleSubmit = (data, resetForm, setSubmitting) => {
 		this.setState({ disabled: true });
-		let formData = new FormData();
-		for ( var key in data ) {	
-			formData.append(key, data[key]);
-		}
-		this.props.ExciseTaxAuditReportActions
-			.VATSetting(formData)
+		const postData = this.getData(data);
+
+		this.props
+			.companyDetails(postData)
 			.then((res) => {
 				if (res.status === 200) {
 					this.setState({ disabled: false });

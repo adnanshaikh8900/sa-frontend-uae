@@ -190,7 +190,7 @@ class CreateChartAccount extends React.Component {
 								<CardHeader>
 									<div className="h4 mb-0 d-flex align-items-center">
 										<i className="nav-icon fas fa-area-chart" />
-										<span className="ml-2">{strings.NewChartAccount}</span>
+										<span className="ml-2">Create Chart Of Account</span>
 									</div>
 								</CardHeader>
 								<CardBody>

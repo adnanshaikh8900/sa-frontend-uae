@@ -345,7 +345,7 @@ class CreateChartAccount extends React.Component {
 																	</div>
 																)}
 														</FormGroup>
-											<span style={{fontWeight:'bold'}}>Note: A Chart Of Account cannot be edited after a document or transaction has been created using it.</span>
+											<span style={{fontWeight:'bold'}}>Note:</span><span> A Chart Of Account cannot be edited if they are associated with a product, document or transaction.</span>
 														<FormGroup className="text-right mt-5">
 															<Button
 																type="button"

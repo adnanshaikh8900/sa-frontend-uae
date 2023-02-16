@@ -1,6 +1,6 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import React from "react";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import {
   Card,
   CardHeader,
@@ -13,23 +13,23 @@ import {
   Input,
   Label,
   NavLink,
-} from 'reactstrap';
-import Select from 'react-select';
-import DatePicker from 'react-datepicker';
-import { Formik, Field } from 'formik';
-import * as Yup from 'yup';
-import { CommonActions } from 'services/global';
-import { selectOptionsFactory } from 'utils';
-import moment from 'moment';
-import { LeavePage, Loader } from 'components';
-import * as transactionDetailActions from './actions';
-import * as transactionActions from '../../actions';
-import 'react-datepicker/dist/react-datepicker.css';
-import './style.scss';
-import API_ROOT_URL from '../../../../../../constants/config';
-import { ViewBankAccount } from './sections';
-import {data}  from '../../../../../Language/index'
-import LocalizedStrings from 'react-localization';
+} from "reactstrap";
+import Select from "react-select";
+import DatePicker from "react-datepicker";
+import { Formik, Field } from "formik";
+import * as Yup from "yup";
+import { CommonActions } from "services/global";
+import { selectOptionsFactory } from "utils";
+import moment from "moment";
+import { LeavePage, Loader } from "components";
+import * as transactionDetailActions from "./actions";
+import * as transactionActions from "../../actions";
+import "react-datepicker/dist/react-datepicker.css";
+import "./style.scss";
+import API_ROOT_URL from "../../../../../../constants/config";
+import { ViewBankAccount } from "./sections";
+import { data } from "../../../../../Language/index";
+import LocalizedStrings from "react-localization";
 
 const mapStateToProps = (state) => {
   return {
@@ -43,20 +43,20 @@ const mapDispatchToProps = (dispatch) => {
     transactionActions: bindActionCreators(transactionActions, dispatch),
     transactionDetailActions: bindActionCreators(
       transactionDetailActions,
-      dispatch,
+      dispatch
     ),
     commonActions: bindActionCreators(CommonActions, dispatch),
   };
 };
 const customStyles = {
-	control: (base, state) => ({
-		...base,
-		borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
-		boxShadow: state.isFocused ? null : null,
-		'&:hover': {
-			borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
-		},
-	}),
+  control: (base, state) => ({
+    ...base,
+    borderColor: state.isFocused ? "#2064d8" : "#c7c7c7",
+    boxShadow: state.isFocused ? null : null,
+    "&:hover": {
+      borderColor: state.isFocused ? "#2064d8" : "#c7c7c7",
+    },
+  }),
 };
 
 let strings = new LocalizedStrings(data);
@@ -64,11 +64,11 @@ class DetailBankTransaction extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      language: window['localStorage'].getItem('language'),
+      language: window["localStorage"].getItem("language"),
       createMore: false,
       loading: true,
-			disableLeavePage:false, 
-      fileName: '',
+      disableLeavePage: false,
+      fileName: "",
       initValue: {},
       transaction_id: null,
       view: false,
@@ -76,13 +76,13 @@ class DetailBankTransaction extends React.Component {
 
     this.file_size = 1024000;
     this.supported_format = [
-      'image/png',
-			'image/jpeg',
-      'text/plain',
-      'application/pdf',
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      'application/vnd.ms-excel',
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      "image/png",
+      "image/jpeg",
+      "text/plain",
+      "application/pdf",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "application/vnd.ms-excel",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     ];
     this.regEx = /^[0-9\d]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
@@ -108,38 +108,38 @@ class DetailBankTransaction extends React.Component {
               initValue: {
                 bankAccountId: res.data.bankAccountId
                   ? res.data.bankAccountId
-                  : '',
+                  : "",
                 transactionDate: res.data.transactionDate
                   ? res.data.transactionDate
-                  : '',
+                  : "",
                 transactionDescription: res.data.transactionDescription
                   ? res.data.transactionDescription
-                  : '',
+                  : "",
                 transactionAmount: res.data.transactionAmount
                   ? res.data.transactionAmount
-                  : '',
+                  : "",
                 chartOfAccountId:
                   res.data.chartOfAccountId !== null
                     ? res.data.chartOfAccountId
-                    : '',
+                    : "",
                 transactionCategoryId:
                   res.data.transactionCategoryId !== null
                     ? res.data.transactionCategoryId
-                    : '',
-                projectId: res.data.projectId ? res.data.projectId : '',
+                    : "",
+                projectId: res.data.projectId ? res.data.projectId : "",
                 receiptNumber: res.data.receiptNumber
                   ? res.data.receiptNumber
-                  : '',
+                  : "",
                 attachementDescription: res.data.attachementDescription
                   ? res.data.attachementDescription
-                  : '',
-                attachment: res.data.attachment ? res.data.attachment : '',
+                  : "",
+                attachment: res.data.attachment ? res.data.attachment : "",
                 fileName: res.data.receiptAttachmentFileName
                   ? res.data.receiptAttachmentFileName
-                  : '',
+                  : "",
                 filePath: res.data.receiptAttachmentPath
                   ? res.data.receiptAttachmentPath
-                  : '',
+                  : "",
               },
               view:
                 this.props.location.state && this.props.location.state.view
@@ -152,15 +152,15 @@ class DetailBankTransaction extends React.Component {
               } else {
                 this.setState({ loading: false });
               }
-            },
+            }
           );
         })
         .catch((err) => {
           // this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
-          this.props.history.push('/admin/banking/bank-account');
+          this.props.history.push("/admin/banking/bank-account");
         });
     } else {
-      this.props.history.push('/admin/banking/bank-account');
+      this.props.history.push("/admin/banking/bank-account");
     }
   };
 
@@ -171,12 +171,12 @@ class DetailBankTransaction extends React.Component {
     if (file) {
       reader.onloadend = () => {};
       reader.readAsDataURL(file);
-      props.setFieldValue('attachment', file, true);
+      props.setFieldValue("attachment", file, true);
     }
   };
 
   handleSubmit = (data, resetForm) => {
-    this.setState({ disabled: true, loading:true, disableLeavePage:true });
+    this.setState({ disabled: true, loading: true, disableLeavePage: true });
     const {
       bankAccountId,
       transactionDate,
@@ -190,45 +190,45 @@ class DetailBankTransaction extends React.Component {
     } = data;
     const { transaction_id } = this.state;
     let formData = new FormData();
-    formData.append('bankAccountId ', bankAccountId ? bankAccountId : '');
-    formData.append('id', transaction_id ? transaction_id : '');
+    formData.append("bankAccountId ", bankAccountId ? bankAccountId : "");
+    formData.append("id", transaction_id ? transaction_id : "");
     formData.append(
-      'transactionDate',
-      typeof transactionDate === 'string'
+      "transactionDate",
+      typeof transactionDate === "string"
         ? moment(transactionDate).toDate()
-        : transactionDate,
+        : transactionDate
     );
     formData.append(
-      'transactionDescription',
-      transactionDescription ? transactionDescription : '',
+      "transactionDescription",
+      transactionDescription ? transactionDescription : ""
     );
     formData.append(
-      'transactionAmount',
-      transactionAmount ? transactionAmount : '',
+      "transactionAmount",
+      transactionAmount ? transactionAmount : ""
     );
     formData.append(
-      'chartOfAccountId',
-      typeof chartOfAccountId === 'object'
-        ? chartOfAccountId['value']
-        : chartOfAccountId,
+      "chartOfAccountId",
+      typeof chartOfAccountId === "object"
+        ? chartOfAccountId["value"]
+        : chartOfAccountId
     );
     formData.append(
-      'transactionCategoryId',
-      typeof transactionCategoryId === 'object'
-        ? transactionCategoryId['value']
-        : transactionCategoryId,
+      "transactionCategoryId",
+      typeof transactionCategoryId === "object"
+        ? transactionCategoryId["value"]
+        : transactionCategoryId
     );
     formData.append(
-      'projectId',
-      typeof projectId === 'object' ? projectId['value'] : projectId,
+      "projectId",
+      typeof projectId === "object" ? projectId["value"] : projectId
     );
-    formData.append('receiptNumber', receiptNumber ? receiptNumber : '');
+    formData.append("receiptNumber", receiptNumber ? receiptNumber : "");
     formData.append(
-      'attachementDescription',
-      attachementDescription ? attachementDescription : '',
+      "attachementDescription",
+      attachementDescription ? attachementDescription : ""
     );
     if (this.uploadFile?.files?.[0]) {
-      formData.append('attachment', this.uploadFile?.files?.[0]);
+      formData.append("attachment", this.uploadFile?.files?.[0]);
     }
     this.props.transactionDetailActions
       .updateTransaction(formData)
@@ -236,18 +236,18 @@ class DetailBankTransaction extends React.Component {
         if (res.status === 200) {
           resetForm();
           this.props.commonActions.tostifyAlert(
-            'success',
-            'Transaction Detail Updated Successfully.',
+            "success",
+            "Transaction Detail Updated Successfully."
           );
-          this.props.history.push('/admin/banking/bank-account/transaction', {
+          this.props.history.push("/admin/banking/bank-account/transaction", {
             bankAccountId,
           });
         }
       })
       .catch((err) => {
         this.props.commonActions.tostifyAlert(
-          'error',
-          err && err.data ? err.data.message : 'Something Went Wrong',
+          "error",
+          err && err.data ? err.data.message : "Something Went Wrong"
         );
       });
   };
@@ -260,11 +260,8 @@ class DetailBankTransaction extends React.Component {
 
   render() {
     strings.setLanguage(this.state.language);
-    const {
-      project_list,
-      transaction_category_list,
-      transaction_type_list,
-    } = this.props;
+    const { project_list, transaction_category_list, transaction_type_list } =
+      this.props;
     console.log(project_list);
     const { initValue, loading } = this.state;
     return (
@@ -289,7 +286,13 @@ class DetailBankTransaction extends React.Component {
                         <div className="h4 mb-0 d-flex align-items-center">
                           <i className="icon-doc" />
                           <span className="ml-2">
-                          {strings.Update+" "+strings.Bank+" "+strings.Transaction+" "+strings.Details}
+                            {strings.Update +
+                              " " +
+                              strings.Bank +
+                              " " +
+                              strings.Transaction +
+                              " " +
+                              strings.Details}
                           </span>
                         </div>
                       </Col>
@@ -306,18 +309,18 @@ class DetailBankTransaction extends React.Component {
                           }}
                           validationSchema={Yup.object().shape({
                             transactionDate: Yup.date().required(
-                              'Transaction Date is Required',
+                              "Transaction Date is Required"
                             ),
                             transactionAmount: Yup.string().required(
-                              'Transaction Amount is Required',
+                              "Transaction Amount is Required"
                             ),
                             chartOfAccountId: Yup.string().required(
-                              'Transaction Type is Required',
+                              "Transaction Type is Required"
                             ),
                             attachment: Yup.mixed()
                               .test(
-                                'fileType',
-                                '*Unsupported File Format',
+                                "fileType",
+                                "*Unsupported File Format",
                                 (value) => {
                                   value &&
                                     this.setState({
@@ -327,7 +330,7 @@ class DetailBankTransaction extends React.Component {
                                     !value ||
                                     (value &&
                                       this.supported_format.includes(
-                                        value.type,
+                                        value.type
                                       )) ||
                                     !value
                                   ) {
@@ -335,11 +338,11 @@ class DetailBankTransaction extends React.Component {
                                   } else {
                                     return false;
                                   }
-                                },
+                                }
                               )
                               .test(
-                                'fileSize',
-                                '*File Size is too large',
+                                "fileSize",
+                                "*File Size is too large",
                                 (value) => {
                                   if (
                                     !value ||
@@ -350,7 +353,7 @@ class DetailBankTransaction extends React.Component {
                                   } else {
                                     return false;
                                   }
-                                },
+                                }
                               ),
                           })}
                         >
@@ -361,54 +364,58 @@ class DetailBankTransaction extends React.Component {
                                   <FormGroup className="mb-3">
                                     <Label htmlFor="chartOfAccountId">
                                       <span className="text-danger">* </span>
-                                     {strings.TransactionType}
+                                      {strings.TransactionType}
                                     </Label>
                                     <Select
-                                    styles={customStyles}
+                                      styles={customStyles}
                                       options={
                                         transaction_type_list
                                           ? selectOptionsFactory.renderOptions(
-                                              'chartOfAccountName',
-                                              'chartOfAccountId',
+                                              "chartOfAccountName",
+                                              "chartOfAccountId",
                                               transaction_type_list,
-                                              'Type',
+                                              "Type"
                                             )
-                                          : ''
+                                          : ""
                                       }
                                       value={
                                         transaction_type_list &&
                                         selectOptionsFactory
                                           .renderOptions(
-                                            'chartOfAccountName',
-                                            'chartOfAccountId',
+                                            "chartOfAccountName",
+                                            "chartOfAccountId",
                                             transaction_type_list,
-                                            'Type',
+                                            "Type"
                                           )
                                           .find(
                                             (option) =>
                                               option.value ===
-                                              props.values.chartOfAccountId,
+                                              props.values.chartOfAccountId
                                           )
                                       }
                                       onChange={(option) => {
                                         if (option && option.value) {
                                           props.handleChange(
-                                            'chartOfAccountId',
+                                            "chartOfAccountId"
                                           )(option);
                                         } else {
                                           props.handleChange(
-                                            'chartOfAccountId',
-                                          )('');
+                                            "chartOfAccountId"
+                                          )("");
                                         }
                                       }}
-                                      placeholder={strings.Select+" "+strings.TransactionType}
+                                      placeholder={
+                                        strings.Select +
+                                        " " +
+                                        strings.TransactionType
+                                      }
                                       id="chartOfAccountId"
                                       name="chartOfAccountId"
                                       className={
                                         props.errors.chartOfAccountId &&
                                         props.touched.chartOfAccountId
-                                          ? 'is-invalid'
-                                          : ''
+                                          ? "is-invalid"
+                                          : ""
                                       }
                                     />
                                     {props.errors.chartOfAccountId &&
@@ -436,21 +443,21 @@ class DetailBankTransaction extends React.Component {
                                       value={
                                         props.values.transactionDate
                                           ? moment(
-                                              props.values.transactionDate,
-                                            ).format('DD-MM-YYYY')
-                                          : ''
+                                              props.values.transactionDate
+                                            ).format("DD-MM-YYYY")
+                                          : ""
                                       }
                                       // selected={props.values.transactionDate}
                                       onChange={(value) =>
-                                        props.handleChange('transactionDate')(
-                                          value,
+                                        props.handleChange("transactionDate")(
+                                          value
                                         )
                                       }
                                       className={`form-control ${
                                         props.errors.transactionDate &&
                                         props.touched.transactionDate
-                                          ? 'is-invalid'
-                                          : ''
+                                          ? "is-invalid"
+                                          : ""
                                       }`}
                                     />
                                     {props.errors.transactionDate &&
@@ -465,7 +472,7 @@ class DetailBankTransaction extends React.Component {
                                   <FormGroup className="mb-3">
                                     <Label htmlFor="transactionAmount">
                                       <span className="text-danger">* </span>
-                                     {strings.Total+" "+strings.Amount }
+                                      {strings.Total + " " + strings.Amount}
                                     </Label>
                                     <Input
                                       type="number"
@@ -475,11 +482,11 @@ class DetailBankTransaction extends React.Component {
                                       placeholder={strings.Amount}
                                       onChange={(option) => {
                                         if (
-                                          option.target.value === '' ||
+                                          option.target.value === "" ||
                                           this.regEx.test(option.target.value)
                                         ) {
                                           props.handleChange(
-                                            'transactionAmount',
+                                            "transactionAmount"
                                           )(option);
                                         }
                                       }}
@@ -487,8 +494,8 @@ class DetailBankTransaction extends React.Component {
                                       className={
                                         props.errors.transactionAmount &&
                                         props.touched.transactionAmount
-                                          ? 'is-invalid'
-                                          : ''
+                                          ? "is-invalid"
+                                          : ""
                                       }
                                     />
                                     {props.errors.transactionAmount &&
@@ -507,16 +514,16 @@ class DetailBankTransaction extends React.Component {
                                       {strings.Category}
                                     </Label>
                                     <Select
-                                    styles={customStyles}
+                                      styles={customStyles}
                                       className="select-default-width"
                                       options={
                                         transaction_category_list &&
                                         transaction_category_list.data
                                           ? selectOptionsFactory.renderOptions(
-                                              'transactionCategoryName',
-                                              'transactionCategoryId',
+                                              "transactionCategoryName",
+                                              "transactionCategoryId",
                                               transaction_category_list.data,
-                                              'Category',
+                                              "Category"
                                             )
                                           : []
                                       }
@@ -526,27 +533,26 @@ class DetailBankTransaction extends React.Component {
                                         transaction_category_list.data &&
                                         selectOptionsFactory
                                           .renderOptions(
-                                            'transactionCategoryName',
-                                            'transactionCategoryId',
+                                            "transactionCategoryName",
+                                            "transactionCategoryId",
                                             transaction_category_list.data,
-                                            'Category',
+                                            "Category"
                                           )
                                           .find(
                                             (option) =>
                                               option.value ===
-                                              props.values
-                                                .transactionCategoryId,
+                                              props.values.transactionCategoryId
                                           )
                                       }
                                       onChange={(option) => {
                                         if (option && option.value) {
                                           props.handleChange(
-                                            'transactionCategoryId',
+                                            "transactionCategoryId"
                                           )(option);
                                         } else {
                                           props.handleChange(
-                                            'transactionCategoryId',
-                                          )('');
+                                            "transactionCategoryId"
+                                          )("");
                                         }
                                       }}
                                     />
@@ -557,7 +563,7 @@ class DetailBankTransaction extends React.Component {
                                 <Col lg={8}>
                                   <FormGroup className="mb-3">
                                     <Label htmlFor="transactionDescription">
-                                       {strings.Description}
+                                      {strings.Description}
                                     </Label>
                                     <Input
                                       type="textarea"
@@ -565,12 +571,12 @@ class DetailBankTransaction extends React.Component {
                                       id="description"
                                       rows="6"
                                       placeholder={strings.Description}
-                                      onChange={(option) =>{
-                                        if(!option.target.value.includes("="))
-                                        props.handleChange(
-                                          'transactionDescription',
-                                        )(option)}
-                                      }
+                                      onChange={(option) => {
+                                        if (!option.target.value.includes("="))
+                                          props.handleChange(
+                                            "transactionDescription"
+                                          )(option);
+                                      }}
                                       value={
                                         props.values.transactionDescription
                                       }
@@ -581,17 +587,19 @@ class DetailBankTransaction extends React.Component {
                               <Row>
                                 <Col lg={4}>
                                   <FormGroup className="mb-3">
-                                    <Label htmlFor="projectId">{strings.Project}</Label>
+                                    <Label htmlFor="projectId">
+                                      {strings.Project}
+                                    </Label>
                                     <Select
-                                    styles={customStyles}
+                                      styles={customStyles}
                                       className="select-default-width"
                                       options={
                                         project_list
                                           ? selectOptionsFactory.renderOptions(
-                                              'label',
-                                              'value',
+                                              "label",
+                                              "value",
                                               project_list,
-                                              'Project',
+                                              "Project"
                                             )
                                           : []
                                       }
@@ -602,16 +610,16 @@ class DetailBankTransaction extends React.Component {
                                         project_list.find(
                                           (option) =>
                                             option.value ===
-                                            +props.values.projectId,
+                                            +props.values.projectId
                                         )
                                       }
                                       onChange={(option) => {
                                         if (option && option.value) {
-                                          props.handleChange('projectId')(
-                                            option,
+                                          props.handleChange("projectId")(
+                                            option
                                           );
                                         } else {
-                                          props.handleChange('projectId')('');
+                                          props.handleChange("projectId")("");
                                         }
                                       }}
                                     />
@@ -628,19 +636,19 @@ class DetailBankTransaction extends React.Component {
                                         </Label>
                                         <Input
                                           type="text"
-																					maxLength="20"
+                                          maxLength="20"
                                           id="receiptNumber"
                                           name="receiptNumber"
                                           placeholder={strings.ReceiptNumber}
                                           onChange={(option) => {
                                             if (
-                                              option.target.value === '' ||
+                                              option.target.value === "" ||
                                               this.regExBoth.test(
-                                                option.target.value,
+                                                option.target.value
                                               )
                                             ) {
                                               props.handleChange(
-                                                'receiptNumber',
+                                                "receiptNumber"
                                               )(option);
                                             }
                                           }}
@@ -653,7 +661,7 @@ class DetailBankTransaction extends React.Component {
                                     <Col lg={12}>
                                       <FormGroup className="mb-3 hideAttachment">
                                         <Label htmlFor="attachementDescription">
-                                        {strings.AttachmentDescription}
+                                          {strings.AttachmentDescription}
                                         </Label>
                                         <Input
                                           type="textarea"
@@ -663,7 +671,7 @@ class DetailBankTransaction extends React.Component {
                                           placeholder={strings.Description}
                                           onChange={(option) =>
                                             props.handleChange(
-                                              'attachementDescription',
+                                              "attachementDescription"
                                             )(option)
                                           }
                                           value={
@@ -682,7 +690,9 @@ class DetailBankTransaction extends React.Component {
                                           name="attachment"
                                           render={({ field, form }) => (
                                             <div>
-                                              <Label>{strings.ReceiptAttachment}</Label>{' '}
+                                              <Label>
+                                                {strings.ReceiptAttachment}
+                                              </Label>{" "}
                                               <br />
                                               <div className="file-upload-cont">
                                                 <Button
@@ -690,13 +700,13 @@ class DetailBankTransaction extends React.Component {
                                                   onClick={() => {
                                                     document
                                                       .getElementById(
-                                                        'fileInput',
+                                                        "fileInput"
                                                       )
                                                       .click();
                                                   }}
                                                   className="btn-square mr-3"
                                                 >
-                                                  <i className="fa fa-upload"></i>{' '}
+                                                  <i className="fa fa-upload"></i>{" "}
                                                   {strings.upload}
                                                 </Button>
                                                 <input
@@ -705,27 +715,27 @@ class DetailBankTransaction extends React.Component {
                                                     this.uploadFile = ref;
                                                   }}
                                                   type="file"
-                                                  style={{ display: 'none' }}
+                                                  style={{ display: "none" }}
                                                   onChange={(e) => {
                                                     this.handleFileChange(
                                                       e,
-                                                      props,
+                                                      props
                                                     );
                                                   }}
                                                 />
                                                 {this.state.fileName && (
-																								<div>
-																									<i
-																										className="fa fa-close"
-																										onClick={() =>
-																											this.setState({
-																												fileName: '',
-																											})
-																										}
-																									></i>{' '}
-																									{this.state.fileName}
-																								</div>
-																							)}
+                                                  <div>
+                                                    <i
+                                                      className="fa fa-close"
+                                                      onClick={() =>
+                                                        this.setState({
+                                                          fileName: "",
+                                                        })
+                                                      }
+                                                    ></i>{" "}
+                                                    {this.state.fileName}
+                                                  </div>
+                                                )}
                                                 {this.state.fileName ? (
                                                   this.state.fileName
                                                 ) : (
@@ -736,7 +746,7 @@ class DetailBankTransaction extends React.Component {
                                                     }
                                                     href={`${API_ROOT_URL.API_ROOT_URL}${initValue.filePath}`}
                                                     style={{
-                                                      fontSize: '0.875rem',
+                                                      fontSize: "0.875rem",
                                                     }}
                                                     target="_blank"
                                                   >
@@ -769,23 +779,27 @@ class DetailBankTransaction extends React.Component {
                                       className="btn-square mr-3"
                                       onClick={props.handleSubmit}
                                     >
-                                      <i className="fa fa-dot-circle-o"></i>{' '}
-                                       {strings.Update}
+                                      <i className="fa fa-dot-circle-o"></i>{" "}
+                                      {strings.Update}
                                     </Button>
                                     <Button
                                       color="secondary"
                                       className="btn-square"
                                       onClick={() =>
                                         this.props.history.push(
-                                          '/admin/banking/bank-account/transaction',
+                                          "/admin/banking/bank-account/transaction",
                                           {
                                             bankAccountId:
                                               initValue.bankAccountId,
-                                          },
+                                            currency:
+                                              this.props.location.state
+                                                ?.currency,
+                                          }
                                         )
                                       }
                                     >
-                                      <i className="fa fa-ban"></i>  {strings.Cancel}
+                                      <i className="fa fa-ban"></i>{" "}
+                                      {strings.Cancel}
                                     </Button>
                                   </FormGroup>
                                 </Col>
@@ -801,7 +815,7 @@ class DetailBankTransaction extends React.Component {
             </Col>
           </Row>
         </div>
-			{this.state.disableLeavePage ?"":<LeavePage/>}
+        {this.state.disableLeavePage ? "" : <LeavePage />}
       </div>
     );
   }
@@ -809,5 +823,5 @@ class DetailBankTransaction extends React.Component {
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
+  mapDispatchToProps
 )(DetailBankTransaction);

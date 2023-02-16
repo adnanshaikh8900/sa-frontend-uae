@@ -2529,14 +2529,23 @@ class ExplainTrasactionDetail extends React.Component {
 																	</Label> */}
 																	<div>
 																		<Input
-                                    disabled
+                                      disabled={
+                                        this.state.initValue
+                                          .explinationStatusEnum ===
+                                          "PARTIAL" ||
+                                        this.state.initValue
+                                          .explinationStatusEnum === "FULL" ||
+                                        this.state.initValue
+                                          .explinationStatusEnum ===
+                                          "RECONCILED"
+                                      }
 																			type="number"
 																			min="0"
 																			className="form-control"
 																			id="exchangeRate"
 																			name="exchangeRate"
 																			maxLength="20"
-                                      value={props.values?.exchangeRate}
+                                      value={props.values?.exchangeRate ? props.values?.exchangeRate : ExchangeChangeList?.exchangeRate }
 																			onChange={(option) => {
 																				props.handleChange('exchangeRate')(
 																					option,

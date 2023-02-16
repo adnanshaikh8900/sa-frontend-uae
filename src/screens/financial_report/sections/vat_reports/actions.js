@@ -11,7 +11,7 @@ export const generateReport = (obj) => {
 			url: '/rest/vatReport/generateVatReport',
 			data: obj,
 		};
-		return authFileUploadApi(data)
+		return authApi(data)
 			.then((res) => {
 				return res			
 			})
@@ -129,7 +129,7 @@ export const recordVatPayment = (obj) => {
 			url: '/rest/vatReport/recordVatPayment',
 			data: obj,
 		};
-		return authFileUploadApi(data)
+		return authApi(data)
 			.then((res) => {
 				return res;
 			})
@@ -178,12 +178,45 @@ export const VATSetting = (obj) => {
 	return (dispatch) => {
 		let data = {
 			method: 'post',
-			url: '/rest/vatReport/VATSetting',
+			url: '/rest/simpleaccountReports/VATSetting',
 			data: obj,
 		};
-		return authFileUploadApi(data)
+		return authApi(data)
 			.then((res) => {
 				return res			
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+export const getVRN = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'GET',
+			url: `/rest/customizeinvoiceprefixsuffix/getNextInvoiceNo?invoiceType=12`,
+		};
+
+		return authApi(data)
+			.then((res) => {
+				return res;
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+export const getVRNPrefix = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: '/rest/customizeinvoiceprefixsuffix/getListForInvoicePrefixAndSuffix?invoiceType=12',
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					return res;
+				}
 			})
 			.catch((err) => {
 				throw err;

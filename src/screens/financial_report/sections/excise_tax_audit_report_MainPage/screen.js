@@ -25,7 +25,6 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import moment from 'moment';
 import download from 'downloadjs';
-import { AgGridReact, AgGridColumn } from 'ag-grid-react/lib/agGridReact';
 import { ConfirmDeleteModal, Currency } from 'components';
 import {data}  from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
@@ -523,7 +522,7 @@ class ExciseTaxAuditReport extends React.Component {
 								<Button color="primary"
 								onClick={()=>{this.setState({openGenerateModal:true})}}
 								>Create a FTA Excise Tax Audit File</Button>
-						</div> */}
+						</div> 
 							
 							{/* <div className="ag-theme-alpine mb-3" style={{ height: 550, width: "100%" }}>
 
@@ -686,7 +685,7 @@ class ExciseTaxAuditReport extends React.Component {
 									></TableHeaderColumn>
 								</BootstrapTable>
 							</div>
-
+							
 						</CardBody>
 					</Card>
 				</div>
@@ -696,6 +695,8 @@ class ExciseTaxAuditReport extends React.Component {
 						this.closeVatSettingModal(e);
 						this.getInitialData();
 					}}
+				companyDetails={this.props.ftaReport.VATSetting}
+
 				/>
 
 			</div>

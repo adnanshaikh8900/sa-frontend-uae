@@ -39,7 +39,7 @@ class ExpenseTemplate extends Component {
 					>
 						<span>{expenseData.expenseStatus}</span>
 					</div> */}
-	<CardBody style={{ margin: '1rem', border: 'solid 1px', borderColor: '#c8ced3'}}>
+	<CardBody style={{ margin: '1rem', border: 'solid 1px', borderColor: '#c8ced3', position:'relative', minHeight:'100vh'}}>
 						<div
 							style={{
 								width: '100%',
@@ -51,7 +51,6 @@ class ExpenseTemplate extends Component {
 						<div style={{ width: '50%', marginTop: '4.5rem', marginLeft: '3rem' }}>
 								
 								<div className="companyDetails">
-									
 									<img
 									src={
 										companyData &&
@@ -59,32 +58,31 @@ class ExpenseTemplate extends Component {
 											? 'data:image/jpg;base64,' +
 											  companyData.companyLogoByteArray
 											: logo
-									}
+									}	
 										className=""
 										alt=""
 										style={{ width: '300px' }}
 									/>
 								
 							</div>
-							
 							</div>
 							<div
 								style={{
-									width: '70%',
+									width: '80%',
 									display: 'flex',
 									flexDirection: 'column',
 									justifyContent: 'center',
-									padding: '60px'
 								}}
 							>
 								<div style={{
-									width: '97%',
+									width: '100%',
 									textAlign: 'right',
+									padding: '60px',
 								}}
 								>
-									<h2 className="mb-1 ml-2"><b>{strings.Expense}</b></h2>	
+									<h2 className="mb-1 ml-2"><h1><b>{strings.Expense}</b></h1></h2>	
 									{/* <div className="mb-1 ml-2" style={{fontSize:"22px"}}><b> {expenseData.payee} </b></div> */}
-									<div className="mb-1 ml-2"><b>{strings.ExpenseDate}</b>: {moment(expenseData.expenseDate ).format('DD-MM-YYYY')}
+									<div className="mb-1 ml-2"><h4><b>{strings.ExpenseDate}</b>: {moment(expenseData.expenseDate ).format('DD-MM-YYYY')}</h4>
 									</div> 
 								</div>
 							</div>	
@@ -96,12 +94,12 @@ class ExpenseTemplate extends Component {
 								>
 									{(expenseData.exchangeRate && expenseData.exchangeRate!==1 ) && <strong>{strings.Exchangerate}: {expenseData.exchangeRate }</strong>}
 						</div><br />
-				<div style={{backgroundColor:'rgb(32 100 216)', height:'45px'}}></div>
+				<div style={{backgroundColor:'rgb(32 100 216)', height:'50px'}}></div>
 					<div className="card text-start border"
 						style={{
 							width: '100%',
 							display: 'flex',
-							border:'1px solid',				
+							border:'2px solid',				
 							borderColor:'#c8ced3'
 						}}>
 

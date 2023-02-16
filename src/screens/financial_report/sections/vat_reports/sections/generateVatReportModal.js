@@ -92,6 +92,7 @@ class GenerateVatReportModal extends React.Component {
 				startDate:new Date(),
 				endDate:new Date(new Date().setMonth(new Date().getMonth() + this.props.monthOption.value))
 			},
+			VRN:"",
 			dialog: null,
 			filterData: {
 				name: '',
@@ -103,11 +104,13 @@ class GenerateVatReportModal extends React.Component {
 	}
 	static getDerivedStateFromProps(nextProps, prevState) {
 		if (prevState.employee_list !== nextProps.employee_list) {
-			console.log('getDerivedStateFromProps state changed', nextProps.selectedData);
+			console.log('getDerivedStateFromProps state changed', nextProps);
+			console.log(nextProps.getVRNPrefix);
 			return {
-				prefixData: nextProps.prefixData,
+				getVRNPrefix: nextProps.getVRNPrefix,
 				employee_list: nextProps.employee_list,
 			};
+			
 		}
 	}
 
@@ -127,7 +130,6 @@ class GenerateVatReportModal extends React.Component {
 		this.pdfExportComponent.save();
 	};
 	componentDidMount = () => {
-		
 		this.setState(
 			{...this.state.initValue,
 			initValue: {
@@ -136,6 +138,7 @@ class GenerateVatReportModal extends React.Component {
 			} })
 	};
 
+
 	handleChange = (val, name) => {
 		this.setState({
 			filterData: Object.assign(this.state.filterData, {
@@ -143,6 +146,7 @@ class GenerateVatReportModal extends React.Component {
 			})
 		})
 	}
+
 
 	generateReport = () => {
 		const { openModal, closeModal } = this.props;
@@ -174,6 +178,7 @@ class GenerateVatReportModal extends React.Component {
 		const postData = {
 			// startDate: moment(this.state.initValue.startDate).format('DD/MM/YYYY'),
 			// endDate: moment(this.state.initValue.endDate).format('DD/MM/YYYY'),
+			vrn:this.state.VRN,
 			startDate:this.getStartDate().replaceAll("-","/"),
 			endDate:this.getEndDate().replaceAll("-","/")
 		};
@@ -195,7 +200,7 @@ class GenerateVatReportModal extends React.Component {
 		strings.setLanguage(this.state.language);
 		const { openModal, closeModal,monthOption,setState,state } = this.props;
 		const { initValue, loading } = this.state;
-
+		console.log(this.state.prefix)
 		var lastdayoflastmonth = new Date();
 		
 		var firstdayoflastmonth = new Date();
@@ -303,13 +308,19 @@ class GenerateVatReportModal extends React.Component {
 														</Col> */}
 
 <Col lg={4}>												
-															{/* <FormGroup className="mb-3">
-																<Label htmlFor="startDate">*VAT Report Number </Label>
-																<Input value={this.getStartDate()} 
+															<FormGroup className="mb-3">
+															<span className="text-danger">* </span>
+																<Label htmlFor="startDate"> VAT Report Number </Label>
+																<Input 
+															value={this.state.VRN} 
+															name="VRN"
+															id="VRN"
+															onChange={(options)=>{this.setState({VRN:options.target.value})}}
+
 																
-																placeholder="Enter VAT Report Number" disabled/>	
+															placeholder="Enter VAT Report Number"/>	
 																
-															</FormGroup> */}
+															</FormGroup>
 															
 														</Col>
 													</Row>

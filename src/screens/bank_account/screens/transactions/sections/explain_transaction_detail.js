@@ -820,9 +820,7 @@ class ExplainTrasactionDetail extends React.Component {
     );
     formData.append("bankId ", this.props.bankId ? this.props.bankId : "");
     formData.append("date", this.state.date ? moment(this.state.date) : date);
-    if (exchangeRate != null) {
-      formData.append("exchangeRate", exchangeRate ? exchangeRate : 1);
-    }
+    formData.append("exchangeRate", exchangeRate ? exchangeRate : 1);
 
     if (
       coaCategoryId.label === "Vat Payment" ||

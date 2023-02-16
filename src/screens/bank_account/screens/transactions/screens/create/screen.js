@@ -395,7 +395,7 @@ class CreateBankTransaction extends React.Component {
         ? exchangeRate.lenght > 0
           ? exchangeRate[0]
           : 1
-        : exchangeRate
+        : exchangeRate ? exchangeRate : 1
     );
     if (transactionCategoryId) {
       formData.append("transactionCategoryId",transactionCategoryId ? transactionCategoryId.value : "" );
@@ -3210,8 +3210,8 @@ class CreateBankTransaction extends React.Component {
                                   </Col>
                                 </Row>
                               )}
-                            {props.values.coaCategoryId && props.values.currencyCode !== 150 && <hr />}
-                            {props.values.currencyCode !== 150 && (
+                            {props.values.coaCategoryId && this.state?.bankCurrency?.bankAccountCurrency !== 150 && <hr />}
+                            {this.state?.bankCurrency?.bankAccountCurrency !== 150 && (
                                 <Row>
                                   <Col>
                                     <Label htmlFor="currency">
@@ -3220,7 +3220,7 @@ class CreateBankTransaction extends React.Component {
                                   </Col>
                                 </Row>
                               )}
-                            {props.values.currencyCode !== 150 && (
+                            {this.state?.bankCurrency?.bankAccountCurrency !== 150 && (
                                 <Row>
                                   <Col lg={1}>
                                     <Input disabled id="1" name="1" value={1} />
@@ -3266,6 +3266,7 @@ class CreateBankTransaction extends React.Component {
                                           maxLength="20"
                                           value={props.values.exchangeRate}
                                           onChange={(option) => {
+                                            console.log(props.values.currencyCode,this.state?.bankCurrency,"jdkhkj")
                                             props.handleChange("exchangeRate")(
                                               option
                                             );

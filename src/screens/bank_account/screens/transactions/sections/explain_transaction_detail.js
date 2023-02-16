@@ -319,9 +319,8 @@ class ExplainTrasactionDetail extends React.Component {
             );
           }
         }
-
       );
-      
+
       this.formRef.current.setFieldValue(
         "amount",
         res.data.amount
@@ -413,8 +412,8 @@ class ExplainTrasactionDetail extends React.Component {
     }
   };
   calculateVAT = (transactionAmount, vatId, exclusiveVat) => {
-    if(exclusiveVat === null ){
-      exclusiveVat=false;
+    if (exclusiveVat === null) {
+      exclusiveVat = false;
     }
     let transactionVatAmount = 0;
     let transactionExpenseAmount = 0;
@@ -440,7 +439,7 @@ class ExplainTrasactionDetail extends React.Component {
     let result = this.props.currency_convert_list.filter((obj) => {
       return obj.currencyCode === this.state?.bankCurrency?.bankAccountCurrency;
     });
-    
+
     return result[0];
   };
   getChartOfAccountCategoryList = (type) => {
@@ -510,7 +509,6 @@ class ExplainTrasactionDetail extends React.Component {
         );
         this.setState({ loading: false });
       });
-      
   };
   setExchange = (value) => {
     let result = this.props.currency_convert_list.filter((obj) => {
@@ -1232,17 +1230,20 @@ class ExplainTrasactionDetail extends React.Component {
     if (option?.length > 0) {
       const transactionAmount =
         amount || this.formRef.current.state.values.amount;
-      const exchangerate = this.formRef.current.state.values?.exchangeRate;
+      const exchangerate =
+        option[0].exchangeRate ||
+        this.formRef.current.state.values?.exchangeRate;
+      debugger;
       const invoicelist = [...option];
       const total = invoicelist.reduce(
-        (accu, curr, index) => curr.amount * exchangerate[index]
+        (accu, curr, index) => curr.amount * exchangerate
       );
       let remainingcredit = transactionAmount;
       const finaldata = invoicelist?.map((i, ind) => {
         let localexe = 0;
-        if (i.exchnageRate === undefined)
+        if (i.exchangeRate === undefined)
           localexe = this.setcustomexchnage(i.currencyCode);
-        else localexe = i.exchnageRate;
+        else localexe = i.exchangeRate;
         let finalcredit = 0;
         let localremainamount = remainingcredit;
         if (remainingcredit > 0) {
@@ -1292,7 +1293,7 @@ class ExplainTrasactionDetail extends React.Component {
       });
 
       this.formRef.current.setFieldValue("invoiceIdList", finaldata);
-
+      this.formRef.current.setFieldValue("exchangeRate", exchangerate);
       return finaldata;
     } else {
       this.formRef.current.setFieldValue("invoiceIdList", []);
@@ -1419,7 +1420,6 @@ class ExplainTrasactionDetail extends React.Component {
         supplier_currencyCode = item.label.currency.currencyCode;
       }
     });
-
 
     if (supplier_currencyCode != 0) {
       return supplier_currencyCode;
@@ -1849,7 +1849,9 @@ class ExplainTrasactionDetail extends React.Component {
                                       }
                                       onChange={(option) => {
                                         let result = this.getExchangeRate();
-                                        props.handleChange('exchangeRate')(result.exchangeRate,);
+                                        props.handleChange("exchangeRate")(
+                                          result.exchangeRate
+                                        );
 
                                         if (option && option.value) {
                                           props.handleChange("coaCategoryId")(
@@ -2401,13 +2403,16 @@ class ExplainTrasactionDetail extends React.Component {
                                             )}
 
                                             <Switch
-                                              checked={props.values.exclusiveVat}
+                                              checked={
+                                                props.values.exclusiveVat
+                                              }
                                               disabled={
                                                 this.state.initValue
                                                   .explinationStatusEnum ===
                                                   "PARTIAL" ||
                                                 this.state.initValue
-                                                  .explinationStatusEnum === "FULL" ||
+                                                  .explinationStatusEnum ===
+                                                  "FULL" ||
                                                 this.state.initValue
                                                   .explinationStatusEnum ===
                                                   "RECONCILED"
@@ -3491,12 +3496,14 @@ class ExplainTrasactionDetail extends React.Component {
                                                         let local2 = [
                                                           ...props.values
                                                             ?.invoiceIdList,
-                                                        ];
-                                                        local2[
-                                                          invindex
-                                                        ].exchnageRate =
-                                                          value.target.value;
-
+                                                        ].map((i) => {
+                                                          return {
+                                                            ...i,
+                                                            exchangeRate:
+                                                              value.target
+                                                                .value,
+                                                          };
+                                                        });
                                                         this.setexchnagedamount(
                                                           local2
                                                         );
@@ -3938,96 +3945,117 @@ class ExplainTrasactionDetail extends React.Component {
                                     </Col>
                                   ))}
                               </Row>
-                              {props.values.coaCategoryId && this.state?.bankCurrency?.bankAccountCurrency !== 150 &&(<hr />)}
-                              {props.values.coaCategoryId && this.state?.bankCurrency?.bankAccountCurrency !== 150 && (
-                              <Row>
-																<Col>
-																<Label htmlFor="currency">
-																{strings.CurrencyExchangeRate}  
-																	</Label>	
-																</Col>
-																</Row>)}
-                                {props.values.coaCategoryId &&
-                                  this.state?.bankCurrency?.bankAccountCurrency !== 150 && (
-																<Row>
-																<Col lg={1}>
-																<Input
-																		disabled
-																				id="1"
-																				name="1"
-																				value=	{
-																					1 }
-																				
-																			/>
-																</Col>
-																<Col lg={3}>
-																<FormGroup className="mb-3">
-																	{/* <Label htmlFor="exchangeRate">
+                              {props.values.coaCategoryId &&
+                                this.state?.bankCurrency
+                                  ?.bankAccountCurrency !== 150 && <hr />}
+                              {props.values.coaCategoryId &&
+                                this.state?.bankCurrency
+                                  ?.bankAccountCurrency !== 150 &&
+                                props.values.coaCategoryId?.label !== "Sales" &&
+                                props.values.coaCategoryId?.label !==
+                                  "Supplier Invoice" && (
+                                  <Row>
+                                    <Col>
+                                      <Label htmlFor="currency">
+                                        {strings.CurrencyExchangeRate}
+                                      </Label>
+                                    </Col>
+                                  </Row>
+                                )}
+                              {props.values.coaCategoryId &&
+                                this.state?.bankCurrency
+                                  ?.bankAccountCurrency !== 150 &&
+                                props.values.coaCategoryId?.label !== "Sales" &&
+                                props.values.coaCategoryId?.label !==
+                                  "Supplier Invoice" && (
+                                  <Row>
+                                    <Col lg={1}>
+                                      <Input
+                                        disabled
+                                        id="1"
+                                        name="1"
+                                        value={1}
+                                      />
+                                    </Col>
+                                    <Col lg={3}>
+                                      <FormGroup className="mb-3">
+                                        {/* <Label htmlFor="exchangeRate">
 																		Exchange rate
 																	</Label> */}
-																	<div>
-																		<Input
-																		disabled	
-																			className="form-control"
-																			id="currencyName"
-																			name="currencyName"
-																			
-																			value={ExchangeChangeList?.currencyName}
-																			onChange={(value) => {
-																				props.handleChange('curreancyname')(
-																					value,
-																				);
-																			}}
-																		/>
-																	</div>
-																</FormGroup>
-															</Col>
-															<FormGroup className="mt-2"><label><b>=</b></label>	</FormGroup>
-															<Col lg={2}>
-																<FormGroup className="mb-3">
-																	{/* <Label htmlFor="exchangeRate">
+                                        <div>
+                                          <Input
+                                            disabled
+                                            className="form-control"
+                                            id="currencyName"
+                                            name="currencyName"
+                                            value={
+                                              ExchangeChangeList?.currencyName
+                                            }
+                                            onChange={(value) => {
+                                              props.handleChange(
+                                                "curreancyname"
+                                              )(value);
+                                            }}
+                                          />
+                                        </div>
+                                      </FormGroup>
+                                    </Col>
+                                    <FormGroup className="mt-2">
+                                      <label>
+                                        <b>=</b>
+                                      </label>{" "}
+                                    </FormGroup>
+                                    <Col lg={2}>
+                                      <FormGroup className="mb-3">
+                                        {/* <Label htmlFor="exchangeRate">
 																		Exchange rate
 																	</Label> */}
-																	<div>
-																		<Input
-                                      disabled={
-                                        this.state.initValue
-                                          .explinationStatusEnum ===
-                                          "PARTIAL" ||
-                                        this.state.initValue
-                                          .explinationStatusEnum === "FULL" ||
-                                        this.state.initValue
-                                          .explinationStatusEnum ===
-                                          "RECONCILED"
-                                      }
-																			type="number"
-																			min="0"
-																			className="form-control"
-																			id="exchangeRate"
-																			name="exchangeRate"
-																			maxLength="20"
-                                      value={props.values?.exchangeRate ? props.values?.exchangeRate : ExchangeChangeList?.exchangeRate }
-																			onChange={(option) => {
-																				props.handleChange('exchangeRate')(
-																					option,
-																				);
-                                        //props.values.exchangeRate = 
-                                      }}
-																		/>
-																	</div>
-																</FormGroup>
-															</Col>
-														
-															<Col lg={3}>
-															<Input
-																		disabled
-																				id="currencyName"
-																				name="currencyName"
-																				value=	{	this.state?.basecurrency?.currencyName }
-																				
-																			/>
-															</Col>
-														</Row>
+                                        <div>
+                                          <Input
+                                            disabled={
+                                              this.state.initValue
+                                                .explinationStatusEnum ===
+                                                "PARTIAL" ||
+                                              this.state.initValue
+                                                .explinationStatusEnum ===
+                                                "FULL" ||
+                                              this.state.initValue
+                                                .explinationStatusEnum ===
+                                                "RECONCILED"
+                                            }
+                                            type="number"
+                                            min="0"
+                                            className="form-control"
+                                            id="exchangeRate"
+                                            name="exchangeRate"
+                                            maxLength="20"
+                                            value={
+                                              props.values?.exchangeRate
+                                                ? props.values?.exchangeRate
+                                                : ExchangeChangeList?.exchangeRate
+                                            }
+                                            onChange={(option) => {
+                                              props.handleChange(
+                                                "exchangeRate"
+                                              )(option);
+                                              //props.values.exchangeRate =
+                                            }}
+                                          />
+                                        </div>
+                                      </FormGroup>
+                                    </Col>
+
+                                    <Col lg={3}>
+                                      <Input
+                                        disabled
+                                        id="currencyName"
+                                        name="currencyName"
+                                        value={
+                                          this.state?.basecurrency?.currencyName
+                                        }
+                                      />
+                                    </Col>
+                                  </Row>
                                 )}
                               <Row className="mt-2 mb-2">
                                 <Col>

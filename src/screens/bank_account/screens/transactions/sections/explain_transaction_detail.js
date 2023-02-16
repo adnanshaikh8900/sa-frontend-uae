@@ -412,14 +412,35 @@ class ExplainTrasactionDetail extends React.Component {
       );
     }
   };
+  calculateVAT = (transactionAmount, vatId, exclusiveVat) => {
+    if(exclusiveVat === null ){
+      exclusiveVat=false;
+    }
+    let transactionVatAmount = 0;
+    let transactionExpenseAmount = 0;
+    if (transactionAmount && vatId === 1 && exclusiveVat) {
+      transactionVatAmount = transactionAmount * 0.05;
+      transactionExpenseAmount = transactionVatAmount + transactionAmount;
+      transactionAmount = transactionExpenseAmount;
+      this.setState({
+        transactionVatAmount: transactionVatAmount,
+        transactionExpenseAmount: transactionExpenseAmount,
+      });
+    } else if (transactionAmount && vatId === 1 && !exclusiveVat) {
+      transactionVatAmount = (transactionAmount * 5) / 105;
+      transactionExpenseAmount = transactionAmount - transactionVatAmount;
+      this.setState({
+        transactionVatAmount: transactionVatAmount,
+        transactionExpenseAmount: transactionExpenseAmount,
+      });
+    }
+    return transactionAmount;
+  };
   getExchangeRate = () => {
     let result = this.props.currency_convert_list.filter((obj) => {
       return obj.currencyCode === this.state?.bankCurrency?.bankAccountCurrency;
     });
-    // if(result[0]){
-    //   //this.setState({exchangeRate:result[0].exchangeRate});
-    //   
-    // }
+    
     return result[0];
   };
   getChartOfAccountCategoryList = (type) => {
@@ -754,12 +775,17 @@ class ExplainTrasactionDetail extends React.Component {
       // userId,
       VATReportId,
       transactionId,
+      exclusiveVat,
       expenseCategory,
       payrollListIds,
     } = data;
 
     const expenseType = this.state.selectedStatus;
-
+    let transactionAmount = this.calculateVAT(
+      amount,
+      vatId.value,
+      exclusiveVat
+    );
     if (
       (invoiceIdList && coaCategoryId.label === "Sales") ||
       (invoiceIdList && coaCategoryId.label === "Supplier Invoice")
@@ -811,7 +837,7 @@ class ExplainTrasactionDetail extends React.Component {
     }
 
     formData.append("description", description ? description : "");
-    formData.append("amount", amount ? amount : "");
+    formData.append("amount", transactionAmount ? transactionAmount : "");
     formData.append("dueAmount", dueAmount ? dueAmount : 0);
     formData.append("coaCategoryId", coaCategoryId ? id : "");
     if (this.state.transactionCategoryId) {
@@ -883,12 +909,6 @@ class ExplainTrasactionDetail extends React.Component {
       let result = this.props.currency_convert_list.filter((obj) => {
         return obj.currencyCode === this.state.bankCurrency.bankAccountCurrency;
       });
-      const exchange = result[0].exchangeRate;
-      formData.append(
-        "currencyCode",
-        this.state.bankCurrency.bankAccountCurrency
-      );
-      formData.append("exchangeRate", exchange || 1);
       formData.append("bankGenerated", true);
       formData.append("convertedAmount", this.expenceconvert(amount));
     }
@@ -1596,6 +1616,11 @@ class ExplainTrasactionDetail extends React.Component {
                           }}
                           validate={(values) => {
                             let errors = {};
+                            this.calculateVAT(
+                              values.amount,
+                              values.vatId,
+                              values.exclusiveVat
+                            );
                             const totalexpaled = values?.invoiceIdList.reduce(
                               (a, c) => a + c.explainedAmount,
                               0
@@ -1823,6 +1848,9 @@ class ExplainTrasactionDetail extends React.Component {
                                         )
                                       }
                                       onChange={(option) => {
+                                        let result = this.getExchangeRate();
+                                        props.handleChange('exchangeRate')(result.exchangeRate,);
+
                                         if (option && option.value) {
                                           props.handleChange("coaCategoryId")(
                                             option
@@ -2373,10 +2401,17 @@ class ExplainTrasactionDetail extends React.Component {
                                             )}
 
                                             <Switch
-                                              checked={
-                                                props.values.exclusiveVat
+                                              checked={props.values.exclusiveVat}
+                                              disabled={
+                                                this.state.initValue
+                                                  .explinationStatusEnum ===
+                                                  "PARTIAL" ||
+                                                this.state.initValue
+                                                  .explinationStatusEnum === "FULL" ||
+                                                this.state.initValue
+                                                  .explinationStatusEnum ===
+                                                  "RECONCILED"
                                               }
-                                              disabled
                                               onChange={(exclusiveVat) => {
                                                 if (
                                                   this.state.initValue
@@ -2472,103 +2507,6 @@ class ExplainTrasactionDetail extends React.Component {
                                     </Col>
                                   )}
                               </Row>
-                              {props.values.coaCategoryId &&
-                                  props.values.coaCategoryId?.label ===
-                                    "Expense" && this.state?.bankCurrency?.bankAccountCurrency !== 150 &&(<hr />)}
-                            {props.values.coaCategoryId &&
-                                  props.values.coaCategoryId?.label ===
-                                    "Expense" && this.state?.bankCurrency?.bankAccountCurrency !== 150 && (
-                                  <Row>
-																<Col>
-																<Label htmlFor="currency">
-																{strings.CurrencyExchangeRate}  
-																	</Label>	
-																</Col>
-																</Row>)}
-                                {props.values.coaCategoryId &&
-                                  props.values.coaCategoryId?.label ===
-                                    "Expense" && this.state?.bankCurrency?.bankAccountCurrency !== 150 && (
-																<Row>
-																<Col lg={1}>
-																<Input
-																		disabled
-																				id="1"
-																				name="1"
-																				value=	{
-																					1 }
-																				
-																			/>
-																</Col>
-																<Col lg={3}>
-																<FormGroup className="mb-3">
-																	{/* <Label htmlFor="exchangeRate">
-																		Exchange rate
-																	</Label> */}
-																	<div>
-																		<Input
-																		disabled	
-																			className="form-control"
-																			id="currencyName"
-																			name="currencyName"
-																			
-																			value={ExchangeChangeList?.currencyName}
-																			onChange={(value) => {
-																				props.handleChange('curreancyname')(
-																					value,
-																				);
-																			}}
-																		/>
-																	</div>
-																</FormGroup>
-															</Col>
-															<FormGroup className="mt-2"><label><b>=</b></label>	</FormGroup>
-															<Col lg={2}>
-																<FormGroup className="mb-3">
-																	{/* <Label htmlFor="exchangeRate">
-																		Exchange rate
-																	</Label> */}
-																	<div>
-																		<Input
-                                      disabled={
-                                        this.state.initValue
-                                          .explinationStatusEnum ===
-                                          "PARTIAL" ||
-                                        this.state.initValue
-                                          .explinationStatusEnum === "FULL" ||
-                                        this.state.initValue
-                                          .explinationStatusEnum ===
-                                          "RECONCILED"
-                                      }
-																			type="number"
-																			min="0"
-																			className="form-control"
-																			id="exchangeRate"
-																			name="exchangeRate"
-																			maxLength="20"
-                                      value={props.values?.exchangeRate ? props.values?.exchangeRate : ExchangeChangeList?.exchangeRate }
-																			onChange={(option) => {
-																				props.handleChange('exchangeRate')(
-																					option,
-																				);
-                                        //props.values.exchangeRate = 
-                                      }}
-																		/>
-																	</div>
-																</FormGroup>
-															</Col>
-														
-															<Col lg={3}>
-															<Input
-																		disabled
-																				id="currencyName"
-																				name="currencyName"
-																				value=	{	this.state?.basecurrency?.currencyName }
-																				
-																			/>
-															</Col>
-														</Row>
-                                )}
-
                               {props.values.coaCategoryId &&
                                 props.values.coaCategoryId?.label ===
                                   "Supplier Invoice" && (
@@ -4000,6 +3938,97 @@ class ExplainTrasactionDetail extends React.Component {
                                     </Col>
                                   ))}
                               </Row>
+                              {props.values.coaCategoryId && this.state?.bankCurrency?.bankAccountCurrency !== 150 &&(<hr />)}
+                              {props.values.coaCategoryId && this.state?.bankCurrency?.bankAccountCurrency !== 150 && (
+                              <Row>
+																<Col>
+																<Label htmlFor="currency">
+																{strings.CurrencyExchangeRate}  
+																	</Label>	
+																</Col>
+																</Row>)}
+                                {props.values.coaCategoryId &&
+                                  this.state?.bankCurrency?.bankAccountCurrency !== 150 && (
+																<Row>
+																<Col lg={1}>
+																<Input
+																		disabled
+																				id="1"
+																				name="1"
+																				value=	{
+																					1 }
+																				
+																			/>
+																</Col>
+																<Col lg={3}>
+																<FormGroup className="mb-3">
+																	{/* <Label htmlFor="exchangeRate">
+																		Exchange rate
+																	</Label> */}
+																	<div>
+																		<Input
+																		disabled	
+																			className="form-control"
+																			id="currencyName"
+																			name="currencyName"
+																			
+																			value={ExchangeChangeList?.currencyName}
+																			onChange={(value) => {
+																				props.handleChange('curreancyname')(
+																					value,
+																				);
+																			}}
+																		/>
+																	</div>
+																</FormGroup>
+															</Col>
+															<FormGroup className="mt-2"><label><b>=</b></label>	</FormGroup>
+															<Col lg={2}>
+																<FormGroup className="mb-3">
+																	{/* <Label htmlFor="exchangeRate">
+																		Exchange rate
+																	</Label> */}
+																	<div>
+																		<Input
+                                      disabled={
+                                        this.state.initValue
+                                          .explinationStatusEnum ===
+                                          "PARTIAL" ||
+                                        this.state.initValue
+                                          .explinationStatusEnum === "FULL" ||
+                                        this.state.initValue
+                                          .explinationStatusEnum ===
+                                          "RECONCILED"
+                                      }
+																			type="number"
+																			min="0"
+																			className="form-control"
+																			id="exchangeRate"
+																			name="exchangeRate"
+																			maxLength="20"
+                                      value={props.values?.exchangeRate ? props.values?.exchangeRate : ExchangeChangeList?.exchangeRate }
+																			onChange={(option) => {
+																				props.handleChange('exchangeRate')(
+																					option,
+																				);
+                                        //props.values.exchangeRate = 
+                                      }}
+																		/>
+																	</div>
+																</FormGroup>
+															</Col>
+														
+															<Col lg={3}>
+															<Input
+																		disabled
+																				id="currencyName"
+																				name="currencyName"
+																				value=	{	this.state?.basecurrency?.currencyName }
+																				
+																			/>
+															</Col>
+														</Row>
+                                )}
                               <Row className="mt-2 mb-2">
                                 <Col>
                                   {/* <Button onClick={()=>{

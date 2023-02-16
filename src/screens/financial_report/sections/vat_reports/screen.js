@@ -188,6 +188,7 @@ class VatReports extends React.Component {
 	}
 
 	getInitialData = () => {
+		this.getVRNPrefix();
 		let { filterData } = this.state;
 		const paginationData = {
 			pageNo: this.options.page ? this.options.page - 1 : 0,
@@ -212,6 +213,7 @@ class VatReports extends React.Component {
 				);
 			});
 	};
+	
 
 	export = (filename) => {
 		this.props.vatreport
@@ -229,7 +231,16 @@ class VatReports extends React.Component {
 				);
 			});
 	}
-
+	getVRNPrefix=()=>{
+		this.props.vatreport.getVRNPrefix().then((res) => {
+			if (res.status === 200) {
+				this.setState({
+					prefix : res.data
+				});
+			}
+		});
+	
+	}
 	handleChange = (key, val) => {
 		this.setState({
 			[key]: val,

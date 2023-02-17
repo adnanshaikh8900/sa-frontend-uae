@@ -523,6 +523,7 @@ class CreateBankTransaction extends React.Component {
         ...this.state.VATlist.find((i) => i.id === VATReportId.value),
       };
       delete info.taxFiledOn;
+
       formData.append(
         "explainedVatPaymentListString",
         info ? JSON.stringify([info]) : ""
@@ -1551,6 +1552,7 @@ class CreateBankTransaction extends React.Component {
                                         this.getVatReportListForBank(2);
                                         props.handleChange("VATReportId")("");
                                         props.handleChange("vatDueAmount")("");
+
                                         props.handleChange("vatAmountpc")("");
                                       }
 
@@ -1627,6 +1629,10 @@ class CreateBankTransaction extends React.Component {
                                     type="number"
                                     min="0"
                                     maxLength="100"
+                                    disabled={
+                                      props.values.coaCategoryId?.label ===
+                                      "VAT Claim"
+                                    }
                                     id="transactionAmount"
                                     name="transactionAmount"
                                     placeholder={strings.Amount}
@@ -1663,10 +1669,8 @@ class CreateBankTransaction extends React.Component {
                                 </FormGroup>
                               </Col>
 
-                              {(props.values.coaCategoryId?.label ===
-                                "VAT Claim" ||
-                                props.values.coaCategoryId?.label ===
-                                  "VAT Payment") && (
+                              {props.values.coaCategoryId?.label ===
+                                "VAT Payment" && (
                                 <Col lg={3}>
                                   <FormGroup className="mb-3">
                                     <Label htmlFor="dueAmount">
@@ -3278,6 +3282,14 @@ class CreateBankTransaction extends React.Component {
                                           props.handleChange("vatAmountpc")(
                                             info.totalAmount
                                           );
+                                          if (
+                                            props.values.coaCategoryId
+                                              ?.label === "VAT Claim"
+                                          )
+                                            props.handleChange(
+                                              "transactionAmount"
+                                            )(info.totalAmount);
+
                                           props.handleChange("vatDueAmount")(
                                             info.dueAmount
                                           );

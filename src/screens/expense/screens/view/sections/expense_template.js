@@ -15,7 +15,12 @@ class ExpenseTemplate extends Component {
 		super(props);
 		this.state = {language: window['localStorage'].getItem('language'),};
 	}
-
+	calculateExpenseAmount = (expenseAmount, expenseVatAmount,exclusiveVat) => {
+		if (exclusiveVat) {
+			expenseAmount=expenseAmount+expenseVatAmount;
+		}
+		return expenseAmount;
+	  };
 	getRibbonColor = (expenseData) => {
 		if (expenseData.expenseStatus == 'Draft') {
 			return 'pending-color';
@@ -29,6 +34,8 @@ class ExpenseTemplate extends Component {
 	render() {
 		strings.setLanguage(this.state.language);
 		const { expenseData,companyData,currencyIsoCode,Currency} = this.props;
+		const expenseAmount= this.calculateExpenseAmount(expenseData.expenseAmount, expenseData.expenseVatAmount, expenseData.exclusiveVat);
+		console.log(expenseData,"expense Data")
 		return (
 			<div>
 				<Card id="singlePage" className="box">
@@ -39,7 +46,7 @@ class ExpenseTemplate extends Component {
 					>
 						<span>{expenseData.expenseStatus}</span>
 					</div> */}
-	<CardBody style={{ margin: '1rem', border: 'solid 1px', borderColor: '#c8ced3', position:'relative', minHeight:'100vh'}}>
+						<CardBody style={{ margin: '1rem', border: 'solid 1px', borderColor: '#c8ced3', position:'relative', minHeight:'100vh'}}>
 						<div
 							style={{
 								width: '100%',
@@ -118,7 +125,7 @@ class ExpenseTemplate extends Component {
 
 	<tr>      <td className="ml-3" style={{width:'245px'}}>  <b>{strings.ExpenseAmount }</b>:	</td> 
 						<td>	
-							{expenseData.expenseAmount? expenseData.currencyName + " " +expenseData.expenseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }):expenseData.currencyName + " " +ZERO.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}  
+							{expenseAmount? expenseData.currencyName + " " +expenseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }):expenseData.currencyName + " " +ZERO.toLocaleString(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}  
 						</td>
 						
 	           {/* <td>{expenseData.expenseAmount}</td> */}

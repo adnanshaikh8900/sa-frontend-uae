@@ -370,11 +370,7 @@ class CreateBankTransaction extends React.Component {
         exchangeRate: exchangeRate,
       }));
     }
-    if (
-      payrollListIds &&
-      expenseCategory.value &&
-      expenseCategory.label === "Salaries and Employee Wages"
-    ) {
+    if (payrollListIds && expenseCategory.value && expenseCategory.label === "Salaries and Employee Wages") {
       var result1 = payrollListIds.map((o) => ({
         payrollId: o.value,
       }));
@@ -395,21 +391,12 @@ class CreateBankTransaction extends React.Component {
     );
     formData.append("exchangeRate", exchangeRate);
     if (transactionCategoryId) {
-      formData.append(
-        "transactionCategoryId",
-        transactionCategoryId ? transactionCategoryId.value : ""
-      );
+      formData.append("transactionCategoryId",transactionCategoryId ? transactionCategoryId.value : "" );
     }
     if (expenseCategory && coaCategoryId.label === "Expense") {
-      formData.append(
-        "expenseCategory",
-        expenseCategory ? expenseCategory.value : ""
-      );
+      formData.append("expenseCategory",expenseCategory ? expenseCategory.value : "");
     }
-    if (
-      (vatId && coaCategoryId.value === 10) ||
-      (vatId && coaCategoryId.label === "Expense")
-    ) {
+    if ((vatId && coaCategoryId.value === 10) || (vatId && coaCategoryId.label === "Expense")) {
       formData.append("vatId", vatId ? vatId.value : "");
       formData.append(
         "transactionVatAmount",
@@ -430,22 +417,10 @@ class CreateBankTransaction extends React.Component {
         this.expenceconvert(transactionAmount)
       );
     }
-    if (
-      (currencyCode && coaCategoryId.label === "Expense") ||
-      coaCategoryId.label === "Sales" ||
-      coaCategoryId.label === "Supplier Invoice"
-    ) {
-      formData.append(
-        "currencyCode",
-        currencyCode.value ? currencyCode.value : currencyCode
-      );
+    if((currencyCode && coaCategoryId.label === "Expense") ||coaCategoryId.label === "Sales" ||coaCategoryId.label === "Supplier Invoice") {
+      formData.append("currencyCode", currencyCode.value ? currencyCode.value : currencyCode );
     }
-    if (
-      (customerId &&
-        coaCategoryId.value &&
-        coaCategoryId.label === "Expenses") ||
-      (customerId && coaCategoryId.value && coaCategoryId.label === "Sales")
-    ) {
+    if ((customerId && coaCategoryId.value && coaCategoryId.label === "Expenses") ||(customerId && coaCategoryId.value && coaCategoryId.label === "Sales")) {
       formData.append("customerId", customerId ? customerId.value : "");
     }
     if (vendorId && coaCategoryId.value && coaCategoryId.label === "Expenses") {
@@ -505,15 +480,8 @@ class CreateBankTransaction extends React.Component {
     if (this.uploadFile?.files?.[0]) {
       formData.append("attachmentFile", this.uploadFile?.files?.[0]);
     }
-    if (
-      payrollListIds &&
-      expenseCategory.value &&
-      expenseCategory.label === "Salaries and Employee Wages"
-    ) {
-      formData.append(
-        "payrollListIds",
-        payrollListIds ? JSON.stringify(result1) : ""
-      );
+    if (payrollListIds && expenseCategory.value && expenseCategory.label === "Salaries and Employee Wages") {
+      formData.append("payrollListIds", payrollListIds ? JSON.stringify(result1) : "");
     }
     if (
       coaCategoryId.label === "VAT Payment" ||
@@ -792,6 +760,7 @@ class CreateBankTransaction extends React.Component {
   };
 
   setExchange = (value) => {
+
     let exchange;
     let result = this.props.currency_convert_list.filter((obj) => {
       return obj.currencyCode === value;
@@ -1519,8 +1488,8 @@ class CreateBankTransaction extends React.Component {
                                       if (option && option.value) {
                                         this.getExchangeRate();
                                         props.handleChange("coaCategoryId")(
-                                          option
-                                        );
+                                          option);
+                                        
                                       } else {
                                         props.handleChange("coaCategoryId")("");
                                       }

@@ -319,6 +319,7 @@ class ExplainTrasactionDetail extends React.Component {
             );
           }
         }
+
       );
 
       this.formRef.current.setFieldValue(
@@ -528,6 +529,7 @@ class ExplainTrasactionDetail extends React.Component {
         );
         this.setState({ loading: false });
       });
+      
   };
   setExchange = (value) => {
     let result = this.props.currency_convert_list.filter((obj) => {
@@ -796,7 +798,6 @@ class ExplainTrasactionDetail extends React.Component {
       expenseCategory,
       payrollListIds,
     } = data;
-
     const expenseType = this.state.selectedStatus;
     let transactionAmount = this.calculateVAT(
       amount,
@@ -826,7 +827,6 @@ class ExplainTrasactionDetail extends React.Component {
       id = coaCategoryId.value;
     }
     let formData = new FormData();
-    formData.append("expenseType", this.state.expenseType);
     formData.append(
       "transactionId",
       this.state.transactionId ? this.state.transactionId : ""
@@ -837,9 +837,7 @@ class ExplainTrasactionDetail extends React.Component {
     );
     formData.append("bankId ", this.props.bankId ? this.props.bankId : "");
     formData.append("date", this.state.date ? moment(this.state.date) : date);
-    if (exchangeRate != null) {
-      formData.append("exchangeRate", exchangeRate ? exchangeRate : 1);
-    }
+    formData.append("exchangeRate", exchangeRate ? exchangeRate : 1);
 
     if (
       coaCategoryId.label === "Vat Payment" ||
@@ -1439,6 +1437,7 @@ class ExplainTrasactionDetail extends React.Component {
         supplier_currencyCode = item.label.currency.currencyCode;
       }
     });
+
 
     if (supplier_currencyCode != 0) {
       return supplier_currencyCode;
@@ -2422,8 +2421,16 @@ class ExplainTrasactionDetail extends React.Component {
                                             )}
 
                                             <Switch
-                                              checked={
-                                                props.values.exclusiveVat
+                                              checked={props.values.exclusiveVat}
+                                              disabled={
+                                                this.state.initValue
+                                                  .explinationStatusEnum ===
+                                                  "PARTIAL" ||
+                                                this.state.initValue
+                                                  .explinationStatusEnum === "FULL" ||
+                                                this.state.initValue
+                                                  .explinationStatusEnum ===
+                                                  "RECONCILED"
                                               }
                                               disabled={
                                                 this.state.initValue

@@ -3263,8 +3263,9 @@ class CreateBankTransaction extends React.Component {
                                 </Row>
                               )}
                             {props.values.coaCategoryId &&
-                              props.values.currencyCode !== 150 && <hr />}
-                            {props.values.currencyCode !== 150 && (
+                              this.state?.bankCurrency?.bankAccountCurrency !== 150 && <hr />}
+                            {props.values.coaCategoryId &&
+                              this.state?.bankCurrency?.bankAccountCurrency !== 150 && (
                               <Row>
                                 <Col>
                                   <Label htmlFor="currency">
@@ -3273,7 +3274,8 @@ class CreateBankTransaction extends React.Component {
                                 </Col>
                               </Row>
                             )}
-                            {props.values.currencyCode !== 150 && (
+                            {props.values.coaCategoryId &&
+                              this.state?.bankCurrency?.bankAccountCurrency !== 150 && (
                               <Row>
                                 <Col lg={1}>
                                   <Input disabled id="1" name="1" value={1} />

@@ -3266,7 +3266,7 @@ class CreateBankTransaction extends React.Component {
                                           maxLength="20"
                                           value={props.values.exchangeRate}
                                           onChange={(option) => {
-                                            console.log(props.values.currencyCode,this.state?.bankCurrency,"jdkhkj")
+                                            console.log(this.state?.basecurrency,this.state?.bankCurrency,"jdkhkj")
                                             props.handleChange("exchangeRate")(
                                               option
                                             );

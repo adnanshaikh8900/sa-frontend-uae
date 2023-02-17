@@ -779,7 +779,6 @@ class ExplainTrasactionDetail extends React.Component {
       expenseCategory,
       payrollListIds,
     } = data;
-
     const expenseType = this.state.selectedStatus;
     let transactionAmount = this.calculateVAT(
       amount,
@@ -809,7 +808,6 @@ class ExplainTrasactionDetail extends React.Component {
       id = coaCategoryId.value;
     }
     let formData = new FormData();
-    formData.append("expenseType", this.state.expenseType);
     formData.append(
       "transactionId",
       this.state.transactionId ? this.state.transactionId : ""
@@ -904,9 +902,6 @@ class ExplainTrasactionDetail extends React.Component {
         this.state.isReverseChargeEnabled
       );
       formData.append("exclusiveVat", this.state.exclusiveVat);
-      let result = this.props.currency_convert_list.filter((obj) => {
-        return obj.currencyCode === this.state.bankCurrency.bankAccountCurrency;
-      });
       formData.append("bankGenerated", true);
       formData.append("convertedAmount", this.expenceconvert(amount));
     }

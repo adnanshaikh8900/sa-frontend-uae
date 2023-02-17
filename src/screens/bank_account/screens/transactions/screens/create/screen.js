@@ -107,7 +107,7 @@ class CreateBankTransaction extends React.Component {
         employeeId: "",
         currencyCode: "",
         currencyName: "",
-        exchangeRate: [],
+        exchangeRate: 1,
         exclusiveVat: false,
         isReverseChargeEnabled: false,
       },
@@ -367,7 +367,7 @@ class CreateBankTransaction extends React.Component {
         id: o.value,
         remainingInvoiceAmount: 0,
         type: o.type,
-        exchangeRate: exchangeRate[index],
+        exchangeRate: exchangeRate,
       }));
     }
     if (payrollListIds && expenseCategory.value && expenseCategory.label === "Salaries and Employee Wages") {
@@ -389,14 +389,7 @@ class CreateBankTransaction extends React.Component {
           : coaCategoryId.value
         : ""
     );
-    formData.append(
-      "exchangeRate",
-      exchangeRate.lenght
-        ? exchangeRate.lenght > 0
-          ? exchangeRate[0]
-          : 1
-        : exchangeRate ? exchangeRate : 1
-    );
+    formData.append("exchangeRate", exchangeRate);
     if (transactionCategoryId) {
       formData.append("transactionCategoryId",transactionCategoryId ? transactionCategoryId.value : "" );
     }
@@ -475,7 +468,7 @@ class CreateBankTransaction extends React.Component {
       );
       formData.append(
         "exchangeGainOrLossId",
-        this.setexcessorshortamount().data < 0
+        this.setexcessorshortamount().data
           ? 103
           : this.setexcessorshortamount().data > 0
           ? 79
@@ -494,7 +487,9 @@ class CreateBankTransaction extends React.Component {
       coaCategoryId.label === "VAT Payment" ||
       coaCategoryId.label === "VAT Claim"
     ) {
-      const info = this.state.VATlist.find((i) => i.id === VATReportId.value);
+      const info = {
+        ...this.state.VATlist.find((i) => i.id === VATReportId.value),
+      };
       delete info.taxFiledOn;
       formData.append(
         "explainedVatPaymentListString",
@@ -518,6 +513,7 @@ class CreateBankTransaction extends React.Component {
           } else {
             this.props.history.push("/admin/banking/bank-account/transaction", {
               bankAccountId,
+              currency: this.props.location.state?.currency,
             });
           }
         }
@@ -789,11 +785,7 @@ class CreateBankTransaction extends React.Component {
       }
     }
 
-    this.formRef.current.setFieldValue(
-      "exchangeRate",
-      [...this.formRef.current.state.values.exchangeRate, exchange],
-      true
-    );
+    this.formRef.current.setFieldValue("exchangeRate", exchange, true);
 
     //   this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
   };
@@ -887,19 +879,21 @@ class CreateBankTransaction extends React.Component {
     if (option?.length > 0) {
       const transactionAmount =
         amount || this.formRef.current.state.values.transactionAmount;
-      const exchangerate = this.formRef.current.state.values?.exchangeRate;
+      const exchangerate =
+        option[0].exchangeRate ||
+        this.formRef.current.state.values?.exchangeRate;
 
       const invoicelist = [...option];
       const total = invoicelist.reduce(
-        (accu, curr, index) => curr.dueAmount * exchangerate[index]
+        (accu, curr, index) => curr.dueAmount * exchangerate
       );
       let remainingcredit = transactionAmount;
       const finaldata = invoicelist?.map((i, ind) => {
         let localexe = 0;
 
-        if (i.exchnageRate === undefined)
+        if (i.exchangeRate === undefined)
           localexe = this.setcustomexchnage(i.currencyCode);
-        else localexe = i.exchnageRate;
+        else localexe = i.exchangeRate;
         let finalcredit = 0;
         let localremainamount = remainingcredit;
         if (remainingcredit > 0) {
@@ -929,7 +923,7 @@ class CreateBankTransaction extends React.Component {
       });
 
       this.formRef.current.setFieldValue("invoiceIdList", finaldata);
-
+      this.formRef.current.setFieldValue("exchangeRate", exchangerate);
       return finaldata;
     } else {
       this.formRef.current.setFieldValue("invoiceIdList", []);
@@ -1242,15 +1236,20 @@ class CreateBankTransaction extends React.Component {
                             values.coaCategoryId.label === "VAT Payment" ||
                             values.coaCategoryId.label === "VAT Claim"
                           ) {
+                            if (
+                              values?.transactionAmount > values?.vatDueAmount
+                            )
+                              errors.transactionAmount = `Amount cannot be greater than Due amount`;
+
                             const info = this.state.VATlist.find(
                               (i) => i.id === values.VATReportId.value
                             );
 
                             if (
                               moment(values.transactionDate).diff(
-                                moment(info.taxFiledOn),
-                                "days"
-                              ) > 0
+                                new Date(info.taxFiledOn),
+                                "seconds"
+                              ) < 0
                             ) {
                               errors.transactionDate =
                                 "The transaction date cannot be before the Date of Filing.";
@@ -1380,6 +1379,7 @@ class CreateBankTransaction extends React.Component {
                                 errors.transactionAmount = `The transaction amount is less than the invoice amount. To partially pay the invoice, please select the checkbox `;
                               }
                             }
+
                             if (
                               date1 < date2 ||
                               date1 < new Date(this.state.reconciledDate)
@@ -1413,7 +1413,7 @@ class CreateBankTransaction extends React.Component {
                             //     errors.transactionAmount = `Transaction Amount Must be Equal to Invoice Total(  ${this.state.totalInvoiceAmount}  )`;
                             // }
                           }
-                          debugger;
+
                           return errors;
                         }}
                         validationSchema={Yup.object().shape({
@@ -1512,9 +1512,15 @@ class CreateBankTransaction extends React.Component {
                                       }
                                       if (option.label === "VAT Payment") {
                                         this.getVatReportListForBank(1);
+                                        props.handleChange("VATReportId")("");
+                                        props.handleChange("vatDueAmount")("");
+                                        props.handleChange("vatAmountpc")("");
                                       }
                                       if (option.label === "VAT Claim") {
                                         this.getVatReportListForBank(2);
+                                        props.handleChange("VATReportId")("");
+                                        props.handleChange("vatDueAmount")("");
+                                        props.handleChange("vatAmountpc")("");
                                       }
 
                                       this.totalAmount("");
@@ -1589,12 +1595,6 @@ class CreateBankTransaction extends React.Component {
                                   <Input
                                     type="number"
                                     min="0"
-                                    disabled={
-                                      props.values.coaCategoryId?.label ===
-                                        "VAT Claim" ||
-                                      props.values.coaCategoryId?.label ===
-                                        "VAT Payment"
-                                    }
                                     maxLength="100"
                                     id="transactionAmount"
                                     name="transactionAmount"
@@ -1631,6 +1631,7 @@ class CreateBankTransaction extends React.Component {
                                     )}
                                 </FormGroup>
                               </Col>
+
                               {(props.values.coaCategoryId?.label ===
                                 "VAT Claim" ||
                                 props.values.coaCategoryId?.label ===
@@ -1638,6 +1639,53 @@ class CreateBankTransaction extends React.Component {
                                 <Col lg={3}>
                                   <FormGroup className="mb-3">
                                     <Label htmlFor="dueAmount">
+                                      <span className="text-danger">* </span>
+                                      Balance Due
+                                    </Label>
+                                    <Input
+                                      type="number"
+                                      min="0"
+                                      disabled
+                                      maxLength="100"
+                                      id="vatDueAmount"
+                                      name="vatDueAmount"
+                                      placeholder="Balance Due"
+                                      onChange={(option) => {
+                                        if (
+                                          option.target.value === "" ||
+                                          this.regDecimal.test(
+                                            option.target.value
+                                          )
+                                        ) {
+                                          props.handleChange("vatDueAmount")(
+                                            option
+                                          );
+                                        }
+                                      }}
+                                      value={props.values.vatDueAmount}
+                                      className={
+                                        props.errors.vatDueAmount &&
+                                        props.touched.vatDueAmount
+                                          ? "is-invalid"
+                                          : ""
+                                      }
+                                    />
+                                    {props.errors.vatDueAmount &&
+                                      props.touched.vatDueAmount && (
+                                        <div className="invalid-feedback">
+                                          {props.errors.vatDueAmount}
+                                        </div>
+                                      )}
+                                  </FormGroup>
+                                </Col>
+                              )}
+                              {(props.values.coaCategoryId?.label ===
+                                "VAT Claim" ||
+                                props.values.coaCategoryId?.label ===
+                                  "VAT Payment") && (
+                                <Col lg={3}>
+                                  <FormGroup className="mb-3">
+                                    <Label htmlFor="vatAmountpc">
                                       <span className="text-danger">* </span>
                                       {props.values.coaCategoryId?.label ===
                                       "VAT Claim"
@@ -1649,8 +1697,8 @@ class CreateBankTransaction extends React.Component {
                                       min="0"
                                       disabled
                                       maxLength="100"
-                                      id="dueAmount"
-                                      name="dueAmount"
+                                      id="vatAmountpc"
+                                      name="vatAmountpc"
                                       placeholder={
                                         props.values.coaCategoryId?.label ===
                                         "VAT Claim"
@@ -1664,23 +1712,23 @@ class CreateBankTransaction extends React.Component {
                                             option.target.value
                                           )
                                         ) {
-                                          props.handleChange("dueAmount")(
+                                          props.handleChange("vatAmountpc")(
                                             option
                                           );
                                         }
                                       }}
-                                      value={props.values.dueAmount}
+                                      value={props.values.vatAmountpc}
                                       className={
-                                        props.errors.transactionAmount &&
-                                        props.touched.dueAmount
+                                        props.errors.vatAmountpc &&
+                                        props.touched.vatAmountpc
                                           ? "is-invalid"
                                           : ""
                                       }
                                     />
-                                    {props.errors.dueAmount &&
-                                      props.touched.dueAmount && (
+                                    {props.errors.vatAmountpc &&
+                                      props.touched.vatAmountpc && (
                                         <div className="invalid-feedback">
-                                          {props.errors.dueAmount}
+                                          {props.errors.vatAmountpc}
                                         </div>
                                       )}
                                   </FormGroup>
@@ -2127,7 +2175,7 @@ class CreateBankTransaction extends React.Component {
                               props.values.coaCategoryId?.label !==
                                 "VAT Payment" &&
                               props.values.coaCategoryId?.label !==
-                                "Vat Claim" &&
+                                "VAT Claim" &&
                               props.values.coaCategoryId?.label !== "Expense" &&
                               props.values.coaCategoryId?.label !==
                                 "Supplier Invoice" &&
@@ -2655,16 +2703,20 @@ class CreateBankTransaction extends React.Component {
                                                     style={{
                                                       textAlign: "right",
                                                     }}
-                                                    value={i.exchangeRate}
+                                                    value={
+                                                      props.values.exchangeRate
+                                                    }
                                                     onChange={(value) => {
                                                       let local2 = [
                                                         ...props.values
                                                           ?.invoiceIdList,
-                                                      ];
-                                                      local2[
-                                                        invindex
-                                                      ].exchnageRate =
-                                                        value.target.value;
+                                                      ].map((i) => {
+                                                        return {
+                                                          ...i,
+                                                          exchangeRate:
+                                                            value.target.value,
+                                                        };
+                                                      });
 
                                                       this.setexchnagedamount(
                                                         local2
@@ -3154,7 +3206,7 @@ class CreateBankTransaction extends React.Component {
 															<Col lg={1}>
 															<Input
 																		disabled
-																				id="currencyName"
+																				id="currencyNaVATlistme"
 																				name="currencyName"
 																				value=	{
 																					this.state.basecurrency.currencyName }
@@ -3192,11 +3244,11 @@ class CreateBankTransaction extends React.Component {
                                           const info = this.state.VATlist.find(
                                             (i) => i.id === option.value
                                           );
-                                          props.handleChange(
-                                            "transactionAmount"
-                                          )(info.dueAmount);
-                                          props.handleChange("dueAmount")(
+                                          props.handleChange("vatAmountpc")(
                                             info.totalAmount
+                                          );
+                                          props.handleChange("vatDueAmount")(
+                                            info.dueAmount
                                           );
                                         }}
                                       />
@@ -3210,85 +3262,85 @@ class CreateBankTransaction extends React.Component {
                                   </Col>
                                 </Row>
                               )}
-                            {props.values.coaCategoryId && this.state?.bankCurrency?.bankAccountCurrency !== 150 && <hr />}
-                            {this.state?.bankCurrency?.bankAccountCurrency !== 150 && (
-                                <Row>
-                                  <Col>
-                                    <Label htmlFor="currency">
-                                      {strings.CurrencyExchangeRate}
-                                    </Label>
-                                  </Col>
-                                </Row>
-                              )}
-                            {this.state?.bankCurrency?.bankAccountCurrency !== 150 && (
-                                <Row>
-                                  <Col lg={1}>
-                                    <Input disabled id="1" name="1" value={1} />
-                                  </Col>
-                                  <Col lg={2}>
-                                    <FormGroup className="mb-3">
-                                      {/* <Label htmlFor="exchangeRate">
+                            {props.values.coaCategoryId &&
+                              props.values.currencyCode !== 150 && <hr />}
+                            {props.values.currencyCode !== 150 && (
+                              <Row>
+                                <Col>
+                                  <Label htmlFor="currency">
+                                    {strings.CurrencyExchangeRate}
+                                  </Label>
+                                </Col>
+                              </Row>
+                            )}
+                            {props.values.currencyCode !== 150 && (
+                              <Row>
+                                <Col lg={1}>
+                                  <Input disabled id="1" name="1" value={1} />
+                                </Col>
+                                <Col lg={2}>
+                                  <FormGroup className="mb-3">
+                                    {/* <Label htmlFor="exchangeRate">
 																		Exchange rate
 																	</Label> */}
-                                      <div>
-                                        <Input
-                                          disabled
-                                          className="form-control"
-                                          id="currencyName"
-                                          name="currencyName"
-                                          value={props.values.currencyName}
-                                          onChange={(value) => {
-                                            props.handleChange("curreancyname")(
-                                              value
-                                            );
-                                          }}
-                                        />
-                                      </div>
-                                    </FormGroup>
-                                  </Col>
-                                  <FormGroup className="mt-2">
-                                    <label>
-                                      <b>=</b>
-                                    </label>{" "}
+                                    <div>
+                                      <Input
+                                        disabled
+                                        className="form-control"
+                                        id="currencyName"
+                                        name="currencyName"
+                                        value={props.values.currencyName}
+                                        onChange={(value) => {
+                                          props.handleChange("curreancyname")(
+                                            value
+                                          );
+                                        }}
+                                      />
+                                    </div>
                                   </FormGroup>
-                                  <Col lg={2}>
-                                    <FormGroup className="mb-3">
-                                      {/* <Label htmlFor="exchangeRate">
+                                </Col>
+                                <FormGroup className="mt-2">
+                                  <label>
+                                    <b>=</b>
+                                  </label>{" "}
+                                </FormGroup>
+                                <Col lg={2}>
+                                  <FormGroup className="mb-3">
+                                    {/* <Label htmlFor="exchangeRate">
 																		Exchange rate
 																	</Label> */}
-                                      <div>
-                                        <Input
-                                          type="number"
-                                          min="0"
-                                          className="form-control"
-                                          id="exchangeRate"
-                                          name="exchangeRate"
-                                          maxLength="20"
-                                          value={props.values.exchangeRate}
-                                          onChange={(option) => {
-                                            console.log(this.state?.basecurrency,this.state?.bankCurrency,"jdkhkj")
-                                            props.handleChange("exchangeRate")(
-                                              option
-                                            );
-                                            //props.values.exchangeRate =
-                                          }}
-                                        />
-                                      </div>
-                                    </FormGroup>
-                                  </Col>
+                                    <div>
+                                      <Input
+                                        type="number"
+                                        min="0"
+                                        className="form-control"
+                                        id="exchangeRate"
+                                        name="exchangeRate"
+                                        maxLength="20"
+                                        value={props.values.exchangeRate}
+                                        onChange={(option) => {
+                                          props.handleChange("exchangeRate")(
+                                            option
+                                          );
+                                          //props.values.exchangeRate =
+                                        }}
+                                      />
+                                    </div>
+                                  </FormGroup>
+                                </Col>
 
-                                  <Col lg={2}>
-                                    <Input
-                                      disabled
-                                      id="currencyName"
-                                      name="currencyName"
-                                      value={
-                                        this.state?.basecurrency?.currencyName
-                                      }
-                                    />
-                                  </Col>
-                                </Row>
-                              )}
+                                <Col lg={2}>
+                                  <Input
+                                    disabled
+                                    id="currencyName"
+                                    name="currencyName"
+                                    value={
+                                      this.state?.basecurrency?.currencyName
+                                    }
+                                  />
+                                </Col>
+                              </Row>
+                            )}
                             <Row>
                               <Col lg={8}>
                                 <FormGroup className="mb-3">
@@ -3475,7 +3527,11 @@ class CreateBankTransaction extends React.Component {
                                     onClick={() => {
                                       this.props.history.push(
                                         "/admin/banking/bank-account/transaction",
-                                        { bankAccountId: id }
+                                        {
+                                          bankAccountId: id,
+                                          currency:
+                                            this.props.location.state?.currency,
+                                        }
                                       );
                                     }}
                                   >

@@ -445,6 +445,7 @@ renderName=(cell,row)=>{
 			isActive,
 			// exciseType,
 			unitTypeId,
+			productCategoryId,
 			...(salesUnitPrice.length !== 0 &&
 				data['productPriceType'].includes('SALES') && {
 					salesUnitPrice,

@@ -341,6 +341,25 @@ class ExplainTrasactionDetail extends React.Component {
         true
       );
       this.formRef.current.setFieldValue(
+        "vatTotalAmount",
+        res.data.vatReportResponseModelList
+          ? res.data.vatReportResponseModelList?.[0]?.totalAmount
+          : "",
+        true
+      );
+
+      this.formRef.current.setFieldValue(
+        "VATReportId",
+        res.data.vatReportResponseModelList
+          ? {
+              label: res.data.vatReportResponseModelList?.[0]?.vatNumber,
+              value: res.data.vatReportResponseModelList?.[0]?.id,
+            }
+          : {},
+        true
+      );
+
+      this.formRef.current.setFieldValue(
         "expenseCategory",
         res.data.transactionCategoryId,
         true
@@ -2014,7 +2033,7 @@ class ExplainTrasactionDetail extends React.Component {
                                     "Vat Payment") && (
                                   <Col lg={3}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="dueAmount">
+                                      <Label htmlFor="vatTotalAmount">
                                         <span className="text-danger">* </span>
                                         {props.values.coaCategoryId?.label ===
                                         "Vat Claim"
@@ -2026,8 +2045,8 @@ class ExplainTrasactionDetail extends React.Component {
                                         min="0"
                                         disabled
                                         maxLength="100"
-                                        id="dueAmount"
-                                        name="dueAmount"
+                                        id="vatTotalAmount"
+                                        name="vatTotalAmount"
                                         placeholder={
                                           props.values.coaCategoryId?.label ===
                                           "Vat Claim"
@@ -2041,23 +2060,23 @@ class ExplainTrasactionDetail extends React.Component {
                                               option.target.value
                                             )
                                           ) {
-                                            props.handleChange("dueAmount")(
-                                              option
-                                            );
+                                            props.handleChange(
+                                              "vatTotalAmount"
+                                            )(option);
                                           }
                                         }}
-                                        value={props.values.dueAmount}
+                                        value={props.values.vatTotalAmount}
                                         className={
-                                          props.errors.dueAmount &&
-                                          props.touched.dueAmount
+                                          props.errors.vatTotalAmount &&
+                                          props.touched.vatTotalAmount
                                             ? "is-invalid"
                                             : ""
                                         }
                                       />
-                                      {props.errors.dueAmount &&
-                                        props.touched.dueAmount && (
+                                      {props.errors.vatTotalAmount &&
+                                        props.touched.vatTotalAmount && (
                                           <div className="invalid-feedback">
-                                            {props.errors.dueAmount}
+                                            {props.errors.vatTotalAmount}
                                           </div>
                                         )}
                                     </FormGroup>

@@ -35,6 +35,7 @@ class ExpenseTemplate extends Component {
 		strings.setLanguage(this.state.language);
 		const { expenseData,companyData,currencyIsoCode,Currency} = this.props;
 		const expenseAmount= this.calculateExpenseAmount(expenseData.expenseAmount, expenseData.expenseVatAmount, expenseData.exclusiveVat);
+		console.log(expenseData,"expense Data")
 		return (
 			<div>
 				<Card id="singlePage" className="box">

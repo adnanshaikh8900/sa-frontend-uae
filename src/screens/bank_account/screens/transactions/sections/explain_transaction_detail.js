@@ -158,7 +158,7 @@ class ExplainTrasactionDetail extends React.Component {
       .catch((err) => {
         this.props.commonActions.tostifyAlert(
           "error",
-          err && err.data ? err.data.message : "Something Went Wrong"
+          err && err.data ? err?.data?.message : "Something Went Wrong"
         );
         this.props.history.push("/admin/banking/bank-account");
       });
@@ -319,7 +319,6 @@ class ExplainTrasactionDetail extends React.Component {
             );
           }
         }
-
       );
 
       this.formRef.current.setFieldValue(
@@ -529,7 +528,6 @@ class ExplainTrasactionDetail extends React.Component {
         );
         this.setState({ loading: false });
       });
-      
   };
   setExchange = (value) => {
     let result = this.props.currency_convert_list.filter((obj) => {
@@ -1437,7 +1435,6 @@ class ExplainTrasactionDetail extends React.Component {
         supplier_currencyCode = item.label.currency.currencyCode;
       }
     });
-
 
     if (supplier_currencyCode != 0) {
       return supplier_currencyCode;
@@ -2421,16 +2418,8 @@ class ExplainTrasactionDetail extends React.Component {
                                             )}
 
                                             <Switch
-                                              checked={props.values.exclusiveVat}
-                                              disabled={
-                                                this.state.initValue
-                                                  .explinationStatusEnum ===
-                                                  "PARTIAL" ||
-                                                this.state.initValue
-                                                  .explinationStatusEnum === "FULL" ||
-                                                this.state.initValue
-                                                  .explinationStatusEnum ===
-                                                  "RECONCILED"
+                                              checked={
+                                                props.values.exclusiveVat
                                               }
                                               disabled={
                                                 this.state.initValue

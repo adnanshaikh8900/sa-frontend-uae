@@ -492,6 +492,7 @@ class CreateBankTransaction extends React.Component {
       };
       delete info.taxFiledOn;
 
+      
       formData.append(
         "explainedVatPaymentListString",
         info ? JSON.stringify([info]) : ""

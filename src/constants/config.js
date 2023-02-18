@@ -52,7 +52,7 @@ export default {
   SETTING_THEME: false,
   SETTING_IMPORT: false,
 
-  REPORTS_HEAD_FI: true,
+  REPORTS_HEAD_FI: false,
   REPORTS_PAL: false,
   REPORTS_BS: false,
   REPORTS_HBS: false,

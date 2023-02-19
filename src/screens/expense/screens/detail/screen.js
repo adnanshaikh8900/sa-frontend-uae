@@ -232,7 +232,7 @@ class DetailExpense extends React.Component {
 										: '',
 									expenseAmount: res.data.expenseAmount,
 									vatCategoryId: vatCategoryId,
-									payMode: res.data.payMode ? res.data.payMode : '',
+									payMode: res.data.payMode ? res.data.payMode : 'CASH',
 									bankAccountId: res.data.bankAccountId
 										? res.data.bankAccountId
 										: '',
@@ -891,7 +891,7 @@ class DetailExpense extends React.Component {
 															'Expense date is required',
 														),
 														taxTreatmentId: Yup.string().required(
-															'Tax treatment is required',
+															'Tax  is required',
 														),
 														currency: Yup.string().required(
 															'Currency is required',
@@ -1474,6 +1474,7 @@ class DetailExpense extends React.Component {
 																						  )
 																						: []
 																				}
+																				disabled
 																				value={
 																					pay_mode_list &&
 																					pay_mode_list.find(
@@ -1482,6 +1483,7 @@ class DetailExpense extends React.Component {
 																							props.values.payMode,
 																					)
 																				}
+																			
 																				onChange={(option) => {
 																					props.handleChange('payMode')(
 																						option.value,

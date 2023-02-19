@@ -160,6 +160,8 @@ const fr = {
 
 //Expenses
       ExpenseNumber:"Numéro de dépense ",
+      CurrencyIsRequired:'La devise est requise',
+
 
 //Customer invoice
       SelectPlaceOfSupply:"Sélectionnez le lieu de fourniture",
@@ -255,7 +257,15 @@ const fr = {
       BillingEmail:"E-mail de facturation",
       ContractPONumber: "Numéro po du contrat",
       VerifyTRN:"Vérifier TRN",
-      
+      TermsAndConditions:'Termes et conditions',
+      TermIsRequired:'Le terme est requis',
+      EmailIsRequired:'Le-mail est requis',
+      FirstNameRequired:'Le prénom est requis',
+      LastNameRequired:'Le nom de famille est requis',
+      InvoiceNumberRequired:"Le numéro de facture est requis",
+      InvoiceDateRequired:"La date de facturation est obligatoire",
+
+            
 //Income receipts
       CreateIncomeReciept:"Créer un reçu de revenu",
       AddNewReceipt:"Ajouter une nouvelle demande",
@@ -270,12 +280,20 @@ const fr = {
       EXPIRATIONDATE:"DATE D'EXPIRATION",				
       AddNewRequest:"Ajouter un nouveau devis",
       CREATED_DATE:" DATE DE CRÉATION",
+      QuotationDate:"Date de cotation",
+      CustomerIsRequired:'Le client est requis',
+      QuotationNumberIsRequired:"Le numéro de devis est requis",
+      QuotationDateRequired:"La date du devis est requise",
+      ExpiryDateRequired:"La date d'expiration est requise",
+
+
 
 //Create Quotation
       CreateQuotation:"Créer une citation",		
       QuotationNumber:"Numéro de quatation",					
       ExpirationDate:"Date d'expiration",			
-      CreateSupplier:"Créer un fournisseur ",		
+      CreateSupplier:"Créer un fournisseur ",	
+      PlaceOfSupplyRequired:'Le lieu de livraison est requis',	
 
 //Expenses
       IsReverseCharge:"Souhaitez-vous appliquer l'autoliquidation à cela ?",
@@ -293,6 +311,14 @@ const fr = {
       UpdateExpense:"Mise à jour des dépenses",
       ExpenseType: "Type de dépense",
       ActualExpenseAmount: "Montant réel des dépenses",
+      TaxTreatmentRequired:'Le traitement fiscal est requis',
+      ExpenseCategoryRequired:'Le numéro de dépense est requis',
+      PaidByRequired:'Payé par est requis',
+      AmountIsRequired:'Le montant est requis',
+      CurrencyIsRequired:'La devise est requise',
+      PayThroughIsRequired:'Le paiement est requis',
+      ExpenseDateRequired:"La date de la dépense est requise",
+
 
 //Add expense		
       CreateExpense:"Créer des dépenses",		
@@ -310,7 +336,9 @@ const fr = {
       SupplierInvoices:"Factures fournisseur",						
       SUPPLIERNAME:"NOM DU FOURNISSEUR",										
       INVOICEAMOUNT:"MONTANT DE LA FACTURE",		
-      SupplierInvoice:"Facture fournisseur",	
+      SupplierInvoice:"Facture fournisseur",
+      InvoiceNumberRequired:"Le numéro de facture est requis",
+      SupplierIsRequired:"Le fournisseur est requis",	
 		
 //Create invoice
       SupplierName:"Nom du fournisseur",	
@@ -425,9 +453,9 @@ const fr = {
 
 //Add Transaction
       CreateBankTransaction:"Créer une transaction bancaire",			
-      TransactionType:"Transaction Type",			
-      TransactionDate:"Transaction Date",								
-      ReferenceNumber:"Numéro de référence",			
+      TransactionType:"Type de transaction",			
+      TransactionDate:"Date de la transaction",								
+      ReferenceNumber:"Numéro de référence",
 
 //Journals
       UpdateJournal:"Mettre à jour le journal ",
@@ -469,9 +497,11 @@ const fr = {
       print_csv:"Imprimer",
 
 //Add Chart of Accounts
-      NewChartAccount:"Nouveau compte graphique",		
+      NewChartAccount:"Nouveau compte graphique",
+      chartOfAccountName:"Nom du plan comptable",
+      accountType:"Type de compte",		
       Name:"Nom",		
-      Type:"type de produit",
+      Type:"type",
       Chart_of_Account:"Plan comptable",		
 
 //Contact
@@ -495,6 +525,13 @@ const fr = {
       inactive:"Inactif",
       Emirates:"Emirates",
       Emirate:"Émirat",
+      BillingAddressRequired:'Ladresse de facturation est obligatoire',
+      CountryIsRequired:'Le pays est requis',
+      StateIsRequired:'Létat est requis',
+      PostalCodeRequired:'Le code postal est requis',
+      ShippingAddressRequired:'Ladresse de livraison est obligatoire',
+      CountryIsRequired:'Le pays est requis',
+      
 
 //Product
       Products:"Produits",		 		
@@ -508,6 +545,15 @@ const fr = {
       excise_slab:"DALLE D’ACCISE",
       enabled:"Activé",
       disabled:"Handicapé",
+      ProductCategoryCodeRequired:"Le code de catégorie de produit est requis",
+      ProductCategoryNameRequired:"Le nom de la catégorie de produits est requis",
+      VATCategoryRequired:"VAT la catégorie est obligatoire",
+      SellingPriceRequired:"Le prix de vente est requis",
+      PurchasePriceRequired:"Le prix d'achat est requis",
+      ProductType:"type de produit",
+
+
+
 
 //Quotation
       excise:"Accise",
@@ -566,7 +612,11 @@ const fr = {
       Value:"Valeur",			
       ExchangeCurrency:"Monnaie d'échange",			
       Exchangerate:"Taux de change",			
-      BaseCurrency:"Devise de base",			
+      BaseCurrency:"Devise de base",
+      ExchangeCurrencyRequired:"La devise d'échange est requise",  
+      ExchangeRateRequired:"Le taux de change est requis",  
+        
+      			
 
 //Inventory
       Dashboard:"Tableau de bord",
@@ -996,6 +1046,7 @@ const fr = {
       Transaction:"Transaction",
       ChartOfAccountCategory:"Catégorie de plan comptable",
       RemainingBalance:"Solde restant",
+      SelectPlaceOfSupply:"Sélectionnez le lieu d'approvisionnement",
 
 
 //View
@@ -1065,5 +1116,14 @@ const fr = {
       select_approver:"Sélectionnez Approbateur",
       action:"Actions",
 
+ //Line Item
+      ProductIsRequired:"Le produit est requis",
+      QuantityGreaterThan0:'La quantité doit être supérieure à 0',
+      UnitPriceGreaterThan1:'Le prix unitaire doit être supérieur à 1',
+      VATIsRequired:'VAT est requis',
+
+//Line Item
+ProductIsRequired:"La devise est requise",
+  
 }
   export {fr};

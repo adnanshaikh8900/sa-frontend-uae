@@ -1,3 +1,4 @@
+/* eslint-disable no-duplicate-case */
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -269,6 +270,7 @@ class BankAccount extends React.Component {
 						closingBalance: row.closingBalance,
 						openingBalance: row.openingBalance,
 						accounName: row.accounName,
+						currency:row.curruncySymbol
 					})
 				}
 			>
@@ -328,7 +330,10 @@ class BankAccount extends React.Component {
 					<DropdownMenu right>
 					{row.name !== 'PettyCash' &&(
 						<DropdownItem
-						onClick={() =>this.props.history.push('/admin/banking/bank-account/transaction/create',{bankAccountId: row.bankAccountId,})	}
+						onClick={() =>this.props.history.push('/admin/banking/bank-account/transaction/create',
+						{bankAccountId: row.bankAccountId,
+							currency:row.curruncySymbol})}
+						
 					>
 				<i className="fas fa-plus" />{strings.AddnewTransaction}
 					</DropdownItem>
@@ -339,6 +344,7 @@ class BankAccount extends React.Component {
 							onClick={() =>
 								this.props.history.push('/admin/banking/bank-account/detail', {
 									bankAccountId: row.bankAccountId,
+									currency:row.curruncySymbol
 								})
 							}
 						>
@@ -353,6 +359,7 @@ class BankAccount extends React.Component {
 										closingBalance: row.closingBalance,
 										openingBalance: row.openingBalance,
 										accounName: row.accounName,
+										currency:row.curruncySymbol
 									},
 								);
 							}}

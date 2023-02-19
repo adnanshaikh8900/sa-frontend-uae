@@ -572,7 +572,7 @@ class ExplainTransactionModal extends React.Component {
 															});
 														}
 													}}
-													placeholder={strings.Select+strings.Type}
+													placeholder={strings.Select+strings.TransactionType}
 													id="chartOfAccountId"
 													name="chartOfAccountId"
 												/>

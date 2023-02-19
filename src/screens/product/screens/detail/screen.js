@@ -445,6 +445,7 @@ renderName=(cell,row)=>{
 			isActive,
 			// exciseType,
 			unitTypeId,
+			productCategoryId,
 			...(salesUnitPrice.length !== 0 &&
 				data['productPriceType'].includes('SALES') && {
 					salesUnitPrice,
@@ -998,7 +999,7 @@ renderName=(cell,row)=>{
 															<Row>
 																<Col lg={4}>
 																	<FormGroup check inline className="mb-3">
-																		<Label className="productlabel"> {strings.Type}
+																		<Label className="productlabel"> {strings.ProductType}
 																		<i
 																				id="ProductTypetip"
 																				className="fa fa-question-circle ml-1"
@@ -1234,6 +1235,7 @@ renderName=(cell,row)=>{
 																			}
 																			id="productCategoryId"
 																			name="productCategoryId"
+																			placeholder={strings.Select+strings.ProductCategory}
 																			value={
 																				product_category_list &&
 																				selectOptionsFactory
@@ -1407,7 +1409,7 @@ renderName=(cell,row)=>{
 															
 															<Row style={{display: props.values.productType !='SERVICE'   ?'' : 'none'}}		>
 																{this.state.companyDetails && this.state.companyDetails.isRegisteredVat===true &&(<Col lg={4}>
-																<FormGroup check inline className="mb-3">
+																<FormGroup check inline className="mb-3" hidden={this.state.childRecordsPresent}>
 																		<Label
 																			className="form-check-label"
 																			check
@@ -1415,7 +1417,7 @@ renderName=(cell,row)=>{
 																		>
 																			
 																			<Input
-																				disabled={this.state.childRecordsPresent}
+																				// disabled={this.state.childRecordsPresent}
 																				type="checkbox"
 																				id="exciseTaxCheck"
 																				name="exciseTaxCheck"

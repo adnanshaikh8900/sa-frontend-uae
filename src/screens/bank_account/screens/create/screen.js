@@ -266,6 +266,7 @@ class CreateBankAccount extends React.Component {
 			});
 	};
 
+
 	render() {
 		strings.setLanguage(this.state.language);
 		const { account_type_list, currency_list,currency_convert_list, country_list } = this.props;

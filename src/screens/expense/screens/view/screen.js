@@ -129,7 +129,18 @@ class ViewExpense extends React.Component {
 								<Button
 									className="btn close-btn"
 									onClick={() => {
-										this.props.history.push('/admin/expense');
+										if(this.props.location?.state?.crossLinked==true){
+											this.props.history.push('/admin/report/vatreports/vatreturnsubreports',{
+												boxNo:this.props.location.state.description,
+												description:this.props.location.state.description,
+												startDate:this.props.location.state.startDate,
+												endDate:this.props.location.state.endDate,
+												placeOfSupplyId:this.props.location.state.placeOfSupplyId
+											});
+										}
+										else{
+											this.props.history.push('/admin/expense');
+										}
 									}}
 								>
 									<i class="fas fa-times"></i>

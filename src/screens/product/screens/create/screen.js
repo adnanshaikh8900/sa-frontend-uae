@@ -495,7 +495,7 @@ try {
 															'Product code already exist';
 													}
 													if (values.productName==='') {
-														errors.productName = 'Product name is required';
+														errors.productName = strings.ProductCategoryNameRequired
 													}
 													if (values.productCode==='') {
 														errors.productCode = 'Product code is required';
@@ -588,7 +588,7 @@ try {
 														{
 															is: (value) => value.includes('SALES'),
 															then: Yup.string().required(
-																'Selling price is required',
+																strings.SellingPriceRequired
 															),
 															otherwise: Yup.string(),
 														},
@@ -600,7 +600,8 @@ try {
 														'Product code is required',
 													),
 													vatCategoryId: Yup.string()
-														.required('VAT category is required')
+														.required(strings.VATCategoryRequired
+															)
 														.nullable(),
 												})}
 											>
@@ -611,7 +612,7 @@ try {
 															<Row>
 																<Col lg={4}>
 																	<FormGroup check inline className="mb-3">
-																		<Label className="productlabel">{strings.Type}
+																		<Label className="productlabel">{strings.ProductType}
 																		<i
 																				id="ProductTypetip"
 																				className="fa fa-question-circle ml-1"

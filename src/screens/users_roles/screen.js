@@ -104,7 +104,7 @@ class UsersRoles extends React.Component {
 
 	goToDetail = (row) => {
 		{row.roleCode === 1 || row.roleCode === 2 ||row.roleCode === 3 ||row.roleCode === 104 ||row.roleCode === 105 ? 
-			this.props.commonActions.tostifyAlert('error', 'You cannot edit '+row.roleName+' Role')
+			this.props.commonActions.tostifyAlert('error', 'You Cannot Edit '+row.roleName+' Role')
 			 :
 			this.props.history.push('/admin/settings/user-role/update', {
 			id: row.roleCode,

@@ -168,7 +168,27 @@ class ViewInvoice extends React.Component {
 											className="close-btn mb-1 btn-lg print-btn-cont"
 											
 											onClick={() => {
-												this.props.history.push('/admin/expense/supplier-invoice');
+												if(this.props?.location?.state?.crossLinked && this.props?.location?.state?.boxNo){
+													this.props.history.push('/admin/report/vatreports/vatreturnsubreports',{
+														boxNo:this.props?.location?.state?.boxNo,
+														description:this.props?.location?.state?.description,
+														startDate:this.props?.location?.state?.startDate,
+														endDate:this.props?.location?.state?.endDate,
+														placeOfSupplyId:this.props?.location?.state?.placeOfSupplyId,
+														id:this.props?.location?.state?.id
+													});
+												}
+												else if(this.props?.location?.state?.crossLinked){
+													this.props.history.push('/admin/report/vatreports/vatreturnsubreports',{
+														description:this.props?.location?.state?.description,
+														startDate:this.props?.location?.state?.startDate,
+														endDate:this.props?.location?.state?.endDate,
+														placeOfSupplyId:this.props?.location?.state?.placeOfSupplyId,
+														id:this.props?.location?.state?.id
+													});
+												}else{
+												 	this.props.history.push('/admin/expense/supplier-invoice');
+												}
 											}}
 										>
 									<i class="fas fa-times"></i>

@@ -64,11 +64,13 @@ class DetailChartAccount extends React.Component {
 			dialog: false,
 			currentData: {},
 			chartOfAccountCategory: [],
-			coaId: '',
+			coaId: null,
 			disabled: false,
 			disabled1:false,
 			loadingMsg:"Loading...",
-			disableLeavePage:false
+			disableLeavePage:false,
+			childRecordsPresent:false,
+			exist: false
 		};
 		// this.regExAlpha = /^[a-zA-Z]+$/;
 		this.regExAlpha = /^[A-Za-z0-9 !@#$%^&*)(+=._-]+$/;
@@ -151,6 +153,18 @@ class DetailChartAccount extends React.Component {
 		});
 	};
 
+	checkChildActivitiesForCoaId = (id) => {
+		this.props.chartOfAccontActions
+			.getExplainedTransactionCountForTransactionCategory(this.state.coaId)
+			.then((res) => {
+				if (res.data > 0) {
+				this.setState({childRecordsPresent:true})
+				} else {
+            this.setState({childRecordsPresent:false})
+				}
+			});
+	};
+
 	deleteChartAccount = () => {
 		const { coaId } = this.state;
 		this.props.chartOfAccontActions
@@ -212,7 +226,26 @@ class DetailChartAccount extends React.Component {
 		});
 	};
 
-	// Create or Edit VAT
+	validationCheck = (value) => {
+		const data = {
+			moduleType: 16,
+			name: value,
+		};
+		this.props.detailChartOfAccontActions
+			.checkValidation(data)
+			.then((response) => {
+				if (response.data === 'Transaction Category Name Already Exists') {
+					this.setState({
+						exist: true,
+					});
+				} else {
+					this.setState({
+						exist: false,
+					});
+				}
+			});
+	};
+
 	handleSubmit = (data, resetForm) => {
 		this.setState({ disabled: true, disableLeavePage:true });
 		const id = this.props.location.state.id;
@@ -275,7 +308,7 @@ class DetailChartAccount extends React.Component {
 									<CardHeader>
 										<div className="h4 mb-0 d-flex align-items-center">
 											<i className="nav-icon fas fa-area-chart" />
-											<span className="ml-2"> {strings.UpdateChartAccount}  </span>
+											<span className="ml-2"> Update Chart Of Account  </span>
 										</div>
 									</CardHeader>
 									<CardBody>
@@ -286,12 +319,18 @@ class DetailChartAccount extends React.Component {
 													onSubmit={(values, { resetForm }) => {
 														this.handleSubmit(values, resetForm);
 													}}
+													validate={(values) => {
+														let errors = {};
+														if (!values.transactionCategoryName) {
+															errors.transactionCategoryName = 'Name is required';
+														}
+														else if (this.state.exist === true) {
+															errors.transactionCategoryName =
+																'Name already exist';
+														}
+														return errors;
+													}}
 													validationSchema={Yup.object().shape({
-														// transactionCategoryCode: Yup.string()
-														//   .required("Code Name is required"),
-														transactionCategoryName: Yup.string().required(
-															'Account is required',
-														),
 														chartOfAccount: Yup.string()
 															.required('Type is required')
 															.nullable(),
@@ -323,14 +362,14 @@ class DetailChartAccount extends React.Component {
                                 </FormGroup> */}
 															<FormGroup>
 																<Label htmlFor="transactionCategoryName">
-																	<span className="text-danger">* </span> {strings.Name}
+																	<span className="text-danger">* </span> {strings.chartOfAccountName}
 																</Label>
 																<Input
 																	type="text"
 																	maxLength='50'
 																	id="transactionCategoryName"
 																	name="transactionCategoryName"
-																	placeholder={strings.Enter+strings.Name}
+																	placeholder={strings.Enter+strings.chartOfAccountName}
 																	onChange={(option) => {
 																		if (
 																			option.target.value === '' ||
@@ -340,6 +379,7 @@ class DetailChartAccount extends React.Component {
 																				'transactionCategoryName',
 																			)(option);
 																		}
+																		this.validationCheck(option.target.value);
 																	}}
 																	value={props.values.transactionCategoryName}
 																	className={
@@ -358,7 +398,7 @@ class DetailChartAccount extends React.Component {
 															</FormGroup>
 															<FormGroup>
 																<Label htmlFor="chartOfAccount">
-																	<span className="text-danger">* </span>{strings.Type}
+																	<span className="text-danger">* </span>{strings.accountType}
 																</Label>
 																{/* <Select
                                     className="select-default-width"
@@ -385,6 +425,7 @@ class DetailChartAccount extends React.Component {
 																	id="chartOfAccount"
 																	name="chartOfAccount"
 																	value={props.values.chartOfAccount}
+																	isDisabled={this.state.childRecordsPresent}
 																	// size="1"
 																	onChange={(val) => {
 																		props.handleChange('chartOfAccount')(val);
@@ -405,7 +446,7 @@ class DetailChartAccount extends React.Component {
 																		</div>
 																	)}
 															</FormGroup>
-
+															<span style={{fontWeight:'bold'}}>Note:</span><span> A Chart Of Account cannot be edited if they are associated with a product, document or transaction.</span>
 															<Row>
 																<Col
 																	lg={12}

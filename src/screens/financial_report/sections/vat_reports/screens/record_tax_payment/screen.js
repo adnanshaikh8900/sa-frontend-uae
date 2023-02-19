@@ -264,8 +264,14 @@ class RecordVatPayment extends React.Component {
 													}}
 													validate={(values) => {
 														let errors = {};
-														 if (values.amount < 1) {
+														 if (values.amount <1) {
 														  errors.amount ='Amount cannot be less Than 1';
+													 }
+													//  if (values.amount==0 ) {
+													// 	errors.amount ='Amount cannot be less Than 0';
+													//  }
+													 if(!values.amount){
+														errors.amount='Amount is required';
 													 }
 													 if(!values.vatPaymentDate){
 														errors.vatPaymentDate='Payment date is required';
@@ -274,7 +280,7 @@ class RecordVatPayment extends React.Component {
 													 if(parseFloat(values.amount)>values.balanceDue){
 														errors.amount ="Amount Cannot Be greater than Balance amount"
 													 }
-
+													
 													 return errors
 													}}
 													validationSchema={Yup.object().shape({
@@ -498,7 +504,7 @@ class RecordVatPayment extends React.Component {
 																			{strings.PaidThrough}
 																		</Label>
 																		<Select
-																			styles={customStyles}
+																			// styles={customStyles}
 																			options={deposit_list}
 																			value={props.values.paidThrought}
 																			onChange={(option) => {

@@ -773,7 +773,7 @@ class ExplainTrasactionDetail extends React.Component {
     // }
     // else {
 
-    const {
+    let {
       bankId,
       date,
       reference,
@@ -797,11 +797,13 @@ class ExplainTrasactionDetail extends React.Component {
       payrollListIds,
     } = data;
     const expenseType = this.state.selectedStatus;
-    let transactionAmount = this.calculateVAT(
-      amount,
-      vatId.value,
-      exclusiveVat
-    );
+    if (coaCategoryId && (coaCategoryId.value === 10 || coaCategoryId.label === "Expense")) {
+      amount = this.calculateVAT(
+        amount,
+        vatId.value,
+        exclusiveVat
+      );
+    }
     if (
       (invoiceIdList && coaCategoryId.label === "Sales") ||
       (invoiceIdList && coaCategoryId.label === "Supplier Invoice")
@@ -850,7 +852,7 @@ class ExplainTrasactionDetail extends React.Component {
     }
 
     formData.append("description", description ? description : "");
-    formData.append("amount", transactionAmount ? transactionAmount : "");
+    formData.append("amount", amount ? amount : "");
     formData.append("dueAmount", dueAmount ? dueAmount : 0);
     formData.append("coaCategoryId", coaCategoryId ? id : "");
     if (this.state.transactionCategoryId) {
@@ -2421,17 +2423,7 @@ class ExplainTrasactionDetail extends React.Component {
                                               checked={
                                                 props.values.exclusiveVat
                                               }
-                                              disabled={
-                                                this.state.initValue
-                                                  .explinationStatusEnum ===
-                                                  "PARTIAL" ||
-                                                this.state.initValue
-                                                  .explinationStatusEnum ===
-                                                  "FULL" ||
-                                                this.state.initValue
-                                                  .explinationStatusEnum ===
-                                                  "RECONCILED"
-                                              }
+                                              disabled
                                               onChange={(exclusiveVat) => {
                                                 if (
                                                   this.state.initValue

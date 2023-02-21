@@ -354,11 +354,13 @@ class CreateBankTransaction extends React.Component {
       VATReportId,
       currencyName,
     } = data;
-    transactionAmount = this.calculateVAT(
-      transactionAmount,
-      vatId.value,
-      exclusiveVat
-    );
+    if (coaCategoryId && (coaCategoryId.value === 10 || coaCategoryId.label === "Expense")) {
+      transactionAmount = this.calculateVAT(
+        transactionAmount,
+        vatId.value,
+        exclusiveVat
+      );
+    }
     if (
       (invoiceIdList && coaCategoryId.label === "Sales") ||
       (invoiceIdList && coaCategoryId.label === "Supplier Invoice")

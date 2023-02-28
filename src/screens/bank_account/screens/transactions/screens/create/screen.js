@@ -281,6 +281,7 @@ class CreateBankTransaction extends React.Component {
         });
     }
   };
+
   calculateVAT = (transactionAmount, vatId, exclusiveVat) => {
     if (transactionAmount && vatId === 1 && exclusiveVat) {
       let transactionVatAmount = 0;
@@ -353,6 +354,7 @@ class CreateBankTransaction extends React.Component {
       exclusiveVat,
       VATReportId,
       currencyName,
+      exchangeRateFromList,
     } = data;
     if (coaCategoryId && (coaCategoryId.value === 10 || coaCategoryId.label === "Expense")) {
       transactionAmount = this.calculateVAT(
@@ -372,7 +374,11 @@ class CreateBankTransaction extends React.Component {
         exchangeRate: exchangeRate,
       }));
     }
-    if (payrollListIds && expenseCategory.value && expenseCategory.label === "Salaries and Employee Wages") {
+    if (
+      payrollListIds &&
+      expenseCategory.value &&
+      expenseCategory.label === "Salaries and Employee Wages"
+    ) {
       var result1 = payrollListIds.map((o) => ({
         payrollId: o.value,
       }));
@@ -391,14 +397,33 @@ class CreateBankTransaction extends React.Component {
           : coaCategoryId.value
         : ""
     );
-    formData.append("exchangeRate", exchangeRate);
+
+    if (
+      coaCategoryId.label === "Sales" ||
+      coaCategoryId.label === "Supplier Invoice"
+    ) {
+      formData.append("exchangeRate", exchangeRateFromList);
+      debugger;
+    } else {
+      formData.append("exchangeRate", exchangeRate);
+    }
+
     if (transactionCategoryId) {
-      formData.append("transactionCategoryId",transactionCategoryId ? transactionCategoryId.value : "" );
+      formData.append(
+        "transactionCategoryId",
+        transactionCategoryId ? transactionCategoryId.value : ""
+      );
     }
     if (expenseCategory && coaCategoryId.label === "Expense") {
-      formData.append("expenseCategory",expenseCategory ? expenseCategory.value : "");
+      formData.append(
+        "expenseCategory",
+        expenseCategory ? expenseCategory.value : ""
+      );
     }
-    if ((vatId && coaCategoryId.value === 10) || (vatId && coaCategoryId.label === "Expense")) {
+    if (
+      (vatId && coaCategoryId.value === 10) ||
+      (vatId && coaCategoryId.label === "Expense")
+    ) {
       formData.append("vatId", vatId ? vatId.value : "");
       formData.append(
         "transactionVatAmount",
@@ -419,10 +444,22 @@ class CreateBankTransaction extends React.Component {
         this.expenceconvert(transactionAmount)
       );
     }
-    if((currencyCode && coaCategoryId.label === "Expense") ||coaCategoryId.label === "Sales" ||coaCategoryId.label === "Supplier Invoice") {
-      formData.append("currencyCode", currencyCode.value ? currencyCode.value : currencyCode );
+    if (
+      (currencyCode && coaCategoryId.label === "Expense") ||
+      coaCategoryId.label === "Sales" ||
+      coaCategoryId.label === "Supplier Invoice"
+    ) {
+      formData.append(
+        "currencyCode",
+        currencyCode.value ? currencyCode.value : currencyCode
+      );
     }
-    if ((customerId && coaCategoryId.value && coaCategoryId.label === "Expenses") ||(customerId && coaCategoryId.value && coaCategoryId.label === "Sales")) {
+    if (
+      (customerId &&
+        coaCategoryId.value &&
+        coaCategoryId.label === "Expenses") ||
+      (customerId && coaCategoryId.value && coaCategoryId.label === "Sales")
+    ) {
       formData.append("customerId", customerId ? customerId.value : "");
     }
     if (vendorId && coaCategoryId.value && coaCategoryId.label === "Expenses") {
@@ -482,8 +519,15 @@ class CreateBankTransaction extends React.Component {
     if (this.uploadFile?.files?.[0]) {
       formData.append("attachmentFile", this.uploadFile?.files?.[0]);
     }
-    if (payrollListIds && expenseCategory.value && expenseCategory.label === "Salaries and Employee Wages") {
-      formData.append("payrollListIds", payrollListIds ? JSON.stringify(result1) : "");
+    if (
+      payrollListIds &&
+      expenseCategory.value &&
+      expenseCategory.label === "Salaries and Employee Wages"
+    ) {
+      formData.append(
+        "payrollListIds",
+        payrollListIds ? JSON.stringify(result1) : ""
+      );
     }
     if (
       coaCategoryId.label === "VAT Payment" ||
@@ -494,7 +538,6 @@ class CreateBankTransaction extends React.Component {
       };
       delete info.taxFiledOn;
 
-      
       formData.append(
         "explainedVatPaymentListString",
         info ? JSON.stringify([info]) : ""
@@ -610,6 +653,7 @@ class CreateBankTransaction extends React.Component {
     };
     this.props.transactionActions.getCustomerInvoiceList(data);
   };
+
   getSuggestionInvoicesFotVend = (option, amount, invoice_list) => {
     const data = {
       amount: amount,
@@ -763,22 +807,14 @@ class CreateBankTransaction extends React.Component {
   };
 
   setExchange = (value) => {
-
     let exchange;
     let result = this.props.currency_convert_list.filter((obj) => {
       return obj.currencyCode === value;
     });
-
-    // this.state.invoiceCurrency
-    // this.state.bankCurrency.bankAccountCurrency
-    // this.state.basecurrency.currencyCode
-    // if(this.state.bankCurrency.bankAccountCurrency=== this.state.invoiceCurrency )
-    //  return this.formRef.current.setFieldValue('exchangeRate',1/result[0].exchangeRate, true);
     if (
       this.state.invoiceCurrency === this.state.bankCurrency.bankAccountCurrency
     ) {
       exchange = 1;
-      //this.formRef.current.setFieldValue('exchangeRate', 1, true);
     } else if (
       this.state.invoiceCurrency !== this.state.bankCurrency.bankAccountCurrency
     ) {
@@ -788,10 +824,8 @@ class CreateBankTransaction extends React.Component {
         exchange = 1 / result[0].exchangeRate;
       }
     }
-
     this.formRef.current.setFieldValue("exchangeRate", exchange, true);
-
-    //   this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
+    this.formRef.current.setFieldValue("exchangeRateFromList", exchange, true);
   };
   getExchangeRate = () => {
     let result = this.props.currency_convert_list.filter((obj) => {
@@ -866,10 +900,7 @@ class CreateBankTransaction extends React.Component {
 
   basecurrencyconvertor = (customerinvoice) => {
     let exchange;
-    if (
-      this.state.bankCurrency.bankAccountCurrency !==
-      this.state.basecurrency.currencyCode
-    ) {
+    if (customerinvoice !== this.state.basecurrency.currencyCode) {
       let result = this.props.currency_convert_list.filter((obj) => {
         return obj.currencyCode === customerinvoice;
       });
@@ -877,6 +908,7 @@ class CreateBankTransaction extends React.Component {
     } else {
       exchange = 1;
     }
+
     return exchange;
   };
   setexchnagedamount = (option, amount) => {
@@ -912,7 +944,7 @@ class CreateBankTransaction extends React.Component {
           remainingcredit = localremainamount;
         }
         const basecurrency = this.basecurrencyconvertor(i.currencyCode);
-
+        debugger;
         return {
           ...i,
 
@@ -922,7 +954,8 @@ class CreateBankTransaction extends React.Component {
           explainedAmount: i.dueAmount * localexe,
           exchangeRate: localexe,
           pp: false,
-          convertedToBaseCurrencyAmount: i.dueAmount * localexe * basecurrency,
+          convertedToBaseCurrencyAmount:
+            basecurrency === 1 ? i.dueAmount : i.dueAmount * basecurrency,
         };
       });
 
@@ -1491,8 +1524,8 @@ class CreateBankTransaction extends React.Component {
                                       if (option && option.value) {
                                         this.getExchangeRate();
                                         props.handleChange("coaCategoryId")(
-                                          option);
-                                        
+                                          option
+                                        );
                                       } else {
                                         props.handleChange("coaCategoryId")("");
                                       }
@@ -2710,9 +2743,7 @@ class CreateBankTransaction extends React.Component {
                                                     style={{
                                                       textAlign: "right",
                                                     }}
-                                                    value={
-                                                      props.values.exchangeRate
-                                                    }
+                                                    value={i.exchangeRate}
                                                     onChange={(value) => {
                                                       let local2 = [
                                                         ...props.values
@@ -3278,86 +3309,89 @@ class CreateBankTransaction extends React.Component {
                                 </Row>
                               )}
                             {props.values.coaCategoryId &&
-                              this.state?.bankCurrency?.bankAccountCurrency !== 150 && <hr />}
+                              this.state?.bankCurrency?.bankAccountCurrency !==
+                                150 && <hr />}
                             {props.values.coaCategoryId &&
-                              this.state?.bankCurrency?.bankAccountCurrency !== 150 && (
-                              <Row>
-                                <Col>
-                                  <Label htmlFor="currency">
-                                    {strings.CurrencyExchangeRate}
-                                  </Label>
-                                </Col>
-                              </Row>
-                            )}
+                              this.state?.bankCurrency?.bankAccountCurrency !==
+                                150 && (
+                                <Row>
+                                  <Col>
+                                    <Label htmlFor="currency">
+                                      {strings.CurrencyExchangeRate}
+                                    </Label>
+                                  </Col>
+                                </Row>
+                              )}
                             {props.values.coaCategoryId &&
-                              this.state?.bankCurrency?.bankAccountCurrency !== 150 && (
-                              <Row>
-                                <Col lg={1}>
-                                  <Input disabled id="1" name="1" value={1} />
-                                </Col>
-                                <Col lg={2}>
-                                  <FormGroup className="mb-3">
-                                    {/* <Label htmlFor="exchangeRate">
+                              this.state?.bankCurrency?.bankAccountCurrency !==
+                                150 && (
+                                <Row>
+                                  <Col lg={1}>
+                                    <Input disabled id="1" name="1" value={1} />
+                                  </Col>
+                                  <Col lg={2}>
+                                    <FormGroup className="mb-3">
+                                      {/* <Label htmlFor="exchangeRate">
 																		Exchange rate
 																	</Label> */}
-                                    <div>
-                                      <Input
-                                        disabled
-                                        className="form-control"
-                                        id="currencyName"
-                                        name="currencyName"
-                                        value={props.values.currencyName}
-                                        onChange={(value) => {
-                                          props.handleChange("curreancyname")(
-                                            value
-                                          );
-                                        }}
-                                      />
-                                    </div>
+                                      <div>
+                                        <Input
+                                          disabled
+                                          className="form-control"
+                                          id="currencyName"
+                                          name="currencyName"
+                                          value={props.values.currencyName}
+                                          onChange={(value) => {
+                                            props.handleChange("curreancyname")(
+                                              value
+                                            );
+                                          }}
+                                        />
+                                      </div>
+                                    </FormGroup>
+                                  </Col>
+                                  <FormGroup className="mt-2">
+                                    <label>
+                                      <b>=</b>
+                                    </label>{" "}
                                   </FormGroup>
-                                </Col>
-                                <FormGroup className="mt-2">
-                                  <label>
-                                    <b>=</b>
-                                  </label>{" "}
-                                </FormGroup>
-                                <Col lg={2}>
-                                  <FormGroup className="mb-3">
-                                    {/* <Label htmlFor="exchangeRate">
+                                  <Col lg={2}>
+                                    <FormGroup className="mb-3">
+                                      {/* <Label htmlFor="exchangeRate">
 																		Exchange rate
 																	</Label> */}
-                                    <div>
-                                      <Input
-                                        type="number"
-                                        min="0"
-                                        className="form-control"
-                                        id="exchangeRate"
-                                        name="exchangeRate"
-                                        maxLength="20"
-                                        value={props.values.exchangeRate}
-                                        onChange={(option) => {
-                                          props.handleChange("exchangeRate")(
-                                            option
-                                          );
-                                          //props.values.exchangeRate =
-                                        }}
-                                      />
-                                    </div>
-                                  </FormGroup>
-                                </Col>
+                                      <div>
+                                        <Input
+                                          type="number"
+                                          min="0"
+                                          className="form-control"
+                                          id="exchangeRate"
+                                          name="exchangeRate"
+                                          maxLength="20"
+                                          value={props.values.exchangeRate}
+                                          onChange={(option) => {
+                                            props.handleChange("exchangeRate")(
+                                              option
+                                            );
+                                            //props.values.exchangeRate =
+                                          }}
+                                        />
+                                      </div>
+                                    </FormGroup>
+                                  </Col>
 
-                                <Col lg={2}>
-                                  <Input
-                                    disabled
-                                    id="currencyName"
-                                    name="currencyName"
-                                    value={
-                                      this.state?.basecurrency?.currencyName
-                                    }
-                                  />
-                                </Col>
-                              </Row>
-                            )}
+                                  <Col lg={2}>
+                                    <Input
+                                      disabled
+                                      id="currencyName"
+                                      name="currencyName"
+                                      value={
+                                        this.state?.basecurrency?.currencyName
+                                      }
+                                    />
+                                  </Col>
+                                </Row>
+                              )}
                             <Row>
                               <Col lg={8}>
                                 <FormGroup className="mb-3">

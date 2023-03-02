@@ -1496,8 +1496,8 @@ class Profile extends React.Component {
 																	errors.phoneNumber =
 																		'Invalid mobile number';
 																}
-																if(!values.vatRegistrationDate){
-																	errors.vatRegistrationDate="VAT Registered Date is required"
+																if (values.IsRegistered === true && !values.vatRegistrationDate) {
+																	errors.vatRegistrationDate= "VAT registration date is required";
 																}
 																return errors;
 															}}

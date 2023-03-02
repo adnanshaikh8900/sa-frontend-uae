@@ -356,7 +356,10 @@ class CreateBankTransaction extends React.Component {
       currencyName,
       exchangeRateFromList,
     } = data;
-    if (coaCategoryId && (coaCategoryId.value === 10 || coaCategoryId.label === "Expense")) {
+    if (
+      coaCategoryId &&
+      (coaCategoryId.value === 10 || coaCategoryId.label === "Expense")
+    ) {
       transactionAmount = this.calculateVAT(
         transactionAmount,
         vatId.value,
@@ -825,7 +828,6 @@ class CreateBankTransaction extends React.Component {
       }
     }
     this.formRef.current.setFieldValue("exchangeRate", exchange, true);
-    this.formRef.current.setFieldValue("exchangeRateFromList", exchange, true);
   };
   getExchangeRate = () => {
     let result = this.props.currency_convert_list.filter((obj) => {
@@ -871,21 +873,20 @@ class CreateBankTransaction extends React.Component {
     let result = this.props.currency_convert_list.filter((obj) => {
       return obj.currencyCode === convertor;
     });
-    // this.state.invoiceCurrency
-    // this.state.bankCurrency.bankAccountCurrency
-    // this.state.basecurrency.currencyCode
-    // if(this.state.bankCurrency.bankAccountCurrency=== this.state.invoiceCurrency )
-    //  return this.formRef.current.setFieldValue('exchangeRate',1/result[0].exchangeRate, true);
 
     if (customerinvoice === this.state.bankCurrency.bankAccountCurrency) {
       exchange = 1;
-      //this.formRef.current.setFieldValue('exchangeRate', 1, true);
     } else {
       if (this.state.basecurrency.currencyCode === customerinvoice)
         exchange = 1 / result[0].exchangeRate;
       else exchange = result[0].exchangeRate;
     }
-
+    this.formRef.current.setFieldValue(
+      "exchangeRateFromList",
+      result[0].exchangeRate,
+      true
+    );
+    debugger;
     return exchange;
   };
 
@@ -915,14 +916,7 @@ class CreateBankTransaction extends React.Component {
     if (option?.length > 0) {
       const transactionAmount =
         amount || this.formRef.current.state.values.transactionAmount;
-      const exchangerate =
-        option[0].exchangeRate ||
-        this.formRef.current.state.values?.exchangeRate;
-
       const invoicelist = [...option];
-      const total = invoicelist.reduce(
-        (accu, curr, index) => curr.dueAmount * exchangerate
-      );
       let remainingcredit = transactionAmount;
       const finaldata = invoicelist?.map((i, ind) => {
         let localexe = 0;
@@ -954,13 +948,11 @@ class CreateBankTransaction extends React.Component {
           explainedAmount: i.dueAmount * localexe,
           exchangeRate: localexe,
           pp: false,
-          convertedToBaseCurrencyAmount:
-            basecurrency === 1 ? i.dueAmount : i.dueAmount * basecurrency,
+          convertedToBaseCurrencyAmount: i.dueAmount * basecurrency,
         };
       });
 
       this.formRef.current.setFieldValue("invoiceIdList", finaldata);
-      this.formRef.current.setFieldValue("exchangeRate", exchangerate);
       return finaldata;
     } else {
       this.formRef.current.setFieldValue("invoiceIdList", []);

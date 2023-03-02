@@ -1496,8 +1496,8 @@ class Profile extends React.Component {
 																	errors.phoneNumber =
 																		'Invalid mobile number';
 																}
-																if(!values.vatRegistrationDate){
-																	errors.vatRegistrationDate="VAT Registered Date is required"
+																if (values.IsRegistered === true && !values.vatRegistrationDate) {
+																	errors.vatRegistrationDate= "VAT registration date is required";
 																}
 																return errors;
 															}}
@@ -2603,7 +2603,7 @@ class Profile extends React.Component {
 																								<span class="tooltiptext">Please note that the TRN cannot be updated <br></br>once a document has been created.</span></div>
 																						</Label>
 																							<Input
-																								disabled={!this.state.enableVatRegistrationDate}
+																								// disabled={!this.state.enableVatRegistrationDate}
 																								type="text"
 																								id="vatRegistrationNumber"
 																								minLength="15"
@@ -2653,7 +2653,7 @@ class Profile extends React.Component {
 																								<span class="tooltiptext">Please note that you cannot update <br></br> this detail once you have created a document.</span></div>
 																							</Label>
 																							<DatePicker
-																								disabled={!this.state.enableVatRegistrationDate}
+																								// disabled={!this.state.enableVatRegistrationDate}
 																								id="date"
 																								name="vatRegistrationDate"
 																								placeholderText='Enter VAT Registered Date.'

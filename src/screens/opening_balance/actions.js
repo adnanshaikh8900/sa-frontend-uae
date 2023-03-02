@@ -23,7 +23,6 @@ export const getTransactionCategoryList = () => {
 }
 
 export const getOpeningBalanceList = (obj) => {
-  console.log('aadsf', obj)
   let pageNo = obj.pageNo ? obj.pageNo : '';
   let pageSize = obj.pageSize ? obj.pageSize : '';
   let order = obj.order ? obj.order : '';

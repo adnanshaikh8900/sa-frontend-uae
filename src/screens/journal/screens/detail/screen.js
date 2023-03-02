@@ -397,7 +397,7 @@ if(row && row.journalTransactionCategoryLabel==='Bank')
 							value={row.contactId}
 							placeholder={strings.Select+strings.Contact}
 							className={`form-control 
-				${
+							${
 								props.errors.journalLineItems &&
 								props.errors.journalLineItems[parseInt(idx, 10)] &&
 								props.errors.journalLineItems[parseInt(idx, 10)].contactId &&
@@ -1006,7 +1006,7 @@ min="0"
 																					? false
 																					: true
 																			}
-																			// placeholder={strings.DeliveryNotes}
+																			placeholder={strings.DeliveryNotes}
 																			value={props.values.description}
 																			onChange={(value) => {
 																				props.handleChange('description')(

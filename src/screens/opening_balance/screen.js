@@ -615,10 +615,9 @@ class OpeningBalance extends React.Component {
 										>{strings.CURRENCY}
 										</TableHeaderColumn> */}
 										<TableHeaderColumn
-												className="text-right"
+												className="table-header-bg text-right"
 												columnClassName="text-right"
 												dataFormat={this.renderActions}
-												className="table-header-bg"
 											></TableHeaderColumn>
 										</BootstrapTable>
 									</div>

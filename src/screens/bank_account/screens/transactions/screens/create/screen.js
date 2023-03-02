@@ -2655,6 +2655,12 @@ class CreateBankTransaction extends React.Component {
                             {(props.values?.coaCategoryId?.label === "Sales" ||
                               props.values?.coaCategoryId?.label ===
                                 "Supplier Invoice") &&
+                              props.values.curreancyname !==
+                                this.state?.bankCurrency
+                                  ?.bankAccountCurrencyIsoCode &&
+                              props.values.curreancyname &&
+                              this.state?.bankCurrency
+                                ?.bankAccountCurrencyIsoCode &&
                               this.state?.bankCurrency?.bankAccountCurrency && (
                                 <Row className="mt-2">
                                   <Col lg={1}>

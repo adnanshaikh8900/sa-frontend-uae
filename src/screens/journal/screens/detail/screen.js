@@ -1006,7 +1006,7 @@ min="0"
 																					? false
 																					: true
 																			}
-																			// placeholder={strings.DeliveryNotes}
+																			placeholder={strings.DeliveryNotes}
 																			value={props.values.description}
 																			onChange={(value) => {
 																				props.handleChange('description')(

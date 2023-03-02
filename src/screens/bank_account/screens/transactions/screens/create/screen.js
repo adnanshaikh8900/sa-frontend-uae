@@ -852,6 +852,13 @@ class CreateBankTransaction extends React.Component {
     return finalarr;
   };
 
+  getVatListByIds = (vatIds) => {
+    const { vat_list } = this.props;
+    const finalarr = vat_list.filter((i) => vatIds.includes(i.id));
+
+    return finalarr;
+  };
+
   setCurrency = (value) => {
     let result = this.props.currency_convert_list.find((obj) => {
       return obj.currencyCode === value;

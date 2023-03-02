@@ -62,6 +62,7 @@ class CreateOpeningBalance extends React.Component {
 			disabled: false,
 			loadingMsg:"Loading...",
 			disableLeavePage:false, 
+			openingbalancelist:"",
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
@@ -75,13 +76,41 @@ class CreateOpeningBalance extends React.Component {
 	componentDidMount = () => {
 		this.props.authActions.getCurrencylist() ;
 		//this.getCompanyCurrency();
-	
+		this.getOpeningBalanceList();
 		this.initializeData();
 	};
-	
+	getOpeningBalanceList = () => {
+		this.props.createOpeningBalancesActions.getOpeningBalanceList()
+		.then((res) => {
+			if (res.status === 200) {
+				this.setState({openingbalancelist:res.data,});
+			}
+		})
+		.catch((err) => {
+			this.props.commonActions.tostifyAlert(
+				'error',
+				err && err.data ? err.data.message : 'Something Went Wrong',
+			);
+		});
+	}; 
+	checkIfOpeningBalanceAlreadyExist = (transactioncategorylist) =>{
+		let openingbalancelist = this.state.openingbalancelist.data;
+		if(openingbalancelist && openingbalancelist.length && openingbalancelist.length !== 0){
+			let transactioncategorynewlist=[];
+			transactioncategorylist.map((category)=> {
+				let openingbalance = openingbalancelist.find((element) => category.transactionCategoryId === element.transactionCategoryId)
+				if(!openingbalance){
+					transactioncategorynewlist.push(category);
+				}
+			});
+			return transactioncategorynewlist;
+		}
+		else{
+			return transactioncategorylist;
+		}
+	}
 	initializeData = () => {
 		this.props.openingBalanceActions.getTransactionCategoryList();
-		
 	}
 
 	// Create  Currency conversion
@@ -131,8 +160,10 @@ class CreateOpeningBalance extends React.Component {
 	render() {
 		strings.setLanguage(this.state.language);
 		const { loading, initValue,loadingMsg} = this.state;
-		
-		const{transaction_category_list} =this.props;
+		let{transaction_category_list} = this.props;
+		if(transaction_category_list && transaction_category_list?.length !== 0){
+			transaction_category_list = this.checkIfOpeningBalanceAlreadyExist(transaction_category_list);
+		}
 		const customStyles = {
 			control: (base, state) => ({
 				...base,
@@ -211,6 +242,9 @@ class CreateOpeningBalance extends React.Component {
 																<Label htmlFor="transactionCategoryBalanceId">
 																<span className="text-danger">* </span>
 																{strings.TransactionCategory}
+																<div className="tooltip-icon nav-icon fas fa-question-circle ml-1">
+																	<span class="tooltiptext">This list will only include categories for which an opening balance has not been created.</span>
+																</div>
 																</Label>
 																		<Select
 																		id="transactionCategoryId"
@@ -233,11 +267,11 @@ class CreateOpeningBalance extends React.Component {
 																				? 'is-invalid'
 																				: ''
 																		}
-																		onChange={(option) =>
+																		onChange={(option) =>{
 																			props.handleChange('transactionCategoryId')(
 																				option,
 																			)
-																		}
+																		}}
 																	/>
 																	{props.errors.transactionCategoryId &&
 																		props.touched.transactionCategoryId && (

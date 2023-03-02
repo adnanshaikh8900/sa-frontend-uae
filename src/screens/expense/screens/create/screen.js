@@ -524,7 +524,6 @@ class CreateExpense extends React.Component {
     } = data;
     let formData = new FormData();
 
-    formData.append("expenseType", this.state.expenseType);
     formData.append("isVatClaimable", this.state.isVatClaimable);
 
     formData.append("delivaryNotes", notes);
@@ -554,25 +553,40 @@ class CreateExpense extends React.Component {
         placeOfSupplyId.value ? placeOfSupplyId.value : placeOfSupplyId
       );
     }
-    if (taxTreatmentId && taxTreatmentId.value) {
-      formData.append("taxTreatmentId", taxTreatmentId.value);
+    if (!this.state.isRegisteredVat) {
+      formData.append("taxTreatmentId", "");
+      formData.append("vatCategoryId", 10);
+      // formData.append("isReverseChargeEnabled",'')
+      // formData.append('expenseType', '' );
+      formData.append("isReverseChargeEnabled", false);
+      formData.append("expenseType", false);
+    } else {
+      if (
+        this.state.isRegisteredVat &&
+        taxTreatmentId &&
+        taxTreatmentId.value
+      ) {
+        formData.append("taxTreatmentId", taxTreatmentId.value);
+      }
+      if (vatCategoryId && vatCategoryId.value) {
+        formData.append("vatCategoryId", vatCategoryId.value);
+        if (this.state.exclusiveVat !== undefined) {
+          formData.append("exclusiveVat", this.state.exclusiveVat);
+        }
+      }
+      formData.append(
+        "isReverseChargeEnabled",
+        this.state.isReverseChargeEnabled
+      );
+      formData.append("expenseType", this.state.expenseType);
     }
-    formData.append(
-      "isReverseChargeEnabled",
-      this.state.isReverseChargeEnabled
-    );
     if (exchangeRate) {
       formData.append("exchangeRate", exchangeRate);
     }
     if (currency) {
       formData.append("currencyCode", currency.value);
     }
-    if (vatCategoryId && vatCategoryId.value) {
-      formData.append("vatCategoryId", vatCategoryId.value);
-      if (this.state.exclusiveVat !== undefined) {
-        formData.append("exclusiveVat", this.state.exclusiveVat);
-      }
-    }
+
     if (bankAccountId && bankAccountId.value && payMode.value === "BANK") {
       formData.append("bankAccountId", bankAccountId.value);
     }
@@ -1125,6 +1139,19 @@ class CreateExpense extends React.Component {
                               ) {
                                 errors.currency = "Currency is required";
                               }
+                              if (
+                                this.state.isRegisteredVat &&
+                                !values.vatCategoryId
+                              ) {
+                                errors.vatCategoryId = strings.VATIsRequired;
+                              }
+                              if (
+                                this.state.isRegisteredVat &&
+                                !values.taxTreatmentId
+                              ) {
+                                errors.taxTreatmentId =
+                                  strings.TaxTreatmentRequired;
+                              }
                               // if (!values.placeOfSupplyId && values.taxTreatmentId.value !== 8) {
                               // 	errors.placeOfSupplyId = 'Place of supply is required';
                               // }
@@ -1134,9 +1161,7 @@ class CreateExpense extends React.Component {
                               expenseNumber: Yup.string().required(
                                 "Expense  is required"
                               ),
-                              taxTreatmentId: Yup.string().required(
-                                strings.TaxTreatmentRequired
-                              ),
+
                               expenseCategory: Yup.string().required(
                                 strings.ExpenseCategoryRequired
                               ),
@@ -1166,9 +1191,7 @@ class CreateExpense extends React.Component {
                                     }
                                   }
                                 ),
-                              vatCategoryId: Yup.string().required(
-                                strings.VATIsRequired
-                              ),
+
                               payMode: Yup.string().required(
                                 strings.PayThroughIsRequired
                               ),
@@ -1270,81 +1293,86 @@ class CreateExpense extends React.Component {
                                         )}
                                     </FormGroup>
                                   </Col>
-                                  <Col lg={3}>
-                                    <FormGroup className="mb-3">
-                                      <Label htmlFor="taxTreatmentId">
-                                        <span className="text-danger">* </span>
-                                        {strings.TaxTreatment}
-                                      </Label>
-                                      <Select
-                                        options={
-                                          taxTreatmentList
-                                            ? selectOptionsFactory.renderOptions(
-                                                "name",
-                                                "id",
-                                                taxTreatmentList,
-                                                "Tax Treatment"
-                                              )
-                                            : []
-                                        }
-                                        id="taxTreatmentId"
-                                        name="taxTreatmentId"
-                                        placeholder={
-                                          strings.Select + strings.TaxTreatment
-                                        }
-                                        value={props.values.taxTreatmentId}
-                                        onChange={(option) => {
-                                          // this.setState({
-                                          //   selectedVatCategory: option.value
-                                          // })
-                                          if (option && option.value) {
-                                            props.handleChange(
-                                              "taxTreatmentId"
-                                            )(option);
-                                            // props.handleChange('placeOfSupplyId')('');
-                                            // for resetting Vat
-                                            props.handleChange("vatCategoryId")(
-                                              ""
-                                            );
-                                            //placelist Setup
-
-                                            this.placelistSetting(
-                                              option,
-                                              props
-                                            );
-                                            // ReverseCharge setup
-                                            this.ReverseChargeSetting(
-                                              option.value,
-                                              props
-                                            );
-                                            this.setState({
-                                              isReverseChargeEnabled: false,
-                                              exclusiveVat: false,
-                                            });
-                                            this.setState({
-                                              taxTreatmentId: option.value,
-                                            });
-                                          } else {
-                                            props.handleChange(
-                                              "taxTreatmentId"
-                                            )("");
+                                  {this.state.isRegisteredVat && (
+                                    <Col lg={3}>
+                                      <FormGroup className="mb-3">
+                                        <Label htmlFor="taxTreatmentId">
+                                          <span className="text-danger">
+                                            *{" "}
+                                          </span>
+                                          {strings.TaxTreatment}
+                                        </Label>
+                                        <Select
+                                          options={
+                                            taxTreatmentList
+                                              ? selectOptionsFactory.renderOptions(
+                                                  "name",
+                                                  "id",
+                                                  taxTreatmentList,
+                                                  "Tax Treatment"
+                                                )
+                                              : []
                                           }
-                                        }}
-                                        className={
-                                          props.errors.taxTreatmentId &&
-                                          props.touched.taxTreatmentId
-                                            ? "is-invalid"
-                                            : ""
-                                        }
-                                      />
-                                      {props.errors.taxTreatmentId &&
-                                        props.touched.taxTreatmentId && (
-                                          <div className="invalid-feedback">
-                                            {props.errors.taxTreatmentId}
-                                          </div>
-                                        )}
-                                    </FormGroup>
-                                  </Col>
+                                          id="taxTreatmentId"
+                                          name="taxTreatmentId"
+                                          placeholder={
+                                            strings.Select +
+                                            strings.TaxTreatment
+                                          }
+                                          value={props.values.taxTreatmentId}
+                                          onChange={(option) => {
+                                            // this.setState({
+                                            //   selectedVatCategory: option.value
+                                            // })
+                                            if (option && option.value) {
+                                              props.handleChange(
+                                                "taxTreatmentId"
+                                              )(option);
+                                              // props.handleChange('placeOfSupplyId')('');
+                                              // for resetting Vat
+                                              props.handleChange(
+                                                "vatCategoryId"
+                                              )("");
+                                              //placelist Setup
+
+                                              this.placelistSetting(
+                                                option,
+                                                props
+                                              );
+                                              // ReverseCharge setup
+                                              this.ReverseChargeSetting(
+                                                option.value,
+                                                props
+                                              );
+                                              this.setState({
+                                                isReverseChargeEnabled: false,
+                                                exclusiveVat: false,
+                                              });
+                                              this.setState({
+                                                taxTreatmentId: option.value,
+                                              });
+                                            } else {
+                                              props.handleChange(
+                                                "taxTreatmentId"
+                                              )("");
+                                            }
+                                          }}
+                                          className={
+                                            props.errors.taxTreatmentId &&
+                                            props.touched.taxTreatmentId
+                                              ? "is-invalid"
+                                              : ""
+                                          }
+                                        />
+                                        {props.errors.taxTreatmentId &&
+                                          props.touched.taxTreatmentId && (
+                                            <div className="invalid-feedback">
+                                              {props.errors.taxTreatmentId}
+                                            </div>
+                                          )}
+                                      </FormGroup>
+                                    </Col>
+                                  )}
                                   {/* {this.state.showPlacelist==true&& (	<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">
@@ -1399,76 +1427,78 @@ class CreateExpense extends React.Component {
 																		)}
 																</FormGroup>
 															</Col>)} */}
-                                  <Col className="mb-2" lg={3}>
-                                    <Label htmlFor="inline-radio3">
-                                      <span className="text-danger">* </span>
-                                      {strings.ExpenseType}
-                                    </Label>
-                                    <div style={{ display: "flex" }}>
-                                      {this.state.isVatClaimable === false ? (
-                                        <span
-                                          style={{ color: "#0069d9" }}
-                                          className="mr-4"
-                                        >
-                                          <b>{strings.NonClaimable}</b>
-                                        </span>
-                                      ) : (
-                                        <span className="mr-4">
-                                          {strings.NonClaimable}
-                                        </span>
-                                      )}
+                                  {this.state.isRegisteredVat && (
+                                    <Col className="mb-2" lg={3}>
+                                      <Label htmlFor="inline-radio3">
+                                        <span className="text-danger">* </span>
+                                        {strings.ExpenseType}
+                                      </Label>
+                                      <div style={{ display: "flex" }}>
+                                        {this.state.isVatClaimable === false ? (
+                                          <span
+                                            style={{ color: "#0069d9" }}
+                                            className="mr-4"
+                                          >
+                                            <b>{strings.NonClaimable}</b>
+                                          </span>
+                                        ) : (
+                                          <span className="mr-4">
+                                            {strings.NonClaimable}
+                                          </span>
+                                        )}
 
-                                      <Switch
-                                        checked={this.state.isVatClaimable}
-                                        onChange={(expenseType) => {
-                                          props.handleChange("expenseType")(
-                                            expenseType
-                                          );
+                                        <Switch
+                                          checked={this.state.isVatClaimable}
+                                          onChange={(expenseType) => {
+                                            props.handleChange("expenseType")(
+                                              expenseType
+                                            );
 
-                                          this.setState(
-                                            { expenseType },
-                                            () => {}
-                                          );
-                                          if (
-                                            this.state.isVatClaimable === true
-                                          ) {
-                                            this.setState({
-                                              isVatClaimable: false,
-                                            });
-                                          } else {
-                                            this.setState({
-                                              isVatClaimable: true,
-                                            });
-                                          }
-                                          // if (this.state.expenseType == true)
-                                          // 	this.setState({ expenseType: true })
-                                        }}
-                                        onColor="#2064d8"
-                                        onHandleColor="#2693e6"
-                                        handleDiameter={25}
-                                        uncheckedIcon={false}
-                                        checkedIcon={false}
-                                        boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-                                        activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-                                        height={20}
-                                        width={48}
-                                        className="react-switch"
-                                      />
+                                            this.setState(
+                                              { expenseType },
+                                              () => {}
+                                            );
+                                            if (
+                                              this.state.isVatClaimable === true
+                                            ) {
+                                              this.setState({
+                                                isVatClaimable: false,
+                                              });
+                                            } else {
+                                              this.setState({
+                                                isVatClaimable: true,
+                                              });
+                                            }
+                                            // if (this.state.expenseType == true)
+                                            // 	this.setState({ expenseType: true })
+                                          }}
+                                          onColor="#2064d8"
+                                          onHandleColor="#2693e6"
+                                          handleDiameter={25}
+                                          uncheckedIcon={false}
+                                          checkedIcon={false}
+                                          boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+                                          activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+                                          height={20}
+                                          width={48}
+                                          className="react-switch"
+                                        />
 
-                                      {this.state.isVatClaimable === true ? (
-                                        <span
-                                          style={{ color: "#0069d9" }}
-                                          className="ml-4"
-                                        >
-                                          <b>{strings.Claimable}</b>
-                                        </span>
-                                      ) : (
-                                        <span className="ml-4">
-                                          {strings.Claimable}
-                                        </span>
-                                      )}
-                                    </div>
-                                  </Col>
+                                        {this.state.isVatClaimable === true ? (
+                                          <span
+                                            style={{ color: "#0069d9" }}
+                                            className="ml-4"
+                                          >
+                                            <b>{strings.Claimable}</b>
+                                          </span>
+                                        ) : (
+                                          <span className="ml-4">
+                                            {strings.Claimable}
+                                          </span>
+                                        )}
+                                      </div>
+                                    </Col>
+                                  )}
                                 </Row>
                                 <Row>
                                   <Col lg={3}>
@@ -1696,7 +1726,8 @@ class CreateExpense extends React.Component {
                                         )}
                                     </FormGroup>
                                   </Col>
-                                  {this.renderVat(props)}
+                                  {this.state.isRegisteredVat &&
+                                    this.renderVat(props)}
 
                                   {/* {!props.values.payee && payMode.value === 'BANK' && (
 																<Col lg={3}>
@@ -1908,15 +1939,16 @@ class CreateExpense extends React.Component {
                                     </Row>
                                   )}
                                 <Row>
-                                  {((this.state.isDesignatedZone &&
-                                    (this.state.taxTreatmentId === 5 ||
-                                      this.state.taxTreatmentId === 6 ||
-                                      this.state.taxTreatmentId === 7)) ||
-                                    (!this.state.isDesignatedZone &&
-                                      this.state.taxTreatmentId !== 3 &&
-                                      this.state.taxTreatmentId !== 8)) && (
-                                    <Col>
-                                      {/* <Input
+                                  {this.state.isRegisteredVat &&
+                                    ((this.state.isDesignatedZone &&
+                                      (this.state.taxTreatmentId === 5 ||
+                                        this.state.taxTreatmentId === 6 ||
+                                        this.state.taxTreatmentId === 7)) ||
+                                      (!this.state.isDesignatedZone &&
+                                        this.state.taxTreatmentId !== 3 &&
+                                        this.state.taxTreatmentId !== 8)) && (
+                                      <Col>
+                                        {/* <Input
 															type="checkbox"
 															id="isReverseChargeEnabled"
 															checked={this.state.isReverseChargeEnabled}
@@ -1925,27 +1957,27 @@ class CreateExpense extends React.Component {
 																this.setState({isReverseChargeEnabled:!this.state.isReverseChargeEnabled})
 															}}
 															/> */}
-                                      <Checkbox
-                                        id="isReverseChargeEnabled"
-                                        checked={
-                                          this.state.isReverseChargeEnabled
-                                        }
-                                        onChange={(option) => {
-                                          this.setState({
-                                            isReverseChargeEnabled:
-                                              !this.state
-                                                .isReverseChargeEnabled,
-                                            exclusiveVat: false,
-                                          });
-                                          // for resetting Vat
-                                          props.handleChange("vatCategoryId")(
-                                            ""
-                                          );
-                                        }}
-                                      />
-                                      <Label>{strings.IsReverseCharge}</Label>
-                                    </Col>
-                                  )}
+                                        <Checkbox
+                                          id="isReverseChargeEnabled"
+                                          checked={
+                                            this.state.isReverseChargeEnabled
+                                          }
+                                          onChange={(option) => {
+                                            this.setState({
+                                              isReverseChargeEnabled:
+                                                !this.state
+                                                  .isReverseChargeEnabled,
+                                              exclusiveVat: false,
+                                            });
+                                            // for resetting Vat
+                                            props.handleChange("vatCategoryId")(
+                                              ""
+                                            );
+                                          }}
+                                        />
+                                        <Label>{strings.IsReverseCharge}</Label>
+                                      </Col>
+                                    )}
                                 </Row>
                                 <hr />
                                 <Row

@@ -461,7 +461,7 @@ class CreateJournal extends React.Component {
 						}}
 						placeholder={strings.Debit+" "+strings.Amount}
 						className={`form-control 
-            ${
+            			${
 							props.errors.journalLineItems &&
 							props.errors.journalLineItems[parseInt(idx, 10)] &&
 							props.errors.journalLineItems[parseInt(idx, 10)].debitAmount &&

@@ -439,7 +439,6 @@ class CreateExpense extends React.Component {
 		} = data;
 		let formData = new FormData();
 
-		formData.append('expenseType',  this.state.expenseType );
 		formData.append('isVatClaimable',  this.state.isVatClaimable );
 
 		formData.append('delivaryNotes',notes);
@@ -450,7 +449,7 @@ class CreateExpense extends React.Component {
 		formData.append('expenseDate', expenseDate !== null ? expenseDate : '');
 		formData.append('expenseDescription', expenseDescription);
 		formData.append('receiptNumber', receiptNumber);
-		formData.append('receiptAttachmentDescription',	receiptAttachmentDescription,		);
+		formData.append('receiptAttachmentDescription',	receiptAttachmentDescription,);
 		formData.append('expenseAmount', expenseAmount);
 		if (payMode && payMode.value) {
 			formData.append('payMode', payMode.value);
@@ -464,22 +463,35 @@ class CreateExpense extends React.Component {
 		if (placeOfSupplyId  ) {
 			formData.append('placeOfSupplyId', placeOfSupplyId.value ?placeOfSupplyId.value :placeOfSupplyId);
 		}
-		if (taxTreatmentId && taxTreatmentId.value) {
-			formData.append('taxTreatmentId', taxTreatmentId.value);
+		if(!this.state.isRegisteredVat){
+			formData.append('taxTreatmentId','');
+			formData.append('vatCategoryId', 10);
+			// formData.append("isReverseChargeEnabled",'')
+			// formData.append('expenseType', '' );
+			formData.append("isReverseChargeEnabled",false)
+			formData.append('expenseType',  false );
 		}
-		formData.append("isReverseChargeEnabled",this.state.isReverseChargeEnabled)
+		else {
+			if(this.state.isRegisteredVat && taxTreatmentId && taxTreatmentId.value) {
+				formData.append('taxTreatmentId', taxTreatmentId.value);
+			}
+			if (vatCategoryId && vatCategoryId.value) {
+				formData.append('vatCategoryId', vatCategoryId.value);
+				if(this.state.exclusiveVat !== undefined){
+					formData.append('exclusiveVat', this.state.exclusiveVat );
+				}
+			}
+			formData.append("isReverseChargeEnabled",this.state.isReverseChargeEnabled)
+			formData.append('expenseType',  this.state.expenseType );
+
+		}
 		if (exchangeRate ) {
 			formData.append('exchangeRate', exchangeRate);
 		}
 		if (currency) {
 			formData.append('currencyCode', currency.value);
 		}
-		if (vatCategoryId && vatCategoryId.value) {
-			formData.append('vatCategoryId', vatCategoryId.value);
-		if(this.state.exclusiveVat !== undefined){
-				formData.append('exclusiveVat', this.state.exclusiveVat );
-			}
-		}
+		
 		if (bankAccountId && bankAccountId.value && payMode.value === 'BANK') {
 			formData.append('bankAccountId', bankAccountId.value);
 		}
@@ -1020,6 +1032,12 @@ componentWillUnmount() {
 													if(this.state.currency===true && values.currency === '' ){
 														errors.currency = 'Currency is required';
 													}
+													if(this.state.isRegisteredVat && !values.vatCategoryId){
+														errors.vatCategoryId=strings.VATIsRequired;
+													}
+													if(this.state.isRegisteredVat && !values.taxTreatmentId){
+														errors.taxTreatmentId=strings.TaxTreatmentRequired;
+													}
 													// if (!values.placeOfSupplyId && values.taxTreatmentId.value !== 8) {
 													// 	errors.placeOfSupplyId = 'Place of supply is required';
 													// }
@@ -1029,9 +1047,7 @@ componentWillUnmount() {
 													expenseNumber: Yup.string().required(
 														'Expense  is required',
 													),
-													taxTreatmentId: Yup.string().required(
-														strings.TaxTreatmentRequired
-													),
+													
 													expenseCategory: Yup.string().required(
 														strings.ExpenseCategoryRequired
 													),
@@ -1062,9 +1078,7 @@ componentWillUnmount() {
 																}
 															},
 														),
-													vatCategoryId: Yup.string().required(
-														strings.VATIsRequired
-													),
+													
 													payMode: Yup.string().required(
 														strings.PayThroughIsRequired
 													),
@@ -1162,7 +1176,7 @@ componentWillUnmount() {
 																			)}
 																	</FormGroup>
 																</Col>
-																	<Col lg={3}>
+																{ this.state.isRegisteredVat && (<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="taxTreatmentId">
 																			<span className="text-danger">* </span>{strings.TaxTreatment}
@@ -1221,7 +1235,7 @@ componentWillUnmount() {
 																				</div>
 																			)}
 																	</FormGroup>
-																</Col>
+																</Col>)}
 															{/* {this.state.showPlacelist==true&& (	<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">
@@ -1276,7 +1290,7 @@ componentWillUnmount() {
 																		)}
 																</FormGroup>
 															</Col>)} */}
-															<Col className='mb-2' lg={3}>
+															{ this.state.isRegisteredVat && (<Col className='mb-2' lg={3}>
 																<Label htmlFor="inline-radio3"><span className="text-danger">* </span>{strings.ExpenseType}</Label>
 																<div style={{display:"flex"}}>
 																	{this.state.isVatClaimable === false ?
@@ -1317,7 +1331,7 @@ componentWillUnmount() {
 																	}
 																</div>
 
-															</Col>
+															</Col>)}
 															
 														</Row>
 														<Row>
@@ -1511,7 +1525,7 @@ componentWillUnmount() {
 																		)}
 																</FormGroup>
 															</Col>													
-															{this.renderVat(props)}	
+															{this.state.isRegisteredVat && (this.renderVat(props))}	
 															
 															{/* {!props.values.payee && payMode.value === 'BANK' && (
 																<Col lg={3}>
@@ -1710,9 +1724,9 @@ componentWillUnmount() {
 														)
 														} 
 														<Row>
-													{((this.state.isDesignatedZone && (this.state.taxTreatmentId === 5  || this.state.taxTreatmentId === 6 ||this.state.taxTreatmentId === 7 ))
+													{(this.state.isRegisteredVat) && (((this.state.isDesignatedZone && (this.state.taxTreatmentId === 5  || this.state.taxTreatmentId === 6 ||this.state.taxTreatmentId === 7 ))
 														|| (!this.state.isDesignatedZone && (this.state.taxTreatmentId !== 3  && this.state.taxTreatmentId !== 8))
-														)&&(<Col>
+														))&&(<Col>
 															{/* <Input
 															type="checkbox"
 															id="isReverseChargeEnabled"

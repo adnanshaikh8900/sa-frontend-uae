@@ -324,7 +324,6 @@ class DetailExpense extends React.Component {
 		const exclusiveVat = this.state.selectedStatus;
 		const expenseType = this.state.selectedStatus;
 		let formData = new FormData();
-		formData.append('expenseType',  this.state.expenseType);
 		formData.append('isVatClaimable',  this.state.isVatClaimable);
 		formData.append('delivaryNotes',notes);
 		formData.append('expenseNumber', expenseNumber);
@@ -351,14 +350,30 @@ class DetailExpense extends React.Component {
 		// if (vatCategoryId && vatCategoryId.value) {
 		// 	formData.append('vatCategoryId', vatCategoryId.value);
 		// }
-		  
-		if (vatCategoryId ) {
-			formData.append('vatCategoryId',  vatCategoryId.value ? vatCategoryId.value :vatCategoryId);
-			
-			if(this.state.exclusiveVat !== undefined){
-				formData.append('exclusiveVat', this.state.exclusiveVat );
-			}
+		if(!this.state.isRegisteredVat){
+			formData.append('taxTreatmentId','');
+			formData.append('vatCategoryId', 10);
+			// formData.append("isReverseChargeEnabled",'')
+			// formData.append('expenseType', '' );
+			formData.append("isReverseChargeEnabled", false)
+			formData.append('expenseType', false);
 		}
+		else {
+			if (taxTreatmentId && taxTreatmentId.value) {
+				formData.append('taxTreatmentId', taxTreatmentId.value);
+			}
+			if (vatCategoryId ) {
+				formData.append('vatCategoryId',  vatCategoryId.value ? vatCategoryId.value :vatCategoryId);
+				
+				if(this.state.exclusiveVat !== undefined){
+					formData.append('exclusiveVat', this.state.exclusiveVat );
+				}
+			}
+			formData.append("isReverseChargeEnabled",this.state.isReverseChargeEnabled)
+			formData.append('expenseType',  this.state.expenseType );
+
+		}  
+		
 		if (bankAccountId && bankAccountId.value && payMode === 'BANK') {
 			formData.append('bankAccountId', bankAccountId.value);
 		}
@@ -369,10 +384,7 @@ class DetailExpense extends React.Component {
 			formData.append('placeOfSupplyId', placeOfSupplyId.value ?placeOfSupplyId.value :placeOfSupplyId);
 		}
 		
-		if (taxTreatmentId && taxTreatmentId.value) {
-			formData.append('taxTreatmentId', taxTreatmentId.value);
-		}
-		formData.append("isReverseChargeEnabled",this.state.isReverseChargeEnabled)
+		
 		this.setState({ loading:true, loadingMsg:"Updating Expense..."});
 		this.props.expenseDetailActions
 			.updateExpense(formData)
@@ -874,6 +886,12 @@ class DetailExpense extends React.Component {
 														) {
 															errors.bankAccountId = 'Bank account is required';
 														}
+														if(this.state.isRegisteredVat && !values.vatCategoryId){
+															errors.vatCategoryId=strings.VATIsRequired;
+														}
+														if(this.state.isRegisteredVat && !values.taxTreatmentId){
+															errors.taxTreatmentId=strings.TaxTreatmentRequired;
+														}
 
 														// if(this.state.showPlacelist===true && values.placeOfSupplyId ===''){
 														// 	errors.placeOfSupplyId="Place of supply is required"
@@ -890,9 +908,6 @@ class DetailExpense extends React.Component {
 														expenseDate: Yup.date().required(
 															'Expense date is required',
 														),
-														taxTreatmentId: Yup.string().required(
-															'Tax  is required',
-														),
 														currency: Yup.string().required(
 															'Currency is required',
 														),
@@ -901,9 +916,6 @@ class DetailExpense extends React.Component {
 														),
 														payee: Yup.string().required(
 															'Paid by is required',
-														),
-														vatCategoryId: Yup.string().required(
-															'VAT is required',
 														),
 														expenseAmount: Yup.string()
 														.required('Amount is required')
@@ -1020,7 +1032,7 @@ class DetailExpense extends React.Component {
 																	</FormGroup>
 																</Col>
 
-																<Col lg={3}>
+																{ this.state.isRegisteredVat && (<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="taxTreatmentId">
 																			<span className="text-danger">* </span>{strings.TaxTreatment}
@@ -1095,7 +1107,7 @@ class DetailExpense extends React.Component {
 																				</div>
 																			)}
 																	</FormGroup>
-																</Col>
+																</Col> )}
 															{/* {this.state.showPlacelist==true&& (	<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">
@@ -1157,7 +1169,7 @@ class DetailExpense extends React.Component {
 																</FormGroup>
 															</Col>)} */}
 
-															<Col className='mb-4' lg={3}>
+														{ this.state.isRegisteredVat && (<Col className='mb-4' lg={3}>
 															<Label htmlFor="inline-radio3"><span className="text-danger">* </span>{strings.ExpenseType}</Label>
 															<div style={{display:"flex"}}>
 																{this.state.expenseType === false ?
@@ -1196,7 +1208,7 @@ class DetailExpense extends React.Component {
 																}
 																</div>
 
-															</Col>
+															</Col>)}
 															
 														</Row>
 															<Row>
@@ -1393,7 +1405,7 @@ class DetailExpense extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
-																{this.renderVat(props)}	
+																{this.state.isRegisteredVat && this.renderVat(props)}	
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="currency">
@@ -1672,9 +1684,9 @@ class DetailExpense extends React.Component {
 																</Row>
 																)}
 																<Row>
-																	{((this.state.isDesignatedZone && (this.state.taxTreatmentId === 5  || this.state.taxTreatmentId === 6 ||this.state.taxTreatmentId === 7 ))
+																	{ this.state.isRegisteredVat && (((this.state.isDesignatedZone && (this.state.taxTreatmentId === 5  || this.state.taxTreatmentId === 6 ||this.state.taxTreatmentId === 7 ))
 																		|| (!this.state.isDesignatedZone && (this.state.taxTreatmentId !== 3  && this.state.taxTreatmentId !== 8))
-																	)&& (
+																	)) && (
 																	<Col>
 																		<Checkbox
 																			id="isReverseChargeEnabled"

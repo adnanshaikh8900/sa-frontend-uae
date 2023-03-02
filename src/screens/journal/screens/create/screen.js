@@ -461,7 +461,7 @@ class CreateJournal extends React.Component {
 						}}
 						placeholder={strings.Debit+" "+strings.Amount}
 						className={`form-control 
-            ${
+            			${
 							props.errors.journalLineItems &&
 							props.errors.journalLineItems[parseInt(idx, 10)] &&
 							props.errors.journalLineItems[parseInt(idx, 10)].debitAmount &&
@@ -916,7 +916,7 @@ class CreateJournal extends React.Component {
 																		name="description"
 																		id="description"
 																		rows="5"
-																		// placeholder={strings.DeliveryNotes}
+																		placeholder={strings.DeliveryNotes}
 																		value={props.values.description || ''}
 																		onChange={(value) => {
 																			props.handleChange('description')(value);

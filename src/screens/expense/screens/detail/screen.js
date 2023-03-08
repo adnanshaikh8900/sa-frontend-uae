@@ -446,19 +446,19 @@ class DetailExpense extends React.Component {
 
 	setCurrency = (value,props) => {
 		if(this.props.currency_convert_list){
-		let result = this.props.currency_convert_list.filter((obj) => {
-		return obj.currencyCode === value;
-		});
-		if(result[0] && result[0].currencyName){
-			//this.formRef.current.setFieldValue('curreancyname',result[0].currencyName , true);
-			if (props){
-				props.handleChange('curreancyname')(
-					result[0].currencyName,
-				);
+			let result = this.props.currency_convert_list.filter((obj) => {
+			return obj.currencyCode === value;
+			});
+			if(result[0] && result[0].currencyName){
+				//this.formRef.current.setFieldValue('curreancyname',result[0].currencyName , true);
+				if (props){
+					props.handleChange('curreancyname')(
+						result[0].currencyName,
+					);
+				}
+				this.setState({curreancyname:result[0].currencyName});
+			
 			}
-			this.setState({curreancyname:result[0].currencyName});
-		
-		}
 		}
 	};
 

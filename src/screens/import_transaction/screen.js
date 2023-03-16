@@ -52,7 +52,7 @@ const mapDispatchToProps = (dispatch) => {
 			dispatch,
 		),
 		commonActions: bindActionCreators(CommonActions, dispatch),
-		detailBankAccountActions : bindActionCreators(DetailBankAccountActions,dispatch)
+		detailBankAccountActions: bindActionCreators(DetailBankAccountActions, dispatch)
 	};
 };
 const Papa = require("papaparse")
@@ -62,7 +62,7 @@ class ImportTransaction extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			templateId:'',
+			templateId: '',
 			language: window['localStorage'].getItem('language'),
 			initialloading: true,
 			initValue: {
@@ -94,12 +94,12 @@ class ImportTransaction extends React.Component {
 			selectedDelimiter: '',
 			selectedDateFormat: '',
 			configurationList: [],
-			selectedConfiguration: this.props.location.state.selectedTemplate ?this.props.location.state.selectedTemplate:'',
+			selectedConfiguration: this.props.location.state.selectedTemplate ? this.props.location.state.selectedTemplate : '',
 			selectError: [],
 			errorIndexList: [],
 			error: {},
-			isHeaderRow:false,
-			indexMap:'',
+			isHeaderRow: false,
+			indexMap: '',
 			config: {
 				delimiter: "",	// auto-detect
 				newline: "",	// auto-detect
@@ -134,17 +134,28 @@ class ImportTransaction extends React.Component {
 		};
 	}
 
-	componentDidMount = () => {		
-		this.initializeData();	
+	componentDidMount = () => {
+		this.initializeData();
 	};
-setConfigurations=(configurationList)=>{
-	
-	let data = configurationList.filter(
-		(item) => item.id == this.state.selectedConfiguration,
-	);
-	if (data.length > 0) {
-		this.setState({
-			initValue: {
+	setConfigurations = (configurationList) => {
+
+		let data = configurationList.filter(
+			(item) => item.id == this.state.selectedConfiguration,
+		);
+		if (data.length > 0) {
+			this.setState({
+				initValue: {
+					name: this.state.initValue.name,
+					skipRows: data[0].skipRows,
+					headerRowNo: data[0].headerRowNo,
+					textQualifier:
+						data[0].textQualifier,
+					// dateFormatId: data[0].dateFormatId,
+					otherDilimiterStr:
+						data[0].otherDilimiterStr,
+					endRows: data[0].endRows,
+					skipColumns: data[0].skipColumns
+				},
 				name: this.state.initValue.name,
 				skipRows: data[0].skipRows,
 				headerRowNo: data[0].headerRowNo,
@@ -153,51 +164,41 @@ setConfigurations=(configurationList)=>{
 				// dateFormatId: data[0].dateFormatId,
 				otherDilimiterStr:
 					data[0].otherDilimiterStr,
-					endRows:data[0].endRows,
-					skipColumns:data[0].skipColumns
-			},
-			name: this.state.initValue.name,
-				skipRows: data[0].skipRows,
-				headerRowNo: data[0].headerRowNo,
-				textQualifier:
-					data[0].textQualifier,
-				// dateFormatId: data[0].dateFormatId,
-				otherDilimiterStr:
-					data[0].otherDilimiterStr,
-					endRows:data[0].endRows,
-					skipColumns:data[0].skipColumns,
-			selectedConfiguration: this.state.selectedConfiguration,
-			templateId : this.state.selectedConfiguration,
-			selectedDateFormat:
-				data[0].dateFormatId,
-			selectedDelimiter: data[0].delimiter,
-			error: {
-				...this.state.error,
-				...{ dateFormatId: '' },
-			},
-		});
+				endRows: data[0].endRows,
+				skipColumns: data[0].skipColumns,
+				selectedConfiguration: this.state.selectedConfiguration,
+				templateId: this.state.selectedConfiguration,
+				selectedDateFormat:
+					data[0].dateFormatId,
+				selectedDelimiter: data[0].delimiter,
+				error: {
+					...this.state.error,
+					...{ dateFormatId: '' },
+				},
+			});
 
-		// this.processData(this.props.location.state.dataString)
+			// this.processData(this.props.location.state.dataString)
 
-}}
+		}
+	}
 	initializeData = () => {
 		console.log('transaction');
-		
+
 		this.props.importTransactionActions.getDateFormatList();
-			
+
 		this.props.importTransactionActions.getConfigurationList().then((res) => {
 			this.setState({
 				configurationList: res.data,
 			});
-			 
+
 			this.setConfigurations(res.data)
 		});
-	
-		 
+
+
 		this.processData(this.props.location.state.dataString)
 		if (this.props.location.state && this.props.location.state.bankAccountId) {
-			
-		
+
+
 			this.props.importTransactionActions
 				.getTableHeaderList()
 				.then((res) => {
@@ -208,7 +209,7 @@ setConfigurations=(configurationList)=>{
 						selectedValue: this.state.tableHeader.concat(temp),
 					});
 				});
-				this.props.detailBankAccountActions
+			this.props.detailBankAccountActions
 				.getBankAccountByID(this.props.location.state.bankAccountId)
 				.then((res) => {
 					this.setState(
@@ -220,7 +221,7 @@ setConfigurations=(configurationList)=>{
 								? res.lastReconcileDate
 								: '',
 						},
-						() => {},
+						() => { },
 					);
 				})
 				.catch((err) => {
@@ -263,12 +264,12 @@ setConfigurations=(configurationList)=>{
 		this.setState({
 			error: temp,
 		});
-		
+
 		if (Object.keys(temp).length) {
-			Object.values(temp).map((i)=>{
+			Object.values(temp).map((i) => {
 				this.props.commonActions.tostifyAlert('error', i)
 			})
-		 
+
 			return false;
 		} else {
 			return true;
@@ -276,7 +277,7 @@ setConfigurations=(configurationList)=>{
 	};
 
 	handleApply = (value, resetForm) => {
-	
+
 		if (this.validateForm()) {
 			const { initValue } = this.state;
 			initValue['delimiter'] = this.state.selectedDelimiter;
@@ -359,7 +360,7 @@ setConfigurations=(configurationList)=>{
 									tableHeader: this.state.tableHeader.concat(res.data),
 									selectedValue: this.state.tableHeader.concat(temp),
 								});
-							
+
 							});
 					}
 				})
@@ -371,7 +372,7 @@ setConfigurations=(configurationList)=>{
 					this.setState({ loading: false });
 				});
 		}
-		
+
 	};
 
 	handleChange = (e, index) => {
@@ -466,202 +467,215 @@ setConfigurations=(configurationList)=>{
 	// 		return true
 	// }
 	handleSave = () => {
-		
+
 		if (this.validateForm()) {
-		let optionErr = [...this.state.selectError];
-		let item = -1;
-		this.state.selectedValueDropdown
-			.map((item, index) => {
-				if (item.value === '') {
-					optionErr[`${index}`] = true;
-				}
-				return item.value;
-			})
-			.indexOf('');
-
-		if (item === -1) {
-			let a = {};
-			let val;
-			let obj = {};
-			this.state.selectedValueDropdown.map((item, index) => {
-				if (item.value !== '') {
-					val = item.value;
-					obj[val] = index;
-					a = { ...a, ...obj };
-				}
-				return item;
-			});
-			let postData = { ...this.state.initValue };
-			
-			postData.skipColumns = this.state.initValue.skipColumns?.length >= 1  ? this.state.initValue.skipColumns : ''
-			postData.indexMap = a;
-			let obi={...postData}
-			
-			Object.keys(obi).map((i)=>{
-
-				if(postData[i]===null)  postData[i]=""
-				else postData[i]=obi[i]
-			})
-			
-			this.props.importTransactionActions
-				.createConfiguration(postData)
-				.then((res) => {
-
-					// this.props.commonActions.tostifyAlert(
-					// 	'success',
-					// 	'New Template Created Successfully',
-					// );
-
-					// this.props.history.push('/admin/banking/bank-account/transaction', {
-					// 	id: res.data.id,
-					// 	bankAccountId: this.props.location.state.bankAccountId,
-					// });
-					
-					this.props.importTransactionActions.getConfigurationList().then((res2) => {
-						this.setState({
-							templateId: res.data.id,
-							configurationList: res2.data,
-						},()=>{
-							this.Import()
-						});
-				
+			let optionErr = [...this.state.selectError];
+			let item = -1;
+			this.state.selectedValueDropdown
+				.map((item, index) => {
+					if (item.value === '') {
+						optionErr[`${index}`] = true;
+					}
+					return item.value;
 				})
-					this.processData(this.props.location.state.dataString)
-					// this.validate();
-				})
-				.catch((err) => {
-					this.props.commonActions.tostifyAlert(
-						'error',
-						err && err.data ? err.data.message : 'Something Went Wrong',
-					);
-					this.props.history.push(
-						'/admin/banking/upload-statement'
-					)
+				.indexOf('');
+
+			if (item === -1) {
+				let a = {};
+				let val;
+				let obj = {};
+				this.state.selectedValueDropdown.map((item, index) => {
+					if (item.value !== '') {
+						val = item.value;
+						obj[val] = index;
+						a = { ...a, ...obj };
+					}
+					return item;
 				});
-		} else {
-			this.setState({
-				selectError: optionErr,
-			});
-		}
-	};}
+				let postData = { ...this.state.initValue };
+
+				postData.skipColumns = this.state.initValue.skipColumns?.length >= 1 ? this.state.initValue.skipColumns : ''
+				postData.indexMap = a;
+				let obi = { ...postData }
+
+				Object.keys(obi).map((i) => {
+
+					if (postData[i] === null) postData[i] = ""
+					else postData[i] = obi[i]
+				})
+
+				this.props.importTransactionActions
+					.createConfiguration(postData)
+					.then((res) => {
+
+						// this.props.commonActions.tostifyAlert(
+						// 	'success',
+						// 	'New Template Created Successfully',
+						// );
+
+						// this.props.history.push('/admin/banking/bank-account/transaction', {
+						// 	id: res.data.id,
+						// 	bankAccountId: this.props.location.state.bankAccountId,
+						// });
+
+						this.props.importTransactionActions.getConfigurationList().then((res2) => {
+							this.setState({
+								templateId: res.data.id,
+								configurationList: res2.data,
+							}, () => {
+								this.Import()
+							});
+
+						})
+						this.processData(this.props.location.state.dataString)
+						// this.validate();
+					})
+					.catch((err) => {
+						this.props.commonActions.tostifyAlert(
+							'error',
+							err && err.data ? err.data.message : 'Something Went Wrong',
+						);
+						this.props.history.push(
+							'/admin/banking/upload-statement'
+						)
+					});
+			} else {
+				this.setState({
+					selectError: optionErr,
+				});
+			}
+		};
+	}
 
 
 
 	columnClassNameFormat = (fieldValue, row, rowIdx, colIdx) => {
-		 
+
 		const index = `${rowIdx.toString()},${colIdx.toString()}`;
 		return this.state.errorIndexList.indexOf(index) > -1 ? 'invalid' : '';
 	};
 
 	Import = () => {
 		const { templateId, tableData, id } = this.state;
-		const mappedvalues=[]
-			this.state.selectedValueDropdown.map((item, index) => {
-				if(item.value!=="") mappedvalues.push({inx:index,val:item.value})
-			})
-			const finaldata=[]
-			tableData.map((i)=>{
-				let local
-				let local2={}
-				local={...i}
-				mappedvalues.map((i2)=>{
-					const allvales=Object.keys(i)?.[i2.inx]
-					
-					local2[i2.val]=local?.[`${allvales}`]
-				})
-				finaldata.push(local2)
-				
-			})
-			
-			const fdata=finaldata.map((i)=>{
-				let local={...i}
-					Object.keys(i).map((i3)=>{
-						
-						if(local?.[`${i3}`]==="" || local?.[`${i3}`]===null || local?.[`${i3}`]===undefined) 
-						{
-						local={...local,[i3]:"-"}
-						}
-						if(i3==="TRANSACTION_DATE"){
+		const mappedvalues = []
+		this.state.selectedValueDropdown.map((item, index) => {
+			if (item.value !== "") mappedvalues.push({ inx: index, val: item.value })
+		})
+		const finaldata = []
+		tableData.map((i) => {
+			let local
+			let local2 = {}
+			local = { ...i }
+			mappedvalues.map((i2) => {
+				const allvales = Object.keys(i)?.[i2.inx]
 
-							const localdata=local["TRANSACTION_DATE"]
-							
-							const data=moment(localdata,'DD/MM/YYYY').format('DD/MM/YYYY')
-							
-							if(data==="Invalid date"){
+				local2[i2.val] = local?.[`${allvales}`]
+			})
+			finaldata.push(local2)
 
-								this.props.commonActions.tostifyAlert(
-									'error',
-									'invalid date format',
-								);
-							} else {
-								local={...local,"TRANSACTION_DATE":data}
-							}
-							
-							
-                        }
-						if(i3==="CR_AMOUNT" || i3==="DR_AMOUNT")
-						{
-							local={...local,"CR_AMOUNT":local["CR_AMOUNT"]?.replace(",",''),
-							"DR_AMOUNT":local["DR_AMOUNT"]?.replace(",",''),
-						}
-						}
+		})
+		let invaliddate = false
+		const deli = [',', ' ', '/', '-']
+		const fdata = finaldata.map((i) => {
+			let local = { ...i }
+			Object.keys(i).map((i3) => {
+
+				if (local?.[`${i3}`] === "" || !local?.[`${i3}`]) {
+					local = { ...local, [i3]: "-" }
+				}
+				if (i3 === "TRANSACTION_DATE") {
+
+					const localdata = local["TRANSACTION_DATE"]
+
+					let selectformat = this.props.date_format_list.find((i) => i.id === this.state.selectedDateFormat).format
+					let finddeli
+					deli.forEach((i) => {
+						if (localdata.split(i).length === 3) finddeli = i
 					})
-					return local
-			})
-			
+					debugger
 
-			// const ldata=fdata.map((i)=>{
-			// 	return {
-			// 		{
-			// 			"Transection Date"
-			// 		}
-			// 	}
-			// })
+					var formatLowerCase = selectformat.toLowerCase();
+					var formatItems = formatLowerCase.split(finddeli);
+					var dateItems = localdata.split(finddeli);
+					var monthIndex = formatItems.findIndex((i) => i.includes("m"));
+					var dayIndex = formatItems.findIndex((i) => i.includes("d"));
+					var yearIndex = formatItems.findIndex((i) => i.includes("y"));
+					var month = parseInt(dateItems[monthIndex]);
+					month -= 1;
+					var formatedDate = new Date(dateItems[yearIndex], month, dateItems[dayIndex]);
+					const data = moment(formatedDate, 'DD/MM/YYYY').format('DD/MM/YYYY')
+					debugger
+					if (data === "Invalid date") {
+						invaliddate = true
+					}
 
-		const postData = {
-			bankId: this.props.location.state.bankAccountId
-				? this.props.location.state.bankAccountId
-				: '',
-			templateId: templateId ? +templateId : '',
-			importDataMap: fdata,
-		};
-
-
-		this.props.importBankStatementActions
-			.importTransaction(postData)
-			.then((res) => {
-				if (res.data.includes('Transactions Imported 0')) {
-					this.props.commonActions.tostifyAlert(
-						'error',
-						'Transaction Date Cannot be less than Bank opening date or Last Reconciled Date',
-						this.props.history.push('/admin/banking/bank-account/transaction',
-						 {
-							bankAccountId: postData.bankId
-						})
-					);
-					this.setState({ selectedTemplate: [], tableData: [], showMessage: true });
-				} else {
-					this.props.commonActions.tostifyAlert('success', res.data);
-					this.props.history.push('/admin/banking/bank-account/transaction', {
-						bankAccountId: postData.bankId
-					});
+					local = { ...local, "TRANSACTION_DATE": data }
+				}
+				if (i3 === "CR_AMOUNT" || i3 === "DR_AMOUNT") {
+					local = {
+						...local, "CR_AMOUNT": local["CR_AMOUNT"]?.replace(",", ''),
+						"DR_AMOUNT": local["DR_AMOUNT"]?.replace(",", ''),
+					}
 				}
 			})
-			.catch((err) => {
-				this.props.history.push(
-					'/admin/banking/upload-statement'
-				)
-				this.props.commonActions.tostifyAlert(
-					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
-				);
-			});
+			debugger
+			return local
+		})
+		if (invaliddate) {
+
+			this.props.commonActions.tostifyAlert(
+				'error',
+				'invalid date format, Please Change To Continue',
+			);
+		} else {
+			const postData = {
+				bankId: this.props.location.state.bankAccountId
+					? this.props.location.state.bankAccountId
+					: '',
+				templateId: templateId ? +templateId : '',
+				importDataMap: fdata,
+			};
+
+
+			this.props.importBankStatementActions
+				.importTransaction(postData)
+				.then((res) => {
+					if (res.data.includes('Transactions Imported 0')) {
+						this.props.commonActions.tostifyAlert(
+							'error',
+							'Transaction Date Cannot be less than Bank opening date or Last Reconciled Date',
+							this.props.history.push('/admin/banking/bank-account/transaction',
+								{
+									bankAccountId: postData.bankId
+								})
+						);
+						this.setState({ selectedTemplate: [], tableData: [], showMessage: true });
+					} else {
+						this.props.commonActions.tostifyAlert('success', res.data);
+						this.props.history.push('/admin/banking/bank-account/transaction', {
+							bankAccountId: postData.bankId
+						});
+					}
+				})
+				.catch((err) => {
+					this.props.history.push(
+						'/admin/banking/upload-statement'
+					)
+					this.props.commonActions.tostifyAlert(
+						'error',
+						err && err.data ? err.data.message : 'Something Went Wrong',
+					);
+				});
+		}
+
+
+
 	};
 
 	ImportWithoutTemplate = () => {
 		const { templateId, tableData, id } = this.state;
 		const postData = {
-			dateFormatId:	this.state.initValue.dateFormatId ? this.state.initValue.dateFormatId : '',
+			dateFormatId: this.state.initValue.dateFormatId ? this.state.initValue.dateFormatId : '',
 			bankId: this.props.location.state.bankAccountId
 				? this.props.location.state.bankAccountId
 				: '',
@@ -676,9 +690,9 @@ setConfigurations=(configurationList)=>{
 						'error',
 						'Transaction Date Cannot be less than Bank opening date or Last Reconciled Date',
 						this.props.history.push('/admin/banking/bank-account/transaction',
-						 {
-							bankAccountId: postData.bankId
-						})
+							{
+								bankAccountId: postData.bankId
+							})
 					);
 					this.setState({ selectedTemplate: [], tableData: [], showMessage: true });
 				} else {
@@ -696,7 +710,7 @@ setConfigurations=(configurationList)=>{
 			});
 	};
 	validateWithoutTemplate = () => {
-		
+
 		// const data ={
 		// 	data : this.state.csv,
 		// 	id : this.state.templateId
@@ -725,45 +739,46 @@ setConfigurations=(configurationList)=>{
 				return item;
 			});
 			let postData = { ...this.state.initValue };
-		
-			postData.skipColumns = this.state.initValue?.skipColumns?.length >= 1  ? this.state.initValue?.skipColumns : ''
+
+			postData.skipColumns = this.state.initValue?.skipColumns?.length >= 1 ? this.state.initValue?.skipColumns : ''
 			postData.indexMap = a;
-		let formData={
-			indexMap:a,
-			delimiter:postData.delimiter ? postData.delimiter : '',
-			headerRowNo:	postData.headerRowNo ? postData.headerRowNo : '',
-			dateFormatId:	postData.dateFormatId ? postData.dateFormatId : '',
-			skipRows:postData.skipRows ? postData.skipRows : null,
-			textQualifier:postData.textQualifier ? postData.textQualifier : '',
-			otherDilimiterStr:postData.otherDilimiterStr ? postData.otherDilimiterStr : '',
-			data:this.state.csv,
-			id: this.state.templateId ? this.state.templateId : ''
-		}
-		this.props.importTransactionActions
-			.parseCsvFileWithOutTemplate(formData)
-			.then((res) => {
-				console.log(res);
-				this.setState({
-					tableData: res.data['data'],
-					tableDataKey: res.data.data[0] ? Object.keys(res.data.data[0]) : [],
-					errorIndexList: res.data.error ? res.data.error : [],
+			let formData = {
+				indexMap: a,
+				delimiter: postData.delimiter ? postData.delimiter : '',
+				headerRowNo: postData.headerRowNo ? postData.headerRowNo : '',
+				dateFormatId: postData.dateFormatId ? postData.dateFormatId : '',
+				skipRows: postData.skipRows ? postData.skipRows : null,
+				textQualifier: postData.textQualifier ? postData.textQualifier : '',
+				otherDilimiterStr: postData.otherDilimiterStr ? postData.otherDilimiterStr : '',
+				data: this.state.csv,
+				id: this.state.templateId ? this.state.templateId : ''
+			}
+			this.props.importTransactionActions
+				.parseCsvFileWithOutTemplate(formData)
+				.then((res) => {
+					console.log(res);
+					this.setState({
+						tableData: res.data['data'],
+						tableDataKey: res.data.data[0] ? Object.keys(res.data.data[0]) : [],
+						errorIndexList: res.data.error ? res.data.error : [],
+					});
+					this.props.commonActions.tostifyAlert(
+						'Success',
+						'Validatation complete',
+					);
+					console.log('tableDataKey', this.state.tableDataKey);
+					// })
+
+					if (this.state.errorIndexList.length <= 0) {
+						this.ImportWithoutTemplate()
+					}
+				})
+
+				.catch((err) => {
+					// this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
+					// this.setState({ loading: false })
 				});
-				this.props.commonActions.tostifyAlert(
-					'Success',
-					'Validatation complete',
-				);
-				console.log('tableDataKey', this.state.tableDataKey);
-				// })
-					
-				if(this.state.errorIndexList.length <= 0){
-					this.ImportWithoutTemplate()
-				}
-			})
-			
-			.catch((err) => {
-				// this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
-				// this.setState({ loading: false })
-			});}
+		}
 	};
 
 	validate = () => {
@@ -790,29 +805,29 @@ setConfigurations=(configurationList)=>{
 		// 		}
 		// 		return item;
 		// 	});
-			
-		const mappedvalues=[]
-			this.state.selectedValueDropdown.map((item, index) => {
-				if(item.value!=="") mappedvalues.push({inx:index,val:item.value})
-			})
-			
 
-			// let postData = { ...this.state.initValue };
-			// postData.skipColumns = this.state.initValue?.skipColumns?.length >= 1  ? this.state.initValue?.skipColumns : ''
-			// postData.indexMap = a;
-			
-			if(mappedvalues.length===4){
-			if(this.state.templateId===""){
+		const mappedvalues = []
+		this.state.selectedValueDropdown.map((item, index) => {
+			if (item.value !== "") mappedvalues.push({ inx: index, val: item.value })
+		})
+
+
+		// let postData = { ...this.state.initValue };
+		// postData.skipColumns = this.state.initValue?.skipColumns?.length >= 1  ? this.state.initValue?.skipColumns : ''
+		// postData.indexMap = a;
+
+		if (mappedvalues.length === 4) {
+			if (this.state.templateId === "") {
 				this.handleSave()
-			} else if(this.state.templateId!==""){
-				
+			} else if (this.state.templateId !== "") {
+
 				this.Import()
 			}
-		}else {
+		} else {
 			this.props.commonActions.tostifyAlert('error', 'please select maping column')
 		}
-			
-			//this.Import()
+
+		//this.Import()
 		// this.props.importTransactionActions
 		// 	.parseCsvFile(postData)
 		// 	.then((res) => {
@@ -828,20 +843,20 @@ setConfigurations=(configurationList)=>{
 		// 		);
 		// 		console.log('tableDataKey', this.state.tableDataKey);
 		// 		// })
-					
+
 		// 		if(this.state.errorIndexList.length <= 0){
 		// 			this.Import()
 		// 		}
 		// 	})
-			
+
 		// 	.catch((err) => {
 		// 		// this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
 		// 		// this.setState({ loading: false })
 		// 	});
 	}
-	
+
 	handleSubmit = (data) => {
-		
+
 		const { selectedTemplate } = this.state;
 		let formData = new FormData();
 
@@ -873,27 +888,26 @@ setConfigurations=(configurationList)=>{
 	};
 
 	processData = dataString => {
-	
-		 let parse = Papa.parse(dataString, this.state.config)
-		 let isheaderisrow=this.state.isHeaderRow
+
+		let parse = Papa.parse(dataString, this.state.config)
+		let isheaderisrow = this.state.isHeaderRow
 		// let parse = dataString
 		const skipColumns = this.state.initValue.skipColumns
-		let newString=''
-		if(skipColumns && skipColumns.length > 0 )
-
-		{let skipColumnsList=skipColumns.split(',')
-		skipColumnsList.map((row)=>{
-			newString+=(parseInt(row)-1)+","
-		})
+		let newString = ''
+		if (skipColumns && skipColumns.length > 0) {
+			let skipColumnsList = skipColumns.split(',')
+			skipColumnsList.map((row) => {
+				newString += (parseInt(row) - 1) + ","
+			})
 		}
-		const dataStringLines=[...parse.data]
-		const local = this.state.skipRows && this.state.skipRows!==""  ? 
-		dataStringLines.splice(isheaderisrow?1:0,
-			parseInt(this.state.skipRows)) 
-			:dataStringLines;
-			
+		const dataStringLines = [...parse.data]
+		const local = this.state.skipRows && this.state.skipRows !== "" ?
+			dataStringLines.splice(isheaderisrow ? 1 : 0,
+				parseInt(this.state.skipRows))
+			: dataStringLines;
+
 		const header = dataStringLines[0]
-		console.log(parse,"parse")
+		console.log(parse, "parse")
 		let headers = header
 
 		const list = [];
@@ -905,7 +919,7 @@ setConfigurations=(configurationList)=>{
 				const obj = {};
 				for (let j = 0; j < headers.length; j++) {
 					if (!newString.includes(j)) {
-						
+
 						let d = row[j];
 						if (d.length > 0) {
 							if (d[0] == '"')
@@ -913,7 +927,7 @@ setConfigurations=(configurationList)=>{
 							if (d[d.length - 1] == '"')
 								d = d.substring(d.length - 2, 1);
 						}
-						
+
 
 						if (headers[j]) {
 							obj[headers[j]] = d;
@@ -928,10 +942,10 @@ setConfigurations=(configurationList)=>{
 			}
 		}
 
-		headers =  header
+		headers = header
 
 		const csv = convertArrayToCSV(list)
-	
+
 		console.log(csv)
 
 		this.setState(
@@ -940,11 +954,11 @@ setConfigurations=(configurationList)=>{
 				tableDataKey: headers,
 				parse: parse,
 				csv: csv,
-		 initValue: {...this.state.initValue,...{otherDilimiterStr : parse.meta.delimiter}}
+				initValue: { ...this.state.initValue, ...{ otherDilimiterStr: parse.meta.delimiter } }
 			},
 
 			() => {
-				
+
 				let obj = { label: 'Select', value: '' };
 				let tempObj = { label: '', status: false };
 				let tempStatus = [...this.state.columnStatus];
@@ -989,9 +1003,9 @@ setConfigurations=(configurationList)=>{
 		// 	this.setState({ dataString: data })
 		// };
 		// reader.readAsBinaryString(file);
- 
 
-	
+
+
 	}
 
 	render() {
@@ -1021,7 +1035,7 @@ setConfigurations=(configurationList)=>{
 											</div>
 										</Col>
 										<Col>
-								{/* <Button title='Back'
+											{/* <Button title='Back'
 										onClick={() => {
 											this.props.history.push(
 												'/admin/banking/upload-statement',
@@ -1030,7 +1044,7 @@ setConfigurations=(configurationList)=>{
 										}}
 									className=' pull-right'>X
 									</Button> */}
-								</Col>
+										</Col>
 									</Row>
 								</CardHeader>
 								<CardBody>
@@ -1053,142 +1067,142 @@ setConfigurations=(configurationList)=>{
 														<Row lg={8} >
 															<Col lg={12} className="d-flex flex justify-content-center">
 																<Col lg={3} className="d-flex flex justify-content-end" >
-																<Label> Select Parsing Template </Label>
+																	<Label> Select Parsing Template </Label>
 																</Col >
 																<Col lg={3} >
-																<FormGroup>
-																	<Select
-																		placeholder="New Template"
-																		value={
-																			configurationList &&
-																			selectOptionsFactory
-																				.renderOptions(
-																					'name',
-																					'id',
-																					configurationList,
-																					'Configuration',
-																				)
-																				.find(
-																					(option) =>
-																						option.value ===
-																						+this.state.selectedConfiguration,
-																				) || selectOptionsFactory
-																				.renderOptions(
-																					'name',
-																					'id',
-																					configurationList,
-																					'Configuration',
-																				)?.[0]
-																		}
-																		options={
-																			configurationList
-																				? selectOptionsFactory.renderOptions(
-																					'name',
-																					'id',
-																					configurationList,
-																					'Configuration',
-																				).filter((i)=>i.value!==1)
-																				: []
-																		}
-																		onChange={(e) => {
-																			let data = configurationList.filter(
-																				(item) => item.id === e.value,
-																			);
-																			
-																			if (data.length > 0) {
-																				let local=[...this.state.selectedValueDropdown.map(()=>{return {label:"Select",value:""}})]
-																			Object.keys(data[0].indexMap).map((i)=>{
-																				const data2 =selectOptionsFactory.renderOptions(
-																					'label',
-																					'value',
-																					this.state.tableHeader,
-																					'',
-																				).find((val)=>val.value==i)
-																				local[data[0].indexMap?.[`${i}`]]=data2
-																			})
-																			
-																				this.setState({
-																					initValue: {
-																						name: this.state.initValue.name,
-																						skipRows: data[0].skipRows,
-																						headerRowNo: data[0].headerRowNo,
-																						textQualifier:
-																							data[0].textQualifier,
-																						// dateFormatId: data[0].dateFormatId,
-																						otherDilimiterStr:
-																							data[0].otherDilimiterStr,
-																						indexMap:data[0].indexMap
-																					},
-																					selectedValueDropdown:[...local],
-																					selectedConfiguration: e.value,
-																					selectedDateFormat:
-																						data[0].dateFormatId,
-																					selectedDelimiter: data[0].delimiter,
-																					error: {
-																						...this.state.error,
-																						...{ dateFormatId: '' },
-																					},
-																					templateId:e.value
-																				
-																				}
-																				
-																				);
-																			} else {
-																				this.setState({
-																					selectedConfiguration: e.value,
-																					templateId:e.value
-																				});
+																	<FormGroup>
+																		<Select
+																			placeholder="New Template"
+																			value={
+																				configurationList &&
+																				selectOptionsFactory
+																					.renderOptions(
+																						'name',
+																						'id',
+																						configurationList,
+																						'Configuration',
+																					)
+																					.find(
+																						(option) =>
+																							option.value ===
+																							+this.state.selectedConfiguration,
+																					) || selectOptionsFactory
+																						.renderOptions(
+																							'name',
+																							'id',
+																							configurationList,
+																							'Configuration',
+																						)?.[0]
 																			}
-																		}}
-																	/>
-																</FormGroup>
+																			options={
+																				configurationList
+																					? selectOptionsFactory.renderOptions(
+																						'name',
+																						'id',
+																						configurationList,
+																						'Configuration',
+																					).filter((i) => i.value !== 1)
+																					: []
+																			}
+																			onChange={(e) => {
+																				let data = configurationList.filter(
+																					(item) => item.id === e.value,
+																				);
+
+																				if (data.length > 0) {
+																					let local = [...this.state.selectedValueDropdown.map(() => { return { label: "Select", value: "" } })]
+																					Object.keys(data[0].indexMap).map((i) => {
+																						const data2 = selectOptionsFactory.renderOptions(
+																							'label',
+																							'value',
+																							this.state.tableHeader,
+																							'',
+																						).find((val) => val.value == i)
+																						local[data[0].indexMap?.[`${i}`]] = data2
+																					})
+
+																					this.setState({
+																						initValue: {
+																							name: this.state.initValue.name,
+																							skipRows: data[0].skipRows,
+																							headerRowNo: data[0].headerRowNo,
+																							textQualifier:
+																								data[0].textQualifier,
+																							// dateFormatId: data[0].dateFormatId,
+																							otherDilimiterStr:
+																								data[0].otherDilimiterStr,
+																							indexMap: data[0].indexMap
+																						},
+																						selectedValueDropdown: [...local],
+																						selectedConfiguration: e.value,
+																						selectedDateFormat:
+																							data[0].dateFormatId,
+																						selectedDelimiter: data[0].delimiter,
+																						error: {
+																							...this.state.error,
+																							...{ dateFormatId: '' },
+																						},
+																						templateId: e.value
+
+																					}
+
+																					);
+																				} else {
+																					this.setState({
+																						selectedConfiguration: e.value,
+																						templateId: e.value
+																					});
+																				}
+																			}}
+																		/>
+																	</FormGroup>
 																</Col>
 															</Col>
 															<Col lg={12} className="d-flex flex justify-content-center my-3 font-weight-bold"> Or Create New Template</Col>
 															<Col lg={12} className="d-flex flex justify-content-center">
 																<Col lg={3} className="d-flex flex justify-content-end">
-																<Label>
-																	<span className="text-danger">* </span>New Template Name
-																</Label>
+																	<Label>
+																		<span className="text-danger">* </span>New Template Name
+																	</Label>
 																</Col>
 																<Col lg={3}>
-																<FormGroup>
-																	<Input
-																		type="text"
-																		id="name"
-																		name="name"
-																		disabled={this.state.templateId!=="" }
-																		placeholder={strings.Enter + " " + strings.Name}
-																		value={this.state.initValue.name}
-																		onChange={(e) => {
-																			this.handleInputChange(
-																				'name',
-																				e.target.value,
-																			);
-																			this.setState({
-																				error: {
-																					...this.state.error,
-																					...{ name: '' },
-																				},
-																			});
-																		}}
-																		className={
-																			this.state.error &&
-																				this.state.error.name
-																				? 'is-invalid'
-																				: ''
-																		}
-																	/>
-																	{this.state.error &&
-																		this.state.error.name && (
-																			<div className="invalid-feedback">
-																				{this.state.error.name}
-																			</div>
-																		)}
-																</FormGroup>
+																	<FormGroup>
+																		<Input
+																			type="text"
+																			id="name"
+																			name="name"
+																			disabled={this.state.templateId !== ""}
+																			placeholder={strings.Enter + " " + strings.Name}
+																			value={this.state.initValue.name}
+																			onChange={(e) => {
+																				this.handleInputChange(
+																					'name',
+																					e.target.value,
+																				);
+																				this.setState({
+																					error: {
+																						...this.state.error,
+																						...{ name: '' },
+																					},
+																				});
+																			}}
+																			className={
+																				this.state.error &&
+																					this.state.error.name
+																					? 'is-invalid'
+																					: ''
+																			}
+																		/>
+																		{this.state.error &&
+																			this.state.error.name && (
+																				<div className="invalid-feedback">
+																					{this.state.error.name}
+																				</div>
+																			)}
+																	</FormGroup>
+																</Col>
 															</Col>
-															</Col>
-														
+
 
 															{/* <Col>
 																<Button
@@ -1249,10 +1263,10 @@ setConfigurations=(configurationList)=>{
 																				<Input
 																					className="ml-3"
 																					type="text"
-																					
+
 																					placeholder='Delimiter'
 																					value={
-																						this.state.initValue.otherDilimiterStr ||''
+																						this.state.initValue.otherDilimiterStr || ''
 																					}
 																					// disabled={
 																					// 	this.state
@@ -1263,7 +1277,7 @@ setConfigurations=(configurationList)=>{
 
 																						this.setState({
 
-																							initValue: { ...this.state.initValue,otherDilimiterStr: e.target.value }
+																							initValue: { ...this.state.initValue, otherDilimiterStr: e.target.value }
 																						}
 																							, () => {
 																								this.processData(this.props.location.state.dataString)
@@ -1278,7 +1292,7 @@ setConfigurations=(configurationList)=>{
 																				<Label
 																					className="ml-3"
 																					htmlFor="skip_rows">
-																				Skip First X Rows 
+																					Skip First X Rows
 																				</Label>
 																				<Input
 																					className="ml-3"
@@ -1298,10 +1312,10 @@ setConfigurations=(configurationList)=>{
 																						);
 																						this.setState({
 																							skipRows: e.target.value
-																						},()=>{
-																							this.processData(this.props.location.state.dataString)					
+																						}, () => {
+																							this.processData(this.props.location.state.dataString)
 																						})
-																						
+
 																					}}
 																				/>
 																			</FormGroup>
@@ -1399,22 +1413,23 @@ setConfigurations=(configurationList)=>{
 																				/>
 																			</FormGroup>
 																		</Col> */}
-																	<Col className=" ml-4">
-																<FormGroup className='pull-right'>
-																<Input
-																	type="checkbox"
-																	id="isHeaderRow"
-																	checked={this.state.isHeaderRow}
-																	onChange={(option) => {
+																		<Col className=" ml-4">
+																			<FormGroup className='pull-right'>
+																				<Input
+																					type="checkbox"
+																					id="isHeaderRow"
+																					checked={this.state.isHeaderRow}
+																					onChange={(option) => {
 
-																		this.setState({ isHeaderRow: !this.state.isHeaderRow },()=>{
-																			this.processData(this.props.location.state.dataString)
-																		})}
-																	}
-																/>
-																<Label>Is Header Row</Label>
-																</FormGroup>
-															</Col>
+																						this.setState({ isHeaderRow: !this.state.isHeaderRow }, () => {
+																							this.processData(this.props.location.state.dataString)
+																						})
+																					}
+																					}
+																				/>
+																				<Label>Is Header Row</Label>
+																			</FormGroup>
+																		</Col>
 																		<Col>
 																			<FormGroup>
 																				<Label htmlFor="description">
@@ -1483,10 +1498,10 @@ setConfigurations=(configurationList)=>{
 																					rows="6"
 																					placeholder={strings.DateFormat}
 																				/>
-																				
+
 																				{this.state.error &&
 																					this.state.error.dateFormatId && (
-																						<div className="invalid-feedback" style={{display:"block", whiteSpace: "normal"}}> 
+																						<div className="invalid-feedback" style={{ display: "block", whiteSpace: "normal" }}>
 																							{
 																								this.state.error
 																									.dateFormatId
@@ -1637,7 +1652,7 @@ setConfigurations=(configurationList)=>{
 													{/* )
                             }
                           </Formik> */}
-													<Row style={{display:'flex', justifyContent:'space-evenly'}}>
+													<Row style={{ display: 'flex', justifyContent: 'space-evenly' }}>
 														{loading ? (
 															<Loader />
 														) : this.state.tableDataKey && this.state.tableDataKey.length > 0 && this.state.isDateFormatAndFileDateFormatSame == true ? (
@@ -1647,7 +1662,7 @@ setConfigurations=(configurationList)=>{
 																		style={{
 																			width: `calc(100% / ${this.state.tableDataKey.length})`,
 																			margin: '20px 0',
-																			maxWidth:200
+																			maxWidth: 200
 																		}}
 																	>
 																		<FormGroup
@@ -1661,7 +1676,7 @@ setConfigurations=(configurationList)=>{
 																		// 		? 'invalid-select'
 																		// 		: ''
 																		// }`}
-																		
+
 																		>
 																			<Select
 																				type=""
@@ -1673,9 +1688,9 @@ setConfigurations=(configurationList)=>{
 																							'value',
 																							this.state.tableHeader,
 																							'',
-																						).filter((i)=>{
-																							if(i.value==="") return true
- 																							return !this.state?.selectedValueDropdown?.find((i2)=>i.value===i2.value)
+																						).filter((i) => {
+																							if (i.value === "") return true
+																							return !this.state?.selectedValueDropdown?.find((i2) => i.value === i2.value)
 																						})
 																						: []
 																				}
@@ -1688,9 +1703,9 @@ setConfigurations=(configurationList)=>{
 																					]
 																				}
 																				onChange={(e) => {
-																					
+
 																					this.handleChange(e, index);
-																			
+
 																				}}
 																			// className={}
 																			/>
@@ -1715,16 +1730,16 @@ setConfigurations=(configurationList)=>{
 															{this.state.tableDataKey && this.state.tableDataKey.length > 0 && this.state.isDateFormatAndFileDateFormatSame == true ? (
 																<BootstrapTable
 																	data={tableData}
-																	 keyField={this.state.tableDataKey[0]}
+																	keyField={this.state.tableDataKey[0]}
 
 																>
-																	{this.state.tableDataKey.map((name,index) => (
+																	{this.state.tableDataKey.map((name, index) => (
 																		<TableHeaderColumn
 																			dataField={name}
 																			dataAlign="center"
 																			iskey={index}
-																			tdStyle={{overflowX:'auto'}}
-																			
+																			tdStyle={{ overflowX: 'auto' }}
+
 																			columnClassName={this.columnClassNameFormat}
 																		>
 																			{name}
@@ -1752,19 +1767,19 @@ setConfigurations=(configurationList)=>{
 																				<i className="fa fa-dot-circle-o"></i>{' '}
 																				Save
 																			</Button> */}
-																			
-																				<Button
-																					type="button"
-																					color="primary"
-																					className="btn-square mr-4"
-																					// disabled={this.state.fileName ? false : true}
-																					onClick={() =>this.validate()}
-																				
-																				>
-																					<i className="fa fa-dot-circle-o"></i>{' '}
-																					Validate and Save
-																				</Button>
-																			
+
+																			<Button
+																				type="button"
+																				color="primary"
+																				className="btn-square mr-4"
+																				// disabled={this.state.fileName ? false : true}
+																				onClick={() => this.validate()}
+
+																			>
+																				<i className="fa fa-dot-circle-o"></i>{' '}
+																				Validate and Save
+																			</Button>
+
 																			<Button
 																				color="secondary"
 																				className="btn-square"

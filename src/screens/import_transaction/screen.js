@@ -593,10 +593,13 @@ class ImportTransaction extends React.Component {
 					deli.forEach((i) => {
 						if (localdata.split(i).length === 3) finddeli = i
 					})
-					debugger
+
 
 					var formatLowerCase = selectformat.toLowerCase();
 					var formatItems = formatLowerCase.split(finddeli);
+					if (formatItems.length !== 3) {
+						invaliddate = true
+					}
 					var dateItems = localdata.split(finddeli);
 					var monthIndex = formatItems.findIndex((i) => i.includes("m"));
 					var dayIndex = formatItems.findIndex((i) => i.includes("d"));
@@ -604,11 +607,13 @@ class ImportTransaction extends React.Component {
 					var month = parseInt(dateItems[monthIndex]);
 					month -= 1;
 					var formatedDate = new Date(dateItems[yearIndex], month, dateItems[dayIndex]);
-					const data = moment(formatedDate, 'DD/MM/YYYY').format('DD/MM/YYYY')
-					debugger
-					if (data === "Invalid date") {
+					if (isNaN(formatedDate.getTime()) && !invaliddate) {
 						invaliddate = true
 					}
+					debugger
+					const data = moment(formatedDate, 'DD/MM/YYYY').format('DD/MM/YYYY')
+
+
 
 					local = { ...local, "TRANSACTION_DATE": data }
 				}

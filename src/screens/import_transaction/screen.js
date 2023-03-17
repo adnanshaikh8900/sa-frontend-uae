@@ -148,6 +148,7 @@ class ImportTransaction extends React.Component {
 					name: this.state.initValue.name,
 					skipRows: data[0].skipRows,
 					headerRowNo: data[0].headerRowNo,
+					delimiter: ',',
 					textQualifier:
 						data[0].textQualifier,
 					// dateFormatId: data[0].dateFormatId,
@@ -492,7 +493,7 @@ class ImportTransaction extends React.Component {
 					}
 					return item;
 				});
-				let postData = { ...this.state.initValue };
+				let postData = { ...this.state.initValue, dateFormatId: 1 };
 
 				postData.skipColumns = this.state.initValue.skipColumns?.length >= 1 ? this.state.initValue.skipColumns : ''
 				postData.indexMap = a;
@@ -533,11 +534,11 @@ class ImportTransaction extends React.Component {
 					.catch((err) => {
 						this.props.commonActions.tostifyAlert(
 							'error',
-							err && err.data ? err.data.message : 'Something Went Wrong',
+							err && err.data ? err.data.message : 'Unable to save template',
 						);
-						this.props.history.push(
-							'/admin/banking/upload-statement'
-						)
+						// this.props.history.push(
+						// 	'/admin/banking/upload-statement'
+						// )
 					});
 			} else {
 				this.setState({
@@ -1123,7 +1124,7 @@ class ImportTransaction extends React.Component {
 
 																					this.setState({
 																						initValue: {
-																							name: this.state.initValue.name,
+																							name: "",
 																							skipRows: data[0].skipRows,
 																							headerRowNo: data[0].headerRowNo,
 																							textQualifier:
@@ -1815,3 +1816,4 @@ class ImportTransaction extends React.Component {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ImportTransaction);
+

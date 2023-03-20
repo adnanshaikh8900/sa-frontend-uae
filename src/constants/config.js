@@ -43,8 +43,8 @@ export default {
   MASTER_CR: true,
   MASTER_EMPLOYEE: false,
 
-  PAYROLL_PR: false,
-  PAYROLL_PC: false,
+  PAYROLL_PR: true,
+  PAYROLL_PC: true,
 
   ADD_ROLES: false,
   ADD_CURRENCY: true,

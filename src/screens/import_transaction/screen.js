@@ -493,7 +493,7 @@ class ImportTransaction extends React.Component {
 					}
 					return item;
 				});
-				let postData = { ...this.state.initValue, dateFormatId: 1, delimiter: ',', };
+				let postData = { ...this.state.initValue, dateFormatId: 1, };
 
 				postData.skipColumns = this.state.initValue.skipColumns?.length >= 1 ? this.state.initValue.skipColumns : ''
 				postData.indexMap = a;

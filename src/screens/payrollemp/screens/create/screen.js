@@ -122,6 +122,7 @@ class CreateEmployeePayroll extends React.Component {
             BankList: [],
             isDisabled: false,
             createMore: false,
+            nameDesigExist: false,
             initValue: {
                 designationName: '',
                 firstName: '',
@@ -287,6 +288,23 @@ class CreateEmployeePayroll extends React.Component {
         // 	this.setState({prefixData:response.data
         // });
         // });
+    };
+    designationNamevalidationCheck = (value) => {
+        const data = {
+            moduleType: 26,
+            name: value,
+        };
+        this.props.commonActions.checkValidation(data).then((response) => {
+            if (response.data === 'Designation name already exists') {
+                this.setState({
+                    nameDesigExist: true,
+                });
+            } else {
+                this.setState({
+                    nameDesigExist: false,
+                });
+            }
+        });
     };
 
     getSalaryComponentByEmployeeId = () => {
@@ -1380,7 +1398,9 @@ class CreateEmployeePayroll extends React.Component {
                                                                                 emergencyContactName1: Yup.string()
                                                                                     .required('Contact name 1 is required'),
                                                                                 emergencyContactNumber1: Yup.string()
-                                                                                    .required("Contact number 1 is required"),
+                                                                                    .required("Contact number 1 is required").test('not smame', 'please Enter Another Mobile Number', (value) => {
+                                                                                        return value !== this.state.masterPhoneNumber
+                                                                                    }),
                                                                                 emergencyContactRelationship1: Yup.string()
                                                                                     .required('Relationship 1 is required'),
 
@@ -1639,6 +1659,8 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                                     props.handleChange('mobileNumber')(
                                                                                                                         option,
                                                                                                                     );
+
+                                                                                                                    this.setState({ masterPhoneNumber: option })
                                                                                                                     // option.length !==12 ? this.setState({checkmobileNumberParam: true }) : this.setState({ checkmobileNumberParam: false });
                                                                                                                 }}
                                                                                                                 isValid
@@ -3848,6 +3870,8 @@ class CreateEmployeePayroll extends React.Component {
                         closeDesignationModal={(e) => {
                             this.closeDesignationModal(e);
                         }}
+                        nameDesigExist={this?.state?.nameDesigExist}
+                        validateinfo={this.designationNamevalidationCheck}
                         getCurrentUser={(e) => this.getCurrentUser(e)}
                         createDesignation={this.props.createPayrollEmployeeActions.createEmployeeDesignation}
                     // currency_list={this.props.currency_convert_list}

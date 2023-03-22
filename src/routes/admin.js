@@ -218,17 +218,17 @@ const adminRoutes = [
 		component: DashboardTwo,
 	},
 
-	Config.ACCOUNTANT_JOURNALS &&{
+	Config.ACCOUNTANT_JOURNALS && {
 		path: '/admin/accountant/journal/create',
 		name: 'Add Journal',
 		component: CreateJournal.screen,
 	},
-	Config.ACCOUNTANT_JOURNALS &&{
+	Config.ACCOUNTANT_JOURNALS && {
 		path: '/admin/accountant/journal/detail',
 		name: 'Update Journal',
 		component: DetailJournal.screen,
 	},
-	Config.ACCOUNTANT_JOURNALS &&{
+	Config.ACCOUNTANT_JOURNALS && {
 		path: '/admin/accountant/journal',
 		name: 'Journals',
 		component: Journal.screen,
@@ -239,12 +239,12 @@ const adminRoutes = [
 		name: 'Add Opening Balance',
 		component: CreateOpeningBalance.screen,
 	},
-	Config.ACCOUNTANT_OB &&{
+	Config.ACCOUNTANT_OB && {
 		path: '/admin/accountant/opening-balance/detail',
 		name: 'Update Opening Balance',
 		component: DetailOpeningBalance.screen,
 	},
-	Config.ACCOUNTANT_OB &&{
+	Config.ACCOUNTANT_OB && {
 		path: '/admin/accountant/opening-balance',
 		name: 'Opening Balances',
 		component: OpeningBalance.screen,
@@ -302,23 +302,23 @@ const adminRoutes = [
 		name: 'View Bank Account',
 		component: BankAccount.screen,
 	},
-	Config.BANKING_BA &&{
+	Config.BANKING_BA && {
 		path: '/admin/banking/upload-statement/transaction',
 		name: 'Add Bank Statement',
 		component: ImportTransaction.screen,
 	},
-	Config.BANKING_BA &&{
+	Config.BANKING_BA && {
 		path: '/admin/banking/upload-statement',
 		name: 'Add Bank Statement',
 		component: ImportBankStatement.screen,
 	},
-	Config.BANKING_BA &&{
+	Config.BANKING_BA && {
 		redirect: true,
 		path: '/admin/banking',
 		pathTo: '/admin/banking/bank-account',
 		name: 'Banking',
 	},
-	
+
 	Config.INCOME_Q && {
 		path: '/admin/income/quotation/create',
 		name: 'Add Quotation',
@@ -366,23 +366,23 @@ const adminRoutes = [
 		name: 'Customer Invoices',
 		component: CustomerInvoice.screen,
 	},
-	Config.INCOME_IR &&{
+	Config.INCOME_IR && {
 		path: '/admin/income/receipt/create',
 		name: 'Create Reciept',
 		component: CreateReceipt.screen,
 	},
-	Config.INCOME_IR &&{
+	Config.INCOME_IR && {
 		path: '/admin/income/receipt/detail',
 		name: 'Detail',
 		component: DetailReceipt.screen,
 	},
-	Config.INCOME_IR &&{
+	Config.INCOME_IR && {
 		path: '/admin/income/receipt',
 		name: 'Customer Receipts',
 		component: Receipt.screen,
 	},
 	//
-	
+
 	Config.INCOME_TCN && {
 		path: '/admin/income/credit-notes/create',
 		name: 'Add Credit Notes',
@@ -398,69 +398,69 @@ const adminRoutes = [
 		name: 'Update Credit Notes',
 		component: DetailCreditNote.screen,
 	},
-	Config.INCOME_TCN &&{
+	Config.INCOME_TCN && {
 		path: '/admin/income/credit-notes/applyToInvoice',
 		name: 'Apply To Invoice',
 		component: ApplyToInvoice.screen,
 	},
 
-	Config.INCOME_TCN &&{
+	Config.INCOME_TCN && {
 		path: '/admin/income/credit-notes/refund',
 		name: 'Refund',
 		component: Refund.screen,
 	},
-	Config.INCOME_TCN &&{
+	Config.INCOME_TCN && {
 		path: '/admin/income/credit-notes',
 		name: 'Credit Notes',
 		component: CreditNotes.screen,
 	},
-	
+
 	Config.EXPENSE_RFQ && {
 		path: '/admin/expense/request-for-quotation/create',
 		name: 'Add Request For Quotation',
 		component: CreateRequestForQuotation.screen,
 	},
-	Config.EXPENSE_RFQ &&{
+	Config.EXPENSE_RFQ && {
 		path: '/admin/expense/request-for-quotation/view',
 		name: 'View Request For Quotation',
 		component: ViewRequestForQuotation.screen,
 	},
-	Config.EXPENSE_RFQ &&{
+	Config.EXPENSE_RFQ && {
 		path: '/admin/expense/request-for-quotation/detail',
 		name: 'Update Request For Quotation',
 		component: DetailRequestForQuotation.screen,
 	},
-	Config.EXPENSE_RFQ &&{
+	Config.EXPENSE_RFQ && {
 		path: '/admin/expense/request-for-quotation',
 		name: 'Quotation',
 		component: RequestForQuotation.screen,
 	},
-	Config.EXPENSE_PO &&{
+	Config.EXPENSE_PO && {
 		path: '/admin/expense/purchase-order/create',
 		name: 'Add Purchase Order',
 		component: CreatePurchaseOrder.screen,
 	},
-	Config.EXPENSE_PO &&{
+	Config.EXPENSE_PO && {
 		path: '/admin/expense/purchase-order/view',
 		name: 'View Purchase Order',
 		component: ViewPurchaseOrder.screen,
 	},
-	Config.EXPENSE_PO &&{
+	Config.EXPENSE_PO && {
 		path: '/admin/expense/purchase-order/detail',
 		name: 'Update Purchase Order',
 		component: DetailPurchaseOrder.screen,
 	},
-	Config.EXPENSE_PO &&{
+	Config.EXPENSE_PO && {
 		path: '/admin/expense/purchase-order',
 		name: 'Purchase Order',
 		component: PurchaseOrder.screen,
 	},
-	Config.EXPENSE_GRN &&{
+	Config.EXPENSE_GRN && {
 		path: '/admin/expense/goods-received-note/create',
 		name: 'Add Goods Receive Notes',
 		component: CreateGoodsReceivedNote.screen,
 	},
-	Config.EXPENSE_GRN &&{
+	Config.EXPENSE_GRN && {
 		path: '/admin/expense/goods-received-note/view',
 		name: 'View Goods Receive Notes',
 		component: ViewGoodsReceivedNote.screen,
@@ -475,27 +475,27 @@ const adminRoutes = [
 		name: 'Goods Receive Notes',
 		component: GoodsReceivedNote.screen,
 	},
-	Config.EXPENSE_SI &&{
+	Config.EXPENSE_SI && {
 		path: '/admin/expense/supplier-invoice/create',
 		name: 'Add Supplier Invoice',
 		component: CreateSupplierInvoice.screen,
 	},
-	Config.EXPENSE_SI &&{
+	Config.EXPENSE_SI && {
 		path: '/admin/expense/supplier-invoice/view',
 		name: 'View Supplier Invoice',
 		component: ViewInvoice.screen,
 	},
-	Config.EXPENSE_SI &&{
+	Config.EXPENSE_SI && {
 		path: '/admin/expense/supplier-invoice/detail',
 		name: 'Update Supplier Invoice',
 		component: DetailSupplierInvoice.screen,
 	},
-	Config.EXPENSE_SI &&{
+	Config.EXPENSE_SI && {
 		path: '/admin/expense/supplier-invoice/record-payment',
 		name: 'Record Supplier Payment',
 		component: RecordSupplierPayment.screen,
 	},
-	Config.EXPENSE_SI &&{
+	Config.EXPENSE_SI && {
 		path: '/admin/expense/supplier-invoice',
 		name: 'Supplier Invoices',
 		component: SupplierInvoice.screen,
@@ -520,7 +520,7 @@ const adminRoutes = [
 		name: 'Expenses',
 		component: Expense.screen,
 	},
-	
+
 	Config.EXPENSE_PR && {
 		path: '/admin/expense/payment/create',
 		name: 'Create Purchase Reciept',
@@ -548,7 +548,7 @@ const adminRoutes = [
 		component: ViewEmployee.screen,
 	},
 	Config.MASTER_EMPLOYEE && {
-		path: '/admin/master/employee/up;dateEmployeePersonal',
+		path: '/admin/master/employee/updateEmployeePersonal',
 		name: 'Update Employee',
 		component: UpdateEmployeePersonal.screen,
 	},
@@ -577,7 +577,7 @@ const adminRoutes = [
 		name: 'Employee',
 		component: PayrollEmployee.screen,
 	},
-	
+
 	Config.PAYROLL_PR && {
 		path: '/admin/payroll/payrollrun/updatePayroll',
 		name: 'Update Payroll',
@@ -613,7 +613,7 @@ const adminRoutes = [
 		name: 'Update Salary Template',
 		component: DetailSalaryTemplate.screen,
 	},
-	
+
 
 	Config.PAYROLL_MODULE && {
 		path: '/admin/payroll/salaryTemplate/create',
@@ -765,8 +765,8 @@ const adminRoutes = [
 		path: '/admin/report/vatreports/vatreturnsubreports',
 		name: 'Vat Payment History',
 		component: SubReports.screen,
-	 },
-	 Config.REPORTS_MODULE && {
+	},
+	Config.REPORTS_MODULE && {
 		path: '/admin/report/vatreports/recordclaimtax',
 		name: 'Record Tax Claim',
 		component: RecordTaxClaim.screen,
@@ -913,17 +913,17 @@ const adminRoutes = [
 		name: 'Add Product',
 		component: CreateProduct.screen,
 	},
-	Config.MASTER_PRODUCTS &&{
+	Config.MASTER_PRODUCTS && {
 		path: '/admin/master/product/detail',
 		name: 'Update Product',
 		component: DetailProduct.screen,
 	},
-	Config.MASTER_PRODUCTS &&{
+	Config.MASTER_PRODUCTS && {
 		path: '/admin/master/product/detail/inventoryedit',
 		name: 'Update Inventory',
 		component: InventoryEdit.screen,
 	},
-	Config.MASTER_PRODUCTS &&{
+	Config.MASTER_PRODUCTS && {
 		path: '/admin/master/product/detail/inventoryhistory',
 		name: 'Inventory History',
 		component: InventoryHistory.screen,
@@ -1008,7 +1008,7 @@ const adminRoutes = [
 		name: 'Currencies',
 		component: Currency.screen,
 	},
-	Config.MASTER_COA &&{
+	Config.MASTER_COA && {
 		redirect: true,
 		path: '/admin/master',
 		pathTo: '/admin/master/chart-account',
@@ -1035,12 +1035,12 @@ const adminRoutes = [
 		name: 'Save Note Settings',
 		component: NotesSettings.screen,
 	},
-	
+
 	Config.SETTING_IMPORT && {
-    		path: '/admin/settings/import',
-    		name: 'Migration',
-    		component: Import.screen,
-    },
+		path: '/admin/settings/import',
+		name: 'Migration',
+		component: Import.screen,
+	},
 	{
 		path: '/admin/settings/migrate',
 		name: 'Migration',
@@ -1087,7 +1087,7 @@ const adminRoutes = [
 		name: 'Update Role',
 		component: UpdateRole.screen,
 	},
-	 {
+	{
 		path: '/admin/settings/user-role',
 		name: 'View Role',
 		component: UsersRoles.screen,
@@ -1125,13 +1125,13 @@ const adminRoutes = [
 		component: Profile.screen,
 	},
 
-	 {
+	{
 		redirect: true,
-		path:  Config.DASHBOARD?'/admin':'/admin/income',
-		pathTo: Config.DASHBOARD ?'/admin/dashboard':'/admin/income/customer-invoice',
-		name:  Config.DASHBOARD?'Admin':'Income',
+		path: Config.DASHBOARD ? '/admin' : '/admin/income',
+		pathTo: Config.DASHBOARD ? '/admin/dashboard' : '/admin/income/customer-invoice',
+		name: Config.DASHBOARD ? 'Admin' : 'Income',
 	},
-	
-].filter((i)=>i.path)
+
+].filter((i) => i.path)
 
 export default adminRoutes;

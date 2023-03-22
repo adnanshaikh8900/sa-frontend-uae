@@ -46,7 +46,7 @@ export default {
   PAYROLL_PR: true,
   PAYROLL_PC: true,
 
-  ADD_ROLES: false,
+  ADD_ROLES: true,
   ADD_CURRENCY: true,
 
   SETTING_THEME: false,

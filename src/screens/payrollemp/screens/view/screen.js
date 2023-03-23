@@ -28,9 +28,10 @@ import { ViewPaySlip } from './sections';
 import {
 	CommonActions
 } from 'services/global'
-import {data}  from '../../../Language/index'
+import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { toast } from 'react-toastify';
+import { amountFormat } from 'screens/bank_account/screens/transactions/screens/create/helpers/amountformater';
 const mapStateToProps = (state) => {
 	return {
 		profile: state.auth.profile,
@@ -53,7 +54,7 @@ class ViewEmployee extends React.Component {
 		this.state = {
 			language: window['localStorage'].getItem('language'),
 			openModal: false,
-			selectedData:{},
+			selectedData: {},
 			activeTab: new Array(4).fill('1'),
 			EmployeeDetails: '',
 			userPhoto: [],
@@ -97,7 +98,7 @@ class ViewEmployee extends React.Component {
 					}
 				>
 					<i className="fas fa-eye" /> {strings.View}
-						</Button>
+				</Button>
 
 			</div>
 		);
@@ -130,7 +131,7 @@ class ViewEmployee extends React.Component {
 
 	disable = () => {
 		if (this.state.EmployeeDetails.employmentId === null) {
-				return true;
+			return true;
 		} else {
 			return false;
 		}
@@ -139,25 +140,25 @@ class ViewEmployee extends React.Component {
 		return (
 			<div>
 				<Button
-				className="btn-sm"
-				style={{padding:'0px'}}
-				 color="link"
+					className="btn-sm"
+					style={{ padding: '0px' }}
+					color="link"
 					onClick={() => {
-						
+
 						this.props.employeeViewActions
-							.getSalarySlip({id: this.props.location.state.id, salaryDate: moment(row.salaryDate).format('DD/MM/YYYY') })
+							.getSalarySlip({ id: this.props.location.state.id, salaryDate: moment(row.salaryDate).format('DD/MM/YYYY') })
 							.then((res) => {
 								if (res.status === 200) {
 									// this.initializeData();
 									// let v ="Fixed Allowance"
 									this.setState({
-										salaryDate:row.salaryDate,
-										employeename:res.data.employeename,
-										selectedData:res.data,
-										Fixed:res.data.salarySlipResult.Fixed,
-										FixedAllowance:res.data.salarySlipResult.Fixed_Allowance ?res.data.salarySlipResult.Fixed_Allowance:res.data.salarySlipResult["Fixed Allowance"] ,
+										salaryDate: row.salaryDate,
+										employeename: res.data.employeename,
+										selectedData: res.data,
+										Fixed: res.data.salarySlipResult.Fixed,
+										FixedAllowance: res.data.salarySlipResult.Fixed_Allowance ? res.data.salarySlipResult.Fixed_Allowance : res.data.salarySlipResult["Fixed Allowance"],
 										Variable: res.data.salarySlipResult.Variable,
-										Deduction:res.data.salarySlipResult.Deduction,
+										Deduction: res.data.salarySlipResult.Deduction,
 									});
 
 								}
@@ -169,31 +170,31 @@ class ViewEmployee extends React.Component {
 									err && err.data ? err.data.message : 'Something Went Wrong',
 								);
 							});
-							
+
 						this.viewPaySlip({ id: this.props.location.state.id, salaryDate: moment(Date(row.salaryDate)).format('DD/MM/YYYY') });
 					}
 
 					}
 				>
 					<i className="fas fa-eye" />  {strings.View}
-						</Button>
+				</Button>
 
-						<Button
-							className="btn-sm ml-3"
-							style={{padding:'0px'}}
-							color="link"
-							onClick={() => {						
-								this.props.employeeViewActions
-									.getSalarySlip({id: this.props.location.state.id, salaryDate: moment(row.salaryDate).format('DD/MM/YYYY') , sendMail:true })
-									.then((res) => {
-										if (res.status === 200) {
-											toast.success("Payslip Sent Successfully")						
-										}
-									})					
-							}}
-						>
-						<i className="fas fa-send" /> {strings.Send}
-						</Button>				
+				<Button
+					className="btn-sm ml-3"
+					style={{ padding: '0px' }}
+					color="link"
+					onClick={() => {
+						this.props.employeeViewActions
+							.getSalarySlip({ id: this.props.location.state.id, salaryDate: moment(row.salaryDate).format('DD/MM/YYYY'), sendMail: true })
+							.then((res) => {
+								if (res.status === 200) {
+									toast.success("Payslip Sent Successfully")
+								}
+							})
+					}}
+				>
+					<i className="fas fa-send" /> {strings.Send}
+				</Button>
 			</div>
 		);
 	};
@@ -270,32 +271,32 @@ class ViewEmployee extends React.Component {
 			this.props.history.push('/admin/master/employee');
 		}
 	};
-getPhoto=()=>{
-	// let image ="data:image/png;base64, "+ this.state.userPhoto[0];
-	 let image =this.state.userPhoto.length !==0 
-	  ?  "data:image/png;base64, "+ 
-	      this.state.userPhoto[0] 
-	  :avatar;
+	getPhoto = () => {
+		// let image ="data:image/png;base64, "+ this.state.userPhoto[0];
+		let image = this.state.userPhoto.length !== 0
+			? "data:image/png;base64, " +
+			this.state.userPhoto[0]
+			: avatar;
 
-	return image;
-}
-renderSalaryDate=(cell,row)=>{
-	let salaryDateString=moment(row.salaryDate).format('DD/MM/YYYY')	
-	return salaryDateString
-}
-getEmployeeInviteEmail=()=>{
-	this.props.employeeViewActions
-	.getEmployeeInviteEmail(this.props.location.state.id)
-	.then((res) => {
-		if (res.status === 200) {
-			toast.success("Mail Sent Successfully")						
-		}
-	})			
-}
+		return image;
+	}
+	renderSalaryDate = (cell, row) => {
+		let salaryDateString = moment(row.salaryDate).format('DD/MM/YYYY')
+		return salaryDateString
+	}
+	getEmployeeInviteEmail = () => {
+		this.props.employeeViewActions
+			.getEmployeeInviteEmail(this.props.location.state.id)
+			.then((res) => {
+				if (res.status === 200) {
+					toast.success("Mail Sent Successfully")
+				}
+			})
+	}
 	render() {
 		strings.setLanguage(this.state.language);
 		console.log(this.state.Fixed)
-		const {profile} = this.props;
+		const { profile } = this.props;
 		return (
 			<div className="financial-report-screen">
 				<div className="animated fadeIn">
@@ -310,20 +311,20 @@ getEmployeeInviteEmail=()=>{
 									</div>
 								</Col>
 								<Col>
-								<div className='pull-right'>
-							                                             	<Button  
-                                                                                   type="submit"
-																				   color="primary"
-																				   className="btn-square mr-3"
-																				   onClick={()=>{this.getEmployeeInviteEmail()}}
-																			   ><i className="fas fa-envelope"></i>{' '}
-																				   Resend Invite
-																			   </Button>
-								                                                <Button  
-                                                                                    onClick={()=>{this.props.history.push('/admin/master/employee')}}
-                                                                                > X </Button>																		
-																						   
-								</div>
+									<div className='pull-right'>
+										<Button
+											type="submit"
+											color="primary"
+											className="btn-square mr-3"
+											onClick={() => { this.getEmployeeInviteEmail() }}
+										><i className="fas fa-envelope"></i>{' '}
+											Resend Invite
+										</Button>
+										<Button
+											onClick={() => { this.props.history.push('/admin/master/employee') }}
+										> X </Button>
+
+									</div>
 								</Col>
 							</Row>
 							<Nav tabs pills>
@@ -334,7 +335,7 @@ getEmployeeInviteEmail=()=>{
 											this.toggle(0, '1');
 										}}
 									>
-										 {strings.OverView}
+										{strings.OverView}
 									</NavLink>
 								</NavItem>
 								<NavItem>
@@ -344,7 +345,7 @@ getEmployeeInviteEmail=()=>{
 											this.toggle(0, '2');
 										}}
 									>
-										 {strings.SalaryDetails}
+										{strings.SalaryDetails}
 									</NavLink>
 								</NavItem>
 								<NavItem>
@@ -354,7 +355,7 @@ getEmployeeInviteEmail=()=>{
 											this.toggle(0, '3');
 										}}
 									>
-										 {strings.Payslips}
+										{strings.Payslips}
 									</NavLink>
 								</NavItem>
 
@@ -366,29 +367,29 @@ getEmployeeInviteEmail=()=>{
 											<Card style={{ height: '621px' }}>
 												<div >
 													<CardBody className='m-4'>
-													
-															<Row>
-																<Col>
-																		<label> <b>{strings.EmployementDetails} </b></label>
-																	</Col>
-																	<Col>
+
+														<Row>
+															<Col>
+																<label> <b>{strings.EmployementDetails} </b></label>
+															</Col>
+															<Col>
 																<Button
 																	color="primary"
 																	className="btn-square pull-right mb-2"
 																	style={{ marginBottom: '10px' }}
-																	onClick={() => 
+																	onClick={() =>
 																		// this.props.history.push(`/admin/payroll/employee/updateEmployeeEmployement`,
 																		// { id: this.state.current_employee_id })
 																		this.props.history.push(`/admin/master/employee/updateEmployeeEmployement`,
-																		{ id: this.state.current_employee_id })
-																	
+																			{ id: this.state.current_employee_id })
+
 																	}
 																>
 																	<i class="far fa-edit"></i>
 																</Button>
-																</Col>
-															</Row>
-													
+															</Col>
+														</Row>
+
 														<div className='text-center'>
 
 															<img
@@ -402,7 +403,7 @@ getEmployeeInviteEmail=()=>{
 														</div>
 														<div className='text-center mt-4' >
 															<h3>{upperFirst(this.state.EmployeeDetails.fullName)} {' '}
-															({this.state.EmployeeDetails.employeeCode  ?  this.state.EmployeeDetails.employeeCode :'-' }{ })</h3>
+																({this.state.EmployeeDetails.employeeCode ? this.state.EmployeeDetails.employeeCode : '-'}{ })</h3>
 
 															<h4>
 																{upperFirst(this.state.EmployeeDetails.employeeDsignationName)}
@@ -415,34 +416,34 @@ getEmployeeInviteEmail=()=>{
 															<hr style={{ width: '50%' }}></hr>
 															<div style={{ fontSize: '16px' }}>
 																<div className='mt-2 mb-2'><span id="mail"> <i class="far fa-envelope"></i>
-																<UncontrolledTooltip
-																			placement="left"
-																			target="mail"
-																		>
+																	<UncontrolledTooltip
+																		placement="left"
+																		target="mail"
+																	>
 																		E-mail
-																		</UncontrolledTooltip>&nbsp;{this.state.EmployeeDetails.email ? this.state.EmployeeDetails.email : '-'}</span></div>
-																<div className='mt-2 mb-2' ><span id="Gender"><i class="far fa-user"></i> 
-																<UncontrolledTooltip
-																			placement="left"
-																			target="Gender"
-																		>
+																	</UncontrolledTooltip>&nbsp;{this.state.EmployeeDetails.email ? this.state.EmployeeDetails.email : '-'}</span></div>
+																<div className='mt-2 mb-2' ><span id="Gender"><i class="far fa-user"></i>
+																	<UncontrolledTooltip
+																		placement="left"
+																		target="Gender"
+																	>
 																		Gender
-																		</UncontrolledTooltip>&nbsp;{this.state.EmployeeDetails.gender ? this.state.EmployeeDetails.gender :'-'}</span></div>
+																	</UncontrolledTooltip>&nbsp;{this.state.EmployeeDetails.gender ? this.state.EmployeeDetails.gender : '-'}</span></div>
 																<div className='mt-2 mb-2'  ><span id="dojTooltip"><i class="far fa-calendar-minus"></i>
-																<UncontrolledTooltip
-																			placement="left"
-																			target="dojTooltip"
-																		>
+																	<UncontrolledTooltip
+																		placement="left"
+																		target="dojTooltip"
+																	>
 																		Date of Joining
-																		</UncontrolledTooltip>  &nbsp;{this.state.EmployeeDetails.dateOfJoining ? this.state.EmployeeDetails.dateOfJoining :'-'}</span></div>
+																	</UncontrolledTooltip>  &nbsp;{this.state.EmployeeDetails.dateOfJoining ? this.state.EmployeeDetails.dateOfJoining : '-'}</span></div>
 																<div className='mt-2 mb-2' >
 																	<UncontrolledTooltip
-																			placement="left"
-																			target="department"
-																		>
+																		placement="left"
+																		target="department"
+																	>
 																		Department
-																		</UncontrolledTooltip> 
-																		<span id="department"> <i class="fas fa-network-wired"></i> &nbsp;{this.state.EmployeeDetails.department ? this.state.EmployeeDetails.department : '-'}</span></div>
+																	</UncontrolledTooltip>
+																	<span id="department"> <i class="fas fa-network-wired"></i> &nbsp;{this.state.EmployeeDetails.department ? this.state.EmployeeDetails.department : '-'}</span></div>
 															</div>
 														</div>
 														<hr></hr>
@@ -466,11 +467,11 @@ getEmployeeInviteEmail=()=>{
 																			color="primary"
 																			className="btn-square pull-right mb-2"
 																			style={{ marginBottom: '10px' }}
-																			onClick={() => 
+																			onClick={() =>
 																				// this.props.history.push(`/admin/payroll/employee/updateEmployeePersonal`,
 																				// { id: this.state.current_employee_id })
 																				this.props.history.push(`/admin/master/employee/updateEmployeePersonal`,
-																				{ id: this.state.current_employee_id })
+																					{ id: this.state.current_employee_id })
 																			}
 																		>
 																			<i class="far fa-edit"></i>
@@ -478,17 +479,17 @@ getEmployeeInviteEmail=()=>{
 																	</Col>
 																</Row>
 																<Row> <Col className='mt-2 mb-2'>{strings.MiddleName} </Col>
-																	<Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.middleName  && this.state.EmployeeDetails.lastName  ?
+																	<Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.middleName && this.state.EmployeeDetails.lastName ?
 																		this.state.EmployeeDetails.middleName + " " + this.state.EmployeeDetails.lastName : ('-')}</Col></Row>
 
-																<Row> <Col className='mt-2 mb-2'>{strings.DateOfBirth} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.dob  ? moment(this.state.EmployeeDetails.dob).format('DD-MM-YYYY') : ('-')}</Col></Row>
+																<Row> <Col className='mt-2 mb-2'>{strings.DateOfBirth} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.dob ? moment(this.state.EmployeeDetails.dob).format('DD-MM-YYYY') : ('-')}</Col></Row>
 
 																{/* <Row> <Col className='mt-2 mb-2'>Personal Email  </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.email ? this.state.EmployeeDetails.email : ('-')}</Col></Row>				 */}
 
-																<Row> <Col className='mt-2 mb-2'>{strings.MobileNumber} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.mobileNumber  ? this.state.EmployeeDetails.mobileNumber : ('-')}</Col></Row>
+																<Row> <Col className='mt-2 mb-2'>{strings.MobileNumber} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.mobileNumber ? this.state.EmployeeDetails.mobileNumber : ('-')}</Col></Row>
 
-																<Row> <Col className='mt-2 mb-2'>{strings.Address} </Col><Col className='mt-2 mb-2'>: &nbsp;{(this.state.EmployeeDetails.presentAddress ? this.state.EmployeeDetails.presentAddress : " ") + ' , ' + (this.state.EmployeeDetails.city ? this.state.EmployeeDetails.city : '')  + ' , ' + 
-																(this.state.EmployeeDetails.stateName ? this.state.EmployeeDetails.stateName : ' ') + ' , ' + (this.state.EmployeeDetails.countryName ? this.state.EmployeeDetails.countryName : '')+ ' , ' + (this.state.EmployeeDetails.pincode ? this.state.EmployeeDetails.pincode : ' ')  }</Col></Row>
+																<Row> <Col className='mt-2 mb-2'>{strings.Address} </Col><Col className='mt-2 mb-2'>: &nbsp;{(this.state.EmployeeDetails.presentAddress ? this.state.EmployeeDetails.presentAddress : " ") + ' , ' + (this.state.EmployeeDetails.city ? this.state.EmployeeDetails.city : '') + ' , ' +
+																	(this.state.EmployeeDetails.stateName ? this.state.EmployeeDetails.stateName : ' ') + ' , ' + (this.state.EmployeeDetails.countryName ? this.state.EmployeeDetails.countryName : '') + ' , ' + (this.state.EmployeeDetails.pincode ? this.state.EmployeeDetails.pincode : ' ')}</Col></Row>
 
 															</div>
 														</CardBody>
@@ -512,7 +513,7 @@ getEmployeeInviteEmail=()=>{
 																				//  this.props.history.push(`/admin/payroll/employee/updateEmployeeBank`,
 																				// { id: this.state.current_employee_id })
 																				this.props.history.push(`/admin/master/employee/updateEmployeeBank`,
-																				{ id: this.state.current_employee_id })
+																					{ id: this.state.current_employee_id })
 																			}
 																		>
 																			<i class="far fa-edit"></i>
@@ -523,7 +524,7 @@ getEmployeeInviteEmail=()=>{
 																	this.state.EmployeeDetails.accountHolderName : ('-')}</Col></Row>
 
 
-																<Row> <Col className='mt-2 mb-2'>{strings.AccountNumber} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.accountNumber  ? this.state.EmployeeDetails.accountNumber : ('-')}</Col></Row>
+																<Row> <Col className='mt-2 mb-2'>{strings.AccountNumber} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.accountNumber ? this.state.EmployeeDetails.accountNumber : ('-')}</Col></Row>
 
 																<Row> <Col className='mt-2 mb-2'>{strings.BankName}</Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.bankName ? this.state.EmployeeDetails.bankName : ('-')}</Col></Row>
 
@@ -540,7 +541,7 @@ getEmployeeInviteEmail=()=>{
 								</TabPane>
 
 
-{/* salary EDIT */}
+								{/* salary EDIT */}
 								<TabPane tabId="2">
 									<div className="table-wrapper">
 										<Row>
@@ -548,53 +549,53 @@ getEmployeeInviteEmail=()=>{
 												<div className='m-4'>
 													<Row style={{ width: '63%' }}>
 														<Col><h5> {strings.AnnualCTC} </h5>
-															<div><h3>  {this.state.CTC  ?
-																			this.state.EmployeeDetails.ctcType=="ANNUALLY"?
-																						(this.state.CTC).toLocaleString()
-																						:
-																						(parseFloat(this.state.CTC)*12).toLocaleString()															
-														               	: ''}</h3></div></Col>
+															<div><h3>  {this.state.CTC ?
+																this.state.EmployeeDetails.ctcType == "ANNUALLY" ?
+																	amountFormat(this.state.CTC, 'AED')
+																	:
+																	amountFormat(parseFloat(this.state.CTC) * 12, 'AED')
+																: ''}</h3></div></Col>
 														<Col><h5> {strings.MonthlyIncome} </h5>
 															<div> <h3>{this.state.CTC ?
-															this.state.EmployeeDetails.ctcType=="ANNUALLY"?
-														                            	(this.state.CTC /12).toLocaleString()
-																						:
-																						(this.state.CTC).toLocaleString()
-															 : ''}</h3></div></Col>
-															<Col>
-																		<Button
-																		className={`btn-square pull-right mb-2 mr-3 ${
-																			this.disable() ? `disabled-cursor` : ``
-																		} `}
-																			disabled={this.disable() ? true : false}
-																			color="primary"
-																		
-																			style={{ marginBottom: '10px' }}
-																			onClick={() => this.props.history.push(`/admin/master/employee/updateSalaryComponent`,
-																				{ id: this.state.current_employee_id,ctcTypeOption:this.state.EmployeeDetails.ctcType!=null?
-																																(	this.state.EmployeeDetails.ctcType=="ANNUALLY" ?
-																																			 {label:this.state.EmployeeDetails.ctcType,value:1}
-																																			:{label:this.state.EmployeeDetails.ctcType,value:2})
-																																			:{label:"ANNUALLY",value:1}
-																																		 })}
-																				
-																				title={
-																					this.disable()
-																						? `Please fill the Employement Details before salary setup`
-																						: ''
-																				}
-																			>
-																			<i class="far fa-edit">{strings.Edit}</i>
-																		</Button>
-																	</Col>
+																this.state.EmployeeDetails.ctcType == "ANNUALLY" ?
+																	amountFormat(this.state.CTC / 12, 'AED')
+																	:
+																	amountFormat(this.state.CTC, 'AED')
+																: ''}</h3></div></Col>
+														<Col>
+															<Button
+																className={`btn-square pull-right mb-2 mr-3 ${this.disable() ? `disabled-cursor` : ``
+																	} `}
+																disabled={this.disable() ? true : false}
+																color="primary"
+
+																style={{ marginBottom: '10px' }}
+																onClick={() => this.props.history.push(`/admin/master/employee/updateSalaryComponent`,
+																	{
+																		id: this.state.current_employee_id, ctcTypeOption: this.state.EmployeeDetails.ctcType != null ?
+																			(this.state.EmployeeDetails.ctcType == "ANNUALLY" ?
+																				{ label: this.state.EmployeeDetails.ctcType, value: 1 }
+																				: { label: this.state.EmployeeDetails.ctcType, value: 2 })
+																			: { label: "ANNUALLY", value: 1 }
+																	})}
+
+																title={
+																	this.disable()
+																		? `Please fill the Employement Details before salary setup`
+																		: ''
+																}
+															>
+																<i class="far fa-edit">{strings.Edit}</i>
+															</Button>
+														</Col>
 													</Row>
 												</div>
 												<Card style={{ height: 'auto', width: '65%' }} >
 													<div>
 														<CardBody>
 															<Table className="text-center">
-																<thead style={{border:"3px solid #c8ced3"}}>
-																	<tr style={{border:"3px solid #c8ced3",    background: '#dfe9f7',color:"Black"}}>
+																<thead style={{ border: "3px solid #c8ced3" }}>
+																	<tr style={{ border: "3px solid #c8ced3", background: '#dfe9f7', color: "Black" }}>
 																		{this.columnHeader1.map((column, index) => {
 																			return (
 																				<th>
@@ -610,11 +611,11 @@ getEmployeeInviteEmail=()=>{
 																			this.state.Fixed
 																		).map((item) => (
 																			<tr className="p-1">
-																					<td  className="text-left" style={{border:"3px solid #dfe9f7"}} >{item.description}<div className=''>
-																						{/* {item.description === 'Basic SALARY' ? '% of CTC' : '% of Baisc'} */}
-																					</div></td>
-																				<td className="text-right" style={{border:"3px solid #dfe9f7"}} >AED {item.monthlyAmount ? item.monthlyAmount.toLocaleString() : '0.00' }</td>
-																				<td className="text-right" style={{border:"3px solid #dfe9f7"}} >AED {item.yearlyAmount ? item.yearlyAmount.toLocaleString() : '0.00'}</td>
+																				<td className="text-left" style={{ border: "3px solid #dfe9f7" }} >{item.description}<div className=''>
+																					{/* {item.description === 'Basic SALARY' ? '% of CTC' : '% of Baisc'} */}
+																				</div></td>
+																				<td className="text-right" style={{ border: "3px solid #dfe9f7" }} > {item.monthlyAmount ? amountFormat(item.monthlyAmount, 'AED') : '0.00'}</td>
+																				<td className="text-right" style={{ border: "3px solid #dfe9f7" }} > {item.yearlyAmount ? amountFormat(item.yearlyAmount, 'AED') : '0.00'}</td>
 																			</tr>
 
 																		))) : (<tr></tr>)}
@@ -625,9 +626,9 @@ getEmployeeInviteEmail=()=>{
 																			this.state.Variable
 																		).map((item) => (
 																			<tr>
-																							<td  className="text-left" style={{border:"3px solid #dfe9f7"}} >{item.description}</td>
-																							<td className="text-right" style={{border:"3px solid #dfe9f7"}} >AED {item.monthlyAmount ? item.monthlyAmount.toLocaleString() : '' }</td>
-																							<td className="text-right" style={{border:"3px solid #dfe9f7"}} >AED {item.yearlyAmount ? item.yearlyAmount.toLocaleString() :''}</td>
+																				<td className="text-left" style={{ border: "3px solid #dfe9f7" }} >{item.description}</td>
+																				<td className="text-right" style={{ border: "3px solid #dfe9f7" }} >{item.monthlyAmount ? amountFormat(item.monthlyAmount, 'AED') : ''}</td>
+																				<td className="text-right" style={{ border: "3px solid #dfe9f7" }} >{item.yearlyAmount ? amountFormat(item.yearlyAmount, 'AED') : ''}</td>
 																			</tr>
 																		))) : (<tr></tr>)}
 
@@ -637,9 +638,9 @@ getEmployeeInviteEmail=()=>{
 																			this.state.Deduction
 																		).map((item) => (
 																			<tr>
-																						<td  className="text-left" style={{border:"3px solid #dfe9f7"}} >{item.description}</td>
-																						<td className="text-right" style={{border:"3px solid #dfe9f7"}} >AED {item.monthlyAmount ? item.monthlyAmount.toLocaleString() : '' }</td>
-																						<td className="text-right" style={{border:"3px solid #dfe9f7"}} >AED {item.yearlyAmount ? item.yearlyAmount.toLocaleString() :''}</td>
+																				<td className="text-left" style={{ border: "3px solid #dfe9f7" }} >{item.description}</td>
+																				<td className="text-right" style={{ border: "3px solid #dfe9f7" }} >{item.monthlyAmount ? amountFormat(item.monthlyAmount, "AED") : ''}</td>
+																				<td className="text-right" style={{ border: "3px solid #dfe9f7" }} >{item.yearlyAmount ? amountFormat(item.yearlyAmount, "AED") : ''}</td>
 																			</tr>
 																		))) : (<tr></tr>)}
 																</tbody>
@@ -649,15 +650,15 @@ getEmployeeInviteEmail=()=>{
 																			this.state.FixedAllowance
 																		).map((item) => (
 																			<tr>
-																				<td  className="text-left" style={{border:"3px solid #dfe9f7"}} >{item.description}</td>
-																				<td className="text-right" style={{border:"3px solid #dfe9f7"}} >AED {item.monthlyAmount ? item.monthlyAmount.toLocaleString() : '' }</td>
-																				<td className="text-right" style={{border:"3px solid #dfe9f7"}} >AED {item.yearlyAmount ? item.yearlyAmount.toLocaleString() :''}</td>
+																				<td className="text-left" style={{ border: "3px solid #dfe9f7" }} >{item.description}</td>
+																				<td className="text-right" style={{ border: "3px solid #dfe9f7" }} >{item.monthlyAmount ? amountFormat(item.monthlyAmount, "AED") : ''}</td>
+																				<td className="text-right" style={{ border: "3px solid #dfe9f7" }} >{item.yearlyAmount ? amountFormat(item.yearlyAmount, "AED") : ''}</td>
 																			</tr>
 																		))) : (<tr></tr>)}
-																	<tr style={{border:"3px solid #dfe9f7"}}>
+																	<tr style={{ border: "3px solid #dfe9f7" }}>
 																		<td className="text-left"><h5><b> {strings.CosttoCompany}</b></h5></td>
-																		<td className="text-right"><h5>AED {this.state.CTC ? this.state.EmployeeDetails.ctcType=="ANNUALLY" ? (this.state.CTC /12).toLocaleString() : (this.state.CTC).toLocaleString() : ''}</h5></td>
-																		<td className="text-right"><h5>AED {this.state.CTC ? this.state.EmployeeDetails.ctcType=="ANNUALLY" ? (this.state.CTC).toLocaleString() : (parseFloat(this.state.CTC)*12).toLocaleString() : ''}</h5></td>
+																		<td className="text-right"><h5>{this.state.CTC ? this.state.EmployeeDetails.ctcType == "ANNUALLY" ? amountFormat(this.state.CTC / 12, "AED") : amountFormat(this.state.CTC, "AED") : ''}</h5></td>
+																		<td className="text-right"><h5>{this.state.CTC ? this.state.EmployeeDetails.ctcType == "ANNUALLY" ? amountFormat(this.state.CTC, "AED") : amountFormat(parseFloat(this.state.CTC) * 12, "AED") : ''}</h5></td>
 																	</tr>
 																</tfoot>
 															</Table>
@@ -672,52 +673,52 @@ getEmployeeInviteEmail=()=>{
 
 
 								<TabPane tabId="3">
-									<div style={{    width: "50%"}} className="table-wrapper">
-										
-											<BootstrapTable
-												selectRow={this.selectRowProp}
-												search={false}
-												options={this.options}
-												data={this.state.salarySlipList &&
-													this.state.salarySlipList ? this.state.salarySlipList : []}
-												version="4"
-												hover
-		
-												keyField="id"
-												remote
+									<div style={{ width: "50%" }} className="table-wrapper">
 
-												className="employee-table"
-												trClassName="cursor-pointer"
+										<BootstrapTable
+											selectRow={this.selectRowProp}
+											search={false}
+											options={this.options}
+											data={this.state.salarySlipList &&
+												this.state.salarySlipList ? this.state.salarySlipList : []}
+											version="4"
+											hover
 
-												ref={(node) => this.table = node}
+											keyField="id"
+											remote
+
+											className="employee-table"
+											trClassName="cursor-pointer"
+
+											ref={(node) => this.table = node}
+										>
+											<TableHeaderColumn
+												className="table-header-bg"
+												dataField="salaryDate"
+												width="15%"
+												dataFormat={this.renderSalaryDate}
 											>
-												<TableHeaderColumn
-													className="table-header-bg"
-													dataField="salaryDate"
-													width="15%"
-													dataFormat={this.renderSalaryDate}
-												>
-													 {strings.SalaryDate}
-													</TableHeaderColumn>
-												<TableHeaderColumn
-													width="15%"
-													className="table-header-bg"
-													dataField="monthYear"
-												>
-													{strings.MonthYear}
-													</TableHeaderColumn>
-												<TableHeaderColumn
-													width="15%"
-													className="table-header-bg"
-													dataFormat={this.renderActions}
-												>
-													 {strings.Payslips}
-													</TableHeaderColumn>
+												{strings.SalaryDate}
+											</TableHeaderColumn>
+											<TableHeaderColumn
+												width="15%"
+												className="table-header-bg"
+												dataField="monthYear"
+											>
+												{strings.MonthYear}
+											</TableHeaderColumn>
+											<TableHeaderColumn
+												width="15%"
+												className="table-header-bg"
+												dataFormat={this.renderActions}
+											>
+												{strings.Payslips}
+											</TableHeaderColumn>
 
-											</BootstrapTable>
+										</BootstrapTable>
 
 
-									
+
 
 									</div>
 								</TabPane>
@@ -734,15 +735,15 @@ getEmployeeInviteEmail=()=>{
 					}}
 					bankDetails={this.state.EmployeeDetails}
 					employeename={this.state.employeename}
-				// id={this.state.rowId}
-				Fixed={this.state.Fixed}
-				 FixedAllowance={this.state.FixedAllowance}
-				 selectedData={this.state.selectedData}
-				 Deduction={this.state.Deduction}
-				 Variable={this.state.Variable}
-				 companyData={profile}
-				 salaryDate={this.state.salaryDate}
-				 empData={this.state.EmployeeDetails}
+					// id={this.state.rowId}
+					Fixed={this.state.Fixed}
+					FixedAllowance={this.state.FixedAllowance}
+					selectedData={this.state.selectedData}
+					Deduction={this.state.Deduction}
+					Variable={this.state.Variable}
+					companyData={profile}
+					salaryDate={this.state.salaryDate}
+					empData={this.state.EmployeeDetails}
 				/>
 			</div>
 		);

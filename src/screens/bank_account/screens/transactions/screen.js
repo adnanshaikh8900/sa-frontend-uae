@@ -138,7 +138,7 @@ class BankTransactions extends React.Component {
       this.props.detailBankAccountActions
         .getBankAccountByID(
           this.props.location.state.bankAccountId ||
-            localStorage.getItem("bankId")
+          localStorage.getItem("bankId")
         )
         .then((res) => {
           this.setState({
@@ -185,7 +185,7 @@ class BankTransactions extends React.Component {
       this.props.detailBankAccountActions
         .getBankAccountByID(
           this.props.location.state.bankAccountId ||
-            localStorage.getItem("bankId")
+          localStorage.getItem("bankId")
         )
         .then((res) => {
           this.setState({
@@ -333,42 +333,42 @@ class BankTransactions extends React.Component {
   renderDepositAmount = (cell, row, rowIndex, extraData) => {
     return row.depositeAmount >= 0
       ? row.currencyIsoCode +
-          " " +
-          row.depositeAmount.toLocaleString(navigator.language, {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })
+      " " +
+      row.depositeAmount.toLocaleString(navigator.language, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })
       : "";
   };
   renderWithdrawalAmount = (cell, row, rowIndex, extraData) => {
     return row.withdrawalAmount >= 0
       ? row.currencyIsoCode +
-          " " +
-          row.withdrawalAmount.toLocaleString(navigator.language, {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })
+      " " +
+      row.withdrawalAmount.toLocaleString(navigator.language, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })
       : "";
   };
   renderRunningAmount = (cell, row) => {
     return row.runningAmount >= 0
       ? row.currencyIsoCode +
-          " " +
-          row.runningAmount.toLocaleString(navigator.language, {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })
+      " " +
+      row.runningAmount.toLocaleString(navigator.language, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })
       : "";
   };
 
   renderDueAmount = (cell, row, rowIndex, extraData) => {
     return row.dueAmount >= 0
       ? row.currencyIsoCode +
-          " " +
-          row.dueAmount.toLocaleString(navigator.language, {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })
+      " " +
+      row.dueAmount.toLocaleString(navigator.language, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })
       : "";
   };
 
@@ -814,16 +814,16 @@ class BankTransactions extends React.Component {
                             {this.state.bankAccountCurrencyIsoCode} &nbsp;
                             {this.state.currentBalance
                               ? this.state.currentBalance.toLocaleString(
-                                  navigator.language,
-                                  {
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2,
-                                  }
-                                )
-                              : " " +
-                                ZERO.toLocaleString(navigator.language, {
+                                navigator.language,
+                                {
                                   minimumFractionDigits: 2,
-                                })}
+                                  maximumFractionDigits: 2,
+                                }
+                              )
+                              : " " +
+                              ZERO.toLocaleString(navigator.language, {
+                                minimumFractionDigits: 2,
+                              })}
                           </h3>
                         </Col>
                         <Col lg={3}>
@@ -833,16 +833,16 @@ class BankTransactions extends React.Component {
                             {this.state.bankAccountCurrencyIsoCode} &nbsp;
                             {this.state.closingBalance
                               ? this.state.closingBalance.toLocaleString(
-                                  navigator.language,
-                                  {
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2,
-                                  }
-                                )
-                              : " " +
-                                ZERO.toLocaleString(navigator.language, {
+                                navigator.language,
+                                {
                                   minimumFractionDigits: 2,
-                                })}
+                                  maximumFractionDigits: 2,
+                                }
+                              )
+                              : " " +
+                              ZERO.toLocaleString(navigator.language, {
+                                minimumFractionDigits: 2,
+                              })}
                           </h3>
                         </Col>
                         <Col lg={3}>
@@ -851,16 +851,16 @@ class BankTransactions extends React.Component {
                             {this.state.bankAccountCurrencyIsoCode} &nbsp;
                             {this.state.openingBalance
                               ? this.state.openingBalance.toLocaleString(
-                                  navigator.language,
-                                  {
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2,
-                                  }
-                                )
-                              : " " +
-                                ZERO.toLocaleString(navigator.language, {
+                                navigator.language,
+                                {
                                   minimumFractionDigits: 2,
-                                })}
+                                  maximumFractionDigits: 2,
+                                }
+                              )
+                              : " " +
+                              ZERO.toLocaleString(navigator.language, {
+                                minimumFractionDigits: 2,
+                              })}
                           </h3>
                         </Col>
                       </Row>
@@ -886,7 +886,7 @@ class BankTransactions extends React.Component {
 														target="_blank"
 													/>
 												)} */}
-                            {/* <Button
+                            <Button
                               color="info"
                               className="btn-square mr-1"
                               onClick={() =>
@@ -895,9 +895,9 @@ class BankTransactions extends React.Component {
                                   {
                                     bankAccountId:
                                       this.props.location.state &&
-                                      this.props.location.state.bankAccountId
+                                        this.props.location.state.bankAccountId
                                         ? this.props.location.state
-                                            .bankAccountId
+                                          .bankAccountId
                                         : "",
                                   }
                                 )
@@ -905,7 +905,7 @@ class BankTransactions extends React.Component {
                             >
                               <i className="fa glyphicon glyphicon-export fa-upload mr-1" />
                               {strings.ImportStatement}
-                            </Button> */}
+                            </Button>
 
                             {this.state.transactionCount > 0 ? (
                               ""
@@ -919,9 +919,9 @@ class BankTransactions extends React.Component {
                                     {
                                       bankAccountId:
                                         this.props.location.state &&
-                                        this.props.location.state.bankAccountId
+                                          this.props.location.state.bankAccountId
                                           ? this.props.location.state
-                                              .bankAccountId
+                                            .bankAccountId
                                           : "",
                                     }
                                   )
@@ -940,9 +940,9 @@ class BankTransactions extends React.Component {
                                   {
                                     bankAccountId:
                                       this.props.location.state &&
-                                      this.props.location.state.bankAccountId
+                                        this.props.location.state.bankAccountId
                                         ? this.props.location.state
-                                            .bankAccountId
+                                          .bankAccountId
                                         : "",
                                   }
                                 )
@@ -1076,7 +1076,7 @@ class BankTransactions extends React.Component {
                             {
                               bankAccountId:
                                 this.props.location.state &&
-                                this.props.location.state.bankAccountId
+                                  this.props.location.state.bankAccountId
                                   ? this.props.location.state.bankAccountId
                                   : "",
                               currency: this.props.location.state.currency,

@@ -96,6 +96,7 @@ class Profile extends React.Component {
 				companyName: '',
 				companyRegistrationNumber: '',
 				vatRegistrationNumber: '',
+				isRegisteredVat: '',
 				companyTypeCode: '',
 				industryTypeCode: '',
 				phoneNumber: '',
@@ -765,6 +766,7 @@ class Profile extends React.Component {
 		formData.append('isDesignatedZone',	this.state.isDesignatedZone ? this.state.isDesignatedZone : false);
 		formData.append('isRegisteredVat', isRegisteredVat ? isRegisteredVat : 0);
 
+		
 		if(vatRegistrationDate && vatRegistrationDate!="Invalid date")
 		formData.append('vatRegistrationDate',vatRegistrationDate !== null ? moment(vatRegistrationDate) : '',);
 		formData.append('fax', fax ? fax : '');
@@ -1496,7 +1498,7 @@ class Profile extends React.Component {
 																	errors.phoneNumber =
 																		'Invalid mobile number';
 																}
-																if (values.IsRegistered === true && !values.vatRegistrationDate) {
+																if (values.isRegisteredVat === true && !values.vatRegistrationDate) {
 																	errors.vatRegistrationDate= "VAT registration date is required";
 																}
 																return errors;
@@ -1529,7 +1531,17 @@ class Profile extends React.Component {
 																		),
 																		otherwise: Yup.string(),
 																	},
-																),	
+																),
+															// 	vatRegistrationDate: Yup.string().when(
+															// 		'isRegisteredVat',
+															// 	{
+															// 		is: (value) => value === true,
+															// 		then: Yup.string().required(
+															// 			'VAT registration date is required',
+															// 		),
+															// 		otherwise: Yup.string(),
+															// 	},
+															// ),	
 																emailAddress: Yup.string()
 																	// .required('Email is required')
 																	.email('Invalid Email'),
@@ -1564,17 +1576,7 @@ class Profile extends React.Component {
 																// companyPostZipCode: Yup.string().required(
 																// 	'Post Zip Code is required',
 																// ),
-																							
-														    	vatRegistrationDate: Yup.string().when(
-																	'isRegisteredVat',
-																{
-																	is: (value) => value === true,
-																	then: Yup.string().required(
-																		'VAT registration date is required',
-																	),
-																	otherwise: Yup.string(),
-																},
-															)
+																
 															})}
 															>
 																{(props) => (
@@ -1584,15 +1586,15 @@ class Profile extends React.Component {
 																			<Col lg={2} md={4}>
 																				<FormGroup className="mb-3 text-center">
 																					{/* <ImagesUploader
-                                    url="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                                    optimisticPreviews
-                                    multiple={false}
-                                    onLoadEnd={(err) => {
-                                      if (err) {
-                                        console.error(err);
-                                      }
-                                    }}
-                                  /> */}
+																							url="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+																							optimisticPreviews
+																							multiple={false}
+																							onLoadEnd={(err) => {
+																							if (err) {
+																								console.error(err);
+																							}
+																							}}
+																						/> */}
 																					<ImageUploader
 																						// withIcon={true}
 																						buttonText="Choose images"
@@ -2654,18 +2656,19 @@ class Profile extends React.Component {
 																							</Label>
 																							<DatePicker
 																								// disabled={!this.state.enableVatRegistrationDate}
-																								id="date"
+																								autoComplete='off'
+																								id="vatRegistrationDate"
 																								name="vatRegistrationDate"
-																								placeholderText='Enter VAT Registered Date.'
+																								placeholderText='Select VAT Registered Date.'
 																								showMonthDropdown
 																								showYearDropdown
 																								dateFormat="dd-MM-yyyy"
 																								dropdownMode="select"
 																								minDate={new Date("01/01/2018")}
 																								//maxDate={this.state.transaction_first_date}
-																								value={props.values.vatRegistrationDate ?moment(
-																									props.values.vatRegistrationDate,
-																								).format('DD-MM-YYYY'):""}
+																								// value={props.values.vatRegistrationDate ?moment(
+																								// 	props.values.vatRegistrationDate,
+																								// ).format('DD-MM-YYYY'):""}
 																								selected={props.values.vatRegistrationDate ? new Date (moment(props.values.vatRegistrationDate).format('MM DD YYYY')) : new Date()}
 																								onChange={(value) => {
 																									props.handleChange('vatRegistrationDate')(value);

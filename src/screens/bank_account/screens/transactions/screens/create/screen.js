@@ -2896,7 +2896,12 @@ class CreateBankTransaction extends React.Component {
                                           className="form-control"
                                           id="currencyName"
                                           name="currencyName"
-                                          value={props.values.curreancyname}
+                                          value={
+                                            props.values.curreancyname === "AED"
+                                              ? this.state?.bankCurrency
+                                                  ?.bankAccountCurrencyIsoCode
+                                              : props.values.curreancyname
+                                          }
                                           onChange={(value) => {
                                             props.handleChange("curreancyname")(
                                               value
@@ -2947,8 +2952,10 @@ class CreateBankTransaction extends React.Component {
                                       id="currencyName"
                                       name="currencyName"
                                       value={
-                                        this.state?.bankCurrency
-                                          ?.bankAccountCurrencyIsoCode
+                                        props.values.curreancyname !== "AED"
+                                          ? this.state?.bankCurrency
+                                              ?.bankAccountCurrencyIsoCode
+                                          : props.values.curreancyname
                                       }
                                     />
                                   </Col>

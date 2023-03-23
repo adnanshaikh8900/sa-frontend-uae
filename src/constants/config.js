@@ -1,6 +1,6 @@
 export default {
   // API_ROOT_URL:'https://devbox-api.app.simpleaccounts.io',
-  // API_ROOT_URL: "https://dev-api.app.simpleaccounts.io",
+  //API_ROOT_URL: "https://dev-api.app.simpleaccounts.io",
   // API_ROOT_URL: 'https://k8s-api.dev.simplevat.com',
   // API_ROOT_URL: 'http://localhost:8080',
   // API_ROOT_URL: 'http://192.168.2.105:8080',
@@ -41,12 +41,12 @@ export default {
   MASTER_PC: true,
   MASTER_VAT: true,
   MASTER_CR: true,
-  MASTER_EMPLOYEE: false,
+  MASTER_EMPLOYEE: true,
 
-  PAYROLL_PR: false,
-  PAYROLL_PC: false,
+  PAYROLL_PR: true,
+  PAYROLL_PC: true,
 
-  ADD_ROLES: false,
+  ADD_ROLES: true,
   ADD_CURRENCY: true,
 
   SETTING_THEME: false,

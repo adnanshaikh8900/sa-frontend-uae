@@ -133,89 +133,6 @@ class BankTransactions extends React.Component {
     this.csvLink = React.createRef();
   }
 
-  // componentDidMount = () => {
-  // 	this.props.detailBankAccountActions
-  // 		.getBankAccountByID(localStorage.getItem('bankId'))
-  // 		.then((res) => {
-  // 			this.setState({
-  // 				bankAccountCurrencySymbol:res.bankAccountCurrencySymbol,
-  // 				currentBalance: res.currentBalance,
-  // 				closingBalance: res.closingBalance,
-  // 				accounName: res.bankAccountName,
-  // 			});
-  // 		})
-  // 		.catch((err) => {
-  // 			this.props.commonActions.tostifyAlert(
-  // 				'error',
-  // 				err && err.data ? err.data.message : 'Something Went Wrong',
-  // 			);
-  // 			this.props.history.push('/admin/banking/bank-account');
-  // 		});
-  // 	this.toggle(0, 'all');
-  // 	this.initializeData();
-  // 	console.log('state', this.props)
-  // 	if (this.props.location.state !== undefined) {
-  // 		localStorage.setItem(
-  // 			'bankId',
-  // 			localStorage.getItem('bankId') !==
-  // 				this.props.location.state.bankAccountId
-  // 				? this.props.location.state.bankAccountId
-  // 				: localStorage.getItem('bankId'),
-  // 		);
-  // 	} else {
-  // 		localStorage.setItem('bankId', localStorage.getItem('bankId'));
-  // 		this.props.location.state =  {}
-  // 		this.props.location.state.bankAccountId = localStorage.getItem('bankId')
-  // 		console.log('props', this.props.location)
-
-  // 	}
-  // 	this.props.transactionsActions.getTransactionTypeList();
-  // 	//this.initializeData();
-
-  // };
-
-  // initializeData = () => {
-  // 	let { filterData } = this.state;
-  // 	const data = {
-  // 		pageNo: this.options.page ? this.options.page - 1 : 0,
-  // 		pageSize: this.options.sizePerPage,
-  // 	};
-  // 	if (localStorage.getItem('bankId')) {
-  // 		const postData = {
-  // 			...filterData,
-  // 			...data,
-  // 			id: localStorage.getItem('bankId'),
-  // 			transactionType: this.state.transactionType,
-  // 		};
-  // 		this.props.transactionsActions
-  // 			.getTransactionList(postData)
-  // 			.then((res) => {
-  // 				const array = []
-  // 				if (res.status === 200) {
-  // 					this.setState({
-  // 						loading: false,
-  // 						transation_data: res.data.data
-  // 					});
-  // 					res.data.data.map((item) => {
-  // 						if (item.creationMode === 'POTENTIAL_DUPLICATE') {
-  // 							array.push(item.id)
-  // 						}
-  // 						this.setState({ nonexpand: array })
-  // 					});
-  // 				}
-  // 			})
-  // 			.catch((err) => {
-  // 				this.props.commonActions.tostifyAlert(
-  // 					'error',
-  // 					err && err.data ? err.data.message : 'Something Went Wrong',
-  // 				);
-  // 				this.setState({ loading: false });
-  // 			});
-  // 	} else {
-  // 		this.props.history.push('/admin/banking/bank-account');
-  // 	}
-  // };
-
   getnewbackdetils = () => {
     if (this.props.location.state && this.props.location.state.bankAccountId) {
       this.props.detailBankAccountActions
@@ -414,14 +331,6 @@ class BankTransactions extends React.Component {
   };
 
   renderDepositAmount = (cell, row, rowIndex, extraData) => {
-    // return row.depositeAmount >= 0 ? (
-    // 	<Currency
-    // 		value={row.depositeAmount}
-    // 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
-    // 	/>
-    // ) : (
-    // 	''
-    // );
     return row.depositeAmount >= 0
       ? row.currencyIsoCode +
           " " +
@@ -432,14 +341,6 @@ class BankTransactions extends React.Component {
       : "";
   };
   renderWithdrawalAmount = (cell, row, rowIndex, extraData) => {
-    // return row.withdrawalAmount >= 0 ? (
-    // 	<Currency
-    // 		value={row.withdrawalAmount}
-    // 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
-    // 	/>
-    // ) : (
-    // 	''
-    // );
     return row.withdrawalAmount >= 0
       ? row.currencyIsoCode +
           " " +
@@ -461,14 +362,6 @@ class BankTransactions extends React.Component {
   };
 
   renderDueAmount = (cell, row, rowIndex, extraData) => {
-    // return row.withdrawalAmount >= 0 ? (
-    // 	<Currency
-    // 		value={row.withdrawalAmount}
-    // 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
-    // 	/>
-    // ) : (
-    // 	''
-    // );
     return row.dueAmount >= 0
       ? row.currencyIsoCode +
           " " +
@@ -641,15 +534,6 @@ class BankTransactions extends React.Component {
       expanded: array,
     }));
   };
-
-  // handleOnExpand = (row,exapandRow) => {
-
-  // 	let data  = this.getbyid(row)
-  // 	alert(data)
-  // 	this.setState(() => ({
-  // 		expanded: [...this.state.expanded, row.id],
-  // 	}));
-  // };
 
   isExpandableRow(row) {
     if (row.id) return true;

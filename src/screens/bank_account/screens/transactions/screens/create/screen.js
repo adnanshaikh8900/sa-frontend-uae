@@ -244,20 +244,20 @@ class CreateBankTransaction extends React.Component {
         "explainedInvoiceListString",
         invoiceIdList
           ? JSON.stringify(
-            invoiceIdList.map((i) => {
-              return {
-                invoiceId: i.value,
-                invoiceAmount: i.dueAmount,
-                convertedInvoiceAmount: i.convertedInvoiceAmount,
-                explainedAmount: i.explainedAmount,
-                exchangeRate: i.exchangeRate,
-                partiallyPaid: i.pp,
-                nonConvertedInvoiceAmount: i.explainedAmount / i.exchangeRate,
-                convertedToBaseCurrencyAmount:
-                  i.convertedToBaseCurrencyAmount,
-              };
-            })
-          )
+              invoiceIdList.map((i) => {
+                return {
+                  invoiceId: i.value,
+                  invoiceAmount: i.dueAmount,
+                  convertedInvoiceAmount: i.convertedInvoiceAmount,
+                  explainedAmount: i.explainedAmount,
+                  exchangeRate: i.exchangeRate,
+                  partiallyPaid: i.pp,
+                  nonConvertedInvoiceAmount: i.explainedAmount / i.exchangeRate,
+                  convertedToBaseCurrencyAmount:
+                    i.convertedToBaseCurrencyAmount,
+                };
+              })
+            )
           : []
       );
       formData.append(
@@ -265,8 +265,8 @@ class CreateBankTransaction extends React.Component {
         this.setexcessorshortamount().data
           ? 103
           : this.setexcessorshortamount().data > 0
-            ? 79
-            : 0
+          ? 79
+          : 0
       );
       formData.append("exchangeGainOrLoss", this.setexcessorshortamount().data);
     }
@@ -1823,26 +1823,26 @@ class CreateBankTransaction extends React.Component {
                             <Row>
                               {props.values.coaCategoryId?.label ===
                                 "Expense" && (
-                                  <Col>
-                                    <Checkbox
-                                      id="isReverseChargeEnabled"
-                                      checked={this.state.isReverseChargeEnabled}
-                                      onChange={(option) => {
-                                        this.setState({
-                                          isReverseChargeEnabled:
-                                            !this.state.isReverseChargeEnabled,
-                                          exclusiveVat: false,
-                                        });
+                                <Col>
+                                  <Checkbox
+                                    id="isReverseChargeEnabled"
+                                    checked={this.state.isReverseChargeEnabled}
+                                    onChange={(option) => {
+                                      this.setState({
+                                        isReverseChargeEnabled:
+                                          !this.state.isReverseChargeEnabled,
+                                        exclusiveVat: false,
+                                      });
 
-                                        props.handleChange("vatId")("");
-                                        props.handleChange(
-                                          "isReverseChargeEnabled"
-                                        )(!props.values.isReverseChargeEnabled);
-                                      }}
-                                    />
-                                    <Label>{strings.IsReverseCharge}</Label>
-                                  </Col>
-                                )}
+                                      props.handleChange("vatId")("");
+                                      props.handleChange(
+                                        "isReverseChargeEnabled"
+                                      )(!props.values.isReverseChargeEnabled);
+                                    }}
+                                  />
+                                  <Label>{strings.IsReverseCharge}</Label>
+                                </Col>
+                              )}
                             </Row>
                             {props.values.coaCategoryId &&
                               props.values.coaCategoryId?.label ===
@@ -2212,33 +2212,33 @@ class CreateBankTransaction extends React.Component {
                                               transactionCategoryList.dataList[1]
                                               ? transactionCategoryList
                                                 .dataList[0].options
-                                              : []
-                                          }
-                                          id="customerId"
-                                          value={props.values.customerId}
-                                          onChange={(option) => {
-                                            props.handleChange("customerId")(
-                                              option
-                                            );
+                                            : []
+                                        }
+                                        id="customerId"
+                                        value={props.values.customerId}
+                                        onChange={(option) => {
+                                          props.handleChange("customerId")(
+                                            option
+                                          );
 
-                                            props.handleChange("invoiceIdList")(
-                                              []
-                                            );
-                                            this.getInvoices(
-                                              option,
-                                              props.values.transactionAmount
-                                            );
-                                          }}
-                                        />
-                                        {props.errors.customerId &&
-                                          props.touched.customerId && (
-                                            <div className="invalid-feedback">
-                                              {props.errors.customerId}
-                                            </div>
-                                          )}
-                                      </FormGroup>
-                                    </Col>
-                                  )}
+                                          props.handleChange("invoiceIdList")(
+                                            []
+                                          );
+                                          this.getInvoices(
+                                            option,
+                                            props.values.transactionAmount
+                                          );
+                                        }}
+                                      />
+                                      {props.errors.customerId &&
+                                        props.touched.customerId && (
+                                          <div className="invalid-feedback">
+                                            {props.errors.customerId}
+                                          </div>
+                                        )}
+                                    </FormGroup>
+                                  </Col>
+                                )}
                                 {props.values.coaCategoryId.value === 2 && (
                                   <Col lg={3}>
                                     <FormGroup className="mb-3">
@@ -2413,39 +2413,40 @@ class CreateBankTransaction extends React.Component {
                                           {this.state.bankCurrency
                                             .bankAccountCurrencyIsoCode !==
                                             props.values.curreancyname && (
-                                              <Col lg={2}>
-                                                <FormGroup className="mb-3">
-                                                  <div>
-                                                    <Input
-                                                      className="form-control"
-                                                      id="exchangeamount"
-                                                      name="exchangeamount"
-                                                      type="number"
-                                                      style={{
-                                                        textAlign: "right",
-                                                      }}
-                                                      value={i.exchangeRate}
-                                                      onChange={(value) => {
-                                                        let local2 = [
-                                                          ...props.values
-                                                            ?.invoiceIdList,
-                                                        ].map((i) => {
-                                                          return {
-                                                            ...i,
-                                                            exchangeRate:
-                                                              value.target.value,
-                                                          };
-                                                        });
+                                            <Col lg={2}>
+                                              <FormGroup className="mb-3">
+                                                <div>
+                                                  <Input
+                                                    className="form-control"
+                                                    id="exchangeamount"
+                                                    name="exchangeamount"
+                                                    type="number"
+                                                    style={{
+                                                      textAlign: "right",
+                                                    }}
+                                                    disabled
+                                                    value={i.exchangeRate}
+                                                    onChange={(value) => {
+                                                      let local2 = [
+                                                        ...props.values
+                                                          ?.invoiceIdList,
+                                                      ].map((i) => {
+                                                        return {
+                                                          ...i,
+                                                          exchangeRate:
+                                                            value.target.value,
+                                                        };
+                                                      });
 
-                                                        this.setexchnagedamount(
-                                                          local2
-                                                        );
-                                                      }}
-                                                    />
-                                                  </div>
-                                                </FormGroup>
-                                              </Col>
-                                            )}
+                                                      this.setexchnagedamount(
+                                                        local2
+                                                      );
+                                                    }}
+                                                  />
+                                                </div>
+                                              </FormGroup>
+                                            </Col>
+                                          )}
 
                                           {this.state.bankCurrency
                                             .bankAccountCurrencyIsoCode !==
@@ -2669,7 +2670,7 @@ class CreateBankTransaction extends React.Component {
                               props.values.coaCategoryId?.label ===
                               "Supplier Invoice" &&
                               (this.state.invoiceCurrency &&
-                                this.state.invoiceCurrency !==
+                              this.state.invoiceCurrency !==
                                 this.state.bankCurrency.bankAccountCurrency ? (
                                 <Row>
                                   <Col lg={3}>
@@ -2800,7 +2801,7 @@ class CreateBankTransaction extends React.Component {
                             {props.values.coaCategoryId &&
                               props.values?.coaCategoryId?.label !== "Sales" &&
                               props.values?.coaCategoryId?.label !==
-                              "Supplier Invoice" &&
+                                "Supplier Invoice" &&
                               this.state?.bankCurrency?.bankAccountCurrency !==
                               150 && (
                                 <Row>
@@ -2873,10 +2874,10 @@ class CreateBankTransaction extends React.Component {
 
                             {(props.values?.coaCategoryId?.label === "Sales" ||
                               props.values?.coaCategoryId?.label ===
-                              "Supplier Invoice") &&
+                                "Supplier Invoice") &&
                               props.values.curreancyname !==
-                              this.state?.bankCurrency
-                                ?.bankAccountCurrencyIsoCode &&
+                                this.state?.bankCurrency
+                                  ?.bankAccountCurrencyIsoCode &&
                               props.values.curreancyname &&
                               this.state?.bankCurrency
                                 ?.bankAccountCurrencyIsoCode &&

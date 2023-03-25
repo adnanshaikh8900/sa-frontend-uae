@@ -709,7 +709,7 @@ class CreateUser extends React.Component {
 																								+props.values.roleId,
 																						)
 																				}
-																				isDisabled={true}
+																				isDisabled={false}
 																				onChange={(option) => {
 																					if (option && option.value) {
 																						props.handleChange('roleId')(

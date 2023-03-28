@@ -589,7 +589,7 @@ class CreateBankTransaction extends React.Component {
     return (
       <Col lg={3}>
         <FormGroup className="mb-3">
-          <Label htmlFor="payrollListIds">Payolls</Label>
+          <Label htmlFor="payrollListIds">Payrolls</Label>
           <Select
             style={customStyles}
             isMulti
@@ -1158,7 +1158,8 @@ class CreateBankTransaction extends React.Component {
                           }
                           if (
                             values.vatId === "" &&
-                            values.coaCategoryId.label === "Expense"
+                            values.coaCategoryId.label === "Expense" &&
+                            values.expenseCategory.value !== 34
                           ) {
                             errors.vatId = "Please select Vat";
                           }
@@ -1580,20 +1581,17 @@ class CreateBankTransaction extends React.Component {
                             </Row>
                             <hr />
                             {props.values.coaCategoryId &&
-                              props.values.coaCategoryId?.label ===
-                              "Expense" && (
+                              props.values.coaCategoryId?.label === "Expense" && (
                                 <Row>
                                   <Col lg={3}>
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="expenseCategory">
                                         <span className="text-danger">* </span>
-                                        Expense Category
+                                        {strings.ExpenseCategory}
                                       </Label>
                                       <Select
                                         style={customStyles}
-                                        placeholder={
-                                          strings.Select + " Expense Category"
-                                        }
+                                        placeholder={strings.Select + strings.ExpenseCategory}
                                         options={
                                           expense_categories_list
                                             ? this.expense_categories_list_generate()
@@ -1667,9 +1665,7 @@ class CreateBankTransaction extends React.Component {
                                                 props.handleChange("vatId")("");
                                               }
                                             }}
-                                            placeholder={
-                                              strings.Select + " VAT"
-                                            }
+                                            placeholder={strings.Select + " VAT"}
                                             id="vatId"
                                             name="vatId"
                                             className={
@@ -1688,6 +1684,12 @@ class CreateBankTransaction extends React.Component {
                                         </FormGroup>
                                       </Col>
                                     )}
+                                    {props.values.coaCategoryId &&
+                                    props.values.coaCategoryId?.label ===
+                                      "Expense" &&
+                                    props.values.expenseCategory &&
+                                    props.values.expenseCategory.value !==
+                                      34 && (
                                   <Col className="mb-6" lg={6}>
                                     <Label htmlFor="inline-radio3">
                                       <span className="text-danger">* </span>
@@ -1744,6 +1746,7 @@ class CreateBankTransaction extends React.Component {
                                       )}
                                     </div>
                                   </Col>
+                                      )}
                                 </Row>
                               )}
                             {props.values.coaCategoryId &&
@@ -1821,8 +1824,12 @@ class CreateBankTransaction extends React.Component {
                                 </Row>
                               )}
                             <Row>
-                              {props.values.coaCategoryId?.label ===
-                                "Expense" && (
+                            {props.values.coaCategoryId &&
+                                props.values.coaCategoryId?.label ===
+                                      "Expense" &&
+                             props.values.expenseCategory &&
+                                props.values.expenseCategory.value !==
+                                      34 && (
                                 <Col>
                                   <Checkbox
                                     id="isReverseChargeEnabled"

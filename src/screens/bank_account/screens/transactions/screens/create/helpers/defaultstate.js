@@ -95,10 +95,10 @@ export const defaultState = (currency) => {
             value: 5,
             label: "Interest Received",
           },
-          // {
-          //   value: 6,
-          //   label: "Money Received From User",
-          // },
+          {
+            value: 6,
+            label: "Money Received From User",
+          },
           {
             value: 7,
             label: "Disposal Of Capital Asset",

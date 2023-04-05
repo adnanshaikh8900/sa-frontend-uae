@@ -109,6 +109,11 @@ class CreateBankTransaction extends React.Component {
   componentDidMount = () => {
     this.props.transactionActions.getUnPaidPayrollsList();
     this.initializeData();
+    this.props.transactionActions
+      .getCOACList()
+      .then((response) => {
+        this.setState({COACList:response.data});
+        });
   };
 
   initializeData = () => {
@@ -908,9 +913,20 @@ class CreateBankTransaction extends React.Component {
         )
         .then((res) => {
           if (res.status === 200) {
+            debugger
+            let categoryList = res.data.categoriesList && res.data.categoriesList.map((category) => {
+              let newcategory = category.label;
+              let newOption = category.options;
+              if(category.label === 'Other Current Liability'){
+                newOption = category.options.filter(obj => obj.label !== 'Payroll Liability')
+              }
+              return {label : newcategory , options : newOption }
+            })
+            console.log(res.data,"290912083092");
+
             this.setState(
               {
-                transactionCategoryList: res.data,
+                transactionCategoryList: { categoriesList : categoryList , dataList : res.data.dataList},
               },
               () => { }
             );

@@ -539,3 +539,19 @@ export const getVatReportListForBank = (id) => {
       });
   };
 };
+
+export const getCOACList = () => {
+  return (dispatch) => {
+    let data = {
+      method: "GET",
+      url: `/rest/reconsile/getCOACList`,
+    };
+    return authApi(data)
+      .then((res) => {
+        return res;
+      })
+      .catch((err) => {
+        throw err;
+      });
+  };
+};

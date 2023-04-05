@@ -14,8 +14,8 @@ import {
 } from 'reactstrap';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { toast } from 'react-toastify'; 
-import {data}  from '../../Language/index'
+import { toast } from 'react-toastify';
+import { data } from '../../Language/index'
 import LocalizedStrings from 'react-localization';
 
 let strings = new LocalizedStrings(data);
@@ -24,15 +24,15 @@ class DesignationModal extends React.Component {
 		super(props);
 		this.state = {
 			language: window['localStorage'].getItem('language'),
-			showDetails : false,
+			showDetails: false,
 			loading: false,
 			initValue: {
-			firstName: '',
-			lastName: '',
-			middleName: '',
-			email: '',
-			disabled: false,
-			dob: new Date(),
+				firstName: '',
+				lastName: '',
+				middleName: '',
+				email: '',
+				disabled: false,
+				dob: new Date(),
 			},
 			state_list: [],
 		};
@@ -55,6 +55,8 @@ class DesignationModal extends React.Component {
 		return temp;
 	};
 
+
+
 	// Create or Contact
 	// handleSubmit = (data, resetForm) => {
 
@@ -64,7 +66,7 @@ class DesignationModal extends React.Component {
 	// 	const firstName = data['firstName'];
 	// 	const lastName = data['lastName'];
 	// 	const middleName = data['middleName'];
-	
+
 	// 	const email = data['email'];
 	// 	const dob = data['dob'];
 
@@ -79,7 +81,7 @@ class DesignationModal extends React.Component {
 	// 	this.props
 	// 		.createEmployee(postData)
 	// 		.then((res) => {
-				
+
 	// 			if (res.status === 200) {
 	// 				resetForm();
 	// 				this.props.closeEmployeeModal(true);
@@ -91,40 +93,40 @@ class DesignationModal extends React.Component {
 	// 			this.formikRef.current.setSubmitting(false);
 	// 		});
 	// };
-    handleSubmit = (data, resetForm) => {
-        this.setState({ disabled: true });
-            const {
-          designationName
-            } = data;
-                const formData = new FormData();
-    
-        formData.append(
-          'designationName',
-          designationName != null ? designationName : '',
-        )
-       
-        this.props
-        .createDesignation(formData)
-        .then((res) => {
-            //  let resConfig = JSON.parse(res.config.data);
-            
-            if (res.status === 200) {
+	handleSubmit = (data, resetForm) => {
+		this.setState({ disabled: true });
+		const {
+			designationName
+		} = data;
+		const formData = new FormData();
+
+		formData.append(
+			'designationName',
+			designationName != null ? designationName : '',
+		)
+
+		this.props
+			.createDesignation(formData)
+			.then((res) => {
+				//  let resConfig = JSON.parse(res.config.data);
+
+				if (res.status === 200) {
+					this.setState({ disabled: false });
+
+					resetForm();
+
+					this.props.closeDesignationModal(true);
+					this.props.getCurrentUser(res.data);
+					toast.success("Designation Created Successfully")
+				}
+			})
+			.catch((err) => {
 				this.setState({ disabled: false });
-            
-                resetForm();
-            
-                this.props.closeDesignationModal(true);
-                this.props.getCurrentUser(res.data);
-				toast.success("Designation Created Successfully")
-            }
-        })
-        .catch((err) => {
-			this.setState({ disabled: false });
-            this.displayMsg(err);
-            this.formikRef.current.setSubmitting(false);
-        });
-      }
-    
+				this.displayMsg(err);
+				this.formikRef.current.setSubmitting(false);
+			});
+	}
+
 	displayMsg = (err) => {
 		toast.error(`${err.data}`, {
 			position: toast.POSITION.TOP_RIGHT,
@@ -132,9 +134,9 @@ class DesignationModal extends React.Component {
 	};
 	_showDetails = (bool) => {
 		this.setState({
-		  showDetails: bool
+			showDetails: bool
 		});
-	  }
+	}
 
 	// getStateList = (countryCode) => {
 	// 	if (countryCode) {
@@ -162,8 +164,10 @@ class DesignationModal extends React.Component {
 			closeDesignationModal,
 			// currency_list,
 			// country_list,
+			nameDesigExist,
+			validateinfo
 		} = this.props;
-		const { initValue} = this.state;
+		const { initValue } = this.state;
 		return (
 			<div className="contact-modal-screen">
 				<Modal
@@ -177,9 +181,12 @@ class DesignationModal extends React.Component {
 							this.handleSubmit(values, resetForm);
 						}}
 						validationSchema={Yup.object().shape({
-						//	firstName: Yup.string().required('First Name is required'),
-						
-							//currrencyCode: Yup.string().required('Currency is required'),
+							//	firstName: Yup.string().required('First Name is required'),
+
+							designationName: Yup.string().required('Designation Name is required').test('is new',
+								"Designation Name is already exist",
+								() => !nameDesigExist)
+
 							// contactType: Yup.string()
 							// .required("Please Select Contact Type"),
 							//       organization: Yup.string()
@@ -207,7 +214,7 @@ class DesignationModal extends React.Component {
 							//       .email('Invalid Email'),
 							//     contractPoNumber: Yup.number()
 							//       .required("Contract PoNumber is required"),
-							
+
 							//       currencyCode: Yup.string()
 							//       .required("Please Select Currency")
 							//       .nullable(),
@@ -233,43 +240,47 @@ class DesignationModal extends React.Component {
 										</Row>
 									</CardHeader>
 									<ModalBody>
-									<Row className="row-wrapper">
-                                        <Col lg={8}>
-                                <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">* </span>{strings.DesignationName}</Label>
-                                  <Input
-                                    type="text"
-                                    id="designationName"
-                                    name="designationName"
-                                    value={props.values.designationName}
-                                    placeholder={strings.Enter+strings.DesignationName}
-                                    onChange={(option) => {
-                                      if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('designationName')(option) }
-                                    }}
-                                    className={props.errors.designationName && props.touched.designationName ? "is-invalid" : ""}
-                                  />
-                                  {props.errors.designationName && props.touched.designationName && (
-                                    <div className="invalid-feedback">{props.errors.designationName}</div>
-                                  )}
-                                </FormGroup>
-                              </Col>	
-                              	</Row>		
+										<Row className="row-wrapper">
+											<Col lg={8}>
+												<FormGroup>
+													<Label htmlFor="select"><span className="text-danger">* </span>{strings.DesignationName}</Label>
+													<Input
+														type="text"
+														id="designationName"
+														name="designationName"
+														value={props.values.designationName}
+														placeholder={strings.Enter + strings.DesignationName}
+														onChange={(option) => {
+															if (option.target.value === '' || this.regExAlpha.test(option.target.value)) {
+
+																props.handleChange('designationName')(option)
+																validateinfo(option.target.value)
+															}
+														}}
+														className={props.errors.designationName && props.touched.designationName ? "is-invalid" : ""}
+													/>
+													{props.errors.designationName && props.touched.designationName && (
+														<div className="invalid-feedback">{props.errors.designationName}</div>
+													)}
+												</FormGroup>
+											</Col>
+										</Row>
 									</ModalBody>
 									<ModalFooter>
-									<Button
+										<Button
 											type="button"
 											color="primary"
 											className="btn-square mr-3"
 											disabled={this.state.disabled}
 											onClick={() => {
-												this.setState( () => {
+												this.setState(() => {
 													props.handleSubmit();
 												});
 											}}
 										>
 											<i className="fa fa-dot-circle-o"></i>  {this.state.disabled
-																			? 'Creating...'
-																			: strings.Create }
+												? 'Creating...'
+												: strings.Create}
 										</Button>
 										&nbsp;
 										<Button
@@ -279,7 +290,7 @@ class DesignationModal extends React.Component {
 												closeDesignationModal(false);
 											}}
 										>
-											<i className="fa fa-ban"></i> {strings. Cancel}
+											<i className="fa fa-ban"></i> {strings.Cancel}
 										</Button>
 									</ModalFooter>
 								</Form>
@@ -292,4 +303,4 @@ class DesignationModal extends React.Component {
 	}
 }
 
-export default DesignationModal ;
+export default DesignationModal;

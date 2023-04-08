@@ -965,217 +965,195 @@ class CreateExpense extends React.Component {
     this._isMounted = false;
   }
 
-  render() {
-    strings.setLanguage(this.state.language);
-    const {
-      initValue,
-      payMode,
-      exist,
-      taxTreatmentList,
-      placelist,
-      vat_list,
-      loading,
-      loadingMsg,
-    } = this.state;
-    const {
-      // currency_list,
-      expense_categories_list,
-      expense_categories_list_Sorted,
-      // vat_list,
-      // profile,
-      // user_list,
-      pay_mode_list,
-      bank_list,
-      currency_convert_list,
-      pay_to_list,
-    } = this.props;
-    const customStyles = {
-      control: (base, state) => ({
-        ...base,
-        borderColor: state.isFocused ? "#2064d8" : "#c7c7c7",
-        boxShadow: state.isFocused ? null : null,
-        "&:hover": {
-          borderColor: state.isFocused ? "#2064d8" : "#c7c7c7",
-        },
-      }),
-    };
-    return loading == true ? (
-      <Loader loadingMsg={loadingMsg} />
-    ) : (
-      <div>
-        <div className="create-expense-screen">
-          <div className="animated fadeIn">
-            <Row>
-              <Col lg={12} className="mx-auto">
-                <Card>
-                  <CardHeader>
-                    <Row>
-                      <Col lg={12}>
-                        <div className="h4 mb-0 d-flex align-items-center">
-                          <i className="fab fa-stack-exchange" />
-                          <span className="ml-2">{strings.CreateExpense} </span>
-                        </div>
-                      </Col>
-                    </Row>
-                  </CardHeader>
-                  <CardBody>
-                    {loading ? (
-                      <Row>
-                        <Col lg={12}>
-                          <Loader />
-                        </Col>
-                      </Row>
-                    ) : (
-                      <Row>
-                        <Col lg={12}>
-                          <Formik
-                            initialValues={initValue}
-                            ref={this.formRef}
-                            onSubmit={(values, { resetForm }) => {
-                              this.handleSubmit(values, resetForm);
+	render() {
+		strings.setLanguage(this.state.language);
+		const { initValue, payMode ,exist,taxTreatmentList,placelist,vat_list,loading,loadingMsg} = this.state;
+		const {
+			// currency_list,
+			expense_categories_list,
+			expense_categories_list_Sorted,
+			// vat_list,
+			// profile,
+			// user_list,
+			pay_mode_list,
+			bank_list,
+			currency_convert_list,
+			pay_to_list,
+		} = this.props;
+		const customStyles = {
+			control: (base, state) => ({
+				...base,
+				borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
+				boxShadow: state.isFocused ? null : null,
+				'&:hover': {
+					borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
+				},
+			}),
+		};
+		return (
+			loading ==true? <Loader loadingMsg={loadingMsg}/> :
+			<div>
+			<div className="create-expense-screen">
+				<div className="animated fadeIn">
+					<Row>
+						<Col lg={12} className="mx-auto">
+							<Card>
+								<CardHeader>
+									<Row>
+										<Col lg={12}>
+											<div className="h4 mb-0 d-flex align-items-center">
+												<i className="fab fa-stack-exchange" />
+												<span className="ml-2">{strings.CreateExpense}  </span>
+											</div>
+										</Col>
+									</Row>
+								</CardHeader>
+								<CardBody>
+								{loading ? (
+										<Row>
+											<Col lg={12}>
+												<Loader />
+											</Col>
+										</Row>
+									) : (
+									<Row>
+										<Col lg={12}>
+											<Formik
+												initialValues={initValue}
+												ref={this.formRef}
+												onSubmit={(values, { resetForm }) => {
+													this.handleSubmit(values, resetForm);
 
-                              // this.setState({
-                              //   selectedCurrency: null,
-                              //   selectedProject: null,
-                              //   selectedBankAccount: null,
-                              //   selectedCustomer: null
+													// this.setState({
+													//   selectedCurrency: null,
+													//   selectedProject: null,
+													//   selectedBankAccount: null,
+													//   selectedCustomer: null
 
-                              // })
-                            }}
-                            validate={(values) => {
-                              let errors = {};
-                              // if (
-                              // 	values.payMode.value === 'BANK' &&
-                              // 	!values.bankAccountId
-                              // ) {
-                              // 	errors.bankAccountId = 'Bank account is required';
-                              // }
-                              if (values.payee.value === "Company Expense") {
-                                if (values.payMode.value != "CASH") {
-                                  errors.payMode = "Pay through is required";
-                                }
-                              }
-                              // if(values.payMode.value === "CASH"){
-                              // 	errors.payMode = 'Pay through is required'
-                              // }
-
-                              if (exist === true) {
-                                errors.expenseNumber =
-                                  "Expense number already exists";
-                              }
-                              if (values.expenseNumber === "") {
-                                errors.expenseNumber =
-                                  strings.ExpenseCategoryRequired;
-                              }
-                              if (
-                                this.state.currency === true &&
-                                values.currency === ""
-                              ) {
-                                errors.currency = "Currency is required";
-                              }
-                              if (
-                                this.state.isRegisteredVat &&
-                                !values.vatCategoryId
-                              ) {
-                                errors.vatCategoryId = strings.VATIsRequired;
-                              }
-                              if (
-                                this.state.isRegisteredVat &&
-                                !values.taxTreatmentId
-                              ) {
-                                errors.taxTreatmentId =
-                                  strings.TaxTreatmentRequired;
-                              }
-                              // if (!values.placeOfSupplyId && values.taxTreatmentId.value !== 8) {
-                              // 	errors.placeOfSupplyId = 'Place of supply is required';
-                              // }
-                              return errors;
-                            }}
-                            validationSchema={Yup.object().shape({
-                              expenseNumber: Yup.string().required(
-                                "Expense  is required"
-                              ),
-
-                              expenseCategory: Yup.string().required(
-                                strings.ExpenseCategoryRequired
-                              ),
-                              expenseDate: Yup.date().required(
-                                "Expense date is required"
-                              ),
-                              currency: Yup.string().required(
-                                strings.CurrencyIsRequired
-                              ),
-                              payee: Yup.string().required(
-                                strings.PaidByRequired
-                              ),
-                              expenseAmount: Yup.string()
-                                .required(strings.AmountIsRequired)
-                                .matches(
-                                  /^[0-9][0-9]*[.]?[0-9]{0,2}$$/,
-                                  "Enter a valid amount"
-                                )
-                                .test(
-                                  "Expense Amount",
-                                  "Expense amount should be greater than 1",
-                                  (value) => {
-                                    if (value > 0) {
-                                      return true;
-                                    } else {
-                                      return false;
-                                    }
-                                  }
-                                ),
-
-                              payMode: Yup.string().required(
-                                strings.PayThroughIsRequired
-                              ),
-                              attachmentFile: Yup.mixed()
-                                .test(
-                                  "fileType",
-                                  "*Unsupported File Format",
-                                  (value) => {
-                                    value &&
-                                      this.setState({
-                                        fileName: value.name,
-                                      });
-                                    if (
-                                      !value ||
-                                      (value &&
-                                        this.supported_format.includes(
-                                          value.type
-                                        ))
-                                    ) {
-                                      return true;
-                                    } else {
-                                      return false;
-                                    }
-                                  }
-                                )
-                                .test(
-                                  "fileSize",
-                                  "*File Size is too large",
-                                  (value) => {
-                                    if (
-                                      !value ||
-                                      (value && value.size <= this.file_size)
-                                    ) {
-                                      return true;
-                                    } else {
-                                      return false;
-                                    }
-                                  }
-                                ),
-                            })}
-                          >
-                            {(props) => (
-                              <Form onSubmit={props.handleSubmit}>
-                                <Row>
-                                  <Col lg={3}>
-                                    <FormGroup className="mb-3">
-                                      <Label htmlFor="expenseNumber">
-                                        <span className="text-danger">* </span>
-                                        {strings.ExpenseNumber}
-                                        {/* <i
+													// })
+												}}
+												validate={(values) => {
+													let errors = {};
+													// if (
+													// 	values.payMode.value === 'BANK' &&
+													// 	!values.bankAccountId
+													// ) {
+													// 	errors.bankAccountId = 'Bank account is required';
+													// }
+													// if(values.payee.value === 'Company Expense' ){
+													// 	if(values.payMode.value != "CASH"){
+													// 		errors.payMode = 'Pay through is required'
+													// 	}
+														
+													// }
+													// if(values.payMode.value === "CASH"){
+													// 	errors.payMode = 'Pay through is required'
+													// }
+													
+													if (exist === true) {
+														errors.expenseNumber = 'Expense number already exists'
+													}
+													if (values.expenseNumber === '') {
+														errors.expenseNumber = strings.ExpenseCategoryRequired
+													}
+													if(this.state.currency===true && values.currency === '' ){
+														errors.currency = 'Currency is required';
+													}
+													if(this.state.isRegisteredVat && !values.vatCategoryId){
+														errors.vatCategoryId=strings.VATIsRequired;
+													}
+													if(this.state.isRegisteredVat && !values.taxTreatmentId){
+														errors.taxTreatmentId=strings.TaxTreatmentRequired;
+													}
+													// if (!values.placeOfSupplyId && values.taxTreatmentId.value !== 8) {
+													// 	errors.placeOfSupplyId = 'Place of supply is required';
+													// }
+													return errors;
+												}}
+												validationSchema={Yup.object().shape({
+													expenseNumber: Yup.string().required(
+														'Expense  is required',
+													),
+													
+													expenseCategory: Yup.string().required(
+														strings.ExpenseCategoryRequired
+													),
+													expenseDate: Yup.date().required(
+														'Expense date is required',
+													),
+													currency: Yup.string().required(
+														strings.CurrencyIsRequired
+													),
+													payee: Yup.string().required(
+														strings.PaidByRequired
+													),
+													expenseAmount: Yup.string().required(
+														strings.AmountIsRequired
+													)
+														.matches(
+															 /^[0-9][0-9]*[.]?[0-9]{0,2}$$/,
+															'Enter a valid amount',
+														)
+														.test(
+															'Expense Amount',
+															'Expense amount should be greater than 1',
+															(value) => {
+																if (value > 0) {
+																	return true;
+																} else {
+																	return false;
+																}
+															},
+														),
+													
+													// payMode: Yup.string().required(
+													// 	strings.PayThroughIsRequired
+													// ),
+													attachmentFile: Yup.mixed()
+														.test(
+															'fileType',
+															'*Unsupported File Format',
+															(value) => {
+																value &&
+																	this.setState({
+																		fileName: value.name,
+																	});
+																if (
+																	!value ||
+																	(value &&
+																		this.supported_format.includes(value.type))
+																) {
+																	return true;
+																} else {
+																	return false;
+																}
+															},
+														)
+														.test(
+															'fileSize',
+															'*File Size is too large',
+															(value) => {
+																if (
+																	!value ||
+																	(value && value.size <= this.file_size)
+																) {
+																	return true;
+																} else {
+																	return false;
+																}
+															},
+														),
+												})}
+											>
+												{(props) => (
+													<Form onSubmit={props.handleSubmit}>
+														<Row>
+														<Col lg={3}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="expenseNumber">
+																			<span className="text-danger">* </span>
+																			{strings.ExpenseNumber}
+																			{/* <i
 																				id="ProductCodeTooltip"
 																				className="fa fa-question-circle ml-1"
 																			></i>
@@ -1789,105 +1767,98 @@ class CreateExpense extends React.Component {
 																	</FormGroup>
 																</Col>
 															)} */}
-                                  <Col lg={3}>
-                                    <FormGroup className="mb-3">
-                                      <Label htmlFor="currency">
-                                        <span className="text-danger">* </span>
-                                        {strings.Currency}
-                                      </Label>
-                                      <Select
-                                        id="currency"
-                                        name="currency"
-                                        // styles={customStyles}
-                                        options={
-                                          currency_convert_list
-                                            ? selectCurrencyFactory.renderOptions(
-                                              "currencyName",
-                                              "currencyCode",
-                                              currency_convert_list,
-                                              "Currency"
-                                            )
-                                            : []
-                                        }
-                                        placeholder={
-                                          strings.Select + strings.Currency
-                                        }
-                                        value={props.values.currency}
-                                        onChange={(option) => {
-                                          if (option.value != "") {
-                                            props.handleChange("currency")(
-                                              option
-                                            );
-                                            this.setExchange(option.value);
-                                            this.setCurrency(option.value);
-                                          }
-                                        }}
-                                        className={
-                                          props.errors.currency &&
-                                            props.touched.currency
-                                            ? "is-invalid"
-                                            : ""
-                                        }
-                                      />
-                                      {props.errors.currency &&
-                                        props.touched.currency && (
-                                          <div className="invalid-feedback">
-                                            {props.errors.currency}
-                                          </div>
-                                        )}
-                                    </FormGroup>
-                                  </Col>
-                                  {/* {this.state.payee  && this.state.payee.value === 'Company Expense' || this.state.payee === 'Company Expense' ?  */}
-                                  <Col lg={3}>
-                                    <FormGroup className="mb-3">
-                                      <Label htmlFor="payMode">
-                                        <span className="text-danger">* </span>{" "}
-                                        {strings.PayThrough}
-                                      </Label>
-                                      <Select
-                                        options={
-                                          pay_mode_list
-                                            ? selectOptionsFactory.renderOptions(
-                                              "label",
-                                              "value",
-                                              pay_mode_list,
-                                              "Pay Through"
-                                            )
-                                            : []
-                                        }
-                                        value={props.values.payMode}
-                                        onChange={(option) => {
-                                          if (option && option.value) {
-                                            props.handleChange("payMode")(
-                                              option
-                                            );
-                                          } else {
-                                            props.handleChange("payMode")("");
-                                          }
-                                        }}
-                                        placeholder={
-                                          strings.Select + strings.PayThrough
-                                        }
-                                        id="payMode"
-                                        name="payMode"
-                                        className={
-                                          props.errors.payMode &&
-                                            props.touched.payMode
-                                            ? "is-invalid"
-                                            : ""
-                                        }
-                                      />
-                                      {props.errors.payMode &&
-                                        props.touched.payMode && (
-                                          <div className="invalid-feedback">
-                                            {props.errors.payMode}
-                                          </div>
-                                        )}
-                                    </FormGroup>
-                                  </Col>
-                                  {/* :''} */}
-                                </Row>
-                                {/* {props.values.vatCategoryId !=='' && props.values.vatCategoryId.label !=='Select Vat' &&
+															<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="currency">
+																		<span className="text-danger">* </span>
+																		{strings.Currency} 
+																	</Label>
+																	<Select
+																		id="currency"
+																		name="currency"
+																		// styles={customStyles}
+																		options={
+																			currency_convert_list
+																				? selectCurrencyFactory.renderOptions(
+																						'currencyName',
+																						'currencyCode',
+																						currency_convert_list,
+																						'Currency',
+																				  )
+																				: []
+																		}
+																		placeholder={strings.Select+strings.Currency}
+																		value={props.values.currency}
+																		onChange={(option) => {
+																			if(option.value!="")
+																			{
+																			props.handleChange('currency')(option);
+																			this.setExchange(option.value);
+																			this.setCurrency(option.value);
+																		     }
+																		   }}
+																		className={
+																			props.errors.currency &&
+																			props.touched.currency
+																				? 'is-invalid'
+																				: ''
+																		}
+																	/>
+																	{props.errors.currency &&
+																		props.touched.currency && (
+																			<div className="invalid-feedback">
+																				{props.errors.currency}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
+																{/* {this.state.payee  && this.state.payee.value === 'Company Expense' || this.state.payee === 'Company Expense' ? 
+															<Col lg={3}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="payMode"><span className="text-danger">* </span> {strings.PayThrough}</Label>
+																		<Select
+																		options={
+																				pay_mode_list
+																					? selectOptionsFactory.renderOptions(
+																							'label',
+																							'value',
+																							pay_mode_list,
+																							'Pay Through',
+																					  )
+																					: []
+																			}
+																			value={props.values.payMode}
+																			onChange={(option) => {
+																				
+																				if (option && option.value) {
+																					props.handleChange('payMode')(option,);
+																					
+																				} else {
+																					props.handleChange('payMode')('');
+																				}
+																			}}
+																			placeholder={strings.Select+strings.PayThrough}
+																			id="payMode"
+																			name="payMode"
+																			
+																			className={
+																				props.errors.payMode &&
+																				props.touched.payMode
+																					? 'is-invalid'
+																					: ''
+																			}
+																		/>
+																		{props.errors.payMode &&
+																			props.touched.payMode && (
+																				<div className="invalid-feedback">
+																					{props.errors.payMode}
+																				</div>
+																			)}
+																	</FormGroup>
+																</Col>
+															 :''}  */}
+														</Row>
+														{/* {props.values.vatCategoryId !=='' && props.values.vatCategoryId.label !=='Select Vat' &&
 														(
 															<Row><Col lg={3}>	<FormGroup check inline className="mb-3">
 																		<Label

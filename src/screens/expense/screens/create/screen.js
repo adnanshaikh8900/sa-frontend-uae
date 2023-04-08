@@ -1013,12 +1013,12 @@ componentWillUnmount() {
 													// ) {
 													// 	errors.bankAccountId = 'Bank account is required';
 													// }
-													if(values.payee.value === 'Company Expense' ){
-														if(values.payMode.value != "CASH"){
-															errors.payMode = 'Pay through is required'
-														}
+													// if(values.payee.value === 'Company Expense' ){
+													// 	if(values.payMode.value != "CASH"){
+													// 		errors.payMode = 'Pay through is required'
+													// 	}
 														
-													}
+													// }
 													// if(values.payMode.value === "CASH"){
 													// 	errors.payMode = 'Pay through is required'
 													// }
@@ -1079,9 +1079,9 @@ componentWillUnmount() {
 															},
 														),
 													
-													payMode: Yup.string().required(
-														strings.PayThroughIsRequired
-													),
+													// payMode: Yup.string().required(
+													// 	strings.PayThroughIsRequired
+													// ),
 													attachmentFile: Yup.mixed()
 														.test(
 															'fileType',
@@ -1614,7 +1614,7 @@ componentWillUnmount() {
 																		)}
 																</FormGroup>
 															</Col>
-																{/* {this.state.payee  && this.state.payee.value === 'Company Expense' || this.state.payee === 'Company Expense' ?  */}
+																{/* {this.state.payee  && this.state.payee.value === 'Company Expense' || this.state.payee === 'Company Expense' ? 
 															<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="payMode"><span className="text-danger">* </span> {strings.PayThrough}</Label>
@@ -1658,7 +1658,7 @@ componentWillUnmount() {
 																			)}
 																	</FormGroup>
 																</Col>
-																{/* :''} */}
+															 :''}  */}
 														</Row>
 														{/* {props.values.vatCategoryId !=='' && props.values.vatCategoryId.label !=='Select Vat' &&
 														(

@@ -1466,7 +1466,7 @@ class DetailExpense extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
-																{/* {this.state.payee === 'Company Expense' ?  */}
+																{/* {this.state.payee === 'Company Expense' ? 
 																	<Col lg={3}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="pay_through"><span className="text-danger">* </span>
@@ -1523,7 +1523,7 @@ class DetailExpense extends React.Component {
 																				)}
 																		</FormGroup>
 																	</Col>
-																	{/* :''} */}
+																	:''} */}
 																{/* {!props.values.payee &&
 																	props.values.payMode === 'BANK' && (
 																		<Col lg={3}>

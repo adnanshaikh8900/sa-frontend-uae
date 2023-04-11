@@ -516,7 +516,7 @@ class CreateEmployeePayroll extends React.Component {
         )
         formData.append(
             'iban',
-            iban != null ? iban : '',
+            iban != null ? "AE"+iban : '',
         )
         formData.append(
             'swiftCode',
@@ -3180,11 +3180,17 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                 <Col md="4">
                                                                                                     <FormGroup>
                                                                                                         <Label htmlFor="select"><span className="text-danger">* </span>{strings.IBANNumber}</Label>
+                                                                                                        <div style={{display:"flex"}}>
+                                                                                                            <Input
+                                                                                                            disabled
+                                                                                                            style={{width:"25%"}}
+                                                                                                            value="AE"
+                                                                                                            />
                                                                                                         <Input
                                                                                                             type="text"
                                                                                                             id="iban"
                                                                                                             name="iban"
-                                                                                                            maxLength="23"
+                                                                                                            maxLength="21"
                                                                                                             value={props.values.iban}
                                                                                                             placeholder={strings.Enter + strings.IBANNumber}
                                                                                                             onChange={(option) => {
@@ -3197,10 +3203,9 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                                     );
                                                                                                                 }
                                                                                                             }}
-
-
                                                                                                             className={props.errors.iban && props.touched.iban ? "is-invalid" : ""}
                                                                                                         />
+                                                                                                        </div>
                                                                                                         {props.errors.iban && props.touched.iban && (
                                                                                                             <div className="invalid-feedback">{props.errors.iban}</div>
                                                                                                         )}

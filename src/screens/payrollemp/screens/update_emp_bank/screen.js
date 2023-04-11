@@ -63,6 +63,7 @@ class UpdateEmployeeBank extends React.Component {
         this.regExAlpha = /^[a-zA-Z ]+$/;
         this.regExBoth = /[a-zA-Z0-9]+$/;
         this.regExSpaceBoth = /[a-zA-Z0-9 ]+$/;
+        this.regexIban=/^AE\d{2}\s?\d{3}\d{16}$/;
 
         this.formRef = React.createRef();
     }
@@ -102,7 +103,7 @@ class UpdateEmployeeBank extends React.Component {
                                     : '',
                             iban:
                                 res.data.iban && res.data.iban !== null
-                                    ? res.data.iban
+                                    ?res.data.iban.replace("AE", "")
                                     : '',
                             swiftCode:
                                 res.data.swiftCode && res.data.swiftCode !== null
@@ -189,7 +190,7 @@ class UpdateEmployeeBank extends React.Component {
         );
         formData.append(
             'iban',
-            iban !== null ? iban : '',
+            iban !== null ? "AE"+iban : '',
         );
         // formData.append(
         //     'bankName',
@@ -474,11 +475,18 @@ class UpdateEmployeeBank extends React.Component {
                                                                                 <Col md="4">
                                                                                     <FormGroup>
                                                                                         <Label htmlFor="select"> <span className="text-danger">* </span>{strings.IBANNumber}</Label>
+                                                                                       <div style={{display:"flex"}}>
+                                                                                         <Input
+                                                                                         disabled
+                                                                                          style={{width:"25%"}}
+                                                                                          value="AE"
+                                                                                          />
                                                                                         <Input
                                                                                             type="text"
                                                                                             id="iban"
                                                                                             name="iban"
-                                                                                            maxLength="23"
+                                                                                            //length excluding "AE" is 21 and including "AE" 23
+                                                                                            maxLength="21"
                                                                                             value={props.values.iban}
                                                                                             placeholder={strings.Enter + strings.IBANNumber}
                                                                                             onChange={(option) => {
@@ -493,7 +501,7 @@ class UpdateEmployeeBank extends React.Component {
                                                                                             }}
 
                                                                                             className={props.errors.iban && props.touched.iban ? "is-invalid" : ""}
-                                                                                        />
+                                                                                        /></div>
                                                                                         {props.errors.iban && props.touched.iban && (
                                                                                             <div className="invalid-feedback">{props.errors.iban}</div>
                                                                                         )}

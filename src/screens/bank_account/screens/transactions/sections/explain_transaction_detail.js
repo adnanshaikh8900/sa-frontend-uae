@@ -400,7 +400,7 @@ class ExplainTrasactionDetail extends React.Component {
       );
       this.formRef.current.setFieldValue(
         "payrollListIds",
-        res.data.payrollListIds,
+        res.data.payrollDropdownList,
         true
       );
       this.formRef.current.setFieldValue(
@@ -567,13 +567,21 @@ class ExplainTrasactionDetail extends React.Component {
         )
         .then((res) => {
           if (res.status === 200) {
+            let categoryList = res.data.categoriesList && res.data.categoriesList.map((category) => {
+              let newcategory = category.label;
+              let newOption = category.options;
+              if(category.label === 'Other Current Liability'){
+                newOption = category.options.filter(obj => obj.label !== 'Payroll Liability')
+              }
+              return {label : newcategory , options : newOption }
+            })
+            console.log(res.data,"290912083092");
+
             this.setState(
               {
-                transactionCategoryList: res.data,
+                transactionCategoryList: { categoriesList : categoryList , dataList : res.data.dataList},
               },
-              () => {
-                //console.log(this.state.transactionCategoryList);
-              }
+              () => {}
             );
           }
         });
@@ -1778,7 +1786,7 @@ class ExplainTrasactionDetail extends React.Component {
                                                       )
                                                     : chartOfAccountCategoryList[0]?.options?.filter(
                                                         (i) =>
-                                                          i.value !== 6 &&
+                                                         // i.value !== 6 &&
                                                           i.value !== 16 &&
                                                           i.value !== 17
                                                       ),

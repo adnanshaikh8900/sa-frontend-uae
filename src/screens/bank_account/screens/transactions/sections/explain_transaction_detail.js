@@ -957,6 +957,7 @@ class ExplainTrasactionDetail extends React.Component {
         payrollListIds ? JSON.stringify(result1) : ""
       );
     }
+    formData.append("expenseType", this.state.expenseType ?this.state.expenseType:false);
     this.props.transactionDetailActions
       .updateTransaction(formData)
       .then((res) => {

@@ -527,11 +527,11 @@ class DetailBankAccount extends React.Component {
 																	maxLength="14,2"
 																	id="opening_balance"
 																	name="opening_balance"
-																	readOnly={
-																		this.state.transactionCount > 0
-																			? true
-																			: false
-																	}
+																	// readOnly={
+																	// 	this.state.transactionCount > 0
+																	// 		? true
+																	// 		: false
+																	// }
 																	placeholder={strings.Enter + strings.OpeningBalance}
 																	value={props.values.opening_balance}
 																	onChange={(option) => {

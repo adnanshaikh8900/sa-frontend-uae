@@ -2846,13 +2846,13 @@ class ExplainTrasactionDetail extends React.Component {
                                         </Label>
                                         <Select
                                           styles={customStyles}
-                                          isDisabled={
-                                            props.values.coaCategoryId
-                                              ?.label === "Transfered From" ||
-                                            props.values.coaCategoryId
-                                              ?.label === "Transfered To" ||
-                                            explainedstatus
-                                          }
+                                          // isDisabled={
+                                          //   props.values.coaCategoryId
+                                          //     ?.label === "Transfered From" ||
+                                          //   props.values.coaCategoryId
+                                          //     ?.label === "Transfered To" ||
+                                          //   explainedstatus
+                                          // }
                                           options={
                                             transactionCategoryList
                                               ? transactionCategoryList.categoriesList

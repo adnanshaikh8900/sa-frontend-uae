@@ -1655,7 +1655,8 @@ class ExplainTrasactionDetail extends React.Component {
 
                             if (
                               values.vatId === "" &&
-                              values.coaCategoryId.label === "Expense"
+                              values.coaCategoryId.label === "Expense" &&
+                              values.expenseCategory !== 34
                             ) {
                               errors.vatId = "Please select Vat";
                             }

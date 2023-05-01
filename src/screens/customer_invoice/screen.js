@@ -1226,7 +1226,7 @@ stockInHandTestForProduct = (row,markAsSent) => {
 													showYearDropdown
 													dateFormat="dd-MM-yyyy"
 													dropdownMode="select"
-												 value={filterData.invoiceDate}
+													value={filterData.invoiceDate}
 													onChange={(value) => {
 														this.handleChange(value, 'invoiceDate');
 													}}
@@ -1356,7 +1356,7 @@ stockInHandTestForProduct = (row,markAsSent) => {
 											dataField="invoiceNumber"
 											// dataFormat={this.renderInvoiceNumber}
 											dataSort
-												width="10%"
+											width="20%"
 											className="table-header-bg"
 										>
 											{strings.INVOICENUMBER}
@@ -1366,7 +1366,6 @@ stockInHandTestForProduct = (row,markAsSent) => {
 											tdStyle={{ whiteSpace: 'normal' }}
 											//	dataSort width="10%"
 											className="table-header-bg"
-											
 										>
 											{strings.CUSTOMERNAME}
 										</TableHeaderColumn>
@@ -1412,7 +1411,7 @@ stockInHandTestForProduct = (row,markAsSent) => {
 											dataAlign="right"
 											dataField="totalAmount"
 											dataSort
-											width="20%"
+											// width="20%"
 											dataFormat={this.renderInvoiceAmount}
 											formatExtraData={universal_currency_list}
 											className="table-header-bg"
@@ -1432,7 +1431,7 @@ stockInHandTestForProduct = (row,markAsSent) => {
 										<TableHeaderColumn
 											className="text-right table-header-bg"
 											columnClassName="text-right"
-												width="5%"
+											width="5%"
 											dataFormat={this.renderActions}
 											
 										>										

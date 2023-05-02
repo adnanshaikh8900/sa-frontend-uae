@@ -28,7 +28,7 @@ import * as ExpenseActions from '../../actions';
 import { CommonActions } from 'services/global';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 import * as ExpenseCreateActions from '../create/actions';
-import { TextareaAutosize } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
 import moment from 'moment';
 import './style.scss';
 import {data}  from '../../../Language/index'
@@ -1789,12 +1789,15 @@ class DetailExpense extends React.Component {
 																	<Label htmlFor="expenseDescription">
 																	{strings.Description}  
 																	</Label>
-																	<Input
+																	<TextField
 																		type="textarea"
 																		maxLength="250"
 																		name="expenseDescription"
 																		id="expenseDescription"
 																		rows="5"
+																		style={{width: "700px"}}
+																		maxRows={4}
+																		multiline
 																		placeholder={strings.Expense+" "+strings.Description}
 																		onChange={(option) =>
 																			props.handleChange('expenseDescription')(
@@ -1810,7 +1813,7 @@ class DetailExpense extends React.Component {
 																<Col lg={8}>
 																{/* <FormGroup className="py-2">
 																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
-																		<TextareaAutosize
+																		<TextField
 																			type="textarea"
 																			style={{width: "870px"}}
 																			className="textarea form-control"
@@ -1913,7 +1916,7 @@ class DetailExpense extends React.Component {
 																		<Label htmlFor="receiptAttachmentDescription">
 																			{strings.AttachmentDescription}
 																		</Label><br/>
-																		<TextareaAutosize
+																		<TextField
 																			type="textarea"
 																			className="textarea form-control"
 																			maxLength="250"

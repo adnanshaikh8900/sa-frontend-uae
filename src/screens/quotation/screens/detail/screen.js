@@ -41,7 +41,7 @@ import moment from "moment";
 import Switch from "react-switch";
 import { data } from "../../../Language/index";
 import LocalizedStrings from "react-localization";
-import { TextareaAutosize } from "@material-ui/core";
+import { TextField } from "@material-ui/core";
 
 const mapStateToProps = (state) => {
   return {
@@ -3072,7 +3072,7 @@ class DetailQuotation extends React.Component {
                                           {strings.TermsAndConditions}
                                         </Label>
                                         <br />
-                                        <TextareaAutosize
+                                        <TextField
                                           type="textarea"
                                           style={{ width: "700px" }}
                                           className="textarea form-control"
@@ -3096,12 +3096,11 @@ class DetailQuotation extends React.Component {
                                             <Input
                                               type="text"
                                               maxLength="20"
+                                              style={{width: "700px"}}
                                               id="receiptNumber"
                                               name="receiptNumber"
                                               value={props.values.receiptNumber}
-                                              placeholder={
-                                                strings.ReceiptNumber
-                                              }
+                                              placeholder={strings.ReceiptNumber}
                                               onChange={(value) => {
                                                 props.handleChange(
                                                   "receiptNumber"
@@ -3190,7 +3189,7 @@ class DetailQuotation extends React.Component {
                                           {strings.AttachmentDescription}
                                         </Label>
                                         <br />
-                                        <TextareaAutosize
+                                        <TextField
                                           type="textarea"
                                           className="textarea form-control"
                                           maxLength="250"

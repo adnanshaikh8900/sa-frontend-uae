@@ -35,7 +35,7 @@ import './style.scss';
 import moment from 'moment';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-import { TextareaAutosize } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
 import { formControlClasses } from '@mui/material';
 
 const mapStateToProps = (state) => {
@@ -3801,28 +3801,7 @@ resetVatId = (props) => {
 														</Row>
 														{this.state.data.length > 0 ? (
 															<Row>
-																<Col lg={8}>
-																	<FormGroup className="py-2">
-																		<Label htmlFor="notes">
-																			{strings.Notes}
-																		</Label><br/>
-																		<TextareaAutosize
-																			type="textarea"
-																			style={{width: "700px"}}
-																			className="textarea form-control"
-																			maxLength="255"
-																			name="notes"
-																			id="notes"
-																			rows="2"
-																			placeholder={strings.DeliveryNotes}
-																			onChange={(option) =>
-																				props.handleChange('notes')(option)
-																			}
-																			value={props.values.notes}
-																		/>
-																	</FormGroup>
-																	<Row>
-																		<Col lg={6}>
+																<Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="receiptNumber">
 																					{strings.ReferenceNumber}
@@ -3830,6 +3809,7 @@ resetVatId = (props) => {
 																				<Input
 																					type="text"
 																					maxLength="20"
+																					style={{width: "700px"}}
 																					id="receiptNumber"
 																					name="receiptNumber"
 																					value={props.values.receiptNumber}
@@ -3845,6 +3825,30 @@ resetVatId = (props) => {
 																				)}
 																			</FormGroup>
 																		</Col>
+																<Col lg={8}>
+																	<FormGroup className="py-2">
+																		<Label htmlFor="notes">
+																			{strings.Notes}
+																		</Label><br/>
+																		<TextField
+																			type="textarea"
+																			multiline
+																			style={{width: "700px"}}
+																			className="textarea"
+																			maxLength="255"
+																			name="notes"
+																			id="notes"
+																			rows="1"
+																			maxRows={4}
+																			placeholder={strings.DeliveryNotes}
+																			onChange={(option) =>
+																				props.handleChange('notes')(option)
+																			}
+																			value={props.values.notes}
+																		/>
+																	</FormGroup>
+																	<Row>
+																		
 																		<Col lg={6}>
 																			<FormGroup className="mb-3 hideAttachment" >
 																				<Field
@@ -3908,24 +3912,19 @@ resetVatId = (props) => {
 																		<Label htmlFor="receiptAttachmentDescription">
 																			{strings.AttachmentDescription}
 																		</Label><br/>
-																		<TextareaAutosize
+																		<TextField
 																			type="textarea"
 																			className="textarea form-control"
 																			maxLength="250"
 																			style={{width: "700px"}}
 																			name="receiptAttachmentDescription"
 																			id="receiptAttachmentDescription"
-																			rows="2"
+																			rows="1"
 																			placeholder={strings.ReceiptAttachmentDescription}
 																			onChange={(option) =>
-																				props.handleChange(
-																					'receiptAttachmentDescription',
-																				)(option)
+																				props.handleChange('receiptAttachmentDescription')(option)
 																			}
-																			value={
-																				props.values
-																					.receiptAttachmentDescription
-																			}
+																			value={props.values.receiptAttachmentDescription}
 																		/>
 																	</FormGroup>
 																	<FormGroup className="mb-3">
@@ -3933,24 +3932,23 @@ resetVatId = (props) => {
 																		{strings.Footnote}
 																		</Label>
 																		<br/>
-																		<TextareaAutosize
+																		<TextField
 																			type="textarea"
-																			className="textarea form-control"
+																			className="textarea"
 																			maxLength="255"
 																			style={{width: "700px"}}
 																			name="footNote"
 																			id="footNote"
-																			rows="2"
+																			rows="1"
+																			maxRows={4}
+																			multiline
 																			placeholder={strings.PaymentDetails}
 																			onChange={(option) =>
-																				props.handleChange(
-																					'footNote',
-																				)(option)
+																				props.handleChange('footNote')(
+																					option
+																			)
 																			}
-																			value={
-																				props.values
-																					.footNote
-																			}
+																			value={props.values.footNote}
 																		/>
 																	</FormGroup>
 																</Col>

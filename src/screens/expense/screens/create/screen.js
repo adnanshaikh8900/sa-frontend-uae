@@ -30,7 +30,7 @@ import { data } from "../../../Language/index";
 import LocalizedStrings from "react-localization";
 import { Checkbox } from "@material-ui/core";
 import Switch from "react-switch";
-import { TextareaAutosize } from "@material-ui/core";
+import { TextField } from "@material-ui/core";
 import currency from "screens/currency";
 import { getCustomerInvoicesCountForDelete } from "screens/customer_invoice/actions";
 
@@ -2067,11 +2067,10 @@ class CreateExpense extends React.Component {
                                         name="expenseDescription"
                                         id="expenseDescription"
                                         rows="5"
-                                        placeholder={
-                                          strings.Expense +
-                                          " " +
-                                          strings.Description
-                                        }
+                                        style={{width: "700px"}}
+                                        maxRows={4}
+                                        multiline
+                                        placeholder={strings.Expense +" " + strings.Description}
                                         onChange={(option) =>
                                           props.handleChange(
                                             "expenseDescription"
@@ -2087,7 +2086,7 @@ class CreateExpense extends React.Component {
                                   <Col lg={8}>
                                     {/* <FormGroup className="py-2">
 																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
-																		<TextareaAutosize
+																		<TextField
 																			type="textarea"
 																			style={{width: "870px"}}
 																			className="textarea form-control"
@@ -2110,6 +2109,9 @@ class CreateExpense extends React.Component {
                                           </Label>
                                           <Input
                                             type="text"
+                                            style={{width: "700px"}}
+                                            maxRows={4}
+                                            multiline
                                             maxLength="20"
                                             id="receiptNumber"
                                             name="receiptNumber"
@@ -2198,7 +2200,7 @@ class CreateExpense extends React.Component {
 																		<Label htmlFor="receiptAttachmentDescription">
 																			{strings.AttachmentDescription}
 																		</Label><br/>
-																		<TextareaAutosize
+																		<TextField
 																			type="textarea"
 																			className="textarea form-control"
 																			maxLength="250"

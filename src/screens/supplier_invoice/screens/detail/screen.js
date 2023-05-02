@@ -30,7 +30,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import { optionFactory, selectCurrencyFactory, selectOptionsFactory } from 'utils';
-import { TextareaAutosize } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
 import './style.scss';
 import moment from 'moment';
 import {data}  from '../../../Language/index'
@@ -2934,7 +2934,7 @@ class DetailSupplierInvoice extends React.Component {
 																		<Col lg={8}>
 																		<FormGroup className="py-2">
 																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
-																		<TextareaAutosize
+																		<TextField
 																			type="textarea"
 																			style={{width: "700px"}}
 																			className="textarea form-control"
@@ -3040,7 +3040,7 @@ class DetailSupplierInvoice extends React.Component {
 																		<Label htmlFor="receiptAttachmentDescription">
 																			{strings.AttachmentDescription}
 																		</Label><br/>
-																		<TextareaAutosize
+																		<TextField
 																			type="textarea"
 																			className="textarea form-control"
 																			maxLength="255"

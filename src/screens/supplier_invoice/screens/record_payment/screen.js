@@ -19,7 +19,7 @@ import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import * as SupplierRecordPaymentActions from './actions';
 import * as SupplierInvoiceActions from '../../actions';
-import { TextareaAutosize } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
 import { SupplierModal } from '../../sections';
 import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -724,7 +724,7 @@ class RecordSupplierPayment extends React.Component {
 																<Col lg={8}>
 																<FormGroup className="py-2">
 																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
-																		<TextareaAutosize
+																		<TextField
 																			type="textarea"
 																			style={{width: "870px"}}
 																			className="textarea form-control"
@@ -827,7 +827,7 @@ class RecordSupplierPayment extends React.Component {
 																		<Label htmlFor="receiptAttachmentDescription">
 																			{strings.AttachmentDescription}
 																		</Label><br/>
-																		<TextareaAutosize
+																		<TextField
 																			type="textarea"
 																			className="textarea form-control"
 																			maxLength="250"

@@ -3639,7 +3639,7 @@ class CreateSupplierInvoice extends React.Component {
 																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
 																		<TextField
 																			type="textarea"
-																			style={{width: "700px"}}
+																			style={{width: "500px"}}
 																			className="textarea form-control"
 																			maxLength="255"
 																			name="notes"
@@ -3743,8 +3743,8 @@ class CreateSupplierInvoice extends React.Component {
 																		<TextField
 																			type="textarea"
 																			className="textarea form-control"
-																			maxLength="250"
-																			style={{width: "700px"}}
+																			inputProps={{ maxLength: 255 }}
+																			style={{width: "500px"}}
 																			name="receiptAttachmentDescription"
 																			id="receiptAttachmentDescription"
 																			rows="2"

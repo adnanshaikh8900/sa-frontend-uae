@@ -3019,9 +3019,9 @@ resetVatId = (props) => {
 																		<TextField
 																			type="textarea"
 																			multiline
-																			style={{width: "700px"}}
-																			className="textarea form-control"
-																			maxLength="250"
+																			style={{width: "500px"}}
+																			className="textarea"
+																			inputProps={{ maxLength: 255 }}
 																			name="notes"
 																			id="notes"
 																			rows="1"
@@ -3041,7 +3041,7 @@ resetVatId = (props) => {
 																				</Label>
 																				<Input
 																					type="text"
-																					style={{width: "700px"}}
+																					style={{width: "500px"}}
 																					maxLength="20"
 																					id="receiptNumber"
 																					name="receiptNumber"
@@ -3124,7 +3124,7 @@ resetVatId = (props) => {
 																			type="textarea"
 																			className="textarea form-control"
 																			maxLength="250"
-																			style={{width: "700px"}}
+																			style={{width: "500px"}}
 																			name="attachmentDescription"
 																			id="attachmentDescription"
 																			rows="2"

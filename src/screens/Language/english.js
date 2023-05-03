@@ -236,11 +236,12 @@ const en = {
       Quotation:"Quotation",				
       QUOTATIONNUMBER:"QUOTATION NUMBER",						
       EXPIRATIONDATE:"EXPIRY DATE",	
-      QuotationDate:"Quotation Date",			
+      QuotationDate:"Quotation Date",	
       AddNewRequest:"Add New Quotation",
       CREATED_DATE:"CREATED DATE",
       CustomerIsRequired:'Customer is required',
       QuotationNumberIsRequired:"Quotation number is required",
+      QuotationDateRequired:"Quotation date is required",
       ExpiryDateRequired:"Expiry date is required",
 
       

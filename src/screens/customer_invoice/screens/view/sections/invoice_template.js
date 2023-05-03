@@ -6,7 +6,7 @@ import '../../../style.scss';
 import logo from 'assets/images/brand/logo.png';
 import { data } from '../../../../Language/index'
 import LocalizedStrings from 'react-localization';
-import { TextareaAutosize } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
 
 let strings = new LocalizedStrings(data);
 const footer = require('assets/images/invoice/invoiceFooter.png');
@@ -665,7 +665,7 @@ class InvoiceTemplate extends Component {
 						{/* <hr />Data Innovation Technologies Limited Dubai company Was founded on August 13,2020 with identification number Avenue - South Zone, Dubai International Financial Center, Dubai, United Arab Emirates.<br /> */}
 						<hr />
 						{/* {invoiceData.footNote} */}
-						<TextareaAutosize
+						<TextField
 								type="textarea"
 								disabled
 								className="textarea viewFootNote"

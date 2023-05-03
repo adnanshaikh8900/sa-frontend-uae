@@ -20,7 +20,7 @@ import { data } from '../Language/index'
 import { Formik } from 'formik';
 import LocalizedStrings from 'react-localization';
 import { LeavePage, Loader } from 'components';
-import { TextareaAutosize } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
 import * as NotesSettingsAction from './actions';
 import { toast } from 'react-toastify';
 import config from 'constants/config';
@@ -139,14 +139,16 @@ class NotesSettings extends React.Component {
 
 																	</Label>
 																	<br />
-																	<TextareaAutosize
+																	<TextField
 																		style={{ width: "1000px" }}
 																		type="textarea"
-																		maxLength="255"
+																		inputProps={{ maxLength: 255 }}
 																		className='textarea'
 																		name="defaultNotes"
 																		id="defaultNotes"
-																		rows="5"
+																		rows="1"
+																		maxRows={5}
+																		multiline
 																		placeholder={strings.DeliveryNotes}
 																		onChange={(option) => {
 																			props.handleChange(
@@ -174,14 +176,16 @@ class NotesSettings extends React.Component {
 																		{"Default "+strings.TermsAndConditions}
 																	</Label>
 																	<br />
-																	<TextareaAutosize
+																	<TextField
 																		style={{ width: "1000px" }}
 																		type="textarea"
-																		maxLength="255"
+																		inputProps={{ maxLength: 255 }}
 																		className='textarea'
 																		name="defaultTermsAndConditions"
 																		id="defaultTermsAndConditions"
-																		rows="5"
+																		rows="1"
+																		maxRows={5}
+																		multiline
 																		placeholder={strings.DeliveryNotes}
 																		onChange={(option) => {
 																			props.handleChange(
@@ -210,14 +214,16 @@ class NotesSettings extends React.Component {
 																		{strings.DefaultFootnotes}
 																	</Label>
 																	<br />
-																	<TextareaAutosize
+																	<TextField
 																		style={{ width: "1000px" }}
 																		type="textarea"
-																		maxLength="255"
+																		inputProps={{ maxLength: 255 }}
 																		className='textarea'
 																		name="defaultFootNotes"
 																		id="defaultFootNotes"
-																		rows="5"
+																		rows="1"
+																		maxRows={5}
+																		multiline
 																		placeholder={strings.PaymentDetails}
 																		onChange={(option) => {
 																			props.handleChange(

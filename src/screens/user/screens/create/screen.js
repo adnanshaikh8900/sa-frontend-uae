@@ -327,7 +327,7 @@ class CreateUser extends React.Component {
 													let errors = {};
 													if (this.state.exist === true) {
 														errors.email =
-															'User already exists';
+															'Email already exists';
 													}
 
 													if (errors.length) {

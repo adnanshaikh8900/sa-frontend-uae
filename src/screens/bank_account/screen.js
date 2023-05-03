@@ -837,6 +837,7 @@ class BankAccount extends React.Component {
 													{strings.ACCOUNTNAME}
 												</TableHeaderColumn>
 												<TableHeaderColumn
+													tdStyle={{ whiteSpace: 'normal' }}
 													dataField="bankAccountNo"
 													dataFormat={this.renderAccountNumber}
 													dataSort

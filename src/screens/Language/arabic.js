@@ -229,6 +229,8 @@ const ar = {
       CREATED_DATE:" تاريخ الإنشاء",
       QuotationDate:"تاريخ الاقتباس",
       CustomerIsRequired:'الزبون مطلوب',
+      QuotationDateRequired:"تاريخ الاقتباس مطلوب",
+      ExpiryDateRequired:"تاريخ انتهاء الصلاحية مطلوب",
 
 
 //Create Quotation

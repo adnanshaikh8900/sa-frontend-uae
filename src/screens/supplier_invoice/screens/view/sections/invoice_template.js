@@ -5,7 +5,7 @@ import '../style.scss';
 import logo from 'assets/images/brand/logo.png';
 import {data}  from '../../../../Language/index'
 import LocalizedStrings from 'react-localization';
-import { TextareaAutosize } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
 
 const { ToWords } = require('to-words');
 const ZERO=0.00
@@ -682,7 +682,7 @@ class InvoiceTemplate extends Component {
 							</div>
 						</div>	
 						<hr/>
-						<TextareaAutosize
+						<TextField
 								type="textarea"
 								disabled
 								className="textarea viewFootNote"

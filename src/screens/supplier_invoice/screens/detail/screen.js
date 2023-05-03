@@ -2936,7 +2936,7 @@ class DetailSupplierInvoice extends React.Component {
 																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
 																		<TextField
 																			type="textarea"
-																			style={{width: "700px"}}
+																			style={{width: "500px"}}
 																			className="textarea form-control"
 																			maxLength="255"
 																			name="notes"
@@ -3044,7 +3044,7 @@ class DetailSupplierInvoice extends React.Component {
 																			type="textarea"
 																			className="textarea form-control"
 																			maxLength="255"
-																			style={{width: "700px"}}
+																			style={{width: "500px"}}
 																			name="receiptAttachmentDescription"
 																			id="receiptAttachmentDescription"
 																			rows="2"

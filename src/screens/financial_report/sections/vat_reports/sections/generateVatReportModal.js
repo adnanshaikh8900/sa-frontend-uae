@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-import logo from "assets/images/brand/datainnLogo.png";
 import {
   Button,
   Row,
@@ -10,36 +9,22 @@ import {
   Input,
   Label,
   Modal,
-  CardHeader,
   ModalBody,
   ModalFooter,
-  UncontrolledTooltip,
   CardBody,
-  Table,
-  Card,
-  ButtonGroup,
   ModalHeader,
 } from "reactstrap";
-import { toInteger, upperCase, upperFirst } from "lodash";
-import { Formik, Field } from "formik";
+import { Formik } from "formik";
 import Select from "react-select";
 import * as Yup from "yup";
-import { Editor } from "react-draft-wysiwyg";
-import { EditorState } from "draft-js";
-import { selectOptionsFactory } from "utils";
 import DatePicker from "react-datepicker";
-import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 import moment from "moment";
 import { bindActionCreators } from "redux";
 import { CommonActions } from "services/global";
-
 import { toast } from "react-toastify";
 import { data } from "../../../../Language/index";
 import LocalizedStrings from "react-localization";
-
 import "../style.scss";
-import { PDFExport } from "@progress/kendo-react-pdf";
-import ReactToPrint from "react-to-print";
 import { Loader } from "components";
 import * as PayrollEmployeeActions from "../../../../payrollemp/actions";
 import * as VatReportActions from "../actions";
@@ -234,13 +219,28 @@ class GenerateVatReportModal extends React.Component {
                 <div className="h4 mb-0 d-flex align-items-center">
                   <i className="nav-icon fas fa-user-tie" />
                   <span className="ml-2">
-                    Generate VAT Report
+                  {strings.GenerateVATReport}
                     {/* ( <b>{this.props.monthOption==0?"Monthly":"Quarterly"}</b> ) */}
                   </span>
                 </div>
               </Col>
             </Row>
           </ModalHeader>
+          <Formik
+						ref={this.formikRef}
+						initialValues={initValue}
+						onSubmit={(values, { resetForm, setSubmitting }) => {
+							this.handleSubmit(values, resetForm);
+						}}
+						validate={(values) => {
+							let errors = {};
+
+							return errors;
+						}}
+						validationSchema={Yup.object().shape({
+
+						})}
+					></Formik>
           <ModalBody style={{ padding: "15px 0px 0px 0px" }}>
             <div style={{ padding: " 0px 1px" }}>
               <div>
@@ -261,7 +261,7 @@ class GenerateVatReportModal extends React.Component {
                               <Col lg={4} className=" pull-right ">
                                 <Label>
                                   <span className="text-danger">* </span>
-                                  Reporting Period
+                                  {strings.ReportingPeriod}
                                 </Label>
                                 <Select
                                   options={state.options}
@@ -282,10 +282,9 @@ class GenerateVatReportModal extends React.Component {
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="startDate">
                                     <span className="text-danger">* </span>
-                                    Generate VAT Report for
+                                    {strings.GenerateVATReportFor}
                                   </Label>
                                   <b>
-                                    {" "}
                                     <DatePicker
                                       selected={this.state.monthlyDate}
                                       onChange={(date) => {
@@ -340,10 +339,9 @@ class GenerateVatReportModal extends React.Component {
 
                               <Col lg={4}>
                                 <FormGroup className="mb-3">
-                                  <span className="text-danger">* </span>
+                                  {/* <span className="text-danger">* </span> */}
                                   <Label htmlFor="startDate">
-                                    {" "}
-                                    VAT Report Number{" "}
+                                  {strings.VATReportNumber}
                                   </Label>
                                   <Input
                                     value={this.state.VRN}
@@ -354,7 +352,7 @@ class GenerateVatReportModal extends React.Component {
                                         VRN: options.target.value,
                                       });
                                     }}
-                                    placeholder="Enter VAT Report Number"
+                                    placeholder={strings.Enter + strings.VATReportNumber}
                                   />
                                 </FormGroup>
                               </Col>

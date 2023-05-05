@@ -979,6 +979,10 @@ const ar = {
       InvoiceDetails: 'تفاصيل الفاتورة',	
       Invoices: 'الفواتير',
       ARAgingReport:"تقرير الشيخوخة AR",
+      GenerateVATReport: 'إنشاء تقرير ضريبة القيمة المضافة',
+      ReportingPeriod: 'فترة التقرير',
+      GenerateVATReportFor: 'إنشاء تقرير ضريبة القيمة المضافة لـ',
+      VATReportNumber: 'رقم تقرير ضريبة القيمة المضافة',
 
 //placeholder
       ReceiptAttachmentDescription:"وصف مرفق الإيصال",	

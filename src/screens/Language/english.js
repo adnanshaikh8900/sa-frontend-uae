@@ -1036,6 +1036,10 @@ const en = {
       CreditNoteDetails : 'Tax Credit Note Details',	
       InvoiceDetails: 'Invoice Details',	
       Invoices: 'Invoices',
+      GenerateVATReport: 'Generate VAT Report',
+      ReportingPeriod: 'Reporting Period',
+      GenerateVATReportFor: 'Generate VAT Report For',
+      VATReportNumber: 'VAT Report Number',
 
 //placeholder	
       ReceiptAttachmentDescription:"Receipt Attachment Description",	

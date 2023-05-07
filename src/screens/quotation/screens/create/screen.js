@@ -36,7 +36,7 @@ import { CommonActions } from 'services/global';
 import { optionFactory, selectCurrencyFactory, selectOptionsFactory } from 'utils';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-import { TextareaAutosize } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
 import './style.scss';
 import moment from 'moment';
 import { ReorderOutlined } from '@material-ui/icons';
@@ -3016,14 +3016,16 @@ resetVatId = (props) => {
 																<Col lg={8}>
 																	<FormGroup className="py-2">
 																		<Label htmlFor="notes">{strings.TermsAndConditions}</Label><br/>
-																		<TextareaAutosize
+																		<TextField
 																			type="textarea"
-																			style={{width: "700px"}}
-																			className="textarea form-control"
-																			maxLength="250"
+																			multiline
+																			style={{width: "500px"}}
+																			className="textarea"
+																			inputProps={{ maxLength: 255 }}
 																			name="notes"
 																			id="notes"
-																			rows="2"
+																			rows="1"
+																			maxRows={4}
 																			placeholder={strings.DeliveryNotes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
@@ -3039,6 +3041,7 @@ resetVatId = (props) => {
 																				</Label>
 																				<Input
 																					type="text"
+																					style={{width: "500px"}}
 																					maxLength="20"
 																					id="receiptNumber"
 																					name="receiptNumber"
@@ -3117,11 +3120,11 @@ resetVatId = (props) => {
 																		<Label htmlFor="attachmentDescription">
 																			{strings.AttachmentDescription}
 																		</Label><br/>
-																		<TextareaAutosize
+																		<TextField
 																			type="textarea"
 																			className="textarea form-control"
 																			maxLength="250"
-																			style={{width: "700px"}}
+																			style={{width: "500px"}}
 																			name="attachmentDescription"
 																			id="attachmentDescription"
 																			rows="2"
@@ -3131,10 +3134,7 @@ resetVatId = (props) => {
 																					'attachmentDescription',
 																				)(option)
 																			}
-																			value={
-																				props.values
-																					.attachmentDescription
-																			}
+																			value={props.values.attachmentDescription}
 																		/>
 																	</FormGroup>
 

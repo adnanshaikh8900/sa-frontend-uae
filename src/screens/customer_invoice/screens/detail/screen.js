@@ -34,7 +34,7 @@ import moment from 'moment';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import Switch from "react-switch";
-import { TextareaAutosize } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
 
 const mapStateToProps = (state) => {
 	return {
@@ -3237,26 +3237,7 @@ class DetailCustomerInvoice extends React.Component {
 														</Row>
 															{data.length > 0 && (
 																<Row>
-																	<Col lg={8}>
-																	<FormGroup className="py-2">
-																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
-																		<TextareaAutosize
-																			type="textarea"
-																			className="textarea form-control"
-																			maxLength="255"
-																			style={{width: "700px"}}
-																			name="notes"
-																			id="notes"
-																			rows="2"
-																			placeholder={strings.DeliveryNotes}
-																			onChange={(option) =>
-																				props.handleChange('notes')(option)
-																			}
-																			value={props.values.notes}
-																		/>
-																	</FormGroup>
-																	<Row>
-																		<Col lg={6}>
+																	<Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="receiptNumber">
 																				{strings.ReferenceNumber}
@@ -3264,6 +3245,7 @@ class DetailCustomerInvoice extends React.Component {
 																				<Input
 																					type="text"
 																					maxLength="20"
+																					style={{width: "500px"}}
 																					id="receiptNumber"
 																					name="receiptNumber"
 																					value={props.values.receiptNumber}
@@ -3277,11 +3259,28 @@ class DetailCustomerInvoice extends React.Component {
 																				{props.errors.receiptNumber && props.touched.receiptNumber && (
 																					<div className="invalid-feedback">{props.errors.receiptNumber}</div>
 																				)}
-		 
-																					
-																				
 																			</FormGroup>
 																		</Col>
+																	<Col lg={8}>
+																	<FormGroup className="py-2">
+																		<Label htmlFor="notes">{strings.Notes}</Label><br/>
+																		<TextField
+																			type="textarea"
+																			className="textarea form-control"
+																			maxLength="255"
+																			style={{width: "500px"}}
+																			name="notes"
+																			id="notes"
+																			rows="2"
+																			placeholder={strings.DeliveryNotes}
+																			onChange={(option) =>
+																				props.handleChange('notes')(option)
+																			}
+																			value={props.values.notes}
+																		/>
+																	</FormGroup>
+																	<Row>
+																		
 																		<Col lg={6}>
 																			<FormGroup className="mb-3 hideAttachment">
 																				<Field
@@ -3347,11 +3346,11 @@ class DetailCustomerInvoice extends React.Component {
 																			{strings.AttachmentDescription}
 																		</Label>
 																		<br/>
-																		<TextareaAutosize
+																		<TextField
 																			type="textarea"
 																			className="textarea form-control"
 																			maxLength="255"
-																			style={{width: "700px"}}
+																			style={{width: "500px"}}
 																			name="receiptAttachmentDescription"
 																			id="receiptAttachmentDescription"
 																			rows="2"
@@ -3372,11 +3371,11 @@ class DetailCustomerInvoice extends React.Component {
 																		{strings.Footnote}
 																		</Label>
 																		<br/>
-																		<TextareaAutosize
+																		<TextField
 																			type="textarea"
 																			className="textarea form-control"
 																			maxLength="255"
-																			style={{width: "700px"}}
+																			style={{width: "500px"}}
 																			name="footNote"
 																			id="footNote"
 																			rows="2"

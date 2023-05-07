@@ -230,7 +230,7 @@ class Register extends React.Component {
 
 		toast.success('Please check your email to set your password', {
 			position: toast.POSITION.TOP_RIGHT,
-			autoClose:15000,});
+			autoClose:40000,});
 			
 		{this.setState({ loading:true, 
 			loadingMsg:"Registering Company," ,

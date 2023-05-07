@@ -236,11 +236,12 @@ const en = {
       Quotation:"Quotation",				
       QUOTATIONNUMBER:"QUOTATION NUMBER",						
       EXPIRATIONDATE:"EXPIRY DATE",	
-      QuotationDate:"Quotation Date",			
+      QuotationDate:"Quotation Date",	
       AddNewRequest:"Add New Quotation",
       CREATED_DATE:"CREATED DATE",
       CustomerIsRequired:'Customer is required',
       QuotationNumberIsRequired:"Quotation number is required",
+      QuotationDateRequired:"Quotation date is required",
       ExpiryDateRequired:"Expiry date is required",
 
       
@@ -1035,6 +1036,10 @@ const en = {
       CreditNoteDetails : 'Tax Credit Note Details',	
       InvoiceDetails: 'Invoice Details',	
       Invoices: 'Invoices',
+      GenerateVATReport: 'Generate VAT Report',
+      ReportingPeriod: 'Reporting Period',
+      GenerateVATReportFor: 'Generate VAT Report For',
+      VATReportNumber: 'VAT Report Number',
 
 //placeholder	
       ReceiptAttachmentDescription:"Receipt Attachment Description",	

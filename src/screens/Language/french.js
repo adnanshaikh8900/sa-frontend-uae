@@ -1027,6 +1027,10 @@ const fr = {
       InvoiceDetails: 'Détails de la facture',	
       Invoices: 'Factures',
       ARAgingReport:"Rapport de vieillissement AR",
+      GenerateVATReport: 'Générer un rapport de TVA',
+      ReportingPeriod: 'Période de déclaration',
+      GenerateVATReportFor: 'Générer un rapport de TVA pour',
+      VATReportNumber: 'Numéro de déclaration de TVA',
 
 //placeholder	
       ReceiptAttachmentDescription:"Description de la pièce jointe au reçu",	

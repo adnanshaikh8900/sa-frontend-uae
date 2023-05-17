@@ -786,28 +786,31 @@ class Register extends React.Component {
 																							<Label htmlFor="phoneNumber">
 																							<span className="text-danger">* </span> {strings.MobileNumber}
 																						</Label>
+																						<div className={
+																							props.errors.phoneNumber &&
+																								props.touched.phoneNumber
+																								? ' is-invalidMobile '
+																								: ''
+																						}>
 																							<PhoneInput
 																								country={"ae"}
 																								enableSearch={true}
 																								international
-																								style={{width:"260px "}}
+																								// style={{width:"260px "}}
 																								value={props.values.phoneNumber}
 																								placeholder={strings.Enter+strings.MobileNumber}
 																								onChange={(option) => {
-																									props.handleChange(
-																										'phoneNumber',
-																									)(option);
-																									
+																									props.handleChange('phoneNumber',)(option);
 																									option.length !== 12 ? this.setState({ checkphoneNumberParam: true }) : this.setState({ checkphoneNumberParam: false });
 																								}}
 																								isValid
-																								className={
-																									props.errors.phoneNumber &&
-																										props.touched.phoneNumber
-																										? ' invalid-feedback is-invalid is-invalidMobile '
-																										: ''
-																								}
-																							/>
+																								// className={
+																								// 	props.errors.phoneNumber &&
+																								// 		props.touched.phoneNumber
+																								// 		? ' invalid-feedback is-invalid is-invalidMobile '
+																								// 		: ''
+																								// }
+																							/></div>
 																							{props.errors.phoneNumber &&
 																								props.touched.phoneNumber && (
 																									<div className="invalid-feedback">

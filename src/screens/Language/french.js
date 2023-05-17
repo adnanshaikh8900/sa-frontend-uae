@@ -21,6 +21,8 @@ const fr = {
       Vat:"T.V.A",  
       ACCOUNT:"Compte",	
       RecieptNumber:"Numéro de reçu",
+      Hey:' hé !',
+
 //sidebar
       Import:"Importer",
       Dashboard:"Tableau de bord",

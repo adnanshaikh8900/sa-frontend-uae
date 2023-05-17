@@ -16,6 +16,7 @@ const ar = {
       GotoFAQ:"انتقل إلى التعليمات", 
       ContactUs:"اتصل بنا",
       RecieptNumber:"عدد إيصال",
+      Hey:'يا',
 
 //Sidebar
       Dashboard:"لوحة القيادة",

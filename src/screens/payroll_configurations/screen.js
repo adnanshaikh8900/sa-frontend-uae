@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import {
 	Card,
-
 	CardBody,
 	Row,
 	Col,
@@ -11,7 +10,6 @@ import {
 	TabContent,
 	NavLink,
 	TabPane,
-
 	Button,
 	CardHeader,
 	ButtonGroup,
@@ -25,28 +23,23 @@ import {
 	FormGroup,
 	Form,
 } from 'reactstrap';
-import { CreateCompanyDetails } from '../payroll_run/sections';
 import { ConfirmDeleteModal } from 'components'
 import * as DesignationActions from '../designation/actions'
 import * as EmployeeActions from "../salaryRoles/actions"
 import * as SalaryStructureAction from "../salaryStructure/actions"
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'react-toastify/dist/ReactToastify.css';
-// import 'react-select/dist/react-select.css'
 import './style.scss';
 import { bindActionCreators } from 'redux';
-
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-
-import {
-	CommonActions
-} from 'services/global'
+import { CommonActions } from 'services/global'
 import { data } from '../Language/index'
 import LocalizedStrings from 'react-localization';
 import { Loader } from 'components';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import * as PayrollRun from '../payroll_run/actions';
+
 const mapStateToProps = (state) => {
 	return {
 		designation_list: state.employeeDesignation.designation_list,
@@ -55,7 +48,6 @@ const mapStateToProps = (state) => {
 		profile: state.auth.profile,
 	};
 };
-
 
 const mapDispatchToProps = (dispatch) => {
 	return {
@@ -66,7 +58,6 @@ const mapDispatchToProps = (dispatch) => {
 		payrollRun: bindActionCreators(PayrollRun, dispatch),
 	};
 };
-
 
 let strings = new LocalizedStrings(data);
 class PayrollConfigurations extends React.Component {
@@ -219,10 +210,6 @@ class PayrollConfigurations extends React.Component {
 		})
 	}
 
-	// goToDetail = (row) => {
-
-	// 	this.props.history.push('/admin/payroll/salaryRoles/detail', { id: row.salaryRoleId })
-	// }
 	goToDetailForRoles = (cell, row) => {
 
 
@@ -267,17 +254,12 @@ class PayrollConfigurations extends React.Component {
 							</Button>
 						)
 				}
-
 				</div>
-
 			</Row>
-
-
 		);
 	}
+
 	goToDetailForDesignations = (cell, row) => {
-
-
 		return (
 			<Row>
 				<div>
@@ -305,7 +287,6 @@ class PayrollConfigurations extends React.Component {
 		this.options.sortOrder = sortOrder;
 		this.initializeData()
 	}
-
 
 	bulkDelete = () => {
 		const {
@@ -386,7 +367,6 @@ class PayrollConfigurations extends React.Component {
 		}
 	}
 
-
 	getCsvData = () => {
 		if (this.state.csvData.length === 0) {
 			let obj = {
@@ -414,6 +394,7 @@ class PayrollConfigurations extends React.Component {
 			},
 		}, () => { this.initializeData() })
 	}
+
 	toggleActionButton = (index) => {
 		let temp = Object.assign({}, this.state.actionButtons);
 		if (temp[parseInt(index, 10)]) {
@@ -425,6 +406,7 @@ class PayrollConfigurations extends React.Component {
 			actionButtons: temp,
 		});
 	};
+
 	renderForId = (cell, row) => {
 		for (let i = 121; i <= 10000; i++) {
 			return (
@@ -432,9 +414,9 @@ class PayrollConfigurations extends React.Component {
 			);
 		}
 	}
+
 	renderActions = (cell, row) => {
 		return (
-
 			<div>
 				<ButtonDropdown
 					isOpen={this.state.actionButtons[row.id]}
@@ -457,10 +439,8 @@ class PayrollConfigurations extends React.Component {
 								)
 							}
 						>
-
 							<i className="fas fa-edit" /> {strings.Edit}
 						</DropdownItem>
-
 
 						{/* <DropdownItem
 								  onClick={() =>
@@ -533,7 +513,6 @@ class PayrollConfigurations extends React.Component {
 								</CardHeader>
 								<CardBody>
 
-
 									<Nav tabs pills>
 										{/* <NavItem>
 											<NavLink
@@ -571,7 +550,7 @@ class PayrollConfigurations extends React.Component {
 												onClick={() => {
 													this.toggle(0, '4');
 												}}
-											>Company Details
+											>{strings.CompanyDetails}
 											</NavLink>
 										</NavItem>
 									</Nav>

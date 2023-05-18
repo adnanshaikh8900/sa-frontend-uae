@@ -12,15 +12,12 @@ import {
 	// Badge
 } from 'reactstrap';
 import PropTypes from 'prop-types';
-
 import {
 	AppAsideToggler,
 	AppNavbarBrand,
 	AppSidebarToggler,
 } from '@coreui/react';
-
 import './style.scss';
-
 import logo from 'assets/images/brand/logo.png';
 import sygnet from 'assets/images/brand/sygnet.png';
 import avatar from 'assets/images/avatars/default-avatar.jpg';
@@ -107,7 +104,7 @@ class Header extends Component {
 							/>
 					<UncontrolledDropdown nav direction="down">
 						<DropdownToggle nav>
-						Hey	<i>{profile && profile.firstName +" "+ profile.lastName}</i>
+						{strings.Hey}	<i>{profile && profile.firstName +" "+ profile.lastName}</i>
 							<i class="fas fa-angle-down ml-2 mr-3"></i>
 						</DropdownToggle>
 						<DropdownMenu right>
@@ -124,8 +121,8 @@ class Header extends Component {
 								<i className="icon-wrench"></i>  {strings.GeneralSettings}
 							</DropdownItem>
 							{/* <DropdownItem onClick={() => this.props.history.push('/admin/settings/transaction-category')}>
-                <i className="icon-graph"></i> Transaction Category
-              </DropdownItem> */}
+									<i className="icon-graph"></i> Transaction Category
+								</DropdownItem> */}
 							<DropdownItem
 								onClick={() => this.props.history.push('/admin/settings/user')}
 							>

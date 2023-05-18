@@ -16,7 +16,8 @@ const en = {
       BackEndVersion:"BackEnd Version",
       GotoFAQ:"Go to FAQ",
       ContactUs:"Contact Us",
-
+      Hey:'Hey',
+      
 //sideBar
       Dashboard:"Dashboard",
       Report:"Report",
@@ -83,9 +84,6 @@ const en = {
       Create: "Create",
       Cancel: "Cancel",
       AddOpeningBalance: "Add Opening Balance",
-
-
-
 
 //Dashboard
       SupplierCustomerPaidInvoices: "SUPPLIER & CUSTOMER PAID INVOICES",
@@ -243,8 +241,6 @@ const en = {
       QuotationNumberIsRequired:"Quotation number is required",
       QuotationDateRequired:"Quotation date is required",
       ExpiryDateRequired:"Expiry date is required",
-
-      
 
 //Create Quotation
       CreateQuotation:"Create Quotation",		
@@ -414,6 +410,7 @@ const en = {
       TransactionType:"Transaction Type",			
       TransactionDate:"Transaction Date",								
       ReferenceNumber:"Reference Number",
+
 //Journals
       UpdateJournal:"Update Journal",
       Journal:"Journal",				

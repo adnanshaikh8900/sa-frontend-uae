@@ -1,7 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-
 import {
     Card,
     CardHeader,
@@ -16,30 +15,19 @@ import {
     DropdownMenu,
     DropdownItem,
 } from 'reactstrap';
-
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
-
 import { Loader, ConfirmDeleteModal } from 'components'
-
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
-
 import * as PayrollEmployeeActions from './actions'
-
-import {
-    CommonActions
-} from 'services/global'
-
-
+import {CommonActions} from 'services/global'
 import './style.scss'
 import moment from 'moment';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
-import { AgGridReact,AgGridColumn } from 'ag-grid-react/lib/agGridReact';
-
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
-import PhoneInput from 'react-phone-input-2';
+
 const mapStateToProps = (state) => {
     return ({
         payroll_employee_list: state.payrollEmployee.payroll_employee_list,
@@ -407,6 +395,11 @@ class PayrollEmployee extends React.Component {
 			</label>
 		);
 	};
+    
+	renderMobileNumber = (cell, rows) => {
+		return rows.mobileNumber ? "+" +rows.mobileNumber : '';
+	};
+    
     getCsvData = () => {
         if (this.state.csvData.length === 0) {
             let obj = {
@@ -633,11 +626,12 @@ class PayrollEmployee extends React.Component {
                                                         className="table-header-bg"
                                                         dataField="mobileNumber"
                                                         dataSort
-                                                    // dataFormat={this.vatCategoryFormatter}
-                                                    width="12%"
-                                                    thStyle={{whiteSpace:"normal"}}
-                                                    csvHeader="MOBILE NUMBER"
-                                                    >
+                                                        // dataFormat={this.vatCategoryFormatter}
+                                                        dataFormat={this.renderMobileNumber}
+                                                        width="12%"
+                                                        thStyle={{whiteSpace:"normal"}}
+                                                        csvHeader="MOBILE NUMBER"
+                                                        >
                                                          {strings.MobileNumber}
                                                     </TableHeaderColumn>
                                                     <TableHeaderColumn

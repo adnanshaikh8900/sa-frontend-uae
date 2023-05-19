@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-
 import {
 	Card,
 	CardHeader,
@@ -22,7 +21,6 @@ import Select from 'react-select';
 import { selectOptionsFactory } from 'utils';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
-
 
 const mapStateToProps = (state) => {
 	return {
@@ -489,7 +487,7 @@ class OpeningBalance extends React.Component {
 							<Row>
 								<Col lg={12}>
 									<div className="h4 mb-0 d-flex align-items-center">
-										<i className="fab fa-stack-exchange" />
+										<i className="fas fa-balance-scale" />
 										<span className="ml-2">{strings.OpeningBalance}</span>
 									</div>
 								</Col>

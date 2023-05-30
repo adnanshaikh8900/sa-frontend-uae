@@ -15,6 +15,7 @@ env:
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
   VERSION_PREFIX: 1.0.0-alpha
+  TAG: 1.0.0-alpha.${{ github.run_number }}
 
 jobs:
   build:
@@ -125,16 +126,56 @@ jobs:
         project_id: "e6cfc29b7dbe4c838cbd29d60dbc2871"
         cluster_id: "f7430d03-f461-11ec-b3dd-0255ac101242"
 
-    - name: Helm chart Test
+  deploy:
+    needs: build
+    runs-on: self-hosted
+    permissions:
+      contents: read
+      packages: write
+      # This is used to complete the identity challenge
+      # with sigstore/fulcio when running outside of PRs.
+      id-token: write
+      issues: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - uses: azure/setup-kubectl@v3
+      with:
+        version: 'latest' # default is latest stable
+      id: install-kubectl
+
+    - uses: azure/setup-helm@v3
+      with:
+        version: 'latest' # default is latest (stable)
+        token: ${{ secrets.GITHUB_TOKEN }} # only needed if version is 'latest'
+      id: install-helm
+
+
+    - name: Helm chart Dev Deployment
       run: |
-        helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=${{ env.VERSION_PREFIX }}.${{ steps.buildnumber.outputs.build_number }},image.repository.frontend.tag=${{ env.VERSION_PREFIX }}.${{ steps.buildnumber.outputs.build_number }},image.repository.frontend.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},maindomain=app.simpleaccounts.io,simpleVatHost=https://dev-api.app.simpleaccounts.io,fullnameOverride=dev-frontend,serviceAccount.name=dev-deploy-robot-frontend,ingress.hosts[0].host=dev.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=dev-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=app.simpleaccounts.io,ingress.tls[0].hosts[1]=dev-api.app.simpleaccounts.io,ingress.tls[0].hosts[2]=dev.app.simpleaccounts.io --wait --dry-run --debug --namespace dev --create-namespace dev-frontend ./simpleaccounts-frontend
+        echo "Deploying application to following cluster..."
+        kubectl cluster-info 
+        echo "Dev deployment scripts..."
+        helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=${{ env.TAG }},image.repository.frontend.tag=${{ env.TAG }},image.repository.frontend.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},maindomain=app.simpleaccounts.io,simpleVatHost=https://dev-api.app.simpleaccounts.io,fullnameOverride=dev-frontend,serviceAccount.name=dev-deploy-robot-frontend,ingress.hosts[0].host=dev.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=dev-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=app.simpleaccounts.io,ingress.tls[0].hosts[1]=dev-api.app.simpleaccounts.io,ingress.tls[0].hosts[2]=dev.app.simpleaccounts.io --wait --dry-run --debug --namespace dev --create-namespace dev-frontend ./simpleaccounts-frontend
+
+    - uses: trstringer/manual-approval@v1
+      with:
+        secret: ${{ github.TOKEN }}
+        approvers: MohsinHashmi-DataInn,MudassarSayed-Datainn
+        minimum-approvals: 1
+        issue-title: "Deploying SA AE Frontend to SIT from DEV"
+        issue-body: "Please approve or deny the deployment of version ${{ env.TAG }}"
+        exclude-workflow-initiator-as-approver: false
+        additional-approved-words: ''
+        additional-denied-words: ''
 
     - name: Helm chart install
       run: |
-        helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=${{ env.VERSION_PREFIX }}.${{ steps.buildnumber.outputs.build_number }},image.repository.frontend.tag=${{ env.VERSION_PREFIX }}.${{ steps.buildnumber.outputs.build_number }},image.repository.frontend.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},maindomain=app.simpleaccounts.io,simpleVatHost=https://dev-api.app.simpleaccounts.io,fullnameOverride=dev-frontend,serviceAccount.name=dev-deploy-robot-frontend,ingress.hosts[0].host=dev.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=dev-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=app.simpleaccounts.io,ingress.tls[0].hosts[1]=dev-api.app.simpleaccounts.io,ingress.tls[0].hosts[2]=dev.app.simpleaccounts.io --wait --namespace dev --create-namespace dev-frontend ./simpleaccounts-frontend
-
-        helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=${{ env.VERSION_PREFIX }}.${{ steps.buildnumber.outputs.build_number }},image.repository.frontend.tag=${{ env.VERSION_PREFIX }}.${{ steps.buildnumber.outputs.build_number }},image.repository.frontend.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},maindomain=app.simpleaccounts.io,simpleVatHost=https://sit1-api.app.simpleaccounts.io,fullnameOverride=sit1-frontend,serviceAccount.name=sit1-deploy-robot-frontend,ingress.hosts[0].host=sit1.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=sit1-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=app.simpleaccounts.io,ingress.tls[0].hosts[1]=sit1-api.app.simpleaccounts.io,ingress.tls[0].hosts[2]=sit1.app.simpleaccounts.io --wait --namespace sit1 --create-namespace sit1-frontend ./simpleaccounts-frontend
-
-        helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=${{ env.VERSION_PREFIX }}.${{ steps.buildnumber.outputs.build_number }},image.repository.frontend.tag=${{ env.VERSION_PREFIX }}.${{ steps.buildnumber.outputs.build_number }},image.repository.frontend.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},maindomain=app.simpleaccounts.io,simpleVatHost=https://sit2-api.app.simpleaccounts.io,fullnameOverride=sit2-frontend,serviceAccount.name=sit2-deploy-robot-frontend,ingress.hosts[0].host=sit2.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=sit2-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=app.simpleaccounts.io,ingress.tls[0].hosts[1]=sit2-api.app.simpleaccounts.io,ingress.tls[0].hosts[2]=sit2.app.simpleaccounts.io --wait --namespace sit2 --create-namespace sit2-frontend ./simpleaccounts-frontend
-
-        helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=${{ env.VERSION_PREFIX }}.${{ steps.buildnumber.outputs.build_number }},image.repository.frontend.tag=${{ env.VERSION_PREFIX }}.${{ steps.buildnumber.outputs.build_number }},image.repository.frontend.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},maindomain=app.simpleaccounts.io,simpleVatHost=https://sit-reports-api.app.simpleaccounts.io,fullnameOverride=sit-reports-frontend,serviceAccount.name=sit-reports-deploy-robot-frontend,ingress.hosts[0].host=sit-reports.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=sit-reports-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=app.simpleaccounts.io,ingress.tls[0].hosts[1]=sit-reports-api.app.simpleaccounts.io,ingress.tls[0].hosts[2]=sit-reports.app.simpleaccounts.io --wait --namespace sit-reports --create-namespace sit-reports-frontend ./simpleaccounts-frontend
+        echo "Deploying application to Sit instances cluster..."
+        kubectl cluster-info 
+        echo "SIT deployment scripts..."
+        helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=${{ env.TAG }},image.repository.frontend.tag=${{ env.TAG }},image.repository.frontend.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},maindomain=app.simpleaccounts.io,simpleVatHost=https://dev-api.app.simpleaccounts.io,fullnameOverride=dev-frontend,serviceAccount.name=dev-deploy-robot-frontend,ingress.hosts[0].host=dev.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=dev-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=app.simpleaccounts.io,ingress.tls[0].hosts[1]=dev-api.app.simpleaccounts.io,ingress.tls[0].hosts[2]=dev.app.simpleaccounts.io --wait --namespace dev --create-namespace dev-frontend ./simpleaccounts-frontend
+        helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=${{ env.TAG }},image.repository.frontend.tag=${{ env.TAG }},image.repository.frontend.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},maindomain=app.simpleaccounts.io,simpleVatHost=https://sit1-api.app.simpleaccounts.io,fullnameOverride=sit1-frontend,serviceAccount.name=sit1-deploy-robot-frontend,ingress.hosts[0].host=sit1.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=sit1-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=app.simpleaccounts.io,ingress.tls[0].hosts[1]=sit1-api.app.simpleaccounts.io,ingress.tls[0].hosts[2]=sit1.app.simpleaccounts.io --wait --namespace sit1 --create-namespace sit1-frontend ./simpleaccounts-frontend
+        helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=${{ env.TAG }},image.repository.frontend.tag=${{ env.TAG }},image.repository.frontend.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},maindomain=app.simpleaccounts.io,simpleVatHost=https://sit2-api.app.simpleaccounts.io,fullnameOverride=sit2-frontend,serviceAccount.name=sit2-deploy-robot-frontend,ingress.hosts[0].host=sit2.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=sit2-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=app.simpleaccounts.io,ingress.tls[0].hosts[1]=sit2-api.app.simpleaccounts.io,ingress.tls[0].hosts[2]=sit2.app.simpleaccounts.io --wait --namespace sit2 --create-namespace sit2-frontend ./simpleaccounts-frontend
+        helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=${{ env.TAG }},image.repository.frontend.tag=${{ env.TAG }},image.repository.frontend.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},maindomain=app.simpleaccounts.io,simpleVatHost=https://sit-reports-api.app.simpleaccounts.io,fullnameOverride=sit-reports-frontend,serviceAccount.name=sit-reports-deploy-robot-frontend,ingress.hosts[0].host=sit-reports.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=sit-reports-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=app.simpleaccounts.io,ingress.tls[0].hosts[1]=sit-reports-api.app.simpleaccounts.io,ingress.tls[0].hosts[2]=sit-reports.app.simpleaccounts.io --wait --namespace sit-reports --create-namespace sit-reports-frontend ./simpleaccounts-frontend

@@ -77,7 +77,7 @@ class CreateUser extends React.Component {
 				dob: '',
 				active: 'true',
 				confirmPassword: '',
-				roleId: 1,
+				roleId:'',
 				timezone: '',
 				designationId: '',
 				employeeId: '',
@@ -179,7 +179,7 @@ class CreateUser extends React.Component {
 		// 		: null,
 		// );
 		//formData.append('dob', dob ? dob : '');
-		formData.append('roleId', roleId );
+		formData.append('roleId', roleId ? roleId.value : "" );
 		formData.append('active', this.state.useractive);
 		// formData.append('password', password ? password : '');
 		formData.append('timeZone', timezone ? timezone.value : '');
@@ -678,7 +678,7 @@ class CreateUser extends React.Component {
 																	<Col lg={6}>
 																		<FormGroup>
 																			<Label htmlFor="roleId">
-																				<span className="text-danger"> </span>
+																				<span className="text-danger">* </span>
 																				 {strings.Role}
 																			</Label>
 																			<Select

@@ -34,7 +34,7 @@ export default {
 				...(config.INCOME_CI ?[{
 					name: strings.CustomerInvoices,
 					url: '/admin/income/customer-invoice',
-					icon: 'far fa-address-card',
+					icon: 'fas fa-file-invoice',
 					path: 'Customer Invoices',
 				}]:[]),
 				...(config.INCOME_IR ?[{
@@ -71,13 +71,13 @@ export default {
 				...(config.EXPENSE_SI?[{
 					name: strings.SupplierInvoices,
 					url: '/admin/expense/supplier-invoice',
-					icon: 'far fa-address-card',
+					icon: 'fas fa-file-invoice',
 					path: 'Supplier Invoices',
 				}]:[]),
 				...(config.EXPENSE_PR?[{
 					name: strings.Purchasereceipts,
 					url: '/admin/expense/purchase',
-					icon: 'fas fa-money-check',
+					icon: 'fas fa-receipt',
 					path: 'Supplier Receipts',
 				}]:[]),
 				...(config.EXPENSE_RFQ?[{
@@ -218,7 +218,7 @@ export default {
 				...(config.MASTER_PRODUCTS ?[{
 					name: strings.Product,
 					url: '/admin/master/product',
-					icon: 'fas fa-object-group',
+					icon: 'fas fa-box',
 					path: 'Product',
 				}]:[]),
 				// {
@@ -235,13 +235,13 @@ export default {
 				...(config.MASTER_PC ? [{
 					name: strings.ProductCategory,
 					url: '/admin/master/product-category',
-					icon: 'fas fa-money',
+					icon: 'fas fa-boxes',
 					path: 'Product Category',
 				}]:[]),
 				...(config.MASTER_CR ?[{
 					name: strings.CurrencyRate,
 					url: '/admin/master/currencyConvert',
-					icon: 'fas fa-id-card-alt',
+					icon: 'nav-icon fas fa-money',
 					path: 'Currency Conversion',
 				}]:[]),
 				// {

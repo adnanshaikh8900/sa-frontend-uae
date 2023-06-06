@@ -12,10 +12,7 @@ import {
 	NavItem,
 	NavLink,
 } from 'reactstrap';
-
 import { InventoryDashboard, InventorySummary } from './sections';
-
-
 // import 'react-select/dist/react-select.css'
 import './style.scss';
 import {data}  from '../Language/index'
@@ -57,7 +54,7 @@ class Inventory extends React.Component {
 							<Row>
 								<Col lg={12}>
 									<div className="h4 mb-0 d-flex align-items-center">
-										<i className="nav-icon fas fa-boxes" />
+										<i className="fas fa-warehouse" />
 										<span className="ml-2 " >{strings.Inventory}</span>
 									</div>
 								</Col>

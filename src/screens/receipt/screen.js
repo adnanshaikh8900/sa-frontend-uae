@@ -356,7 +356,7 @@ class Receipt extends React.Component {
 							<Row>
 								<Col lg={12}>
 									<div className="h4 mb-0 d-flex align-items-center">
-										<i className="nav-icon fa fa-file-o" />
+										<i className="fas fa-receipt" />
 										<span className="ml-2">{strings.Receipts}</span>
 									</div>
 								</Col>

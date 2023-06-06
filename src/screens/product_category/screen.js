@@ -8,15 +8,12 @@ import {
 	Button,
 	Row,
 	Col,
-	Input,
 	ButtonGroup,
 } from 'reactstrap';
 import { toast } from 'react-toastify';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { CommonActions } from 'services/global';
-
 import { Loader, ConfirmDeleteModal } from 'components';
-
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
@@ -25,10 +22,7 @@ import LocalizedStrings from 'react-localization';
 // import { AgGridReact,AgGridColumn } from 'ag-grid-react/lib/agGridReact';
 // import 'ag-grid-community/dist/styles/ag-grid.css';
 // import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
-
-
 import * as ProductCategoryActions from './actions';
-import { CSVLink } from 'react-csv';
 
 const mapStateToProps = (state) => {
 	return {
@@ -368,7 +362,7 @@ class ProductCategory extends React.Component {
 					<Card>
 						<CardHeader>
 							<div className="h4 mb-0 d-flex align-items-center">
-								<i className="nav-icon icon-briefcase" />
+								<i className="fas fa-boxes" />
 								<span className="ml-2">{strings.ProductCategory}</span>
 							</div>
 						</CardHeader>

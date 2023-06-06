@@ -9,27 +9,17 @@ import {
 	Row,
 	Col,
 	ButtonGroup,
-	FormGroup,
-	Input,
 	ButtonDropdown,
 	DropdownToggle,
 	DropdownMenu,
 	DropdownItem,
 } from 'reactstrap';
-import Select from 'react-select';
-
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-
 import { Loader, ConfirmDeleteModal, Currency } from 'components';
-
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
-import { selectOptionsFactory } from 'utils';
-
 import * as ProductActions from './actions';
 import { CommonActions } from 'services/global';
-import { CSVLink } from 'react-csv';
-
 import './style.scss';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
@@ -517,7 +507,7 @@ class Product extends React.Component {
 							<Row>
 								<Col lg={12}>
 									<div className="h4 mb-0 d-flex align-items-center">
-										<i className="fas fa-object-group" />
+										<i className="fas fa-box" />
 										<span className="ml-2">{strings.Products} </span>
 									</div>
 								</Col>

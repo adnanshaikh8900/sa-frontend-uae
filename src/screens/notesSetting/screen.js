@@ -102,7 +102,7 @@ class NotesSettings extends React.Component {
 											<Row>
 												<Col lg={12}>
 													<div className="h4 mb-0 d-flex align-items-center">
-														<i className="nav-icon fas fa-id-card-alt" />
+														<i className="fas fa-info-circle" />
 														<span className="ml-2">{strings.Notes_Settings}</span>
 													</div>
 												</Col>

@@ -209,7 +209,7 @@ class RFQTemplate extends Component {
 <div className="mb-1 ml-2"><b>{strings.QuotationNo}:</b> {QuotationData.quotationNumber}</div>
 {QuotationData.receiptNumber&&(<div className="mb-1 ml-2"><b>{strings.ReferenceNo}: </b>{QuotationData.receiptNumber}</div>)}
 <div className="mb-1 ml-2"><b>{strings.Created_Date}: </b>{' '}
-	{moment(QuotationData.createdDate).format('DD MMM YYYY')}</div>
+	{moment(QuotationData.quotationdate).format('DD MMM YYYY')}</div>
 <div className="mb-1 ml-2"><b>{strings.ExpirationDate }: </b>
 	{moment(QuotationData.quotaionExpiration).format('DD MMM YYYY')}</div>
 <div className=" ml-2"><b>{strings.Status}: </b>{this.renderQuotationStatus(QuotationData.status)}</div>

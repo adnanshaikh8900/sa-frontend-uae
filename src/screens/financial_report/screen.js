@@ -189,9 +189,7 @@ class FinancialReport extends React.Component {
 
 									</Row>
 									
-									
 									<Row className="mt-4">
-									
 									{config.REPORTS_HEAD_SALES && <Col  className="report-section ml-4">
 										<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "37px",width:"350px" }}>
 											<img
@@ -204,25 +202,22 @@ class FinancialReport extends React.Component {
 											this.props.history.push('/admin/report/salesbycustomer')}> {strings.SalesByCustomer}</a></h6>
 											<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
 											this.props.history.push('/admin/report/salesbyproduct')}>{strings.SalesByProduct}</a></h6>
-									
 									</div>
 										</Col>}
-
-										{config.REPORTS_HEAD_PURCHASE && <Col  className="report-section ml-4">
+										<Col  className="report-section ml-4">
 										<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "37px",width:"350px" }}>
 											<img
 												className="ml-2 mr-2 mt-2 mb-2 "
-											src={Purchase}
-											style={{height:'25px'}}
-											></img>	<h5 className="mb-3 mt-2">{strings.Purchase}</h5></div>
-											<div className="mt-2 ml-4">
-											<h6><a  style={{fontWeight:'400'}} href ="#" onClick={() => 
-											this.props.history.push('/admin/report/purchasebyvendor')}> {strings.PurhaseByVendor}</a></h6>
+												src={Vat}
+												style={{height:'25px'}}	>
+											</img>	
+											<h5 className="mb-3 mt-2">{strings.CorporateTax}</h5></div>
+										<div className="mt-2 ml-4">
 											<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
-											this.props.history.push('/admin/report/purchasebyitem')}>{strings.PurhaseByProduct}</a></h6>
-									
-									</div>
-										</Col>}
+											this.props.history.push('/admin/report/vatreports')}>{strings.CorporateTax}</a></h6>
+										</div>
+										</Col>
+										
 										{config.REPORTS_HEAD_EXPENSE && <Col  className="report-section ml-4">
 										<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "37px",width:"350px" }}>
 											<img
@@ -237,6 +232,7 @@ class FinancialReport extends React.Component {
 											this.props.history.push('/admin/report/expense-by-category')}>{strings.Expense+" "+strings.By+" "+ strings.Category}</a></h6>
 									</div>
 									</Col>}
+										
 									</Row>
 									<Row xs="3" className="mt-4">
 									{config.REPORTS_HEAD_RECEIVABLE && <Col  className="report-section ml-4">
@@ -253,23 +249,21 @@ class FinancialReport extends React.Component {
 											this.props.history.push('/admin/report/receivable-invoice-details')}>{strings.Receivable+" "+strings.Invoice+" "+strings.Details}</a></h6>
 									</div>
 									</Col>}
-									
-									{config.REPORTS_PAYABLE && <Col  className="report-section ml-4">
+									{config.REPORTS_HEAD_PURCHASE && <Col  className="report-section ml-4">
 										<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "37px",width:"350px" }}>
 											<img
 												className="ml-2 mr-2 mt-2 mb-2 "
-											src={Payables}
+											src={Purchase}
 											style={{height:'25px'}}
-											></img>	<h5 className="mb-3 mt-2">{strings.Payables}</h5></div>
+											></img>	<h5 className="mb-3 mt-2">{strings.Purchase}</h5></div>
 											<div className="mt-2 ml-4">
-											<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
-											this.props.history.push('/admin/report/payable-invoice-summary')}>{strings.PayablesInvoiceSummary}</a></h6>
 											<h6><a  style={{fontWeight:'400'}} href ="#" onClick={() => 
-											this.props.history.push('/admin/report/payable-invoice-details')}> {strings.PayableInvoiceDetails}</a></h6>
-										
+											this.props.history.push('/admin/report/purchasebyvendor')}> {strings.PurhaseByVendor}</a></h6>
+											<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
+											this.props.history.push('/admin/report/purchasebyitem')}>{strings.PurhaseByProduct}</a></h6>
 									
 									</div>
-									</Col>}
+										</Col>}
 									{config.REPORTS_HEAD_PR && <Col  className="report-section ml-4">
 										<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "37px",width:"350px" }}>
 											<img
@@ -301,17 +295,18 @@ class FinancialReport extends React.Component {
 											this.props.history.push('/admin/report/receivable-invoice-details')}>{strings.Receivable+" "+strings.Invoice+" "+strings.Details}</a></h6> */}
 									</div>
 									</Col>}
-
-									{config.REPORTS_PAYROLLSSUMMARY && <Col  className="report-section ml-4">
+									{config.REPORTS_PAYABLE && <Col  className="report-section ml-4">
 										<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "37px",width:"350px" }}>
 											<img
-											className="ml-2 mr-2 mt-2 mb-2 "
-											src={Vat}
+												className="ml-2 mr-2 mt-2 mb-2 "
+											src={Payables}
 											style={{height:'25px'}}
-											></img>	<h5 className="mb-3 mt-2">{strings.Payroll +"s"}</h5></div>
+											></img>	<h5 className="mb-3 mt-2">{strings.Payables}</h5></div>
 											<div className="mt-2 ml-4">
 											<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
-											this.props.history.push('/admin/report/payroll-summary')}>{strings.Payroll+"s  "+strings.Summary}</a></h6>	
+											this.props.history.push('/admin/report/payable-invoice-summary')}>{strings.PayablesInvoiceSummary}</a></h6>
+											<h6><a  style={{fontWeight:'400'}} href ="#" onClick={() => 
+											this.props.history.push('/admin/report/payable-invoice-details')}> {strings.PayableInvoiceDetails}</a></h6>
 									</div>
 									</Col>}
 									<Col  className="report-section ml-4">
@@ -360,19 +355,32 @@ class FinancialReport extends React.Component {
 									</Col> */}
 									</Row>
 								<Row xs="3" className="mt-4">
-								{config.REPORTS_ARAGINGREPORT && <Col  className="report-section ml-4">
+								{config.REPORTS_ARAGINGREPORT && 
+									<Col  className="report-section ml-4">
 										<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "37px",width:"350px" }}>
 											<img
 												className="ml-2 mr-2 mt-2 mb-2 "
 											src={Sales}
 											style={{height:'25px'}}
-											></img>	<h5 className="mb-3 mt-2">AR-Aging Report</h5></div>
+											></img>	<h5 className="mb-3 mt-2">{strings.ARAgingReport}</h5></div>
 											<div className="mt-2 ml-4">
 											<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
 											this.props.history.push('/admin/report/arAgingReport')}>{strings.ARAgingReport}</a></h6>
-									
-									</div>
-										</Col>}
+										</div>
+									</Col>}
+										{config.REPORTS_PAYROLLSSUMMARY && 
+									<Col  className="report-section ml-4">
+										<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "37px",width:"350px" }}>
+											<img
+											className="ml-2 mr-2 mt-2 mb-2 "
+											src={Vat}
+											style={{height:'25px'}}
+											></img>	<h5 className="mb-3 mt-2">{strings.Payroll +"s"}</h5></div>
+											<div className="mt-2 ml-4">
+											<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
+											this.props.history.push('/admin/report/payroll-summary')}>{strings.Payroll+"s  "+strings.Summary}</a></h6>	
+										</div>
+									</Col>}
 								</Row>
 						</CardBody>
 					</Card>

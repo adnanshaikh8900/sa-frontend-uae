@@ -214,7 +214,7 @@ class FinancialReport extends React.Component {
 											<h5 className="mb-3 mt-2">{strings.CorporateTax}</h5></div>
 										<div className="mt-2 ml-4">
 											<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
-											this.props.history.push('/admin/report/vatreports')}>{strings.CorporateTax}</a></h6>
+											this.props.history.push('/admin/report/corporatetax')}>{strings.CorporateTax}</a></h6>
 										</div>
 										</Col>
 										
@@ -381,6 +381,8 @@ class FinancialReport extends React.Component {
 											this.props.history.push('/admin/report/payroll-summary')}>{strings.Payroll+"s  "+strings.Summary}</a></h6>	
 										</div>
 									</Col>}
+									<Col  className="report-section ml-4">
+									</Col>
 								</Row>
 						</CardBody>
 					</Card>

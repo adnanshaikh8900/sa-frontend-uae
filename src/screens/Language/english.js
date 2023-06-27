@@ -1041,6 +1041,11 @@ const en = {
       ReportingPeriod: 'Reporting Period',
       GenerateVATReportFor: 'Generate VAT Report For',
       VATReportNumber: 'VAT Report Number',
+      TaxPeriod: 'Tax Period',
+      NetIncome: 'Net Income',
+      TaxableAmount: 'Taxable Amount',
+      TaxAmount: 'Tax Amount',
+      FiledOn: 'Filed On',      
 
 //placeholder	
       ReceiptAttachmentDescription:"Receipt Attachment Description",	

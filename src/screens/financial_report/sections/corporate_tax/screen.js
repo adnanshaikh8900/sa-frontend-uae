@@ -581,6 +581,7 @@ class CorporateTax extends React.Component {
                     tdStyle={{ whiteSpace: "normal" }}
                     isKey
                     dataField="taxPeriod"
+                    dataAlign="left"
                     dataSort
                     className="table-header-bg"
                   >
@@ -588,12 +589,13 @@ class CorporateTax extends React.Component {
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField="dueDate"
+                    dataAlign="left"
                     // columnTitle={this.customEmail}
                     dataSort
                     dataFormat={this.renderDate}
                     className="table-header-bg"
                   >
-                    Due Date
+                    {strings.DueDate}
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     width="10%"
@@ -603,7 +605,7 @@ class CorporateTax extends React.Component {
                     dataFormat={this.renderAmount}
                     className="table-header-bg"
                   >
-                    Net Income
+                    {strings.NetIncome}
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField="taxableAmount"
@@ -613,7 +615,7 @@ class CorporateTax extends React.Component {
                     dataFormat={this.renderAmount}
                     className="table-header-bg"
                   >
-                    Taxable Amount
+                    {strings.TaxableAmount}
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField="taxAmount"
@@ -623,16 +625,17 @@ class CorporateTax extends React.Component {
                     dataFormat={this.renderAmount}
                     className="table-header-bg"
                     >
-                    Tax Amount
+                    {strings.TaxAmount}
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField="filedOn"
                     // columnTitle={this.customEmail}
                     dataSort
                     dataFormat={this.renderDate}
+                    dataAlign="left"
                     className="table-header-bg"
                     >
-                    Filed On
+                    {strings.FiledOn}
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField="status"
@@ -642,7 +645,7 @@ class CorporateTax extends React.Component {
                     dataFormat={this.renderStatus}
                     className="table-header-bg"
                   >
-                    Status
+                    {strings.STATUS}
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField="balanceDue"
@@ -652,7 +655,7 @@ class CorporateTax extends React.Component {
                     dataFormat={this.renderAmount}
                     className="table-header-bg"
                   >
-                    Balance Due
+                    {strings.BalanceDue}
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     className="text-right table-header-bg"

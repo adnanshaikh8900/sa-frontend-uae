@@ -988,6 +988,11 @@ const ar = {
       ReportingPeriod: 'فترة التقرير',
       GenerateVATReportFor: 'إنشاء تقرير ضريبة القيمة المضافة لـ',
       VATReportNumber: 'رقم تقرير ضريبة القيمة المضافة',
+      TaxPeriod: 'الفترة الضريبية',
+      NetIncome: 'صافي الدخل',
+      TaxableAmount: 'المبلغ الخاضع للضريبة',
+      TaxAmount: 'قيمة الضريبة',
+      FiledOn: 'المحفوظة في',
 
 //placeholder
       ReceiptAttachmentDescription:"وصف مرفق الإيصال",	

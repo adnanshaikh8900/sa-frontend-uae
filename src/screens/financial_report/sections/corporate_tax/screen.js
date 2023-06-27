@@ -25,13 +25,13 @@ import { upperFirst } from "lodash-es";
 // import 'ag-grid-community/dist/styles/ag-grid.css';
 // import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import moment from "moment";
-import download from "downloadjs";
-import {
-  DeleteModal,
-  FileTaxReturnModal,
-  GenerateVatReportModal,
-  VatSettingModal,
-} from "./sections";
+// import download from "downloadjs";
+// import {
+//   DeleteModal,
+//   FileTaxReturnModal,
+//   GenerateVatReportModal,
+//   VatSettingModal,
+// } from "../vat_reports/sections";
 import { ConfirmDeleteModal, Currency, Loader } from "components";
 import { data } from "../../../Language/index";
 import LocalizedStrings from "react-localization";
@@ -101,19 +101,19 @@ class CorporateTax extends React.Component {
     this.gridColumnApi = params.columnApi;
   };
 
-  onSizePerPageList = (sizePerPage) => {
-    if (this.options.sizePerPage !== sizePerPage) {
-      this.options.sizePerPage = sizePerPage;
-      this.getInitialData();
-    }
-  };
+  // onSizePerPageList = (sizePerPage) => {
+  //   if (this.options.sizePerPage !== sizePerPage) {
+  //     this.options.sizePerPage = sizePerPage;
+  //     this.getInitialData();
+  //   }
+  // };
 
-  onPageChange = (page, sizePerPage) => {
-    if (this.options.page !== page) {
-      this.options.page = page;
-      this.getInitialData();
-    }
-  };
+  // onPageChange = (page, sizePerPage) => {
+  //   if (this.options.page !== page) {
+  //     this.options.page = page;
+  //     this.getInitialData();
+  //   }
+  // };
 
   onBtnExport = () => {
     this.gridApi.exportDataAsCsv();
@@ -123,90 +123,10 @@ class CorporateTax extends React.Component {
     this.gridApi.exportDataAsExcel();
   };
 
-  componentDidMount = () => {
-    this.getInitialData();
-  };
-
-  markItUnfiled = (row) => {
-    const postingRequestModel = {
-      postingRefId: row.id,
-      postingRefType: "VAT_REPORT_FILED",
-    };
-    this.setState({ loading: true, loadingMsg: "VAT UnFiling..." });
-    this.props.vatreport
-      .markItUnfiled(postingRequestModel)
-      .then((res) => {
-        if (res.status === 200) {
-          this.props.commonActions.tostifyAlert(
-            "success",
-            res.data && res.data.message
-              ? res.data.message
-              : " VAT UnFiled Successfully"
-          );
-          this.getInitialData();
-          this.setState({ loading: false });
-        }
-      })
-      .catch((err) => {
-        this.props.commonActions.tostifyAlert(
-          "error",
-          err && err.data ? err.data.message : "Something Went Wrong"
-        );
-      });
-  };
-
-  getInitialData = () => {
-    this.getVRNPrefix();
-    let { filterData } = this.state;
-    const paginationData = {
-      pageNo: this.options.page ? this.options.page - 1 : 0,
-      pageSize: this.options.sizePerPage,
-    };
-    const sortingData = {
-      order: this.options.sortOrder ? this.options.sortOrder : "",
-      sortingCol: this.options.sortName ? this.options.sortName : "",
-    };
-    const postData = { ...filterData, ...paginationData, ...sortingData };
-    this.props.vatreport
-      .getVatReportList(postData)
-      .then((res) => {
-        if (res.status === 200) {
-          this.setState({ vatReportDataList: res.data }); // comment for dummy
-        }
-      })
-      .catch((err) => {
-        this.props.commonActions.tostifyAlert(
-          "error",
-          err && err.data ? err.data.message : "Something Went Wrong"
-        );
-      });
-  };
-
-  export = (filename) => {
-    this.props.vatreport
-      .downloadcsv(filename)
-      .then((res) => {
-        if (res.status === 200) {
-          const blob = new Blob([res.data], { type: "application/csv" });
-          download(blob, filename);
-        }
-      })
-      .catch((err) => {
-        this.props.commonActions.tostifyAlert(
-          "error",
-          err && err.data ? err.data.message : "Something Went Wrong"
-        );
-      });
-  };
-  getVRNPrefix = () => {
-    this.props.vatreport.getVRNPrefix().then((res) => {
-      if (res.status === 200) {
-        this.setState({
-          prefix: res.data,
-        });
-      }
-    });
-  };
+  // componentDidMount = () => {
+  //   this.getInitialData();
+  // };
+  
   handleChange = (key, val) => {
     this.setState({
       [key]: val,
@@ -457,33 +377,33 @@ class CorporateTax extends React.Component {
     });
   };
 
-  remove = (current_report_id) => {
-    this.props.vatreport
-      .deleteReportById(current_report_id)
-      .then((res) => {
-        if (res.status === 200) {
-          this.props.commonActions.tostifyAlert(
-            "success",
-            res.data && res.data.message
-              ? res.data.message
-              : "VAT Report File Deleted Successfully"
-          );
-          this.setState({
-            dialog: null,
-          });
-          this.getInitialData();
-        }
-      })
-      .catch((err) => {
-        this.props.commonActions.tostifyAlert(
-          "error",
-          err.data ? err.data.message : "VAT Report File Deleted Unsuccessfully"
-        );
-        this.setState({
-          dialog: null,
-        });
-      });
-  };
+  // remove = (current_report_id) => {
+  //   this.props.vatreport
+  //     .deleteReportById(current_report_id)
+  //     .then((res) => {
+  //       if (res.status === 200) {
+  //         this.props.commonActions.tostifyAlert(
+  //           "success",
+  //           res.data && res.data.message
+  //             ? res.data.message
+  //             : "VAT Report File Deleted Successfully"
+  //         );
+  //         this.setState({
+  //           dialog: null,
+  //         });
+  //         this.getInitialData();
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       this.props.commonActions.tostifyAlert(
+  //         "error",
+  //         err.data ? err.data.message : "VAT Report File Deleted Unsuccessfully"
+  //       );
+  //       this.setState({
+  //         dialog: null,
+  //       });
+  //     });
+  // };
 
   removeDialog = () => {
     this.setState({
@@ -589,7 +509,7 @@ class CorporateTax extends React.Component {
                           );
                         }}
                       >
-                        <i className="fas fa-history"></i> VAT Payment Record {strings.CTPaymentHistory}
+                        <i className="fas fa-history"></i> {strings.CTPaymentHistory}
                       </Button>
 
                       <Button
@@ -603,6 +523,19 @@ class CorporateTax extends React.Component {
                         }}
                       >
                         <i class="fas fa-plus"></i> Generate CT Report
+                      </Button>
+
+                      <Button
+                        name="button"
+                        color="primary"
+                        className="btn-square pull-right "
+                        // disabled={!this.state.enbaleReportGeneration}
+                        // title={!this.state.enbaleReportGeneration?"Select VAT Reporting Period":""}
+                        onClick={() => {
+                          this.setState({ openModal: true });
+                        }}
+                      >
+                        <i class="fas fa-cog"></i> Corporate Tax Settings
                       </Button>
 
                       {/* <Button color="primary" className="btn-square  pull-right"
@@ -642,46 +575,55 @@ class CorporateTax extends React.Component {
                     dataTotalSize: vatReportDataList.count
                       ? vatReportDataList.count
                       : 0,
-                  }}
+                    }}
                 >
                   <TableHeaderColumn
                     tdStyle={{ whiteSpace: "normal" }}
                     isKey
-                    dataField="vatNumber"
+                    dataField="taxPeriod"
                     dataSort
                     className="table-header-bg"
                   >
-                    VAT Report No.
+                    Tax Period
                   </TableHeaderColumn>
-
                   <TableHeaderColumn
-                    tdStyle={{ whiteSpace: "normal" }}
-                    dataField="taxReturns"
+                    dataField="dueDate"
+                    // columnTitle={this.customEmail}
                     dataSort
-                    dataFormat={this.renderTaxReturns}
+                    dataFormat={this.renderDate}
                     className="table-header-bg"
                   >
-                    VAT Return
+                    Due Date
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     width="10%"
-                    dataField="totalTaxPayable"
+                    dataField="netIncome"
                     dataAlign="right"
                     dataSort
                     dataFormat={this.renderAmount}
                     className="table-header-bg"
                   >
-                    Total VAT Payable
+                    Net Income
                   </TableHeaderColumn>
                   <TableHeaderColumn
-                    dataField="totalTaxReclaimable"
+                    dataField="taxableAmount"
                     // columnTitle={this.customEmail}
                     dataAlign="right"
                     dataSort
                     dataFormat={this.renderAmount}
                     className="table-header-bg"
                   >
-                    Total VAT Reclaimable
+                    Taxable Amount
+                  </TableHeaderColumn>
+                  <TableHeaderColumn
+                    dataField="taxAmount"
+                    // columnTitle={this.customEmail}
+                    dataAlign="right"
+                    dataSort
+                    dataFormat={this.renderAmount}
+                    className="table-header-bg"
+                    >
+                    Tax Amount
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField="filedOn"
@@ -689,17 +631,18 @@ class CorporateTax extends React.Component {
                     dataSort
                     dataFormat={this.renderDate}
                     className="table-header-bg"
-                  >
+                    >
                     Filed On
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField="status"
+                    dataAlign="center"
                     // columnTitle={this.customEmail}
                     dataSort
                     dataFormat={this.renderStatus}
                     className="table-header-bg"
                   >
-                    {strings.Status}
+                    Status
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField="balanceDue"
@@ -709,7 +652,7 @@ class CorporateTax extends React.Component {
                     dataFormat={this.renderAmount}
                     className="table-header-bg"
                   >
-                    {strings.BalanceDue}
+                    Balance Due
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     className="text-right table-header-bg"
@@ -722,7 +665,7 @@ class CorporateTax extends React.Component {
             </CardBody>
           </Card>
         </div>
-        <GenerateVatReportModal
+        {/* <GenerateVatReportModal
           openModal={this.state.openModal}
           setState={(e) => this.setState(e)}
           vatReportDataList={vatReportDataList}
@@ -757,7 +700,7 @@ class CorporateTax extends React.Component {
             this.closeDeleteModal(e);
             this.getInitialData();
           }}
-        />
+        /> */}
       </div>
     );
   }

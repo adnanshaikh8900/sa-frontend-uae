@@ -190,6 +190,7 @@ import VatReports from './financial_report/sections/vat_reports'
 import VatPaymentRecord from './financial_report/sections/vat_reports/screens/vatPaymentRecord'
 import RecordTaxClaim from './financial_report/sections/vat_reports/screens/record_claim_tax'
 import RecordVatPayment from './financial_report/sections/vat_reports/screens/record_tax_payment'
+import CorporateTax from './financial_report/sections/corporate_tax'
 import FtaAuditReport from './financial_report/sections/fta_audit_report_MainPage'
 import GenerateAuditFile from './financial_report/sections/fta_audit_report_MainPage/screens/generate_Fta_audit_report'
 import ViewFtaAuditReport from './financial_report/sections/Fta_Audit_Report';
@@ -371,6 +372,7 @@ export {
 	VatPaymentRecord,
 	RecordTaxClaim,
 	RecordVatPayment,
+	CorporateTax,
 	FtaAuditReport,
 	GenerateAuditFile,
 	ViewFtaAuditReport,

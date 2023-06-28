@@ -21,17 +21,11 @@ import "react-datepicker/dist/react-datepicker.css";
 import "./style.scss";
 import * as Vatreport from "./actions";
 import { upperFirst } from "lodash-es";
-// import { AgGridReact, AgGridColumn } from 'ag-grid-react/lib/agGridReact';
+import { CTReport } from './sections';
 // import 'ag-grid-community/dist/styles/ag-grid.css';
 // import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import moment from "moment";
 // import download from "downloadjs";
-// import {
-//   DeleteModal,
-//   FileTaxReturnModal,
-//   GenerateVatReportModal,
-//   VatSettingModal,
-// } from "../vat_reports/sections";
 import { ConfirmDeleteModal, Currency, Loader } from "components";
 import { data } from "../../../Language/index";
 import LocalizedStrings from "react-localization";
@@ -61,13 +55,14 @@ class CorporateTax extends React.Component {
       actionButtons: {},
       disabled: false,
       file_data_list: [],
-      openModal: false,
+      openCTReportModal: false,
       openVatSettingModal: false,
       openFileTaxRetrunModal: false,
       coaName: "",
       vatReportDataList: [],
       options: [
         { label: "Montly", value: 0 },
+        { label: "Yearly", value: 1 },
         { label: "Quarterly", value: 2 },
       ],
       enbaleReportGeneration: false,
@@ -77,6 +72,7 @@ class CorporateTax extends React.Component {
       current_report_id: "",
       deleteModal: false,
       loadingMsg: "Loading...",
+      fiscalYear:"",
     };
 
     this.options = {
@@ -126,7 +122,7 @@ class CorporateTax extends React.Component {
   // componentDidMount = () => {
   //   this.getInitialData();
   // };
-  
+
   handleChange = (key, val) => {
     this.setState({
       [key]: val,
@@ -134,7 +130,7 @@ class CorporateTax extends React.Component {
   };
 
   closeModal = (res) => {
-    this.setState({ openModal: false });
+    this.setState({ openCTReportModal: false });
   };
 
   closeVatSettingModal = (res) => {
@@ -415,7 +411,7 @@ class CorporateTax extends React.Component {
     return cell
       ? moment(cell).format("DD-MM-YYYY")
       : // .format('LL')
-        "-";
+      "-";
   };
 
   renderVATNumber = (cell, row) => {
@@ -519,10 +515,10 @@ class CorporateTax extends React.Component {
                         // disabled={!this.state.enbaleReportGeneration}
                         // title={!this.state.enbaleReportGeneration?"Select VAT Reporting Period":""}
                         onClick={() => {
-                          this.setState({ openModal: true });
+                          this.setState({ openCTReportModal: true });
                         }}
                       >
-                        <i class="fas fa-plus"></i> Generate CT Report
+                        <i class="fas fa-plus"></i> {strings.GenerateCTReport}
                       </Button>
 
                       <Button
@@ -566,8 +562,8 @@ class CorporateTax extends React.Component {
                   // rowData={vatReportDataList.data ? vatReportDataList.data : []}
                   pagination={
                     vatReportDataList &&
-                    vatReportDataList.data &&
-                    vatReportDataList.data.length
+                      vatReportDataList.data &&
+                      vatReportDataList.data.length
                       ? true
                       : false
                   }
@@ -575,7 +571,7 @@ class CorporateTax extends React.Component {
                     dataTotalSize: vatReportDataList.count
                       ? vatReportDataList.count
                       : 0,
-                    }}
+                  }}
                 >
                   <TableHeaderColumn
                     tdStyle={{ whiteSpace: "normal" }}
@@ -668,18 +664,15 @@ class CorporateTax extends React.Component {
             </CardBody>
           </Card>
         </div>
-        {/* <GenerateVatReportModal
-          openModal={this.state.openModal}
+        <CTReport
+          openModal={this.state.openCTReportModal}
           setState={(e) => this.setState(e)}
-          vatReportDataList={vatReportDataList}
-          state={this.state}
-          monthOption={this.state.monthOption}
+          fiscalYear={this.state.fiscalYear}
           closeModal={(e) => {
             this.closeModal(e);
-            this.getInitialData();
           }}
         />
-        <VatSettingModal
+        {/*<VatSettingModal
           openModal={this.state.openVatSettingModal}
           closeModal={(e) => {
             this.closeVatSettingModal(e);

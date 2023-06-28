@@ -777,7 +777,7 @@ const adminRoutes = [
 		component: RecordVatPayment.screen,
 	},
 	Config.REPORTS_MODULE && {
-		path: '/admin/report/corporatetax',
+		path: '/admin/report/corporate-tax',
 		name: 'Corporate Tax',
 		component: CorporateTax.screen,
 	},

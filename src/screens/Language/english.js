@@ -1046,6 +1046,7 @@ const en = {
       TaxableAmount: 'Taxable Amount',
       TaxAmount: 'Tax Amount',
       FiledOn: 'Filed On',      
+      GenerateCorporateTaxReport:"Generate Corporate Tax Report",
 
 //placeholder	
       ReceiptAttachmentDescription:"Receipt Attachment Description",	

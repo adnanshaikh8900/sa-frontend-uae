@@ -960,6 +960,10 @@ const en = {
       BalanceSheet:"Balance Sheet",
       HorizontalBalanceSheet:"Horizontal Balance Sheet",
       TrailBalances:"Trial Balances",
+      CorporateTax:"Corporate Tax",
+      CorporateTaxSetting:"Corporate Tax Settings",
+      GenerateCTReport:"Generate CT Report",
+      CTPaymentHistory:"CT Payment History",
       VatReports:"VAT Reports",
       FTA_Audit_Report:"FTA VAT Audit File",
       Excise_Tax_Report:"FTA Excise Tax Audit File",
@@ -1037,6 +1041,12 @@ const en = {
       ReportingPeriod: 'Reporting Period',
       GenerateVATReportFor: 'Generate VAT Report For',
       VATReportNumber: 'VAT Report Number',
+      TaxPeriod: 'Tax Period',
+      NetIncome: 'Net Income',
+      TaxableAmount: 'Taxable Amount',
+      TaxAmount: 'Tax Amount',
+      FiledOn: 'Filed On',      
+      GenerateCorporateTaxReport:"Generate Corporate Tax Report",
 
 //placeholder	
       ReceiptAttachmentDescription:"Receipt Attachment Description",	

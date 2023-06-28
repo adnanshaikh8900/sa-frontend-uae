@@ -958,6 +958,10 @@ const fr = {
       BalanceSheet:"Bilan",
       HorizontalBalanceSheet:"Bilan horizontal",
       TrailBalances:"Soldes des Sentiers",
+      CorporateTax:"Impôt sur les sociétés",
+      CorporateTaxSetting:"Paramètres d'impôt sur les sociétés",
+      GenerateCTReport:"Générer l'impôt sur les sociétés",
+      CTPaymentHistory:"Historique de paiement de l'impôt sur les sociétés",
       VatReports:"Rapports de TVA",
       Audit_Start_Date:"Date de début de l’audit",
       Audit_End_Date:"Date de fin de l’audit",
@@ -1033,6 +1037,11 @@ const fr = {
       ReportingPeriod: 'Période de déclaration',
       GenerateVATReportFor: 'Générer un rapport de TVA pour',
       VATReportNumber: 'Numéro de déclaration de TVA',
+      TaxPeriod: 'Période d imposition',
+      NetIncome: 'Revenu net',
+      TaxableAmount: 'Montant imposable',
+      TaxAmount: 'Montant de la taxe',
+      FiledOn: 'Classé le',
 
 //placeholder	
       ReceiptAttachmentDescription:"Description de la pièce jointe au reçu",	

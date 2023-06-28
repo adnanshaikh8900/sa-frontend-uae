@@ -103,7 +103,7 @@ import {
 	RecordTaxClaim,
 	RecordVatPayment,
 	ARAgingReport,
-
+	CorporateTax,
 
 	// Master Screens
 	ChartAccount,
@@ -775,6 +775,11 @@ const adminRoutes = [
 		path: '/admin/report/vatreports/recordtaxpayment',
 		name: 'Record Tax Payment',
 		component: RecordVatPayment.screen,
+	},
+	Config.REPORTS_MODULE && {
+		path: '/admin/report/corporate-tax',
+		name: 'Corporate Tax',
+		component: CorporateTax.screen,
 	},
 	Config.REPORTS_MODULE && {
 		path: '/admin/report/arAgingReport',

@@ -105,7 +105,7 @@ class CreateExpense extends React.Component {
 				vatCategoryId: '',
 				payMode: '',
 				bankAccountId: '',
-				exclusiveVat:false,
+				exclusiveVat:true,
 				exist:false,
 				taxTreatmentId:'',
 				expenseType:false,
@@ -1213,7 +1213,7 @@ componentWillUnmount() {
 																					this.placelistSetting(option,props)
 																					// ReverseCharge setup
 																					this.ReverseChargeSetting(option.value,props)
-																					this.setState({isReverseChargeEnabled:false,exclusiveVat:false})
+																					this.setState({isReverseChargeEnabled:false,exclusiveVat:true})
 																					this.setState({taxTreatmentId:option.value})
 																				} else {
 																					props.handleChange('taxTreatmentId')(
@@ -1697,13 +1697,13 @@ componentWillUnmount() {
 																<Col></Col>
 																	<Col >
 																	<FormGroup>
-																				<span className='mr-4'>Inclusive VAT</span>
+																				<span className='mr-4'>Exclusive VAT</span>
 																				<Switch
-																					checked={ this.state.exclusiveVat}
+																					checked={!this.state.exclusiveVat}
 																					onChange={(checked) => {
-																							this.setState({																						
-																								exclusiveVat: ! this.state.exclusiveVat
-																							});
+																						this.setState({
+																							exclusiveVat: !checked
+																						});
 																					}}
 																					onColor="#2064d8"
 																					onHandleColor="#2693e6"
@@ -1714,8 +1714,9 @@ componentWillUnmount() {
 																					activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
 																					height={20}
 																					width={48}
-																					className="react-switch "																					/>
-																					<span  className='ml-4'>Exclusive VAT</span>
+																					className="react-switch "
+																					/>
+																					<span  className='ml-4'>Inclusive VAT</span>
 
 																		</FormGroup>
 																	</Col>
@@ -1740,7 +1741,7 @@ componentWillUnmount() {
 																id="isReverseChargeEnabled"
 																checked={this.state.isReverseChargeEnabled}
 																onChange={(option)=>{
-																		this.setState({isReverseChargeEnabled:!this.state.isReverseChargeEnabled,exclusiveVat:false})
+																		this.setState({isReverseChargeEnabled:!this.state.isReverseChargeEnabled,exclusiveVat:true})
 																		// for resetting Vat
 																		props.handleChange('vatCategoryId')('');
 																}}

@@ -89,15 +89,6 @@ jobs:
         with:
           issue-number: ${{ github.event.issue.number }}
           body: 'Deployment Completed 👍'
-  
-      - uses: JasonEtco/create-an-issue@v2
-        name: Create approval Issue for UAT
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ENVIRONMENT: UAT
-          RUNNUMBER: ${{ needs.parse.outputs.ci-run-number }}
-        with:
-          filename: .github/deployment-approval.md
 
   deploy-SIT2:
     needs: [parse]
@@ -141,15 +132,6 @@ jobs:
         with:
           issue-number: ${{ github.event.issue.number }}
           body: 'Deployment Completed 👍'
-  
-      - uses: JasonEtco/create-an-issue@v2
-        name: Create approval Issue for UAT
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ENVIRONMENT: UAT
-          RUNNUMBER: ${{ needs.parse.outputs.ci-run-number }}
-        with:
-          filename: .github/deployment-approval.md
 
 
   deploy-SIT-Reports:

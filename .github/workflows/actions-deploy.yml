@@ -177,8 +177,8 @@ jobs:
           issue-number: ${{ github.event.issue.number }}
           body: 'Deployment Completed 👍'
   
-  close-issue:
-    needs: [deploy-SIT1, deploy-SIT2, deploy-SIT-Reports]
+  close-issue-SIT:
+    needs: [parse, deploy-SIT1, deploy-SIT2, deploy-SIT-Reports]
     if: ${{ always() }}
     runs-on: ubuntu-latest  
     permissions:
@@ -196,3 +196,150 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           comment: 'Closing issue 🌟'
+
+      - uses: JasonEtco/create-an-issue@v2
+        name: Create approval Issue for UAT
+        if: ${{ needs.deploy-SIT1.result == 'success' || needs.deploy-SIT2.result == 'success' || needs.deploy-SIT-Reports.result == 'success' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ENVIRONMENT: UAT
+          RUNNUMBER: ${{ needs.parse.outputs.ci-run-number }}
+        with:
+          filename: .github/deployment-approval.md
+
+  deploy-UAT:
+    needs: [parse]
+    if: ${{ needs.parse.outputs.deploy-environment == 'UAT' }}
+    runs-on: datainn-digitalocean-test-runner-set
+    permissions:
+      contents: read
+      packages: write
+      # This is used to complete the identity challenge
+      # with sigstore/fulcio when running outside of PRs.
+      id-token: write
+      issues: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - uses: azure/setup-kubectl@v3
+      with:
+        version: 'latest' # default is latest stable
+      id: install-kubectl
+
+    - uses: azure/setup-helm@v3
+      with:
+        version: 'latest' # default is latest (stable)
+        token: ${{ secrets.GITHUB_TOKEN }} # only needed if version is 'latest'
+      id: install-helm
+
+    - name: Helm chart Sandbox Deployment
+      run: |
+        TAG=${{ env.VERSION_PREFIX }}.${{ needs.parse.outputs.ci-run-number }}
+        echo "Deploying application to following cluster..."
+        kubectl cluster-info
+        echo "Test deployment scripts..."
+        helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},maindomain=sandbox.app.simpleaccounts.io,simpleVatHost=https://sandbox-api.app.simpleaccounts.io,fullnameOverride=sandbox-frontend,serviceAccount.name=sandbox-deploy-robot-frontend,ingress.hosts[0].host=sandbox.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=sandbox-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=sandbox-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=sandbox.app.simpleaccounts.io --wait --dry-run --debug --namespace sandbox --create-namespace sandbox-frontend ./simpleaccounts-frontend 
+        echo "Deployment started scripts..."
+        helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},maindomain=sandbox.app.simpleaccounts.io,simpleVatHost=https://sandbox-api.app.simpleaccounts.io,fullnameOverride=sandbox-frontend,serviceAccount.name=sandbox-deploy-robot-frontend,ingress.hosts[0].host=sandbox.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=sandbox-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=sandbox-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=sandbox.app.simpleaccounts.io --wait --namespace sandbox --create-namespace sandbox-frontend ./simpleaccounts-frontend 
+        echo "Application successfully deployed."
+
+    - name: Comment on Issue      
+      uses: peter-evans/create-or-update-comment@v1
+      with:
+        issue-number: ${{ github.event.issue.number }}
+        body: 'Deployment Completed 👍'
+  
+  close-issue-UAT:
+    needs: [parse, deploy-UAT]
+    if: ${{ always() }}
+    runs-on: ubuntu-latest  
+    permissions:
+      contents: read
+      packages: write
+      # This is used to complete the identity challenge
+      # with sigstore/fulcio when running outside of PRs.
+      id-token: write
+      issues: write
+      
+    steps:
+      - name: Close Issue
+        if: ${{ needs.deploy-UAT.result == 'success' }}
+        uses: peter-evans/close-issue@v1.0.3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          comment: 'Closing issue 🌟'
+
+      - uses: JasonEtco/create-an-issue@v2
+        name: Create approval Issue for UAT
+        if: ${{ needs.deploy-UAT.result == 'success' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ENVIRONMENT: PROD
+          RUNNUMBER: ${{ needs.parse.outputs.ci-run-number }}
+        with:
+          filename: .github/deployment-approval.md
+
+  deploy-PROD:
+    needs: [parse]
+    if: ${{ needs.parse.outputs.deploy-environment == 'PROD' }}
+    runs-on: datainn-digitalocean-test-runner-set
+    permissions:
+      contents: read
+      packages: write
+      # This is used to complete the identity challenge
+      # with sigstore/fulcio when running outside of PRs.
+      id-token: write
+      issues: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - uses: azure/setup-kubectl@v3
+      with:
+        version: 'latest' # default is latest stable
+      id: install-kubectl
+
+    - uses: azure/setup-helm@v3
+      with:
+        version: 'latest' # default is latest (stable)
+        token: ${{ secrets.GITHUB_TOKEN }} # only needed if version is 'latest'
+      id: install-helm
+
+    - name: Helm chart PROD DIT Deployment
+      run: |
+        TAG=${{ env.VERSION_PREFIX }}.${{ needs.parse.outputs.ci-run-number }}
+        echo "Deploying application to following cluster..."
+        kubectl cluster-info
+        echo "Test deployment scripts..."
+        helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},maindomain=dit.app.simpleaccounts.io,simpleVatHost=https://dit-api.app.simpleaccounts.io,fullnameOverride=dit-frontend,serviceAccount.name=dit-deploy-robot-frontend,ingress.hosts[0].host=dit.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=dit-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=dit-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=dit.app.simpleaccounts.io --wait --dry-run --debug --namespace dit --create-namespace dit-frontend ./simpleaccounts-frontend 
+        echo "Deployment started scripts..."
+        helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},maindomain=dit.app.simpleaccounts.io,simpleVatHost=https://dit-api.app.simpleaccounts.io,fullnameOverride=dit-frontend,serviceAccount.name=dit-deploy-robot-frontend,ingress.hosts[0].host=dit.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=dit-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=dit-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=dit.app.simpleaccounts.io --wait --namespace dit --create-namespace dit-frontend ./simpleaccounts-frontend 
+        echo "Application successfully deployed."
+
+    - name: Comment on Issue      
+      uses: peter-evans/create-or-update-comment@v1
+      with:
+        issue-number: ${{ github.event.issue.number }}
+        body: 'Deployment Completed 👍'
+  
+  close-issue-PROD:
+    needs: [parse, deploy-PROD]
+    if: ${{ always() }}
+    runs-on: ubuntu-latest  
+    permissions:
+      contents: read
+      packages: write
+      # This is used to complete the identity challenge
+      # with sigstore/fulcio when running outside of PRs.
+      id-token: write
+      issues: write
+      
+    steps:
+      - name: Close Issue
+        if: ${{ needs.deploy-PROD.result == 'success' }}
+        uses: peter-evans/close-issue@v1.0.3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          comment: 'Closing issue 🌟'
+        

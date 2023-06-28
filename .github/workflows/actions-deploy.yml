@@ -15,7 +15,7 @@ env:
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
-  VERSION_PREFIX: 1.0.0-alpha
+  VERSION_PREFIX: 1.0.1-alpha
 
 jobs:  
   parse:

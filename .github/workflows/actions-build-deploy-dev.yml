@@ -14,7 +14,7 @@ env:
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
-  TAG: 1.0.0-alpha.${{ github.run_number }}
+  TAG: 1.0.1-alpha.${{ github.run_number }}
 
 jobs:
   build:

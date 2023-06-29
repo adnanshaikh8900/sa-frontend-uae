@@ -297,7 +297,7 @@ jobs:
   createPullRequest-PROD:
     needs: [parse]
     if: ${{ needs.parse.outputs.deploy-environment == 'PROD' }}
-    runs-on: datainn-digitalocean-test-runner-set
+    runs-on: ubuntu-latest
     permissions:
       contents: write
       packages: write

@@ -324,23 +324,16 @@ jobs:
       uses: ad-m/github-push-action@master
       with:
         branch: commit-promotion-develop
-
-    - name: Create Pull Request
-      id: cpr
-      uses: peter-evans/create-pull-request@v5
+        
+    - name: Run the Action
+      uses: devops-infra/action-pull-request@v0.5.5
       with:
-        commit-message: Prod PR for ${{ needs.parse.outputs.tag }}
-        base: master
-        branch: commit-promotion-develop
-        delete-branch: true
-        title: 'Prod PR for ${{ needs.parse.outputs.tag }}'
-        body: |
-          Prod PR for ${{ needs.parse.outputs.tag }}
-        labels: |
-          Production
-          Automated PR
-        assignees: MohsinHashmi-DataInn
-        reviewers: MohsinHashmi-DataInn     
+        github_token: ${{ github.token }}
+        source_branch: commit-promotion-develop
+        target_branch: master
+        title: "Prod PR for ${{ needs.parse.outputs.tag }}"
+        body: "**Automated pull request**"
+        label: Production-Releases
 
     - name: Comment on Issue      
       uses: peter-evans/create-or-update-comment@v1

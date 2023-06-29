@@ -316,6 +316,11 @@ jobs:
         git checkout -b commit-promotion-develop origin/develop
         git cherry-pick ${{ needs.parse.outputs.commit-sha }}
 
+    - name: Configure Git committer identity
+      run: |
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git config --global user.name "github-actions[bot]"
+
     - name: Push branch to origin
       uses: ad-m/github-push-action@master
       with:

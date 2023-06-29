@@ -294,7 +294,36 @@ jobs:
         with:
           filename: .github/deployment-approval.md
 
-  deploy-PROD:
+  createPullRequest:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Create branch with commit
+        run: |
+          git fetch origin develop
+          git checkout -b commit-promotion origin/develop
+          git cherry-pick ${{ needs.parse.outputs.commit-sha }}
+
+      - name: Push branch to origin
+        uses: ad-m/github-push-action@master
+        with:
+          branch: commit-promotion
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          branch: commit-promotion
+          base: master
+          title: Promote commit to master
+          body: |
+            This pull request promotes a specific commit from the develop branch to the master branch.
+          
+          
+
+  createPullRequest-PROD:
     needs: [parse]
     if: ${{ needs.parse.outputs.deploy-environment == 'PROD' }}
     runs-on: datainn-digitalocean-test-runner-set
@@ -309,8 +338,17 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
+
+    - name: Create branch with commit
+      run: |
+        git fetch origin develop
+        git checkout -b commit-promotion-develop origin/develop
+        git cherry-pick ${{ needs.parse.outputs.commit-sha }}
+
+    - name: Push branch to origin
+      uses: ad-m/github-push-action@master
       with:
-        ref: '${{ needs.parse.outputs.commit-sha }}'
+        branch: commit-promotion-develop
 
     - name: Create Pull Request
       id: cpr
@@ -318,6 +356,8 @@ jobs:
       with:
         commit-message: Prod PR for ${{ needs.parse.outputs.tag }}
         base: master
+        branch: commit-promotion-develop
+        delete-branch: true
         title: 'Prod PR for ${{ needs.parse.outputs.tag }}'
         body: |
           Prod PR for ${{ needs.parse.outputs.tag }}
@@ -334,8 +374,8 @@ jobs:
         body: 'Prod PR is created 👍'
   
   close-issue-PROD:
-    needs: [parse, deploy-PROD]
-    if: ${{ needs.deploy-PROD.result == 'success' }}
+    needs: [parse, createPullRequest-PROD]
+    if: ${{ needs.createPullRequest-PROD.result == 'success' }}
     runs-on: ubuntu-latest  
     permissions:
       contents: read

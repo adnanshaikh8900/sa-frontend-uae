@@ -317,7 +317,8 @@ jobs:
       uses: peter-evans/create-pull-request@v5
       with:
         commit-message: Prod PR for ${{ needs.parse.outputs.tag }}
-        delete-branch: false
+        base: master
+        branch: develop
         title: 'Prod PR for ${{ needs.parse.outputs.tag }}'
         body: |
           Prod PR for ${{ needs.parse.outputs.tag }}

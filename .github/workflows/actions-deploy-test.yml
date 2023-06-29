@@ -318,7 +318,6 @@ jobs:
       with:
         commit-message: Prod PR for ${{ needs.parse.outputs.tag }}
         base: master
-        branch: develop
         title: 'Prod PR for ${{ needs.parse.outputs.tag }}'
         body: |
           Prod PR for ${{ needs.parse.outputs.tag }}

@@ -185,7 +185,7 @@ jobs:
   
   close-issue-SIT:
     needs: [parse, deploy-SIT1, deploy-SIT2, deploy-SIT-Reports]
-    if: ${{ always() }}
+    if: ${{ needs.deploy-SIT1.result == 'success' && needs.deploy-SIT2.result == 'success' && needs.deploy-SIT-Reports.result == 'success' }}
     runs-on: ubuntu-latest  
     permissions:
       contents: read
@@ -197,15 +197,16 @@ jobs:
       
     steps:
       - name: Close Issue
-        if: ${{ needs.deploy-SIT1.result == 'success' || needs.deploy-SIT2.result == 'success' || needs.deploy-SIT-Reports.result == 'success' }}
         uses: peter-evans/close-issue@v1.0.3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           comment: 'Closing issue 🌟'
-
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          ref: '${{ needs.parse.outputs.commit-sha }}'
       - uses: JasonEtco/create-an-issue@v2
         name: Create approval Issue for UAT
-        if: ${{ needs.deploy-SIT1.result == 'success' || needs.deploy-SIT2.result == 'success' || needs.deploy-SIT-Reports.result == 'success' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ENVIRONMENT: UAT
@@ -262,7 +263,7 @@ jobs:
   
   close-issue-UAT:
     needs: [parse, deploy-UAT]
-    if: ${{ always() }}
+    if: ${{ needs.deploy-UAT.result == 'success' }}
     runs-on: ubuntu-latest  
     permissions:
       contents: read
@@ -274,15 +275,16 @@ jobs:
       
     steps:
       - name: Close Issue
-        if: ${{ needs.deploy-UAT.result == 'success' }}
         uses: peter-evans/close-issue@v1.0.3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           comment: 'Closing issue 🌟'
-
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          ref: '${{ needs.parse.outputs.commit-sha }}'
       - uses: JasonEtco/create-an-issue@v2
         name: Create approval Issue for UAT
-        if: ${{ needs.deploy-UAT.result == 'success' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ENVIRONMENT: PROD
@@ -338,7 +340,7 @@ jobs:
   
   close-issue-PROD:
     needs: [parse, deploy-PROD]
-    if: ${{ always() }}
+    if: ${{ needs.deploy-PROD.result == 'success' }}
     runs-on: ubuntu-latest  
     permissions:
       contents: read
@@ -350,7 +352,6 @@ jobs:
       
     steps:
       - name: Close Issue
-        if: ${{ needs.deploy-PROD.result == 'success' }}
         uses: peter-evans/close-issue@v1.0.3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}

@@ -137,7 +137,6 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }} # only needed if version is 'latest'
       id: install-helm
 
-
     - name: Helm chart Dev Deployment
       run: |
         echo "Deploying application to following cluster..."
@@ -146,12 +145,14 @@ jobs:
         helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=${{ env.TAG }},image.repository.frontend.tag=${{ env.TAG }},image.repository.frontend.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},maindomain=dev.app.simpleaccounts.io,simpleVatHost=https://dev-api.app.simpleaccounts.io,fullnameOverride=dev-frontend,serviceAccount.name=dev-deploy-robot-frontend,ingress.hosts[0].host=dev.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=dev-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=dev-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=dev.app.simpleaccounts.io --wait --dry-run --debug --namespace dev --create-namespace dev-frontend ./simpleaccounts-frontend 
         echo "Dev Depolyment Scripts..."
         helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=${{ env.TAG }},image.repository.frontend.tag=${{ env.TAG }},image.repository.frontend.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},maindomain=dev.app.simpleaccounts.io,simpleVatHost=https://dev-api.app.simpleaccounts.io,fullnameOverride=dev-frontend,serviceAccount.name=dev-deploy-robot-frontend,ingress.hosts[0].host=dev.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=dev-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=dev-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=dev.app.simpleaccounts.io --wait --namespace dev --create-namespace dev-frontend ./simpleaccounts-frontend 
-
+        
     - name: Create approval Issue for SIT
       uses: JasonEtco/create-an-issue@v2.6.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         ENVIRONMENT: SIT
         RUNNUMBER: ${{ github.run_number  }}
+        COMMITSHA: ${{ github.sha }}
+        TAG: ${{ env.TAG }}
       with:         
         filename: .github/deployment-approval.md

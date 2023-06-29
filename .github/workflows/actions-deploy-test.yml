@@ -325,38 +325,42 @@ jobs:
       with:
         branch: commit-promotion-develop
         
-    - name: Run the Action
-      uses: devops-infra/action-pull-request@v0.5.5
-      with:
-        github_token: ${{ github.token }}
-        source_branch: commit-promotion-develop
-        target_branch: master
-        title: "Prod PR for ${{ needs.parse.outputs.tag }}"
-        body: "**Automated pull request**"
-        label: Production-Releases
+    # - name: Run the Create Pull Request Action
+    #   uses: devops-infra/action-pull-request@v0.5.5
+    #   with:
+    #     github_token: ${{ github.token }}
+    #     source_branch: commit-promotion-develop
+    #     target_branch: master
+    #     title: "Prod PR for ${{ needs.parse.outputs.tag }}"
+    #     body: "**Automated pull request**"
+    #     label: Production-Releases
 
     - name: Comment on Issue      
       uses: peter-evans/create-or-update-comment@v1
       with:
         issue-number: ${{ github.event.issue.number }}
-        body: 'Prod PR is created 👍'
+        body: |
+         'commit-promotion-develop branch created 👍
+          Please create a PR from commit-promotion-develop to master branch and merge it to deploy to PROD
+          please delete the commit-promotion-develop branch after merging the PR.
+          Please close this issue manually after successful deployment to PROD.'
   
-  close-issue-PROD:
-    needs: [parse, createPullRequest-PROD]
-    if: ${{ needs.createPullRequest-PROD.result == 'success' }}
-    runs-on: ubuntu-latest  
-    permissions:
-      contents: read
-      packages: write
-      # This is used to complete the identity challenge
-      # with sigstore/fulcio when running outside of PRs.
-      id-token: write
-      issues: write
+  # close-issue-PROD:
+  #   needs: [parse, createPullRequest-PROD]
+  #   if: ${{ needs.createPullRequest-PROD.result == 'success' }}
+  #   runs-on: ubuntu-latest  
+  #   permissions:
+  #     contents: read
+  #     packages: write
+  #     # This is used to complete the identity challenge
+  #     # with sigstore/fulcio when running outside of PRs.
+  #     id-token: write
+  #     issues: write
       
-    steps:
-      - name: Close Issue
-        uses: peter-evans/close-issue@v1.0.3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          comment: 'Closing issue 🌟'
+  #   steps:
+  #     - name: Close Issue
+  #       uses: peter-evans/close-issue@v1.0.3
+  #       with:
+  #         token: ${{ secrets.GITHUB_TOKEN }}
+  #         comment: 'Closing issue 🌟'
         

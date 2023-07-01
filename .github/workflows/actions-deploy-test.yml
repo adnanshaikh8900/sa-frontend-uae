@@ -20,10 +20,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      packages: write
-      # This is used to complete the identity challenge
-      # with sigstore/fulcio when running outside of PRs.
-      id-token: write
       issues: write
 
     outputs:
@@ -53,10 +49,6 @@ jobs:
     runs-on: datainn-digitalocean-test-runner-set
     permissions:
       contents: read
-      packages: write
-      # This is used to complete the identity challenge
-      # with sigstore/fulcio when running outside of PRs.
-      id-token: write
       issues: write
 
     steps:
@@ -98,10 +90,6 @@ jobs:
     runs-on: datainn-digitalocean-test-runner-set
     permissions:
       contents: read
-      packages: write
-      # This is used to complete the identity challenge
-      # with sigstore/fulcio when running outside of PRs.
-      id-token: write
       issues: write
 
     steps:
@@ -144,10 +132,6 @@ jobs:
     runs-on: datainn-digitalocean-test-runner-set
     permissions:
       contents: read
-      packages: write
-      # This is used to complete the identity challenge
-      # with sigstore/fulcio when running outside of PRs.
-      id-token: write
       issues: write
 
     steps:
@@ -189,10 +173,6 @@ jobs:
     runs-on: ubuntu-latest  
     permissions:
       contents: read
-      packages: write
-      # This is used to complete the identity challenge
-      # with sigstore/fulcio when running outside of PRs.
-      id-token: write
       issues: write
       
     steps:
@@ -222,10 +202,6 @@ jobs:
     runs-on: datainn-digitalocean-test-runner-set
     permissions:
       contents: read
-      packages: write
-      # This is used to complete the identity challenge
-      # with sigstore/fulcio when running outside of PRs.
-      id-token: write
       issues: write
 
     steps:
@@ -267,10 +243,6 @@ jobs:
     runs-on: ubuntu-latest  
     permissions:
       contents: read
-      packages: write
-      # This is used to complete the identity challenge
-      # with sigstore/fulcio when running outside of PRs.
-      id-token: write
       issues: write
       
     steps:
@@ -300,31 +272,20 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      packages: write
-      # This is used to complete the identity challenge
-      # with sigstore/fulcio when running outside of PRs.
-      id-token: write
       issues: write
       pull-requests: write
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-
-    - name: Configure Git committer identity
-      run: |
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git config --global user.name "github-actions[bot]" 
-
+      
     - name: Create branch with commit
-      run: |
-        git fetch origin develop
-        git checkout -b commit-promotion-develop ${{ needs.parse.outputs.commit-sha }}
-
-    - name: Push branch to origin
-      uses: ad-m/github-push-action@master
+      uses: peterjgrainger/action-create-branch@v2.2.0
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
       with:
-        branch: commit-promotion-develop
+        branch: 'commit-promotion-develop'
+        sha: '${{ needs.parse.outputs.commit-sha }}'
         
     - name: Run the Create Pull Request Action
       uses: devops-infra/action-pull-request@v0.5.5
@@ -351,10 +312,6 @@ jobs:
     runs-on: ubuntu-latest  
     permissions:
       contents: read
-      packages: write
-      # This is used to complete the identity challenge
-      # with sigstore/fulcio when running outside of PRs.
-      id-token: write
       issues: write
       
     steps:

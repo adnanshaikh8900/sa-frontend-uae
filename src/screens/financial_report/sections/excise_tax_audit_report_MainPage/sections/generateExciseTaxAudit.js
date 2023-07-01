@@ -224,7 +224,7 @@ const regExAddress = /^[a-zA-Z0-9\s\D,'-/]+$/;
 																	)}
 																{/* <div className="VerifyTRN">
 																	<br />
-																	<b>	<a target="_blank" rel="noopener noreferrer" href="https://eservices.tax.gov.ae/en-us/trn-verify" style={{ color: '#2266d8' }}  >{strings.VerifyTRN}</a></b>
+																	<b>	<a target="_blank" rel="noopener noreferrer" href="https://tax.gov.ae/en/default.aspx" style={{ color: '#2266d8' }}  >{strings.VerifyTRN}</a></b>
 																</div> */}
 															</FormGroup>
 														</Col>

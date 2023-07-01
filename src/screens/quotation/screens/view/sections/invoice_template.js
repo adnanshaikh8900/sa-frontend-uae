@@ -86,6 +86,8 @@ class RFQTemplate extends Component {
 		strings.setLanguage(this.state.language);
 		const { QuotationData, currencyData, totalNet, companyData,contactData } = this.props;
 		console.log(contactData,"contactData")
+		console.log(QuotationData,"QuotationData")
+		console.log(companyData,"companyData")
 		return (
 			<div>
 				<Card id="singlePage" className="box">
@@ -207,7 +209,7 @@ class RFQTemplate extends Component {
 <div className="mb-1 ml-2"><b>{strings.QuotationNo}:</b> {QuotationData.quotationNumber}</div>
 {QuotationData.receiptNumber&&(<div className="mb-1 ml-2"><b>{strings.ReferenceNo}: </b>{QuotationData.receiptNumber}</div>)}
 <div className="mb-1 ml-2"><b>{strings.Created_Date}: </b>{' '}
-	{moment(QuotationData.createdDate).format('DD MMM YYYY')}</div>
+	{moment(QuotationData.quotationdate).format('DD MMM YYYY')}</div>
 <div className="mb-1 ml-2"><b>{strings.ExpirationDate }: </b>
 	{moment(QuotationData.quotaionExpiration).format('DD MMM YYYY')}</div>
 <div className=" ml-2"><b>{strings.Status}: </b>{this.renderQuotationStatus(QuotationData.status)}</div>
@@ -280,25 +282,19 @@ class RFQTemplate extends Component {
 									</th>
 									{/* <th style={{ padding: '0.5rem' }}>Item</th> */}
 									<th style={{ padding: '0.5rem' }}>{strings.ProductNameAndDescription}</th>
-									<th className="text-center" style={{ padding: '0.5rem' }}>
-										{strings.Quantity }
-									</th>
-									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
-										{strings.UnitCost }
-									</th>
+									<th className="text-center" style={{ padding: '0.5rem' }}>{strings.Quantity}</th>
+									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.UnitCost}</th>
 									{QuotationData.discount > 0 && (<>
-									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
-										{strings.Discount }
-									</th></>)}
+									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.Discount}</th></>)}
 									{/* <th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.DiscountType}</th> */}
 									{/* <th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.Excise}</th> */}
-									{ QuotationData.totalExciseAmount > 0 && (<>
+									{QuotationData.totalExciseAmount > 0 && (<>
 									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.ExciseAmount}</th></>)}
 									{/* <th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.VAT}</th> */}
-									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.VatAmount }</th>
-									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
-									  {strings.Total }
-									</th>
+									{companyData.isRegisteredVat === true && (<>
+									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.VatAmount}</th>
+									</>)}
+									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.Total}</th>
 								</tr>
 							</thead>
 							<tbody className="table-hover">
@@ -325,15 +321,15 @@ class RFQTemplate extends Component {
 												</td>
 												</>)}
 											
-												{ QuotationData.totalExciseAmount > 0 && (<><td style={{ textAlign: 'right' }}>
+												{QuotationData.totalExciseAmount > 0 && (<><td style={{ textAlign: 'right' }}>
 												{QuotationData.currencyIsoCode + " " +item.exciseAmount.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
 												</td></>)}
 												{/* <td
 													style={{ textAlign: 'right' }}
 												>{`${item.vatPercentage}%`}</td> */}
-												<td style={{ textAlign: 'right' }}>
+												{companyData.isRegisteredVat === true && (<td style={{ textAlign: 'right' }}>
 												{QuotationData.currencyIsoCode + " " +item.vatAmount.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
-												</td>
+												</td>)}
 												<td style={{ textAlign: 'right' }}>
 													{/* <Currency
 														value={item.subTotal}
@@ -435,6 +431,7 @@ class RFQTemplate extends Component {
 													{QuotationData.totalAmount ? QuotationData.currencyIsoCode + " " + ((parseFloat(QuotationData.totalAmount)-parseFloat(QuotationData.totalVatAmount))-parseFloat(QuotationData.totalExciseAmount)).toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : 0 } 													</span>
 												</td>
 										</tr>
+										{companyData.isRegisteredVat && companyData.isRegisteredVat === true ?
 											<tr >
 											<td style={{ width: '40%' }}>
 												<strong>{strings.VAT}</strong>
@@ -450,7 +447,7 @@ class RFQTemplate extends Component {
 													{QuotationData.totalVatAmount?QuotationData.currencyIsoCode+ " " +QuotationData.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):QuotationData.currencyIsoCode + " " + ZERO.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits:2 }) }
 												</span>
 											</td>
-										</tr>
+										</tr> : ""}
 										<tr >
 											<td style={{ width: '40%' }}>
 												<strong>{strings.Total }</strong>

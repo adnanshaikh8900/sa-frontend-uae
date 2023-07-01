@@ -14,6 +14,7 @@ import InvoiceTemplate from './invoice-template';
 import * as CustomStyles from './react-select';
 import ConfirmLeavePageModal from './confirm_leave_page'
 import LeavePage from './navigationPromtForLeavePage'
+import {CommonList} from './comman_list_data'
 
 export {
 	Loading,
@@ -31,5 +32,6 @@ export {
 	CustomStyles,
 	Tooltip,
 	Currency,
-	InvoiceTemplate
+	InvoiceTemplate,
+	CommonList,
 };

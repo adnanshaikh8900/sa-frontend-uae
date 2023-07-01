@@ -341,7 +341,7 @@ class Payment extends React.Component {
 							<Row>
 								<Col lg={12}>
 									<div className="h4 mb-0 d-flex align-items-center">
-										<i className="fas fa-money-check" />
+										<i className="fas fa-receipt" />
 										<span className="ml-2">{strings.Purchasereceipts}</span>
 									</div>
 								</Col>

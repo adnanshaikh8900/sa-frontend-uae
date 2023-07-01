@@ -1106,7 +1106,7 @@ class DetailExpense extends React.Component {
 																					this.placelistSetting(option,props)
 																					// ReverseCharge setup
 																					//this.ReverseChargeSetting(option.value,props)
-																					this.setState({isReverseChargeEnabled:false,exclusiveVat:false})
+																					this.setState({isReverseChargeEnabled:false,exclusiveVat:true})
 																					this.setState({taxTreatmentId:option.value})
 																																
 																				} else {
@@ -1616,13 +1616,13 @@ class DetailExpense extends React.Component {
 																<Col></Col>
 																	<Col >
 																	<FormGroup>
-																				<span className='mr-4'>{strings.InclusiveVAT}</span>
+																				<span className='mr-4'>{strings.ExclusiveVAT}</span>
 																				<Switch
-																					checked={ this.state.exclusiveVat}
-																					onChange={() => {
-																							this.setState({																						
-																								exclusiveVat: ! this.state.exclusiveVat
-																							});
+																					checked={!this.state.exclusiveVat}
+																					onChange={(checked) => {
+																						this.setState({
+																							exclusiveVat: !checked
+																						});
 																					}}
 																					onColor="#2064d8"
 																					onHandleColor="#2693e6"
@@ -1634,7 +1634,7 @@ class DetailExpense extends React.Component {
 																					height={20}
 																					width={48}
 																					className="react-switch "																					/>
-																					<span  className='ml-4'>{strings.ExclusiveVAT}</span>
+																					<span  className='ml-4'>{strings.InclusiveVAT}</span>
 
 																		</FormGroup>
 																		{/* <FormGroup className="mb-3">
@@ -1717,7 +1717,7 @@ class DetailExpense extends React.Component {
 																			id="isReverseChargeEnabled"
 																			checked={this.state.isReverseChargeEnabled}
 																			onChange={(option)=>{
-																				this.setState({isReverseChargeEnabled:!this.state.isReverseChargeEnabled,exclusiveVat:false})
+																				this.setState({isReverseChargeEnabled:!this.state.isReverseChargeEnabled,exclusiveVat:true})
 																				// for resetting VAT
 																				props.handleChange('vatCategoryId')('');
 																			}}

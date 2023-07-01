@@ -20,10 +20,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      packages: write
-      # This is used to complete the identity challenge
-      # with sigstore/fulcio when running outside of PRs.
-      id-token: write
       issues: write
 
     outputs:
@@ -53,10 +49,6 @@ jobs:
     runs-on: datainn-digitalocean-test-runner-set
     permissions:
       contents: read
-      packages: write
-      # This is used to complete the identity challenge
-      # with sigstore/fulcio when running outside of PRs.
-      id-token: write
       issues: write
 
     steps:
@@ -98,10 +90,6 @@ jobs:
     runs-on: datainn-digitalocean-test-runner-set
     permissions:
       contents: read
-      packages: write
-      # This is used to complete the identity challenge
-      # with sigstore/fulcio when running outside of PRs.
-      id-token: write
       issues: write
 
     steps:
@@ -144,10 +132,6 @@ jobs:
     runs-on: datainn-digitalocean-test-runner-set
     permissions:
       contents: read
-      packages: write
-      # This is used to complete the identity challenge
-      # with sigstore/fulcio when running outside of PRs.
-      id-token: write
       issues: write
 
     steps:
@@ -189,10 +173,6 @@ jobs:
     runs-on: ubuntu-latest  
     permissions:
       contents: read
-      packages: write
-      # This is used to complete the identity challenge
-      # with sigstore/fulcio when running outside of PRs.
-      id-token: write
       issues: write
       
     steps:
@@ -222,10 +202,6 @@ jobs:
     runs-on: datainn-digitalocean-test-runner-set
     permissions:
       contents: read
-      packages: write
-      # This is used to complete the identity challenge
-      # with sigstore/fulcio when running outside of PRs.
-      id-token: write
       issues: write
 
     steps:
@@ -267,10 +243,6 @@ jobs:
     runs-on: ubuntu-latest  
     permissions:
       contents: read
-      packages: write
-      # This is used to complete the identity challenge
-      # with sigstore/fulcio when running outside of PRs.
-      id-token: write
       issues: write
       
     steps:
@@ -299,11 +271,7 @@ jobs:
     if: ${{ needs.parse.outputs.deploy-environment == 'PROD' }}
     runs-on: ubuntu-latest
     permissions:
-      contents: write
-      packages: write
-      # This is used to complete the identity challenge
-      # with sigstore/fulcio when running outside of PRs.
-      id-token: write
+      contents: read
       issues: write
       pull-requests: write
 
@@ -351,10 +319,6 @@ jobs:
     runs-on: ubuntu-latest  
     permissions:
       contents: read
-      packages: write
-      # This is used to complete the identity challenge
-      # with sigstore/fulcio when running outside of PRs.
-      id-token: write
       issues: write
       
     steps:

@@ -5,8 +5,12 @@ name: SimpleAccounts Frontend Deploy
 
 on:
   pull_request:
+    types:
+      - closed
     branches:
       - master
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
 
 env:
   # Use docker.io for Docker Hub if empty
@@ -20,7 +24,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       packages: write
       # This is used to complete the identity challenge
       # with sigstore/fulcio when running outside of PRs.
@@ -36,9 +40,14 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
+    - name: Delete remote commit-promotion-develop branch
+      run: |
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git config --global user.name "github-actions[bot]" 
+        git push origin --delete commit-promotion-develop
+
     - uses: ncipollo/release-action@v1
       with:
-        artifacts: "release-${{ env.TAG }}.tar.gz"
         body: "Production release ${{ env.TAG }}"
         tag: "${{ env.TAG }}"
         generateReleaseNotes: "true"

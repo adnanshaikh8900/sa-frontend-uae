@@ -20,7 +20,8 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    permissions:
+    permissions: 
+      contents: read
       packages: write
 
     strategy:
@@ -111,6 +112,7 @@ jobs:
     needs: build
     runs-on: datainn-digitalocean-test-runner-set
     permissions:
+      contents: read
       issues: write
 
     steps:

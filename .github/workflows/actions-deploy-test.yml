@@ -27,6 +27,7 @@ jobs:
       ci-run-number: ${{ fromJSON(steps.issue_body_parser.outputs.payload).runNumber }}
       commit-sha: ${{ fromJSON(steps.issue_body_parser.outputs.payload).commitSha }}
       tag: ${{ fromJSON(steps.issue_body_parser.outputs.payload).tag }}
+      
     steps:
       - name: Comment on Issue      
         uses: peter-evans/create-or-update-comment@v1

@@ -27,6 +27,7 @@ jobs:
       ci-run-number: ${{ fromJSON(steps.issue_body_parser.outputs.payload).runNumber }}
       commit-sha: ${{ fromJSON(steps.issue_body_parser.outputs.payload).commitSha }}
       tag: ${{ fromJSON(steps.issue_body_parser.outputs.payload).tag }}
+      
     steps:
       - name: Comment on Issue      
         uses: peter-evans/create-or-update-comment@v1
@@ -287,17 +288,17 @@ jobs:
         branch: 'commit-promotion-develop'
         sha: '${{ needs.parse.outputs.commit-sha }}'
         
-    - name: Run the Create Pull Request Action
-      uses: devops-infra/action-pull-request@v0.5.5
-      with:
-        github_token: ${{ github.token }}
-        source_branch: commit-promotion-develop
-        target_branch: master
-        title: "Prod PR for ${{ needs.parse.outputs.tag }}"
-        body: "**Automated pull request**"
-        label: Production-Releases
-        ignore_users: "dependabot"
-        allow_no_diff: true
+    # - name: Run the Create Pull Request Action
+    #   uses: devops-infra/action-pull-request@v0.5.5
+    #   with:
+    #     github_token: ${{ github.token }}
+    #     source_branch: commit-promotion-develop
+    #     target_branch: master
+    #     title: "Prod PR for ${{ needs.parse.outputs.tag }}"
+    #     body: "**Automated pull request**"
+    #     label: Production-Releases
+    #     ignore_users: "dependabot"
+    #     allow_no_diff: true 
 
     - name: Comment on Issue      
       uses: peter-evans/create-or-update-comment@v1

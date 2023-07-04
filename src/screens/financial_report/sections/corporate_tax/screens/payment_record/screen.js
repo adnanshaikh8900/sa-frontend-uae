@@ -17,7 +17,7 @@ import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import * as VatreportActions from '../../actions';
+import * as CTReportActions from '../../actions';
 import { Loader } from 'components';
 import { CommonActions } from 'services/global';
 import moment from 'moment';
@@ -33,10 +33,7 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
-		vatreportActions: bindActionCreators(
-			VatreportActions,
-			dispatch,
-		),
+		ctReportActions: bindActionCreators(CTReportActions,dispatch,),
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
@@ -94,9 +91,8 @@ class CorporateTaxPaymentRecord extends React.Component {
 			reportfilledOn:new Date(),
 			loadingMsg:"Loading..."
 		};
-
-		this.props.vatreportActions
-			.getVatReportList()
+		this.props.ctReportActions
+			.getCTReportList()
 			.then((res) => {
 				if (res.status === 200) {
 					const data=res.data?.data || []
@@ -139,7 +135,7 @@ class CorporateTaxPaymentRecord extends React.Component {
 	};
 
 	initializeData = () => {
-		this.props.vatreportActions.getDepositList().then((res)=>{	
+		this.props.ctReportActions.getDepositList().then((res)=>{	
 			this.setState({deposit_list:res});
 		})
 	};
@@ -194,7 +190,7 @@ class CorporateTaxPaymentRecord extends React.Component {
 		}
 		formData.append('isVatReclaimed', false);
 		this.setState({ loading:true, loadingMsg:"Tax Claim Recording..."});
-		this.props.vatreportActions.recordVatPayment(formData)
+		this.props.ctReportActions.recordVatPayment(formData)
 			.then((res) => {
 				
 				this.props.commonActions.tostifyAlert(

@@ -965,6 +965,7 @@ const en = {
       GenerateCTReport:"Generate CT Report",
       GenerateCTReportFor:"Generate CT Report For",
       CTPaymentHistory:"CT Payment History",
+      CorporateTaxPaymentHistory:"Corporate Tax Payment History",
       VatReports:"VAT Reports",
       FTA_Audit_Report:"FTA VAT Audit File",
       Excise_Tax_Report:"FTA Excise Tax Audit File",

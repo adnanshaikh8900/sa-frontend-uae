@@ -789,8 +789,8 @@ const adminRoutes = [
 		component: CorporateTaxPaymentHistory.screen,
 	},
 	Config.REPORTS_MODULE && {
-		path: '/admin/report/corporate-tax/payment-record',
-		name: 'Corporate Tax Payment Record',
+		path: '/admin/report/corporate-tax/payment',
+		name: 'Corporate Tax Payment',
 		component: CorporateTaxPaymentRecord.screen,
 	},
 	Config.REPORTS_MODULE && {

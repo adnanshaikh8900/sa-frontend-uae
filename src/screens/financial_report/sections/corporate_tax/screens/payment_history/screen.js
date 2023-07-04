@@ -19,6 +19,8 @@ import moment from 'moment';
 import * as FinancialReportActions from '../../../../actions';
 import { Currency } from 'components';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import { data } from '../../../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
     return {
@@ -32,13 +34,15 @@ const mapDispatchToProps = (dispatch) => {
         authActions: bindActionCreators(AuthActions, dispatch),
         commonActions: bindActionCreators(CommonActions, dispatch),
         ctReportActions: bindActionCreators(CTreportAction, dispatch),
-        financialReportActions: bindActionCreators(FinancialReportActions,dispatch,),
+        financialReportActions: bindActionCreators(FinancialReportActions, dispatch,),
     };
 };
+let strings = new LocalizedStrings(data);
 class CorporateTaxPaymentHistory extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            language: window['localStorage'].getItem('language'),
             initValue: {},
             loading: false,
             fileName: '',
@@ -49,7 +53,7 @@ class CorporateTaxPaymentHistory extends React.Component {
             upload: false,
             file_data_list: [],
             openModal: false,
-            cttReportDataList:[],
+            cttReportDataList: [],
             paginationPageSize: 10,
         };
         this.options = {
@@ -121,10 +125,9 @@ class CorporateTaxPaymentHistory extends React.Component {
         };
         const postData = { ...filterData, ...paginationData, ...sortingData };
         this.props.ctReportActions
-            .getVatPaymentHistoryList(postData)
+            .getCTPaymentHistoryList(postData)
             .then((res) => {
                 if (res.status === 200) {
-
                     this.setState({ cttReportDataList: res.data }) // comment for dummy
                 }
             })
@@ -165,6 +168,7 @@ class CorporateTaxPaymentHistory extends React.Component {
     };
 
     render() {
+        strings.setLanguage(this.state.language);
         const { cttReportDataList } = this.state;
         const { company_profile } = this.props;
         return (
@@ -188,7 +192,7 @@ class CorporateTaxPaymentHistory extends React.Component {
                                                 }}
                                                 onClick={this.viewFilter}
                                             >
-                                                <i className="fa fa-history mr-2"></i>VAT Payment Record
+                                                <i className="fa fa-history mr-2"></i> {strings.CorporateTaxPaymentHistory}
                                             </p>
                                         </div>
                                         <div className="d-flex">
@@ -234,7 +238,7 @@ class CorporateTaxPaymentHistory extends React.Component {
                                             : 'ABC GROUP'}
                                     </h2>
                                     <br style={{ marginBottom: '5px' }} />
-                                    <b style={{ fontSize: '18px' }}>VAT Payment Record</b>
+                                    <b style={{ fontSize: '18px' }}>{strings.CorporateTaxPaymentHistory}</b>
                                     <br style={{ marginBottom: '5px' }} />
                                     <br />
                                 </div>
@@ -246,7 +250,7 @@ class CorporateTaxPaymentHistory extends React.Component {
                                     version="4"
                                     hover
                                     responsive
-                                    remote							
+                                    remote
                                     data={cttReportDataList.data ? cttReportDataList.data : []}
                                     pagination={
                                         cttReportDataList &&
@@ -263,40 +267,32 @@ class CorporateTaxPaymentHistory extends React.Component {
                                 >
                                     <TableHeaderColumn
                                         tdStyle={{ whiteSpace: 'normal' }}
+                                        dataAlign="left"
                                         isKey
                                         dataField="taxReturns"
                                         dataSort
                                         dataFormat={this.renderTaxReturns}
                                         className="table-header-bg"
                                     >
-                                        VAT Return
+                                        {strings.TaxPeriod}
                                     </TableHeaderColumn>
                                     <TableHeaderColumn
+                                        dataAlign="right"
                                         dataField="dateOfFiling"
-                                        // columnTitle={this.customEmail}
+                                        dataSort
+                                        dataFormat={this.renderAmount}
+                                        className="table-header-bg"
+                                    >
+                                        {strings.AmountPaid}
+                                    </TableHeaderColumn>
+                                    <TableHeaderColumn
+                                        dataAlign="left"
+                                        dataField="amountPaid"
                                         dataSort
                                         dataFormat={this.renderDate}
                                         className="table-header-bg"
                                     >
-                                        Date of Filing
-                                    </TableHeaderColumn>
-                                    <TableHeaderColumn
-                                        dataField="amountPaid"
-                                        // columnTitle={this.customEmail}
-                                        dataSort
-                                        dataFormat={this.renderAmount}
-                                        className="table-header-bg"
-                                    >
-                                        Amount Paid
-                                    </TableHeaderColumn>
-                                    <TableHeaderColumn
-                                        dataField="amountReclaimed"
-                                        // columnTitle={this.customEmail}
-                                        dataSort
-                                        dataFormat={this.renderAmount}
-                                        className="table-header-bg"
-                                    >
-                                        Amount Reclaimed
+                                        {strings.PAYMENTDATE}
                                     </TableHeaderColumn>
                                 </BootstrapTable>
                             </div>

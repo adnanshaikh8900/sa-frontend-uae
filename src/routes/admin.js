@@ -105,6 +105,7 @@ import {
 	ARAgingReport,
 	CorporateTax,
 	CorporateTaxPaymentHistory,
+	CorporateTaxPaymentRecord,
 
 	// Master Screens
 	ChartAccount,
@@ -786,6 +787,11 @@ const adminRoutes = [
 		path: '/admin/report/corporate-tax/payment-history',
 		name: 'Corporate Tax Payment History',
 		component: CorporateTaxPaymentHistory.screen,
+	},
+	Config.REPORTS_MODULE && {
+		path: '/admin/report/corporate-tax/payment-record',
+		name: 'Corporate Tax Payment Record',
+		component: CorporateTaxPaymentRecord.screen,
 	},
 	Config.REPORTS_MODULE && {
 		path: '/admin/report/arAgingReport',

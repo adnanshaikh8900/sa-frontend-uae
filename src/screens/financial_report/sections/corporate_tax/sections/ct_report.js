@@ -160,7 +160,6 @@ class CTReport extends React.Component {
                         }}
                         validate={(values) => {
                             let errors = {};
-
                             return errors;
                         }}
                         validationSchema={Yup.object().shape({
@@ -168,7 +167,8 @@ class CTReport extends React.Component {
                                 'This field is required',
                             ),
                         })}
-                    ></Formik>
+                    >
+                    </Formik>
                     <ModalBody style={{ padding: "15px 0px 0px 0px" }}>
                         <div style={{ padding: " 0px 1px" }}>
                             <div>

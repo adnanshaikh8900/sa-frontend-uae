@@ -19,7 +19,7 @@ import { AuthActions, CommonActions } from "services/global";
 import "react-toastify/dist/ReactToastify.css";
 import "react-datepicker/dist/react-datepicker.css";
 import "./style.scss";
-import * as Vatreport from "./actions";
+import * as CTReportAction from "./actions";
 import { upperFirst } from "lodash-es";
 import { CTReport } from './sections';
 // import 'ag-grid-community/dist/styles/ag-grid.css';
@@ -31,8 +31,10 @@ import { data } from "../../../Language/index";
 import LocalizedStrings from "react-localization";
 
 const mapStateToProps = (state) => {
+  console.log(state)
   return {
     version: state.common.version,
+    setting_list: state.reports.setting_list,
   };
 };
 
@@ -40,7 +42,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     authActions: bindActionCreators(AuthActions, dispatch),
     commonActions: bindActionCreators(CommonActions, dispatch),
-    vatreport: bindActionCreators(Vatreport, dispatch),
+    ctReportAction: bindActionCreators(CTReportAction, dispatch),
   };
 };
 
@@ -72,7 +74,7 @@ class CorporateTax extends React.Component {
       current_report_id: "",
       deleteModal: false,
       loadingMsg: "Loading...",
-      fiscalYear:"",
+      fiscalYearOptions: [],
     };
 
     this.options = {
@@ -119,9 +121,9 @@ class CorporateTax extends React.Component {
     this.gridApi.exportDataAsExcel();
   };
 
-  // componentDidMount = () => {
-  //   this.getInitialData();
-  // };
+  componentDidMount = () => {
+    this.props.ctReportAction.getSettings();
+  };
 
   handleChange = (key, val) => {
     this.setState({
@@ -501,7 +503,7 @@ class CorporateTax extends React.Component {
                         className="btn-square  pull-right"
                         onClick={() => {
                           this.props.history.push(
-                            "/admin/report/vatreports/vatpaymentrecordhistory"
+                            "/admin/report/corporate-tax/payment-history"
                           );
                         }}
                       >
@@ -515,7 +517,17 @@ class CorporateTax extends React.Component {
                         // disabled={!this.state.enbaleReportGeneration}
                         // title={!this.state.enbaleReportGeneration?"Select VAT Reporting Period":""}
                         onClick={() => {
-                          this.setState({ openCTReportModal: true });
+                          const setting = this.props.setting_list ? this.props.setting_list.find(obj => obj.selectedFlag === true) : '';
+                          const startingMonth = 'January'
+                          const startingDate = '01-1-';
+                          const startingYear = 2024;
+                          const fiscalYearOptions = [];
+                          for (let i = 0; i < 4; i++) {
+                            const year = parseInt(startingYear) + parseInt(i);
+                            const date = startingDate + year;
+                            fiscalYearOptions.push({ value: date, label: startingMonth + '-' + year })
+                          }
+                          this.setState({ fiscalYearOptions: fiscalYearOptions, openCTReportModal: true });
                         }}
                       >
                         <i class="fas fa-plus"></i> {strings.GenerateCTReport}
@@ -620,7 +632,7 @@ class CorporateTax extends React.Component {
                     dataSort
                     dataFormat={this.renderAmount}
                     className="table-header-bg"
-                    >
+                  >
                     {strings.TaxAmount}
                   </TableHeaderColumn>
                   <TableHeaderColumn
@@ -630,7 +642,7 @@ class CorporateTax extends React.Component {
                     dataFormat={this.renderDate}
                     dataAlign="left"
                     className="table-header-bg"
-                    >
+                  >
                     {strings.FiledOn}
                   </TableHeaderColumn>
                   <TableHeaderColumn
@@ -667,7 +679,7 @@ class CorporateTax extends React.Component {
         <CTReport
           openModal={this.state.openCTReportModal}
           setState={(e) => this.setState(e)}
-          fiscalYear={this.state.fiscalYear}
+          fiscalYearOptions={this.state.fiscalYearOptions}
           closeModal={(e) => {
             this.closeModal(e);
           }}

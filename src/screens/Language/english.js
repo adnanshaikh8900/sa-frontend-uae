@@ -963,6 +963,7 @@ const en = {
       CorporateTax:"Corporate Tax",
       CorporateTaxSetting:"Corporate Tax Settings",
       GenerateCTReport:"Generate CT Report",
+      GenerateCTReportFor:"Generate CT Report For",
       CTPaymentHistory:"CT Payment History",
       VatReports:"VAT Reports",
       FTA_Audit_Report:"FTA VAT Audit File",

@@ -6,7 +6,7 @@ export const getSettings = (obj) => {
     return (dispatch) => {
         let data = {
             method: 'get',
-            url: '/rest/corporatetax/get/setting',
+            url: '/rest/corporate/tax/get/setting',
         };
         return authApi(data)
             .then((res) => {

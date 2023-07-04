@@ -60,12 +60,6 @@ const customStyles = {
 let strings = new LocalizedStrings(data);
 class CTReport extends React.Component {
     constructor(props) {
-        var date = new Date();
-        var lastdayoflastmonth = new Date();
-
-        var firstdayoflastmonth = new Date();
-        firstdayoflastmonth.setDate(1);
-
         super(props);
         this.state = {
             language: window["localStorage"].getItem("language"),
@@ -87,7 +81,6 @@ class CTReport extends React.Component {
         const startDate = new Date(value);
         const endDate = new Date(moment(startDate).add(12, 'month').subtract(1, "days"));
         const dueDate = new Date(moment(endDate).add(9, 'month'))
-        console.log(startDate, endDate)
         this.setState({
             startDate: startDate,
             endDate: endDate,
@@ -99,38 +92,26 @@ class CTReport extends React.Component {
 
     }
 
-    displayMsg = (err) => {
-        toast.error(`${err.data}`, {
-            position: toast.POSITION.TOP_RIGHT,
-        });
-    };
-    _showDetails = (bool) => {
-        this.setState({
-            showDetails: bool,
-        });
-    };
-
-    exportPDFWithComponent = () => {
-        this.pdfExportComponent.save();
-    };
-    // componentDidMount = () => {
-    //     this.setState({ctReprtFor_list:[]})
-    // };
-    
     generateCTReport = () => {
         const { openModal, closeModal } = this.props;
         this.setState({ disabled: true });
         const data = this.state;
-        const postData = {
-            startDate: moment(data.startDate).format('DD/MM/YYYY'),
-            endDate: moment(data.endDate).format('DD/MM/YYYY'),
-            dueDate: moment(data.dueDate).format('DD/MM/YYYY'),
-            reportingPeriod: 'Yearly',
-            reportingForYear: data.ctReprtFor.label,
-        };
+        const formData = new FormData();
+        // const postData = {
+        //     startDate: moment(data.startDate).format('DD/MM/YYYY'),
+        //     endDate: moment(data.endDate).format('DD/MM/YYYY'),
+        //     dueDate: moment(data.dueDate).format('DD/MM/YYYY'),
+        //     reportingPeriod: 'Yearly',
+        //     reportingForYear: data.ctReprtFor.label,
+        // };
+        formData.append('startDate', moment(data.startDate).format('DD/MM/YYYY'))
+		formData.append('endDate', moment(data.endDate).format('DD/MM/YYYY'))
+		formData.append('dueDate', moment(data.dueDate).format('DD/MM/YYYY'))
+		formData.append('reportingPeriod','Yearly')
+		formData.append('reportingForYear', data.ctReprtFor.label)
 
         this.props.ctReportActions
-            .generateCTReport(postData)
+            .generateCTReport(formData)
             .then((res) => {
                 if (res.status === 200) {
                     this.props.commonActions.tostifyAlert(
@@ -166,7 +147,6 @@ class CTReport extends React.Component {
                                 <div className="h4 mb-0 d-flex align-items-center">
                                     <span className="ml-2">
                                         {strings.GenerateCorporateTaxReport}
-                                        {/* ( <b>{this.props.monthOption==0?"Monthly":"Quarterly"}</b> ) */}
                                     </span>
                                 </div>
                             </Col>
@@ -180,7 +160,6 @@ class CTReport extends React.Component {
                         }}
                         validate={(values) => {
                             let errors = {};
-
                             return errors;
                         }}
                         validationSchema={Yup.object().shape({
@@ -188,7 +167,8 @@ class CTReport extends React.Component {
                                 'This field is required',
                             ),
                         })}
-                    ></Formik>
+                    >
+                    </Formik>
                     <ModalBody style={{ padding: "15px 0px 0px 0px" }}>
                         <div style={{ padding: " 0px 1px" }}>
                             <div>
@@ -363,41 +343,6 @@ class CTReport extends React.Component {
             </div>
         );
     }
-
-    //
-
-    getStartDate = () => {
-        const { monthOption } = this.props;
-
-        if (this.state.monthlyDate) {
-            let date = moment(this.state.monthlyDate).format("DD-MM-YYYY");
-
-            return date;
-        }
-    };
-
-    //
-    getEndDate = () => {
-        const { monthOption } = this.props;
-        let date = "";
-        if (this.state.monthlyDate) {
-            if (monthOption.value === 0) {
-                date = moment(this.state.monthlyDate)
-                    .add(1, "month")
-                    .subtract(1, "day")
-                    .format("DD-MM-YYYY");
-            } else if (monthOption.value === 2) {
-                date = moment(this.state.monthlyDate)
-                    .add(3, "month")
-                    .subtract(1, "day")
-                    .format("DD-MM-YYYY");
-            }
-
-            return date;
-        }
-    };
-
-    //
 }
 
 export default connect(

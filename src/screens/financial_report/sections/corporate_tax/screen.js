@@ -232,7 +232,7 @@ class CorporateTax extends React.Component {
                 this.setState({ current_report_id: params.id });
                 if (params.totalTaxReclaimable != 0)
                   this.props.history.push(
-                    "/admin/report/vatreports/recordclaimtax",
+                    "/admin/report/corporate-tax/payment-record",
                     {
                       id: params.id,
                       totalTaxReclaimable: params.totalTaxReclaimable,
@@ -517,15 +517,19 @@ class CorporateTax extends React.Component {
                         // disabled={!this.state.enbaleReportGeneration}
                         // title={!this.state.enbaleReportGeneration?"Select VAT Reporting Period":""}
                         onClick={() => {
-                          const setting = this.props.setting_list ? this.props.setting_list.find(obj => obj.selectedFlag === true) : '';
-                          const startingMonth = 'January'
-                          const startingDate = '01-1-';
-                          const startingYear = 2024;
+                          const setting = this.props.setting_list ? this.props.setting_list.find(obj => obj.selectedFlag === true) ? this.props.setting_list.find(obj => obj.selectedFlag === true) : this.props.setting_list[0] : '';
+                          //const setting = this.props.setting_list ? this.props.setting_list.find(obj => obj.selectedFlag === true) : '';
                           const fiscalYearOptions = [];
-                          for (let i = 0; i < 4; i++) {
-                            const year = parseInt(startingYear) + parseInt(i);
-                            const date = startingDate + year;
-                            fiscalYearOptions.push({ value: date, label: startingMonth + '-' + year })
+                          if (setting) {
+                            const startingMonth = setting.fiscalYear.split(' - ')[0];
+                            const startingDate = startingMonth === 'January' ? '1-1-' : '6-1-';
+                            const startingYear = startingMonth === 'January' ? moment().year() + 1 : moment().year();
+                            // const startingYear = startingMonth === 'January' ? moment().month() > 1 ? moment().year()+1 : moment.year() : moment().month() > 6 ? moment().year()+1 : moment.year() ;
+                            for (let i = 0; i < 4; i++) {
+                              const year = parseInt(startingYear) + parseInt(i);
+                              const date = startingDate + year;
+                              fiscalYearOptions.push({ value: date, label: startingMonth + '-' + year })
+                            }
                           }
                           this.setState({ fiscalYearOptions: fiscalYearOptions, openCTReportModal: true });
                         }}

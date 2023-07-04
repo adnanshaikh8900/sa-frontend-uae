@@ -517,7 +517,7 @@ class CorporateTax extends React.Component {
                         // disabled={!this.state.enbaleReportGeneration}
                         // title={!this.state.enbaleReportGeneration?"Select VAT Reporting Period":""}
                         onClick={() => {
-                          const setting = this.props.setting_list ? this.props.setting_list.find(obj => obj.selectedFlag === true) : '';
+                          const setting = this.props.setting_list ? this.props.setting_list.find(obj => obj.selectedFlag === true) ?  this.props.setting_list.find(obj => obj.selectedFlag === true) : this.props.setting_list[0] : '';
                           const startingMonth = 'January'
                           const startingDate = '01-1-';
                           const startingYear = 2024;

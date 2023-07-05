@@ -11,6 +11,7 @@ const initState = {
   creditnote_details: [],
   setting_list: [],
   payment_history: [],
+  ctReport_list: [],
 }
 
 const ReportsReducer = (state = initState, action) => {
@@ -68,6 +69,11 @@ const ReportsReducer = (state = initState, action) => {
       return {
         ...state,
         payment_history: Object.assign([], payload.data),
+      };
+    case REPORTS.CTREPORT_LIST:
+      return {
+        ...state,
+        ctReport_list: Object.assign([], payload.data),
       };
     default:
       return state

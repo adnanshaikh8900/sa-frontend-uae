@@ -56,6 +56,12 @@ export const getCorporateTaxList = (postObj) => {
 		};
 		return authFileUploadApi(data)
 			.then((res) => {
+				dispatch({
+					type: REPORTS.CTREPORT_LIST,
+					payload: {
+						data: res.data,
+					},
+				});
 				return res			
 			})
 			.catch((err) => {

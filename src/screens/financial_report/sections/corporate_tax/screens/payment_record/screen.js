@@ -66,10 +66,10 @@ class CorporateTaxPaymentRecord extends React.Component {
 			headerValue: this.props.location.state.taxReturns ?this.props.location.state.taxReturns :'',
 			initValue: {
 				receiptNo: '',
-				vatPaymentDate: '',
+				ctPaymentDate: '',
 				reportId: this.props.location.state && this.props.location.state.id ?this.props.location.state.id:'',
 				amount: '',
-				totalTaxPayable: this.props.location.state && this.props.location.state.totalTaxPayable ?this.props.location.state.totalTaxPayable: 0.00,
+				totalAmount: this.props.location.state && this.props.location.state.totalAmount ?this.props.location.state.totalAmount: 0.00,
 				payMode: '',
 				notes: '',
 				paidThrough: '',
@@ -92,16 +92,17 @@ class CorporateTaxPaymentRecord extends React.Component {
 			loadingMsg:"Loading..."
 		};
 		this.props.ctReportActions
-			.getCTReportList()
+			.getCorporateTaxList()
 			.then((res) => {
 				if (res.status === 200) {
+					debugger
 					const data=res.data?.data || []
 					const reportInfoById=data.find((obj)=>obj.id === this.props.location.state.id)
 					if(reportInfoById)
 					this.setState({ 
-						reportfilledOn: new Date(reportInfoById.filedOn),
+						reportfilledOn: reportInfoById.taxFiledOn ? new Date(reportInfoById.taxFiledOn) : new Date(),
 						initValue: {
-							vatPaymentDate: new Date(reportInfoById.filedOn),
+							ctPaymentDate: reportInfoById.taxFiledOn ? new Date(reportInfoById.taxFiledOn) : new Date(),
 						},
 					})
 				
@@ -155,7 +156,7 @@ class CorporateTaxPaymentRecord extends React.Component {
 	handleSubmit = (data) => {
 		this.setState({ disabled: true });
 		const {
-			vatPaymentDate,
+			ctPaymentDate,
 			reportId,
 			amount,
 			paidThrough,
@@ -167,10 +168,10 @@ class CorporateTaxPaymentRecord extends React.Component {
 		
 		let formData = new FormData();
 		formData.append(
-			'vatPaymentDate',
-			typeof vatPaymentDate === 'string'
-				? moment(vatPaymentDate, 'DD-MM-YYYY').toDate()
-				: vatPaymentDate,
+			'ctPaymentDate',
+			typeof ctPaymentDate === 'string'
+				? moment(ctPaymentDate, 'DD-MM-YYYY').toDate()
+				: ctPaymentDate,
 		);
 
 		formData.append('amount', amount !== null ? amount : '');
@@ -265,8 +266,8 @@ class CorporateTaxPaymentRecord extends React.Component {
 													 if(!values.amount){
 														errors.amount='Amount is required';
 													 }
-													 if(!values.vatPaymentDate){
-														errors.vatPaymentDate='Payment date is required';
+													 if(!values.ctPaymentDate){
+														errors.ctPaymentDate='Payment date is required';
 													 }
 													
 													 if(parseFloat(values.amount)>values.balanceDue){
@@ -289,7 +290,7 @@ class CorporateTaxPaymentRecord extends React.Component {
 															(value) => {
 																if (
 																	!value ||
-																	(value  <= this.props.location.state.totalTaxPayable)
+																	(value  <= this.props.location.state.totalAmount)
 																) {
 																	return true;
 																} else {
@@ -341,36 +342,35 @@ class CorporateTaxPaymentRecord extends React.Component {
 															<Row>
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
-																		<Label htmlFor="totalTaxPayable">
-																			<span className="text-danger">* </span>{' '}
-																		Total VAT Payable
+																		<Label htmlFor="totalAmount">
+																			<span className="text-danger">* </span> {strings.TotalCorporateTaxAmount}
 																		</Label>
 																		<Input
 																			type="number"
 																			disabled
-																			id="totalTaxPayable"
-																			name="totalTaxPayable"
-																			value={props.values.totalTaxPayable}
+																			id="totalAmount"
+																			name="totalAmount"
+																			value={props.values.totalAmount}
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
 																					this.regDecimal.test(option.target.value),
-																					props.handleChange('totalTaxPayable')(option)
+																					props.handleChange('totalAmount')(option)
 																				) {
-																					props.handleChange('totalTaxPayable')(option);
+																					props.handleChange('totalAmount')(option);
 																				}
 																			}}
 																			className={
-																				props.errors.totalTaxPayable &&
+																				props.errors.totalAmount &&
 																				props.touched.amount
 																					? 'is-invalid'
 																					: ''
 																			}
 																		/>
-																		{props.errors.totalTaxPayable &&
-																			props.touched.totalTaxPayable && (
+																		{props.errors.totalAmount &&
+																			props.touched.totalAmount && (
 																				<div className="invalid-feedback">
-																					{props.errors.totalTaxPayable}
+																					{props.errors.totalAmount}
 																				</div>
 																			)}
 																	</FormGroup>
@@ -459,32 +459,32 @@ class CorporateTaxPaymentRecord extends React.Component {
 																			 {strings.PaymentDate}
 																		</Label>
 																		<DatePicker
-																			id="vatPaymentDate"
-																			name="vatPaymentDate"
+																			id="ctPaymentDate"
+																			name="ctPaymentDate"
 																			placeholderText={'Select '+strings.PaymentDate}
 																			showMonthDropdown
 																			showYearDropdown
 																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
-																			value={props.values.vatPaymentDate ? props.values.vatPaymentDate : this.state.reportfilledOn}
-																			selected={props.values.vatPaymentDate ? props.values.vatPaymentDate : this.state.reportfilledOn}
+																			value={props.values.ctPaymentDate ? props.values.ctPaymentDate : this.state.reportfilledOn}
+																			selected={props.values.ctPaymentDate ? props.values.ctPaymentDate : this.state.reportfilledOn}
 																			minDate={this.state.reportfilledOn}
 																			onChange={(value) => {
-																				props.handleChange('vatPaymentDate')(
+																				props.handleChange('ctPaymentDate')(
 																					value,
 																				);
 																			}}
 																			className={`form-control ${
-																				props.errors.vatPaymentDate &&
-																				props.touched.vatPaymentDate
+																				props.errors.ctPaymentDate &&
+																				props.touched.ctPaymentDate
 																					? 'is-invalid'
 																					: ''
 																			}`}
 																		/>
-																		{props.errors.vatPaymentDate &&
-																			props.touched.vatPaymentDate && (
+																		{props.errors.ctPaymentDate &&
+																			props.touched.ctPaymentDate && (
 																				<div className="invalid-feedback">
-																					{props.errors.vatPaymentDate}
+																					{props.errors.ctPaymentDate}
 																				</div>
 																			)}
 																	</FormGroup>

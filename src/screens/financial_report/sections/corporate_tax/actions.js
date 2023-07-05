@@ -1,28 +1,21 @@
 import { authApi, authFileUploadApi } from 'utils';
 import { REPORTS } from 'constants/types'
 
-export const getSettings = (obj) => {
-    return (dispatch) => {
-        let data = {
-            method: 'get',
-            url: '/rest/corporate/tax/get/setting',
-        };
-        return authApi(data)
-            .then((res) => {
-                if (res.status === 200) {
-                    dispatch({
-                        type: REPORTS.SETTING_LIST,
-                        payload: {
-                            data: res.data,
-                        },
-                    });
-                }
-                return res;
-            })
-            .catch((err) => {
-                throw err;
-            });
-    };
+export const getCTSettings = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: '/rest/corporate/tax/get/setting',
+			// data: obj,
+		};
+		return authApi(data)
+			.then((res) => {
+				return res
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
 };
 
 export const generateCTReport = (obj) => {
@@ -87,6 +80,42 @@ export const fileCTReport = (obj) => {
 	};
 };
 
+export const getCompanyDetails = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: '/rest/company/getCompanyDetails',
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
+export const getCompany = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: 'rest/company/getById?id=10000',
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
 export const getCTPaymentHistoryList = (postObj) => {
 	let pageNo = postObj?.pageNo ? postObj.pageNo : '';
 	let pageSize = postObj?.pageSize ? postObj.pageSize : '';
@@ -96,7 +125,7 @@ export const getCTPaymentHistoryList = (postObj) => {
 		let data = {
 			method: 'get',
 			url: `/rest/vatReport/getVatPaymentHistoryList?pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}`,
-	
+
 		};
 		return authFileUploadApi(data)
 			.then((res) => {
@@ -108,7 +137,7 @@ export const getCTPaymentHistoryList = (postObj) => {
                         },
                     });
                 }
-				return res			
+				return res
 			})
 			.catch((err) => {
 				throw err;

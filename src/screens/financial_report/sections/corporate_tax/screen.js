@@ -21,7 +21,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import "./style.scss";
 import * as CTReportAction from "./actions";
 import { upperFirst } from "lodash-es";
-import { CTReport } from './sections';
+import { CTReport, CTSettingModal } from './sections';
 // import 'ag-grid-community/dist/styles/ag-grid.css';
 // import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import moment from "moment";
@@ -59,7 +59,7 @@ class CorporateTax extends React.Component {
       disabled: false,
       file_data_list: [],
       openCTReportModal: false,
-      openVatSettingModal: false,
+      openCTSettingModal: false,
       openFileTaxRetrunModal: false,
       coaName: "",
       ctReport_list: [],
@@ -123,7 +123,7 @@ class CorporateTax extends React.Component {
   };
 
   componentDidMount = () => {
-    this.props.ctReportAction.getSettings();
+    this.props.ctReportAction.getCTSettings();
     this.props.ctReportAction.getCorporateTaxList();
   };
 
@@ -137,8 +137,8 @@ class CorporateTax extends React.Component {
     this.setState({ openCTReportModal: false });
   };
 
-  closeVatSettingModal = (res) => {
-    this.setState({ openVatSettingModal: false });
+  closeCTSettingModal = (res) => {
+    this.setState({ openCTSettingModal: false });
   };
 
   closeFileTaxRetrunModal = (res) => {
@@ -432,6 +432,7 @@ class CorporateTax extends React.Component {
 
   render() {
     const {
+      vatReportDataList,
       csvFileNamesData,
       dialog,
       options,
@@ -546,7 +547,7 @@ class CorporateTax extends React.Component {
                         // disabled={!this.state.enbaleReportGeneration}
                         // title={!this.state.enbaleReportGeneration?"Select VAT Reporting Period":""}
                         onClick={() => {
-                          this.setState({ openModal: true });
+                          this.setState({ openCTSettingModal: true });
                         }}
                       >
                         <i class="fas fa-cog"></i> Corporate Tax Settings
@@ -596,7 +597,7 @@ class CorporateTax extends React.Component {
                     isKey
                     dataField="taxPeriod"
                     dataAlign="left"
-                    dataSort
+                    // dataSort
                     className="table-header-bg"
                   >
                     Tax Period
@@ -605,7 +606,7 @@ class CorporateTax extends React.Component {
                     dataField="dueDate"
                     dataAlign="left"
                     // columnTitle={this.customEmail}
-                    dataSort
+                    // dataSort
                     dataFormat={this.renderDate}
                     className="table-header-bg"
                   >
@@ -615,7 +616,7 @@ class CorporateTax extends React.Component {
                     width="10%"
                     dataField="netIncome"
                     dataAlign="right"
-                    dataSort
+                    // dataSort
                     dataFormat={this.renderAmount}
                     className="table-header-bg"
                   >
@@ -625,7 +626,7 @@ class CorporateTax extends React.Component {
                     dataField="taxableAmount"
                     // columnTitle={this.customEmail}
                     dataAlign="right"
-                    dataSort
+                    // dataSort
                     dataFormat={this.renderAmount}
                     className="table-header-bg"
                   >
@@ -635,7 +636,7 @@ class CorporateTax extends React.Component {
                     dataField="taxAmount"
                     // columnTitle={this.customEmail}
                     dataAlign="right"
-                    dataSort
+                    // dataSort
                     dataFormat={this.renderAmount}
                     className="table-header-bg"
                   >
@@ -644,7 +645,7 @@ class CorporateTax extends React.Component {
                   <TableHeaderColumn
                     dataField="filedOn"
                     // columnTitle={this.customEmail}
-                    dataSort
+                    // dataSort
                     dataFormat={this.renderDate}
                     dataAlign="left"
                     className="table-header-bg"
@@ -655,7 +656,7 @@ class CorporateTax extends React.Component {
                     dataField="status"
                     dataAlign="center"
                     // columnTitle={this.customEmail}
-                    dataSort
+                    // dataSort
                     dataFormat={this.renderStatus}
                     className="table-header-bg"
                   >
@@ -665,7 +666,7 @@ class CorporateTax extends React.Component {
                     dataField="balanceDue"
                     // columnTitle={this.customEmail}
                     dataAlign="right"
-                    dataSort
+                    // dataSort
                     dataFormat={this.renderAmount}
                     className="table-header-bg"
                   >
@@ -690,14 +691,14 @@ class CorporateTax extends React.Component {
             this.closeModal(e);
           }}
         />
-        {/*<VatSettingModal
-          openModal={this.state.openVatSettingModal}
+        <CTSettingModal
+          openModal={this.state.openCTSettingModal}
           closeModal={(e) => {
-            this.closeVatSettingModal(e);
-            this.getInitialData();
+            this.closeCTSettingModal(e);
+            // this.getInitialData();
           }}
         />
-        <FileTaxReturnModal
+        {/* <FileTaxReturnModal
           openModal={this.state.openFileTaxRetrunModal}
           current_report_id={this.state.current_report_id}
           endDate={this.state.endDate}

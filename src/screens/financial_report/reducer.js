@@ -10,7 +10,7 @@ const initState = {
   payable_invoice: [],
   creditnote_details: [],
   setting_list: [],
-
+  payment_history: [],
 }
 
 const ReportsReducer = (state = initState, action) => {
@@ -63,6 +63,11 @@ const ReportsReducer = (state = initState, action) => {
       return {
         ...state,
         setting_list: Object.assign([], payload.data),
+      };
+    case REPORTS.PAYMENT_HISTORY:
+      return {
+        ...state,
+        payment_history: Object.assign([], payload.data),
       };
     default:
       return state

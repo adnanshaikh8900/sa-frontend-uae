@@ -97,13 +97,13 @@ class CTReport extends React.Component {
         this.setState({ disabled: true });
         const data = this.state;
         const formData = new FormData();
-        // const postData = {
-        //     startDate: moment(data.startDate).format('DD/MM/YYYY'),
-        //     endDate: moment(data.endDate).format('DD/MM/YYYY'),
-        //     dueDate: moment(data.dueDate).format('DD/MM/YYYY'),
-        //     reportingPeriod: 'Yearly',
-        //     reportingForYear: data.ctReprtFor.label,
-        // };
+        const postData = {
+            startDate: moment(data.startDate).format('DD/MM/YYYY'),
+            endDate: moment(data.endDate).format('DD/MM/YYYY'),
+            dueDate: moment(data.dueDate).format('DD/MM/YYYY'),
+            reportingPeriod: 'Yearly',
+            reportingForYear: data.ctReprtFor.label,
+        };
         formData.append('startDate', moment(data.startDate).format('DD/MM/YYYY'))
 		formData.append('endDate', moment(data.endDate).format('DD/MM/YYYY'))
 		formData.append('dueDate', moment(data.dueDate).format('DD/MM/YYYY'))
@@ -111,7 +111,7 @@ class CTReport extends React.Component {
 		formData.append('reportingForYear', data.ctReprtFor.label)
 
         this.props.ctReportActions
-            .generateCTReport(formData)
+            .generateCTReport(postData)
             .then((res) => {
                 if (res.status === 200) {
                     this.props.commonActions.tostifyAlert(

@@ -1,7 +1,6 @@
 import { authApi, authFileUploadApi } from 'utils';
 import { REPORTS } from 'constants/types'
 
-
 export const getSettings = (obj) => {
     return (dispatch) => {
         let data = {
@@ -25,6 +24,7 @@ export const getSettings = (obj) => {
             });
     };
 };
+
 export const generateCTReport = (obj) => {
 	return (dispatch) => {
 		let data = {
@@ -42,16 +42,34 @@ export const generateCTReport = (obj) => {
 	};
 };
 
-export const getCTPaymentHistoryList = (postObj) => {
+export const getCorporateTaxList = (postObj) => {
 	let pageNo = postObj?.pageNo ? postObj.pageNo : '';
 	let pageSize = postObj?.pageSize ? postObj.pageSize : '';
 	let order = postObj?.order ? postObj.order : '';
 	let sortingCol = postObj?.sortingCol ? postObj.sortingCol : '';
+	
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: `/rest/vatReport/getVatPaymentHistoryList?pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}`,
+			url: `/rest/corporate/tax/Corporate/list?pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}`,
 	
+		};
+		return authFileUploadApi(data)
+			.then((res) => {
+				return res			
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
+export const fileCTReport = (obj) => {
+	return (dispatch) => {
+		let data = {
+			method: 'post',
+			url: '/rest/Corporate/filect',
+			data: obj,
 		};
 		return authFileUploadApi(data)
 			.then((res) => {

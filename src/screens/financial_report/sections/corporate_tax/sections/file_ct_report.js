@@ -23,7 +23,7 @@ import { data } from '../../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import '../style.scss';
 import * as PayrollEmployeeActions from '../../../../payrollemp/actions'
-import * as VatreportActions from '../actions';
+import * as CTReportActions from '../actions';
 import moment from 'moment';
 
 const mapStateToProps = (state) => {
@@ -37,7 +37,7 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 		payrollEmployeeActions: bindActionCreators(PayrollEmployeeActions, dispatch),
-		vatreportActions: bindActionCreators(VatreportActions, dispatch),
+		CTReportActions: bindActionCreators(CTReportActions, dispatch),
 	};
 };
 
@@ -53,7 +53,7 @@ const customStyles = {
 };
 
 let strings = new LocalizedStrings(data);
-class FileTaxReturnModal extends React.Component {
+class FileCtReportModal extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -62,19 +62,8 @@ class FileTaxReturnModal extends React.Component {
 			selectedRows: [],
 			actionButtons: {},
 			initValue: {
-				taxablePersonNameInEnglish: '',
 				taxFiledOn: new Date(),
-				vatReportFiling: '',
-				vatRegistrationNumber: '',
-				taxAgentApprovalNumber: '',
-				taxAgencyNumber: '',
-				taxAgencyName: '',
-				taxAgentName: '',
-				taxablePersonNameInArabic: '',
 			},
-			isTANMandetory:false,
-			isTAANMandetory:false,
-			isTaxAgentName:false,
 			dialog: null,
 			filterData: {
 				name: '',
@@ -102,7 +91,7 @@ class FileTaxReturnModal extends React.Component {
 		for ( var key in data ) {	
 			formData.append(key, data[key]);
 		}
-		this.props.vatreportActions
+		this.props.CTReportActions
 			.fileVatReport(formData)
 			.then((res) => {
 				if (res.status === 200) {
@@ -137,14 +126,65 @@ class FileTaxReturnModal extends React.Component {
 	  }
 
 	componentDidMount = () => {
-		this.props.vatreportActions.getCompanyDetails().then((res)=>{			
+		this.props.CTReportActions.getCompanyDetails().then((res)=>{			
 			if(res.status==200){
 			this.setState({initValue:{vatRegistrationNumber:res.data.vatRegistrationNumber?res.data.vatRegistrationNumber:""}})}
 		});
 	};
 
+	initializeData = () => {
+		const { initValue } = this.state;
+		let query = new URLSearchParams(document.location.search)
+		const idofvat=query.get('id')
+		if(!idofvat) this.props.history.push('/admin/report/corporate-tax')
+		this.props.vatreport
+			.getCTReportList()
+			.then((res) => {
+				
+				if (res.status === 200) {
+					this.setState({ vatReportData: res?.data?.data?.find((i)=>i.id==idofvat) }) // comment for dummy
+				}
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+			});
+			
+		const postData = {
+			startDate:this.props?.location?.state?.startDate,
+			endDate: this.props?.location?.state?.endDate,
+		};
+		this.setState(
+			{
+				initValue: {
+					startDate: this.props?.location?.state?.startDate,
+					endDate:this.props?.location?.state?.endDate,
+				},
+				loading: true,
+			},
+			() => {
+				// this.initializeData();
+			},
+		);
+		this.props.financialReportActions
+			.getVatReturnsReport(postData)
+			.then((res) => {
+				if (res.status === 200) {
+					this.setState({
+						data: res.data,
+						loading: false,
+					});
+				}
+			})
+			.catch((err) => {
+				this.setState({ loading: false });
+			});
+	 };
+
     dateLimit=()=>{
-	    const { taxReturns} = this.props;
+	    const {taxReturns} = this.props;
 		if(taxReturns){
 			var datearray = taxReturns.split("-")[0].split("/");
 			const value=	new Date(parseInt(datearray[2]),parseInt(datearray[1])-1,parseInt(datearray[0])+1)
@@ -278,4 +318,4 @@ class FileTaxReturnModal extends React.Component {
 export default connect(
 	mapStateToProps
 	, mapDispatchToProps
-)(FileTaxReturnModal);
+)(FileCtReportModal);

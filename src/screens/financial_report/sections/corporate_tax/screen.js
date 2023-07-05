@@ -35,6 +35,7 @@ const mapStateToProps = (state) => {
   return {
     version: state.common.version,
     setting_list: state.reports.setting_list,
+    ctReport_list: state.reports.ctReport_list,
   };
 };
 
@@ -61,7 +62,7 @@ class CorporateTax extends React.Component {
       openVatSettingModal: false,
       openFileTaxRetrunModal: false,
       coaName: "",
-      vatReportDataList: [],
+      ctReport_list: [],
       options: [
         { label: "Montly", value: 0 },
         { label: "Yearly", value: 1 },
@@ -123,6 +124,7 @@ class CorporateTax extends React.Component {
 
   componentDidMount = () => {
     this.props.ctReportAction.getSettings();
+    this.props.ctReportAction.getCorporateTaxList();
   };
 
   handleChange = (key, val) => {
@@ -430,13 +432,13 @@ class CorporateTax extends React.Component {
 
   render() {
     const {
-      vatReportDataList,
       csvFileNamesData,
       dialog,
       options,
       loading,
       loadingMsg,
     } = this.state;
+    const {ctReport_list} = this.props;
     return loading == true ? (
       <Loader loadingMsg={loadingMsg} />
     ) : (
@@ -570,22 +572,22 @@ class CorporateTax extends React.Component {
                   responsive
                   remote
                   data={
-                    vatReportDataList && vatReportDataList.data
-                      ? vatReportDataList.data
+                    ctReport_list && ctReport_list.data
+                      ? ctReport_list.data
                       : []
                   }
-                  // data={vatReportDataList.data ? vatReportDataList.data : []}
-                  // rowData={vatReportDataList.data ? vatReportDataList.data : []}
+                  // data={ctReport_list.data ? ctReport_list.data : []}
+                  // rowData={ctReport_list.data ? ctReport_list.data : []}
                   pagination={
-                    vatReportDataList &&
-                      vatReportDataList.data &&
-                      vatReportDataList.data.length
+                    ctReport_list &&
+                      ctReport_list.data &&
+                      ctReport_list.data.length
                       ? true
                       : false
                   }
                   fetchInfo={{
-                    dataTotalSize: vatReportDataList.count
-                      ? vatReportDataList.count
+                    dataTotalSize: ctReport_list.count
+                      ? ctReport_list.count
                       : 0,
                   }}
                 >

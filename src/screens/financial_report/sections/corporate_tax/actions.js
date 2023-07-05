@@ -56,6 +56,12 @@ export const getCorporateTaxList = (postObj) => {
 		};
 		return authFileUploadApi(data)
 			.then((res) => {
+				dispatch({
+					type: REPORTS.CTREPORT_LIST,
+					payload: {
+						data: res.data,
+					},
+				});
 				return res			
 			})
 			.catch((err) => {
@@ -103,6 +109,29 @@ export const getCTPaymentHistoryList = (postObj) => {
                     });
                 }
 				return res			
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+export const getDepositList = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: `/rest/datalist/receipt/tnxCat`,
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					// dispatch({
+					// 	type: CUSTOMER_INVOICE.DEPOSIT_LIST,
+					// 	payload: {
+					// 		data: res.data,
+					// 	},
+					// });
+					return res.data;
+				}
 			})
 			.catch((err) => {
 				throw err;

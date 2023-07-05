@@ -106,6 +106,7 @@ import {
 	CorporateTax,
 	CorporateTaxPaymentHistory,
 	CorporateTaxPaymentRecord,
+	ViewCorporateTax,
 
 	// Master Screens
 	ChartAccount,
@@ -782,6 +783,11 @@ const adminRoutes = [
 		path: '/admin/report/corporate-tax',
 		name: 'Corporate Tax',
 		component: CorporateTax.screen,
+	},
+	Config.REPORTS_MODULE && {
+				path: '/admin/report/corporate-tax/view',
+				name: 'View Corporate Tax',
+				component: ViewCorporateTax.screen,
 	},
 	Config.REPORTS_MODULE && {
 		path: '/admin/report/corporate-tax/payment-history',

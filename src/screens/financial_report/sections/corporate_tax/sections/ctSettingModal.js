@@ -66,7 +66,13 @@ class CTSettingModal extends React.Component {
             loading: false,
             selectedRows: [],
             actionButtons: {},
-            IsEligibleForCP: 'false',
+			fiscalYearOptions: [
+				{ value: 'January - December', label: 'January - December' },
+				{ value: 'June - May', label: 'June - May' },
+			],
+            initValue: {
+            isEligibleForCP: 'false',
+            },
             fiscalYear: '',
             dialog: null,
             view: false,
@@ -75,12 +81,17 @@ class CTSettingModal extends React.Component {
 		this.formikRef = React.createRef();
     }
 
-	handleSubmit = (data, resetForm, setSubmitting) => {
-		let formdata = new FormData()
-		formdata.append("IsEligibleForCP", data.IsEligibleForCP)
-		formdata.append("fiscalYear", data.fiscalYear)
-		this.props.CTSettingModal
-			.saveCTSettings(formdata)
+	saveCTSettings = (data, resetForm) => {
+		this.setState({ disabled: true });
+		const isEligibleForCP = data['isEligibleForCP'] || this.state.isEligibleForCP;
+		const fiscalYear = data['fiscalYear'] || this.state.fiscalYear.value;
+		const dataNew = {
+			isEligibleForCP,
+			fiscalYear,
+		};
+		// const postData = this.getData(dataNew);
+		this.props.ctReportActions
+			.saveCTSettings(dataNew)
 			.then((res) => {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
@@ -91,6 +102,7 @@ class CTSettingModal extends React.Component {
 				}
 			})
 			.catch((err) => {
+				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
 					err && err.data ? err.data.message : 'Something Went Wrong',
@@ -106,10 +118,10 @@ class CTSettingModal extends React.Component {
 
     render() {
         strings.setLanguage(this.state.language);
-        const { openModal, closeModal, fiscalYearOptions} = this.props;
-        const { initValue, loading } = this.state;
-        fiscalYearOptions && fiscalYearOptions.length > 1 && !this.state.startDate && this.setDates(this.state.ctReprtFor ? this.state.ctReprtFor.value : fiscalYearOptions[0].value)
-        fiscalYearOptions && fiscalYearOptions.length > 1 && !this.state.ctReprtFor && this.setState({ctReprtFor : fiscalYearOptions[0]})
+        const { openModal, closeModal } = this.props;
+        const { initValue, loading, fiscalYearOptions } = this.state;
+        // fiscalYearOptions && fiscalYearOptions.length > 1 && !this.state.startDate && this.setDates(this.state.ctReprtFor ? this.state.ctReprtFor.value : fiscalYearOptions[0].value)
+        // fiscalYearOptions && fiscalYearOptions.length > 1 && !this.state.ctReprtFor && this.setState({ctReprtFor : fiscalYearOptions[0]})
         return (
             <div className="contact-modal-screen">
                 <Modal isOpen={openModal} className="modal-success contact-modal">
@@ -157,57 +169,55 @@ class CTSettingModal extends React.Component {
                                             <Formik initialValues={initValue}>
                                                 {(props) => (
                                                     <Form>
-                                                        <Label>
-                                                            Does your company have to pay corporate taxes ?
-														</Label>
-                                                                <div className="wrapper">
-                                                                    <Row>
-                                                                        <Col>
+                                                            <Col lg={8}>
+																<FormGroup check inline className="mb-3">
+																	<Label className="isEligibleForCP"><span className="text-danger">* </span>Does your company have to pay corporate taxes ?</Label>
+																	<div className="wrapper">
+																	<Label
+																		className="form-check-label"
+																		check
+																	>
+																	<Input
+																		className="form-check-input"
+																		type="radio"
+																		id="inline-radio1"
+                                                                        name="isEligibleForCP"
+																		checked={this.state.isEligibleForCP}
+																		value={true}
+																		onChange={(e) => {
+																				if (
+																						e.target.value === 'true'
+																					) {
+																						this.setState({isEligibleForCP: true});
+																						}
+																					}}
+																				/>
+																			  {strings.Yes}
+																			</Label>
 																			<Label
 																				className="form-check-label"
 																				check
-																				htmlFor="isEligibleForCPYes"
 																			>
 																				<Input
 																					className="form-check-input"
 																					type="radio"
-																					id="isEligibleForCPYes"
-																					name="isEligibleForCPYes"
-																					value="True"
-																					onChange={(value) => {
-																						props.handleChange('isEligibleForCP')(
-																							value,
-																						);
-																					}}
-																					checked={props.values.productType === 'true'}
+																					id="inline-radio2"
+                                                                                    name="isEligibleForCP"
+																					value={false}
+                                                                                    checked={!this.state.isEligibleForCP}
+                                                                                            onChange={(e) => {
+                                                                                                if (
+                                                                                                    	 e.target.value === 'false'
+                                                                                                    ) {
+                                                                                                        	this.setState({isEligibleForCP: false});
+                                                                                                        }
+                                                                                                     }}
 																				/>
-																				{strings.Yes}
+																				   {strings.No}
 																			</Label>
-                                                                        </Col>
-                                                                        <Col>
-																			<Label
-																				className="form-check-label"
-																				check
-																				htmlFor="isEligibleForCPNo"
-																			>
-																				<Input
-																					className="form-check-input"
-																					type="radio"
-																					id="isEligibleForCPNo"
-																					name="isEligibleForCPNo"
-																					value="False"
-																					onChange={(value) => {
-																						props.handleChange('isEligibleForCP')(
-																							value,
-																						);
-																					}}
-																					checked={props.values.productType ==='false'}
-																				/>
-																				{strings.No}
-																			</Label>
-                                                                        </Col>
-                                                                    </Row>
-                                                                </div>
+																		</div>   
+                                                                    </FormGroup>
+                                                                </Col>
                                                                 <div>
                                                                     <Col lg={4}>
                                                                         <Label>
@@ -216,15 +226,13 @@ class CTSettingModal extends React.Component {
                                                                         </Label>
                                                                         <Select
                                                                             options={fiscalYearOptions}
-                                                                            id="ctReportFor"
-                                                                            name="ctReoprtFor"
+                                                                            id="fiscalYear"
+                                                                            name="fiscalYear"
                                                                             value={this.state.fiscalYear}
-                                                                            onChange={(option) => {
-                                                                                const year = option.label.split('-')[1]
-                                                                                this.setState({ reportingForYear: year, fiscalYear: option }, () => {
-                                                                                    this.setDates(option.value);
-                                                                                });
-                                                                            }}
+                                                                            onChange={(e) => {
+                                                                                    props.setFieldValue('fiscalYear','',);
+                                                                                    this.setState({fiscalYear:e});
+                                                                        }}
                                                                         />
                                                                     </Col>
 																</div>

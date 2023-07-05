@@ -18,6 +18,23 @@ export const getCTSettings = () => {
 	};
 };
 
+export const saveCTSettings = (obj) => {
+	return (dispatch) => {
+		let data = {
+			method: 'post',
+			url: '/rest/corporate/tax/save',
+			data: obj,
+		};
+		return authApi(data)
+			.then((res) => {
+				return res			
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
 export const generateCTReport = (obj) => {
 	return (dispatch) => {
 		let data = {

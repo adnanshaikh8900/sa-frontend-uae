@@ -217,14 +217,12 @@ class CorporateTax extends React.Component {
             // }}
             onClick={() => {
               this.setState({ current_report_id: params.id });
-              let dateArr = params.taxReturns
-                ? params.taxReturns.split("-")
-                : [];
               this.props.history.push(
-                `/admin/report/vatreports/view?id=${params.id}`,
+                `/admin/report/corporate-tax/view?id=${params.id}`,
                 {
-                  startDate: dateArr[0] ? dateArr[0] : "",
-                  endDate: dateArr[1] ? dateArr[1] : "",
+                  id:params.id,
+                  startDate: params.startDate,
+                  endDate: params.endDate,
                 }
               );
             }}

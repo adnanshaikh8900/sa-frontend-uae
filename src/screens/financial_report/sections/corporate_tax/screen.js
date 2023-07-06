@@ -189,7 +189,9 @@ class CorporateTax extends React.Component {
   };
 
   getActionButtons = (cell, params) => {
-    console.log(params);
+    const startDate = moment(params.startDate).format("DD-MM-YYYY");
+    const endDate = moment(params.endDate).format("DD-MM-YYYY");
+    const taxPeriod = startDate + ' To ' + endDate
     return (
       // DROPDOWN ACTIONS
 
@@ -252,27 +254,28 @@ class CorporateTax extends React.Component {
 
           {/* Record Payment */}
 
-          {params.status === "Filed" || params.status === "Partially Paid" ? (
-            <DropdownItem
-              onClick={() => {
-                this.setState({ current_report_id: params.id });
-                this.props.history.push(
-                  "/admin/report/corporate-tax/payment-record",
-                  {
-                    id: params.id,
-                    taxReturns: params.taxReturns,
-                    totalTaxPayable: params.totalTaxPayable,
-                    balanceDue: params.balanceDue,
-                  }
-                );
-              }}
-            >
-              {" "}
-              <i className="fas fa-university" /> Record Payment
-            </DropdownItem>
-          ) : (
+          {/* {params.status === "Filed" || params.status === "Partially Paid" ? ( */}
+          <DropdownItem
+            onClick={() => {
+              this.setState({ current_report_id: params.id });
+              this.props.history.push(
+                "/admin/report/corporate-tax/payment",
+                {
+                  id: params.id,
+                  taxPeriod: taxPeriod,
+                  totalTaxPayable: params.totalTaxPayable,
+                  balanceDue: params.balanceDue,
+                  taxFiledOn:params.taxFiledOn,
+                }
+              );
+            }}
+          >
+            {" "}
+            <i className="fas fa-university" /> Record Payment
+          </DropdownItem>
+          {/* ) : (
             ""
-          )}
+          )} */}
 
           {/* Mark It Unfiled  */}
 
@@ -390,35 +393,6 @@ class CorporateTax extends React.Component {
       ),
     });
   };
-
-  // remove = (current_report_id) => {
-  //   this.props.vatreport
-  //     .deleteReportById(current_report_id)
-  //     .then((res) => {
-  //       if (res.status === 200) {
-  //         this.props.commonActions.tostifyAlert(
-  //           "success",
-  //           res.data && res.data.message
-  //             ? res.data.message
-  //             : "VAT Report File Deleted Successfully"
-  //         );
-  //         this.setState({
-  //           dialog: null,
-  //         });
-  //         this.getInitialData();
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       this.props.commonActions.tostifyAlert(
-  //         "error",
-  //         err.data ? err.data.message : "VAT Report File Deleted Unsuccessfully"
-  //       );
-  //       this.setState({
-  //         dialog: null,
-  //       });
-  //     });
-  // };
-
   removeDialog = () => {
     this.setState({
       dialog: null,

@@ -204,3 +204,20 @@ export const deleteReportById = (id) => {
 	  })
 	}
   }
+
+  export const recordCTPayment = (obj) => {
+	return (dispatch) => {
+		let data = {
+			method: 'post',
+			url: '/rest/corporate/tax/recordctpayment',
+			data: obj,
+		};
+		return authApi(data)
+			.then((res) => {
+				return res;
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};

@@ -10,6 +10,12 @@ export const getCTSettings = () => {
 		};
 		return authApi(data)
 			.then((res) => {
+				dispatch({
+					type: REPORTS.SETTING_LIST,
+					payload: {
+						data: res.data,
+					},
+				});
 				return res
 			})
 			.catch((err) => {

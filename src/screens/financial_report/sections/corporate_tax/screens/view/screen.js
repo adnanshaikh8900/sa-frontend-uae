@@ -21,6 +21,7 @@ import * as XLSX from 'xlsx';
 import { CSVLink } from 'react-csv';
 import { Loader, Currency } from 'components';
 import * as CTActions from './actions';
+import * as CTReportActions from '../../actions';
 import FilterComponent from '../../../filterComponent';
 import FilterComponent2 from '../../../filterComponet2';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -28,6 +29,7 @@ import './style.scss';
 import logo from 'assets/images/brand/logo.png';
 import {data}  from '../../../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import { alertTitleClasses } from '@mui/material';
 
 const mapStateToProps = (state) => {
 	return {
@@ -38,6 +40,10 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
+		ctReportActions: bindActionCreators(
+			CTReportActions,
+			dispatch,
+		),
 		ctActions: bindActionCreators(
 			CTActions,
 			dispatch,
@@ -62,11 +68,8 @@ class ViewCorporateTax extends React.Component {
 			loading: true,
 			dropdownOpen: false,
 			view: false,
-			initValue: {
-				id: '',
-				startDate: moment().startOf('month').format('DD/MM/YYYY'),
-				endDate: moment().endOf('month').format('DD/MM/YYYY'),
-			},
+			// id: '',
+			initValue: {},
 			csvData: [],
 			activePage: 1,
 			sizePerPage: 10,
@@ -74,6 +77,11 @@ class ViewCorporateTax extends React.Component {
 			sort: {
 				column: null,
 				direction: 'desc',
+			},
+			ctReportData: {
+				// id: '',
+				// startDate: '',
+				// endDate: '',
 			},
 			data: {
 				// totalOperatingIncome: 0.0,
@@ -120,30 +128,50 @@ class ViewCorporateTax extends React.Component {
 	componentDidMount = () => {
 		// this.props.financialReportActions.getCompany() 
 		this.initializeData();
+		console.log(this.state.initValue);
 	};
 
 	initializeData = () => {
 		const { initValue } = this.state;
-		const postData = {
-			id: initValue.id,
-			startDate: initValue.startDate,
-			endDate: initValue.endDate,
-		};
-		this.props.ctActions
-			.getCTView(postData)
+		let query = new URLSearchParams(document.location.search)
+		const idofct=query.get('id')
+		if(!idofct) this.props.history.push('/admin/report/corporate-tax')
+		this.props.ctReportActions
+			.getCorporateTaxList()
 			.then((res) => {
-				if (res.status === 200 ) {
-          this.setState({
-						data: res.data,
-						loading: false,
-					});
+				
+				if (res.status === 200) {
+					this.setState({ ctReportData: res?.data?.data?.find((i)=>i.id==idofct) }) // comment for dummy
+					// console.log(this.state.ctReportData);
+					const postData = {
+						id:this.state.ctReportData.id,
+						startDate:this.state.ctReportData.startDate,
+						endDate: this.state.ctReportData.endDate,
+					};
+					// console.log(postData);
+					this.props.ctActions
+						.getCTView(postData)
+						.then((res) => {
+							if (res.status === 200) {
+								this.setState({
+									data: res.data,
+									loading: false,
+								});
+								// console.log(res.data);
+							}
+						})
+						.catch((err) => {
+							this.setState({ loading: false });
+						});
 				}
-
 			})
 			.catch((err) => {
-				this.setState({ loading: false });
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
 			});
-	};
+	 };
 
 	
 	exportFile = () => {
@@ -214,7 +242,7 @@ class ViewCorporateTax extends React.Component {
 											style={{ justifyContent: 'space-between' }}
 										>
 											<div>
-												<p
+												{/* <p
 													className="mb-0"
 													style={{
 														cursor: 'pointer',
@@ -224,7 +252,7 @@ class ViewCorporateTax extends React.Component {
 													onClick={this.viewFilter}
 												>
 													<i className="fa fa-cog mr-2"></i>{strings.CustomizeReport}
-												</p>
+												</p> */}
 											</div>
 											<div className="d-flex">
 												<Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
@@ -359,8 +387,8 @@ class ViewCorporateTax extends React.Component {
 											<br style={{ marginBottom: '5px' }} />
 											<b style ={{ fontSize: '18px'}}>{strings.ProfitandLoss}</b>
 											<br style={{ marginBottom: '5px' }} />
-											{strings.From} {(initValue.startDate).replaceAll("/","-")} {strings.To} {initValue.endDate.replaceAll("/","-")} 
-											
+											{strings.From} {moment(this.props.location.state.startDate).format('DD-MM-YYYY')} 
+											{strings.To} {moment(this.props.location.state.endDate).format('DD-MM-YYYY')} 
 									</div>
 									<div>
 									</div>									

@@ -37,7 +37,7 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 		payrollEmployeeActions: bindActionCreators(PayrollEmployeeActions, dispatch),
-		CTReportActions: bindActionCreators(CTReportActions, dispatch),
+        ctReportActions: bindActionCreators(CTReportActions, dispatch),
 	};
 };
 
@@ -62,7 +62,8 @@ class FileCtReportModal extends React.Component {
 			selectedRows: [],
 			actionButtons: {},
 			initValue: {
-				taxFiledOn: new Date(),
+				taxFiledOn: '',
+				corporateTaxFiling: '',
 			},
 			dialog: null,
 			filterData: {
@@ -71,8 +72,6 @@ class FileCtReportModal extends React.Component {
 			},
 			reporting_period_list: [{ label: "Custom", value: 1 }],
 			view: false,
-			FTAExciseTaxAuditFile:false,
-			FTAVatAuditFile:false,
 		};
 		this.regEx = /^[0-9\d]+$/;
 		// this.regEx = /[a-zA-Z0-9]+$/;
@@ -84,27 +83,28 @@ class FileCtReportModal extends React.Component {
 		this.formikRef = React.createRef();
 	}
 
-	handleSubmit = (data, resetForm, setSubmitting) => {
-
+	handleSubmit = (data,resetForm, setSubmitting) => {
+		console.log(data)
+        const { openModal, closeModal } = this.props;
 		this.setState({ disabled: true });
 		let formData = new FormData();
-		for ( var key in data ) {	
-			formData.append(key, data[key]);
-		}
-		this.props.CTReportActions
-			.fileVatReport(formData)
+		const postData = {
+			taxFiledOn: moment(data.taxFiledOn).format('DD/MM/YYYY'),
+			id: data.corporateTaxFiling,
+		};
+		formData.append('taxFiledOn', moment(data.taxFiledOn).format('DD/MM/YYYY'))
+		formData.append('id', data.corporateTaxFiling)
+		this.props.ctReportActions
+			.fileCTReport(postData)
 			.then((res) => {
 				if (res.status === 200) {
 					this.setState({ disabled: false });
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data.message?res.data.message:'VAT Report Filed Successfully',
+						res.data.message?res.data.message:'Tax Report Filed Successfully',
 					);
-					resetForm();
-					this.setState({isTANMandetory:false})
-					this.setState({isTAANMandetory:false})
-					this.props.closeModal(true);
 				}
+				closeModal(false);
 			})
 			.catch((err) => {
 				this.setState({ disabled: false });
@@ -126,9 +126,10 @@ class FileCtReportModal extends React.Component {
 	  }
 
 	componentDidMount = () => {
-		this.props.CTReportActions.getCompanyDetails().then((res)=>{			
+		this.props.ctReportActions.getCompanyDetails().then((res)=>{			
 			if(res.status==200){
-			this.setState({initValue:{vatRegistrationNumber:res.data.vatRegistrationNumber?res.data.vatRegistrationNumber:""}})}
+			// this.setState({initValue:{vatRegistrationNumber:res.data.vatRegistrationNumber?res.data.vatRegistrationNumber:""}})
+		}
 		});
 	};
 
@@ -250,13 +251,13 @@ class FileCtReportModal extends React.Component {
 														showYearDropdown
 														dateFormat="dd-MM-yyyy"
 														dropdownMode="select"
-														minDate={this.dateLimit()}
-														maxDate={new Date()}
+														// minDate={this.dateLimit()}
+														// maxDate={new Date()}
 														value={props.values.taxFiledOn}
 														selected={props.values.taxFiledOn}
 														onChange={(value) => {																			
 															props.handleChange('taxFiledOn')(value);
-															props.handleChange('vatReportFiling')(current_report_id);
+															props.handleChange('corporateTaxFiling')(current_report_id);
 
 														}}
 														className={`form-control ${
@@ -297,8 +298,8 @@ class FileCtReportModal extends React.Component {
 											color="secondary"
 											className="btn-square"
 											onClick={() => {											
-												this.setState({isTANMandetory:false})
-												this.setState({isTAANMandetory:false})
+												// this.setState({isTANMandetory:false})
+												// this.setState({isTAANMandetory:false})
 												closeModal(false);
 											}}
 										>

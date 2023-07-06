@@ -298,7 +298,9 @@ class CorporateTax extends React.Component {
                 this.setState({
                   openFileCtReportModal: true,
                   current_report_id: params.id,
-                  taxReturns: params.taxReturns,
+                  taxReturns: taxPeriod,
+                  startDate: startDate,
+                  endDate: endDate,
                 });
               }}
             >

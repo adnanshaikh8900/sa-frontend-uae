@@ -254,7 +254,7 @@ class CorporateTax extends React.Component {
 
           {/* Record Payment */}
 
-          {/* {params.status === "Filed" || params.status === "Partially Paid" ? ( */}
+          {params.status === "Filed" || params.status === "Partially Paid" ? (
           <DropdownItem
             onClick={() => {
               this.setState({ current_report_id: params.id });
@@ -263,7 +263,7 @@ class CorporateTax extends React.Component {
                 {
                   id: params.id,
                   taxPeriod: taxPeriod,
-                  totalTaxPayable: params.totalTaxPayable,
+                  totalAmount: params.taxAmount,
                   balanceDue: params.balanceDue,
                   taxFiledOn:params.taxFiledOn,
                 }
@@ -273,10 +273,9 @@ class CorporateTax extends React.Component {
             {" "}
             <i className="fas fa-university" /> Record Payment
           </DropdownItem>
-          {/* ) : (
+          ) : (
             ""
-          )} */}
-
+          )}
           {/* Mark It Unfiled  */}
 
           {params.status === "Filed" ? (

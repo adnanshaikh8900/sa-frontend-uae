@@ -139,16 +139,11 @@ export const getCompany = () => {
 	};
 };
 
-export const getCTPaymentHistoryList = (postObj) => {
-	let pageNo = postObj?.pageNo ? postObj.pageNo : '';
-	let pageSize = postObj?.pageSize ? postObj.pageSize : '';
-	let order = postObj?.order ? postObj.order : '';
-	let sortingCol = postObj?.sortingCol ? postObj.sortingCol : '';
+export const getCTPaymentHistoryList = () => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: `/rest/vatReport/getVatPaymentHistoryList?pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}`,
-
+			url: `/rest/corporate/tax/payment/history`,
 		};
 		return authFileUploadApi(data)
 			.then((res) => {
@@ -204,3 +199,20 @@ export const deleteReportById = (id) => {
 	  })
 	}
   }
+
+  export const recordCTPayment = (obj) => {
+	return (dispatch) => {
+		let data = {
+			method: 'post',
+			url: '/rest/corporate/tax/recordctpayment',
+			data: obj,
+		};
+		return authApi(data)
+			.then((res) => {
+				return res;
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};

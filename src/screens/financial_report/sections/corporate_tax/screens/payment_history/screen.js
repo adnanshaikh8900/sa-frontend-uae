@@ -125,7 +125,7 @@ class CorporateTaxPaymentHistory extends React.Component {
         };
         const postData = { ...filterData, ...paginationData, ...sortingData };
         this.props.ctReportActions
-            .getCTPaymentHistoryList(postData)
+            .getCTPaymentHistoryList()
             .then((res) => {
                 if (res.status === 200) {
                     this.setState({ cttReportDataList: res.data }) // comment for dummy

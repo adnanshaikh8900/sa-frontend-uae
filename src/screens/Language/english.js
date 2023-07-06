@@ -967,6 +967,7 @@ const en = {
       CTPaymentHistory: "CT Payment History",
       CorporateTaxPaymentHistory: "Corporate Tax Payment History",
       TotalCorporateTaxAmount: "Total Corporate Tax Amount",
+      RecordPaymentTaxPeriod: "Record Payment For Tax Period",
       VatReports: "VAT Reports",
       FTA_Audit_Report: "FTA VAT Audit File",
       Excise_Tax_Report: "FTA Excise Tax Audit File",

@@ -68,8 +68,9 @@ class CTSettingModal extends React.Component {
 				{ value: 2, label: 'June-May' },
 			],
             initValue: {
-            isEligibleForCP: 'false',
+            isEligibleForCP: false,
             },
+            isEligibleForCP: false,
             fiscalYear: '',
             dialog: null,
             view: false,
@@ -80,13 +81,11 @@ class CTSettingModal extends React.Component {
 
 	saveCTSettings = (data, resetForm) => {
 		this.setState({ disabled: true });
-		const isEligibleForCP = data['isEligibleForCP'] || this.state.isEligibleForCP;
-		const corporateTaxSettingId = this.state.fiscalYear.value;
-        const selectedFlag= this.state.selectedFlag
+		const corporateTaxSettingId = this.state.fiscalYear ? this.state.fiscalYear.value :'';
 		const dataNew = {
-			isEligibleForCP,
-			corporateTaxSettingId,
-            selectedFlag,
+			isEligibleForCP: this.state.isEligibleForCP,
+			corporateTaxSettingId:corporateTaxSettingId,
+            selectedFlag:this.state.selectedFlag,
 		};
 		// const postData = this.getData(dataNew);
 		this.props.ctReportActions

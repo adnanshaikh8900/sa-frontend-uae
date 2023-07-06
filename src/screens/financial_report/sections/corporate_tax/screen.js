@@ -21,7 +21,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import "./style.scss";
 import * as CTReportAction from "./actions";
 import { upperFirst } from "lodash-es";
-import { CTReport, CTSettingModal, FileCtReportModal } from './sections';
+import { CTReport, CTSettingModal, FileCtReportModal, DeleteModal, } from './sections';
 // import 'ag-grid-community/dist/styles/ag-grid.css';
 // import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import moment from "moment";
@@ -122,10 +122,34 @@ class CorporateTax extends React.Component {
   };
 
   componentDidMount = () => {
-    this.props.ctReportAction.getCTSettings();
-    this.props.ctReportAction.getCorporateTaxList();
+    this.getInitialData();
   };
-
+  getInitialData = () => {
+    this.props.ctReportAction.getCTSettings();
+    let { filterData } = this.state;
+    const paginationData = {
+      pageNo: this.options.page ? this.options.page - 1 : 0,
+      pageSize: this.options.sizePerPage,
+    };
+    const sortingData = {
+      order: this.options.sortOrder ? this.options.sortOrder : "",
+      sortingCol: this.options.sortName ? this.options.sortName : "",
+    };
+    const postData = { ...filterData, ...paginationData, ...sortingData };
+    this.props.ctReportAction
+      .getCorporateTaxList(postData)
+      .then((res) => {
+        if (res.status === 200) {
+          this.setState({ ctReport_list: res.data }); // comment for dummy
+        }
+      })
+      .catch((err) => {
+        this.props.commonActions.tostifyAlert(
+          "error",
+          err && err.data ? err.data.message : "Something Went Wrong"
+        );
+      });
+  };
   handleChange = (key, val) => {
     this.setState({
       [key]: val,
@@ -165,6 +189,7 @@ class CorporateTax extends React.Component {
   };
 
   getActionButtons = (cell, params) => {
+    console.log(params);
     return (
       // DROPDOWN ACTIONS
 
@@ -209,7 +234,7 @@ class CorporateTax extends React.Component {
 
           {/* delete */}
 
-          {params.status === "UnFiled" ? (
+          {/* {params.status === "UnFiled" ? ( */}
             <DropdownItem
               onClick={() => {
                 // this.delete(params.id)
@@ -221,9 +246,9 @@ class CorporateTax extends React.Component {
             >
               <i className="fas fa-trash" /> Delete
             </DropdownItem>
-          ) : (
+          {/* ) : (
             ""
-          )}
+          )} */}
 
           {/* Record Payment */}
 
@@ -357,11 +382,11 @@ class CorporateTax extends React.Component {
   delete = (id) => {
     const message1 = (
       <text>
-        <b>Delete VAT Report File ?</b>
+        <b>Delete Tax Report File ?</b>
       </text>
     );
     const message =
-      "This VAT report file will be deleted permanently and cannot be recovered. ";
+      "This CT report file will be deleted permanently and cannot be recovered. ";
 
     this.setState({
       dialog: (
@@ -438,7 +463,7 @@ class CorporateTax extends React.Component {
     } = this.state;
     const { ctReport_list } = this.props;
     const setting = this.props.setting_list ? this.props.setting_list.find(obj => obj.selectedFlag === true) : '';
-    console.log(setting,this.props.setting_list);
+    console.log(setting, this.props.setting_list);
     return loading == true ? (
       <Loader loadingMsg={loadingMsg} />
     ) : (
@@ -540,8 +565,8 @@ class CorporateTax extends React.Component {
                       <Button
                         name="button"
                         color="primary"
-                        
-                        disabled={setting ? true : false}
+
+                        disabled={setting && ctReport_list?.count > 0}
                         className="btn-square pull-right "
                         onClick={() => {
                           this.setState({ openCTSettingModal: true });
@@ -600,7 +625,7 @@ class CorporateTax extends React.Component {
                     Tax Period
                   </TableHeaderColumn>
                   <TableHeaderColumn
-                    isKey = {true}
+                    isKey={true}
                     dataField="dueDate"
                     dataAlign="left"
                     // columnTitle={this.customEmail}
@@ -687,13 +712,14 @@ class CorporateTax extends React.Component {
           fiscalYearOptions={this.state.fiscalYearOptions}
           closeModal={(e) => {
             this.closeModal(e);
+            this.getInitialData();
           }}
         />
         <CTSettingModal
           openModal={this.state.openCTSettingModal}
           closeModal={(e) => {
             this.closeCTSettingModal(e);
-            // this.getInitialData();
+            this.getInitialData();
           }}
         />
         <FileCtReportModal
@@ -703,17 +729,17 @@ class CorporateTax extends React.Component {
           taxReturns={this.state.taxReturns}
           closeModal={(e) => {
             this.closeFileTaxRetrunModal(e);
-            // this.getInitialData();
+            this.getInitialData();
           }}
         />
-        {/* <DeleteModal
+        <DeleteModal
           openModal={this.state.deleteModal}
           current_report_id={this.state.current_report_id}
           closeModal={(e) => {
             this.closeDeleteModal(e);
             this.getInitialData();
           }}
-        /> */}
+        />
       </div>
     );
   }

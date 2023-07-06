@@ -190,3 +190,17 @@ export const getDepositList = () => {
 			});
 	};
 };
+
+export const deleteReportById = (id) => {
+	return (dispatch) => {
+	  let data = {
+		method: 'DELETE',
+		url: `/rest/corporate/tax/delete?id=${id}`
+	  }  
+	  return authApi(data).then((res) => {
+		return res
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }

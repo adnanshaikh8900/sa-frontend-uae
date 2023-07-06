@@ -39,10 +39,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         commonActions: bindActionCreators(CommonActions, dispatch),
-        payrollEmployeeActions: bindActionCreators(
-            PayrollEmployeeActions,
-            dispatch
-        ),
+        payrollEmployeeActions: bindActionCreators(PayrollEmployeeActions, dispatch),
         ctReportActions: bindActionCreators(CTReportActions, dispatch),
     };
 };
@@ -98,7 +95,7 @@ class CTSettingModal extends React.Component {
 						'success',
 						'Corporate Tax Settings Saved Successfully',
 					);
-					// this.props.closeModal(false);				
+					this.props.closeModal(false);
 				}
 			})
 			.catch((err) => {
@@ -171,7 +168,9 @@ class CTSettingModal extends React.Component {
                                                     <Form>
                                                             <Col lg={8}>
 																<FormGroup check inline className="mb-3">
-																	<Label className="isEligibleForCP"><span className="text-danger">* </span>Does your company have to pay corporate taxes ?</Label>
+																	<Label className="isEligibleForCP"><span className="text-danger">* </span>
+                                                                    Does your company have to pay corporate taxes ?
+                                                                    </Label>
 																	<div className="wrapper">
 																	<Label
 																		className="form-check-label"
@@ -236,6 +235,8 @@ class CTSettingModal extends React.Component {
                                                                         />
                                                                     </Col>
 																</div>
+                                                                <br></br>
+                                                                <b>Note:</b> Once the corporate tax report has been created, the settings cannot be changed
                                                     </Form>
                                                 )}
                                             </Formik>{" "}

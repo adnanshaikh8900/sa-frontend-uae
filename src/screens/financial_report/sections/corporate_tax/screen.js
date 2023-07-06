@@ -21,7 +21,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import "./style.scss";
 import * as CTReportAction from "./actions";
 import { upperFirst } from "lodash-es";
-import { CTReport, CTSettingModal } from './sections';
+import { CTReport, CTSettingModal, FileCtReportModal } from './sections';
 // import 'ag-grid-community/dist/styles/ag-grid.css';
 // import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import moment from "moment";
@@ -60,7 +60,7 @@ class CorporateTax extends React.Component {
       file_data_list: [],
       openCTReportModal: false,
       openCTSettingModal: false,
-      openFileTaxRetrunModal: false,
+      openFileCtReportModal: false,
       coaName: "",
       ctReport_list: [],
       options: [
@@ -68,7 +68,6 @@ class CorporateTax extends React.Component {
         { label: "Yearly", value: 1 },
         { label: "Quarterly", value: 2 },
       ],
-      enbaleReportGeneration: false,
       monthOption: { label: "Montly", value: 0 },
       paginationPageSize: 10,
       dialog: false,
@@ -142,7 +141,7 @@ class CorporateTax extends React.Component {
   };
 
   closeFileTaxRetrunModal = (res) => {
-    this.setState({ openFileTaxRetrunModal: false });
+    this.setState({ openFileCtReportModal: false });
   };
 
   closeDeleteModal = (res) => {
@@ -282,7 +281,7 @@ class CorporateTax extends React.Component {
             <DropdownItem
               onClick={() => {
                 this.setState({
-                  openFileTaxRetrunModal: true,
+                  openFileCtReportModal: true,
                   current_report_id: params.id,
                   taxReturns: params.taxReturns,
                 });
@@ -421,13 +420,11 @@ class CorporateTax extends React.Component {
   renderVATNumber = (cell, row) => {
     return <>{row.vatNumber}</>;
   };
-  renderTaxReturns = (cell, row) => {
-    let dateArr = cell ? cell.split("-") : [];
+  renderTaxPeriod = (cell, row) => {
+    let startDate = moment(row.startDate).format("DD-MM-YYYY");
+    let endDate = moment(row.endDate).format("DD-MM-YYYY");
 
-    let startDate = moment(dateArr[0]).format("DD-MM-YYYY");
-    let endDate = moment(dateArr[1]).format("DD-MM-YYYY");
-
-    return <>{dateArr[0].replaceAll("/", "-")}</>;
+    return <>{startDate} To {endDate}</>;
   };
 
   render() {
@@ -439,7 +436,9 @@ class CorporateTax extends React.Component {
       loading,
       loadingMsg,
     } = this.state;
-    const {ctReport_list} = this.props;
+    const { ctReport_list } = this.props;
+    const setting = this.props.setting_list ? this.props.setting_list.find(obj => obj.selectedFlag === true) : '';
+    console.log(setting,this.props.setting_list);
     return loading == true ? (
       <Loader loadingMsg={loadingMsg} />
     ) : (
@@ -517,10 +516,8 @@ class CorporateTax extends React.Component {
                         name="button"
                         color="primary"
                         className="btn-square pull-right "
-                        // disabled={!this.state.enbaleReportGeneration}
-                        // title={!this.state.enbaleReportGeneration?"Select VAT Reporting Period":""}
+                        disabled={setting ? setting.isEligibleForCP ? false : true : true}
                         onClick={() => {
-                          const setting = this.props.setting_list ? this.props.setting_list.find(obj => obj.selectedFlag === true) ? this.props.setting_list.find(obj => obj.selectedFlag === true) : this.props.setting_list[0] : '';
                           //const setting = this.props.setting_list ? this.props.setting_list.find(obj => obj.selectedFlag === true) : '';
                           const fiscalYearOptions = [];
                           if (setting) {
@@ -543,9 +540,9 @@ class CorporateTax extends React.Component {
                       <Button
                         name="button"
                         color="primary"
+                        
+                        disabled={setting ? true : false}
                         className="btn-square pull-right "
-                        // disabled={!this.state.enbaleReportGeneration}
-                        // title={!this.state.enbaleReportGeneration?"Select VAT Reporting Period":""}
                         onClick={() => {
                           this.setState({ openCTSettingModal: true });
                         }}
@@ -594,15 +591,16 @@ class CorporateTax extends React.Component {
                 >
                   <TableHeaderColumn
                     tdStyle={{ whiteSpace: "normal" }}
-                    isKey
-                    dataField="taxPeriod"
+                    width="20%"
                     dataAlign="left"
                     // dataSort
+                    dataFormat={this.renderTaxPeriod}
                     className="table-header-bg"
                   >
                     Tax Period
                   </TableHeaderColumn>
                   <TableHeaderColumn
+                    isKey = {true}
                     dataField="dueDate"
                     dataAlign="left"
                     // columnTitle={this.customEmail}
@@ -698,17 +696,17 @@ class CorporateTax extends React.Component {
             // this.getInitialData();
           }}
         />
-        {/* <FileTaxReturnModal
-          openModal={this.state.openFileTaxRetrunModal}
+        <FileCtReportModal
+          openModal={this.state.openFileCtReportModal}
           current_report_id={this.state.current_report_id}
           endDate={this.state.endDate}
           taxReturns={this.state.taxReturns}
           closeModal={(e) => {
             this.closeFileTaxRetrunModal(e);
-            this.getInitialData();
+            // this.getInitialData();
           }}
         />
-        <DeleteModal
+        {/* <DeleteModal
           openModal={this.state.deleteModal}
           current_report_id={this.state.current_report_id}
           closeModal={(e) => {

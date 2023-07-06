@@ -90,7 +90,7 @@ export const fileCTReport = (obj) => {
 	return (dispatch) => {
 		let data = {
 			method: 'post',
-			url: '/rest/Corporate/filect',
+			url: '/rest/corporate/tax/filect',
 			data: obj,
 		};
 		return authFileUploadApi(data)

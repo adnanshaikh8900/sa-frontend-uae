@@ -235,17 +235,17 @@ class CorporateTax extends React.Component {
           {/* delete */}
 
           {/* {params.status === "UnFiled" ? ( */}
-            <DropdownItem
-              onClick={() => {
-                // this.delete(params.id)
-                this.setState({
-                  current_report_id: params.id,
-                  deleteModal: true,
-                });
-              }}
-            >
-              <i className="fas fa-trash" /> Delete
-            </DropdownItem>
+          <DropdownItem
+            onClick={() => {
+              // this.delete(params.id)
+              this.setState({
+                current_report_id: params.id,
+                deleteModal: true,
+              });
+            }}
+          >
+            <i className="fas fa-trash" /> Delete
+          </DropdownItem>
           {/* ) : (
             ""
           )} */}
@@ -256,25 +256,15 @@ class CorporateTax extends React.Component {
             <DropdownItem
               onClick={() => {
                 this.setState({ current_report_id: params.id });
-                if (params.totalTaxReclaimable != 0)
-                  this.props.history.push(
-                    "/admin/report/corporate-tax/payment-record",
-                    {
-                      id: params.id,
-                      totalTaxReclaimable: params.totalTaxReclaimable,
-                      taxReturns: params.taxReturns,
-                    }
-                  );
-                else
-                  this.props.history.push(
-                    "/admin/report/vatreports/recordtaxpayment",
-                    {
-                      id: params.id,
-                      taxReturns: params.taxReturns,
-                      totalTaxPayable: params.totalTaxPayable,
-                      balanceDue: params.balanceDue,
-                    }
-                  );
+                this.props.history.push(
+                  "/admin/report/corporate-tax/payment-record",
+                  {
+                    id: params.id,
+                    taxReturns: params.taxReturns,
+                    totalTaxPayable: params.totalTaxPayable,
+                    balanceDue: params.balanceDue,
+                  }
+                );
               }}
             >
               {" "}

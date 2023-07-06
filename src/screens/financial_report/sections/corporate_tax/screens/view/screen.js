@@ -22,6 +22,7 @@ import { CSVLink } from 'react-csv';
 import { Loader, Currency } from 'components';
 import * as CTActions from './actions';
 import * as CTReportActions from '../../actions';
+	import * as FinancialReportActions from '../../../../actions';
 import FilterComponent from '../../../filterComponent';
 import FilterComponent2 from '../../../filterComponet2';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -40,6 +41,10 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
+		financialReportActions: bindActionCreators(
+			FinancialReportActions,
+			dispatch,
+		),
 		ctReportActions: bindActionCreators(
 			CTReportActions,
 			dispatch,
@@ -126,7 +131,7 @@ class ViewCorporateTax extends React.Component {
 	// };
 
 	componentDidMount = () => {
-		// this.props.financialReportActions.getCompany() 
+		this.props.financialReportActions.getCompany() 
 		this.initializeData();
 		console.log(this.state.initValue);
 	};
@@ -387,8 +392,7 @@ class ViewCorporateTax extends React.Component {
 											<br style={{ marginBottom: '5px' }} />
 											<b style ={{ fontSize: '18px'}}>{strings.ProfitandLoss}</b>
 											<br style={{ marginBottom: '5px' }} />
-											{strings.From} {moment(this.props.location.state.startDate).format('DD-MM-YYYY')} 
-											{strings.To} {moment(this.props.location.state.endDate).format('DD-MM-YYYY')} 
+											{strings.From} {moment(this.props.location.state.startDate).format('DD-MM-YYYY')} {strings.To} {moment(this.props.location.state.endDate).format('DD-MM-YYYY')} 
 									</div>
 									<div>
 									</div>									

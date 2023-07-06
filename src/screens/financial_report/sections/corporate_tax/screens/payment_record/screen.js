@@ -55,11 +55,10 @@ class CorporateTaxPaymentRecord extends React.Component {
 			headerValue: this.props.location.state.taxPeriod ? this.props.location.state.taxPeriod : '',
 			initValue: {
 				receiptNo: '',
-				paymentDate: this.props.location.state && this.props.location.state.taxFiledOn ? new Date(this.props.location.state.taxFiledOn) : new Date(),
+				paymentDate: this.props.location.state && this.props.location.state.taxFiledOn ? new Date(this.props.location.state.taxFiledOn) : '',
 				reportId: this.props.location.state && this.props.location.state.id ? this.props.location.state.id : '',
 				amountPaid: '',
 				totalAmount: this.props.location.state && this.props.location.state.totalAmount ? this.props.location.state.totalAmount : 0.00,
-				payMode: '',
 				notes: '',
 				paidThrough: '',
 				referenceNumber: '',
@@ -77,7 +76,7 @@ class CorporateTaxPaymentRecord extends React.Component {
 			discountAmount: 0,
 			fileName: '',
 			disabled: false,
-			reportfilledOn: this.props.location.state && this.props.location.state.taxFiledOn ? new Date(this.props.location.state.taxFiledOn) : new Date(),
+			reportfilledOn: this.props.location.state && this.props.location.state.taxFiledOn ? new Date(this.props.location.state.taxFiledOn) : '',
 			loadingMsg: "Loading..."
 		};
 		// this.props.ctReportActions
@@ -153,7 +152,7 @@ class CorporateTaxPaymentRecord extends React.Component {
 			referenceNumber,
 		} = data;
 		const postData={
-			paymentDate:  moment(paymentDate, 'DD-MM-YYYY').toDate(),
+			paymentDate: paymentDate ? moment(paymentDate).format('DD/MM/YYYY') : '',
 			amountPaid:amountPaid !== null ? parseFloat(amountPaid) : '',
 			refereNumber:referenceNumber !== null ? referenceNumber : '',
 			depositToTransactionCategoryId: paidThrough !== null ? paidThrough.value : '',
@@ -169,7 +168,6 @@ class CorporateTaxPaymentRecord extends React.Component {
 		// formData.append('notes', notes !== null ? notes : '');
 		// formData.append('referenceNumber', referenceNumber !== null ? referenceNumber : '',);
 		// formData.append('depositToTransactionCategoryId', paidThrough !== null ? paidThrough.value : '');
-		// //  formData.append('payMode', payMode !== null &&payMode.value ? payMode.value : 'CASH' );
 		// if (reportId) {
 		// 	formData.append('corporateTaxFilingId', reportId);
 		// 	formData.append('vatFiledNumber', reportId);
@@ -265,9 +263,6 @@ class CorporateTaxPaymentRecord extends React.Component {
 															validationSchema={Yup.object().shape({
 																paidThrough: Yup.string().required(
 																	'Paid through is required',
-																),
-																payMode: Yup.string().required(
-																	'Payment mode is required',
 																),
 																amountPaid: Yup.mixed()
 																	.test(
@@ -663,6 +658,7 @@ class CorporateTaxPaymentRecord extends React.Component {
 																					disabled={this.state.disabled}
 																					onClick={() => {
 																						//	added validation popup	msg
+																						console.log(props.errors)
 																						props.handleBlur();
 																						if (props.errors && Object.keys(props.errors).length != 0)
 																							this.props.commonActions.fillManDatoryDetails();
@@ -680,7 +676,7 @@ class CorporateTaxPaymentRecord extends React.Component {
 																					className="btn-square"
 																					onClick={() => {
 																						this.props.history.push(
-																							'/admin/report/vatreports',
+																							'/admin/report/corporate-tax',
 																						);
 																					}}
 																				>

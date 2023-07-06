@@ -159,14 +159,12 @@ class CorporateTaxPaymentHistory extends React.Component {
         else
             return ("---")
     }
-
-    renderTaxReturns = (cell, row) => {
-        let dateArr = cell ? cell.split(" ") : [];
-        let startDate = moment(dateArr[0]).format('DD-MM-YYYY')
-        let endDate = moment(dateArr[1]).format('DD-MM-YYYY')
-        return (<>{dateArr[0].replaceAll("/", "-")}</>);
-    };
-
+    renderTaxPeriod = (cell, row) => {
+        let startDate = moment(row.startDate).format("DD-MM-YYYY");
+        let endDate = moment(row.endDate).format("DD-MM-YYYY");
+    
+        return <>{startDate} To {endDate}</>;
+      };
     render() {
         strings.setLanguage(this.state.language);
         const { cttReportDataList } = this.state;
@@ -187,7 +185,7 @@ class CorporateTaxPaymentHistory extends React.Component {
                                                 className="mb-0"
                                                 style={{
                                                     cursor: 'pointer',
-                                                    fontSize: '1rem',
+                                                    fontSize: '1.3125rem',
                                                     paddingLeft: '15px',
                                                 }}
                                                 onClick={this.viewFilter}
@@ -270,16 +268,14 @@ class CorporateTaxPaymentHistory extends React.Component {
                                         dataAlign="left"
                                         isKey
                                         dataField="taxReturns"
-                                        dataSort
-                                        dataFormat={this.renderTaxReturns}
+                                        dataFormat={this.renderTaxPeriod}
                                         className="table-header-bg"
                                     >
                                         {strings.TaxPeriod}
                                     </TableHeaderColumn>
                                     <TableHeaderColumn
                                         dataAlign="right"
-                                        dataField="dateOfFiling"
-                                        dataSort
+                                        dataField="amountPaid"
                                         dataFormat={this.renderAmount}
                                         className="table-header-bg"
                                     >
@@ -287,8 +283,7 @@ class CorporateTaxPaymentHistory extends React.Component {
                                     </TableHeaderColumn>
                                     <TableHeaderColumn
                                         dataAlign="left"
-                                        dataField="amountPaid"
-                                        dataSort
+                                        dataField="paymentDate"
                                         dataFormat={this.renderDate}
                                         className="table-header-bg"
                                     >

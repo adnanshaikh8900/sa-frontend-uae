@@ -77,16 +77,16 @@ class DeleteModal extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data && res.data.message ? res.data.message :
-							'CT Report File Deleted Successfully'
+						'Report Deleted Successfully!'
 					);
+					console.log(res.data);
 					this.props.closeModal(false);
 				}
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data ? err.data.message : 'CT Report File Deleted Unsuccessfully'
+					err.data ? err.data.message : 'Report Deleted Unsuccessfully'
 				);
 				this.props.closeModal(false);
 			});

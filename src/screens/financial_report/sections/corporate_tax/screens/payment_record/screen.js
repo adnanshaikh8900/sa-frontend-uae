@@ -151,7 +151,7 @@ class CorporateTaxPaymentRecord extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Tax Payment Recorded Successfully',
+						'Payment Recorded Successfully!',
 					);
 
 					this.props.history.push('/admin/report/corporate-tax');
@@ -161,7 +161,7 @@ class CorporateTaxPaymentRecord extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Payment Recorded Unsuccessfully',
+					err && err.data ? err.data.message : 'Payment Recorded Unsuccessfully!',
 				);
 				this.setState({ loading: false, });
 			});

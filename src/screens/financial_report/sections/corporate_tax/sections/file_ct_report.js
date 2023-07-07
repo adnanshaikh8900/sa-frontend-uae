@@ -101,7 +101,7 @@ class FileCtReportModal extends React.Component {
 					this.setState({ disabled: false });
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data.message?res.data.message:'Tax Report Filed Successfully',
+						'Report Filed Successfully!',
 					);
 				}
 				closeModal(false);

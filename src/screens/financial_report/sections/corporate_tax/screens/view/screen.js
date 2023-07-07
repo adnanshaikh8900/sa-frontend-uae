@@ -150,12 +150,12 @@ class ViewCorporateTax extends React.Component {
 					// console.log(this.state.ctReportData);
 					const postData = {
 						id:this.state.ctReportData.id,
-						startDate:this.state.ctReportData.startDate,
-						endDate: this.state.ctReportData.endDate,
+						startDate:moment(this.props.location.state.startDate).format('DD/MM/YYYY'),
+						endDate: moment(this.props.location.state.endDate).format('DD/MM/YYYY'),
 					};
 					// console.log(postData);
-					this.props.ctActions
-						.getCTView(postData)
+					this.props.financialReportActions
+						.getProfitAndLossReport(postData)
 						.then((res) => {
 							if (res.status === 200) {
 								this.setState({

@@ -168,6 +168,21 @@ class CorporateTax extends React.Component {
       .then((res) => {
         if (res.status === 200) {
           this.setState({ ctReport_list: res.data }); // comment for dummy
+          // const lastrecord = res.data.data.filter(e => {return (e.status === "Filed")})
+          const dataList = res.data.data.filter(e => {return (e.status === "Filed")}); // Assuming the array of objects is stored in the "data" property of the response
+          if (dataList.length > 0) {
+            // Check if the array is not empty
+            dataList.forEach((obj, index) => {
+              obj.flag = index === 0; // Set "flag" to true for the first object, false for others
+              // console.log(obj);
+            });
+          }
+          // if (lastrecord[0] !== null) {
+          //   this.setState({ lastRecord: true });
+          //   console.log(this.state.lastRecord);
+          // } else {
+          //   console.log(this.state.lastRecord);
+          // }
         }
       })
       .catch((err) => {
@@ -326,7 +341,7 @@ class CorporateTax extends React.Component {
           )}
           {/* Mark It Unfiled  */}
 
-          {params.status === "Filed" ? (
+          {params.status === "Filed" && params.flag === true ? (
             <DropdownItem
               onClick={() => {
                 this.setState({ current_report_id: params.id });

@@ -679,7 +679,7 @@ class CorporateTax extends React.Component {
                     {strings.TaxAmount}
                   </TableHeaderColumn>
                   <TableHeaderColumn
-                    dataField="filedOn"
+                    dataField="taxFiledOn"
                     // columnTitle={this.customEmail}
                     // dataSort
                     dataFormat={this.renderDate}

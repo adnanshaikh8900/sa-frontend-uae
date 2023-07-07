@@ -124,6 +124,35 @@ class CorporateTax extends React.Component {
   componentDidMount = () => {
     this.getInitialData();
   };
+
+  markItUnfiled = (row) => {
+    const postingRequestModel = {
+      id: row.id,
+      // postingRefType: "VAT_REPORT_FILED",
+    };
+    this.setState({ loading: true, loadingMsg: "VAT UnFiling..." });
+    this.props.ctReportAction
+      .markItUnfiled(postingRequestModel)
+      .then((res) => {
+        if (res.status === 200) {
+          this.props.commonActions.tostifyAlert(
+            "success",
+            res.data && res.data.message
+              ? res.data.message
+              : " VAT UnFiled Successfully"
+          );
+          this.getInitialData();
+          this.setState({ loading: false });
+        }
+      })
+      .catch((err) => {
+        this.props.commonActions.tostifyAlert(
+          "error",
+          err && err.data ? err.data.message : "Something Went Wrong"
+        );
+      });
+  };
+
   getInitialData = () => {
     this.props.ctReportAction.getCTSettings();
     let { filterData } = this.state;

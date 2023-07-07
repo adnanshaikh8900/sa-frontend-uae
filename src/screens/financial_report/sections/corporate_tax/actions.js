@@ -103,6 +103,25 @@ export const fileCTReport = (obj) => {
 	};
 };
 
+export const markItUnfiled = (obj) => {
+	return (dispatch) => {
+		let data = {
+			method: 'post',
+			url: '/rest/corporate/tax/unfilect',
+			data: obj,
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
 export const getCompanyDetails = () => {
 	return (dispatch) => {
 		let data = {

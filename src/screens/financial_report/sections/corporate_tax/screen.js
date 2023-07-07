@@ -31,7 +31,7 @@ import { data } from "../../../Language/index";
 import LocalizedStrings from "react-localization";
 
 const mapStateToProps = (state) => {
-  console.log(state)
+  // console.log(state)
   return {
     version: state.common.version,
     setting_list: state.reports.setting_list,
@@ -263,7 +263,7 @@ class CorporateTax extends React.Component {
 
           {/* delete */}
 
-          {/* {params.status === "UnFiled" ? ( */}
+          {params.status === "UnFiled" ? (
           <DropdownItem
             onClick={() => {
               // this.delete(params.id)
@@ -275,13 +275,36 @@ class CorporateTax extends React.Component {
           >
             <i className="fas fa-trash" /> Delete
           </DropdownItem>
-          {/* ) : (
+          ) : (
             ""
-          )} */}
+          )}
 
           {/* Record Payment */}
 
-          {params.status === "Filed" || params.status === "Partially Paid" ? (
+          {params.netIncome > 375000 && params.status === "Filed" ? (
+          <DropdownItem
+            onClick={() => {
+              this.setState({ current_report_id: params.id });
+              this.props.history.push(
+                "/admin/report/corporate-tax/payment",
+                {
+                  id: params.id,
+                  taxPeriod: taxPeriod,
+                  totalAmount: params.taxAmount,
+                  balanceDue: params.balanceDue,
+                  taxFiledOn:params.taxFiledOn,
+                }
+              );
+            }}
+          >
+            {" "}
+            <i className="fas fa-university" /> Record Payment
+          </DropdownItem>
+          ) : (
+            ""
+          )}
+
+          {params.status === "Partially Paid" ? (
           <DropdownItem
             onClick={() => {
               this.setState({ current_report_id: params.id });
@@ -455,7 +478,7 @@ class CorporateTax extends React.Component {
     } = this.state;
     const { ctReport_list } = this.props;
     const setting = this.props.setting_list ? this.props.setting_list.find(obj => obj.selectedFlag === true) : '';
-    console.log(setting, this.props.setting_list);
+    // console.log(setting, this.props.setting_list);
     return loading == true ? (
       <Loader loadingMsg={loadingMsg} />
     ) : (
@@ -608,7 +631,7 @@ class CorporateTax extends React.Component {
                 >
                   <TableHeaderColumn
                     tdStyle={{ whiteSpace: "normal" }}
-                    width="15%"
+                    width="20%"
                     dataAlign="left"
                     // dataSort
                     dataFormat={this.renderTaxPeriod}
@@ -628,6 +651,7 @@ class CorporateTax extends React.Component {
                     {strings.DueDate}
                   </TableHeaderColumn>
                   <TableHeaderColumn
+                    width="10%"
                     dataField="netIncome"
                     dataAlign="right"
                     // dataSort
@@ -657,7 +681,7 @@ class CorporateTax extends React.Component {
                     {strings.TaxAmount}
                   </TableHeaderColumn>
                   <TableHeaderColumn
-                    dataField="taxFiledOn"
+                    dataField="filedOn"
                     // columnTitle={this.customEmail}
                     // dataSort
                     dataFormat={this.renderDate}
@@ -669,7 +693,6 @@ class CorporateTax extends React.Component {
                   <TableHeaderColumn
                     dataField="status"
                     dataAlign="center"
-                    width="8%"
                     // columnTitle={this.customEmail}
                     // dataSort
                     dataFormat={this.renderStatus}

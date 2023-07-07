@@ -94,7 +94,7 @@ class CTSettingModal extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Corporate Tax Settings Saved Successfully',
+						'Settings Saved Successfully!',
 					);
 					this.props.closeModal(false);
 				}

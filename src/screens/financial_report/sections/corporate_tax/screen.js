@@ -130,16 +130,14 @@ class CorporateTax extends React.Component {
       id: row.id,
       // postingRefType: "VAT_REPORT_FILED",
     };
-    this.setState({ loading: true, loadingMsg: "VAT UnFiling..." });
+    this.setState({ loading: true, loadingMsg: "Report UnFiling..." });
     this.props.ctReportAction
       .markItUnfiled(postingRequestModel)
       .then((res) => {
         if (res.status === 200) {
           this.props.commonActions.tostifyAlert(
             "success",
-            res.data && res.data.message
-              ? res.data.message
-              : " VAT UnFiled Successfully"
+            "Report Unfiled Successfully!"
           );
           this.getInitialData();
           this.setState({ loading: false });

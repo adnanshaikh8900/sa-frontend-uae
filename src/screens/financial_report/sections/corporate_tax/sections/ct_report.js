@@ -116,9 +116,7 @@ class CTReport extends React.Component {
                 if (res.status === 200) {
                     this.props.commonActions.tostifyAlert(
                         "success",
-                        res.data && res.data.message
-                            ? res.data.message
-                            : "VAT Report Generated Successfully"
+                        "Report Generated Successfully!"
                     );
                 }
                 closeModal(false);

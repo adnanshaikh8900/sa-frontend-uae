@@ -45,13 +45,8 @@ class CorporateTaxPaymentRecord extends React.Component {
 			language: window['localStorage'].getItem('language'),
 			loading: false,
 			dialog: false,
-			discountOptions: [
-				{ value: 'FIXED', label: 'Fixed' },
-				{ value: 'PERCENTAGE', label: 'Percentage' },
-			],
 			discount_option: '',
 			data: [],
-			current_customer_id: null,
 			headerValue: this.props.location.state.taxPeriod ? this.props.location.state.taxPeriod : '',
 			initValue: {
 				receiptNo: '',
@@ -60,7 +55,7 @@ class CorporateTaxPaymentRecord extends React.Component {
 				amountPaid: '',
 				totalAmount: this.props.location.state && this.props.location.state.totalAmount ? this.props.location.state.totalAmount : 0.00,
 				notes: '',
-				paidThrough: '',
+				paidThrough: {value: 47, label: 'Petty Cash'},
 				referenceNumber: '',
 				attachmentFile: '',
 				paidInvoiceListStr: [],
@@ -79,29 +74,6 @@ class CorporateTaxPaymentRecord extends React.Component {
 			reportfilledOn: this.props.location.state && this.props.location.state.taxFiledOn ? new Date(this.props.location.state.taxFiledOn) : '',
 			loadingMsg: "Loading..."
 		};
-		// this.props.ctReportActions
-		// 	.getCorporateTaxList()
-		// 	.then((res) => {
-		// 		if (res.status === 200) {
-		// 			const data = res.data?.data || []
-		// 			const reportInfoById = data.find((obj) => obj.id === this.props.location.state.id)
-		// 			if (reportInfoById)
-		// 				this.setState({
-		// 					reportfilledOn: reportInfoById.taxFiledOn ? new Date(reportInfoById.taxFiledOn) : new Date(),
-		// 					initValue: {
-		// 						paymentDate: reportInfoById.taxFiledOn ? new Date(reportInfoById.taxFiledOn) : new Date(),
-		// 					},
-		// 				})
-
-		// 		}
-		// 	})
-		// 	.catch((err) => {
-		// 		this.props.commonActions.tostifyAlert(
-		// 			'error',
-		// 			err && err.data ? err.data.message : 'Something Went Wrong',
-		// 		);
-		// 	}
-		// 	);
 		this.formRef = React.createRef();
 		this.regEx = /^[0-9\b]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
@@ -407,11 +379,7 @@ class CorporateTaxPaymentRecord extends React.Component {
 																					name="amountPaid"
 																					value={props.values.amountPaid}
 																					onChange={(option) => {
-																						if (
-																							option.target.value === '' ||
-																							this.regDecimal.test(option.target.value),
-																							props.handleChange('amountPaid')(option)
-																						) {
+																						if (option.target.value === '' || this.regDecimal.test(option.target.value)) {
 																							props.handleChange('amountPaid')(option);
 																						}
 																					}}
@@ -478,8 +446,9 @@ class CorporateTaxPaymentRecord extends React.Component {
 																				<Select
 																					// styles={customStyles}
 																					options={deposit_list}
-																					value={props.values.paidThrought}
+																					value={props.values.paidThrough}
 																					onChange={(option) => {
+																						console.log(option)
 																						if (option && option.value) {
 																							props.handleChange('paidThrough')(
 																								option,

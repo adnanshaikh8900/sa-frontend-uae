@@ -608,7 +608,7 @@ class CorporateTax extends React.Component {
                 >
                   <TableHeaderColumn
                     tdStyle={{ whiteSpace: "normal" }}
-                    width="20%"
+                    width="15%"
                     dataAlign="left"
                     // dataSort
                     dataFormat={this.renderTaxPeriod}
@@ -628,7 +628,6 @@ class CorporateTax extends React.Component {
                     {strings.DueDate}
                   </TableHeaderColumn>
                   <TableHeaderColumn
-                    width="10%"
                     dataField="netIncome"
                     dataAlign="right"
                     // dataSort
@@ -658,7 +657,7 @@ class CorporateTax extends React.Component {
                     {strings.TaxAmount}
                   </TableHeaderColumn>
                   <TableHeaderColumn
-                    dataField="filedOn"
+                    dataField="taxFiledOn"
                     // columnTitle={this.customEmail}
                     // dataSort
                     dataFormat={this.renderDate}
@@ -670,6 +669,7 @@ class CorporateTax extends React.Component {
                   <TableHeaderColumn
                     dataField="status"
                     dataAlign="center"
+                    width="8%"
                     // columnTitle={this.customEmail}
                     // dataSort
                     dataFormat={this.renderStatus}

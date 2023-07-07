@@ -282,7 +282,7 @@ class CorporateTaxPaymentHistory extends React.Component {
                                         {strings.AmountPaid}
                                     </TableHeaderColumn>
                                     <TableHeaderColumn
-                                        dataAlign="left"
+                                        dataAlign="right"
                                         dataField="paymentDate"
                                         dataFormat={this.renderDate}
                                         className="table-header-bg"

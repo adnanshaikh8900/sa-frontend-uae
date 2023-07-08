@@ -114,7 +114,7 @@ jobs:
           simpleaccounts/simpleaccounts-frontend-uae:latest
           simpleaccounts/simpleaccounts-frontend-uae:${{ env.TAG }}
 
-  deploy-PROD:
+  deploy-PROD-dit:
     needs: [build]
     runs-on: datainn-digitalocean-test-runner-set
     permissions:
@@ -144,6 +144,38 @@ jobs:
         helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},maindomain=dit.app.simpleaccounts.io,simpleVatHost=https://dit-api.app.simpleaccounts.io,fullnameOverride=dit-frontend,serviceAccount.name=dit-deploy-robot-frontend,ingress.hosts[0].host=dit.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=dit-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=dit-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=dit.app.simpleaccounts.io --wait --dry-run --debug --namespace dit --create-namespace dit-frontend ./simpleaccounts-frontend 
         echo "Deployment started scripts..."
         helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},maindomain=dit.app.simpleaccounts.io,simpleVatHost=https://dit-api.app.simpleaccounts.io,fullnameOverride=dit-frontend,serviceAccount.name=dit-deploy-robot-frontend,ingress.hosts[0].host=dit.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=dit-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=dit-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=dit.app.simpleaccounts.io --wait --namespace dit --create-namespace dit-frontend ./simpleaccounts-frontend 
+        echo "Application successfully deployed."
+
+  deploy-PROD-projetsaviation:
+    needs: [build]
+    runs-on: datainn-digitalocean-test-runner-set
+    permissions:
+      contents: read
+      issues: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - uses: azure/setup-kubectl@v3
+      with:
+        version: 'latest' # default is latest stable
+      id: install-kubectl
+
+    - uses: azure/setup-helm@v3
+      with:
+        version: 'latest' # default is latest (stable)
+        token: ${{ secrets.GITHUB_TOKEN }} # only needed if version is 'latest'
+      id: install-helm
+
+    - name: Helm chart PROD DIT Deployment
+      run: |
+        echo "Deploying application to following cluster..."
+        kubectl cluster-info
+        echo "Test deployment scripts..."
+        helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},maindomain=projetsaviation.app.simpleaccounts.io,simpleVatHost=https://projetsaviation-api.app.simpleaccounts.io,fullnameOverride=projetsaviation-frontend,serviceAccount.name=projetsaviation-deploy-robot-frontend,ingress.hosts[0].host=projetsaviation.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=projetsaviation-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=projetsaviation-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=projetsaviation.app.simpleaccounts.io --wait --dry-run --debug --namespace projetsaviation --create-namespace projetsaviation-frontend ./simpleaccounts-frontend 
+        echo "Deployment started scripts..."
+        helm upgrade --install --values ./simpleaccounts-frontend/values.yaml --set simpleVatFrontendRelease=$TAG,image.repository.frontend.tag=$TAG,image.repository.frontend.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},maindomain=projetsaviation.app.simpleaccounts.io,simpleVatHost=https://projetsaviation-api.app.simpleaccounts.io,fullnameOverride=projetsaviation-frontend,serviceAccount.name=projetsaviation-deploy-robot-frontend,ingress.hosts[0].host=projetsaviation.app.simpleaccounts.io,ingress.hosts[0].paths[0]=/*,clusterIssuer=app-simpleaccounts-io-letsencrypt-prod,'ingress.annotations.cert-manager\.io/clusterissuer'=app-simpleaccounts-io-letsencrypt-prod,ingress.tls[0].secretName=projetsaviation-app-simpleaccounts-io-tls,ingress.tls[0].hosts[0]=projetsaviation-api.app.simpleaccounts.io,ingress.tls[0].hosts[1]=projetsaviation.app.simpleaccounts.io --wait --namespace projetsaviation --create-namespace projetsaviation-frontend ./simpleaccounts-frontend 
         echo "Application successfully deployed."
 
         

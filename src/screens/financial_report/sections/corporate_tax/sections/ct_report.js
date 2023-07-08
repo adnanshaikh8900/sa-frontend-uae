@@ -27,7 +27,7 @@ import LocalizedStrings from "react-localization";
 import "../style.scss";
 import { Loader, CommonList } from "components";
 import * as PayrollEmployeeActions from "../../../../payrollemp/actions";
-import * as VatReportActions from "../actions";
+import * as CTReportActions from "../actions";
 
 
 const mapStateToProps = (state) => {
@@ -43,7 +43,7 @@ const mapDispatchToProps = (dispatch) => {
             PayrollEmployeeActions,
             dispatch
         ),
-        vatReportActions: bindActionCreators(VatReportActions, dispatch),
+        ctReportActions: bindActionCreators(CTReportActions, dispatch),
     };
 };
 const customStyles = {
@@ -60,12 +60,6 @@ const customStyles = {
 let strings = new LocalizedStrings(data);
 class CTReport extends React.Component {
     constructor(props) {
-        var date = new Date();
-        var lastdayoflastmonth = new Date();
-
-        var firstdayoflastmonth = new Date();
-        firstdayoflastmonth.setDate(1);
-
         super(props);
         this.state = {
             language: window["localStorage"].getItem("language"),
@@ -77,95 +71,52 @@ class CTReport extends React.Component {
             endDate: '',
             dueDate: '',
             ctReprtFor: '',
-            ctReprtFor_list:'',
             dialog: null,
             view: false,
+            reportingForYear: '',
         };
     }
-    static getDerivedStateFromProps(nextProps, prevState) {
-        console.log("getDerivedStateFromProps state changed", prevState);
-        console.log(nextProps);
-        if (prevState.employee_list !== nextProps.employee_list) {
-            return {
-                getVRNPrefix: nextProps.getVRNPrefix,
-                employee_list: nextProps.employee_list,
-            };
-        }
-    }
-
-    displayMsg = (err) => {
-        toast.error(`${err.data}`, {
-            position: toast.POSITION.TOP_RIGHT,
-        });
-    };
-    _showDetails = (bool) => {
-        this.setState({
-            showDetails: bool,
-        });
-    };
-
-    exportPDFWithComponent = () => {
-        this.pdfExportComponent.save();
-    };
-    componentDidMount = () => {
-        console.log(this.props);
-        this.setState({ctReprtFor_list:[]})
-    };
     setDates = (value) => {
-        //debugger
         //value = '01-1-2024'
         const startDate = new Date(value);
-        const endDate = new Date(moment(startDate).add(365, 'days'))
+        const endDate = new Date(moment(startDate).add(12, 'month').subtract(1, "days"));
         const dueDate = new Date(moment(endDate).add(9, 'month'))
-        console.log(startDate,endDate)
         this.setState({
-            startDate:startDate,
-            endDate:endDate,
-            dueDate:dueDate,
+            startDate: startDate,
+            endDate: endDate,
+            dueDate: dueDate,
         })
     }
+
+    static getDerivedStateFromProps(nextProps, prevState) {
+
+    }
+
     generateCTReport = () => {
         const { openModal, closeModal } = this.props;
-        let notgererated = true;
-        this.props.vatReportDataList.data.map(({ taxReturns }) => {
-            let dateArr = taxReturns ? taxReturns.split("-") : [];
-            let currenttartdate = moment(this.getStartDate());
-            let currentenddate = moment(this.getEndDate(), "DD-MM-YYYY");
-            let startDate = moment(dateArr[0]);
-            let endDate = moment(dateArr[1], "DD/MM/YYYY");
-            if (
-                currenttartdate.diff(startDate, "days") === 0 ||
-                currentenddate.diff(endDate, "days") === 0 ||
-                (currenttartdate.diff(startDate, "days") >= 0 &&
-                    currentenddate.diff(endDate, "days") <= 0)
-            )
-                notgererated = false;
-        });
-        if (!notgererated) {
-            return this.props.commonActions.tostifyAlert(
-                "error",
-                "VAT Report is Already generated"
-            );
-        }
         this.setState({ disabled: true });
-        const { initValue } = this.state;
+        const data = this.state;
+        const formData = new FormData();
         const postData = {
-            // startDate: moment(this.state.initValue.startDate).format('DD/MM/YYYY'),
-            // endDate: moment(this.state.initValue.endDate).format('DD/MM/YYYY'),
-            vrn: this.state.VRN,
-            startDate: this.getStartDate().replaceAll("-", "/"),
-            endDate: this.getEndDate().replaceAll("-", "/"),
+            startDate: moment(data.startDate).format('DD/MM/YYYY'),
+            endDate: moment(data.endDate).format('DD/MM/YYYY'),
+            dueDate: moment(data.dueDate).format('DD/MM/YYYY'),
+            reportingPeriod: 'Yearly',
+            reportingForYear: data.ctReprtFor.label,
         };
+        formData.append('startDate', moment(data.startDate).format('DD/MM/YYYY'))
+		formData.append('endDate', moment(data.endDate).format('DD/MM/YYYY'))
+		formData.append('dueDate', moment(data.dueDate).format('DD/MM/YYYY'))
+		formData.append('reportingPeriod','Yearly')
+		formData.append('reportingForYear', data.ctReprtFor.label)
 
-        this.props.vatReportActions
+        this.props.ctReportActions
             .generateCTReport(postData)
             .then((res) => {
                 if (res.status === 200) {
                     this.props.commonActions.tostifyAlert(
                         "success",
-                        res.data && res.data.message
-                            ? res.data.message
-                            : "VAT Report Generated Successfully"
+                        "Report Generated Successfully!"
                     );
                 }
                 closeModal(false);
@@ -181,11 +132,10 @@ class CTReport extends React.Component {
 
     render() {
         strings.setLanguage(this.state.language);
-        const { openModal, closeModal, monthOption, setState, state } = this.props;
+        const { openModal, closeModal, fiscalYearOptions} = this.props;
         const { initValue, loading } = this.state;
-        var firstdayoflastmonth = new Date();
-        firstdayoflastmonth.setDate(1);
-
+        fiscalYearOptions && fiscalYearOptions.length > 1 && !this.state.startDate && this.setDates(this.state.ctReprtFor ? this.state.ctReprtFor.value : fiscalYearOptions[0].value)
+        fiscalYearOptions && fiscalYearOptions.length > 1 && !this.state.ctReprtFor && this.setState({ctReprtFor : fiscalYearOptions[0]})
         return (
             <div className="contact-modal-screen">
                 <Modal isOpen={openModal} className="modal-success contact-modal">
@@ -195,7 +145,6 @@ class CTReport extends React.Component {
                                 <div className="h4 mb-0 d-flex align-items-center">
                                     <span className="ml-2">
                                         {strings.GenerateCorporateTaxReport}
-                                        {/* ( <b>{this.props.monthOption==0?"Monthly":"Quarterly"}</b> ) */}
                                     </span>
                                 </div>
                             </Col>
@@ -209,13 +158,15 @@ class CTReport extends React.Component {
                         }}
                         validate={(values) => {
                             let errors = {};
-
                             return errors;
                         }}
                         validationSchema={Yup.object().shape({
-
+                            ctReprtFor: Yup.string().required(
+                                'This field is required',
+                            ),
                         })}
-                    ></Formik>
+                    >
+                    </Formik>
                     <ModalBody style={{ padding: "15px 0px 0px 0px" }}>
                         <div style={{ padding: " 0px 1px" }}>
                             <div>
@@ -252,15 +203,17 @@ class CTReport extends React.Component {
                                                             <Col lg={4} className=" pull-right ">
                                                                 <Label>
                                                                     <span className="text-danger">* </span>
-                                                                    {strings.ReportingPeriod}
+                                                                    {strings.GenerateCTReportFor}
                                                                 </Label>
                                                                 <Select
-                                                                    options={this.state.ctReprtFor_list}
+                                                                    options={fiscalYearOptions}
                                                                     id="ctReprtFor"
                                                                     name="ctReprtFor"
+                                                                    placeholder={strings.Select + strings.GenerateCTReportFor}
                                                                     value={this.state.ctReprtFor}
                                                                     onChange={(option) => {
-                                                                        this.setState({ ctReprtFor: option }, () => {
+                                                                        const year = option.label.split('-')[1]
+                                                                        this.setState({ reportingForYear: year, ctReprtFor: option }, () => {
                                                                             this.setDates(option.value);
                                                                         });
                                                                     }}
@@ -388,41 +341,6 @@ class CTReport extends React.Component {
             </div>
         );
     }
-
-    //
-
-    getStartDate = () => {
-        const { monthOption } = this.props;
-
-        if (this.state.monthlyDate) {
-            let date = moment(this.state.monthlyDate).format("DD-MM-YYYY");
-
-            return date;
-        }
-    };
-
-    //
-    getEndDate = () => {
-        const { monthOption } = this.props;
-        let date = "";
-        if (this.state.monthlyDate) {
-            if (monthOption.value === 0) {
-                date = moment(this.state.monthlyDate)
-                    .add(1, "month")
-                    .subtract(1, "day")
-                    .format("DD-MM-YYYY");
-            } else if (monthOption.value === 2) {
-                date = moment(this.state.monthlyDate)
-                    .add(3, "month")
-                    .subtract(1, "day")
-                    .format("DD-MM-YYYY");
-            }
-
-            return date;
-        }
-    };
-
-    //
 }
 
 export default connect(

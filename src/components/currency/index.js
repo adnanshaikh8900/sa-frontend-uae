@@ -11,8 +11,8 @@ class Currency extends React.Component {
 			var currencyCode = currencySymbol.slice(0, currencySymbol.length - 1);
 			var currencySymbolMain = currencySymbol;
 		} else {
-			var currencyCode = 'US';
-			var currencySymbolMain = 'USD';
+			var currencyCode = 'AED';
+			var currencySymbolMain = 'AED';
 		}
 
 		return new Intl.NumberFormat('en', {

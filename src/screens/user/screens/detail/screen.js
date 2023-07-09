@@ -788,7 +788,7 @@ class DetailUser extends React.Component {
 																						props.handleChange('roleId')(option)
 																					}
 																					placeholder={strings.Select+strings.Role}
-																					isDisabled
+																					
 																					id="roleId"
 																					name="roleId"
 																					className={

@@ -2053,12 +2053,14 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                                 maxLength="6"
                                                                                                                 id="poBoxNumber"
                                                                                                                 name="poBoxNumber"
-                                                                                                                autoComplete="Off"
+                                                                                                               
                                                                                                                 placeholder={strings.Enter + strings.POBoxNumber}
                                                                                                                 onChange={(option) => {
                                                                                                                     if (
                                                                                                                         option.target.value === '' ||
-                                                                                                                        this.regEx.test(option.target.value)
+                                                                                                                        this.regEx.test(
+                                                                                                                            option.target.value,
+                                                                                                                        )
                                                                                                                     ) {
                                                                                                                         if (option.target.value.length < 3)
                                                                                                                             this.setState({ showpoBoxNumberErrorMsg: true })
@@ -2067,12 +2069,12 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                                         props.handleChange('poBoxNumber')(
                                                                                                                             option,
                                                                                                                         );
-                                                                                                                        props.handleChange('PostZipCode')(
+                                                                                                                        props.handleChange('poBoxNumber')(
                                                                                                                             option,
                                                                                                                         );
                                                                                                                     }
                                                                                                                 }}
-                                                                                                                value={props.values.PostZipCode}
+                                                                                                                value={props.values.poBoxNumber}
                                                                                                                 className={
                                                                                                                     props.errors.poBoxNumber &&
                                                                                                                         props.touched.poBoxNumber

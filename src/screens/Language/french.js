@@ -1026,6 +1026,7 @@ const fr = {
       GrossProfit:"Bénéfice brut",		
       OperatingProfit:"Bénéfice d'exploitation",	
       NonOperating:"Non En Fonctionnement",	
+      NetProfit:"Net Bénéfice",
       NetProfitLoss:"Net Bénéfice/Perte",	
       Operating:"En Fonctionnement",
       PaymentsRecevied : 'paiement reçu',

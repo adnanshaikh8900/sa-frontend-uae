@@ -977,6 +977,7 @@ const ar = {
       GrossProfit:"اجمالي الربح",		
       OperatingProfit:"ربح التشغيل",	
       NonOperating:"أثناء عدم التشغيل",	
+      NetProfit:"صافي الربح",	
       NetProfitLoss:"صافي الربح أو الخسارة",	
       Operating:"تشغيل",	
       PaymentsRecevied : 'الدفعات المستلمة',

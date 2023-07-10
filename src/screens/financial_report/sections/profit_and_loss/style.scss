@@ -132,3 +132,32 @@ border-color: #2064d8 !important;
   background-color: #d1f7ed !important;
   border-color: #d1f7ed !important; 
 }
+
+.pnl-table-bordered{
+  td{
+    border: 1px solid black !important;
+    color: #000000 !important;
+  } 
+  th{
+    border: 1px solid black !important;
+  }
+  .wh {
+    color: #fff !important;
+  }
+  .bld {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+  }
+  .th {
+    // width: 65%;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    padding-top: 4px !important;
+    padding-bottom: 4px !important;
+  }
+}
+
+.wid{
+  width: 60%;
+  margin: auto;
+}

@@ -419,265 +419,297 @@ class ViewCorporateTax extends React.Component {
 											</tr>
 										</thead>
 										<tbody className="data-column">
-											{Object.keys(this.state.data).length > 0 ? (
-												<>
-													<tr>
-														<td className="pt-3 pb-3" colSpan={2}></td>
-													</tr>
-													<tr style={{backgroundColor: '#4472C4'}}>
-														<td className="wh pt-1 pb-1 bld" colSpan={2}>{strings.Income}</td>
-													</tr>
-													{Object.keys(
-														this.state.data['operatingIncome'],
-													).map((item) => (
-														<tr>
-															<td className="pt-0 pb-0">{item}</td>
-															<td className="pt-0 pb-0 text-right">
-																<Currency
-																	value={this.state.data['operatingIncome'][
-																		`${item}`
-																	]  }
-																	currencySymbol={
-																		universal_currency_list[0]
-																			? universal_currency_list[0]
-																					.currencyIsoCode
-																			: 'USD'
-																	}
-																/>
+													{Object.keys(this.state.data).length > 0 ? (
+														<>
+															<tr>
+																<td className="pt-3 pb-3" colSpan={2}></td>
+															</tr>
+															<tr style={{backgroundColor: '#4472C4'}}>
+																<td className="wh pt-1 pb-1 bld" colSpan={2}>{strings.Income}</td>
+															</tr>
+															{Object.keys(
+																this.state.data['nonOperatingIncome'],
+															).map((item) => (
+																<tr>
+																	<td className="pt-0 pb-0">{item}</td>
+																	<td className="pt-0 pb-0 text-right">
+																		<Currency
+																			value={'-' + this.state.data['nonOperatingIncome'][
+																				`${item}`
+																			]  }
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	</td>
+																</tr>
+															))}
+															{Object.keys(
+																this.state.data['operatingIncome'],
+															).map((item) => (
+																<tr>
+																	<td className="pt-0 pb-0">{item}</td>
+																	<td className="pt-0 pb-0 text-right">
+																		<Currency
+																			value={this.state.data['operatingIncome'][
+																				`${item}`
+																			]  }
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	</td>
+																</tr>
+															))}
+															<tr>
+																<td></td>
+																<td></td>
+															</tr>
+															<tr style={{backgroundColor: '#B4C6E7'}}>
+																<td className="pt-1 pb-1 bld">
+																	{strings.Total+" "+strings.Income}
+																</td>
+																<td className="text-right pt-1 pb-1 bld">
+																	{this.state.data['totalOperatingIncome'] !=
+																	null ? (
+																		<Currency
+																			value={this.state.data[
+																				'totalOperatingIncome'
+																			]  }
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		<Currency
+																			value={"0.00"}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	)}
+																</td>
+															</tr>
+															<tr>
+																<td className="pt-3 pb-3" colSpan={2}></td>
+															</tr>
+															<tr style={{backgroundColor: '#4472C4'}}>
+																<td className="wh pt-1 pb-1 bld" colSpan={2}>
+																	{strings.CostofGoodsSold}
+																</td>
+															</tr>
+															{Object.keys(
+																this.state.data['costOfGoodsSold'],
+															).map((item) => (
+																<tr>
+																	<td className="pt-0 pb-0">{item}</td>
+																	<td className="pt-0 pb-0 text-right">
+																		<Currency
+																			value={this.state.data['costOfGoodsSold'][
+																				`${item}`
+																			]  }
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	</td>
+																</tr>
+															))}
+															<tr>
+																<td></td>
+																<td></td>
+															</tr>
+															<tr style={{backgroundColor: '#B4C6E7'}}>
+																<td className="pt-1 pb-1 bld">
+																	{strings.Total+" "+strings.CostofGoodsSold}
+																</td>
+																<td className="text-right pt-1 pb-1 bld">
+																	{this.state.data['totalCostOfGoodsSold'] !=
+																	null ? (
+																		<Currency
+																			value={this.state.data[
+																				'totalCostOfGoodsSold'
+																			]  }
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		<Currency
+																		value={"0.00"}
+																		currencySymbol={
+																			universal_currency_list[0]
+																				? universal_currency_list[0]
+																						.currencyIsoCode
+																				: 'USD'
+																		}
+																	/>
+																	)}
+																</td>
+															</tr>
+															<tr>
+																<td className="pt-3 pb-3" colSpan={2}></td>
+															</tr>
+															<tr style={{backgroundColor: '#9CC2E5'}}>
+																<td className="pt-1 pb-1 bld">{strings.GrossProfit}</td>
+																<td className="text-right pt-1 pb-1 bld">
+																	{this.state.data['grossProfit'] != null ? (
+																		<Currency
+																			value={this.state.data[
+																				'grossProfit'
+																			]  }
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		<Currency
+																			value={"0.00"}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	)}
+																</td>
+															</tr>
+															<tr>
+																<td className="pt-3 pb-3" colSpan={2}></td>
+															</tr>
+															<tr style={{backgroundColor: '#4472C4'}}>
+																<td className="wh pt-1 pb-1 bld" colSpan={2}>{strings.Operating+" "+strings.Expenses}</td>
+															</tr>
+															{Object.keys(
+																this.state.data['operatingExpense'],
+															).map((item) => (
+																<tr>
+																	<td className="pt-0 pb-0">{item}</td>
+																	{/* <td className="pt-0 pb-0"></td> */}
+																	<td className="pt-0 pb-0 text-right">
+																		{ item === 'Purchase Discount' ? 
+																		<Currency
+																			value={'-' + this.state.data[
+																				'operatingExpense'
+																			][`${item}`]  }
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/> : <Currency
+																		value={this.state.data[
+																			'operatingExpense'
+																		][`${item}`]  }
+																		currencySymbol={
+																			universal_currency_list[0]
+																				? universal_currency_list[0]
+																						.currencyIsoCode
+																				: 'USD'
+																		}
+																	/>
+																		} 
+																	</td>
+																</tr>
+															))}
+															<tr>
+																<td></td>
+																<td></td>
+															</tr>
+															<tr style={{backgroundColor: '#B4C6E7'}}>
+																<td className="pt-1 pb-1 bld">
+																	{strings.Total+" "+strings.Operating+" "+strings.Expenses}
+																</td>
+																<td className="text-right pt-1 pb-1 bld">
+																	{this.state.data['totalOperatingExpense'] !=
+																	null ? (
+																		<Currency
+																			value={this.state.data[
+																				'totalOperatingExpense'
+																			]  }
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		<Currency
+																			value={"0.00"}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	)}
+																</td>
+															</tr>
+															<tr>
+																<td className="pt-3 pb-3" colSpan={2}></td>
+															</tr>
+															<tr style={{backgroundColor: '#9CC2E5'}}>
+																<td className="pt-1 pb-1 bld">{strings.NetProfit} </td>
+																<td className="text-right pt-1 pb-1 bld">
+																	{this.state.data['netProfitLoss'] != null ? (
+																		<Currency
+																			value={this.state.data[
+																				'netProfitLoss'
+																			]  }
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		<Currency
+																			value={"0.00"}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	)}
+																</td>
+															</tr>
+														</>
+													) : (
+														<tr className="mainLable ">
+															<td style={{ textAlign: 'center' }} colSpan="9">
+																{strings.Thereisnodatatodisplay}
 															</td>
 														</tr>
-													))}
-													<tr>
-														<td></td>
-														<td></td>
-													</tr>
-													<tr style={{backgroundColor: '#B4C6E7'}}>
-														<td className="pt-1 pb-1 bld">
-															{strings.Total+" "+strings.Income}
-														</td>
-														<td className="text-right pt-1 pb-1 bld">
-															{this.state.data['totalOperatingIncome'] !=
-															null ? (
-																<Currency
-																	value={this.state.data[
-																		'totalOperatingIncome'
-																	]  }
-																	currencySymbol={
-																		universal_currency_list[0]
-																			? universal_currency_list[0]
-																					.currencyIsoCode
-																			: 'USD'
-																	}
-																/>
-															) : (
-																<Currency
-																	value={"0.00"}
-																	currencySymbol={
-																		universal_currency_list[0]
-																			? universal_currency_list[0]
-																					.currencyIsoCode
-																			: 'USD'
-																	}
-																/>
-															)}
-														</td>
-													</tr>
-													<tr>
-														<td className="pt-3 pb-3" colSpan={2}></td>
-													</tr>
-													<tr style={{backgroundColor: '#4472C4'}}>
-														<td className="wh pt-1 pb-1 bld" colSpan={2}>
-															{strings.CostofGoodsSold}
-														</td>
-													</tr>
-													{Object.keys(
-														this.state.data['costOfGoodsSold'],
-													).map((item) => (
-														<tr>
-															<td className="pt-0 pb-0">{item}</td>
-															<td className="pt-0 pb-0 text-right">
-																<Currency
-																	value={this.state.data['costOfGoodsSold'][
-																		`${item}`
-																	]  }
-																	currencySymbol={
-																		universal_currency_list[0]
-																			? universal_currency_list[0]
-																					.currencyIsoCode
-																			: 'USD'
-																	}
-																/>
-															</td>
-														</tr>
-													))}
-													<tr>
-														<td></td>
-														<td></td>
-													</tr>
-													<tr style={{backgroundColor: '#B4C6E7'}}>
-														<td className="pt-1 pb-1 bld">
-															{strings.Total+" "+strings.CostofGoodsSold}
-														</td>
-														<td className="text-right pt-1 pb-1 bld">
-															{this.state.data['totalCostOfGoodsSold'] !=
-															null ? (
-																<Currency
-																	value={this.state.data[
-																		'totalCostOfGoodsSold'
-																	]  }
-																	currencySymbol={
-																		universal_currency_list[0]
-																			? universal_currency_list[0]
-																					.currencyIsoCode
-																			: 'USD'
-																	}
-																/>
-															) : (
-																<Currency
-																value={"0.00"}
-																currencySymbol={
-																	universal_currency_list[0]
-																		? universal_currency_list[0]
-																				.currencyIsoCode
-																		: 'USD'
-																}
-															/>
-															)}
-														</td>
-													</tr>
-													<tr>
-														<td className="pt-3 pb-3" colSpan={2}></td>
-													</tr>
-													<tr style={{backgroundColor: '#9CC2E5'}}>
-														<td className="pt-1 pb-1 bld">{strings.GrossProfit}</td>
-														<td className="text-right pt-1 pb-1 bld">
-															{this.state.data['grossProfit'] != null ? (
-																<Currency
-																	value={this.state.data[
-																		'grossProfit'
-																	]  }
-																	currencySymbol={
-																		universal_currency_list[0]
-																			? universal_currency_list[0]
-																					.currencyIsoCode
-																			: 'USD'
-																	}
-																/>
-															) : (
-																<Currency
-																	value={"0.00"}
-																	currencySymbol={
-																		universal_currency_list[0]
-																			? universal_currency_list[0]
-																					.currencyIsoCode
-																			: 'USD'
-																	}
-																/>
-															)}
-														</td>
-													</tr>
-													<tr>
-														<td className="pt-3 pb-3" colSpan={2}></td>
-													</tr>
-													<tr style={{backgroundColor: '#4472C4'}}>
-														<td className="wh pt-1 pb-1 bld" colSpan={2}>{strings.Operating+" "+strings.Expenses}</td>
-													</tr>
-													{Object.keys(
-														this.state.data['operatingExpense'],
-													).map((item) => (
-														<tr>
-															<td className="pt-0 pb-0">{item}</td>
-															{/* <td className="pt-0 pb-0"></td> */}
-															<td className="pt-0 pb-0 text-right">
-																<Currency
-																	value={this.state.data[
-																		'operatingExpense'
-																	][`${item}`]  }
-																	currencySymbol={
-																		universal_currency_list[0]
-																			? universal_currency_list[0]
-																					.currencyIsoCode
-																			: 'USD'
-																	}
-																/>
-															</td>
-														</tr>
-													))}
-													<tr>
-														<td></td>
-														<td></td>
-													</tr>
-													<tr style={{backgroundColor: '#B4C6E7'}}>
-														<td className="pt-1 pb-1 bld">
-															{strings.Total+" "+strings.Operating+" "+strings.Expenses}
-														</td>
-														<td className="text-right pt-1 pb-1 bld">
-															{this.state.data['totalOperatingExpense'] !=
-															null ? (
-																<Currency
-																	value={this.state.data[
-																		'totalOperatingExpense'
-																	]  }
-																	currencySymbol={
-																		universal_currency_list[0]
-																			? universal_currency_list[0]
-																					.currencyIsoCode
-																			: 'USD'
-																	}
-																/>
-															) : (
-																<Currency
-																	value={"0.00"}
-																	currencySymbol={
-																		universal_currency_list[0]
-																			? universal_currency_list[0]
-																					.currencyIsoCode
-																			: 'USD'
-																	}
-																/>
-															)}
-														</td>
-													</tr>
-													<tr>
-														<td className="pt-3 pb-3" colSpan={2}></td>
-													</tr>
-													<tr style={{backgroundColor: '#9CC2E5'}}>
-														<td className="pt-1 pb-1 bld">{strings.NetProfit} </td>
-														<td className="text-right pt-1 pb-1 bld">
-															{this.state.data['netProfitLoss'] != null ? (
-																<Currency
-																	value={this.state.data[
-																		'netProfitLoss'
-																	]  }
-																	currencySymbol={
-																		universal_currency_list[0]
-																			? universal_currency_list[0]
-																					.currencyIsoCode
-																			: 'USD'
-																	}
-																/>
-															) : (
-																<Currency
-																	value={"0.00"}
-																	currencySymbol={
-																		universal_currency_list[0]
-																			? universal_currency_list[0]
-																					.currencyIsoCode
-																			: 'USD'
-																	}
-																/>
-															)}
-														</td>
-													</tr>
-												</>
-											) : (
-												<tr className="mainLable ">
-													<td style={{ textAlign: 'center' }} colSpan="9">
-														{strings.Thereisnodatatodisplay}
-													</td>
-												</tr>
-											)}
-										</tbody>
+													)}
+												</tbody>
 									</Table>
 								</div>
 									)}

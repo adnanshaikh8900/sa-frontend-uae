@@ -394,6 +394,26 @@ class ProfitAndLossReport extends React.Component {
 																<td className="wh pt-1 pb-1 bld" colSpan={2}>{strings.Income}</td>
 															</tr>
 															{Object.keys(
+																this.state.data['nonOperatingIncome'],
+															).map((item) => (
+																<tr>
+																	<td className="pt-0 pb-0">{item}</td>
+																	<td className="pt-0 pb-0 text-right">
+																		<Currency
+																			value={'-' + this.state.data['nonOperatingIncome'][
+																				`${item}`
+																			]  }
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	</td>
+																</tr>
+															))}
+															{Object.keys(
 																this.state.data['operatingIncome'],
 															).map((item) => (
 																<tr>
@@ -555,8 +575,9 @@ class ProfitAndLossReport extends React.Component {
 																	<td className="pt-0 pb-0">{item}</td>
 																	{/* <td className="pt-0 pb-0"></td> */}
 																	<td className="pt-0 pb-0 text-right">
+																		{ item === 'Purchase Discount' ? 
 																		<Currency
-																			value={this.state.data[
+																			value={'-' + this.state.data[
 																				'operatingExpense'
 																			][`${item}`]  }
 																			currencySymbol={
@@ -565,7 +586,18 @@ class ProfitAndLossReport extends React.Component {
 																							.currencyIsoCode
 																					: 'USD'
 																			}
-																		/>
+																		/> : <Currency
+																		value={this.state.data[
+																			'operatingExpense'
+																		][`${item}`]  }
+																		currencySymbol={
+																			universal_currency_list[0]
+																				? universal_currency_list[0]
+																						.currencyIsoCode
+																				: 'USD'
+																		}
+																	/>
+																		} 
 																	</td>
 																</tr>
 															))}

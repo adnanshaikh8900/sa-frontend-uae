@@ -116,7 +116,7 @@ class CTReport extends React.Component {
                 if (res.status === 200) {
                     this.props.commonActions.tostifyAlert(
                         "success",
-                        "Report Generated Successfully!"
+                        "Report Created Successfully!"
                     );
                 }
                 closeModal(false);

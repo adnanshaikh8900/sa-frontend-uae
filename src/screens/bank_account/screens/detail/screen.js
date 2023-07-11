@@ -164,6 +164,7 @@ class DetailBankAccount extends React.Component {
 										? res.personalCorporateAccountInd
 										: '',
 									openingDate: moment(res.openingDate).format('DD-MM-YYYY'),
+									transactionCount: res.transactionCount,
 								},
 							});
 						})
@@ -984,18 +985,20 @@ class DetailBankAccount extends React.Component {
 															className="d-flex align-items-center justify-content-between flex-wrap mt-5"
 														>
 															<FormGroup>
+																{this.state.initialVals.transactionCount > 0 ? '' :
 																<Button
-																	type="button"
-																	name="button"
-																	color="danger"
-																	className="btn-square"
-																	disabled1={this.state.disabled1}
-																	onClick={() => this.closeBankAccount(current_bank_account_id)}
+																type="button"
+																name="button"
+																color="danger"
+																className="btn-square"
+																disabled1={this.state.disabled1}
+																onClick={() => this.closeBankAccount(current_bank_account_id)}
 																>
 																	<i className="fa fa-trash"></i>{' '}{this.state.disabled1
 																		? 'Deleting...'
 																		: strings.Delete}
 																</Button>
+																}
 															</FormGroup>
 															<FormGroup className="text-right">
 																<Button

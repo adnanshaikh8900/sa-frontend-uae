@@ -1037,6 +1037,7 @@ const en = {
       GrossProfit: "Gross Profit",
       OperatingProfit: "Operating Profit",
       NonOperating: "Non Operating",
+      NetProfit: "Net Profit",
       NetProfitLoss: "Net Profit/Loss",
       Operating: "Operating",
       PaymentsRecevied: 'Payments Received',

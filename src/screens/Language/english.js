@@ -755,7 +755,7 @@ const en = {
       Freezone: "Freezone",
 
       //Header DropDown
-      GeneralSettings: "General Settings",
+      GeneralSettings: "Mail Settings",
       User: "User",
       Help: "Help",
       LogOut: "Log Out",

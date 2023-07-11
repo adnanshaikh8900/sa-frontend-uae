@@ -118,7 +118,7 @@ class Header extends Component {
 									this.props.history.push('/admin/settings/general')
 								}
 							>
-								<i className="icon-wrench"></i>  {strings.GeneralSettings}
+								<i className="fas fa-envelope"></i>  {strings.GeneralSettings}
 							</DropdownItem>
 							{/* <DropdownItem onClick={() => this.props.history.push('/admin/settings/transaction-category')}>
 									<i className="icon-graph"></i> Transaction Category

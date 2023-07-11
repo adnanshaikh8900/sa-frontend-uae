@@ -179,6 +179,10 @@ class VatPaymentRecord extends React.Component {
 			return ("---")
 	}
 
+	renderVATNumber = (cell, row) => {
+    return <>{row.vatNumber}</>;
+  };
+	
 	renderTaxReturns = (cell, row) => {
 		let dateArr = cell ? cell.split(" ") : [];
 		let startDate = moment(dateArr[0]).format('DD-MM-YYYY')
@@ -379,8 +383,17 @@ class VatPaymentRecord extends React.Component {
 												}}											
 												>
 														<TableHeaderColumn
-															tdStyle={{ whiteSpace: 'normal' }}
+															tdStyle={{ whiteSpace: "normal" }}
 															isKey
+															dataField="vatNumber"
+															dataSort
+															className="table-header-bg"
+														>
+															VAT Report No.
+														</TableHeaderColumn>
+														<TableHeaderColumn
+															tdStyle={{ whiteSpace: 'normal' }}
+															// isKey
 															dataField="taxReturns"
 															dataSort
 														    dataFormat={this.renderTaxReturns}

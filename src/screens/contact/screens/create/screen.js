@@ -506,7 +506,7 @@ class CreateContact extends React.Component {
 																	strings.ShippingAddressRequired
 																),
 																shippingCountryId: Yup.string().required(
-																	strings.CountryIsrequired
+																	strings.CountryIsRequired
 																),
 																shippingStateId: Yup.string().required(
 																	'State is required',

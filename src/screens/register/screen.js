@@ -546,7 +546,7 @@ class Register extends React.Component {
 																										)('');
 																									}
 																								}}
-																								placeholder={strings.Enter + strings.CompanyBusinessType}
+																								placeholder={strings.Select + strings.CompanyBusinessType}
 																								id="companyTypeCode"
 																								name="companyTypeCode"
 																								className={

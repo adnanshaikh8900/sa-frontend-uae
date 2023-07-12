@@ -17,8 +17,6 @@ import {
 import { Formik } from "formik";
 import Select from "react-select";
 import * as Yup from "yup";
-import DatePicker from "react-datepicker";
-import moment from "moment";
 import { bindActionCreators } from "redux";
 import { CommonActions } from "services/global";
 import { toast } from "react-toastify";
@@ -28,7 +26,6 @@ import "../style.scss";
 import { Loader, CommonList } from "components";
 import * as PayrollEmployeeActions from "../../../../payrollemp/actions";
 import * as CTReportActions from "../actions";
-
 
 const mapStateToProps = (state) => {
     return {
@@ -114,9 +111,6 @@ class CTSettingModal extends React.Component {
         strings.setLanguage(this.state.language);
         const { openModal, closeModal, previousSettings } = this.props;
         const { initValue, loading, fiscalYearOptions } = this.state;
-        // fiscalYearOptions && fiscalYearOptions.length > 1 && !this.state.startDate && this.setDates(this.state.ctReprtFor ? this.state.ctReprtFor.value : fiscalYearOptions[0].value)
-        // fiscalYearOptions && fiscalYearOptions.length > 1 && !this.state.ctReprtFor && this.setState({ctReprtFor : fiscalYearOptions[0]})
-        console.log(this.props);
         return (
             <div className="contact-modal-screen">
                 <Modal isOpen={openModal} className="modal-success contact-modal">

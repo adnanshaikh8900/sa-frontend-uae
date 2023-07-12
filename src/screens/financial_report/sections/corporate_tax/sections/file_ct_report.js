@@ -225,6 +225,7 @@ class FileCtReportModal extends React.Component {
 
 									<ModalBody>
 										<Row className='mb-4'><Col><h4>Transactions for the tax period cannot be edited after the tax report has been filed.</h4></Col></Row>
+										<br></br>
 										<Row>
 											<Col lg={4}>
 												<FormGroup className="mb-3"><span className="text-danger">* </span>
@@ -235,6 +236,7 @@ class FileCtReportModal extends React.Component {
 														placeholderText={"Tax Filed On"}
 														showMonthDropdown
 														showYearDropdown
+														autoComplete="off"
 														dateFormat="dd-MM-yyyy"
 														dropdownMode="select"
 														minDate={endDate}
@@ -244,7 +246,6 @@ class FileCtReportModal extends React.Component {
 														onChange={(value) => {
 															props.handleChange('taxFiledOn')(value);
 															props.handleChange('corporateTaxFiling')(current_report_id);
-
 														}}
 														className={`form-control ${props.errors.taxFiledOn
 																? 'is-invalid'

@@ -30,6 +30,7 @@ import logo from 'assets/images/brand/logo.png';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
 import { upperFirst } from 'lodash-es';
+import PasswordChecklist from "react-password-checklist"
 
 const mapStateToProps = (state) => {
 	return {
@@ -99,6 +100,8 @@ class Register extends React.Component {
 				vatRegistrationDate:'',
 				companyAddress1:'',
 				phoneNumber: '',
+				password: "",
+				confirmPassword: '',
 
 			},
 			userDetail: false,
@@ -157,6 +160,18 @@ class Register extends React.Component {
 		});
 	};
 
+	registerStrapiUser = (datauser) => {
+		this.setState({})
+		const {
+			userName,
+			email,
+			password,
+			first_name,
+			lastName
+		} = datauser;
+	}
+		
+
 	handleSubmit = (data, resetForm) => {
 
 		this.setState({ loading: true });
@@ -179,25 +194,69 @@ class Register extends React.Component {
 			phoneNumber,
 			vatRegistrationDate,
 			companyAddress1,
-            companyAddress2
+            companyAddress2,
+			domainName,
+			companyURL,
+			frontend,
+			backend,
+			status,
+			createdAt,
+			updatedAt,
+			id,
+			userName,
+			provider,
+			confirmed,
+			blocked,
+			nickname,
+			activePlan
+			
 
 		} = data;
 		
-		let obj = {
-			companyName: companyName,
-			currencyCode: currencyCode ? currencyCode : '',
-			companyTypeCode: companyTypeCode,
+		let companyStrapiObj = {
+			CompanyName: companyName,
+			currency: currencyCode ? currencyCode : '',
+			companyType: companyTypeCode,
 			industryTypeCode: industryTypeCode,
-			firstName: firstName,
-			lastName: lastName,
-			email: email,
 			// countryCode: countryCode ? countryCode : '',
-			countryId:countryId.value,
+			country:"UAE",
 			stateId:stateId.value,
 			IsDesignatedZone:this.state.isDesignatedZone ? this.state.isDesignatedZone : false,
 			IsRegisteredVat:IsRegistered,
 			TaxRegistrationNumber:TaxRegistrationNumber,
 			vatRegistrationDate:vatRegistrationDate,
+			domainName: companyName,
+			companyURL: companyName,
+			frontend: null,
+			backend: null,
+			status: "nosub",
+			createdAt: new Date(),
+			updatedAt: new Date(),
+			TimeZonePrefrence: "Asia/Dubai",
+			Emirate: "Select Emirate",
+			MobileNumber: phoneNumber,
+			IsVatRegistered: IsRegistered,
+			CompanyLocatedAt: "Dubai",
+			Currency: "UAE Dirham - AED",
+			CompanyAddressLine1: companyAddress1,
+			CompanyAddressLine2: companyAddress2,
+			// id: null,
+			user: {
+				id: '6',
+				username: email,
+				email: email,
+				provider: "local",
+				confirmed: true,
+				blocked: false,
+				nickname: null,
+				firstname: firstName,
+				lastname: lastName,
+				createdAt: '2023-02-16T01:31:47.856Z',
+				updatedAt: '2023-02-16T02:32:18.563Z'
+			},
+			activePlan: null,
+			isPasswordShown: false,
+
 		};
 		let formData = new FormData();
 		// for (var key in this.state.initValue) {
@@ -227,15 +286,27 @@ class Register extends React.Component {
 		formData.append('companyAddressLine1',companyAddress1 ? companyAddress1 : '')
         formData.append('companyAddressLine2',companyAddress2 ? companyAddress2 : '')
 		formData.append('loginUrl', window.location.origin);
+		formData.append('password', password)
 
-		toast.success('Please check your email to set your password', {
+		toast.success('Please wait till we setup your account', {
 			position: toast.POSITION.TOP_RIGHT,
 			autoClose:40000,});
 			
 		{this.setState({ loading:true, 
 			loadingMsg:"Registering Company," ,
-		    NextloadingMsg:"Please check your email to set your password" })} 
-	
+		    NextloadingMsg:"Please wait till we setup your account" })} 
+		
+		// this.props.authActions
+		// 	.registerStrapy(obj)
+		let strapiUserObj = {
+			username: email,
+			email: email,
+			password: 'Demo@123',
+			first_name: firstName,
+			last_name: lastName
+		};
+		this.props.authActions
+			.registerStrapiUser(strapiUserObj, companyStrapiObj)
 		this.props.authActions
 			.register(formData)
 			.then((res) => {
@@ -262,6 +333,11 @@ class Register extends React.Component {
 					},
 				);
 			});
+	};
+
+	togglePasswordVisiblity = () => {
+		const { isPasswordShown } = this.state;
+		this.setState({ isPasswordShown: !isPasswordShown });
 	};
 
 	render() {
@@ -336,6 +412,16 @@ class Register extends React.Component {
 														}}
 
 														validationSchema={Yup.object().shape({
+															password: Yup.string()
+																.required("Password is required")
+																// .min(8, "Password Too Short")
+																.matches(
+																/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
+																"Must contain minimum 8 characters, must contain maximum 255 characters, one uppercase, one lowercase, one number and one special case character"
+																),
+															confirmPassword: Yup.string()
+																.required('Confirm password is required')
+																.oneOf([Yup.ref("password"), null], "Passwords must match"),
 															companyName: Yup.string().required(
 																'Company name is required',
 															),
@@ -1171,6 +1257,120 @@ class Register extends React.Component {
 																					)}
 																			</FormGroup>
 																		</Col>
+																		</Row>
+																		<Row>
+																		<Col lg={6}>
+																		<FormGroup>
+																			<Label htmlFor="select">
+																				<span className="text-danger">* </span>
+																				 Password
+																			</Label>
+																			<div>
+																				<Input
+																					onPaste={(e)=>{
+																					e.preventDefault()
+																					return false;
+																					}} onCopy={(e)=>{
+																					e.preventDefault()
+																					return false;
+																					}}
+																					type={
+																						this.state.isPasswordShown
+																							? 'text'
+																							: 'password'
+																					}
+                                          											autoComplete="off"
+																					id="password"
+																					name="password"
+																					placeholder=" Enter Password"
+																					value={props.values.password}
+																					onChange={(option) => {
+                                            													if(option.target.value!="")
+																				  				{		
+                                            												props.handleChange('password')(
+																							option,
+																						);
+																							this.setState({displayRules:true})}
+																							else{
+																							props.handleChange('password')(
+																								option,
+																							);
+																							this.setState({displayRules:false})
+																							}
+																					}}
+																					className={
+																						props.errors.password &&
+																							props.touched.password
+																							? 'is-invalid'
+																							: ''
+																					}
+																				/>
+																				<i className={`fa ${isPasswordShown ? "fa-eye" : "fa-eye-slash"} password-icon fa-lg`}
+																					onClick={this.togglePasswordVisiblity}
+																				>
+																				</i>
+																			</div>
+																			{props.errors.password &&
+																				props.touched.password && (
+																					<div className="invalid-feedback">
+																						{props.errors.password}
+																					</div>
+																				)}
+																		{this.state.displayRules==true&&(	<PasswordChecklist
+																				rules={["maxLength", "minLength", "specialChar", "number", "capital"]}
+																				minLength={8}
+                                        										maxLength={255}
+																				value={props.values.password}
+																				valueAgain={props.values.confirmPassword}
+																			/>)}
+																		</FormGroup>
+																			</Col>
+																			<Col lg={6}>
+																			<FormGroup>
+																			<Label htmlFor="select">
+																				<span className="text-danger">* </span>
+																			Confirm Password
+																			</Label>
+																			<Input
+																				onPaste={(e)=>{
+																					e.preventDefault()
+																					return false;
+																					}} onCopy={(e)=>{
+																					e.preventDefault()
+																					return false;
+																					}}
+																				// autoComplete="off"
+																				type="password"
+																				id="confirmPassword"
+																				name="confirmPassword"
+																				value={props.values.confirmPassword}
+																				placeholder="Confirm Password"
+																				onChange={(value) => {
+																					props.handleChange('confirmPassword')(
+																						value,
+																					);
+																				}}
+																				className={
+																					props.errors.confirmPassword &&
+																						props.touched.confirmPassword
+																						? 'is-invalid'
+																						: ''
+																				}
+																			/>
+																			{props.errors.confirmPassword &&
+																				props.touched.confirmPassword && (
+																					<div className="invalid-feedback">
+																						{props.errors.confirmPassword}
+																					</div>
+																				)}
+																				{this.state.displayRules==true&&(	<PasswordChecklist
+																				rules={[ "match"]}
+																				minLength={8}
+																				value={props.values.password}
+																				valueAgain={props.values.confirmPassword}
+																			/>)}
+																		</FormGroup>
+																			</Col>
 																		</Row>
 																		<>Note:<b> Super Admin</b> Details Cannot Be Altered After Registration</>
 																	<Row>

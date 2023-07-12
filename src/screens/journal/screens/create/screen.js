@@ -852,7 +852,7 @@ class CreateJournal extends React.Component {
 																		showMonthDropdown
 																		showYearDropdown
 																		dropdownMode="select"
-																		dateFormat="dd-MM-yyyy"
+																		dateFormat="yyyy-MM-dd"
 																		maxDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('journalDate')(value);

@@ -473,7 +473,7 @@ class ViewCorporateTax extends React.Component {
 															</tr>
 															<tr style={{backgroundColor: '#B4C6E7'}}>
 																<td className="pt-1 pb-1 bld">
-																	{strings.Total+" "+strings.Income}
+																	{strings.Total+" "+strings.Income + ' (A)'}
 																</td>
 																<td className="text-right pt-1 pb-1 bld">
 																	{this.state.data['totalOperatingIncome'] !=
@@ -536,7 +536,7 @@ class ViewCorporateTax extends React.Component {
 															</tr>
 															<tr style={{backgroundColor: '#B4C6E7'}}>
 																<td className="pt-1 pb-1 bld">
-																	{strings.Total+" "+strings.CostofGoodsSold}
+																	{strings.Total+" "+strings.CostofGoodsSold + ' (B)'}
 																</td>
 																<td className="text-right pt-1 pb-1 bld">
 																	{this.state.data['totalCostOfGoodsSold'] !=
@@ -569,7 +569,7 @@ class ViewCorporateTax extends React.Component {
 																<td className="pt-3 pb-3" colSpan={2}></td>
 															</tr>
 															<tr style={{backgroundColor: '#9CC2E5'}}>
-																<td className="pt-1 pb-1 bld">{strings.GrossProfit}</td>
+																<td className="pt-1 pb-1 bld">{strings.GrossProfit + ' (A-B)'}</td>
 																<td className="text-right pt-1 pb-1 bld">
 																	{this.state.data['grossProfit'] != null ? (
 																		<Currency
@@ -641,7 +641,7 @@ class ViewCorporateTax extends React.Component {
 															</tr>
 															<tr style={{backgroundColor: '#B4C6E7'}}>
 																<td className="pt-1 pb-1 bld">
-																	{strings.Total+" "+strings.Operating+" "+strings.Expenses}
+																	{strings.Total+" "+strings.Operating+" "+strings.Expenses + ' (C)'}
 																</td>
 																<td className="text-right pt-1 pb-1 bld">
 																	{this.state.data['totalOperatingExpense'] !=
@@ -674,7 +674,7 @@ class ViewCorporateTax extends React.Component {
 																<td className="pt-3 pb-3" colSpan={2}></td>
 															</tr>
 															<tr style={{backgroundColor: '#9CC2E5'}}>
-																<td className="pt-1 pb-1 bld">{strings.NetProfit} </td>
+																<td className="pt-1 pb-1 bld">{strings.NetProfit + ' (A-B-C)'}</td>
 																<td className="text-right pt-1 pb-1 bld">
 																	{this.state.data['netProfitLoss'] != null ? (
 																		<Currency

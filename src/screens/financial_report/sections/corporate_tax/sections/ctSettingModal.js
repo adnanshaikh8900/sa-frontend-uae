@@ -17,8 +17,6 @@ import {
 import { Formik } from "formik";
 import Select from "react-select";
 import * as Yup from "yup";
-import DatePicker from "react-datepicker";
-import moment from "moment";
 import { bindActionCreators } from "redux";
 import { CommonActions } from "services/global";
 import { toast } from "react-toastify";
@@ -28,7 +26,6 @@ import "../style.scss";
 import { Loader, CommonList } from "components";
 import * as PayrollEmployeeActions from "../../../../payrollemp/actions";
 import * as CTReportActions from "../actions";
-
 
 const mapStateToProps = (state) => {
     return {
@@ -69,9 +66,10 @@ class CTSettingModal extends React.Component {
 			],
             initValue: {
             isEligibleForCP: false,
+            fiscalYear: { value: 1, label: 'January-December' },
             },
             isEligibleForCP: false,
-            fiscalYear: '',
+            // fiscalYear: '',
             dialog: null,
             view: false,
             selectedFlag:true,
@@ -118,8 +116,7 @@ class CTSettingModal extends React.Component {
         strings.setLanguage(this.state.language);
         const { openModal, closeModal } = this.props;
         const { initValue, loading, fiscalYearOptions } = this.state;
-        // fiscalYearOptions && fiscalYearOptions.length > 1 && !this.state.startDate && this.setDates(this.state.ctReprtFor ? this.state.ctReprtFor.value : fiscalYearOptions[0].value)
-        // fiscalYearOptions && fiscalYearOptions.length > 1 && !this.state.ctReprtFor && this.setState({ctReprtFor : fiscalYearOptions[0]})
+       
         return (
             <div className="contact-modal-screen">
                 <Modal isOpen={openModal} className="modal-success contact-modal">
@@ -167,12 +164,10 @@ class CTSettingModal extends React.Component {
                                             <Formik initialValues={initValue}>
                                                 {(props) => (
                                                     <Form>
-                                                            <Col lg={8}>
-																<FormGroup check inline className="mb-3">
-																	<Label className="isEligibleForCP"><span className="text-danger">* </span>
-                                                                    Does your company have to pay corporate taxes ?
-                                                                    </Label>
-																	<div className="wrapper">
+																<FormGroup check className="mb-3">
+                                                                <Row className='mb-4'><Label className="isEligibleForCP"><span className="text-danger"> </span>Does your company have to pay corporate taxes ?</Label></Row>
+                                                                <Row>
+                                                                    <div className="wrapper" style={{ marginRight: '100px', marginLeft: '40px' }}>
 																	<Label
 																		className="form-check-label"
 																		check
@@ -180,7 +175,7 @@ class CTSettingModal extends React.Component {
 																	<Input
 																		className="form-check-input"
 																		type="radio"
-																		id="inline-radio1"
+																		id="radio1"
                                                                         name="isEligibleForCP"
 																		checked={this.state.isEligibleForCP}
 																		value={true}
@@ -194,6 +189,8 @@ class CTSettingModal extends React.Component {
 																				/>
 																			  {strings.Yes}
 																			</Label>
+                                                                        </div>
+                                                                            <div className="wrapper" >
 																			<Label
 																				className="form-check-label"
 																				check
@@ -201,7 +198,7 @@ class CTSettingModal extends React.Component {
 																				<Input
 																					className="form-check-input"
 																					type="radio"
-																					id="inline-radio2"
+																					id="radio2"
                                                                                     name="isEligibleForCP"
 																					value={false}
                                                                                     checked={!this.state.isEligibleForCP}
@@ -215,13 +212,13 @@ class CTSettingModal extends React.Component {
 																				/>
 																				   {strings.No}
 																			</Label>
-																		</div>   
+																		</div>
+                                                                        </Row>
                                                                     </FormGroup>
-                                                                </Col>
                                                                 <div>
                                                                     <Col lg={4}>
                                                                         <Label>
-                                                                            <span className="text-danger">* </span>
+                                                                            <span className="text-danger"> </span>
                                                                             Fiscal Year
                                                                         </Label>
                                                                         <Select

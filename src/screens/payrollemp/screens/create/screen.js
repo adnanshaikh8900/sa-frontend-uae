@@ -1618,7 +1618,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                             showYearDropdown
                                                                                                             maxDate={new Date()}
                                                                                                             autoComplete={"off"}
-                                                                                                            dateFormat="dd-MM-yyyy"
+                                                                                                            dateFormat="yyyy-MM-dd"
                                                                                                             dropdownMode="select"
                                                                                                             selected={props.values.dob}
                                                                                                             value={props.values.dob}

@@ -37,7 +37,7 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 		payrollEmployeeActions: bindActionCreators(PayrollEmployeeActions, dispatch),
-        ctReportActions: bindActionCreators(CTReportActions, dispatch),
+		ctReportActions: bindActionCreators(CTReportActions, dispatch),
 	};
 };
 
@@ -79,18 +79,16 @@ class FileCtReportModal extends React.Component {
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regExAddress = /^[a-zA-Z0-9\s\D,'-/]+$/;
-
 		this.formikRef = React.createRef();
 	}
 
-	handleSubmit = (data,resetForm, setSubmitting) => {
-		console.log(data)
-        const { openModal, closeModal } = this.props;
+	handleSubmit = (data, resetForm, setSubmitting) => {
+		const { openModal, closeModal } = this.props;
 		this.setState({ disabled: true });
 		let formData = new FormData();
 		const postData = {
-			taxFiledOn: moment(data.taxFiledOn).format('DD/MM/YYYY'),
-			id: data.corporateTaxFiling,
+			taxFiledOn: moment(data.taxFiledOn ? data.taxFiledOn : this.props.endDate).format('DD/MM/YYYY'),
+			id: data.corporateTaxFiling ? data.corporateTaxFiling : this.props.current_report_id ,
 		};
 		formData.append('taxFiledOn', moment(data.taxFiledOn).format('DD/MM/YYYY'))
 		formData.append('id', data.corporateTaxFiling)
@@ -121,29 +119,28 @@ class FileCtReportModal extends React.Component {
 
 	_showDetails = (bool) => {
 		this.setState({
-		  showDetails: bool
+			showDetails: bool
 		});
-	  }
+	}
 
 	componentDidMount = () => {
-		this.props.ctReportActions.getCompanyDetails().then((res)=>{			
-			if(res.status==200){
-			// this.setState({initValue:{vatRegistrationNumber:res.data.vatRegistrationNumber?res.data.vatRegistrationNumber:""}})
-		}
+		this.props.ctReportActions.getCompanyDetails().then((res) => {
+			if (res.status == 200) {
+				// this.setState({initValue:{vatRegistrationNumber:res.data.vatRegistrationNumber?res.data.vatRegistrationNumber:""}})
+			}
 		});
 	};
-
 	initializeData = () => {
 		const { initValue } = this.state;
 		let query = new URLSearchParams(document.location.search)
-		const idofvat=query.get('id')
-		if(!idofvat) this.props.history.push('/admin/report/corporate-tax')
+		const idofvat = query.get('id')
+		if (!idofvat) this.props.history.push('/admin/report/corporate-tax')
 		this.props.vatreport
 			.getCTReportList()
 			.then((res) => {
-				
+
 				if (res.status === 200) {
-					this.setState({ vatReportData: res?.data?.data?.find((i)=>i.id==idofvat) }) // comment for dummy
+					this.setState({ vatReportData: res?.data?.data?.find((i) => i.id == idofvat) }) // comment for dummy
 				}
 			})
 			.catch((err) => {
@@ -152,16 +149,16 @@ class FileCtReportModal extends React.Component {
 					err && err.data ? err.data.message : 'Something Went Wrong',
 				);
 			});
-			
+
 		const postData = {
-			startDate:this.props?.location?.state?.startDate,
+			startDate: this.props?.location?.state?.startDate,
 			endDate: this.props?.location?.state?.endDate,
 		};
 		this.setState(
 			{
 				initValue: {
 					startDate: this.props?.location?.state?.startDate,
-					endDate:this.props?.location?.state?.endDate,
+					endDate: this.props?.location?.state?.endDate,
 				},
 				loading: true,
 			},
@@ -182,22 +179,11 @@ class FileCtReportModal extends React.Component {
 			.catch((err) => {
 				this.setState({ loading: false });
 			});
-	 };
-
-    dateLimit=()=>{
-	    const {taxReturns} = this.props;
-		if(taxReturns){
-			var datearray = taxReturns.split("-")[0].split("/");
-			const value=	new Date(parseInt(datearray[2]),parseInt(datearray[1])-1,parseInt(datearray[0])+1)
-			return value
-		}
-	}
-
+	};
 	render() {
 		strings.setLanguage(this.state.language);
-		const { openModal, closeModal ,current_report_id, endDate, taxReturns} = this.props;
-		const { initValue, loading, reporting_period_list } = this.state;
-
+		const { openModal, closeModal, current_report_id, taxReturns,endDate,dueDate } = this.props;
+		const { initValue, loading, reporting_period_list, } = this.state;
 		return (
 			<div className="contact-modal-screen">
 				<Modal isOpen={openModal} className="modal-success contact-modal">
@@ -211,7 +197,7 @@ class FileCtReportModal extends React.Component {
 							</Col>
 						</Row>
 					</ModalHeader>
-			
+
 					<Formik
 						ref={this.formikRef}
 						initialValues={initValue}
@@ -220,13 +206,13 @@ class FileCtReportModal extends React.Component {
 						}}
 						validate={(values) => {
 							let errors = {};
-							if(!values.taxFiledOn)
-								errors.taxFiledOn='Date of filling is required';				
+							if (values.corporateTaxFiling && !values.taxFiledOn)
+								errors.taxFiledOn = 'Date of filling is required';
 							return errors;
 						}}
 						validationSchema={Yup.object().shape({
-							taxFiledOn: Yup.string().required('Date of filling is required'),
-										})}
+							//taxFiledOn: Yup.string().required('Date of filling is required'),
+						})}
 					>
 						{(props) => {
 							const { isSubmitting } = props;
@@ -253,24 +239,23 @@ class FileCtReportModal extends React.Component {
 														autoComplete="off"
 														dateFormat="dd-MM-yyyy"
 														dropdownMode="select"
-														// minDate={this.dateLimit()}
-														// maxDate={new Date()}
-														value={props.values.taxFiledOn}
-														selected={props.values.taxFiledOn}
-														onChange={(value) => {																			
+														minDate={endDate}
+														maxDate={dueDate}
+														value={props.values.taxFiledOn || props.values.corporateTaxFiling ? props.values.taxFiledOn : endDate}
+														selected={props.values.taxFiledOn || props.values.corporateTaxFiling ? props.values.taxFiledOn : endDate}
+														onChange={(value) => {
 															props.handleChange('taxFiledOn')(value);
 															props.handleChange('corporateTaxFiling')(current_report_id);
 														}}
-														className={`form-control ${
-															props.errors.taxFiledOn
+														className={`form-control ${props.errors.taxFiledOn
 																? 'is-invalid'
 																: ''
-														}`}
+															}`}
 													/>
 													{props.errors.taxFiledOn && (
-															<div className="invalid-feedback">
-																{props.errors.taxFiledOn}
-															</div>
+														<div className="invalid-feedback">
+															{props.errors.taxFiledOn}
+														</div>
 													)}
 												</FormGroup>
 											</Col>
@@ -283,22 +268,22 @@ class FileCtReportModal extends React.Component {
 											className="btn-square"
 											disabled={this.state.disabled}
 											onClick={() => {
-											//	added validation popup	msg
-											console.log(props.errors,"ERROR");
-											props.handleBlur();
-												if(props.errors &&  Object.keys(props.errors).length != 0)
-												this.props.commonActions.fillManDatoryDetails();
-										}}
+												//	added validation popup	msg
+												console.log(props.errors, "ERROR");
+												props.handleBlur();
+												if (props.errors && Object.keys(props.errors).length != 0)
+													this.props.commonActions.fillManDatoryDetails();
+											}}
 										>
 											<i className="fa fa-dot-circle-o"></i> 	{this.state.disabled
-																			? 'Saving...'
-																			: "File" }
+												? 'Saving...'
+												: "File"}
 										</Button>
 										&nbsp;
 										<Button
 											color="secondary"
 											className="btn-square"
-											onClick={() => {											
+											onClick={() => {
 												// this.setState({isTANMandetory:false})
 												// this.setState({isTAANMandetory:false})
 												closeModal(false);

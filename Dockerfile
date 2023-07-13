@@ -10,7 +10,7 @@ COPY nginx /etc/nginx
 EXPOSE 80
 # Copy .env file and shell script to container
 COPY ./env.sh .
-COPY .env .
+COPY ./.env .
 # Make our shell script executable
 RUN chmod +x env.sh
 

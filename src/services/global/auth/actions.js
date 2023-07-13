@@ -56,6 +56,7 @@ export const logIn = (obj) => {
 };
 
 export const register = (obj) => {
+	console.log ('simpleaccountsregister obj', obj)
 	return (dispatch) => {
 		let data = {
 			method: 'post',
@@ -72,6 +73,58 @@ export const register = (obj) => {
 				// window['sessionStorage'].setItem('userId', res.data.userId);
 
 				//return res;
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
+export const registerStrapiCompany = (apiToken, companyObj) => {
+	//console.log ('in register Company', apiToken)
+	// console.log ('in register Company', companyObj)
+	return (dispatch) => {
+		let data = {
+			method: 'post',
+			url: 'https://strapi-api-test-ae.app.simpleaccounts.io/api/companies',
+			data: companyObj,
+			headers: {
+				Authorization: `Bearer ${apiToken}`
+			}
+		};
+		return api(data)
+			.then((res) => {
+				// alert ("response from company")
+				//console.log(res);
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
+export const registerStrapiUser = (obj, companyobj) => {
+	return (dispatch) => {
+		let data = {
+			method: 'post',
+			url: 'https://strapi-api-test-ae.app.simpleaccounts.io/api/auth/local/register',
+			data: obj,
+		};
+		return api(data)
+			.then((res) => {
+				// alert("before json object")
+				//console.log('userdata=',res.data)
+				var text = JSON.stringify(companyobj, function (key, value) {
+					// alert(key);
+					if (key == "id") {
+						value =  res.data.id;
+					  return value;
+					}
+				  });
+
+				// console.log("updated company obj = ",companyobj)
+				//alert("after json convert")
+				registerStrapiCompany (res.data.jwt, companyobj);
 			})
 			.catch((err) => {
 				throw err;

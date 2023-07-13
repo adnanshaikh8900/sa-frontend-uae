@@ -56,7 +56,6 @@ export const logIn = (obj) => {
 };
 
 export const register = (obj) => {
-	console.log ('simpleaccountsregister obj', obj)
 	return (dispatch) => {
 		let data = {
 			method: 'post',
@@ -80,28 +79,51 @@ export const register = (obj) => {
 	};
 };
 
+// export const registerStrapiCompany = (apiToken, companyObj) => {
+// 	console.log ('in register Company', apiToken)
+// 	console.log ('in register Company', companyObj)
+// 	return (dispatch) => {
+// 		let data = {
+// 			method: 'post',
+// 			url: 'https://strapi-api-test-ae.app.simpleaccounts.io/api/companies',
+// 			data: companyObj,
+// 			headers: {
+// 				Authorization: `Bearer ${apiToken}`,
+//        			'Content-Type': 'application/json',
+// 			},
+// 		};
+// 		return api(data)
+// 			.then((res) => {
+// 				console.log(res.data)
+// 			})
+// 			.catch((err) => {
+// 				console.log(err)
+// 				throw err;
+// 			});
+// 	};
+// };
+
 export const registerStrapiCompany = (apiToken, companyObj) => {
-	//console.log ('in register Company', apiToken)
-	// console.log ('in register Company', companyObj)
-	return (dispatch) => {
-		let data = {
-			method: 'post',
-			url: 'https://strapi-api-test-ae.app.simpleaccounts.io/api/companies',
-			data: companyObj,
-			headers: {
-				Authorization: `Bearer ${apiToken}`
-			}
-		};
-		return api(data)
-			.then((res) => {
-				// alert ("response from company")
-				//console.log(res);
-			})
-			.catch((err) => {
-				throw err;
-			});
+	return async (dispatch) => {
+	  try {
+		const response = await api.post('https://strapi-api-test-ae.app.simpleaccounts.io/api/companies', companyObj, {
+		  headers: {
+			Authorization: `Bearer ${apiToken}`,
+			'Content-Type': 'application/json',
+		  },
+		});
+  		console.log(response.data);
+		// Handle the API response and dispatch appropriate actions
+		// Example: dispatch({ type: REGISTER_COMPANY_SUCCESS, payload: response.data });
+	  } catch (error) {
+		console.log(error);
+		// Handle the error and dispatch appropriate actions
+		// Example: dispatch({ type: REGISTER_COMPANY_ERROR, payload: error.message });
+		throw error;
+	  }
 	};
-};
+  };
+  
 
 export const registerStrapiUser = (obj, companyobj) => {
 	return (dispatch) => {
@@ -112,19 +134,12 @@ export const registerStrapiUser = (obj, companyobj) => {
 		};
 		return api(data)
 			.then((res) => {
-				// alert("before json object")
-				//console.log('userdata=',res.data)
-				var text = JSON.stringify(companyobj, function (key, value) {
-					// alert(key);
-					if (key == "id") {
-						value =  res.data.id;
-					  return value;
-					}
-				  });
-
-				// console.log("updated company obj = ",companyobj)
-				//alert("after json convert")
-				registerStrapiCompany (res.data.jwt, companyobj);
+				//block for updating the id of user coming in response
+				let key = "id";
+				let cleanJsonRegex = new RegExp(`"${key}"\\s*:\\s*"[^"]*"`);
+				let nameJsonStr = JSON.stringify(companyobj).replace(cleanJsonRegex, `"${key}": "${res.data.user.id}"`);
+				//end of block	
+				registerStrapiCompany (res.data.jwt, nameJsonStr);
 			})
 			.catch((err) => {
 				throw err;

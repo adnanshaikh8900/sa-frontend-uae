@@ -105,10 +105,10 @@ class CTReport extends React.Component {
             reportingForYear: data.ctReprtFor.label,
         };
         formData.append('startDate', moment(data.startDate).format('DD/MM/YYYY'))
-		formData.append('endDate', moment(data.endDate).format('DD/MM/YYYY'))
-		formData.append('dueDate', moment(data.dueDate).format('DD/MM/YYYY'))
-		formData.append('reportingPeriod','Yearly')
-		formData.append('reportingForYear', data.ctReprtFor.label)
+        formData.append('endDate', moment(data.endDate).format('DD/MM/YYYY'))
+        formData.append('dueDate', moment(data.dueDate).format('DD/MM/YYYY'))
+        formData.append('reportingPeriod', 'Yearly')
+        formData.append('reportingForYear', data.ctReprtFor.label)
 
         this.props.ctReportActions
             .generateCTReport(postData)
@@ -119,7 +119,11 @@ class CTReport extends React.Component {
                         "Report Created Successfully!"
                     );
                 }
-                closeModal(false);
+
+                this.setState({ ctReprtFor: null }, () => {
+                    console.log(this.state)
+                    closeModal(false);
+                })
             })
             .catch((err) => {
                 this.props.commonActions.tostifyAlert(
@@ -132,10 +136,14 @@ class CTReport extends React.Component {
 
     render() {
         strings.setLanguage(this.state.language);
-        const { openModal, closeModal, fiscalYearOptions} = this.props;
+        const { openModal, closeModal, fiscalYearOptions } = this.props;
         const { initValue, loading } = this.state;
-        fiscalYearOptions && fiscalYearOptions.length > 1 && !this.state.startDate && this.setDates(this.state.ctReprtFor ? this.state.ctReprtFor.value : fiscalYearOptions[0].value)
-        fiscalYearOptions && fiscalYearOptions.length > 1 && !this.state.ctReprtFor && this.setState({ctReprtFor : fiscalYearOptions[0]})
+        if (fiscalYearOptions && fiscalYearOptions.length > 1)
+            if (!this.state.ctReprtFor || fiscalYearOptions[0]?.label !== this.state.ctReprtFor?.label) {
+                console.log(this.state.ctReprtFor)
+                this.setDates(this.state.ctReprtFor ? this.state.ctReprtFor.value : fiscalYearOptions[0].value)
+                this.setState({ ctReprtFor: fiscalYearOptions[0] })
+            }
         return (
             <div className="contact-modal-screen">
                 <Modal isOpen={openModal} className="modal-success contact-modal">
@@ -207,6 +215,7 @@ class CTReport extends React.Component {
                                                                 </Label>
                                                                 <Select
                                                                     options={fiscalYearOptions}
+                                                                    isDisabled={this.props.ctReport}
                                                                     id="ctReprtFor"
                                                                     name="ctReprtFor"
                                                                     placeholder={strings.Select + strings.GenerateCTReportFor}

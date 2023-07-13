@@ -494,16 +494,16 @@ class CorporateTaxPaymentRecord extends React.Component {
 																							name="referenceNumber"
 																							placeholder="e.g. Receipt Number"
 																							onChange={(option) => {
-																								if (
-																									option.target.value === '' ||
-																									this.regExBoth.test(
-																										option.target.value,
-																									)
-																								) {
+																								// if (
+																								// 	option.target.value === '' ||
+																								// 	this.regExBoth.test(
+																								// 		option.target.value,
+																								// 	)
+																								// ) {
 																									props.handleChange(
 																										'referenceNumber',
 																									)(option);
-																								}
+																								// }
 																							}}
 																							value={props.values.referenceNumber}
 																						/>

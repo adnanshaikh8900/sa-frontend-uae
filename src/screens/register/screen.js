@@ -658,7 +658,7 @@ class Register extends React.Component {
 																			<Label htmlFor="select"><span className="text-danger">* </span>{strings.CompanyAddressLine1}</Label>
 																				<Input
 																					type="text"
-																					maxLength="100"
+																					maxLength="250"
 																					id="companyAddress1"
 																					name="companyAddress1"
 																					placeholder="Enter Company Address"
@@ -688,7 +688,7 @@ class Register extends React.Component {
 																				<Label htmlFor="companyAddress2">{strings.CompanyAddressLine2}</Label>
 																				<Input
 																					type="text"
-																				 	maxLength="100"
+																				 	maxLength="250"
 																					id="companyAddress2"
 																					name="companyAddress2"
 																					placeholder="Enter Company Address"

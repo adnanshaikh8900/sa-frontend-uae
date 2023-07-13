@@ -74,7 +74,8 @@ class CTSettingModal extends React.Component {
     }
     saveCTSettings = (data, resetForm) => {
         this.setState({ disabled: true });
-        const corporateTaxSettingId = this.state.fiscalYear ? this.state.fiscalYear.value : this.props.previousSettings?.corporateTaxSettingId ? this.props.previousSettings?.corporateTaxSettingId : '';
+        const{fiscalYearOptions} = this.props;
+        const corporateTaxSettingId = this.state.fiscalYear ? this.state.fiscalYear.value : this.props.previousSettings?.corporateTaxSettingId ? this.props.previousSettings?.corporateTaxSettingId : fiscalYearOptions[0].value;
         const dataNew = {
             isEligibleForCP: this.state.isEligibleForCP ? this.state.isEligibleForCP === 'true' ? true : false : this.props.previousSettings?.isEligibleForCP,
             corporateTaxSettingId: corporateTaxSettingId,
@@ -211,7 +212,7 @@ class CTSettingModal extends React.Component {
                                                                 options={fiscalYearOptions}
                                                                 id="fiscalYear"
                                                                 name="fiscalYear"
-                                                                value={this.state.fiscalYear ? this.state.fiscalYear : { 'value': previousSettings?.corporateTaxSettingId, 'label': previousSettings?.fiscalYear }}
+                                                                value={this.state.fiscalYear ? this.state.fiscalYear : previousSettings ? { 'value': previousSettings?.corporateTaxSettingId, 'label': previousSettings?.fiscalYear } : fiscalYearOptions[0] }
                                                                 onChange={(e) => {
                                                                     props.setFieldValue('fiscalYear', '',);
                                                                     this.setState({ fiscalYear: e });

@@ -1038,9 +1038,9 @@ componentWillUnmount() {
 													if(this.state.isRegisteredVat && !values.taxTreatmentId){
 														errors.taxTreatmentId=strings.TaxTreatmentRequired;
 													}
-													// if (!values.placeOfSupplyId && values.taxTreatmentId.value !== 8) {
-													// 	errors.placeOfSupplyId = 'Place of supply is required';
-													// }
+													 if (!values.placeOfSupplyId && values.taxTreatmentId.value !== 8) {
+													 	errors.placeOfSupplyId = 'Place of supply is required';
+													 }
 													return errors;
 												}}
 												validationSchema={Yup.object().shape({

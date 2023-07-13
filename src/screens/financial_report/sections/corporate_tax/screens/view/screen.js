@@ -20,14 +20,17 @@ import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
 import { CSVLink } from 'react-csv';
 import { Loader, Currency } from 'components';
-import * as FinancialReportActions from '../../actions';
-import FilterComponent from '../filterComponent';
-import FilterComponent2 from '../filterComponet2';
+import * as CTActions from './actions';
+import * as CTReportActions from '../../actions';
+	import * as FinancialReportActions from '../../../../actions';
+import FilterComponent from '../../../filterComponent';
+import FilterComponent2 from '../../../filterComponet2';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';
-import {data}  from '../../../Language/index'
+import {data}  from '../../../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import { alertTitleClasses } from '@mui/material';
 
 const mapStateToProps = (state) => {
 	return {
@@ -42,6 +45,14 @@ const mapDispatchToProps = (dispatch) => {
 			FinancialReportActions,
 			dispatch,
 		),
+		ctReportActions: bindActionCreators(
+			CTReportActions,
+			dispatch,
+		),
+		ctActions: bindActionCreators(
+			CTActions,
+			dispatch,
+		),
 	};
 };
 let strings = new LocalizedStrings(data);
@@ -54,7 +65,7 @@ else{
 strings1.setLanguage(localStorage.getItem('language'));
 }
 
-class ProfitAndLossReport extends React.Component {
+class ViewCorporateTax extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -62,12 +73,8 @@ class ProfitAndLossReport extends React.Component {
 			loading: true,
 			dropdownOpen: false,
 			view: false,
-			initValue: {
-				startDate: moment().startOf('month').format('DD/MM/YYYY'),
-				endDate: moment().endOf('month').format('DD/MM/YYYY'),
-				reportBasis: 'ACCRUAL',
-				chartOfAccountId: '',
-			},
+			// id: '',
+			initValue: {},
 			csvData: [],
 			activePage: 1,
 			sizePerPage: 10,
@@ -76,23 +83,28 @@ class ProfitAndLossReport extends React.Component {
 				column: null,
 				direction: 'desc',
 			},
+			ctReportData: {
+				// id: '',
+				// startDate: '',
+				// endDate: '',
+			},
 			data: {
-				totalOperatingIncome: 0.0,
-				totalCostOfGoodsSold: 0.0,
-				grossProfit: 0.0,
-				totalOperatingExpense: 0.0,
-				operatingProfit: 0.0,
-				totalNonOperatingIncome: 0.0,
-				totalNonOperatingExpense: 0.0,
-				nonOperatingIncome: {},
+				// totalOperatingIncome: 0.0,
+				// totalCostOfGoodsSold: 0.0,
+				// grossProfit: 0.0,
+				// totalOperatingExpense: 0.0,
+				// operatingProfit: 0.0,
+				// totalNonOperatingIncome: 0.0,
+				// totalNonOperatingExpense: 0.0,
+				// nonOperatingIncome: {},
 
-				nonOperatingIncomeExpense: 0.0,
-				netProfitLoss: 0.0,
-				operatingIncome: {},
+				// nonOperatingIncomeExpense: 0.0,
+				// netProfitLoss: 0.0,
+				// operatingIncome: {},
 
-				costOfGoodsSold: {},
-				operatingExpense: {},
-				nonOperatingExpense: {},
+				// costOfGoodsSold: {},
+				// operatingExpense: {},
+				// nonOperatingExpense: {},
 			},
 		};
 		this.columnHeader = [
@@ -102,47 +114,69 @@ class ProfitAndLossReport extends React.Component {
 		];
 	}
 
-	generateReport = (value) => {
-		this.setState(
-			{
-				initValue: {
-					startDate: moment(value.startDate).format('DD/MM/YYYY'),
-					endDate: moment(value.endDate).format('DD/MM/YYYY'),
-				},
-				loading: true,
-				view: !this.state.view,
-			},
-			() => {
-				this.initializeData();
-			},
-		);
-	};
+	// generateReport = (value) => {
+	// 	this.setState(
+	// 		{
+	// 			initValue: {
+	// 				startDate: moment(value.startDate).format('DD/MM/YYYY'),
+	// 				endDate: moment(value.endDate).format('DD/MM/YYYY'),
+	// 			},
+	// 			loading: true,
+	// 			view: !this.state.view,
+	// 		},
+	// 		() => {
+	// 			this.initializeData();
+	// 		},
+	// 	);
+	// };
 
 	componentDidMount = () => {
 		this.props.financialReportActions.getCompany() 
 		this.initializeData();
+		console.log(this.state.initValue);
 	};
 
 	initializeData = () => {
 		const { initValue } = this.state;
-		const postData = {
-			startDate: initValue.startDate,
-			endDate: initValue.endDate,
-		};
-		this.props.financialReportActions
-			.getProfitAndLossReport(postData)
+		let query = new URLSearchParams(document.location.search)
+		const idofct=query.get('id')
+		if(!idofct) this.props.history.push('/admin/report/corporate-tax')
+		this.props.ctReportActions
+			.getCorporateTaxList()
 			.then((res) => {
+				
 				if (res.status === 200) {
-					this.setState({
-						data: res.data,
-						loading: false,
-					});
+					this.setState({ ctReportData: res?.data?.data?.find((i)=>i.id==idofct) }) // comment for dummy
+					// console.log(this.state.ctReportData);
+					const postData = {
+						id:this.state.ctReportData.id,
+						startDate:moment(this.props.location.state.startDate).format('DD/MM/YYYY'),
+						endDate: moment(this.props.location.state.endDate).format('DD/MM/YYYY'),
+					};
+					// console.log(postData);
+					this.props.financialReportActions
+						.getProfitAndLossReport(postData)
+						.then((res) => {
+							if (res.status === 200) {
+								this.setState({
+									data: res.data,
+									loading: false,
+								});
+								// console.log(res.data);
+							}
+						})
+						.catch((err) => {
+							this.setState({ loading: false });
+						});
 				}
 			})
 			.catch((err) => {
-				this.setState({ loading: false });
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
 			});
-	};
+	 };
 
 	
 	exportFile = () => {
@@ -213,7 +247,7 @@ class ProfitAndLossReport extends React.Component {
 											style={{ justifyContent: 'space-between' }}
 										>
 											<div>
-												<p
+												{/* <p
 													className="mb-0"
 													style={{
 														cursor: 'pointer',
@@ -223,7 +257,7 @@ class ProfitAndLossReport extends React.Component {
 													onClick={this.viewFilter}
 												>
 													<i className="fa fa-cog mr-2"></i>{strings.CustomizeReport}
-												</p>
+												</p> */}
 											</div>
 											<div className="d-flex">
 												<Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
@@ -298,7 +332,7 @@ class ProfitAndLossReport extends React.Component {
 												<div
 													className="mr-2 print-btn-cont"
                                                     onClick={() => {
-                                                        this.props.history.push('/admin/report/reports-page');
+                                                        this.props.history.push('/admin/report/corporate-tax');
                                                     }}
 													style={{
 														cursor: 'pointer',
@@ -358,33 +392,33 @@ class ProfitAndLossReport extends React.Component {
 											<br style={{ marginBottom: '5px' }} />
 											<b style ={{ fontSize: '18px'}}>{strings.ProfitandLoss}</b>
 											<br style={{ marginBottom: '5px' }} />
-											{strings.From} {(initValue.startDate).replaceAll("/","-")} {strings.To} {initValue.endDate.replaceAll("/","-")} 
-											
+											{strings.From} {moment(this.props.location.state.startDate).format('DD-MM-YYYY')} {strings.To} {moment(this.props.location.state.endDate).format('DD-MM-YYYY')} 
 									</div>
 									<div>
 									</div>									
 							</div>
-									{loading ? (
+									{/* {loading ? (
 										<Loader />
-									) : (
-										<div className="table-wrapper wid">
-											<Table id="tbl_exporttable_to_xls" responsive className="pnl-table-bordered">
-												<thead>
-													<tr>
-														{this.columnHeader.map((column, index) => {
-															return (
-																<th
-																	key={index}
-																	style={{ color:'black', backgroundColor: '#9CC2E5' }}
-																	className={column.class ? 'text-right table-header-bg th' : 'table-header-bg th' }
-																>
-																	{column.label}
-																</th>
-															);
-														})}
-													</tr>
-												</thead>
-												<tbody className="data-column">
+									) :  */}
+									{(
+									<div className="table-wrapper wid">
+									<Table id="tbl_exporttable_to_xls" responsive className="pnl-table-bordered">
+										<thead>
+											<tr>
+												{this.columnHeader.map((column, index) => {
+													return (
+														<th
+															key={index}
+															style={{ color:'black', backgroundColor: '#9CC2E5' }}
+															className={column.class ? 'text-right table-header-bg th' : 'table-header-bg th' }
+														>
+															{column.label}
+														</th>
+													);
+												})}
+											</tr>
+										</thead>
+										<tbody className="data-column">
 													{Object.keys(this.state.data).length > 0 ? (
 														<>
 															<tr>
@@ -676,8 +710,8 @@ class ProfitAndLossReport extends React.Component {
 														</tr>
 													)}
 												</tbody>
-											</Table>
-										</div>
+									</Table>
+								</div>
 									)}
 									<div style={{ textAlignLast:'center'}}> {strings.PoweredBy} <b>SimpleAccounts</b></div> 
 								</PDFExport>
@@ -693,4 +727,4 @@ class ProfitAndLossReport extends React.Component {
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps,
-)(ProfitAndLossReport);
+)(ViewCorporateTax);

@@ -539,6 +539,21 @@ export const getVatReportListForBank = (id) => {
       });
   };
 };
+export const getCorporateTaxList = (id) => {
+  return (dispatch) => {
+    let data = {
+      method: "GET",
+      url: `/rest/corporate/tax/Corporate/list?paginationDisable=true`,
+    };
+    return authApi(data)
+      .then((res) => {
+        return res;
+      })
+      .catch((err) => {
+        throw err;
+      });
+  };
+};
 
 export const getCOACList = () => {
   return (dispatch) => {

@@ -19,9 +19,9 @@ import { AuthActions, CommonActions } from "services/global";
 import "react-toastify/dist/ReactToastify.css";
 import "react-datepicker/dist/react-datepicker.css";
 import "./style.scss";
-import * as Vatreport from "./actions";
+import * as CTReportAction from "./actions";
 import { upperFirst } from "lodash-es";
-import { CTReport } from './sections';
+import { CTReport, CTSettingModal, FileCtReportModal, DeleteModal, } from './sections';
 // import 'ag-grid-community/dist/styles/ag-grid.css';
 // import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import moment from "moment";
@@ -33,6 +33,8 @@ import LocalizedStrings from "react-localization";
 const mapStateToProps = (state) => {
   return {
     version: state.common.version,
+    setting_list: state.reports.setting_list,
+    ctReport_list: state.reports.ctReport_list,
   };
 };
 
@@ -40,7 +42,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     authActions: bindActionCreators(AuthActions, dispatch),
     commonActions: bindActionCreators(CommonActions, dispatch),
-    vatreport: bindActionCreators(Vatreport, dispatch),
+    ctReportAction: bindActionCreators(CTReportAction, dispatch),
   };
 };
 
@@ -56,23 +58,24 @@ class CorporateTax extends React.Component {
       disabled: false,
       file_data_list: [],
       openCTReportModal: false,
-      openVatSettingModal: false,
-      openFileTaxRetrunModal: false,
+      openCTSettingModal: false,
+      openFileCtReportModal: false,
       coaName: "",
-      vatReportDataList: [],
+      ctReport_list: [],
       options: [
         { label: "Montly", value: 0 },
         { label: "Yearly", value: 1 },
         { label: "Quarterly", value: 2 },
       ],
-      enbaleReportGeneration: false,
       monthOption: { label: "Montly", value: 0 },
       paginationPageSize: 10,
       dialog: false,
       current_report_id: "",
       deleteModal: false,
       loadingMsg: "Loading...",
-      fiscalYear:"",
+      fiscalYearOptions: [],
+      previousSettings: '',
+      endDate: '',
     };
 
     this.options = {
@@ -119,10 +122,76 @@ class CorporateTax extends React.Component {
     this.gridApi.exportDataAsExcel();
   };
 
-  // componentDidMount = () => {
-  //   this.getInitialData();
-  // };
+  componentDidMount = () => {
+    this.getInitialData();
+  };
 
+  markItUnfiled = (row) => {
+    const postingRequestModel = {
+      id: row.id,
+      // postingRefType: "VAT_REPORT_FILED",
+    };
+    this.setState({ loading: true, loadingMsg: "Report UnFiling..." });
+    this.props.ctReportAction
+      .markItUnfiled(postingRequestModel)
+      .then((res) => {
+        if (res.status === 200) {
+          this.props.commonActions.tostifyAlert(
+            "success",
+            "Report Unfiled Successfully!"
+          );
+          this.getInitialData();
+          this.setState({ loading: false });
+        }
+      })
+      .catch((err) => {
+        this.props.commonActions.tostifyAlert(
+          "error",
+          err && err.data ? err.data.message : "Something Went Wrong"
+        );
+      });
+  };
+
+  getInitialData = () => {
+    this.props.ctReportAction.getCTSettings();
+    let { filterData } = this.state;
+    const paginationData = {
+      pageNo: this.options.page ? this.options.page - 1 : 0,
+      pageSize: this.options.sizePerPage,
+    };
+    const sortingData = {
+      order: this.options.sortOrder ? this.options.sortOrder : "",
+      sortingCol: this.options.sortName ? this.options.sortName : "",
+    };
+    const postData = { ...filterData, ...paginationData, ...sortingData };
+    this.props.ctReportAction
+      .getCorporateTaxList(postData)
+      .then((res) => {
+        if (res.status === 200) {
+          this.setState({ ctReport_list: res.data }); // comment for dummy
+          // const lastrecord = res.data.data.filter(e => {return (e.status === "Filed")})
+          const dataList = res.data.data.filter(e => { return (e.status === "Filed") }); // Assuming the array of objects is stored in the "data" property of the response
+          if (dataList.length > 0) {
+            // Check if the array is not empty
+            dataList.forEach((obj, index) => {
+              obj.flag = index === 0; // Set "flag" to true for the first object, false for others
+            });
+          }
+          // if (lastrecord[0] !== null) {
+          //   this.setState({ lastRecord: true });
+          //   console.log(this.state.lastRecord);
+          // } else {
+          //   console.log(this.state.lastRecord);
+          // }
+        }
+      })
+      .catch((err) => {
+        this.props.commonActions.tostifyAlert(
+          "error",
+          err && err.data ? err.data.message : "Something Went Wrong"
+        );
+      });
+  };
   handleChange = (key, val) => {
     this.setState({
       [key]: val,
@@ -133,12 +202,12 @@ class CorporateTax extends React.Component {
     this.setState({ openCTReportModal: false });
   };
 
-  closeVatSettingModal = (res) => {
-    this.setState({ openVatSettingModal: false });
+  closeCTSettingModal = (res) => {
+    this.setState({ openCTSettingModal: false });
   };
 
   closeFileTaxRetrunModal = (res) => {
-    this.setState({ openFileTaxRetrunModal: false });
+    this.setState({ openFileCtReportModal: false });
   };
 
   closeDeleteModal = (res) => {
@@ -162,6 +231,9 @@ class CorporateTax extends React.Component {
   };
 
   getActionButtons = (cell, params) => {
+    const startDate = moment(params.startDate).format("DD-MM-YYYY");
+    const endDate = moment(params.endDate).format("DD-MM-YYYY");
+    const taxPeriod = startDate + ' To ' + endDate
     return (
       // DROPDOWN ACTIONS
 
@@ -189,14 +261,12 @@ class CorporateTax extends React.Component {
             // }}
             onClick={() => {
               this.setState({ current_report_id: params.id });
-              let dateArr = params.taxReturns
-                ? params.taxReturns.split("-")
-                : [];
               this.props.history.push(
-                `/admin/report/vatreports/view?id=${params.id}`,
+                `/admin/report/corporate-tax/view?id=${params.id}`,
                 {
-                  startDate: dateArr[0] ? dateArr[0] : "",
-                  endDate: dateArr[1] ? dateArr[1] : "",
+                  id: params.id,
+                  startDate: params.startDate,
+                  endDate: params.endDate,
                 }
               );
             }}
@@ -224,29 +294,20 @@ class CorporateTax extends React.Component {
 
           {/* Record Payment */}
 
-          {params.status === "Filed" || params.status === "Partially Paid" ? (
+          {params.netIncome > 375000 && params.status === "Filed" ? (
             <DropdownItem
               onClick={() => {
                 this.setState({ current_report_id: params.id });
-                if (params.totalTaxReclaimable != 0)
-                  this.props.history.push(
-                    "/admin/report/vatreports/recordclaimtax",
-                    {
-                      id: params.id,
-                      totalTaxReclaimable: params.totalTaxReclaimable,
-                      taxReturns: params.taxReturns,
-                    }
-                  );
-                else
-                  this.props.history.push(
-                    "/admin/report/vatreports/recordtaxpayment",
-                    {
-                      id: params.id,
-                      taxReturns: params.taxReturns,
-                      totalTaxPayable: params.totalTaxPayable,
-                      balanceDue: params.balanceDue,
-                    }
-                  );
+                this.props.history.push(
+                  "/admin/report/corporate-tax/payment",
+                  {
+                    id: params.id,
+                    taxPeriod: taxPeriod,
+                    totalAmount: params.taxAmount,
+                    balanceDue: params.balanceDue,
+                    taxFiledOn: params.taxFiledOn,
+                  }
+                );
               }}
             >
               {" "}
@@ -256,9 +317,31 @@ class CorporateTax extends React.Component {
             ""
           )}
 
+          {params.status === "Partially Paid" ? (
+            <DropdownItem
+              onClick={() => {
+                this.setState({ current_report_id: params.id });
+                this.props.history.push(
+                  "/admin/report/corporate-tax/payment",
+                  {
+                    id: params.id,
+                    taxPeriod: taxPeriod,
+                    totalAmount: params.taxAmount,
+                    balanceDue: params.balanceDue,
+                    taxFiledOn: params.taxFiledOn,
+                  }
+                );
+              }}
+            >
+              {" "}
+              <i className="fas fa-university" /> Record Payment
+            </DropdownItem>
+          ) : (
+            ""
+          )}
           {/* Mark It Unfiled  */}
 
-          {params.status === "Filed" ? (
+          {params.status === "Filed" && params.flag === true ? (
             <DropdownItem
               onClick={() => {
                 this.setState({ current_report_id: params.id });
@@ -277,10 +360,13 @@ class CorporateTax extends React.Component {
           {params.status === "UnFiled" ? (
             <DropdownItem
               onClick={() => {
+
                 this.setState({
-                  openFileTaxRetrunModal: true,
+                  openFileCtReportModal: true,
                   current_report_id: params.id,
-                  taxReturns: params.taxReturns,
+                  taxReturns: taxPeriod,
+                  endDate: (new Date(params.endDate)).setDate((new Date(params.endDate)).getDate() + 1),
+                  dueDate: new Date(params.dueDate),
                 });
               }}
             >
@@ -354,11 +440,11 @@ class CorporateTax extends React.Component {
   delete = (id) => {
     const message1 = (
       <text>
-        <b>Delete VAT Report File ?</b>
+        <b>Delete Tax Report File ?</b>
       </text>
     );
     const message =
-      "This VAT report file will be deleted permanently and cannot be recovered. ";
+      "This CT report file will be deleted permanently and cannot be recovered. ";
 
     this.setState({
       dialog: (
@@ -372,35 +458,6 @@ class CorporateTax extends React.Component {
       ),
     });
   };
-
-  // remove = (current_report_id) => {
-  //   this.props.vatreport
-  //     .deleteReportById(current_report_id)
-  //     .then((res) => {
-  //       if (res.status === 200) {
-  //         this.props.commonActions.tostifyAlert(
-  //           "success",
-  //           res.data && res.data.message
-  //             ? res.data.message
-  //             : "VAT Report File Deleted Successfully"
-  //         );
-  //         this.setState({
-  //           dialog: null,
-  //         });
-  //         this.getInitialData();
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       this.props.commonActions.tostifyAlert(
-  //         "error",
-  //         err.data ? err.data.message : "VAT Report File Deleted Unsuccessfully"
-  //       );
-  //       this.setState({
-  //         dialog: null,
-  //       });
-  //     });
-  // };
-
   removeDialog = () => {
     this.setState({
       dialog: null,
@@ -417,13 +474,11 @@ class CorporateTax extends React.Component {
   renderVATNumber = (cell, row) => {
     return <>{row.vatNumber}</>;
   };
-  renderTaxReturns = (cell, row) => {
-    let dateArr = cell ? cell.split("-") : [];
+  renderTaxPeriod = (cell, row) => {
+    let startDate = moment(row.startDate).format("DD-MM-YYYY");
+    let endDate = moment(row.endDate).format("DD-MM-YYYY");
 
-    let startDate = moment(dateArr[0]).format("DD-MM-YYYY");
-    let endDate = moment(dateArr[1]).format("DD-MM-YYYY");
-
-    return <>{dateArr[0].replaceAll("/", "-")}</>;
+    return <>{startDate} To {endDate}</>;
   };
 
   render() {
@@ -435,10 +490,10 @@ class CorporateTax extends React.Component {
       loading,
       loadingMsg,
     } = this.state;
-    return loading == true ? (
-      <Loader loadingMsg={loadingMsg} />
-    ) : (
-      <div className="import-bank-statement-screen">
+    const { ctReport_list } = this.props;
+    const setting = this.props.setting_list ? this.props.setting_list.find(obj => obj.selectedFlag === true) : '';
+    return loading == true ? (<Loader loadingMsg={loadingMsg} />) :
+      (<div className="import-bank-statement-screen">
         <div className="animated fadeIn">
           <Card>
             <CardHeader>
@@ -501,7 +556,7 @@ class CorporateTax extends React.Component {
                         className="btn-square  pull-right"
                         onClick={() => {
                           this.props.history.push(
-                            "/admin/report/vatreports/vatpaymentrecordhistory"
+                            "/admin/report/corporate-tax/payment-history"
                           );
                         }}
                       >
@@ -512,10 +567,23 @@ class CorporateTax extends React.Component {
                         name="button"
                         color="primary"
                         className="btn-square pull-right "
-                        // disabled={!this.state.enbaleReportGeneration}
-                        // title={!this.state.enbaleReportGeneration?"Select VAT Reporting Period":""}
+                        disabled={(setting ? setting.isEligibleForCP ? false : true : true) || (ctReport_list.count > 0 && ctReport_list?.data[0].status === 'UnFiled')}
                         onClick={() => {
-                          this.setState({ openCTReportModal: true });
+                          //const setting = this.props.setting_list ? this.props.setting_list.find(obj => obj.selectedFlag === true) : '';
+                          const fiscalYearOptions = [];
+                          const lastRecordYear = ctReport_list.count > 0 ? parseInt(ctReport_list?.data[0].startDate.split('-')[0])+1 : '';
+                          if (setting) {
+                            const startingMonth = setting.fiscalYear.split(' - ')[0];
+                            const startingDate = startingMonth === 'January' ? '1-1-' : '6-1-';
+                            const startingYear = lastRecordYear ? lastRecordYear  :startingMonth === 'January' ? moment().year() + 1 : moment().year() ;
+                            // const startingYear = lastRecordYear ? lastRecordYear  : startingMonth === 'January' ? moment().month() > 1 ? moment().year()+1 : moment.year() : moment().month() > 6 ? moment().year()+1 : moment.year() ;
+                            for (let i = 0; i < 4; i++) {
+                              const year = parseInt(startingYear) + parseInt(i);
+                              const date = startingDate + year;
+                              fiscalYearOptions.push({ value: date, label: startingMonth + '-' + year })
+                            }
+                          }
+                          this.setState({ fiscalYearOptions: fiscalYearOptions, openCTReportModal: true });
                         }}
                       >
                         <i class="fas fa-plus"></i> {strings.GenerateCTReport}
@@ -525,10 +593,9 @@ class CorporateTax extends React.Component {
                         name="button"
                         color="primary"
                         className="btn-square pull-right "
-                        // disabled={!this.state.enbaleReportGeneration}
-                        // title={!this.state.enbaleReportGeneration?"Select VAT Reporting Period":""}
                         onClick={() => {
-                          this.setState({ openModal: true });
+                          console.log(setting)
+                          this.setState({ previousSettings: setting, openCTSettingModal: true });
                         }}
                       >
                         <i class="fas fa-cog"></i> Corporate Tax Settings
@@ -554,40 +621,41 @@ class CorporateTax extends React.Component {
                   responsive
                   remote
                   data={
-                    vatReportDataList && vatReportDataList.data
-                      ? vatReportDataList.data
+                    ctReport_list && ctReport_list.data
+                      ? ctReport_list.data
                       : []
                   }
-                  // data={vatReportDataList.data ? vatReportDataList.data : []}
-                  // rowData={vatReportDataList.data ? vatReportDataList.data : []}
+                  // data={ctReport_list.data ? ctReport_list.data : []}
+                  // rowData={ctReport_list.data ? ctReport_list.data : []}
                   pagination={
-                    vatReportDataList &&
-                      vatReportDataList.data &&
-                      vatReportDataList.data.length
+                    ctReport_list &&
+                      ctReport_list.data &&
+                      ctReport_list.data.length
                       ? true
                       : false
                   }
                   fetchInfo={{
-                    dataTotalSize: vatReportDataList.count
-                      ? vatReportDataList.count
+                    dataTotalSize: ctReport_list.count
+                      ? ctReport_list.count
                       : 0,
                   }}
                 >
                   <TableHeaderColumn
                     tdStyle={{ whiteSpace: "normal" }}
-                    isKey
-                    dataField="taxPeriod"
+                    width="20%"
                     dataAlign="left"
-                    dataSort
+                    // dataSort
+                    dataFormat={this.renderTaxPeriod}
                     className="table-header-bg"
                   >
                     Tax Period
                   </TableHeaderColumn>
                   <TableHeaderColumn
+                    isKey={true}
                     dataField="dueDate"
                     dataAlign="left"
                     // columnTitle={this.customEmail}
-                    dataSort
+                    // dataSort
                     dataFormat={this.renderDate}
                     className="table-header-bg"
                   >
@@ -597,7 +665,7 @@ class CorporateTax extends React.Component {
                     width="10%"
                     dataField="netIncome"
                     dataAlign="right"
-                    dataSort
+                    // dataSort
                     dataFormat={this.renderAmount}
                     className="table-header-bg"
                   >
@@ -607,7 +675,7 @@ class CorporateTax extends React.Component {
                     dataField="taxableAmount"
                     // columnTitle={this.customEmail}
                     dataAlign="right"
-                    dataSort
+                    // dataSort
                     dataFormat={this.renderAmount}
                     className="table-header-bg"
                   >
@@ -617,27 +685,27 @@ class CorporateTax extends React.Component {
                     dataField="taxAmount"
                     // columnTitle={this.customEmail}
                     dataAlign="right"
-                    dataSort
+                    // dataSort
                     dataFormat={this.renderAmount}
                     className="table-header-bg"
-                    >
+                  >
                     {strings.TaxAmount}
                   </TableHeaderColumn>
                   <TableHeaderColumn
-                    dataField="filedOn"
+                    dataField="taxFiledOn"
                     // columnTitle={this.customEmail}
-                    dataSort
+                    // dataSort
                     dataFormat={this.renderDate}
                     dataAlign="left"
                     className="table-header-bg"
-                    >
+                  >
                     {strings.FiledOn}
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField="status"
                     dataAlign="center"
                     // columnTitle={this.customEmail}
-                    dataSort
+                    // dataSort
                     dataFormat={this.renderStatus}
                     className="table-header-bg"
                   >
@@ -647,7 +715,7 @@ class CorporateTax extends React.Component {
                     dataField="balanceDue"
                     // columnTitle={this.customEmail}
                     dataAlign="right"
-                    dataSort
+                    // dataSort
                     dataFormat={this.renderAmount}
                     className="table-header-bg"
                   >
@@ -666,24 +734,29 @@ class CorporateTax extends React.Component {
         </div>
         <CTReport
           openModal={this.state.openCTReportModal}
-          setState={(e) => this.setState(e)}
-          fiscalYear={this.state.fiscalYear}
+          fiscalYearOptions={this.state.fiscalYearOptions}
+          ctReport = {this.props.ctReport_list?.count > 0}
           closeModal={(e) => {
             this.closeModal(e);
-          }}
-        />
-        {/*<VatSettingModal
-          openModal={this.state.openVatSettingModal}
-          closeModal={(e) => {
-            this.closeVatSettingModal(e);
             this.getInitialData();
           }}
         />
-        <FileTaxReturnModal
-          openModal={this.state.openFileTaxRetrunModal}
+        <CTSettingModal
+          openModal={this.state.openCTSettingModal}
+          setState={(e) => this.setState(e)}
+          previousSettings={this.state.previousSettings}
+          ctReport = {this.props.ctReport_list?.count > 0}
+          closeModal={(e) => {
+            this.closeCTSettingModal(e);
+            this.getInitialData();
+          }}
+        />
+        <FileCtReportModal
+          openModal={this.state.openFileCtReportModal}
           current_report_id={this.state.current_report_id}
           endDate={this.state.endDate}
           taxReturns={this.state.taxReturns}
+          dueDate={this.state.dueDate}
           closeModal={(e) => {
             this.closeFileTaxRetrunModal(e);
             this.getInitialData();
@@ -696,9 +769,9 @@ class CorporateTax extends React.Component {
             this.closeDeleteModal(e);
             this.getInitialData();
           }}
-        /> */}
+        />
       </div>
-    );
+      );
   }
 }
 

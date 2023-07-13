@@ -154,15 +154,14 @@ class CTSettingModal extends React.Component {
                                         <Formik initialValues={initValue}>
                                             {(props) => (
                                                 <Form>
-                                                    <Col lg={8}>
-                                                        <FormGroup check inline className="mb-3">
+                                                    <Col lg={12} className="pl-0">
+                                                        <FormGroup check className="mb-3 pl-0">
                                                             <Label className="isEligibleForCP"><span className="text-danger">* </span>
                                                                 Does your company have to pay corporate taxes?
                                                             </Label>
+                                                            <br></br>
                                                             <div className="wrapper">
-                                                                <Label
-                                                                    className="form-check-label"
-                                                                    check
+                                                                <Label className="form-check-label ml-4 mr-5 " check
                                                                 >
                                                                     <Input
                                                                         className="form-check-input"
@@ -202,8 +201,8 @@ class CTSettingModal extends React.Component {
                                                             </div>
                                                         </FormGroup>
                                                     </Col>
-                                                    <div>
-                                                        <Col lg={4}>
+                                                    <div className="mt-3">
+                                                        <Col lg={4} className="pl-0">
                                                             <Label>
                                                                 <span className="text-danger">* </span>
                                                                 Fiscal Year

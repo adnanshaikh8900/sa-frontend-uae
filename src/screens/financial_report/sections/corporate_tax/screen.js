@@ -734,8 +734,8 @@ class CorporateTax extends React.Component {
         </div>
         <CTReport
           openModal={this.state.openCTReportModal}
-          setState={(e) => this.setState(e)}
           fiscalYearOptions={this.state.fiscalYearOptions}
+          ctReport = {this.props.ctReport_list?.count > 0}
           closeModal={(e) => {
             this.closeModal(e);
             this.getInitialData();

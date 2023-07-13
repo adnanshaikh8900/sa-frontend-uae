@@ -301,7 +301,7 @@ class Register extends React.Component {
 		let strapiUserObj = {
 			username: email,
 			email: email,
-			password: 'Demo@123',
+			password: password,
 			first_name: firstName,
 			last_name: lastName
 		};
@@ -356,7 +356,7 @@ class Register extends React.Component {
 	
 		const { initValue, currencyList, userDetail, country_list, timezone, loading, loadingMsg, NextloadingMsg} = this.state;
 		const {universal_currency_list,state_list,company_type_list} = this.props;
-		console.log(company_type_list)
+		//console.log(company_type_list)
 
 		return (
 			loading ==true? <Loader loadingMsg={loadingMsg} NextloadingMsg={NextloadingMsg}/> :
@@ -658,7 +658,7 @@ class Register extends React.Component {
 																			<Label htmlFor="select"><span className="text-danger">* </span>{strings.CompanyAddressLine1}</Label>
 																				<Input
 																					type="text"
-																					maxLength="100"
+																					maxLength="250"
 																					id="companyAddress1"
 																					name="companyAddress1"
 																					placeholder="Enter Company Address"
@@ -688,7 +688,7 @@ class Register extends React.Component {
 																				<Label htmlFor="companyAddress2">{strings.CompanyAddressLine2}</Label>
 																				<Input
 																					type="text"
-																				 	maxLength="100"
+																				 	maxLength="250"
 																					id="companyAddress2"
 																					name="companyAddress2"
 																					placeholder="Enter Company Address"

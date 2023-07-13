@@ -64,7 +64,7 @@ export const register = (obj) => {
 		};
 		return api(data)
 			.then((res) => {
-				console.log(res);
+			//	console.log(res);
 				// dispatch({
 				// 	type: AUTH.REGISTER,
 				// });
@@ -79,51 +79,8 @@ export const register = (obj) => {
 	};
 };
 
-// export const registerStrapiCompany = (apiToken, companyObj) => {
-// 	console.log ('in register Company', apiToken)
-// 	console.log ('in register Company', companyObj)
-// 	return (dispatch) => {
-// 		let data = {
-// 			method: 'post',
-// 			url: 'https://strapi-api-test-ae.app.simpleaccounts.io/api/companies',
-// 			data: companyObj,
-// 			headers: {
-// 				Authorization: `Bearer ${apiToken}`,
-//        			'Content-Type': 'application/json',
-// 			},
-// 		};
-// 		return api(data)
-// 			.then((res) => {
-// 				console.log(res.data)
-// 			})
-// 			.catch((err) => {
-// 				console.log(err)
-// 				throw err;
-// 			});
-// 	};
-// };
 
-export const registerStrapiCompany = (apiToken, companyObj) => {
-	return async (dispatch) => {
-	  try {
-		const response = await api.post('https://strapi-api-test-ae.app.simpleaccounts.io/api/companies', companyObj, {
-		  headers: {
-			Authorization: `Bearer ${apiToken}`,
-			'Content-Type': 'application/json',
-		  },
-		});
-  		console.log(response.data);
-		// Handle the API response and dispatch appropriate actions
-		// Example: dispatch({ type: REGISTER_COMPANY_SUCCESS, payload: response.data });
-	  } catch (error) {
-		console.log(error);
-		// Handle the error and dispatch appropriate actions
-		// Example: dispatch({ type: REGISTER_COMPANY_ERROR, payload: error.message });
-		throw error;
-	  }
-	};
-  };
-  
+
 
 export const registerStrapiUser = (obj, companyobj) => {
 	return (dispatch) => {
@@ -136,16 +93,76 @@ export const registerStrapiUser = (obj, companyobj) => {
 			.then((res) => {
 				//block for updating the id of user coming in response
 				let key = "id";
-				let cleanJsonRegex = new RegExp(`"${key}"\\s*:\\s*"[^"]*"`);
-				let nameJsonStr = JSON.stringify(companyobj).replace(cleanJsonRegex, `"${key}": "${res.data.user.id}"`);
+				let companyObjectKey = new RegExp(`"${key}"\\s*:\\s*"[^"]*"`);
+				let companyJsonStr = JSON.stringify(companyobj).replace(companyObjectKey, `"${key}": "${res.data.user.id}"`);
 				//end of block	
-				registerStrapiCompany (res.data.jwt, nameJsonStr);
+				registerStrapiCompany (res.data.jwt, companyJsonStr);
 			})
 			.catch((err) => {
 				throw err;
 			});
 	};
 };
+
+
+
+export const registerStrapiCompany = (apiToken, companyObj) => {
+	//return (dispatch) => {
+try{
+		//console.log('Starting API request...');
+	let data = {
+			method: 'post',
+			url: 'https://strapi-api-test-ae.app.simpleaccounts.io/api/companies',
+			data: companyObj,
+			headers: {
+				Authorization: `Bearer ${apiToken}`,
+       			'Content-Type': 'application/json',
+			},
+		};
+		return api(data)
+			.then((res) => {
+				//console.log(res.data)
+			})
+			.catch((err) => {
+				console.log(err)
+				throw err;
+			});
+		} catch (error) {
+			console.log(error)
+		}
+	//};
+};
+
+
+// export const registerStrapiCompany = (apiToken, companyObj) => {
+// 	alert("in reg comp")
+// 	return async (dispatch) => {
+// 	  try {
+// 		console.log('Starting API request...');
+		
+// 		const response = await api.post('https://strapi-api-test-ae.app.simpleaccounts.io/api/companies', companyObj, {
+// 		  headers: {
+// 			Authorization: `Bearer ${apiToken}`,
+// 			'Content-Type': 'application/json',
+// 		  },
+// 		});
+  
+// 		console.log('API request successful!');
+// 		console.log('Response:', response.data);
+		
+// 		// Handle the API response and dispatch appropriate actions
+// 		// Example: dispatch({ type: REGISTER_COMPANY_SUCCESS, payload: response.data });
+// 	  } catch (error) {
+// 		console.log('API request error!');
+// 		console.log('Error:', error);
+		
+// 		// Handle the error and dispatch appropriate actions
+// 		// Example: dispatch({ type: REGISTER_COMPANY_ERROR, payload: error.message });
+// 		throw error;
+// 	  }
+// 	};
+//   };
+  
 
 export const getCurrencyList = () => {
 	return (dispatch) => {

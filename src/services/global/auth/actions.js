@@ -1,6 +1,7 @@
 import { AUTH, COMMON } from 'constants/types';
 import { api, authApi, cryptoService } from 'utils';
 
+
 export const checkAuthStatus = () => {
 	return (dispatch) => {
 		let data = {
@@ -80,13 +81,13 @@ export const register = (obj) => {
 };
 
 
-
+//Test URL: https://strapi-api-test-ae.app.simpleaccounts.io/api/auth/local/register
 
 export const registerStrapiUser = (obj, companyobj) => {
 	return (dispatch) => {
 		let data = {
 			method: 'post',
-			url: 'https://strapi-api-test-ae.app.simpleaccounts.io/api/auth/local/register',
+			url: 'https://strapi-api-new.ae.simpleaccounts.io/api/auth/local/register',
 			data: obj,
 		};
 		return api(data)
@@ -104,7 +105,7 @@ export const registerStrapiUser = (obj, companyobj) => {
 	};
 };
 
-
+//TEst URL = https://strapi-api-test-ae.app.simpleaccounts.io/api/companies
 
 export const registerStrapiCompany = (apiToken, companyObj) => {
 	//return (dispatch) => {
@@ -112,7 +113,7 @@ try{
 		//console.log('Starting API request...');
 	let data = {
 			method: 'post',
-			url: 'https://strapi-api-test-ae.app.simpleaccounts.io/api/companies',
+			url: 'https://strapi-api-new.ae.simpleaccounts.io/api/companies',
 			data: companyObj,
 			headers: {
 				Authorization: `Bearer ${apiToken}`,

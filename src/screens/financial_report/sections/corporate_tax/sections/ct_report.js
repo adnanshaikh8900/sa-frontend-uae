@@ -140,8 +140,7 @@ class CTReport extends React.Component {
         const { initValue, loading } = this.state;
         if (fiscalYearOptions && fiscalYearOptions.length > 1)
             if (!this.state.ctReprtFor || fiscalYearOptions[0]?.label !== this.state.ctReprtFor?.label) {
-                console.log(this.state.ctReprtFor)
-                this.setDates(this.state.ctReprtFor ? this.state.ctReprtFor.value : fiscalYearOptions[0].value)
+                this.setDates(fiscalYearOptions[0].value)
                 this.setState({ ctReprtFor: fiscalYearOptions[0] })
             }
         return (

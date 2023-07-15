@@ -28,6 +28,9 @@ export const defaultState = (currency) => {
       exchangeRate: null,
       exclusiveVat: false,
       isReverseChargeEnabled: false,
+      ct_taxPeriod:'',
+      ct_taxPeriodList:'',
+      corporateTaxList:[],
     },
     transactionVatAmount: "",
     transactionExpenseAmount: "",
@@ -71,6 +74,14 @@ export const defaultState = (currency) => {
               ? {
                   value: 16,
                   label: "VAT Payment",
+                }
+              : {}),
+          },
+          {
+            ...(currency === "AED"
+              ? {
+                  value: 18,
+                  label: "Corporate Tax Payment",
                 }
               : {}),
           },

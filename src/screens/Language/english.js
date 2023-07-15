@@ -271,6 +271,8 @@ const en = {
       ExpenseCategoryRequired: 'Expense number is required',
       PaidByRequired: 'Paid by is required',
       AmountIsRequired: 'Amount is required',
+      TaxPeriodIsRequired:"Tax Period is required",
+      AmountShouldBeLessThanOrEqualToTheBalanceDue:"Amount should be less than or equal to the Balance Due",
       CurrencyIsRequired: 'Currency is required',
       PayThroughIsRequired: 'Pay through is required',
       ExpenseDateRequired: "Expense date is required",
@@ -755,7 +757,7 @@ const en = {
       Freezone: "Freezone",
 
       //Header DropDown
-      GeneralSettings: "General Settings",
+      GeneralSettings: "Mail Settings",
       User: "User",
       Help: "Help",
       LogOut: "Log Out",
@@ -1035,6 +1037,7 @@ const en = {
       GrossProfit: "Gross Profit",
       OperatingProfit: "Operating Profit",
       NonOperating: "Non Operating",
+      NetProfit: "Net Profit",
       NetProfitLoss: "Net Profit/Loss",
       Operating: "Operating",
       PaymentsRecevied: 'Payments Received',

@@ -236,7 +236,7 @@ class GeneralSettings extends React.Component {
 							<Card>
 								<CardHeader>
 									<div className="h4 mb-0 d-flex align-items-center">
-										<i className="nav-icon icon-wrench" />
+									<i className="fas fa-envelope"></i>
 										<span className="ml-2"> {strings.GeneralSettings}</span>
 									</div>
 								</CardHeader>

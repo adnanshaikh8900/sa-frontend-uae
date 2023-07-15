@@ -624,17 +624,17 @@ try {
 																				The product type cannot be changed after any document has been created using this product.
 																			</UncontrolledTooltip>
 																		</Label>
-																		<div className="wrapper">
-																			<Label
-																				className="form-check-label"
-																				check
-																				htmlFor="producttypeone"
-																			>
-																				<Input
-																					className="form-check-input"
+																		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+																				<FormGroup check inline>
+																		<div className="custom-radio custom-control">
+																				<input
+																					className="custom-control-input"
 																					type="radio"
 																					id="producttypeone"
 																					name="producttypeone"
+																					// checked={
+																					// 	this.state.selectedStatus
+																					// }
 																					value="GOODS"
 																					onChange={(value) => {
 																						props.handleChange('productType')(
@@ -642,21 +642,25 @@ try {
 																						);
 																					}}
 																					checked={
-																						props.values.productType === 'GOODS'
+																						props.values.productType === 
+																						'GOODS'
 																					}
 																				/>
+																				<label className='custom-control-label'
+																				htmlFor='producttypeone'
+																				>
 																				{strings.Goods}
-																			</Label>
-																			<Label
-																				className="form-check-label"
-																				check
-																				htmlFor="producttypetwo"
-																			>
+																				</label>
+																				</div>
+																				</FormGroup>
+																				<FormGroup check inline>
+																				<div className="custom-radio custom-control">
 																				<Input
-																					className="form-check-input"
+																					className="custom-control-input"
 																					type="radio"
 																					id="producttypetwo"
 																					name="producttypetwo"
+																					
 																					value="SERVICE"
 																					onChange={(value) => {
 																						props.handleChange('productType')(
@@ -670,25 +674,27 @@ try {
 																						'SERVICE'
 																					}
 																				/>
+																				<label className='custom-control-label'
+																				htmlFor='producttypetwo'
+																				>
 																				{strings.Service}
-																			</Label>
+																				</label>
 																		</div>
+																	</FormGroup>
 																	</FormGroup>
 																</Col>
 
 																<Col lg={4}>
 																{this.props.isParentComponentPresent &&this.props.isParentComponentPresent ==true ?"":(		<FormGroup check inline className="mb-3">
 																	<Label className="productlabel"><span className="text-danger">* </span>{strings.Status}</Label>
-																	<div className="wrapper">
-																	<Label
-																		className="form-check-label"
-																		check
-																	>
+																	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+																	<FormGroup check inline>	
+																		 <div className="custom-radio custom-control">
 																	<Input
-																		className="form-check-input"
+																		className="custom-control-input"
 																		type="radio"
 																		id="inline-radio1"
-                                                                        name="isActive"
+                                                                        name="active"
 																		checked={
 																					this.state.selectedStatus
 																				}
@@ -705,37 +711,46 @@ try {
 																						}
 																					}}
 																				/>
+																				<label
+																				className="custom-control-label"
+																				htmlFor='inline-radio1'
+																				>
 																			  {strings.Active}
-																			</Label>
-																			<Label
-																				className="form-check-label"
-																				check
-																			>
-																				<Input
-																					className="form-check-input"
+																			  </label>
+																			</div>
+																			</FormGroup>
+																			<FormGroup check inline>
+																		<div className="custom-radio custom-control">
+																			<input
+																					className="custom-control-input"
 																					type="radio"
 																					id="inline-radio2"
-                                                                                    name="isActive"
+                                                                                    name="active"
 																					value={false}
                                                                                     checked={
-                                                                                                !this.state.selectedStatus
-                                                                                            }
-                                                                                            onChange={(e) => {
-                                                                                                if (
-                                                                                                    	 e.target.value === 'false'
-                                                                                                    ) {
-                                                                                                        	this.setState({
-                                                                                                            selectedStatus: false,
-                                                                                                            productActive: false,
-																											isActive:false
-                                                                                                    	});
-                                                                                                        }
-                                                                                                     }}
+																						!this.state.selectedStatus
+																					}
+																					onChange={(e) => {
+																						if (
+																									e.target.value === 'false'
+																							) {
+																									this.setState({
+																									selectedStatus: false,
+																									productActive: false,
+																									isActive:false
+																								});
+																								}
+																								}}
 																				/>
+																				<label 
+																				className='custom-control-label'
+																				htmlFor='inline-radio2'
+																				>
 																				   {strings.Inactive}
-																			</Label>
+																			</label>
 																		</div>   
-                                                                    </FormGroup>)}
+                                                                    </FormGroup>
+																	</FormGroup>)}
                                                                 </Col>
 															</Row>
 															<hr></hr>

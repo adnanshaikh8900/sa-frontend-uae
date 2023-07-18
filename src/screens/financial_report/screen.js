@@ -150,6 +150,8 @@ class FinancialReport extends React.Component {
 												this.props.history.push('/admin/report/horizontalbalancesheet')}>{strings.HorizontalBalanceSheet}</a></h6>}
 											{config.REPORTS_TB && <h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
 												this.props.history.push('/admin/report/trailbalances')}>{strings.TrailBalances}</a></h6>}
+											{config.REPORTS_CF && <h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
+												this.props.history.push('/admin/report/cash-flow')}>{strings.Cash_flow}</a></h6>}
 										</div>
 										</Col>}
 

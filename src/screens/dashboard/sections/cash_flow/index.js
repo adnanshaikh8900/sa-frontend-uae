@@ -89,7 +89,7 @@ class CashFlow extends Component {
 				<Card className="cash-card">
 					<CardBody className="tab-card">
 						<div className="flex-wrapper title-bottom-border" >
-							<h1 className="mb -2 card-h1">{strings.Cashflow}</h1>
+							<h1 className="mb -2 card-h1">{strings.CASHFLOW}</h1>
 							
 							<div className=" mb-1 card-header-actions card-select-alignment">
 								<select

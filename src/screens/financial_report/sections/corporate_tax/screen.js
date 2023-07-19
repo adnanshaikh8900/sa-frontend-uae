@@ -559,7 +559,7 @@ class CorporateTax extends React.Component {
                       <Button
                         name="button"
                         color="primary"
-                        className="btn-square pull-right "
+                        className={`btn-square pull-right ${((setting ? setting.isEligibleForCP ? false : true : true) || (ctReport_list.count > 0 && ctReport_list?.data[0].status === 'UnFiled')) ? 'disabled-button' : ''}`}
                         disabled={(setting ? setting.isEligibleForCP ? false : true : true) || (ctReport_list.count > 0 && ctReport_list?.data[0].status === 'UnFiled')}
                         onClick={() => {
                           //const setting = this.props.setting_list ? this.props.setting_list.find(obj => obj.selectedFlag === true) : '';

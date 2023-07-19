@@ -58,6 +58,7 @@ export default {
   REPORTS_BS: true,
   REPORTS_HBS: true,
   REPORTS_TB: true,
+  REPORTS_CF: true,
 
   REPORTS_HEAD_SALES: true,
   REPORTS_SALESBYCUSTOMER: true,

@@ -87,6 +87,7 @@ import {
 	BalanceSheet,
 	HorizontalBalanceSheet,
 	TrailBalances,
+	Cashflow,
 	VatReturnsReport,
 	DetailedGeneralLedgerReport,
 	SalesByCustomer,
@@ -716,6 +717,11 @@ const adminRoutes = [
 		path: '/admin/report/trailbalances',
 		name: 'Trial Balance',
 		component: TrailBalances.screen,
+	},
+	Config.REPORTS_MODULE && {
+		path: '/admin/report/cash-flow',
+		name: 'Cash Flow',
+		component: Cashflow.screen,
 	},
 	Config.REPORTS_MODULE && {
 		path: '/admin/report/ftaAuditReports',

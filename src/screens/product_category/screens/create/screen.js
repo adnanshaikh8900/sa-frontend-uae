@@ -148,7 +148,7 @@ class CreateProductCategory extends React.Component {
 							<Card>
 								<CardHeader>
 									<div className="h4 mb-0 d-flex align-items-center">
-										<i className="nav-icon icon-briefcase" />
+										<i className="nav-icon fas fa-boxes" />
 										<span className="ml-2">{strings.NewProductCategory}</span>
 									</div>
 								</CardHeader>

@@ -416,7 +416,7 @@ class DetailUser extends React.Component {
 													// 	[Yup.ref('password'), null],
 													// 	'Passwords must match',
 													// ),
-														//	dob: Yup.string().required('DOB is required'),
+														dob: Yup.string().required('DOB is required'),
 													})}
 												>
 													{(props) => (
@@ -592,6 +592,7 @@ class DetailUser extends React.Component {
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="date">
+																				<span className="text-danger">* </span>
 																					 {strings.DateOfBirth}
 																				</Label>
 																				<DatePicker
@@ -755,11 +756,11 @@ class DetailUser extends React.Component {
 																		<Col lg={6}>
 																			<FormGroup>
 																				<Label htmlFor="roleId">
-																					<span className="text-danger"> </span>
+																				<span className="text-danger">* </span>
 																					 {strings.Role}
 																				</Label>
 																				<Select
-																					styles={customStyles}
+																				//	styles={customStyles}
 																					options={
 																						active_roles_list
 																							? selectOptionsFactory.renderOptions(
@@ -784,16 +785,21 @@ class DetailUser extends React.Component {
 																									+props.values.roleId,
 																							)
 																					}
-																					onChange={(option) =>
-																						props.handleChange('roleId')(option)
-																					}
-																					placeholder={strings.Select+strings.Role}
-																					
+																					onChange={(option) => {
+																						if (option && option.value) {
+																							props.handleChange('roleId')(
+																								option,
+																							);
+																						} else {
+																							props.handleChange('roleId')('');
+																						}
+																					}}
+																					placeholder={strings.Select + strings.Role}
 																					id="roleId"
 																					name="roleId"
 																					className={
 																						props.errors.roleId &&
-																						props.touched.roleId
+																							props.touched.roleId
 																							? 'is-invalid'
 																							: ''
 																					}

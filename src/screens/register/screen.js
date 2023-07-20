@@ -234,7 +234,7 @@ class Register extends React.Component {
 			updatedAt: new Date(),
 			TimeZonePrefrence: "Asia/Dubai",
 			Emirate: "Select Emirate",
-			MobileNumber: phoneNumber,
+			//MobileNumber: phoneNumber,
 			IsVatRegistered: IsRegistered ? IsRegistered : false,
 			CompanyLocatedAt: "Dubai",
 			Currency: "UAE Dirham - AED",
@@ -400,8 +400,12 @@ class Register extends React.Component {
 														}}
 														validate={(values) => {
 															let errors = {};
+															if (!values.phoneNumber) {
+																errors.phoneNumber =
+																	'Mobile number is required';
+															}
 		
-															if (checkphoneNumberParam == true) {
+															if (values.phoneNumber && checkphoneNumberParam == true) {
 																errors.phoneNumber =
 																	'Invalid mobile number';
 															}
@@ -452,9 +456,9 @@ class Register extends React.Component {
 															timeZone: Yup.string().required(
 																'Time zone is required',
 															),
-															phoneNumber: Yup.string().required(
-																'Mobile number is required',
-															),
+															// phoneNumber: Yup.string().required(
+															// 	'Mobile number is required',
+															// ),
 															TaxRegistrationNumber: Yup.string().when(
 																'IsRegistered',
 																{

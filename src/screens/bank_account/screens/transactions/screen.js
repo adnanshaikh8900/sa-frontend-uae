@@ -906,7 +906,7 @@ class BankTransactions extends React.Component {
                               <i className="fa glyphicon glyphicon-export fa-upload mr-1" />
                               {strings.ImportStatement}
                             </Button>
-
+                            &nbsp; &nbsp; &nbsp;
                             {this.state.transactionCount > 0 ? (
                               ""
                             ) : (

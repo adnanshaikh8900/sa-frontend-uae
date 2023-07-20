@@ -371,7 +371,7 @@ class CreateUser extends React.Component {
 													// 		[Yup.ref('password'), null],
 													// 		'Passwords must match',
 													// 	),
-													//	dob: Yup.date().required('DOB is required'),
+														dob: Yup.date().required('DOB is required'),
 												})}
 											>
 												{(props) => (
@@ -530,6 +530,7 @@ class CreateUser extends React.Component {
 																	<Col lg={6}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="date">
+																			<span className="text-danger">* </span>
 																				{strings.DateOfBirth}
 																			</Label>
 																			<DatePicker
@@ -632,11 +633,11 @@ class CreateUser extends React.Component {
 																	<Col lg={6}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="contactId">
-																				{/* <span className="text-danger">* </span> */}
-																				{strings.Employee}
+																		{/* <span className="text-danger">* </span>*/}
+																			{strings.Employee}
 																			</Label>
 																			<Select
-																				styles={customStyles}
+																				// styles={customStyles}
 																				id="employeeId"
 																				name="employeeId"
 																				placeholder={strings.Select + strings.Employee}
@@ -682,7 +683,7 @@ class CreateUser extends React.Component {
 																				 {strings.Role}
 																			</Label>
 																			<Select
-																				styles={customStyles}
+																				// styles={customStyles}
 																				options={
 																					active_roles_list
 																						? selectOptionsFactory.renderOptions(

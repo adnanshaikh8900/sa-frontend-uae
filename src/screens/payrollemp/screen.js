@@ -469,7 +469,7 @@ class PayrollEmployee extends React.Component {
                             <Row>
                                 <Col lg={12}>
                                     <div className="h4 mb-0 d-flex align-items-center">
-                                        <i className="fas fa-object-group" />
+                                        <i className="fnav-icon fas fa-user-plus" />
                                         <span className="ml-2"> {strings.Employees} </span>
                                     </div>
                                 </Col>

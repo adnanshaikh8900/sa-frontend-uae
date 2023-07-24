@@ -889,7 +889,7 @@ renderName=(cell,row)=>{
 										<Row>
 											<Col lg={12}>
 												<div className="h4 mb-0 d-flex align-items-center">
-													<i className="fas fa-object-group" />
+													<i className="fas fa-box" />
 													<span className="ml-2"> {strings.UpdateProduct}  </span>
 												</div>
 											</Col>

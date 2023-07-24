@@ -87,7 +87,7 @@ export const registerStrapiUser = (obj, companyobj) => {
 	return (dispatch) => {
 		let data = {
 			method: 'post',
-			url: 'https://strapi-api-new.ae.simpleaccounts.io/api/auth/local/register',
+			url: 'https://strapi-api.ae.simpleaccounts.io/api/auth/local/register',
 			data: obj,
 		};
 		return api(data)
@@ -113,7 +113,7 @@ try{
 		//console.log('Starting API request...');
 	let data = {
 			method: 'post',
-			url: 'https://strapi-api-new.ae.simpleaccounts.io/api/companies',
+			url: 'https://strapi-api.ae.simpleaccounts.io/api/companies',
 			data: companyObj,
 			headers: {
 				Authorization: `Bearer ${apiToken}`,

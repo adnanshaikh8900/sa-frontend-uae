@@ -855,7 +855,7 @@ class PayrollConfigurations extends React.Component {
 														<Row>
 															<Col lg={12}>
 																<div className="h4 mb-0 d-flex align-items-center">
-																	<i className="nav-icon fas fa-user-plus" />
+																	<i className="fas fa-object-group" />
 																	<span className="ml-2">{strings.EmployeeDesignation}</span>
 																</div>
 															</Col>

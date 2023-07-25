@@ -169,20 +169,13 @@ class CorporateTax extends React.Component {
       .then((res) => {
         if (res.status === 200) {
           this.setState({ ctReport_list: res.data }); // comment for dummy
-          // const lastrecord = res.data.data.filter(e => {return (e.status === "Filed")})
-          const dataList = res.data.data.filter(e => { return (e.status === "Filed") }); // Assuming the array of objects is stored in the "data" property of the response
+          // const dataList = res.data.data.filter(e => {return (e.status === "Filed")})
+          const dataList = res.data.data;
           if (dataList.length > 0) {
-            // Check if the array is not empty
             dataList.forEach((obj, index) => {
-              obj.flag = index === 0; // Set "flag" to true for the first object, false for others
+              obj.flag = index === 0; 
             });
           }
-          // if (lastrecord[0] !== null) {
-          //   this.setState({ lastRecord: true });
-          //   console.log(this.state.lastRecord);
-          // } else {
-          //   console.log(this.state.lastRecord);
-          // }
         }
       })
       .catch((err) => {
@@ -566,7 +559,7 @@ class CorporateTax extends React.Component {
                       <Button
                         name="button"
                         color="primary"
-                        className="btn-square pull-right "
+                        className={`btn-square pull-right ${((setting ? setting.isEligibleForCP ? false : true : true) || (ctReport_list.count > 0 && ctReport_list?.data[0].status === 'UnFiled')) ? 'disabled-button' : ''}`}
                         disabled={(setting ? setting.isEligibleForCP ? false : true : true) || (ctReport_list.count > 0 && ctReport_list?.data[0].status === 'UnFiled')}
                         onClick={() => {
                           //const setting = this.props.setting_list ? this.props.setting_list.find(obj => obj.selectedFlag === true) : '';
